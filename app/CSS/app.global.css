@@ -1,5 +1,16 @@
 @import "~font-awesome/css/font-awesome.css";
-
+@import "../components/Footer/style.css";
+@import "../components/Header/style.css";
+@import "../components/Addressbook/style.css";
+@import "../components/BlockExplorer/style.css";
+@import "../components/List/style.css";
+@import "../components/Market/style.css";
+@import "../components/Overview/style.css";
+@import "../components/SecurityLogin/style.css";
+@import "../components/SendRecieve/style.css";
+@import "../components/Settings/style.css";
+@import "../components/Terminal/style.css";
+@import "../components/Transactions/style.css";
 /* @font-face {
   src: url("./fonts/MyriadPro-Regular.ttf");
   font-family: "Myriad Pro";
@@ -53,13 +64,18 @@ body {
   top: 0;
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-#Footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+#hdr-line {
+  width: 80%;
+  height: 4px;
+  margin: 0 auto;
+  background: -webkit-linear-gradient(
+    left,
+    transparent 0%,
+    var(--color-2) 50%,
+    transparent 100%
+  );
 }

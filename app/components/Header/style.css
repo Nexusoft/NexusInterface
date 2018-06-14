@@ -1,0 +1,11 @@
+#hdr-line {
+  width: 80%;
+  height: 4px;
+  margin: 0 auto;
+  background: -webkit-linear-gradient(
+    left,
+    transparent 0%,
+    var(--color-2) 50%,
+    transparent 100%
+  );
+}

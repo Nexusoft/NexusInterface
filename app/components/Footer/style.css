@@ -1,2 +1,29 @@
+#Footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#ftr-line {
+  width: 60%;
+  height: 2px;
+  margin: 0 auto 10px;
+  background: -webkit-linear-gradient(
+    left,
+    transparent 0%,
+    var(--color-2) 50%,
+    transparent 100%
+  );
+}
+
 #navigation {
+  display: flex;
+  justify-content: space-between;
+}
+
+#navigation img {
+  margin: 5px;
 }

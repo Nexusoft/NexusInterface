@@ -7,6 +7,7 @@ export default class Footer extends Component {
   render() {
     return (
       <div id="Footer">
+        <div id="ftr-line" />
         <div id="navigation">
           <Link to="/">
             <img src="images/icon-home.png" alt="Overview" />

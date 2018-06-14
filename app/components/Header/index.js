@@ -9,11 +9,14 @@ export default class Header extends Component {
   componentWillMount() {
     RPC.PROMISE("getinfo", []).then(payload => console.log(payload));
   }
-  //
+
   render() {
     return (
       <div id="Header">
-        <h1>Header goes here.</h1>
+        <Link to="/">
+          <img src="images/NXS-logo-min.png" alt="Nexus Logo" id="test" />
+        </Link>
+        <div id="hdr-line" />
       </div>
     );
   }
