@@ -1,9 +1,23 @@
 // @flow
-import React from 'react';
-import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'react-router-redux';
-import Routes from '../routes';
+import React from "react";
+import { Provider } from "react-redux";
+import { ConnectedRouter } from "react-router-redux";
+// import Routes from '../routes';
+import { Route } from "react-router";
 
+import App from "./App";
+import Overview from "../components/Overview/index";
+import Header from "../components/Header/index";
+import Footer from "../components/Footer/index";
+import SendRecieve from "../components/SendRecieve/index";
+import Transactions from "../components/Transactions/index";
+import Market from "../components/Market/index";
+import Addressbook from "../components/Addressbook/index";
+import BlockExplorer from "../components/BlockExplorer/index";
+import Settings from "../components/Settings/index";
+import Terminal from "../components/Terminal/index";
+import SecurityLogin from "../components/SecurityLogin/index";
+import List from "../components/List/index";
 type RootType = {
   store: {},
   history: {}
@@ -13,7 +27,20 @@ export default function Root({ store, history }: RootType) {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <Routes />
+        <App>
+          <Route path="/" component={Header} />
+          <Route exact path="/" component={Overview} />
+          <Route exact path="/SendRecieve" component={SendRecieve} />
+          <Route exact path="/Transactions" component={Transactions} />
+          <Route exact path="/Market" component={Market} />
+          <Route exact path="/Addressbook" component={Addressbook} />
+          <Route exact path="/BlockExplorer" component={BlockExplorer} />
+          <Route exact path="/Settings" component={Settings} />
+          <Route exact path="/Terminal" component={Terminal} />
+          <Route exact path="/SecurityLogin" component={SecurityLogin} />
+          <Route exact path="/List" component={List} />
+          <Route path="/" component={Footer} />
+        </App>
       </ConnectedRouter>
     </Provider>
   );

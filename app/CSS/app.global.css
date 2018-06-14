@@ -1,0 +1,65 @@
+@import "~font-awesome/css/font-awesome.css";
+
+/* @font-face {
+  src: url("./fonts/MyriadPro-Regular.ttf");
+  font-family: "Myriad Pro";
+}
+
+@font-face {
+  src: url("./fonts/FranklinGothic-DemiCondensed.otf");
+  font-family: "Franklin Gothic";
+} */
+
+:root {
+  /* COLOR PALETTE VARIABLES */
+  --color-1: #111111; /* <-- Dark Grey */
+  --color-2: #0ca4fb; /* <-- Nexus Blue */
+  --color-3: #ffffff; /* <-- White */
+
+  /* BACKGROUND IMAGE VARIABLES */
+  --background-main: linear-gradient(
+      rgba(17, 17, 17, 0.45),
+      rgba(17, 17, 17, 0.45)
+    ),
+    url("https://images7.alphacoders.com/428/428134.jpg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
+
+  /* FONTS */
+  --font-1: "Myriad Pro"; /* <-- Sourced Above in First @font-face*/
+  --font-2: "Franklin Gothic"; /* <-- Sourced Above in Second @font-face */
+}
+
+li {
+  list-style: none;
+}
+
+body {
+  position: relative;
+  color: white;
+  height: 100vh;
+  background-color: #232c39;
+  background-image: var(--background-main);
+  font-family: Arial, Helvetica, Helvetica Neue, serif;
+  overflow-y: hidden;
+}
+
+#App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#Header {
+  position: relative;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#Footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
