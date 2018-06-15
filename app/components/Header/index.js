@@ -1,31 +1,29 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+
 import styles from "./style.css";
-
 import * as RPC from "../../script/rpc";
+import * as TYPE from "../../actiontypes";
 
-// import { bindActionCreators } from 'redux';
-// import { connect } from 'react-redux';
-// import Counter from '../components/Counter';
-// import * as CounterActions from '../actions/counter';
+const mapStateToProps = state => ({
+  ...state.common
+});
 
-// function mapStateToProps(state) {
-//   return {
-//     counter: state.counter
-//   };
-// }
+const mapDispatchToProps = dispatch => ({
+  GetInfoDump: returnedData =>
+    dispatch({ type: TYPE.GET_INFO_DUMP, payload: returnedData })
+});
 
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators(CounterActions, dispatch);
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(Counter);
-
-export default class Header extends Component {
+class Header extends Component {
   componentWillMount() {
-    RPC.PROMISE("getinfo", []).then(payload => console.log(payload));
+    console.log(this.props);
+    RPC.PROMISE("getinfo", []).then(payload => {
+      console.log(payload);
+      this.props.GetInfoDump(payload);
+    });
   }
-
+  //
   render() {
     return (
       <div id="Header">
@@ -37,3 +35,7 @@ export default class Header extends Component {
     );
   }
 }
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Header);

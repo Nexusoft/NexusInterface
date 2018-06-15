@@ -9,6 +9,11 @@ export default (state = defaultState, action) => {
         ...state,
         appLoaded: true
       };
+    case TYPE.GET_INFO_DUMP:
+      return {
+        ...state,
+        ...action.payload
+      };
     default:
       return state;
   }
