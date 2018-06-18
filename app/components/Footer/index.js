@@ -14,6 +14,9 @@ export default class Footer extends Component {
           <Link to="/SendRecieve">
             <img src="images/icon-send.png" alt="SendRecieve" />
           </Link>
+          <Link to="/Transactions">
+            <img src="images/icon-transactions.png" alt="Transactions" />
+          </Link>
           <Link to="/Market">
             <img src="images/icon-market.png" alt="Market Data" />
           </Link>

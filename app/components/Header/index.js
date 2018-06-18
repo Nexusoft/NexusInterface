@@ -17,19 +17,28 @@ const mapDispatchToProps = dispatch => ({
 
 class Header extends Component {
   componentWillMount() {
-    console.log(this.props);
     RPC.PROMISE("getinfo", []).then(payload => {
-      console.log(payload);
       this.props.GetInfoDump(payload);
+      console.log(this.props);
     });
+
+    var self = this;
+    self.set = setInterval(function() {
+      RPC.PROMISE("getinfo", []).then(payload => {
+        self.props.GetInfoDump(payload);
+      });
+    }, 1000);
   }
-  //
+
   render() {
     return (
       <div id="Header">
+        <div id="settings-menu">{this.props.timestamp}</div>
+
         <Link to="/">
           <img src="images/NXS-logo-min.png" alt="Nexus Logo" id="test" />
         </Link>
+
         <div id="hdr-line" />
       </div>
     );

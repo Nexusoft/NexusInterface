@@ -11,15 +11,8 @@
 @import "../components/Settings/style.css";
 @import "../components/Terminal/style.css";
 @import "../components/Transactions/style.css";
-/* @font-face {
-  src: url("./fonts/MyriadPro-Regular.ttf");
-  font-family: "Myriad Pro";
-}
 
-@font-face {
-  src: url("./fonts/FranklinGothic-DemiCondensed.otf");
-  font-family: "Franklin Gothic";
-} */
+@import "./base/text.css";
 
 :root {
   /* COLOR PALETTE VARIABLES */
@@ -57,25 +50,4 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-#Header {
-  position: relative;
-  top: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#hdr-line {
-  width: 80%;
-  height: 4px;
-  margin: 0 auto;
-  background: -webkit-linear-gradient(
-    left,
-    transparent 0%,
-    var(--color-2) 50%,
-    transparent 100%
-  );
 }
