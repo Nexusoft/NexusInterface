@@ -1,10 +1,10 @@
-import { combineReducers } from "redux";
-import { routerReducer as router } from "react-router-redux";
+import { combineReducers } from "redux-immutable";
+import routerReducer from "./routerReducer";
 import common from "./common";
 
 const rootReducer = combineReducers({
   common,
-  router
+  routerReducer
 });
 
 export default rootReducer;

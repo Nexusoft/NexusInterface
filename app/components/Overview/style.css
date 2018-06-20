@@ -1,12 +1,13 @@
 .overviewInfo {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 #overviewPage {
-  display: grid;
-  grid-template-columns: auto auto auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 }
 
 #globe {
@@ -72,12 +73,12 @@ II. BALANCE
   font-size: 14px;
   letter-spacing: 6px;
 }
-#nxs-getinfo-balance {
-  font-family: var(--font-2);
-  font-weight: 600;
-  font-size: 44px;
+.overviewValue {
+  font-family: var(--font-1);
+  font-size: 2em;
+  font-weight: 800;
   letter-spacing: 1px;
-  padding-top: 10px;
+  /* padding-top: 10px; */
   margin-right: -1px;
 }
 #coin {
@@ -107,13 +108,16 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   margin-right: -3px;
 }
 #left-stats {
-  position: absolute;
-  top: 15px;
+  position: relative;
+  right: 0px;
+  top: 0px;
   display: flex;
   flex-direction: column;
-  align-self: center;
+  align-items: center;
+  z-index: 99999;
   text-align: center;
-  z-index: 1000;
+  justify-content: space-between;
+  padding-left: 30px;
 }
 #left-stats img {
   width: 35px;

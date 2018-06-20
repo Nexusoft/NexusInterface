@@ -6,9 +6,9 @@ import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actiontypes";
 
-const mapStateToProps = state => ({
-  ...state.common
-});
+const mapStateToProps = state => {
+  return state.toJS();
+};
 
 const mapDispatchToProps = dispatch => ({
   GetInfoDump: returnedData =>
@@ -16,10 +16,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Header extends Component {
-  componentWillMount() {
+  componentDidMount() {
     RPC.PROMISE("getinfo", []).then(payload => {
       this.props.GetInfoDump(payload);
-      console.log(this.props);
     });
 
     var self = this;
@@ -33,7 +32,7 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
-        <div id="settings-menu">{this.props.timestamp}</div>
+        <div id="settings-menu">{this.props.common.getinfo.timestamp}</div>
 
         <Link to="/">
           <img src="images/NXS-logo-min.png" alt="Nexus Logo" id="test" />

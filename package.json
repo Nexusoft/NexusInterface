@@ -177,6 +177,7 @@
     "font-awesome": "^4.7.0",
     "history": "^4.6.3",
     "immutable": "^3.8.2",
+    "maxmind": "^2.7.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-hot-loader": "3.0.0-beta.6",
@@ -187,7 +188,8 @@
     "redux": "^3.7.1",
     "redux-immutable": "^4.0.0",
     "reselect": "^3.0.1",
-    "source-map-support": "^0.4.15"
+    "source-map-support": "^0.4.15",
+    "three": "^0.93.0"
   },
   "devEngines": {
     "node": ">=7.x",

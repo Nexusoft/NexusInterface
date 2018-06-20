@@ -2,16 +2,34 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
+import { getIn } from "immutable";
 
-const mapStateToProps = state => ({
-  ...state.common
-});
+import NetworkGlobe from "./NetworkGlobe";
+
+const mapStateToProps = state => {
+  return state.toJS();
+};
 
 const mapDispatchToProps = dispatch => ({});
 
 class Overview extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    const yesArray = [];
+    for (let prop in this.props.common.getinfo) {
+      if (this.props.common.getinfo[prop] === nextProps.common.getinfo[prop]) {
+        yesArray.push(true);
+      }
+    }
+    if (yesArray.length === Object.keys(this.props.common.getinfo).length - 1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   connectionsImage() {
-    const con = this.props.connections;
+    const con = this.props.common.getinfo.connections;
+    console.log(this.props);
     if (con <= 4) {
       return "images/Connections0.png";
     } else if (con > 4 && con <= 8) {
@@ -32,17 +50,42 @@ class Overview extends Component {
   render() {
     return (
       <div id="overviewPage">
-        <div>
-          <div className="overviewInfo">
-            <div className="h2"> B A L E N C E</div>
-            <div id="nxs-getinfo-balance">{this.props.balance}</div>
+        <NetworkGlobe />
+        <div id="left-stats">
+          <div className="grid-container">
+            <div className="h2">Balance</div>
+            <div className="overviewValue">
+              {this.props.common.getinfo.balance}
+            </div>
             <div id="coin">NXS</div>
           </div>
-          <div />
-          <div />
-          <div />
+          <div className="grid-container">
+            <div className="balance-info">
+              <div className="h2">Currency Value</div>
+              <div className="overviewValue">$0.00</div>
+              <div id="currency">USD</div>
+            </div>
+          </div>
+          <div className="grid-container">
+            <div className="balance-info">
+              <div className="h2">Transactions</div>
+              <div className="overviewValue">0</div>
+            </div>
+          </div>
+          <div className="grid-container">
+            <div className="balance-info">
+              <div className="h2">Market Price</div>
+              <div className="overviewValue">0</div>
+            </div>
+          </div>
+          <div className="grid-container">
+            <div className="balance-info">
+              <div className="h2">Market Price</div>
+              <div className="overviewValue">0</div>
+            </div>
+          </div>
         </div>
-        <div id="globe" />
+
         <div className="right-stats">
           <div className="h2">Connections</div>
           <div id="nxs-connections-info">
@@ -50,7 +93,9 @@ class Overview extends Component {
               id="nxs-getinfo-connections-image"
               src={this.connectionsImage()}
             />
-            <div id="nxs-getinfo-connections">{this.props.connections}</div>
+            <div className="overviewValue">
+              {this.props.common.getinfo.connections}
+            </div>
           </div>
           <div className="h2">Block Weight</div>
           <div id="nxs-blockweight-info">
@@ -58,29 +103,37 @@ class Overview extends Component {
               id="nxs-getinfo-blockweight-image"
               src="images/BlockWeight-0.png"
             />
-            <div id="nxs-getinfo-blockweight">{this.props.blockweight}</div>
+            <div className="overviewValue">
+              {this.props.common.getinfo.blockweight}
+            </div>
           </div>
           <div className="h2">Block Count</div>
           <div id="nxs-blocks-info">
             <img src="images/nxs-blocks.png" />
-            <div id="nxs-getinfo-blocks">{this.props.blocks}</div>
+            <div className="overviewValue">
+              {this.props.common.getinfo.blocks}
+            </div>
           </div>
           <div className="h2">Trust Weight</div>
           <div id="nxs-trustweight-info">
             <img id="nxs-getinfo-trustweight-image" src="images/trust00.png" />
-            <div id="nxs-getinfo-trustweight">{this.props.trustweight}</div>
+            <div className="overviewValue">
+              {this.props.common.getinfo.trustweight}
+            </div>
           </div>
           <div className="h2">Interest Weight</div>
           <div id="nxs-interestweight-info">
             <img src="images/nxs-chart.png" />
-            <div id="nxs-getinfo-interestweight">
-              {this.props.interestweight + "%"}
+            <div className="overviewValue">
+              {this.props.common.getinfo.interestweight + "%"}
             </div>
           </div>
           <div className="h2">Stake Weight</div>
           <div id="nxs-stakeweight-info">
             <img src="images/nxs-staking.png" />
-            <div id="nxs-getinfo-stakeweight">{this.props.stakeweight}</div>
+            <div className="overviewValue">
+              {this.props.common.getinfo.stakeweight}
+            </div>
           </div>
         </div>
       </div>

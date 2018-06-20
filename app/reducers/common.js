@@ -1,19 +1,14 @@
 import * as TYPE from "../actiontypes";
+import Immutable from "immutable";
 
-const defaultState = {};
+const initialState = Immutable.fromJS({
+  getinfo: {}
+});
 
-export default (state = defaultState, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.APP_LOAD:
-      return {
-        ...state,
-        appLoaded: true
-      };
     case TYPE.GET_INFO_DUMP:
-      return {
-        ...state,
-        ...action.payload
-      };
+      return state.set("getinfo", action.payload);
     default:
       return state;
   }
