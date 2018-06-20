@@ -50,7 +50,6 @@ class Overview extends Component {
   render() {
     return (
       <div id="overviewPage">
-        <NetworkGlobe />
         <div id="left-stats">
           <div className="grid-container">
             <div className="h2">Balance</div>
@@ -85,7 +84,7 @@ class Overview extends Component {
             </div>
           </div>
         </div>
-
+        <NetworkGlobe />
         <div className="right-stats">
           <div className="h2">Connections</div>
           <div id="nxs-connections-info">

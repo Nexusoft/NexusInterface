@@ -150,7 +150,7 @@ export default (DAT.Globe = function(container, opts) {
     renderer.setSize(w, h);
     renderer.setClearColor(0x000000, 0); // set background color to transparent
 
-    renderer.domElement.style.position = "absolute";
+    // renderer.domElement.style.position = "absolute";
 
     container.appendChild(renderer.domElement);
 

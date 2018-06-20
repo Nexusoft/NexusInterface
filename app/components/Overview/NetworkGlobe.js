@@ -5,10 +5,6 @@ import * as RPC from "../../script/rpc";
 import maxmind from "maxmind";
 
 export default class NetworkGlobe extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
   componentDidMount() {
     const globeseries = [["peers", []]];
     const geoiplookup = maxmind.openSync(
