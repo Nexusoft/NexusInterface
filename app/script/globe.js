@@ -12,6 +12,7 @@
  */
 
 import * as THREE from "three";
+import world from "../images/world.jpg";
 var DAT = DAT || {};
 
 export default (DAT.Globe = function(container, opts) {
@@ -109,10 +110,8 @@ export default (DAT.Globe = function(container, opts) {
     shader = Shaders["earth"];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
-    uniforms["texture"].value = new THREE.TextureLoader().load(
-      imgDir + "world.jpg"
-    );
-
+    uniforms["texture"].value = new THREE.TextureLoader().load(world);
+    // imgDir + "world.jpg"
     material = new THREE.ShaderMaterial({
       uniforms: uniforms,
       vertexShader: shader.vertexShader,

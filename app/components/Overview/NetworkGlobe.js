@@ -31,6 +31,9 @@ export default class NetworkGlobe extends Component {
       glb.animate();
     });
   }
+  componentWillUnmount() {
+    this.threeRootElement.remove();
+  }
   getResourcesDirectory() {
     let appPath = require("electron").remote.app.getAppPath();
 
