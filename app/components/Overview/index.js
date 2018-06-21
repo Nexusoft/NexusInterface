@@ -29,7 +29,7 @@ class Overview extends Component {
 
   connectionsImage() {
     const con = this.props.common.getinfo.connections;
-    console.log(this.props);
+
     if (con <= 4) {
       return "images/Connections0.png";
     } else if (con > 4 && con <= 8) {
@@ -99,8 +99,8 @@ class Overview extends Component {
           <div className="h2">Block Weight</div>
           <div id="nxs-blockweight-info">
             <img
-              id="nxs-getinfo-blockweight-image"
               src="images/BlockWeight-0.png"
+              id="nxs-getinfo-blockweight-image"
             />
             <div className="overviewValue">
               {this.props.common.getinfo.blockweight}
@@ -120,9 +120,9 @@ class Overview extends Component {
               {this.props.common.getinfo.trustweight}
             </div>
           </div>
-          <div className="h2">Interest Weight</div>
+          <div className="h2">Interest Rate</div>
           <div id="nxs-interestweight-info">
-            <img src="images/nxs-chart.png" />
+            <img src="/home/dillon/Desktop/Nexus-Interface-React/app/images/nxs-chart.png" />
             <div className="overviewValue">
               {this.props.common.getinfo.interestweight + "%"}
             </div>

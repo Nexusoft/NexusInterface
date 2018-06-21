@@ -109,7 +109,7 @@ export default (DAT.Globe = function(container, opts) {
     shader = Shaders["earth"];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
-    uniforms["texture"].value = THREE.ImageUtils.loadTexture(
+    uniforms["texture"].value = new THREE.TextureLoader().load(
       imgDir + "world.jpg"
     );
 

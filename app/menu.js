@@ -197,6 +197,13 @@ export default class MenuBuilder {
             click: () => {
               this.mainWindow.close();
             }
+          },
+          {
+            label: "Toggle Developer Tools",
+            accelerator: "Alt+Command+I",
+            click: () => {
+              this.mainWindow.toggleDevTools();
+            }
           }
         ]
       },
@@ -212,6 +219,7 @@ export default class MenuBuilder {
                     this.mainWindow.webContents.reload();
                   }
                 },
+
                 {
                   label: "Toggle &Full Screen",
                   accelerator: "F11",
