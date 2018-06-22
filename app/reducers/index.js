@@ -1,5 +1,6 @@
-import { combineReducers } from "redux-immutable";
-import routerReducer from "./routerReducer";
+import { combineReducers } from "redux";
+import { routerReducer } from "react-router-redux";
+
 import common from "./common";
 import listReducer from "./listReducer";
 

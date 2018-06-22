@@ -16,13 +16,7 @@ const configureStore = () => {
   // Logging Middleware
   // const logger = createLogger({
   //   level: "info",
-  //   collapsed: true,
-  //   stateTransformer: state => state.toJS(),
-  //   predicate: action => {
-  //     if (action.type === "GET_INFO_DUMP") {
-  //       return false;
-  //     }
-  //   }
+  //   collapsed: true
   // });
   // middleware.push(logger);
 

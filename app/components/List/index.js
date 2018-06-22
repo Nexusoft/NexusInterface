@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Immutable from "immutable";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actiontypes";
 
 const mapStateToProps = state => {
-  return state.get("listReducer").toJS();
+  return { ...state };
 };
 
 const mapDispatchToProps = dispatch => ({

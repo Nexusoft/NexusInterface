@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
-import { getIn } from "immutable";
 
 // importing images here because of a weird webpack issue
 import Connections0 from "../../images/Connections0.png";
@@ -42,7 +41,9 @@ import nxsblocks from "../../images/nxs-blocks.png";
 import NetworkGlobe from "./NetworkGlobe";
 
 const mapStateToProps = state => {
-  return state.toJS();
+  return {
+    ...state.common
+  };
 };
 
 const mapDispatchToProps = dispatch => ({});
@@ -50,12 +51,12 @@ const mapDispatchToProps = dispatch => ({});
 class Overview extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const yesArray = [];
-    for (let prop in this.props.common.getinfo) {
-      if (this.props.common.getinfo[prop] === nextProps.common.getinfo[prop]) {
+    for (let prop in this.props) {
+      if (this.props[prop] === nextProps[prop]) {
         yesArray.push(true);
       }
     }
-    if (yesArray.length === Object.keys(this.props.common.getinfo).length - 1) {
+    if (yesArray.length === Object.keys(this.props).length - 1) {
       return false;
     } else {
       return true;
@@ -63,8 +64,8 @@ class Overview extends Component {
   }
 
   connectionsImage() {
-    const con = this.props.common.getinfo.connections;
-
+    const con = this.props.connections;
+    console.log("shit rerendering ");
     if (con <= 4) {
       return Connections0;
     } else if (con > 4 && con <= 8) {
@@ -83,7 +84,7 @@ class Overview extends Component {
   }
 
   trustImg() {
-    const TW = parseInt(this.props.common.getinfo.trustweight / 10);
+    const TW = parseInt(this.props.trustweight / 10);
     switch (TW) {
       case 0:
         return trust00;
@@ -125,8 +126,7 @@ class Overview extends Component {
   }
 
   blockWeightImage() {
-    const BW = parseInt(this.props.common.getinfo.blockweight / 10);
-
+    const BW = parseInt(this.props.blockweight / 10);
     switch (BW) {
       case 0:
         return blockweight0;
@@ -170,9 +170,7 @@ class Overview extends Component {
         <div id="left-stats">
           <div className="grid-container">
             <div className="h2">Balance</div>
-            <div className="overviewValue">
-              {this.props.common.getinfo.balance}
-            </div>
+            <div className="overviewValue">{this.props.balance}</div>
             <div id="coin">NXS</div>
           </div>
           <div className="grid-container">
@@ -209,9 +207,7 @@ class Overview extends Component {
               id="nxs-getinfo-connections-image"
               src={this.connectionsImage()}
             />
-            <div className="overviewValue">
-              {this.props.common.getinfo.connections}
-            </div>
+            <div className="overviewValue">{this.props.connections}</div>
           </div>
           <div className="h2">Block Weight</div>
           <div id="nxs-blockweight-info">
@@ -219,37 +215,29 @@ class Overview extends Component {
               src={this.blockWeightImage()}
               id="nxs-getinfo-blockweight-image"
             />
-            <div className="overviewValue">
-              {this.props.common.getinfo.blockweight}
-            </div>
+            <div className="overviewValue">{this.props.blockweight}</div>
           </div>
           <div className="h2">Block Count</div>
           <div id="nxs-blocks-info">
             <img src={nxsblocks} />
-            <div className="overviewValue">
-              {this.props.common.getinfo.blocks}
-            </div>
+            <div className="overviewValue">{this.props.blocks}</div>
           </div>
           <div className="h2">Trust Weight</div>
           <div id="nxs-trustweight-info">
             <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
-            <div className="overviewValue">
-              {this.props.common.getinfo.trustweight}
-            </div>
+            <div className="overviewValue">{this.props.trustweight}</div>
           </div>
           <div className="h2">Interest Rate</div>
           <div id="nxs-interestweight-info">
             <img src={interestRate} />
             <div className="overviewValue">
-              {this.props.common.getinfo.interestweight + "%"}
+              {this.props.interestweight + "%"}
             </div>
           </div>
           <div className="h2">Stake Weight</div>
           <div id="nxs-stakeweight-info">
             <img src={nxsStake} />
-            <div className="overviewValue">
-              {this.props.common.getinfo.stakeweight}
-            </div>
+            <div className="overviewValue">{this.props.stakeweight}</div>
           </div>
         </div>
       </div>
