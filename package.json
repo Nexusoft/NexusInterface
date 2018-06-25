@@ -186,7 +186,6 @@
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.6",
     "redux": "^3.7.1",
-    "reselect": "^3.0.1",
     "source-map-support": "^0.4.15",
     "three": "^0.93.0"
   },

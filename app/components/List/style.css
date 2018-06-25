@@ -1,0 +1,28 @@
+#listbody {
+  /* display: flex;
+  flex-direction: column; */
+
+  /* overflow: auto; */
+  height: 100%;
+}
+
+#listhead {
+  display: flex;
+  height: fit-content;
+  justify-content: space-between;
+}
+
+#listRoot {
+  height: 100%;
+}
+
+#listRoot h1 {
+  text-align: center;
+}
+
+#tablebody {
+  display: block;
+  height: 70vh;
+  overflow: auto;
+  width: max-content;
+}
