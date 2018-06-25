@@ -54,14 +54,14 @@ class List extends Component {
         <h1>Trust List</h1>
 
         <table id="listbody">
-          <tr id="listhead">
+          <thead id="listhead">
             <th>
               <div>Address</div>
             </th>
             <th onClick={() => this.props.ToggleSortDir()}>
               <div>Intrest Rate</div>
             </th>
-          </tr>
+          </thead>
           <tbody id="tablebody">{this.buildList()}</tbody>
         </table>
       </div>

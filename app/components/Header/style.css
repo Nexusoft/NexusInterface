@@ -27,12 +27,29 @@
   display: inline-block;
 }
 
-#settings-menu li {
+.icon {
   display: inline-block;
   padding: 0 5px;
-}
-
-#settings-menu img {
   width: 20px;
   height: 20px;
+}
+
+.icon:hover .iconinfo {
+  visibility: visible;
+  opacity: 1;
+  width: max-content;
+}
+
+.iconinfo {
+  position: absolute;
+  top: 28px;
+  color: var(--color-1);
+  right: 0;
+  background-color: var(--color-3);
+  visibility: hidden;
+}
+
+.iconinfo div {
+  margin-left: 5px;
+  margin-right: 5px;
 }

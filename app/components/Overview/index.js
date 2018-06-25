@@ -65,12 +65,12 @@ class Overview extends Component {
 
   connectionsImage() {
     const con = this.props.connections;
-    console.log("shit rerendering ");
+
     if (con <= 4) {
       return Connections0;
-    } else if (con > 4 && con <= 8) {
+    } else if (con > 4 && con <= 6) {
       return Connections4;
-    } else if (con > 8 && con <= 12) {
+    } else if (con > 6 && con <= 12) {
       return Connections8;
     } else if (con > 12 && con <= 14) {
       return Connections12;
