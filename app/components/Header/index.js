@@ -19,8 +19,6 @@ class Header extends Component {
   componentDidMount() {
     RPC.PROMISE("getinfo", []).then(payload => {
       this.props.GetInfoDump(payload);
-
-      console.log(this.props);
     });
 
     var self = this;

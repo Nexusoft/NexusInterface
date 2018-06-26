@@ -2,12 +2,12 @@ import { combineReducers } from "redux";
 import { routerReducer } from "react-router-redux";
 
 import common from "./common";
-import listReducer from "./listReducer";
+import list from "./list";
 
 const rootReducer = combineReducers({
   common,
   routerReducer,
-  listReducer
+  list
 });
 
 export default rootReducer;

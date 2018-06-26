@@ -5,7 +5,7 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actiontypes";
 
 const mapStateToProps = state => {
-  return { ...state.listReducer };
+  return { ...state.list };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -18,14 +18,10 @@ class List extends Component {
   componentDidMount() {
     RPC.PROMISE("getnetworktrustkeys", []).then(payload => {
       this.props.GetListDump(payload.keys);
-      console.log(this.props);
     });
-    console.log(this.props);
   }
 
   buildList() {
-    console.log(this.props);
-
     if (this.props.trustlist) {
       let sortableList = [...this.props.trustlist];
       if (this.props.acc) {
@@ -52,7 +48,6 @@ class List extends Component {
     return (
       <div id="listRoot">
         <h1>Trust List</h1>
-
         <table id="listbody">
           <thead id="listhead">
             <th>
