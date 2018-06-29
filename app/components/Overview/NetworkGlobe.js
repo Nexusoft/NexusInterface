@@ -11,8 +11,8 @@ export default class NetworkGlobe extends Component {
       __dirname + "/GeoLite2-City_20180403/GeoLite2-City.mmdb"
     );
     RPC.PROMISE("getpeerinfo", []).then(payload => {
-      var tmp;
-      var ip;
+      var tmp = {};
+      var ip = {};
       for (var i = 0; i < payload.length; i++) {
         ip = payload[i].addr;
         ip = ip.split(":")[0];
