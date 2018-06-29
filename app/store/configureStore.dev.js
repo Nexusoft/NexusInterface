@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import { createHashHistory } from "history";
+import thunk from "redux-thunk";
 import { routerMiddleware, routerActions } from "react-router-redux";
 import { createLogger } from "redux-logger";
 import rootReducer from "../reducers";
@@ -13,6 +14,7 @@ const configureStore = () => {
   const middleware = [];
   const enhancers = [];
 
+  middleware.push(thunk);
   // Logging Middleware
   // const logger = createLogger({
   //   level: "info",

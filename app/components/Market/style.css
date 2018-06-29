@@ -1,0 +1,24 @@
+#Market {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 875px;
+  width: 100%;
+  overflow: auto;
+}
+
+.marketInfoContainer {
+  display: grid;
+  grid-template-columns: auto auto;
+  /* max-height: 600px; */
+}
+
+.marketInfoContainer img {
+  height: 75px;
+  grid-column: 1/3;
+}
+
+.marketInfoContainer canvas {
+  min-width: 500px;
+  max-width: 800px;
+}
