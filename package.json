@@ -173,12 +173,14 @@
     "webpack-sources": "^1.0.1"
   },
   "dependencies": {
+    "chart.js": "^2.7.2",
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",
     "font-awesome": "^4.7.0",
     "history": "^4.6.3",
     "maxmind": "^2.6.0",
     "react": "^15.6.1",
+    "react-chartjs-2": "^2.7.2",
     "react-dom": "^15.6.1",
     "react-hot-loader": "3.0.0-beta.6",
     "react-redux": "^5.0.5",
@@ -186,6 +188,7 @@
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.6",
     "redux": "^3.7.1",
+    "redux-thunk": "^2.3.0",
     "source-map-support": "^0.4.15",
     "three": "^0.93.0"
   },
