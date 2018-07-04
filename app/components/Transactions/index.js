@@ -76,7 +76,11 @@ export default class Transactions extends Component {
                 txid: element2.txid,
                 account: element2.account,
                 address: element2.address,
-                
+                value:
+                {
+                  USD:0,
+                  BTC:0
+                },
                 coin: "Nexus",
                 fee: 0
               }
@@ -109,7 +113,7 @@ export default class Transactions extends Component {
   }
 
   DisplayPastWeek()
-  {
+  {tempdata
     this.setState(
       {
         displayTimeFrame:"Week"
@@ -139,30 +143,8 @@ export default class Transactions extends Component {
   {
     //Analytics.GANALYTICS.SendEvent("Transactions","CSV",this.state.displayTimeFrame,1);
 
-    let tempdata = [
-      {
-        account:4,
-        address:"232321312",
-        amount:1233,
-        value:
-        {
-          USD:1,
-          BTC:1
-        },
-        category:"asdsa",
-        time:11231234,
-        txid:"1232321123213",
-        confirmations:123132,
-        fee:1
-
-      }
-    ];
-    this.setState(
-      {
-        DataThisIsShowing:tempdata
-      }
-    )
-    this.saveCSV(tempdata);
+ 
+    this.saveCSV(this.returnAllFilters([...this.state.currentTransactions]));
   }
 
   /// Save CSV
@@ -171,7 +153,7 @@ export default class Transactions extends Component {
   ///   DataToSave  || Object Array || Transactions to save
   saveCSV(DataToSave) {
     const rows = []; //Set up a blank array for each row
-
+    console.log(DataToSave);
     //This is so we can have named columns in the export, this will be row 1
     let NameEntry = [
       "Number",
