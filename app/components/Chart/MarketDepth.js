@@ -54,20 +54,52 @@ export default class MarketDepth extends Component {
   render() {
     return (
       <div className="marketDepthInner">
-        <div className="infobox">
+        {/* <div className="infobox">
           {this.state.buySeries ? "Buy" : "Sell"}
           <br />
           BTC Price: {this.state.crosshairValues.x} <br />
           NXS Volume: {this.state.crosshairValues.y}
-        </div>
+        </div> */}
         <VictoryChart
           animate={{
             duration: 1000,
             onLoad: { duration: 1000 }
           }}
+          theme={{
+            axis: {
+              style: {
+                axis: {
+                  fill: "transparent",
+                  stroke: "white",
+                  strokeWidth: 1
+                },
+                axisLabel: {
+                  textAnchor: "right",
+                  padding: 25
+                },
+                grid: {
+                  fill: "none",
+                  stroke: "none",
+                  pointerEvents: "painted"
+                },
+                ticks: {
+                  fill: "white",
+                  size: 5,
+                  stroke: "white"
+                },
+                tickLabels: {
+                  top: 10,
+                  padding: 2,
+                  fill: "white",
+                  stroke: "transparent",
+                  angle: -35
+                }
+              }
+            }
+          }}
         >
           <VictoryArea
-            animate={{ duration: 2000 }}
+            animate={{ duration: 1000 }}
             style={{
               data: {
                 fill: "green",
