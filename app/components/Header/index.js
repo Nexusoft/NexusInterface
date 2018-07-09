@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actiontypes";
+import * as TYPE from "../../actions/actiontypes";
 
 const mapStateToProps = state => {
   return { ...state.common };
