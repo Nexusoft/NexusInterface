@@ -8,12 +8,15 @@ import styles from "./style.css";
 import * as TYPE from "../../actions/actiontypes";
 import LineChart from "../Chart/Line.js";
 import MarketDepth from "../Chart/MarketDepth";
+import Candlestick from "../Chart/Candlestick";
 
 // import images
 import bittrexLogo from "../../images/BittrexLogo.png";
 import binanceLogo from "../../images/BINANCE.png";
 import cryptopiaLogo from "../../images/cryptopia.png";
 import * as actionsCreators from "../../actions/marketActionCreators";
+
+import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
 const mapStateToProps = state => {
   return { ...state.market };
@@ -49,7 +52,8 @@ class Market extends Component {
         } else {
           return {
             x: e.Price,
-            y: newQuantity
+            y: newQuantity,
+            label: `Price: ${e.Price} \n Volume: ${newQuantity}`
           };
         }
       })

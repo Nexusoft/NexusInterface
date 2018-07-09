@@ -1,35 +1,10 @@
-// Copyright (c) 2016 - 2017 Uber Technologies, Inc.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
 import React, { Component } from "react";
-
 import {
-  FlexibleXYPlot,
-  XAxis,
-  YAxis,
-  AreaSeries,
-  GradientDefs,
-  linearGradient,
-  Crosshair,
-  Borders,
-  Hint
-} from "react-vis";
+  VictoryArea,
+  VictoryChart,
+  VictoryTooltip,
+  VictoryAnimation
+} from "victory";
 
 export default class MarketDepth extends Component {
   constructor(props) {
@@ -80,62 +55,40 @@ export default class MarketDepth extends Component {
     return (
       <div className="marketDepthInner">
         <div className="infobox">
+          {this.state.buySeries ? "Buy" : "Sell"}
+          <br />
           BTC Price: {this.state.crosshairValues.x} <br />
           NXS Volume: {this.state.crosshairValues.y}
         </div>
-        <FlexibleXYPlot
-          onMouseLeave={this._onMouseLeave}
-          margin={{ left: 100, bottom: 100 }}
+        <VictoryChart
+          animate={{
+            duration: 1000,
+            onLoad: { duration: 1000 }
+          }}
         >
-          {/* <Hint
-            value={this.state.crosshairValues}
+          <VictoryArea
+            animate={{ duration: 2000 }}
             style={{
-              fontSize: 14,
-              text: {
-                display: "none"
+              data: {
+                fill: "green",
+                opacity: 0.7
               }
             }}
-          /> */}
-          <XAxis
+            labelComponent={<VictoryTooltip />}
+            data={[...this.props.chartData]}
+          />
+          <VictoryArea
+            animate={{ duration: 2000 }}
             style={{
-              line: { stroke: "white" },
-              ticks: { stroke: "white" },
-              text: { stroke: "none", fill: "white" }
+              data: {
+                fill: "red",
+                opacity: 0.7
+              }
             }}
-            tickFormat={v => `BTC ${v}`}
-            tickLabelAngle={-45}
+            labelComponent={<VictoryTooltip />}
+            data={[...this.props.chartSellData]}
           />
-          <YAxis
-            style={{
-              line: { stroke: "white" },
-              ticks: { stroke: "white" },
-              text: { stroke: "none", fill: "white" }
-            }}
-          />
-          <GradientDefs>
-            <linearGradient id="buySupport" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="green" stopOpacity={0.9} />
-              <stop offset="100%" stopColor="green" stopOpacity={0.2} />
-            </linearGradient>
-            <linearGradient id="sellSupport" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="red" stopOpacity={0.9} />
-              <stop offset="100%" stopColor="red" stopOpacity={0.2} />
-            </linearGradient>
-          </GradientDefs>
-
-          <AreaSeries
-            onNearestX={this._onNearestXbuy}
-            onSeriesMouseOver={() => this.whichseries(true)}
-            color={"url(#buySupport)"}
-            data={this.props.chartData}
-          />
-          <AreaSeries
-            onNearestX={this._onNearestX}
-            onSeriesMouseOver={() => this.whichseries(false)}
-            color={"url(#sellSupport)"}
-            data={this.props.chartSellData}
-          />
-        </FlexibleXYPlot>
+        </VictoryChart>
       </div>
     );
   }
