@@ -44,7 +44,6 @@ class Market extends Component {
         newQuantity = prevQuantity + e.Volume;
         prevQuantity = newQuantity;
         if (e.Price < array[0].Price * 0.05) {
-          console.log("low Price Cutoff");
           return {
             x: 0,
             y: newQuantity
