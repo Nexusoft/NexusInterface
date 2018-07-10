@@ -44,7 +44,6 @@ class Market extends Component {
         newQuantity = prevQuantity + e.Volume;
         prevQuantity = newQuantity;
         if (e.Price < array[0].Price * 0.05) {
-          console.log("low Price Cutoff");
           return {
             x: 0,
             y: newQuantity
@@ -95,7 +94,7 @@ class Market extends Component {
   render() {
     return (
       <div id="Market">
-        <h1>Market</h1>
+        <h1>Market Information</h1>
 
         {this.props.loaded &&
           this.props.binance.buy[0] && (
