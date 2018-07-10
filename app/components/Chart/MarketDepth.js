@@ -14,24 +14,6 @@ export default class MarketDepth extends Component {
   render() {
     return (
       <div className="marketDepthInner">
-        <svg style={{ height: 0 }}>
-          <defs>
-            <linearGradient id="green" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="rgba(38,230,0,0.9)" />
-
-              <stop offset="100%" stopColor=" rgba(38,230,0,0.2)" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <svg style={{ height: 0 }}>
-          <defs>
-            <linearGradient id="red" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="rgba(255, 15, 15,0.9)" />
-
-              <stop offset="100%" stopColor=" rgba(255, 15, 15,0.2)" />
-            </linearGradient>
-          </defs>
-        </svg>
         <VictoryChart
           animate={{
             duration: 1000,
@@ -86,19 +68,17 @@ export default class MarketDepth extends Component {
             animate={{ duration: 1000 }}
             style={{
               data: {
-                fill: "url(#green)",
-                opacity: 0.7
+                fill: "url(#green)"
               }
             }}
             labelComponent={<VictoryTooltip />}
             data={[...this.props.chartData]}
           />
           <VictoryArea
-            animate={{ duration: 2000 }}
+            animate={{ duration: 1000 }}
             style={{
               data: {
-                fill: "url(#red)",
-                opacity: 0.7
+                fill: "url(#red)"
               }
             }}
             labelComponent={<VictoryTooltip />}
@@ -106,14 +86,30 @@ export default class MarketDepth extends Component {
           />
           <VictoryAxis
             independentAxis
-            // style={{ tickLabels: { angle: -35 } }}
+            style={{ tickLabels: { angle: -15 } }}
             tickLabelComponent={
               <VictoryPortal>
                 <VictoryLabel />
               </VictoryPortal>
             }
           />
-        </VictoryChart>
+        </VictoryChart>{" "}
+        <svg style={{ height: 0 }}>
+          <defs>
+            <linearGradient id="green" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="rgba(38, 230, 0, 0.9)" />
+              <stop offset="100%" stopColor=" rgba(38, 230, 0, 0.2)" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <svg style={{ height: 0 }}>
+          <defs>
+            <linearGradient id="red" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="rgba(255, 15, 15,0.9)" />
+              <stop offset="100%" stopColor=" rgba(255, 15, 15,0.2)" />
+            </linearGradient>
+          </defs>
+        </svg>
       </div>
     );
   }

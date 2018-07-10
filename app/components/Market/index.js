@@ -94,7 +94,7 @@ class Market extends Component {
   render() {
     return (
       <div id="Market">
-        <h1>Market</h1>
+        <h1>Market Information</h1>
 
         {this.props.loaded &&
           this.props.binance.buy[0] && (
