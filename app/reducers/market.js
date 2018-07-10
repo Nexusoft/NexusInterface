@@ -4,17 +4,20 @@ const initialState = {
   binance: {
     info24hr: {},
     buy: [],
-    sell: []
+    sell: [],
+    candlesticks: []
   },
   cryptopia: {
     info24hr: {},
     buy: [],
-    sell: []
+    sell: [],
+    candlesticks: []
   },
   bittrex: {
     info24hr: {},
     buy: [],
-    sell: []
+    sell: [],
+    candlesticks: []
   },
   loaded: false
 };
@@ -76,6 +79,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loaded: true
+      };
+    case TYPE.BINANCE_CANDLESTICK:
+      return {
+        ...state,
+        binance: {
+          ...state.binance,
+          candlesticks: [...action.payload]
+        }
       };
     default:
       return state;

@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import Request from "request";
 
 import styles from "./style.css";
 import * as TYPE from "../../actions/actiontypes";
-import LineChart from "../Chart/Line.js";
 import MarketDepth from "../Chart/MarketDepth";
 import Candlestick from "../Chart/Candlestick";
 
@@ -34,6 +32,7 @@ class Market extends Component {
     this.props.binance24hrInfo();
     this.props.bittrex24hrInfo();
     this.props.cryptopia24hrInfo();
+    this.props.binanceCandlestickLoader();
   }
 
   formatBuyData(array) {
@@ -94,8 +93,9 @@ class Market extends Component {
   render() {
     return (
       <div id="Market">
-        <h1>Market Information</h1>
-
+        <div>
+          <h1>Market Information</h1>
+        </div>
         {this.props.loaded &&
           this.props.binance.buy[0] && (
             <div className="exchangeUnitContainer">
@@ -105,6 +105,9 @@ class Market extends Component {
                   chartData={this.formatChartData("binanceBuy")}
                   chartSellData={this.formatChartData("binanceSell")}
                 />
+                {this.props.binance.candlesticks[0] && (
+                  <Candlestick data={this.props.binance.candlesticks} />
+                )}
               </div>
             </div>
           )}
