@@ -93,7 +93,7 @@ export default class MarketDepth extends Component {
               </VictoryPortal>
             }
           />
-        </VictoryChart>{" "}
+        </VictoryChart>
         <svg style={{ height: 0 }}>
           <defs>
             <linearGradient id="green" x1="0" x2="0" y1="0" y2="1">
