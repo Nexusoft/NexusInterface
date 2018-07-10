@@ -4,6 +4,7 @@ import styles from "./style.css";
 import Table from "../../script/utilities-react";
 import * as RPC from "../../script/rpc";
 import { Promise } from "bluebird-lst";
+import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer} from 'victory';
 //import Analytics from "../../script/googleanalytics";
 
 export default class Transactions extends Component {
@@ -37,7 +38,8 @@ export default class Transactions extends Component {
       DataThisIsShowing: [{}],
       amountFilter: 0,
       categoryFilter: "all",
-      addressFilter: ""
+      addressFilter: "",
+      zoomDomain: { x: [new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()), new Date()] }
     };
   }
   componentDidMount() {
@@ -99,11 +101,24 @@ export default class Transactions extends Component {
               }
             );
           });
+          console.log(tempWalletTransactions);
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          console.log(tempWalletTransactions);
           this.setState(
             {
               walletTransactions:tempWalletTransactions,
               currentTransactions:tempWalletTransactions,
-              tableColumns:tabelheaders
+              tableColumns:tabelheaders,
+              zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date(tempWalletTransactions[tempWalletTransactions.length - 1].time * 1000)] }
             }
           );
           this.forceUpdate();
@@ -113,7 +128,7 @@ export default class Transactions extends Component {
   }
 
   DisplayPastWeek()
-  {tempdata
+  {
     this.setState(
       {
         displayTimeFrame:"Week"
@@ -366,6 +381,69 @@ export default class Transactions extends Component {
     });
   }
 
+
+  TEMPaddfaketransaction()
+  {
+    let faketrans = 
+    {
+      transactionnumber: (this.state.walletTransactions.length),
+      confirmations: 1000,
+      time: 3432423,
+      category:  "",
+      amount: (Math.random()*100),
+      txid: "00000000000000000000000000000000000000000",
+      account: "Random",
+      address: "1111111111111111111111111111111",
+      value: {
+        USD: 1.90,
+        BTC: 0.0003222
+      },
+      coin: "Nexus",
+      fee: 0
+    }
+    let hhhh = function() {
+      
+        let temp = Math.ceil(Math.random() * 4);
+        if (temp == 4)
+        {
+          return "send";
+        }
+        else if (temp == 1)
+        {
+          return "receive";
+        }
+        else if (temp == 2)
+        {
+          return "trust";
+        }
+        else{
+          return "genesis";
+        }
+      
+    }
+
+    let xxxx = function()
+    {
+      let start = new Date(2018,3,1);
+        let end = new Date(2018,7,2);
+        let yuuu = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        return yuuu.getTime() / 1000.0;
+    }
+
+    faketrans.category = hhhh();
+    faketrans.time = xxxx();
+
+
+    if (faketrans.category == "send")
+    {
+      faketrans.amount = faketrans.amount * -1;
+    }
+    console.log(faketrans);
+    return faketrans;
+  
+
+  }
+
   clickprevious()
   {
 
@@ -384,7 +462,6 @@ export default class Transactions extends Component {
   returnFormatedTableData()
   {
     const aaaa = this.returnAllFilters([...this.state.currentTransactions]);
-    console.log(aaaa.length);
     let bbbb = 0;
     return aaaa.map((ele) =>
       {
@@ -450,14 +527,139 @@ export default class Transactions extends Component {
     return tempColumns;
   }
 
+  returnChartData()
+  {
+    const aaaa = this.returnAllFilters([...this.state.currentTransactions]);
+    return aaaa.map((ele) =>
+    {
+      return{
+        a:new Date(ele.time * 1000),
+        b:ele.amount,
+        fill: "white",
+        category:ele.category
+      }
+    }
+    );
+  }
+
+  returnCorrectFillColor(inData)
+  {
+    if (inData.category == "receive")
+    {
+      return "green";
+    }
+    else if (inData.category == "send")
+    {
+      return "red";
+    }
+    else
+    {
+      return "gold";
+    }
+  }
+  returnCorrectStokeColor(inData)
+  {
+    if (inData.category == "receive")
+    {
+      return "#047717";
+    }
+    else if (inData.category == "send")
+    {
+      return "#770303";
+    }
+    else
+    {
+      return "#775d03";
+    }
+  }
+  
+  returnToolTipLable(inData)
+  {
+    return (inData.category + "\nAmount: " + inData.b + "\nTime:" + inData.a);
+  }
+
+  handleZoom(domain) {
+    this.setState({ zoomDomain: domain });
+  }
+
   render() { 
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
-
+    const getBarData = () => {
+      return [
+        { x: new Date(1986, 1, 1), y: 2 },
+        { x: new Date(1996, 1, 1), y: 3 },
+        { x: new Date(2006, 1, 1), y: 5 },
+        { x: new Date(2016, 1, 1), y: 4 }
+      ];
+    };
+    const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
 
     return (
-      <div>
-        <h1>Transactions here.</h1>
+      <div style={{overflow:"auto",height:"800px"}} >
+        <h2>Transactions</h2>
+        <div >
+        <VictoryChart width={400} height={270} scale={{ x: "time" }} 
+          theme={VictoryTheme.material}
+          domainPadding={{ x: 15 }}
+          padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
+          containerComponent={
+           
+            <VictoryZoomVoronoiContainer
+              zoomDimension="x"
+              zoomDomain={this.state.zoomDomain}
+              onZoomDomainChange={this.handleZoom.bind(this)}
+            />
+          }
+        >
+            <VictoryBar
+              style={{
+                data: {
+                  fill: (d) => this.returnCorrectFillColor(d),
+                  stroke: (d) => this.returnCorrectStokeColor(d),
+                  fillOpacity: 1,
+                  strokeWidth: 1
+                }
+              }}
+              labelComponent={<VictoryTooltip/>}
+              labels={(d) => this.returnToolTipLable(d)}
+              data={this.returnChartData()}
+              x="a"
+              y="b"
+            />
+
+          </VictoryChart>
+
+          <VictoryChart
+            padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+            width={600} height={50} scale={{ x: "time" }}
+            theme={VictoryTheme.material}
+            domainPadding={{ x: 15 }}
+            containerComponent={
+              <VictoryBrushContainer
+                brushDimension="x"
+                brushDomain={this.state.zoomDomain}
+                brushStyle={{fill: "white", opacity: 0.4}}
+                onBrushDomainChange={this.handleZoom.bind(this)}
+              />
+            }
+          >
+           <VictoryAxis/>
+            <VictoryBar
+              style={{
+                data: { 
+                  stroke: "tomato",
+                  fill: (d) => this.returnCorrectFillColor(d),
+                 }
+              }}
+              data={this.returnChartData()}
+              x="a"
+              y="b"
+            />
+          </VictoryChart>
+
+
+      </div>
         <a id="timeshown">Time Displaying: {this.state.displayTimeFrame}</a> <br/>
         <button id="showpast-week-button" value="Show Past Week" onClick={() => this.DisplayPastWeek()}>Show Past Week </button>
         <button id="showpast-month-button" value="Show Past Month" onClick={() => this.DisplayPastMonth()} > Show Past Month </button>
