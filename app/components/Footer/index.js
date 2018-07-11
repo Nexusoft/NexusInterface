@@ -35,6 +35,9 @@ export default class Footer extends Component {
           <Link to="/SecurityLogin">
             <img src="images/icon-security.png" alt="Security" />
           </Link>
+          <Link to="/StyleGuide">
+            <img src="images/icon-developer.png" alt="Style Guide" />
+          </Link>
           <Link to="/List">
             <img src="images/icon-trustlist.png" alt="List" />
           </Link>

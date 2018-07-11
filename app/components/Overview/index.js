@@ -167,37 +167,46 @@ class Overview extends Component {
   render() {
     return (
       <div id="overviewPage">
-        <div id="left-stats">
-          <div className="grid-container">
-            <div className="h2">Balance</div>
+        <div className="left-stats">           
+
+          <div className="h2">Balance</div>
+          <div id="nxs-balance-info">
             <div className="overviewValue">{this.props.balance}</div>
-            <div id="coin">NXS</div>
+            {/* <div id="coin">NXS</div> */}
+            <img src={nxsStake} />
           </div>
-          <div className="grid-container">
-            <div className="balance-info">
-              <div className="h2">Currency Value</div>
-              <div className="overviewValue">$0.00</div>
-              <div id="currency">USD</div>
-            </div>
+
+          <div className="h2">Currency Value</div>
+          <div id="nxs-currency-value-info">
+            <div className="overviewValue">$0.00</div>
+            {/* <div id="currency">USD</div> */}
+            <img src={nxsStake} />
           </div>
-          <div className="grid-container">
-            <div className="balance-info">
-              <div className="h2">Transactions</div>
-              <div className="overviewValue">0</div>
-            </div>
+
+          <div className="h2">Transactions</div>
+          <div id="nxs-transactions-info">
+            <div className="overviewValue">0</div>
+            <img src={nxsStake} />
           </div>
-          <div className="grid-container">
-            <div className="balance-info">
-              <div className="h2">Market Price</div>
-              <div className="overviewValue">0</div>
-            </div>
+
+          <div className="h2">Market Price</div>
+          <div id="nxs-market-price-info">
+            <div className="overviewValue">0</div>
+            <img src={nxsStake} />
           </div>
-          <div className="grid-container">
-            <div className="balance-info">
-              <div className="h2">Market Price</div>
-              <div className="overviewValue">0</div>
-            </div>
+
+          <div className="h2">Market Price</div>
+          <div id="nxs-market-price-info">
+            <div className="overviewValue">0</div>
+            <img src={nxsStake} />
           </div>
+
+          <div className="h2">Market Price</div>
+          <div id="nxs-market-price-info">
+            <div className="overviewValue">0</div>
+            <img src={nxsStake} />
+          </div>
+
         </div>
         <NetworkGlobe />
         <div className="right-stats">

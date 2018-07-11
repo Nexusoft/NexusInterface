@@ -74,7 +74,7 @@ II. BALANCE
   letter-spacing: 6px;
 }
 .overviewValue {
-  font-family: var(--font-1);
+  /* font-family: var(--font-1); */
   font-size: 2em;
   font-weight: 800;
   letter-spacing: 1px;
@@ -107,24 +107,49 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   letter-spacing: 3px;
   margin-right: -3px;
 }
-#left-stats {
+.left-stats {
   position: relative;
   right: 0px;
   top: 0px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-self: center;
   z-index: 99999;
-  text-align: center;
-  justify-content: space-between;
-  padding-left: 30px;
+  text-align: right;
+  /* justify-content: space-between; */
+  padding-left: 40px;
 }
-#left-stats img {
+.left-stats img {
   width: 35px;
   height: 35px;
   padding-top: 5px;
   padding-left: 20px;
 }
+#nxs-balance-info {
+  display: flex;
+  justify-content: flex-end;
+}
+#nxs-currency-value-info {
+  display: flex;
+  justify-content: flex-end;
+}
+#nxs-transactions-info {
+  display: flex;
+  justify-content: flex-end;
+}
+#nxs-market-price-info {
+  display: flex;
+  justify-content: flex-end;
+}
+#nxs-interestweight-info {
+  display: flex;
+  justify-content: flex-start;
+}
+#nxs-stakeweight-info {
+  display: flex;
+  justify-content: flex-start;
+}
+
 
 /*------------------------------------------------------------------
 V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
