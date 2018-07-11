@@ -38,8 +38,10 @@
       rgba(17, 17, 17, 0.45),
       rgba(17, 17, 17, 0.45)
     );
-    --background-main-image:  url("https://images7.alphacoders.com/428/428134.jpg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
-
+    /* --background-main-image:  url("https://images7.alphacoders.com/428/428134.jpg"); <-- Full Screen Background Image for Nexus Earth Theme */
+    --background-main-image:  url("../images/background/nexus-conference.png"); /* <-- Full Screen Background Image for Nexus Earth Theme */
+ 
+    
   /* FONTS */
   --font-1: "Myriad Pro"; /* <-- Sourced Above in First @font-face*/
   --font-2: "Franklin Gothic"; /* <-- Sourced Above in Second @font-face */
