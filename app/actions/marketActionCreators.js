@@ -146,3 +146,38 @@ export const bittrexDepthLoader = () => {
     );
   };
 };
+
+// actions creators for candlestick data
+
+export const binanceCandlestickLoader = () => {
+  return dispatch => {
+    Request(
+      {
+        url: "https://api.binance.com/api/v1/klines?symbol=NXSBTC&interval=1d",
+        json: true
+      },
+      (error, response, body) => {
+        if (response.statusCode === 200) {
+          let res = body.map(e => {
+            return {
+              x: new Date(e[0]),
+              open: parseFloat(e[1]),
+              close: parseFloat(e[4]),
+              high: parseFloat(e[2]),
+              low: parseFloat(e[3]),
+              label: `Date: ${new Date(e[0]).getMonth()}/${new Date(
+                e[0]
+              ).getDate()}/${new Date(e[0]).getFullYear()}
+              Open: ${parseFloat(e[1])}
+              Close: ${parseFloat(e[4])}
+              High: ${parseFloat(e[2])}
+              Low: ${parseFloat(e[3])}`
+            };
+          });
+          dispatch({ type: TYPE.BINANCE_CANDLESTICK, payload: res });
+          dispatch(marketDataLoaded());
+        }
+      }
+    );
+  };
+};
