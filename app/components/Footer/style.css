@@ -1,7 +1,4 @@
 #Footer {
-  /* position: fixed;
-  bottom: 0;
-  width: 100%; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,6 +16,7 @@
     var(--color-2) 50%,
     transparent 100%
   );
+  z-index: 1;
 }
 
 #navigation {
