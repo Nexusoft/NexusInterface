@@ -34,9 +34,13 @@
   --color-3: #ffffff; /* <-- White */
 
   /* BACKGROUND IMAGE VARIABLES */
-  --background-main-gradient: linear-gradient(
+  /* --background-main-gradient: linear-gradient(
       rgba(17, 17, 17, 0.45),
       rgba(17, 17, 17, 0.45)
+    ); */
+    --background-main-gradient: linear-gradient(
+      rgba(17, 17, 17, 0),
+      rgba(17, 17, 17, 0)
     );
     /* --background-main-image:  url("https://images7.alphacoders.com/428/428134.jpg"); <-- Full Screen Background Image for Nexus Earth Theme */
     --background-main-image:  url("../images/background/nexus-conference.png"); /* <-- Full Screen Background Image for Nexus Earth Theme */
@@ -62,37 +66,36 @@ body {
   overflow-y: hidden;
 }
 
+#root {
+  height: 100%;
+}
+
 #app {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  margin: 0 auto;
-  flex-grow: 1;
-  
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: 85px auto 75px;
+  grid-template-areas:
+    "header"
+    "content"
+    "navigation"
 }
 
 #app-header {
-  flex-grow: 0;
-  flex-shrink: 0;
+  grid-area: header;
 }
 
 #app-content {
-  flex-grow: 1;
+  grid-area: content;
   overflow: auto;
-  padding: 0 2em;
 }
 
 #app-content-container {
+  height: 100%;
   max-width: 80%;
   margin: 0 auto;
 }
 
 #app-navigation {
-  flex-grow: 0;
-  flex-shrink: 0;
-  z-index: 1;
+  grid-area: navigation;
 }

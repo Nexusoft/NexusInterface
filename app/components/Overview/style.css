@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
+  height: 100%;
 }
 
 #globe {
@@ -103,21 +103,16 @@ III. CONTAINER
 IV. LEFT CONTENT - connection, Block Weight, Block Count
 ------------------------------------------------------------------*/
 .h2 {
-  padding-top: 4vh;
   letter-spacing: 3px;
   margin-right: -3px;
 }
 .left-stats {
-  position: relative;
-  right: 0px;
-  top: 0px;
   display: flex;
+  width: 200px;
   flex-direction: column;
   align-self: center;
-  z-index: 99999;
   text-align: right;
-  /* justify-content: space-between; */
-  padding-left: 40px;
+  z-index: 1;
 }
 .left-stats img {
   width: 35px;
@@ -125,44 +120,23 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   padding-top: 5px;
   padding-left: 20px;
 }
-#nxs-balance-info {
-  display: flex;
-  justify-content: flex-end;
+.left-stats > div {
+  margin: 1em 0;
 }
-#nxs-currency-value-info {
-  display: flex;
-  justify-content: flex-end;
+.left-stats > div img {
+  float: right;
 }
-#nxs-transactions-info {
-  display: flex;
-  justify-content: flex-end;
-}
-#nxs-market-price-info {
-  display: flex;
-  justify-content: flex-end;
-}
-#nxs-interestweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-stakeweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-
 
 /*------------------------------------------------------------------
 V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
 ------------------------------------------------------------------*/
 .right-stats {
-  position: relative;
-  right: 0px;
-  top: 0px;
   display: flex;
+  width: 200px;
   flex-direction: column;
   align-self: center;
   text-align: left;
-  padding-right: 40px;
+  z-index: 1;
 }
 .right-stats img {
   width: 35px;
@@ -170,53 +144,11 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
   padding-top: 5px;
   padding-right: 20px;
 }
-#nxs-connections-info {
-  display: flex;
-  justify-content: flex-start;
+.right-stats > div {
+  margin: 1em 0;
 }
-#nxs-getinfo-connections {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-blockweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-blockweight {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-blocks-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-blocks {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-trustweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-trustweight {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-interestweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-interestweight {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-stakeweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-stakeweight {
-  font-size: 2em;
-  font-weight: 800;
+.right-stats > div img {
+  float: left;
 }
 
 /*------------------------------------------------------------------
