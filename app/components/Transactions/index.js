@@ -1,13 +1,38 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
+import {connect} from "react-redux";
+import {remote} from "electron";
 import Table from "../../script/utilities-react";
 import * as RPC from "../../script/rpc";
 import { Promise } from "bluebird-lst";
+import * as TYPE from "../../actions/actiontypes";
 import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer} from 'victory';
 //import Analytics from "../../script/googleanalytics";
 
-export default class Transactions extends Component {
+const mapStateToProps = state => {
+  return { ...state.transactions };
+};
+const mapDispatchToProps = dispatch => ({
+  SetWalletTransactionArray: returnData =>
+  {
+    dispatch({type:TYPE.SET_WALL_TRANS,payload:returnData})
+  },
+  SetSendAgainData: returnData =>
+  {
+    dispatch({type:TYPE.SET_TRANSACTION_SENDAGAIN,payload:returnData})
+  },
+  SetExploreInfo: returnData =>
+  {
+    dispatch({type:TYPE.SET_TRANSACTION_EXPLOREINFO,payload:returnData})
+  }
+});
+
+class Transactions extends Component {
+  static contextTypes = {
+    router: React.PropTypes.object
+  };
+
 
   constructor(props)
   {
@@ -39,11 +64,209 @@ export default class Transactions extends Component {
       amountFilter: 0,
       categoryFilter: "all",
       addressFilter: "",
-      zoomDomain: { x: [new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()), new Date()] }
+      zoomDomain: { x: [new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()), new Date()] },
+      isHoveringOverTable: false,
+      hoveringID: 999999999999
     };
   }
   componentDidMount() {
     this.getTransactionData();
+
+
+    
+    
+    console.log(window);
+    console.log(remote);
+    console.log(this);
+
+    this.transactioncontextfunction = this.transactioncontextfunction.bind(this);
+
+    //Remove Previous vent
+    //window.removeEventListener("contextmenu", REGISTRY.REGISTER.ContextMenu);
+    //regester this event
+    //REGISTRY.REGISTER.ContextMenu = transactioncontextfunction;
+    //Add new listener
+    window.addEventListener("contextmenu", this.transactioncontextfunction, false);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener("contextmenu",this.transactioncontextfunction);
+  }
+
+  /// Transaction Context Function
+    /// This is the method that is called when the user pressed the right click 
+    /// Input:
+    ///   e || Event || Default Events given by the system for right click
+    transactioncontextfunction(e) {
+      // Prevent default action of right click
+      e.preventDefault();
+
+
+
+      const template = [
+        {
+          label: 'File',
+          submenu: [
+      
+            {
+              label: 'Copy',
+              role: 'copy',
+              
+            }
+          ]
+        },
+        {
+            label: 'Reload',
+            accelerator: 'CmdOrCtrl+R',
+            click (item, focusedWindow) {
+              if (focusedWindow) focusedWindow.reload()
+            }
+        }
+      ]
+      
+      console.log(this.state);
+
+      //build default
+      let defaultcontextmenu = remote.Menu.buildFromTemplate(template);
+      //create new custom
+      let transactiontablecontextmenu = new remote.Menu();
+
+      
+
+      let moreDatailsCallback = function() {
+          console.log("12121");
+          console.log(this.state);
+          // openmoredetailmodal();
+      }
+      moreDatailsCallback = moreDatailsCallback.bind(this);
+
+
+
+      transactiontablecontextmenu.append(
+        new remote.MenuItem({
+          label: "More Details",
+          click() {
+            moreDatailsCallback();
+           // openmoredetailmodal();
+          }
+        })
+      );
+
+      let tablecopyaddresscallback = function () {
+        this.copysomethingtotheclipboard(this.state.walletTransactions[this.state.hoveringID].address);
+      }
+      tablecopyaddresscallback = tablecopyaddresscallback.bind(this);
+      
+      let tablecopyamountcallback = function () {
+        this.copysomethingtotheclipboard(this.state.walletTransactions[this.state.hoveringID].amount);
+      }
+      tablecopyamountcallback = tablecopyamountcallback.bind(this);
+
+      let tablecopyaccountcallback = function () {
+        this.copysomethingtotheclipboard(this.state.walletTransactions[this.state.hoveringID].account);
+      }
+      tablecopyaccountcallback = tablecopyaccountcallback.bind(this);
+      
+      console.log(this);
+      transactiontablecontextmenu.append(
+        new remote.MenuItem({
+          label: "Copy",
+          submenu: [
+      
+            {
+              label: "Address",
+              click() {
+                tablecopyaddresscallback();
+              }
+            },
+            {
+              label: "Account",
+              click() {
+                tablecopyaccountcallback();
+              }
+            },
+            {
+              label: "Amount",
+              click() {
+                tablecopyamountcallback();
+              }
+            }
+          ]
+        })
+       
+      );
+
+      console.log(transactiontablecontextmenu);
+
+
+      let sendtoSendPagecallback = function()
+      {
+       
+        this.props.SetSendAgainData({
+          address: this.state.walletTransactions[this.state.hoveringID].address,
+          account: this.state.walletTransactions[this.state.hoveringID].account,
+          amount: this.state.walletTransactions[this.state.hoveringID].amount
+        });
+        this.context.router.history.push('/SendRecieve');
+      }
+      sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
+
+      let sendtoBlockExplorercallback = function() {
+        
+        this.props.SetExploreInfo(
+          {
+            transactionId: this.state.walletTransactions[this.state.hoveringID].txid
+          }
+        );
+        this.context.router.history.push('/BlockExplorer');
+        TRANSACTIONS.TXIDtosearch =
+        this.state.walletTransactions[this.state.hoveringID].txid;
+      }
+
+      sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
+
+      //Add Resending the transaction option
+      transactiontablecontextmenu.append(
+        new remote.MenuItem({
+          label: "Send Again",
+          click() {
+
+            sendtoSendPagecallback();
+            
+          }
+        })
+      );
+      //Add Open Explorer Option
+      transactiontablecontextmenu.append(
+        new remote.MenuItem({
+          label: "Open Explorer",
+          click() {
+            sendtoBlockExplorercallback();
+          }
+        })
+      );
+
+      if (this.state.isHoveringOverTable) {
+        transactiontablecontextmenu.popup(remote.getCurrentWindow());
+      } else {
+        defaultcontextmenu.popup(remote.getCurrentWindow());
+      }
+    }
+
+
+  /// Copy Something To The Clipboard
+  /// Copies the input to the clipboard
+  /// Input :
+  ///   instringtocopy      || String || String to copy 
+  copysomethingtotheclipboard(instringtocopy)
+  {
+    let tempelement = document.createElement("textarea");
+    tempelement.value = instringtocopy;
+    document.body.appendChild(tempelement);
+    tempelement.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempelement);
   }
 
   getTransactionData()
@@ -113,6 +336,8 @@ export default class Transactions extends Component {
           tempWalletTransactions.push(this.TEMPaddfaketransaction());
           tempWalletTransactions.push(this.TEMPaddfaketransaction());
           console.log(tempWalletTransactions);
+          this.props.SetWalletTransactionArray(tempWalletTransactions);
+          console.log(this.props.walletitems);
           this.setState(
             {
               walletTransactions:tempWalletTransactions,
@@ -454,8 +679,9 @@ export default class Transactions extends Component {
     console.log("next");
   }
 
-  tryingsomething(e)
+  tryingsomething(e,indata)
   {
+    console.log(indata);
     console.log("try");
   }
 
@@ -582,6 +808,26 @@ export default class Transactions extends Component {
     this.setState({ zoomDomain: domain });
   }
 
+  mouseOverCallback(e, inData)
+  {
+    this.setState(
+      {
+        isHoveringOverTable:true,
+        hoveringID:inData.index
+
+      }
+    )
+  }
+
+  mouseOutCallback(e)
+  {
+    this.setState(
+      {
+        isHoveringOverTable:false
+      }
+    )
+  }
+
   render() { 
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
@@ -679,9 +925,13 @@ export default class Transactions extends Component {
             <button id="download-cvs-button" value="Download CSV" onClick={() => this.DownloadCSV()} > Download CSV </button> 
         </left>
 
-         <Table key="table-top" data={data} columns={columns} selectCallback={this.tryingsomething} defaultsortingid={1}/>
+         <Table key="table-top" data={data} columns={columns} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
       </div>
 
     );
   }
 }
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Transactions);
