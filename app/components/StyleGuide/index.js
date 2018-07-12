@@ -7,6 +7,7 @@ export default class StyleGuide extends Component {
     return (
 
 <div id="styleguide">
+<div id="styleguide-container">
 
 	<h2>Style Guide</h2>
 
@@ -872,6 +873,7 @@ Lorem ipsum ...
 		<input type="button" value="TestModal" onClick={testmodal()}/>
 	</section>
 
+</div>
 </div>
 </div>
 </div>

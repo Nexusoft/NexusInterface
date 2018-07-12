@@ -94,8 +94,32 @@ body {
   height: 100%;
   max-width: 80%;
   margin: 0 auto;
+  /* position: relative; */
 }
 
 #app-navigation {
   grid-area: navigation;
+}
+
+/* Scrollbar */ 
+::-webkit-scrollbar { 
+	width: 10px;
+  background: rgba(0,0,0,0.5);
+ } 
+
+/* Track */ 
+::-webkit-scrollbar-track { 
+} 
+
+/* Handle */ 
+::-webkit-scrollbar-thumb { 
+  background: var(--color-2); 
+} 
+
+::-webkit-scrollbar-thumb:window-inactive { 
+	background: var(--color-2); 
+}
+
+::-webkit-scrollbar-corner { 
+  background: rgba(0,0,0,0.5);
 }

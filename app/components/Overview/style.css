@@ -1,18 +1,11 @@
-.overviewInfo {
-  display: flex;
-  flex-direction: column;
-}
-
 #overviewPage {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   height: 100%;
+  margin: 0 -10%;
 }
 
-#globe {
-  width: 400px;
-}
 /*------------------------------------------------------------------
 [OVERVIEW MODULE Stylesheet] Overview Module CSS
 --------------------------------------------------------------------
@@ -27,27 +20,21 @@ Table of Contents
 /*------------------------------------------------------------------
 	I. GENERAL
 ------------------------------------------------------------------*/
-section {
-  --column-width: 4;
-  position: relative;
-  padding-top: calc(var(--gutter));
-  padding-bottom: calc(var(--gutter));
+.h2 {
+  letter-spacing: 3px;
+  margin-right: -3px;
 }
 
 /*------------------------------------------------------------------
 I. NEXUS EARTH VISUALIZATION
 ------------------------------------------------------------------*/
 .earth {
-  position: absolute;
-  top: 0px;
-  left: 0px;
   margin: 0 auto;
   order: 0;
   flex-shrink: 1;
   flex-basis: auto;
   align-self: auto;
   align-items: center;
-  overflow: hidden;
 }
 #nxs-earth {
   position: absolute;
@@ -65,47 +52,20 @@ canvas {
 /*------------------------------------------------------------------
 II. BALANCE
 ------------------------------------------------------------------*/
-.balance-info {
-  --column-width: 6;
-}
-#balance {
-  padding-top: 20px;
-  font-size: 14px;
-  letter-spacing: 6px;
-}
 .overviewValue {
-  /* font-family: var(--font-1); */
   font-size: 2em;
   font-weight: 800;
   letter-spacing: 1px;
-  /* padding-top: 10px; */
   margin-right: -1px;
-}
-#coin {
-  font-size: 14px;
-  padding-bottom: 25px;
-  margin-top: -15px;
 }
 
 /*------------------------------------------------------------------
 III. CONTAINER
 ------------------------------------------------------------------*/
-#interface-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: stretch;
-  align-content: stretch;
-}
 
 /*------------------------------------------------------------------
 IV. LEFT CONTENT - connection, Block Weight, Block Count
 ------------------------------------------------------------------*/
-.h2 {
-  letter-spacing: 3px;
-  margin-right: -3px;
-}
 .left-stats {
   display: flex;
   width: 200px;

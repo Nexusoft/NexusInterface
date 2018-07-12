@@ -173,14 +173,12 @@ class Overview extends Component {
             <div className="h2">Balance (NXS)</div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.balance}</div>
-            {/* <div id="coin">NXS</div> */}
           </div>
 
           <div id="nxs-currency-value-info">
             <div className="h2">Currency Value (USD)</div>
             <img src={nxsStake} />
             <div className="overviewValue">$0.00</div>
-            {/* <div id="currency">USD</div> */}
           </div>
           
           <div id="nxs-transactions-info">
