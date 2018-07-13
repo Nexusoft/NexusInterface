@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   height: 875px;
+  /* height: 55em; */
   width: 100%;
   overflow: auto;
 }
@@ -37,4 +38,13 @@
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.marketSummaryTable {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.marketSummaryTable div {
+  border-bottom: 1px solid white;
 }

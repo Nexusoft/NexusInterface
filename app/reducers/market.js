@@ -88,6 +88,22 @@ export default (state = initialState, action) => {
           candlesticks: [...action.payload]
         }
       };
+    case TYPE.BITTREX_CANDLESTICK:
+      return {
+        ...state,
+        bittrex: {
+          ...state.bittrex,
+          candlesticks: [...action.payload]
+        }
+      };
+    case TYPE.CRYPTOPIA_CANDLESTICK:
+      return {
+        ...state,
+        cryptopia: {
+          ...state.cryptopia,
+          candlesticks: [...action.payload]
+        }
+      };
     default:
       return state;
   }

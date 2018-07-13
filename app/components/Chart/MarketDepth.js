@@ -15,10 +15,6 @@ export default class MarketDepth extends Component {
     return (
       <div className="marketDepthInner">
         <VictoryChart
-          animate={{
-            duration: 1000,
-            onLoad: { duration: 1000 }
-          }}
           theme={{
             axis: {
               style: {
@@ -65,7 +61,6 @@ export default class MarketDepth extends Component {
           />
 
           <VictoryArea
-            animate={{ duration: 1000 }}
             style={{
               data: {
                 fill: "url(#green)"
@@ -75,7 +70,6 @@ export default class MarketDepth extends Component {
             data={[...this.props.chartData]}
           />
           <VictoryArea
-            animate={{ duration: 1000 }}
             style={{
               data: {
                 fill: "url(#red)"

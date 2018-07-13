@@ -48,7 +48,7 @@ export default class Candlestick extends Component {
         >
           <VictoryAxis
             tickFormat={t =>
-              `${new Date(t).getDate()}/${new Date(t).getMonth()}`
+              `${new Date(t).getDate()}/${new Date(t).getMonth() + 1}`
             }
             tickLabelComponent={
               <VictoryPortal>
@@ -57,7 +57,7 @@ export default class Candlestick extends Component {
             }
           />
 
-          <VictoryAxis dependentAxis style={{ tickLabels: { angle: -35 } }} />
+          <VictoryAxis dependentAxis style={{ tickLabels: { angle: -45 } }} />
           <VictoryCandlestick
             style={{ data: { stroke: "white" } }}
             candleColors={{
