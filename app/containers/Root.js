@@ -44,7 +44,7 @@ export default function Root({ store, history }: RootType) {
             <Route exact path="/Market" component={Market} />
             <Route exact path="/Addressbook" component={Addressbook} />
             <Route exact path="/BlockExplorer" component={BlockExplorer} />
-            <Route exact path="/Settings" component={Settings} />
+            <Route path="/Settings" component={Settings} />
             <Route exact path="/Terminal" component={Terminal} />
             <Route exact path="/SecurityLogin" component={SecurityLogin} />
             <Route exact path="/StyleGuide" component={StyleGuide} />
