@@ -95,7 +95,7 @@ class Header extends Component {
           </div>
         </div>
         <Link to="/">
-          <img src="images/NXS-logo-min.png" alt="Nexus Logo" id="test" />
+          <img id="logo" src="images/NXS-logo-min.png" alt="Nexus Logo" />
         </Link>
 
         <div id="hdr-line" />

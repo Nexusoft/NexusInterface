@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+@import "./base/normalize.css";
+@import "./base/grid.css";
+@import "./base/buttons.css";
+@import "./base/forms.css";
+@import "./base/palette.css";
+@import "./base/tables.css";
+@import "./base/text.css";
+
+@import "./controls/panel.css";
+@import "./controls/progress.css";
+@import "./controls/switch.css";
+
 @import "~font-awesome/css/font-awesome.css";
 @import "../components/Footer/style.css";
 @import "../components/Header/style.css";
@@ -7,12 +21,11 @@
 @import "../components/Market/style.css";
 @import "../components/Overview/style.css";
 @import "../components/SecurityLogin/style.css";
+@import "../components/StyleGuide/style.css";
 @import "../components/SendRecieve/style.css";
 @import "../components/Settings/style.css";
 @import "../components/Terminal/style.css";
 @import "../components/Transactions/style.css";
-
-@import "./base/text.css";
 
 :root {
   /* COLOR PALETTE VARIABLES */
@@ -21,12 +34,18 @@
   --color-3: #ffffff; /* <-- White */
 
   /* BACKGROUND IMAGE VARIABLES */
-  --background-main: linear-gradient(
+  /* --background-main-gradient: linear-gradient(
       rgba(17, 17, 17, 0.45),
       rgba(17, 17, 17, 0.45)
-    ),
-    url("https://images7.alphacoders.com/428/428134.jpg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
-
+    ); */
+    --background-main-gradient: linear-gradient(
+      rgba(17, 17, 17, 0),
+      rgba(17, 17, 17, 0)
+    );
+    /* --background-main-image:  url("https://images7.alphacoders.com/428/428134.jpg"); <-- Full Screen Background Image for Nexus Earth Theme */
+    --background-main-image:  url("../images/background/nexus-conference.png"); /* <-- Full Screen Background Image for Nexus Earth Theme */
+ 
+    
   /* FONTS */
   --font-1: "Myriad Pro"; /* <-- Sourced Above in First @font-face*/
   --font-2: "Franklin Gothic"; /* <-- Sourced Above in Second @font-face */
@@ -41,13 +60,66 @@ body {
   color: white;
   height: 100vh;
   background-color: #232c39;
-  background-image: var(--background-main);
-  font-family: Arial, Helvetica, Helvetica Neue, serif;
+  background-image: var(--background-main-gradient), var(--background-main-image);
+  /* font-family: Arial, Helvetica, Helvetica Neue, serif; */
+  font-family: 'Roboto', sans-serif;
   overflow-y: hidden;
 }
 
-#App {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+#root {
+  height: 100%;
+}
+
+#app {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: 85px auto 75px;
+  grid-template-areas:
+    "header"
+    "content"
+    "navigation"
+}
+
+#app-header {
+  grid-area: header;
+}
+
+#app-content {
+  grid-area: content;
+  overflow: auto;
+}
+
+#app-content-container {
+  height: 100%;
+  max-width: 80%;
+  margin: 0 auto;
+  /* position: relative; */
+}
+
+#app-navigation {
+  grid-area: navigation;
+}
+
+/* Scrollbar */ 
+::-webkit-scrollbar { 
+	width: 10px;
+  background: rgba(0,0,0,0.5);
+ } 
+
+/* Track */ 
+::-webkit-scrollbar-track { 
+} 
+
+/* Handle */ 
+::-webkit-scrollbar-thumb { 
+  background: var(--color-2); 
+} 
+
+::-webkit-scrollbar-thumb:window-inactive { 
+	background: var(--color-2); 
+}
+
+::-webkit-scrollbar-corner { 
+  background: rgba(0,0,0,0.5);
 }

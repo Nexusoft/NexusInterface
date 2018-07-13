@@ -2,10 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 875px;
-  /* height: 55em; */
-  width: 100%;
-  overflow: auto;
 }
 
 .exchangeUnitContainer {

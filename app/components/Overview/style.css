@@ -1,18 +1,11 @@
-.overviewInfo {
-  display: flex;
-  flex-direction: column;
-}
-
 #overviewPage {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
+  height: 100%;
+  margin: 0 -10%;
 }
 
-#globe {
-  width: 400px;
-}
 /*------------------------------------------------------------------
 [OVERVIEW MODULE Stylesheet] Overview Module CSS
 --------------------------------------------------------------------
@@ -27,27 +20,21 @@ Table of Contents
 /*------------------------------------------------------------------
 	I. GENERAL
 ------------------------------------------------------------------*/
-section {
-  --column-width: 4;
-  position: relative;
-  padding-top: calc(var(--gutter));
-  padding-bottom: calc(var(--gutter));
+.h2 {
+  letter-spacing: 3px;
+  margin-right: -3px;
 }
 
 /*------------------------------------------------------------------
 I. NEXUS EARTH VISUALIZATION
 ------------------------------------------------------------------*/
 .earth {
-  position: absolute;
-  top: 0px;
-  left: 0px;
   margin: 0 auto;
   order: 0;
   flex-shrink: 1;
   flex-basis: auto;
   align-self: auto;
   align-items: center;
-  overflow: hidden;
 }
 #nxs-earth {
   position: absolute;
@@ -65,79 +52,51 @@ canvas {
 /*------------------------------------------------------------------
 II. BALANCE
 ------------------------------------------------------------------*/
-.balance-info {
-  --column-width: 6;
-}
-#balance {
-  padding-top: 20px;
-  font-size: 14px;
-  letter-spacing: 6px;
-}
 .overviewValue {
-  font-family: var(--font-1);
   font-size: 2em;
   font-weight: 800;
   letter-spacing: 1px;
-  /* padding-top: 10px; */
   margin-right: -1px;
-}
-#coin {
-  font-size: 14px;
-  padding-bottom: 25px;
-  margin-top: -15px;
 }
 
 /*------------------------------------------------------------------
 III. CONTAINER
 ------------------------------------------------------------------*/
-#interface-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: stretch;
-  align-content: stretch;
-}
 
 /*------------------------------------------------------------------
 IV. LEFT CONTENT - connection, Block Weight, Block Count
 ------------------------------------------------------------------*/
-.h2 {
-  padding-top: 4vh;
-  letter-spacing: 3px;
-  margin-right: -3px;
-}
-#left-stats {
-  position: relative;
-  right: 0px;
-  top: 0px;
+.left-stats {
   display: flex;
+  width: 200px;
   flex-direction: column;
-  align-items: center;
-  z-index: 99999;
-  text-align: center;
-  justify-content: space-between;
-  padding-left: 30px;
+  align-self: center;
+  text-align: right;
+  z-index: 1;
 }
-#left-stats img {
+.left-stats img {
   width: 35px;
   height: 35px;
   padding-top: 5px;
   padding-left: 20px;
+}
+.left-stats > div {
+  margin: 1em 0;
+}
+.left-stats > div img {
+  float: right;
 }
 
 /*------------------------------------------------------------------
 V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
 ------------------------------------------------------------------*/
 .right-stats {
-  position: relative;
-  right: 0px;
-  top: 0px;
   display: flex;
+  width: 200px;
   flex-direction: column;
   align-self: center;
   text-align: left;
-  padding-right: 40px;
+  z-index: 1;
 }
 .right-stats img {
   width: 35px;
@@ -145,53 +104,11 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
   padding-top: 5px;
   padding-right: 20px;
 }
-#nxs-connections-info {
-  display: flex;
-  justify-content: flex-start;
+.right-stats > div {
+  margin: 1em 0;
 }
-#nxs-getinfo-connections {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-blockweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-blockweight {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-blocks-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-blocks {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-trustweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-trustweight {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-interestweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-interestweight {
-  font-size: 2em;
-  font-weight: 800;
-}
-#nxs-stakeweight-info {
-  display: flex;
-  justify-content: flex-start;
-}
-#nxs-getinfo-stakeweight {
-  font-size: 2em;
-  font-weight: 800;
+.right-stats > div img {
+  float: left;
 }
 
 /*------------------------------------------------------------------
