@@ -7,6 +7,7 @@ import Table from "../../script/utilities-react";
 import * as RPC from "../../script/rpc";
 import { Promise } from "bluebird-lst";
 import * as TYPE from "../../actions/actiontypes";
+import Modal from 'react-responsive-modal';
 import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer} from 'victory';
 //import Analytics from "../../script/googleanalytics";
 
@@ -66,7 +67,8 @@ class Transactions extends Component {
       addressFilter: "",
       zoomDomain: { x: [new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()), new Date()] },
       isHoveringOverTable: false,
-      hoveringID: 999999999999
+      hoveringID: 999999999999,
+      open: false
     };
   }
   componentDidMount() {
@@ -137,6 +139,11 @@ class Transactions extends Component {
       let moreDatailsCallback = function() {
           console.log("12121");
           console.log(this.state);
+          this.setState(
+            {
+              open:true
+            }
+          )
           // openmoredetailmodal();
       }
       moreDatailsCallback = moreDatailsCallback.bind(this);
@@ -828,6 +835,301 @@ class Transactions extends Component {
     )
   }
 
+  /// Get History Data Json
+  /// Either load in the file from local or start downloading more data and make a new one. 
+  gethistorydatajson()
+  {
+    let fs = require('fs');
+
+    try {
+          let appdataloc = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME);
+        appdataloc = appdataloc + "/.Nexus/";
+        let incominghistoryfile = JSON.parse(fs.readFileSync(appdataloc + 'historydata.json', 'utf8'));
+        let keys = Object.keys(incominghistoryfile);
+        keys.forEach(element => {
+          TRANSACTIONS.HistoryDataMap.set(Number(element),incominghistoryfile[element]);
+        });
+    }
+    catch (err) {
+      //File is not found or corrupted, make a new one. 
+      //onsole.log(err);
+      getAllhourData();
+    }
+  }
+
+  /// Create Cryptocompare Url
+  /// Helper method to create URL's quickly
+  /// Input :
+  ///   coinsym         || String || The symbol for the coin/fiat we are looking for MUST BE IN CAPS 
+  ///   timestamptolook || String || timestamp string ( in seconds) that will be the to var in looking up data
+  createcryptocompareurl(coinsym, timestamptolook)
+  {
+    let tempurl = "https://min-api.cryptocompare.com/data/histohour?fsym=NXS&tsym=" + coinsym + "&limit=2000&toTs=" + timestamptolook;
+    return tempurl;
+  }
+
+  /// Get All Hour Data
+  /// Gather 2 years of data for a new history json file
+  getAllhourData()
+  {
+
+    // We first have a download of data from may to the last known data that cryptocompare has data for. 
+    // This is not great but we can only get data in 15 calls persecond so this is a good start. 
+    let nowepoch = (Math.ceil(new Date(2018,5,8,10,25,25,500) /1000));
+    let cryptocompareurl1 = createcryptocompareurl("USD",nowepoch);
+    let cryptocompareurl8 = createcryptocompareurl("BTC",nowepoch);
+    let cryptocompareurl2 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 1))))) ;
+    let cryptocompareurl5 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 1))))) ;
+    let cryptocompareurl3 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 2))))) ;
+    let cryptocompareurl6 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 2))))) ;
+    let cryptocompareurl4 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 3))))) ;
+    let cryptocompareurl7 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 3))))) ;
+    let cryptocompareurl9 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 4))))) ;
+    let cryptocompareurl10 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 4))))) ;
+    let cryptocompareurl11 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 5))))) ;
+    let cryptocompareurl12 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 5))))) ;
+    let cryptocompareurl13 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 6))))) ;
+    let cryptocompareurl14 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 6))))) ;
+    let promsiewait = new Promise(function(resolve, reject) {
+      setTimeout(resolve, 1000);
+    });
+    
+    
+    let finishandsavefilepromise = new Promise(function(resolve, reject) {
+      setTimeout(() => {
+        console.log((Array.from(TRANSACTIONS.HistoryDataMap.keys())).length);
+        let appdataloc = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME);
+        appdataloc = appdataloc + "/.Nexus/";
+    
+        let fs = require('fs');
+    
+        fs.writeFile(appdataloc + 'historydata.json', JSON.stringify(mapToObject(TRANSACTIONS.HistoryDataMap)),(err) => {
+          if (err != null){
+              console.log(err);
+              } 
+          });
+        resolve();
+    
+      }, 10000);
+    });
+    
+    //Call the promises and make a chain.
+    createhistoricaldatapullpromise(cryptocompareurl1,'USD')
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl2,'USD'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl3,'USD'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl4,'USD'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl5,'BTC'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl6,'BTC'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl7,'BTC'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl8,'BTC'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl9,'USD'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl10,'BTC'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl11,'USD'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl12,'BTC'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl13,'USD'))
+    .then(promsiewait)
+    .then(createhistoricaldatapullpromise(cryptocompareurl14,'BTC'))
+    .then(promsiewait)
+    .then(finishandsavefilepromise);
+  }
+  
+
+  /// Grab More History Data
+  /// If more data is need give this a timestamp and troubled transaction then added to the history file
+  /// Input :
+  ///   intimestamp       || String || String Timestamp
+  ///   trnsactionIndex   || Number || The index that needs more data
+  grabmorehistorydata(intimestamp,transactionIndex)
+  {
+    //This locks from calling the api at the same time.
+    TRANSACTIONS.gettingmoredata = true;
+    console.log("NeededNewInfo");
+
+    //Create the URL's 
+    let cryptocompareurlUSD = createcryptocompareurl("USD",intimestamp);
+    let cryptocompareurlBTC = createcryptocompareurl("BTC",intimestamp);
+
+    
+    //Get Both new USD and BTC Data
+    createhistoricaldatapullpromise(cryptocompareurlUSD,'USD').
+    then(data => {console.log(data);createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC').
+    then( data => {
+      setTimeout(() => {
+        TRANSACTIONS.gettingmoredata = false;
+        TRANSACTIONS.getpriceattime(transactionIndex); //Now there is more data, process that transaction.
+      })
+    }); });
+
+  }
+
+  /// Create History Data pull promise
+  /// This will create and return a promise based on the cryptocompare url, and needs which coin to get info from (the api only accepts one coin at a time)
+  /// Input :
+  ///   urltoask        || String || URL to attach to this promise to look up
+  ///   tokentocomapre  || String || Either 'USD' or 'BTC'
+  /// Output :
+  ///   Promise         || Promise to be executed
+  function createhistoricaldatapullpromise(urltoask, tokentocompare)
+  {
+    
+    let internalpromise = new Promise(function(resolve, reject) {
+      setTimeout(() => {
+        
+
+      TRANSACTIONS.request(
+        {
+          url: urltoask,
+          json: true
+        },
+        function(error, response, body) {
+          if (!error && response.statusCode === 200) {
+            let result = body;
+            //console.log(result);
+
+            //For each point returned at it to the historydatamap.
+            result["Data"].forEach(element => {
+              let tempdataobj = {};
+              let tempdataattribute = 'price' + tokentocompare;
+              tempdataobj[tempdataattribute] = element["open"];
+              let incomingelement = tempdataobj;
+              Object.assign(incomingelement,TRANSACTIONS.HistoryDataMap.get(element["time"]));
+              TRANSACTIONS.HistoryDataMap.set(element["time"],incomingelement);
+              resolve(tokentocompare);
+            });
+          }
+        }
+      );
+    }, 250 + Math.floor(Math.random() * 2000) ); // I just added this so there is a bit of seperation between calls. 
+    });
+
+    return internalpromise;
+  }
+
+
+
+  /// Map To Object
+  /// Used to transform a Map to a Object so that we can save it to a json file 
+  /// http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
+  /// Based on code from http://2ality.com/2015/08/es6-map-json.html
+  /// Input :
+  ///   aMap    || Map || A map of the data 
+  /// Output :
+  ///   Object  || A object that replaces the map but contains the same data.
+  function mapToObject(aMap) {
+    let obj = Object.create(null);
+    console.log("Happen");
+    for (let [k,v] of aMap) {
+        // We don’t escape the key '__proto__' which can cause problems on older engines
+        if (v instanceof Map) {
+            obj[k.toString()] = mapToObject(v); // handle Maps that have Maps as values
+        } else {
+            obj[k.toString()] = v;              // calling toString handles case where map key is not a string JSON requires key to be a string
+        }
+    }
+    return obj;
+  }
+
+  /// Find CLoses Data Point
+  /// If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC
+  /// Input :
+  ///   intimestamp || String || Timestamp to look up 
+  /// Output :
+  ///     Object || A object that contains priceUSD and priceBTC
+  function findclosestdatapoint(intimestamp)
+  {
+    
+        
+    let modifiedtimestamp = intimestamp.substring(0,8);
+    modifiedtimestamp += "00";
+    let numberremainder = Number(modifiedtimestamp) % 3600;
+    let datatograb; 
+
+    datatograb = TRANSACTIONS.HistoryDataMap.get((Number(modifiedtimestamp)  + numberremainder));
+
+    if ( datatograb == undefined) 
+    {
+      datatograb = TRANSACTIONS.HistoryDataMap.get((Number(modifiedtimestamp)  - numberremainder));
+    } 
+
+    return datatograb;
+  }
+
+    
+
+  /// Compare Data
+  /// Compares a Data to a from Data and a To Data and returns a Bool
+  /// Input :
+  ///   indate    || Date || Date to check
+  ///   starttime || Date || Date from
+  ///   endtime   || Date || Date to
+  /// Output :
+  ///   Bool || Is this true or not 
+  function comparedate(indate, starttime, endtime)
+  {
+    console.log("In Time: " + indate + " StartTime: " + starttime + " EndTime: " + endtime);
+
+    if (starttime <= indate && indate <= endtime)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  onOpenModal = () => {
+    this.setState({ open: true });
+  };
+
+  onCloseModal = () => {
+    this.setState({ open: false });
+  };
+
+  returnModalInternal()
+  {
+    let internalString = [];
+    if (this.state.hoveringID != 999999999999){
+      const selectedTransaction = this.state.walletTransactions[this.state.hoveringID];
+      
+
+      internalString.push(
+          <h2 key="modal_title"> TRANSACTIONS </h2>
+        );
+      internalString.push(<br key="br1"/>);
+      internalString.push(
+          <a key="modal_amount">{"Amount: " + selectedTransaction.amount}</a>
+        );
+      internalString.push(<br key="br2"/>);
+      internalString.push(
+          <a key="modal_time">{"Time: " + selectedTransaction.time}</a>
+        );
+      internalString.push(<br key="br3"/>);
+      internalString.push(
+          <a key="modal_amount">{"Account: " + selectedTransaction.account}</a>
+        );
+      internalString.push(<br key="br4"/>);
+      internalString.push(
+          <a key="modal_amount">{"Confirmations: " + selectedTransaction.confirmations}</a>
+        );
+      
+    }
+   
+    return internalString;
+  }
+
   render() { 
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
@@ -840,9 +1142,13 @@ class Transactions extends Component {
       ];
     };
     const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
-
+    const open = this.state.open; 
+   
     return (
       <div style={{overflow:"auto",height:"800px"}} >
+      <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'custom-modal' }}>
+          {this.returnModalInternal()}
+        </Modal>
         <h2>Transactions</h2>
         <div >
         <VictoryChart width={400} height={270} scale={{ x: "time" }} 
