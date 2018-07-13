@@ -35,3 +35,12 @@
   top: 0;
   right: 0;
 }
+
+.marketSummaryTable {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.marketSummaryTable div {
+  border-bottom: 1px solid white;
+}
