@@ -6,6 +6,8 @@
   z-index: 99999;
   flex-direction: column;
   align-items: center;
+  flex-shrink: 0;
+  overflow: initial !important; /* override #App > div style to make modules have scrollbars if larger than viewport */
 }
 
 #hdr-line {
@@ -20,11 +22,16 @@
   );
 }
 
+#logo {
+  margin: 1em 0;
+  display: block;
+}
+
 #settings-menu {
-  position: absolute;
-  top: 5px;
-  right: 5px;
   display: inline-block;
+  position: absolute;
+  top: 2em;
+  right: 2em;
 }
 
 .icon {

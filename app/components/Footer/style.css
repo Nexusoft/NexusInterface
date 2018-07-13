@@ -1,10 +1,9 @@
 #Footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 
 #ftr-line {
@@ -17,6 +16,7 @@
     var(--color-2) 50%,
     transparent 100%
   );
+  z-index: 1;
 }
 
 #navigation {
@@ -24,6 +24,17 @@
   justify-content: space-between;
 }
 
+#navigation a {
+  display: block;
+  filter: grayscale(1) brightness(200%);
+}
+
+#navigation a:hover {
+  display: block;
+  filter: grayscale(0);
+}
+
 #navigation img {
-  margin: 5px;
+  display: block;
+  margin: .625em;
 }
