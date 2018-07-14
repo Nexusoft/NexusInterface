@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styles from "./style.css";
 
 export default class Footer extends Component {
@@ -8,39 +8,39 @@ export default class Footer extends Component {
       <div id="Footer">
         <div id="ftr-line" />
         <div id="navigation">
-          <Link to="/">
+          <NavLink exact to="/">
             <img src="images/icon-home.png" alt="Overview" />
-          </Link>
-          <Link to="/SendRecieve">
+          </NavLink>
+          <NavLink to="/SendRecieve">
             <img src="images/icon-send.png" alt="SendRecieve" />
-          </Link>
-          <Link to="/Transactions">
+          </NavLink>
+          <NavLink to="/Transactions">
             <img src="images/icon-transactions.png" alt="Transactions" />
-          </Link>
-          <Link to="/Market">
+          </NavLink>
+          <NavLink to="/Market">
             <img src="images/icon-market.png" alt="Market Data" />
-          </Link>
-          <Link to="/Addressbook">
+          </NavLink>
+          <NavLink to="/Addressbook">
             <img src="images/icon-contacts.png" alt="Addressbook" />
-          </Link>
-          <Link to="/BlockExplorer">
+          </NavLink>
+          <NavLink to="/BlockExplorer">
             <img src="images/icon-explorer.png" alt="Block Explorer" />
-          </Link>
-          <Link to="/Settings">
+          </NavLink>
+          <NavLink to="/Settings">
             <img src="images/icon-settings.png" alt="Settings" />
-          </Link>
-          <Link to="/Terminal">
+          </NavLink>
+          <NavLink to="/Terminal">
             <img src="images/icon-console.png" alt="Command Line Interface" />
-          </Link>
-          <Link to="/SecurityLogin">
+          </NavLink>
+          <NavLink to="/SecurityLogin">
             <img src="images/icon-security.png" alt="Security" />
-          </Link>
-          <Link to="/StyleGuide">
+          </NavLink>
+          <NavLink to="/StyleGuide">
             <img src="images/icon-developer.png" alt="Style Guide" />
-          </Link>
-          <Link to="/List">
+          </NavLink>
+          <NavLink to="/List">
             <img src="images/icon-trustlist.png" alt="List" />
-          </Link>
+          </NavLink>
         </div>
       </div>
     );
