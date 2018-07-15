@@ -10,7 +10,7 @@ Switch
 
 .tooltip {
     visibility: hidden;
-    width: 120px;
+    /* width: 120px; */
     background-color: var(--tooltip-background-color);
     color: var(--tooltip-color);
     text-align: left;
@@ -19,20 +19,41 @@ Switch
     position: absolute;
     box-shadow: 0 2px 20px rgba(0,0,0,0.5);
     z-index: 1;
-    top: 150%;
+}
+
+.tooltip.top {
+    bottom: 100%;
     left: 50%;
-    transform: translateX(-50%);
+    margin-bottom: 8px;             /* 2px spacing + pointer size from item being hovered */
+    transform: translateX(-50%); 
+}
+
+.tooltip.bottom {
+    top: 100%;
+    left: 50%;
+    margin-top: 8px;                /* 2px spacing + pointer size from item being hovered */
+    transform: translateX(-50%);     
 }
 
 .tooltip::after {
     content: "";
     position: absolute;
+    border-width: 6px;
+    border-style: solid;
+}
+
+.tooltip.bottom::after {
     bottom: 100%;
     left: 50%;
     margin-left: -6px;
-    border-width: 6px;
-    border-style: solid;
     border-color: transparent transparent var(--tooltip-background-color) transparent;
+}
+
+.tooltip.top::after {
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-color: var(--tooltip-background-color) transparent transparent transparent;
 }
 
 *:hover > .tooltip {

@@ -76,13 +76,13 @@ class Header extends Component {
         <div id="settings-menu">
           <div className="icon">
             <img src={this.signInStatus()} />
-            <div className="tooltip">
+            <div className="tooltip bottom">
               <div>{this.signInStatusMessage()}</div>
             </div>
           </div>
           <div className="icon">
             <img src="images/nxs-staking-icon.png" />
-            <div className="tooltip">
+            <div className="tooltip bottom">
               <div>Stake Weight: {this.props.stakeweight}%</div>
               <div>Interest Rate: {this.props.interestweight}%</div>
               <div>Trust Weight: {this.props.trustweight}%</div>
