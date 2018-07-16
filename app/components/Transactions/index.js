@@ -981,7 +981,7 @@ class Transactions extends Component {
   ///   tokentocomapre  || String || Either 'USD' or 'BTC'
   /// Output :
   ///   Promise         || Promise to be executed
-  function createhistoricaldatapullpromise(urltoask, tokentocompare)
+  createhistoricaldatapullpromise(urltoask, tokentocompare)
   {
     
     let internalpromise = new Promise(function(resolve, reject) {
@@ -1027,7 +1027,7 @@ class Transactions extends Component {
   ///   aMap    || Map || A map of the data 
   /// Output :
   ///   Object  || A object that replaces the map but contains the same data.
-  function mapToObject(aMap) {
+  mapToObject(aMap) {
     let obj = Object.create(null);
     console.log("Happen");
     for (let [k,v] of aMap) {
@@ -1047,7 +1047,7 @@ class Transactions extends Component {
   ///   intimestamp || String || Timestamp to look up 
   /// Output :
   ///     Object || A object that contains priceUSD and priceBTC
-  function findclosestdatapoint(intimestamp)
+  findclosestdatapoint(intimestamp)
   {
     
         
@@ -1076,7 +1076,7 @@ class Transactions extends Component {
   ///   endtime   || Date || Date to
   /// Output :
   ///   Bool || Is this true or not 
-  function comparedate(indate, starttime, endtime)
+  comparedate(indate, starttime, endtime)
   {
     console.log("In Time: " + indate + " StartTime: " + starttime + " EndTime: " + endtime);
 
