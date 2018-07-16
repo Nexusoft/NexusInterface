@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Route } from "react-router";
 import styles from "./style.css";
 
@@ -21,9 +21,21 @@ export default class Settings extends Component {
 
             <ul className="tabs">
 
-              <li><Link to={`${this.props.match.url}/app`}>Application</Link></li>
-              <li><Link to={`${this.props.match.url}/core`}>Core</Link></li>
-              <li><Link to={`${this.props.match.url}/development`}>Development</Link></li>
+              <li>
+                <NavLink to={`${this.props.match.url}/app`}>
+                  <img src="images/icon-home.png" alt="Application" />Application
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to={`${this.props.match.url}/core`}>
+                  <img src="images/icon-explorer.png" alt="Core" />Core
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to={`${this.props.match.url}/development`}>
+                  <img src="images/icon-developer.png" alt="Development" />Development
+                </NavLink>
+              </li>
 
             </ul>
 
