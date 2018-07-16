@@ -12,8 +12,12 @@ import Candlestick from "../Chart/Candlestick";
 // import images
 import bittrexLogo from "../../images/BittrexLogo.png";
 import binanceLogo from "../../images/BINANCE.png";
-import cryptopiaLogo from "../../images/cryptopia.png";
+import cryptopiaLogo from "../../images/CryptopiaLogo.png";
 import * as actionsCreators from "../../actions/marketActionCreators";
+import binanceSmallLogo from "../../images/binanceSmallLogo.png";
+import bittrexSmallLogo from "../../images/bittrexSmallLogo.png";
+import cryptopiaSmallLogo from "../../images/cryptopiaSmallLogo.png";
+import arrow from "../../images/arrow.png";
 
 import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
@@ -44,51 +48,161 @@ class Market extends Component {
       highArr = [],
       arbArr = [[], [], []];
 
-    lowArr.push({
-      exchange: "binance",
-      ...this.props.binance.sell[this.props.binance.sell.length - 1]
+    let sellArr = [],
+      buyArr = [];
+    if (this.props.binance.sell[0]) {
+      sellArr.push({
+        exchange: "binance",
+        fee: 0.001,
+        arr: this.props.binance.sell
+      });
+    }
+    if (this.props.bittrex.sell[0]) {
+      sellArr.push({
+        exchange: "bittrex",
+        fee: 0.0025,
+        arr: this.props.bittrex.sell
+      });
+    }
+    if (this.props.cryptopia.sell[0]) {
+      sellArr.push({
+        exchange: "cryptopia",
+        fee: 0.002,
+        arr: this.props.cryptopia.sell
+      });
+    }
+    if (this.props.binance.sell[0]) {
+      buyArr.push({
+        exchange: "binance",
+        fee: 0.001,
+        arr: this.props.binance.buy
+      });
+    }
+    if (this.props.bittrex.sell[0]) {
+      buyArr.push({
+        exchange: "bittrex",
+        fee: 0.0025,
+        arr: this.props.bittrex.buy
+      });
+    }
+    if (this.props.cryptopia.sell[0]) {
+      buyArr.push({
+        exchange: "cryptopia",
+        fee: 0.002,
+        arr: this.props.cryptopia.buy
+      });
+    }
+    const compBuyArr = buyArr.map(obj => {
+      let volAgra = 0,
+        i = 0,
+        priceAgra = 0;
+      while (volAgra < 1000) {
+        priceAgra = obj.arr[i].Price + priceAgra;
+        volAgra = obj.arr[i].Volume + volAgra;
+        ++i;
+      }
+      return {
+        exchange: obj.exchange,
+        priceAverage: priceAgra / i,
+        fee: obj.fee,
+        volAgra: volAgra,
+        buy: true
+      };
     });
-    lowArr.push({
-      exchange: "bittrex",
-      ...this.props.bittrex.sell[this.props.bittrex.sell.length - 1]
-    });
-    lowArr.push({
-      exchange: "cryptopia",
-      ...this.props.cryptopia.sell[this.props.cryptopia.sell.length - 1]
-    });
-    highArr.push({
-      exchange: "binance",
-      ...this.props.binance.buy[0]
-    });
-    highArr.push({
-      exchange: "bittrex",
-      ...this.props.bittrex.buy[0]
-    });
-    highArr.push({
-      exchange: "cryptopia",
-      ...this.props.cryptopia.buy[0]
+    const compSellArr = sellArr.map(obj => {
+      let volAgra = 0,
+        i = 0,
+        priceAgra = 0;
+      while (volAgra < 1000) {
+        priceAgra = obj.arr[i].Price + priceAgra;
+        volAgra = obj.arr[i].Volume + volAgra;
+        ++i;
+      }
+      return {
+        exchange: obj.exchange,
+        fee: obj.fee,
+        priceAverage: priceAgra / i,
+        volAgra: volAgra,
+        buy: false
+      };
     });
 
-    let alerts = highArr
-      .map((high, i) => {
-        const highPrice = high.Price;
-        return lowArr
-          .map((low, index) => {
+    const placeholderVolume = 1;
+    const placeholderTreshold = -0.0001;
+    let potentialAlerts = compBuyArr
+      .map((high, i1) => {
+        return compSellArr
+          .map((low, i2) => {
             if (high.exchange !== low.exchange) {
-              const lowPrice = low.Price;
-              let arb = highPrice - lowPrice;
-              if (arb > 0) {
+              let sellNXS =
+                high.priceAverage * placeholderVolume -
+                high.priceAverage * placeholderVolume * high.fee;
+              let buyNXS =
+                placeholderVolume * low.priceAverage -
+                placeholderVolume * low.priceAverage * low.fee;
+
+              let deltaBTC = sellNXS - buyNXS;
+
+              if (deltaBTC > placeholderTreshold) {
                 console.log("ARBITRAGE!!!");
-                return {
-                  fromExcange: high.exchange,
-                  value: arb.toFixed(8),
-                  ...low
-                };
+                let highsrc, lowsrc;
+                switch (high.exchange) {
+                  case "binance":
+                    highsrc = binanceSmallLogo;
+                    break;
+                  case "bittrex":
+                    highsrc = bittrexSmallLogo;
+                    break;
+                  case "cryptopia":
+                    highsrc = cryptopiaSmallLogo;
+                    break;
+                  default:
+                    break;
+                }
+                switch (low.exchange) {
+                  case "binance":
+                    lowsrc = binanceSmallLogo;
+                    break;
+                  case "bittrex":
+                    lowsrc = bittrexSmallLogo;
+                    break;
+                  case "cryptopia":
+                    lowsrc = cryptopiaSmallLogo;
+                    break;
+                  default:
+                    break;
+                }
+
+                return (
+                  <div className="arbitrageAlert" key={`${i1}${i2}`}>
+                    <div>ARBITRAGE ALERT!</div>
+                    <span onClick={() => this.closeAlert(this)}>X</span>
+                    <div>
+                      <img src={highsrc} alt={high.exchange} />
+                      <img src={arrow} alt="right pointing arrow" />
+                      <img src={lowsrc} alt={low.exchange} />
+                    </div>
+                    <div>
+                      {deltaBTC.toFixed(8)} profit on a {placeholderVolume} NXS
+                      trade
+                    </div>
+                  </div>
+                );
+                // {
+                //   fromExcange: high.exchange,
+                //   fromPriceAve: high.priceAverage,
+                //   toPriceAve: low.priceAverage,
+                //   maxVol: maxVol,
+                //   fromFee: low.fee,
+                //   toFee: high.fee,
+                //   deltaP: parseFloat(deltaP.toFixed(8)),
+                //   toExchange: low.exchange
+                // };
               } else return null;
             }
           })
           .filter(e => {
-            if (e != null) {
+            if (e) {
               return e;
             }
           });
@@ -97,39 +211,20 @@ class Market extends Component {
         if (e.length != 0) {
           return e;
         }
-      })
-      .map(arrayOfObj => {
-        return arrayOfObj.map(obj => {
-          return (
-            <div>
-              NXS {obj.Volume}, BTC {obj.Price}, arb diff: {obj.value} BTC,{" "}
-              {obj.fromExcange} => {obj.exchange}
-            </div>
-          );
-        });
       });
-    if (alerts.length > 0) {
-      alerts.reduce((accumulator, currentValue) =>
+    let alerts;
+    if (potentialAlerts.length > 0) {
+      alerts = potentialAlerts.reduce((accumulator, currentValue) =>
         accumulator.concat(currentValue)
       );
     }
-    return alerts;
+
     console.log(alerts);
+    return alerts;
   }
 
-  oneDayInfo(exchange) {
-    return (
-      <div className="marketSummaryTable">
-        <div>24hr Market Summary</div>
-        <div>High Price: {this.props[exchange].info24hr.high}</div>
-        <div>Low Price: {this.props[exchange].info24hr.low}</div>
-        <div>
-          Price Change:{" "}
-          {parseFloat(this.props[exchange].info24hr.change).toFixed(2)}%
-        </div>
-        <div>Volume: {this.props[exchange].info24hr.volume}</div>
-      </div>
-    );
+  closeAlert(thing) {
+    console.log(thing);
   }
 
   formatBuyData(array) {
@@ -190,10 +285,9 @@ class Market extends Component {
   render() {
     return (
       <div id="Market">
-        <div>
-          <button onClick={() => this.refresher()}>Refresh</button>
-          <h1>Market Information</h1>
-          <div>{this.arbitageAlert()}</div>
+        <div id="marketHeadliner">
+          <h2 onClick={() => this.refresher()}>Market Information</h2>
+          <div className="alertbox">{this.arbitageAlert()}</div>
         </div>
         {this.props.loaded &&
           this.props.binance.buy[0] && (
@@ -249,3 +343,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Market);
+// withAlert()

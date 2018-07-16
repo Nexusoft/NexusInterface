@@ -52,7 +52,7 @@
   top: 28px;
   color: var(--color-1);
   right: 0;
-  background-color: var(--color-3);
+  background-color: white !important;
   visibility: hidden;
 }
 
