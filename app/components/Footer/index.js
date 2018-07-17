@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styles from "./style.css";
 
 export default class Footer extends Component {
@@ -8,39 +8,50 @@ export default class Footer extends Component {
       <div id="Footer">
         <div id="ftr-line" />
         <div id="navigation">
-          <Link to="/">
+          <NavLink exact to="/">
             <img src="images/icon-home.png" alt="Overview" />
-          </Link>
-          <Link to="/SendRecieve">
+            <div className="tooltip top">Overview</div>
+          </NavLink>
+          <NavLink to="/SendRecieve">
             <img src="images/icon-send.png" alt="SendRecieve" />
-          </Link>
-          <Link to="/Transactions">
+            <div className="tooltip top">Send/Recieve</div>
+          </NavLink>
+          <NavLink to="/Transactions">
             <img src="images/icon-transactions.png" alt="Transactions" />
-          </Link>
-          <Link to="/Market">
+            <div className="tooltip top">Transactions</div>
+          </NavLink>
+          <NavLink to="/Market">
             <img src="images/icon-market.png" alt="Market Data" />
-          </Link>
-          <Link to="/Addressbook">
-            <img src="images/icon-contacts.png" alt="Addressbook" />
-          </Link>
-          <Link to="/BlockExplorer">
+            <div className="tooltip top">Market&nbsp;Data</div>
+          </NavLink>
+          <NavLink to="/Addressbook">
+            <img src="images/icon-contacts.png" alt="Address Book" />
+            <div className="tooltip top">Address&nbsp;Book</div>
+          </NavLink>
+          <NavLink to="/BlockExplorer">
             <img src="images/icon-explorer.png" alt="Block Explorer" />
-          </Link>
-          <Link to="/Settings">
+            <div className="tooltip top">Block&nbsp;Explorer</div>
+          </NavLink>
+          <NavLink to="/Settings">
             <img src="images/icon-settings.png" alt="Settings" />
-          </Link>
-          <Link to="/Terminal">
-            <img src="images/icon-console.png" alt="Command Line Interface" />
-          </Link>
-          <Link to="/SecurityLogin">
+            <div className="tooltip top">Settings</div>
+          </NavLink>
+          <NavLink to="/Terminal">
+            <img src="images/icon-console.png" alt="Console" />
+            <div className="tooltip top">Console</div>
+          </NavLink>
+          <NavLink to="/SecurityLogin">
             <img src="images/icon-security.png" alt="Security" />
-          </Link>
-          <Link to="/StyleGuide">
+            <div className="tooltip top">Security</div>
+          </NavLink>
+          <NavLink to="/StyleGuide">
             <img src="images/icon-developer.png" alt="Style Guide" />
-          </Link>
-          <Link to="/List">
-            <img src="images/icon-trustlist.png" alt="List" />
-          </Link>
+            <div className="tooltip top">Style&nbsp;Guide</div>
+          </NavLink>
+          <NavLink to="/List">
+            <img src="images/icon-trustlist.png" alt="Trust List" />
+            <div className="tooltip top">Trust&nbsp;List</div>
+          </NavLink>
         </div>
       </div>
     );

@@ -11,6 +11,8 @@
 @import "./controls/panel.css";
 @import "./controls/progress.css";
 @import "./controls/switch.css";
+@import "./controls/tabs.css";
+@import "./controls/tooltip.css";
 
 @import "~font-awesome/css/font-awesome.css";
 @import "../components/Footer/style.css";

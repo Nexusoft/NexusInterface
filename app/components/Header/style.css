@@ -31,32 +31,17 @@
   display: inline-block;
   position: absolute;
   top: 2em;
-  right: 2em;
+  right: 3em;
 }
 
 .icon {
   display: inline-block;
+  position: relative;
   padding: 0 5px;
   width: 20px;
   height: 20px;
 }
 
-.icon:hover .iconinfo {
-  visibility: visible;
-  opacity: 1;
-  width: max-content;
-}
-
-.iconinfo {
-  position: absolute;
-  top: 28px;
-  color: var(--color-1);
-  right: 0;
-  background-color: white !important;
-  visibility: hidden;
-}
-
-.iconinfo div {
-  margin-left: 5px;
-  margin-right: 5px;
+.icon .tooltip {
+  width: 120px;
 }

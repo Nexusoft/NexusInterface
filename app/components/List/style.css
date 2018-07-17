@@ -1,28 +1,38 @@
-#listbody {
-  /* display: flex;
-  flex-direction: column; */
+#trustlist {
+	position: relative;
+	height: 100%;
+}
 
-  /* overflow: auto; */
+#trustlist-container {
+	--example-border: 1px solid rgba(255,255,255,.1);
+	counter-reset: section;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+
+	/* this is needed to allow the header/panel to collapse to scrollbars */
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+#trustlist-container > h2 {
+	flex: 0;
+}
+
+#trustlist-container > div {
+	flex: 1;
+  overflow-y: auto;
+}
+
+#trustlist table {
+  margin: 0;
+}
+
+#trustlist #table-wrap {
   height: 100%;
-}
-
-#listhead {
-  display: flex;
-  height: fit-content;
-  justify-content: space-between;
-}
-
-#listRoot {
-  height: 100%;
-}
-
-#listRoot h1 {
-  text-align: center;
-}
-
-#tablebody {
-  display: block;
-  height: 70vh;
-  overflow: auto;
-  width: max-content;
+  width: 100%;
+  overflow-x: auto;
 }

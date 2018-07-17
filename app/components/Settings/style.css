@@ -1,0 +1,103 @@
+#settings {
+	position: relative;
+	height: 100%;
+}
+
+#settings-container {
+	--example-border: 1px solid rgba(255,255,255,.1);
+	counter-reset: section;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+
+	/* this is needed to allow the header/panel to collapse to scrollbars */
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+#settings-container > h2 {
+	flex: 0;
+}
+
+#settings-container > div {
+	flex: 1;
+	overflow-y: auto;
+}
+
+.panel > .tabs {
+	position: relative;
+}
+
+section {
+	--column-width: 6;
+	position: relative;
+	padding-top: calc(var(--gutter));
+	padding-bottom: calc(var(--gutter));
+}
+
+@media (min-width: 1200px) {
+	section {--column-width: 8;}
+}
+
+@media (min-width: 1600px) {
+	section {--column-width: 12;}
+}
+
+.clear-both {
+	clear: both;
+}
+
+
+
+
+
+
+
+
+/* Settings imported from PreAlpha */
+
+section {
+	--column-width: 4;
+	--field-align-label-width: 75%;
+	position: relative;
+	padding-top: calc(var(--gutter));
+	padding-bottom: calc(var(--gutter));
+}
+
+/* @media (min-width: 800px) {
+	section {--column-width: 2;}
+}
+
+@media (min-width: 1200px) {
+	section {--column-width: 4;}
+}
+
+@media (min-width: 1600px) {
+	section {--column-width: 4;}
+} */
+
+/*
+Form
+=====================================
+*/
+
+form {
+	position: relative;
+	/* padding: calc(var(--line-height) * 1em);
+	padding-top: 0; */
+	border: 1px solid transparent;
+	text-align: left;
+}
+
+.panel {
+	padding: calc(var(--line-height) * 1em);
+}
+
+.note {
+	padding: 1em;
+	border: 2px dashed rgba(255,255,255,0.2);
+	background-color: rgba(0,0,0,0.2);
+}
