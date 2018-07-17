@@ -7,7 +7,7 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 
 const mapStateToProps = state => {
-  return { ...state.common };
+  return { ...state.overview };
 };
 
 const mapDispatchToProps = dispatch => ({
