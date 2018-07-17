@@ -9,6 +9,12 @@ import * as TYPE from "../../actions/actiontypes";
 import MarketDepth from "../Chart/MarketDepth";
 import Candlestick from "../Chart/Candlestick";
 
+///////testing///////
+
+import { Alert } from "../Alert";
+
+////////////////////
+
 // import images
 import bittrexLogo from "../../images/BittrexLogo.png";
 import binanceLogo from "../../images/BINANCE.png";
@@ -172,7 +178,7 @@ class Market extends Component {
                   default:
                     break;
                 }
-
+                // this.Alert.add();
                 return (
                   <div className="arbitrageAlert" key={`${i1}${i2}`}>
                     <div>ARBITRAGE ALERT!</div>
@@ -286,7 +292,7 @@ class Market extends Component {
     return (
       <div id="Market">
         <div id="marketHeadliner">
-          <h2 onClick={() => this.refresher()}>Market Information</h2>
+          <h1 onClick={() => this.refresher()}>Market Information</h1>
           <div className="alertbox">{this.arbitageAlert()}</div>
         </div>
         {this.props.loaded &&
