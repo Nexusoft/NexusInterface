@@ -29,9 +29,21 @@ class BlockExplorer extends Component {
 
 
     return (
-      <div>
-        <h1>BlockExplorer</h1>
+
+      <div id="blockexplorer">
+
+        <div id="blockexplorer-container">
+
+	        <h2>Block Explorer</h2>
+
+	        <div className="panel">
+
+          </div>
+
+        </div>
+
       </div>
+
     );
   }
 }

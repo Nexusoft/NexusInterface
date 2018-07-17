@@ -55,35 +55,33 @@ input[type="checkbox"].switch:disabled{
 	opacity: 0.5;
 }
 
+/* Hide the tooltip content by default */
+.switch[data-tooltip]:before {
+visibility: hidden;
+opacity: 0;
+pointer-events: none;
+z-index: 2;
+}
 
-  
-  /* Hide the tooltip content by default */
-  .switch[data-tooltip]:before {
-	visibility: hidden;
-	opacity: 0;
-	pointer-events: none;
-	z-index: 2;
-  }
+.switch[data-tooltip]:hover:before {
+visibility: visible;
+opacity: 1;
+}
 
-  .switch[data-tooltip]:hover:before {
-	visibility: visible;
-	opacity: 1;
-  }
-
-  .switch[data-tooltip]:before {
-	position: absolute;
-	top: 150%;
-	left: 50%;
-	margin-bottom: 5px;
-	margin-left: -80px;
-	padding: 7px;
-	width: 160px;
-	border-radius: 3px;
-	background-color: #000;
-	background-color: hsla(0, 0%, 20%, 0.9);
-	color: #fff;
-	content: attr(data-tooltip);
-	text-align: center;
-	font-size: 14px;
-	line-height: 1.2;
-  }
+.switch[data-tooltip]:before {
+position: absolute;
+top: 150%;
+left: 50%;
+margin-bottom: 5px;
+margin-left: -80px;
+padding: 7px;
+width: 160px;
+border-radius: 3px;
+background-color: #000;
+background-color: hsla(0, 0%, 20%, 0.9);
+color: #fff;
+content: attr(data-tooltip);
+text-align: center;
+font-size: 14px;
+line-height: 1.2;
+}

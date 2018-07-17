@@ -31,7 +31,9 @@ Panel
 	overflow: hidden;
 }
 
-.panel::before {
+/* TODO: this blur layer was causing issues if children weren't position: relative, and didn't scroll correctly */
+
+/* .panel::before {
 	display: block;
 	position: absolute;
 	content: "";
@@ -43,7 +45,7 @@ Panel
 	filter: blur(6px);
 	margin: -5%;
 	z-index: 0;
-  }
+} */
 
 .panel .panel {
 	background-color: rgba(47, 50, 65, 0.4);
