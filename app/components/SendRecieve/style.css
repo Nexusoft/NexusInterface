@@ -1,0 +1,28 @@
+#send-receive {
+	position: relative;
+	height: 100%;
+}
+
+#send-receive-container {
+	--example-border: 1px solid rgba(255,255,255,.1);
+	counter-reset: section;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+
+	/* this is needed to allow the header/panel to collapse to scrollbars */
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+#send-receive-container > h2 {
+	flex: 0;
+}
+
+#send-receive-container > div {
+	flex: 1;
+	overflow-y: auto;
+}

@@ -5,9 +5,21 @@ import styles from "./style.css";
 export default class SendRecieve extends Component {
   render() {
     return (
-      <div>
-        <h1>Send and Recieve here.</h1>
+
+      <div id="send-receive">
+
+        <div id="send-receive-container">
+
+	        <h2>Send / Receive</h2>
+
+	        <div className="panel">
+
+          </div>
+
+        </div>
+
       </div>
+
     );
   }
 }
