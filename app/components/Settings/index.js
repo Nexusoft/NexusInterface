@@ -5,7 +5,6 @@ import styles from "./style.css";
 
 import SettingsApp from "./SettingsApp";
 import SettingsCore from "./SettingsCore";
-import SettingsDev from "./SettingsDev";
 
 export default class Settings extends Component {
   render() {
@@ -31,11 +30,6 @@ export default class Settings extends Component {
                   <img src="images/icon-explorer.png" alt="Core" />Core
                 </NavLink>
               </li>
-              <li>
-                <NavLink to={`${this.props.match.url}/development`}>
-                  <img src="images/icon-developer.png" alt="Development" />Development
-                </NavLink>
-              </li>
 
             </ul>
 
@@ -43,7 +37,6 @@ export default class Settings extends Component {
 
               <Route path={`${this.props.match.path}/app`} component={SettingsApp}/>
               <Route path={`${this.props.match.path}/core`} component={SettingsCore}/>
-              <Route path={`${this.props.match.path}/development`} component={SettingsDev}/>
 
             </div>
 

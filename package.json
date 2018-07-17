@@ -173,6 +173,7 @@
     "webpack-sources": "^1.0.1"
   },
   "dependencies": {
+    "auto-launch": "^5.0.5",
     "chart.js": "^2.7.2",
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",
