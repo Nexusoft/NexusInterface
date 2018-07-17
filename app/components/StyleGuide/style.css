@@ -1,0 +1,318 @@
+/*
+General layout styles for module
+=====================================
+*/
+
+#styleguide {
+	position: relative;
+	height: 100%;
+}
+
+#styleguide-container {
+	--example-border: 1px solid rgba(255,255,255,.1);
+	counter-reset: section;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+
+	/* this is needed to allow the header/panel to collapse to scrollbars */
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+#styleguide-container > h2 {
+	flex: 0;
+}
+
+#styleguide-container > div {
+	flex: 1;
+	overflow-y: auto;
+}
+
+.clear-both {
+	clear: both;
+}
+
+section {
+	--column-width: 6;
+	position: relative;
+	padding-top: calc(var(--gutter));
+	padding-bottom: calc(var(--gutter));
+}
+
+section > h3::before {
+	counter-increment: section;
+	content: counter(section)'.';
+	font-size: .75em;
+	margin-right: .4em;
+	filter: contrast(50%);
+}
+
+@media (min-width: 1200px) {
+	section {--column-width: 8;}
+}
+
+@media (min-width: 1600px) {
+	section {--column-width: 12;}
+}
+
+.fifty-percent {
+  float: left;
+  width: 50%;
+  min-width: 16em;
+}
+
+/*
+Example of element or component
+=====================================
+*/
+
+.example {
+	position: relative;
+	padding: 0 calc(var(--line-height) * 1em);
+	border: 1px solid transparent;
+	text-align: left;
+}
+
+.example:hover {
+	background-position: center -1px;
+	background-size: 100% calc(var(--base-font-size) * var(--line-height) * 16px);
+	background-image: linear-gradient(to bottom, rgba(255,255,255,.1) 1px, transparent 1px);
+}
+
+.panel ~ .code-example {
+	margin-top: 0;
+	border: 0;
+	padding: 0 calc(var(--line-height) * 1em);
+	background-color: rgba(47, 50, 65, 0.95);
+
+	/*max-height: 0;*/
+	/*transition: all .75s linear;*/
+	overflow: hidden;
+}
+
+/*
+Code Toggle
+=====================================
+*/
+
+input.toggle {
+	display: none;
+}
+
+input.toggle:not(checked) ~ .panel ~ .code-example { 
+	display: none;
+}
+
+input.toggle:checked ~ .panel ~ .code-example { 
+	display: block;
+	animation: toggle-show .3s ease-in-out;
+}
+
+label.toggle {
+	display: block;
+    position: absolute;
+    top: 4em;
+    right: .75em;
+    font-family: var(--mono-font-family);
+	font-size: .875em;
+	opacity: .75;
+}
+input.toggle:checked ~ label.toggle::before {
+	content: '</code>';
+}
+input.toggle:not(:checked) ~ label.toggle::before {
+	content: '<code>';
+}
+
+@keyframes toggle-show {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+  1% {
+    display: block;
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*
+Colors
+=====================================
+*/
+
+#colors ul {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#colors li {
+	box-sizing: border-box;
+	width: 20%;
+	font-size: .875em;
+	font-family: var(--mono-font-family);
+	border-right: var(--example-border);
+}
+
+#colors li:last-of-type {
+	border-right: 0;
+}
+
+#colors li .swatch {
+	position: relative;
+	width: 100%;
+	height: calc(var(--line-height) * 16px * 5);
+	text-shadow: 0 1px 1px rgba(0,0,0,0.75);
+}
+
+#colors li .swatch:after  {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: .5em;
+}
+
+#colors li:nth-of-type(1) .swatch  {
+	background-color: var(--color-1);
+}
+#colors li:nth-of-type(1) .swatch:after  {
+	content: '--color-1';
+}
+
+#colors li:nth-of-type(2) .swatch {
+	background-color: var(--color-2);
+}
+#colors li:nth-of-type(2) .swatch:after  {
+	content: '--color-2';
+}
+#colors li:nth-of-type(3) .swatch {
+	background-color: var(--color-3);
+}
+#colors li:nth-of-type(3) .swatch:after  {
+	content: '--color-3';
+}
+#colors li:nth-of-type(4) .swatch {
+	background-color: var(--color-4);
+}
+#colors li:nth-of-type(4) .swatch:after  {
+	content: '--color-4';
+}
+#colors li:nth-of-type(5) .swatch {
+	background-color: var(--color-5);
+}
+#colors li:nth-of-type(5) .swatch:after  {
+	content: '--color-5';
+}
+
+/*
+Headers
+=====================================
+*/
+
+#headers ul {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#headers li {
+	box-sizing: border-box;
+	width: 25%;
+	/* margin-left: calc(var(--line-height) * .5em);
+	margin-right: calc(var(--line-height) * .5em); */
+	font-size: .875em;
+	font-family: var(--mono-font-family);
+	border-right: var(--example-border);
+}
+
+#headers li:first-of-type {
+	margin-left: 0;
+}
+
+#headers li:last-of-type {
+	margin-right: 0;
+	border-right: 0;
+}
+
+#headers li .example {
+	position: relative;
+	box-sizing: border-box;
+	height: calc(var(--line-height) * 16px * 5);
+}
+
+#headers li .example:after  {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: .5em;
+}
+
+#headers li:nth-of-type(1) .example:after  {
+	content: 'H1';
+}
+#headers li:nth-of-type(2) .example:after  {
+	content: 'H2';
+}
+#headers li:nth-of-type(3) .example:after  {
+	content: 'H3';
+}
+#headers li:nth-of-type(4) .example:after  {
+	content: 'H4';
+}
+
+/*
+Buttons
+=====================================
+*/
+
+#buttons .example,
+#button-sizes .example {
+	padding-top: calc(var(--line-height) * .5em);
+	padding-bottom: calc(var(--line-height) * .5em);
+}
+
+#buttons .example .button:first-of-type,
+#button-sizes .example .button:first-of-type {
+	margin-left: 0;
+}
+
+/*
+Switched
+=====================================
+*/
+
+#switches {
+	--field-align-label-width: 45%;
+}
+
+/*
+Media Queries
+=====================================
+*/
+
+/* @media (min-width: 1200px) {
+	#colors {--column-width: 8;}
+	#headers {--column-width: 8;}
+	#forms-aligned {--column-width: 8;}
+	#buttons {--column-width: 8;}
+}
+
+@media (min-width: 1600px) {
+	#colors {--column-width: 6;}
+	#headers {--column-width: 6;}
+	#forms-aligned {--column-width: 6;}
+	#buttons {--column-width: 6;}
+} */

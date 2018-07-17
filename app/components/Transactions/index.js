@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./style.css";
 import {connect} from "react-redux";
 import {remote} from "electron";
+import Request from "request";
 import Table from "../../script/utilities-react";
 import * as RPC from "../../script/rpc";
 import { Promise } from "bluebird-lst";
@@ -68,13 +69,24 @@ class Transactions extends Component {
       zoomDomain: { x: [new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()), new Date()] },
       isHoveringOverTable: false,
       hoveringID: 999999999999,
-      open: false
+      open: false,
+      exectuedHistoryData: false,
+      historyData: new Map()
     };
   }
   componentDidMount() {
     this.getTransactionData();
 
 
+    if (this.state.exectuedHistoryData == false)
+    {
+      this.gethistorydatajson();
+      this.setState(
+        {
+          exectuedHistoryData:true
+        }
+      );
+    }
     
     
     console.log(window);
@@ -227,8 +239,6 @@ class Transactions extends Component {
           }
         );
         this.context.router.history.push('/BlockExplorer');
-        TRANSACTIONS.TXIDtosearch =
-        this.state.walletTransactions[this.state.hoveringID].txid;
       }
 
       sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
@@ -316,7 +326,14 @@ class Transactions extends Component {
                 coin: "Nexus",
                 fee: 0
               }
+             
+              let gothistorydata = this.findclosestdatapoint(tempTrans.time.toString());
+              //tempTrans.value.USD = gothistorydata.priceUSD;
+              //tempTrans.value.BTC = gothistorydata.priceBTC;
+              console.log(this.findclosestdatapoint(tempTrans.time.toString())); 
+              
               tempWalletTransactions.push(tempTrans);
+             
             }
 
           });
@@ -351,9 +368,16 @@ class Transactions extends Component {
               currentTransactions:tempWalletTransactions,
               tableColumns:tabelheaders,
               zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date(tempWalletTransactions[tempWalletTransactions.length - 1].time * 1000)] }
+            },() => {
+              console.log(this.state.walletTransactions);
+              for (let index = 0; index < this.state.walletTransactions.length; index++) {
+              this.getDataorNewData(index);
+            
+              } 
             }
           );
           this.forceUpdate();
+          
         });
       }
     )
@@ -846,14 +870,21 @@ class Transactions extends Component {
         appdataloc = appdataloc + "/.Nexus/";
         let incominghistoryfile = JSON.parse(fs.readFileSync(appdataloc + 'historydata.json', 'utf8'));
         let keys = Object.keys(incominghistoryfile);
+        let newTempMap = new Map();
         keys.forEach(element => {
-          TRANSACTIONS.HistoryDataMap.set(Number(element),incominghistoryfile[element]);
+          newTempMap.set(Number(element),incominghistoryfile[element]);
         });
+        this.setState(
+          {
+            historyData:newTempMap
+          }
+        );
+        
     }
     catch (err) {
       //File is not found or corrupted, make a new one. 
       //onsole.log(err);
-      getAllhourData();
+      this.getAllhourData();
     }
   }
 
@@ -876,71 +907,86 @@ class Transactions extends Component {
     // We first have a download of data from may to the last known data that cryptocompare has data for. 
     // This is not great but we can only get data in 15 calls persecond so this is a good start. 
     let nowepoch = (Math.ceil(new Date(2018,5,8,10,25,25,500) /1000));
-    let cryptocompareurl1 = createcryptocompareurl("USD",nowepoch);
-    let cryptocompareurl8 = createcryptocompareurl("BTC",nowepoch);
-    let cryptocompareurl2 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 1))))) ;
-    let cryptocompareurl5 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 1))))) ;
-    let cryptocompareurl3 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 2))))) ;
-    let cryptocompareurl6 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 2))))) ;
-    let cryptocompareurl4 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 3))))) ;
-    let cryptocompareurl7 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 3))))) ;
-    let cryptocompareurl9 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 4))))) ;
-    let cryptocompareurl10 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 4))))) ;
-    let cryptocompareurl11 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 5))))) ;
-    let cryptocompareurl12 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 5))))) ;
-    let cryptocompareurl13 = createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 6))))) ;
-    let cryptocompareurl14 = createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 6))))) ;
+    let cryptocompareurl1 = this.createcryptocompareurl("USD",nowepoch);
+    let cryptocompareurl8 = this.createcryptocompareurl("BTC",nowepoch);
+    let cryptocompareurl2 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 1))))) ;
+    let cryptocompareurl5 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 1))))) ;
+    let cryptocompareurl3 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 2))))) ;
+    let cryptocompareurl6 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 2))))) ;
+    let cryptocompareurl4 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 3))))) ;
+    let cryptocompareurl7 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 3))))) ;
+    let cryptocompareurl9 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 4))))) ;
+    let cryptocompareurl10 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 4))))) ;
+    let cryptocompareurl11 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 5))))) ;
+    let cryptocompareurl12 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 5))))) ;
+    let cryptocompareurl13 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 6))))) ;
+    let cryptocompareurl14 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 6))))) ;
     let promsiewait = new Promise(function(resolve, reject) {
       setTimeout(resolve, 1000);
     });
     
-    
-    let finishandsavefilepromise = new Promise(function(resolve, reject) {
-      setTimeout(() => {
-        console.log((Array.from(TRANSACTIONS.HistoryDataMap.keys())).length);
+    let pppppp = function()
+    {
+      console.log((Array.from(this.state.historyData.keys())).length);
         let appdataloc = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME);
         appdataloc = appdataloc + "/.Nexus/";
     
         let fs = require('fs');
     
-        fs.writeFile(appdataloc + 'historydata.json', JSON.stringify(mapToObject(TRANSACTIONS.HistoryDataMap)),(err) => {
+        fs.writeFile(appdataloc + 'historydata.json', JSON.stringify(this.mapToObject(this.state.historyData)),(err) => {
           if (err != null){
               console.log(err);
               } 
           });
-        resolve();
+    }
+
+    pppppp = pppppp.bind(this);
+
+    let eeeeee = function()
+    {
+      setTimeout(() => {
+        console.log("777777777777777777");
+        pppppp();
+     
+       }, 10000);
+    }
+
+    eeeeee = eeeeee.bind(this);
     
-      }, 10000);
-    });
+    let finishandsavefilepromise = new Promise(function(resolve, reject) {
+     eeeeee();
+    }.bind(this));
+    finishandsavefilepromise = finishandsavefilepromise.bind(this);
+    this.createhistoricaldatapullpromise.bind(this);
     
     //Call the promises and make a chain.
-    createhistoricaldatapullpromise(cryptocompareurl1,'USD')
+    this.createhistoricaldatapullpromise(cryptocompareurl1,'USD')
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl2,'USD'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl2,'USD'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl3,'USD'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl3,'USD'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl4,'USD'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl4,'USD'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl5,'BTC'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl5,'BTC'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl6,'BTC'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl6,'BTC'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl7,'BTC'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl7,'BTC'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl8,'BTC'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl8,'BTC'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl9,'USD'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl9,'USD'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl10,'BTC'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl10,'BTC'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl11,'USD'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl11,'USD'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl12,'BTC'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl12,'BTC'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl13,'USD'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl13,'USD'))
     .then(promsiewait)
-    .then(createhistoricaldatapullpromise(cryptocompareurl14,'BTC'))
+    .then(this.createhistoricaldatapullpromise(cryptocompareurl14,'BTC'))
     .then(promsiewait)
     .then(finishandsavefilepromise);
   }
@@ -963,16 +1009,86 @@ class Transactions extends Component {
 
     
     //Get Both new USD and BTC Data
-    createhistoricaldatapullpromise(cryptocompareurlUSD,'USD').
-    then(data => {console.log(data);createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC').
+    this.createhistoricaldatapullpromise(cryptocompareurlUSD,'USD').
+    then(data => {console.log(data);this.createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC').
     then( data => {
       setTimeout(() => {
-        TRANSACTIONS.gettingmoredata = false;
-        TRANSACTIONS.getpriceattime(transactionIndex); //Now there is more data, process that transaction.
+        console.log(this.state.historyData);
+        //TRANSACTIONS.gettingmoredata = false;
+        //TRANSACTIONS.getpriceattime(transactionIndex); //Now there is more data, process that transaction.
       })
     }); });
 
   }
+
+  setnewdatafunction(body,tokentocompare)
+    {
+      let result = body;
+      console.log(result);
+      let previousDataFile = this.state.historyData;
+      //For each point returned at it to the historydatamap.
+      result["Data"].forEach(element => {
+        let tempdataobj = {};
+        let tempdataattribute = 'price' + tokentocompare;
+        tempdataobj[tempdataattribute] = element["open"];
+        let incomingelement = tempdataobj;
+
+        Object.assign(incomingelement,previousDataFile.get(element["time"]));
+        previousDataFile.set(element["time"],incomingelement);
+      });
+      this.setState(
+        {
+          historyData:previousDataFile
+        }
+      );
+      console.log(this.state.historyData);
+    };
+
+    uuuuuuuuuu = function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        console.log(response["request"]["path"]);
+        let iiiiiii;
+        if ( response["request"]["path"].includes("USD",10) == true)
+        {
+          console.log("99999999999999");
+          iiiiiii = "USD";
+        }
+        if ( response["request"]["path"].includes("BTC",10) == true)
+        {
+          console.log("0000000000000000000");
+          iiiiiii = "BTC";
+        }
+          this.setnewdatafunction(body,iiiiiii);
+          //resolve(iiiiiii);
+        
+
+      }
+    }
+
+    kfkfkfkfkfk = function(urltoask,tokentocomapre)
+      {
+        this.uuuuuuuuuu.bind(this);
+        Request(
+          {
+            url: urltoask,
+            json: true,
+
+          },
+          this.uuuuuuuuuu.bind(this)
+        );
+      }
+
+      gjggjgjgj = function(resolve,reject,urltoask,tokentocomapre)
+    {
+
+
+      this.kfkfkfkfkfk = this.kfkfkfkfkfk.bind(this);
+            setTimeout(() => {
+        
+              this.kfkfkfkfkfk(urltoask,tokentocomapre);
+
+    }, 250 + Math.floor(Math.random() * 2000) );
+    }
 
   /// Create History Data pull promise
   /// This will create and return a promise based on the cryptocompare url, and needs which coin to get info from (the api only accepts one coin at a time)
@@ -983,38 +1099,65 @@ class Transactions extends Component {
   ///   Promise         || Promise to be executed
   createhistoricaldatapullpromise(urltoask, tokentocompare)
   {
-    
-    let internalpromise = new Promise(function(resolve, reject) {
-      setTimeout(() => {
-        
+     /*
+    let setnewdatafunction = function(body)
+    {
+      let result = body;
+      console.log(result);
+      let previousDataFile = this.state.historyData;
+      //For each point returned at it to the historydatamap.
+      result["Data"].forEach(element => {
+        let tempdataobj = {};
+        let tempdataattribute = 'price' + tokentocompare;
+        tempdataobj[tempdataattribute] = element["open"];
+        let incomingelement = tempdataobj;
 
-      TRANSACTIONS.request(
+        Object.assign(incomingelement,previousDataFile.get(element["time"]));
+        previousDataFile.set(element["time"],incomingelement);
+      });
+      this.setState(
         {
-          url: urltoask,
-          json: true
-        },
-        function(error, response, body) {
-          if (!error && response.statusCode === 200) {
-            let result = body;
-            //console.log(result);
-
-            //For each point returned at it to the historydatamap.
-            result["Data"].forEach(element => {
-              let tempdataobj = {};
-              let tempdataattribute = 'price' + tokentocompare;
-              tempdataobj[tempdataattribute] = element["open"];
-              let incomingelement = tempdataobj;
-              Object.assign(incomingelement,TRANSACTIONS.HistoryDataMap.get(element["time"]));
-              TRANSACTIONS.HistoryDataMap.set(element["time"],incomingelement);
-              resolve(tokentocompare);
-            });
-          }
+          historyData:previousDataFile
         }
       );
-    }, 250 + Math.floor(Math.random() * 2000) ); // I just added this so there is a bit of seperation between calls. 
-    });
+    };
+ */
+    this.setnewdatafunction.bind(this);
+    
+
+    
+   
+
+    let internalpromise = new Promise((resolve,reject) => this.gjggjgjgj(resolve,reject,urltoask,tokentocompare));
 
     return internalpromise;
+  }
+
+  
+  
+  getDataorNewData(incomingIndex)
+  {
+    var that = this;
+    console.log(that);
+    console.log(this.state.walletTransactions);
+    let founddata = this.findclosestdatapoint(this.state.walletTransactions[incomingIndex].time.toString())
+    console.log(founddata);
+    if(founddata == undefined)
+    {
+      console.log(this.state.walletTransactions[incomingIndex]);
+    }
+    else
+    {
+      let tempwalletTrans = this.state.walletTransactions;
+      tempwalletTrans[incomingIndex].value.USD = founddata.priceUSD;
+      tempwalletTrans[incomingIndex].value.BTC = founddata.priceBTC;
+      that.setState(
+        {
+          walletTransactions:tempwalletTrans
+        }
+      );
+      
+    }
   }
 
 
@@ -1033,7 +1176,7 @@ class Transactions extends Component {
     for (let [k,v] of aMap) {
         // We don’t escape the key '__proto__' which can cause problems on older engines
         if (v instanceof Map) {
-            obj[k.toString()] = mapToObject(v); // handle Maps that have Maps as values
+            obj[k.toString()] = this.mapToObject(v); // handle Maps that have Maps as values
         } else {
             obj[k.toString()] = v;              // calling toString handles case where map key is not a string JSON requires key to be a string
         }
@@ -1056,11 +1199,11 @@ class Transactions extends Component {
     let numberremainder = Number(modifiedtimestamp) % 3600;
     let datatograb; 
 
-    datatograb = TRANSACTIONS.HistoryDataMap.get((Number(modifiedtimestamp)  + numberremainder));
+    datatograb = this.state.historyData.get((Number(modifiedtimestamp)  + numberremainder));
 
     if ( datatograb == undefined) 
     {
-      datatograb = TRANSACTIONS.HistoryDataMap.get((Number(modifiedtimestamp)  - numberremainder));
+      datatograb = this.state.historyData.get((Number(modifiedtimestamp)  - numberremainder));
     } 
 
     return datatograb;

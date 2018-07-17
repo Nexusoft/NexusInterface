@@ -2,9 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 875px;
-  width: 100%;
-  overflow: auto;
 }
 
 .exchangeUnitContainer {
@@ -37,4 +34,13 @@
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.marketSummaryTable {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.marketSummaryTable div {
+  border-bottom: 1px solid white;
 }

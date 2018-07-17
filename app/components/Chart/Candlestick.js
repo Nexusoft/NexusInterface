@@ -1,55 +1,74 @@
-// Copyright (c) 2016 - 2017 Uber Technologies, Inc.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 import React, { Component } from "react";
 
 import {
-  XYPlot,
-  XAxis,
-  YAxis,
-  VerticalGridLines,
-  HorizontalGridLines,
-  WhiskerSeries
-} from "react-vis";
+  VictoryChart,
+  VictoryAxis,
+  VictoryCandlestick,
+  VictoryPortal,
+  VictoryLabel,
+  VictoryTooltip
+} from "victory";
 
 export default class Candlestick extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
   render() {
     return (
-      <XYPlot width={300} height={300}>
-        <XAxis />
-        <YAxis />
-        <WhiskerSeries
-          className="whisker-series-example"
-          data={[
-            { x: 1, y: 10, yVariance: 2 },
-            { x: 1.7, y: 12, yVariance: 7 },
-            { x: 2, y: 5, yVariance: 3 },
-            { x: 3, y: 15, yVariance: 2 },
-            { x: 2.5, y: 7, yVariance: 4 }
-          ]}
-        />
-      </XYPlot>
+      <div className="marketDepthInner">
+        <VictoryChart
+          domainPadding={{ x: 10 }}
+          theme={{
+            axis: {
+              style: {
+                axis: {
+                  fill: "transparent",
+                  stroke: "white",
+                  strokeWidth: 1
+                },
+                axisLabel: {
+                  textAnchor: "right",
+                  padding: 25
+                },
+                grid: {
+                  fill: "none",
+                  stroke: "none",
+                  pointerEvents: "painted"
+                },
+                ticks: {
+                  fill: "white",
+                  size: 5,
+                  stroke: "white"
+                },
+                tickLabels: {
+                  padding: 1,
+                  fill: "white",
+                  stroke: "transparent"
+                }
+              }
+            }
+          }}
+        >
+          <VictoryAxis
+            tickFormat={t =>
+              `${new Date(t).getDate()}/${new Date(t).getMonth() + 1}`
+            }
+            tickLabelComponent={
+              <VictoryPortal>
+                <VictoryLabel />
+              </VictoryPortal>
+            }
+          />
+
+          <VictoryAxis dependentAxis style={{ tickLabels: { angle: -45 } }} />
+          <VictoryCandlestick
+            style={{ data: { stroke: "white" } }}
+            candleColors={{
+              positive: "rgba(38, 230, 0, 1)",
+              negative: "rgba(255, 15, 15, 1)"
+            }}
+            data={this.props.data}
+            labelComponent={<VictoryTooltip />}
+          />
+        </VictoryChart>
+      </div>
     );
   }
 }

@@ -76,26 +76,26 @@ class Header extends Component {
         <div id="settings-menu">
           <div className="icon">
             <img src={this.signInStatus()} />
-            <div className="iconinfo">
+            <div className="tooltip bottom">
               <div>{this.signInStatusMessage()}</div>
             </div>
           </div>
           <div className="icon">
             <img src="images/nxs-staking-icon.png" />
-            <div className="iconinfo">
+            <div className="tooltip bottom">
               <div>Stake Weight: {this.props.stakeweight}%</div>
-              <div>Intrest Rate: {this.props.interestweight}%</div>
+              <div>Interest Rate: {this.props.interestweight}%</div>
               <div>Trust Weight: {this.props.trustweight}%</div>
               <div>Block Weight: {this.props.blockweight}</div>
             </div>
           </div>
           <div className="icon">
             <img src={this.syncStatus()} />
-            <div className="iconinfo" />
+            {/* <div className="tooltip" /> */}
           </div>
         </div>
         <Link to="/">
-          <img src="images/NXS-logo-min.png" alt="Nexus Logo" id="test" />
+          <img id="logo" src="images/NXS-logo-min.png" alt="Nexus Logo" />
         </Link>
 
         <div id="hdr-line" />

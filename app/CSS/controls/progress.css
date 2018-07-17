@@ -1,0 +1,24 @@
+/*
+Progress Bar
+=================================
+*/
+
+:root {
+	--progress-track-background-color: rgba(0,0,0,0.25);
+	--progress-background-color: #0ca4fb;
+	--progress-transition-timing: .4s;
+}
+
+.progress {
+	padding: 4px;
+	border-radius: 4px;
+	background: var(--progress-track-background-color);
+  }
+  
+.progress .bar {
+	height: 16px;
+	width: 0; /* default progress bar to empty */
+	border-radius: 3px;
+	background-color: var(--progress-background-color);
+	transition: width var(--progress-transition-timing) linear;
+}
