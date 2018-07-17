@@ -297,6 +297,38 @@ class Transactions extends Component {
           promisList.push(RPC.PROMISE("listtransactions",[element,9999,0]));
         });
         let tempWalletTransactions = [];
+        tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+         
+
+          let objectheaders = Object.keys(this.state.walletTransactions[0]);
+          let tabelheaders = [];
+          objectheaders.forEach(element => {
+            tabelheaders.push(
+              {
+                Header: element,
+                accessor: element
+              }
+            );
+          });
+
+          this.setState(
+          {
+              tableColumns:tabelheaders
+          });
+          
+           if ( promisList == null || promisList == undefined || promisList.length == 1)
+          {
+            return;
+          }
         Promise.all(promisList).then(payload =>
         {
           console.log(payload);
@@ -338,27 +370,9 @@ class Transactions extends Component {
 
           });
           
-          let objectheaders = Object.keys(tempWalletTransactions[0]);
-          let tabelheaders = [];
-          objectheaders.forEach(element => {
-            tabelheaders.push(
-              {
-                Header: element,
-                accessor: element
-              }
-            );
-          });
+          
           console.log(tempWalletTransactions);
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+          
           console.log(tempWalletTransactions);
           this.props.SetWalletTransactionArray(tempWalletTransactions);
           console.log(this.props.walletitems);
@@ -1132,6 +1146,8 @@ class Transactions extends Component {
 
     return internalpromise;
   }
+
+  
 
   
   
