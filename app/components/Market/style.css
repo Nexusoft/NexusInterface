@@ -52,11 +52,10 @@
   display: flex;
   flex-wrap: wrap;
   position: fixed;
-  right: 20px;
-  z-index: 9999999999999999999999999;
-  max-height: 250px;
-  max-width: 500px;
-  overflow: auto;
+  right: 70px;
+  max-height: 125px;
+  max-width: 50%;
+  overflow: hidden;
 }
 
 .arbitrageAlert {
@@ -72,4 +71,8 @@
   position: absolute;
   top: 0;
   right: 5px;
+}
+
+.panel {
+  width: 100%;
 }

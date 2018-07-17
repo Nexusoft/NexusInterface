@@ -9,11 +9,7 @@ import * as TYPE from "../../actions/actiontypes";
 import MarketDepth from "../Chart/MarketDepth";
 import Candlestick from "../Chart/Candlestick";
 
-///////testing///////
-
-import { Alert } from "../Alert";
-
-////////////////////
+import Alert from "../Alert";
 
 // import images
 import bittrexLogo from "../../images/BittrexLogo.png";
@@ -47,9 +43,10 @@ class Market extends Component {
     this.props.binanceCandlestickLoader();
     this.props.bittrexCandlestickLoader();
     this.props.cryptopiaCandlestickLoader();
+    this.arbitageChecker();
   }
 
-  arbitageAlert() {
+  arbitageChecker() {
     let lowArr = [],
       highArr = [],
       arbArr = [[], [], []];
@@ -133,77 +130,27 @@ class Market extends Component {
       };
     });
 
-    const placeholderVolume = 1;
-    const placeholderTreshold = -0.0001;
+    const placeholderTreshold = -0.001;
     let potentialAlerts = compBuyArr
       .map((high, i1) => {
         return compSellArr
           .map((low, i2) => {
             if (high.exchange !== low.exchange) {
               let sellNXS =
-                high.priceAverage * placeholderVolume -
-                high.priceAverage * placeholderVolume * high.fee;
+                high.priceAverage * this.props.tradeVolume -
+                high.priceAverage * this.props.tradeVolume * high.fee;
               let buyNXS =
-                placeholderVolume * low.priceAverage -
-                placeholderVolume * low.priceAverage * low.fee;
+                this.props.tradeVolume * low.priceAverage -
+                this.props.tradeVolume * low.priceAverage * low.fee;
 
               let deltaBTC = sellNXS - buyNXS;
 
-              if (deltaBTC > placeholderTreshold) {
-                console.log("ARBITRAGE!!!");
-                let highsrc, lowsrc;
-                switch (high.exchange) {
-                  case "binance":
-                    highsrc = binanceSmallLogo;
-                    break;
-                  case "bittrex":
-                    highsrc = bittrexSmallLogo;
-                    break;
-                  case "cryptopia":
-                    highsrc = cryptopiaSmallLogo;
-                    break;
-                  default:
-                    break;
-                }
-                switch (low.exchange) {
-                  case "binance":
-                    lowsrc = binanceSmallLogo;
-                    break;
-                  case "bittrex":
-                    lowsrc = bittrexSmallLogo;
-                    break;
-                  case "cryptopia":
-                    lowsrc = cryptopiaSmallLogo;
-                    break;
-                  default:
-                    break;
-                }
-                // this.Alert.add();
-                return (
-                  <div className="arbitrageAlert" key={`${i1}${i2}`}>
-                    <div>ARBITRAGE ALERT!</div>
-                    <span onClick={() => this.closeAlert(this)}>X</span>
-                    <div>
-                      <img src={highsrc} alt={high.exchange} />
-                      <img src={arrow} alt="right pointing arrow" />
-                      <img src={lowsrc} alt={low.exchange} />
-                    </div>
-                    <div>
-                      {deltaBTC.toFixed(8)} profit on a {placeholderVolume} NXS
-                      trade
-                    </div>
-                  </div>
-                );
-                // {
-                //   fromExcange: high.exchange,
-                //   fromPriceAve: high.priceAverage,
-                //   toPriceAve: low.priceAverage,
-                //   maxVol: maxVol,
-                //   fromFee: low.fee,
-                //   toFee: high.fee,
-                //   deltaP: parseFloat(deltaP.toFixed(8)),
-                //   toExchange: low.exchange
-                // };
+              if (deltaBTC > this.props.threshold) {
+                return {
+                  fromExcange: high.exchange,
+                  potentialProfit: deltaBTC.toFixed(8),
+                  toExchange: low.exchange
+                };
               } else return null;
             }
           })
@@ -223,14 +170,58 @@ class Market extends Component {
       alerts = potentialAlerts.reduce((accumulator, currentValue) =>
         accumulator.concat(currentValue)
       );
+      this.props.setAlertList(alerts);
     }
-
-    console.log(alerts);
-    return alerts;
   }
 
-  closeAlert(thing) {
-    console.log(thing);
+  arbitageAlert() {
+    if (this.props.arbAlertList[0]) {
+      return this.props.arbAlertList.map((e, i) => {
+        let highsrc, lowsrc;
+        switch (e.fromExcange) {
+          case "binance":
+            highsrc = binanceSmallLogo;
+            break;
+          case "bittrex":
+            highsrc = bittrexSmallLogo;
+            break;
+          case "cryptopia":
+            highsrc = cryptopiaSmallLogo;
+            break;
+          default:
+            break;
+        }
+        switch (e.toExchange) {
+          case "binance":
+            lowsrc = binanceSmallLogo;
+            break;
+          case "bittrex":
+            lowsrc = bittrexSmallLogo;
+            break;
+          case "cryptopia":
+            lowsrc = cryptopiaSmallLogo;
+            break;
+          default:
+            break;
+        }
+
+        return (
+          <div className="arbitrageAlert" key={`${i}`}>
+            <div>ARBITRAGE ALERT!</div>
+            <span onClick={() => this.props.removeAlert(i)}>X</span>
+            <div>
+              <img src={highsrc} alt={e.fromExcange} />
+              <img src={arrow} alt="right pointing arrow" />
+              <img src={lowsrc} alt={e.toExchange} />
+            </div>
+            <div>
+              {e.potentialProfit} potential average profit on a{" "}
+              {this.props.tradeVolume} NXS trade
+            </div>
+          </div>
+        );
+      });
+    } else return null;
   }
 
   formatBuyData(array) {
@@ -295,52 +286,55 @@ class Market extends Component {
           <h1 onClick={() => this.refresher()}>Market Information</h1>
           <div className="alertbox">{this.arbitageAlert()}</div>
         </div>
-        {this.props.loaded &&
-          this.props.binance.buy[0] && (
-            <div className="exchangeUnitContainer">
-              <img className="exchangeLogo" src={binanceLogo} />
-              <div className="marketInfoContainer">
-                <MarketDepth
-                  chartData={this.formatChartData("binanceBuy")}
-                  chartSellData={this.formatChartData("binanceSell")}
-                />
-                {this.props.binance.candlesticks[0] && (
-                  <Candlestick data={this.props.binance.candlesticks} />
-                )}
-              </div>
-            </div>
-          )}
-        {this.props.loaded &&
-          this.props.bittrex.buy[0] && (
-            <div className="exchangeUnitContainer">
-              <img className="exchangeLogo" src={bittrexLogo} />
-              <div className="marketInfoContainer">
-                <MarketDepth
-                  chartData={this.formatChartData("bittrexBuy")}
-                  chartSellData={this.formatChartData("bittrexSell")}
-                />
-                {this.props.bittrex.candlesticks[0] && (
-                  <Candlestick data={this.props.bittrex.candlesticks} />
-                )}
-              </div>
-            </div>
-          )}
-        {this.props.loaded &&
-          this.props.cryptopia.buy[0] && (
-            <div className="exchangeUnitContainer">
-              <img className="excangeLogo" src={cryptopiaLogo} />
-              <div className="marketInfoContainer">
-                <MarketDepth
-                  chartData={this.formatChartData("cryptopiaBuy")}
-                  chartSellData={this.formatChartData("cryptopiaSell")}
-                />
 
-                {this.props.cryptopia.candlesticks[0] && (
-                  <Candlestick data={this.props.cryptopia.candlesticks} />
-                )}
+        <div className="panel">
+          {this.props.loaded &&
+            this.props.binance.buy[0] && (
+              <div className="exchangeUnitContainer">
+                <img className="exchangeLogo" src={binanceLogo} />
+                <div className="marketInfoContainer">
+                  <MarketDepth
+                    chartData={this.formatChartData("binanceBuy")}
+                    chartSellData={this.formatChartData("binanceSell")}
+                  />
+                  {this.props.binance.candlesticks[0] && (
+                    <Candlestick data={this.props.binance.candlesticks} />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          {this.props.loaded &&
+            this.props.bittrex.buy[0] && (
+              <div className="exchangeUnitContainer">
+                <img className="exchangeLogo" src={bittrexLogo} />
+                <div className="marketInfoContainer">
+                  <MarketDepth
+                    chartData={this.formatChartData("bittrexBuy")}
+                    chartSellData={this.formatChartData("bittrexSell")}
+                  />
+                  {this.props.bittrex.candlesticks[0] && (
+                    <Candlestick data={this.props.bittrex.candlesticks} />
+                  )}
+                </div>
+              </div>
+            )}
+          {this.props.loaded &&
+            this.props.cryptopia.buy[0] && (
+              <div className="exchangeUnitContainer">
+                <img className="excangeLogo" src={cryptopiaLogo} />
+                <div className="marketInfoContainer">
+                  <MarketDepth
+                    chartData={this.formatChartData("cryptopiaBuy")}
+                    chartSellData={this.formatChartData("cryptopiaSell")}
+                  />
+
+                  {this.props.cryptopia.candlesticks[0] && (
+                    <Candlestick data={this.props.cryptopia.candlesticks} />
+                  )}
+                </div>
+              </div>
+            )}
+        </div>
       </div>
     );
   }
@@ -349,4 +343,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Market);
-// withAlert()

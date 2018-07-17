@@ -39,29 +39,13 @@ export default function Root({ store, history }: RootType) {
               <Route exact path="/Market" component={Market} />
               <Route exact path="/Addressbook" component={Addressbook} />
               <Route exact path="/BlockExplorer" component={BlockExplorer} />
-              <Route exact path="/Settings" component={Settings} />
+              <Route path="/Settings" component={Settings} />
               <Route exact path="/Terminal" component={Terminal} />
               <Route exact path="/SecurityLogin" component={SecurityLogin} />
               <Route exact path="/StyleGuide" component={StyleGuide} />
               <Route exact path="/List" component={List} />
             </div>
           </div>
-
-          <div id="app-content"><div id="app-content-container">
-
-            <Route exact path="/" component={Overview} />
-            <Route exact path="/SendRecieve" component={SendRecieve} />
-            <Route exact path="/Transactions" component={Transactions} />
-            <Route exact path="/Market" component={Market} />
-            <Route exact path="/Addressbook" component={Addressbook} />
-            <Route exact path="/BlockExplorer" component={BlockExplorer} />
-            <Route path="/Settings" component={Settings} />
-            <Route exact path="/Terminal" component={Terminal} />
-            <Route exact path="/SecurityLogin" component={SecurityLogin} />
-            <Route exact path="/StyleGuide" component={StyleGuide} />
-            <Route exact path="/List" component={List} />
-
-          </div></div>
 
           <div id="app-navigation">
             <Route path="/" component={Footer} />
