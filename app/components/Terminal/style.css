@@ -1,0 +1,74 @@
+#terminal {
+	position: relative;
+	height: 100%;
+}
+
+#terminal-container {
+	--example-border: 1px solid rgba(255,255,255,.1);
+	counter-reset: section;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+
+	/* this is needed to allow the header/panel to collapse to scrollbars */
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+#terminal-container > h2 {
+	flex: 0;
+}
+
+#terminal-container > .panel {
+	flex: 1;
+	overflow-y: auto;
+
+	display: flex;
+    flex-direction: column;
+}
+
+.panel > .tabs {
+	/* position: relative; */
+
+	/* flex: 0; */
+}
+
+#terminal-content {
+	position: relative;
+
+	display: flex;
+	flex: 1;
+}
+
+#terminal-console {
+	display: flex;
+	flex-direction: column;
+
+	flex: 1;
+}
+
+#terminal-console .button {
+	margin: 0;
+}
+
+#terminal-console-input {
+	display: flex;
+	margin-bottom: 1em;
+}
+
+#terminal-console-input > input {
+	flex: 1;
+}
+
+#terminal-console-output,
+#terminal-core-output {
+	flex: 1;
+	background-color: rgba(255,255,255,0.1);
+	border: 1px solid rgba(255,255,255,0.1);
+	overflow: auto;
+	font-family: var(--mono-font-family);
+}
+
