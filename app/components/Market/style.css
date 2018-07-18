@@ -1,7 +1,17 @@
-#Market {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+#market {
+	position: relative;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+#market > h2 {
+	flex: 0;
+}
+
+#market > .panel {
+	flex: 1;
+	overflow-y: auto;
 }
 
 .exchangeUnitContainer {
@@ -12,10 +22,12 @@
   display: flex;
   flex-direction: row;
   width: 100%;
+  margin: 1.5em 0;
+  border-top: 1px solid #333;
 }
 
-.excangeLogo {
-  height: 75px;
+.exchangeLogo {
+  height: 60px;
 }
 
 .marketDepthInner {
@@ -39,13 +51,6 @@
 
 .marketSummaryTable div {
   border-bottom: 1px solid white;
-}
-
-#marketHeadliner {
-  display: flex;
-  flex-direction: row;
-  /* justify-content: center; */
-  width: 100%;
 }
 
 .alertbox {
@@ -73,6 +78,24 @@
   right: 5px;
 }
 
-.panel {
-  width: 100%;
+/*
+Refresh Button
+--------------------------------
+*/
+
+a.refresh {
+	display: block;
+  position: absolute;
+  top: 4em;
+  right: 0;
+  font-family: var(--mono-font-family);
+	font-size: .875em;
+  opacity: .75;
+  color: #fff;
+  cursor: pointer;
+}
+
+a.refresh:hover {
+  opacity: .95;
+  text-decoration: underline;
 }
