@@ -8,13 +8,9 @@ export default class BlockExplorer extends Component {
 
       <div id="blockexplorer">
 
-        <div id="blockexplorer-container">
+        <h2>Block Explorer</h2>
 
-	        <h2>Block Explorer</h2>
-
-	        <div className="panel">
-
-          </div>
+        <div className="panel">
 
         </div>
 
