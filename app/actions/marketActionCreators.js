@@ -3,84 +3,96 @@ import * as TYPE from "./actiontypes";
 
 //action creator for loaded flag
 
-export function marketDataLoaded() {
+export const marketDataLoaded = () => {
   return { type: TYPE.MARKET_DATA_LOADED };
-}
+};
+
+// action creators for the alert list
+
+export const setAlertList = list => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_ALERTS, payload: list });
+  };
+};
+
+export const removeAlert = index => {
+  return dispatch => {
+    console.log(index);
+    dispatch({ type: TYPE.REMOVE_ALERT, payload: index });
+  };
+};
 
 // action creators for the 24 hr market summery requests
 
-export const binance24hrInfo = () => {
-  return dispatch => {
-    Request(
-      {
-        url: "https://api.binance.com/api/v1/ticker/24hr?symbol=NXSBTC",
-        json: true
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          console.log("binnance", body);
-          // let data= body.result[0];
-          let res = {
-            change: body.priceChange,
-            high: body.highPrice,
-            low: body.lowPrice,
-            volume: body.volume
-          };
-          dispatch({ type: TYPE.BINANCE_24, payload: res });
-        }
-      }
-    );
-  };
-};
+// export const binance24hrInfo = () => {
+//   return dispatch => {
+//     Request(
+//       {
+//         url: "https://api.binance.com/api/v1/ticker/24hr?symbol=NXSBTC",
+//         json: true
+//       },
+//       (error, response, body) => {
+//         if (response.statusCode === 200) {
+//           // let data= body.result[0];
+//           let res = {
+//             change: body.priceChange,
+//             high: body.highPrice,
+//             low: body.lowPrice,
+//             volume: body.volume
+//           };
+//           dispatch({ type: TYPE.BINANCE_24, payload: res });
+//         }
+//       }
+//     );
+//   };
+// };
 
-export const bittrex24hrInfo = () => {
-  return dispatch => {
-    Request(
-      {
-        url:
-          "https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-nxs",
-        json: true
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          console.log("bittrex", body);
-          let data = body.result[0];
-          let res = {
-            change: (data.Last - data.PrevDay) / data.Last,
-            high: data.High,
-            low: data.Low,
-            volume: data.Volume
-          };
-          dispatch({ type: TYPE.BITTREX_24, payload: res });
-        }
-      }
-    );
-  };
-};
+// export const bittrex24hrInfo = () => {
+//   return dispatch => {
+//     Request(
+//       {
+//         url:
+//           "https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-nxs",
+//         json: true
+//       },
+//       (error, response, body) => {
+//         if (response.statusCode === 200) {
+//           let data = body.result[0];
+//           let res = {
+//             change: (data.Last - data.PrevDay) / data.Last,
+//             high: data.High,
+//             low: data.Low,
+//             volume: data.Volume
+//           };
+//           dispatch({ type: TYPE.BITTREX_24, payload: res });
+//         }
+//       }
+//     );
+//   };
+// };
 
-export const cryptopia24hrInfo = () => {
-  return dispatch => {
-    Request(
-      {
-        url: "https://www.cryptopia.co.nz/api/GetMarket/NXS_BTC",
-        json: true
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          console.log("cryptopia", body.Data);
-          let data = body.Data;
-          let res = {
-            change: data.Change,
-            high: data.High,
-            low: data.Low,
-            volume: data.Volume
-          };
-          dispatch({ type: TYPE.CRYPTOPIA_24, payload: res });
-        }
-      }
-    );
-  };
-};
+// export const cryptopia24hrInfo = () => {
+//   return dispatch => {
+//     Request(
+//       {
+//         url: "https://www.cryptopia.co.nz/api/GetMarket/NXS_BTC",
+//         json: true
+//       },
+//       (error, response, body) => {
+//         if (response.statusCode === 200) {
+//           let data = body.Data;
+//           let res = {
+//             change: data.Change,
+//             high: data.High,
+//             low: data.Low,
+//             volume: data.Volume
+//           };
+//           dispatch({ type: TYPE.CRYPTOPIA_24, payload: res });
+//         }
+//       }
+//     );
+//   };
+// };
 
 // action creators for the market depth calls
 
@@ -256,7 +268,6 @@ export const cryptopiaCandlestickLoader = () => {
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
-          console.log(response);
           let res = body.Candle.reverse()
             .map(e => {
               return {

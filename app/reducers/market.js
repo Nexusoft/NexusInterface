@@ -2,26 +2,29 @@ import * as TYPE from "../actions/actiontypes";
 
 const initialState = {
   binance: {
-    info24hr: {},
+    // info24hr: {},
     buy: [],
     sell: [],
     candlesticks: []
   },
   cryptopia: {
-    info24hr: {},
+    // info24hr: {},
     buy: [],
     sell: [],
     candlesticks: []
   },
   bittrex: {
-    info24hr: {},
+    // info24hr: {},
     buy: [],
     sell: [],
     candlesticks: []
   },
-  loaded: false
+  loaded: false,
+  arbAlertList: [],
+  threshold: 0.0002,
+  tradeVolume: 5
 };
-
+// TODO: deprecate when we move to a new alert system
 export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.CRYPTOPIA_24:
@@ -104,6 +107,21 @@ export default (state = initialState, action) => {
           candlesticks: [...action.payload]
         }
       };
+    //  TODO: deprecate when we move to a new alert system
+    case TYPE.SET_ALERTS:
+      return {
+        ...state,
+        arbAlertList: action.payload
+      };
+    case TYPE.REMOVE_ALERT:
+      return {
+        ...state,
+        arbAlertList: [
+          ...state.arbAlertList.slice(0, action.payload),
+          ...state.arbAlertList.slice(action.payload + 1)
+        ]
+      };
+
     default:
       return state;
   }

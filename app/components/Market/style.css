@@ -18,11 +18,6 @@
   height: 75px;
 }
 
-/* .marketDepthOuter {
-  min-width: 500px;
-  max-width: 800px;
-} */
-
 .marketDepthInner {
   position: relative;
   flex: 1;
@@ -41,6 +36,43 @@
   flex-direction: column;
   justify-content: center;
 }
+
 .marketSummaryTable div {
   border-bottom: 1px solid white;
+}
+
+#marketHeadliner {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center; */
+  width: 100%;
+}
+
+.alertbox {
+  display: flex;
+  flex-wrap: wrap;
+  position: fixed;
+  right: 70px;
+  max-height: 125px;
+  max-width: 50%;
+  overflow: hidden;
+}
+
+.arbitrageAlert {
+  position: relative;
+  padding: 5px;
+  margin: 2px;
+  background-color: rgba(13, 145, 18, 0.7);
+}
+.arbitrageAlert img {
+  height: 50px;
+}
+.arbitrageAlert span {
+  position: absolute;
+  top: 0;
+  right: 5px;
+}
+
+.panel {
+  width: 100%;
 }
