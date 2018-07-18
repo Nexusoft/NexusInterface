@@ -8,20 +8,17 @@ export default class SecurityLogin extends Component {
 
       <div id="securitylogin">
 
-        <div id="securitylogin-container">
+        <h2>Security Login</h2>
 
-	        <h2>Security Login</h2>
+        <div className="panel">
 
-	        <div className="panel">
-
-            <p>
-              Login for security module. Note to future self break this into 3
-              modules on a secured route.
-            </p>
-
-          </div>
+          <p>
+            Login for security module. Note to future self break this into 3
+            modules on a secured route.
+          </p>
 
         </div>
+
 
       </div>
 
