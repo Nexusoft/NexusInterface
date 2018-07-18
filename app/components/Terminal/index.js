@@ -24,37 +24,35 @@ export default class Terminal extends Component {
 
       <div id="terminal">
 
-        <div id="terminal-container">
+        <h2>Console</h2>
 
-	        <h2>Console</h2>
+        <div className="panel">
 
-	        <div className="panel">
+          <ul className="tabs">
 
-            <ul className="tabs">
+            <li>
+              <NavLink to={`${this.props.match.url}/Console`}>
+                <img src="images/icon-home.png" alt="Console" />Console
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to={`${this.props.match.url}/Core`}>
+                <img src="images/icon-explorer.png" alt="Core Output" />Core Output
+              </NavLink>
+            </li>
 
-              <li>
-                <NavLink to={`${this.props.match.url}/Console`}>
-                  <img src="images/icon-home.png" alt="Console" />Console
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to={`${this.props.match.url}/Core`}>
-                  <img src="images/icon-explorer.png" alt="Core Output" />Core Output
-                </NavLink>
-              </li>
+          </ul>
 
-            </ul>
+          <div id="terminal-content">
 
-            <div id="terminal-content">
-
-              <Route exact path={`${this.props.match.path}/`} component={TerminalConsole}/>
-              <Route path={`${this.props.match.path}/Console`} component={TerminalConsole}/>
-              <Route path={`${this.props.match.path}/Core`} component={TerminalCore}/>
-
-            </div>
+            <Route exact path={`${this.props.match.path}/`} component={TerminalConsole}/>
+            <Route path={`${this.props.match.path}/Console`} component={TerminalConsole}/>
+            <Route path={`${this.props.match.path}/Core`} component={TerminalCore}/>
 
           </div>
+
         </div>
+
       </div>
     );
   }
