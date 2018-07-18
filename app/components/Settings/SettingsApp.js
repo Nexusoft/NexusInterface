@@ -265,6 +265,7 @@ export default class SettingsApp extends Component {
 
   render() {
     return (
+
       <section id="application">
 
         <form className="aligned">
@@ -308,6 +309,7 @@ export default class SettingsApp extends Component {
         </form>
 
       </section>
+      
     );
   }
 }

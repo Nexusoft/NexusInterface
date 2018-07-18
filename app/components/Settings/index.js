@@ -24,34 +24,30 @@ export default class Settings extends Component {
 
       <div id="settings">
 
-        <div id="settings-container">
+        <h2>Settings</h2>
 
-	        <h2>Settings</h2>
+        <div className="panel">
 
-	        <div className="panel">
+          <ul className="tabs">
 
-            <ul className="tabs">
+            <li>
+              <NavLink to={`${this.props.match.url}/App`}>
+                <img src="images/icon-home.png" alt="Application" />Application
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to={`${this.props.match.url}/Core`}>
+                <img src="images/icon-explorer.png" alt="Core" />Core
+              </NavLink>
+            </li>
 
-              <li>
-                <NavLink to={`${this.props.match.url}/App`}>
-                  <img src="images/icon-home.png" alt="Application" />Application
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to={`${this.props.match.url}/Core`}>
-                  <img src="images/icon-explorer.png" alt="Core" />Core
-                </NavLink>
-              </li>
+          </ul>
 
-            </ul>
+          <div className="grid-container">
 
-            <div className="grid-container">
-
-              <Route exact path={`${this.props.match.path}/`} component={SettingsApp}/>
-              <Route path={`${this.props.match.path}/App`} component={SettingsApp}/>
-              <Route path={`${this.props.match.path}/Core`} component={SettingsCore}/>
-
-            </div>
+            <Route exact path={`${this.props.match.path}/`} component={SettingsApp}/>
+            <Route path={`${this.props.match.path}/App`} component={SettingsApp}/>
+            <Route path={`${this.props.match.path}/Core`} component={SettingsCore}/>
 
           </div>
 
