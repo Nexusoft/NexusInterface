@@ -1,8 +1,7 @@
 import { app, Menu, shell, BrowserWindow, remote } from "electron";
-// const {app, Menu, shell, BrowserWindow,} = remote
-import React from "react";
-import { NavLink, Redirect } from "react-router";
-import { Link, withRouter } from "react-router-dom";
+
+import * as RPC from "./script/rpc";
+
 export default class MenuBuilder {
   mainWindow: remote.BrowserWindow;
 
@@ -194,29 +193,56 @@ export default class MenuBuilder {
         submenu: [
           {
             label: "test",
-
             click: () => {
               history.push("/");
             }
           },
           {
-            label: "&Open",
-            accelerator: "Ctrl+O"
-          },
-          {
-            label: "&Close",
-            accelerator: "Ctrl+W",
+            label: "Back-up Wallet",
             click: () => {
-              this.mainWindow.close();
-            }
-          },
-          {
-            label: "Toggle Developer Tools",
-            accelerator: "Alt+Command+I",
-            click: () => {
-              this.mainWindow.toggleDevTools();
+              let now = `${new Date()}`;
+              let BackupDir = process.env.HOME + "/NexusBackups";
+              RPC.PROMISE("backupwallet", [BackupDir + "/" + now + ".dat"]);
             }
           }
+        ]
+      },
+      {
+        label: "Settings",
+        submenu: [
+          {
+            label: "Core Settings",
+            click() {
+              history.push("/Settings/Core");
+            }
+          },
+          {
+            label: "Application Settings",
+            click() {
+              history.push("/Settings/App");
+            }
+          }
+          // {
+          //   label: "Change Passphrase",
+          //   click() {
+          //     LOAD.Module(11, 1);
+          //   }
+          // },
+          // {
+          //   label: "Backup Wallet",
+          //   click() {
+          //     LOAD.Module(3, 1);
+          //   }
+          // },
+          // {
+          //   type: "separator"
+          // },
+          // {
+          //   label: "Options",
+          //   click() {
+          //     LOAD.Module(9, 1);
+          //   }
+          // }
         ]
       },
       {
@@ -236,9 +262,9 @@ export default class MenuBuilder {
                   label: "Toggle &Full Screen",
                   accelerator: "F11",
                   click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
+                    remote
+                      .getCurrentWindow()
+                      .setFullScreen(!remote.getCurrentWindow().isFullScreen());
                   }
                 },
                 {
@@ -264,30 +290,28 @@ export default class MenuBuilder {
       {
         label: "Help",
         submenu: [
+          // {
+          //   label: "About Nexus",
+          //   click() {
+          //     Module(13, 1);
+          //   }
+          // },
           {
-            label: "Learn More",
+            label: "NexusEarth",
+            click() {
+              shell.openExternal("http://nexusearth.com");
+            }
+          },
+          {
+            label: "Nexusoft Github",
+            click() {
+              shell.openExternal("http://github.com/Nexusoft");
+            }
+          },
+          {
+            label: "Electron Documentation",
             click() {
               shell.openExternal("http://electron.atom.io");
-            }
-          },
-          {
-            label: "Documentation",
-            click() {
-              shell.openExternal(
-                "https://github.com/atom/electron/tree/master/docs#readme"
-              );
-            }
-          },
-          {
-            label: "Community Discussions",
-            click() {
-              shell.openExternal("https://discuss.atom.io/c/electron");
-            }
-          },
-          {
-            label: "Search Issues",
-            click() {
-              shell.openExternal("https://github.com/atom/electron/issues");
             }
           }
         ]
