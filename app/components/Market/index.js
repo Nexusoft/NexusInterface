@@ -99,7 +99,7 @@ class Market extends Component {
       let volAgra = 0,
         i = 0,
         priceAgra = 0;
-      while (volAgra < 1000) {
+      while (volAgra < this.props.tradeVolume) {
         priceAgra = obj.arr[i].Price + priceAgra;
         volAgra = obj.arr[i].Volume + volAgra;
         ++i;
@@ -116,7 +116,7 @@ class Market extends Component {
       let volAgra = 0,
         i = 0,
         priceAgra = 0;
-      while (volAgra < 1000) {
+      while (volAgra < this.props.tradeVolume) {
         priceAgra = obj.arr[i].Price + priceAgra;
         volAgra = obj.arr[i].Volume + volAgra;
         ++i;

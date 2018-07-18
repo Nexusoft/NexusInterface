@@ -17,12 +17,8 @@ import Terminal from "../components/Terminal/index";
 import SecurityLogin from "../components/SecurityLogin/index";
 import StyleGuide from "../components/StyleGuide/index";
 import List from "../components/List/index";
-type RootType = {
-  store: {},
-  history: {}
-};
 
-export default function Root({ store, history }: RootType) {
+export default function Root({ store, history }) {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>

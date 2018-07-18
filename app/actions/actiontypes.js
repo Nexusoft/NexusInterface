@@ -1,4 +1,4 @@
-// common
+// overview
 export const GET_INFO_DUMP = "GET_INFO_DUMP";
 
 //trust list
