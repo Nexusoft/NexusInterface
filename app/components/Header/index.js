@@ -6,6 +6,8 @@ import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 
+import electron from "electron";
+import MenuBuilder from "../../menu";
 const mapStateToProps = state => {
   return { ...state.overview };
 };
@@ -17,6 +19,12 @@ const mapDispatchToProps = dispatch => ({
 
 class Header extends Component {
   componentDidMount() {
+    const menuBuilder = new MenuBuilder(
+      require("electron").remote.getCurrentWindow().id
+    );
+
+    menuBuilder.buildMenu(this.props.history);
+
     RPC.PROMISE("getinfo", []).then(payload => {
       this.props.GetInfoDump(payload);
     });

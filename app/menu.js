@@ -1,36 +1,41 @@
-import { app, Menu, shell, BrowserWindow } from "electron";
-
+import { app, Menu, shell, BrowserWindow, remote } from "electron";
+// const {app, Menu, shell, BrowserWindow,} = remote
+import React from "react";
+import { NavLink, Redirect } from "react-router";
+import { Link, withRouter } from "react-router-dom";
 export default class MenuBuilder {
-  mainWindow: BrowserWindow;
+  mainWindow: remote.BrowserWindow;
 
-  constructor(mainWindow: BrowserWindow) {
-    this.mainWindow = mainWindow;
+  constructor(mainWindow: remote.BrowserWindow) {
+    this.mainWindow = remote.BrowserWindow;
   }
 
-  buildMenu() {
+  buildMenu(history) {
     if (
       process.env.NODE_ENV === "development" ||
       process.env.DEBUG_PROD === "true"
     ) {
-      this.setupDevelopmentEnvironment();
+      console.log(remote);
+      // this.setupDevelopmentEnvironment();
     }
 
     let template;
 
     if (process.platform === "darwin") {
-      template = this.buildDarwinTemplate();
+      template = this.buildDarwinTemplate(history);
     } else {
-      template = this.buildDefaultTemplate();
+      template = this.buildDefaultTemplate(history);
     }
 
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    const menu = remote.Menu.buildFromTemplate(template);
+    remote.Menu.setApplicationMenu(menu);
 
     return menu;
   }
 
   setupDevelopmentEnvironment() {
-    this.mainWindow.openDevTools();
+    remote.BrowserWindow.openDevTools();
+
     this.mainWindow.webContents.on("context-menu", (e, props) => {
       const { x, y } = props;
 
@@ -45,7 +50,7 @@ export default class MenuBuilder {
     });
   }
 
-  buildDarwinTemplate() {
+  buildDarwinTemplate(history) {
     const subMenuAbout = {
       label: "Electron",
       submenu: [
@@ -182,11 +187,18 @@ export default class MenuBuilder {
     return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
-  buildDefaultTemplate() {
+  buildDefaultTemplate(history) {
     const templateDefault = [
       {
         label: "&File",
         submenu: [
+          {
+            label: "test",
+
+            click: () => {
+              history.push("/");
+            }
+          },
           {
             label: "&Open",
             accelerator: "Ctrl+O"
@@ -242,9 +254,9 @@ export default class MenuBuilder {
                   label: "Toggle &Full Screen",
                   accelerator: "F11",
                   click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
+                    // this.mainWindow.setFullScreen(
+                    //   !this.mainWindow.isFullScreen()
+                    // );
                   }
                 }
               ]
