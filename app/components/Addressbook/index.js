@@ -8,13 +8,9 @@ export default class Addressbook extends Component {
 
       <div id="addressbook">
 
-        <div id="addressbook-container">
+        <h2>Address Book</h2>
 
-	        <h2>Address Book</h2>
-
-	        <div className="panel">
-
-          </div>
+        <div className="panel">
 
         </div>
 
