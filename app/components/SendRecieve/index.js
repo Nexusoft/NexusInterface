@@ -8,13 +8,9 @@ export default class SendRecieve extends Component {
 
       <div id="send-receive">
 
-        <div id="send-receive-container">
+        <h2>Send / Receive</h2>
 
-	        <h2>Send / Receive</h2>
-
-	        <div className="panel">
-
-          </div>
+        <div className="panel">
 
         </div>
 
