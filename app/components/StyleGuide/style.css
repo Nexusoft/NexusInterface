@@ -2,32 +2,18 @@
 General layout styles for module
 =====================================
 */
-
 #styleguide {
 	position: relative;
 	height: 100%;
-}
-
-#styleguide-container {
-	--example-border: 1px solid rgba(255,255,255,.1);
-	counter-reset: section;
-	text-align: left;
 	display: flex;
 	flex-direction: column;
-
-	/* this is needed to allow the header/panel to collapse to scrollbars */
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
 }
 
-#styleguide-container > h2 {
+#styleguide > h2 {
 	flex: 0;
 }
 
-#styleguide-container > div {
+#styleguide > .panel {
 	flex: 1;
 	overflow-y: auto;
 }
