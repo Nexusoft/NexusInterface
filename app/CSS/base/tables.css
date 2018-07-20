@@ -11,7 +11,7 @@ Tables
 	--table-cell-border-color: #556070;
 	--table-nested-background-color: #556070;
 	--table-padded-padding-horizontal: 0.5em;
-	--table-padded-padding-vertical: 0.5em;
+	--table-padded-padding-vertical: 0.375em;
 	--table-striped-background-color: rgba(255,255,255,0.05);
 }
 
@@ -24,7 +24,7 @@ table {
 	margin-bottom: calc(var(--line-height) * 1em);
 	border-collapse: separate;
 	border-spacing: 0;
-	border-radius: .25em;
+	border-radius: 0;
 
 	/* .bordered styles */
 	margin-top: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
@@ -58,6 +58,10 @@ table th {
 	vertical-align: bottom;
 	min-width: 10em;
 	background-color: var(--border-color);
+	font-size: .8125em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: normal;
 }
 
 table caption + thead tr:first-child th,
