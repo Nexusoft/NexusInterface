@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
 import {connect} from "react-redux";
 import {remote} from "electron";
 import Request from "request";
@@ -11,6 +10,14 @@ import * as TYPE from "../../actions/actiontypes";
 import Modal from 'react-responsive-modal';
 import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer} from 'victory';
 //import Analytics from "../../script/googleanalytics";
+
+/* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
+// import "react-table/react-table.css"
+
+/* TODO: THIS DOESN"T WORK EITHER, COULD BE DUE TO WEBPACK CONFIG FOR ExtractTextPlugin? */
+//import tablestyles from "./react-table.css";
+import styles from "./style.css";
+
 
 const mapStateToProps = state => {
   return { ...state.transactions };
@@ -71,12 +78,19 @@ class Transactions extends Component {
       hoveringID: 999999999999,
       open: false,
       exectuedHistoryData: false,
-      historyData: new Map()
+      historyData: new Map(),
+      mainChartWidth: 0,
+      mainChartHeight: 0,
+      miniChartWidth: 0,
+      miniChartHeight: 0
     };
   }
   componentDidMount() {
     this.getTransactionData();
 
+    this.updateChartDimensions();
+
+    window.addEventListener('resize', this.updateChartDimensions.bind(this));
 
     if (this.state.exectuedHistoryData == false)
     {
@@ -105,7 +119,28 @@ class Transactions extends Component {
 
   componentWillUnmount()
   {
+    window.removeEventListener('resize', this.updateChartDimensions);
+
     window.removeEventListener("contextmenu",this.transactioncontextfunction);
+  }
+
+  updateChartDimensions(event) {
+
+    let chartContainer = document.getElementById("transactions-chart");
+
+    // set heights, accounting for the 8px that for some reason each chart is taller than requested (may be some padding that can be removed)
+    // let mainHeight = chartContainer.clientHeight - 50 - 8;
+    let mainHeight = chartContainer.clientHeight -12;
+    let miniHeight = 50 - 8;
+
+    console.log("updating chart dimensions -> container: " + chartContainer.clientWidth + "x" + chartContainer.clientHeight + " main: " + chartContainer.clientWidth + "x" + mainHeight + " mini: " + chartContainer.clientWidth + "x" + miniHeight);
+
+    this.setState({
+      mainChartWidth: chartContainer.clientWidth,
+      miniChartWidth: chartContainer.clientWidth,
+      mainChartHeight: mainHeight,
+      miniChartHeight: miniHeight
+    }) 
   }
 
   /// Transaction Context Function
@@ -321,14 +356,18 @@ class Transactions extends Component {
           });
 
           this.setState(
-          {
-              tableColumns:tabelheaders
-          });
-          
-           if ( promisList == null || promisList == undefined || promisList.length == 1)
-          {
-            return;
-          }
+            {
+                tableColumns:tabelheaders,
+                currentTransactions:tempWalletTransactions,
+                zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date(tempWalletTransactions[tempWalletTransactions.length - 1].time * 1000)] }
+              
+            });
+            
+             if ( promisList == null || promisList == undefined || promisList.length == 0)
+            {
+              return;
+            }
+
         Promise.all(promisList).then(payload =>
         {
           console.log(payload);
@@ -397,29 +436,11 @@ class Transactions extends Component {
     )
   }
 
-  DisplayPastWeek()
+  transactionTimeframeChange(event)
   {
     this.setState(
       {
-        displayTimeFrame:"Week"
-      }
-    );
-  }
-
-  DisplayPastMonth()
-  {
-    this.setState(
-      {
-        displayTimeFrame:"Month"
-      }
-    );
-  }
-
-  DisplayPastYear()
-  {
-    this.setState(
-      {
-        displayTimeFrame:"Year"
+        displayTimeFrame: event.target.options[event.target.selectedIndex].value
       }
     );
   }
@@ -756,22 +777,25 @@ class Transactions extends Component {
 
     tempColumns.push(
       {
-        Header: 'transactionnumber',
-        accessor: 'transactionnumber'
+        Header: 'TX Number',
+        accessor: 'transactionnumber',
+        maxWidth: 100
       }
     );
 
     tempColumns.push(
       {
         Header: 'time',
-        accessor: 'time'
+        accessor: 'time',
+        maxWidth: 150
       }
     );
 
     tempColumns.push(
       {
         Header: 'category',
-        accessor: 'category'
+        accessor: 'category',
+        maxWidth: 100
       }
     );
 
@@ -785,7 +809,8 @@ class Transactions extends Component {
     tempColumns.push(
       {
         Header: 'account',
-        accessor: 'account'
+        accessor: 'account',
+        maxWidth: 200
       }
     );
 
@@ -817,30 +842,30 @@ class Transactions extends Component {
   {
     if (inData.category == "receive")
     {
-      return "green";
+      return "#0ca4fb";
     }
     else if (inData.category == "send")
     {
-      return "red";
+      return "#fff";
     }
     else
     {
-      return "gold";
+      return "#666";
     }
   }
   returnCorrectStokeColor(inData)
   {
     if (inData.category == "receive")
     {
-      return "#047717";
+      return "#0ca4fb";
     }
     else if (inData.category == "send")
     {
-      return "#770303";
+      return "#fff";
     }
     else
     {
-      return "#775d03";
+      return "#666";
     }
   }
   
@@ -1304,93 +1329,153 @@ class Transactions extends Component {
     const open = this.state.open; 
    
     return (
-      <div style={{overflow:"auto",height:"800px"}} >
-      <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'custom-modal' }}>
+
+      <div id="transactions">
+
+        <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'custom-modal' }}>
           {this.returnModalInternal()}
         </Modal>
+
         <h2>Transactions</h2>
-        <div >
-        <VictoryChart width={400} height={270} scale={{ x: "time" }} 
-          theme={VictoryTheme.material}
-          domainPadding={{ x: 15 }}
-          padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
-          containerComponent={
-           
-            <VictoryZoomVoronoiContainer
-              zoomDimension="x"
-              zoomDomain={this.state.zoomDomain}
-              onZoomDomainChange={this.handleZoom.bind(this)}
-            />
-          }
-        >
-            <VictoryBar
-              style={{
-                data: {
-                  fill: (d) => this.returnCorrectFillColor(d),
-                  stroke: (d) => this.returnCorrectStokeColor(d),
-                  fillOpacity: 1,
-                  strokeWidth: 1
-                }
-              }}
-              labelComponent={<VictoryTooltip/>}
-              labels={(d) => this.returnToolTipLable(d)}
-              data={this.returnChartData()}
-              x="a"
-              y="b"
-            />
 
-          </VictoryChart>
+        <div className="panel">
 
-          <VictoryChart
-            padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
-            width={600} height={50} scale={{ x: "time" }}
-            theme={VictoryTheme.material}
-            domainPadding={{ x: 15 }}
-            containerComponent={
-              <VictoryBrushContainer
-                brushDimension="x"
-                brushDomain={this.state.zoomDomain}
-                brushStyle={{fill: "white", opacity: 0.4}}
-                onBrushDomainChange={this.handleZoom.bind(this)}
+          <div id="transactions-chart">
+
+            <VictoryChart 
+              width={this.state.mainChartWidth}
+              height={this.state.mainChartHeight}
+              scale={{ x: "time" }} 
+              theme={VictoryTheme.material}
+              domainPadding={{ x: 15 }}
+              padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
+              containerComponent={
+              
+                <VictoryZoomVoronoiContainer
+                  zoomDimension="x"
+                  zoomDomain={this.state.zoomDomain}
+                  onZoomDomainChange={this.handleZoom.bind(this)}
+                />
+              }
+            >
+              <VictoryBar
+                style={{
+                  data: {
+                    fill: (d) => this.returnCorrectFillColor(d),
+                    stroke: (d) => this.returnCorrectStokeColor(d),
+                    fillOpacity: .5,
+                    strokeWidth: 1
+                  }
+                }}
+                labelComponent={<VictoryTooltip/>}
+                labels={(d) => this.returnToolTipLable(d)}
+                data={this.returnChartData()}
+                x="a"
+                y="b"
               />
-            }
-          >
-           <VictoryAxis/>
-            <VictoryBar
-              style={{
-                data: { 
-                  stroke: "tomato",
-                  fill: (d) => this.returnCorrectFillColor(d),
-                 }
-              }}
-              data={this.returnChartData()}
-              x="a"
-              y="b"
-            />
-          </VictoryChart>
 
+              <VictoryAxis
+                // label="Label"
+                style={{
+                  axis: {stroke: "var(--border-color)", strokeOpacity: .5},
+                  // axisLabel: {fontSize: 20, padding: 30},
+                  grid: {stroke: (t) => t > 0.3 ? "var(--border-color)" : "var(--border-color)", strokeOpacity: .5},
+                  ticks: {stroke: "var(--border-color)", strokeOpacity: .75, size: 10},
+                  tickLabels: {fontSize: 15, padding: 5, fill: "#bbb"}
+                }}
+              />
 
-      </div>
-        <a id="timeshown">Time Displaying: {this.state.displayTimeFrame}</a> <br/>
-        <button id="showpast-week-button" value="Show Past Week" onClick={() => this.DisplayPastWeek()}>Show Past Week </button>
-        <button id="showpast-month-button" value="Show Past Month" onClick={() => this.DisplayPastMonth()} > Show Past Month </button>
-        <button id="showpast-year-button" value="Show Past Year" onClick={() => this.DisplayPastYear()} > Show Past Year </button>
-        <button id="showpast-all-button" value="Show All" onClick={() => this.setState({displayTimeFrame:"All"})} > Show All </button>
-        <br/>
-        <left>
-            <a>Transaction Type</a> <select id="transactiontype-dropdown" onChange={this.transactiontypefiltercallback} >
-                <option value="all">All</option>
-                <option value="receive">receive</option>
-                <option value="send">Sent</option>
-                <option value="genesis">Genesis</option>
-                <option value="trust">Trust</option> 
-            </select>
-            <a>Minimum Amount</a> <input id="minimum-nxs" type="number" min="0" onChange={this.transactionamountfiltercallback}/>
-            <a>Search Address:</a><input id="address-filter" type="search"  name="addressfilter"   onChange={this.transactionaddressfiltercallback}/>
-            <button id="download-cvs-button" value="Download CSV" onClick={() => this.DownloadCSV()} > Download CSV </button> 
-        </left>
+            </VictoryChart>
 
-         <Table key="table-top" data={data} columns={columns} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
+            {/* <VictoryChart
+              padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+              width={this.state.miniChartWidth}
+              height={this.state.miniChartHeight}
+              scale={{ x: "time" }}
+              theme={VictoryTheme.material}
+              domainPadding={{ x: 15 }}
+              padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
+              containerComponent={
+                <VictoryBrushContainer
+                  brushDimension="x"
+                  brushDomain={this.state.zoomDomain}
+                  brushStyle={{fill: "white", opacity: 0.1}}
+                  onBrushDomainChange={this.handleZoom.bind(this)}
+                />
+              }
+            >
+              <VictoryAxis/>
+              <VictoryBar
+                style={{
+                  data: { 
+                    stroke: "tomato",
+                    fill: (d) => this.returnCorrectFillColor(d),
+                    }
+                }}
+                data={this.returnChartData()}
+                x="a"
+                y="b"
+              />
+
+            </VictoryChart> */}
+
+          </div>
+
+          <div id="transactions-filters">
+
+            {/* <a id="timeshown">Time Displaying: {this.state.displayTimeFrame}</a> <br/> */}
+
+            <div id="filter-address" className="filter-field">
+
+              <label htmlFor="address-filter">Search Address</label>
+              <input id="address-filter" type="search"  name="addressfilter" onChange={this.transactionaddressfiltercallback}/>
+
+            </div>
+
+            <div id="filter-type" className="filter-field">
+
+                <label htmlFor="transactiontype-dropdown">Type</label>
+                <select id="transactiontype-dropdown" onChange={this.transactiontypefiltercallback} >
+                    <option value="all">All</option>
+                    <option value="receive">Receive</option>
+                    <option value="send">Sent</option>
+                    <option value="genesis">Genesis</option>
+                    <option value="trust">Trust</option> 
+                </select>
+
+            </div>
+
+            <div id="filter-minimum" className="filter-field">
+
+                <label htmlFor="minimum-nxs">Min Amount</label>
+                <input id="minimum-nxs" type="number" min="0" placeholder="0.00" onChange={this.transactionamountfiltercallback}/>
+
+            </div>
+
+            <div id="filter-timeframe" className="filter-field">
+
+              <label htmlFor="transaction-timeframe">Time Span</label>
+              <select id="transaction-timeframe" onChange={(event) => this.transactionTimeframeChange(event)} >
+                <option value="All">All</option>
+                <option value="Year">Past Year</option>
+                <option value="Month">Past Month</option>
+                <option value="Week">Past Week</option>
+              </select>
+
+            </div>
+
+            <button id="download-cvs-button" className="button primary" value="Download" onClick={() => this.DownloadCSV()} >Download</button> 
+
+          </div>
+
+          <div id="transactions-details">
+
+            <Table key="table-top" data={data} columns={columns} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
+
+          </div>
+
+        </div>
+
       </div>
 
     );
