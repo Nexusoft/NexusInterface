@@ -49,20 +49,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({});
 
 class Overview extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    const yesArray = [];
-    for (let prop in this.props) {
-      if (this.props[prop] === nextProps[prop]) {
-        yesArray.push(true);
-      }
-    }
-    if (yesArray.length === Object.keys(this.props).length - 1) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   connectionsImage() {
     const con = this.props.connections;
 
