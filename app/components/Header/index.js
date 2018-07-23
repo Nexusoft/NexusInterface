@@ -1,34 +1,47 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
+import electron from "electron";
+import MenuBuilder from "../../menu";
 
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
+import * as actionsCreators from "../../actions/headerActionCreators";
 
 const mapStateToProps = state => {
-  return { ...state.common };
+  return { ...state.overview, ...state.common };
 };
 
-const mapDispatchToProps = dispatch => ({
-  GetInfoDump: returnedData =>
-    dispatch({ type: TYPE.GET_INFO_DUMP, payload: returnedData })
-});
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
   componentDidMount() {
-    RPC.PROMISE("getinfo", []).then(payload => {
-      this.props.GetInfoDump(payload);
-    });
+    const menuBuilder = new MenuBuilder(
+      require("electron").remote.getCurrentWindow().id
+    );
+
+    menuBuilder.buildMenu(this.props.history);
+
+    this.props.GetInfoDump();
 
     var self = this;
     self.set = setInterval(function() {
-      RPC.PROMISE("getinfo", []).then(payload => {
-        self.props.GetInfoDump(payload);
-      });
+      self.props.GetInfoDump();
     }, 1000);
   }
-
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.unlocked_until === undefined) {
+      this.props.Unlock();
+    } else if (nextProps.unlocked_until === 0) {
+      this.props.Lock();
+    } else if (nextProps.unlocked_until >= 0) {
+      this.props.Unlock();
+    }
+  }
   signInStatus() {
     if (this.props.unlocked_until === undefined) {
       return "images/unencryptedicon.png";

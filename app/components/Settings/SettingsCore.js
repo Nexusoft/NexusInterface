@@ -442,11 +442,12 @@ export default class SettingsCore extends Component {
 
   render() {
     return (
+
       <section id="core">
 
         <div className="note">
 
-                Changes to core settings will take effect the next time the core is restarted.
+          Changes to core settings will take effect the next time the core is restarted.
 
         </div>
 

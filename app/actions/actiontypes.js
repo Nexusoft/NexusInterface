@@ -1,11 +1,11 @@
-// common
+// overview
 export const GET_INFO_DUMP = "GET_INFO_DUMP";
 
-//trust list
+// trust
 export const GET_TRUST_LIST = "GET_TRUST_LIST";
 export const TOGGLE_SORT_DIRECTION = "TOGGLE_SORT_DIRECTION";
 
-// market reducer stuff
+// market
 export const CRYPTOPIA_ORDERBOOK = "CRYPTOPIA_ORDERBOOK";
 export const CRYPTOPIA_24 = "CRYPTOPIA_24";
 export const BITTREX_ORDERBOOK = "BITTREX_ORDERBOOK";
@@ -18,3 +18,13 @@ export const BITTREX_CANDLESTICK = "BITTREX_CANDLESTICK";
 export const CRYPTOPIA_CANDLESTICK = "CRYPTOPIA_CANDLESTICK";
 export const REMOVE_ALERT = "REMOVE_ALERT";
 export const SET_ALERTS = "SET_ALERTS";
+
+// login
+export const SET_DATE = "SET_DATE";
+export const SET_PASSWORD = "SET_PASSWORD";
+export const WIPE_LOGIN_INFO = "WIPE_LOGIN_INFO";
+export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
+
+// common
+export const LOCK = "LOCK";
+export const UNLOCK = "UNLOCK";

@@ -1,25 +1,26 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
+import { connect } from "react-redux";
 
-export default class SendRecieve extends Component {
+const mapStateToProps = state => {
+  return { ...state.common };
+};
+
+const mapDispatchToProps = dispatch => ({});
+
+class SendRecieve extends Component {
   render() {
     return (
-
       <div id="send-receive">
+        <h2>Send / Receive</h2>
 
-        <div id="send-receive-container">
-
-	        <h2>Send / Receive</h2>
-
-	        <div className="panel">
-
-          </div>
-
-        </div>
-
+        <div className="panel" />
       </div>
-
     );
   }
 }
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SendRecieve);

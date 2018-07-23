@@ -99,7 +99,7 @@ class Market extends Component {
       let volAgra = 0,
         i = 0,
         priceAgra = 0;
-      while (volAgra < 1000) {
+      while (volAgra < this.props.tradeVolume) {
         priceAgra = obj.arr[i].Price + priceAgra;
         volAgra = obj.arr[i].Volume + volAgra;
         ++i;
@@ -116,7 +116,7 @@ class Market extends Component {
       let volAgra = 0,
         i = 0,
         priceAgra = 0;
-      while (volAgra < 1000) {
+      while (volAgra < this.props.tradeVolume) {
         priceAgra = obj.arr[i].Price + priceAgra;
         volAgra = obj.arr[i].Volume + volAgra;
         ++i;
@@ -281,13 +281,19 @@ class Market extends Component {
 
   render() {
     return (
-      <div id="Market">
-        <div id="marketHeadliner">
-          <h1 onClick={() => this.refresher()}>Market Information</h1>
-          <div className="alertbox">{this.arbitageAlert()}</div>
+
+      <div id="market">
+
+        <h2>Market Information</h2>
+
+				<a className="refresh" onClick={() => this.refresher()}>Refresh Market Data</a>
+
+        <div className="alertbox">
+          {this.arbitageAlert()}
         </div>
 
         <div className="panel">
+
           {this.props.loaded &&
             this.props.binance.buy[0] && (
               <div className="exchangeUnitContainer">
@@ -321,7 +327,7 @@ class Market extends Component {
           {this.props.loaded &&
             this.props.cryptopia.buy[0] && (
               <div className="exchangeUnitContainer">
-                <img className="excangeLogo" src={cryptopiaLogo} />
+                <img className="exchangeLogo" src={cryptopiaLogo} />
                 <div className="marketInfoContainer">
                   <MarketDepth
                     chartData={this.formatChartData("cryptopiaBuy")}
@@ -334,8 +340,11 @@ class Market extends Component {
                 </div>
               </div>
             )}
+            
         </div>
+
       </div>
+
     );
   }
 }

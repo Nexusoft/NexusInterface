@@ -10,8 +10,10 @@
  *
  *
  */
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, remote } from "electron";
 import MenuBuilder from "./menu";
+import electron from "electron";
+// import menu from "../app/menu/mainmenu"
 const path = require("path");
 let mainWindow = null;
 
@@ -82,7 +84,4 @@ app.on("ready", async () => {
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
 });

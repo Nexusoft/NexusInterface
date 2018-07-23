@@ -1,33 +1,20 @@
 #settings {
 	position: relative;
 	height: 100%;
-}
-
-#settings-container {
-	--example-border: 1px solid rgba(255,255,255,.1);
-	counter-reset: section;
-	text-align: left;
 	display: flex;
 	flex-direction: column;
-
-	/* this is needed to allow the header/panel to collapse to scrollbars */
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
 }
 
-#settings-container > h2 {
+#settings > h2 {
 	flex: 0;
 }
 
-#settings-container > div {
+#settings > .panel {
 	flex: 1;
 	overflow-y: auto;
 }
 
-.panel > .tabs {
+#settings > .panel > .tabs {
 	position: relative;
 }
 

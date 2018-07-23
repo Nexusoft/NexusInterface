@@ -1,36 +1,40 @@
-import { app, Menu, shell, BrowserWindow } from "electron";
+import { app, Menu, shell, BrowserWindow, remote } from "electron";
+
+import * as RPC from "./script/rpc";
 
 export default class MenuBuilder {
-  mainWindow: BrowserWindow;
+  mainWindow: remote.BrowserWindow;
 
-  constructor(mainWindow: BrowserWindow) {
-    this.mainWindow = mainWindow;
+  constructor(mainWindow: remote.BrowserWindow) {
+    this.mainWindow = remote.BrowserWindow;
   }
 
-  buildMenu() {
+  buildMenu(history) {
     if (
       process.env.NODE_ENV === "development" ||
       process.env.DEBUG_PROD === "true"
     ) {
-      this.setupDevelopmentEnvironment();
+      // console.log(remote);
+      // this.setupDevelopmentEnvironment();
     }
 
     let template;
 
     if (process.platform === "darwin") {
-      template = this.buildDarwinTemplate();
+      template = this.buildDarwinTemplate(history);
     } else {
-      template = this.buildDefaultTemplate();
+      template = this.buildDefaultTemplate(history);
     }
 
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    const menu = remote.Menu.buildFromTemplate(template);
+    remote.Menu.setApplicationMenu(menu);
 
     return menu;
   }
 
   setupDevelopmentEnvironment() {
-    this.mainWindow.openDevTools();
+    remote.BrowserWindow.openDevTools();
+
     this.mainWindow.webContents.on("context-menu", (e, props) => {
       const { x, y } = props;
 
@@ -45,7 +49,7 @@ export default class MenuBuilder {
     });
   }
 
-  buildDarwinTemplate() {
+  buildDarwinTemplate(history) {
     const subMenuAbout = {
       label: "Electron",
       submenu: [
@@ -182,29 +186,63 @@ export default class MenuBuilder {
     return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
-  buildDefaultTemplate() {
+  buildDefaultTemplate(history) {
     const templateDefault = [
       {
         label: "&File",
         submenu: [
           {
-            label: "&Open",
-            accelerator: "Ctrl+O"
-          },
-          {
-            label: "&Close",
-            accelerator: "Ctrl+W",
+            label: "test",
             click: () => {
-              this.mainWindow.close();
+              history.push("/");
             }
           },
           {
-            label: "Toggle Developer Tools",
-            accelerator: "Alt+Command+I",
+            label: "Back-up Wallet",
             click: () => {
-              this.mainWindow.toggleDevTools();
+              let now = `${new Date()}`;
+              let BackupDir = process.env.HOME + "/NexusBackups";
+              RPC.PROMISE("backupwallet", [BackupDir + "/" + now + ".dat"]);
             }
           }
+        ]
+      },
+      {
+        label: "Settings",
+        submenu: [
+          {
+            label: "Core Settings",
+            click() {
+              history.push("/Settings/Core");
+            }
+          },
+          {
+            label: "Application Settings",
+            click() {
+              history.push("/Settings/App");
+            }
+          }
+          // {
+          //   label: "Change Passphrase",
+          //   click() {
+          //     LOAD.Module(11, 1);
+          //   }
+          // },
+          // {
+          //   label: "Backup Wallet",
+          //   click() {
+          //     LOAD.Module(3, 1);
+          //   }
+          // },
+          // {
+          //   type: "separator"
+          // },
+          // {
+          //   label: "Options",
+          //   click() {
+          //     LOAD.Module(9, 1);
+          //   }
+          // }
         ]
       },
       {
@@ -224,9 +262,9 @@ export default class MenuBuilder {
                   label: "Toggle &Full Screen",
                   accelerator: "F11",
                   click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
+                    remote
+                      .getCurrentWindow()
+                      .setFullScreen(!remote.getCurrentWindow().isFullScreen());
                   }
                 },
                 {
@@ -242,9 +280,9 @@ export default class MenuBuilder {
                   label: "Toggle &Full Screen",
                   accelerator: "F11",
                   click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
+                    // this.mainWindow.setFullScreen(
+                    //   !this.mainWindow.isFullScreen()
+                    // );
                   }
                 }
               ]
@@ -252,30 +290,28 @@ export default class MenuBuilder {
       {
         label: "Help",
         submenu: [
+          // {
+          //   label: "About Nexus",
+          //   click() {
+          //     Module(13, 1);
+          //   }
+          // },
           {
-            label: "Learn More",
+            label: "NexusEarth",
+            click() {
+              shell.openExternal("http://nexusearth.com");
+            }
+          },
+          {
+            label: "Nexusoft Github",
+            click() {
+              shell.openExternal("http://github.com/Nexusoft");
+            }
+          },
+          {
+            label: "Electron Documentation",
             click() {
               shell.openExternal("http://electron.atom.io");
-            }
-          },
-          {
-            label: "Documentation",
-            click() {
-              shell.openExternal(
-                "https://github.com/atom/electron/tree/master/docs#readme"
-              );
-            }
-          },
-          {
-            label: "Community Discussions",
-            click() {
-              shell.openExternal("https://discuss.atom.io/c/electron");
-            }
-          },
-          {
-            label: "Search Issues",
-            click() {
-              shell.openExternal("https://github.com/atom/electron/issues");
             }
           }
         ]
