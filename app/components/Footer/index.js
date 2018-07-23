@@ -52,6 +52,10 @@ export default class Footer extends Component {
             <img src="images/icon-trustlist.png" alt="Trust List" />
             <div className="tooltip top">Trust&nbsp;List</div>
           </NavLink>
+          <NavLink to="/About">
+            <img src="images/icon-trustlist.png" alt="About" />
+            <div className="tooltip top">Trust&nbsp;About</div>
+          </NavLink>
         </div>
       </div>
     );

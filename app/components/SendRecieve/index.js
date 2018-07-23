@@ -4,20 +4,35 @@ import styles from "./style.css";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
-  return { ...state.common };
+  return { ...state.common, ...state.transactions };
 };
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  SetSendAgainData: returnData => 
+  { 
+    dispatch({type:TYPE.SET_TRANSACTION_SENDAGAIN,payload:returnData}) 
+  } 
+
+});
 
 class SendRecieve extends Component {
   render() {
-    return (
-      <div id="send-receive">
-        <div id="send-receive-container">
-          <h2>Send / Receive</h2>
+    ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction 
+    if ( this.props.sendagain != undefined && this.props.sendagain != null) 
+    { 
+      console.log(this.props.sendagain); 
+      this.props.SetSendAgainData( 
+        null 
+      ); 
+    } 
 
-          <div className="panel" />
-        </div>
+    
+    return (
+      
+      <div id="send-receive">
+        <h2>Send / Receive</h2>
+
+        <div className="panel" />
       </div>
     );
   }
