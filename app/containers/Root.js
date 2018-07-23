@@ -17,6 +17,7 @@ import Terminal from "../components/Terminal/index";
 import SecurityLogin from "../components/SecurityLogin/index";
 import StyleGuide from "../components/StyleGuide/index";
 import List from "../components/List/index";
+import About from "../components/About/index";
 
 export default function Root({ store, history }) {
   return (
@@ -40,6 +41,7 @@ export default function Root({ store, history }) {
               <Route exact path="/SecurityLogin" component={SecurityLogin} />
               <Route exact path="/StyleGuide" component={StyleGuide} />
               <Route exact path="/List" component={List} />
+              <Route exact path="/About" component={About} />
             </div>
           </div>
 
