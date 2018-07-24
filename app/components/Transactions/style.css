@@ -17,16 +17,6 @@
   flex-direction: column;
 }
 
-#transactions-chart {
-  flex: 1;
-	/* background-color: rgba(255,255,255,0.1); */
-	border: 1px solid var(--border-color);
-	overflow: auto;
-  order: 2;
-  margin-bottom: 1em;
-  flex-basis: auto;
-}
-
 #transactions-filters {
   order: 1;
   display: flex;
@@ -74,6 +64,15 @@
   width: 7em;
 }
 
+#transactions-chart {
+  display: none;
+  flex: 0;
+  height: 150px;
+  margin-bottom: 1em;
+	border: 1px solid var(--border-color);
+  order: 2;
+}
+
 #transactions-details {
   order: 3;
   flex: 1;
@@ -85,4 +84,8 @@
   background: #0c082c;
   max-width: 500px;
   width: 100%;
+}
+
+@media (min-height: 800px) {
+	#transactions-chart {display: block;}
 }

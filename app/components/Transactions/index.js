@@ -82,15 +82,18 @@ class Transactions extends Component {
       mainChartWidth: 0,
       mainChartHeight: 0,
       miniChartWidth: 0,
-      miniChartHeight: 0
+      miniChartHeight: 0,
+      tableHeight: {
+        height: 200
+      }
     };
   }
   componentDidMount() {
+
     this.getTransactionData();
+    this.updateChartAndTableDimensions();
 
-    this.updateChartDimensions();
-
-    window.addEventListener('resize', this.updateChartDimensions.bind(this));
+    window.addEventListener('resize', this.updateChartAndTableDimensions.bind(this));
 
     if (this.state.exectuedHistoryData == false)
     {
@@ -101,7 +104,6 @@ class Transactions extends Component {
         }
       );
     }
-    
     
     console.log(window);
     console.log(remote);
@@ -119,27 +121,34 @@ class Transactions extends Component {
 
   componentWillUnmount()
   {
-    window.removeEventListener('resize', this.updateChartDimensions);
+    window.removeEventListener('resize', this.updateChartAndTableDimensions);
 
     window.removeEventListener("contextmenu",this.transactioncontextfunction);
   }
 
-  updateChartDimensions(event) {
+  updateChartAndTableDimensions(event) {
 
-    let chartContainer = document.getElementById("transactions-chart");
+    let chart = document.getElementById("transactions-chart");
+    let filters = document.getElementById("transactions-filters");
+    let details = document.getElementById("transactions-details");
+    let parent = chart.parentNode;
 
-    // set heights, accounting for the 8px that for some reason each chart is taller than requested (may be some padding that can be removed)
-    // let mainHeight = chartContainer.clientHeight - 50 - 8;
-    let mainHeight = chartContainer.clientHeight -12;
-    let miniHeight = 50 - 8;
+    let parentHeight = parseInt(parent.clientHeight) - parseInt(window.getComputedStyle(parent, '').getPropertyValue('padding-top')) - parseInt(window.getComputedStyle(parent, '').getPropertyValue('padding-bottom'));
+    let filtersHeight = parseInt(filters.offsetHeight) + parseInt(window.getComputedStyle(filters, '').getPropertyValue('margin-top')) + parseInt(window.getComputedStyle(filters, '').getPropertyValue('margin-bottom'));
+    let chartHeight = parseInt(chart.offsetHeight) + parseInt(window.getComputedStyle(chart, '').getPropertyValue('margin-top')) + parseInt(window.getComputedStyle(chart, '').getPropertyValue('margin-bottom'));
+    let detailsHeight = parentHeight - filtersHeight - chartHeight;
 
-    console.log("updating chart dimensions -> container: " + chartContainer.clientWidth + "x" + chartContainer.clientHeight + " main: " + chartContainer.clientWidth + "x" + mainHeight + " mini: " + chartContainer.clientWidth + "x" + miniHeight);
+    let mainHeight = 150; // fixed height, should match CSS
+    let miniHeight = 50 - 8; // right now this is disabled, if re-enabled this needs to be set properly
 
     this.setState({
-      mainChartWidth: chartContainer.clientWidth,
-      miniChartWidth: chartContainer.clientWidth,
+      mainChartWidth: chart.clientWidth,
+      miniChartWidth: chart.clientWidth,
       mainChartHeight: mainHeight,
-      miniChartHeight: miniHeight
+      miniChartHeight: miniHeight,
+      tableHeight: {
+        height: detailsHeight
+      }
     }) 
   }
 
@@ -1470,7 +1479,9 @@ class Transactions extends Component {
 
           <div id="transactions-details">
 
-            <Table key="table-top" data={data} columns={columns} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
+            <Table 
+            styles={this.state.tableHeight}
+            key="table-top" data={data} columns={columns} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
 
           </div>
 

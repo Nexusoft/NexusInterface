@@ -67,9 +67,7 @@ export default class Table extends Component {
                     // }
                 }
             }}
-            style={{
-                height: "325px" // This will force the table body to overflow and scroll, since there is not enough room
-              }}
+            style={this.props.styles}
             />
         );
 
