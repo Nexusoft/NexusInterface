@@ -103,6 +103,15 @@ body {
   grid-area: navigation;
 }
 
+#app-loader {
+  grid-area: content;
+  position: absolute;
+  top: calc(50% - 210px);
+  left: calc(50% - 150px);
+  width: 300px;
+  height: 300px;
+}
+
 /* Scrollbar */ 
 ::-webkit-scrollbar { 
 	width: 10px;
