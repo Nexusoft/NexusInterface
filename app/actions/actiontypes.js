@@ -18,6 +18,8 @@ export const BITTREX_CANDLESTICK = "BITTREX_CANDLESTICK";
 export const CRYPTOPIA_CANDLESTICK = "CRYPTOPIA_CANDLESTICK";
 export const REMOVE_ALERT = "REMOVE_ALERT";
 export const SET_ALERTS = "SET_ALERTS";
+export const SET_TRADEVOL = "SET_TRADEVOL";
+export const SET_THRESHOLD = "SET_THRESHOLD";
 
 // Transaction Page
 export const SET_WALL_TRANS = "SET_WALL_TRANS";
