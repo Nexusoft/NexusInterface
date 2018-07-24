@@ -232,108 +232,79 @@ export default class SettingsApp extends Component {
 
   render() {
     return (
-      <div id="appSettingsContianer">
-        <section id="application">
-          <form className="aligned">
-            <div className="field">
-              <label htmlFor="autostart">Start at system startup</label>
-              <input
-                id="autostart"
-                type="checkbox"
-                className="switch"
-                onChange={this.updateAutoStart}
-                data-tooltip="Automatically start the wallet when you log into your system"
-              />
-            </div>
+      <section id="application">
+        <form className="aligned">
+          <div className="field">
+            <label htmlFor="autostart">Start at system startup</label>
+            <input
+              id="autostart"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateAutoStart}
+              data-tooltip="Automatically start the wallet when you log into your system"
+            />
+          </div>
 
-            <div className="field">
-              <label htmlFor="minimizeToTray">Minimize to tray</label>
-              <input
-                id="minimizeToTray"
-                type="checkbox"
-                className="switch"
-                onChange={this.updateMinimizeToTray}
-                data-tooltip="Minimize the wallet to the system tray"
-              />
-            </div>
+          <div className="field">
+            <label htmlFor="minimizeToTray">Minimize to tray</label>
+            <input
+              id="minimizeToTray"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateMinimizeToTray}
+              data-tooltip="Minimize the wallet to the system tray"
+            />
+          </div>
 
-            <div className="field">
-              <label htmlFor="minimizeOnClose">Minimize on close</label>
-              <input
-                id="minimizeOnClose"
-                type="checkbox"
-                className="switch"
-                onChange={this.updateMinimizeOnClose}
-                data-tooltip="Minimize the wallet when closing the window instead of closing it"
-              />
-            </div>
+          <div className="field">
+            <label htmlFor="minimizeOnClose">Minimize on close</label>
+            <input
+              id="minimizeOnClose"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateMinimizeOnClose}
+              data-tooltip="Minimize the wallet when closing the window instead of closing it"
+            />
+          </div>
 
-            <div className="field">
-              <label htmlFor="googleAnalytics">Send anonymous usage data</label>
-              <input
-                id="googleAnalytics"
-                type="checkbox"
-                className="switch"
-                onChange={this.updateGoogleAnalytics}
-                data-tooltip="Send anonymous usage data to allow the Nexus developers to improve the wallet"
-              />
-            </div>
+          <div className="field">
+            <label htmlFor="googleAnalytics">Send anonymous usage data</label>
+            <input
+              id="googleAnalytics"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateGoogleAnalytics}
+              data-tooltip="Send anonymous usage data to allow the Nexus developers to improve the wallet"
+            />
+          </div>
 
-            <div className="field">
-              <label htmlFor="defaultUnitAmount">Default unit amount</label>
-              <select
-                id="defaultUnitAmount"
-                onChange={this.updateDefaultUnitAmount}
-                data-tooltip="Default unit amount to display throughout the wallet"
-              >
-                <option value="NXS">NXS</option>
-                <option value="mNXS">mNXS</option>
-                <option value="uNXS">uNXS</option>
-              </select>
-            </div>
+          <div className="field">
+            <label htmlFor="defaultUnitAmount">Default unit amount</label>
+            <select
+              id="defaultUnitAmount"
+              onChange={this.updateDefaultUnitAmount}
+              data-tooltip="Default unit amount to display throughout the wallet"
+            >
+              <option value="NXS">NXS</option>
+              <option value="mNXS">mNXS</option>
+              <option value="uNXS">uNXS</option>
+            </select>
+          </div>
 
-            <div className="field">
-              <label htmlFor="devmode">Developer Mode</label>
-              <input
-                id="devmode"
-                type="checkbox"
-                className="switch"
-                onChange={this.updateDeveloperMode}
-                data-tooltip="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
-              />
-            </div>
+          <div className="field">
+            <label htmlFor="devmode">Developer Mode</label>
+            <input
+              id="devmode"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateDeveloperMode}
+              data-tooltip="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
+            />
+          </div>
 
-            <div className="clear-both" />
-          </form>
-        </section>
-        <section id="application">
-          <form>
-            <fieldset>
-              <legend>Account Information</legend>
-
-              <div className="field">
-                <label>Email:</label>
-                <input type="email" placeholder="user@domain.com" required />
-                <span className="hint">
-                  Email address is required and must be in the format:
-                  user@@domain.com
-                </span>
-              </div>
-
-              <div className="field">
-                <label>Password:</label>
-                <input type="password" placeholder="Password" required />
-                <span className="hint">Password is required</span>
-              </div>
-            </fieldset>
-
-            <p>
-              <input type="submit" className="button primary" />{" "}
-              <input type="reset" value="Reset" className="button" />
-            </p>
-          </form>
-        </section>
-      </div>
+          <div className="clear-both" />
+        </form>
+      </section>
     );
   }
 }
