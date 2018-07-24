@@ -1,0 +1,28 @@
+/*
+Modal
+=================================
+*/
+
+:root {
+    --modal-background-color: #282828;
+    --modal-close-button-color: #888;
+}
+
+.modal {
+    background: var(--modal-background-color);
+    max-width: 500px;
+    width: 100%;
+}
+
+.modal button {
+    user-select: none;
+    outline: 0;
+}
+
+.modal button svg {
+    fill: var(--modal-close-button-color);
+}
+
+.modal button svg:hover {
+    filter: brightness(150%);
+}

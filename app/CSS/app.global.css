@@ -8,6 +8,7 @@
 @import "./base/tables.css";
 @import "./base/text.css";
 
+@import "./controls/modal.css";
 @import "./controls/panel.css";
 @import "./controls/progress.css";
 @import "./controls/react-table.css";

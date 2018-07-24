@@ -80,12 +80,6 @@
   font-size: .875em;
 }
 
-.custom-modal {
-  background: #0c082c;
-  max-width: 500px;
-  width: 100%;
-}
-
 @media (min-height: 800px) {
 	#transactions-chart {display: block;}
 }
