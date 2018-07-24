@@ -855,13 +855,14 @@ class Transactions extends Component {
     }
     else if (inData.category == "send")
     {
-      return "#fff";
+      return "#035";
     }
     else
     {
-      return "#666";
+      return "#fff";
     }
   }
+
   returnCorrectStokeColor(inData)
   {
     if (inData.category == "receive")
@@ -870,11 +871,11 @@ class Transactions extends Component {
     }
     else if (inData.category == "send")
     {
-      return "#fff";
+      return "#035";
     }
     else
     {
-      return "#666";
+      return "#fff";
     }
   }
   
@@ -1297,11 +1298,6 @@ class Transactions extends Component {
     if (this.state.hoveringID != 999999999999){
       const selectedTransaction = this.state.walletTransactions[this.state.hoveringID];
       
-
-      internalString.push(
-          <h2 key="modal_title"> TRANSACTIONS </h2>
-        );
-      internalString.push(<br key="br1"/>);
       internalString.push(
           <a key="modal_amount">{"Amount: " + selectedTransaction.amount}</a>
         );
@@ -1341,8 +1337,12 @@ class Transactions extends Component {
 
       <div id="transactions">
 
-        <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'custom-modal' }}>
+        <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'modal' }}>
+
+          <h2 >Transaction Details</h2>
+
           {this.returnModalInternal()}
+
         </Modal>
 
         <h2>Transactions</h2>
@@ -1355,9 +1355,10 @@ class Transactions extends Component {
               width={this.state.mainChartWidth}
               height={this.state.mainChartHeight}
               scale={{ x: "time" }} 
-              theme={VictoryTheme.material}
-              domainPadding={{ x: 15 }}
-              padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
+              // theme={VictoryTheme.material}
+              domainPadding={{ x: 30 }}
+              // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
+              padding={{ top: 6, bottom: 6, left: 0, right: 0 }}
               containerComponent={
               
                 <VictoryZoomVoronoiContainer
@@ -1372,8 +1373,8 @@ class Transactions extends Component {
                   data: {
                     fill: (d) => this.returnCorrectFillColor(d),
                     stroke: (d) => this.returnCorrectStokeColor(d),
-                    fillOpacity: .5,
-                    strokeWidth: 1
+                    fillOpacity: 1,
+                    strokeWidth: 0
                   }
                 }}
                 labelComponent={<VictoryTooltip/>}
@@ -1384,13 +1385,26 @@ class Transactions extends Component {
               />
 
               <VictoryAxis
-                // label="Label"
+                // label="Time"
+                independentAxis
                 style={{
-                  axis: {stroke: "var(--border-color)", strokeOpacity: .5},
-                  // axisLabel: {fontSize: 20, padding: 30},
-                  grid: {stroke: (t) => t > 0.3 ? "var(--border-color)" : "var(--border-color)", strokeOpacity: .5},
+                  axis: {stroke: "var(--border-color)", strokeOpacity: 1},
+                  axisLabel: {fontSize: 16},
+                  grid: {stroke: "var(--border-color)", strokeOpacity: .25},
                   ticks: {stroke: "var(--border-color)", strokeOpacity: .75, size: 10},
-                  tickLabels: {fontSize: 15, padding: 5, fill: "#bbb"}
+                  tickLabels: {fontSize: 11, padding: 5, fill: "#bbb"}
+                }}
+              />
+
+              <VictoryAxis
+                label="Amount"
+                dependentAxis
+                style={{
+                  axis: {stroke: "var(--border-color)", strokeOpacity: 1},
+                  axisLabel: {fontSize: 16},
+                  grid: {stroke: "var(--border-color)", strokeOpacity: .25},
+                  ticks: {stroke: "var(--border-color)", strokeOpacity: .75, size: 10},
+                  tickLabels: {fontSize: 11, padding: 5, fill: "#bbb"}
                 }}
               />
 
