@@ -512,7 +512,7 @@ class Transactions extends Component {
     let encodedUri = encodeURI(csvContent); //Set up a uri, in Javascript we are basically making a Link to this file
     let link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "my_data.csv"); //give link an action and a default name for the file. MUST BE .csv
+    link.setAttribute("download", "nexus-transactions.csv"); //give link an action and a default name for the file. MUST BE .csv
 
     document.body.appendChild(link); // Required for FF
 
@@ -1397,7 +1397,7 @@ class Transactions extends Component {
               />
 
               <VictoryAxis
-                label="Amount"
+                // label="Amount"
                 dependentAxis
                 style={{
                   axis: {stroke: "var(--border-color)", strokeOpacity: 1},
