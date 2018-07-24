@@ -12,9 +12,7 @@ const rootReducer = combineReducers({
   overview,
   routerReducer,
   list,
-  common,
   login,
-  market
   market,
   transactions,
   common
