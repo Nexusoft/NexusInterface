@@ -30,7 +30,6 @@ class Settings extends Component {
       <div id="settings">
         <div id="settings-container">
           <h2>Settings</h2>
-          <button onClick={() => RPC.PROMISE("walletlock", [])}>Lock</button>
 
           <div className="panel">
             <ul className="tabs">

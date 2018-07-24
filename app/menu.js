@@ -192,9 +192,9 @@ export default class MenuBuilder {
         label: "&File",
         submenu: [
           {
-            label: "test",
+            label: "Lock Wallet",
             click: () => {
-              history.push("/");
+              RPC.PROMISE("walletlock", []);
             }
           },
           {

@@ -21,7 +21,6 @@ export const SET_ALERTS = "SET_ALERTS";
 
 // login
 export const SET_DATE = "SET_DATE";
-export const SET_PASSWORD = "SET_PASSWORD";
 export const WIPE_LOGIN_INFO = "WIPE_LOGIN_INFO";
 export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
 

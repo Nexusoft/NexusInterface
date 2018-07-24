@@ -1,57 +1,54 @@
 #settings {
-	position: relative;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 #settings > h2 {
-	flex: 0;
+  flex: 0;
 }
 
 #settings > .panel {
-	flex: 1;
-	overflow-y: auto;
+  flex: 1;
+  overflow-y: auto;
 }
 
 #settings > .panel > .tabs {
-	position: relative;
+  position: relative;
 }
 
 section {
-	--column-width: 6;
-	position: relative;
-	padding-top: calc(var(--gutter));
-	padding-bottom: calc(var(--gutter));
+  --column-width: 6;
+  position: relative;
+  padding-top: calc(var(--gutter));
+  padding-bottom: calc(var(--gutter));
 }
 
 @media (min-width: 1200px) {
-	section {--column-width: 8;}
+  section {
+    --column-width: 8;
+  }
 }
 
 @media (min-width: 1600px) {
-	section {--column-width: 12;}
+  section {
+    --column-width: 12;
+  }
 }
 
 .clear-both {
-	clear: both;
+  clear: both;
 }
-
-
-
-
-
-
-
 
 /* Settings imported from PreAlpha */
 
 section {
-	--column-width: 4;
-	--field-align-label-width: 75%;
-	position: relative;
-	padding-top: calc(var(--gutter));
-	padding-bottom: calc(var(--gutter));
+  --column-width: 4;
+  --field-align-label-width: 75%;
+  position: relative;
+  padding-top: calc(var(--gutter));
+  padding-bottom: calc(var(--gutter));
 }
 
 /* @media (min-width: 800px) {
@@ -72,19 +69,19 @@ Form
 */
 
 form {
-	position: relative;
-	/* padding: calc(var(--line-height) * 1em);
+  position: relative;
+  /* padding: calc(var(--line-height) * 1em);
 	padding-top: 0; */
-	border: 1px solid transparent;
-	text-align: left;
+  border: 1px solid transparent;
+  text-align: left;
 }
 
 .panel {
-	padding: calc(var(--line-height) * 1em);
+  padding: calc(var(--line-height) * 1em);
 }
 
 .note {
-	padding: 1em;
-	border: 2px dashed rgba(255,255,255,0.2);
-	background-color: rgba(0,0,0,0.2);
+  padding: 1em;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }

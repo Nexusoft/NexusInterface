@@ -14,8 +14,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   setDate: date => dispatch({ type: TYPE.SET_DATE, payload: date }),
-  setPassword: password =>
-    dispatch({ type: TYPE.SET_PASSWORD, payload: password }),
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
   busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
 });
@@ -41,13 +39,11 @@ class Login extends Component {
     );
     this.props.busy();
     RPC.PROMISE("walletpassphrase", [
-      this.props.password,
+      document.getElementById("pass").value,
       unlockUntill,
       true
     ]).then(payload => {
-      console.log(payload);
       this.props.wipe();
-      this.props.busy();
     });
   }
 
@@ -80,8 +76,9 @@ class Login extends Component {
               <input
                 type="password"
                 placeholder="Password"
-                value={this.props.password}
-                onChange={e => this.props.setPassword(e.target.value)}
+                id="pass"
+                // value={this.props.password}
+                // onChange={e => this.props.setPassword(e.target.value)}
                 required
               />
               <span className="hint">Password is required</span>
