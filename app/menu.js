@@ -6,7 +6,7 @@ export default class MenuBuilder {
   mainWindow: remote.BrowserWindow;
 
   constructor(mainWindow: remote.BrowserWindow) {
-    this.mainWindow = remote.BrowserWindow;
+    this.mainWindow = remote.getCurrentWindow();
   }
 
   buildMenu(history) {
@@ -14,7 +14,8 @@ export default class MenuBuilder {
       process.env.NODE_ENV === "development" ||
       process.env.DEBUG_PROD === "true"
     ) {
-      // console.log(remote);
+     // console.log(remote);
+
       // this.setupDevelopmentEnvironment();
     }
 
@@ -33,7 +34,7 @@ export default class MenuBuilder {
   }
 
   setupDevelopmentEnvironment() {
-    remote.BrowserWindow.openDevTools();
+    remote.getCurrentWindow().openDevTools();
 
     this.mainWindow.webContents.on("context-menu", (e, props) => {
       const { x, y } = props;
@@ -118,6 +119,7 @@ export default class MenuBuilder {
           label: "Toggle Developer Tools",
           accelerator: "Alt+Command+I",
           click: () => {
+            console.log(this.mainWindow);
             this.mainWindow.toggleDevTools();
           }
         }
@@ -290,12 +292,12 @@ export default class MenuBuilder {
       {
         label: "Help",
         submenu: [
-          // {
-          //   label: "About Nexus",
-          //   click() {
-          //     Module(13, 1);
-          //   }
-          // },
+           {
+             label: "About Nexus",
+             click() {
+              history.push('/About');
+             }
+           },
           {
             label: "NexusEarth",
             click() {
