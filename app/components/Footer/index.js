@@ -40,10 +40,6 @@ export default class Footer extends Component {
             <img src="images/icon-console.png" alt="Console" />
             <div className="tooltip top">Console</div>
           </NavLink>
-          <NavLink to="/SecurityLogin">
-            <img src="images/icon-security.png" alt="Security" />
-            <div className="tooltip top">Security</div>
-          </NavLink>
           <NavLink to="/StyleGuide">
             <img src="images/icon-developer.png" alt="Style Guide" />
             <div className="tooltip top">Style&nbsp;Guide</div>

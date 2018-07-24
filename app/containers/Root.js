@@ -14,7 +14,6 @@ import Addressbook from "../components/Addressbook/index";
 import BlockExplorer from "../components/BlockExplorer/index";
 import Settings from "../components/Settings/index";
 import Terminal from "../components/Terminal/index";
-import SecurityLogin from "../components/SecurityLogin/index";
 import StyleGuide from "../components/StyleGuide/index";
 import List from "../components/List/index";
 
@@ -37,7 +36,6 @@ export default function Root({ store, history }) {
               <Route exact path="/BlockExplorer" component={BlockExplorer} />
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
-              <Route exact path="/SecurityLogin" component={SecurityLogin} />
               <Route exact path="/StyleGuide" component={StyleGuide} />
               <Route exact path="/List" component={List} />
             </div>
