@@ -1373,8 +1373,8 @@ class Transactions extends Component {
                   data: {
                     fill: (d) => this.returnCorrectFillColor(d),
                     stroke: (d) => this.returnCorrectStokeColor(d),
-                    fillOpacity: 1,
-                    strokeWidth: 0
+                    fillOpacity: .85,
+                    strokeWidth: 1
                   }
                 }}
                 labelComponent={<VictoryTooltip/>}
