@@ -7,6 +7,8 @@ import ContextMenuBuilder from "../../contextmenu";
 import {remote} from "electron";
 
 
+import * as TYPE from "../../actions/actiontypes";
+
 const mapStateToProps = state => {
   return { ...state.common, ...state.transactions };
 };

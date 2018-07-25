@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
 import {connect} from "react-redux";
 import {remote} from "electron";
 import Request from "request";
@@ -13,6 +12,14 @@ import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiCon
 //import Analytics from "../../script/googleanalytics";
 
 import ContextMenuBuilder from "../../contextmenu";
+
+/* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
+// import "react-table/react-table.css"
+
+/* TODO: THIS DOESN"T WORK EITHER, COULD BE DUE TO WEBPACK CONFIG FOR ExtractTextPlugin? */
+//import tablestyles from "./react-table.css";
+import styles from "./style.css";
+
 
 const mapStateToProps = state => {
   return { ...state.transactions };
@@ -75,11 +82,21 @@ class Transactions extends Component {
       exectuedHistoryData: false,
       historyData: new Map(),
       transactionsToCheck:[],
+      mainChartWidth: 0,
+      mainChartHeight: 0,
+      miniChartWidth: 0,
+      miniChartHeight: 0,
+      tableHeight: {
+        height: 200
+      }
     };
   }
   componentDidMount() {
-    this.getTransactionData();
 
+    this.getTransactionData();
+    this.updateChartAndTableDimensions();
+
+    window.addEventListener('resize', this.updateChartAndTableDimensions.bind(this));
 
     if (this.state.exectuedHistoryData == false)
     {
@@ -90,7 +107,6 @@ class Transactions extends Component {
         }
       );
     }
-    
     
     console.log(window);
     console.log(remote);
@@ -110,7 +126,35 @@ class Transactions extends Component {
 
   componentWillUnmount()
   {
+    window.removeEventListener('resize', this.updateChartAndTableDimensions);
+
     window.removeEventListener("contextmenu",this.transactioncontextfunction);
+  }
+
+  updateChartAndTableDimensions(event) {
+
+    let chart = document.getElementById("transactions-chart");
+    let filters = document.getElementById("transactions-filters");
+    let details = document.getElementById("transactions-details");
+    let parent = chart.parentNode;
+
+    let parentHeight = parseInt(parent.clientHeight) - parseInt(window.getComputedStyle(parent, '').getPropertyValue('padding-top')) - parseInt(window.getComputedStyle(parent, '').getPropertyValue('padding-bottom'));
+    let filtersHeight = parseInt(filters.offsetHeight) + parseInt(window.getComputedStyle(filters, '').getPropertyValue('margin-top')) + parseInt(window.getComputedStyle(filters, '').getPropertyValue('margin-bottom'));
+    let chartHeight = parseInt(chart.offsetHeight) + parseInt(window.getComputedStyle(chart, '').getPropertyValue('margin-top')) + parseInt(window.getComputedStyle(chart, '').getPropertyValue('margin-bottom'));
+    let detailsHeight = parentHeight - filtersHeight - chartHeight;
+
+    let mainHeight = 150; // fixed height, should match CSS
+    let miniHeight = 50 - 8; // right now this is disabled, if re-enabled this needs to be set properly
+
+    this.setState({
+      mainChartWidth: chart.clientWidth,
+      miniChartWidth: chart.clientWidth,
+      mainChartHeight: mainHeight,
+      miniChartHeight: miniHeight,
+      tableHeight: {
+        height: detailsHeight
+      }
+    }) 
   }
 
   /// Transaction Context Function
@@ -405,29 +449,11 @@ class Transactions extends Component {
     )
   }
 
-  DisplayPastWeek()
+  transactionTimeframeChange(event)
   {
     this.setState(
       {
-        displayTimeFrame:"Week"
-      }
-    );
-  }
-
-  DisplayPastMonth()
-  {
-    this.setState(
-      {
-        displayTimeFrame:"Month"
-      }
-    );
-  }
-
-  DisplayPastYear()
-  {
-    this.setState(
-      {
-        displayTimeFrame:"Year"
+        displayTimeFrame: event.target.options[event.target.selectedIndex].value
       }
     );
   }
@@ -490,7 +516,7 @@ class Transactions extends Component {
     let encodedUri = encodeURI(csvContent); //Set up a uri, in Javascript we are basically making a Link to this file
     let link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "my_data.csv"); //give link an action and a default name for the file. MUST BE .csv
+    link.setAttribute("download", "nexus-transactions.csv"); //give link an action and a default name for the file. MUST BE .csv
 
     document.body.appendChild(link); // Required for FF
 
@@ -764,22 +790,25 @@ class Transactions extends Component {
 
     tempColumns.push(
       {
-        Header: 'transactionnumber',
-        accessor: 'transactionnumber'
+        Header: 'TX Number',
+        accessor: 'transactionnumber',
+        maxWidth: 100
       }
     );
 
     tempColumns.push(
       {
         Header: 'time',
-        accessor: 'time'
+        accessor: 'time',
+        maxWidth: 150
       }
     );
 
     tempColumns.push(
       {
         Header: 'category',
-        accessor: 'category'
+        accessor: 'category',
+        maxWidth: 100
       }
     );
 
@@ -793,7 +822,8 @@ class Transactions extends Component {
     tempColumns.push(
       {
         Header: 'account',
-        accessor: 'account'
+        accessor: 'account',
+        maxWidth: 200
       }
     );
 
@@ -825,30 +855,31 @@ class Transactions extends Component {
   {
     if (inData.category == "receive")
     {
-      return "green";
+      return "#0ca4fb";
     }
     else if (inData.category == "send")
     {
-      return "red";
+      return "#035";
     }
     else
     {
-      return "gold";
+      return "#fff";
     }
   }
+
   returnCorrectStokeColor(inData)
   {
     if (inData.category == "receive")
     {
-      return "#047717";
+      return "#0ca4fb";
     }
     else if (inData.category == "send")
     {
-      return "#770303";
+      return "#035";
     }
     else
     {
-      return "#775d03";
+      return "#fff";
     }
   }
   
@@ -1418,11 +1449,6 @@ class Transactions extends Component {
     if (this.state.hoveringID != 999999999999){
       const selectedTransaction = this.state.walletTransactions[this.state.hoveringID];
       
-
-      internalString.push(
-          <h2 key="modal_title"> TRANSACTIONS </h2>
-        );
-      internalString.push(<br key="br1"/>);
       internalString.push(
           <a key="modal_amount">{"Amount: " + selectedTransaction.amount}</a>
         );
@@ -1459,93 +1485,173 @@ class Transactions extends Component {
     const open = this.state.open; 
    
     return (
-      <div style={{overflow:"auto",height:"800px"}} >
-      <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'custom-modal' }}>
+
+      <div id="transactions">
+
+        <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'modal' }}>
+
+          <h2 >Transaction Details</h2>
+
           {this.returnModalInternal()}
+
         </Modal>
+
         <h2>Transactions</h2>
-        <div >
-        <VictoryChart width={400} height={270} scale={{ x: "time" }} 
-          theme={VictoryTheme.material}
-          domainPadding={{ x: 15 }}
-          padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
-          containerComponent={
-           
-            <VictoryZoomVoronoiContainer
-              zoomDimension="x"
-              zoomDomain={this.state.zoomDomain}
-              onZoomDomainChange={this.handleZoom.bind(this)}
-            />
-          }
-        >
-            <VictoryBar
-              style={{
-                data: {
-                  fill: (d) => this.returnCorrectFillColor(d),
-                  stroke: (d) => this.returnCorrectStokeColor(d),
-                  fillOpacity: 1,
-                  strokeWidth: 1
-                }
-              }}
-              labelComponent={<VictoryTooltip/>}
-              labels={(d) => this.returnToolTipLable(d)}
-              data={this.returnChartData()}
-              x="a"
-              y="b"
-            />
 
-          </VictoryChart>
+        <div className="panel">
 
-          <VictoryChart
-            padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
-            width={600} height={50} scale={{ x: "time" }}
-            theme={VictoryTheme.material}
-            domainPadding={{ x: 15 }}
-            containerComponent={
-              <VictoryBrushContainer
-                brushDimension="x"
-                brushDomain={this.state.zoomDomain}
-                brushStyle={{fill: "white", opacity: 0.4}}
-                onBrushDomainChange={this.handleZoom.bind(this)}
+          <div id="transactions-chart">
+
+            <VictoryChart 
+              width={this.state.mainChartWidth}
+              height={this.state.mainChartHeight}
+              scale={{ x: "time" }} 
+              // theme={VictoryTheme.material}
+              domainPadding={{ x: 30 }}
+              // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
+              padding={{ top: 6, bottom: 6, left: 0, right: 0 }}
+              containerComponent={
+              
+                <VictoryZoomVoronoiContainer
+                  zoomDimension="x"
+                  zoomDomain={this.state.zoomDomain}
+                  onZoomDomainChange={this.handleZoom.bind(this)}
+                />
+              }
+            >
+              <VictoryBar
+                style={{
+                  data: {
+                    fill: (d) => this.returnCorrectFillColor(d),
+                    stroke: (d) => this.returnCorrectStokeColor(d),
+                    fillOpacity: .85,
+                    strokeWidth: 1
+                  }
+                }}
+                labelComponent={<VictoryTooltip/>}
+                labels={(d) => this.returnToolTipLable(d)}
+                data={this.returnChartData()}
+                x="a"
+                y="b"
               />
-            }
-          >
-           <VictoryAxis/>
-            <VictoryBar
-              style={{
-                data: { 
-                  stroke: "tomato",
-                  fill: (d) => this.returnCorrectFillColor(d),
-                 }
-              }}
-              data={this.returnChartData()}
-              x="a"
-              y="b"
-            />
-          </VictoryChart>
 
+              <VictoryAxis
+                // label="Time"
+                independentAxis
+                style={{
+                  axis: {stroke: "var(--border-color)", strokeOpacity: 1},
+                  axisLabel: {fontSize: 16},
+                  grid: {stroke: "var(--border-color)", strokeOpacity: .25},
+                  ticks: {stroke: "var(--border-color)", strokeOpacity: .75, size: 10},
+                  tickLabels: {fontSize: 11, padding: 5, fill: "#bbb"}
+                }}
+              />
 
-      </div>
-        <a id="timeshown">Time Displaying: {this.state.displayTimeFrame}</a> <br/>
-        <button id="showpast-week-button" value="Show Past Week" onClick={() => this.DisplayPastWeek()}>Show Past Week </button>
-        <button id="showpast-month-button" value="Show Past Month" onClick={() => this.DisplayPastMonth()} > Show Past Month </button>
-        <button id="showpast-year-button" value="Show Past Year" onClick={() => this.DisplayPastYear()} > Show Past Year </button>
-        <button id="showpast-all-button" value="Show All" onClick={() => this.setState({displayTimeFrame:"All"})} > Show All </button>
-        <br/>
-        <left>
-            <a>Transaction Type</a> <select id="transactiontype-dropdown" onChange={this.transactiontypefiltercallback} >
-                <option value="all">All</option>
-                <option value="receive">receive</option>
-                <option value="send">Sent</option>
-                <option value="genesis">Genesis</option>
-                <option value="trust">Trust</option> 
-            </select>
-            <a>Minimum Amount</a> <input id="minimum-nxs" type="number" min="0" onChange={this.transactionamountfiltercallback}/>
-            <a>Search Address:</a><input id="address-filter" type="search"  name="addressfilter"   onChange={this.transactionaddressfiltercallback}/>
-            <button id="download-cvs-button" value="Download CSV" onClick={() => this.DownloadCSV()} > Download CSV </button> 
-        </left>
+              <VictoryAxis
+                // label="Amount"
+                dependentAxis
+                style={{
+                  axis: {stroke: "var(--border-color)", strokeOpacity: 1},
+                  axisLabel: {fontSize: 16},
+                  grid: {stroke: "var(--border-color)", strokeOpacity: .25},
+                  ticks: {stroke: "var(--border-color)", strokeOpacity: .75, size: 10},
+                  tickLabels: {fontSize: 11, padding: 5, fill: "#bbb"}
+                }}
+              />
 
-         <Table key="table-top" data={data} columns={columns} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
+            </VictoryChart>
+
+            {/* <VictoryChart
+              padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+              width={this.state.miniChartWidth}
+              height={this.state.miniChartHeight}
+              scale={{ x: "time" }}
+              theme={VictoryTheme.material}
+              domainPadding={{ x: 15 }}
+              padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
+              containerComponent={
+                <VictoryBrushContainer
+                  brushDimension="x"
+                  brushDomain={this.state.zoomDomain}
+                  brushStyle={{fill: "white", opacity: 0.1}}
+                  onBrushDomainChange={this.handleZoom.bind(this)}
+                />
+              }
+            >
+              <VictoryAxis/>
+              <VictoryBar
+                style={{
+                  data: { 
+                    stroke: "tomato",
+                    fill: (d) => this.returnCorrectFillColor(d),
+                    }
+                }}
+                data={this.returnChartData()}
+                x="a"
+                y="b"
+              />
+
+            </VictoryChart> */}
+
+          </div>
+
+          <div id="transactions-filters">
+
+            {/* <a id="timeshown">Time Displaying: {this.state.displayTimeFrame}</a> <br/> */}
+
+            <div id="filter-address" className="filter-field">
+
+              <label htmlFor="address-filter">Search Address</label>
+              <input id="address-filter" type="search"  name="addressfilter" onChange={this.transactionaddressfiltercallback}/>
+
+            </div>
+
+            <div id="filter-type" className="filter-field">
+
+                <label htmlFor="transactiontype-dropdown">Type</label>
+                <select id="transactiontype-dropdown" onChange={this.transactiontypefiltercallback} >
+                    <option value="all">All</option>
+                    <option value="receive">Receive</option>
+                    <option value="send">Sent</option>
+                    <option value="genesis">Genesis</option>
+                    <option value="trust">Trust</option> 
+                </select>
+
+            </div>
+
+            <div id="filter-minimum" className="filter-field">
+
+                <label htmlFor="minimum-nxs">Min Amount</label>
+                <input id="minimum-nxs" type="number" min="0" placeholder="0.00" onChange={this.transactionamountfiltercallback}/>
+
+            </div>
+
+            <div id="filter-timeframe" className="filter-field">
+
+              <label htmlFor="transaction-timeframe">Time Span</label>
+              <select id="transaction-timeframe" onChange={(event) => this.transactionTimeframeChange(event)} >
+                <option value="All">All</option>
+                <option value="Year">Past Year</option>
+                <option value="Month">Past Month</option>
+                <option value="Week">Past Week</option>
+              </select>
+
+            </div>
+
+            <button id="download-cvs-button" className="button primary" value="Download" onClick={() => this.DownloadCSV()} >Download</button> 
+
+          </div>
+
+          <div id="transactions-details">
+
+            <Table 
+            styles={this.state.tableHeight}
+            key="table-top" data={data} columns={columns} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
+
+          </div>
+
+        </div>
+
       </div>
 
     );

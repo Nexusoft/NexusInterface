@@ -4,6 +4,8 @@ import styles from "./style.css";
 import { connect } from "react-redux";
 
 
+import * as TYPE from "../../actions/actiontypes";
+
 import ContextMenuBuilder from "../../contextmenu";
 import {remote} from "electron";
 
