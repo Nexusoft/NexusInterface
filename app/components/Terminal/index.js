@@ -6,7 +6,29 @@ import styles from "./style.css";
 import TerminalConsole from "./TerminalConsole";
 import TerminalCore from "./TerminalCore";
 
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
 export default class Terminal extends Component {
+  
+  componentDidMount()
+  {
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener("contextmenu",this.setupcontextmenu);
+  }
+
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
+  }
+
   render() {
 
     // Redirect to application settings if the pathname matches the url (eg: /Terminal = /Terminal)

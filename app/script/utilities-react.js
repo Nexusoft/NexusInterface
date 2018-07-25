@@ -12,7 +12,9 @@ export default class Table extends Component {
         indata : this.props.data,
         incolumns :  this.props.columns,
         selected : null,
-        selectedcallback : this.props.selectCallback
+        selectedcallback : this.props.selectCallback,
+        onMouseOverCallback: this.props.onMouseOverCallback,
+        onMouseOutCallback: this.props.onMouseOutCallback
       };
     }
 
@@ -42,23 +44,30 @@ export default class Table extends Component {
         }
         return(
             <ReactTable key="table-child" data={data} columns={columns} minRows = {0} defaultSorted = {defaultsorting} 
-            
             getTrProps={(state, rowInfo) => {
                 return {
                     onClick: (e) => {
                        
-                        this.props.selectCallback(e);
+                        this.props.selectCallback(e,rowInfo);
                         this.setState({
                             selected: rowInfo.index
                         })
                     },
-                    style: {
-                        background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
-                        color: rowInfo.index === this.state.selected ? 'white' : 'black'
-                    }
+                    onMouseOver: (e) =>
+                    {
+                        this.props.onMouseOverCallback(e,rowInfo);
+                    },
+                    onMouseOut: (e) =>
+                    {
+                        this.props.onMouseOutCallback(e);
+                    },
+                    // style: {
+                    //     background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
+                    //     color: rowInfo.index === this.state.selected ? 'white' : 'black'
+                    // }
                 }
             }}
-
+            style={this.props.styles}
             />
         );
 

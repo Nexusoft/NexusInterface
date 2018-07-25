@@ -1,13 +1,12 @@
 import { app, Menu, shell, BrowserWindow, remote } from "electron";
-// const {app, Menu, shell, BrowserWindow,} = remote
-import React from "react";
-import { NavLink, Redirect } from "react-router";
-import { Link, withRouter } from "react-router-dom";
+
+import * as RPC from "./script/rpc";
+
 export default class MenuBuilder {
   mainWindow: remote.BrowserWindow;
 
   constructor(mainWindow: remote.BrowserWindow) {
-    this.mainWindow = remote.BrowserWindow;
+    this.mainWindow = remote.getCurrentWindow();
   }
 
   buildMenu(history) {
@@ -15,7 +14,7 @@ export default class MenuBuilder {
       process.env.NODE_ENV === "development" ||
       process.env.DEBUG_PROD === "true"
     ) {
-      console.log(remote);
+      // console.log(remote);
       // this.setupDevelopmentEnvironment();
     }
 
@@ -34,7 +33,7 @@ export default class MenuBuilder {
   }
 
   setupDevelopmentEnvironment() {
-    remote.BrowserWindow.openDevTools();
+    remote.getCurrentWindow().openDevTools();
 
     this.mainWindow.webContents.on("context-menu", (e, props) => {
       const { x, y } = props;
@@ -119,6 +118,7 @@ export default class MenuBuilder {
           label: "Toggle Developer Tools",
           accelerator: "Alt+Command+I",
           click: () => {
+            console.log(this.mainWindow);
             this.mainWindow.toggleDevTools();
           }
         }
@@ -193,30 +193,63 @@ export default class MenuBuilder {
         label: "&File",
         submenu: [
           {
-            label: "test",
-
+            label: "Lock Wallet",
             click: () => {
-              history.push("/");
+              RPC.PROMISE("walletlock", []);
             }
           },
           {
-            label: "&Open",
-            accelerator: "Ctrl+O"
-          },
-          {
-            label: "&Close",
-            accelerator: "Ctrl+W",
+            label: "Back-up Wallet",
             click: () => {
-              this.mainWindow.close();
+              let now = `${new Date()}`;
+              let BackupDir = process.env.HOME + "/NexusBackups";
+              RPC.PROMISE("backupwallet", [BackupDir + "/" + now + ".dat"]);
             }
           },
           {
-            label: "Toggle Developer Tools",
-            accelerator: "Alt+Command+I",
-            click: () => {
-              this.mainWindow.toggleDevTools();
+            label: "Open Backups Folder",
+            click() {
+              shell.openItem(process.env.HOME + "/NexusBackups");
             }
           }
+        ]
+      },
+      {
+        label: "Settings",
+        submenu: [
+          {
+            label: "Core Settings",
+            click() {
+              history.push("/Settings/Core");
+            }
+          },
+          {
+            label: "Application Settings",
+            click() {
+              history.push("/Settings/App");
+            }
+          }
+          // {
+          //   label: "Change Passphrase",
+          //   click() {
+          //     LOAD.Module(11, 1);
+          //   }
+          // },
+          // {
+          //   label: "Backup Wallet",
+          //   click() {
+          //     LOAD.Module(3, 1);
+          //   }
+          // },
+          // {
+          //   type: "separator"
+          // },
+          // {
+          //   label: "Options",
+          //   click() {
+          //     LOAD.Module(9, 1);
+          //   }
+          // }
         ]
       },
       {
@@ -236,9 +269,9 @@ export default class MenuBuilder {
                   label: "Toggle &Full Screen",
                   accelerator: "F11",
                   click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
+                    remote
+                      .getCurrentWindow()
+                      .setFullScreen(!remote.getCurrentWindow().isFullScreen());
                   }
                 },
                 {
@@ -265,29 +298,27 @@ export default class MenuBuilder {
         label: "Help",
         submenu: [
           {
-            label: "Learn More",
+            label: "About Nexus",
+            click() {
+              history.push("/About");
+            }
+          },
+          {
+            label: "NexusEarth",
+            click() {
+              shell.openExternal("http://nexusearth.com");
+            }
+          },
+          {
+            label: "Nexusoft Github",
+            click() {
+              shell.openExternal("http://github.com/Nexusoft");
+            }
+          },
+          {
+            label: "Electron Documentation",
             click() {
               shell.openExternal("http://electron.atom.io");
-            }
-          },
-          {
-            label: "Documentation",
-            click() {
-              shell.openExternal(
-                "https://github.com/atom/electron/tree/master/docs#readme"
-              );
-            }
-          },
-          {
-            label: "Community Discussions",
-            click() {
-              shell.openExternal("https://discuss.atom.io/c/electron");
-            }
-          },
-          {
-            label: "Search Issues",
-            click() {
-              shell.openExternal("https://github.com/atom/electron/issues");
             }
           }
         ]

@@ -40,6 +40,9 @@ import nxsblocks from "../../images/nxs-blocks.png";
 
 import NetworkGlobe from "./NetworkGlobe";
 
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
 const mapStateToProps = state => {
   return {
     ...state.overview
@@ -62,6 +65,25 @@ class Overview extends Component {
       return true;
     }
   }
+
+  componentDidMount()
+  {
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener("contextmenu",this.setupcontextmenu);
+  }
+
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
+  }
+
 
   connectionsImage() {
     const con = this.props.connections;
