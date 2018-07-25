@@ -1,15 +1,479 @@
 #addressbook {
-	position: relative;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 #addressbook > h2 {
-	flex: 0;
+  flex: 0;
 }
 
 #addressbook > .panel {
-	flex: 1;
-	overflow-y: auto;
+  flex: 1;
+  overflow-y: auto;
+}
+
+
+
+/* WIDGETS/MODULES START */
+
+/* WIDGETS/MODULES END */
+#nxs-addressbook-module {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  color: var(--color-3);
+  margin-top: 25px;
+}
+
+#nxs-address-display {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#namesContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  height: 775px;
+}
+
+#namesList {
+  flex: 1;
+
+  width: auto;
+  text-align: left;
+  font-size: 25px;
+  overflow: auto;
+  color: var(--color-3);
+}
+
+#namesList::-webkit-scrollbar {
+  display: none;
+}
+
+#navLetters {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.navLetter {
+  flex: 1;
+  color: var(--color-3);
+}
+
+.navLetter:hover {
+  color: var(--color-2) !important ;
+  text-decoration: none;
+}
+
+.navLetterHighlight {
+  flex: 1;
+  text-decoration: none;
+  color: var(--color-2) !important ;
+}
+
+.letterheader {
+  border-bottom: 1px solid var(--color-2);
+  font-size: 30px;
+}
+
+#namesList::-webkit-scrollbar {
+  display: none;
+}
+
+.name {
+  padding-left: 20px;
+}
+
+.name:hover {
+  background-color: var(--color-2);
+}
+
+#contactDetail {
+  flex: 2;
+  float: right;
+}
+
+#contactCard {
+  display: flex;
+  flex-direction: row;
+  margin-left: 15px;
+  border-radius: 15px;
+  border: 3px solid var(--color-2);
+  background-color: var(--color-1);
+}
+
+#profilePic {
+  float: left;
+  padding: 15px;
+}
+
+#cardDetail {
+  flex: 2;
+}
+
+#cardTitle {
+  display: flex;
+}
+
+#editCard {
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 10px;
+  width: 30px;
+}
+
+#titleName {
+  flex: 2;
+  padding-top: 30px;
+  border-bottom: 1px solid var(--color-2);
+  font-size: 30px;
+}
+
+#cardInfo {
+  padding: 20px;
+  padding-left: 0;
+
+  text-align: left;
+  font-size: 20px;
+}
+
+#notesZone {
+  display: flex;
+  flex-direction: row;
+}
+
+#notesLabel {
+  flex: 1;
+}
+
+#notesField {
+  flex: 5;
+  height: 100px;
+  width: 20px;
+  overflow: auto;
+}
+
+/* #notesField::-webkit-scrollbar {
+display: none;
+} */
+
+#mine {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+#notMine {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+#addressesContainer {
+  overflow: auto;
+  max-height: 520px;
+}
+
+#addressesContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.js-modal {
+  position: absolute;
+  max-width: 800px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--color-1);
+  display: flex;
+  padding: 20px;
+  color: var(--color-3);
+}
+
+.js-modal-hidden {
+  display: none;
+}
+
+.js-modal-inner {
+  position: relative;
+  padding: 10px;
+  text-align: left;
+}
+
+.js-modal-close {
+  font-size: 10px;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  color: var(--color-3);
+  border-width: 0;
+  border-radius: 100%;
+  background-color: var(--color-1);
+  padding: 3px;
+}
+
+#modalcontent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--color-1);
+}
+.newAcctInpt {
+  width: 100%;
+  border: solid !important;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.newAcctInpt.invalid {
+  width: 100%;
+  border: solid red !important;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+#errMessage {
+  color: red;
+  visibility: hidden;
+}
+
+#new-account-address {
+  min-width: 400px;
+}
+
+#new-account-notes {
+  font-family: inherit;
+  min-width: 400px;
+}
+
+.label {
+  display: flex;
+  color: var(--color-1);
+  flex-direction: column;
+  align-items: flex-start;
+
+  padding: 5px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.tingle-modal-box {
+  width: fit-content !important;
+}
+#new-account-submit {
+  margin: 0 !important;
+  margin-top: 10px;
+  width: 100%;
+  background-color: var(--color-2);
+  border: var(--color-2);
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+#new-address-submit {
+  margin: 0 !important;
+  margin-top: 10px;
+  width: 100%;
+  background-color: var(--color-2);
+  border: var(--color-2);
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#new-edit-notes {
+  font-family: inherit;
+  min-width: 400px;
+  max-width: 100%;
+}
+
+#phoneLabel {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.phoneEntry {
+  width: 40px;
+  border: solid !important;
+  color: var(--color-1);
+  box-sizing: unset !important;
+  text-align: center;
+}
+
+#new-edit-4 {
+  border: solid;
+  margin-left: 4px !important;
+}
+
+#new-edit-3 {
+  border: solid;
+  margin-left: 4px !important;
+}
+
+#new-edit-area {
+  border: solid;
+  margin-left: 0 !important;
+}
+
+#new-account-4 {
+  margin-left: 4px !important;
+}
+
+#new-account-3 {
+  margin-left: 4px !important;
+}
+
+#new-account-area {
+  margin-left: 0 !important;
+}
+
+.addressLabel {
+  position: relative;
+  display: inline-block;
+}
+
+.addressLabel .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: var(--color-3);
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.addressLabel .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.addressLabel:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-3);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--color-1);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: var(--color-2);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--color-2);
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+#sliderContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+input[type="checkbox"].switch {
+  font-size: 30px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 1.75em;
+  height: 1em;
+  background: #ddd;
+  border-radius: 3em;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+input[type="checkbox"].switch:checked {
+  background: #0ebeff;
+}
+
+input[type="checkbox"].switch:after {
+  position: absolute;
+  content: "";
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  background: #fff;
+  -webkit-box-shadow: 0 1px 0.25em rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 0.25em rgba(0, 0, 0, 0.1);
+  -webkit-transform: scale(0.7);
+  transform: scale(0.7);
+  left: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+input[type="checkbox"].switch:checked:after {
+  left: calc(100% - 1em);
 }
