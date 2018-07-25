@@ -14,8 +14,7 @@ export default class MenuBuilder {
       process.env.NODE_ENV === "development" ||
       process.env.DEBUG_PROD === "true"
     ) {
-     // console.log(remote);
-
+      // console.log(remote);
       // this.setupDevelopmentEnvironment();
     }
 
@@ -194,9 +193,9 @@ export default class MenuBuilder {
         label: "&File",
         submenu: [
           {
-            label: "test",
+            label: "Lock Wallet",
             click: () => {
-              history.push("/");
+              RPC.PROMISE("walletlock", []);
             }
           },
           {
@@ -205,6 +204,12 @@ export default class MenuBuilder {
               let now = `${new Date()}`;
               let BackupDir = process.env.HOME + "/NexusBackups";
               RPC.PROMISE("backupwallet", [BackupDir + "/" + now + ".dat"]);
+            }
+          },
+          {
+            label: "Open Backups Folder",
+            click() {
+              shell.openItem(process.env.HOME + "/NexusBackups");
             }
           }
         ]
@@ -292,12 +297,12 @@ export default class MenuBuilder {
       {
         label: "Help",
         submenu: [
-           {
-             label: "About Nexus",
-             click() {
-              history.push('/About');
-             }
-           },
+          {
+            label: "About Nexus",
+            click() {
+              history.push("/About");
+            }
+          },
           {
             label: "NexusEarth",
             click() {

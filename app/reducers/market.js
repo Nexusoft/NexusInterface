@@ -35,6 +35,7 @@ export default (state = initialState, action) => {
           info24hr: { ...action.payload }
         }
       };
+      break;
     case TYPE.BITTREX_24:
       return {
         ...state,
@@ -43,6 +44,7 @@ export default (state = initialState, action) => {
           info24hr: { ...action.payload }
         }
       };
+      break;
     case TYPE.BINANCE_24:
       return {
         ...state,
@@ -51,6 +53,7 @@ export default (state = initialState, action) => {
           info24hr: { ...action.payload }
         }
       };
+      break;
     case TYPE.CRYPTOPIA_ORDERBOOK:
       return {
         ...state,
@@ -60,6 +63,7 @@ export default (state = initialState, action) => {
           sell: [...action.payload.sell]
         }
       };
+      break;
     case TYPE.BINANCE_ORDERBOOK:
       return {
         ...state,
@@ -69,6 +73,7 @@ export default (state = initialState, action) => {
           sell: [...action.payload.sell]
         }
       };
+      break;
     case TYPE.BITTREX_ORDERBOOK:
       return {
         ...state,
@@ -78,11 +83,13 @@ export default (state = initialState, action) => {
           sell: [...action.payload.sell]
         }
       };
+      break;
     case TYPE.MARKET_DATA_LOADED:
       return {
         ...state,
         loaded: true
       };
+      break;
     case TYPE.BINANCE_CANDLESTICK:
       return {
         ...state,
@@ -91,6 +98,7 @@ export default (state = initialState, action) => {
           candlesticks: [...action.payload]
         }
       };
+      break;
     case TYPE.BITTREX_CANDLESTICK:
       return {
         ...state,
@@ -99,6 +107,7 @@ export default (state = initialState, action) => {
           candlesticks: [...action.payload]
         }
       };
+      break;
     case TYPE.CRYPTOPIA_CANDLESTICK:
       return {
         ...state,
@@ -107,12 +116,26 @@ export default (state = initialState, action) => {
           candlesticks: [...action.payload]
         }
       };
+      break;
+    case TYPE.SET_TRADEVOL:
+      return {
+        ...state,
+        tradeVolume: action.payload
+      };
+      break;
+    case TYPE.SET_THRESHOLD:
+      return {
+        ...state,
+        threshold: action.payload
+      };
+      break;
     //  TODO: deprecate when we move to a new alert system
     case TYPE.SET_ALERTS:
       return {
         ...state,
         arbAlertList: action.payload
       };
+      break;
     case TYPE.REMOVE_ALERT:
       return {
         ...state,
@@ -121,6 +144,7 @@ export default (state = initialState, action) => {
           ...state.arbAlertList.slice(action.payload + 1)
         ]
       };
+      break;
 
     default:
       return state;
