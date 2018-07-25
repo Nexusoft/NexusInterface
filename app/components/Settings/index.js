@@ -6,8 +6,35 @@ import styles from "./style.css";
 import SettingsApp from "./SettingsApp";
 import SettingsCore from "./SettingsCore";
 
+
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
 export default class Settings extends Component {
-  render() {
+
+  
+    componentDidMount()
+    {
+      window.addEventListener("contextmenu", this.setupcontextmenu, false);
+    }
+  
+    componentWillUnmount()
+    {
+      window.removeEventListener("contextmenu",this.setupcontextmenu);
+    }
+  
+    setupcontextmenu(e) {
+      e.preventDefault();
+      const contextmenu = new ContextMenuBuilder().defaultContext;
+      //build default
+      let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+      defaultcontextmenu.popup(remote.getCurrentWindow());
+    }
+    
+    render() {
+
+
+    
 
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {

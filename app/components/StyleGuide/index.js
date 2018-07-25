@@ -2,8 +2,36 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
 
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
+
 export default class StyleGuide extends Component {
-  render() {
+	
+	
+	componentDidMount()
+    {
+      window.addEventListener("contextmenu", this.setupcontextmenu, false);
+    }
+  
+    componentWillUnmount()
+    {
+      window.removeEventListener("contextmenu",this.setupcontextmenu);
+    }
+  
+    setupcontextmenu(e) {
+      e.preventDefault();
+      const contextmenu = new ContextMenuBuilder().defaultContext;
+      //build default
+      let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+      defaultcontextmenu.popup(remote.getCurrentWindow());
+	}
+	
+	render() {
+
+
+	
+
     return (
 
 		<div id="styleguide">

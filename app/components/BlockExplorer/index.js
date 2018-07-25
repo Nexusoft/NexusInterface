@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
 
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
+
 const mapStateToProps = state => {
   return { ...state.common, ...state.transactions };
 };
@@ -19,6 +23,26 @@ const mapDispatchToProps = dispatch => ({
 
 
 class BlockExplorer extends Component {
+
+
+  componentDidMount()
+  {
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener("contextmenu",this.setupcontextmenu);
+  }
+
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
+  }
+
   render() {
 
     if ( this.props.exploreinfo != undefined && this.props.exploreinfo != null) 

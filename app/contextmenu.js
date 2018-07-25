@@ -14,16 +14,17 @@ export default class ContextMenuBuilder {
   {
     const template = [
       {
-        label: 'File',
-        submenu: [
-    
-          {
-            label: 'Copy',
-            role: 'copy',
-            
-          }
-        ]
+        label: 'Copy',
+        ccelerator: 'CmdOrCtrl+C',
+        role: 'copy',
       },
+      {
+        label: 'Paste',
+        ccelerator: 'CmdOrCtrl+V',
+            role: 'paste',
+      },
+      {type: 'separator'},
+
       {
           label: 'Reload',
           accelerator: 'CmdOrCtrl+R',
@@ -32,12 +33,20 @@ export default class ContextMenuBuilder {
           }
       },
       {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
+        label: 'About',
+        accelerator: 'CmdOrCtrl+Y',
         click (item, focusedWindow) {
-          if (focusedWindow) focusedWindow.reload()
+          console.log(focusedWindow);
+          focusedWindow.loadURL('/About');
+          //history.push('/About');
         }
-    }
+      },
+
+      {
+        label: 'Quit',
+        accelerator: 'alt+f4',
+        role: 'close'
+      }
     ]
     return template;
   }
