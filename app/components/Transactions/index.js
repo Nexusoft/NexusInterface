@@ -79,6 +79,7 @@ class Transactions extends Component {
       open: false,
       exectuedHistoryData: false,
       historyData: new Map(),
+      transactionsToCheck:[],
       mainChartWidth: 0,
       mainChartHeight: 0,
       miniChartWidth: 0,
@@ -365,18 +366,17 @@ class Transactions extends Component {
           });
 
           this.setState(
-            {
-                tableColumns:tabelheaders,
-                currentTransactions:tempWalletTransactions,
-                zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date(tempWalletTransactions[tempWalletTransactions.length - 1].time * 1000)] }
-              
-            });
+          {
+              tableColumns:tabelheaders,
+              currentTransactions:tempWalletTransactions,
+              zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date(tempWalletTransactions[tempWalletTransactions.length - 1].time * 1000)] }
             
-             if ( promisList == null || promisList == undefined || promisList.length == 0)
-            {
-              return;
-            }
+          });
 
+           if ( promisList == null || promisList == undefined || promisList.length == 0)
+          {
+            return;
+          }
         Promise.all(promisList).then(payload =>
         {
           console.log(payload);
@@ -439,7 +439,7 @@ class Transactions extends Component {
             }
           );
           this.forceUpdate();
-          
+          this.gothroughdatathatneedsit();
         });
       }
     )
@@ -732,7 +732,7 @@ class Transactions extends Component {
 
     faketrans.category = hhhh();
     faketrans.time = xxxx();
-
+    faketrans.time = Math.round(faketrans.time);
 
     if (faketrans.category == "send")
     {
@@ -1110,13 +1110,15 @@ class Transactions extends Component {
           this.setnewdatafunction(body,iiiiiii);
           //resolve(iiiiiii);
         
-
+        //jjjjjjjj(true);
       }
     }
 
-    kfkfkfkfkfk = function(urltoask,tokentocomapre)
+    kfkfkfkfkfk = function(resolve,reject,urltoask,tokentocomapre)
       {
         this.uuuuuuuuuu.bind(this);
+        let jjjjjjjj = resolve;
+
         Request(
           {
             url: urltoask,
@@ -1124,7 +1126,8 @@ class Transactions extends Component {
 
           },
           this.uuuuuuuuuu.bind(this)
-        );
+        ).on("response",() => resolve(true));
+       
       }
 
       gjggjgjgj = function(resolve,reject,urltoask,tokentocomapre)
@@ -1134,7 +1137,7 @@ class Transactions extends Component {
       this.kfkfkfkfkfk = this.kfkfkfkfkfk.bind(this);
             setTimeout(() => {
         
-              this.kfkfkfkfkfk(urltoask,tokentocomapre);
+              this.kfkfkfkfkfk(resolve,reject,urltoask,tokentocomapre);
 
     }, 250 + Math.floor(Math.random() * 2000) );
     }
@@ -1184,18 +1187,119 @@ class Transactions extends Component {
 
   
 
+  gothroughdatathatneedsit()
+  {
+    
+
+    let historyPromiseList = [];
+    for (let index = 0; index < this.state.transactionsToCheck.length; index++) {
+      const element = this.state.transactionsToCheck[index];
+      historyPromiseList.push({incomingIndex:element,this:this});
+     
+      
+    }
+
+    historyPromiseList.reduce((p, v) => p.then((otp) => this.generateHistoryPromise(v.this,v.incomingIndex,otp)), Promise.resolve()).then(() => this.afterHistoryPromiseProcessAndSave());
+  }
+
+  generateHistoryPromise(incomingthis,incomingIndex,passthroughdata)
+  {
+    return new Promise(function(resolve, reject) {
+   
+      let founddata = incomingthis.findclosestdatapoint(incomingthis.state.walletTransactions[incomingIndex].time.toString());
+      if(founddata == undefined)
+      {
+        
+        
+       // console.log(incomingthis);
+        let cryptocompareurlUSD = incomingthis.createcryptocompareurl("USD",incomingthis.state.walletTransactions[incomingIndex].time);
+        let cryptocompareurlBTC = incomingthis.createcryptocompareurl("BTC",incomingthis.state.walletTransactions[incomingIndex].time);
+       // incomingthis.createhistoricaldatapullpromise(cryptocompareurlUSD,'USD').then( () => 
+       // incomingthis.createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC').then( () => 
+        //  resolve(true)
+        //));
+           let allpromise = [];
+           allpromise.push( incomingthis.createhistoricaldatapullpromise(cryptocompareurlUSD,'USD'));
+           allpromise.push(incomingthis.createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC'));
+            Promise.all(allpromise).then((ttttt) => {console.log("********"); console.log(ttttt); resolve(ttttt);} );
+            //.then(fooff => {console.log("daadada");})
+            console.log("$$$$$$$$$$$$$$$$$$$$$$");
+            setTimeout(() => {
+              let ggggg = "true" + passthroughdata;
+              console.log(ggggg)
+              //resolve(ggggg);
+            }, 2000);
+          }
+          else
+          {
+            console.log("Didn;t need more");
+            let founddata = incomingthis.findclosestdatapoint(incomingthis.state.walletTransactions[incomingIndex].time.toString())
+            let temp = incomingthis.state.walletTransactions;
+            temp[incomingIndex].value.USD = founddata.priceUSD;
+            temp[incomingIndex].value.BTC = founddata.priceBTC;
+            incomingthis.setState(
+              {
+                walletTransactions:temp
+              }
+            );
+            resolve(false);
+          }
+    });
+  }
+
+  ttttttt(incomingIndex)
+  {
+    if (this.wwwwww(incomingIndex))
+    {
+      return false;
+    }
+    else
+    {
+      let founddata = this.findclosestdatapoint(this.state.walletTransactions[incomingIndex].time.toString())
+      let temp = this.state.walletTransactions;
+      temp[incomingIndex].value.USD = founddata.priceUSD;
+      temp[incomingIndex].value.BTC = founddata.priceBTC;
+      this.setState(
+        {
+          walletTransactions:temp
+        }
+      );
+      return true;
+    }
+  }
   
+  wwwwww(incomingIndex)
+  {
+    
+    let founddata = this.findclosestdatapoint(this.state.walletTransactions[incomingIndex].time.toString());
+    if(founddata == undefined)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
   
   getDataorNewData(incomingIndex)
   {
     var that = this;
-    console.log(that);
-    console.log(this.state.walletTransactions);
-    let founddata = this.findclosestdatapoint(this.state.walletTransactions[incomingIndex].time.toString())
-    console.log(founddata);
+    //console.log(that);
+    //console.log(this.state.walletTransactions);
+    let founddata = this.findclosestdatapoint(this.state.walletTransactions[incomingIndex].time.toString());
+    //console.log(founddata);
     if(founddata == undefined)
     {
-      console.log(this.state.walletTransactions[incomingIndex]);
+     // console.log("!!!!!!!!!!!!!!!!!!!!!" + this.state.walletTransactions[incomingIndex]);
+      let temp = this.state.transactionsToCheck;
+      temp.push(incomingIndex);
+      this.setState(
+        {
+          transactionsToCheck:temp
+        }
+      );
+
     }
     else
     {
@@ -1209,6 +1313,44 @@ class Transactions extends Component {
       );
       
     }
+  }
+
+  afterHistoryPromiseProcessAndSave()
+  {
+    this.addhistorydatatoprevious();
+    this.SaveHistoryDataToJson();
+  }
+
+  addhistorydatatoprevious()
+  {
+    let tempdata = this.state.walletTransactions;
+    for (let index = 0; index < tempdata.length; index++) {
+      let founddata = this.findclosestdatapoint(this.state.walletTransactions[index].time.toString());
+      tempdata[index].value.USD = founddata.priceUSD;
+      tempdata[index].value.BTC = founddata.priceBTC;
+
+    }
+
+    this.setState(
+    {
+      walletTransactions:tempdata
+    }
+    );
+  }
+
+
+  SaveHistoryDataToJson()
+  {
+    let appdataloc = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME);
+    appdataloc = appdataloc + "/.Nexus/";
+    console.log("Saving");
+    let fs = require('fs');
+
+    fs.writeFile(appdataloc + 'historydata.json', JSON.stringify(this.mapToObject(this.state.historyData)),(err) => {
+      if (err != null){
+          console.log(err);
+          } 
+      });
   }
 
 
@@ -1244,19 +1386,24 @@ class Transactions extends Component {
   findclosestdatapoint(intimestamp)
   {
     
-        
+    console.log(intimestamp);
     let modifiedtimestamp = intimestamp.substring(0,8);
     modifiedtimestamp += "00";
+    console.log(modifiedtimestamp);
     let numberremainder = Number(modifiedtimestamp) % 3600;
     let datatograb; 
 
+    console.log(numberremainder);
+
     datatograb = this.state.historyData.get((Number(modifiedtimestamp)  + numberremainder));
+
+    
 
     if ( datatograb == undefined) 
     {
       datatograb = this.state.historyData.get((Number(modifiedtimestamp)  - numberremainder));
     } 
-
+    console.log(datatograb);
     return datatograb;
   }
 
