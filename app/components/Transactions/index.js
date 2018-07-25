@@ -11,6 +11,8 @@ import Modal from 'react-responsive-modal';
 import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer} from 'victory';
 //import Analytics from "../../script/googleanalytics";
 
+import ContextMenuBuilder from "../../contextmenu";
+
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
 // import "react-table/react-table.css"
 
@@ -18,7 +20,6 @@ import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiCon
 //import tablestyles from "./react-table.css";
 import styles from "./style.css";
 
-import ContextMenuBuilder from "../../contextmenu";
 
 const mapStateToProps = state => {
   return { ...state.transactions };
