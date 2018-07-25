@@ -18,6 +18,7 @@ import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiCon
 //import tablestyles from "./react-table.css";
 import styles from "./style.css";
 
+import ContextMenuBuilder from "../../contextmenu";
 
 const mapStateToProps = state => {
   return { ...state.transactions };
@@ -110,6 +111,8 @@ class Transactions extends Component {
     console.log(remote);
     console.log(this);
 
+    console.log(ContextMenuBuilder);
+    console.log(new ContextMenuBuilder().defaultContext);
     this.transactioncontextfunction = this.transactioncontextfunction.bind(this);
 
     //Remove Previous vent
@@ -185,9 +188,9 @@ class Transactions extends Component {
       ]
       
       console.log(this.state);
-
+      const yuup = new ContextMenuBuilder().defaultContext;
       //build default
-      let defaultcontextmenu = remote.Menu.buildFromTemplate(template);
+      let defaultcontextmenu = remote.Menu.buildFromTemplate(yuup);
       //create new custom
       let transactiontablecontextmenu = new remote.Menu();
 

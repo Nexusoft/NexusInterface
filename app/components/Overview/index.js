@@ -42,27 +42,13 @@ import NetworkGlobe from "./NetworkGlobe";
 
 const mapStateToProps = state => {
   return {
-    ...state.common
+    ...state.overview
   };
 };
 
 const mapDispatchToProps = dispatch => ({});
 
 class Overview extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    const yesArray = [];
-    for (let prop in this.props) {
-      if (this.props[prop] === nextProps[prop]) {
-        yesArray.push(true);
-      }
-    }
-    if (yesArray.length === Object.keys(this.props).length - 1) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   connectionsImage() {
     const con = this.props.connections;
 
@@ -167,8 +153,7 @@ class Overview extends Component {
   render() {
     return (
       <div id="overviewPage">
-        <div className="left-stats">           
-
+        <div className="left-stats">
           <div id="nxs-balance-info">
             <div className="h2">Balance (NXS)</div>
             <img src={nxsStake} />
@@ -180,15 +165,9 @@ class Overview extends Component {
             <img src={nxsStake} />
             <div className="overviewValue">$0.00</div>
           </div>
-          
+
           <div id="nxs-transactions-info">
             <div className="h2">Transactions</div>
-            <img src={nxsStake} />
-            <div className="overviewValue">0</div>
-          </div>
-
-          <div id="nxs-market-price-info">
-          <div className="h2">Market Price</div>
             <img src={nxsStake} />
             <div className="overviewValue">0</div>
           </div>
@@ -200,16 +179,21 @@ class Overview extends Component {
           </div>
 
           <div id="nxs-market-price-info">
-          <div className="h2">Market Price</div>
+            <div className="h2">Market Price</div>
             <img src={nxsStake} />
             <div className="overviewValue">0</div>
           </div>
 
+          <div id="nxs-market-price-info">
+            <div className="h2">Market Price</div>
+            <img src={nxsStake} />
+            <div className="overviewValue">0</div>
+          </div>
         </div>
         <NetworkGlobe />
         <div className="right-stats">
           <div id="nxs-connections-info">
-          <div className="h2">Connections</div>
+            <div className="h2">Connections</div>
             <img
               id="nxs-getinfo-connections-image"
               src={this.connectionsImage()}
@@ -217,7 +201,7 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.connections}</div>
           </div>
           <div id="nxs-blockweight-info">
-          <div className="h2">Block Weight</div>
+            <div className="h2">Block Weight</div>
             <img
               src={this.blockWeightImage()}
               id="nxs-getinfo-blockweight-image"
@@ -225,24 +209,24 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.blockweight}</div>
           </div>
           <div id="nxs-blocks-info">
-          <div className="h2">Block Count</div>
+            <div className="h2">Block Count</div>
             <img src={nxsblocks} />
             <div className="overviewValue">{this.props.blocks}</div>
           </div>
           <div id="nxs-trustweight-info">
-          <div className="h2">Trust Weight</div>
+            <div className="h2">Trust Weight</div>
             <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
             <div className="overviewValue">{this.props.trustweight}</div>
           </div>
           <div id="nxs-interestweight-info">
-          <div className="h2">Interest Rate</div>
+            <div className="h2">Interest Rate</div>
             <img src={interestRate} />
             <div className="overviewValue">
               {this.props.interestweight + "%"}
             </div>
           </div>
           <div id="nxs-stakeweight-info">
-          <div className="h2">Stake Weight</div>
+            <div className="h2">Stake Weight</div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.stakeweight}</div>
           </div>

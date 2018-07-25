@@ -43,11 +43,16 @@ class List extends Component {
 
       return sortableList.map(ele => (
 
-        <tr key={ele.address.slice(0, 8)} className="ListItem">
-          <td key={ele.address.slice(0, 9)}>{ele.address}</td>
-          <td key={ele.address.slice(0, 10)} className="intrestRate">
+        <tr key={ele.address.slice(0, 8)}>
+
+          <td key={ele.address.slice(0, 9)}>
+            {ele.address}
+          </td>
+
+          <td key={ele.address.slice(0, 10)}>
             {ele["interest rate"]}
           </td>
+          
         </tr>
 
       ));
@@ -59,15 +64,15 @@ class List extends Component {
 
       <div id="trustlist">
 
-        <div id="trustlist-container">
+        <h2>Trust List</h2>
 
-	        <h2>Trust List</h2>
+        <div className="panel">
 
-	        <div className="panel">
-            <div id="table-wrap">
-            <table id="listbody" className="table table-striped table-hover user-list fixed-header">
+          <div id="table-wrap">
 
-              <thead id="listhead">
+            <table>
+
+              <thead>
 
                 <th>
                   <div>Address</div>
@@ -79,10 +84,10 @@ class List extends Component {
 
               </thead>
 
-              <tbody id="tablebody">{this.buildList()}</tbody>
+              <tbody>{this.buildList()}</tbody>
 
             </table>
-            </div>
+
           </div>
 
         </div>

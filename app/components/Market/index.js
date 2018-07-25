@@ -9,11 +9,17 @@ import * as TYPE from "../../actions/actiontypes";
 import MarketDepth from "../Chart/MarketDepth";
 import Candlestick from "../Chart/Candlestick";
 
+import Alert from "../Alert";
+
 // import images
 import bittrexLogo from "../../images/BittrexLogo.png";
 import binanceLogo from "../../images/BINANCE.png";
-import cryptopiaLogo from "../../images/cryptopia.png";
+import cryptopiaLogo from "../../images/CryptopiaLogo.png";
 import * as actionsCreators from "../../actions/marketActionCreators";
+import binanceSmallLogo from "../../images/binanceSmallLogo.png";
+import bittrexSmallLogo from "../../images/bittrexSmallLogo.png";
+import cryptopiaSmallLogo from "../../images/cryptopiaSmallLogo.png";
+import arrow from "../../images/arrow.png";
 
 import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
@@ -37,58 +43,119 @@ class Market extends Component {
     this.props.binanceCandlestickLoader();
     this.props.bittrexCandlestickLoader();
     this.props.cryptopiaCandlestickLoader();
+    this.arbitageChecker();
   }
 
-  arbitageAlert() {
+  arbitageChecker() {
     let lowArr = [],
       highArr = [],
       arbArr = [[], [], []];
 
-    lowArr.push({
-      exchange: "binance",
-      ...this.props.binance.sell[this.props.binance.sell.length - 1]
+    let sellArr = [],
+      buyArr = [];
+    if (this.props.binance.sell[0]) {
+      sellArr.push({
+        exchange: "binance",
+        fee: 0.001,
+        arr: this.props.binance.sell
+      });
+    }
+    if (this.props.bittrex.sell[0]) {
+      sellArr.push({
+        exchange: "bittrex",
+        fee: 0.0025,
+        arr: this.props.bittrex.sell
+      });
+    }
+    if (this.props.cryptopia.sell[0]) {
+      sellArr.push({
+        exchange: "cryptopia",
+        fee: 0.002,
+        arr: this.props.cryptopia.sell
+      });
+    }
+    if (this.props.binance.sell[0]) {
+      buyArr.push({
+        exchange: "binance",
+        fee: 0.001,
+        arr: this.props.binance.buy
+      });
+    }
+    if (this.props.bittrex.sell[0]) {
+      buyArr.push({
+        exchange: "bittrex",
+        fee: 0.0025,
+        arr: this.props.bittrex.buy
+      });
+    }
+    if (this.props.cryptopia.sell[0]) {
+      buyArr.push({
+        exchange: "cryptopia",
+        fee: 0.002,
+        arr: this.props.cryptopia.buy
+      });
+    }
+    const compBuyArr = buyArr.map(obj => {
+      let volAgra = 0,
+        i = 0,
+        priceAgra = 0;
+      while (volAgra < this.props.tradeVolume) {
+        priceAgra = obj.arr[i].Price + priceAgra;
+        volAgra = obj.arr[i].Volume + volAgra;
+        ++i;
+      }
+      return {
+        exchange: obj.exchange,
+        priceAverage: priceAgra / i,
+        fee: obj.fee,
+        volAgra: volAgra,
+        buy: true
+      };
     });
-    lowArr.push({
-      exchange: "bittrex",
-      ...this.props.bittrex.sell[this.props.bittrex.sell.length - 1]
-    });
-    lowArr.push({
-      exchange: "cryptopia",
-      ...this.props.cryptopia.sell[this.props.cryptopia.sell.length - 1]
-    });
-    highArr.push({
-      exchange: "binance",
-      ...this.props.binance.buy[0]
-    });
-    highArr.push({
-      exchange: "bittrex",
-      ...this.props.bittrex.buy[0]
-    });
-    highArr.push({
-      exchange: "cryptopia",
-      ...this.props.cryptopia.buy[0]
+    const compSellArr = sellArr.map(obj => {
+      let volAgra = 0,
+        i = 0,
+        priceAgra = 0;
+      while (volAgra < this.props.tradeVolume) {
+        priceAgra = obj.arr[i].Price + priceAgra;
+        volAgra = obj.arr[i].Volume + volAgra;
+        ++i;
+      }
+      return {
+        exchange: obj.exchange,
+        fee: obj.fee,
+        priceAverage: priceAgra / i,
+        volAgra: volAgra,
+        buy: false
+      };
     });
 
-    let alerts = highArr
-      .map((high, i) => {
-        const highPrice = high.Price;
-        return lowArr
-          .map((low, index) => {
+    const placeholderTreshold = -0.001;
+    let potentialAlerts = compBuyArr
+      .map((high, i1) => {
+        return compSellArr
+          .map((low, i2) => {
             if (high.exchange !== low.exchange) {
-              const lowPrice = low.Price;
-              let arb = highPrice - lowPrice;
-              if (arb > 0) {
-                console.log("ARBITRAGE!!!");
+              let sellNXS =
+                high.priceAverage * this.props.tradeVolume -
+                high.priceAverage * this.props.tradeVolume * high.fee;
+              let buyNXS =
+                this.props.tradeVolume * low.priceAverage -
+                this.props.tradeVolume * low.priceAverage * low.fee;
+
+              let deltaBTC = sellNXS - buyNXS;
+
+              if (deltaBTC > this.props.threshold) {
                 return {
                   fromExcange: high.exchange,
-                  value: arb.toFixed(8),
-                  ...low
+                  potentialProfit: deltaBTC.toFixed(8),
+                  toExchange: low.exchange
                 };
               } else return null;
             }
           })
           .filter(e => {
-            if (e != null) {
+            if (e) {
               return e;
             }
           });
@@ -97,39 +164,64 @@ class Market extends Component {
         if (e.length != 0) {
           return e;
         }
-      })
-      .map(arrayOfObj => {
-        return arrayOfObj.map(obj => {
-          return (
-            <div>
-              NXS {obj.Volume}, BTC {obj.Price}, arb diff: {obj.value} BTC,{" "}
-              {obj.fromExcange} => {obj.exchange}
-            </div>
-          );
-        });
       });
-    if (alerts.length > 0) {
-      alerts.reduce((accumulator, currentValue) =>
+    let alerts;
+    if (potentialAlerts.length > 0) {
+      alerts = potentialAlerts.reduce((accumulator, currentValue) =>
         accumulator.concat(currentValue)
       );
+      this.props.setAlertList(alerts);
     }
-    return alerts;
-    console.log(alerts);
   }
 
-  oneDayInfo(exchange) {
-    return (
-      <div className="marketSummaryTable">
-        <div>24hr Market Summary</div>
-        <div>High Price: {this.props[exchange].info24hr.high}</div>
-        <div>Low Price: {this.props[exchange].info24hr.low}</div>
-        <div>
-          Price Change:{" "}
-          {parseFloat(this.props[exchange].info24hr.change).toFixed(2)}%
-        </div>
-        <div>Volume: {this.props[exchange].info24hr.volume}</div>
-      </div>
-    );
+  arbitageAlert() {
+    if (this.props.arbAlertList[0]) {
+      return this.props.arbAlertList.map((e, i) => {
+        let highsrc, lowsrc;
+        switch (e.fromExcange) {
+          case "binance":
+            highsrc = binanceSmallLogo;
+            break;
+          case "bittrex":
+            highsrc = bittrexSmallLogo;
+            break;
+          case "cryptopia":
+            highsrc = cryptopiaSmallLogo;
+            break;
+          default:
+            break;
+        }
+        switch (e.toExchange) {
+          case "binance":
+            lowsrc = binanceSmallLogo;
+            break;
+          case "bittrex":
+            lowsrc = bittrexSmallLogo;
+            break;
+          case "cryptopia":
+            lowsrc = cryptopiaSmallLogo;
+            break;
+          default:
+            break;
+        }
+
+        return (
+          <div className="arbitrageAlert" key={`${i}`}>
+            <div>ARBITRAGE ALERT!</div>
+            <span onClick={() => this.props.removeAlert(i)}>X</span>
+            <div>
+              <img src={highsrc} alt={e.fromExcange} />
+              <img src={arrow} alt="right pointing arrow" />
+              <img src={lowsrc} alt={e.toExchange} />
+            </div>
+            <div>
+              {e.potentialProfit} potential average profit on a{" "}
+              {this.props.tradeVolume} NXS trade
+            </div>
+          </div>
+        );
+      });
+    } else return null;
   }
 
   formatBuyData(array) {
@@ -189,59 +281,70 @@ class Market extends Component {
 
   render() {
     return (
-      <div id="Market">
-        <div>
-          <button onClick={() => this.refresher()}>Refresh</button>
-          <h1>Market Information</h1>
-          <div>{this.arbitageAlert()}</div>
-        </div>
-        {this.props.loaded &&
-          this.props.binance.buy[0] && (
-            <div className="exchangeUnitContainer">
-              <img className="exchangeLogo" src={binanceLogo} />
-              <div className="marketInfoContainer">
-                <MarketDepth
-                  chartData={this.formatChartData("binanceBuy")}
-                  chartSellData={this.formatChartData("binanceSell")}
-                />
-                {this.props.binance.candlesticks[0] && (
-                  <Candlestick data={this.props.binance.candlesticks} />
-                )}
-              </div>
-            </div>
-          )}
-        {this.props.loaded &&
-          this.props.bittrex.buy[0] && (
-            <div className="exchangeUnitContainer">
-              <img className="exchangeLogo" src={bittrexLogo} />
-              <div className="marketInfoContainer">
-                <MarketDepth
-                  chartData={this.formatChartData("bittrexBuy")}
-                  chartSellData={this.formatChartData("bittrexSell")}
-                />
-                {this.props.bittrex.candlesticks[0] && (
-                  <Candlestick data={this.props.bittrex.candlesticks} />
-                )}
-              </div>
-            </div>
-          )}
-        {this.props.loaded &&
-          this.props.cryptopia.buy[0] && (
-            <div className="exchangeUnitContainer">
-              <img className="excangeLogo" src={cryptopiaLogo} />
-              <div className="marketInfoContainer">
-                <MarketDepth
-                  chartData={this.formatChartData("cryptopiaBuy")}
-                  chartSellData={this.formatChartData("cryptopiaSell")}
-                />
 
-                {this.props.cryptopia.candlesticks[0] && (
-                  <Candlestick data={this.props.cryptopia.candlesticks} />
-                )}
+      <div id="market">
+
+        <h2>Market Information</h2>
+
+				<a className="refresh" onClick={() => this.refresher()}>Refresh Market Data</a>
+
+        <div className="alertbox">
+          {this.arbitageAlert()}
+        </div>
+
+        <div className="panel">
+
+          {this.props.loaded &&
+            this.props.binance.buy[0] && (
+              <div className="exchangeUnitContainer">
+                <img className="exchangeLogo" src={binanceLogo} />
+                <div className="marketInfoContainer">
+                  <MarketDepth
+                    chartData={this.formatChartData("binanceBuy")}
+                    chartSellData={this.formatChartData("binanceSell")}
+                  />
+                  {this.props.binance.candlesticks[0] && (
+                    <Candlestick data={this.props.binance.candlesticks} />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          {this.props.loaded &&
+            this.props.bittrex.buy[0] && (
+              <div className="exchangeUnitContainer">
+                <img className="exchangeLogo" src={bittrexLogo} />
+                <div className="marketInfoContainer">
+                  <MarketDepth
+                    chartData={this.formatChartData("bittrexBuy")}
+                    chartSellData={this.formatChartData("bittrexSell")}
+                  />
+                  {this.props.bittrex.candlesticks[0] && (
+                    <Candlestick data={this.props.bittrex.candlesticks} />
+                  )}
+                </div>
+              </div>
+            )}
+          {this.props.loaded &&
+            this.props.cryptopia.buy[0] && (
+              <div className="exchangeUnitContainer">
+                <img className="exchangeLogo" src={cryptopiaLogo} />
+                <div className="marketInfoContainer">
+                  <MarketDepth
+                    chartData={this.formatChartData("cryptopiaBuy")}
+                    chartSellData={this.formatChartData("cryptopiaSell")}
+                  />
+
+                  {this.props.cryptopia.candlesticks[0] && (
+                    <Candlestick data={this.props.cryptopia.candlesticks} />
+                  )}
+                </div>
+              </div>
+            )}
+            
+        </div>
+
       </div>
+
     );
   }
 }

@@ -14,54 +14,40 @@ import Addressbook from "../components/Addressbook/index";
 import BlockExplorer from "../components/BlockExplorer/index";
 import Settings from "../components/Settings/index";
 import Terminal from "../components/Terminal/index";
-import SecurityLogin from "../components/SecurityLogin/index";
 import StyleGuide from "../components/StyleGuide/index";
 import List from "../components/List/index";
-type RootType = {
-  store: {},
-  history: {}
-};
+import About from "../components/About/index";
 
-export default function Root({ store, history }: RootType) {
+export default function Root({ store, history }) {
   return (
     <Provider store={store}>
-
       <ConnectedRouter history={history}>
-
         <App>
-          
           <div id="app-header">
-
             <Route path="/" component={Header} />
-
           </div>
 
-          <div id="app-content"><div id="app-content-container">
-
-            <Route exact path="/" component={Overview} />
-            <Route exact path="/SendRecieve" component={SendRecieve} />
-            <Route exact path="/Transactions" component={Transactions} />
-            <Route exact path="/Market" component={Market} />
-            <Route exact path="/Addressbook" component={Addressbook} />
-            <Route exact path="/BlockExplorer" component={BlockExplorer} />
-            <Route path="/Settings" component={Settings} />
-            <Route exact path="/Terminal" component={Terminal} />
-            <Route exact path="/SecurityLogin" component={SecurityLogin} />
-            <Route exact path="/StyleGuide" component={StyleGuide} />
-            <Route exact path="/List" component={List} />
-
-          </div></div>
+          <div id="app-content">
+            <div id="app-content-container">
+              <Route exact path="/" component={Overview} />
+              <Route exact path="/SendRecieve" component={SendRecieve} />
+              <Route exact path="/Transactions" component={Transactions} />
+              <Route exact path="/Market" component={Market} />
+              <Route exact path="/Addressbook" component={Addressbook} />
+              <Route exact path="/BlockExplorer" component={BlockExplorer} />
+              <Route path="/Settings" component={Settings} />
+              <Route path="/Terminal" component={Terminal} />
+              <Route exact path="/StyleGuide" component={StyleGuide} />
+              <Route exact path="/List" component={List} />
+              <Route exact path="/About" component={About} />
+            </div>
+          </div>
 
           <div id="app-navigation">
-
             <Route path="/" component={Footer} />
-
           </div>
-
         </App>
-
       </ConnectedRouter>
-
     </Provider>
   );
 }

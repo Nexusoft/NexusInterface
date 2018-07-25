@@ -1,20 +1,13 @@
 import * as TYPE from "../actions/actiontypes";
 
-const initialState = {
-  loggedIn: false
-};
+const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.LOCK:
+    case TYPE.GET_INFO_DUMP:
       return {
         ...state,
-        loggedIn: false
-      };
-    case TYPE.UNLOCK:
-      return {
-        ...state,
-        loggedIn: true
+        ...action.payload
       };
     default:
       return state;

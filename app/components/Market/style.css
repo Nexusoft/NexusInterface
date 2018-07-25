@@ -1,7 +1,17 @@
-#Market {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+#market {
+	position: relative;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+#market > h2 {
+	flex: 0;
+}
+
+#market > .panel {
+	flex: 1;
+	overflow-y: auto;
 }
 
 .exchangeUnitContainer {
@@ -12,16 +22,13 @@
   display: flex;
   flex-direction: row;
   width: 100%;
+  margin: 1.5em 0;
+  border-top: 1px solid #333;
 }
 
-.excangeLogo {
-  height: 75px;
+.exchangeLogo {
+  height: 60px;
 }
-
-/* .marketDepthOuter {
-  min-width: 500px;
-  max-width: 800px;
-} */
 
 .marketDepthInner {
   position: relative;
@@ -41,6 +48,54 @@
   flex-direction: column;
   justify-content: center;
 }
+
 .marketSummaryTable div {
   border-bottom: 1px solid white;
+}
+
+.alertbox {
+  display: flex;
+  flex-wrap: wrap;
+  position: fixed;
+  right: 70px;
+  max-height: 125px;
+  max-width: 50%;
+  overflow: hidden;
+}
+
+.arbitrageAlert {
+  position: relative;
+  padding: 5px;
+  margin: 2px;
+  background-color: rgba(13, 145, 18, 0.7);
+}
+.arbitrageAlert img {
+  height: 50px;
+}
+.arbitrageAlert span {
+  position: absolute;
+  top: 0;
+  right: 5px;
+}
+
+/*
+Refresh Button
+--------------------------------
+*/
+
+a.refresh {
+	display: block;
+  position: absolute;
+  top: 4em;
+  right: 0;
+  font-family: var(--mono-font-family);
+	font-size: .875em;
+  opacity: .75;
+  color: #fff;
+  cursor: pointer;
+}
+
+a.refresh:hover {
+  opacity: .95;
+  text-decoration: underline;
 }

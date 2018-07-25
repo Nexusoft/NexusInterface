@@ -3,13 +3,11 @@ import { Link } from "react-router-dom";
 import styles from "./style.css";
 
 export default class SettingsApp extends Component {
-
   //
   // componentDidMount - Initialize the settings
   //
 
   componentDidMount() {
-
     var settings = require("../../api/settings.js").GetSettings();
 
     //Application settings
@@ -19,7 +17,6 @@ export default class SettingsApp extends Component {
     this.setGoogleAnalytics(settings);
     this.setDefaultUnitAmount(settings);
     this.setDeveloperMode(settings);
-
   }
 
   //
@@ -27,19 +24,15 @@ export default class SettingsApp extends Component {
   //
 
   setAutostart(settings) {
-
     var autostart = document.getElementById("autostart");
 
-    if ( settings.autostart === undefined)
-    {
+    if (settings.autostart === undefined) {
       autostart.checked = false;
     }
-    if ( settings.autostart === "true")
-    {
+    if (settings.autostart === "true") {
       autostart.checked = true;
     }
-    if ( settings.autostart === "false")
-    {
+    if (settings.autostart === "false") {
       autostart.checked = false;
     }
   }
@@ -49,19 +42,15 @@ export default class SettingsApp extends Component {
   //
 
   setMinimizeToTray(settings) {
-
     var minimizeToTray = document.getElementById("minimizeToTray");
 
-    if ( settings.minimizeToTray === undefined)
-    {
+    if (settings.minimizeToTray === undefined) {
       minimizeToTray.checked = false;
     }
-    if ( settings.minimizeToTray === "true")
-    {
+    if (settings.minimizeToTray === "true") {
       minimizeToTray.checked = true;
     }
-    if ( settings.minimizeToTray === "false")
-    {
+    if (settings.minimizeToTray === "false") {
       minimizeToTray.checked = false;
     }
   }
@@ -71,19 +60,15 @@ export default class SettingsApp extends Component {
   //
 
   setMinimizeOnClose(settings) {
-
     var minimizeOnClose = document.getElementById("minimizeOnClose");
 
-    if ( settings.minimizeOnClose === undefined)
-    {
+    if (settings.minimizeOnClose === undefined) {
       minimizeOnClose.checked = false;
     }
-    if ( settings.minimizeOnClose === "true")
-    {
+    if (settings.minimizeOnClose === "true") {
       minimizeOnClose.checked = true;
     }
-    if ( settings.minimizeOnClose === "false")
-    {
+    if (settings.minimizeOnClose === "false") {
       minimizeOnClose.checked = false;
     }
   }
@@ -92,19 +77,16 @@ export default class SettingsApp extends Component {
   // Set Google Analytics Enabled
   //
 
-  setGoogleAnalytics(settings){
-
+  setGoogleAnalytics(settings) {
     var googlesetting = document.getElementById("googleAnalytics");
 
-    if ( settings.googleAnalytics === undefined)
-    {
+    if (settings.googleAnalytics === undefined) {
       googlesetting.checked = true;
     }
-    if (settings.googleAnalytics === "true")
-    {
+    if (settings.googleAnalytics === "true") {
       googlesetting.checked = true;
     }
-    if ( settings.googleAnalytics === "false"){
+    if (settings.googleAnalytics === "false") {
       googlesetting.checked = false;
     }
   }
@@ -113,16 +95,12 @@ export default class SettingsApp extends Component {
   // Set default unit amount
   //
 
-  setDefaultUnitAmount(settings){
-
+  setDefaultUnitAmount(settings) {
     var defaultUnitAmount = document.getElementById("defaultUnitAmount");
 
-    if ( settings.defaultUnitAmount === undefined)
-    {
+    if (settings.defaultUnitAmount === undefined) {
       defaultUnitAmount.value = "NXS";
-    }
-    else
-    {
+    } else {
       defaultUnitAmount.value = settings.defaultUnitAmount;
     }
   }
@@ -132,7 +110,6 @@ export default class SettingsApp extends Component {
   //
 
   setDeveloperMode(settings) {
-
     var devmode = document.getElementById("devmode");
 
     if (settings.devMode === "true") {
@@ -144,8 +121,7 @@ export default class SettingsApp extends Component {
   // Update autostart
   //
 
-  updateAutoStart(event)
-  {
+  updateAutoStart(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -154,33 +130,29 @@ export default class SettingsApp extends Component {
 
     settings.SaveSettings(settingsObj);
 
-
     ///This is the code that will create a reg to have the OS auto start the app
-    var AutoLaunch = require('auto-launch');
+    var AutoLaunch = require("auto-launch");
     /// Change Name when we need to
     var autolaunchsettings = new AutoLaunch({
-      name: 'nexus-interface'
+      name: "nexus-interface"
     });
     ///No need for a path as it will be set automaticly
 
-    
     ///Check selector
-    if (el.checked.toString() == "true")
-    {
+    if (el.checked.toString() == "true") {
       autolaunchsettings.enable();
-      autolaunchsettings.isEnabled()
-      .then(function(isEnabled){
-        if(isEnabled){
-          return;
-        }
-        autolaunchsettings.enable();
-      })
-      .catch(function(err){
-        // handle error
-      });
-    }
-    else
-    {
+      autolaunchsettings
+        .isEnabled()
+        .then(function(isEnabled) {
+          if (isEnabled) {
+            return;
+          }
+          autolaunchsettings.enable();
+        })
+        .catch(function(err) {
+          // handle error
+        });
+    } else {
       /// Will Remove the property that makes it auto play
       autolaunchsettings.disable();
     }
@@ -190,8 +162,7 @@ export default class SettingsApp extends Component {
   // Update minimize to tray
   //
 
-  updateMinimizeToTray(event)
-  {
+  updateMinimizeToTray(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -205,8 +176,7 @@ export default class SettingsApp extends Component {
   // Update minimize on close
   //
 
-  updateMinimizeOnClose(event)
-  {
+  updateMinimizeOnClose(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -220,8 +190,7 @@ export default class SettingsApp extends Component {
   // Update enabled google analytics
   //
 
-  updateGoogleAnalytics(event)
-  {
+  updateGoogleAnalytics(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -237,8 +206,7 @@ export default class SettingsApp extends Component {
   // Update default unit amount
   //
 
-  updateDefaultUnitAmount(event)
-  {
+  updateDefaultUnitAmount(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -253,45 +221,70 @@ export default class SettingsApp extends Component {
   //
 
   updateDeveloperMode(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
     settingsObj.devMode = el.checked.toString();
-    
+
     settings.SaveSettings(settingsObj);
   }
 
   render() {
     return (
       <section id="application">
-
         <form className="aligned">
-
           <div className="field">
             <label htmlFor="autostart">Start at system startup</label>
-            <input id="autostart" type="checkbox" className="switch" onChange={this.updateAutoStart} data-tooltip="Automatically start the wallet when you log into your system"/>
+            <input
+              id="autostart"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateAutoStart}
+              data-tooltip="Automatically start the wallet when you log into your system"
+            />
           </div>
 
           <div className="field">
             <label htmlFor="minimizeToTray">Minimize to tray</label>
-            <input id="minimizeToTray" type="checkbox" className="switch" onChange={this.updateMinimizeToTray} data-tooltip="Minimize the wallet to the system tray"/>
+            <input
+              id="minimizeToTray"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateMinimizeToTray}
+              data-tooltip="Minimize the wallet to the system tray"
+            />
           </div>
 
           <div className="field">
             <label htmlFor="minimizeOnClose">Minimize on close</label>
-            <input id="minimizeOnClose" type="checkbox" className="switch" onChange={this.updateMinimizeOnClose} data-tooltip="Minimize the wallet when closing the window instead of closing it"/>
+            <input
+              id="minimizeOnClose"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateMinimizeOnClose}
+              data-tooltip="Minimize the wallet when closing the window instead of closing it"
+            />
           </div>
 
           <div className="field">
             <label htmlFor="googleAnalytics">Send anonymous usage data</label>
-            <input id="googleAnalytics" type="checkbox" className="switch" onChange={this.updateGoogleAnalytics} data-tooltip="Send anonymous usage data to allow the Nexus developers to improve the wallet"/>
+            <input
+              id="googleAnalytics"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateGoogleAnalytics}
+              data-tooltip="Send anonymous usage data to allow the Nexus developers to improve the wallet"
+            />
           </div>
 
           <div className="field">
             <label htmlFor="defaultUnitAmount">Default unit amount</label>
-            <select id="defaultUnitAmount" onChange={this.updateDefaultUnitAmount} data-tooltip="Default unit amount to display throughout the wallet">
+            <select
+              id="defaultUnitAmount"
+              onChange={this.updateDefaultUnitAmount}
+              data-tooltip="Default unit amount to display throughout the wallet"
+            >
               <option value="NXS">NXS</option>
               <option value="mNXS">mNXS</option>
               <option value="uNXS">uNXS</option>
@@ -300,13 +293,17 @@ export default class SettingsApp extends Component {
 
           <div className="field">
             <label htmlFor="devmode">Developer Mode</label>
-            <input id="devmode" type="checkbox" className="switch" onChange={this.updateDeveloperMode} data-tooltip="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"/>
+            <input
+              id="devmode"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateDeveloperMode}
+              data-tooltip="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
+            />
           </div>
 
-          <div className="clear-both"></div>
-
+          <div className="clear-both" />
         </form>
-
       </section>
     );
   }
