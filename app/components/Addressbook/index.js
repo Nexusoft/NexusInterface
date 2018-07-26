@@ -145,8 +145,8 @@ class Addressbook extends Component {
       new remote.MenuItem({
         label: "Edit",
         click() {
-          alert("Edit Modal: not yet implemented");
-          // ADDRESSBOOK.labelmodal(ADDRESSBOOK.thisid, ADDRESSBOOK.autofill);
+          // alert("Edit Modal: not yet implemented");
+          this.labelmodal(this.state.thisid, this.state.autofill);
         }
       })
     );
@@ -209,7 +209,7 @@ class Addressbook extends Component {
     config.WriteJson("addressbook.json", this.state.psudoState);
     modal.close();
 
-    RPC.GET("listaccounts", [0], ADDRESSBOOK.CALLBACK.REFRESH);
+    RPC.GET("listaccounts", [0], this.refresh);
   }
 
   /// CALLBACK.REFRESH
@@ -221,7 +221,7 @@ class Addressbook extends Component {
   ///     Address || string || not used
   ///     PostData || object || not used
 
-  ADDRESSBOOK.CALLBACK.REFRESH = (ResponseObject, Address, PostData) => 
+  refresh(ResponseObject, Address, PostData)
   {
     if (ResponseObject.readyState != 4) return;
 
@@ -312,7 +312,7 @@ class Addressbook extends Component {
             this.state.psudoState
           );
 
-          ADDRESSBOOK.PROCESSACCOUNTS();
+          this.processaccounts();
         });
       });
     }
@@ -327,7 +327,7 @@ class Addressbook extends Component {
   ///     Address || string || not used
   ///     PostData || object || not used
 
-  ADDRESSBOOK.CALLBACK.LOADDATA = (ResponseObject, Address, PostData) => 
+  loaddata(ResponseObject, Address, PostData)
   {
     if (ResponseObject.readyState != 4) return;
 
@@ -426,7 +426,7 @@ class Addressbook extends Component {
             this.state.psudoState
           );
           console.log(this.state.psudoState);
-          ADDRESSBOOK.PROCESSACCOUNTS();
+          this.processaccounts();
         });
       });
     }
@@ -439,12 +439,12 @@ class Addressbook extends Component {
   ///                                 information that pertains to the addressbok
   ///     namesList || string || passed to check in view
 
-  ADDRESSBOOK.HANDLEHIGHLIGHTS = (letters, namesList) => 
+  handlehighlights(letters, namesList)
   {
     let highlight = letters.map(i => {
       let element = document.getElementById(`${i}`);
 
-      let bool = ADDRESSBOOK.CHECKINVIEW(namesList, element);
+      let bool = this.checkinview(namesList, element);
       return bool;
     });
     highlight.map((e, i) => {
@@ -466,7 +466,7 @@ class Addressbook extends Component {
   /// Output :
   ///     Boolian || weather or not the element is in the view
 
-  ADDRESSBOOK.CHECKINVIEW = (container, element, partial) => 
+  checkinview(container, element, partial)
   {
     //Get container properties
     let cTop = container.scrollTop;
@@ -489,7 +489,7 @@ class Addressbook extends Component {
   /// PROCESSACCOUNTS
   /// This method starts the pagebuilding process by populating the list of accounts on the side and calling contactdetailer when done
 
-  ADDRESSBOOK.PROCESSACCOUNTS = () => 
+  processaccounts()
   {
     AJAX.LOADER.Hide();
     const master = this.state.psudoState;
@@ -503,7 +503,7 @@ class Addressbook extends Component {
     const namesList = document.createElement("div");
     namesList.id = "namesList";
     namesList.addEventListener("scroll", () => {
-      ADDRESSBOOK.HANDLEHIGHLIGHTS(letters, namesList);
+      this.handlehighlights(letters, namesList);
     });
     const namesDivs = masterArr.map(name => {
       const contactName = document.createElement("div");
@@ -511,7 +511,7 @@ class Addressbook extends Component {
         contactName.innerText = "No Account Set";
         contactName.id = "No Account Set";
         contactName.addEventListener("click", () => {
-          ADDRESSBOOK.CONTACTDETAILER(
+          this.contactdetailer(
             accountDisplayDiv,
             name,
             this.state.psudoState[name].phoneNum,
@@ -525,7 +525,7 @@ class Addressbook extends Component {
           contactName.innerText = name;
           contactName.id = name;
           contactName.addEventListener("click", () => {
-            ADDRESSBOOK.CONTACTDETAILER(
+            this.contactdetailer(
               accountDisplayDiv,
               name,
               this.state.psudoState[name].phoneNum,
@@ -538,7 +538,7 @@ class Addressbook extends Component {
           contactName.id = name;
 
           contactName.addEventListener("click", () => {
-            ADDRESSBOOK.CONTACTDETAILER(
+            this.contactdetailer(
               accountDisplayDiv,
               name,
               this.state.psudoState[name].phoneNum,
@@ -617,7 +617,7 @@ class Addressbook extends Component {
     namesContainer.appendChild(navLetters);
     accountDisplayDiv.appendChild(namesContainer);
     if (namesDivs[0].id === "No Account Set") {
-      ADDRESSBOOK.CONTACTDETAILER(
+      this.contactdetailer(
         accountDisplayDiv,
         "",
         this.state.psudoState[""].phoneNum,
@@ -625,7 +625,7 @@ class Addressbook extends Component {
         this.state.psudoState[""].notes
       );
     } else {
-      ADDRESSBOOK.CONTACTDETAILER(
+      this.contactdetailer(
         accountDisplayDiv,
         namesDivs[0].id,
         this.state.psudoState[namesDivs[0].id].phoneNum,
@@ -633,7 +633,7 @@ class Addressbook extends Component {
         this.state.psudoState[namesDivs[0].id].notes
       );
     }
-    ADDRESSBOOK.HANDLEHIGHLIGHTS(letters, namesList);
+    this.handlehighlights(letters, namesList);
   }
 
   /// COPYADDRESS
@@ -641,7 +641,7 @@ class Addressbook extends Component {
   /// Input
   ///     inc || number || a number corisponding to the id of the addresses element
 
-  ADDRESSBOOK.COPYADDRESS = function(inc) 
+  copyaddress(inc) 
   {
     let flash = document.getElementById("nxs-addressbook-module");
     let lookup = `m${inc}`;
@@ -667,7 +667,7 @@ class Addressbook extends Component {
   ///      notes || string || notes
   ///      notFirst || Boolian || weather or not to destroy the old elements and redraw
 
-  ADDRESSBOOK.CONTACTDETAILER = function(accountDisplayDiv, name, phone, timeZone, notes, notFirst) 
+  contactdetailer(accountDisplayDiv, name, phone, timeZone, notes, notFirst)
   {
     if (notFirst) {
       let oldCard = document.getElementById("contactDetail");
@@ -695,7 +695,7 @@ class Addressbook extends Component {
     titleName.id = "titleName";
 
     const editIcon = document.createElement("div");
-    editIcon.innerHTML = `<img src="images/pencil.png" onclick="ADDRESSBOOK.EDITMODAL()"/>`;
+    editIcon.innerHTML = `<img src="images/pencil.png" onclick="editmodal()"/>`;
     editIcon.id = "editCard";
 
     if (name === "") {
@@ -723,7 +723,7 @@ class Addressbook extends Component {
       localTime.innerText = `Local Time: ${timeZone}`;
       bottomPart.appendChild(localTime);
     } else {
-      setInterval(ADDRESSBOOK.TIME(timeZone, bottomPart), 60000);
+      setInterval(this.time(timeZone, bottomPart), 60000);
     }
     const notesZone = document.createElement("div");
     notesZone.id = "notesZone";
@@ -781,21 +781,28 @@ class Addressbook extends Component {
         event => {
           event.target.style.color = "#0ca4fb";
 
+          let detailaddId = event.target.id[0] + event.target.id.slice(6);
+
           this.setState(
             {
-              hoveredover: "label"
+              hoveredover: "label",
+              addId: detailaddId,
+              thisadd: document.getElementById(detailaddId).innerText,
+              rootAccount: event.target.value,
+              autofill: event.target.innerText.split(":")[0],
+              thisid: event.target.id
             }
           );
           // this.state.hoveredover = "label";
 
-          ADDRESSBOOK.addId = event.target.id[0] + event.target.id.slice(6);
-          ADDRESSBOOK.thisadd = document.getElementById(
-            ADDRESSBOOK.addId
-          ).innerText;
+          // ADDRESSBOOK.addId = event.target.id[0] + event.target.id.slice(6);
+          // ADDRESSBOOK.thisadd = document.getElementById(
+          //   ADDRESSBOOK.addId
+          // ).innerText;
 
-          ADDRESSBOOK.rootAccount = event.target.value;
-          ADDRESSBOOK.autofill = event.target.innerText.split(":")[0];
-          ADDRESSBOOK.thisid = event.target.id;
+          // ADDRESSBOOK.rootAccount = event.target.value;
+          // ADDRESSBOOK.autofill = event.target.innerText.split(":")[0];
+          // ADDRESSBOOK.thisid = event.target.id;
         },
         false
       );
@@ -822,7 +829,7 @@ class Addressbook extends Component {
       const copy = document.createElement("div");
       copy.className = "address";
 
-      copy.innerHTML = `<img src="images/editcopy.png" style="{height:10px; width:10px;}" onclick="ADDRESSBOOK.COPYADDRESS(${inc})"></img>`;
+      copy.innerHTML = `<img src="images/editcopy.png" style="{height:10px; width:10px;}" onclick="copyaddress(${inc})"></img>`;
       labelDiv.appendChild(toolTip);
       mineDisplay.appendChild(labelDiv);
       mineDisplay.appendChild(adds);
@@ -853,21 +860,28 @@ class Addressbook extends Component {
         event => {
           event.target.style.color = "#0ca4fb";
 
+          let detailaddId = event.target.id.slice(0, 2) + event.target.id.slice(7);
+
           this.setState(
             {
-              hoveredover: "label"
+              hoveredover: "label",
+              addId: detailaddId,
+              thisadd: document.getElementById(detailaddId).innerText,
+              autofill: event.target.innerText.split(":")[0],
+              thisid: event.target.id,
+              rootAccount: event.target.value
             }
           );
           // this.state.hoveredover = "label";
-          ADDRESSBOOK.addId =
-            event.target.id.slice(0, 2) + event.target.id.slice(7);
-          ADDRESSBOOK.thisadd = document.getElementById(
-            ADDRESSBOOK.addId
-          ).innerText;
+          // ADDRESSBOOK.addId =
+          //   event.target.id.slice(0, 2) + event.target.id.slice(7);
+          // ADDRESSBOOK.thisadd = document.getElementById(
+          //   ADDRESSBOOK.addId
+          // ).innerText;
 
-          ADDRESSBOOK.autofill = event.target.innerText.split(":")[0];
-          ADDRESSBOOK.thisid = event.target.id;
-          ADDRESSBOOK.rootAccount = event.target.value;
+          // ADDRESSBOOK.autofill = event.target.innerText.split(":")[0];
+          // ADDRESSBOOK.thisid = event.target.id;
+          // ADDRESSBOOK.rootAccount = event.target.value;
         },
         false
       );
@@ -898,12 +912,17 @@ class Addressbook extends Component {
                     
           this.setState(
             {
-              hoveredover: "outgoing"
+              hoveredover: "outgoing",
+              thisadd: event.target.value,
+              SendOBJ: {
+                name: name,
+                to: ""
+              }
             }
           );
           // this.state.hoveredover = "outgoing";
-          ADDRESSBOOK.SendOBJ.name = name;
-          ADDRESSBOOK.thisadd = event.target.value;
+          // ADDRESSBOOK.SendOBJ.name = name;
+          // ADDRESSBOOK.thisadd = event.target.value;
         },
         false
       );
@@ -923,7 +942,7 @@ class Addressbook extends Component {
       );
       const copy = document.createElement("div");
       copy.className = "address";
-      copy.innerHTML = `<img src="images/editcopy.png" style="{height:10px; width:10px;}" onclick="ADDRESSBOOK.COPYADDRESS(${inc})"></img>`;
+      copy.innerHTML = `<img src="images/editcopy.png" style="{height:10px; width:10px;}" onclick="copyaddress(${inc})"></img>`;
       mineDisplay.appendChild(labelDiv);
       mineDisplay.appendChild(adds);
       mineDisplay.appendChild(copy);
@@ -939,7 +958,7 @@ class Addressbook extends Component {
   ///     offSet || number || diffrence in min from GMT to calculate the time in that timezone
   ///     bottomPart || HTML element || mounting point
 
-  ADDRESSBOOK.TIME = (offSet, bottomPart) => 
+  time(offSet, bottomPart)
   {
     let d = new Date();
     let utc = ADDRESSBOOK.today.getTimezoneOffset();
@@ -970,7 +989,7 @@ class Addressbook extends Component {
   /// Input:
   ///     elem || HTML element || the elemnt being inputed to
 
-  ADDRESSBOOK.validateInp = elem => 
+  validateInp(elem)
   {
     let validChars = /[0-9]/;
     let strIn = elem.value;
@@ -992,7 +1011,7 @@ class Addressbook extends Component {
   ///     id || string || id of the elemnt to be edited
   ///     autofill || string|| the old value
 
-  ADDRESSBOOK.labelmodal = (id, autofill) => 
+  labelmodal(id, autofill)
   {
     // instanciate new modal
     var modal = new tingle.modal({
@@ -1029,26 +1048,26 @@ class Addressbook extends Component {
     modal.addFooterBtn("Submit", "tingle-btn tingle-btn--primary", function() {
       const newLabel = document.getElementById("new-label-name").value;
 
-      if (ADDRESSBOOK.addId.slice(0, 2) === "nm") {
-        const oldLabel = ADDRESSBOOK.getKeyByValue(
-          this.state.psudoState[ADDRESSBOOK.rootAccount].notMine,
-          ADDRESSBOOK.thisadd
+      if (this.state.addId.slice(0, 2) === "nm") {
+        const oldLabel = this.getKeyByValue(
+          this.state.psudoState[this.state.rootAccount].notMine,
+          this.state.thisadd
         );
-        this.state.psudoState[ADDRESSBOOK.rootAccount].notMine[newLabel] =
-          this.state.psudoState[ADDRESSBOOK.rootAccount].notMine[oldLabel];
-        delete this.state.psudoState[ADDRESSBOOK.rootAccount].notMine[oldLabel];
+        this.state.psudoState[this.state.rootAccount].notMine[newLabel] =
+          this.state.psudoState[this.state.rootAccount].notMine[oldLabel];
+        delete this.state.psudoState[this.state.rootAccount].notMine[oldLabel];
       } else {
-        const oldLabel = ADDRESSBOOK.getKeyByValue(
-          this.state.psudoState[ADDRESSBOOK.rootAccount].mine,
-          ADDRESSBOOK.thisadd
+        const oldLabel = this.getKeyByValue(
+          this.state.psudoState[this.state.rootAccount].mine,
+          this.state.thisadd
         );
-        this.state.psudoState[ADDRESSBOOK.rootAccount].mine[newLabel] =
-          this.state.psudoState[ADDRESSBOOK.rootAccount].mine[oldLabel];
-        delete this.state.psudoState[ADDRESSBOOK.rootAccount].mine[oldLabel];
+        this.state.psudoState[this.state.rootAccount].mine[newLabel] =
+          this.state.psudoState[this.state.rootAccount].mine[oldLabel];
+        delete this.state.psudoState[this.state.rootAccount].mine[oldLabel];
       }
       config.WriteJson("addressbook.json", this.state.psudoState);
       modal.close();
-      ADDRESSBOOK.PROCESSACCOUNTS();
+      this.processaccounts();
     });
     modal.open();
   };
@@ -1061,7 +1080,7 @@ class Addressbook extends Component {
   /// Output:
   ///     prop || the key corrasponding to the value inputed
 
-  ADDRESSBOOK.getKeyByValue = (obj, value) => 
+  getKeyByValue(obj, value)
   {
     for (let prop in obj) {
       if (obj.hasOwnProperty(prop)) {
@@ -1073,7 +1092,7 @@ class Addressbook extends Component {
   /// EDITMODAL
   /// Modal to edit the details for each account
 
-  ADDRESSBOOK.EDITMODAL = () => 
+  editmodal()
   {
     let acct = {};
     if (document.getElementById("titleName").innerText === "No Account Set") {
@@ -1112,13 +1131,13 @@ class Addressbook extends Component {
       `<div id="modalcontent" >
         <label class="label">Phone Number
             <div id="phoneLabel">
-                <input class="phoneEntry" onkeyup="ADDRESSBOOK.validateInp(this)" id="new-edit-area" type="tel" maxlength="3" placeholder="555"
+                <input class="phoneEntry" onkeyup="validateInp(this)" id="new-edit-area" type="tel" maxlength="3" placeholder="555"
                 ${phoneNumRaw && "value='" + phoneNumRaw[0] + "'"}
                 />
-                <input class="phoneEntry" onkeyup="ADDRESSBOOK.validateInp(this)" id="new-edit-3" type="tel" maxlength="3" placeholder="555"  ${phoneNumRaw &&
+                <input class="phoneEntry" onkeyup="validateInp(this)" id="new-edit-3" type="tel" maxlength="3" placeholder="555"  ${phoneNumRaw &&
                   "value='" + phoneNumRaw[1] + "'"}
                 />
-                <input class="phoneEntry" onkeyup="ADDRESSBOOK.validateInp(this)"  id="new-edit-4" type="tel" maxlength="4" placeholder="5555"  ${phoneNumRaw &&
+                <input class="phoneEntry" onkeyup="validateInp(this)"  id="new-edit-4" type="tel" maxlength="4" placeholder="5555"  ${phoneNumRaw &&
                   "value='" + phoneNumRaw[2] + "'"}
                 />
             </div>
@@ -1207,7 +1226,7 @@ class Addressbook extends Component {
         });
       }
       config.WriteJson("addressbook.json", this.state.psudoState);
-      ADDRESSBOOK.PROCESSACCOUNTS();
+      this.processaccounts();
       modal.close();
     });
 
@@ -1217,7 +1236,7 @@ class Addressbook extends Component {
   /// MODAL
   /// modal for adding accounts and generating new addresses for this wallet
 
-  ADDRESSBOOK.MODAL = () => 
+  modal()
   {
     var modal = new tingle.modal({
       footer: true,
@@ -1243,11 +1262,11 @@ class Addressbook extends Component {
     </label>
     <label class="label">Phone Number
         <div id="phoneLabel">
-            <input class="phoneEntry" onkeyup="ADDRESSBOOK.validateInp(this)" id="new-account-area" type="tel" maxlength="3" placeholder="555"
+            <input class="phoneEntry" onkeyup="validateInp(this)" id="new-account-area" type="tel" maxlength="3" placeholder="555"
             />
-            <input class="phoneEntry" onkeyup="ADDRESSBOOK.validateInp(this)" id="new-account-3" type="tel" maxlength="3" placeholder="555"
+            <input class="phoneEntry" onkeyup="validateInp(this)" id="new-account-3" type="tel" maxlength="3" placeholder="555"
             />
-            <input class="phoneEntry" onkeyup="ADDRESSBOOK.validateInp(this)" columns="4" id="new-account-4" type="tel" maxlength="4"
+            <input class="phoneEntry" onkeyup="validateInp(this)" columns="4" id="new-account-4" type="tel" maxlength="4"
                 placeholder="5555" />
         </div>
     </label>
@@ -1304,7 +1323,7 @@ class Addressbook extends Component {
     </label>
 
   <label id="sliderContainer" >Generate an new address for this wallet</label> 
-  <input id="generateNewAddressSwitch" type="checkbox" onchange="ADDRESSBOOK.toggleGenerateNewAddress()" class="switch">
+  <input id="generateNewAddressSwitch" type="checkbox" onchange="toggleGenerateNewAddress()" class="switch">
 
   <span id="errMessage" ></span>
   </div> `);
@@ -1343,14 +1362,14 @@ class Addressbook extends Component {
               )
               .catch(e => {
                 console.log(e);
-                ADDRESSBOOK.Toaster(
+                this.toaster(
                   "Unable to set account at this time.",
                   message
                 );
               });
           });
         } else {
-          ADDRESSBOOK.Toaster("Account must have a name.", message);
+          this.toaster("Account must have a name.", message);
         }
       } else if (!ADDRESSBOOK.generateFlag) {
         if (accountName.trim() !== "") {
@@ -1372,7 +1391,7 @@ class Addressbook extends Component {
                   )
                   .catch(e => {
                     console.log(e);
-                    ADDRESSBOOK.Toaster(
+                    this.toaster(
                       "Unable to set account at this time.",
                       message
                     );
@@ -1380,13 +1399,13 @@ class Addressbook extends Component {
               })
               .catch(e => {
                 console.log(e);
-                ADDRESSBOOK.Toaster("Invalid Address.", message);
+                this.toaster("Invalid Address.", message);
               });
           } else {
-            ADDRESSBOOK.Toaster("Address left blank.", message);
+            this.toaster("Address left blank.", message);
           }
         } else {
-          ADDRESSBOOK.Toaster("Account must have a name.", message);
+          this.toaster("Account must have a name.", message);
         }
       }
     });
@@ -1400,7 +1419,7 @@ class Addressbook extends Component {
   ///     string || string || message to be displayed
   ///     element || HTML element || the element it'll be displayed in
 
-  ADDRESSBOOK.Toaster = (string, element) => 
+  toaster(string, element)
   {
     element.innerText = string;
     element.style.visibility = "visible";
@@ -1412,7 +1431,7 @@ class Addressbook extends Component {
   /// toggleGenerateNewAddress
   /// toggles weather you are adding a new account or generating a new address for the wallet
 
-  ADDRESSBOOK.toggleGenerateNewAddress = () => 
+  toggleGenerateNewAddress()
   {
     let addressFeild = document.getElementById("addressLabel");
     let addressinput = document.getElementById("new-account-address");
@@ -1432,7 +1451,9 @@ class Addressbook extends Component {
   /// CLOSEMODAL
   /// closes the modal
 
-  ADDRESSBOOK.CLOSEMODAL = () => 
+  ///TODO: DOESNT LOOK LIKE THIS FUNCTION IS USED, REMOVE IT???
+
+  closemodal()
   {
     let overlay = document.getElementById("overlay");
     let modal = document.getElementById("modal");
@@ -1443,7 +1464,7 @@ class Addressbook extends Component {
     modal.remove();
   };
 
-  ADDRESSBOOK.exporttoCSV = () => 
+  exporttoCSV()
   {
     // console.log(this.state.psudoState);
 
@@ -1643,15 +1664,22 @@ class Addressbook extends Component {
     link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
   }
 
-  AJAX.CALLBACK.MODULE.Final = (ResponseObject, Address, TagID) => 
-  {
-    /** Register Global Variables **/
-    AJAX.LOADER.Show();
-    ADDRESSBOOK.Location = Address;
-    RPC.GET("listaccounts", [0], ADDRESSBOOK.CALLBACK.LOADDATA);
-  }
+  // AJAX.CALLBACK.MODULE.Final = (ResponseObject, Address, TagID) => 
+  // {
+  //   /** Register Global Variables **/
+  //   AJAX.LOADER.Show();
+  //   ADDRESSBOOK.Location = Address;
+  //   RPC.GET("listaccounts", [0], this.loaddata);
+  // }
 
   render() {
+
+    // AJAX.LOADER.Show();
+    // ADDRESSBOOK.Location = Address;
+
+    //TODO: Should this be in componentDidMount???
+    RPC.GET("listaccounts", [0], this.loaddata);
+
     return (
 
       <div id="addressbook">
@@ -1668,8 +1696,8 @@ class Addressbook extends Component {
 
           <div style="display: flex; flex-direction: row;">
 
-              <button id="new-address-button" class="button hero ghost" onclick="ADDRESSBOOK.MODAL()">ADD ACCOUNT</button>
-              <button id="export-csv-button" class="button hero ghost" onclick="ADDRESSBOOK.exporttoCSV()">EXPORT AS CSV</button>
+              <button id="new-address-button" class="button hero ghost" onclick="modal()">ADD ACCOUNT</button>
+              <button id="export-csv-button" class="button hero ghost" onclick="exporttoCSV()">EXPORT AS CSV</button>
 
           </div>
 
