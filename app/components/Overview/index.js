@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
 import Modal from 'react-responsive-modal';
+import * as TYPE from "../../actions/actiontypes";
+
 
 // importing images here because of a weird webpack issue
 import Connections0 from "../../images/Connections0.png";
@@ -50,9 +52,14 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  setExperimentalWarning: returndata =>
+  {
+    dispatch({type:TYPE.SET_EXPERIMENTAL_WARNING,payload:returndata})
+  }
+});
 
-let experimentalOpen = true;
+//let experimentalOpen = true;
 
 class Overview extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -71,7 +78,7 @@ class Overview extends Component {
 
   componentDidMount()
   {
-    this.setState({ open: true });
+    this.props.setExperimentalWarning(true);
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
 
@@ -88,13 +95,6 @@ class Overview extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
-  onOpenModal = () => {
-    this.setState({ open: true });
-  };
-
-  onCloseModal = () => {
-    this.setState({ experimentalOpen: false });
-  };
 
   closeLicenseModal()
   {
@@ -111,14 +111,14 @@ class Overview extends Component {
     let internalString = [];
 
       internalString.push("MIT LICENSE GOES HERE");
-      internalString.push (<br/>);
+      internalString.push (<br key="br1" />);
       internalString.push(
-        <button className="btn btn-action" onClick={ () => this.closeLicenseModal()}>
+        <button key="agreement-button-accept" className="btn btn-action" onClick={ () => this.closeLicenseModal()}>
             ACCEPT
         </button>
       );
       internalString.push(
-        <button className="btn btn-action" onClick={ () => remote.app.quit()}>
+        <button key="agreement-button-reject" className="btn btn-action" onClick={ () => remote.app.quit()}>
         REJECT
         </button>
       );
@@ -130,21 +130,36 @@ class Overview extends Component {
   {
     let internalString = [];
 
-    internalString.push ("CONSIDER THIS SOFTWARE EXPERIMENTAL. PLEASE BACK UP WALLET FREQUENTLY");
-    internalString.push(<br/>);
+    internalString.push ("CONSIDER THIS SOFTWARE EXPERIMENTAL. PLEASE BACK UP WALLET FREQUENTLY ");
+    internalString.push(<br key="br2" />);
 
     internalString.push(
-      <button className="btn btn-action" onClick={ () => this.closeLicenseModal()}>
+      <button key="experiment-button-accept" className="btn btn-action" onClick={this.closeExperimentalModal}>
           OK
       </button>
     );
     internalString.push(
-      <button className="btn btn-action" onClick={ () => remote.app.quit()}>
+      <button key="experiment-button-noshow" className="btn btn-action" onClick={ ()  => this.dontShowExperimentalAgain() }>
       Don't show this again
       </button>
     );
 
     return internalString;
+  }
+
+  closeExperimentalModal = () =>
+  {
+    this.props.setExperimentalWarning(false);
+    this.forceUpdate();
+  }
+
+  dontShowExperimentalAgain()
+  {
+    let settings = require("../../api/settings.js").GetSettings();
+    settings["experimentalWarning"] = false;
+    require("../../api/settings.js").SaveSettings(settings);
+    this.props.setExperimentalWarning(false);
+    this.forceUpdate();
   }
 
   connectionsImage() {
@@ -256,24 +271,43 @@ class Overview extends Component {
 
   returnIfExperimentalShouldBeOpen()
   {
-    let temp  = experimentalOpen;
-    if ( temp == null)
+    
+    if (this.returnIfLicenseShouldBeOpen())
     {
-      temp = true;
+      return false;
     }
-    return temp;
+    let settings = require("../../api/settings.js").GetSettings();
+    if (this.props.experimentalOpen == true )
+    {
+      if (settings.experimentalWarning == null)
+      {
+        return true;
+      }
+
+      if (settings.experimentalWarning == false)
+      {
+        return false;
+      }
+      else
+      {
+        return true;
+      }
+    }else
+    {
+      return false;
+    }
   }
 
   render() {
     const agreementOpen = this.returnIfLicenseShouldBeOpen();
-    //const experimentalOpen = this.returnIfExperimentalShouldBeOpen();
+    const experimentalOpenbool = this.returnIfExperimentalShouldBeOpen();
     return (
       <div id="overviewPage">
-        <Modal open={agreementOpen} onClose={this.onCloseModal} center showCloseIcon={false} classNames={{ modal: 'modal' }}>
-          <h2 >License Agreement</h2>
+        <Modal key="agreement-modal" open={agreementOpen} onClose={ () => {return true} } center showCloseIcon={false} classNames={{ modal: 'modal' }}>
+          <h2>License Agreement</h2>
           {this.returnLicenseModalInternal()}
         </Modal>
-        <Modal open={experimentalOpen} onClose={this.onCloseModal} center classNames={{ modal: 'modal' }}>
+        <Modal key="experiment-modal" open={experimentalOpenbool} onClose={this.closeExperimentalModal} center classNames={{ modal: 'modal' }}>
     
           {this.returnExperimentalModalInternal()}
         </Modal>

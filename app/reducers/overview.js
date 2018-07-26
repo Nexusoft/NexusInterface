@@ -9,6 +9,12 @@ export default (state = initialState, action) => {
         ...state,
         ...action.payload
       };
+
+    case TYPE.SET_EXPERIMENTAL_WARNING:
+      return {
+          ...state,
+          experimentalOpen: action.payload
+      };
     default:
       return state;
   }

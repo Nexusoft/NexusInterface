@@ -1,5 +1,6 @@
 // overview
 export const GET_INFO_DUMP = "GET_INFO_DUMP";
+export const SET_EXPERIMENTAL_WARNING = "SET_EXPERIMENTAL_WARNING";
 
 // trust
 export const GET_TRUST_LIST = "GET_TRUST_LIST";
