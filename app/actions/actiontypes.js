@@ -1,6 +1,7 @@
 // overview
 export const GET_INFO_DUMP = "GET_INFO_DUMP";
-
+export const USD_RATE = "USD_RATE";
+export const BTC_RATE = "BTC_RATE";
 // trust
 export const GET_TRUST_LIST = "GET_TRUST_LIST";
 export const TOGGLE_SORT_DIRECTION = "TOGGLE_SORT_DIRECTION";
