@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
+import Modal from 'react-responsive-modal';
 
 // importing images here because of a weird webpack issue
 import Connections0 from "../../images/Connections0.png";
@@ -51,6 +52,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({});
 
+let experimentalOpen = true;
+
 class Overview extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const yesArray = [];
@@ -68,6 +71,7 @@ class Overview extends Component {
 
   componentDidMount()
   {
+    this.setState({ open: true });
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
 
@@ -84,6 +88,64 @@ class Overview extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  onOpenModal = () => {
+    this.setState({ open: true });
+  };
+
+  onCloseModal = () => {
+    this.setState({ experimentalOpen: false });
+  };
+
+  closeLicenseModal()
+  {
+    this.setState({ open: false });
+    var settings = require("../../api/settings.js").GetSettings();
+    settings.acceptedagreement = true;
+    require("../../api/settings.js").SaveSettings(settings);
+    console.log("accepted");
+    
+  }
+
+  returnLicenseModalInternal()
+  {
+    let internalString = [];
+
+      internalString.push("MIT LICENSE GOES HERE");
+      internalString.push (<br/>);
+      internalString.push(
+        <button className="btn btn-action" onClick={ () => this.closeLicenseModal()}>
+            ACCEPT
+        </button>
+      );
+      internalString.push(
+        <button className="btn btn-action" onClick={ () => remote.app.quit()}>
+        REJECT
+        </button>
+      );
+   
+    return internalString;
+  }
+
+  returnExperimentalModalInternal()
+  {
+    let internalString = [];
+
+    internalString.push ("CONSIDER THIS SOFTWARE EXPERIMENTAL. PLEASE BACK UP WALLET FREQUENTLY");
+    internalString.push(<br/>);
+
+    internalString.push(
+      <button className="btn btn-action" onClick={ () => this.closeLicenseModal()}>
+          OK
+      </button>
+    );
+    internalString.push(
+      <button className="btn btn-action" onClick={ () => remote.app.quit()}>
+      Don't show this again
+      </button>
+    );
+
+    return internalString;
+  }
 
   connectionsImage() {
     const con = this.props.connections;
@@ -186,9 +248,35 @@ class Overview extends Component {
     }
   }
 
+  returnIfLicenseShouldBeOpen()
+  {
+    let settings = require("../../api/settings.js").GetSettings();
+    return !settings.acceptedagreement;
+  }
+
+  returnIfExperimentalShouldBeOpen()
+  {
+    let temp  = experimentalOpen;
+    if ( temp == null)
+    {
+      temp = true;
+    }
+    return temp;
+  }
+
   render() {
+    const agreementOpen = this.returnIfLicenseShouldBeOpen();
+    //const experimentalOpen = this.returnIfExperimentalShouldBeOpen();
     return (
       <div id="overviewPage">
+        <Modal open={agreementOpen} onClose={this.onCloseModal} center showCloseIcon={false} classNames={{ modal: 'modal' }}>
+          <h2 >License Agreement</h2>
+          {this.returnLicenseModalInternal()}
+        </Modal>
+        <Modal open={experimentalOpen} onClose={this.onCloseModal} center classNames={{ modal: 'modal' }}>
+    
+          {this.returnExperimentalModalInternal()}
+        </Modal>
         <div className="left-stats">
           <div id="nxs-balance-info">
             <div className="h2">Balance (NXS)</div>
