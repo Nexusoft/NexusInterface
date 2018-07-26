@@ -1,9 +1,11 @@
 import * as TYPE from "../actions/actiontypes";
 
 const initialState = {
-  password: "",
   unlockUntillDate: "",
-  busyFlag: false
+  busyFlag: false,
+  accoutName: "",
+  privKey: "",
+  address: ""
 };
 
 export default (state = initialState, action) => {
@@ -14,12 +16,6 @@ export default (state = initialState, action) => {
         unlockUntillDate: action.payload
       };
       break;
-    case TYPE.SET_PASSWORD:
-      return {
-        ...state,
-        password: action.payload
-      };
-      break;
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
         ...state,
@@ -27,11 +23,7 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.WIPE_LOGIN_INFO:
-      return {
-        ...state,
-        unlockUntillDate: "",
-        password: ""
-      };
+      return initialState;
       break;
     default:
       return state;

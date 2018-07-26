@@ -44,14 +44,15 @@ input[type="url"],
 input[type="week"] {
 	box-sizing: border-box;
 	margin: calc(var(--input-border-width) * -1) 0; /* if there is a border reduce margin so it sits properly on the vertical scale */
-	padding: .0 .5em;
+	padding: .125em .5em;
 	border-width: var(--input-border-width);
 	border-style: var(--input-border-style);
 	border-color: var(--input-border-color);
 	border-radius: var(--input-border-radius);
 	background-color: var(--input-background-color);
 	font: inherit;
-	color: var(--input-color);
+  color: var(--input-color);
+  -webkit-appearance: none; /* makes select elements behave like regular inputs and respect padding */
 }
 
 textarea:focus,

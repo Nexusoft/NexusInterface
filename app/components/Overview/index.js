@@ -40,6 +40,9 @@ import nxsblocks from "../../images/nxs-blocks.png";
 
 import NetworkGlobe from "./NetworkGlobe";
 
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
 const mapStateToProps = state => {
   return {
     ...state.overview
@@ -49,6 +52,39 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({});
 
 class Overview extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    const yesArray = [];
+    for (let prop in this.props) {
+      if (this.props[prop] === nextProps[prop]) {
+        yesArray.push(true);
+      }
+    }
+    if (yesArray.length === Object.keys(this.props).length - 1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  componentDidMount()
+  {
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener("contextmenu",this.setupcontextmenu);
+  }
+
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
+  }
+
+
   connectionsImage() {
     const con = this.props.connections;
 

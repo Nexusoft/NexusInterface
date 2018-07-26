@@ -4,6 +4,7 @@ import { routerReducer } from "react-router-redux";
 import overview from "./overview";
 import list from "./list";
 import market from "./market";
+import transactions from "./transactions";
 import common from "./common";
 import login from "./login";
 
@@ -11,9 +12,10 @@ const rootReducer = combineReducers({
   overview,
   routerReducer,
   list,
-  common,
   login,
-  market
+  market,
+  transactions,
+  common
 });
 
 export default rootReducer;
