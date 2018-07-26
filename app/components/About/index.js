@@ -70,7 +70,7 @@ class About extends Component {
                   <b>THIS IS EXPERIMENTAL SOFTWARE AND THE NEXUS EMBASY HOLDS NO LIABILITY FOR THE USE OF THIS SOFTWARE</b>
               </column>
               <column>
-                  <h2>License Agreament</h2>
+                  <h2>License Agreement</h2>
                   <blockquote>
                           Copyright {this.getCurrentYear()} Nexus 
                           <br/>
