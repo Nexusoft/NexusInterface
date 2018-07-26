@@ -19,8 +19,11 @@ class Loader extends Component {
                 <div id="proton1"></div>
                 <div id="proton2"></div>
                 <div id="proton3"></div>
-            </div>
+            </div>           
         </div>
+    )
+    return (
+        <div id="version">T R I T I U M</div>
     );
   }
 }
