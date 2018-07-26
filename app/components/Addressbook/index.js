@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
 import { remote } from "electron";
-import config from "./api/configuration.js";
+import config from "../../api/configuration";
 import * as RPC from "../../script/rpc";
 
 import ContextMenuBuilder from "../../contextmenu";
@@ -18,6 +18,8 @@ import ContextMenuBuilder from "../../contextmenu";
 
 // ADDRESSBOOK.CALLBACK = ADDRESSBOOK.CALLBACK || {};
 // ADDRESSBOOK.ACCOUNTS = ADDRESSBOOK.ACCOUNTS || [];
+
+var psudoState = null;
 
 const mapStateToProps = state => {
   return { ...state.common };
@@ -56,13 +58,15 @@ class Addressbook extends Component {
         to: ""
       },
       calledfrom: false,
-      psudoState: null,
+      // psudoState: null,
       generateFlag: false
 
     };
   }
 
   componentDidMount() {
+
+    RPC.GET("listaccounts", [0], this.loaddata.bind(this));
 
     this.addressbookcontextfunction = this.addressbookcontextfunction.bind(this);
 
@@ -176,37 +180,37 @@ class Addressbook extends Component {
 
   setaccount(newName, areaCode, first3, last4, TZ, newNotes, modal)
   {
-    this.state.psudoState[newName] = {
+    psudoState[newName] = {
       mine: {},
       notMine: {}
     };
     let concat = areaCode + first3 + last4;
 
     if (concat.trim().length >= 10) {
-      this.state.psudoState = Object.assign(this.state.psudoState, {
-        [newName]: Object.assign(this.state.psudoState[newName], {
+      psudoState = Object.assign(psudoState, {
+        [newName]: Object.assign(psudoState[newName], {
           phoneNum: `(${areaCode}) ${first3}-${last4}`
         })
       });
     }
 
     if (TZ !== null || undefined || "") {
-      this.state.psudoState = Object.assign(this.state.psudoState, {
-        [newName]: Object.assign(this.state.psudoState[newName], {
+      psudoState = Object.assign(psudoState, {
+        [newName]: Object.assign(psudoState[newName], {
           timeZone: TZ
         })
       });
     }
 
     if (newNotes.trim() !== "") {
-      this.state.psudoState = Object.assign(this.state.psudoState, {
-        [newName]: Object.assign(this.state.psudoState[newName], {
+      psudoState = Object.assign(psudoState, {
+        [newName]: Object.assign(psudoState[newName], {
           notes: newNotes
         })
       });
     }
-    console.log(this.state.psudoState);
-    config.WriteJson("addressbook.json", this.state.psudoState);
+    console.log(psudoState);
+    config.WriteJson("addressbook.json", psudoState);
     modal.close();
 
     RPC.GET("listaccounts", [0], this.refresh);
@@ -226,7 +230,7 @@ class Addressbook extends Component {
     if (ResponseObject.readyState != 4) return;
 
     if (ResponseObject.status == 200) {
-      this.state.psudoState = config.ReadJson("addressbook.json");
+      psudoState = config.ReadJson("addressbook.json");
       var Data = JSON.parse(ResponseObject.responseText);
       var results = Data.result;
 
@@ -247,58 +251,58 @@ class Addressbook extends Component {
         Promise.all(addressCheck).then(payload => {
           payload.map((e, i) => {
             if (e.ismine) {
-              if (!this.state.psudoState[e.account]) {
-                this.state.psudoState[e.account] = {
+              if (!psudoState[e.account]) {
+                psudoState[e.account] = {
                   numAddreses: 0,
                   mine: {},
                   notMine: {},
-                  phoneNum: this.state.psudoState[e.account].phoneNum,
-                  timeZone: this.state.psudoState[e.account].timeZone,
-                  notes: this.state.psudoState[e.account].notes
+                  phoneNum: psudoState[e.account].phoneNum,
+                  timeZone: psudoState[e.account].timeZone,
+                  notes: psudoState[e.account].notes
                 };
               }
               if (e.isvalid) {
                 if (
-                  this.state.psudoState[e.account] ||
-                  this.state.psudoState[e.account] === ""
+                  psudoState[e.account] ||
+                  psudoState[e.account] === ""
                 ) {
                   if (
                     !Object.values(
-                      this.state.psudoState[e.account].mine
+                      psudoState[e.account].mine
                     ).includes(e.address)
                   ) {
-                    this.state.psudoState[e.account].numAddreses++;
-                    this.state.psudoState[e.account].mine = Object.assign(
-                      this.state.psudoState[e.account].mine,
+                    psudoState[e.account].numAddreses++;
+                    psudoState[e.account].mine = Object.assign(
+                      psudoState[e.account].mine,
                       { [i]: e.address }
                     );
                   }
                 }
               }
             } else {
-              if (!this.state.psudoState[e.account]) {
-                this.state.psudoState[e.account] = {
+              if (!psudoState[e.account]) {
+                psudoState[e.account] = {
                   numAddreses: 0,
                   mine: {},
                   notMine: {},
-                  phoneNum: this.state.psudoState[e.account].phoneNum,
-                  timeZone: this.state.psudoState[e.account].timeZone,
-                  notes: this.state.psudoState[e.account].notes
+                  phoneNum: psudoState[e.account].phoneNum,
+                  timeZone: psudoState[e.account].timeZone,
+                  notes: psudoState[e.account].notes
                 };
               }
               if (e.isvalid) {
                 if (
-                  this.state.psudoState[e.account] ||
-                  this.state.psudoState[e.account] === ""
+                  psudoState[e.account] ||
+                  psudoState[e.account] === ""
                 ) {
                   if (
                     !Object.values(
-                      this.state.psudoState[e.account].notMine
+                      psudoState[e.account].notMine
                     ).includes(e.address)
                   ) {
-                    this.state.psudoState[e.account].numAddreses++;
-                    this.state.psudoState[e.account].notMine = Object.assign(
-                      this.state.psudoState[e.account].notMine,
+                    psudoState[e.account].numAddreses++;
+                    psudoState[e.account].notMine = Object.assign(
+                      psudoState[e.account].notMine,
                       { [i]: e.address }
                     );
                   }
@@ -309,7 +313,7 @@ class Addressbook extends Component {
 
           config.WriteJson(
             "addressbook.json",
-            this.state.psudoState
+            psudoState
           );
 
           this.processaccounts();
@@ -334,7 +338,7 @@ class Addressbook extends Component {
     if (ResponseObject.status == 200) {
       // check to see if the JSON storage exists if not create it
       try {
-        this.state.psudoState = config.ReadJson("addressbook.json");
+        psudoState = config.ReadJson("addressbook.json");
       } catch (err) {
         config.WriteJson("addressbook.json", {});
       }
@@ -342,8 +346,8 @@ class Addressbook extends Component {
       let results = Data.result;
 
       let accounts = Object.keys(results);
-      if (this.state.psudoState === null) {
-        this.state.psudoState = Object.assign({}, results);
+      if (psudoState === null) {
+        psudoState = Object.assign({}, results);
       }
       let promises = [];
       let addressCheck = [];
@@ -362,8 +366,8 @@ class Addressbook extends Component {
         Promise.all(addressCheck).then(payload => {
           payload.map((e, i) => {
             if (e.ismine) {
-              if (typeof this.state.psudoState[e.account] !== "object") {
-                this.state.psudoState[e.account] = {
+              if (typeof psudoState[e.account] !== "object") {
+                psudoState[e.account] = {
                   numAddreses: 0,
                   mine: {},
                   notMine: {},
@@ -374,25 +378,25 @@ class Addressbook extends Component {
               }
               if (e.isvalid) {
                 if (
-                  this.state.psudoState[e.account] ||
-                  this.state.psudoState[e.account] === ""
+                  psudoState[e.account] ||
+                  psudoState[e.account] === ""
                 ) {
                   if (
                     !Object.values(
-                      this.state.psudoState[e.account].mine
+                      psudoState[e.account].mine
                     ).includes(e.address)
                   ) {
-                    this.state.psudoState[e.account].numAddreses++;
-                    this.state.psudoState[e.account].mine = Object.assign(
-                      this.state.psudoState[e.account].mine,
+                    psudoState[e.account].numAddreses++;
+                    psudoState[e.account].mine = Object.assign(
+                      psudoState[e.account].mine,
                       { [i]: e.address }
                     );
                   }
                 }
               }
             } else {
-              if (typeof this.state.psudoState[e.account] !== "object") {
-                this.state.psudoState[e.account] = {
+              if (typeof psudoState[e.account] !== "object") {
+                psudoState[e.account] = {
                   numAddreses: 0,
                   mine: {},
                   notMine: {},
@@ -403,17 +407,17 @@ class Addressbook extends Component {
               }
               if (e.isvalid) {
                 if (
-                  this.state.psudoState[e.account] ||
-                  this.state.psudoState[e.account] === ""
+                  psudoState[e.account] ||
+                  psudoState[e.account] === ""
                 ) {
                   if (
                     !Object.values(
-                      this.state.psudoState[e.account].notMine
+                      psudoState[e.account].notMine
                     ).includes(e.address)
                   ) {
-                    this.state.psudoState[e.account].numAddreses++;
-                    this.state.psudoState[e.account].notMine = Object.assign(
-                      this.state.psudoState[e.account].notMine,
+                    psudoState[e.account].numAddreses++;
+                    psudoState[e.account].notMine = Object.assign(
+                      psudoState[e.account].notMine,
                       { [i]: e.address }
                     );
                   }
@@ -423,9 +427,9 @@ class Addressbook extends Component {
           });
           config.WriteJson(
             "addressbook.json",
-            this.state.psudoState
+            psudoState
           );
-          console.log(this.state.psudoState);
+          console.log(psudoState);
           this.processaccounts();
         });
       });
@@ -491,8 +495,8 @@ class Addressbook extends Component {
 
   processaccounts()
   {
-    AJAX.LOADER.Hide();
-    const master = this.state.psudoState;
+    // AJAX.LOADER.Hide();
+    const master = psudoState;
     const masterArr = Object.keys(master);
     const regexp = /^[A-Z]/;
     const accountDisplayDiv = document.getElementById("nxs-address-display");
@@ -514,9 +518,9 @@ class Addressbook extends Component {
           this.contactdetailer(
             accountDisplayDiv,
             name,
-            this.state.psudoState[name].phoneNum,
-            this.state.psudoState[name].timeZone,
-            this.state.psudoState[name].notes,
+            psudoState[name].phoneNum,
+            psudoState[name].timeZone,
+            psudoState[name].notes,
             true
           );
         });
@@ -528,9 +532,9 @@ class Addressbook extends Component {
             this.contactdetailer(
               accountDisplayDiv,
               name,
-              this.state.psudoState[name].phoneNum,
-              this.state.psudoState[name].timeZone,
-              this.state.psudoState[name].notes,
+              psudoState[name].phoneNum,
+              psudoState[name].timeZone,
+              psudoState[name].notes,
               true
             );
           });
@@ -541,9 +545,9 @@ class Addressbook extends Component {
             this.contactdetailer(
               accountDisplayDiv,
               name,
-              this.state.psudoState[name].phoneNum,
-              this.state.psudoState[name].timeZone,
-              this.state.psudoState[name].notes,
+              psudoState[name].phoneNum,
+              psudoState[name].timeZone,
+              psudoState[name].notes,
               true
             );
           });
@@ -620,17 +624,17 @@ class Addressbook extends Component {
       this.contactdetailer(
         accountDisplayDiv,
         "",
-        this.state.psudoState[""].phoneNum,
-        this.state.psudoState[""].timeZone,
-        this.state.psudoState[""].notes
+        psudoState[""].phoneNum,
+        psudoState[""].timeZone,
+        psudoState[""].notes
       );
     } else {
       this.contactdetailer(
         accountDisplayDiv,
         namesDivs[0].id,
-        this.state.psudoState[namesDivs[0].id].phoneNum,
-        this.state.psudoState[namesDivs[0].id].timeZone,
-        this.state.psudoState[namesDivs[0].id].notes
+        psudoState[namesDivs[0].id].phoneNum,
+        psudoState[namesDivs[0].id].timeZone,
+        psudoState[namesDivs[0].id].notes
       );
     }
     this.handlehighlights(letters, namesList);
@@ -717,7 +721,7 @@ class Addressbook extends Component {
     phoneNum.id = "phoneNum";
     phoneNum.innerText = `Phone: ${phone}`;
     bottomPart.appendChild(phoneNum);
-    if (this.state.psudoState[name].timeZone == "No Time Zone Set") {
+    if (psudoState[name].timeZone == "No Time Zone Set") {
       const localTime = document.createElement("div");
       localTime.id = "localTime";
       localTime.innerText = `Local Time: ${timeZone}`;
@@ -756,7 +760,7 @@ class Addressbook extends Component {
     const mineDisplay = document.createElement("div");
     mineDisplay.id = "mine";
     let inc = 0;
-    for (let address in this.state.psudoState[name].mine) {
+    for (let address in psudoState[name].mine) {
       inc++;
       const toolTip = document.createElement("span");
       toolTip.innerText = "Right click to edit";
@@ -823,8 +827,8 @@ class Addressbook extends Component {
 
       const adds = document.createElement("div");
       adds.className = "address";
-      adds.innerText = this.state.psudoState[name].mine[address];
-      adds.value = this.state.psudoState[name].mine[address];
+      adds.innerText = psudoState[name].mine[address];
+      adds.value = psudoState[name].mine[address];
       adds.id = "m" + inc;
       const copy = document.createElement("div");
       copy.className = "address";
@@ -837,7 +841,7 @@ class Addressbook extends Component {
     }
     addressesContainer.appendChild(mineDisplay);
 
-    for (let address in this.state.psudoState[name].notMine) {
+    for (let address in psudoState[name].notMine) {
       inc++;
       const labelDiv = document.createElement("div");
       labelDiv.className = "addressLabel";
@@ -902,8 +906,8 @@ class Addressbook extends Component {
 
       const adds = document.createElement("div");
       adds.className = "address";
-      adds.innerText = this.state.psudoState[name].notMine[address];
-      adds.value = this.state.psudoState[name].notMine[address];
+      adds.innerText = psudoState[name].notMine[address];
+      adds.value = psudoState[name].notMine[address];
       adds.id = "nm" + inc;
       adds.addEventListener(
         "mouseenter",
@@ -1050,22 +1054,22 @@ class Addressbook extends Component {
 
       if (this.state.addId.slice(0, 2) === "nm") {
         const oldLabel = this.getKeyByValue(
-          this.state.psudoState[this.state.rootAccount].notMine,
+          psudoState[this.state.rootAccount].notMine,
           this.state.thisadd
         );
-        this.state.psudoState[this.state.rootAccount].notMine[newLabel] =
-          this.state.psudoState[this.state.rootAccount].notMine[oldLabel];
-        delete this.state.psudoState[this.state.rootAccount].notMine[oldLabel];
+        psudoState[this.state.rootAccount].notMine[newLabel] =
+          psudoState[this.state.rootAccount].notMine[oldLabel];
+        delete psudoState[this.state.rootAccount].notMine[oldLabel];
       } else {
         const oldLabel = this.getKeyByValue(
-          this.state.psudoState[this.state.rootAccount].mine,
+          psudoState[this.state.rootAccount].mine,
           this.state.thisadd
         );
-        this.state.psudoState[this.state.rootAccount].mine[newLabel] =
-          this.state.psudoState[this.state.rootAccount].mine[oldLabel];
-        delete this.state.psudoState[this.state.rootAccount].mine[oldLabel];
+        psudoState[this.state.rootAccount].mine[newLabel] =
+          psudoState[this.state.rootAccount].mine[oldLabel];
+        delete psudoState[this.state.rootAccount].mine[oldLabel];
       }
-      config.WriteJson("addressbook.json", this.state.psudoState);
+      config.WriteJson("addressbook.json", psudoState);
       modal.close();
       this.processaccounts();
     });
@@ -1096,10 +1100,10 @@ class Addressbook extends Component {
   {
     let acct = {};
     if (document.getElementById("titleName").innerText === "No Account Set") {
-      acct = this.state.psudoState[""];
+      acct = psudoState[""];
     } else {
       acct =
-        this.state.psudoState[document.getElementById("titleName").innerText];
+        psudoState[document.getElementById("titleName").innerText];
     }
     let phoneNumRaw = "";
     if (acct.phoneNum !== "No Phone Number Set") {
@@ -1207,25 +1211,25 @@ class Addressbook extends Component {
       //change name stuff
       // if (newName.trim() !== "") {
       if (concat.trim().length >= 10) {
-        this.state.psudoState = Object.assign(this.state.psudoState, {
-          [name]: Object.assign(this.state.psudoState[name], {
+        psudoState = Object.assign(psudoState, {
+          [name]: Object.assign(psudoState[name], {
             phoneNum: `(${areaCode}) ${first3}-${last4}`
           })
         });
       }
       if (TZ !== null || undefined || "") {
-        this.state.psudoState = Object.assign(this.state.psudoState, {
-          [name]: Object.assign(this.state.psudoState[name], { timeZone: TZ })
+        psudoState = Object.assign(psudoState, {
+          [name]: Object.assign(psudoState[name], { timeZone: TZ })
         });
       }
       if (newNotes.trim() !== "") {
-        this.state.psudoState = Object.assign(this.state.psudoState, {
-          [name]: Object.assign(this.state.psudoState[name], {
+        psudoState = Object.assign(psudoState, {
+          [name]: Object.assign(psudoState[name], {
             notes: newNotes
           })
         });
       }
-      config.WriteJson("addressbook.json", this.state.psudoState);
+      config.WriteJson("addressbook.json", psudoState);
       this.processaccounts();
       modal.close();
     });
@@ -1458,7 +1462,7 @@ class Addressbook extends Component {
     let overlay = document.getElementById("overlay");
     let modal = document.getElementById("modal");
 
-    config.WriteJson("addressbook.json", this.state.psudoState);
+    config.WriteJson("addressbook.json", psudoState);
 
     overlay.remove();
     modal.remove();
@@ -1466,7 +1470,7 @@ class Addressbook extends Component {
 
   exporttoCSV()
   {
-    // console.log(this.state.psudoState);
+    // console.log(psudoState);
 
     const rows = []; //Set up a blank array for each row
 
@@ -1481,15 +1485,15 @@ class Addressbook extends Component {
     ];
     rows.push(NameEntry);
 
-    for (let account in this.state.psudoState) {
+    for (let account in psudoState) {
       let accountname = "";
-      // let mine = Array.from(this.state.psudoState[account].mine);
-      let mine = Object.keys(this.state.psudoState[account].mine).map(key => {
-        return [key, this.state.psudoState[account].mine[key]];
+      // let mine = Array.from(psudoState[account].mine);
+      let mine = Object.keys(psudoState[account].mine).map(key => {
+        return [key, psudoState[account].mine[key]];
       });
-      let notMine = Object.keys(this.state.psudoState[account].notMine).map(
+      let notMine = Object.keys(psudoState[account].notMine).map(
         key => {
-          return [key, this.state.psudoState[account].notMine[key]];
+          return [key, psudoState[account].notMine[key]];
         }
       );
 
@@ -1500,7 +1504,7 @@ class Addressbook extends Component {
       }
 
       let timezone = "";
-      switch (this.state.psudoState[account].timeZone) {
+      switch (psudoState[account].timeZone) {
         case 0:
           timezone = "London";
           break;
@@ -1619,18 +1623,18 @@ class Addressbook extends Component {
           timezone = "Berlin";
           break;
         default:
-          timezone = this.state.psudoState[account].timeZone;
+          timezone = psudoState[account].timeZone;
           break;
       }
 
-      // console.log(this.state.psudoState[account], "test");
+      // console.log(psudoState[account], "test");
       let tempentry = [
         accountname,
         "",
         "",
-        this.state.psudoState[account].phoneNum,
+        psudoState[account].phoneNum,
         timezone,
-        this.state.psudoState[account].notes
+        psudoState[account].notes
       ];
       rows.push(tempentry);
       mine.map(arr => {
@@ -1678,7 +1682,7 @@ class Addressbook extends Component {
     // ADDRESSBOOK.Location = Address;
 
     //TODO: Should this be in componentDidMount???
-    RPC.GET("listaccounts", [0], this.loaddata);
+    // RPC.GET("listaccounts", [0], this.loaddata);
 
     return (
 
@@ -1690,14 +1694,12 @@ class Addressbook extends Component {
 
           <div id="nxs-address-display">
 
-              <!-- This will be dynamically populated from the data from RPC -->
-
           </div>
 
-          <div style="display: flex; flex-direction: row;">
+          <div>
 
-              <button id="new-address-button" class="button hero ghost" onclick="modal()">ADD ACCOUNT</button>
-              <button id="export-csv-button" class="button hero ghost" onclick="exporttoCSV()">EXPORT AS CSV</button>
+              <button id="new-address-button" className="button hero ghost" onClick={this.modal}>ADD ACCOUNT</button>
+              <button id="export-csv-button" className="button hero ghost" onClick={this.exporttoCSV}>EXPORT AS CSV</button>
 
           </div>
 
