@@ -44,7 +44,8 @@ import nxsblocks from "../../images/nxs-blocks.png";
 import NetworkGlobe from "./NetworkGlobe";
 
 import ContextMenuBuilder from "../../contextmenu";
-import {remote} from "electron";
+import { remote } from "electron";
+import Request from "request";
 
 const mapStateToProps = state => {
   return {
@@ -56,7 +57,9 @@ const mapDispatchToProps = dispatch => ({
   setExperimentalWarning: returndata =>
   {
     dispatch({type:TYPE.SET_EXPERIMENTAL_WARNING,payload:returndata})
-  }
+  },
+  setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
+  setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate })
 });
 
 //let experimentalOpen = true;
@@ -78,13 +81,24 @@ class Overview extends Component {
 
   componentDidMount()
   {
-    this.props.setExperimentalWarning(true);
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
+    Request(
+      {
+        url: "https://api.coinmarketcap.com/v2/ticker/789/?convert=BTC",
+        json: true
+      },
+      (error, response, body) => {
+        if (response.statusCode === 200) {
+          console.log(response);
+          this.props.setBTC(body.data.quotes.BTC.price);
+          this.props.setUSD(body.data.quotes.USD.price);
+        }
+      }
+    );
   }
 
-  componentWillUnmount()
-  {
-    window.removeEventListener("contextmenu",this.setupcontextmenu);
+  componentWillUnmount() {
+    window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
   setupcontextmenu(e) {
@@ -95,6 +109,16 @@ class Overview extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  calculateUSDvalue() {
+    let USDvalue = this.props.balance * this.props.USD;
+    console.log(this.props.BTC);
+    if (USDvalue === 0) {
+      USDvalue = `${USDvalue}.00`;
+    } else {
+      USDvalue = USDvalue.toFixed(2);
+    }
+    return `$${USDvalue}`;
+  }
 
   closeLicenseModal()
   {
@@ -321,19 +345,19 @@ class Overview extends Component {
           <div id="nxs-currency-value-info">
             <div className="h2">Currency Value (USD)</div>
             <img src={nxsStake} />
-            <div className="overviewValue">$0.00</div>
+            <div className="overviewValue">{this.calculateUSDvalue()}</div>
           </div>
 
           <div id="nxs-transactions-info">
             <div className="h2">Transactions</div>
             <img src={nxsStake} />
-            <div className="overviewValue">0</div>
+            <div className="overviewValue">{this.props.txtotal}</div>
           </div>
 
           <div id="nxs-market-price-info">
-            <div className="h2">Market Price</div>
+            <div className="h2">Market Price (BTC)</div>
             <img src={nxsStake} />
-            <div className="overviewValue">0</div>
+            <div className="overviewValue">{this.props.BTC.toFixed(8)}</div>
           </div>
 
           <div id="nxs-market-price-info">

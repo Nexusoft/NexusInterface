@@ -1,6 +1,10 @@
 import * as TYPE from "../actions/actiontypes";
 
-const initialState = {};
+const initialState = {
+  USD: 0,
+  BTC: 0,
+  experimentalOpen:true
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -15,6 +19,19 @@ export default (state = initialState, action) => {
           ...state,
           experimentalOpen: action.payload
       };
+      break;
+    case TYPE.USD_RATE:
+      return {
+        ...state,
+        USD: action.payload
+      };
+      break;
+    case TYPE.BTC_RATE:
+      return {
+        ...state,
+        BTC: action.payload
+      };
+      break;
     default:
       return state;
   }
