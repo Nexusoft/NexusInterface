@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
+import Modal from 'react-responsive-modal';
+import * as TYPE from "../../actions/actiontypes";
+
 
 // importing images here because of a weird webpack issue
 import Connections0 from "../../images/Connections0.png";
@@ -40,8 +43,6 @@ import nxsblocks from "../../images/nxs-blocks.png";
 
 import NetworkGlobe from "./NetworkGlobe";
 
-import * as TYPE from "../../actions/actiontypes";
-
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import Request from "request";
@@ -53,11 +54,17 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  setExperimentalWarning: returndata =>
+  {
+    dispatch({type:TYPE.SET_EXPERIMENTAL_WARNING,payload:returndata})
+  },
   setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
   setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
   set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
   setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate })
 });
+
+//let experimentalOpen = true;
 
 class Overview extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -74,7 +81,8 @@ class Overview extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount()
+  {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
     Request(
       {
@@ -114,6 +122,72 @@ class Overview extends Component {
       USDvalue = USDvalue.toFixed(2);
     }
     return `$${USDvalue}`;
+  }
+
+  closeLicenseModal()
+  {
+    this.setState({ open: false });
+    var settings = require("../../api/settings.js").GetSettings();
+    settings.acceptedagreement = true;
+    require("../../api/settings.js").SaveSettings(settings);
+    console.log("accepted");
+    
+  }
+
+  returnLicenseModalInternal()
+  {
+    let internalString = [];
+
+      internalString.push("MIT LICENSE GOES HERE");
+      internalString.push (<br key="br1" />);
+      internalString.push(
+        <button key="agreement-button-accept" className="btn btn-action" onClick={ () => this.closeLicenseModal()}>
+            ACCEPT
+        </button>
+      );
+      internalString.push(
+        <button key="agreement-button-reject" className="btn btn-action" onClick={ () => remote.app.quit()}>
+        REJECT
+        </button>
+      );
+   
+    return internalString;
+  }
+
+  returnExperimentalModalInternal()
+  {
+    let internalString = [];
+
+    internalString.push ("CONSIDER THIS SOFTWARE EXPERIMENTAL. PLEASE BACK UP WALLET FREQUENTLY ");
+    internalString.push(<br key="br2" />);
+
+    internalString.push(
+      <button key="experiment-button-accept" className="btn btn-action" onClick={this.closeExperimentalModal}>
+          OK
+      </button>
+    );
+    internalString.push(
+      <button key="experiment-button-noshow" className="btn btn-action" onClick={ ()  => this.dontShowExperimentalAgain() }>
+      Don't show this again
+      </button>
+    );
+
+    return internalString;
+  }
+
+  closeExperimentalModal = () =>
+  {
+    this.props.setExperimentalWarning(false);
+    this.forceUpdate();
+  }
+
+  dontShowExperimentalAgain()
+  {
+    let settings = require("../../api/settings.js").GetSettings();
+    settings["experimentalWarning"] = false;
+    require("../../api/settings.js").SaveSettings(settings);
+    this.props.setExperimentalWarning(false);
+    this.forceUpdate();
   }
 
   connectionsImage() {
@@ -217,9 +291,54 @@ class Overview extends Component {
     }
   }
 
+  returnIfLicenseShouldBeOpen()
+  {
+    let settings = require("../../api/settings.js").GetSettings();
+    return !settings.acceptedagreement;
+  }
+
+  returnIfExperimentalShouldBeOpen()
+  {
+    
+    if (this.returnIfLicenseShouldBeOpen())
+    {
+      return false;
+    }
+    let settings = require("../../api/settings.js").GetSettings();
+    if (this.props.experimentalOpen == true )
+    {
+      if (settings.experimentalWarning == null)
+      {
+        return true;
+      }
+
+      if (settings.experimentalWarning == false)
+      {
+        return false;
+      }
+      else
+      {
+        return true;
+      }
+    }else
+    {
+      return false;
+    }
+  }
+
   render() {
+    const agreementOpen = this.returnIfLicenseShouldBeOpen();
+    const experimentalOpenbool = this.returnIfExperimentalShouldBeOpen();
     return (
       <div id="overviewPage">
+        <Modal key="agreement-modal" open={agreementOpen} onClose={ () => {return true} } center showCloseIcon={false} classNames={{ modal: 'modal' }}>
+          <h2>License Agreement</h2>
+          {this.returnLicenseModalInternal()}
+        </Modal>
+        <Modal key="experiment-modal" open={experimentalOpenbool} onClose={this.closeExperimentalModal} center classNames={{ modal: 'modal' }}>
+    
+          {this.returnExperimentalModalInternal()}
+        </Modal>
         <div className="left-stats">
           <div id="nxs-balance-info">
             <div className="h2">Balance (NXS)</div>

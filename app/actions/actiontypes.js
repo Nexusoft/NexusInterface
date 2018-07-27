@@ -1,5 +1,7 @@
 // overview
 export const GET_INFO_DUMP = "GET_INFO_DUMP";
+export const SET_EXPERIMENTAL_WARNING = "SET_EXPERIMENTAL_WARNING";
+
 export const USD_RATE = "USD_RATE";
 export const BTC_RATE = "BTC_RATE";
 export const CHANGE_24 = "CHANGE_24";

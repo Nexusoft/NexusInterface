@@ -3,6 +3,7 @@ import * as TYPE from "../actions/actiontypes";
 const initialState = {
   USD: 0,
   BTC: 0,
+  experimentalOpen: true,
   circulatingSupply: 0,
   USDpercentChange: 0
 };
@@ -13,6 +14,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.payload
+      };
+
+    case TYPE.SET_EXPERIMENTAL_WARNING:
+      return {
+        ...state,
+        experimentalOpen: action.payload
       };
       break;
     case TYPE.USD_RATE:
