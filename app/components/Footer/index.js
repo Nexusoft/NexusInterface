@@ -28,9 +28,10 @@ export default class Footer extends Component {
             <img src="images/icon-contacts.png" alt="Address Book" />
             <div className="tooltip top">Address&nbsp;Book</div>
           </NavLink>
-          <NavLink to="/BlockExplorer">
-            <img src="images/icon-explorer.png" alt="Block Explorer" />
-            <div className="tooltip top">Block&nbsp;Explorer</div>
+
+          <NavLink to="/List">
+            <img src="images/icon-trustlist.png" alt="Trust List" />
+            <div className="tooltip top">Trust&nbsp;List</div>
           </NavLink>
           <NavLink to="/Settings">
             <img src="images/icon-settings.png" alt="Settings" />
@@ -40,17 +41,13 @@ export default class Footer extends Component {
             <img src="images/icon-console.png" alt="Console" />
             <div className="tooltip top">Console</div>
           </NavLink>
-          <NavLink to="/StyleGuide">
+          {/* <NavLink to="/StyleGuide">
             <img src="images/icon-developer.png" alt="Style Guide" />
             <div className="tooltip top">Style&nbsp;Guide</div>
           </NavLink>
-          <NavLink to="/List">
-            <img src="images/icon-trustlist.png" alt="Trust List" />
-            <div className="tooltip top">Trust&nbsp;List</div>
-          </NavLink>
-          {/* <NavLink to="/About">
-            <img src="images/icon-trustlist.png" alt="About" />
-            <div className="tooltip top">Trust&nbsp;About</div>
+          <NavLink to="/BlockExplorer">
+            <img src="images/icon-explorer.png" alt="Block Explorer" />
+            <div className="tooltip top">Block&nbsp;Explorer</div>
           </NavLink> */}
         </div>
       </div>

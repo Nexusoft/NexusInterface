@@ -59,6 +59,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:TYPE.SET_EXPERIMENTAL_WARNING,payload:returndata})
   },
   setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
+  setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
+  set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
   setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate })
 });
 
@@ -91,6 +93,8 @@ class Overview extends Component {
         if (response.statusCode === 200) {
           console.log(response);
           this.props.setBTC(body.data.quotes.BTC.price);
+          this.props.set24hrChange(body.data.quotes.USD.percent_change_24h);
+          this.props.setSupply(body.data.circulating_supply);
           this.props.setUSD(body.data.quotes.USD.price);
         }
       }
@@ -361,15 +365,15 @@ class Overview extends Component {
           </div>
 
           <div id="nxs-market-price-info">
-            <div className="h2">Market Price</div>
+            <div className="h2">Circulating Supply (NXS)</div>
             <img src={nxsStake} />
-            <div className="overviewValue">0</div>
+            <div className="overviewValue">{this.props.circulatingSupply}</div>
           </div>
 
           <div id="nxs-market-price-info">
-            <div className="h2">Market Price</div>
+            <div className="h2">24hr Percent Change (USD)</div>
             <img src={nxsStake} />
-            <div className="overviewValue">0</div>
+            <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
         <NetworkGlobe />
