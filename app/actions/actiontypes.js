@@ -36,3 +36,4 @@ export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
 // common
 export const LOCK = "LOCK";
 export const UNLOCK = "UNLOCK";
+export const SET_GOOGLEANALYTICS = "SET_GOOGLEANALYTICS";
