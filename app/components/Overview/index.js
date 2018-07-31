@@ -48,8 +48,7 @@ import Request from "request";
 
 const mapStateToProps = state => {
   return {
-    ...state.overview,
-    ...state.common
+    ...state.overview, ...state.common
   };
 };
 
@@ -68,6 +67,11 @@ const mapDispatchToProps = dispatch => ({
 class Overview extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
+   
+    if ( this.props.googleanalytics != null)
+    {
+      this.props.googleanalytics.SendScreen("Overview");
+    }
     Request(
       {
         url: "https://api.coinmarketcap.com/v2/ticker/789/?convert=BTC",

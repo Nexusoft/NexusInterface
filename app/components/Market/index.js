@@ -27,7 +27,7 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
 const mapStateToProps = state => {
-  return { ...state.market };
+  return { ...state.market, ...state.common};
 };
 
 const mapDispatchToProps = dispatch =>
@@ -37,6 +37,7 @@ class Market extends Component {
   // thunk API calls to the exchanges
   componentDidMount() {
     this.refresher();
+    this.props.googleanalytics.SendScreen("Market");
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
 
