@@ -11,6 +11,8 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
 
+import GOOGLE from "../../script/googleanalytics";
+
 const mapStateToProps = state => {
   return { ...state.overview, ...state.common };
 };
@@ -24,6 +26,10 @@ class Header extends Component {
       require("electron").remote.getCurrentWindow().id
     );
 
+    
+    console.log(GOOGLE);
+    //console.log(visitor);
+    this.props.SetGoogleAnalytics(GOOGLE);
     menuBuilder.buildMenu(this.props.history);
 
     this.props.GetInfoDump();

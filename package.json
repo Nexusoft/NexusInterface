@@ -197,6 +197,7 @@
     "redux-thunk": "^2.3.0",
     "source-map-support": "^0.4.15",
     "three": "^0.93.0",
+    "universal-analytics": "^0.4.17",
     "victory": "^0.27.2"
   },
   "devEngines": {
