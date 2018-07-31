@@ -25,6 +25,7 @@
 #logo {
   margin: 1em 0;
   display: block;
+  max-height: 49px;
 }
 
 #settings-menu {

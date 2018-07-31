@@ -6,6 +6,17 @@
   flex-grow: 0;
 }
 
+#footerbg {
+  background: -webkit-linear-gradient(
+    left,
+    transparent 0%,
+    var(--color-1) 20%,
+    var(--color-1) 50%,
+    var(--color-1) 80%,
+    transparent 100%
+  );
+}
+
 #ftr-line {
   width: 60%;
   height: 2px;
@@ -58,11 +69,12 @@
 #navigation a img {
   display: block;
   margin: .625em;
-  filter: grayscale(1) brightness(200%);
+  filter: grayscale(0);
+  width: 40px;
 }
 
 #navigation a:hover img {
   display: block;
   margin: .625em;
-  filter: grayscale(0);
+  filter: grayscale(1) brightness(200%);
 }

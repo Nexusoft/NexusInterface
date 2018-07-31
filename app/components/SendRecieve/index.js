@@ -13,7 +13,7 @@ class SendRecieve extends Component {
   render() {
     return (
       <div id="send-receive">
-        <h2>Send / Receive</h2>
+        <h2>Send NXS</h2>
 
         <div className="panel" />
       </div>
