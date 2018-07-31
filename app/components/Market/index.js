@@ -23,10 +23,8 @@ import arrow from "../../images/arrow.png";
 
 import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
-
 import ContextMenuBuilder from "../../contextmenu";
-import {remote} from "electron";
-
+import { remote } from "electron";
 
 const mapStateToProps = state => {
   return { ...state.market };
@@ -42,9 +40,8 @@ class Market extends Component {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
 
-  componentWillUnmount()
-  {
-    window.removeEventListener("contextmenu",this.setupcontextmenu);
+  componentWillUnmount() {
+    window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
   setupcontextmenu(e) {
@@ -300,19 +297,16 @@ class Market extends Component {
 
   render() {
     return (
-
       <div id="market">
-
         <h2>Market Information</h2>
 
-				<a className="refresh" onClick={() => this.refresher()}>Refresh Market Data</a>
+        <a className="refresh" onClick={() => this.refresher()}>
+          Refresh Market Data
+        </a>
 
-        <div className="alertbox">
-          {this.arbitageAlert()}
-        </div>
+        <div className="alertbox">{this.arbitageAlert()}</div>
 
         <div className="panel">
-
           {this.props.loaded &&
             this.props.binance.buy[0] && (
               <div className="exchangeUnitContainer">
@@ -359,11 +353,8 @@ class Market extends Component {
                 </div>
               </div>
             )}
-            
         </div>
-
       </div>
-
     );
   }
 }
