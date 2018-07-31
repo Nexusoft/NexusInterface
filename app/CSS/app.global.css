@@ -8,8 +8,10 @@
 @import "./base/tables.css";
 @import "./base/text.css";
 
+@import "./controls/modal.css";
 @import "./controls/panel.css";
 @import "./controls/progress.css";
+@import "./controls/react-table.css";
 @import "./controls/switch.css";
 @import "./controls/tabs.css";
 @import "./controls/tooltip.css";
@@ -22,7 +24,7 @@
 @import "../components/List/style.css";
 @import "../components/Market/style.css";
 @import "../components/Overview/style.css";
-@import "../components/SecurityLogin/style.css";
+@import "../components/Security/style.css";
 @import "../components/StyleGuide/style.css";
 @import "../components/SendRecieve/style.css";
 @import "../components/Settings/style.css";
@@ -123,8 +125,8 @@ body {
 }
 
 /* Track */
-::-webkit-scrollbar-track {
-}
+/* ::-webkit-scrollbar-track {
+} */
 
 /* Handle */
 ::-webkit-scrollbar-thumb {

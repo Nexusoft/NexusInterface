@@ -4,6 +4,10 @@ import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 
+
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
 const mapStateToProps = state => {
   return { ...state.list };
 };
@@ -21,7 +25,20 @@ class List extends Component {
     RPC.PROMISE("getnetworktrustkeys", []).then(payload => {
       this.props.GetListDump(payload.keys);
     });
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
 
+  componentWillUnmount()
+  {
+    window.removeEventListener("contextmenu",this.setupcontextmenu);
+  }
+
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   buildList() {

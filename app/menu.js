@@ -6,7 +6,7 @@ export default class MenuBuilder {
   mainWindow: remote.BrowserWindow;
 
   constructor(mainWindow: remote.BrowserWindow) {
-    this.mainWindow = remote.BrowserWindow;
+    this.mainWindow = remote.getCurrentWindow();
   }
 
   buildMenu(history) {
@@ -33,7 +33,7 @@ export default class MenuBuilder {
   }
 
   setupDevelopmentEnvironment() {
-    remote.BrowserWindow.openDevTools();
+    remote.getCurrentWindow().openDevTools();
 
     this.mainWindow.webContents.on("context-menu", (e, props) => {
       const { x, y } = props;
@@ -118,6 +118,7 @@ export default class MenuBuilder {
           label: "Toggle Developer Tools",
           accelerator: "Alt+Command+I",
           click: () => {
+            console.log(this.mainWindow);
             this.mainWindow.toggleDevTools();
           }
         }
@@ -192,9 +193,9 @@ export default class MenuBuilder {
         label: "&File",
         submenu: [
           {
-            label: "test",
+            label: "Lock Wallet",
             click: () => {
-              history.push("/");
+              RPC.PROMISE("walletlock", []);
             }
           },
           {
@@ -203,6 +204,12 @@ export default class MenuBuilder {
               let now = `${new Date()}`;
               let BackupDir = process.env.HOME + "/NexusBackups";
               RPC.PROMISE("backupwallet", [BackupDir + "/" + now + ".dat"]);
+            }
+          },
+          {
+            label: "Open Backups Folder",
+            click() {
+              shell.openItem(process.env.HOME + "/NexusBackups");
             }
           }
         ]
@@ -290,12 +297,12 @@ export default class MenuBuilder {
       {
         label: "Help",
         submenu: [
-          // {
-          //   label: "About Nexus",
-          //   click() {
-          //     Module(13, 1);
-          //   }
-          // },
+          {
+            label: "About Nexus",
+            click() {
+              history.push("/About");
+            }
+          },
           {
             label: "NexusEarth",
             click() {

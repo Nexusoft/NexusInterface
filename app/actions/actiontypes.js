@@ -1,6 +1,11 @@
 // overview
 export const GET_INFO_DUMP = "GET_INFO_DUMP";
+export const SET_EXPERIMENTAL_WARNING = "SET_EXPERIMENTAL_WARNING";
 
+export const USD_RATE = "USD_RATE";
+export const BTC_RATE = "BTC_RATE";
+export const CHANGE_24 = "CHANGE_24";
+export const SET_SUPPLY = "SET_SUPPLY";
 // trust
 export const GET_TRUST_LIST = "GET_TRUST_LIST";
 export const TOGGLE_SORT_DIRECTION = "TOGGLE_SORT_DIRECTION";
@@ -18,10 +23,15 @@ export const BITTREX_CANDLESTICK = "BITTREX_CANDLESTICK";
 export const CRYPTOPIA_CANDLESTICK = "CRYPTOPIA_CANDLESTICK";
 export const REMOVE_ALERT = "REMOVE_ALERT";
 export const SET_ALERTS = "SET_ALERTS";
+export const SET_TRADEVOL = "SET_TRADEVOL";
+export const SET_THRESHOLD = "SET_THRESHOLD";
 
+// Transaction Page
+export const SET_WALL_TRANS = "SET_WALL_TRANS";
+export const SET_TRANSACTION_SENDAGAIN = "SET_TRANSACTION_SENDAGAIN";
+export const SET_TRANSACTION_EXPLOREINFO = "SET_TRANSACTION_EXPLOREINFO";
 // login
 export const SET_DATE = "SET_DATE";
-export const SET_PASSWORD = "SET_PASSWORD";
 export const WIPE_LOGIN_INFO = "WIPE_LOGIN_INFO";
 export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
 

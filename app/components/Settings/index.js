@@ -6,9 +6,15 @@ import { connect } from "react-redux";
 import styles from "./style.css";
 import SettingsApp from "./SettingsApp";
 import SettingsCore from "./SettingsCore";
+import SettingsMarket from "./SettingsMarket";
 import Security from "../Security/Security";
 import Login from "../Security/Login";
 import * as RPC from "../../script/rpc";
+
+
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
 
 const mapStateToProps = state => {
   return {
@@ -17,7 +23,29 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({});
+
 class Settings extends Component {
+
+  
+    componentDidMount()
+    {
+      window.addEventListener("contextmenu", this.setupcontextmenu, false);
+    }
+  
+    componentWillUnmount()
+    {
+      window.removeEventListener("contextmenu",this.setupcontextmenu);
+    }
+  
+    setupcontextmenu(e) {
+      e.preventDefault();
+      const contextmenu = new ContextMenuBuilder().defaultContext;
+      //build default
+      let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+      defaultcontextmenu.popup(remote.getCurrentWindow());
+    }
+    
+
   render() {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
@@ -30,7 +58,6 @@ class Settings extends Component {
       <div id="settings">
         <div id="settings-container">
           <h2>Settings</h2>
-          <button onClick={() => RPC.PROMISE("walletlock", [])}>Lock</button>
 
           <div className="panel">
             <ul className="tabs">
@@ -46,11 +73,12 @@ class Settings extends Component {
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Security`}>
-                  <img
-                    src="images/icon-security.png"
-                    alt="Security"
-                    onClick={() => console.log("click")}
-                  />Security
+                  <img src="images/icon-security.png" alt="Security" />Security
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to={`${this.props.match.url}/Market`}>
+                  <img src="images/icon-market.png" alt="Martket" />Martket
                 </NavLink>
               </li>
             </ul>
@@ -69,7 +97,10 @@ class Settings extends Component {
                 path={`${this.props.match.path}/Core`}
                 component={SettingsCore}
               />
-
+              <Route
+                path={`${this.props.match.path}/Market`}
+                component={SettingsMarket}
+              />
               <Route
                 path={`${this.props.match.path}/Security`}
                 render={props =>

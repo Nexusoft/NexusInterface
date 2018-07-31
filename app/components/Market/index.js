@@ -23,6 +23,11 @@ import arrow from "../../images/arrow.png";
 
 import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
+
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
+
 const mapStateToProps = state => {
   return { ...state.market };
 };
@@ -34,6 +39,20 @@ class Market extends Component {
   // thunk API calls to the exchanges
   componentDidMount() {
     this.refresher();
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener("contextmenu",this.setupcontextmenu);
+  }
+
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   refresher() {
