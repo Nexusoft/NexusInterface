@@ -1,6 +1,11 @@
 // overview
 export const GET_INFO_DUMP = "GET_INFO_DUMP";
+export const SET_EXPERIMENTAL_WARNING = "SET_EXPERIMENTAL_WARNING";
 
+export const USD_RATE = "USD_RATE";
+export const BTC_RATE = "BTC_RATE";
+export const CHANGE_24 = "CHANGE_24";
+export const SET_SUPPLY = "SET_SUPPLY";
 // trust
 export const GET_TRUST_LIST = "GET_TRUST_LIST";
 export const TOGGLE_SORT_DIRECTION = "TOGGLE_SORT_DIRECTION";
