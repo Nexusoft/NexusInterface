@@ -1,34 +1,53 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
+import electron from "electron";
+import MenuBuilder from "../../menu";
 
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actiontypes";
+import * as TYPE from "../../actions/actiontypes";
+import * as actionsCreators from "../../actions/headerActionCreators";
+
+import GOOGLE from "../../script/googleanalytics";
 
 const mapStateToProps = state => {
-  return { ...state.common };
+  return { ...state.overview, ...state.common };
 };
 
-const mapDispatchToProps = dispatch => ({
-  GetInfoDump: returnedData =>
-    dispatch({ type: TYPE.GET_INFO_DUMP, payload: returnedData })
-});
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
   componentDidMount() {
-    RPC.PROMISE("getinfo", []).then(payload => {
-      this.props.GetInfoDump(payload);
-    });
+    const menuBuilder = new MenuBuilder(
+      require("electron").remote.getCurrentWindow().id
+    );
+
+    
+    console.log(GOOGLE);
+    //console.log(visitor);
+    this.props.SetGoogleAnalytics(GOOGLE);
+    menuBuilder.buildMenu(this.props.history);
+
+    this.props.GetInfoDump();
 
     var self = this;
     self.set = setInterval(function() {
-      RPC.PROMISE("getinfo", []).then(payload => {
-        self.props.GetInfoDump(payload);
-      });
+      self.props.GetInfoDump();
     }, 1000);
   }
-
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.unlocked_until === undefined) {
+      this.props.Unlock();
+    } else if (nextProps.unlocked_until === 0) {
+      this.props.Lock();
+    } else if (nextProps.unlocked_until >= 0) {
+      this.props.Unlock();
+    }
+  }
   signInStatus() {
     if (this.props.unlocked_until === undefined) {
       return "images/unencryptedicon.png";
@@ -76,26 +95,26 @@ class Header extends Component {
         <div id="settings-menu">
           <div className="icon">
             <img src={this.signInStatus()} />
-            <div className="iconinfo">
+            <div className="tooltip bottom">
               <div>{this.signInStatusMessage()}</div>
             </div>
           </div>
           <div className="icon">
             <img src="images/nxs-staking-icon.png" />
-            <div className="iconinfo">
+            <div className="tooltip bottom">
               <div>Stake Weight: {this.props.stakeweight}%</div>
-              <div>Intrest Rate: {this.props.interestweight}%</div>
+              <div>Interest Rate: {this.props.interestweight}%</div>
               <div>Trust Weight: {this.props.trustweight}%</div>
               <div>Block Weight: {this.props.blockweight}</div>
             </div>
           </div>
           <div className="icon">
             <img src={this.syncStatus()} />
-            <div className="iconinfo" />
+            {/* <div className="tooltip" /> */}
           </div>
         </div>
         <Link to="/">
-          <img src="images/NXS-logo-min.png" alt="Nexus Logo" id="test" />
+          <img id="logo" src="images/NXS-logo-min.png" alt="Nexus Logo" />
         </Link>
 
         <div id="hdr-line" />

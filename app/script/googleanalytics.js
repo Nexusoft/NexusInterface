@@ -1,88 +1,68 @@
-// when packaging it looks like babel isn't running to make this ES6 import work, changing to require for now
-// import Analytics from 'electron-google-analytics';
-const Analytics  = require('electron-google-analytics');
+////////////////////////////////////
+/// Google Analytics
+////////////////////////////////////
+/// Script that holds on to a visitor and is referenced when a visitor makes a action
+var GA = {};
 
-var GANALYTICS = GANALYTICS || {};
-GANALYTICS.settings = GANALYTICS.settings || require("../script/settings.js").GetSettings();
-
-GANALYTICS.IsEnabled = GANALYTICS.IsEnabled || true; // if user deactivates analytics
-
-GANALYTICS.CLIENTID = GANALYTICS.CLIENTID || "test";
-
-console.log(GANALYTICS.settings.googleAnalytics);
-if (GANALYTICS.settings.googleAnalytics === "false")
+let ua = require('universal-analytics');
+GA.visitor = null;
+GA.active = false;
+let settings = require("../script/settings").GetSettings();
+if (settings.googleAnalytics == null || settings.googleAnalytics == undefined || Boolean(settings.googleAnalytics) == true)
 {
-    GANALYTICS.IsEnabled = false;
-}
-
-if (GANALYTICS.IsEnabled == true){ //if not enabled don't even make the event. 
-    /* const Analytics  = require('electron-google-analytics');
-    const analytics = new Analytics.default('UA-117808839-1',[]); // TODO: Using a test UA id for this, should be switch to one the whole team can see
-    */
-   GANALYTICS.analytics = new Analytics.default('UA-117808839-1');
-    GANALYTICS.CLIENTID = makeid();
-} 
-
-console.log(GANALYTICS.IsEnabled);
-
-const accountname = 'NexusWalletTest'; //acount name for google analytics. 
-const versionnumber = '0.0.1'; //app version
-const appaddress = 'com.app.test'; // the ID for the app. can be anything
-const appinstalleraddress = 'com.app.installer'; // not 100% on what this is, I assume apple/android?
-
-module.exports = {
-    GANALYTICS
+    GA.visitor = ua('UA-117808839-1',);
+    GA.active = true;
 }
 
 
-//For an app instead of sending what url they are on, send what screen they are on. 
-GANALYTICS.SendScreen = function (screenname)
+/// Send Screen
+/// Send A Screen Event to Google, this is like a url hit for websites
+/// Input :
+///     ScreenTitle || String || The Screen To Post
+GA.SendScreen = function(ScreenTitle)
 {
-    
-    if (GANALYTICS.IsEnabled == false) return; // if not enabled don't do anything
+    if (GA.active == false)
+        return;
 
-    GANALYTICS.analytics.screen(accountname, versionnumber, appaddress, appinstalleraddress, screenname,"test");
+    GA.visitor.screenview(ScreenTitle, "Nexus Wallet", "0.0.1").send();
+    console.log("Sent Screen: " + ScreenTitle);
 }
 
-/*
-category = category to group these events in
-actionname = name of the action, et "Play"
-actionlable = lable
-actionvalue = value (int)
-*/
+/// Send Event
+/// Send A regular event to google
+/// Input :
+///     category || String || Event Category, grand scheme
+///     action   || String || Event Action, group of events 
+///     label    || String || Event Label, The actual event being fired
+///     value    || NonNegative Int || Event Value, must be NonNegative
 
-GANALYTICS.SendEvent = function(category, actionname,actionlable,actionvalue)
+GA.SendEvent = function(category,action,lable,value) {
+    GA.visitor.event(category,action,lable,value).send();
+}
+
+/// Disable Analytics
+/// Turn off anayltics and destroys the old object
+GA.DisableAnalytics = function()
 {
-    GANALYTICS.analytics.event(category,actionname, { evLabel: actionlable, evValue: actionvalue});
+    if (GA.visitor == null)
+        return;
+    GA.visitor = null;
+    GA.active = false;
+    console.log("Disabled Analytics")
 }
 
-GANALYTICS.SetEnabled = function(boolIsEnabled){
-    if ( boolIsEnabled == "false")
-    {
-        GANALYTICS.IsEnabled = false;
-        GANALYTICS.analytics = null;
-        GANALYTICS.CLIENTID = "";
-
-    }
-    if ( boolIsEnabled == "true")
-    {
-        GANALYTICS.IsEnabled = true;
-        GANALYTICS.analytics = new Analytics.default('UA-117808839-1');
-        GANALYTICS.CLIENTID = makeid();
-    }
-
-    console.log(boolIsEnabled)
-
+/// Enable Analytics
+/// Turn on Analytics and create a new visitor
+GA.EnableAnalytics = function()
+{
+    if (GA.visitor != null)
+        return;
+    GA.visitor = ua('UA-117808839-1',);
+    GA.active = true;
+    console.log("Enabled Analytics")
 }
 
-//https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
-function makeid() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  
-    for (var i = 0; i < 30; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-  
-      console.log(text);
-    return text;
-  }
+module.exports = GA;
+
+/// When this code is started up for the first time try and run a event to get the visitor in the system. 
+GA.SendScreen("Overview");

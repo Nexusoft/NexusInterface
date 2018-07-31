@@ -1,0 +1,66 @@
+/*
+Tabs
+=================================
+*/
+
+:root {
+	--tabs-background-color: #222;
+	--tabs-color: #ccc;
+}
+
+.tabs {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin: 0 0 1em 0;
+    padding: 0;
+    border-bottom: 1px solid #333;
+}
+
+.tabs li {
+    flex-grow: 0;
+    /* flex-shrink: 1; */
+}
+
+.tabs li a {
+    display: block;
+    padding: .25em 2.5em .75em 1.5em;
+    cursor: pointer;
+    font-size: 1.125em;
+    color: #aaa;
+    vertical-align: middle;
+    /* width: 9em; */
+    margin-bottom: -1px;
+}
+
+.tabs li a:hover {
+    color: #fff;
+}
+
+.tabs li a.active {
+    color: #fff;
+    border-bottom: 1px solid #0ca4fb;
+}
+
+.tabs li a.active:hover {
+    color: #0ca4fb;
+}
+
+.tabs li:first-of-type a {
+    padding-left: 0;
+}
+
+.tabs li a img {
+    height: 20px;
+    margin-right: .75em;
+    vertical-align: -4px;
+    filter: grayscale(1) brightness(200%);
+}
+
+.tabs li a.active img {
+    height: 20px;
+    margin-right: .75em;
+    vertical-align: -4px;
+    filter: none;
+}

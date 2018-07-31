@@ -6,6 +6,8 @@
   z-index: 99999;
   flex-direction: column;
   align-items: center;
+  flex-shrink: 0;
+  overflow: initial !important; /* override #App > div style to make modules have scrollbars if larger than viewport */
 }
 
 #hdr-line {
@@ -20,36 +22,26 @@
   );
 }
 
+#logo {
+  margin: 1em 0;
+  display: block;
+}
+
 #settings-menu {
-  position: absolute;
-  top: 5px;
-  right: 5px;
   display: inline-block;
+  position: absolute;
+  top: 2em;
+  right: 3em;
 }
 
 .icon {
   display: inline-block;
+  position: relative;
   padding: 0 5px;
   width: 20px;
   height: 20px;
 }
 
-.icon:hover .iconinfo {
-  visibility: visible;
-  opacity: 1;
-  width: max-content;
-}
-
-.iconinfo {
-  position: absolute;
-  top: 28px;
-  color: var(--color-1);
-  right: 0;
-  background-color: var(--color-3);
-  visibility: hidden;
-}
-
-.iconinfo div {
-  margin-left: 5px;
-  margin-right: 5px;
+.icon .tooltip {
+  width: 120px;
 }

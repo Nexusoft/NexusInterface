@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
+import Modal from 'react-responsive-modal';
+import * as TYPE from "../../actions/actiontypes";
+
 
 // importing images here because of a weird webpack issue
 import Connections0 from "../../images/Connections0.png";
@@ -40,13 +43,28 @@ import nxsblocks from "../../images/nxs-blocks.png";
 
 import NetworkGlobe from "./NetworkGlobe";
 
+import ContextMenuBuilder from "../../contextmenu";
+import { remote } from "electron";
+import Request from "request";
+
 const mapStateToProps = state => {
   return {
-    ...state.common
+    ...state.overview, ...state.common
   };
 };
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  setExperimentalWarning: returndata =>
+  {
+    dispatch({type:TYPE.SET_EXPERIMENTAL_WARNING,payload:returndata})
+  },
+  setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
+  setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
+  set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
+  setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate })
+});
+
+//let experimentalOpen = true;
 
 class Overview extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -61,6 +79,120 @@ class Overview extends Component {
     } else {
       return true;
     }
+  }
+
+  componentDidMount()
+  {
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+   
+    if ( this.props.googleanalytics != null)
+    {
+      this.props.googleanalytics.SendScreen("Overview");
+    }
+    Request(
+      {
+        url: "https://api.coinmarketcap.com/v2/ticker/789/?convert=BTC",
+        json: true
+      },
+      (error, response, body) => {
+        if (response.statusCode === 200) {
+          console.log(response);
+          this.props.setBTC(body.data.quotes.BTC.price);
+          this.props.set24hrChange(body.data.quotes.USD.percent_change_24h);
+          this.props.setSupply(body.data.circulating_supply);
+          this.props.setUSD(body.data.quotes.USD.price);
+        }
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("contextmenu", this.setupcontextmenu);
+  }
+
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
+  }
+
+  calculateUSDvalue() {
+    let USDvalue = this.props.balance * this.props.USD;
+    console.log(this.props.BTC);
+    if (USDvalue === 0) {
+      USDvalue = `${USDvalue}.00`;
+    } else {
+      USDvalue = USDvalue.toFixed(2);
+    }
+    return `$${USDvalue}`;
+  }
+
+  closeLicenseModal()
+  {
+    this.setState({ open: false });
+    var settings = require("../../api/settings.js").GetSettings();
+    settings.acceptedagreement = true;
+    require("../../api/settings.js").SaveSettings(settings);
+    console.log("accepted");
+    
+  }
+
+  returnLicenseModalInternal()
+  {
+    let internalString = [];
+
+      internalString.push("MIT LICENSE GOES HERE");
+      internalString.push (<br key="br1" />);
+      internalString.push(
+        <button key="agreement-button-accept" className="btn btn-action" onClick={ () => this.closeLicenseModal()}>
+            ACCEPT
+        </button>
+      );
+      internalString.push(
+        <button key="agreement-button-reject" className="btn btn-action" onClick={ () => remote.app.quit()}>
+        REJECT
+        </button>
+      );
+   
+    return internalString;
+  }
+
+  returnExperimentalModalInternal()
+  {
+    let internalString = [];
+
+    internalString.push ("CONSIDER THIS SOFTWARE EXPERIMENTAL. PLEASE BACK UP WALLET FREQUENTLY ");
+    internalString.push(<br key="br2" />);
+
+    internalString.push(
+      <button key="experiment-button-accept" className="btn btn-action" onClick={this.closeExperimentalModal}>
+          OK
+      </button>
+    );
+    internalString.push(
+      <button key="experiment-button-noshow" className="btn btn-action" onClick={ ()  => this.dontShowExperimentalAgain() }>
+      Don't show this again
+      </button>
+    );
+
+    return internalString;
+  }
+
+  closeExperimentalModal = () =>
+  {
+    this.props.setExperimentalWarning(false);
+    this.forceUpdate();
+  }
+
+  dontShowExperimentalAgain()
+  {
+    let settings = require("../../api/settings.js").GetSettings();
+    settings["experimentalWarning"] = false;
+    require("../../api/settings.js").SaveSettings(settings);
+    this.props.setExperimentalWarning(false);
+    this.forceUpdate();
   }
 
   connectionsImage() {
@@ -164,78 +296,128 @@ class Overview extends Component {
     }
   }
 
+  returnIfLicenseShouldBeOpen()
+  {
+    let settings = require("../../api/settings.js").GetSettings();
+    return !settings.acceptedagreement;
+  }
+
+  returnIfExperimentalShouldBeOpen()
+  {
+    
+    if (this.returnIfLicenseShouldBeOpen())
+    {
+      return false;
+    }
+    let settings = require("../../api/settings.js").GetSettings();
+    if (this.props.experimentalOpen == true )
+    {
+      if (settings.experimentalWarning == null)
+      {
+        return true;
+      }
+
+      if (settings.experimentalWarning == false)
+      {
+        return false;
+      }
+      else
+      {
+        return true;
+      }
+    }else
+    {
+      return false;
+    }
+  }
+
   render() {
+    const agreementOpen = this.returnIfLicenseShouldBeOpen();
+    const experimentalOpenbool = this.returnIfExperimentalShouldBeOpen();
     return (
       <div id="overviewPage">
-        <div id="left-stats">
-          <div className="grid-container">
-            <div className="h2">Balance</div>
+        <Modal key="agreement-modal" open={agreementOpen} onClose={ () => {return true} } center showCloseIcon={false} classNames={{ modal: 'modal' }}>
+          <h2>License Agreement</h2>
+          {this.returnLicenseModalInternal()}
+        </Modal>
+        <Modal key="experiment-modal" open={experimentalOpenbool} onClose={this.closeExperimentalModal} center classNames={{ modal: 'modal' }}>
+    
+          {this.returnExperimentalModalInternal()}
+        </Modal>
+        <div className="left-stats">
+          <div id="nxs-balance-info">
+            <div className="h2">Balance (NXS)</div>
+            <img src={nxsStake} />
             <div className="overviewValue">{this.props.balance}</div>
-            <div id="coin">NXS</div>
           </div>
-          <div className="grid-container">
-            <div className="balance-info">
-              <div className="h2">Currency Value</div>
-              <div className="overviewValue">$0.00</div>
-              <div id="currency">USD</div>
-            </div>
+
+          <div id="nxs-currency-value-info">
+            <div className="h2">Currency Value (USD)</div>
+            <img src={nxsStake} />
+            <div className="overviewValue">{this.calculateUSDvalue()}</div>
           </div>
-          <div className="grid-container">
-            <div className="balance-info">
-              <div className="h2">Transactions</div>
-              <div className="overviewValue">0</div>
-            </div>
+
+          <div id="nxs-transactions-info">
+            <div className="h2">Transactions</div>
+            <img src={nxsStake} />
+            <div className="overviewValue">{this.props.txtotal}</div>
           </div>
-          <div className="grid-container">
-            <div className="balance-info">
-              <div className="h2">Market Price</div>
-              <div className="overviewValue">0</div>
-            </div>
+
+          <div id="nxs-market-price-info">
+            <div className="h2">Market Price (BTC)</div>
+            <img src={nxsStake} />
+            <div className="overviewValue">{this.props.BTC.toFixed(8)}</div>
           </div>
-          <div className="grid-container">
-            <div className="balance-info">
-              <div className="h2">Market Price</div>
-              <div className="overviewValue">0</div>
-            </div>
+
+          <div id="nxs-market-price-info">
+            <div className="h2">Circulating Supply (NXS)</div>
+            <img src={nxsStake} />
+            <div className="overviewValue">{this.props.circulatingSupply}</div>
+          </div>
+
+          <div id="nxs-market-price-info">
+            <div className="h2">24hr Percent Change (USD)</div>
+            <img src={nxsStake} />
+            <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
         <NetworkGlobe />
         <div className="right-stats">
-          <div className="h2">Connections</div>
           <div id="nxs-connections-info">
+            <div className="h2">Connections</div>
             <img
               id="nxs-getinfo-connections-image"
               src={this.connectionsImage()}
             />
             <div className="overviewValue">{this.props.connections}</div>
           </div>
-          <div className="h2">Block Weight</div>
           <div id="nxs-blockweight-info">
+            <div className="h2">Block Weight</div>
             <img
               src={this.blockWeightImage()}
               id="nxs-getinfo-blockweight-image"
             />
             <div className="overviewValue">{this.props.blockweight}</div>
           </div>
-          <div className="h2">Block Count</div>
           <div id="nxs-blocks-info">
+            <div className="h2">Block Count</div>
             <img src={nxsblocks} />
             <div className="overviewValue">{this.props.blocks}</div>
           </div>
-          <div className="h2">Trust Weight</div>
           <div id="nxs-trustweight-info">
+            <div className="h2">Trust Weight</div>
             <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
             <div className="overviewValue">{this.props.trustweight}</div>
           </div>
-          <div className="h2">Interest Rate</div>
           <div id="nxs-interestweight-info">
+            <div className="h2">Interest Rate</div>
             <img src={interestRate} />
             <div className="overviewValue">
               {this.props.interestweight + "%"}
             </div>
           </div>
-          <div className="h2">Stake Weight</div>
           <div id="nxs-stakeweight-info">
+            <div className="h2">Stake Weight</div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.stakeweight}</div>
           </div>

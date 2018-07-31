@@ -1,0 +1,62 @@
+/*
+Switch
+=================================
+*/
+
+:root {
+	--tooltip-background-color: #282828;
+	--tooltip-color: #ccc;
+}
+
+.tooltip {
+    visibility: hidden;
+    /* width: 120px; */
+    background-color: var(--tooltip-background-color);
+    color: var(--tooltip-color);
+    text-align: left;
+    border-radius: .25em;
+    padding: .5em .75em;
+    position: absolute;
+    /* box-shadow: 0 2px 20px rgba(0,0,0,0.5); */
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
+    z-index: 1;
+}
+
+.tooltip.top {
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 12px;             /* 2px spacing + pointer size from item being hovered */
+    transform: translateX(-50%); 
+}
+
+.tooltip.bottom {
+    top: 100%;
+    left: 50%;
+    margin-top: 12px;                /* 2px spacing + pointer size from item being hovered */
+    transform: translateX(-50%);     
+}
+
+.tooltip::after {
+    content: "";
+    position: absolute;
+    border-width: 10px;
+    border-style: solid;
+}
+
+.tooltip.bottom::after {
+    bottom: 100%;
+    left: 50%;
+    margin-left: -10px;
+    border-color: transparent transparent var(--tooltip-background-color) transparent;
+}
+
+.tooltip.top::after {
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    border-color: var(--tooltip-background-color) transparent transparent transparent;
+}
+
+*:hover > .tooltip {
+    visibility: visible;
+}

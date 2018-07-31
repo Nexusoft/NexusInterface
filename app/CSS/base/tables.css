@@ -8,11 +8,11 @@ Tables
 :root {
 	--table-cell-border-width: 1px;
 	--table-cell-border-style: solid;
-	--table-cell-border-color: #fff;
-	--table-nested-background-color: #fff;
+	--table-cell-border-color: #556070;
+	--table-nested-background-color: #556070;
 	--table-padded-padding-horizontal: 0.5em;
-	--table-padded-padding-vertical: 0.5em;
-	--table-striped-background-color: rgba(255,255,255,0.1);
+	--table-padded-padding-vertical: 0.375em;
+	--table-striped-background-color: rgba(255,255,255,0.05);
 }
 
 /* Element Styles */
@@ -24,6 +24,13 @@ table {
 	margin-bottom: calc(var(--line-height) * 1em);
 	border-collapse: separate;
 	border-spacing: 0;
+	border-radius: 0;
+
+	/* .bordered styles */
+	margin-top: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
+	margin-bottom: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
+	border: 1px solid var(--border-color);
+	border-left: 0;
 }
 
 table th,
@@ -35,12 +42,26 @@ table td {
 	border-top-color: var(--table-cell-border-color);
 	text-align: left;
 	vertical-align: top;
+
+	/* .padded styles */
+	padding-top: calc(var(--line-height) * var(--table-padded-padding-vertical));
+	padding-bottom: calc(var(--line-height) * var(--table-padded-padding-vertical));
+	padding-left: calc(var(--line-height) * var(--table-padded-padding-horizontal));
+	padding-right: calc(var(--line-height) * var(--table-padded-padding-horizontal));
+
+	/* .bordered styles */
+	border-left: 1px solid var(--border-color);
 }
 
 table th {
 	font-weight: bold;
 	vertical-align: bottom;
 	min-width: 10em;
+	background-color: var(--border-color);
+	font-size: .8125em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: normal;
 }
 
 table caption + thead tr:first-child th,
@@ -54,7 +75,7 @@ table thead:first-child tr:first-child td {
 }
 
 table tbody + tbody {
-	border-top-width: calc(var(--table-cell-border-width) * 2);
+	border-top-width: calc(vafffr(--table-cell-border-width) * 2);
 	border-top-style: var(--table-cell-border-style);
 	border-top-color: var(--table-cell-border-color);
 }
@@ -63,28 +84,27 @@ table table {
 	background-color: var(--table-nested-background-color);
 }
 
-table.padded th,
+/* table.padded th,
 table.padded td {
 	padding-top: calc(var(--line-height) * var(--table-padded-padding-vertical));
 	padding-bottom: calc(var(--line-height) * var(--table-padded-padding-vertical));
 	padding-left: calc(var(--line-height) * var(--table-padded-padding-horizontal));
 	padding-right: calc(var(--line-height) * var(--table-padded-padding-horizontal));
-}
+} */
 
-table.bordered {
-	margin-top: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
-	margin-bottom: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
+/* table.bordered {
+	margin-top: calc(var(--line-height) * 1em - 1px);
+	margin-bottom: calc(var(--line-height) * 1em - 1px);
 	border: 1px solid var(--border-color);
 	border-left: 0;
+} */
 
-}
-
-table.bordered th,
+/* table.bordered th,
 table.bordered td {
 	border-left: 1px solid var(--border-color);
-}
+} */
 
-table.striped tbody > tr:nth-child(odd) > td,
+/* table.striped tbody > tr:nth-child(odd) > td,
 table.striped tbody > tr:nth-child(odd) > th {
 	background-color: var(--table-striped-background-color);
-}
+} */

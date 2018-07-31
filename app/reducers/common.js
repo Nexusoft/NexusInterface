@@ -1,13 +1,26 @@
-import * as TYPE from "../actiontypes";
+import * as TYPE from "../actions/actiontypes";
 
-const initialState = {};
+const initialState = {
+  loggedIn: false,
+  googleanalytics:null
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.GET_INFO_DUMP:
+    case TYPE.LOCK:
       return {
         ...state,
-        ...action.payload
+        loggedIn: false
+      };
+    case TYPE.UNLOCK:
+      return {
+        ...state,
+        loggedIn: true
+      };
+    case TYPE.SET_GOOGLEANALYTICS:
+      return {
+        ...state,
+        googleanalytics: action.payload
       };
     default:
       return state;

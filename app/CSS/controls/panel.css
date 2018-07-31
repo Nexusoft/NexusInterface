@@ -1,0 +1,60 @@
+/*
+Panel
+=====================================
+*/
+
+:root {
+	--panel-background-color: rgba(47, 50, 65, 0.7);
+	--panel-shadow: 0 1px 1px rgba(0,0,0,.05);
+	--panel-gradient: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+.panel {
+	/* margin: auto; */
+	box-sizing: border-box;
+	position: relative;
+	/* min-width: 300px; */
+	/* margin: 0 auto; */
+	/* padding: 1.5em 3em; */
+	background-image: var(--panel-gradient), var(--background-main-image);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	border: 1px solid rgba(0,0,0,0.1);
+	box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+	/* text-shadow: 0 1px 3px rgba(0,0,0,0.4); */
+	/* color: white; */
+	overflow: hidden;
+}
+
+/* TODO: this blur layer was causing issues if children weren't position: relative, and didn't scroll correctly */
+
+/* .panel::before {
+	display: block;
+	position: absolute;
+	content: "";
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background: inherit;
+	filter: blur(6px);
+	margin: -5%;
+	z-index: 0;
+} */
+
+.panel .panel {
+	background-color: rgba(47, 50, 65, 0.4);
+	background-image: none;
+	box-shadow: none;
+    border: 1px solid rgba(0,0,0,.1);
+}
+
+.panel .panel::before {
+	filter: initial;
+	margin: 0;
+}

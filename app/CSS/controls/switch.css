@@ -1,0 +1,87 @@
+/*
+Switch
+=================================
+*/
+
+:root {
+	--switch-default-background-color: #666;
+	--switch-checked-background-color: #0ebeff;
+	--switch-slider-color: #fff;
+}
+
+input[type="checkbox"].switch{
+	display: block;
+	font-size: calc(var(--line-height) *1em);
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	        appearance: none;
+	width: 1.75em;
+	height: 1em;
+	margin: 0;
+	background: var(--switch-default-background-color);
+	border-radius: 3em;
+	position: relative;
+	cursor: pointer;
+	outline: none;
+	-webkit-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
+}
+
+input[type="checkbox"].switch:checked{
+	background: var(--switch-checked-background-color);
+}
+
+input[type="checkbox"].switch:after{
+	position: absolute;
+	content: "";
+	width: 1em;
+	height: 1em;
+	border-radius: 50%;
+	background: var(--switch-slider-color);
+	-webkit-box-shadow: 0 1px .25em rgba(0,0,0,.1);
+					box-shadow: 0 1px .25em rgba(0,0,0,.1);
+	-webkit-transform: scale(.7);
+					transform: scale(.7);
+	left: 0;
+	-webkit-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
+}
+
+input[type="checkbox"].switch:checked:after{
+	left: calc(100% - 1em);
+}
+	
+input[type="checkbox"].switch:disabled{
+	opacity: 0.5;
+}
+
+/* Hide the tooltip content by default */
+.switch[data-tooltip]:before {
+visibility: hidden;
+opacity: 0;
+pointer-events: none;
+z-index: 2;
+}
+
+.switch[data-tooltip]:hover:before {
+visibility: visible;
+opacity: 1;
+}
+
+.switch[data-tooltip]:before {
+position: absolute;
+top: 150%;
+left: 50%;
+margin-bottom: 5px;
+margin-left: -80px;
+padding: 7px;
+width: 160px;
+border-radius: 3px;
+background-color: #000;
+background-color: hsla(0, 0%, 20%, 0.9);
+color: #fff;
+content: attr(data-tooltip);
+text-align: center;
+font-size: 14px;
+line-height: 1.2;
+}

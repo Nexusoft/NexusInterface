@@ -1,13 +1,59 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
+import { connect } from "react-redux";
+import * as TYPE from "../../actions/actiontypes";
 
-export default class BlockExplorer extends Component {
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
+const mapStateToProps = state => {
+  return { ...state.common, ...state.transactions };
+};
+
+const mapDispatchToProps = dispatch => ({
+  SetExploreInfo: returnData => {
+    dispatch({ type: TYPE.SET_TRANSACTION_EXPLOREINFO, payload: returnData });
+  }
+});
+
+class BlockExplorer extends Component {
+
+
+  componentDidMount()
+  {
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
+
+  componentWillUnmount()
+  {
+    window.removeEventListener("contextmenu",this.setupcontextmenu);
+  }
+
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
+  }
+
   render() {
+    if (this.props.exploreinfo != undefined && this.props.exploreinfo != null) {
+      console.log(this.props.exploreinfo);
+      this.props.SetExploreInfo(null);
+    }
+
     return (
-      <div>
-        <h1>BlockExplorer</h1>
+      <div id="blockexplorer">
+        <h2>Block Explorer</h2>
+
+        <div className="panel" />
       </div>
     );
   }
 }
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BlockExplorer);
