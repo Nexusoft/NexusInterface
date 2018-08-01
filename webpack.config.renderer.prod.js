@@ -117,15 +117,6 @@ export default merge.smart(baseConfig, {
           }
         }
       },
-      {
-        test: /\.mmdb?$/,
-        use: {
-          loader: "url-loader",
-          options: {
-            outputPath: "geoDB/"
-          }
-        }
-      },
       // EOT Font
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
