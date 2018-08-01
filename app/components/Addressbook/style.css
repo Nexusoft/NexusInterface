@@ -12,6 +12,11 @@
 #addressbook > .panel {
   flex: 1;
   overflow-y: auto;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0; /* remove panel padding, sub controls will add their own */
 }
 
 
@@ -476,4 +481,207 @@ input[type="checkbox"].switch:after {
 
 input[type="checkbox"].switch:checked:after {
   left: calc(100% - 1em);
+}
+
+
+/*****************************************
+Add Contact Modal
+*****************************************/
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+}
+
+/*****************************************
+Export Button
+*****************************************/
+
+a.export {
+	display: block;
+  position: absolute;
+  top: 4em;
+  right: 0;
+  font-family: var(--mono-font-family);
+	font-size: .875em;
+  opacity: .75;
+  color: #fff;
+  cursor: pointer;
+}
+
+a.export:hover {
+  opacity: .95;
+  text-decoration: underline;
+}
+
+/*****************************************
+Address Book Contact List
+*****************************************/
+
+#addressbook-contact-list {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  flex-basis: 25%;
+  height: 100%;
+  min-width: max-content;
+  max-width: 15em;
+  /* padding: 1em; */
+  overflow-y: auto;
+
+  border-right: 1px solid rgba(255,255,255,0.2);
+}
+
+#addressbook-contact-list svg {
+  text-anchor: middle;
+  fill: white;
+  font-size: 65px;
+  height: 20px;
+  width: 20px;
+  background-color: #555;
+  border-radius: 50%;
+  margin-right: .1em;
+  vertical-align: sub;
+}
+
+#addressbook-contact-list h4 {
+  margin: .8em .8em 0 .8em;
+  font-size: 1.25em;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding: .25em .5em;
+}
+
+#addressbook-contact-list ul{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+
+  margin: 0;
+  padding: 1em;
+  overflow: hidden;
+}
+
+#addressbook-contact-list ul:hover{
+  overflow: auto;
+}
+
+#addressbook-contact-list li {
+  box-sizing: border-box;
+  width: 100%;
+  padding: .25em .75em;
+  cursor: pointer;
+}
+
+#addressbook-contact-list li:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+#addressbook-contact-list li:first-child {
+  margin-top: .5em;
+  margin-bottom: 2em;
+  position: relative;
+}
+
+#addressbook-contact-list li:first-child:after {
+  content: '';
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  width: 100%;
+  display: block;
+  position: absolute;
+  bottom: -1em;
+  left: 0;
+}
+
+#addressbook-contact-list button {
+  display: block;
+  justify-self: flex-end;
+  margin: 1em;
+}
+
+/*****************************************
+Address Book Contact Details
+*****************************************/
+
+#addressbook-contact-detail {
+  box-sizing: border-box;
+  flex: 1;
+  height: 100%;
+  padding: 1em 2em;
+}
+
+#addressbook-contact-detail h4 {
+  margin: 0;
+  font-size: 1.25em;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding: .25em .5em;
+}
+
+#addressbook-contact-detail > div {
+  padding: .75em.5em;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+#addressbook-contact-detail header {
+  font-size: .8125em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: .5;
+}
+
+#addressbook-contact-detail #my-addresses,
+#addressbook-contact-detail #their-addresses {
+  margin: 0;
+  padding: 0;
+}
+
+#addressbook-contact-detail #my-addresses li,
+#addressbook-contact-detail #their-addresses li {
+  display: flex;
+  padding: .125em 0;
+  font-family: var(--mono-font-family);
+  font-size: .875em;
+  cursor: pointer;
+}
+
+#addressbook-contact-detail #my-addresses li span,
+#addressbook-contact-detail #their-addresses li span{
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#addressbook-contact-detail #my-addresses li img,
+#addressbook-contact-detail #their-addresses li img {
+  visibility: hidden;
+  height: 16px;
+  width: 16px;
+  padding-left: 1em;
+}
+
+#addressbook-contact-detail #my-addresses li img:hover,
+#addressbook-contact-detail #their-addresses li img:hover {
+  filter: brightness(75%);
+}
+
+#addressbook-contact-detail #my-addresses li:hover img,
+#addressbook-contact-detail #their-addresses li:hover img {
+  visibility: initial;
+}
+
+#addressbook-contact-detail #my-addresses li.copied,
+#addressbook-contact-detail #their-addresses li.copied {
+  animation-name: copied;
+  animation-duration: 4s;
+}
+
+@keyframes copied {
+  from {color: var(--color-2);}
+  to {color: var(--body-font-color);}
 }
