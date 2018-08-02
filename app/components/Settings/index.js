@@ -29,6 +29,7 @@ class Settings extends Component {
   
     componentDidMount()
     {
+      this.props.googleanalytics.SendScreen("Settings");
       window.addEventListener("contextmenu", this.setupcontextmenu, false);
     }
   
@@ -87,11 +88,15 @@ class Settings extends Component {
               <Route
                 exact
                 path={`${this.props.match.path}/`}
-                component={SettingsApp}
+                render={props =>
+                    <SettingsApp {...this.props}/>
+                }
               />
               <Route
                 path={`${this.props.match.path}/App`}
-                component={SettingsApp}
+                render={props =>
+                  <SettingsApp {...this.props}/>
+              }
               />
               <Route
                 path={`${this.props.match.path}/Core`}
