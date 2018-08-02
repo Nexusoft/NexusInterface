@@ -14,6 +14,8 @@ import * as actionsCreators from "../../actions/headerActionCreators";
 import GOOGLE from "../../script/googleanalytics";
 
 const mapStateToProps = state => {
+  // console.log(state.overview);
+
   return { ...state.overview, ...state.common };
 };
 
@@ -38,6 +40,7 @@ class Header extends Component {
     self.set = setInterval(function() {
       self.props.GetInfoDump();
     }, 1000);
+    this.props.history.push("/");
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
