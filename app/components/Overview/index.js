@@ -48,7 +48,8 @@ import Request from "request";
 
 const mapStateToProps = state => {
   return {
-    ...state.overview, ...state.common
+    ...state.overview,
+    ...state.common
   };
 };
 
@@ -67,9 +68,8 @@ const mapDispatchToProps = dispatch => ({
 class Overview extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
-   
-    if ( this.props.googleanalytics != null)
-    {
+
+    if (this.props.googleanalytics != null) {
       this.props.googleanalytics.SendScreen("Overview");
     }
     Request(
@@ -381,7 +381,7 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
-        {/* <NetworkGlobe /> */}
+        <NetworkGlobe />
         <div className="right-stats">
           <div id="nxs-connections-info">
             <div className="h2">Connections</div>

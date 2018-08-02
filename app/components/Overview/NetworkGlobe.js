@@ -8,7 +8,7 @@ export default class NetworkGlobe extends Component {
   componentDidMount() {
     const globeseries = [["peers", []]];
     const geoiplookup = maxmind.openSync(
-      __dirname + "GeoLite2-City_20180403/GeoLite2-City.mmdb"
+      "app/GeoLite2-City_20180403/GeoLite2-City.mmdb"
     );
     RPC.PROMISE("getpeerinfo", []).then(payload => {
       var tmp = {};

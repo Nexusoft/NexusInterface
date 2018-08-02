@@ -39,6 +39,10 @@
       "main.prod.js.map",
       "package.json"
     ],
+    "extraResources": [
+      "GeoLite2-City_20180403/**/*",
+      "cores/**/*"
+    ],
     "dmg": {
       "contents": [
         {
