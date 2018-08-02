@@ -25,3 +25,9 @@ export const Unlock = () => {
     dispatch({ type: TYPE.UNLOCK });
   };
 };
+
+export const SetGoogleAnalytics = (returnData) => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload:returnData });
+  };
+};

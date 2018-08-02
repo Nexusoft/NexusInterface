@@ -95,7 +95,7 @@ class Transactions extends Component {
 
     this.getTransactionData();
     this.updateChartAndTableDimensions();
-
+    this.props.googleanalytics.SendScreen("Transactions");
     window.addEventListener('resize', this.updateChartAndTableDimensions.bind(this));
 
     if (this.state.exectuedHistoryData == false)

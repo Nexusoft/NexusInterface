@@ -25,6 +25,7 @@ class List extends Component {
     RPC.PROMISE("getnetworktrustkeys", []).then(payload => {
       this.props.GetListDump(payload.keys);
     });
+    this.props.googleanalytics.SendScreen("TrustList");
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
 
