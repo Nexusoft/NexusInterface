@@ -30,6 +30,10 @@
   z-index: 1;
 }
 
+/* RESPONSIVE MENU */
+
+/* END RESPONSIVE */
+
 #navigation {
   display: flex;
   justify-content: space-between;
@@ -55,7 +59,7 @@
   content: '';
   height: 2px;
   width: 65%;
-  background-color: #0ca4fb;
+  background-color: var(--color-5);
   position: absolute;
   bottom: 1px;
   left: 50%;

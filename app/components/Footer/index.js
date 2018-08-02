@@ -6,7 +6,7 @@ export default class Footer extends Component {
   render() {
     return (
       <div id="Footer">
-        <div id="ftr-line" />
+        <div id="ftr-line"></div>
         <div id="navigation">
           <NavLink exact to="/">
             <img src="images/logo.svg" alt="Overview" />

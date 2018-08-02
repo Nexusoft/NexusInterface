@@ -62,9 +62,19 @@
     text-align: center;
     left: calc(50% - 97px);
     top: calc(50% + 190px);
+    /*-webkit-animation: blue-pulse 1s infinite alternate;
+    animation: blue-pulse 1s infinite alternate;*/
   }
   @keyframes orbit {
     100% {
       transform: rotate(360deg);
       }
+  }
+  @keyframes blue-pulse {
+    0% {
+      box-shadow: 0px 0px 10px var(--color-2);
+    }
+    100% {
+      box-shadow: 0px 0px 20px var(--color-2);
+    }
   }
