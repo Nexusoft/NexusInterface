@@ -14,8 +14,8 @@ import { app, BrowserWindow, remote, Tray, Menu, ipcMain } from "electron";
 import MenuBuilder from "./menu";
 import electron from "electron";
 
-import {autoUpdater} from "electron-updater";
-import log from "electron-log"
+import { autoUpdater } from "electron-updater";
+import log from "electron-log";
 import settings from "./script/settings";
 
 // import menu from "../app/menu/mainmenu"
@@ -28,7 +28,7 @@ let tray = null;
 //
 
 autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
+autoUpdater.logger.transports.file.level = "info";
 
 if (process.env.NODE_ENV === "production") {
   const sourceMapSupport = require("source-map-support");
@@ -102,32 +102,24 @@ app.on("ready", async () => {
   });
 
   // Event when the window is minimized
-  mainWindow.on('minimize',function(event){
-
+  mainWindow.on("minimize", function(event) {
     //let settings = require("./api/settings").GetSettings();
 
     //if (settings.minimizeToTray === "true") {
-      event.preventDefault();
-      mainWindow.hide();
-   // }
-
+    event.preventDefault();
+    mainWindow.hide();
+    // }
   });
 
   // Event when the window is requested to be closed
-  mainWindow.on('close', function (event) {
-
+  mainWindow.on("close", function(event) {
     //let settings = require("./api/settings").GetSettings();
 
-    if(!app.isQuiting && settings.minimizeOnClose === "true") {
-
-        event.preventDefault();
-        mainWindow.hide();
-        
+    if (!app.isQuiting && settings.minimizeOnClose === "true") {
+      event.preventDefault();
+      mainWindow.hide();
     }
-
   });
-
-
 });
 
 //
@@ -135,25 +127,25 @@ app.on("ready", async () => {
 //
 
 function setupTray() {
-
-  tray = new Tray(__dirname + "/images/nexus-logo.png")
+  tray = new Tray(__dirname + "/images/nexus-logo.png");
 
   var contextMenu = Menu.buildFromTemplate([
-      {
-          label: 'Open Nexus', click: function () {
-            mainWindow.show();
-          }
-      },
-      {
-          label: 'Quit Nexus', click: function () {
-              app.isQuiting = true;
-              mainWindow.close();
-          }
+    {
+      label: "Open Nexus",
+      click: function() {
+        mainWindow.show();
       }
-  ])
+    },
+    {
+      label: "Quit Nexus",
+      click: function() {
+        app.isQuiting = true;
+        mainWindow.close();
+      }
+    }
+  ]);
 
   tray.setContextMenu(contextMenu);
-
 }
 
 //
@@ -161,50 +153,48 @@ function setupTray() {
 //
 
 function updateApplication() {
-
   //
   // TODO: IMPORTANT: Prior to going live, remove this code and revoke the github token. Feed URL logic only applies with a private github repository
   //
 
   const data = {
-    'provider': 'github',
-    'owner':    'Nexusoft',
-    'repo':     'NexusInterface',
-    'token':    "606ac051f55833592161e2e87334fe57c218ae9c"
+    provider: "github",
+    owner: "Nexusoft",
+    repo: "NexusInterface",
+    token: "606ac051f55833592161e2e87334fe57c218ae9c"
   };
 
   autoUpdater.setFeedURL(data);
   autoUpdater.autoDownload = false;
   autoUpdater.checkForUpdates();
-
 }
 
 //
 // Auto Updater Events
 //
 
-autoUpdater.on('checking-for-update', () => {
-  mainWindow.webContents.send('update-checking');
+autoUpdater.on("checking-for-update", () => {
+  mainWindow.webContents.send("update-checking");
 });
 
-autoUpdater.on('update-available', (info) => {
-  mainWindow.webContents.send('update-available');
+autoUpdater.on("update-available", info => {
+  mainWindow.webContents.send("update-available");
 });
 
-autoUpdater.on('update-not-available', (info) => {
-  mainWindow.webContents.send('update-not-available');
+autoUpdater.on("update-not-available", info => {
+  mainWindow.webContents.send("update-not-available");
 });
 
-autoUpdater.on('download-progress', (progress) => {
-  mainWindow.webContents.send('update-download-progress', progress);
+autoUpdater.on("download-progress", progress => {
+  mainWindow.webContents.send("update-download-progress", progress);
 });
 
-autoUpdater.on('update-downloaded', (info) => {
-  mainWindow.webContents.send('update-downloaded');
+autoUpdater.on("update-downloaded", info => {
+  mainWindow.webContents.send("update-downloaded");
 });
 
-autoUpdater.on('error', (err) => {
-  mainWindow.webContents.send('update-error', err);
+autoUpdater.on("error", err => {
+  mainWindow.webContents.send("update-error", err);
 });
 
 //
@@ -216,10 +206,9 @@ ipcMain.on("update-application", (event, arg) => {
 });
 
 ipcMain.on("update-download", (event, arg) => {
-  autoUpdater.downloadUpdate(); 
+  autoUpdater.downloadUpdate();
 });
 
 ipcMain.on("update-quit-and-install", (event, arg) => {
   autoUpdater.quitAndInstall();
 });
-
