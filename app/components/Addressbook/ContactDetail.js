@@ -40,6 +40,17 @@ class ContactDetail extends Component {
 
   }
 
+  getinitial() 
+  {
+      let name = this.getname();
+
+      if (name !== "")
+        return name.charAt(0);
+
+    return "";
+
+  }
+
   getname() 
   {
 
@@ -53,6 +64,8 @@ class ContactDetail extends Component {
       return name;
     }
 
+    return "";
+
   }
 
   getlocaltime() 
@@ -62,7 +75,19 @@ class ContactDetail extends Component {
     {
       let name = Object.keys(this.props.data)[this.props.selectedIndex];
 
-      return this.time(this.props.data[name].timeZone);
+      if (!this.props.data[name].timeZone)
+        return;
+
+      console.log("local time is :" + this.props.data[name].timeZone);
+
+      return (
+
+        <div>
+          <header>Local Time</header>
+          {this.time(this.props.data[name].timeZone)}
+        </div>
+
+      )
     }
 
   }
@@ -74,7 +99,17 @@ class ContactDetail extends Component {
     {
       let name = Object.keys(this.props.data)[this.props.selectedIndex];
 
-      return this.props.data[name].phoneNum;
+      if (!this.props.data[name].phoneNum)
+        return;
+
+      return (
+
+        <div>
+          <header>Phone</header>
+          {this.props.data[name].phoneNum}
+        </div>
+
+      )
     }
 
   }
@@ -86,7 +121,17 @@ class ContactDetail extends Component {
     {
       let name = Object.keys(this.props.data)[this.props.selectedIndex];
 
-      return this.props.data[name].notes;
+      if (!this.props.data[name].notes)
+        return;
+
+      return (
+
+        <div>
+          <header>Notes</header>
+          {this.props.data[name].notes}
+        </div>
+
+      )
     }
 
   }
@@ -176,7 +221,6 @@ class ContactDetail extends Component {
   addreceiveaddress() 
   {
 
-    console.log("conditionally rendering receive address button");
     if(this.props.data)
     {
       let name = Object.keys(this.props.data)[this.props.selectedIndex];
@@ -193,6 +237,43 @@ class ContactDetail extends Component {
         
     }
 
+  }
+
+  addupdatebutton() 
+  {
+
+    if(this.props.data)
+    {
+      let name = Object.keys(this.props.data)[this.props.selectedIndex];
+
+      if (name !== ""){
+
+        return (
+
+          <button className="button" onClick={this.updatecontact.bind(this)}>UpdateContact</button>
+
+        );
+
+      }
+        
+    }
+
+  }
+
+  updatecontact()
+  {
+
+    let name = Object.keys(this.props.data)[this.props.selectedIndex];
+
+    this.props.data[name].notes = "These are updated again";
+
+    this.props.onUpdate();
+
+  }
+
+  editcontact()
+  {
+    console.log("Editing contact");
   }
 
     /// TIME
@@ -222,34 +303,34 @@ class ContactDetail extends Component {
       m = `0${m}`;
     }
 
-    return `Local Time: ${h}:${m} ${i}`;
+    return `${h}:${m} ${i}`;
 
   };
 
   render() {
 
-    console.log(this.ismyaddresses());
-
     return (
 
       <div id="addressbook-contact-detail">
 
-          <h4>{this.getname()}</h4>
+          <a id="edit-contact" onClick={this.editcontact}>
 
-          <div>
-            <header>Local Time</header>
-            {this.getlocaltime()}
-          </div>
+            <img src="images/icon-developer.png" alt="Edit Contact" />
 
-          <div>
-            <header>Phone</header>
-            {this.getphone()}
-          </div>
+          </a>
 
-          <div>
-            <header>Notes</header>
-            {this.getnotes()}
-          </div>
+          <h4>
+            <svg viewBox="0 0 100 100">
+              <text x='50' y='50' dy='.35em'>
+                {this.getinitial()}
+              </text>
+            </svg>
+            {this.getname()}
+          </h4>
+
+          {this.getlocaltime()}
+
+          {this.getphone()}
 
           {this.ismyaddresses() &&
             <div>
@@ -262,14 +343,18 @@ class ContactDetail extends Component {
 
           {!this.ismyaddresses() &&
             <div>
-              <header>Their Addresses</header>
+              <header>Addresses</header>
               <ul id="their-addresses">
                 {this.gettheiraddresses()}
               </ul>
             </div>
           }
           
+          {this.getnotes()}
+
           {this.addreceiveaddress()}
+
+          {this.addupdatebutton()}
 
       </div>
       

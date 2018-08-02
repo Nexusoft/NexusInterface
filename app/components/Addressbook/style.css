@@ -530,9 +530,10 @@ Address Book Contact List
   min-width: max-content;
   max-width: 15em;
   /* padding: 1em; */
-  overflow-y: auto;
+  overflow: hidden;
 
-  border-right: 1px solid rgba(255,255,255,0.2);
+  /* border-right: 1px solid rgba(255,255,255,0.2); */
+  background-color: rgba(255,255,255,.1);
 }
 
 #addressbook-contact-list svg {
@@ -545,14 +546,6 @@ Address Book Contact List
   border-radius: 50%;
   margin-right: .1em;
   vertical-align: sub;
-}
-
-#addressbook-contact-list h4 {
-  margin: .8em .8em 0 .8em;
-  font-size: 1.25em;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding: .25em .5em;
 }
 
 #addressbook-contact-list ul{
@@ -589,7 +582,7 @@ Address Book Contact List
 
 #addressbook-contact-list li:first-child:after {
   content: '';
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   width: 100%;
   display: block;
   position: absolute;
@@ -614,17 +607,48 @@ Address Book Contact Details
   padding: 1em 2em;
 }
 
+#addressbook-contact-detail #edit-contact {
+  display: block;
+  position: absolute;
+  top: 1.5em;
+  right: 1.5em;
+  cursor: pointer;
+}
+
+#addressbook-contact-detail #edit-contact img {
+  height: 1.125em;
+  width: 1.125em;
+  opacity: .5;
+  filter: grayscale(1) brightness(200%);
+}
+
+#addressbook-contact-detail #edit-contact:hover img {
+  opacity: 1;
+}
+
 #addressbook-contact-detail h4 {
   margin: 0;
   font-size: 1.25em;
   font-weight: 600;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding: .25em .5em;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: .25em .5em 1em .5em;
+}
+
+#addressbook-contact-detail svg {
+  text-anchor: middle;
+  fill: white;
+  font-size: 48px;
+  height: 42px;
+  width: 42px;
+  background-color: #555;
+  border-radius: 50%;
+  margin-right: .25em;
+  vertical-align: -13px;
 }
 
 #addressbook-contact-detail > div {
   padding: .75em.5em;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 #addressbook-contact-detail header {

@@ -51,7 +51,7 @@ class Addressbook extends Component {
         to: ""
       },
       calledfrom: false,
-      // psudoState: null,
+      psudoState: null,
       generateFlag: false,
 
       selectedContactIndex: 0,
@@ -227,13 +227,12 @@ class Addressbook extends Component {
 
       payload.map(this.processvalidatedaddress);
 
-      this.saveaddressbookstate();
+      this.saveaddressbookstate(psudoState);
 
   }
 
   processvalidatedaddress = (e, i) => {
 
-      console.log(e.account);
       if (e.ismine)
       {
         if (typeof psudoState[e.account] !== "object")
@@ -243,9 +242,9 @@ class Addressbook extends Component {
             // numAddreses: 0,
             mine: {},
             notMine: {},
-            phoneNum: "No Phone Number Set",
-            timeZone: "No Time Zone Set",
-            notes: "No Notes"
+            phoneNum: null,
+            timeZone: null,
+            notes: null
           };
 
         }
@@ -275,9 +274,9 @@ class Addressbook extends Component {
           psudoState[e.account] = {
             mine: {},
             notMine: {},
-            phoneNum: "No Phone Number Set",
-            timeZone: "No Time Zone Set",
-            notes: "No Notes"
+            phoneNum: null,
+            timeZone: null,
+            notes: null
           };
 
         }
@@ -299,10 +298,16 @@ class Addressbook extends Component {
       }
   }
 
-  saveaddressbookstate() {
+  saveaddressbookstate(state) {
 
     console.log("saving addressbook.json");
-    config.WriteJson("addressbook.json", psudoState);
+    config.WriteJson("addressbook.json", state);
+
+    this.setState(
+      {
+        psudoState: state
+      }
+    );
 
   }
 
@@ -598,6 +603,15 @@ class Addressbook extends Component {
 
   }
 
+  updatecontact = () => {
+
+    // state was already updated, clone to a new object then save to trigger refresh
+    const newState = {...this.state.psudoState};
+
+    this.saveaddressbookstate(newState);
+
+  }
+
   updateaccountstate(name, phone, timezone, notes)
   {
     psudoState[name] = {
@@ -652,11 +666,22 @@ class Addressbook extends Component {
 
         <div className="panel">
 
-          <ContactList data={psudoState} onClick={this.contactSelected} onAdd={this.openaddcontactmodal}/>
+          <ContactList 
+            data={this.state.psudoState}
+            onClick={this.contactSelected} 
+            onAdd={this.openaddcontactmodal}/>
 
-          <ContactDetail data={psudoState} selectedIndex={this.state.selectedContactIndex} onAddReceiveAddress={this.addreceiveaddress}/>
+          <ContactDetail 
+            data={this.state.psudoState}
+            selectedIndex={this.state.selectedContactIndex} 
+            onAddReceiveAddress={this.addreceiveaddress} 
+            onUpdate={this.updatecontact}/>
 
-          <Modal open={this.state.addcontactmodalopen} onClose={this.closeaddcontactmodal} center classNames={{ modal: 'modal' }}>
+          <Modal 
+            open={this.state.addcontactmodalopen} 
+            onClose={this.closeaddcontactmodal} 
+            center 
+            classNames={{ modal: 'modal' }}>
 
             <h2 >Add Contact</h2>
 

@@ -34,7 +34,7 @@ class ContactList extends Component {
     if (this.props.data) {
 
       const master = this.props.data;
-      const masterArr = Object.keys(master);
+      const masterArr = Object.keys(master).sort();
 
       if(masterArr[0] === "")
         masterArr[0] = "My Addresses";
@@ -46,12 +46,12 @@ class ContactList extends Component {
 
         return (
         
-        <li key={i} onClick={() => this.click(i)}>
-          <svg viewBox="0 0 100 100">
+        <li key={i} onClick={() => this.click(item)}>
+          {/* <svg viewBox="0 0 100 100">
             <text x='50' y='50' dy='.35em'>
               {item.charAt(0)}
             </text>
-          </svg>
+          </svg> */}
           {item}
         </li>
 
@@ -61,10 +61,13 @@ class ContactList extends Component {
     }
   }
 
-  click = (index) => {
-    // console.log("COntactList: update index: " + index);
+  click = (item) => {
+
+    // get this by item name instead of index since we sorted the names list
+    let index = Object.keys(this.props.data).indexOf(item);
+
     this.props.onClick(index);
-    // this.setState({selectedContactIndex: index});
+
   };
 
   addcontact = () => {
@@ -81,15 +84,13 @@ class ContactList extends Component {
 
         {/* <button className="button primary">My Addresses</button> */}
 
-        <h4>Contacts</h4>
-
         <ul>
 
           {this.buildList()}
 
         </ul>
 
-        <button className="button primary" onClick={this.addcontact}>Add Contact</button>
+        <button className="button" onClick={this.addcontact}>Add Contact</button>
 
       </div>
     );
