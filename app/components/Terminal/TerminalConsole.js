@@ -303,6 +303,15 @@ export default class TerminalConsole extends Component {
     );
   }
 
+  removeAutoCompleteDiv = (e) =>
+  {
+    this.setState(
+      {
+        autoComplete: []
+      }
+    );
+  }
+
 
   render() {
 
@@ -312,7 +321,7 @@ export default class TerminalConsole extends Component {
 
         <div id="terminal-console-input">
 
-          <input id="input-text" autoFocus ref={this.setInputFeild} type="text" value={this.currentInput} placeholder="Enter console commands here (ex: getinfo, help)" onChange={this.onInputfieldChange} onKeyPress={this.handleEnterKeyPress} onKeyDown={this.handleAutocompleteArrowKeyPress}/>
+          <input id="input-text" autoFocus ref={this.setInputFeild} type="text" value={this.currentInput} placeholder="Enter console commands here (ex: getinfo, help)" onChange={this.onInputfieldChange} onKeyPress={this.handleEnterKeyPress} onKeyDown={this.handleAutocompleteArrowKeyPress} onBlur={this.removeAutoCompleteDiv}/>
           <button id="input-submit" className="button primary" value="Execute" onClick={() => this.processInput()}>Execute</button>
         
          <div key="autocomplete" style={{position:'absolute',  top:'100%', zIndex: 99, background: 'black'}}>
