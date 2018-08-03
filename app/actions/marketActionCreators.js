@@ -113,7 +113,8 @@ export const binanceDepthLoader = () => {
                   Price: parseFloat(ele[0])
                 };
               })
-              .sort((a, b) => b.Price - a.Price),
+              .sort((a, b) => b.Price - a.Price)
+              .reverse(),
             buy: body.bids
               .map(ele => {
                 return {
@@ -145,9 +146,11 @@ export const cryptopiaDepthLoader = () => {
             buy: body.Data.Buy.sort((a, b) => b.Price - a.Price).map(e => {
               return { Volume: e.Volume, Price: e.Price };
             }),
-            sell: body.Data.Sell.sort((a, b) => b.Price - a.Price).map(e => {
-              return { Volume: e.Volume, Price: e.Price };
-            })
+            sell: body.Data.Sell.sort((a, b) => b.Price - a.Price)
+              .map(e => {
+                return { Volume: e.Volume, Price: e.Price };
+              })
+              .reverse()
           };
           dispatch({ type: TYPE.CRYPTOPIA_ORDERBOOK, payload: res });
           dispatch(marketDataLoaded());
@@ -171,9 +174,12 @@ export const bittrexDepthLoader = () => {
             buy: body.result.buy.sort((a, b) => b.Rate - a.Rate).map(e => {
               return { Volume: e.Quantity, Price: e.Rate };
             }),
-            sell: body.result.sell.sort((a, b) => b.Rate - a.Rate).map(e => {
-              return { Volume: e.Quantity, Price: e.Rate };
-            })
+            sell: body.result.sell
+              .sort((a, b) => b.Rate - a.Rate)
+              .map(e => {
+                return { Volume: e.Quantity, Price: e.Rate };
+              })
+              .reverse()
           };
           dispatch({ type: TYPE.BITTREX_ORDERBOOK, payload: res });
           dispatch(marketDataLoaded());
