@@ -1,15 +1,146 @@
-#send-receive {
-	position: relative;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
+/* #send-receive {
+  position: relative;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
+  margin: auto;
+}
+#send-receive-right {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding-left: 60%;
+  margin-top: -31.5%;
+  overflow: auto;
+  max-width: auto;
+  max-height: auto;
+  border: 1px solid rgb(12, 145, 185);
 }
 
 #send-receive > h2 {
-	flex: 0;
+  flex: 1;
+  position: relative;
 }
 
 #send-receive > .panel {
-	flex: 1;
-	overflow-y: auto;
+  flex: 1;
+  flex-direction: row;
+  overflow-y: auto;
+  position: relative;
+}
+.right {
+  display: flex;
+  position: relative;
+}
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+#btn-group button {
+  background-color: rgb(12, 145, 185);
+  border: 1px solid rgb(12, 145, 185);
+  color: white;
+  position: relative;
+  float: right;
+  width: auto;
+  height: 35%;
+  margin: auto;
+  margin-top: auto;
+  overflow-x: auto;
+}
+.divider {
+  width: auto;
+  height: auto;
+  float: right;
+
+  position: relative;
+}
+
+.h {
+  width: 160%;
+  float: right;
+  margin: auto;
+  position: relative;
+} */
+#container {
+  height: auto;
+  width: auto;
+
+  display: flex;
+
+  flex-direction: row;
+  justify-content: space-around;
+  flex-flow: wrap;
+  flex-wrap: wrap;
+  flex-basis: 0;
+}
+.box {
+  width: 20%;
+  height: 300px;
+  justify-content: center;
+  margin: 20px;
+  border: 3px solid rgb(12, 145, 185);
+  border-radius: 10px;
+
+  margin-bottom: 15px;
+  margin-top: 35px;
+  margin-left: 20;
+  padding: 8px;
+  padding-left: 25px;
+
+  padding-bottom: 130px;
+  width: 300px;
+}
+.box2 {
+  width: 20%;
+  height: 300px;
+  justify-content: center;
+  margin: 20px;
+  border: 3px solid rgb(12, 145, 185);
+  border-radius: 10px;
+  margin-top: 30px;
+  margin-bottom: 100px;
+  margin-left: 5%;
+  padding: 5px;
+  padding-left: 15px;
+  padding-bottom: 150px;
+  width: 300px;
+  padding-right: 175px;
+}
+#btn-group button {
+  background-color: rgb(12, 145, 185);
+  border: 1px solid rgb(12, 145, 185);
+  color: white;
+  position: relative;
+  margin-top: 500px;
+  float: right;
+  width: auto;
+  height: 35%;
+  margin: auto;
+  margin-top: auto;
+  overflow-x: auto;
+  padding: 24px 12px;
+  border-radius: 0;
+}
+#right-buttons {
+  margin-top: 140%;
+  margin-right: -120%;
+  margin-left: 20%;
+}
+#left-buttons {
+  margin-top: 20%;
+  margin-left: 10%;
+}
+.h {
+  text-align: center;
+  color: var(--color-2);
+}
+.panel {
+  flex: 1;
+  flex-direction: row;
+  overflow-y: auto;
+  position: relative;
 }

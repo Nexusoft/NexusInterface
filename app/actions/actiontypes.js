@@ -36,3 +36,9 @@ export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
 // common
 export const LOCK = "LOCK";
 export const UNLOCK = "UNLOCK";
+export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
+export const REMOVE_FROM_QUEUE = "REMOVE_FROM_QUEUE";
+export const UPDATE_ADDRESS = "UPDATE_ADDRESS";
+export const UPDATE_AMOUNT = "UPDATE_AMOUNT";
+export const UPDATE_MESSAGE = "UPDATE_MESSAGE";
+export const UPDATE_ACCOUNT_NAME = "UPDATE_ACCOUNT_NAME";
