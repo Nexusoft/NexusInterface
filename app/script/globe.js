@@ -12,7 +12,7 @@
  */
 
 import * as THREE from "three";
-import world from "../images/world.jpg";
+import world from "../images/world.svg";
 var DAT = DAT || {};
 
 export default (DAT.Globe = function(container, opts) {

@@ -48,7 +48,7 @@
     rgba(17, 17, 17, 0)
   );
   /* --background-main-image:  url("https://images7.alphacoders.com/428/428134.jpg"); <-- Full Screen Background Image for Nexus Earth Theme */
-  --background-main-image: url("../images/background/hero.jpg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
+  --background-main-image: url("../images/background/hero.svg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
 
   /* FONTS */
   --font-1: "Myriad Pro"; /* <-- Sourced Above in First @font-face*/
