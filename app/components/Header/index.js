@@ -28,7 +28,6 @@ class Header extends Component {
       require("electron").remote.getCurrentWindow().id
     );
 
-    
     console.log(GOOGLE);
     //console.log(visitor);
     this.props.SetGoogleAnalytics(GOOGLE);
@@ -45,10 +44,13 @@ class Header extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
       this.props.Unlock();
+      this.props.Unencrypted();
     } else if (nextProps.unlocked_until === 0) {
       this.props.Lock();
+      this.props.Encrypted();
     } else if (nextProps.unlocked_until >= 0) {
       this.props.Unlock();
+      this.props.Encrypted();
     }
   }
   signInStatus() {
