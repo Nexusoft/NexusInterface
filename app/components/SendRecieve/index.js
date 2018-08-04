@@ -154,7 +154,7 @@ class SendRecieve extends Component {
         <tr key={i}>
           <td>{e.key}</td>
           <td>{e.val}</td>
-          <button onClick={() => this.props.removeQueue(e.key)}>Hoe </button>
+          <button onClick={() => this.props.removeQueue(e.key)} />
         </tr>
       );
     });
@@ -241,7 +241,14 @@ class SendRecieve extends Component {
               <tbody>{this.fillQueue()}</tbody>
             </table>
             <div id="right-buttons">
-              <input type="reset" value="Send All" className="button" />
+              <input
+                type="reset"
+                value="Send All"
+                className="button"
+                onClick={() => {
+                  this.sendMany();
+                }}
+              />
               <input
                 type="button"
                 value="Clear Queue"
