@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
+import * as RPC from "../../script/rpc";
 
 import * as TYPE from "../../actions/actiontypes";
 
@@ -19,6 +20,12 @@ const mapDispatchToProps = dispatch => ({
   updateAddress: returnAddress => {
     dispatch({ type: TYPE.UPDATE_ADDRESS, payload: returnAddress });
   },
+  clearQueue: () => {
+    dispatch({ type: TYPE.CLEAR_QUEUE });
+  },
+  clearForm: () => {
+    dispatch({ type: TYPE.CLEAR_FORM });
+  },
   addToQueue: returnQueue => {
     dispatch({ type: TYPE.ADD_TO_QUEUE, payload: returnQueue });
   },
@@ -33,7 +40,8 @@ const mapDispatchToProps = dispatch => ({
   },
   removeQueue: returnQueue => {
     dispatch({ type: TYPE.REMOVE_FROM_QUEUE, payload: returnQueue });
-  }
+  },
+  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
 });
 
 class SendRecieve extends Component {
@@ -52,12 +60,104 @@ class SendRecieve extends Component {
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
-  fillQueue() {
-    let queueArray = [];
-    if ((this.props.Address, this.props.Amount)) {
-      queueArray.push(Object.keys(this.props.queueArray));
+  sendOne() {
+    this.props.busy();
+    if (!(this.props.Address === "") && this.props.Amount > 0) {
+      RPC.PROMISE("validateaddress", [this.props.Address])
+        .then(payload => {
+          if (payload.isvalid) {
+            if (!payload.ismine) {
+              if (this.props.Message) {
+                RPC.PROMISE(
+                  "sendtoaddress",
+                  this.props.address,
+                  this.props.amount,
+                  [Message]
+                );
+                this.props.clearForm();
+                this.props.busy();
+              } else {
+                RPC.PROMISE(
+                  "sendtoaddress",
+                  this.props.address,
+                  this.props.amount
+                );
+                this.props.clearForm();
+                this.props.busy();
+              }
+            } else {
+              this.props.busy();
+              alert("This is an address regiestered to this wallet");
+            }
+          } else {
+            this.props.busy();
+            alert("Invalid Address");
+          }
+        })
+        .catch(e => {
+          this.props.busy();
+          alert("Invalid Address");
+        });
     }
-    return queueArray;
+  }
+
+  sendMany() {
+    this.props.busy();
+    RPC.PROMISE("sendmany", this.props.Queue).then(this.props.busy());
+  }
+
+  validateAddToQueue() {
+    this.props.busy();
+    if (!(this.props.Address === "") && this.props.Amount > 0) {
+      console.log(this.props.Address);
+      RPC.PROMISE("validateaddress", [this.props.Address])
+        .then(payload => {
+          console.log(payload);
+          if (payload.isvalid) {
+            if (!payload.ismine) {
+              this.props.addToQueue({
+                address: this.props.Address,
+                amount: this.props.Amount
+              });
+              this.props.busy();
+            } else {
+              this.props.busy();
+              alert("This is an address regiestered to this wallet");
+            }
+          } else {
+            this.props.busy();
+            alert("Invalid Address");
+          }
+        })
+        .catch(e => {
+          this.props.busy();
+          alert("Invalid Address");
+        });
+    }
+  }
+
+  fillQueue() {
+    let Keys = Object.keys(this.props.Queue);
+    let values = Object.values(this.props.Queue);
+    let queueArray = Keys.map((e, i) => {
+      let newObj = {
+        key: e,
+        val: values[i]
+      };
+      console.log(newObj);
+      return newObj;
+    });
+
+    console.log(Keys, values, queueArray);
+    return queueArray.map((e, i) => {
+      return (
+        <tr key={i}>
+          <td>{e.key}</td>
+          <td>{e.val}</td>
+          <button onClick={() => this.props.removeQueue(e.key)}>Hoe </button>
+        </tr>
+      );
+    });
   }
 
   render() {
@@ -87,24 +187,17 @@ class SendRecieve extends Component {
                     onChange={e => this.props.updateAddress(e.target.value)}
                     required
                   />
-                  <span className="hint">NXS Account Name</span>
-                  <label>Nexus Account Name</label>
-                  <input
-                    size="27"
-                    type="text"
-                    placeholder="NXS Account Name"
-                    value={this.props.Account}
-                    onChange={e => this.props.updateAccount(e.target.value)}
-                    required
-                  />
+
                   <span className="hint">Amount Of Nexus</span>
                   <label>Nexus Amount</label>
                   <input
                     size="27"
-                    type="text"
+                    type="number"
                     placeholder="Nexus Amount"
                     value={this.props.Amount}
-                    onChange={e => this.props.updateAmount(e.target.value)}
+                    onChange={e => {
+                      this.props.updateAmount(parseFloat(e.target.value));
+                    }}
                     required
                   />
                   <p>
@@ -124,11 +217,15 @@ class SendRecieve extends Component {
                   type="button"
                   value="Add To Queue"
                   className="button primary"
-                  onClick={() =>
-                    console.log(this.props.Address, this.props.Amount)
-                  }
+                  onClick={() => this.validateAddToQueue()}
                 />
-                <input type="reset" value="Send Now" className="button" />
+
+                <input
+                  type="reset"
+                  value="Send Now"
+                  className="button"
+                  onClick={() => this.sendOne()}
+                />
               </div>
             </div>
           </div>
@@ -137,27 +234,21 @@ class SendRecieve extends Component {
             {" "}
             <label>Queue </label>
             <table>
-              <tbody>
-                <tr>
-                  <th> Account</th>
-                  <th> Address</th>
-                  <th>Amount</th>
-                </tr>
-
-                <tr>
-                  <td> {this.props.Account} </td>
-                  <td> {this.props.Address} </td>
-                  <td> {this.props.Amount} </td>
-                </tr>
-              </tbody>
+              <thead>
+                <th> Address</th>
+                <th>Amount</th>
+              </thead>
+              <tbody>{this.fillQueue()}</tbody>
             </table>
             <div id="right-buttons">
-              <input type="button" value="-Remove" className="button primary" />
-              <input type="reset" value="Send Now" className="button" />
+              <input type="reset" value="Send All" className="button" />
               <input
                 type="button"
-                value="Clear All"
+                value="Clear Queue"
                 className="button primary"
+                onClick={() => {
+                  this.props.clearQueue();
+                }}
               />
             </div>{" "}
           </div>

@@ -41,13 +41,32 @@ export default (state = initialState, action) => {
         Account: action.payload
       };
       break;
+    case TYPE.CLEAR_QUEUE:
+      return {
+        ...state,
+        Queue: {}
+      };
+      break;
     case TYPE.ADD_TO_QUEUE:
       return {
         ...state,
         Queue: {
           ...state.Queue,
           [action.payload.address]: action.payload.amount
-        }
+        },
+        Address: "",
+        Amount: 0,
+        Account: "",
+        Message: ""
+      };
+      break;
+    case TYPE.CLEAR_FORM:
+      return {
+        ...state,
+        Address: "",
+        Amount: 0,
+        Account: "",
+        Message: ""
       };
       break;
     default:
