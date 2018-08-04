@@ -18,11 +18,7 @@ const mapDispatchToProps = dispatch => ({
   busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
 });
 
-class Security extends Component {
-  lockWallet() {
-    this.props.busy();
-    RPC.PROMISE("walletlock", []).then(payload => this.props.wipe());
-  }
+class Unencrypted extends Component {
   showPrivKey() {
     let addressInput = document.getElementById("privKeyAddress");
     let address = addressInput.value;
@@ -62,24 +58,21 @@ class Security extends Component {
     output.type = "password";
   }
 
-  changePassword() {
+  encrypt() {
     let pass, newPass, passChk, passHint;
-    pass = document.getElementById("oldPass");
     newPass = document.getElementById("newPass");
     passChk = document.getElementById("passChk");
     passHint = document.getElementById("passHint");
     if (pass.value.trim()) {
       if (newPass.value === passChk.value) {
         if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
-          RPC.PROMISE("walletpassphrasechange", [
-            pass.value,
-            newPass.value
-          ]).then(payload => {
+          RPC.PROMISE("encryptwallet", [newPass.value]).then(payload => {
             if (payload === null) {
               pass.value = "";
               newPass.value = "";
               passChk.value = "";
-              alert("Password has been changed.");
+              alert("Wallet has been encrypted.");
+              this.props.history.push();
             }
           });
         } else {
@@ -96,33 +89,20 @@ class Security extends Component {
       pass.focus();
     }
   }
+
   componentWillUnmount() {
     this.props.wipe();
   }
   render() {
-    if (!this.props.loggedIn) {
-      return (
-        <Redirect to={this.props.match.path.replace("/Content", "/Security")} />
-      );
-    }
     return (
       <div id="securitylogin">
         <div className="securitySubContainer">
           <form>
             <fieldset>
-              <legend>Change Password</legend>
+              <legend>Encrypt Wallet</legend>
+
               <div className="field">
-                <label>Previous Password:</label>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  id="oldPass"
-                  required
-                />
-                <span className="hint">Password is required</span>
-              </div>
-              <div className="field">
-                <label>New Password:</label>
+                <label>Password:</label>
                 <input
                   type="password"
                   placeholder="New Password"
@@ -148,25 +128,13 @@ class Security extends Component {
                   style={{ width: "100%", margin: "0" }}
                   disabled={this.props.busyFlag}
                   className="button primary"
-                  onClick={() => this.changePassword()}
+                  onClick={() => this.encrypt()}
                 >
                   Submit
                 </button>
               </p>
             </fieldset>
           </form>
-          <button
-            style={{ width: "100%", margin: "0" }}
-            id="lockWallet"
-            className="button default"
-            disabled={this.props.busyFlag}
-            onClick={e => {
-              e.preventDefault();
-              this.lockWallet();
-            }}
-          >
-            Lock Wallet
-          </button>
         </div>
         <div className="securitySubContainer privKey">
           <form>
@@ -253,4 +221,4 @@ class Security extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Security);
+)(Unencrypted);
