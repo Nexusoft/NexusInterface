@@ -22,7 +22,7 @@ import styles from "./style.css";
 
 
 const mapStateToProps = state => {
-  return { ...state.transactions };
+  return { ...state.transactions, ...state.common };
 };
 const mapDispatchToProps = dispatch => ({
   SetWalletTransactionArray: returnData =>
