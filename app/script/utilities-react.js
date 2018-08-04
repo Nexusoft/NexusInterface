@@ -61,13 +61,13 @@ export default class Table extends Component {
                     {
                         this.props.onMouseOutCallback(e);
                     },
-                    style: {
-                        background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
-                        color: rowInfo.index === this.state.selected ? 'white' : 'black'
-                    }
+                    // style: {
+                    //     background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
+                    //     color: rowInfo.index === this.state.selected ? 'white' : 'black'
+                    // }
                 }
             }}
-
+            style={this.props.styles}
             />
         );
 

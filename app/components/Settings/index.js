@@ -11,6 +11,11 @@ import Security from "../Security/Security";
 import Login from "../Security/Login";
 import * as RPC from "../../script/rpc";
 
+
+import ContextMenuBuilder from "../../contextmenu";
+import {remote} from "electron";
+
+
 const mapStateToProps = state => {
   return {
     ...state.common
@@ -18,7 +23,30 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({});
+
 class Settings extends Component {
+
+  
+    componentDidMount()
+    {
+      this.props.googleanalytics.SendScreen("Settings");
+      window.addEventListener("contextmenu", this.setupcontextmenu, false);
+    }
+  
+    componentWillUnmount()
+    {
+      window.removeEventListener("contextmenu",this.setupcontextmenu);
+    }
+  
+    setupcontextmenu(e) {
+      e.preventDefault();
+      const contextmenu = new ContextMenuBuilder().defaultContext;
+      //build default
+      let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+      defaultcontextmenu.popup(remote.getCurrentWindow());
+    }
+    
+
   render() {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
@@ -60,11 +88,15 @@ class Settings extends Component {
               <Route
                 exact
                 path={`${this.props.match.path}/`}
-                component={SettingsApp}
+                render={props =>
+                    <SettingsApp {...this.props}/>
+                }
               />
               <Route
                 path={`${this.props.match.path}/App`}
-                component={SettingsApp}
+                render={props =>
+                  <SettingsApp {...this.props}/>
+              }
               />
               <Route
                 path={`${this.props.match.path}/Core`}

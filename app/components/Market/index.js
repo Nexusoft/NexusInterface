@@ -23,8 +23,11 @@ import arrow from "../../images/arrow.png";
 
 import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
+import ContextMenuBuilder from "../../contextmenu";
+import { remote } from "electron";
+
 const mapStateToProps = state => {
-  return { ...state.market };
+  return { ...state.market, ...state.common };
 };
 
 const mapDispatchToProps = dispatch =>
@@ -34,6 +37,20 @@ class Market extends Component {
   // thunk API calls to the exchanges
   componentDidMount() {
     this.refresher();
+    this.props.googleanalytics.SendScreen("Market");
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("contextmenu", this.setupcontextmenu);
+  }
+
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   refresher() {
@@ -225,9 +242,37 @@ class Market extends Component {
   }
 
   formatBuyData(array) {
+    console.log("array", array);
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array
+      .map(e => {
+        newQuantity = prevQuantity + e.Volume;
+        prevQuantity = newQuantity;
+        if (e.Price < array[0].Price * 0.05) {
+          return {
+            x: 0,
+            y: newQuantity
+          };
+        } else {
+          return {
+            x: e.Price,
+            y: newQuantity,
+            label: `Price: ${e.Price} \n Volume: ${newQuantity}`
+          };
+        }
+      })
+      .filter(e => e.x > 0);
+
+    return finnishedArray;
+  }
+
+  formatSellData(array) {
+    console.log("array", array);
+    let newQuantity = 0;
+    let prevQuantity = 0;
+    let finnishedArray = array
+      .sort((a, b) => b.Rate - a.Rate)
       .map(e => {
         newQuantity = prevQuantity + e.Volume;
         prevQuantity = newQuantity;
@@ -253,47 +298,41 @@ class Market extends Component {
     const dataSetArray = [];
     switch (exchange) {
       case "binanceBuy":
-        return [...this.formatBuyData(this.props.binance.buy)];
+        return this.formatBuyData(this.props.binance.buy);
         break;
       case "binanceSell":
-        return [...this.formatBuyData([...this.props.binance.sell].reverse())];
+        return this.formatBuyData(this.props.binance.sell);
         break;
       case "bittrexBuy":
-        return [...this.formatBuyData(this.props.bittrex.buy)];
+        return this.formatBuyData(this.props.bittrex.buy);
         break;
       case "bittrexSell":
-        return [...this.formatBuyData([...this.props.bittrex.sell].reverse())];
+        return this.formatBuyData(this.props.bittrex.sell);
         break;
       case "cryptopiaBuy":
-        return [...this.formatBuyData(this.props.cryptopia.buy)];
+        return this.formatBuyData(this.props.cryptopia.buy);
         break;
       case "cryptopiaSell":
-        return [
-          ...this.formatBuyData([...this.props.cryptopia.sell].reverse())
-        ];
+        return this.formatBuyData(this.props.cryptopia.sell);
         break;
       default:
         return [];
         break;
     }
-    return [...this.formatBuyData(this.props.binance.buy)];
   }
 
   render() {
     return (
-
       <div id="market">
-
         <h2>Market Information</h2>
 
-				<a className="refresh" onClick={() => this.refresher()}>Refresh Market Data</a>
+        <a className="refresh" onClick={() => this.refresher()}>
+          Refresh Market Data
+        </a>
 
-        <div className="alertbox">
-          {this.arbitageAlert()}
-        </div>
+        <div className="alertbox">{this.arbitageAlert()}</div>
 
         <div className="panel">
-
           {this.props.loaded &&
             this.props.binance.buy[0] && (
               <div className="exchangeUnitContainer">
@@ -340,11 +379,8 @@ class Market extends Component {
                 </div>
               </div>
             )}
-            
         </div>
-
       </div>
-
     );
   }
 }

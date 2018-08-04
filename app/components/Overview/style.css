@@ -53,7 +53,7 @@ canvas {
 II. BALANCE
 ------------------------------------------------------------------*/
 .overviewValue {
-  font-size: 2em;
+  font-size: 1.5em;
   font-weight: 800;
   letter-spacing: 1px;
   margin-right: -1px;
@@ -68,7 +68,7 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
 ------------------------------------------------------------------*/
 .left-stats {
   display: flex;
-  width: 200px;
+  width: 220px;
   flex-direction: column;
   align-self: center;
   text-align: right;
@@ -92,7 +92,7 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
 ------------------------------------------------------------------*/
 .right-stats {
   display: flex;
-  width: 200px;
+  width: 220px;
   flex-direction: column;
   align-self: center;
   text-align: left;

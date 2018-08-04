@@ -11,7 +11,11 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
 
+import GOOGLE from "../../script/googleanalytics";
+
 const mapStateToProps = state => {
+  // console.log(state.overview);
+
   return { ...state.overview, ...state.common };
 };
 
@@ -24,6 +28,10 @@ class Header extends Component {
       require("electron").remote.getCurrentWindow().id
     );
 
+    
+    console.log(GOOGLE);
+    //console.log(visitor);
+    this.props.SetGoogleAnalytics(GOOGLE);
     menuBuilder.buildMenu(this.props.history);
 
     this.props.GetInfoDump();
@@ -32,6 +40,7 @@ class Header extends Component {
     self.set = setInterval(function() {
       self.props.GetInfoDump();
     }, 1000);
+    this.props.history.push("/");
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {

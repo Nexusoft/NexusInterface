@@ -197,6 +197,18 @@ export default class SettingsApp extends Component {
 
     settingsObj.googleAnalytics = el.checked.toString();
 
+    if ( el.checked.toString() == "true")
+    {
+      this.props.googleanalytics.EnableAnalytics();
+
+      this.props.googleanalytics.SendEvent("Settings","Analytics","Enabled",1);
+    }
+    else
+    {
+      this.props.googleanalytics.SendEvent("Settings","Analytics","Disabled",1);
+      this.props.googleanalytics.DisableAnalytics();
+    }
+
     settings.SaveSettings(settingsObj);
 
     // SETTINGS.Analytics.GANALYTICS.SetEnabled(settingsObj.googleAnalytics);
@@ -273,7 +285,7 @@ export default class SettingsApp extends Component {
               id="googleAnalytics"
               type="checkbox"
               className="switch"
-              onChange={this.updateGoogleAnalytics}
+              onChange={this.updateGoogleAnalytics.bind(this)}
               data-tooltip="Send anonymous usage data to allow the Nexus developers to improve the wallet"
             />
           </div>
