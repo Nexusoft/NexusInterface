@@ -8,7 +8,7 @@ import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 
 const mapStateToProps = state => {
-  return { ...state.common };
+  return { ...state.common, ...state.exchange };
 };
 
 const mapDispatchToProps = dispatch => ({});
@@ -18,7 +18,7 @@ class Shapeshift extends Component {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
     Request(
       {
-        url: "https://shapeshift.io/rate/nxs_btc",
+        url: "https://shapeshift.io/marketinfo/nxs_btc",
         json: true
       },
       (error, response, body) => {
@@ -28,7 +28,44 @@ class Shapeshift extends Component {
       }
     );
   }
-
+  testapi() {
+    console.log("test");
+    // Request(
+    //   {
+    //     url: "https://shapeshift.io/marketinfo/nxs_btc",
+    //     json: true
+    //   },
+    //   (error, response, body) => {
+    //     console.log(response);
+    //     if (response.statusCode === 200) {
+    //       console.log(response);
+    //     }
+    //   }
+    // );
+    // Request(
+    //   {
+    //     url: "https://shapeshift.io/limit/nxs_btc",
+    //     json: true
+    //   },
+    //   (error, response, body) => {
+    //     console.log(response);
+    //     if (response.statusCode === 200) {
+    //       console.log(response);
+    //     }
+    //   }
+    // );
+    Request(
+      {
+        url: "https://shapeshift.io/getcoins",
+        json: true
+      },
+      (error, response, body) => {
+        if (response.statusCode === 200) {
+          console.log(response.body);
+        }
+      }
+    );
+  }
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
@@ -41,12 +78,81 @@ class Shapeshift extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  buildConfermation() {
+    return (
+      <div id="confirmation">
+        <h1>confirmation</h1>
+        <div>img</div> <h1>goes here</h1>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div id="Shapeshift">
-        <h2>Shapeshift</h2>
+        <h2>Exchange Powered By Shapeshift</h2>
 
-        <div className="panel" />
+        <div className="panel">
+          <button onClick={() => this.testapi()}>test</button>
+          <div id="shifty-pannel">
+            <div>
+              <form>
+                <fieldset>
+                  <legend>Send</legend>
+
+                  <div className="field">
+                    <label>Email:</label>
+                    <input
+                      type="email"
+                      placeholder="user@domain.com"
+                      required
+                    />
+                    <span className="hint">
+                      Email address is required and must be in the format:
+                      user@@domain.com
+                    </span>
+                  </div>
+
+                  <div className="field">
+                    <label>Password:</label>
+                    <input type="password" placeholder="Password" required />
+                    <span className="hint">Password is required</span>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+            <div>
+              <div id="line" />
+            </div>
+            <div>
+              <form>
+                <fieldset>
+                  <legend>Recieve</legend>
+
+                  <div className="field">
+                    <label>Email:</label>
+                    <input
+                      type="email"
+                      placeholder="user@domain.com"
+                      required
+                    />
+                    <span className="hint">
+                      Email address is required and must be in the format:
+                      user@@domain.com
+                    </span>
+                  </div>
+
+                  <div className="field">
+                    <label>Password:</label>
+                    <input type="password" placeholder="Password" required />
+                    <span className="hint">Password is required</span>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+          <div>{this.buildConfermation()}</div>
+        </div>
       </div>
     );
   }

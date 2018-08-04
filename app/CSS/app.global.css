@@ -30,6 +30,7 @@
 @import "../components/Settings/style.css";
 @import "../components/Terminal/style.css";
 @import "../components/Transactions/style.css";
+@import "../components/Shapeshift/style.css";
 
 :root {
   /* COLOR PALETTE VARIABLES */
