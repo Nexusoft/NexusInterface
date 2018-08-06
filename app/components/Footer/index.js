@@ -45,14 +45,14 @@ export default class Footer extends Component {
             <img src="images/shapeshiftlogo.png" alt="Shapeshift" />
             <div className="tooltip top">Shapeshift</div>
           </NavLink>
-          {/* <NavLink to="/StyleGuide">
+          <NavLink to="/StyleGuide">
             <img src="images/icon-developer.png" alt="Style Guide" />
             <div className="tooltip top">Style&nbsp;Guide</div>
           </NavLink>
           <NavLink to="/BlockExplorer">
             <img src="images/icon-explorer.png" alt="Block Explorer" />
             <div className="tooltip top">Block&nbsp;Explorer</div>
-          </NavLink> */}
+          </NavLink>
         </div>
       </div>
     );

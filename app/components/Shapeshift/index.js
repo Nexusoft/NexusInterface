@@ -2,20 +2,26 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { remote } from "electron";
 import Request from "request";
+import { bindActionCreators } from "redux";
 
 import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 
+import arrowimg from "../../images/TEMPORARYARROW.png";
+import * as actionsCreators from "../../actions/shapeshiftActionCreators";
+
 const mapStateToProps = state => {
   return { ...state.common, ...state.exchange };
 };
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(actionsCreators, dispatch);
 
 class Shapeshift extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
+    this.props.GetAvailaleCoins();
     Request(
       {
         url: "https://shapeshift.io/marketinfo/nxs_btc",
@@ -54,17 +60,18 @@ class Shapeshift extends Component {
     //     }
     //   }
     // );
-    Request(
-      {
-        url: "https://shapeshift.io/getcoins",
-        json: true
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          console.log(response.body);
-        }
-      }
-    );
+    // Request(
+    //   {
+    //     url: "https://shapeshift.io/getcoins",
+    //     json: true
+    //   },
+    //   (error, response, body) => {
+    //     if (response.statusCode === 200) {
+    //       console.log(response.body);
+    //     }
+    //   }
+    // );
+    this.props.GetAvailaleCoins();
   }
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
@@ -82,9 +89,15 @@ class Shapeshift extends Component {
     return (
       <div id="confirmation">
         <h1>confirmation</h1>
-        <div>img</div> <h1>goes here</h1>
+        <img src={arrowimg} style={{ height: "100px" }} /> <h1>goes here</h1>
       </div>
     );
+  }
+
+  optionbuilder() {
+    return this.props.availableCoins.map(e => {
+      return <option key={e.symbol}>{e.name}</option>;
+    });
   }
 
   render() {
@@ -101,16 +114,7 @@ class Shapeshift extends Component {
                   <legend>Send</legend>
 
                   <div className="field">
-                    <label>Email:</label>
-                    <input
-                      type="email"
-                      placeholder="user@domain.com"
-                      required
-                    />
-                    <span className="hint">
-                      Email address is required and must be in the format:
-                      user@@domain.com
-                    </span>
+                    <select class="form-control">{this.optionbuilder()}</select>
                   </div>
 
                   <div className="field">
@@ -128,22 +132,14 @@ class Shapeshift extends Component {
               <form>
                 <fieldset>
                   <legend>Recieve</legend>
-
                   <div className="field">
-                    <label>Email:</label>
-                    <input
-                      type="email"
-                      placeholder="user@domain.com"
-                      required
-                    />
-                    <span className="hint">
-                      Email address is required and must be in the format:
-                      user@@domain.com
-                    </span>
+                    <select>{this.optionbuilder()}</select>
                   </div>
 
                   <div className="field">
-                    <label>Password:</label>
+                    <label>
+                      Password: <span class="caret" />
+                    </label>
                     <input type="password" placeholder="Password" required />
                     <span className="hint">Password is required</span>
                   </div>
