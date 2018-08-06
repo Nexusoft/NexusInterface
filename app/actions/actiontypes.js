@@ -39,3 +39,5 @@ export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
 export const LOCK = "LOCK";
 export const UNLOCK = "UNLOCK";
 export const SET_GOOGLEANALYTICS = "SET_GOOGLEANALYTICS";
+export const ENCRYPTED = "ENCRYPTED";
+export const UNENCRYPTED = "UNENCRYPTED";

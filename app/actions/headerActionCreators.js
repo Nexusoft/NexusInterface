@@ -26,8 +26,20 @@ export const Unlock = () => {
   };
 };
 
-export const SetGoogleAnalytics = (returnData) => {
+export const Encrypted = () => {
   return dispatch => {
-    dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload:returnData });
+    dispatch({ type: TYPE.ENCRYPTED });
+  };
+};
+
+export const Unencrypted = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.UNENCRYPTED });
+  };
+};
+
+export const SetGoogleAnalytics = returnData => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload: returnData });
   };
 };
