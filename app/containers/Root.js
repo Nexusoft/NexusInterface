@@ -4,6 +4,7 @@ import { ConnectedRouter } from "react-router-redux";
 import { Route } from "react-router";
 
 import App from "./App";
+import Loader from "../components/Loader/index";
 import Overview from "../components/Overview/index";
 import Header from "../components/Header/index";
 import Footer from "../components/Footer/index";
@@ -29,6 +30,9 @@ export default function Root({ store, history }) {
 
           <div id="app-content">
             <div id="app-content-container">
+                <div id="app-loader">
+                  <Route path="/" component={Loader} />
+                </div>
               <Route exact path="/" component={Overview} />
               <Route exact path="/SendRecieve" component={SendRecieve} />
               <Route exact path="/Transactions" component={Transactions} />
