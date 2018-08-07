@@ -42,3 +42,5 @@ export const SET_GOOGLEANALYTICS = "SET_GOOGLEANALYTICS";
 
 // exchange
 export const AVAILABLE_COINS = "AVAILABLE_COINS";
+export const FROM_SETTER = "FROM_SETTER";
+export const TO_SETTER = "TO_SETTER";

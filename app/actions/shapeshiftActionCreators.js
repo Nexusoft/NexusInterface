@@ -14,11 +14,23 @@ export const GetAvailaleCoins = () => {
         if (response.statusCode === 200) {
           dispatch({
             type: TYPE.AVAILABLE_COINS,
-            payload: Object.values(response.body)
+            payload: response.body
           });
         }
       }
     );
+  };
+};
+
+export const FromSetter = from => {
+  return dispatch => {
+    dispatch({ type: TYPE.FROM_SETTER, payload: from });
+  };
+};
+
+export const ToSetter = to => {
+  return dispatch => {
+    dispatch({ type: TYPE.TO_SETTER, payload: to });
   };
 };
 

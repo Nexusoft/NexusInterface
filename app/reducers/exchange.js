@@ -4,7 +4,9 @@ const initialState = {
   refundAddress: "",
   toAddress: "",
   fromAddress: "",
-  availableCoins: []
+  availableCoins: {},
+  from: "",
+  to: ""
 };
 
 export default (state = initialState, action) => {
@@ -13,6 +15,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         availableCoins: action.payload
+      };
+      break;
+    case TYPE.FROM_SETTER:
+      return {
+        ...state,
+        from: action.payload
+      };
+      break;
+    case TYPE.TO_SETTER:
+      return {
+        ...state,
+        to: action.payload
       };
       break;
     default:

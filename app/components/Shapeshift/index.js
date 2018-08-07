@@ -86,6 +86,7 @@ class Shapeshift extends Component {
   }
 
   buildConfermation() {
+    console.log(this.props);
     return (
       <div id="confirmation">
         <h1>confirmation</h1>
@@ -95,8 +96,12 @@ class Shapeshift extends Component {
   }
 
   optionbuilder() {
-    return this.props.availableCoins.map(e => {
-      return <option key={e.symbol}>{e.name}</option>;
+    return Object.values(this.props.availableCoins).map(e => {
+      return (
+        <option key={e.symbol} value={e.symbol}>
+          {e.name}
+        </option>
+      );
     });
   }
 
@@ -114,7 +119,14 @@ class Shapeshift extends Component {
                   <legend>Send</legend>
 
                   <div className="field">
-                    <select class="form-control">{this.optionbuilder()}</select>
+                    <label>
+                      <select
+                        className="form-control"
+                        onChange={e => this.props.FromSetter(e.target.value)}
+                      >
+                        {this.optionbuilder()}
+                      </select>
+                    </label>
                   </div>
 
                   <div className="field">
@@ -133,15 +145,14 @@ class Shapeshift extends Component {
                 <fieldset>
                   <legend>Recieve</legend>
                   <div className="field">
-                    <select>{this.optionbuilder()}</select>
+                    <select onChange={e => this.props.ToSetter(e.target.value)}>
+                      {this.optionbuilder()}
+                    </select>
                   </div>
 
                   <div className="field">
-                    <label>
-                      Password: <span class="caret" />
-                    </label>
-                    <input type="password" placeholder="Password" required />
-                    <span className="hint">Password is required</span>
+                    <label>Password:</label>
+                    <input type="text" placeholder="Password" required />
                   </div>
                 </fieldset>
               </form>
