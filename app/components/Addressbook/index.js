@@ -1,16 +1,19 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import styles from "./style.css";
 import { connect } from "react-redux";
 import { remote } from "electron";
-import config from "../../api/configuration";
-import * as RPC from "../../script/rpc";
+import { Link } from "react-router-dom";
 import Modal from 'react-responsive-modal';
 
-import ContactList from "./ContactList";
-import ContactDetail from "./ContactDetail";
+import config from "../../api/configuration";
+import * as RPC from "../../script/rpc";
 
+import MyAddresses from "./MyAddresses";
+import ContactList from "./ContactList";
+import ContactView from "./ContactView";
+import ContactEdit from "./ContactEdit";
 import ContextMenuBuilder from "../../contextmenu";
+
+import styles from "./style.css";
 
 var psudoState = null;
 
@@ -32,50 +35,45 @@ class Addressbook extends Component {
 
     this.state =
     {
-      addresscountnotmine: 0,
-      addresscountmine: 0,
-      accountsTotal: 0,
-      accountsaddressed: 0,
-      thisadd: "",
-      thisid: "",
-      rootAccount: "",
-      autofill: "",
-      addId: "",
-      pages: {},
-      thisPage: 1,
-      maxPage: 1,
       hoveredover: false,
-      today: new Date(),
-      SendOBJ: {
-        name: "",
-        to: ""
-      },
-      calledfrom: false,
-      psudoState: null,
-      generateFlag: false,
 
-      selectedContactIndex: 0,
-      addcontactmodalopen: false
+      contacts: null,
+      selectedContact: null,
+      showMyAddresses: false,
+      showAddContact: false,
+      showViewContact: false,
+      showEditContact: false
     };
   }
 
+  //
+  // componentDidMount: get addressbook data and set up context menus
+  //
+
   componentDidMount() {
 
-    RPC.GET("listaccounts", [0], this.loaddata.bind(this));
+    RPC.GET("listaccounts", [0], this.loadAddressBook.bind(this));
 
-    this.addressbookcontextfunction = this.addressbookcontextfunction.bind(this);
+    this.addressbookcontextfunction = this.addressbookContextFunction.bind(this);
 
-    window.addEventListener("contextmenu", this.addressbookcontextfunction, false);
+    window.addEventListener("contextmenu", this.addressbookContextFunction, false);
     
   }
 
+  //
+  // componentWillUnmount: unbind context menus
+  //
+
   componentWillUnmount()
   {
-    window.removeEventListener("contextmenu",this.addressbookcontextfunction);
+    window.removeEventListener("contextmenu",this.addressbookContextFunction);
   }
 
-  //Make the function to attached to the listener
-  addressbookcontextfunction(e) 
+  //
+  // addressbookContextFunction: listener to configure the context menu (right click)
+  //
+
+  addressbookContextFunction(e) 
   {
     // Prevent default action of right click
     e.preventDefault();
@@ -156,9 +154,10 @@ class Addressbook extends Component {
   }
 
   //
-  // Read the addressbook.json file and return the contents as an object, if it doesn't exist initialize the file
+  // readAddressBook: Read the addressbook.json file and return the contents as an object, if it doesn't exist initialize the file
   //
-  readaddressbookjson()
+
+  readAddressBook()
   {
     let json = null;
 
@@ -175,8 +174,27 @@ class Addressbook extends Component {
     return json;
   }
 
+  //
+  // saveAddressBook: save the address book to disk, then save the contacts state
+  //
 
-  loaddata(ResponseObject, Address, PostData)
+  saveAddressBook(state) {
+
+    config.WriteJson("addressbook.json", state);
+
+    this.setState(
+      {
+        contacts: state
+      }
+    );
+
+  }
+
+  //
+  // loadAddressBook: Load the addressbook json and get the addresses from the core
+  //
+
+  loadAddressBook(ResponseObject, Address, PostData)
   {
     if (ResponseObject.readyState != 4)
       return;
@@ -185,7 +203,7 @@ class Addressbook extends Component {
     {
       let getAddressesPromises = [];
       
-      psudoState = this.readaddressbookjson();
+      psudoState = this.readAddressBook();
 
       let results = JSON.parse(ResponseObject.responseText).result;
 
@@ -203,11 +221,15 @@ class Addressbook extends Component {
         getAddressesPromises.push(RPC.PROMISE("getaddressesbyaccount", [accounts[i]]));
       }
 
-      Promise.all(getAddressesPromises).then(this.processaddresses);
+      Promise.all(getAddressesPromises).then(this.processAddresses);
     }
   }
 
-  processaddresses = (payload) => {
+  //
+  // processAddresses: Process addresses that get returned from getaddressesbyaccount call to the core
+  //
+
+  processAddresses = (payload) => {
   
     let validateAddressPromises = [];
 
@@ -219,19 +241,29 @@ class Addressbook extends Component {
 
     });
 
-    Promise.all(validateAddressPromises).then(this.processvalidatedaddresses);
+    Promise.all(validateAddressPromises).then(this.processValidatedAddresses);
 
   }
 
-  processvalidatedaddresses = (payload) => {
+  //
+  // processValidatedAddresses: Process validated addresses returned from validateaddress call to the core, then save the addressbook and set the default contact
+  //
 
-      payload.map(this.processvalidatedaddress);
+  processValidatedAddresses = (payload) => {
 
-      this.saveaddressbookstate(psudoState);
+      payload.map(this.processValidatedAddress);
+
+      this.saveAddressBook(psudoState);
+
+      this.setDefaultContact(psudoState);
 
   }
 
-  processvalidatedaddress = (e, i) => {
+  //
+  // processValidatedAddress: Process a validated address returned from validateaddress call to the core
+  //
+
+  processValidatedAddress = (e, i) => {
 
       if (e.ismine)
       {
@@ -298,22 +330,269 @@ class Addressbook extends Component {
       }
   }
 
-  saveaddressbookstate(state) {
+  //
+  // setDefaultContact: set the default contact to be displayed (hint: My Addresses) and append the name/index to the object to simplify child component's lives
+  //
 
-    console.log("saving addressbook.json");
-    config.WriteJson("addressbook.json", state);
+  setDefaultContact(state)
+  {
+
+    let name = Object.keys(this.state.contacts)[0];
+    let contact = {name: name, index: 0, ...state[name]};
+
+    this.setState({
+      selectedContact: contact
+    });
+
+  };
+
+  //
+  // setContact: set a contact as the selectedContact, then set state to show the contact
+  //
+
+  setContact = (index) => {
+
+    let name = Object.keys(this.state.contacts)[index];
+    let contact = {name: name, index: index, ...this.state.contacts[name]};
+
+    this.setState({
+      selectedContact: contact,
+      showViewContact: true,
+      showEditContact: false
+    });
+
+  };
+
+  //
+  // showMyAddresses: show the my addresses modal
+  //
+
+  showMyAddresses = () => {
 
     this.setState(
       {
-        psudoState: state
+        showMyAddresses: true
       }
     );
 
   }
 
-  exporttoCSV()
+  //
+  // showAddContact: show the add contact modal
+  //
+
+  showAddContact = () => {
+
+    this.setState(
+      {
+        showAddContact: true
+      }
+    );
+
+  }
+
+  //
+  // showEditContact: hide the view and show the edit contact screen
+  //
+
+  showEditContact = () => {
+
+    this.setState(
+      {
+        showViewContact: false,
+        showEditContact: true
+      }
+    );
+
+  }
+
+
+  //
+  // showAddContact: show the add contact modal
+  //
+
+  cancelViewContact = () => {
+
+    this.setState(
+      {
+        showViewContact: false
+      }
+    );
+
+  }
+
+  //
+  // cancelAddContact: cancel adding a new contact or click the close modal X
+  //
+
+  cancelMyAddresses = () => {
+    
+    this.setState(
+      {
+        showMyAddresses: false
+      }
+    );
+
+  }
+
+  //
+  // cancelAddContact: cancel adding a new contact or click the close modal X
+  //
+
+  cancelAddContact = () => {
+    
+    this.setState(
+      {
+        showAddContact: false
+      }
+    );
+
+  }
+
+  //
+  // cancelEditContact: cancel editing the contact and return to the view screen
+  //
+
+  cancelEditContact = () => {
+
+    this.setState(
+      {
+        showViewContact: true,
+        showEditContact: false
+      }
+    );
+
+  }
+
+  //
+  // addContact: add a new contact
+  //
+
+  addContact = () => {
+    
+    let name = document.getElementById("new-account-name").value;
+    let phone = document.getElementById("new-account-phone").value;
+    let timezone = JSON.parse(document.getElementById("new-account-timezone").value);
+    let address = document.getElementById("new-account-address").value;
+    let notes = document.getElementById("new-account-notes").value;
+
+    // Input Validation: Name
+    if (name.trim === "")
+    {
+      console.debug("Contact name is empty");
+      return;
+    }
+
+    // Input Validation: Address
+    if (address.trim === "")
+    {
+      console.debug("Address is empty");
+      return;
+    }
+
+    RPC.PROMISE("validateaddress", [address])
+      .then(payload => {
+
+        RPC.PROMISE("setaccount", [address, name])
+          .then(success => {
+
+            console.debug("Updating account state");
+
+            let newState = {...this.state.contacts};
+
+            newState[name] = {
+              mine: {},
+              notMine: {},    //TODO: Do we need to add the address here?
+              phoneNum: phone.trim(),
+              timeZone: timezone,
+              notes: notes.trim()
+            };
+
+            this.saveAddressBook(newState);
+
+            console.debug("Successfully added contact");
+            this.closeAddContact();
+
+          })
+          .catch(e => {
+            console.debug("Unable to set account at this time: " + e);
+          });
+
+      })
+      .catch(e => {
+        console.debug("Invalid Address: " + e);
+      });
+
+  }
+
+  //
+  // updateContact: called when the edit contact process is complete, find and update the contact in the state and save it to disk then go back to the view contact page
+  //
+
+  updateContact = (contact) => {
+
+    let newState = {...this.state.contacts};
+
+    let updatedContact = {
+      mine: contact.mine,
+      notMine: contact.notMine,
+      phoneNum: contact.phoneNum,
+      timeZone: contact.timeZone,
+      notes: contact.notes
+    };
+
+    let oldName = Object.keys(newState)[contact.index];
+
+    if (oldName !== contact.name)
+    {
+      console.log("Name is updated, removing old contact");
+      delete newState[oldName];
+    }
+
+    newState[contact.name] = updatedContact;
+
+    this.saveAddressBook(newState);
+
+    this.setState(
+      {
+        showViewContact: true,
+        showEditContact: false
+      }
+    );
+
+  }
+
+  //
+  // addReceiveAddress: add a new receive address for the wallet, these show in My Addresses
+  //
+
+  addReceiveAddress = () => {
+
+    RPC.PROMISE("getnewaddress", [""])
+      .then(payload => {
+
+        RPC.PROMISE("setaccount", ["", ""])
+          .then(success => {
+
+            //TODO: Add the new address to the state object, which should trigger a re-render
+
+            this.saveAddressBook(this.state.contacts);
+
+          })
+          .catch(e => {
+              console.log(e);
+          });
+
+      });
+
+  }
+
+  //
+  // exportAddressBook: Export the address book to CSV format
+  //
+
+  exportAddressBook()
   {
-    // console.log(psudoState);
 
     const rows = []; //Set up a blank array for each row
 
@@ -470,7 +749,6 @@ class Addressbook extends Component {
           break;
       }
 
-      // console.log(psudoState[account], "test");
       let tempentry = [
         accountname,
         "",
@@ -511,150 +789,11 @@ class Addressbook extends Component {
     link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
   }
 
-  contactSelected = (index) => {
-
-    this.setState({
-      selectedContactIndex: index
-    });
-
-  };
-
-  openaddcontactmodal = () => {
-
-    this.setState(
-      {
-        addcontactmodalopen: true
-      }
-    );
-
-  }
-
-  closeaddcontactmodal = () => {
-    
-    this.setState(
-      {
-        addcontactmodalopen: false
-      }
-    );
-
-  }
-
-  addcontact = () => {
-    
-    let name = document.getElementById("new-account-name").value;
-    let phone = document.getElementById("new-account-phone").value;
-    let timezone = JSON.parse(document.getElementById("new-account-timezone").value);
-    let address = document.getElementById("new-account-address").value;
-    let notes = document.getElementById("new-account-notes").value;
-
-    // Input Validation: Name
-    if (name.trim === "")
-    {
-      console.debug("Contact name is empty");
-      return;
-    }
-
-    // Input Validation: Address
-    if (address.trim === "")
-    {
-      console.debug("Address is empty");
-      return;
-    }
-
-    RPC.PROMISE("validateaddress", [address])
-      .then(payload => {
-
-        console.debug("Addressbook Payload:", payload);
-
-        RPC.PROMISE("setaccount", [address, name])
-          .then(success => {
-              this.updateaccountstate(name, phone, timezone, notes);
-              console.debug("Successfully added contact");
-              this.closeaddcontactmodal();
-            }
-          )
-          .catch(e => {
-            console.debug("Unable to set account at this time: " + e);
-          });
-
-      })
-      .catch(e => {
-        console.debug("Invalid Address: " + e);
-      });
-
-  }
-
-  addreceiveaddress = () => {
-
-    RPC.PROMISE("getnewaddress", [""])
-      .then(payload => {
-
-        console.log(payload);
-
-        RPC.PROMISE("setaccount", ["", ""])
-          .then(
-            this.updateaccountstate("", phone, timezone, notes)
-          )
-          .catch(e => {
-              console.log(e);
-          });
-
-      });
-
-  }
-
-  updatecontact = () => {
-
-    // state was already updated, clone to a new object then save to trigger refresh
-    const newState = {...this.state.psudoState};
-
-    this.saveaddressbookstate(newState);
-
-  }
-
-  updateaccountstate(name, phone, timezone, notes)
-  {
-    psudoState[name] = {
-      mine: {},
-      notMine: {}
-    };
-
-    if (phone.trim().length >= 10) {
-      psudoState = Object.assign(psudoState, {
-        [name]: Object.assign(psudoState[name], {
-          // phoneNum: `(${areaCode}) ${first3}-${last4}`
-          phoneNum: phone
-        })
-      });
-    }
-
-    if (timezone !== null || undefined || "") {
-      psudoState = Object.assign(psudoState, {
-        [name]: Object.assign(psudoState[name], {
-          timeZone: timezone
-        })
-      });
-    }
-
-    if (notes.trim() !== "") {
-      psudoState = Object.assign(psudoState, {
-        [name]: Object.assign(psudoState[name], {
-          notes: notes
-        })
-      });
-    }
-
-    console.log(psudoState);
-
-    config.WriteJson("addressbook.json", psudoState);
-
-    // RPC.GET("listaccounts", [0], this.refresh);
-  }
+  //
+  // render: render the component
+  //
 
   render() {
-
-    //TODO: Should this be in componentDidMount???
-    // RPC.GET("listaccounts", [0], this.loaddata.bind(this));
 
     return (
 
@@ -662,24 +801,40 @@ class Addressbook extends Component {
 
         <h2>Address Book</h2>
 
-        <a className="refresh" onClick={() => this.refresher()}>Export Contacts</a>
+        <a className="refresh" onClick={() => this.exportAddressBook()}>Export Contacts</a>
 
         <div className="panel">
 
-          <ContactList 
-            data={this.state.psudoState}
-            onClick={this.contactSelected} 
-            onAdd={this.openaddcontactmodal}/>
+          <div id="addressbook-controls">
+            <button className="button" onClick={this.showMyAddresses}>My Addresses</button>
+            <button className="button" onClick={this.showAddContact}>Add Contact</button>
+          </div>
 
-          <ContactDetail 
-            data={this.state.psudoState}
-            selectedIndex={this.state.selectedContactIndex} 
-            onAddReceiveAddress={this.addreceiveaddress} 
-            onUpdate={this.updatecontact}/>
+          <ContactList
+            contacts={this.state.contacts}
+            onSelect={this.setContact} />
+
+          <MyAddresses 
+            show={this.state.showMyAddresses}
+            onClose={this.cancelMyAddresses}
+            contact={this.state.selectedContact}
+            onAddReceiveAddress={this.addReceiveAddress} />
+
+          <ContactView 
+            show={this.state.showViewContact}
+            onClose={this.cancelViewContact}
+            contact={this.state.selectedContact}
+            onUpdate={this.updateContact}
+            onEdit={this.showEditContact}/>
+
+          <ContactEdit 
+            show={this.state.showEditContact}
+            contact={this.state.selectedContact}
+            onUpdate={this.updateContact}/>
 
           <Modal 
-            open={this.state.addcontactmodalopen} 
-            onClose={this.closeaddcontactmodal} 
+            open={this.state.showAddContact} 
+            onClose={this.cancelAddContact} 
             center 
             classNames={{ modal: 'modal' }}>
 
@@ -741,16 +896,16 @@ class Addressbook extends Component {
             </div>
 
             <div className="field">
-              <label htmlFor="new-account-address">Nexus Address</label>
-              <input id="new-account-address" type="text"  placeholder="Nexus Address" />
-            </div>
-
-            <div className="field">
               <label htmlFor="new-account-notes">Notes</label>
               <textarea id="new-account-notes" rows="4"></textarea>
             </div>
 
-            <button className="button" onClick={this.addcontact}>Add Contact</button>
+            <div className="field">
+              <label htmlFor="new-account-address">Nexus Address</label>
+              <input id="new-account-address" type="text"  placeholder="Nexus Address" />
+            </div>
+            
+            <button className="button" onClick={this.addContact}>Add Contact</button>
 
           </Modal>
 

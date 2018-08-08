@@ -14,65 +14,60 @@ const mapDispatchToProps = dispatch => ({});
 
 class ContactList extends Component {
 
-  // constructor(props)
-  // {
-  //   super(props);
-
-  //   this.state =
-  //   {
-  //     selectedContactIndex: 0,
-  //     addcontactmodalopen: false
-  //   };
-  // }
-
-  buildList() 
+  build() 
   {
 
-    // console.debug("ContactList props:");
-    // console.debug(this.props);
+    if (this.props.contacts) {
 
-    if (this.props.data) {
+      const contacts = Object.keys(this.props.contacts).sort();
 
-      const master = this.props.data;
-      const masterArr = Object.keys(master).sort();
+      return contacts.map(function(item, i){
 
-      if(masterArr[0] === "")
-        masterArr[0] = "My Addresses";
-
-      // console.debug("ContactList list array:");
-      // console.debug(masterArr);
-
-      return masterArr.map(function(item, i){
+        if (i === 0)
+          return null;
+          
+        let contact = this.props.contacts[item];
 
         return (
         
-        <li key={i} onClick={() => this.click(item)}>
-          {/* <svg viewBox="0 0 100 100">
-            <text x='50' y='50' dy='.35em'>
-              {item.charAt(0)}
-            </text>
-          </svg> */}
-          {item}
+        <li key={i} onClick={() => this.select(item)}>
+
+          <span className="contact-avatar">
+            <svg viewBox="0 0 100 100">
+              <text x='50' y='50' dy='.35em'>
+                {this.getinitial(item)}
+              </text>
+            </svg>
+          </span>
+          <span className="contact-name">{(item === "" ? "My Addresses" : item)}</span>
+          <span className="contact-phone">{contact.phoneNum}</span>
+          <span className="contact-addresses">{Object.keys(contact.notMine).length} Addresses</span>
+
         </li>
 
         )
 
       }.bind(this));
     }
+    
   }
 
-  click = (item) => {
+  getinitial(name) 
+  {
+
+    if (name && name.length >= 1)
+      return name.charAt(0);
+
+    return "M";  // My Addresses
+
+  }
+
+  select = (item) => {
 
     // get this by item name instead of index since we sorted the names list
-    let index = Object.keys(this.props.data).indexOf(item);
+    let index = Object.keys(this.props.contacts).indexOf(item);
 
-    this.props.onClick(index);
-
-  };
-
-  addcontact = () => {
-
-    this.props.onAdd();
+    this.props.onSelect(index);
 
   }
 
@@ -80,17 +75,13 @@ class ContactList extends Component {
 
     return (
 
-      <div id="addressbook-contact-list">
-
-        {/* <button className="button primary">My Addresses</button> */}
+      <div id="addressbook-contacts">
 
         <ul>
 
-          {this.buildList()}
+          {this.build()}
 
         </ul>
-
-        <button className="button" onClick={this.addcontact}>Add Contact</button>
 
       </div>
     );
