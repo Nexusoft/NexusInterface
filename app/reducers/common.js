@@ -3,8 +3,7 @@ import * as TYPE from "../actions/actiontypes";
 const initialState = {
   loggedIn: false,
   googleanalytics: null,
-  encrypted: false
-  loggedIn: false,
+  encrypted: false,
   busyFlag: false
 };
 

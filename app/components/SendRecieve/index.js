@@ -60,6 +60,7 @@ class SendRecieve extends Component {
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
+
   sendOne() {
     this.props.busy();
     if (!(this.props.Address === "") && this.props.Amount > 0) {
@@ -100,9 +101,21 @@ class SendRecieve extends Component {
   }
 
   sendMany() {
+    let keyCheck = Object.keys(this.props.Queue);
     this.props.busy();
-    RPC.PROMISE("sendmany", [{ ...this.props.Queue }]).then(this.props.busy());
+
+    if (keyCheck.length > 1) {
+      RPC.PROMISE("sendmany", ["", this.props.Queue]);
+    } else {
+      RPC.PROMISE("sendtoaddress", [
+        keyCheck[1],
+        Object.values(this.props.Queue)[0]
+      ]).then(payoad => console.log(payload));
+      this.props.clearForm();
+      this.props.busy();
+    }
   }
+  addAmount() {}
 
   validateAddToQueue() {
     this.props.busy();
@@ -153,7 +166,6 @@ class SendRecieve extends Component {
           <td>{e.key}</td>
           <td>{e.val}</td>
           <td>
-            {" "}
             <button
               className="button primary"
               onClick={() => this.props.removeQueue(e.key)}
@@ -171,82 +183,81 @@ class SendRecieve extends Component {
       this.props.SetSendAgainData(null);
     }
     return (
-      <div className="panel">
-        <div>
-          <h2> Send Nexus </h2>
-        </div>
-        <div id="container">
-          <div>
-            {" "}
+      <div>
+        <h2> Send Nexus </h2>
+        <div className="panel">
+          <div />
+          <div id="container">
             <div>
-              <div className="box">
-                <legend>Create</legend>
-                <div className="field">
-                  <label>Nexus Address</label>
+              {" "}
+              <div>
+                <div className="box">
+                  <legend>Create</legend>
+                  <div className="field">
+                    <label>Nexus Address</label>
+                    <input
+                      size="27"
+                      type="text"
+                      placeholder="Enter NXS Address"
+                      value={this.props.Address}
+                      onChange={e => this.props.updateAddress(e.target.value)}
+                      required
+                    />
+
+                    <span className="hint">Amount Of Nexus</span>
+                    <label>Nexus Amount</label>
+                    <input
+                      size="27"
+                      type="number"
+                      placeholder="Nexus Amount"
+                      value={this.props.Amount}
+                      onChange={e => {
+                        this.props.updateAmount(parseFloat(e.target.value));
+                      }}
+                      required
+                    />
+                    <p>
+                      <textarea
+                        value={this.props.Message}
+                        onChange={e => this.props.updateMessage(e.target.value)}
+                        name="message"
+                        rows="5"
+                        cols="28"
+                        placeholder="Enter Your Message"
+                      />
+                    </p>
+                  </div>
+                </div>
+                <div id="left-buttons">
                   <input
-                    size="27"
-                    type="text"
-                    placeholder="Enter NXS Address"
-                    value={this.props.Address}
-                    onChange={e => this.props.updateAddress(e.target.value)}
-                    required
+                    type="button"
+                    value="Add To Queue"
+                    className="button primary"
+                    onClick={() => this.validateAddToQueue()}
                   />
 
-                  <span className="hint">Amount Of Nexus</span>
-                  <label>Nexus Amount</label>
                   <input
-                    size="27"
-                    type="number"
-                    placeholder="Nexus Amount"
-                    value={this.props.Amount}
-                    onChange={e => {
-                      this.props.updateAmount(parseFloat(e.target.value));
-                    }}
-                    required
+                    type="reset"
+                    value="Send Now"
+                    className="button"
+                    onClick={() => this.sendOne()}
                   />
-                  <p>
-                    <textarea
-                      value={this.props.Message}
-                      onChange={e => this.props.updateMessage(e.target.value)}
-                      name="message"
-                      rows="5"
-                      cols="28"
-                      placeholder="Enter Your Message"
-                    />
-                  </p>
                 </div>
               </div>
-              <div id="left-buttons">
-                <input
-                  type="button"
-                  value="Add To Queue"
-                  className="button primary"
-                  onClick={() => this.validateAddToQueue()}
-                />
-
-                <input
-                  type="reset"
-                  value="Send Now"
-                  className="button"
-                  onClick={() => this.sendOne()}
-                />
-              </div>
             </div>
-          </div>
+            <div>
+              {" "}
+              <table className="table">
+                <thead className="thead">
+                  <th>Address</th>
+                  <th>Amount</th>
+                  <th>Remove </th>
+                </thead>
 
-          <div className="box2">
-            {" "}
-            <label>Queue </label>
-            <table className="table">
-              <thead clssName="thead">
-                <th>Address</th>
-                <th>Amount</th>
-                <th>Remove </th>
-              </thead>
-
-              <tbody className="tbody" />
-              {this.fillQueue()}
-            </table>
+                <tbody className="tbody" />
+                {this.fillQueue()}
+              </table>
+            </div>
             <tfoot className="tfoot">
               <tr>
                 <td>
@@ -272,7 +283,12 @@ class SendRecieve extends Component {
               </tr>
             </tfoot>
           </div>
-        </div>
+          <div id="feeCounter">
+            {" "}
+            TOTAL:
+            <p>Fee: 1,000,000</p>{" "}
+          </div>
+        </div>{" "}
       </div>
     );
   }
