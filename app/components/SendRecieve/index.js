@@ -68,20 +68,18 @@ class SendRecieve extends Component {
           if (payload.isvalid) {
             if (!payload.ismine) {
               if (this.props.Message) {
-                RPC.PROMISE(
-                  "sendtoaddress",
-                  this.props.address,
-                  this.props.amount,
-                  [Message]
-                );
+                RPC.PROMISE("sendtoaddress", [
+                  this.props.Address,
+                  this.props.Amount,
+                  Message
+                ]);
                 this.props.clearForm();
                 this.props.busy();
               } else {
-                RPC.PROMISE(
-                  "sendtoaddress",
-                  this.props.address,
-                  this.props.amount
-                );
+                RPC.PROMISE("sendtoaddress", [
+                  this.props.Address,
+                  this.props.Amount
+                ]).then(payoad => console.log(payload));
                 this.props.clearForm();
                 this.props.busy();
               }
@@ -103,7 +101,7 @@ class SendRecieve extends Component {
 
   sendMany() {
     this.props.busy();
-    RPC.PROMISE("sendmany", this.props.Queue).then(this.props.busy());
+    RPC.PROMISE("sendmany", [{ ...this.props.Queue }]).then(this.props.busy());
   }
 
   validateAddToQueue() {
@@ -154,7 +152,13 @@ class SendRecieve extends Component {
         <tr key={i}>
           <td>{e.key}</td>
           <td>{e.val}</td>
-          <button onClick={() => this.props.removeQueue(e.key)} />
+          <td>
+            {" "}
+            <button
+              className="button primary"
+              onClick={() => this.props.removeQueue(e.key)}
+            />
+          </td>
         </tr>
       );
     });
@@ -169,7 +173,7 @@ class SendRecieve extends Component {
     return (
       <div className="panel">
         <div>
-          <h2 className="h">Send Nexus </h2>
+          <h2> Send Nexus </h2>
         </div>
         <div id="container">
           <div>
@@ -233,31 +237,40 @@ class SendRecieve extends Component {
           <div className="box2">
             {" "}
             <label>Queue </label>
-            <table>
-              <thead>
-                <th> Address</th>
+            <table className="table">
+              <thead clssName="thead">
+                <th>Address</th>
                 <th>Amount</th>
+                <th>Remove </th>
               </thead>
-              <tbody>{this.fillQueue()}</tbody>
+
+              <tbody className="tbody" />
+              {this.fillQueue()}
             </table>
-            <div id="right-buttons">
-              <input
-                type="reset"
-                value="Send All"
-                className="button"
-                onClick={() => {
-                  this.sendMany();
-                }}
-              />
-              <input
-                type="button"
-                value="Clear Queue"
-                className="button primary"
-                onClick={() => {
-                  this.props.clearQueue();
-                }}
-              />
-            </div>{" "}
+            <tfoot className="tfoot">
+              <tr>
+                <td>
+                  <input
+                    type="reset"
+                    value="Send All"
+                    className="button primary"
+                    onClick={() => {
+                      this.sendMany();
+                    }}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="button"
+                    value="Clear Queue"
+                    className="button primary"
+                    onClick={() => {
+                      this.props.clearQueue();
+                    }}
+                  />
+                </td>
+              </tr>
+            </tfoot>
           </div>
         </div>
       </div>
