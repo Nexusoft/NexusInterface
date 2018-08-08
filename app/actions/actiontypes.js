@@ -39,6 +39,16 @@ export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
 export const LOCK = "LOCK";
 export const UNLOCK = "UNLOCK";
 export const SET_GOOGLEANALYTICS = "SET_GOOGLEANALYTICS";
+export const ENCRYPTED = "ENCRYPTED";
+export const UNENCRYPTED = "UNENCRYPTED";
+export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
+export const REMOVE_FROM_QUEUE = "REMOVE_FROM_QUEUE";
+export const UPDATE_ADDRESS = "UPDATE_ADDRESS";
+export const UPDATE_AMOUNT = "UPDATE_AMOUNT";
+export const UPDATE_MESSAGE = "UPDATE_MESSAGE";
+export const UPDATE_ACCOUNT_NAME = "UPDATE_ACCOUNT_NAME";
+export const CLEAR_QUEUE = "CLEAR_QUEUE";
+export const CLEAR_FORM = "CLEAR_FORM";
 
 // exchange
 export const AVAILABLE_COINS = "AVAILABLE_COINS";

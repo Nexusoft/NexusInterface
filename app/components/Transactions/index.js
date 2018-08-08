@@ -22,7 +22,7 @@ import styles from "./style.css";
 
 
 const mapStateToProps = state => {
-  return { ...state.transactions };
+  return { ...state.transactions, ...state.common };
 };
 const mapDispatchToProps = dispatch => ({
   SetWalletTransactionArray: returnData =>
@@ -108,12 +108,12 @@ class Transactions extends Component {
       );
     }
     
-    console.log(window);
-    console.log(remote);
-    console.log(this);
+    //console.log(window);
+    //console.log(remote);
+    //console.log(this);
 
-    console.log(ContextMenuBuilder);
-    console.log(new ContextMenuBuilder().defaultContext);
+    //console.log(ContextMenuBuilder);
+    //console.log(new ContextMenuBuilder().defaultContext);
     this.transactioncontextfunction = this.transactioncontextfunction.bind(this);
 
     //Remove Previous vent
@@ -303,6 +303,7 @@ class Transactions extends Component {
           }
         })
       );
+      /*  Currently Block Explorer is turned off. 
       //Add Open Explorer Option
       transactiontablecontextmenu.append(
         new remote.MenuItem({
@@ -312,7 +313,7 @@ class Transactions extends Component {
           }
         })
       );
-
+      */
       if (this.state.isHoveringOverTable) {
         transactiontablecontextmenu.popup(remote.getCurrentWindow());
       } else {
@@ -1458,11 +1459,11 @@ class Transactions extends Component {
         );
       internalString.push(<br key="br3"/>);
       internalString.push(
-          <a key="modal_amount">{"Account: " + selectedTransaction.account}</a>
+          <a key="modal_Account">{"Account: " + selectedTransaction.account}</a>
         );
       internalString.push(<br key="br4"/>);
       internalString.push(
-          <a key="modal_amount">{"Confirmations: " + selectedTransaction.confirmations}</a>
+          <a key="modal_Confirms">{"Confirmations: " + selectedTransaction.confirmations}</a>
         );
       
     }

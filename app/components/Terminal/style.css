@@ -37,6 +37,7 @@
 
 #terminal-console-input {
 	display: flex;
+	position: relative;
 	margin-bottom: 1em;
 }
 
@@ -52,4 +53,3 @@
 	overflow: auto;
 	font-family: var(--mono-font-family);
 }
-

@@ -11,12 +11,27 @@ export default class TerminalConsole extends Component {
       //vars go here
       consoleoutput: [],
       currentInput: "",
-      inputfield: null
-    };
-  }
+      inputfield: null,
+      commandList:[],
+      autoComplete:[],
+      testnum: 99999
+    }
 
-  componentDidMount() {
-    //this.state.inputfield.focus();
+  }  
+
+  componentDidMount(){
+    //this.state.inputfield.focus(); 
+
+    RPC.PROMISE("help", []).then(payload => {
+      
+      let CommandList = payload.split('\n');
+      console.log(CommandList);
+      this.setState(
+        {
+          commandList:CommandList
+        }
+      );
+    });
   }
 
   /// Reset Nexus RPC Console
@@ -95,23 +110,30 @@ export default class TerminalConsole extends Component {
             tempConsoleOutput.push(payload);
           }
         }
-        /// If it is a object with multi variables then output them on each line
-        else {
-          for (let aaa in payload) {
-            //ddd.push(aaa + ": " + payload[aaa]);
-            if (typeof payload[aaa] === "object") {
-              tempConsoleOutput.push(aaa + ": ");
-            } else {
-              tempConsoleOutput.push(aaa + ": " + payload[aaa]);
+        else
+        {
+          tempConsoleOutput.push(payload);
+        }
+      }
+      /// If it is a object with multi variables then output them on each line 
+      else {
+        for (let outputObject in payload)
+        {
+          //ddd.push(aaa + ": " + payload[aaa]);
+          if (typeof payload[outputObject] === "object")
+            {
+              tempConsoleOutput.push(outputObject + ": " );
+            }
+            else{
+              tempConsoleOutput.push(outputObject + ": " + payload[outputObject]);
             }
 
             //If it is a object then we need to display ever var on a new line.
-            if (typeof payload[aaa] === "object") {
-              for (let interalres in payload[aaa]) {
+            if (typeof payload[outputObject] === "object"){
+              for (let interalres in payload[outputObject])
+              {
                 /// Probably need to do this in css but I add a tab to make it look cleaner
-                tempConsoleOutput.push(
-                  "       " + interalres + ":" + payload[aaa][interalres]
-                );
+                tempConsoleOutput.push('       ' + interalres + ":" + payload[outputObject][interalres]);
               }
             }
           }
@@ -148,39 +170,81 @@ export default class TerminalConsole extends Component {
     }
   };
 
+  /// Handle arrow key press
+  /// Handles what happens when the user presses arrow keys for the auto complete
+  handleAutocompleteArrowKeyPress = (e) => {
+    
+    /*
+    console.log(this.state.currentInput);
+    console.log(e.target.value);
+
+    let pdpdpdp = this.state.testnum;
+    
+    if (pdpdpdp == 9999)
+    {
+      pdpdpdp = -1;
+    }
+
+    if (e.key === 'ArrowDown')
+    {
+      pdpdpdp++;
+    }
+
+    if (e.key === 'ArrowUp')
+    {
+      pdpdpdp--; 
+    }
+    if (e.target.value == "")
+    {
+      pdpdpdp = 9999;
+    }
+
+    let tempcommand = this.state.autoComplete[pdpdpdp]
+
+    if ( tempcommand != null)
+    {
+      console.log(tempcommand.props.children[0]);
+      e.target.value = tempcommand.props.children[0];
+      this.setState(
+        {
+          testnum:-1
+        }
+      )
+    }
+
+    
+
+    this.setState(
+      {
+        testnum:pdpdpdp
+      }
+    , () => {console.log(this.state.testnum)}); 
+
+      */
+  }
+
   /// On Input Field Change
   /// What happens when the value of the inputfield changes
-  onInputfieldChange = e => {
-    this.setState({
-      currentInput: e.target.value
-    });
-  };
+  onInputfieldChange = (e) =>
+  {
+    this.setState(
+      {
+        currentInput: e.target.value
+      });
+  }
+
 
   render() {
     return (
       <div id="terminal-console">
         <div id="terminal-console-input">
-          <input
-            id="input-text"
-            autoFocus
-            ref={this.setInputFeild}
-            type="text"
-            value={this.currentInput}
-            placeholder="Enter console commands here (ex: getinfo, help)"
-            onChange={this.onInputfieldChange}
-            onKeyPress={this.handleEnterKeyPress}
-          />
-          <button
-            id="input-submit"
-            className="button primary"
-            value="Execute"
-            onClick={() => this.processInput()}
-          >
-            Execute
-          </button>
+
+          <input id="input-text" autoFocus ref={this.setInputFeild} type="text" value={this.currentInput} placeholder="Enter console commands here (ex: getinfo, help)" onChange={this.onInputfieldChange} onKeyPress={this.handleEnterKeyPress}/>
+          <button id="input-submit" className="button primary" value="Execute" onClick={() => this.processInput()}>Execute</button>
+          
         </div>
 
-        <div id="terminal-console-output">{this.processOutput()}</div>
+        <div id="terminal-console-output">
 
         <button
           id="terminal-console-reset"
