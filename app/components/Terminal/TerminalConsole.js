@@ -100,11 +100,15 @@ export default class TerminalConsole extends Component {
       /// If this is a number we need to format it an int
       if (isNaN(Number(element)) === false)
       {
-        element = parseInt(element);
+        element = parseFloat(element);
       }
       RPCArguments.push(element);
     }
    
+
+    console.log(splitInput[0]);
+    console.log(RPCArguments);
+
     /// Execute the command with the given args
     RPC.PROMISE(splitInput[0], RPCArguments).then(payload => {
 
@@ -291,7 +295,7 @@ export default class TerminalConsole extends Component {
     });
     let tempAutoComplete = [];
     tempCompandList.map((item, key) => {
-      return tempAutoComplete.push(<a key={key} onClick={ () => this.onAutoCompleteClick(item)}>{item}<br/></a>);
+      return tempAutoComplete.push(<a key={key} onMouseDown={ () => this.onAutoCompleteClick(item)}>{item}<br/></a>);
     })
 
 
