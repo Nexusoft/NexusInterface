@@ -34,29 +34,31 @@ export const ToSetter = to => {
   };
 };
 
-// export const bittrex24hrInfo = () => {
-//   return dispatch => {
-//     Request(
-//       {
-//         url:
-//           "https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-nxs",
-//         json: true
-//       },
-//       (error, response, body) => {
-//         if (response.statusCode === 200) {
-//           let data = body.result[0];
-//           let res = {
-//             change: (data.Last - data.PrevDay) / data.Last,
-//             high: data.High,
-//             low: data.Low,
-//             volume: data.Volume
-//           };
-//           dispatch({ type: TYPE.BITTREX_24, payload: res });
-//         }
-//       }
-//     );
-//   };
-// };
+export const ammountUpdater = ammt => {
+  if (parseFloat(ammt) !== NaN) {
+    return dispatch => {
+      dispatch({ type: TYPE.UPDATE_AMMOUNT, payload: ammt });
+    };
+  } else return null;
+};
+
+export const GetPairMarketInfo = pair => {
+  return dispatch => {
+    Request(
+      {
+        url: `https://shapeshift.io/marketinfo/${pair}`,
+        json: true
+      },
+      (error, response, body) => {
+        if (response.statusCode === 200) {
+          if (!response.body.error) {
+            dispatch({ type: TYPE.MARKET_PAIR_DATA, payload: response.body });
+          }
+        }
+      }
+    );
+  };
+};
 
 // export const cryptopia24hrInfo = () => {
 //   return dispatch => {

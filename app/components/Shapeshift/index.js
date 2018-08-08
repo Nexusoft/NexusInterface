@@ -8,7 +8,7 @@ import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 
-import arrowimg from "../../images/TEMPORARYARROW.png";
+import arrow from "../../images/arrow.png";
 import * as actionsCreators from "../../actions/shapeshiftActionCreators";
 
 const mapStateToProps = state => {
@@ -77,6 +77,16 @@ class Shapeshift extends Component {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      (this.props.to !== prevProps.to || this.props.from !== prevProps.from) &&
+      this.props.from !== this.props.to
+    ) {
+      let pair = this.props.from + "_" + this.props.to;
+      this.props.GetPairMarketInfo(pair);
+    }
+  }
+
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -87,12 +97,28 @@ class Shapeshift extends Component {
 
   buildConfermation() {
     console.log(this.props);
-    return (
-      <div id="confirmation">
-        <h1>confirmation</h1>
-        <img src={arrowimg} style={{ height: "100px" }} /> <h1>goes here</h1>
-      </div>
-    );
+
+    if (this.props.to && this.props.from && this.props.from !== this.props.to) {
+      return (
+        <div id="confirmation">
+          <div id="sendSideConfirm">
+            <h3>YOU ARE SENDING</h3>
+            <img
+              style={{ height: "100px" }}
+              src={this.props.availableCoins[this.props.from].image}
+            />
+          </div>
+          <img src={arrow} style={{ height: "100px" }} />
+          <div id="recieveSideConfirm">
+            <h3>YOU WILL RECIEVE</h3>
+            <img
+              style={{ height: "100px" }}
+              src={this.props.availableCoins[this.props.to].image}
+            />
+          </div>
+        </div>
+      );
+    } else return null;
   }
 
   optionbuilder() {
@@ -105,13 +131,34 @@ class Shapeshift extends Component {
     });
   }
 
+  minAmmount() {
+    if (this.props.marketPairData.minimum) {
+      return this.props.marketPairData.minimum;
+    } else return 0;
+  }
+
+  maxAmmount() {
+    if (this.props.marketPairData.maxLimit) {
+      return this.props.marketPairData.maxLimit;
+    } else return 1;
+  }
+
+  currencylabel() {
+    if (this.props.to) {
+      return this.props.availableCoins[this.props.to].name;
+    } else return null;
+  }
+  ammountHandler(value) {
+    console.log(parseFloat(value));
+  }
+
   render() {
     return (
       <div id="Shapeshift">
         <h2>Exchange Powered By Shapeshift</h2>
 
         <div className="panel">
-          <button onClick={() => this.testapi()}>test</button>
+          {/* <button onClick={() => this.testapi()}>test</button> */}
           <div id="shifty-pannel">
             <div>
               <form>
@@ -119,21 +166,29 @@ class Shapeshift extends Component {
                   <legend>Send</legend>
 
                   <div className="field">
-                    <label>
-                      <select
-                        className="form-control"
-                        onChange={e => this.props.FromSetter(e.target.value)}
-                      >
-                        {this.optionbuilder()}
-                      </select>
-                    </label>
+                    <select
+                      className="soflow-color"
+                      value={this.props.from}
+                      onChange={e => this.props.FromSetter(e.target.value)}
+                    >
+                      {this.optionbuilder()}
+                    </select>
                   </div>
-
                   <div className="field">
-                    <label>Password:</label>
-                    <input type="password" placeholder="Password" required />
-                    <span className="hint">Password is required</span>
+                    <input
+                      type="text"
+                      placeholder={this.minAmmount()}
+                      value={this.props.ammount}
+                      onChange={e => this.ammountHandler(e.target.value)}
+                      required
+                    />
                   </div>
+                  {this.props.from !== "nxs" ? (
+                    <div className="field">
+                      <label>Refund Address:</label>
+                      <input type="text" required />
+                    </div>
+                  ) : null}
                 </fieldset>
               </form>
             </div>
@@ -145,14 +200,18 @@ class Shapeshift extends Component {
                 <fieldset>
                   <legend>Recieve</legend>
                   <div className="field">
-                    <select onChange={e => this.props.ToSetter(e.target.value)}>
+                    <select
+                      className="soflow-color"
+                      onChange={e => this.props.ToSetter(e.target.value)}
+                      value={this.props.to}
+                    >
                       {this.optionbuilder()}
                     </select>
                   </div>
 
                   <div className="field">
-                    <label>Password:</label>
-                    <input type="text" placeholder="Password" required />
+                    <label>{this.currencylabel()} Address:</label>
+                    <input type="text" required />
                   </div>
                 </fieldset>
               </form>
