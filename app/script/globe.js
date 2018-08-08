@@ -13,6 +13,8 @@
 
 import * as THREE from "three";
 import world from "../images/world.jpg";
+
+import { geoInterpolate } from 'd3-geo';
 var DAT = DAT || {};
 
 export default (DAT.Globe = function(container, opts) {
@@ -92,6 +94,8 @@ export default (DAT.Globe = function(container, opts) {
   var padding = 40;
   var PI_HALF = Math.PI / 2;
 
+  var tempoints = [];
+
   function init() {
     // container.style.color = '#fff';
     container.style.font = "13px/20px Arial, sans-serif";
@@ -134,8 +138,27 @@ export default (DAT.Globe = function(container, opts) {
       transparent: true
     });
 
+    var curve = new THREE.CatmullRomCurve3( [
+      new THREE.Vector3(0,0,0),
+      new THREE.Vector3(99,99,99)
+    ] );
+
+    var points = curve.getPoints( 50 );
+    var geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+    var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+
+    // Create the final object to add to the scene
+    var curveObject = new THREE.Line( geometry, material );
+    
+
+    //scene.add(curveObject);
+
+    
+
     mesh = new THREE.Mesh(geometry, material);
     mesh.scale.set(1.1, 1.1, 1.1);
+    
     scene.add(mesh);
 
     geometry = new THREE.BoxGeometry(0.75, 0.75, 1);
@@ -224,6 +247,12 @@ export default (DAT.Globe = function(container, opts) {
       color = colorFnWrapper(data, i);
       size = data[i + 2];
       size = size * 200;
+
+      if ((i+ step)  == (data.length))
+      {
+        color = {r:0,g:1,b:0};
+      }
+     
       addPoint(lat, lng, size, color, subgeo);
     }
     if (opts.animated) {
@@ -234,6 +263,7 @@ export default (DAT.Globe = function(container, opts) {
     } else {
       this._baseGeometry = subgeo;
     }
+
   }
 
   function createPoints() {
@@ -269,8 +299,51 @@ export default (DAT.Globe = function(container, opts) {
           })
         );
       }
+
+      let aaaaa = [];
+  
+      console.log(tempoints);
+      const lastpoint = tempoints[tempoints.length-1];
+      for (let index = 0; index < (tempoints.length - 1); index++) {
+        const element = tempoints[index];
+        let temparray = [];
+        temparray.push(parseFloat(lastpoint.lat));
+        temparray.push(parseFloat(lastpoint.lng));
+        temparray.push(element.lat);
+        temparray.push(element.lng);
+        aaaaa.push(temparray);
+      }
+      
+      console.log(aaaaa);
+
+      let yyyyy = new THREE.Mesh(
+        this._baseGeometry,
+        new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          vertexColors: THREE.FaceColors,
+          morphTargets: true
+        })
+      );
+  
+      initCurves(aaaaa,yyyyy);
+  
+
       scene.add(this.points);
+      scene.add(yyyyy);
     }
+  }
+
+  function returnPointVector3(lat, lng)
+  {
+    let vector3 = new THREE.Vector3(0,0,0);
+    var phi = ((90 - lat) * Math.PI) / 180;
+    var theta = ((180 - lng) * Math.PI) / 180;
+
+    vector3.x = 200 * Math.sin(phi) * Math.cos(theta);
+    vector3.y = 200 * Math.cos(phi);
+    vector3.z = 200 * Math.sin(phi) * Math.sin(theta);
+
+    return vector3;
   }
 
   function addPoint(lat, lng, size, color, subgeo) {
@@ -285,6 +358,8 @@ export default (DAT.Globe = function(container, opts) {
 
     point.scale.z = Math.max(size, 0.1); // avoid non-invertible matrix
     point.updateMatrix();
+
+    tempoints.push({lat:lat,lng:lng});
 
     for (var i = 0; i < point.geometry.faces.length; i++) {
       point.geometry.faces[i].color = color;
@@ -391,6 +466,84 @@ export default (DAT.Globe = function(container, opts) {
 
     renderer.render(scene, camera);
   }
+
+  function initCurves(allCoords,incomingmesh) {
+    const material = new THREE.MeshBasicMaterial({
+      blending: THREE.AdditiveBlending,
+      opacity: 0.6,
+      transparent: true,
+      color: 0xe43c59
+    });
+    const curveMesh = new THREE.Mesh();
+  
+    allCoords.forEach((coords, index) => {
+        const curve = new Curve(coords, material);
+        curveMesh.add(curve.mesh);
+    });
+  
+    incomingmesh.add(curveMesh);
+  }
+
+  function Curve(coords, material) {
+    const { spline } = getSplineFromCoords(coords);
+  
+    // add curve geometry
+    const curveGeometry = new THREE.BufferGeometry();
+    const points = new Float32Array(32 * 3);
+    const vertices = spline.getPoints(32 - 1);
+  
+    for (let i = 0, j = 0; i < vertices.length; i++) {
+      const vertex = vertices[i];
+      points[j++] = vertex.x;
+      points[j++] = vertex.y;
+      points[j++] = vertex.z;
+    }
+  
+    // !!!
+    // You can use setDrawRange to animate the curve
+    curveGeometry.addAttribute('position', new THREE.BufferAttribute(points, 3));
+    curveGeometry.setDrawRange(0, 32);
+  
+   this.mesh =  new THREE.Line(curveGeometry, material);
+  }
+
+  function getSplineFromCoords(coords) {
+    const startLat = coords[0];
+    const startLng = coords[1];
+    const endLat = coords[2];
+    const endLng = coords[3];
+  
+    // spline vertices
+    const start = coordinateToPosition(startLat, startLng, 200);
+    const end = coordinateToPosition(endLat, endLng, 200);
+    const altitude = clamp(start.distanceTo(end) * .75, 20, 200);
+    const interpolate = geoInterpolate([startLng, startLat], [endLng, endLat]);
+    const midCoord1 = interpolate(0.25);
+    const midCoord2 = interpolate(0.75);
+    const mid1 = coordinateToPosition(midCoord1[1], midCoord1[0], 200 + altitude);
+    const mid2 = coordinateToPosition(midCoord2[1], midCoord2[0], 200 + altitude);
+  
+    return {
+      start,
+      end,
+      spline: new THREE.CubicBezierCurve3(start, mid1, mid2, end)
+    };
+  }
+  function clamp(num, min, max) {
+    return num <= min ? min : (num >= max ? max : num)};
+
+  function coordinateToPosition(lat, lng, radius) {
+    const DEGREE_TO_RADIAN = Math.PI / 180;
+    const phi = (90 - lat) * DEGREE_TO_RADIAN;
+    const theta = (lng) * DEGREE_TO_RADIAN;
+  
+    return new THREE.Vector3(
+      - radius * Math.sin(phi) * Math.cos(theta),
+      radius * Math.cos(phi),
+      radius * Math.sin(phi) * Math.sin(theta)
+    );
+  }
+
 
   init();
   this.animate = animate;
