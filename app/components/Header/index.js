@@ -11,7 +11,12 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
 
+import GOOGLE from "../../script/googleanalytics";
+let heighestPeerBlock = 0;
+
 const mapStateToProps = state => {
+  // console.log(state.overview);
+
   return { ...state.overview, ...state.common };
 };
 
@@ -24,6 +29,9 @@ class Header extends Component {
       require("electron").remote.getCurrentWindow().id
     );
 
+    
+    //console.log(visitor);
+    this.props.SetGoogleAnalytics(GOOGLE);
     menuBuilder.buildMenu(this.props.history);
 
     this.props.GetInfoDump();
@@ -32,14 +40,18 @@ class Header extends Component {
     self.set = setInterval(function() {
       self.props.GetInfoDump();
     }, 1000);
+    this.props.history.push("/");
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
       this.props.Unlock();
+      this.props.Unencrypted();
     } else if (nextProps.unlocked_until === 0) {
       this.props.Lock();
+      this.props.Encrypted();
     } else if (nextProps.unlocked_until >= 0) {
       this.props.Unlock();
+      this.props.Encrypted();
     }
   }
   signInStatus() {
@@ -68,7 +80,7 @@ class Header extends Component {
   }
 
   syncStatus() {
-    let heighestPeerBlock = "";
+    
     RPC.PROMISE("getpeerinfo", []).then(peerresponse => {
       peerresponse.forEach(element => {
         if (element.height >= heighestPeerBlock) {
@@ -80,6 +92,15 @@ class Header extends Component {
       return "images/notsynced.png";
     } else {
       return "images/status-good.png";
+    }
+  }
+
+  returnSyncStatusTooltip()
+  {
+    if (heighestPeerBlock > this.props.blocks) {
+      return "Syncing...\nBehind\n" + (heighestPeerBlock - this.props.blocks).toString() + "\nBlocks";
+    } else {
+      return "Synced";
     }
   }
 
@@ -104,7 +125,9 @@ class Header extends Component {
           </div>
           <div className="icon">
             <img src={this.syncStatus()} />
-            {/* <div className="tooltip" /> */}
+            <div className="tooltip bottom" style={{right:"100%"}} >
+              <div>{this.returnSyncStatusTooltip()}</div>
+            </div>
           </div>
         </div>
         <Link to="/">

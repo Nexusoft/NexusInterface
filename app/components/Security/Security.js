@@ -110,7 +110,7 @@ class Security extends Component {
         <div className="securitySubContainer">
           <form>
             <fieldset>
-              <legend>Account Information</legend>
+              <legend>Change Password</legend>
               <div className="field">
                 <label>Previous Password:</label>
                 <input

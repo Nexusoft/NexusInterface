@@ -105,11 +105,20 @@ body {
   grid-area: navigation;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  background: rgba(0, 0, 0, 0.5);
+#app-loader {
+  grid-area: content;
+  position: absolute;
+  top: calc(50% - 210px);
+  left: calc(50% - 150px);
+  width: 300px;
+  height: 300px;
 }
+
+/* Scrollbar */ 
+::-webkit-scrollbar { 
+	width: 10px;
+  background: rgba(0,0,0,0.5);
+ } 
 
 /* Track */
 /* ::-webkit-scrollbar-track {

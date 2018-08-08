@@ -25,3 +25,21 @@ export const Unlock = () => {
     dispatch({ type: TYPE.UNLOCK });
   };
 };
+
+export const Encrypted = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.ENCRYPTED });
+  };
+};
+
+export const Unencrypted = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.UNENCRYPTED });
+  };
+};
+
+export const SetGoogleAnalytics = returnData => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload: returnData });
+  };
+};

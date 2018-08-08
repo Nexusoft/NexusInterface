@@ -2,6 +2,9 @@ import * as TYPE from "../actions/actiontypes";
 
 const initialState = {
   loggedIn: false,
+  googleanalytics: null,
+  encrypted: false
+  loggedIn: false,
   busyFlag: false
 };
 
@@ -12,6 +15,7 @@ export default (state = initialState, action) => {
         ...state,
         loggedIn: false
       };
+      break;
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
         ...state,
@@ -23,6 +27,27 @@ export default (state = initialState, action) => {
         ...state,
         loggedIn: true
       };
+      break;
+    case TYPE.UNENCRYPTED:
+      return {
+        ...state,
+        encrypted: false
+      };
+      break;
+    case TYPE.ENCRYPTED:
+      return {
+        ...state,
+        encrypted: true
+      };
+      break;
+
+    case TYPE.SET_GOOGLEANALYTICS:
+      return {
+        ...state,
+        googleanalytics: action.payload
+      };
+      break;
+
     default:
       return state;
   }
