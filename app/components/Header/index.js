@@ -86,7 +86,7 @@ class Header extends Component {
       });
     });
     if (heighestPeerBlock > this.props.blocks) {
-      return "images/status-notgood.svg";
+      return "images/status-bad.svg";
     } else {
       return "images/status-good.svg";
     }
