@@ -2,7 +2,7 @@ import * as TYPE from "../actions/actiontypes";
 
 const initialState = {
   refundAddress: "",
-  ammount: 0,
+  ammount: "",
   toAddress: "",
   availableCoins: {},
   from: "",

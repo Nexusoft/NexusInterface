@@ -149,7 +149,9 @@ class Shapeshift extends Component {
     } else return null;
   }
   ammountHandler(value) {
-    console.log(parseFloat(value));
+    if (value === Number) {
+      consolelog(typeof parseFloat(value));
+    }
   }
 
   render() {
@@ -178,8 +180,9 @@ class Shapeshift extends Component {
                     <input
                       type="text"
                       placeholder={this.minAmmount()}
-                      value={this.props.ammount}
-                      onChange={e => this.ammountHandler(e.target.value)}
+                      // value={this.props.ammount}
+                      // onChange={e => this.ammountHandler(e.target.value)}
+                      pattern={"^[0-9.-/]+$"}
                       required
                     />
                   </div>

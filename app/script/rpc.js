@@ -111,9 +111,9 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args
     });
-
+    console.log(PostData);
     var ResponseObject;
-  
+
     /** Opera 8.0+, Firefox, Safari **/
     try {
       ResponseObject = new XMLHttpRequest();
@@ -136,15 +136,11 @@ export const PROMISE = (cmd, args) => {
 
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
-
-      if (ResponseObject.status == 404)
-      {
-        
-        reject("RPC Command {"  + cmd + "} Not Found");
+      if (ResponseObject.status == 404) {
+        reject("RPC Command {" + cmd + "} Not Found");
       }
-      if (ResponseObject.status == 500)
-      {
-        reject("Bad Command Arguments");
+      if (ResponseObject.status == 500) {
+        reject(JSON.parse(ResponseObject.statusText));
       }
 
       if (cmd === "validateaddress") {
@@ -166,11 +162,10 @@ export const PROMISE = (cmd, args) => {
       resolve(payload);
     };
 
-    ResponseObject.onerror = () =>
-    {
+    ResponseObject.onerror = () => {
       console.log("BBBBBBBBBBBBBB");
       reject(ResponseObject.response);
-    }
+    };
 
     /** Generate the AJAX Request. **/
     if (GETUSER() == undefined && GETPASSWORD() == undefined)
