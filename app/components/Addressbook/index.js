@@ -10,7 +10,6 @@ import * as RPC from "../../script/rpc";
 import MyAddresses from "./MyAddresses";
 import ContactList from "./ContactList";
 import ContactView from "./ContactView";
-import ContactEdit from "./ContactEdit";
 import ContextMenuBuilder from "../../contextmenu";
 
 import styles from "./style.css";
@@ -826,11 +825,6 @@ class Addressbook extends Component {
             contact={this.state.selectedContact}
             onUpdate={this.updateContact}
             onEdit={this.showEditContact}/>
-
-          <ContactEdit 
-            show={this.state.showEditContact}
-            contact={this.state.selectedContact}
-            onUpdate={this.updateContact}/>
 
           <Modal 
             open={this.state.showAddContact} 
