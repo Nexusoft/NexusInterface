@@ -11,6 +11,7 @@ export default class SettingsApp extends Component {
     var settings = require("../../api/settings.js").GetSettings();
 
     //Application settings
+    // this.setWallpaper(settings);
     this.setAutostart(settings);
     this.setMinimizeToTray(settings);
     this.setMinimizeOnClose(settings);
@@ -18,6 +19,22 @@ export default class SettingsApp extends Component {
     this.setDefaultUnitAmount(settings);
     this.setDeveloperMode(settings);
   }
+
+  //
+  // Set wallpaper
+  //
+
+  // setWallpaper(settings) {
+  //   var wallpaper = document.getElementById("wallpaper");
+
+  //   if (settings.wallpaper === undefined) {
+  //     wallpaper.value = "../images/background/nexus-conference.png";
+  //     // wallpaper.value = "https://images7.alphacoders.com/428/428134.jpg";
+  //   } else {
+  //     wallpaper.value = settings.wallpaper;
+  //   }
+
+  // }
 
   //
   // Set autostart
@@ -115,6 +132,25 @@ export default class SettingsApp extends Component {
     if (settings.devMode === "true") {
       devmode.checked = true;
     }
+  }
+
+  //
+  // Update Wallpaper
+  //
+
+  updateWallpaper(event) {
+
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    console.log(el.files[0].path);
+    settingsObj.wallpaper = el.files[0].path;
+
+    settings.SaveSettings(settingsObj);
+
+    document.body.style.setProperty('--background-main-image', "url('" + el.files[0].path + "')");
+
   }
 
   //
@@ -234,6 +270,12 @@ export default class SettingsApp extends Component {
     return (
       <section id="application">
         <form className="aligned">
+
+            <div className="field">
+              <label htmlFor="wallpaper">Wallpaper</label>
+              <input id="wallpaper" type="file" size="25" onChange={this.updateWallpaper} data-tooltip="The background wallpaper for your wallet"/>
+            </div>
+
           <div className="field">
             <label htmlFor="autostart">Start at system startup</label>
             <input

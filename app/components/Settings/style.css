@@ -86,8 +86,55 @@ form {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-#appSettingsContianer {
-  width: 100%;
-  display: flex;
-  flex-direction: row-reverse;
+#settings input[type="file"] {
+  margin: 0;
+  padding: 0;
+  height: 2em;
+  background: transparent;
+  color: transparent;
+  outline: 0;
+}
+#settings input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden;
+}
+#settings input[type="file"]::before {
+  content: 'Select a wallpaper';
+
+  display: inline-block;
+	position: relative;
+  margin: 0;
+	padding: .4375em 1.25em;
+	vertical-align: middle;
+	line-height: var(--line-height);
+
+	outline: 0;
+	border: var(--button-border);
+	border-radius: var(--button-border-radius);
+
+	background: var(--button-background);
+	box-shadow: var(--button-box-shadow);
+	text-shadow: var(--button-text-shadow);
+
+	color: var(--button-color);
+
+	font-size: inherit;
+	font-family: inherit;
+	text-decoration: none;
+	white-space: nowrap;
+	user-select: none;
+
+	cursor: pointer;
+	
+	transition: all .1s ease;
+}
+#settings input[type="file"]:hover::before {
+  color: var(--button-hover-color);
+	border: var(--button-hover-border);
+	background: var(--button-hover-background);
+	text-decoration: none;
+	transform: var(--button-hover-transform);
+	box-shadow: var(--button-hover-box-shadow);
+}
+#settings input[type="file"]:active {
+  outline: 0;
 }
