@@ -378,7 +378,7 @@ class Overview extends Component {
           </div>
 
           <div id="nxs-market-price-info">
-            <div className="h2">24hr Percent Change (USD)</div>
+            <div className="h2">24hr Change (USD %)</div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
