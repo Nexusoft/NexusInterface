@@ -110,7 +110,9 @@ class SendRecieve extends Component {
     this.props.busy();
 
     if (keyCheck.length > 1) {
-      RPC.PROMISE("sendmany", ["", this.props.Queue]);
+      RPC.PROMISE("sendmany", ["", this.props.Queue]).catch(e =>
+        alert(e.error.message)
+      );
     } else {
       RPC.PROMISE("sendtoaddress", [
         keyCheck[1],

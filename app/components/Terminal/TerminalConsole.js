@@ -12,25 +12,21 @@ export default class TerminalConsole extends Component {
       consoleoutput: [],
       currentInput: "",
       inputfield: null,
-      commandList:[],
-      autoComplete:[],
+      commandList: [],
+      autoComplete: [],
       testnum: 99999
-    }
+    };
+  }
 
-  }  
-
-  componentDidMount(){
-    //this.state.inputfield.focus(); 
+  componentDidMount() {
+    //this.state.inputfield.focus();
 
     RPC.PROMISE("help", []).then(payload => {
-      
-      let CommandList = payload.split('\n');
+      let CommandList = payload.split("\n");
       console.log(CommandList);
-      this.setState(
-        {
-          commandList:CommandList
-        }
-      );
+      this.setState({
+        commandList: CommandList
+      });
     });
   }
 
@@ -110,30 +106,29 @@ export default class TerminalConsole extends Component {
             tempConsoleOutput.push(payload);
           }
         }
-        else
-        {
-          tempConsoleOutput.push(payload);
-        }
-      }
-      /// If it is a object with multi variables then output them on each line 
-      else {
-        for (let outputObject in payload)
-        {
-          //ddd.push(aaa + ": " + payload[aaa]);
-          if (typeof payload[outputObject] === "object")
-            {
-              tempConsoleOutput.push(outputObject + ": " );
-            }
-            else{
-              tempConsoleOutput.push(outputObject + ": " + payload[outputObject]);
+
+        /// If it is a object with multi variables then output them on each line
+        else {
+          for (let outputObject in payload) {
+            //ddd.push(aaa + ": " + payload[aaa]);
+            if (typeof payload[outputObject] === "object") {
+              tempConsoleOutput.push(outputObject + ": ");
+            } else {
+              tempConsoleOutput.push(
+                outputObject + ": " + payload[outputObject]
+              );
             }
 
             //If it is a object then we need to display ever var on a new line.
-            if (typeof payload[outputObject] === "object"){
-              for (let interalres in payload[outputObject])
-              {
+            if (typeof payload[outputObject] === "object") {
+              for (let interalres in payload[outputObject]) {
                 /// Probably need to do this in css but I add a tab to make it look cleaner
-                tempConsoleOutput.push('       ' + interalres + ":" + payload[outputObject][interalres]);
+                tempConsoleOutput.push(
+                  "       " +
+                    interalres +
+                    ":" +
+                    payload[outputObject][interalres]
+                );
               }
             }
           }
@@ -172,8 +167,7 @@ export default class TerminalConsole extends Component {
 
   /// Handle arrow key press
   /// Handles what happens when the user presses arrow keys for the auto complete
-  handleAutocompleteArrowKeyPress = (e) => {
-    
+  handleAutocompleteArrowKeyPress = e => {
     /*
     console.log(this.state.currentInput);
     console.log(e.target.value);
@@ -221,38 +215,49 @@ export default class TerminalConsole extends Component {
     , () => {console.log(this.state.testnum)}); 
 
       */
-  }
+  };
 
   /// On Input Field Change
   /// What happens when the value of the inputfield changes
-  onInputfieldChange = (e) =>
-  {
-    this.setState(
-      {
-        currentInput: e.target.value
-      });
-  }
-
+  onInputfieldChange = e => {
+    this.setState({
+      currentInput: e.target.value
+    });
+  };
 
   render() {
     return (
       <div id="terminal-console">
         <div id="terminal-console-input">
-
-          <input id="input-text" autoFocus ref={this.setInputFeild} type="text" value={this.currentInput} placeholder="Enter console commands here (ex: getinfo, help)" onChange={this.onInputfieldChange} onKeyPress={this.handleEnterKeyPress}/>
-          <button id="input-submit" className="button primary" value="Execute" onClick={() => this.processInput()}>Execute</button>
-          
+          <input
+            id="input-text"
+            autoFocus
+            ref={this.setInputFeild}
+            type="text"
+            value={this.currentInput}
+            placeholder="Enter console commands here (ex: getinfo, help)"
+            onChange={this.onInputfieldChange}
+            onKeyPress={this.handleEnterKeyPress}
+          />
+          <button
+            id="input-submit"
+            className="button primary"
+            value="Execute"
+            onClick={() => this.processInput()}
+          >
+            Execute
+          </button>
         </div>
 
         <div id="terminal-console-output">
-
-        <button
-          id="terminal-console-reset"
-          className="button"
-          onClick={() => this.resetnexusrpcconsole()}
-        >
-          Clear Console
-        </button>
+          <button
+            id="terminal-console-reset"
+            className="button"
+            onClick={() => this.resetnexusrpcconsole()}
+          >
+            Clear Console
+          </button>
+        </div>
       </div>
     );
   }
