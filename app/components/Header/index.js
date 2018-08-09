@@ -75,7 +75,11 @@ class Header extends Component {
     } else if (this.props.unlocked_until === 0) {
       return "Wallet Locked";
     } else if (this.props.unlocked_until >= 0) {
-      return "Unlocked until: " + unlockDate;
+      if (this.props.minting_only) {
+        return "Unlocked until: " + unlockDate + " STAKING ONLY";
+      } else {
+        return "Unlocked until: " + unlockDate;
+      }
     }
   }
 

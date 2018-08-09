@@ -162,8 +162,8 @@ export const PROMISE = (cmd, args) => {
       resolve(payload);
     };
 
-    ResponseObject.onerror = () => {
-      console.log("BBBBBBBBBBBBBB");
+    ResponseObject.onerror = () =>
+    {
       reject(ResponseObject.response);
     };
 

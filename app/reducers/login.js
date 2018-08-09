@@ -4,7 +4,8 @@ const initialState = {
   unlockUntillDate: "",
   accoutName: "",
   privKey: "",
-  address: ""
+  address: "",
+  stakingFlag: false
 };
 
 export default (state = initialState, action) => {
@@ -13,6 +14,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         unlockUntillDate: action.payload
+      };
+      break;
+    case TYPE.TOGGLE_BUSY_FLAG:
+      return {
+        ...state,
+        busyFlag: !state.busyFlag
+      };
+      break;
+    case TYPE.TOGGLE_STAKING_FLAG:
+      return {
+        ...state,
+        stakingFlag: !state.stakingFlag
       };
       break;
     case TYPE.WIPE_LOGIN_INFO:
