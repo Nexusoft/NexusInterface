@@ -29,8 +29,6 @@ class Header extends Component {
       require("electron").remote.getCurrentWindow().id
     );
 
-    
-    //console.log(visitor);
     this.props.SetGoogleAnalytics(GOOGLE);
     menuBuilder.buildMenu(this.props.history);
 
@@ -42,6 +40,7 @@ class Header extends Component {
     }, 1000);
     this.props.history.push("/");
   }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
       this.props.Unlock();
@@ -54,6 +53,7 @@ class Header extends Component {
       this.props.Encrypted();
     }
   }
+
   signInStatus() {
     if (this.props.unlocked_until === undefined) {
       return "images/unencryptedicon.png";
@@ -80,7 +80,6 @@ class Header extends Component {
   }
 
   syncStatus() {
-    
     RPC.PROMISE("getpeerinfo", []).then(peerresponse => {
       peerresponse.forEach(element => {
         if (element.height >= heighestPeerBlock) {
@@ -95,10 +94,13 @@ class Header extends Component {
     }
   }
 
-  returnSyncStatusTooltip()
-  {
+  returnSyncStatusTooltip() {
     if (heighestPeerBlock > this.props.blocks) {
-      return "Syncing...\nBehind\n" + (heighestPeerBlock - this.props.blocks).toString() + "\nBlocks";
+      return (
+        "Syncing...\nBehind\n" +
+        (heighestPeerBlock - this.props.blocks).toString() +
+        "\nBlocks"
+      );
     } else {
       return "Synced";
     }
@@ -125,7 +127,7 @@ class Header extends Component {
           </div>
           <div className="icon">
             <img src={this.syncStatus()} />
-            <div className="tooltip bottom" style={{right:"100%"}} >
+            <div className="tooltip bottom" style={{ right: "100%" }}>
               <div>{this.returnSyncStatusTooltip()}</div>
             </div>
           </div>
