@@ -15,7 +15,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   setDate: date => dispatch({ type: TYPE.SET_DATE, payload: date }),
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
+  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG })
 });
 
 class Login extends Component {
@@ -38,13 +39,29 @@ class Login extends Component {
       (unlockDate.getTime() - today.getTime()) / 1000
     );
     this.props.busy();
-    RPC.PROMISE("walletpassphrase", [
-      document.getElementById("pass").value,
-      unlockUntill,
-      true
-    ]).then(payload => {
-      this.props.wipe();
-    });
+    if (this.props.stakingFlag) {
+      console.log("wut");
+      RPC.PROMISE("walletpassphrase", [
+        document.getElementById("pass").value,
+        unlockUntill,
+        true
+      ])
+        .then(payload => {
+          this.props.wipe();
+        })
+        .catch(e => alert(e.error.message));
+    } else {
+      console.log("other");
+      RPC.PROMISE("walletpassphrase", [
+        document.getElementById("pass").value,
+        unlockUntill,
+        false
+      ])
+        .then(payload => {
+          this.props.wipe();
+        })
+        .catch(e => alert(e.error.message));
+    }
   }
 
   render() {
@@ -82,6 +99,17 @@ class Login extends Component {
                 required
               />
               <span className="hint">Password is required</span>
+            </div>
+
+            {/* STAKING FLAG STUFF */}
+            <div className="field" id="checkFeild">
+              <label>Staking Only:</label>
+              <input
+                type="checkbox"
+                className="switch"
+                value={this.props.stakeFlag}
+                onChange={() => this.props.stake()}
+              />
             </div>
           </fieldset>
 

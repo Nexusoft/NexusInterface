@@ -55,3 +55,9 @@
   height: fit-content;
   flex: 2;
 }
+
+#checkFeild {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
