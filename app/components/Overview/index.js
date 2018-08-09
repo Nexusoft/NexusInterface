@@ -6,39 +6,41 @@ import Modal from "react-responsive-modal";
 import * as TYPE from "../../actions/actiontypes";
 
 // importing images here because of a weird webpack issue
-import Connections0 from "../../images/Connections0.png";
-import Connections4 from "../../images/Connections4.png";
-import Connections8 from "../../images/Connections8.png";
-import Connections12 from "../../images/Connections12.png";
-import Connections14 from "../../images/Connections14.png";
-import Connections16 from "../../images/Connections16.png";
+import Connections0 from "../../images/Connections0.svg";
+import Connections4 from "../../images/Connections4.svg";
+import Connections8 from "../../images/Connections8.svg";
+import Connections12 from "../../images/Connections12.svg";
+import Connections14 from "../../images/Connections14.svg";
+import Connections16 from "../../images/Connections16.svg";
 
-import blockweight0 from "../../images/BlockWeight-0.png";
-import blockweight1 from "../../images/BlockWeight-1.png";
-import blockweight2 from "../../images/BlockWeight-2.png";
-import blockweight3 from "../../images/BlockWeight-3.png";
-import blockweight4 from "../../images/BlockWeight-4.png";
-import blockweight5 from "../../images/BlockWeight-5.png";
-import blockweight6 from "../../images/BlockWeight-6.png";
-import blockweight7 from "../../images/BlockWeight-7.png";
-import blockweight8 from "../../images/BlockWeight-8.png";
-import blockweight9 from "../../images/BlockWeight-9.png";
+import blockweight0 from "../../images/BlockWeight-0.svg";
+import blockweight1 from "../../images/BlockWeight-1.svg";
+import blockweight2 from "../../images/BlockWeight-2.svg";
+import blockweight3 from "../../images/BlockWeight-3.svg";
+import blockweight4 from "../../images/BlockWeight-4.svg";
+import blockweight5 from "../../images/BlockWeight-5.svg";
+import blockweight6 from "../../images/BlockWeight-6.svg";
+import blockweight7 from "../../images/BlockWeight-7.svg";
+import blockweight8 from "../../images/BlockWeight-8.svg";
+import blockweight9 from "../../images/BlockWeight-9.svg";
 
-import trust00 from "../../images/trust00.png";
-import trust10 from "../../images/trust10.png";
-import trust20 from "../../images/trust20.png";
-import trust30 from "../../images/trust30.png";
-import trust40 from "../../images/trust40.png";
-import trust50 from "../../images/trust50.png";
-import trust60 from "../../images/trust60.png";
-import trust70 from "../../images/trust70.png";
-import trust80 from "../../images/trust80.png";
-import trust90 from "../../images/trust90.png";
-import trust100 from "../../images/trust100.png";
+import trust00 from "../../images/trust00.svg";
+import trust10 from "../../images/trust10.svg";
+import trust20 from "../../images/trust20.svg";
+import trust30 from "../../images/trust30.svg";
+import trust40 from "../../images/trust40.svg";
+import trust50 from "../../images/trust50.svg";
+import trust60 from "../../images/trust60.svg";
+import trust70 from "../../images/trust70.svg";
+import trust80 from "../../images/trust80.svg";
+import trust90 from "../../images/trust90.svg";
+import trust100 from "../../images/trust100.svg";
 
-import nxsStake from "../../images/nxs-staking.png";
+import USD from "../../images/USD.svg";
+import transactionsArrows from "../../images/transactions-arrows.svg";
+import nxsStake from "../../images/nxs-staking.svg";
 import interestRate from "../../images/nxs-chart.png";
-import nxsblocks from "../../images/nxs-blocks.png";
+import nxsblocks from "../../images/blockexplorer.svg";
 
 import NetworkGlobe from "./NetworkGlobe";
 
@@ -353,13 +355,13 @@ class Overview extends Component {
 
           <div id="nxs-currency-value-info">
             <div className="h2">Currency Value (USD)</div>
-            <img src={nxsStake} />
+            <img src={USD} />
             <div className="overviewValue">{this.calculateUSDvalue()}</div>
           </div>
 
           <div id="nxs-transactions-info">
             <div className="h2">Transactions</div>
-            <img src={nxsStake} />
+            <img src={transactionsArrows} />
             <div className="overviewValue">{this.props.txtotal}</div>
           </div>
 

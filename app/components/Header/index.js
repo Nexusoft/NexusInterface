@@ -103,7 +103,7 @@ class Header extends Component {
             </div>
           </div>
           <div className="icon">
-            <img src="images/nxs-staking-icon.png" />
+            <img src="images/staking.svg" />
             <div className="tooltip bottom">
               <div>Stake Weight: {this.props.stakeweight}%</div>
               <div>Interest Rate: {this.props.interestweight}%</div>
