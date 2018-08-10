@@ -10,6 +10,7 @@ import * as RPC from "../../script/rpc";
 import MyAddresses from "./MyAddresses";
 import ContactList from "./ContactList";
 import ContactView from "./ContactView";
+import FormError from "./FormError";
 import ContextMenuBuilder from "../../contextmenu";
 
 import styles from "./style.css";
@@ -41,115 +42,19 @@ class Addressbook extends Component {
       showMyAddresses: false,
       showAddContact: false,
       showViewContact: false,
-      showEditContact: false
+      showEditContact: false,
+      addError: null
     };
   }
 
   //
-  // componentDidMount: get addressbook data and set up context menus
+  // componentDidMount: get addressbook data
   //
 
   componentDidMount() {
 
     RPC.GET("listaccounts", [0], this.loadAddressBook.bind(this));
 
-    this.addressbookcontextfunction = this.addressbookContextFunction.bind(this);
-
-    window.addEventListener("contextmenu", this.addressbookContextFunction, false);
-    
-  }
-
-  //
-  // componentWillUnmount: unbind context menus
-  //
-
-  componentWillUnmount()
-  {
-    window.removeEventListener("contextmenu",this.addressbookContextFunction);
-  }
-
-  //
-  // addressbookContextFunction: listener to configure the context menu (right click)
-  //
-
-  addressbookContextFunction(e) 
-  {
-    // Prevent default action of right click
-    e.preventDefault();
-
-    const template = [
-      {
-        label: 'File',
-        submenu: [
-    
-          {
-            label: 'Copy',
-            role: 'copy',
-            
-          }
-        ]
-      },
-      {
-          label: 'Reload',
-          accelerator: 'CmdOrCtrl+R',
-          click (item, focusedWindow) {
-            if (focusedWindow) focusedWindow.reload()
-          }
-      }
-    ]
-
-    //get default context menu
-    const defaultContext = new ContextMenuBuilder().defaultContext;
-
-    //build default context menu
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(defaultContext);
-
-    //create new custom context menu
-    let addressbookcontextmenu = new remote.Menu();
-
-    //Add Resending the transaction option
-    addressbookcontextmenu.append(
-      new remote.MenuItem({
-        label: "Send Nexus To",
-        click() {
-          alert("Send Nexus: not yet implemented");
-          // ADDRESSBOOK.SendOBJ = Object.assign(ADDRESSBOOK.SendOBJ, {
-          //   to: ADDRESSBOOK.thisadd
-          // });
-          // alert(ADDRESSBOOK.SendOBJ);
-          // ADDRESSBOOK.calledfrom = true;
-          // LOAD.Module(1, 2);
-        }
-      })
-    );
-
-    let addressbooklabelcontextmenu = new remote.Menu();
-
-    //Add Resending the transaction option
-    addressbooklabelcontextmenu.append(
-      new remote.MenuItem({
-        label: "Edit",
-        click() {
-          alert("Edit Modal: not yet implemented");
-          // this.labelmodal(this.state.thisid, this.state.autofill);
-        }
-      })
-    );
-
-    switch (this.state.hoveredover) {
-      case "label":
-        addressbooklabelcontextmenu.popup(remote.getCurrentWindow());
-        break;
-      case "outgoing":
-        addressbookcontextmenu.popup(remote.getCurrentWindow());
-        break;
-      case "general":
-        defaultcontextmenu.popup(remote.getCurrentWindow());
-        break;
-      default:
-        defaultcontextmenu.popup(remote.getCurrentWindow());
-        break;
-    }
   }
 
   //
@@ -254,8 +159,6 @@ class Addressbook extends Component {
 
       this.saveAddressBook(psudoState);
 
-      this.setDefaultContact(psudoState);
-
   }
 
   //
@@ -330,22 +233,6 @@ class Addressbook extends Component {
   }
 
   //
-  // setDefaultContact: set the default contact to be displayed (hint: My Addresses) and append the name/index to the object to simplify child component's lives
-  //
-
-  setDefaultContact(state)
-  {
-
-    let name = Object.keys(this.state.contacts)[0];
-    let contact = {name: name, index: 0, ...state[name]};
-
-    this.setState({
-      selectedContact: contact
-    });
-
-  };
-
-  //
   // setContact: set a contact as the selectedContact, then set state to show the contact
   //
 
@@ -407,10 +294,10 @@ class Addressbook extends Component {
 
 
   //
-  // showAddContact: show the add contact modal
+  // closeViewContact: close the add contact modal
   //
 
-  cancelViewContact = () => {
+  closeViewContact = () => {
 
     this.setState(
       {
@@ -421,10 +308,10 @@ class Addressbook extends Component {
   }
 
   //
-  // cancelAddContact: cancel adding a new contact or click the close modal X
+  // closeMyAddresses: close the my addresses modal
   //
 
-  cancelMyAddresses = () => {
+  closeMyAddresses = () => {
     
     this.setState(
       {
@@ -435,14 +322,15 @@ class Addressbook extends Component {
   }
 
   //
-  // cancelAddContact: cancel adding a new contact or click the close modal X
+  // closeAddContact: close the add contact modal
   //
 
-  cancelAddContact = () => {
+  closeAddContact = () => {
     
     this.setState(
       {
-        showAddContact: false
+        showAddContact: false,
+        addError: null
       }
     );
 
@@ -475,33 +363,32 @@ class Addressbook extends Component {
     let address = document.getElementById("new-account-address").value;
     let notes = document.getElementById("new-account-notes").value;
 
-    // Input Validation: Name
-    if (name.trim === "")
+    // Validate the name is not blank
+    if (name.trim() === "")
     {
-      console.debug("Contact name is empty");
+      this.setState(
+        {
+          addError: "Please enter a contact name"
+        }
+      );
       return;
     }
 
-    // Input Validation: Address
-    if (address.trim === "")
-    {
-      console.debug("Address is empty");
-      return;
-    }
-
+    // Validate that the address is a valid address
     RPC.PROMISE("validateaddress", [address])
       .then(payload => {
 
+        // Add the address to the account
         RPC.PROMISE("setaccount", [address, name])
           .then(success => {
-
-            console.debug("Updating account state");
 
             let newState = {...this.state.contacts};
 
             newState[name] = {
               mine: {},
-              notMine: {},    //TODO: Do we need to add the address here?
+              notMine: {
+                "Primary": address
+              },
               phoneNum: phone.trim(),
               timeZone: timezone,
               notes: notes.trim()
@@ -509,17 +396,28 @@ class Addressbook extends Component {
 
             this.saveAddressBook(newState);
 
-            console.debug("Successfully added contact");
             this.closeAddContact();
 
           })
           .catch(e => {
-            console.debug("Unable to set account at this time: " + e);
+
+            this.setState(
+              {
+                addError: "Error adding address to the account: " + e
+              }
+            );
+
           });
 
       })
       .catch(e => {
-        console.debug("Invalid Address: " + e);
+
+        this.setState(
+          {
+            addError: "Please enter a valid Nexus address"
+          }
+        );
+
       });
 
   }
@@ -540,12 +438,31 @@ class Addressbook extends Component {
       notes: contact.notes
     };
 
-    let oldName = Object.keys(newState)[contact.index];
-
-    if (oldName !== contact.name)
+    if (contact.newNotMine)
     {
-      console.log("Name is updated, removing old contact");
-      delete newState[oldName];
+
+      for (var i in contact.newNotMine)
+      {
+
+        let label = contact.newNotMine[i].label;
+        let address = contact.newNotMine[i].address;
+
+        console.log("Adding contact address: ", contact.newNotMine[i], label, address);
+
+        updatedContact.notMine[label] = address;
+
+        //TODO: Right now we fire and forget the setaccount, the logic needs to be reorganized to make sure it only adds the contact if the call is successful. If the item is added to the new contact in the call it won't appear in the contact due to the async call
+
+        RPC.PROMISE("setaccount", [address, contact.name])
+        .then(success => {
+
+          console.log("Contact added");
+
+        });
+
+      }
+      
+      delete contact.newNotMine; // prevents bug where same contact is edited twice and addresses get duplicated
     }
 
     newState[contact.name] = updatedContact;
@@ -565,22 +482,24 @@ class Addressbook extends Component {
   // addReceiveAddress: add a new receive address for the wallet, these show in My Addresses
   //
 
-  addReceiveAddress = () => {
+  addReceiveAddress = (label) => {
 
+    // Get a new address, if an account is provided the new address will be a receive address 
+    // for that account, so transactions recieved at that address will be associated with the account
+
+    //TODO: Do we need the "" 
     RPC.PROMISE("getnewaddress", [""])
       .then(payload => {
 
-        RPC.PROMISE("setaccount", ["", ""])
-          .then(success => {
+        // Copy the old state to a new object and get a new receive address key
+        let newState = {...this.state.contacts};
 
-            //TODO: Add the new address to the state object, which should trigger a re-render
+        let newAddressKey = label === "" ? Object.keys(newState[""].mine).length : label;
 
-            this.saveAddressBook(this.state.contacts);
+        // Add new address to receive address list with new key
+        newState[""].mine[newAddressKey] = payload;
 
-          })
-          .catch(e => {
-              console.log(e);
-          });
+        this.saveAddressBook(newState);
 
       });
 
@@ -606,26 +525,26 @@ class Addressbook extends Component {
     ];
     rows.push(NameEntry);
 
-    for (let account in psudoState) {
+    for (let account in this.state.contacts) {
       let accountname = "";
       // let mine = Array.from(psudoState[account].mine);
-      let mine = Object.keys(psudoState[account].mine).map(key => {
-        return [key, psudoState[account].mine[key]];
+      let mine = Object.keys(this.state.contacts[account].mine).map(key => {
+        return [key, this.state.contacts[account].mine[key]];
       });
-      let notMine = Object.keys(psudoState[account].notMine).map(
+      let notMine = Object.keys(this.state.contacts[account].notMine).map(
         key => {
-          return [key, psudoState[account].notMine[key]];
+          return [key, this.state.contacts[account].notMine[key]];
         }
       );
 
       if (account === "") {
-        accountname = "No Account Name Set";
+        accountname = "Receive Addresses";
       } else {
         accountname = account;
       }
 
       let timezone = "";
-      switch (psudoState[account].timeZone) {
+      switch (this.state.contacts[account].timeZone) {
         case 0:
           timezone = "London";
           break;
@@ -744,7 +663,7 @@ class Addressbook extends Component {
           timezone = "Berlin";
           break;
         default:
-          timezone = psudoState[account].timeZone;
+          timezone = this.state.contacts[account].timeZone;
           break;
       }
 
@@ -752,9 +671,9 @@ class Addressbook extends Component {
         accountname,
         "",
         "",
-        psudoState[account].phoneNum,
+        this.state.contacts[account].phoneNum,
         timezone,
-        psudoState[account].notes
+        this.state.contacts[account].notes
       ];
       rows.push(tempentry);
       mine.map(arr => {
@@ -781,7 +700,7 @@ class Addressbook extends Component {
     let encodedUri = encodeURI(csvContent); //Set up a uri, in Javascript we are basically making a Link to this file
     let link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "my_data.csv"); //give link an action and a default name for the file. MUST BE .csv
+    link.setAttribute("download", "nexus-addressbook.csv"); //give link an action and a default name for the file. MUST BE .csv
 
     document.body.appendChild(link); // Required for FF
 
@@ -805,8 +724,10 @@ class Addressbook extends Component {
         <div className="panel">
 
           <div id="addressbook-controls">
-            <button className="button" onClick={this.showMyAddresses}>My Addresses</button>
-            <button className="button" onClick={this.showAddContact}>Add Contact</button>
+            <div id="addressbook-search">
+            </div>
+            <button className="button ghost" onClick={this.showMyAddresses}>My Addresses</button>
+            <button className="button primary" onClick={this.showAddContact}>Add Contact</button>
           </div>
 
           <ContactList
@@ -815,28 +736,30 @@ class Addressbook extends Component {
 
           <MyAddresses 
             show={this.state.showMyAddresses}
-            onClose={this.cancelMyAddresses}
-            contact={this.state.selectedContact}
+            onClose={this.closeMyAddresses}
+            contacts={this.state.contacts}
             onAddReceiveAddress={this.addReceiveAddress} />
 
           <ContactView 
             show={this.state.showViewContact}
-            onClose={this.cancelViewContact}
+            onClose={this.closeViewContact}
             contact={this.state.selectedContact}
             onUpdate={this.updateContact}
             onEdit={this.showEditContact}/>
 
           <Modal 
             open={this.state.showAddContact} 
-            onClose={this.cancelAddContact} 
+            onClose={this.closeAddContact} 
             center 
-            classNames={{ modal: 'modal' }}>
+            classNames={{ modal: 'modal addressbook-add-contact-modal' }}>
 
             <h2 >Add Contact</h2>
 
+            <FormError error={this.state.addError}/>
+
             <div className="field">
               <label htmlFor="new-account-name">Name</label>
-              <input id="new-account-name" type="text" placeholder="Name" />
+              <input ref="addContactName" id="new-account-name" type="text" placeholder="Name" required/>
             </div>
 
             <div className="field">
@@ -891,15 +814,16 @@ class Addressbook extends Component {
 
             <div className="field">
               <label htmlFor="new-account-notes">Notes</label>
-              <textarea id="new-account-notes" rows="4"></textarea>
+              <textarea id="new-account-notes" rows="3"></textarea>
             </div>
 
             <div className="field">
               <label htmlFor="new-account-address">Nexus Address</label>
-              <input id="new-account-address" type="text"  placeholder="Nexus Address" />
+              <input ref="addContactAddress" id="new-account-address" type="text" placeholder="Nexus Address"/>
             </div>
             
-            <button className="button" onClick={this.addContact}>Add Contact</button>
+            <button className="button primary" onClick={this.addContact}>Add Contact</button>
+            <button className="button" onClick={this.closeAddContact}>Cancel</button>
 
           </Modal>
 

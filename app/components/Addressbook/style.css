@@ -20,24 +20,6 @@
 }
 
 /*****************************************
-Add Contact Modal
-*****************************************/
-
-#addressbook .field input,
-#addressbook .field select,
-#addressbook .field textarea {
-  width: 100%;
-  display: block;
-}
-
-#addressbook .field label {
-  font-size: .8125em;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  opacity: .5;
-}
-
-/*****************************************
 Export Button
 *****************************************/
 
@@ -60,11 +42,30 @@ a.export:hover {
 
 #addressbook #addressbook-controls {
   box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
   flex: 0;
   width: 100%;
+  min-height: min-content;
   padding: 1em;
   border-bottom: 1px solid rgba(255,255,255,0.2);
 }
+
+#addressbook #addressbook-controls #addressbook-search {
+  flex: 1;
+}
+
+#addressbook #addressbook-controls button {
+  flex: 0;
+  margin: 0;
+  /* margin-top: 1em; */
+  margin-left: .75em;
+  font-size: 13px;
+  line-height: 26px;
+  padding: 2px 14px;
+}
+
 
 /*****************************************
 Address Book Contacts
@@ -84,7 +85,7 @@ Address Book Contacts
 #addressbook-contacts ul{
   flex: 1;
   margin: 0;
-  padding: 1em;
+  padding: 0;
   /* overflow: hidden; */
 }
 
@@ -144,7 +145,7 @@ Address Book Contacts
 Address Book View Contact
 *****************************************/
 
-#addressbook-contact-detail {
+#addressbook-contact-view {
   box-sizing: border-box;
   position: absolute;
   top: 0;
@@ -158,7 +159,7 @@ Address Book View Contact
   animation-duration: .5s;
 }
 
-#addressbook-contact-detail.close {
+#addressbook-contact-view.close {
   animation-name: hide-contact-view;
   animation-duration: .5s;
 }
@@ -173,7 +174,7 @@ Address Book View Contact
   to {right: -100%; opacity: 0}
 }
 
-#addressbook-contact-detail #close-contact {
+#addressbook-contact-view #close-contact {
   display: block;
   position: absolute;
   top: 1.5em;
@@ -181,16 +182,16 @@ Address Book View Contact
   cursor: pointer;
 }
 
-#addressbook-contact-detail #close-contact svg {
+#addressbook-contact-view #close-contact svg {
   fill: var(--modal-close-button-color);
 }
 
-#addressbook-contact-detail #close-contact:hover svg {
+#addressbook-contact-view #close-contact:hover svg {
   filter: brightness(150%);
 }
 
-#addressbook-contact-detail #edit-contact,
-#addressbook-contact-detail #save-contact  {
+#addressbook-contact-view #edit-contact,
+#addressbook-contact-view #save-contact  {
   display: block;
   position: absolute;
   bottom: 1.5em;
@@ -199,38 +200,38 @@ Address Book View Contact
   margin: 0;
 }
 
-#addressbook-contact-detail #edit-contact img {
+#addressbook-contact-view #edit-contact img {
   height: 1.125em;
   width: 1.125em;
   opacity: .5;
   filter: grayscale(1) brightness(200%);
 }
 
-#addressbook-contact-detail #edit-contact:hover img {
+#addressbook-contact-view #edit-contact:hover img {
   opacity: 1;
 }
 
-#addressbook-contact-detail h3 {
+#addressbook-contact-view h3 {
   margin-bottom: 1.5em;
 }
 
-#addressbook-contact-detail h4 {
+#addressbook-contact-view h4 {
   margin: .5em 0;
   font-weight: 600;
   border-bottom: 1px solid rgba(255,255,255,0.1);
   padding: .5em;
 }
 
-#addressbook-contact-detail .contact-detail,
-#addressbook-contact-detail .contact-address {
+#addressbook-contact-view .contact-detail,
+#addressbook-contact-view .contact-address {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   position: relative;
 }
 
-#addressbook-contact-detail .contact-detail label,
-#addressbook-contact-detail .contact-address label {
+#addressbook-contact-view .contact-detail label,
+#addressbook-contact-view .contact-address label {
   flex: 0;
   flex-basis: 9em;
   display: inline-block;
@@ -241,19 +242,19 @@ Address Book View Contact
   opacity: .5;
 }
 
-#addressbook-contact-detail .contact-detail span {
+#addressbook-contact-view .contact-detail span {
   display: block;
   flex: 1;
 }
 
-#addressbook-contact-detail .contact-detail span input,
-#addressbook-contact-detail .contact-detail span select,
-#addressbook-contact-detail .contact-detail span textarea {
+#addressbook-contact-view .contact-detail span input,
+#addressbook-contact-view .contact-detail span select,
+#addressbook-contact-view .contact-detail span textarea {
   font-size: .875em;
   width: 100%;
 }
 
-#addressbook-contact-detail .contact-address span {
+#addressbook-contact-view .contact-address span {
   display: block;
   flex: 1;
   font-family: var(--mono-font-family);
@@ -263,12 +264,12 @@ Address Book View Contact
   cursor: pointer;
 }
 
-#addressbook-contact-detail .contact-address span.copied {
+#addressbook-contact-view .contact-address span.copied {
   animation-name: copied;
   animation-duration: 4s;
 }
 
-#addressbook-contact-detail h3 svg {
+#addressbook-contact-view h3 svg {
   text-anchor: middle;
   fill: white;
   font-size: 48px;
@@ -280,177 +281,147 @@ Address Book View Contact
   vertical-align: -13px;
 }
 
-#addressbook-contact-detail > div {
+#addressbook-contact-view > div {
   padding: .5em 0;
 }
 
-#addressbook-contact-detail header {
+#addressbook-contact-view header {
   font-size: .8125em;
   text-transform: uppercase;
   letter-spacing: 1px;
   opacity: .5;
 }
 
-#addressbook-contact-detail #my-addresses,
-#addressbook-contact-detail #their-addresses {
-  margin: 0;
-  padding: 0;
-}
-
-#addressbook-contact-detail #my-addresses td,
-#addressbook-contact-detail #their-addresses td {
-  padding: .25em .75em;
-  font-family: var(--mono-font-family);
-  font-size: .875em;
-  cursor: pointer;
-  position: relative;
-}
-
-#addressbook-contact-detail #my-addresses td span,
-#addressbook-contact-detail #their-addresses td span{
-  flex: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-#addressbook-contact-detail #my-addresses td img,
-#addressbook-contact-detail #their-addresses td img {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 16px;
-  width: 16px;
-  padding: .325em;
-  visibility: hidden;
-}
-
-#addressbook-contact-detail #my-addresses td:hover img,
-#addressbook-contact-detail #their-addresses td:hover img {
-  visibility: initial;
-}
-
-#addressbook-contact-detail #my-addresses td.copied,
-#addressbook-contact-detail #their-addresses td.copied {
-  animation-name: copied;
-  animation-duration: 4s;
-}
-
-/* #addressbook-contact-detail #my-addresses li,
-#addressbook-contact-detail #their-addresses li {
+#addressbook-contact-view #add-address-inputs {
   display: flex;
-  padding: .125em 0;
+  font-size: .875em;
+  margin: 1em 0;
+}
+
+#addressbook-contact-view #add-address-inputs > input {
+  flex: 1;  
+}
+
+#addressbook-contact-view #add-address-inputs > input:first-child {
+  flex: 0;
+  box-sizing: border-box;
+  margin-left: 1em;
+  width: 8em;
+  margin-right: .5em;
+}
+
+#addressbook-contact-view #add-address-inputs > button {
+  flex: 0;  
+  margin: 0;
+  font-size: 1.25em;
+  padding: .125em .75em;
+}
+
+/*****************************************
+My Addresses Modal
+*****************************************/
+
+.addressbook-add-receive-addr-modal {
+  padding: 0 2em 2em 2em;
+  width: 90%;
+  max-width: 40em;
+}
+
+.addressbook-add-receive-addr-modal button {
+  float: right;
+  margin: 0;
+}
+
+#addressbook-my-addresses-inputs {
+	display: flex;
+	margin-bottom: 1em;
+}
+
+#addressbook-my-addresses-inputs > input {
+	flex: 1;
+}
+
+#addressbook-my-addresses-inputs > button {
+  margin: 0;
+}
+
+.addressbook-add-receive-addr-modal #my-addresses-list {
+  margin: 1em 0;
+  height: 20em;
+  border: 1px solid var(--border-color);
+  overflow: auto;
+}
+
+.addressbook-add-receive-addr-modal #my-addresses-list table {
+  margin: 0;
+  border: 0;
+}
+
+.addressbook-add-receive-addr-modal #my-addresses-list td {
+  padding: .25em .5em;
+  vertical-align: middle;
+}
+
+.addressbook-add-receive-addr-modal #my-addresses-list td.address {
+  position: relative;
   font-family: var(--mono-font-family);
   font-size: .875em;
-  cursor: pointer;
 }
 
-#addressbook-contact-detail #my-addresses li span,
-#addressbook-contact-detail #their-addresses li span{
-  flex: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.addressbook-add-receive-addr-modal #my-addresses-list td.address .tooltip {
+  font-family: var(--body-font-family);
+  width: 6em;
 }
 
-#addressbook-contact-detail #my-addresses li img,
-#addressbook-contact-detail #their-addresses li img {
-  visibility: hidden;
-  height: 16px;
-  width: 16px;
-  padding-left: 1em;
-}
-
-#addressbook-contact-detail #my-addresses li img:hover,
-#addressbook-contact-detail #their-addresses li img:hover {
-  filter: brightness(75%);
-}
-
-#addressbook-contact-detail #my-addresses li:hover img,
-#addressbook-contact-detail #their-addresses li:hover img {
-  visibility: initial;
-}
-
-#addressbook-contact-detail #my-addresses li.copied,
-#addressbook-contact-detail #their-addresses li.copied {
+.addressbook-add-receive-addr-modal #my-addresses-list td.copied {
   animation-name: copied;
   animation-duration: 4s;
-} */
+}
+
+/*****************************************
+Add Contact Modal
+*****************************************/
+
+.addressbook-add-contact-modal {
+  padding: 0 2em 2em 2em;
+}
+
+.addressbook-add-contact-modal button{
+  float: right;
+  margin: 0;
+  margin-left: .75em;
+}
+
+.addressbook-add-contact-modal .form-error {
+  padding: .5em 1em;
+  border: 1px solid var(--border-color);
+  background-color: var(--color-1);
+  color: var(--color-4);
+}
+
+#addressbook .field input,
+#addressbook .field select,
+#addressbook .field textarea,
+.addressbook-add-contact-modal .field input,
+.addressbook-add-contact-modal .field select,
+.addressbook-add-contact-modal .field textarea {
+  width: 100%;
+  display: block;
+}
+
+#addressbook .field label,
+.addressbook-add-contact-modal  .field label {
+  font-size: .8125em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: .5;
+}
+
+/*****************************************
+Animations
+*****************************************/
 
 @keyframes copied {
   from {color: var(--color-2);}
   to {color: var(--body-font-color);}
-}
-
-/*****************************************
-Address Book Edit Contact
-*****************************************/
-
-#addressbook-contact-edit {
-  box-sizing: border-box;
-  flex: 1;
-  height: 100%;
-  padding: 1em 2em;
-}
-
-#addressbook-contact-edit h4 {
-  margin: 0;
-  font-size: 1.25em;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding: .25em .5em 1em 0;
-}
-
-/* #addressbook-contact-edit > div {
-  padding: .75em.5em;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-} */
-
-#addressbook-contact-edit header {
-  font-size: .8125em;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  opacity: .5;
-}
-
-#addressbook-contact-edit #their-addresses {
-  margin: 0;
-  padding: 0;
-}
-
-#addressbook-contact-edit #their-addresses li {
-  display: flex;
-  padding: .125em 0;
-  font-family: var(--mono-font-family);
-  font-size: .875em;
-  cursor: pointer;
-}
-
-#addressbook-contact-edit #their-addresses li span{
-  flex: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-#addressbook-contact-edit #their-addresses li img {
-  visibility: hidden;
-  height: 16px;
-  width: 16px;
-  padding-left: 1em;
-}
-
-#addressbook-contact-edit #their-addresses li img:hover {
-  filter: brightness(75%);
-}
-
-#addressbook-contact-edit #their-addresses li:hover img {
-  visibility: initial;
-}
-
-#addressbook-contact-edit .button {
-  float: right;
-  margin-top: 0;
-  margin-left: 0;
-  margin-right: 0;
 }

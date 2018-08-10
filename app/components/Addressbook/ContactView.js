@@ -72,7 +72,7 @@ class ContactView extends Component {
 
     // this.props.contact.name = this.refs.name;
     this.props.contact.phoneNum = this.refs.editPhoneNumber.value;
-    this.props.contact.timeZone = this.refs.editTimeZone.value;
+    this.props.contact.timeZone = parseInt(this.refs.editTimeZone.value);
     this.props.contact.notes = this.refs.editNotes.value;
 
     this.setState(
@@ -88,7 +88,7 @@ class ContactView extends Component {
   close = () =>
   {
 
-    let container = document.getElementById("addressbook-contact-detail");
+    let container = document.getElementById("addressbook-contact-view");
 
     container.classList.add("close");
 
@@ -101,9 +101,47 @@ class ContactView extends Component {
 
   }
   
+  addaddress = () =>
+  {
+  
+    let label = this.refs.addContactAddressLabel.value;
+    let address = this.refs.addContactAddress.value;
+
+    if (label.trim() === "")
+      return;
+
+    // Validate that the address is a valid address
+    RPC.PROMISE("validateaddress", [address])
+    .then(payload => {
+
+      if(!this.props.contact.newNotMine)
+        this.props.contact.newNotMine = new Array();
+
+      this.props.contact.newNotMine.push(
+        {
+          label: label.trim(),
+          address: address.trim()
+        }
+      )
+
+      console.log("valid address: ", label, address);
+
+    })
+    .catch(e => {
+
+      console.log("invalid address: ", address);
+      // this.setState(
+      //   {
+      //     addError: "Please enter a valid Nexus address"
+      //   }
+      // );
+
+    });
+
+  }
+
   copyaddress(event) 
   {
-    console.log("copying");
     event.preventDefault();
 
     let target = event.currentTarget;
@@ -306,14 +344,40 @@ class ContactView extends Component {
 
   renderAddresses() {
 
+    if (this.state.isEditing)
+    {
+
       return (
 
         <div>
+
           {this.buildtheiraddresses()}
+
+
+          <div id="add-address-inputs">
+
+            <input ref="addContactAddressLabel" type="text" placeholder="Label"/>
+            <input ref="addContactAddress" type="text" placeholder="Nexus address"/>
+            <button className="button" onClick={this.addaddress}>+</button>
+
+          </div>
+
         </div>
 
       )
-    
+    }
+    else
+    {
+      return (
+
+        <div>
+
+          {this.buildtheiraddresses()}
+
+        </div>
+
+      )
+    }
   }
 
   renderEditButton() {
@@ -335,7 +399,7 @@ class ContactView extends Component {
 
       return (
 
-        <button id="save-contact" className="button" onClick={this.save}>Save Contact</button>
+        <button id="save-contact" className="button primary" onClick={this.save}>Save Contact</button>
 
       )
     
@@ -351,7 +415,7 @@ class ContactView extends Component {
 
     return (
 
-      <div id="addressbook-contact-detail">
+      <div id="addressbook-contact-view">
 
           <a id="close-contact" onClick={this.close}>
             <svg className="close-button" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 36 36"><path d="M28.5 9.62L26.38 7.5 18 15.88 9.62 7.5 7.5 9.62 15.88 18 7.5 26.38l2.12 2.12L18 20.12l8.38 8.38 2.12-2.12L20.12 18z"></path></svg>

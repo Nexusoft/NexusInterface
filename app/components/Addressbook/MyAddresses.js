@@ -18,17 +18,17 @@ class MyAddresses extends Component {
   buildmyaddresses() 
   {
 
-    return Object.keys(this.props.contact.mine).map(function(item, i){
+    return Object.keys(this.props.contacts[""].mine).map(function(item, i){
 
       return (
 
-        <div className="contact-address">
-          <label>{item}</label>
-          <span key={i} data-address={this.props.contact.mine[item]} onClick={this.copyaddress}>
-            {this.props.contact.mine[item]}
-          </span>
-          <div className="tooltip bottom">Click to copy</div>
-        </div>
+        <tr className="contact-address">
+          <td>{item}</td>
+          <td className="address" key={i} data-address={this.props.contacts[""].mine[item]} onClick={this.copyaddress}>
+            {this.props.contacts[""].mine[item]}
+            <div className="tooltip left">Click to copy</div>
+          </td>
+        </tr>
 
       )
 
@@ -38,7 +38,6 @@ class MyAddresses extends Component {
   
   copyaddress(event) 
   {
-    console.log("copying");
     event.preventDefault();
 
     let target = event.currentTarget;
@@ -67,6 +66,12 @@ class MyAddresses extends Component {
     }, 5000);
   }
 
+  add = () => {
+
+    this.props.onAddReceiveAddress(this.refs.addReceiveAddressLabel.value);
+
+  }
+
   close = () => {
 
     this.props.onClose();
@@ -75,7 +80,7 @@ class MyAddresses extends Component {
 
   render() {
 
-    if (!this.props.show || this.props.contact === null)
+    if (!this.props.show || this.props.contacts === null)
     {
       return null;
     }
@@ -86,7 +91,7 @@ class MyAddresses extends Component {
       open={this.props.show} 
       onClose={this.close} 
       center 
-      classNames={{ modal: 'modal' }}>
+      classNames={{ modal: 'modal addressbook-add-receive-addr-modal' }}>
 
         <div id="addressbook-my-addresses">
 
@@ -96,13 +101,31 @@ class MyAddresses extends Component {
 
           </h3>
 
-          <div>
+          <div id="addressbook-my-addresses-inputs">
 
-            {this.buildmyaddresses()}
+            <input ref="addReceiveAddressLabel" autoFocus type="text" placeholder="Label for new address"/>
+            <button className="button primary" onClick={this.add}>Add Address</button>
 
           </div>
-          
-          <button className="button" onClick={this.props.onAddReceiveAddress}>Add Receive Address</button>
+
+          <div id="my-addresses-list">
+
+            <table>
+
+              <thead>
+                <th>Label</th>
+                <th>Address</th>
+              </thead>
+
+              <tbody>
+                {this.buildmyaddresses()}
+              </tbody>
+
+            </table>
+
+          </div>
+
+          <button className="button" onClick={this.close}>Close</button>
 
         </div>
 
