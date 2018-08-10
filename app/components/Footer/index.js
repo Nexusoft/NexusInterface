@@ -6,8 +6,8 @@ export default class Footer extends Component {
   render() {
     return (
       <div id="Footer">
-        <div id="ftr-line"></div>
-        <div id="navigation">
+        <div id="ftr-line" className="animated fadeIn "></div>
+        <div id="navigation" className="animated bounceInUp ">
           <NavLink exact to="/">
             <img src="images/logo.svg" alt="Overview" />
             <div className="tooltip top">Overview</div>

@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto");
 
+@import "./animations/animate.css";
+
 @import "./base/normalize.css";
 @import "./base/grid.css";
 @import "./base/buttons.css";

@@ -95,7 +95,7 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
-        <div id="settings-menu">
+        <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />
             <div className="tooltip bottom">
@@ -117,10 +117,10 @@ class Header extends Component {
           </div>
         </div>
         <Link to="/">
-          <img id="logo" src="images/logo-full-beta.svg" alt="Nexus Logo" />
+          <img id="logo" className="animated zoomIn " src="images/logo-full-beta.svg" alt="Nexus Logo" />
         </Link>
 
-        <div id="hdr-line" />
+        <div id="hdr-line" className="animated fadeIn "/>
       </div>
     );
   }

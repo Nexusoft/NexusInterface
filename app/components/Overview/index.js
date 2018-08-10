@@ -347,37 +347,37 @@ class Overview extends Component {
           {this.returnExperimentalModalInternal()}
         </Modal>
         <div className="left-stats">
-          <div id="nxs-balance-info">
+          <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
             <div className="h2">Balance (NXS)</div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.balance}</div>
           </div>
 
-          <div id="nxs-currency-value-info">
+          <div id="nxs-currency-value-info" className="animated fadeInDown delay-1s">
             <div className="h2">Currency Value (USD)</div>
             <img src={USD} />
             <div className="overviewValue">{this.calculateUSDvalue()}</div>
           </div>
 
-          <div id="nxs-transactions-info">
+          <div id="nxs-transactions-info" className="animated fadeInDown delay-1s">
             <div className="h2">Transactions</div>
             <img src={transactionsArrows} />
             <div className="overviewValue">{this.props.txtotal}</div>
           </div>
 
-          <div id="nxs-market-price-info">
+          <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
             <div className="h2">Market Price (BTC)</div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.BTC.toFixed(8)}</div>
           </div>
 
-          <div id="nxs-market-price-info">
+          <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
             <div className="h2">Circulating Supply (NXS)</div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.circulatingSupply}</div>
           </div>
 
-          <div id="nxs-market-price-info">
+          <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
             <div className="h2">24hr Change (USD %)</div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
@@ -385,7 +385,7 @@ class Overview extends Component {
         </div>
         <NetworkGlobe />
         <div className="right-stats">
-          <div id="nxs-connections-info">
+          <div id="nxs-connections-info" className="animated fadeInDown delay-1s">
             <div className="h2">Connections</div>
             <img
               id="nxs-getinfo-connections-image"
@@ -393,7 +393,7 @@ class Overview extends Component {
             />
             <div className="overviewValue">{this.props.connections}</div>
           </div>
-          <div id="nxs-blockweight-info">
+          <div id="nxs-blockweight-info" className="animated fadeInDown delay-1s">
             <div className="h2">Block Weight</div>
             <img
               src={this.blockWeightImage()}
@@ -401,24 +401,24 @@ class Overview extends Component {
             />
             <div className="overviewValue">{this.props.blockweight}</div>
           </div>
-          <div id="nxs-blocks-info">
+          <div id="nxs-blocks-info" className="animated fadeInDown delay-1s">
             <div className="h2">Block Count</div>
             <img src={nxsblocks} />
             <div className="overviewValue">{this.props.blocks}</div>
           </div>
-          <div id="nxs-trustweight-info">
+          <div id="nxs-trustweight-info" className="animated fadeInDown delay-1s"> 
             <div className="h2">Trust Weight</div>
             <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
             <div className="overviewValue">{this.props.trustweight}</div>
           </div>
-          <div id="nxs-interestweight-info">
+          <div id="nxs-interestweight-info" className="animated fadeInDown delay-1s">
             <div className="h2">Interest Rate</div>
             <img src={interestRate} />
             <div className="overviewValue">
               {this.props.interestweight + "%"}
             </div>
           </div>
-          <div id="nxs-stakeweight-info">
+          <div id="nxs-stakeweight-info" className="animated fadeInDown delay-1s">
             <div className="h2">Stake Weight</div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.stakeweight}</div>

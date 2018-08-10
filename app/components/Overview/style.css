@@ -23,6 +23,7 @@ Table of Contents
 .h2 {
   letter-spacing: 3px;
   margin-right: -3px;
+  text-shadow: 2px 2px #111111;
 }
 
 /*------------------------------------------------------------------
@@ -57,6 +58,8 @@ II. BALANCE
   font-weight: 800;
   letter-spacing: 1px;
   margin-right: -1px;
+  margin-top: 5px;
+  text-shadow: 2px 2px #111111;
 }
 
 /*------------------------------------------------------------------
