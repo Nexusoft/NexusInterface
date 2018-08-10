@@ -39,7 +39,6 @@ export default (state = initialState, action) => {
         encrypted: true
       };
       break;
-
     case TYPE.SET_GOOGLEANALYTICS:
       return {
         ...state,

@@ -61,7 +61,8 @@ export default (state = initialState, action) => {
     case TYPE.MARKET_PAIR_DATA:
       return {
         ...state,
-        marketPairData: action.payload
+        marketPairData: action.payload,
+        availablePair: true
       };
       break;
     case TYPE.AVAILABLE_PAIR_FLAG:
