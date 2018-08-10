@@ -11,6 +11,7 @@ export default class SettingsApp extends Component {
     var settings = require("../../api/settings.js").GetSettings();
 
     //Application settings
+    // this.setWallpaper(settings);
     this.setAutostart(settings);
     this.setMinimizeToTray(settings);
     this.setMinimizeOnClose(settings);
@@ -19,6 +20,22 @@ export default class SettingsApp extends Component {
     this.setDeveloperMode(settings);
     this.setInfoPopup(settings);
   }
+
+  //
+  // Set wallpaper
+  //
+
+  // setWallpaper(settings) {
+  //   var wallpaper = document.getElementById("wallpaper");
+
+  //   if (settings.wallpaper === undefined) {
+  //     wallpaper.value = "../images/background/nexus-conference.png";
+  //     // wallpaper.value = "https://images7.alphacoders.com/428/428134.jpg";
+  //   } else {
+  //     wallpaper.value = settings.wallpaper;
+  //   }
+
+  // }
 
   //
   // Set autostart
@@ -130,6 +147,22 @@ export default class SettingsApp extends Component {
     }
   }
 
+  //
+  // Update Wallpaper
+  //
+
+  updateWallpaper(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+    
+    console.log(el.files[0].path);
+    settingsObj.wallpaper = el.files[0].path;
+
+    settings.SaveSettings(settingsObj);
+
+    document.body.style.setProperty('--background-main-image', "url('" + el.files[0].path + "')");
+  }
 
   //
   // Update info Popups
@@ -144,8 +177,6 @@ export default class SettingsApp extends Component {
 
     settings.SaveSettings(settingsObj);
   }
-
-
 
   //
   // Update autostart
@@ -275,7 +306,13 @@ export default class SettingsApp extends Component {
     return (
       <section id="application">
         <form className="aligned">
-        <div className="field">
+
+          <div className="field">
+            <label htmlFor="wallpaper">Wallpaper</label>
+            <input id="wallpaper" type="file" size="25" onChange={this.updateWallpaper} data-tooltip="The background wallpaper for your wallet"/>
+          </div>
+
+          <div className="field">
             <label htmlFor="infopopup">Information Popups</label>
             <input
               id="infopopup"
@@ -285,6 +322,7 @@ export default class SettingsApp extends Component {
               data-tooltip="Triggers Popups that display additional information"
             />
           </div>
+          
           <div className="field">
             <label htmlFor="autostart">Start at system startup</label>
             <input

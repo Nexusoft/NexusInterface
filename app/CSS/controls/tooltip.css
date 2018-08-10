@@ -4,8 +4,8 @@ Switch
 */
 
 :root {
-	--tooltip-background-color: #282828;
-	--tooltip-color: #ccc;
+	--tooltip-background-color: var(--color-1);
+	--tooltip-color: var(--color-5);
 }
 
 .tooltip {
@@ -36,6 +36,20 @@ Switch
     transform: translateX(-50%);     
 }
 
+.tooltip.left {
+    top: 50%;
+    right: 100%;
+    margin-right: 12px;                /* 2px spacing + pointer size from item being hovered */
+    transform: translateY(-50%);     
+}
+
+.tooltip.right {
+    top: 50%;
+    left: 100%;
+    margin-left: 12px;                /* 2px spacing + pointer size from item being hovered */
+    transform: translateY(-50%);     
+}
+
 .tooltip::after {
     content: "";
     position: absolute;
@@ -55,6 +69,20 @@ Switch
     left: 50%;
     margin-left: -10px;
     border-color: var(--tooltip-background-color) transparent transparent transparent;
+}
+
+.tooltip.left::after {
+    top: 50%;
+    left: 100%;
+    margin-top: -10px;
+    border-color: transparent transparent transparent var(--tooltip-background-color);
+}
+
+.tooltip.right::after {
+    top: 50%;
+    right: 100%;
+    margin-top: -10px;
+    border-color: transparent var(--tooltip-background-color) transparent transparent;
 }
 
 *:hover > .tooltip {

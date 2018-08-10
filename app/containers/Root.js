@@ -20,6 +20,7 @@ import List from "../components/List/index";
 import About from "../components/About/index";
 
 export default function Root({ store, history }) {
+  console.log(store);
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
@@ -30,9 +31,9 @@ export default function Root({ store, history }) {
 
           <div id="app-content">
             <div id="app-content-container">
-                <div id="app-loader">
-                  <Route path="/" component={Loader} />
-                </div>
+              <div id="app-loader">
+                <Loader />
+              </div>
               <Route exact path="/" component={Overview} />
               <Route exact path="/SendRecieve" component={SendRecieve} />
               <Route exact path="/Transactions" component={Transactions} />

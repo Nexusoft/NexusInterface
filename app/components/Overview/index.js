@@ -6,39 +6,47 @@ import Modal from "react-responsive-modal";
 import * as TYPE from "../../actions/actiontypes";
 
 // importing images here because of a weird webpack issue
-import Connections0 from "../../images/Connections0.png";
-import Connections4 from "../../images/Connections4.png";
-import Connections8 from "../../images/Connections8.png";
-import Connections12 from "../../images/Connections12.png";
-import Connections14 from "../../images/Connections14.png";
-import Connections16 from "../../images/Connections16.png";
-
-import blockweight0 from "../../images/BlockWeight-0.png";
-import blockweight1 from "../../images/BlockWeight-1.png";
-import blockweight2 from "../../images/BlockWeight-2.png";
-import blockweight3 from "../../images/BlockWeight-3.png";
-import blockweight4 from "../../images/BlockWeight-4.png";
-import blockweight5 from "../../images/BlockWeight-5.png";
-import blockweight6 from "../../images/BlockWeight-6.png";
-import blockweight7 from "../../images/BlockWeight-7.png";
-import blockweight8 from "../../images/BlockWeight-8.png";
-import blockweight9 from "../../images/BlockWeight-9.png";
-
-import trust00 from "../../images/trust00.png";
-import trust10 from "../../images/trust10.png";
-import trust20 from "../../images/trust20.png";
-import trust30 from "../../images/trust30.png";
-import trust40 from "../../images/trust40.png";
-import trust50 from "../../images/trust50.png";
-import trust60 from "../../images/trust60.png";
-import trust70 from "../../images/trust70.png";
-import trust80 from "../../images/trust80.png";
-import trust90 from "../../images/trust90.png";
-import trust100 from "../../images/trust100.png";
-
-import nxsStake from "../../images/nxs-staking.png";
+import USD from "../../images/USD.svg";
+import transactionsArrows from "../../images/transactions-arrows.svg";
+import marketicon from "../../images/marketstats-white.svg";
+import supplyicon from "../../images/supply.svg";
+import hours24icon from "../../images/24hr.svg";
+import nxsStake from "../../images/nxs-staking.svg";
 import interestRate from "../../images/nxs-chart.png";
-import nxsblocks from "../../images/nxs-blocks.png";
+
+import Connections0 from "../../images/Connections0.svg";
+import Connections4 from "../../images/Connections4.svg";
+import Connections8 from "../../images/Connections8.svg";
+import Connections12 from "../../images/Connections12.svg";
+import Connections14 from "../../images/Connections14.svg";
+import Connections16 from "../../images/Connections16.svg";
+
+import blockweight0 from "../../images/BlockWeight-0.svg";
+import blockweight1 from "../../images/BlockWeight-1.svg";
+import blockweight2 from "../../images/BlockWeight-2.svg";
+import blockweight3 from "../../images/BlockWeight-3.svg";
+import blockweight4 from "../../images/BlockWeight-4.svg";
+import blockweight5 from "../../images/BlockWeight-5.svg";
+import blockweight6 from "../../images/BlockWeight-6.svg";
+import blockweight7 from "../../images/BlockWeight-7.svg";
+import blockweight8 from "../../images/BlockWeight-8.svg";
+import blockweight9 from "../../images/BlockWeight-9.svg";
+
+import trust00 from "../../images/trust00.svg";
+import trust10 from "../../images/trust00.svg";
+import trust20 from "../../images/trust00.svg";
+import trust30 from "../../images/trust00.svg";
+import trust40 from "../../images/trust00.svg";
+import trust50 from "../../images/trust00.svg";
+import trust60 from "../../images/trust00.svg";
+import trust70 from "../../images/trust00.svg";
+import trust80 from "../../images/trust00.svg";
+import trust90 from "../../images/trust00.svg";
+import trust100 from "../../images/trust00.svg";
+
+import nxsblocks from "../../images/blockexplorer-invert-white.svg";
+import interesticon from "../../images/interest.svg";
+import stakeicon from "../../images/staking-white.svg";
 
 import NetworkGlobe from "./NetworkGlobe";
 
@@ -92,6 +100,18 @@ class Overview extends Component {
 
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
+  }
+
+  componentDidUpdate(previousprops)
+  {
+
+    if (this.props.blocks != previousprops.blocks )
+    {
+      if (this.props.blocks != 0 && previousprops.blocks != 0){
+        console.log("UPDATE BLOCKS");
+        this.asdada();
+      }
+    }
   }
 
   setupcontextmenu(e) {
@@ -202,9 +222,9 @@ class Overview extends Component {
       return Connections8;
     } else if (con > 12 && con <= 14) {
       return Connections12;
-    } else if (con > 14 && con <= 16) {
+    } else if (con > 14 && con <= 15) {
       return Connections14;
-    } else if (con > 16) {
+    } else if (con > 15) {
       return Connections16;
     } else {
       return Connections0;
@@ -317,6 +337,13 @@ class Overview extends Component {
     }
   }
 
+
+  returnIfDrawLines()
+  {
+      //if (testinglines == true)
+
+  }
+
   render() {
     const agreementOpen = this.returnIfLicenseShouldBeOpen();
     const experimentalOpenbool = this.returnIfExperimentalShouldBeOpen();
@@ -345,45 +372,45 @@ class Overview extends Component {
           {this.returnExperimentalModalInternal()}
         </Modal>
         <div className="left-stats">
-          <div id="nxs-balance-info">
-            <div className="h2">Balance (NXS)</div>
+          <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
+            <div className="h2">Balance <span className="h2-nospace">(NXS)</span></div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.balance}</div>
           </div>
 
-          <div id="nxs-currency-value-info">
-            <div className="h2">Currency Value (USD)</div>
-            <img src={nxsStake} />
+          <div id="nxs-currency-value-info" className="animated fadeInDown delay-1s">
+            <div className="h2">Currency Value <span className="h2-nospace">(USD)</span></div>
+            <img src={USD} />
             <div className="overviewValue">{this.calculateUSDvalue()}</div>
           </div>
 
-          <div id="nxs-transactions-info">
+          <div id="nxs-transactions-info" className="animated fadeInDown delay-1s">
             <div className="h2">Transactions</div>
-            <img src={nxsStake} />
+            <img src={transactionsArrows} />
             <div className="overviewValue">{this.props.txtotal}</div>
           </div>
 
-          <div id="nxs-market-price-info">
-            <div className="h2">Market Price (BTC)</div>
-            <img src={nxsStake} />
+          <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
+            <div className="h2">Market Price <span className="h2-nospace">(BTC)</span></div>
+            <img src={marketicon} />
             <div className="overviewValue">{this.props.BTC.toFixed(8)}</div>
           </div>
 
-          <div id="nxs-market-price-info">
-            <div className="h2">Circulating Supply (NXS)</div>
-            <img src={nxsStake} />
+          <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
+            <div className="h2">Circulating Supply <span className="h2-nospace">(NXS)</span></div>
+            <img src={supplyicon} />
             <div className="overviewValue">{this.props.circulatingSupply}</div>
           </div>
 
-          <div id="nxs-market-price-info">
-            <div className="h2">24hr Percent Change (USD)</div>
-            <img src={nxsStake} />
+          <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
+            <div className="h2">24hr Change <span className="h2-nospace">(USD %)</span></div>
+            <img src={hours24icon} />
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
-        <NetworkGlobe />
+        <NetworkGlobe  handleOnLineRender = {e => this.asdada = e} />
         <div className="right-stats">
-          <div id="nxs-connections-info">
+          <div id="nxs-connections-info" className="animated fadeInDown delay-1s">
             <div className="h2">Connections</div>
             <img
               id="nxs-getinfo-connections-image"
@@ -391,7 +418,7 @@ class Overview extends Component {
             />
             <div className="overviewValue">{this.props.connections}</div>
           </div>
-          <div id="nxs-blockweight-info">
+          <div id="nxs-blockweight-info" className="animated fadeInDown delay-1s">
             <div className="h2">Block Weight</div>
             <img
               src={this.blockWeightImage()}
@@ -399,26 +426,26 @@ class Overview extends Component {
             />
             <div className="overviewValue">{this.props.blockweight}</div>
           </div>
-          <div id="nxs-blocks-info">
+          <div id="nxs-blocks-info" className="animated fadeInDown delay-1s">
             <div className="h2">Block Count</div>
             <img src={nxsblocks} />
             <div className="overviewValue">{this.props.blocks}</div>
           </div>
-          <div id="nxs-trustweight-info">
+          <div id="nxs-trustweight-info" className="animated fadeInDown delay-1s"> 
             <div className="h2">Trust Weight</div>
             <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
             <div className="overviewValue">{this.props.trustweight}</div>
           </div>
-          <div id="nxs-interestweight-info">
+          <div id="nxs-interestweight-info" className="animated fadeInDown delay-1s">
             <div className="h2">Interest Rate</div>
-            <img src={interestRate} />
+            <img src={interesticon} />
             <div className="overviewValue">
               {this.props.interestweight + "%"}
             </div>
           </div>
-          <div id="nxs-stakeweight-info">
+          <div id="nxs-stakeweight-info" className="animated fadeInDown delay-1s">
             <div className="h2">Stake Weight</div>
-            <img src={nxsStake} />
+            <img src={stakeicon} />
             <div className="overviewValue">{this.props.stakeweight}</div>
           </div>
         </div>
