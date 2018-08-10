@@ -33,16 +33,16 @@ import blockweight8 from "../../images/BlockWeight-8.svg";
 import blockweight9 from "../../images/BlockWeight-9.svg";
 
 import trust00 from "../../images/trust00.svg";
-import trust10 from "../../images/trust10.svg";
-import trust20 from "../../images/trust20.svg";
-import trust30 from "../../images/trust30.svg";
-import trust40 from "../../images/trust40.svg";
-import trust50 from "../../images/trust50.svg";
-import trust60 from "../../images/trust60.svg";
-import trust70 from "../../images/trust70.svg";
-import trust80 from "../../images/trust80.svg";
-import trust90 from "../../images/trust90.svg";
-import trust100 from "../../images/trust100.svg";
+import trust10 from "../../images/trust00.svg";
+import trust20 from "../../images/trust00.svg";
+import trust30 from "../../images/trust00.svg";
+import trust40 from "../../images/trust00.svg";
+import trust50 from "../../images/trust00.svg";
+import trust60 from "../../images/trust00.svg";
+import trust70 from "../../images/trust00.svg";
+import trust80 from "../../images/trust00.svg";
+import trust90 from "../../images/trust00.svg";
+import trust100 from "../../images/trust00.svg";
 
 import nxsblocks from "../../images/blockexplorer-invert-white.svg";
 import interesticon from "../../images/interest.svg";
