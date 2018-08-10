@@ -6,6 +6,14 @@ import Modal from "react-responsive-modal";
 import * as TYPE from "../../actions/actiontypes";
 
 // importing images here because of a weird webpack issue
+import USD from "../../images/USD.svg";
+import transactionsArrows from "../../images/transactions-arrows.svg";
+import marketicon from "../../images/marketstats-white.svg";
+import supplyicon from "../../images/supply.svg";
+import hours24icon from "../../images/24hr.svg";
+import nxsStake from "../../images/nxs-staking.svg";
+import interestRate from "../../images/nxs-chart.png";
+
 import Connections0 from "../../images/Connections0.svg";
 import Connections4 from "../../images/Connections4.svg";
 import Connections8 from "../../images/Connections8.svg";
@@ -36,11 +44,9 @@ import trust80 from "../../images/trust80.svg";
 import trust90 from "../../images/trust90.svg";
 import trust100 from "../../images/trust100.svg";
 
-import USD from "../../images/USD.svg";
-import transactionsArrows from "../../images/transactions-arrows.svg";
-import nxsStake from "../../images/nxs-staking.svg";
-import interestRate from "../../images/nxs-chart.png";
-import nxsblocks from "../../images/blockexplorer.svg";
+import nxsblocks from "../../images/blockexplorer-invert-white.svg";
+import interesticon from "../../images/interest.svg";
+import stakeicon from "../../images/staking-white.svg";
 
 import NetworkGlobe from "./NetworkGlobe";
 
@@ -367,19 +373,19 @@ class Overview extends Component {
 
           <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
             <div className="h2">Market Price <span className="h2-nospace">(BTC)</span></div>
-            <img src={nxsStake} />
+            <img src={marketicon} />
             <div className="overviewValue">{this.props.BTC.toFixed(8)}</div>
           </div>
 
           <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
             <div className="h2">Circulating Supply <span className="h2-nospace">(NXS)</span></div>
-            <img src={nxsStake} />
+            <img src={supplyicon} />
             <div className="overviewValue">{this.props.circulatingSupply}</div>
           </div>
 
           <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
             <div className="h2">24hr Change <span className="h2-nospace">(USD %)</span></div>
-            <img src={nxsStake} />
+            <img src={hours24icon} />
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
@@ -413,14 +419,14 @@ class Overview extends Component {
           </div>
           <div id="nxs-interestweight-info" className="animated fadeInDown delay-1s">
             <div className="h2">Interest Rate</div>
-            <img src={interestRate} />
+            <img src={interesticon} />
             <div className="overviewValue">
               {this.props.interestweight + "%"}
             </div>
           </div>
           <div id="nxs-stakeweight-info" className="animated fadeInDown delay-1s">
             <div className="h2">Stake Weight</div>
-            <img src={nxsStake} />
+            <img src={stakeicon} />
             <div className="overviewValue">{this.props.stakeweight}</div>
           </div>
         </div>

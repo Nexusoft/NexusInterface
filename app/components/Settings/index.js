@@ -64,22 +64,22 @@ class Settings extends Component {
             <ul className="tabs">
               <li>
                 <NavLink to={`${this.props.match.url}/App`}>
-                  <img src="images/icon-home.png" alt="Application" />Application
+                  <img src="images/logo.svg" alt="Application" />Application
                 </NavLink>
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Core`}>
-                  <img src="images/icon-explorer.png" alt="Core" />Core
+                  <img src="images/core.svg" alt="Core" />Core
                 </NavLink>
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Security`}>
-                  <img src="images/icon-security.png" alt="Security" />Security
+                  <img src="images/lock-encrypted.svg" alt="Security" />Security
                 </NavLink>
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Market`}>
-                  <img src="images/icon-market.png" alt="Martket" />Martket
+                  <img src="images/marketstats.svg" alt="Martket" />Martket
                 </NavLink>
               </li>
             </ul>
