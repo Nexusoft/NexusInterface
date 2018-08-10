@@ -30,7 +30,7 @@
 @import "../components/Settings/style.css";
 @import "../components/Terminal/style.css";
 @import "../components/Transactions/style.css";
-@import "../components/Shapeshift/style.css";
+@import "../components/Exchange/style.css";
 
 :root {
   /* COLOR PALETTE VARIABLES */
@@ -115,11 +115,11 @@ body {
   height: 300px;
 }
 
-/* Scrollbar */ 
-::-webkit-scrollbar { 
-	width: 10px;
-  background: rgba(0,0,0,0.5);
- } 
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  background: rgba(0, 0, 0, 0.5);
+}
 
 /* Track */
 /* ::-webkit-scrollbar-track {

@@ -41,9 +41,9 @@ export default class Footer extends Component {
             <img src="images/icon-console.png" alt="Console" />
             <div className="tooltip top">Console</div>
           </NavLink>
-          <NavLink to="/Shapeshift">
-            <img src="images/shapeshiftlogo.png" alt="Shapeshift" />
-            <div className="tooltip top">Shapeshift</div>
+          <NavLink to="/Exchange">
+            <img src="images/shapeshiftlogo.png" alt="Exchange" />
+            <div className="tooltip top">Exchange</div>
           </NavLink>
           <NavLink to="/StyleGuide">
             <img src="images/icon-developer.png" alt="Style Guide" />

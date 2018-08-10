@@ -9,7 +9,7 @@ import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 
 import arrow from "../../images/arrow.png";
-import * as actionsCreators from "../../actions/shapeshiftActionCreators";
+import * as actionsCreators from "../../actions/exchangeActionCreators";
 
 const mapStateToProps = state => {
   return { ...state.common, ...state.exchange };
@@ -18,7 +18,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
-class Shapeshift extends Component {
+class Fast extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
     this.props.GetAvailaleCoins();
@@ -180,8 +180,6 @@ class Shapeshift extends Component {
   render() {
     return (
       <div id="Shapeshift">
-        <h2>Exchange Powered By Shapeshift</h2>
-
         <div className="panel">
           <div id="shifty-pannel">
             <div>
@@ -267,4 +265,4 @@ class Shapeshift extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Shapeshift);
+)(Fast);

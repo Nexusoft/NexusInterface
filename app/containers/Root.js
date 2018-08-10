@@ -18,7 +18,7 @@ import Terminal from "../components/Terminal/index";
 import StyleGuide from "../components/StyleGuide/index";
 import List from "../components/List/index";
 import About from "../components/About/index";
-import Shapeshift from "../components/Shapeshift/index";
+import Exchange from "../components/Exchange/index";
 
 export default function Root({ store, history }) {
   return (
@@ -31,9 +31,9 @@ export default function Root({ store, history }) {
 
           <div id="app-content">
             <div id="app-content-container">
-                <div id="app-loader">
-                  <Route path="/" component={Loader} />
-                </div>
+              <div id="app-loader">
+                <Route path="/" component={Loader} />
+              </div>
               <Route exact path="/" component={Overview} />
               <Route exact path="/SendRecieve" component={SendRecieve} />
               <Route exact path="/Transactions" component={Transactions} />
@@ -43,7 +43,7 @@ export default function Root({ store, history }) {
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
               <Route exact path="/StyleGuide" component={StyleGuide} />
-              <Route exact path="/Shapeshift" component={Shapeshift} />
+              <Route exact path="/Exchange" component={Exchange} />
               <Route exact path="/List" component={List} />
               <Route exact path="/About" component={About} />
             </div>
