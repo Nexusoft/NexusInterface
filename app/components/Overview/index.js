@@ -102,6 +102,18 @@ class Overview extends Component {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  componentDidUpdate(previousprops)
+  {
+
+    if (this.props.blocks != previousprops.blocks )
+    {
+      if (this.props.blocks != 0 && previousprops.blocks != 0){
+        console.log("UPDATE BLOCKS");
+        this.asdada();
+      }
+    }
+  }
+
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -210,9 +222,9 @@ class Overview extends Component {
       return Connections8;
     } else if (con > 12 && con <= 14) {
       return Connections12;
-    } else if (con > 14 && con <= 16) {
+    } else if (con > 14 && con <= 15) {
       return Connections14;
-    } else if (con > 16) {
+    } else if (con > 15) {
       return Connections16;
     } else {
       return Connections0;
@@ -325,6 +337,13 @@ class Overview extends Component {
     }
   }
 
+
+  returnIfDrawLines()
+  {
+      //if (testinglines == true)
+
+  }
+
   render() {
     const agreementOpen = this.returnIfLicenseShouldBeOpen();
     const experimentalOpenbool = this.returnIfExperimentalShouldBeOpen();
@@ -389,7 +408,7 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
-        <NetworkGlobe />
+        <NetworkGlobe  handleOnLineRender = {e => this.asdada = e} />
         <div className="right-stats">
           <div id="nxs-connections-info" className="animated fadeInDown delay-1s">
             <div className="h2">Connections</div>
