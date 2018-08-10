@@ -33,6 +33,7 @@
   position: absolute;
   top: 2em;
   right: 3em;
+  overflow:hidden;
 }
 
 .icon {
