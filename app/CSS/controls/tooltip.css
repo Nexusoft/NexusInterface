@@ -4,8 +4,8 @@ Switch
 */
 
 :root {
-	--tooltip-background-color: #282828;
-	--tooltip-color: #ccc;
+	--tooltip-background-color: var(--color-1);
+	--tooltip-color: var(--color-5);
 }
 
 .tooltip {
