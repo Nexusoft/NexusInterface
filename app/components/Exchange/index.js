@@ -20,31 +20,31 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({});
 
 class Exchange extends Component {
-  // componentDidMount() {
-  //   this.props.googleanalytics.SendScreen("Exchange");
-  //   window.addEventListener("contextmenu", this.setupcontextmenu, false);
-  // }
+  componentDidMount() {
+    this.props.googleanalytics.SendScreen("Exchange");
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
 
-  // componentWillUnmount() {
-  //   window.removeEventListener("contextmenu", this.setupcontextmenu);
-  // }
+  componentWillUnmount() {
+    window.removeEventListener("contextmenu", this.setupcontextmenu);
+  }
 
-  // setupcontextmenu(e) {
-  //   e.preventDefault();
-  //   const contextmenu = new ContextMenuBuilder().defaultContext;
-  //   //build default
-  //   let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-  //   defaultcontextmenu.popup(remote.getCurrentWindow());
-  // }
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
+  }
 
   render() {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
-    // if (this.props.location.pathname === this.props.match.url) {
-    //   console.log("Redirecting to Precice trading");
+    if (this.props.location.pathname === this.props.match.url) {
+      console.log("Redirecting to Precise trading");
 
-    //   return <Redirect to={`${this.props.match.url}/Precice`} />;
-    // }
-    console.log("index", this.props);
+      return <Redirect to={`${this.props.match.url}/Precise`} />;
+    }
+
     return (
       <div id="Exchange">
         <div id="Exchange-container">

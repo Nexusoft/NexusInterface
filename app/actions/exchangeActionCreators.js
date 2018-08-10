@@ -17,6 +17,12 @@ export const toggleWithinBounds = () => {
   };
 };
 
+export const setBusyFlag = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
+  };
+};
+
 export const FromSetter = from => {
   return dispatch => {
     dispatch({ type: TYPE.FROM_SETTER, payload: from });
@@ -54,6 +60,24 @@ export const GetAvailaleCoins = () => {
   };
 };
 
+export const GetQuote = pair => {
+  return dispatch => {
+    Request(
+      {
+        method: "POST",
+        url: "https://shapeshift.io/sendamount",
+        json: true,
+        data: { depositAmount: 3, outputAmount: 3, amount: 3, pair: "ltc_btc" }
+      },
+      (error, response, body) => {
+        // if (response.statusCode === 200) {
+        console.log(response);
+        // }
+      }
+    );
+  };
+};
+
 export const GetPairMarketInfo = pair => {
   return dispatch => {
     Request(
@@ -66,26 +90,16 @@ export const GetPairMarketInfo = pair => {
           if (!response.body.error) {
             dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: true });
             dispatch({ type: TYPE.MARKET_PAIR_DATA, payload: response.body });
+            dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
           }
         } else if (
           response.body.error ===
           "That pair is temporarily unavailable for trades."
         ) {
           dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: false });
+          dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
         }
       }
     );
-  };
-};
-
-export const unavaliblePair = () => {
-  return dispatch => {
-    dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: false });
-  };
-};
-
-export const avaliblePair = () => {
-  return dispatch => {
-    dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: true });
   };
 };

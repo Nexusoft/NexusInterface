@@ -44,7 +44,7 @@ export default function Root({ store, history }) {
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
               <Route exact path="/StyleGuide" component={StyleGuide} />
-              <Route exact path="/Exchange" component={Exchange} />
+              <Route path="/Exchange" component={Exchange} />
               <Route exact path="/List" component={List} />
               <Route exact path="/About" component={About} />
             </div>

@@ -94,7 +94,13 @@ class Precise extends Component {
   }
 
   buildConfermation() {
-    if (this.props.to && this.props.from && this.props.from !== this.props.to) {
+    if (
+      this.props.to &&
+      this.props.from &&
+      this.props.from !== this.props.to
+      //  &&
+      // this.props.busyFlag
+    ) {
       if (this.props.availablePair) {
         return (
           <div id="confirmationContainer">
@@ -125,7 +131,14 @@ class Precise extends Component {
               </div>
             </div>
             {this.props.withinBounds && (
-              <button className="button primary hero">EXECUTE TRADE</button>
+              <button
+                className="button primary hero"
+                onClick={() => {
+                  this.getQuote();
+                }}
+              >
+                GET QUOTE
+              </button>
             )}
           </div>
         );
@@ -170,17 +183,35 @@ class Precise extends Component {
       return null;
     }
   }
+  toFromHandler(e, switcher) {
+    if (switcher === "to") {
+      if (e.target.value !== this.props.from) {
+        this.props.setBusyFlag();
+        this.props.ToSetter(e.target.value);
+      } else {
+        this.props.ToSetter(e.target.value);
+      }
+    } else {
+      if (e.target.value !== this.props.to) {
+        this.props.setBusyFlag();
+        this.props.FromSetter(e.target.value);
+      } else {
+        this.props.FromSetter(e.target.value);
+      }
+    }
+  }
 
-  executeTrade() {
+  getQuote() {
     if (this.props.withinBounds) {
-      // if ()
+      let pair = this.props.from + "_" + this.props.to;
+      this.props.GetQuote();
     } else alert("Outside trade-able ammounts");
   }
 
   render() {
     console.log(this.props);
     return (
-      <div id="Shapeshift">
+      <div id="ExchngeContainer">
         <div id="shifty-pannel">
           <div>
             <form>
@@ -191,12 +222,13 @@ class Precise extends Component {
                   <select
                     className="soflow-color"
                     value={this.props.from}
-                    onChange={e => this.props.FromSetter(e.target.value)}
+                    onChange={e => this.toFromHandler(e, "from")}
                   >
                     {this.optionbuilder()}
                   </select>
                 </div>
                 <div className="field">
+                  <label>Trade Ammount:</label>
                   <input
                     type="text"
                     placeholder={
@@ -210,7 +242,7 @@ class Precise extends Component {
                     required
                   />
                 </div>
-                {this.props.from !== "nxs" ? (
+                {this.props.from !== "NXS" ? (
                   <div className="field">
                     <label>Refund Address:</label>
                     <input
@@ -236,7 +268,7 @@ class Precise extends Component {
                 <div className="field">
                   <select
                     className="soflow-color"
-                    onChange={e => this.props.ToSetter(e.target.value)}
+                    onChange={e => this.toFromHandler(e, "to")}
                     value={this.props.to}
                   >
                     {this.optionbuilder()}

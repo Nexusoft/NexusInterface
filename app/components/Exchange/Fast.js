@@ -179,85 +179,83 @@ class Fast extends Component {
 
   render() {
     return (
-      <div id="Shapeshift">
-        <div className="panel">
-          <div id="shifty-pannel">
-            <div>
-              <form>
-                <fieldset>
-                  <legend>Send</legend>
+      <div id="ExchngeContainer">
+        <div id="shifty-pannel">
+          <div>
+            <form>
+              <fieldset>
+                <legend>Send</legend>
 
+                <div className="field">
+                  <select
+                    className="soflow-color"
+                    value={this.props.from}
+                    onChange={e => this.props.FromSetter(e.target.value)}
+                  >
+                    {this.optionbuilder()}
+                  </select>
+                </div>
+                <div className="field">
+                  <input
+                    type="text"
+                    placeholder={
+                      this.minAmmount() +
+                      " " +
+                      this.props.from +
+                      " Minimum Tade"
+                    }
+                    value={this.props.ammount}
+                    onChange={e => this.ammountHandler(e.target.value)}
+                    required
+                  />
+                </div>
+                {this.props.from !== "nxs" ? (
                   <div className="field">
-                    <select
-                      className="soflow-color"
-                      value={this.props.from}
-                      onChange={e => this.props.FromSetter(e.target.value)}
-                    >
-                      {this.optionbuilder()}
-                    </select>
-                  </div>
-                  <div className="field">
+                    <label>Refund Address:</label>
                     <input
                       type="text"
-                      placeholder={
-                        this.minAmmount() +
-                        " " +
-                        this.props.from +
-                        " Minimum Tade"
+                      value={this.props.refundAddress}
+                      onChange={e =>
+                        this.props.refundAddressSetter(e.target.value)
                       }
-                      value={this.props.ammount}
-                      onChange={e => this.ammountHandler(e.target.value)}
                       required
                     />
                   </div>
-                  {this.props.from !== "nxs" ? (
-                    <div className="field">
-                      <label>Refund Address:</label>
-                      <input
-                        type="text"
-                        value={this.props.refundAddress}
-                        onChange={e =>
-                          this.props.refundAddressSetter(e.target.value)
-                        }
-                        required
-                      />
-                    </div>
-                  ) : null}
-                </fieldset>
-              </form>
-            </div>
-            <div>
-              <div id="line" />
-            </div>
-            <div>
-              <form style={{ display: "flex", height: "100%" }}>
-                <fieldset>
-                  <legend>Recieve</legend>
-                  <div className="field">
-                    <select
-                      className="soflow-color"
-                      onChange={e => this.props.ToSetter(e.target.value)}
-                      value={this.props.to}
-                    >
-                      {this.optionbuilder()}
-                    </select>
-                  </div>
-
-                  <div className="field">
-                    <label>{this.currencylabel()} Address:</label>
-                    <input
-                      type="text"
-                      value={this.props.toAddress}
-                      onChange={e => this.props.toAddressSetter(e.target.value)}
-                      required
-                    />
-                  </div>
-                </fieldset>
-              </form>
-            </div>
+                ) : null}
+              </fieldset>
+            </form>
           </div>
-          <div>{this.buildConfermation()}</div>
+          <div>
+            <div id="line" />
+          </div>
+          <div>
+            <form style={{ display: "flex", height: "100%" }}>
+              <fieldset>
+                <legend>Recieve</legend>
+                <div className="field">
+                  <select
+                    className="soflow-color"
+                    onChange={e => this.props.ToSetter(e.target.value)}
+                    value={this.props.to}
+                  >
+                    {this.optionbuilder()}
+                  </select>
+                </div>
+
+                <div className="field">
+                  <label>{this.currencylabel()} Address:</label>
+                  <input
+                    type="text"
+                    value={this.props.toAddress}
+                    onChange={e => this.props.toAddressSetter(e.target.value)}
+                    required
+                  />
+                </div>
+              </fieldset>
+            </form>
+          </div>
         </div>
+        <div>{this.buildConfermation()}</div>
       </div>
     );
   }

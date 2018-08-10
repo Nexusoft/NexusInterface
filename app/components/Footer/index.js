@@ -6,7 +6,7 @@ export default class Footer extends Component {
   render() {
     return (
       <div id="Footer">
-        <div id="ftr-line" className="animated fadeIn "></div>
+        <div id="ftr-line" className="animated fadeIn " />
         <div id="navigation" className="animated bounceInUp ">
           <NavLink exact to="/">
             <img src="images/logo.svg" alt="Overview" />
@@ -28,10 +28,10 @@ export default class Footer extends Component {
             <img src="images/addressbook.svg" alt="Address Book" />
             <div className="tooltip top">Address&nbsp;Book</div>
           </NavLink>
-          <NavLink to="/BlockExplorer">
+          {/* <NavLink to="/BlockExplorer">
             <img src="images/blockexplorer.svg" alt="Block Explorer" />
             <div className="tooltip top">Block&nbsp;Explorer</div>
-          </NavLink>
+          </NavLink> */}
           <NavLink to="/Settings">
             <img src="images/settings.svg" alt="Settings" />
             <div className="tooltip top">Settings</div>
@@ -44,14 +44,10 @@ export default class Footer extends Component {
             <img src="images/shapeshiftlogo.png" alt="Exchange" />
             <div className="tooltip top">Exchange</div>
           </NavLink>
-          <NavLink to="/StyleGuide">
+          {/* <NavLink to="/StyleGuide">
             <img src="images/icon-developer.png" alt="Style Guide" />
             <div className="tooltip top">Style&nbsp;Guide</div>
-          </NavLink>
-          <NavLink to="/BlockExplorer">
-            <img src="images/icon-explorer.png" alt="Block Explorer" />
-            <div className="tooltip top">Block&nbsp;Explorer</div>
-          </NavLink>
+          </NavLink> */}
         </div>
       </div>
     );
