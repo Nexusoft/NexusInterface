@@ -348,13 +348,13 @@ class Overview extends Component {
         </Modal>
         <div className="left-stats">
           <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
-            <div className="h2">Balance (NXS)</div>
+            <div className="h2">Balance <span className="h2-nospace">(NXS)</span></div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.balance}</div>
           </div>
 
           <div id="nxs-currency-value-info" className="animated fadeInDown delay-1s">
-            <div className="h2">Currency Value (USD)</div>
+            <div className="h2">Currency Value <span className="h2-nospace">(USD)</span></div>
             <img src={USD} />
             <div className="overviewValue">{this.calculateUSDvalue()}</div>
           </div>
@@ -366,19 +366,19 @@ class Overview extends Component {
           </div>
 
           <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
-            <div className="h2">Market Price (BTC)</div>
+            <div className="h2">Market Price <span className="h2-nospace">(BTC)</span></div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.BTC.toFixed(8)}</div>
           </div>
 
           <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
-            <div className="h2">Circulating Supply (NXS)</div>
+            <div className="h2">Circulating Supply <span className="h2-nospace">(NXS)</span></div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.circulatingSupply}</div>
           </div>
 
           <div id="nxs-market-price-info" className="animated fadeInDown delay-1s">
-            <div className="h2">24hr Change (USD %)</div>
+            <div className="h2">24hr Change <span className="h2-nospace">(USD %)</span></div>
             <img src={nxsStake} />
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
