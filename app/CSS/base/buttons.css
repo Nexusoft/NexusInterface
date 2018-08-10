@@ -51,9 +51,9 @@ Button
 	--button-negative-hover-border: none;
 	--button-negative-hover-background: #e74c3c;
 
-	--button-ghost-color: #fff;
+	--button-ghost-color: #eee;
 	--button-ghost-text-shadow: none;
-	--button-ghost-border: 1px solid #fff;
+	--button-ghost-border: 1px solid #888;
 	--button-ghost-background: none;
 	--button-ghost-hover-color: #fff;
 	--button-ghost-hover-border: 1px solid #fff;
@@ -77,7 +77,7 @@ Button
 
 	background: var(--button-background);
 	box-shadow: var(--button-box-shadow);
-	text-shadow: var(-button-text-shadow);
+	text-shadow: var(--button-text-shadow);
 
 	color: var(--button-color);
 
