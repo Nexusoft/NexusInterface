@@ -82,6 +82,8 @@ export default (DAT.Globe = function(container, opts) {
   var curZoomSpeed = 0;
   var zoomSpeed = 50;
 
+  var cureves = [];
+
   var mouse = { x: 0, y: 0 },
     mouseOnDown = { x: 0, y: 0 };
   var rotation = { x: 0, y: 0 },
@@ -307,10 +309,10 @@ export default (DAT.Globe = function(container, opts) {
       for (let index = 0; index < (tempoints.length - 1); index++) {
         const element = tempoints[index];
         let temparray = [];
-        temparray.push(parseFloat(lastpoint.lat));
-        temparray.push(parseFloat(lastpoint.lng));
         temparray.push(element.lat);
         temparray.push(element.lng);
+        temparray.push(parseFloat(lastpoint.lat));
+        temparray.push(parseFloat(lastpoint.lng));
         aaaaa.push(temparray);
       }
       
@@ -327,7 +329,7 @@ export default (DAT.Globe = function(container, opts) {
   
       initCurves(aaaaa,yyyyy);
   
-
+      playCurve();
       scene.add(this.points);
       scene.add(yyyyy);
     }
@@ -450,9 +452,24 @@ export default (DAT.Globe = function(container, opts) {
     render();
   }
 
+  function playCurve()
+  {
+    console.log(cureves);
+    cureves.forEach(element => {
+      element.restart();
+      element.play();
+    });
+  }
+
+
+  function removePoints()
+  {
+    console.log("REMOVED OLD POINTS");
+  }
+
   function render() {
     zoom(curZoomSpeed);
-
+    //playCurve();
     target.x += incr_rotation.x;
     rotation.x += (target.x - rotation.x) * 0.1;
     rotation.y += (target.y - rotation.y) * 0.1;
@@ -478,6 +495,7 @@ export default (DAT.Globe = function(container, opts) {
   
     allCoords.forEach((coords, index) => {
         const curve = new Curve(coords, material);
+        cureves.push(curve);
         curveMesh.add(curve.mesh);
     });
   
@@ -487,10 +505,12 @@ export default (DAT.Globe = function(container, opts) {
   function Curve(coords, material) {
     const { spline } = getSplineFromCoords(coords);
   
+    const curveSegments = 32;
+    let index = 0;
     // add curve geometry
     const curveGeometry = new THREE.BufferGeometry();
-    const points = new Float32Array(32 * 3);
-    const vertices = spline.getPoints(32 - 1);
+    const points = new Float32Array(curveSegments * 3);
+    const vertices = spline.getPoints(curveSegments - 1);
   
     for (let i = 0, j = 0; i < vertices.length; i++) {
       const vertex = vertices[i];
@@ -505,6 +525,31 @@ export default (DAT.Globe = function(container, opts) {
     curveGeometry.setDrawRange(0, 32);
   
    this.mesh =  new THREE.Line(curveGeometry, material);
+
+   this.hasStopped = () => index > curveSegments;
+
+   this.play = () => {
+     if (this.hasStopped()) return;
+     index += 1;
+     curveGeometry.setDrawRange(0, index);
+     curveGeometry.attributes.position.needsUpdate = true;
+     setTimeout(() => {
+       this.play();
+     }, 50);
+   };
+ 
+   this.stop = () => {
+     curveGeometry.setDrawRange(0, curveSegments);
+     this.index = curveSegments + 1;
+   };
+ 
+   this.restart = () => {
+     index = 1;
+     curveGeometry.setDrawRange(0, 1);
+   };
+ 
+   //isPlaying ? this.restart() : this.stop();
+
   }
 
   function getSplineFromCoords(coords) {
@@ -513,15 +558,17 @@ export default (DAT.Globe = function(container, opts) {
     const endLat = coords[2];
     const endLng = coords[3];
   
+    const globeradius = 200;
+
     // spline vertices
-    const start = coordinateToPosition(startLat, startLng, 200);
-    const end = coordinateToPosition(endLat, endLng, 200);
-    const altitude = clamp(start.distanceTo(end) * .75, 20, 200);
+    const start = coordinateToPosition(startLat, startLng, globeradius);
+    const end = coordinateToPosition(endLat, endLng, globeradius);
+    const altitude = clamp(start.distanceTo(end) * .75, 10, globeradius);
     const interpolate = geoInterpolate([startLng, startLat], [endLng, endLat]);
     const midCoord1 = interpolate(0.25);
     const midCoord2 = interpolate(0.75);
-    const mid1 = coordinateToPosition(midCoord1[1], midCoord1[0], 200 + altitude);
-    const mid2 = coordinateToPosition(midCoord2[1], midCoord2[0], 200 + altitude);
+    const mid1 = coordinateToPosition(midCoord1[1], midCoord1[0], globeradius + altitude);
+    const mid2 = coordinateToPosition(midCoord2[1], midCoord2[0], globeradius + altitude);
   
     return {
       start,
@@ -580,6 +627,8 @@ export default (DAT.Globe = function(container, opts) {
   this.createPoints = createPoints;
   this.renderer = renderer;
   this.scene = scene;
+  this.removePoints = removePoints;
+  this.playCurve = playCurve;
 
   return this;
 });
