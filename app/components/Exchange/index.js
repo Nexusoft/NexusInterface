@@ -74,7 +74,7 @@ class Exchange extends Component {
               />
               <Route
                 path={`${this.props.match.path}/Precise`}
-                render={() => <Precise />}
+                render={props => <Precise />}
               />
               <Route
                 path={`${this.props.match.path}/Fast`}
