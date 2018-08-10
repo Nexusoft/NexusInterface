@@ -42,6 +42,14 @@
           .map(script => '<script defer src="' + script + '"><\/script>')
           .join('')
       );
+
+      var settings = require("./api/settings").GetSettings();
+
+      if (settings.wallpaper) {
+        console.log("Applying custom wallpaper: " + settings.wallpaper);
+        document.body.style.setProperty('--background-main-image', "url('" + settings.wallpaper + "')");
+      }
+
     }
   </script>
 </body>
