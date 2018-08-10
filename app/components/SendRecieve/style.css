@@ -1,160 +1,97 @@
-/* #send-receive {
-  position: relative;
-  height: auto;
-  display: flex;
-  flex-direction: row;
-  overflow: auto;
-  margin: auto;
+#sendrecieve > h2 {
+  flex: 0;
 }
-#send-receive-right {
-  position: relative;
-  display: flex;
+#sendrecieve > .panel {
   flex: 1;
-  flex-direction: column;
-  padding-left: 60%;
-  margin-top: -31.5%;
-  overflow: auto;
-  max-width: auto;
-  max-height: auto;
-  border: 1px solid rgb(12, 145, 185);
-}
-
-#send-receive > h2 {
-  flex: 1;
-  position: relative;
-}
-
-#send-receive > .panel {
-  flex: 1;
-  flex-direction: row;
   overflow-y: auto;
-  position: relative;
 }
-.right {
-  display: flex;
-  position: relative;
-}
-.flex-container {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-}
-#btn-group button {
-  background-color: rgb(12, 145, 185);
-  border: 1px solid rgb(12, 145, 185);
-  color: white;
-  position: relative;
-  float: right;
-  width: auto;
-  height: 35%;
-  margin: auto;
-  margin-top: auto;
-  overflow-x: auto;
-}
-.divider {
-  width: auto;
-  height: auto;
-  float: right;
-
-  position: relative;
-}
-
-.h {
-  width: 160%;
-  float: right;
-  margin: auto;
-  position: relative;
-} */
 #container {
-  height: auto;
-  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  width: 100%;
+  margin: 1.5em 0;
 
+  justify-content: space-between;
+}
+.box1 {
+  display: flex;
+  margin-left: 100px;
+}
+.box2 {
   display: flex;
 
-  flex-direction: row;
-  justify-content: space-around;
-  flex-flow: wrap;
-  flex-wrap: wrap;
-  flex-basis: 0;
+  flex-direction: column;
+  width: 60%;
 }
-.box {
-  width: 20%;
-  height: 300px;
-  justify-content: center;
-  margin: 20px;
-  border: 3px solid rgb(12, 145, 185);
-  border-radius: 10px;
-  margin-bottom: 15px;
-  margin-top: 35px;
-  margin-left: 20;
-  padding: 8px;
-  padding-left: 25px;
-  padding-bottom: 130px;
-  width: 300px;
-}
-/* .box2 {
-  width: 20%;
-  height: 300px;
-  justify-content: center;
-  margin: 20px;
-  border: 3px solid rgb(12, 145, 185);
-  border-radius: 10px;
-  margin-top: 30px;
-  margin-bottom: 100px;
-  margin-left: 5%;
-  padding: 5px;
-  padding-left: 15px;
-  padding-bottom: 150px;
-  width: 300px;
-  padding-right: 175px;
-} */
-#btn-group button {
-  background-color: rgb(12, 145, 185);
-  border: 1px solid rgb(12, 145, 185);
-  color: white;
-  position: relative;
-  margin-top: 500px;
+.foot {
+  margin-left: 60%;
   float: right;
-  width: auto;
-  height: 35%;
-  margin: auto;
-  margin-top: auto;
-  overflow-x: auto;
-  padding: 24px 12px;
-  border-radius: 0;
+  margin-top: -7%;
 }
-/* #right-buttons {
-  margin-top: 140%;
-  margin-right: -120%;
-  margin-left: 20%;
-} */
-#left-buttons {
-  margin-left: 10%;
-}
+.counter {
+  float: right;
 
-.panel {
-  flex: 1;
-  flex-direction: row;
-  overflow-y: auto;
-  position: relative;
+  width: auto;
 }
-.table {
-  table-layout: auto;
-  width: 30%;
+/* .tbody {
+  line-height: 1em;
+  color: white;
+  display: block;
+} */
+/* .table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+} */
+
+#left-buttons {
+  padding-top: 40px;
 }
-.tfoot {
-  width: 50%;
-  margin-left: 63%;
-  margin-top: -2%;
-  margin-bottom: 3%;
+/* #thead {
+  width: 100%;
+} */
+.input[type="number"] {
+  width: 350px;
 }
-.thead {
-  width: 30%;
+.label {
+  font-size: 40px;
 }
-.td {
+#table-wrap {
+  text-align: center;
+}
+/* Generic table stylings */
+table {
+  width: 100%;
+  border-right: #fcfcfc;
+  border-bottom: #fcfcfc;
+  border: 1px solid #ffffff;
+  overflow-y: scroll;
+  height: 325px;
+
   display: block;
 }
-#feeCounter {
-  float: right;
-  margin-right: 5%;
+table tbody td,
+table thead th,
+table tfoot th {
+  border-right: #fcfcfc;
+  border-bottom: #fcfcfc;
+  border: 1px solid #ffffff;
+  width: 300px;
+}
+table tbody tr:nth-child(even),
+table thead tr,
+table tfoot tr {
+  background: #fcfcfc;
+  border: 1px solid #ffffff;
+}
+.tbody {
+  height: 299px;
+  position: relative;
+  width: 100%;
+  border-collapse: collapse;
+  overflow: auto;
+}
+.td {
+  border: 1px solid #ffffff;
 }
