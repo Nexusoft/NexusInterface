@@ -210,9 +210,9 @@ class Overview extends Component {
       return Connections8;
     } else if (con > 12 && con <= 14) {
       return Connections12;
-    } else if (con > 14 && con <= 16) {
+    } else if (con > 14 && con <= 15) {
       return Connections14;
-    } else if (con > 16) {
+    } else if (con > 15) {
       return Connections16;
     } else {
       return Connections0;
