@@ -25,13 +25,14 @@
 #logo {
   margin: 1em 0;
   display: block;
+  max-height: 49px;
 }
 
 #settings-menu {
   display: inline-block;
   position: absolute;
   top: 2em;
-  right: 3em;
+  right: 3.8em;
 }
 
 .icon {

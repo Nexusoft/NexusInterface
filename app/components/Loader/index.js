@@ -11,15 +11,18 @@ const mapDispatchToProps = dispatch => ({});
 class Loader extends Component {
   render() {
     return (
-        <div id="orbit-container">
-            <div id="orbit">
-                <div id="orbit-cirlce"></div>
+        <div id="loader">
+            <div id="orbit-container">
+                <div id="orbit">
+                    <div id="orbit-cirlce"></div>
+                </div>
+                <div id="tritium">
+                    <div id="proton1"></div>
+                    <div id="proton2"></div>
+                    <div id="proton3"></div>
+                </div>           
             </div>
-            <div id="tritium">
-                <div id="proton1"></div>
-                <div id="proton2"></div>
-                <div id="proton3"></div>
-            </div>
+            <div id="version">T R I T I U M</div>
         </div>
     );
   }

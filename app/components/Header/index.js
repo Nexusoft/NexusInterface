@@ -56,11 +56,11 @@ class Header extends Component {
 
   signInStatus() {
     if (this.props.unlocked_until === undefined) {
-      return "images/unencryptedicon.png";
+      return "images/lock-unencrypted.svg";
     } else if (this.props.unlocked_until === 0) {
-      return "images/lock.png";
+      return "images/lock-encrypted.svg";
     } else if (this.props.unlocked_until >= 0) {
-      return "images/unlock.png";
+      return "images/lock-minting.svg";
     }
   }
 
@@ -92,9 +92,9 @@ class Header extends Component {
       });
     });
     if (heighestPeerBlock > this.props.blocks) {
-      return "images/notsynced.png";
+      return "images/status-bad.svg";
     } else {
-      return "images/status-good.png";
+      return "images/status-good.svg";
     }
   }
 
@@ -113,7 +113,7 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
-        <div id="settings-menu">
+        <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />
             <div className="tooltip bottom">
@@ -121,7 +121,7 @@ class Header extends Component {
             </div>
           </div>
           <div className="icon">
-            <img src="images/nxs-staking-icon.png" />
+            <img src="images/staking.svg" />
             <div className="tooltip bottom">
               <div>Stake Weight: {this.props.stakeweight}%</div>
               <div>Interest Rate: {this.props.interestweight}%</div>
@@ -137,10 +137,10 @@ class Header extends Component {
           </div>
         </div>
         <Link to="/">
-          <img id="logo" src="images/NXS-logo-min.png" alt="Nexus Logo" />
+          <img id="logo" className="animated zoomIn " src="images/logo-full-beta.svg" alt="Nexus Logo" />
         </Link>
 
-        <div id="hdr-line" />
+        <div id="hdr-line" className="animated fadeIn "/>
       </div>
     );
   }
