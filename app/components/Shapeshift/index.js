@@ -34,56 +34,35 @@ class Shapeshift extends Component {
       }
     );
   }
-  testapi() {
-    console.log("test");
-    // Request(
-    //   {
-    //     url: "https://shapeshift.io/marketinfo/nxs_btc",
-    //     json: true
-    //   },
-    //   (error, response, body) => {
-    //     console.log(response);
-    //     if (response.statusCode === 200) {
-    //       console.log(response);
-    //     }
-    //   }
-    // );
-    // Request(
-    //   {
-    //     url: "https://shapeshift.io/limit/nxs_btc",
-    //     json: true
-    //   },
-    //   (error, response, body) => {
-    //     console.log(response);
-    //     if (response.statusCode === 200) {
-    //       console.log(response);
-    //     }
-    //   }
-    // );
-    // Request(
-    //   {
-    //     url: "https://shapeshift.io/getcoins",
-    //     json: true
-    //   },
-    //   (error, response, body) => {
-    //     if (response.statusCode === 200) {
-    //       console.log(response.body);
-    //     }
-    //   }
-    // );
-    this.props.GetAvailaleCoins();
-  }
+
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
   componentDidUpdate(prevProps) {
+    let pair = this.props.from + "_" + this.props.to;
     if (
       (this.props.to !== prevProps.to || this.props.from !== prevProps.from) &&
       this.props.from !== this.props.to
     ) {
-      let pair = this.props.from + "_" + this.props.to;
       this.props.GetPairMarketInfo(pair);
+    }
+    // if (this.props.marketPairData.pair !== pair) {
+    //   this.props.unavaliblePair();
+    // }
+    if (this.props.ammount !== prevProps.ammount) {
+      let tradeAmmt = parseFloat(this.props.ammount);
+      if (tradeAmmt > this.props.marketPairData.minimum) {
+        if (tradeAmmt < this.props.marketPairData.maxLimit) {
+          if (!this.props.withinBounds) {
+            this.props.toggleWithinBounds();
+          }
+        } else if (this.props.withinBounds) {
+          this.props.toggleWithinBounds();
+        }
+      } else if (this.props.withinBounds) {
+        this.props.toggleWithinBounds();
+      }
     }
   }
 
@@ -95,29 +74,64 @@ class Shapeshift extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
-  buildConfermation() {
-    console.log(this.props);
+  transferCalculator() {
+    let tradeAmmt = parseFloat(this.props.ammount);
+    if (tradeAmmt > this.props.marketPairData.minimum) {
+      if (tradeAmmt < this.props.marketPairData.maxLimit) {
+        let grossTrade = tradeAmmt * this.props.marketPairData.rate;
+        let finalTrade = grossTrade - this.props.marketPairData.minerFee;
+        return (
+          <div>
+            {finalTrade.toFixed(8)} {this.props.to}
+          </div>
+        );
+      } else {
+        return <div>Trade Maximum Exceeded</div>;
+      }
+    } else {
+      return <div>Trade Minimum Unmet</div>;
+    }
+  }
 
+  buildConfermation() {
     if (this.props.to && this.props.from && this.props.from !== this.props.to) {
-      return (
-        <div id="confirmation">
-          <div id="sendSideConfirm">
-            <h3>YOU ARE SENDING</h3>
-            <img
-              style={{ height: "100px" }}
-              src={this.props.availableCoins[this.props.from].image}
-            />
+      if (this.props.availablePair) {
+        return (
+          <div id="confirmationContainer">
+            <div id="confirmation">
+              <div id="sendSideConfirm">
+                <div className="confirmationWords">
+                  <h3>YOU ARE SENDING</h3>
+                  <div>
+                    {this.props.ammount} {this.props.from}
+                  </div>
+                </div>
+                <img
+                  style={{ height: "100px", margin: "10px" }}
+                  src={this.props.availableCoins[this.props.from].image}
+                />
+              </div>
+              <img src={arrow} style={{ height: "100px" }} />
+              <div id="recieveSideConfirm">
+                <img
+                  style={{ height: "100px", margin: "10px" }}
+                  src={this.props.availableCoins[this.props.to].image}
+                />
+                <div className="confirmationWords">
+                  <h3>YOU WILL RECIEVE</h3>
+
+                  {this.transferCalculator()}
+                </div>
+              </div>
+            </div>
+            {this.props.withinBounds && (
+              <button className="button primary hero">EXECUTE TRADE</button>
+            )}
           </div>
-          <img src={arrow} style={{ height: "100px" }} />
-          <div id="recieveSideConfirm">
-            <h3>YOU WILL RECIEVE</h3>
-            <img
-              style={{ height: "100px" }}
-              src={this.props.availableCoins[this.props.to].image}
-            />
-          </div>
-        </div>
-      );
+        );
+      } else {
+        return <h1>That pair is temporarily unavailable for trades.</h1>;
+      }
     } else return null;
   }
 
@@ -148,10 +162,19 @@ class Shapeshift extends Component {
       return this.props.availableCoins[this.props.to].name;
     } else return null;
   }
+
   ammountHandler(value) {
-    if (value === Number) {
-      consolelog(typeof parseFloat(value));
+    if (/^[0-9.]+$/.test(value) | (value === "")) {
+      this.props.ammountUpdater(value);
+    } else {
+      return null;
     }
+  }
+
+  executeTrade() {
+    if (this.props.withinBounds) {
+      // if ()
+    } else alert("Outside trade-able ammounts");
   }
 
   render() {
@@ -160,7 +183,6 @@ class Shapeshift extends Component {
         <h2>Exchange Powered By Shapeshift</h2>
 
         <div className="panel">
-          {/* <button onClick={() => this.testapi()}>test</button> */}
           <div id="shifty-pannel">
             <div>
               <form>
@@ -179,17 +201,28 @@ class Shapeshift extends Component {
                   <div className="field">
                     <input
                       type="text"
-                      placeholder={this.minAmmount()}
-                      // value={this.props.ammount}
-                      // onChange={e => this.ammountHandler(e.target.value)}
-                      pattern={"^[0-9.-/]+$"}
+                      placeholder={
+                        this.minAmmount() +
+                        " " +
+                        this.props.from +
+                        " Minimum Tade"
+                      }
+                      value={this.props.ammount}
+                      onChange={e => this.ammountHandler(e.target.value)}
                       required
                     />
                   </div>
                   {this.props.from !== "nxs" ? (
                     <div className="field">
                       <label>Refund Address:</label>
-                      <input type="text" required />
+                      <input
+                        type="text"
+                        value={this.props.refundAddress}
+                        onChange={e =>
+                          this.props.refundAddressSetter(e.target.value)
+                        }
+                        required
+                      />
                     </div>
                   ) : null}
                 </fieldset>
@@ -199,7 +232,7 @@ class Shapeshift extends Component {
               <div id="line" />
             </div>
             <div>
-              <form>
+              <form style={{ display: "flex", height: "100%" }}>
                 <fieldset>
                   <legend>Recieve</legend>
                   <div className="field">
@@ -214,7 +247,12 @@ class Shapeshift extends Component {
 
                   <div className="field">
                     <label>{this.currencylabel()} Address:</label>
-                    <input type="text" required />
+                    <input
+                      type="text"
+                      value={this.props.toAddress}
+                      onChange={e => this.props.toAddressSetter(e.target.value)}
+                      required
+                    />
                   </div>
                 </fieldset>
               </form>

@@ -9,11 +9,6 @@ import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
-// const testParams = {
-//   ["2SGFyEHg3tm7Ska6z6G9aWyyu3QBqEJT5pyUeG5gf88JMuc6ZQv"]: 0.25,
-//   ["2RLNjiVGcAoHBNvBbLBTb85Ls6J55eja2yhcemtHJF3swaPAfpG"]: 0.25
-// };
-
 const mapStateToProps = state => {
   return { ...state.common, ...state.transactions, ...state.sendRecieve };
 };

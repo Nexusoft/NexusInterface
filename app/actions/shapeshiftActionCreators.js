@@ -1,7 +1,39 @@
 import Request from "request";
 import * as TYPE from "./actiontypes";
 
-// action creators for the 24 hr market summery requests
+export const refundAddressSetter = refundAdd => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_REFUND_ADDRESS, payload: refundAdd });
+  };
+};
+export const toAddressSetter = toAdd => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_TO_ADDRESS, payload: toAdd });
+  };
+};
+export const toggleWithinBounds = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.TOGGLE_WITHIN_TRADE_BOUNDS });
+  };
+};
+
+export const FromSetter = from => {
+  return dispatch => {
+    dispatch({ type: TYPE.FROM_SETTER, payload: from });
+  };
+};
+
+export const ToSetter = to => {
+  return dispatch => {
+    dispatch({ type: TYPE.TO_SETTER, payload: to });
+  };
+};
+
+export const ammountUpdater = ammt => {
+  return dispatch => {
+    dispatch({ type: TYPE.UPDATE_EXCHANGE_AMMOUNT, payload: ammt });
+  };
+};
 
 export const GetAvailaleCoins = () => {
   return dispatch => {
@@ -22,26 +54,6 @@ export const GetAvailaleCoins = () => {
   };
 };
 
-export const FromSetter = from => {
-  return dispatch => {
-    dispatch({ type: TYPE.FROM_SETTER, payload: from });
-  };
-};
-
-export const ToSetter = to => {
-  return dispatch => {
-    dispatch({ type: TYPE.TO_SETTER, payload: to });
-  };
-};
-
-export const ammountUpdater = ammt => {
-  if (parseFloat(ammt) !== NaN) {
-    return dispatch => {
-      dispatch({ type: TYPE.UPDATE_AMMOUNT, payload: ammt });
-    };
-  } else return null;
-};
-
 export const GetPairMarketInfo = pair => {
   return dispatch => {
     Request(
@@ -52,33 +64,28 @@ export const GetPairMarketInfo = pair => {
       (error, response, body) => {
         if (response.statusCode === 200) {
           if (!response.body.error) {
+            dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: true });
             dispatch({ type: TYPE.MARKET_PAIR_DATA, payload: response.body });
           }
+        } else if (
+          response.body.error ===
+          "That pair is temporarily unavailable for trades."
+        ) {
+          dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: false });
         }
       }
     );
   };
 };
 
-// export const cryptopia24hrInfo = () => {
-//   return dispatch => {
-//     Request(
-//       {
-//         url: "https://www.cryptopia.co.nz/api/GetMarket/NXS_BTC",
-//         json: true
-//       },
-//       (error, response, body) => {
-//         if (response.statusCode === 200) {
-//           let data = body.Data;
-//           let res = {
-//             change: data.Change,
-//             high: data.High,
-//             low: data.Low,
-//             volume: data.Volume
-//           };
-//           dispatch({ type: TYPE.CRYPTOPIA_24, payload: res });
-//         }
-//       }
-//     );
-//   };
-// };
+export const unavaliblePair = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: false });
+  };
+};
+
+export const avaliblePair = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: true });
+  };
+};

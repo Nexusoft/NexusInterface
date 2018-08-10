@@ -111,7 +111,7 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args
     });
-    console.log(PostData);
+    // console.log(PostData);
     var ResponseObject;
 
     /** Opera 8.0+, Firefox, Safari **/
@@ -162,8 +162,7 @@ export const PROMISE = (cmd, args) => {
       resolve(payload);
     };
 
-    ResponseObject.onerror = () =>
-    {
+    ResponseObject.onerror = () => {
       reject(ResponseObject.response);
     };
 

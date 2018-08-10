@@ -34,18 +34,43 @@
   margin-right: 50px;
   margin-left: 50px;
 }
+#confirmationContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 #confirmation {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 #sendSideConfirm {
+  display: flex;
 }
 
-/*  */
+#recieveSideConfirm {
+  display: flex;
+}
+
+.confirmationWords {
+  display: flex;
+  flex-direction: column;
+}
+
+.confirmationWords h3 {
+  margin-bottom: 0;
+}
+
+#sendSideConfirm .confirmationWords {
+  text-align: right;
+}
+
 #shifty-pannel .field {
   display: flex;
   flex-direction: column;
