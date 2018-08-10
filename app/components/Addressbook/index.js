@@ -17,9 +17,6 @@ import styles from "./style.css";
 
 var psudoState = null;
 
-import ContextMenuBuilder from "../../contextmenu";
-import { remote } from "electron";
-
 const mapStateToProps = state => {
   return { ...state.common };
 };
