@@ -78,6 +78,7 @@ export default class TerminalConsole extends Component {
     if (this.state.currentInput.toLowerCase() == "clear" )
     {
       this.resetnexusrpcconsole();
+      this.state.inputfield.value = ""; 
       return;
     }
     /// remove the command inputed
@@ -85,11 +86,16 @@ export default class TerminalConsole extends Component {
     
     /// Get the old console output so we can concat on it.
     let tempConsoleOutput = [...this.state.consoleoutput];
-    
-    //console.log(this.state.currentInput);
-
+  
     /// Split the input so that we can get the command and the arguments. THIS MIGHT BE AN ISSUE as I am just checking the US keyboard space
     let splitInput = this.state.currentInput.split(" ");
+
+    let preSanatized = splitInput[0];
+
+    preSanatized = preSanatized.replace(/[^a-zA-Z0-9]/g, "");
+
+    splitInput[0] = preSanatized;
+
     /// this is the argument array
     let RPCArguments = [];
 
@@ -100,7 +106,7 @@ export default class TerminalConsole extends Component {
       /// If this is a number we need to format it an int
       if (isNaN(Number(element)) === false)
       {
-        element = parseInt(element);
+        element = parseFloat(element);
       }
       RPCArguments.push(element);
     }
@@ -156,6 +162,7 @@ export default class TerminalConsole extends Component {
     }).catch( error =>
       {
         /// If there is an error then return that error message and place it in the output.
+        
         tempConsoleOutput.push(error);
         this.setState(
           {
@@ -291,7 +298,7 @@ export default class TerminalConsole extends Component {
     });
     let tempAutoComplete = [];
     tempCompandList.map((item, key) => {
-      return tempAutoComplete.push(<a key={key} onClick={ () => this.onAutoCompleteClick(item)}>{item}<br/></a>);
+      return tempAutoComplete.push(<a key={key} onMouseDown={ () => this.onAutoCompleteClick(item)}>{item}<br/></a>);
     })
 
 

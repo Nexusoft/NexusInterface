@@ -168,7 +168,6 @@ export const PROMISE = (cmd, args) => {
 
     ResponseObject.onerror = () =>
     {
-      console.log("BBBBBBBBBBBBBB");
       reject(ResponseObject.response);
     }
 
