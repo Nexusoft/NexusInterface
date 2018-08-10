@@ -1,7 +1,9 @@
 import * as TYPE from "../actions/actiontypes";
 
 const initialState = {
-  loggedIn: false
+  loggedIn: false,
+  googleanalytics: null,
+  encrypted: false
 };
 
 export default (state = initialState, action) => {
@@ -11,11 +13,33 @@ export default (state = initialState, action) => {
         ...state,
         loggedIn: false
       };
+      break;
     case TYPE.UNLOCK:
       return {
         ...state,
         loggedIn: true
       };
+      break;
+    case TYPE.UNENCRYPTED:
+      return {
+        ...state,
+        encrypted: false
+      };
+      break;
+    case TYPE.ENCRYPTED:
+      return {
+        ...state,
+        encrypted: true
+      };
+      break;
+
+    case TYPE.SET_GOOGLEANALYTICS:
+      return {
+        ...state,
+        googleanalytics: action.payload
+      };
+      break;
+
     default:
       return state;
   }

@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto");
 
+@import "./animations/animate.css";
+
 @import "./base/normalize.css";
 @import "./base/grid.css";
 @import "./base/buttons.css";
@@ -30,12 +32,13 @@
 @import "../components/Settings/style.css";
 @import "../components/Terminal/style.css";
 @import "../components/Transactions/style.css";
+@import "../components/Loader/style.css";
 
 :root {
   /* COLOR PALETTE VARIABLES */
   --color-1: #111111; /* <-- Dark Grey */
   --color-2: #0ca4fb; /* <-- Nexus Blue */
-  --color-3: #ffffff; /* <-- White */
+  --color-5: #ffffff; /* <-- White */
 
   /* BACKGROUND IMAGE VARIABLES */
   /* --background-main-gradient: linear-gradient(
@@ -47,8 +50,8 @@
     rgba(17, 17, 17, 0)
   );
   /* --background-main-image:  url("https://images7.alphacoders.com/428/428134.jpg"); <-- Full Screen Background Image for Nexus Earth Theme */
-  --background-main-image: url("../images/background/nexus-conference.png"); /* <-- Full Screen Background Image for Nexus Earth Theme */
-  
+  --background-main-image: url("../images/background/hero.svg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
+
   /* FONTS */
   --font-1: "Myriad Pro"; /* <-- Sourced Above in First @font-face*/
   --font-2: "Franklin Gothic"; /* <-- Sourced Above in Second @font-face */
@@ -66,6 +69,8 @@ body {
   background-image: var(--background-main-gradient),
     var(--background-main-image);
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   /* font-family: Arial, Helvetica, Helvetica Neue, serif; */
   font-family: "Roboto", sans-serif;
   overflow-y: hidden;
@@ -104,6 +109,15 @@ body {
 
 #app-navigation {
   grid-area: navigation;
+}
+
+#app-loader {
+  grid-area: content;
+  position: absolute;
+  top: calc(50% - 190px);
+  left: calc(50% - 150px);
+  width: 300px;
+  height: 300px;
 }
 
 /* Scrollbar */

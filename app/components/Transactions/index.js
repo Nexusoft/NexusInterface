@@ -11,6 +11,8 @@ import Modal from 'react-responsive-modal';
 import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer} from 'victory';
 //import Analytics from "../../script/googleanalytics";
 
+import ContextMenuBuilder from "../../contextmenu";
+
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
 // import "react-table/react-table.css"
 
@@ -18,10 +20,9 @@ import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiCon
 //import tablestyles from "./react-table.css";
 import styles from "./style.css";
 
-import ContextMenuBuilder from "../../contextmenu";
 
 const mapStateToProps = state => {
-  return { ...state.transactions };
+  return { ...state.transactions, ...state.common };
 };
 const mapDispatchToProps = dispatch => ({
   SetWalletTransactionArray: returnData =>
@@ -94,7 +95,7 @@ class Transactions extends Component {
 
     this.getTransactionData();
     this.updateChartAndTableDimensions();
-
+    this.props.googleanalytics.SendScreen("Transactions");
     window.addEventListener('resize', this.updateChartAndTableDimensions.bind(this));
 
     if (this.state.exectuedHistoryData == false)
@@ -107,12 +108,12 @@ class Transactions extends Component {
       );
     }
     
-    console.log(window);
-    console.log(remote);
-    console.log(this);
+    //console.log(window);
+    //console.log(remote);
+    //console.log(this);
 
-    console.log(ContextMenuBuilder);
-    console.log(new ContextMenuBuilder().defaultContext);
+    //console.log(ContextMenuBuilder);
+    //console.log(new ContextMenuBuilder().defaultContext);
     this.transactioncontextfunction = this.transactioncontextfunction.bind(this);
 
     //Remove Previous vent
@@ -302,6 +303,7 @@ class Transactions extends Component {
           }
         })
       );
+      /*  Currently Block Explorer is turned off. 
       //Add Open Explorer Option
       transactiontablecontextmenu.append(
         new remote.MenuItem({
@@ -311,7 +313,7 @@ class Transactions extends Component {
           }
         })
       );
-
+      */
       if (this.state.isHoveringOverTable) {
         transactiontablecontextmenu.popup(remote.getCurrentWindow());
       } else {
@@ -1457,11 +1459,11 @@ class Transactions extends Component {
         );
       internalString.push(<br key="br3"/>);
       internalString.push(
-          <a key="modal_amount">{"Account: " + selectedTransaction.account}</a>
+          <a key="modal_Account">{"Account: " + selectedTransaction.account}</a>
         );
       internalString.push(<br key="br4"/>);
       internalString.push(
-          <a key="modal_amount">{"Confirmations: " + selectedTransaction.confirmations}</a>
+          <a key="modal_Confirms">{"Confirmations: " + selectedTransaction.confirmations}</a>
         );
       
     }

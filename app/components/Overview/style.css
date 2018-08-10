@@ -23,6 +23,12 @@ Table of Contents
 .h2 {
   letter-spacing: 3px;
   margin-right: -3px;
+  text-shadow: 2px 2px #111111;
+}
+.h2-nospace {
+  font-size: .8em;
+  letter-spacing: 0px;
+  text-shadow: 2px 2px #111111;
 }
 
 /*------------------------------------------------------------------
@@ -53,10 +59,12 @@ canvas {
 II. BALANCE
 ------------------------------------------------------------------*/
 .overviewValue {
-  font-size: 2em;
+  font-size: 1.5em;
   font-weight: 800;
   letter-spacing: 1px;
   margin-right: -1px;
+  margin-top: 5px;
+  text-shadow: 2px 2px #111111;
 }
 
 /*------------------------------------------------------------------
@@ -68,7 +76,7 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
 ------------------------------------------------------------------*/
 .left-stats {
   display: flex;
-  width: 200px;
+  width: 220px;
   flex-direction: column;
   align-self: center;
   text-align: right;
@@ -92,7 +100,7 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
 ------------------------------------------------------------------*/
 .right-stats {
   display: flex;
-  width: 200px;
+  width: 220px;
   flex-direction: column;
   align-self: center;
   text-align: left;

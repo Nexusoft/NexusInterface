@@ -48,10 +48,10 @@ class SettingsMarket extends Component {
               <input
                 type="number"
                 // placeholder="0.000251 BTC"
+                value={this.props.threshold}
                 onChange={e =>
                   this.props.setThershold(parseFloat(e.target.value))
                 }
-                value={this.props.thereshold}
               />
               <span className="hint">
                 Threshold of profit to trigger an Arbitrage Alert

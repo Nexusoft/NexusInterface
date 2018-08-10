@@ -18,6 +18,7 @@ export default class SettingsApp extends Component {
     this.setGoogleAnalytics(settings);
     this.setDefaultUnitAmount(settings);
     this.setDeveloperMode(settings);
+    this.setInfoPopup(settings);
   }
 
   //
@@ -46,10 +47,10 @@ export default class SettingsApp extends Component {
     if (settings.autostart === undefined) {
       autostart.checked = false;
     }
-    if (settings.autostart === "true") {
+    if (settings.autostart == true) {
       autostart.checked = true;
     }
-    if (settings.autostart === "false") {
+    if (settings.autostart == false) {
       autostart.checked = false;
     }
   }
@@ -64,10 +65,10 @@ export default class SettingsApp extends Component {
     if (settings.minimizeToTray === undefined) {
       minimizeToTray.checked = false;
     }
-    if (settings.minimizeToTray === "true") {
+    if (settings.minimizeToTray == true) {
       minimizeToTray.checked = true;
     }
-    if (settings.minimizeToTray === "false") {
+    if (settings.minimizeToTray == false) {
       minimizeToTray.checked = false;
     }
   }
@@ -82,10 +83,10 @@ export default class SettingsApp extends Component {
     if (settings.minimizeOnClose === undefined) {
       minimizeOnClose.checked = false;
     }
-    if (settings.minimizeOnClose === "true") {
+    if (settings.minimizeOnClose == true) {
       minimizeOnClose.checked = true;
     }
-    if (settings.minimizeOnClose === "false") {
+    if (settings.minimizeOnClose == false) {
       minimizeOnClose.checked = false;
     }
   }
@@ -100,10 +101,10 @@ export default class SettingsApp extends Component {
     if (settings.googleAnalytics === undefined) {
       googlesetting.checked = true;
     }
-    if (settings.googleAnalytics === "true") {
+    if (settings.googleAnalytics == true) {
       googlesetting.checked = true;
     }
-    if (settings.googleAnalytics === "false") {
+    if (settings.googleAnalytics == false) {
       googlesetting.checked = false;
     }
   }
@@ -129,8 +130,20 @@ export default class SettingsApp extends Component {
   setDeveloperMode(settings) {
     var devmode = document.getElementById("devmode");
 
-    if (settings.devMode === "true") {
+    if (settings.devMode == true) {
       devmode.checked = true;
+    }
+  }
+
+  //
+  // Set info popup
+  //
+
+  setInfoPopup(settings) {
+    var infopop = document.getElementById("infopopup");
+
+    if (settings.infopopups == true) {
+      infopop.checked = true;
     }
   }
 
@@ -139,18 +152,30 @@ export default class SettingsApp extends Component {
   //
 
   updateWallpaper(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
-
+    
     console.log(el.files[0].path);
     settingsObj.wallpaper = el.files[0].path;
 
     settings.SaveSettings(settingsObj);
 
     document.body.style.setProperty('--background-main-image', "url('" + el.files[0].path + "')");
+  }
 
+  //
+  // Update info Popups
+  //
+
+  updateInfoPopUp(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.infopopups = el.checked;
+
+    settings.SaveSettings(settingsObj);
   }
 
   //
@@ -162,7 +187,7 @@ export default class SettingsApp extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.autostart = el.checked.toString();
+    settingsObj.autostart = el.checked;
 
     settings.SaveSettings(settingsObj);
 
@@ -175,7 +200,7 @@ export default class SettingsApp extends Component {
     ///No need for a path as it will be set automaticly
 
     ///Check selector
-    if (el.checked.toString() == "true") {
+    if (el.checked == true) {
       autolaunchsettings.enable();
       autolaunchsettings
         .isEnabled()
@@ -203,7 +228,7 @@ export default class SettingsApp extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.minimizeToTray = el.checked.toString();
+    settingsObj.minimizeToTray = el.checked;
 
     settings.SaveSettings(settingsObj);
   }
@@ -217,7 +242,7 @@ export default class SettingsApp extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.minimizeOnClose = el.checked.toString();
+    settingsObj.minimizeOnClose = el.checked;
 
     settings.SaveSettings(settingsObj);
   }
@@ -231,11 +256,22 @@ export default class SettingsApp extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.googleAnalytics = el.checked.toString();
+    settingsObj.googleAnalytics = el.checked;
+
+    if ( el.checked == true)
+    {
+      this.props.googleanalytics.EnableAnalytics();
+
+      this.props.googleanalytics.SendEvent("Settings","Analytics","Enabled",1);
+    }
+    else
+    {
+      this.props.googleanalytics.SendEvent("Settings","Analytics","Disabled",1);
+      this.props.googleanalytics.DisableAnalytics();
+    }
 
     settings.SaveSettings(settingsObj);
 
-    // SETTINGS.Analytics.GANALYTICS.SetEnabled(settingsObj.googleAnalytics);
   }
 
   //
@@ -261,7 +297,7 @@ export default class SettingsApp extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.devMode = el.checked.toString();
+    settingsObj.devMode = el.checked;
 
     settings.SaveSettings(settingsObj);
   }
@@ -271,11 +307,22 @@ export default class SettingsApp extends Component {
       <section id="application">
         <form className="aligned">
 
-            <div className="field">
-              <label htmlFor="wallpaper">Wallpaper</label>
-              <input id="wallpaper" type="file" size="25" onChange={this.updateWallpaper} data-tooltip="The background wallpaper for your wallet"/>
-            </div>
+          <div className="field">
+            <label htmlFor="wallpaper">Wallpaper</label>
+            <input id="wallpaper" type="file" size="25" onChange={this.updateWallpaper} data-tooltip="The background wallpaper for your wallet"/>
+          </div>
 
+          <div className="field">
+            <label htmlFor="infopopup">Information Popups</label>
+            <input
+              id="infopopup"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateInfoPopUp}
+              data-tooltip="Triggers Popups that display additional information"
+            />
+          </div>
+          
           <div className="field">
             <label htmlFor="autostart">Start at system startup</label>
             <input
@@ -315,7 +362,7 @@ export default class SettingsApp extends Component {
               id="googleAnalytics"
               type="checkbox"
               className="switch"
-              onChange={this.updateGoogleAnalytics}
+              onChange={this.updateGoogleAnalytics.bind(this)}
               data-tooltip="Send anonymous usage data to allow the Nexus developers to improve the wallet"
             />
           </div>
