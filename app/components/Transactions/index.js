@@ -411,6 +411,7 @@ class Transactions extends Component {
                 coin: "Nexus",
                 fee: 0
               }
+
              
               let gothistorydata = this.findclosestdatapoint(tempTrans.time.toString());
               //tempTrans.value.USD = gothistorydata.priceUSD;
@@ -1204,7 +1205,9 @@ class Transactions extends Component {
       
     }
 
-    historyPromiseList.reduce((p, v) => p.then((otp) => this.generateHistoryPromise(v.this,v.incomingIndex,otp)), Promise.resolve()).then(() => this.afterHistoryPromiseProcessAndSave());
+    historyPromiseList.reduce((p, v) => p.then((otp) => this.generateHistoryPromise(v.this,v.incomingIndex,otp)), Promise.resolve()).then(() => {setTimeout(() => {
+       this.afterHistoryPromiseProcessAndSave()
+    }, 3000) });
   }
 
   generateHistoryPromise(incomingthis,incomingIndex,passthroughdata)
@@ -1226,7 +1229,9 @@ class Transactions extends Component {
            let allpromise = [];
            allpromise.push( incomingthis.createhistoricaldatapullpromise(cryptocompareurlUSD,'USD'));
            allpromise.push(incomingthis.createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC'));
-            Promise.all(allpromise).then((ttttt) => {console.log("********"); console.log(ttttt); resolve(ttttt);} );
+            Promise.all(allpromise).then((ttttt) => {setTimeout(() => {
+              console.log("********"); console.log(ttttt); resolve(ttttt);
+            }, 1000) } );
             //.then(fooff => {console.log("daadada");})
             console.log("$$$$$$$$$$$$$$$$$$$$$$");
             setTimeout(() => {
@@ -1331,9 +1336,10 @@ class Transactions extends Component {
     let tempdata = this.state.walletTransactions;
     for (let index = 0; index < tempdata.length; index++) {
       let founddata = this.findclosestdatapoint(this.state.walletTransactions[index].time.toString());
-      tempdata[index].value.USD = founddata.priceUSD;
-      tempdata[index].value.BTC = founddata.priceBTC;
-
+      if ( founddata != undefined){
+        tempdata[index].value.USD = founddata.priceUSD;
+        tempdata[index].value.BTC = founddata.priceBTC;
+      }
     }
 
     this.setState(
