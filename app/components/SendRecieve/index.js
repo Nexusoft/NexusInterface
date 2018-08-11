@@ -265,7 +265,7 @@ class SendRecieve extends Component {
             </div>
             <div className="box2">
               {" "}
-              <div id="table-wrap">
+              <div id="table-wraper">
                 {" "}
                 <label className="label">Queue</label>{" "}
                 <table className="table">

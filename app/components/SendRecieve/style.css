@@ -61,7 +61,7 @@
   text-align: center;
 }
 /* Generic table stylings */
-table {
+#table-wraper table {
   width: 100%;
   border-right: #fcfcfc;
   border-bottom: #fcfcfc;
@@ -71,27 +71,27 @@ table {
 
   display: block;
 }
-table tbody td,
-table thead th,
-table tfoot th {
+#table-wraper table tbody td,
+#table-wraper table thead th,
+#table-wraper table tfoot th {
   border-right: #fcfcfc;
   border-bottom: #fcfcfc;
   border: 1px solid #ffffff;
   width: 300px;
 }
-table tbody tr:nth-child(even),
-table thead tr,
-table tfoot tr {
+#table-wraper table tbody tr:nth-child(even),
+#table-wraper table thead tr,
+#table-wraper table tfoot tr {
   background: #fcfcfc;
   border: 1px solid #ffffff;
 }
-.tbody {
+#table-wraper .tbody {
   height: 299px;
   position: relative;
   width: 100%;
   border-collapse: collapse;
   overflow: auto;
 }
-.td {
+#table-wraper .td {
   border: 1px solid #ffffff;
 }
