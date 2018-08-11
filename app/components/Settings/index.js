@@ -69,7 +69,7 @@ class Settings extends Component {
               <li>
                 {this.props.encrypted !== true ? (
                   <NavLink to={`${this.props.match.url}/Unencrypted`}>
-                    <img src="images/lock-unencrypted.svg" alt="Security" />Security
+                    <img src="images/lock-minting.svg" alt="Security" />Security
                   </NavLink>
                 ) : (
                   <NavLink to={`${this.props.match.url}/Security`}>
