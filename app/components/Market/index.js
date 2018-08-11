@@ -325,13 +325,10 @@ class Market extends Component {
     return (
       <div id="market">
         <h2>Market Information</h2>
-
         <a className="refresh" onClick={() => this.refresher()}>
           Refresh Market Data
         </a>
-
         <div className="alertbox">{this.arbitageAlert()}</div>
-
         <div className="panel">
           {this.props.loaded &&
             this.props.binance.buy[0] && (

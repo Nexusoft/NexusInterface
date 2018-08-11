@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+// flow-typed signature: 3ee12410fda28c9af2248a1a5eb308bb
+=======
 // flow-typed signature: a52ae7ddc45ef957afd7789298a21a70
+>>>>>>> ReactPort
 // flow-typed version: <<STUB>>/jsdom_v^11.0.0/flow_v0.48.0
 
 /**
@@ -158,6 +162,13 @@ declare module 'jsdom/lib/jsdom/living/events/ProgressEvent-impl' {
   declare module.exports: any;
 }
 
+<<<<<<< HEAD
+declare module 'jsdom/lib/jsdom/living/events/StorageEvent-impl' {
+  declare module.exports: any;
+}
+
+=======
+>>>>>>> ReactPort
 declare module 'jsdom/lib/jsdom/living/events/TouchEvent-impl' {
   declare module.exports: any;
 }
@@ -186,10 +197,13 @@ declare module 'jsdom/lib/jsdom/living/file-api/FileReader-impl' {
   declare module.exports: any;
 }
 
+<<<<<<< HEAD
+=======
 declare module 'jsdom/lib/jsdom/living/form-data-symbols' {
   declare module.exports: any;
 }
 
+>>>>>>> ReactPort
 declare module 'jsdom/lib/jsdom/living/generated/AbortController' {
   declare module.exports: any;
 }
@@ -834,6 +848,21 @@ declare module 'jsdom/lib/jsdom/living/generated/ShadowRootInit' {
   declare module.exports: any;
 }
 
+<<<<<<< HEAD
+declare module 'jsdom/lib/jsdom/living/generated/Storage' {
+  declare module.exports: any;
+}
+
+declare module 'jsdom/lib/jsdom/living/generated/StorageEvent' {
+  declare module.exports: any;
+}
+
+declare module 'jsdom/lib/jsdom/living/generated/StorageEventInit' {
+  declare module.exports: any;
+}
+
+=======
+>>>>>>> ReactPort
 declare module 'jsdom/lib/jsdom/living/generated/SupportedType' {
   declare module.exports: any;
 }
@@ -1514,6 +1543,13 @@ declare module 'jsdom/lib/jsdom/living/websockets/WebSocket-impl' {
   declare module.exports: any;
 }
 
+<<<<<<< HEAD
+declare module 'jsdom/lib/jsdom/living/webstorage/Storage-impl' {
+  declare module.exports: any;
+}
+
+=======
+>>>>>>> ReactPort
 declare module 'jsdom/lib/jsdom/living/window/BarProp-impl' {
   declare module.exports: any;
 }
@@ -1693,6 +1729,12 @@ declare module 'jsdom/lib/jsdom/living/events/PopStateEvent-impl.js' {
 declare module 'jsdom/lib/jsdom/living/events/ProgressEvent-impl.js' {
   declare module.exports: $Exports<'jsdom/lib/jsdom/living/events/ProgressEvent-impl'>;
 }
+<<<<<<< HEAD
+declare module 'jsdom/lib/jsdom/living/events/StorageEvent-impl.js' {
+  declare module.exports: $Exports<'jsdom/lib/jsdom/living/events/StorageEvent-impl'>;
+}
+=======
+>>>>>>> ReactPort
 declare module 'jsdom/lib/jsdom/living/events/TouchEvent-impl.js' {
   declare module.exports: $Exports<'jsdom/lib/jsdom/living/events/TouchEvent-impl'>;
 }
@@ -1714,9 +1756,12 @@ declare module 'jsdom/lib/jsdom/living/file-api/FileList-impl.js' {
 declare module 'jsdom/lib/jsdom/living/file-api/FileReader-impl.js' {
   declare module.exports: $Exports<'jsdom/lib/jsdom/living/file-api/FileReader-impl'>;
 }
+<<<<<<< HEAD
+=======
 declare module 'jsdom/lib/jsdom/living/form-data-symbols.js' {
   declare module.exports: $Exports<'jsdom/lib/jsdom/living/form-data-symbols'>;
 }
+>>>>>>> ReactPort
 declare module 'jsdom/lib/jsdom/living/generated/AbortController.js' {
   declare module.exports: $Exports<'jsdom/lib/jsdom/living/generated/AbortController'>;
 }
@@ -2200,6 +2245,18 @@ declare module 'jsdom/lib/jsdom/living/generated/SelectionMode.js' {
 declare module 'jsdom/lib/jsdom/living/generated/ShadowRootInit.js' {
   declare module.exports: $Exports<'jsdom/lib/jsdom/living/generated/ShadowRootInit'>;
 }
+<<<<<<< HEAD
+declare module 'jsdom/lib/jsdom/living/generated/Storage.js' {
+  declare module.exports: $Exports<'jsdom/lib/jsdom/living/generated/Storage'>;
+}
+declare module 'jsdom/lib/jsdom/living/generated/StorageEvent.js' {
+  declare module.exports: $Exports<'jsdom/lib/jsdom/living/generated/StorageEvent'>;
+}
+declare module 'jsdom/lib/jsdom/living/generated/StorageEventInit.js' {
+  declare module.exports: $Exports<'jsdom/lib/jsdom/living/generated/StorageEventInit'>;
+}
+=======
+>>>>>>> ReactPort
 declare module 'jsdom/lib/jsdom/living/generated/SupportedType.js' {
   declare module.exports: $Exports<'jsdom/lib/jsdom/living/generated/SupportedType'>;
 }
@@ -2710,6 +2767,12 @@ declare module 'jsdom/lib/jsdom/living/websockets/WebSocket-impl-browser.js' {
 declare module 'jsdom/lib/jsdom/living/websockets/WebSocket-impl.js' {
   declare module.exports: $Exports<'jsdom/lib/jsdom/living/websockets/WebSocket-impl'>;
 }
+<<<<<<< HEAD
+declare module 'jsdom/lib/jsdom/living/webstorage/Storage-impl.js' {
+  declare module.exports: $Exports<'jsdom/lib/jsdom/living/webstorage/Storage-impl'>;
+}
+=======
+>>>>>>> ReactPort
 declare module 'jsdom/lib/jsdom/living/window/BarProp-impl.js' {
   declare module.exports: $Exports<'jsdom/lib/jsdom/living/window/BarProp-impl'>;
 }

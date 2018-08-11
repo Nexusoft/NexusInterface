@@ -7,6 +7,7 @@ import market from "./market";
 import transactions from "./transactions";
 import common from "./common";
 import login from "./login";
+import sendRecieve from "./sendRecieve";
 
 const rootReducer = combineReducers({
   overview,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   list,
   login,
   market,
+  sendRecieve,
   transactions,
   common
 });

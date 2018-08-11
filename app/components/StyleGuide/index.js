@@ -3,35 +3,26 @@ import { Link } from "react-router-dom";
 import styles from "./style.css";
 
 import ContextMenuBuilder from "../../contextmenu";
-import {remote} from "electron";
-
+import { remote } from "electron";
 
 export default class StyleGuide extends Component {
-	
-	
-	componentDidMount()
-    {
-      window.addEventListener("contextmenu", this.setupcontextmenu, false);
-    }
-  
-    componentWillUnmount()
-    {
-      window.removeEventListener("contextmenu",this.setupcontextmenu);
-    }
-  
-    setupcontextmenu(e) {
-      e.preventDefault();
-      const contextmenu = new ContextMenuBuilder().defaultContext;
-      //build default
-      let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-      defaultcontextmenu.popup(remote.getCurrentWindow());
-	}
-	
-	render() {
+  componentDidMount() {
+    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+  }
 
+  componentWillUnmount() {
+    window.removeEventListener("contextmenu", this.setupcontextmenu);
+  }
 
-	
+  setupcontextmenu(e) {
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
+  }
 
+  render() {
     return (
       <div id="styleguide">
         <h2>Style Guide</h2>
@@ -231,7 +222,8 @@ export default class StyleGuide extends Component {
                   &lt;abbr title="abbreviation title"&gt; abbreviation
                   &lt;/abbr&gt;&lt;br&gt; &lt;b&gt;bold text&lt;/b&gt;&lt;br&gt;
                   &lt;cite&gt;citation&lt;/cite&gt;&lt;br&gt; &lt;code&gt;.code{" "}
-                  {`{color: red;}`}&lt;/code&gt;&lt;br&gt; &lt;del&gt;deleted
+                  {`{color: red;}`}
+                  &lt;/code&gt;&lt;br&gt; &lt;del&gt;deleted
                   text&lt;/del&gt;&lt;br&gt; &lt;dfn title="definition term
                   title"&gt; definition term &lt;/dfn&gt;&lt;br&gt;
                   &lt;em&gt;emphasisted text&lt;/em&gt;&lt;br&gt;
