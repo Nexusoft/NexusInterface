@@ -53,6 +53,8 @@ const mapDispatchToProps = dispatch => ({
 class SendRecieve extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
+
+    this.props.googleanalytics.SendScreen("Send");
   }
 
   componentWillUnmount() {

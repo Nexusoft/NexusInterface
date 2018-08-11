@@ -27,11 +27,11 @@ export default class Footer extends Component {
           <NavLink to="/Addressbook">
             <img src="images/addressbook.svg" alt="Address Book" />
             <div className="tooltip top">Address&nbsp;Book</div>
-          </NavLink>
+          </NavLink>{/*
           <NavLink to="/BlockExplorer">
             <img src="images/blockexplorer.svg" alt="Block Explorer" />
             <div className="tooltip top">Block&nbsp;Explorer</div>
-          </NavLink>
+          </NavLink> */}
           <NavLink to="/Settings">
             <img src="images/settings.svg" alt="Settings" />
             <div className="tooltip top">Settings</div>
