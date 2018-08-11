@@ -3,7 +3,8 @@ import * as TYPE from "../actions/actiontypes";
 const initialState = {
   loggedIn: false,
   googleanalytics: null,
-  encrypted: false
+  encrypted: false,
+  busyFlag: false
 };
 
 export default (state = initialState, action) => {
@@ -12,6 +13,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loggedIn: false
+      };
+      break;
+    case TYPE.TOGGLE_BUSY_FLAG:
+      return {
+        ...state,
+        busyFlag: !state.busyFlag
       };
       break;
     case TYPE.UNLOCK:

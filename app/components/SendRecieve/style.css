@@ -1,15 +1,97 @@
-#send-receive {
-	position: relative;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
+#sendrecieve > h2 {
+  flex: 0;
 }
-
-#send-receive > h2 {
-	flex: 0;
+#sendrecieve > .panel {
+  flex: 1;
+  overflow-y: auto;
 }
+#container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  width: 100%;
+  margin: 1.5em 0;
 
-#send-receive > .panel {
-	flex: 1;
-	overflow-y: auto;
+  justify-content: space-between;
+}
+.box1 {
+  display: flex;
+  margin-left: 100px;
+}
+.box2 {
+  display: flex;
+
+  flex-direction: column;
+  width: 60%;
+}
+.foot {
+  margin-left: 60%;
+  float: right;
+  margin-top: -7%;
+}
+.counter {
+  float: right;
+
+  width: auto;
+}
+/* .tbody {
+  line-height: 1em;
+  color: white;
+  display: block;
+} */
+/* .table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+} */
+
+#left-buttons {
+  padding-top: 40px;
+}
+/* #thead {
+  width: 100%;
+} */
+.input[type="number"] {
+  width: 350px;
+}
+.label {
+  font-size: 40px;
+}
+#table-wrap {
+  text-align: center;
+}
+/* Generic table stylings */
+#table-wraper table {
+  width: 100%;
+  border-right: #fcfcfc;
+  border-bottom: #fcfcfc;
+  border: 1px solid #ffffff;
+  overflow-y: scroll;
+  height: 325px;
+
+  display: block;
+}
+#table-wraper table tbody td,
+#table-wraper table thead th,
+#table-wraper table tfoot th {
+  border-right: #fcfcfc;
+  border-bottom: #fcfcfc;
+  border: 1px solid #ffffff;
+  width: 300px;
+}
+#table-wraper table tbody tr:nth-child(even),
+#table-wraper table thead tr,
+#table-wraper table tfoot tr {
+  background: #fcfcfc;
+  border: 1px solid #ffffff;
+}
+#table-wraper .tbody {
+  height: 299px;
+  position: relative;
+  width: 100%;
+  border-collapse: collapse;
+  overflow: auto;
+}
+#table-wraper .td {
+  border: 1px solid #ffffff;
 }
