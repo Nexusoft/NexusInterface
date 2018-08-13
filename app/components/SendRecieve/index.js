@@ -204,9 +204,7 @@ class SendRecieve extends Component {
     }
     return (
       <div>
-        <h2>
-          Send Nexus <img src="images/icon-send.png" />
-        </h2>
+        <h2>Send Nexus</h2>
         <div className="panel">
           <div id="container">
             <div className="box1">

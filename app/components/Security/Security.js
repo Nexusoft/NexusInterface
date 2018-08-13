@@ -21,7 +21,10 @@ const mapDispatchToProps = dispatch => ({
 class Security extends Component {
   lockWallet() {
     this.props.busy();
-    RPC.PROMISE("walletlock", []).then(payload => this.props.wipe());
+    RPC.PROMISE("walletlock", []).then(payload => {
+      this.props.wipe();
+      this.props.busy();
+    });
   }
   showPrivKey() {
     let addressInput = document.getElementById("privKeyAddress");
