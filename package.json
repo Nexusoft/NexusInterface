@@ -30,7 +30,7 @@
   "browserslist": "electron 1.6",
   "build": {
     "productName": "Nexus Interface",
-    "appId": "org.develar.NexusInterface",
+    "appId": "com.nexusearth.NexusInterface",
     "files": [
       "dist/",
       "node_modules/",
@@ -43,15 +43,18 @@
       "GeoLite2-City_20180403/**/*",
       "cores/**/*"
     ],
+    "publish": {
+      "provider": "github"
+    },
     "dmg": {
       "contents": [
         {
-          "x": 130,
-          "y": 220
+          "x": 129,
+          "y": 250
         },
         {
           "x": 410,
-          "y": 220,
+          "y": 247,
           "type": "link",
           "path": "/Applications"
         }
@@ -202,7 +205,8 @@
     "source-map-support": "^0.4.15",
     "three": "^0.93.0",
     "universal-analytics": "^0.4.17",
-    "victory": "^0.27.2"
+    "victory": "^0.27.2",
+    "xmlhttprequest": "^1.8.0"
   },
   "devEngines": {
     "node": ">=7.x",
