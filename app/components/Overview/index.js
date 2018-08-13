@@ -9,7 +9,7 @@ import * as TYPE from "../../actions/actiontypes";
 import USD from "../../images/USD.svg";
 import transactionsArrows from "../../images/transactions-arrows.svg";
 import marketicon from "../../images/marketstats-white.svg";
-import supplyicon from "images/supply.svg";
+import supplyicon from "../../images/supply.svg";
 import hours24icon from "../../images/24hr.svg";
 import nxsStake from "../../images/nxs-staking.svg";
 import interestRate from "../../images/nxs-chart.png";
