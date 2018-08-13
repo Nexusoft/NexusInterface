@@ -11,6 +11,9 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
 
+import lockedImg from "images/lock-encrypted.svg";
+import unencryptedImg from "images/lock-unencrypted.svg";
+import unlockImg from "images/lock-minting.svg";
 import GOOGLE from "../../script/googleanalytics";
 let heighestPeerBlock = 0;
 
@@ -29,7 +32,6 @@ class Header extends Component {
       require("electron").remote.getCurrentWindow().id
     );
 
-    
     //console.log(visitor);
     this.props.SetGoogleAnalytics(GOOGLE);
     menuBuilder.buildMenu(this.props.history);
@@ -56,11 +58,11 @@ class Header extends Component {
   }
   signInStatus() {
     if (this.props.unlocked_until === undefined) {
-      return "images/lock-unencrypted.svg";
+      return unencryptedImg;
     } else if (this.props.unlocked_until === 0) {
-      return "images/lock-encrypted.svg";
+      return lockedImg;
     } else if (this.props.unlocked_until >= 0) {
-      return "images/lock-minting.svg";
+      return unlockImg;
     }
   }
 
@@ -80,7 +82,6 @@ class Header extends Component {
   }
 
   syncStatus() {
-    
     RPC.PROMISE("getpeerinfo", []).then(peerresponse => {
       peerresponse.forEach(element => {
         if (element.height >= heighestPeerBlock) {
@@ -95,10 +96,13 @@ class Header extends Component {
     }
   }
 
-  returnSyncStatusTooltip()
-  {
+  returnSyncStatusTooltip() {
     if (heighestPeerBlock > this.props.blocks) {
-      return "Syncing...\nBehind\n" + (heighestPeerBlock - this.props.blocks).toString() + "\nBlocks";
+      return (
+        "Syncing...\nBehind\n" +
+        (heighestPeerBlock - this.props.blocks).toString() +
+        "\nBlocks"
+      );
     } else {
       return "Synced";
     }
@@ -125,16 +129,21 @@ class Header extends Component {
           </div>
           <div className="icon">
             <img src={this.syncStatus()} />
-            <div className="tooltip bottom" style={{right:"100%"}} >
+            <div className="tooltip bottom" style={{ right: "100%" }}>
               <div>{this.returnSyncStatusTooltip()}</div>
             </div>
           </div>
         </div>
         <Link to="/">
-          <img id="logo" className="animated zoomIn " src="images/logo-full-beta.svg" alt="Nexus Logo" />
+          <img
+            id="logo"
+            className="animated zoomIn "
+            src="images/logo-full-beta.svg"
+            alt="Nexus Logo"
+          />
         </Link>
 
-        <div id="hdr-line" className="animated fadeIn "/>
+        <div id="hdr-line" className="animated fadeIn " />
       </div>
     );
   }

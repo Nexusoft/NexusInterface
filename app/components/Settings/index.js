@@ -58,28 +58,33 @@ class Settings extends Component {
             <ul className="tabs">
               <li>
                 <NavLink to={`${this.props.match.url}/App`}>
-                  <img src="images/logo.svg" alt="Application" />Application
+                  <img src="images/logo.svg" alt="Application" />
+                  Application
                 </NavLink>
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Core`}>
-                  <img src="images/core.svg" alt="Core" />Core
+                  <img src="images/core.svg" alt="Core" />
+                  Core
                 </NavLink>
               </li>
               <li>
                 {this.props.encrypted !== true ? (
                   <NavLink to={`${this.props.match.url}/Unencrypted`}>
-                    <img src="images/lock-unencrypted.svg" alt="Security" />Security
+                    <img src="images/lock-unencrypted.svg" alt="Security" />
+                    Security
                   </NavLink>
                 ) : (
                   <NavLink to={`${this.props.match.url}/Security`}>
-                    <img src="images/lock-encrypted.svg" alt="Security" />Security
+                    <img src="images/lock-encrypted.svg" alt="Security" />
+                    Security
                   </NavLink>
                 )}
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Market`}>
-                  <img src="images/marketstats.svg" alt="Martket" />Martket
+                  <img src="images/marketstats.svg" alt="Market" />
+                  Market
                 </NavLink>
               </li>
             </ul>
