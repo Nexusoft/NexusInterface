@@ -47,9 +47,7 @@ class Fast extends Component {
     ) {
       this.props.GetPairMarketInfo(pair);
     }
-    // if (this.props.marketPairData.pair !== pair) {
-    //   this.props.unavaliblePair();
-    // }
+
     if (this.props.ammount !== prevProps.ammount) {
       let tradeAmmt = parseFloat(this.props.ammount);
       if (tradeAmmt > this.props.marketPairData.minimum) {
@@ -98,7 +96,7 @@ class Fast extends Component {
       this.props.to &&
       this.props.from &&
       this.props.from !== this.props.to &&
-      this.props.busyFlag
+      !this.props.busyFlag
     ) {
       if (this.props.availablePair) {
         return (
@@ -133,10 +131,10 @@ class Fast extends Component {
               <button
                 className="button primary hero"
                 onClick={() => {
-                  this.getQuote();
+                  this.executeTrade();
                 }}
               >
-                GET QUOTE
+                EXECUTE TRADE
               </button>
             )}
           </div>
@@ -200,11 +198,13 @@ class Fast extends Component {
     }
   }
 
-  getQuote() {
-    if (this.props.withinBounds) {
-      let pair = this.props.from + "_" + this.props.to;
-      this.props.GetQuote();
-    } else alert("Outside trade-able ammounts");
+  executeTrade() {
+    if (this.props.loggedIn && this.props.from === "NXS") {
+      if (this.props.withinBounds) {
+        let pair = this.props.from + "_" + this.props.to;
+        this.props.executeFastTrade();
+      } else alert("Outside trade-able ammounts");
+    } else alert("Please unlock your wallet");
   }
 
   render() {

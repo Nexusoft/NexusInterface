@@ -67,7 +67,28 @@ export const GetQuote = pair => {
         method: "POST",
         url: "https://shapeshift.io/sendamount",
         json: true,
-        data: { depositAmount: 3, outputAmount: 3, amount: 3, pair: "ltc_btc" }
+        data: { amount: 0.012, pair: "eth_btc" }
+      },
+      (error, response, body) => {
+        // if (response.statusCode === 200) {
+        console.log(response);
+        // }
+      }
+    );
+  };
+};
+export const executeFastTrade = (pair, toAddress, refundAddress) => {
+  return dispatch => {
+    Request(
+      {
+        method: "POST",
+        url: "https://shapeshift.io/shift",
+        json: true,
+        data: {
+          withdrawal: toAddress,
+          pair: pair,
+          returnAddress: refundAddress
+        }
       },
       (error, response, body) => {
         // if (response.statusCode === 200) {
@@ -89,13 +110,15 @@ export const GetPairMarketInfo = pair => {
         if (response.statusCode === 200) {
           if (!response.body.error) {
             dispatch({ type: TYPE.MARKET_PAIR_DATA, payload: response.body });
+            dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
           }
         } else if (
           response.body.error ===
           "That pair is temporarily unavailable for trades."
         ) {
           dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: false });
-        }
+          dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
+        } else dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
       }
     );
   };

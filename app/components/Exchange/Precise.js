@@ -185,14 +185,14 @@ class Precise extends Component {
   toFromHandler(e, switcher) {
     if (switcher === "to") {
       if (e.target.value !== this.props.from) {
-        // this.props.setBusyFlag();
+        this.props.setBusyFlag();
         this.props.ToSetter(e.target.value);
       } else {
         this.props.ToSetter(e.target.value);
       }
     } else {
       if (e.target.value !== this.props.to) {
-        // this.props.setBusyFlag();
+        this.props.setBusyFlag();
         this.props.FromSetter(e.target.value);
       } else {
         this.props.FromSetter(e.target.value);
