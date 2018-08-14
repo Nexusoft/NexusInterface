@@ -132,8 +132,8 @@ class SendRecieve extends Component {
       return (
         <div id="feeCounter">
           {" "}
-          TOTAL: {sum}
-          <p>Fee: {this.props.paytxfee} </p>{" "}
+          TOTAL: {sum} NXS
+          <p>FEE: {this.props.paytxfee} NXS </p>{" "}
         </div>
       );
     }
@@ -191,6 +191,7 @@ class SendRecieve extends Component {
             <img
               id="Remove"
               src="images/status-bad.svg"
+              disabled={this.props.busyFlag}
               onClick={() => this.props.removeQueue(e.key)}
             />
           </td>
@@ -206,7 +207,7 @@ class SendRecieve extends Component {
       this.props.SetSendAgainData(null);
     }
     return (
-      <div>
+      <div id="sendrecieve">
         <h2>Send Nexus</h2>
         <div className="panel">
           <div id="container">
@@ -226,12 +227,15 @@ class SendRecieve extends Component {
                   <span className="hint">Amount Of Nexus</span>
                   <label>Nexus Amount</label>
                   <input
+                    step="0.00000001"
                     className="input"
                     type="number"
                     placeholder="Nexus Amount"
                     value={this.props.Amount}
                     onChange={e => {
-                      this.props.updateAmount(parseFloat(e.target.value));
+                      this.props.updateAmount(
+                        parseFloat(e.target.value).toFixed(8)
+                      );
                     }}
                     required
                   />
@@ -253,6 +257,7 @@ class SendRecieve extends Component {
                     value="Add To Queue"
                     className="button primary"
                     onClick={() => this.validateAddToQueue()}
+                    disabled={this.props.busyFlag}
                   />
 
                   <input
@@ -260,6 +265,7 @@ class SendRecieve extends Component {
                     value="Send Now"
                     className="button"
                     onClick={() => this.sendOne()}
+                    disabled={this.props.busyFlag}
                   />
                 </div>
               </div>
@@ -268,7 +274,9 @@ class SendRecieve extends Component {
               {" "}
               <div id="table-wraper">
                 {" "}
-                <label className="label">Queue</label>{" "}
+                <p>
+                  <label className="label">Queue</label>
+                </p>
                 <table className="table">
                   <thead className="thead">
                     <th>Address</th>
@@ -284,6 +292,7 @@ class SendRecieve extends Component {
                     type="reset"
                     value="Send All"
                     className="button primary"
+                    disabled={this.props.busyFlag}
                     onClick={() => {
                       this.sendMany();
                     }}
@@ -292,6 +301,7 @@ class SendRecieve extends Component {
                     type="button"
                     value="Clear Queue"
                     className="button primary"
+                    disabled={this.props.busyFlag}
                     onClick={() => {
                       this.props.clearQueue();
                     }}
