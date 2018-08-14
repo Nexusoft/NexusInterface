@@ -66,7 +66,7 @@ class Precise extends Component {
     if (this.props.quote) {
       let grossTrade = tradeAmmt * this.props.quote.quotedRate;
       let finalTrade = grossTrade - this.props.quote.minerFee;
-      this.props.greenLightTransaction(true);
+
       return (
         <div>
           <div>
@@ -141,14 +141,19 @@ class Precise extends Component {
       this.props.GetQuote(pair, this.props.ammount);
     } else alert("Outside trade-able ammounts");
   }
+
+  executeTransaction() {
+    console.log("execute");
+  }
+
   buttonSwitcher() {
     if (this.props.withinBounds) {
-      if (this.props.greenlight) {
+      if (this.props.greenLight) {
         return (
           <button
             className="button primary hero"
             onClick={() => {
-              this.getQuote();
+              this.executeTransaction();
             }}
           >
             EXECUTE TRANSACTION
@@ -168,6 +173,7 @@ class Precise extends Component {
       }
     }
   }
+
   buildConfermation() {
     if (
       this.props.to &&
