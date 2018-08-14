@@ -164,8 +164,6 @@ function createWindow() {
       throw new Error('"mainWindow" is not defined');
     }
 
-    log.info("Main: Window contents finished loading, showing window");
-
     mainWindow.show();
     mainWindow.focus();
 
