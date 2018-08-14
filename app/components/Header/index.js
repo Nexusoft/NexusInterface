@@ -34,7 +34,11 @@ class Header extends Component {
 
     //console.log(visitor);
     this.props.SetGoogleAnalytics(GOOGLE);
-    menuBuilder.buildMenu(this.props.history);
+    let encryptionStatus = false;
+    if (this.props.unlocked_until) {
+      encryptionStatus = true;
+    }
+    menuBuilder.buildMenu(this.props.history, encryptionStatus);
 
     this.props.GetInfoDump();
 
