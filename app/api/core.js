@@ -32,7 +32,7 @@ function SetCoreParameters(settings)
     // set up the user/password/host for RPC communication
     //
 
-    if (settings.manualDaemon === "true") {
+    if (settings.manualDaemon == true) {
 
         let ip = (settings.manualDaemonIP === undefined ? "127.0.0.1" : settings.manualDaemonIP);
         let port = (settings.manualDaemonPort === undefined ? "9336" : settings.manualDaemonPort);
@@ -61,19 +61,19 @@ function SetCoreParameters(settings)
     parameters.push("-llpallowip=" + "127.0.0.1:8325");       // <-- Make a setting for this
 
     // Disable upnp (default is 1)
-    if (settings.mapPortUsingUpnp === "false")
+    if (settings.mapPortUsingUpnp == false)
         parameters.push("-upnp=0");
 
     // Connect through SOCKS4 proxy
-    if (settings.socks4Proxy === "true")
+    if (settings.socks4Proxy == true)
         parameters.push("-proxy=" + settings.socks4ProxyIP + ":" + settings.socks4ProxyPort)
 
     // Enable mining (default is 0)
-    if (settings.miningEnabled === "true")
+    if (settings.miningEnabled == true)
         parameters.push("-mining=1");
 
     // Enable detach database on shutdown (default is 0)
-    if (settings.detatchDatabaseOnShutdown === "true")
+    if (settings.detatchDatabaseOnShutdown == true)
         parameters.push("-detachdb=1");
 
     log.info("Core Parameters: " + parameters.toString());
@@ -87,6 +87,8 @@ function SetCoreParameters(settings)
 
 function GetResourcesDirectory()
 {
+    //TODO: Test this under a packaged environment to make sure the /cores folder is found correctly
+
     // let appPath = require('electron').app.getAppPath();
 
     // if (process.cwd() === appPath)
@@ -251,7 +253,7 @@ class Core extends EventEmitter {
         let settings = require("./settings").GetSettings();
         let parameters = SetCoreParameters(settings);
 
-        if (settings.manualDaemon === "true") {
+        if (settings.manualDaemon == true) {
 
             log.info("Core Manager: Manual daemon mode, skipping starting core");
 
@@ -283,7 +285,8 @@ class Core extends EventEmitter {
 
         this.emit('starting');
 
-        this.checkresponding();
+        // May not need to do this with the way we have the RPC calls set up in REACT, disable for now
+        // this.checkresponding();
     }
 
     //
@@ -303,7 +306,7 @@ class Core extends EventEmitter {
 
         log.info("Core Manager: Core is stopping (process id: " + coreprocess.pid + ")");
 
-        coreprocess.onClose = function (code, signal) {
+        coreprocess.on('close', (code, signal) => {
 
             log.info("Core Manager: Core is stopped");
 
@@ -314,9 +317,7 @@ class Core extends EventEmitter {
 
             if (callback)
                 callback();
-        }
-
-        coreprocess.on('close', coreprocess.onClose);
+        });
 
         coreprocess.kill();
 

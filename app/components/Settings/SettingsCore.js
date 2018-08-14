@@ -37,7 +37,7 @@ export default class SettingsCore extends Component {
     var manualDaemonSettings = document.getElementById("manual-daemon-settings");
     var automaticDaemonSettings = document.getElementById("automatic-daemon-settings");
 
-    if (settings.manualDaemon === "true") {
+    if (settings.manualDaemon == true) {
       manualDaemon.checked = true;
     }
 
@@ -135,11 +135,11 @@ export default class SettingsCore extends Component {
     {
       mapPortUsingUpnp.checked = true;
     }
-    if ( settings.mapPortUsingUpnp === "true")
+    if ( settings.mapPortUsingUpnp == true)
     {
       mapPortUsingUpnp.checked = true;
     }
-    if ( settings.mapPortUsingUpnp === "false")
+    if ( settings.mapPortUsingUpnp == false)
     {
       mapPortUsingUpnp.checked = false;
     }
@@ -159,11 +159,11 @@ export default class SettingsCore extends Component {
     {
       socks4Proxy.checked = false;
     }
-    if ( settings.socks4Proxy === "true")
+    if ( settings.socks4Proxy == true)
     {
       socks4Proxy.checked = true;
     }
-    if ( settings.socks4Proxy === "false")
+    if ( settings.socks4Proxy == false)
     {
       socks4Proxy.checked = false;
     }
@@ -223,11 +223,11 @@ export default class SettingsCore extends Component {
     {
       detatchDatabaseOnShutdown.checked = false;
     }
-    if ( settings.detatchDatabaseOnShutdown === "true")
+    if ( settings.detatchDatabaseOnShutdown == true)
     {
       detatchDatabaseOnShutdown.checked = true;
     }
-    if ( settings.detatchDatabaseOnShutdown === "false")
+    if ( settings.detatchDatabaseOnShutdown == false)
     {
       detatchDatabaseOnShutdown.checked = false;
     }
@@ -261,7 +261,7 @@ export default class SettingsCore extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemon = el.checked.toString();
+    settingsObj.manualDaemon = el.checked;
     
     settings.SaveSettings(settingsObj);
 
@@ -348,7 +348,7 @@ export default class SettingsCore extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.mapPortUsingUpnp = el.checked.toString();
+    settingsObj.mapPortUsingUpnp = el.checked;
 
     settings.SaveSettings(settingsObj);
   }
@@ -363,7 +363,7 @@ export default class SettingsCore extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.socks4Proxy = el.checked.toString();
+    settingsObj.socks4Proxy = el.checked;
 
     settings.SaveSettings(settingsObj);
 
@@ -419,7 +419,7 @@ export default class SettingsCore extends Component {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
-    settingsObj.detatchDatabaseOnShutdown = el.checked.toString();
+    settingsObj.detatchDatabaseOnShutdown = el.checked;
 
     settings.SaveSettings(settingsObj);
   }
