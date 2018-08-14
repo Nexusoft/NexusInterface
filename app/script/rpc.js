@@ -66,58 +66,60 @@ Available RPC methods:
 	Add new Interface Specific Utilities Here. Module Specific Functions go In Module Scripts.
 	
 **/
-var RPC = RPC || {};
-RPC.COMMANDS = RPC.COMMANDS || {};
-RPC.CALLBACK = RPC.CALLBACK || {};
-RPC.CORE = RPC.CORE || require('electron').remote.getGlobal('core');
+// var RPC = RPC || {};
+export const COMMANDS = {};
+export const CALLBACK = {};
 
 //
-// GETHOST: Get the rpc host name from the core, else default to development defaults
+// GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 //
 
-RPC.GETHOST = function() {
-  return RPC.CORE.host;
-};
+export const GETHOST = () => {
+  let core = require('electron').remote.getGlobal('core');
+  return core.host;
+}
 
 //
-// GETUSER: Get the rpc user name from the core, else default to development defaults
+// GETUSER: Get the rpc user name from the core configuration, else default to development defaults
 //
 
-RPC.GETUSER = function() {
-  return RPC.CORE.user;
-};
+export const GETUSER = () => {
+  let core = require('electron').remote.getGlobal('core');
+  return core.user;
+}
 
 //
-// GETPASSWORD: Get the rpc password from the core, else default to development defaults
+// GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
 //
 
-RPC.GETPASSWORD = function() {
-  return RPC.CORE.password;
-};
+export const GETPASSWORD = () => {
+  let core = require('electron').remote.getGlobal('core');
+  return core.password;
+}
 
-RPC.GET = function(cmd, args, Callback) {
+export const GET = (cmd, args, Callback) => {
   var PostData = JSON.stringify({
     method: cmd,
     params: args
   });
 
-  RPC.POST(
-    this.GETHOST(),
+  POST(
+    GETHOST(),
     PostData,
     "TAG-ID-deprecate",
     Callback,
-    this.GETUSER(),
-    this.GETPASSWORD()
+    GETUSER(),
+    GETPASSWORD()
   );
 };
 
-RPC.PROMISE = function(cmd, args) {
+export const PROMISE = (cmd, args) => {
   return new Promise((resolve, reject) => {
     var PostData = JSON.stringify({
       method: cmd,
       params: args
     });
-
+    console.log(PostData);
     var ResponseObject;
 
     /** Opera 8.0+, Firefox, Safari **/
@@ -141,7 +143,14 @@ RPC.PROMISE = function(cmd, args) {
     }
 
     /** Establish the resolve. **/
-    ResponseObject.onload = function() {
+    ResponseObject.onload = () => {
+      if (ResponseObject.status == 404) {
+        reject("RPC Command {" + cmd + "} Not Found");
+      }
+      if (ResponseObject.status == 500) {
+        reject("Bad Command Arguments");
+      }
+
       if (cmd === "validateaddress") {
         if (JSON.parse(ResponseObject.response).result.isvalid === false) {
           reject(JSON.parse(ResponseObject.response).result.isvalid);
@@ -161,42 +170,40 @@ RPC.PROMISE = function(cmd, args) {
       resolve(payload);
     };
 
+    ResponseObject.onerror = () =>
+    {
+      reject(ResponseObject.response);
+    };
+
     /** Generate the AJAX Request. **/
-    if (this.GETUSER() == undefined && this.GETPASSWORD() == undefined)
-      ResponseObject.open("POST", this.GETHOST(), true);
-    else
-      ResponseObject.open(
-        "POST",
-        this.GETHOST(),
-        true,
-        this.GETUSER(),
-        this.GETPASSWORD()
-      );
+    if (GETUSER() == undefined && GETPASSWORD() == undefined)
+      ResponseObject.open("POST", GETHOST(), true);
+    else ResponseObject.open("POST", GETHOST(), true, GETUSER(), GETPASSWORD());
 
     /** Send off the Post Data. **/
     ResponseObject.send(PostData);
   });
 };
 
-RPC.GETWITHPASS = function(cmd, args, Callback, passdata) {
+export const GETWITHPASS = (cmd, args, Callback, passdata) => {
   var PostData = JSON.stringify({
     method: cmd,
     params: args,
     passthrough: passdata
   });
 
-  RPC.POST(
-    this.GETHOST(),
+  POST(
+    GETHOST(),
     PostData,
     "TAG-ID-deprecate",
     Callback,
-    this.GETUSER(),
-    this.GETPASSWORD()
+    GETUSER(),
+    GETPASSWORD()
   );
 };
 
 //TODO: clean this up... still not diving into this yet. prototype first...
-RPC.POST = function(
+export const POST = (
   Address,
   PostData,
   TagID,
@@ -204,7 +211,7 @@ RPC.POST = function(
   Username,
   Password,
   Content
-) {
+) => {
   /** Object to handle the AJAX Requests. */
   var ResponseObject;
 
@@ -235,7 +242,7 @@ RPC.POST = function(
   if (TagID == undefined) TagID = "";
 
   /** Establish the Callback Function. **/
-  ResponseObject.onreadystatechange = function() {
+  ResponseObject.onreadystatechange = () => {
     Callback(ResponseObject, Address, PostData, TagID);
   };
 
