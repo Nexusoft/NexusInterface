@@ -53,6 +53,8 @@ const mapDispatchToProps = dispatch => ({
 class SendRecieve extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
+
+    this.props.googleanalytics.SendScreen("Send");
   }
 
   componentWillUnmount() {
@@ -264,7 +266,7 @@ class SendRecieve extends Component {
             </div>
             <div className="box2">
               {" "}
-              <div id="table-wrap">
+              <div id="table-wraper">
                 {" "}
                 <label className="label">Queue</label>{" "}
                 <table className="table">

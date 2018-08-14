@@ -62,7 +62,7 @@
   width: 100%;
 }
 /* Generic table stylings */
-.table {
+#table-wraper table {
   width: 100%;
   min-width: 50%;
   margin-top: -2%;
@@ -73,17 +73,22 @@
   height: 325px;
   display: block;
 }
-.table tbody td,
-.table thead th,
-.table tfoot th {
+#table-wraper table tbody td,
+#table-wraper table thead th,
+#table-wraper table tfoot th {
   border-right: #fcfcfc;
   border-bottom: #fcfcfc;
   border: 1px solid #ffffff;
   border-width: 1px;
   width: 100%;
 }
-
-.tbody {
+#table-wraper table tbody tr:nth-child(even),
+#table-wraper table thead tr,
+#table-wraper table tfoot tr {
+  background: #fcfcfc;
+  border: 1px solid #ffffff;
+}
+#table-wraper .tbody {
   height: 299px;
   position: relative;
   width: 100%;
@@ -91,7 +96,7 @@
   overflow: auto;
   min-width: 50%;
 }
-.td {
+#table-wraper .td {
   border: 1px solid #ffffff;
 }
 .thead {

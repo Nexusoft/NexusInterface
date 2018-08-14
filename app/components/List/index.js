@@ -9,7 +9,7 @@ import ContextMenuBuilder from "../../contextmenu";
 import {remote} from "electron";
 
 const mapStateToProps = state => {
-  return { ...state.list };
+  return { ...state.list, ...state.common };
 };
 
 const mapDispatchToProps = dispatch => ({

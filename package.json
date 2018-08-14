@@ -1,8 +1,8 @@
 {
   "name": "nexus-interface",
   "productName": "Nexus Interface",
-  "version": "1.0.0",
-  "buildDate": "March 10th 2018",
+  "version": "0.4.0",
+  "buildDate": "August 11th 2018",
   "description": "nexus interface electron wallet",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",

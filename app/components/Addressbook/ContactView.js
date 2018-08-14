@@ -20,10 +20,30 @@ class ContactView extends Component {
 
     this.state =
     {
-      isEditing: false
+      isEditing: false,
+      newAddresses: {}
     };
   }
 
+  componentDidUpdate(prevProps) 
+  {
+
+    // make sure the editing state is turned off if the contact changed in a prop change
+    if (!prevProps.contact)
+      return;
+
+    if (this.props.contact.name !== prevProps.contact.name) 
+    {
+
+      this.setState(
+        {
+          isEditing: false
+        }
+      );
+
+    }
+
+  }
 
   getinitial(name) 
   {
@@ -35,17 +55,21 @@ class ContactView extends Component {
 
   }
 
-  buildtheiraddresses() 
+  buildtheiraddresses(addresses) 
   {
+    console.log(addresses);
 
-    return Object.keys(this.props.contact.notMine).map(function(item, i){
+    if (!addresses)
+      return null;
+
+    return Object.keys(addresses).map(function(item, i){
 
       return (
 
         <div className="contact-address">
           <label>{item}</label>
-          <span key={i} data-address={this.props.contact.notMine[item]} onClick={this.copyaddress}>
-            {this.props.contact.notMine[item]}
+          <span key={i} data-address={addresses[item]} onClick={this.copyaddress}>
+            {addresses[item]}
           </span>
           <div className="tooltip bottom">Click to copy</div>
         </div>
@@ -74,6 +98,7 @@ class ContactView extends Component {
     this.props.contact.phoneNum = this.refs.editPhoneNumber.value;
     this.props.contact.timeZone = parseInt(this.refs.editTimeZone.value);
     this.props.contact.notes = this.refs.editNotes.value;
+    this.props.contact.newNotMine = this.state.newAddresses;
 
     this.setState(
       {
@@ -93,6 +118,13 @@ class ContactView extends Component {
     container.classList.add("close");
 
     var self = this;
+
+    this.setState(
+      {
+        isEditing: false,
+        newAddresses: {}
+      }
+    );
 
     setTimeout(function() {
       container.classList.remove("close");
@@ -114,15 +146,18 @@ class ContactView extends Component {
     RPC.PROMISE("validateaddress", [address])
     .then(payload => {
 
-      if(!this.props.contact.newNotMine)
-        this.props.contact.newNotMine = new Array();
+      let newState = {...this.state.newAddresses};
 
-      this.props.contact.newNotMine.push(
+      newState[label.trim()] = address.trim();
+
+      this.setState(
         {
-          label: label.trim(),
-          address: address.trim()
+          newAddresses: newState
         }
-      )
+      );
+
+      this.refs.addContactAddressLabel.value = "";
+      this.refs.addContactAddress.value = "";
 
       console.log("valid address: ", label, address);
 
@@ -130,11 +165,6 @@ class ContactView extends Component {
     .catch(e => {
 
       console.log("invalid address: ", address);
-      // this.setState(
-      //   {
-      //     addError: "Please enter a valid Nexus address"
-      //   }
-      // );
 
     });
 
@@ -351,8 +381,8 @@ class ContactView extends Component {
 
         <div>
 
-          {this.buildtheiraddresses()}
-
+          {this.buildtheiraddresses(this.props.contact.notMine)}
+          {this.buildtheiraddresses(this.state.newAddresses)}
 
           <div id="add-address-inputs">
 
@@ -372,7 +402,7 @@ class ContactView extends Component {
 
         <div>
 
-          {this.buildtheiraddresses()}
+          {this.buildtheiraddresses(this.props.contact.notMine)}
 
         </div>
 
