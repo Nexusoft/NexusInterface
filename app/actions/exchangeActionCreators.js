@@ -41,6 +41,12 @@ export const ammountUpdater = ammt => {
   };
 };
 
+export const greenLightTransaction = bool => {
+  return dispatch => {
+    dispatch({ type: TYPE.GREENLIGHT_TRANSACTION, payload: bool });
+  };
+};
+
 export const GetAvailaleCoins = () => {
   return dispatch => {
     Request(
@@ -60,40 +66,44 @@ export const GetAvailaleCoins = () => {
   };
 };
 
-export const GetQuote = pair => {
+export const GetQuote = (pair, ammount, callback) => {
   return dispatch => {
     Request(
       {
         method: "POST",
         url: "https://shapeshift.io/sendamount",
-        json: true,
-        data: { amount: 0.012, pair: "eth_btc" }
+        json: { amount: ammount, pair: pair }
       },
       (error, response, body) => {
-        // if (response.statusCode === 200) {
-        console.log(response);
-        // }
+        if (response.statusCode === 200) {
+          if (!response.body.error) {
+            dispatch({ type: TYPE.SET_QUOTE, payload: response.body.success });
+            dispatch({ type: TYPE.GREENLIGHT_TRANSACTION, payload: true });
+          }
+        } else {
+          console.log(response);
+        }
       }
     );
   };
 };
+
 export const executeFastTrade = (pair, toAddress, refundAddress) => {
   return dispatch => {
     Request(
       {
         method: "POST",
         url: "https://shapeshift.io/shift",
-        json: true,
-        data: {
+        json: {
           withdrawal: toAddress,
           pair: pair,
           returnAddress: refundAddress
         }
       },
       (error, response, body) => {
-        // if (response.statusCode === 200) {
-        console.log(response);
-        // }
+        if (response.statusCode === 200) {
+          console.log(response);
+        }
       }
     );
   };

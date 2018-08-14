@@ -22,17 +22,6 @@ class Precise extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
     this.props.GetAvailaleCoins();
-    Request(
-      {
-        url: "https://shapeshift.io/marketinfo/nxs_btc",
-        json: true
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          console.log(response);
-        }
-      }
-    );
   }
 
   componentWillUnmount() {
@@ -47,9 +36,7 @@ class Precise extends Component {
     ) {
       this.props.GetPairMarketInfo(pair);
     }
-    // if (this.props.marketPairData.pair !== pair) {
-    //   this.props.unavaliblePair();
-    // }
+
     if (this.props.ammount !== prevProps.ammount) {
       let tradeAmmt = parseFloat(this.props.ammount);
       if (tradeAmmt > this.props.marketPairData.minimum) {
@@ -76,74 +63,21 @@ class Precise extends Component {
 
   transferCalculator() {
     let tradeAmmt = parseFloat(this.props.ammount);
-    if (tradeAmmt > this.props.marketPairData.minimum) {
-      if (tradeAmmt < this.props.marketPairData.maxLimit) {
-        let grossTrade = tradeAmmt * this.props.marketPairData.rate;
-        let finalTrade = grossTrade - this.props.marketPairData.minerFee;
-        return (
+    if (this.props.quote) {
+      let grossTrade = tradeAmmt * this.props.quote.quotedRate;
+      let finalTrade = grossTrade - this.props.quote.minerFee;
+      this.props.greenLightTransaction(true);
+      return (
+        <div>
           <div>
             {finalTrade.toFixed(8)} {this.props.to}
           </div>
-        );
-      } else {
-        return <div>Trade Maximum Exceeded</div>;
-      }
-    } else {
-      return <div>Trade Minimum Unmet</div>;
-    }
-  }
-
-  buildConfermation() {
-    if (
-      this.props.to &&
-      this.props.from &&
-      this.props.from !== this.props.to &&
-      !this.props.busyFlag
-    ) {
-      if (this.props.availablePair) {
-        return (
-          <div id="confirmationContainer">
-            <div id="confirmation">
-              <div id="sendSideConfirm">
-                <div className="confirmationWords">
-                  <h3>YOU ARE SENDING</h3>
-                  <div>
-                    {this.props.ammount} {this.props.from}
-                  </div>
-                </div>
-                <img
-                  style={{ height: "100px", margin: "10px" }}
-                  src={this.props.availableCoins[this.props.from].image}
-                />
-              </div>
-              <img src={arrow} style={{ height: "100px" }} />
-              <div id="recieveSideConfirm">
-                <img
-                  style={{ height: "100px", margin: "10px" }}
-                  src={this.props.availableCoins[this.props.to].image}
-                />
-                <div className="confirmationWords">
-                  <h3>YOU WILL RECIEVE</h3>
-
-                  {this.transferCalculator()}
-                </div>
-              </div>
-            </div>
-            {this.props.withinBounds && (
-              <button
-                className="button primary hero"
-                onClick={() => {
-                  this.getQuote();
-                }}
-              >
-                GET QUOTE
-              </button>
-            )}
+          <div>
+            Deposit: {this.props.quote.depositAmount} {this.props.from}
           </div>
-        );
-      } else {
-        return <h1>That pair is temporarily unavailable for trades.</h1>;
-      }
+        </div>
+      );
+      return <div>hello</div>;
     } else return null;
   }
 
@@ -182,6 +116,7 @@ class Precise extends Component {
       return null;
     }
   }
+
   toFromHandler(e, switcher) {
     if (switcher === "to") {
       if (e.target.value !== this.props.from) {
@@ -203,8 +138,79 @@ class Precise extends Component {
   getQuote() {
     if (this.props.withinBounds) {
       let pair = this.props.from + "_" + this.props.to;
-      this.props.GetQuote();
+      this.props.GetQuote(pair, this.props.ammount);
     } else alert("Outside trade-able ammounts");
+  }
+  buttonSwitcher() {
+    if (this.props.withinBounds) {
+      if (this.props.greenlight) {
+        return (
+          <button
+            className="button primary hero"
+            onClick={() => {
+              this.getQuote();
+            }}
+          >
+            EXECUTE TRANSACTION
+          </button>
+        );
+      } else {
+        return (
+          <button
+            className="button primary hero"
+            onClick={() => {
+              this.getQuote();
+            }}
+          >
+            GET QUOTE
+          </button>
+        );
+      }
+    }
+  }
+  buildConfermation() {
+    if (
+      this.props.to &&
+      this.props.from &&
+      this.props.from !== this.props.to &&
+      !this.props.busyFlag
+    ) {
+      if (this.props.availablePair) {
+        return (
+          <div id="confirmationContainer">
+            <div id="confirmation">
+              <div id="sendSideConfirm">
+                <div className="confirmationWords">
+                  <h3>YOU ARE SENDING</h3>
+                  <div>
+                    {this.props.ammount} {this.props.from}
+                  </div>
+                </div>
+                <img
+                  style={{ height: "100px", margin: "10px" }}
+                  src={this.props.availableCoins[this.props.from].image}
+                />
+              </div>
+              <img src={arrow} style={{ height: "100px" }} />
+              <div id="recieveSideConfirm">
+                <img
+                  style={{ height: "100px", margin: "10px" }}
+                  src={this.props.availableCoins[this.props.to].image}
+                />
+                <div className="confirmationWords">
+                  <h3>YOU WILL RECIEVE</h3>
+
+                  {this.transferCalculator()}
+                </div>
+              </div>
+            </div>
+            {this.buttonSwitcher()}
+          </div>
+        );
+      } else {
+        return <h1>That pair is temporarily unavailable for trades.</h1>;
+      }
+    } else return null;
   }
 
   render() {

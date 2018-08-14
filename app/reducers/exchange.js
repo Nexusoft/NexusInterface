@@ -9,7 +9,9 @@ const initialState = {
   to: "",
   availablePair: true,
   withinBounds: false,
-  marketPairData: {}
+  marketPairData: {},
+  quote: null,
+  greenLight: false
 };
 
 export default (state = initialState, action) => {
@@ -24,7 +26,9 @@ export default (state = initialState, action) => {
       return {
         ...state,
         from: action.payload,
-        ammount: ""
+        ammount: "",
+        quote: null,
+        greenLight: false
       };
       break;
     case TYPE.UPDATE_EXCHANGE_AMMOUNT:
@@ -37,7 +41,9 @@ export default (state = initialState, action) => {
       return {
         ...state,
         to: action.payload,
-        ammount: ""
+        ammount: "",
+        quote: null,
+        greenLight: false
       };
       break;
     case TYPE.TOGGLE_WITHIN_TRADE_BOUNDS:
@@ -69,6 +75,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         availablePair: action.payload
+      };
+      break;
+    case TYPE.SET_QUOTE:
+      return {
+        ...state,
+        quote: action.payload
+      };
+      break;
+    case TYPE.GREENLIGHT_TRANSACTION:
+      return {
+        ...state,
+        greenLight: action.payload
       };
       break;
     default:

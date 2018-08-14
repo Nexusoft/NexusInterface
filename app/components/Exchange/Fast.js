@@ -22,17 +22,6 @@ class Fast extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
     this.props.GetAvailaleCoins();
-    Request(
-      {
-        url: "https://shapeshift.io/marketinfo/nxs_btc",
-        json: true
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          console.log(response);
-        }
-      }
-    );
   }
 
   componentWillUnmount() {
@@ -199,12 +188,16 @@ class Fast extends Component {
   }
 
   executeTrade() {
-    if (this.props.loggedIn && this.props.from === "NXS") {
-      if (this.props.withinBounds) {
-        let pair = this.props.from + "_" + this.props.to;
-        this.props.executeFastTrade();
-      } else alert("Outside trade-able ammounts");
-    } else alert("Please unlock your wallet");
+    // if (this.props.loggedIn && this.props.from === "NXS") {
+    if (this.props.withinBounds) {
+      let pair = this.props.from + "_" + this.props.to;
+      this.props.executeFastTrade(
+        pair,
+        this.props.toAddress,
+        this.props.refundAddress
+      );
+    } else alert("Outside trade-able ammounts");
+    // } else alert("Please unlock your wallet");
   }
 
   render() {
