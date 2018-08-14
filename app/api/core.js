@@ -58,7 +58,7 @@ function SetCoreParameters(settings)
     parameters.push("-rpcpassword=" + password);
     parameters.push("-printtoconsole");                     // Enable console functionality via stdout
     parameters.push("-verbose=" + "2");                     // <-- Make a setting for this
-    parameters.push("-llpallowip=" + "*.*.*.*:8325");       // <-- Make a setting for this
+    parameters.push("-llpallowip=" + "127.0.0.1:8325");       // <-- Make a setting for this
 
     // Disable upnp (default is 1)
     if (settings.mapPortUsingUpnp === "false")
@@ -87,12 +87,14 @@ function SetCoreParameters(settings)
 
 function GetResourcesDirectory()
 {
-    let appPath = require('electron').app.getAppPath();
+    // let appPath = require('electron').app.getAppPath();
 
-    if (process.cwd() === appPath)
-        return "./";
-    else
-        return process.resourcesPath + "/";
+    // if (process.cwd() === appPath)
+    //     return "./";
+    // else
+    //     return process.resourcesPath + "/";
+
+    return "app/";
 }
 
 //
