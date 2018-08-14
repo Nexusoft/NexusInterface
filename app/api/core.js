@@ -265,14 +265,17 @@ class Core extends EventEmitter {
                 log.info("Core Manager: Starting core");
 
                 var spawn = require("child_process").spawn;
-                
-                ///TODO: Is there some error handling needed here in case it can't spawn??
-                ///
+
                 coreprocess = spawn(GetCoreBinaryPath(), parameters, { shell: false });
 
                 coreprocess.on('error', (err) => {
-                    log.info("Core Manager: Failed to start core: " + err);
+
+                    log.info("Core Manager: Core has returned an error: " + err);
+        
                 });
+
+                if (coreprocess != null)
+                    log.info("Core Manager: Core has started (process id: " + coreprocess.pid + ")");
 
             }
             else {
@@ -306,11 +309,25 @@ class Core extends EventEmitter {
 
         log.info("Core Manager: Core is stopping (process id: " + coreprocess.pid + ")");
 
-        coreprocess.on('close', (code, signal) => {
+        var _this = this;
 
-            log.info("Core Manager: Core is stopped");
+        coreprocess.once('error', (err) => {
 
-            this.removeListener('close', this.onClose);
+            log.info("Core Manager: Core has returned an error: " + err);
+
+        });
+
+        coreprocess.once('exit', (code, signal) => {
+
+            log.info("Core Manager: Core has exited");
+
+        });
+
+        coreprocess.once('close', (code, signal) => {
+
+            log.info("Core Manager: Core stdio streams have closed");
+
+            //_this.removeListener('close', _this.onClose);
 
             coreprocess = null;
             responding = false;
