@@ -119,7 +119,7 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args
     });
-    console.log(PostData);
+    // console.log(PostData);
     var ResponseObject;
 
     /** Opera 8.0+, Firefox, Safari **/
