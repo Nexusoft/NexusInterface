@@ -6,12 +6,12 @@
   overflow-y: auto;
 }
 #container {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
-  flex-direction: row;
   width: 100%;
-  margin: 1.5em 0;
-
+  height: 100%;
+  border: 1px solid white;
+  flex-direction: row;
   justify-content: space-between;
 }
 .box1 {
@@ -20,14 +20,14 @@
 }
 .box2 {
   display: flex;
-
-  flex-direction: column;
-  width: 60%;
+  justify-content: center;
+  flex-direction: row;
+  width: 100%;
+  max-width: 100%;
+  min-width: 50%;
 }
 .foot {
-  margin-left: 60%;
   float: right;
-  margin-top: -7%;
 }
 .counter {
   float: right;
@@ -59,39 +59,46 @@
 }
 #table-wrap {
   text-align: center;
+  width: 100%;
 }
 /* Generic table stylings */
-table {
+.table {
   width: 100%;
+  min-width: 50%;
+  margin-top: -2%;
   border-right: #fcfcfc;
   border-bottom: #fcfcfc;
   border: 1px solid #ffffff;
   overflow-y: scroll;
   height: 325px;
-
   display: block;
 }
-table tbody td,
-table thead th,
-table tfoot th {
+.table tbody td,
+.table thead th,
+.table tfoot th {
   border-right: #fcfcfc;
   border-bottom: #fcfcfc;
   border: 1px solid #ffffff;
-  width: 300px;
+  border-width: 1px;
+  width: 100%;
 }
-table tbody tr:nth-child(even),
-table thead tr,
-table tfoot tr {
-  background: #fcfcfc;
-  border: 1px solid #ffffff;
-}
+
 .tbody {
   height: 299px;
   position: relative;
   width: 100%;
   border-collapse: collapse;
   overflow: auto;
+  min-width: 50%;
 }
 .td {
   border: 1px solid #ffffff;
+}
+.thead {
+  width: 300px;
+  min-width: 50%;
+}
+#Remove {
+  height: 15px;
+  width: 15px;
 }

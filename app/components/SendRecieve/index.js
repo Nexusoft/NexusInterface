@@ -187,7 +187,8 @@ class SendRecieve extends Component {
           <td className="td">{e.val}</td>
           <td className="td">
             <img
-              src="images/quit.png"
+              id="Remove"
+              src="images/status-bad.svg"
               onClick={() => this.props.removeQueue(e.key)}
             />
           </td>
@@ -204,9 +205,7 @@ class SendRecieve extends Component {
     }
     return (
       <div>
-        <h2>
-          Send Nexus <img src="images/icon-send.png" />
-        </h2>
+        <h2>Send Nexus</h2>
         <div className="panel">
           <div id="container">
             <div className="box1">
@@ -278,30 +277,30 @@ class SendRecieve extends Component {
                   {this.fillQueue()}
                   <tbody className="tbody"> </tbody>
                 </table>
+                <foot className="foot">
+                  <input
+                    type="reset"
+                    value="Send All"
+                    className="button primary"
+                    onClick={() => {
+                      this.sendMany();
+                    }}
+                  />
+                  <input
+                    type="button"
+                    value="Clear Queue"
+                    className="button primary"
+                    onClick={() => {
+                      this.props.clearQueue();
+                    }}
+                  />{" "}
+                  <p>
+                    <div className="counter">{this.addAmount()}</div>{" "}
+                  </p>
+                </foot>{" "}
               </div>{" "}
             </div>
           </div>
-          <foot className="foot">
-            <input
-              type="reset"
-              value="Send All"
-              className="button primary"
-              onClick={() => {
-                this.sendMany();
-              }}
-            />
-            <input
-              type="button"
-              value="Clear Queue"
-              className="button primary"
-              onClick={() => {
-                this.props.clearQueue();
-              }}
-            />{" "}
-            <p>
-              <div className="counter">{this.addAmount()}</div>{" "}
-            </p>
-          </foot>{" "}
         </div>
       </div>
     );
