@@ -84,9 +84,16 @@ function updateApplication() {
     token: "606ac051f55833592161e2e87334fe57c218ae9c"
   };
 
-  autoUpdater.setFeedURL(data);
-  autoUpdater.autoDownload = false;
-  autoUpdater.checkForUpdates();
+  try {
+    autoUpdater.setFeedURL(data);
+    autoUpdater.autoDownload = false;
+    autoUpdater.checkForUpdates();
+  }
+  catch (err)
+  {
+    log.error("Error checking for updates: " + err);
+  }
+
 }
 
 //
@@ -141,7 +148,9 @@ function createWindow() {
 
     width: (settings.windowWidth === undefined ? 1600 : settings.windowWidth),
     height: (settings.windowHeight === undefined ? 1650 : settings.windowHeight),
-    icon: path.join(__dirname, "/images/nexus-logo.png")
+    icon: path.join(__dirname, "/images/nexus-icon.png"),
+    backgroundColor: '#232c39',
+    show: false
 
   });
 
@@ -160,7 +169,7 @@ function createWindow() {
     mainWindow.show();
     mainWindow.focus();
 
-    updateApplication(); // if updates are checked in app.on('ready') there is a chance the event doesn't make it to the UI if that hasn't loaded yet, this is safer
+    //updateApplication(); // if updates are checked in app.on('ready') there is a chance the event doesn't make it to the UI if that hasn't loaded yet, this is safer
 
   });
 
@@ -194,7 +203,7 @@ function createWindow() {
 
     let settings = require("./api/settings").GetSettings();
 
-    if (settings.minimizeToTray === "true") {
+    if (settings.minimizeToTray) {
 
       event.preventDefault();
       mainWindow.hide();
@@ -208,7 +217,7 @@ function createWindow() {
 
     let settings = require("./api/settings").GetSettings();
 
-    if(!app.isQuiting && settings.minimizeOnClose === "true") {
+    if(!app.isQuiting && settings.minimizeOnClose) {
 
         event.preventDefault();
         mainWindow.hide();
@@ -229,11 +238,11 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  setupTray();
-
   core.start();
 
   createWindow();
+
+  setupTray();
 
 });
 
