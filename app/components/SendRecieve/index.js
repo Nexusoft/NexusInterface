@@ -203,7 +203,7 @@ class SendRecieve extends Component {
       this.props.SetSendAgainData(null);
     }
     return (
-      <div>
+      <div id="sendrecieve">
         <h2>
           Send Nexus <img src="images/icon-send.png" />
         </h2>

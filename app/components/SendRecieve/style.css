@@ -1,3 +1,8 @@
+#sendrecieve {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
 #sendrecieve > h2 {
   flex: 0;
 }
@@ -11,12 +16,10 @@
   flex-direction: row;
   width: 100%;
   margin: 1.5em 0;
-
   justify-content: space-between;
 }
 .box1 {
   display: flex;
-  margin-left: 100px;
 }
 .box2 {
   display: flex;
