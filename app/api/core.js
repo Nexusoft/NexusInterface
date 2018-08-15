@@ -274,6 +274,18 @@ class Core extends EventEmitter {
         
                 });
 
+                coreprocess.once('exit', (code, signal) => {
+
+                    log.info("Core Manager: Core has exited unexpectedly");
+        
+                });
+        
+                coreprocess.once('close', (code, signal) => {
+        
+                    log.info("Core Manager: Core stdio streams have closed unexpectedly");
+        
+                });
+
                 if (coreprocess != null)
                     log.info("Core Manager: Core has started (process id: " + coreprocess.pid + ")");
 
