@@ -31,7 +31,7 @@ class Header extends Component {
     const menuBuilder = new MenuBuilder(
       require("electron").remote.getCurrentWindow().id
     );
-
+    var self = this;
     //console.log(visitor);
     this.props.SetGoogleAnalytics(GOOGLE);
     let encryptionStatus = false;
@@ -39,11 +39,10 @@ class Header extends Component {
       encryptionStatus = true;
     }
     console.log(this.props);
-    menuBuilder.buildMenu(this.props.history, encryptionStatus);
+    menuBuilder.buildMenu(self);
 
     this.props.GetInfoDump();
 
-    var self = this;
     self.set = setInterval(function() {
       self.props.GetInfoDump();
     }, 1000);

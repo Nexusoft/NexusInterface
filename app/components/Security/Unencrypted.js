@@ -19,7 +19,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Unencrypted extends Component {
-  showPrivKey() {
+  showPrivKey(e) {
+    e.preventDefault();
     let addressInput = document.getElementById("privKeyAddress");
     let address = addressInput.value;
     let output = document.getElementById("privKeyOutput");
@@ -32,7 +33,8 @@ class Unencrypted extends Component {
     }
   }
 
-  importPrivKey() {
+  importPrivKey(e) {
+    e.preventDefault();
     let acctname = document.getElementById("acctName");
     let label = acctname.value.trim();
     let privateKeyInput = document.getElementById("privateKey");
@@ -49,7 +51,8 @@ class Unencrypted extends Component {
     }
   }
 
-  copyPrivkey() {
+  copyPrivkey(e) {
+    e.preventDefault();
     let output = document.getElementById("privKeyOutput");
     output.type = "text";
     output.focus();
@@ -58,7 +61,8 @@ class Unencrypted extends Component {
     output.type = "password";
   }
 
-  encrypt() {
+  encrypt(e) {
+    e.preventDefault();
     let newPass, passChk, passHint;
     newPass = document.getElementById("newPass");
     passChk = document.getElementById("passChk");
@@ -122,17 +126,18 @@ class Unencrypted extends Component {
                   Passwords do not match
                 </span>
               </div>
-              <p />
+              <p>
+                <button
+                  style={{ width: "100%", margin: "0" }}
+                  disabled={this.props.busyFlag}
+                  className="button primary"
+                  onClick={e => this.encrypt(e)}
+                >
+                  Submit
+                </button>
+              </p>
             </fieldset>
           </form>
-          <button
-            style={{ width: "100%", margin: "0" }}
-            disabled={this.props.busyFlag}
-            className="button primary"
-            onClick={() => this.encrypt()}
-          >
-            Submit
-          </button>
         </div>
         <div className="securitySubContainer privKey">
           <form>
@@ -151,7 +156,7 @@ class Unencrypted extends Component {
                   <button
                     disabled={this.props.busyFlag}
                     className="button primary"
-                    onClick={() => this.showPrivKey()}
+                    onClick={e => this.showPrivKey(e)}
                   >
                     Submit
                   </button>
@@ -165,7 +170,7 @@ class Unencrypted extends Component {
                   <button
                     disabled={this.props.busyFlag}
                     className="button"
-                    onClick={() => this.copyPrivkey()}
+                    onClick={e => this.copyPrivkey(e)}
                   >
                     Copy
                   </button>
@@ -204,7 +209,7 @@ class Unencrypted extends Component {
                 <button
                   disabled={this.props.busyFlag}
                   className="button primary"
-                  onClick={() => this.importPrivKey()}
+                  onClick={e => this.importPrivKey(e)}
                 >
                   Submit
                 </button>
