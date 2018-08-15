@@ -196,7 +196,9 @@ export default class TerminalConsole extends Component {
   /// Handle arrow key press
   /// Handles what happens when the user presses arrow keys for the auto complete
   handleAutocompleteArrowKeyPress = (e) => {
-    
+    ///NOT WORKING COME BACK TO THIS 
+
+
     /*
     console.log(this.state.currentInput);
     console.log(e.target.value);
@@ -250,6 +252,7 @@ export default class TerminalConsole extends Component {
   /// What happens when the value of the inputfield changes
   onInputfieldChange = (e) =>
   {
+    this.inputfield = e.target;
     this.setState(
       {
         currentInput: e.target.value
@@ -257,19 +260,22 @@ export default class TerminalConsole extends Component {
       
   }
 
+  /// On Auto Complete Click
+  /// What happens when you click on an auto complete link
   onAutoCompleteClick(inItem)
   {
-    console.log(inItem);
     const inputRef = this.state.inputfield;
-    inputRef.value = inItem;
     inputRef.focus();
     this.setState(
       {
+        currentInput:inItem,
         autoComplete: []
       }
     );
   }
 
+  /// Return Auto Complete
+  /// Returns the list of commands that should be displayed for the auto complete section
   returnAutocomplete()
   {
   
@@ -310,6 +316,8 @@ export default class TerminalConsole extends Component {
     );
   }
 
+  /// Remove Auto Complete Div
+  /// Removes all divs from the array
   removeAutoCompleteDiv = (e) =>
   {
     this.setState(

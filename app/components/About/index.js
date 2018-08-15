@@ -10,7 +10,7 @@ import packageJson from "../../../package.json";
 import * as actionsCreators from "../../actions/marketActionCreators";
 import { bindActionCreators } from "redux";
 
-import nexusLogo from "../../images/nexus-logo.png";
+import nexusLogo from "../../images/logo-full.svg";
 import updateicon from "../../images/unlock.png";
 
 const mapStateToProps = state => {
@@ -65,7 +65,7 @@ class About extends Component {
                   </row>
                   <img id="update-image" src={updateicon} /> 
                   <a id="update-text" >UPDATE</a> <br/>
-                  <b>Copyright {this.getCurrentYear()} </b> Peercoin,Nexus,Videlicet <br/>
+                  <b>Copyright {this.getCurrentYear()} </b> Nexus,Videlicet,Peercoin <br/>
                   <br/>
                   <b>THIS IS EXPERIMENTAL SOFTWARE AND THE NEXUS EMBASY HOLDS NO LIABILITY FOR THE USE OF THIS SOFTWARE</b>
               </column>
@@ -93,6 +93,9 @@ class About extends Component {
                   <dd>MIT</dd>
                   <dt>React</dt>
                   <dd>MIT</dd>
+                  <dt>MaxMind</dt>
+                  <dd>Copyright &copy; 2018 MaxMind, Inc. This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/"> creativecommons.org </a>.
+This database incorporates <a href="http://www.geonames.org">GeoNames</a> geographical data, which is made available under the Creative Commons Attribution 3.0 License. To view a copy of this license, visit <a href="http://www.creativecommons.org/licenses/by/3.0/us/">creativecommons.org</a> .</dd>
               </dl>
               </div>
           </div>

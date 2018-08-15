@@ -96,7 +96,9 @@ class Transactions extends Component {
     this.getTransactionData();
     this.updateChartAndTableDimensions();
     this.props.googleanalytics.SendScreen("Transactions");
-    window.addEventListener('resize', this.updateChartAndTableDimensions.bind(this));
+
+    this.updateChartAndTableDimensions = this.updateChartAndTableDimensions.bind(this);
+    window.addEventListener('resize', this.updateChartAndTableDimensions, false);
 
     if (this.state.exectuedHistoryData == false)
     {
@@ -108,19 +110,7 @@ class Transactions extends Component {
       );
     }
     
-    //console.log(window);
-    //console.log(remote);
-    //console.log(this);
-
-    //console.log(ContextMenuBuilder);
-    //console.log(new ContextMenuBuilder().defaultContext);
     this.transactioncontextfunction = this.transactioncontextfunction.bind(this);
-
-    //Remove Previous vent
-    //window.removeEventListener("contextmenu", REGISTRY.REGISTER.ContextMenu);
-    //regester this event
-    //REGISTRY.REGISTER.ContextMenu = transactioncontextfunction;
-    //Add new listener
     window.addEventListener("contextmenu", this.transactioncontextfunction, false);
   }
 

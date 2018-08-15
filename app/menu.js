@@ -216,6 +216,15 @@ export default class MenuBuilder {
             click() {
               shell.openItem(process.env.HOME + "/NexusBackups");
             }
+          },
+          {
+            label: "Close",
+            role: 'close'
+          },
+          {
+            label: "Close And Shutdown Deamon",
+            role: 'quit'
+            
           }
         ]
       },
