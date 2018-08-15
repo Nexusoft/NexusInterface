@@ -59,11 +59,11 @@ class Unencrypted extends Component {
   }
 
   encrypt() {
-    let pass, newPass, passChk, passHint;
+    let newPass, passChk, passHint;
     newPass = document.getElementById("newPass");
     passChk = document.getElementById("passChk");
     passHint = document.getElementById("passHint");
-    if (pass.value.trim()) {
+    if (newPass.value.trim()) {
       if (newPass.value === passChk.value) {
         if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
           RPC.PROMISE("encryptwallet", [newPass.value]).then(payload => {
@@ -72,7 +72,6 @@ class Unencrypted extends Component {
               newPass.value = "";
               passChk.value = "";
               alert("Wallet has been encrypted.");
-              this.props.history.push();
             }
           });
         } else {
@@ -123,18 +122,17 @@ class Unencrypted extends Component {
                   Passwords do not match
                 </span>
               </div>
-              <p>
-                <button
-                  style={{ width: "100%", margin: "0" }}
-                  disabled={this.props.busyFlag}
-                  className="button primary"
-                  onClick={() => this.encrypt()}
-                >
-                  Submit
-                </button>
-              </p>
+              <p />
             </fieldset>
           </form>
+          <button
+            style={{ width: "100%", margin: "0" }}
+            disabled={this.props.busyFlag}
+            className="button primary"
+            onClick={() => this.encrypt()}
+          >
+            Submit
+          </button>
         </div>
         <div className="securitySubContainer privKey">
           <form>

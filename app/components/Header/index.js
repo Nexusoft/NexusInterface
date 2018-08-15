@@ -35,9 +35,10 @@ class Header extends Component {
     //console.log(visitor);
     this.props.SetGoogleAnalytics(GOOGLE);
     let encryptionStatus = false;
-    if (this.props.unlocked_until) {
+    if (this.props.unlocked_until !== undefined) {
       encryptionStatus = true;
     }
+    console.log(this.props);
     menuBuilder.buildMenu(this.props.history, encryptionStatus);
 
     this.props.GetInfoDump();
@@ -48,6 +49,7 @@ class Header extends Component {
     }, 1000);
     this.props.history.push("/");
   }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
       this.props.Unlock();
