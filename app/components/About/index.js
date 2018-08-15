@@ -10,7 +10,7 @@ import packageJson from "../../../package.json";
 import * as actionsCreators from "../../actions/marketActionCreators";
 import { bindActionCreators } from "redux";
 
-import nexusLogo from "../../images/nexus-logo.png";
+import nexusLogo from "../../images/logo-full.svg";
 import updateicon from "../../images/unlock.png";
 
 const mapStateToProps = state => {
