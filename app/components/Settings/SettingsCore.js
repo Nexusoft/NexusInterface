@@ -440,6 +440,17 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
+  //
+  // Restart the core
+  //
+
+  coreRestart() {
+
+    let core = require('electron').remote.getGlobal('core');
+    core.restart();
+
+  }
+  
   render() {
     return (
 
@@ -513,6 +524,8 @@ export default class SettingsCore extends Component {
               <label htmlFor="optionalTransactionFee">Optional transaction fee (in NXS)</label>
               <input id="optionalTransactionFee" type="text" size="6" onChange={this.updateOptionalTransactionFee} data-tooltip="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"/>
             </div>
+
+            <button id="restart-core" className="button primary" onClick={this.coreRestart}>Restart Core</button>
 
           </div>
 
