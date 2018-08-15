@@ -55,6 +55,7 @@ class Addressbook extends Component {
 
     RPC.GET("listaccounts", [0], this.loadAddressBook.bind(this));
 
+    this.props.googleanalytics.SendScreen("AddressBook");
   }
 
   //

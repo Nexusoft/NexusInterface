@@ -9,7 +9,7 @@ export default class MenuBuilder {
     this.mainWindow = remote.getCurrentWindow();
   }
 
-  buildMenu(history) {
+  buildMenu(history, encryptionStatus) {
     if (
       process.env.NODE_ENV === "development" ||
       process.env.DEBUG_PROD === "true"
@@ -49,7 +49,7 @@ export default class MenuBuilder {
     });
   }
 
-  buildDarwinTemplate(history) {
+  buildDarwinTemplate(history, encryptionStatus) {
     const subMenuAbout = {
       label: "Electron",
       submenu: [
@@ -187,15 +187,19 @@ export default class MenuBuilder {
     return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
-  buildDefaultTemplate(history) {
+  buildDefaultTemplate(history, encryptionStatus) {
     const templateDefault = [
       {
         label: "&File",
         submenu: [
           {
-            label: "Lock Wallet",
+            label: "Lock/Unlock/Encrypt Wallet",
             click: () => {
-              RPC.PROMISE("walletlock", []);
+              if (encryptionStatus) {
+                history.push("/Settings/Unencrypted");
+              } else {
+                history.push("/Settings/Security");
+              }
             }
           },
           {
@@ -211,6 +215,15 @@ export default class MenuBuilder {
             click() {
               shell.openItem(process.env.HOME + "/NexusBackups");
             }
+          },
+          {
+            label: "Close",
+            role: 'close'
+          },
+          {
+            label: "Close And Shutdown Deamon",
+            role: 'quit'
+            
           }
         ]
       },

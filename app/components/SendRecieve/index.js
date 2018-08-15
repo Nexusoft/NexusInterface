@@ -53,6 +53,8 @@ const mapDispatchToProps = dispatch => ({
 class SendRecieve extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
+
+    this.props.googleanalytics.SendScreen("Send");
   }
 
   componentWillUnmount() {
@@ -205,7 +207,7 @@ class SendRecieve extends Component {
     return (
       <div id="sendrecieve">
         <h2>
-          Send Nexus <img src="images/icon-send.png" />
+          Send Nexus
         </h2>
         <div className="panel">
           <div id="container">

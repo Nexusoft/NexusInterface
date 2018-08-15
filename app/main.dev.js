@@ -11,17 +11,22 @@
  *
  */
 import { app, BrowserWindow, remote, Tray, Menu, ipcMain } from "electron";
-import MenuBuilder from "./menu";
-import electron from "electron";
-
-import { autoUpdater } from "electron-updater";
 import log from "electron-log";
-import settings from "./script/settings";
+import { autoUpdater } from "electron-updater";
+import MenuBuilder from "./menu";
+import core from "./api/core";
 
-// import menu from "../app/menu/mainmenu"
 const path = require("path");
-let mainWindow = null;
-let tray = null;
+
+let mainWindow;
+let tray;
+let resizeTimer;
+
+//
+// Global Objects
+//
+
+global.core = core;
 
 //
 // Configure Updater
@@ -30,20 +35,28 @@ let tray = null;
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = "info";
 
+//
+// Enable source map support
+//
+
 if (process.env.NODE_ENV === "production") {
   const sourceMapSupport = require("source-map-support");
   sourceMapSupport.install();
 }
 
-if (
-  process.env.NODE_ENV === "development" ||
-  process.env.DEBUG_PROD === "true"
-) {
+//
+// Enable debugging for development or production with debug flag
+//
+
+if (process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true") {
   require("electron-debug")();
-  const path = require("path");
   const p = path.join(__dirname, "..", "app", "node_modules");
   require("module").globalPaths.push(p);
 }
+
+//
+// Enable development tools for REACT and REDUX
+//
 
 const installExtensions = async () => {
   const installer = require("electron-devtools-installer");
@@ -54,99 +67,6 @@ const installExtensions = async () => {
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
 };
-
-/**
- * Add event listeners...
- */
-
-app.on("window-all-closed", () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
-
-app.on("ready", async () => {
-  if (
-    process.env.NODE_ENV === "development" ||
-    process.env.DEBUG_PROD === "true"
-  ) {
-    await installExtensions();
-  }
-  // TODO: figure out the icon thing
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1600,
-    height: 1650,
-    icon: __dirname + "/images/nexus-logo.png"
-  });
-
-  setupTray();
-
-  //  __dirname:    /home/dillon/Desktop/Nexus-Interface-React/app
-  mainWindow.loadURL(`file://${__dirname}/app.html`);
-
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on("did-finish-load", () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-    mainWindow.show();
-    mainWindow.focus();
-  });
-
-  mainWindow.on("closed", () => {
-    //mainWindow = null;
-  });
-
-  // Event when the window is minimized
-  mainWindow.on("minimize", function(event) {
-    //let settings = require("./api/settings").GetSettings();
-
-    //if (settings.minimizeToTray === "true") {
-    event.preventDefault();
-    mainWindow.hide();
-    // }
-  });
-
-  // Event when the window is requested to be closed
-  mainWindow.on("close", function(event) {
-    //let settings = require("./api/settings").GetSettings();
-
-    if (!app.isQuiting && settings.minimizeOnClose === "true") {
-      event.preventDefault();
-      mainWindow.hide();
-    }
-  });
-});
-
-//
-// Set up the icon in the system tray
-//
-
-function setupTray() {
-  tray = new Tray(__dirname + "/images/nexus-logo.png");
-
-  var contextMenu = Menu.buildFromTemplate([
-    {
-      label: "Open Nexus",
-      click: function() {
-        mainWindow.show();
-      }
-    },
-    {
-      label: "Quit Nexus",
-      click: function() {
-        app.isQuiting = true;
-        mainWindow.close();
-      }
-    }
-  ]);
-
-  tray.setContextMenu(contextMenu);
-}
 
 //
 // Initialize application updater and check for updates
@@ -164,10 +84,182 @@ function updateApplication() {
     token: "606ac051f55833592161e2e87334fe57c218ae9c"
   };
 
-  autoUpdater.setFeedURL(data);
-  autoUpdater.autoDownload = false;
-  autoUpdater.checkForUpdates();
+  try {
+    autoUpdater.setFeedURL(data);
+    autoUpdater.autoDownload = false;
+    autoUpdater.checkForUpdates();
+  }
+  catch (err)
+  {
+    log.error("Error checking for updates: " + err);
+  }
+
 }
+
+//
+// Set up the icon in the system tray
+//
+
+function setupTray() {
+
+  let trayImage;
+
+  if (process.platform == 'darwin') {
+    trayImage = path.join(__dirname, "/images/tray/iconTemplate.png");
+  }
+  else {
+    trayImage = path.join(__dirname, "/images/tray/icon.png");
+  }
+
+  tray = new Tray(trayImage);
+
+  if (process.platform == 'darwin') {
+    tray.setPressedImage(path.join(__dirname, "/images/tray/iconHighlight.png"));
+  }
+
+  var contextMenu = Menu.buildFromTemplate([
+      {
+          label: 'Open Nexus', click: function () {
+            mainWindow.show();
+          }
+      },
+      {
+          label: 'Quit Nexus', click: function () {
+              app.isQuiting = true;
+              mainWindow.close();
+          }
+      }
+  ])
+
+  tray.setContextMenu(contextMenu);
+
+}
+
+//
+// Create Application Window
+//
+
+function createWindow() {
+
+  let settings = require("./api/settings").GetSettings();
+
+  // Create the main browser window
+  mainWindow = new BrowserWindow({
+
+    width: (settings.windowWidth === undefined ? 1600 : settings.windowWidth),
+    height: (settings.windowHeight === undefined ? 1650 : settings.windowHeight),
+    icon: path.join(__dirname, "/images/nexus-icon.png"),
+    backgroundColor: '#232c39',
+    show: false
+
+  });
+
+  // Load the index.html into the new browser window
+  mainWindow.loadURL(`file://${__dirname}/app.html`);
+
+  // Show the window only once the contents finish loading, then check for updates
+  mainWindow.webContents.on('did-finish-load', function() {
+
+    if (!mainWindow) {
+      throw new Error('"mainWindow" is not defined');
+    }
+
+    mainWindow.show();
+    mainWindow.focus();
+
+    //updateApplication(); // if updates are checked in app.on('ready') there is a chance the event doesn't make it to the UI if that hasn't loaded yet, this is safer
+
+  });
+
+  // Save the window dimensions once the resize event is completed
+  mainWindow.on("resize", function (event) {
+
+    clearTimeout(resizeTimer);
+
+    resizeTimer = setTimeout(function() {
+
+      // Resize event has been completed
+      let settings = require("./api/settings");
+      var settingsObj = settings.GetSettings();
+
+      settingsObj.windowWidth = mainWindow.getBounds().width;
+      settingsObj.windowHeight = mainWindow.getBounds().height;
+
+      settings.SaveSettings(settingsObj);
+
+    }, 250);
+
+  });
+
+  // Emitted when the window has finished its close command.
+  mainWindow.on("closed", function (event) {
+    
+  });
+
+  // Event when the window is minimized
+  mainWindow.on('minimize',function(event){
+
+    let settings = require("./api/settings").GetSettings();
+
+    if (settings.minimizeToTray) {
+
+      event.preventDefault();
+      mainWindow.hide();
+
+    }
+
+  });
+
+  // Event when the window is requested to be closed
+  mainWindow.on('close', function (event) {
+
+    let settings = require("./api/settings").GetSettings();
+
+    if(!app.isQuiting && settings.minimizeOnClose) {
+
+        event.preventDefault();
+        mainWindow.hide();
+        
+    }
+
+  });
+
+}
+
+//
+// Application Startup
+//
+
+app.on('ready', async () => {
+
+  if (process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true") {
+    await installExtensions();
+  }
+
+  core.start();
+
+  createWindow();
+
+  setupTray();
+
+});
+
+//
+// Application Shutdown
+//
+
+app.on("window-all-closed", () => {
+
+  if (process.platform !== "darwin") {
+
+    core.stop(function() {
+
+      app.quit();
+
+    });
+  }
+  
+});
 
 //
 // Auto Updater Events
