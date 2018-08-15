@@ -41,9 +41,10 @@ class Login extends Component {
     RPC.PROMISE("walletpassphrase", [
       document.getElementById("pass").value,
       unlockUntill,
-      true
+      false
     ]).then(payload => {
       this.props.wipe();
+      this.props.busy();
     });
   }
 

@@ -15,6 +15,12 @@ import * as RPC from "../../script/rpc";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
+// import images here
+import coreImg from "images/core.svg";
+import logoImg from "images/logo.svg";
+import lockImg from "images/lock-minting.svg";
+import marketImg from "images/marketstats.svg";
+
 const mapStateToProps = state => {
   return {
     ...state.common
@@ -45,7 +51,7 @@ class Settings extends Component {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
       console.log("Redirecting to Application Settings");
-
+      console.log(this.props);
       return <Redirect to={`${this.props.match.url}/App`} />;
     }
 
@@ -58,28 +64,33 @@ class Settings extends Component {
             <ul className="tabs">
               <li>
                 <NavLink to={`${this.props.match.url}/App`}>
-                  <img src="images/logo.svg" alt="Application" />Application
+                  <img src={logoImg} alt="Application" />
+                  Application
                 </NavLink>
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Core`}>
-                  <img src="images/core.svg" alt="Core" />Core
+                  <img src={coreImg} alt="Core" />
+                  Core
                 </NavLink>
               </li>
               <li>
                 {this.props.encrypted !== true ? (
                   <NavLink to={`${this.props.match.url}/Unencrypted`}>
-                    <img src="images/lock-unencrypted.svg" alt="Security" />Security
+                    <img src={lockImg} alt="Security" />
+                    Security
                   </NavLink>
                 ) : (
                   <NavLink to={`${this.props.match.url}/Security`}>
-                    <img src="images/lock-encrypted.svg" alt="Security" />Security
+                    <img src={lockImg} alt="Security" />
+                    Security
                   </NavLink>
                 )}
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Market`}>
-                  <img src="images/marketstats.svg" alt="Martket" />Martket
+                  <img src={marketImg} alt="Market" />
+                  Market
                 </NavLink>
               </li>
             </ul>

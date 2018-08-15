@@ -69,25 +69,33 @@ Available RPC methods:
 // var RPC = RPC || {};
 export const COMMANDS = {};
 export const CALLBACK = {};
-const CONFIG = require("./core-configuration");
 
 //
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 //
 
-export const GETHOST = () => CONFIG.rpchost || "http://127.0.0.1:9336";
+export const GETHOST = () => {
+  let core = require('electron').remote.getGlobal('core');
+  return core.host;
+}
 
 //
 // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
 //
 
-export const GETUSER = () => CONFIG.rpcuser || "rpcserver";
+export const GETUSER = () => {
+  let core = require('electron').remote.getGlobal('core');
+  return core.user;
+}
 
 //
 // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
 //
 
-export const GETPASSWORD = () => CONFIG.rpcpassword || "password";
+export const GETPASSWORD = () => {
+  let core = require('electron').remote.getGlobal('core');
+  return core.password;
+}
 
 export const GET = (cmd, args, Callback) => {
   var PostData = JSON.stringify({
@@ -111,7 +119,7 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args
     });
-    console.log(PostData);
+    // console.log(PostData);
     var ResponseObject;
 
     /** Opera 8.0+, Firefox, Safari **/
