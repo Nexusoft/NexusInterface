@@ -229,13 +229,13 @@ class SendRecieve extends Component {
                   <input
                     step="0.00000001"
                     className="input"
+                    min="0"
+                    max="1000000"
                     type="number"
                     placeholder="Nexus Amount"
                     value={this.props.Amount}
                     onChange={e => {
-                      this.props.updateAmount(
-                        parseFloat(e.target.value).toFixed(8)
-                      );
+                      this.props.updateAmount(parseFloat(e.target.value));
                     }}
                     required
                   />
