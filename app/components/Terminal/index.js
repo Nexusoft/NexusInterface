@@ -45,14 +45,12 @@ export default class Terminal extends Component {
           <ul className="tabs">
             <li>
               <NavLink to={`${this.props.match.url}/Console`}>
-                <img src={homeIcon} alt="Console" />
-                Console
+                <img src="images/logo.svg" alt="Console" />Console
               </NavLink>
             </li>
             <li>
               <NavLink to={`${this.props.match.url}/Core`}>
-                <img src={explorerImg} alt="Core Output" />
-                Core Output
+                <img src="images/core.svg" alt="Core Output" />Core Output
               </NavLink>
             </li>
           </ul>
