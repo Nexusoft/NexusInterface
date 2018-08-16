@@ -69,6 +69,22 @@ class SendRecieve extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  editQueue() {
+    if (Object.keys(this.props.Queue).includes(this.props.Address)) {
+      return "Edit Entry";
+    } else {
+      return "Add To Queue";
+    }
+  }
+
+  nxsAmount(e) {
+    if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === "")) {
+      this.props.updateAmount(e.target.value);
+    } else {
+      return null;
+    }
+  }
+
   sendOne() {
     this.props.busy();
     if (!(this.props.Address === "") && this.props.Amount > 0) {
@@ -79,15 +95,15 @@ class SendRecieve extends Component {
               if (this.props.Message) {
                 RPC.PROMISE("sendtoaddress", [
                   this.props.Address,
-                  this.props.Amount,
-                  Message
+                  parseFloat(this.props.Amount),
+                  this.props.Message
                 ]);
                 this.props.clearForm();
                 this.props.busy();
               } else {
                 RPC.PROMISE("sendtoaddress", [
                   this.props.Address,
-                  this.props.Amount
+                  parseFloat(this.props.Amount)
                 ]).then(payoad => console.log(payload));
                 this.props.clearForm();
                 this.props.busy();
@@ -108,6 +124,12 @@ class SendRecieve extends Component {
     }
   }
 
+  // amountHandler(value) {
+  //   if (/^[0-9.]+$/.test(value) | (value === "")) {
+  //   } else {
+  //     return null;
+  //   }
+  // }
   sendMany() {
     let keyCheck = Object.keys(this.props.Queue);
     this.props.busy();
@@ -131,9 +153,8 @@ class SendRecieve extends Component {
       });
       return (
         <div id="feeCounter">
-          {" "}
-          TOTAL: {sum} NXS
-          <p>FEE: {this.props.paytxfee} NXS </p>{" "}
+          TOTAL: {sum.toFixed(8)} NXS
+          <p>FEE: {this.props.paytxfee.toFixed(8)} NXS </p>{" "}
         </div>
       );
     }
@@ -150,7 +171,7 @@ class SendRecieve extends Component {
             if (!payload.ismine) {
               this.props.addToQueue({
                 address: this.props.Address,
-                amount: this.props.Amount
+                amount: parseFloat(this.props.Amount)
               });
               this.props.busy();
             } else {
@@ -186,7 +207,7 @@ class SendRecieve extends Component {
       return (
         <tr key={i}>
           <td className="td">{e.key}</td>
-          <td className="td">{e.val}</td>
+          <td className="td">{e.val.toFixed(8)}</td>
           <td className="td">
             <img
               id="Remove"
@@ -204,6 +225,7 @@ class SendRecieve extends Component {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
       console.log(this.props.sendagain);
+
       this.props.SetSendAgainData(null);
     }
     return (
@@ -212,7 +234,6 @@ class SendRecieve extends Component {
         <div className="panel">
           <div id="container">
             <div className="box1">
-              {" "}
               <div className="field">
                 <label>Nexus Address</label>
                 <input
@@ -227,16 +248,11 @@ class SendRecieve extends Component {
                   <span className="hint">Amount Of Nexus</span>
                   <label>Nexus Amount</label>
                   <input
-                    step="0.00000001"
                     className="input"
-                    type="number"
+                    type="text"
                     placeholder="Nexus Amount"
                     value={this.props.Amount}
-                    onChange={e => {
-                      this.props.updateAmount(
-                        parseFloat(e.target.value).toFixed(8)
-                      );
-                    }}
+                    onChange={e => this.nxsAmount(e)}
                     required
                   />
                 </p>
@@ -252,28 +268,27 @@ class SendRecieve extends Component {
                   />
                 </p>
                 <div id="left-buttons">
-                  <input
-                    type="button"
-                    value="Add To Queue"
-                    className="button primary"
+                  <button
+                    className="button large"
                     onClick={() => this.validateAddToQueue()}
-                    disabled={this.props.busyFlag}
-                  />
-
+                  >
+                    {this.editQueue()}
+                  </button>
                   <input
                     type="reset"
                     value="Send Now"
                     className="button"
                     onClick={() => this.sendOne()}
-                    disabled={this.props.busyFlag}
                   />
+                  <p className="balance">
+                    Wallet Balance {this.props.balance} NXS
+                  </p>
                 </div>
               </div>
             </div>
+
             <div className="box2">
-              {" "}
               <div id="table-wraper">
-                {" "}
                 <p>
                   <label className="label">Queue</label>
                 </p>
@@ -292,7 +307,6 @@ class SendRecieve extends Component {
                     type="reset"
                     value="Send All"
                     className="button primary"
-                    disabled={this.props.busyFlag}
                     onClick={() => {
                       this.sendMany();
                     }}
@@ -301,7 +315,6 @@ class SendRecieve extends Component {
                     type="button"
                     value="Clear Queue"
                     className="button primary"
-                    disabled={this.props.busyFlag}
                     onClick={() => {
                       this.props.clearQueue();
                     }}
