@@ -6,7 +6,6 @@
 
 #sendrecieve > .h2 {
   flex: 0;
-  justify-content: space-between;
 }
 
 #sendrecieve > .panel {

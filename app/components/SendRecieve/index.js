@@ -71,12 +71,26 @@ class SendRecieve extends Component {
 
   editQueue() {
     if (Object.keys(this.props.Queue).includes(this.props.Address)) {
-      return "Edit Entry";
+      return (
+        <button
+          className="button large"
+          onClick={() => this.validateAddToQueue(alert("bitch"))}
+        >
+          Hello
+        </button>
+      );
     } else {
-      return "Add To Queue";
+      return (
+        <button
+          name="Add To Queue"
+          className="button large"
+          onClick={() => this.validateAddToQueue()}
+        >
+          Add To Queue
+        </button>
+      );
     }
   }
-
   nxsAmount(e) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === "")) {
       this.props.updateAmount(e.target.value);
@@ -124,16 +138,32 @@ class SendRecieve extends Component {
     }
   }
 
-  // amountHandler(value) {
-  //   if (/^[0-9.]+$/.test(value) | (value === "")) {
+  // sendMany() {
+  //   let keyCheck = Object.keys(this.props.Queue);
+  //   this.props.busy();
+  //   // sendmany <fromaccount> {address:amount,...} [minconf=1] [comment]
+  //   if (keyCheck.length > 0) {
+  //     console.log(
+  //       "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  //       "{'" + this.props.Queue + "': " + parseFloat(this.props.Queue.val) + "}"
+  //     );
+  //     RPC.PROMISE("sendmany", [
+  //       "",
+  //       "{'" + this.props.Queue.key + "': " + this.props.Queue.val + "}"
+  //     ]);
   //   } else {
-  //     return null;
+  //     RPC.PROMISE("sendtoaddress", [
+  //       keyCheck[1],
+  //       Object.values(this.props.Queue)[0]
+  //     ]).then(payoad => console.log(payload));
+  //     this.props.clearForm();
+  //     this.props.busy();
   //   }
   // }
+
   sendMany() {
     let keyCheck = Object.keys(this.props.Queue);
     this.props.busy();
-
     if (keyCheck.length > 1) {
       RPC.PROMISE("sendmany", ["", this.props.Queue]);
     } else {
@@ -141,10 +171,11 @@ class SendRecieve extends Component {
         keyCheck[1],
         Object.values(this.props.Queue)[0]
       ]).then(payoad => console.log(payload));
-      this.props.clearForm();
-      this.props.busy();
     }
+    this.props.clearForm();
+    this.props.busy();
   }
+
   addAmount() {
     let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 0) {
@@ -159,7 +190,6 @@ class SendRecieve extends Component {
       );
     }
   }
-
   validateAddToQueue() {
     this.props.busy();
     if (!(this.props.Address === "") && this.props.Amount > 0) {
@@ -268,12 +298,14 @@ class SendRecieve extends Component {
                   />
                 </p>
                 <div id="left-buttons">
-                  <button
+                  {this.editQueue()}
+                  {/* <button
                     className="button large"
                     onClick={() => this.validateAddToQueue()}
                   >
                     {this.editQueue()}
-                  </button>
+                  </button> */}
+
                   <input
                     type="reset"
                     value="Send Now"
