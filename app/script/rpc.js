@@ -75,27 +75,27 @@ export const CALLBACK = {};
 //
 
 export const GETHOST = () => {
-  let core = require('electron').remote.getGlobal('core');
+  let core = require("electron").remote.getGlobal("core");
   return core.host;
-}
+};
 
 //
 // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
 //
 
 export const GETUSER = () => {
-  let core = require('electron').remote.getGlobal('core');
+  let core = require("electron").remote.getGlobal("core");
   return core.user;
-}
+};
 
 //
 // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
 //
 
 export const GETPASSWORD = () => {
-  let core = require('electron').remote.getGlobal('core');
+  let core = require("electron").remote.getGlobal("core");
   return core.password;
-}
+};
 
 export const GET = (cmd, args, Callback) => {
   var PostData = JSON.stringify({
@@ -144,6 +144,7 @@ export const PROMISE = (cmd, args) => {
 
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
+      // console.log(ResponseObject);
       if (ResponseObject.status == 404) {
         reject("RPC Command {" + cmd + "} Not Found");
       }
@@ -170,8 +171,8 @@ export const PROMISE = (cmd, args) => {
       resolve(payload);
     };
 
-    ResponseObject.onerror = () =>
-    {
+    ResponseObject.onerror = () => {
+      console.log(ResponseObject.response);
       reject(ResponseObject.response);
     };
 
@@ -181,7 +182,11 @@ export const PROMISE = (cmd, args) => {
     else ResponseObject.open("POST", GETHOST(), true, GETUSER(), GETPASSWORD());
 
     /** Send off the Post Data. **/
-    ResponseObject.send(PostData);
+    try {
+      ResponseObject.send(PostData);
+    } catch (e) {
+      console.log(e);
+    }
   });
 };
 

@@ -94,7 +94,7 @@ class Login extends Component {
                 e.preventDefault();
                 this.handleSubmit();
               }}
-              disabled={this.props.busyFlag}
+              // disabled={this.props.busyFlag}
             />
           </p>
         </form>

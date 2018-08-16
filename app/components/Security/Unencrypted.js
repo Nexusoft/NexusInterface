@@ -32,6 +32,15 @@ class Unencrypted extends Component {
       addressInput.focus();
     }
   }
+  coreRestart() {
+    let core = require("electron").remote.getGlobal("core");
+    core.start();
+  }
+
+  encryptCallback() {
+    alert("Wallet Encrypted");
+    this.coreRestart();
+  }
 
   importPrivKey(e) {
     e.preventDefault();
@@ -70,14 +79,7 @@ class Unencrypted extends Component {
     if (newPass.value.trim()) {
       if (newPass.value === passChk.value) {
         if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
-          RPC.PROMISE("encryptwallet", [newPass.value]).then(payload => {
-            if (payload === null) {
-              pass.value = "";
-              newPass.value = "";
-              passChk.value = "";
-              alert("Wallet has been encrypted.");
-            }
-          });
+          RPC.GET("encryptwallet", [newPass.value], this.encryptCallback);
         } else {
           passChk.value = "";
           passHint.innerText = "Password cannot start or end with spaces";
