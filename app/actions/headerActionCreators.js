@@ -10,9 +10,6 @@ export const GetInfoDump = () => {
       })
       .then(payload => {
         dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload });
-      })
-      .catch(e => {
-        console.log(`${e}`);
       });
   };
 };

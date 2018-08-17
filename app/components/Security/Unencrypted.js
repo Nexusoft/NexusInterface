@@ -69,7 +69,16 @@ class Unencrypted extends Component {
     document.execCommand("Copy", false, null);
     output.type = "password";
   }
-
+  reEnterValidator(e) {
+    let newPass = document.getElementById("newPass");
+    let passHint = document.getElementById("passHint");
+    if (e.target.value === newPass.value) {
+      e.preventDefault();
+      passHint.style.visibility = "hidden";
+    } else {
+      passHint.style.visibility = "visible";
+    }
+  }
   encrypt(e) {
     e.preventDefault();
     let newPass, passChk, passHint;
@@ -122,9 +131,9 @@ class Unencrypted extends Component {
                   type="password"
                   placeholder="Re-Enter Password"
                   id="passChk"
-                  required
+                  onChange={e => this.reEnterValidator(e)}
                 />
-                <span id="passHint" className="hint">
+                <span id="passHint" className="err invalid">
                   Passwords do not match
                 </span>
               </div>

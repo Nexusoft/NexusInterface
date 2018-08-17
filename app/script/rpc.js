@@ -149,7 +149,7 @@ export const PROMISE = (cmd, args) => {
         reject("RPC Command {" + cmd + "} Not Found");
       }
       if (ResponseObject.status == 500) {
-        reject("Bad Command Arguments");
+        reject(JSON.parse(ResponseObject.statusText));
       }
 
       if (cmd === "validateaddress") {
@@ -182,11 +182,8 @@ export const PROMISE = (cmd, args) => {
     else ResponseObject.open("POST", GETHOST(), true, GETUSER(), GETPASSWORD());
 
     /** Send off the Post Data. **/
-    try {
-      ResponseObject.send(PostData);
-    } catch (e) {
-      console.log(e);
-    }
+
+    ResponseObject.send(PostData);
   });
 };
 

@@ -100,9 +100,22 @@ class Security extends Component {
         passChk.focus();
       }
     } else {
+      passHint.innerText = "Passwords do not match";
       pass.focus();
     }
   }
+
+  reEnterValidator(e) {
+    let newPass = document.getElementById("newPass");
+    let passHint = document.getElementById("passHint");
+    if (e.target.value === newPass.value) {
+      e.preventDefault();
+      passHint.style.visibility = "hidden";
+    } else {
+      passHint.style.visibility = "visible";
+    }
+  }
+
   componentWillUnmount() {
     this.props.wipe();
   }
@@ -144,9 +157,9 @@ class Security extends Component {
                   type="password"
                   placeholder="Re-Enter Password"
                   id="passChk"
-                  required
+                  onChange={e => this.reEnterValidator(e)}
                 />
-                <span id="passHint" className="hint">
+                <span id="passHint" className="err invalid">
                   Passwords do not match
                 </span>
               </div>
