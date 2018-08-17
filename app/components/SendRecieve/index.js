@@ -205,8 +205,10 @@ class SendRecieve extends Component {
       this.props.SetSendAgainData(null);
     }
     return (
-      <div>
-        <h2>Send Nexus</h2>
+      <div id="sendrecieve">
+        <h2>
+          Send Nexus
+        </h2>
         <div className="panel">
           <div id="container">
             <div className="box1">

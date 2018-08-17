@@ -19,7 +19,7 @@ import * as actionsCreators from "../../actions/marketActionCreators";
 import binanceSmallLogo from "../../images/binanceSmallLogo.png";
 import bittrexSmallLogo from "../../images/bittrexSmallLogo.png";
 import cryptopiaSmallLogo from "../../images/cryptopiaSmallLogo.png";
-import arrow from "../../images/arrow.png";
+import arrow from "../../images/arrow.svg";
 
 import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
