@@ -179,7 +179,7 @@ class Security extends Component {
             style={{ width: "100%", margin: "0" }}
             id="lockWallet"
             className="button default"
-            disabled={this.props.busyFlag}
+            // disabled={this.props.busyFlag}
             onClick={e => {
               e.preventDefault();
               this.lockWallet();
@@ -203,7 +203,7 @@ class Security extends Component {
                     required
                   />
                   <button
-                    disabled={this.props.busyFlag}
+                    // disabled={this.props.busyFlag}
                     className="button primary"
                     onClick={e => this.showPrivKey(e)}
                   >
@@ -217,7 +217,7 @@ class Security extends Component {
                 <div className="expander">
                   <input type="password" id="privKeyOutput" />
                   <button
-                    disabled={this.props.busyFlag}
+                    // disabled={this.props.busyFlag}
                     className="button"
                     onClick={e => this.copyPrivkey(e)}
                   >

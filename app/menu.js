@@ -208,12 +208,22 @@ export default class MenuBuilder {
             click: () => {
               let now = `${new Date()}`;
               let BackupDir = process.env.HOME + "/NexusBackups";
+              let fs = require("fs");
+              if (fs.existsSync(BackupDir) == undefined)
+              {
+                fs.mkdirSync(BackupDir);
+              }
               RPC.PROMISE("backupwallet", [BackupDir + "/" + now + ".dat"]);
             }
           },
           {
             label: "Open Backups Folder",
             click() {
+              let fs = require("fs");
+              if (fs.existsSync(BackupDir) == undefined)
+              {
+                fs.mkdirSync(BackupDir);
+              }
               shell.openItem(process.env.HOME + "/NexusBackups");
             }
           },
