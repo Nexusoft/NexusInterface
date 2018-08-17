@@ -165,7 +165,7 @@ class Unencrypted extends Component {
                     required
                   />
                   <button
-                    disabled={this.props.busyFlag}
+                    // disabled={this.props.busyFlag}
                     className="button primary"
                     onClick={e => this.showPrivKey(e)}
                   >
@@ -179,7 +179,7 @@ class Unencrypted extends Component {
                 <div className="expander">
                   <input type="password" id="privKeyOutput" />
                   <button
-                    disabled={this.props.busyFlag}
+                    // disabled={this.props.busyFlag}
                     className="button"
                     onClick={e => this.copyPrivkey(e)}
                   >
@@ -218,7 +218,7 @@ class Unencrypted extends Component {
               </div>
               <p>
                 <button
-                  disabled={this.props.busyFlag}
+                  // disabled={this.props.busyFlag}
                   className="button primary"
                   onClick={e => this.importPrivKey(e)}
                 >
