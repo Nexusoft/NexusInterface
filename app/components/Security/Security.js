@@ -26,7 +26,8 @@ class Security extends Component {
       this.props.busy();
     });
   }
-  showPrivKey() {
+  showPrivKey(e) {
+    e.preventDefault();
     let addressInput = document.getElementById("privKeyAddress");
     let address = addressInput.value;
     let output = document.getElementById("privKeyOutput");
@@ -39,7 +40,8 @@ class Security extends Component {
     }
   }
 
-  importPrivKey() {
+  importPrivKey(e) {
+    e.preventDefault();
     let acctname = document.getElementById("acctName");
     let label = acctname.value.trim();
     let privateKeyInput = document.getElementById("privateKey");
@@ -56,7 +58,8 @@ class Security extends Component {
     }
   }
 
-  copyPrivkey() {
+  copyPrivkey(e) {
+    e.preventDefault();
     let output = document.getElementById("privKeyOutput");
     output.type = "text";
     output.focus();
@@ -65,7 +68,8 @@ class Security extends Component {
     output.type = "password";
   }
 
-  changePassword() {
+  changePassword(e) {
+    e.preventDefault();
     let pass, newPass, passChk, passHint;
     pass = document.getElementById("oldPass");
     newPass = document.getElementById("newPass");
@@ -96,9 +100,22 @@ class Security extends Component {
         passChk.focus();
       }
     } else {
+      passHint.innerText = "Passwords do not match";
       pass.focus();
     }
   }
+
+  reEnterValidator(e) {
+    let newPass = document.getElementById("newPass");
+    let passHint = document.getElementById("passHint");
+    if (e.target.value === newPass.value) {
+      e.preventDefault();
+      passHint.style.visibility = "hidden";
+    } else {
+      passHint.style.visibility = "visible";
+    }
+  }
+
   componentWillUnmount() {
     this.props.wipe();
   }
@@ -140,9 +157,9 @@ class Security extends Component {
                   type="password"
                   placeholder="Re-Enter Password"
                   id="passChk"
-                  required
+                  onChange={e => this.reEnterValidator(e)}
                 />
-                <span id="passHint" className="hint">
+                <span id="passHint" className="err invalid">
                   Passwords do not match
                 </span>
               </div>
@@ -151,7 +168,7 @@ class Security extends Component {
                   style={{ width: "100%", margin: "0" }}
                   disabled={this.props.busyFlag}
                   className="button primary"
-                  onClick={() => this.changePassword()}
+                  onClick={() => this.changePassword(e)}
                 >
                   Submit
                 </button>
@@ -188,7 +205,7 @@ class Security extends Component {
                   <button
                     disabled={this.props.busyFlag}
                     className="button primary"
-                    onClick={() => this.showPrivKey()}
+                    onClick={e => this.showPrivKey(e)}
                   >
                     Submit
                   </button>
@@ -202,7 +219,7 @@ class Security extends Component {
                   <button
                     disabled={this.props.busyFlag}
                     className="button"
-                    onClick={() => this.copyPrivkey()}
+                    onClick={e => this.copyPrivkey(e)}
                   >
                     Copy
                   </button>
@@ -241,7 +258,7 @@ class Security extends Component {
                 <button
                   disabled={this.props.busyFlag}
                   className="button primary"
-                  onClick={() => this.importPrivKey()}
+                  onClick={e => this.importPrivKey(e)}
                 >
                   Submit
                 </button>

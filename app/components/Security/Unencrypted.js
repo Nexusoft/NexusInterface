@@ -19,7 +19,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Unencrypted extends Component {
-  showPrivKey() {
+  showPrivKey(e) {
+    e.preventDefault();
     let addressInput = document.getElementById("privKeyAddress");
     let address = addressInput.value;
     let output = document.getElementById("privKeyOutput");
@@ -31,8 +32,18 @@ class Unencrypted extends Component {
       addressInput.focus();
     }
   }
+  coreRestart() {
+    let core = require("electron").remote.getGlobal("core");
+    core.start();
+  }
 
-  importPrivKey() {
+  encryptCallback() {
+    alert("Wallet Encrypted");
+    this.coreRestart();
+  }
+
+  importPrivKey(e) {
+    e.preventDefault();
     let acctname = document.getElementById("acctName");
     let label = acctname.value.trim();
     let privateKeyInput = document.getElementById("privateKey");
@@ -49,7 +60,8 @@ class Unencrypted extends Component {
     }
   }
 
-  copyPrivkey() {
+  copyPrivkey(e) {
+    e.preventDefault();
     let output = document.getElementById("privKeyOutput");
     output.type = "text";
     output.focus();
@@ -57,24 +69,26 @@ class Unencrypted extends Component {
     document.execCommand("Copy", false, null);
     output.type = "password";
   }
-
-  encrypt() {
-    let pass, newPass, passChk, passHint;
+  reEnterValidator(e) {
+    let newPass = document.getElementById("newPass");
+    let passHint = document.getElementById("passHint");
+    if (e.target.value === newPass.value) {
+      e.preventDefault();
+      passHint.style.visibility = "hidden";
+    } else {
+      passHint.style.visibility = "visible";
+    }
+  }
+  encrypt(e) {
+    e.preventDefault();
+    let newPass, passChk, passHint;
     newPass = document.getElementById("newPass");
     passChk = document.getElementById("passChk");
     passHint = document.getElementById("passHint");
-    if (pass.value.trim()) {
+    if (newPass.value.trim()) {
       if (newPass.value === passChk.value) {
         if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
-          RPC.PROMISE("encryptwallet", [newPass.value]).then(payload => {
-            if (payload === null) {
-              pass.value = "";
-              newPass.value = "";
-              passChk.value = "";
-              alert("Wallet has been encrypted.");
-              this.props.history.push();
-            }
-          });
+          RPC.GET("encryptwallet", [newPass.value], this.encryptCallback);
         } else {
           passChk.value = "";
           passHint.innerText = "Password cannot start or end with spaces";
@@ -117,9 +131,9 @@ class Unencrypted extends Component {
                   type="password"
                   placeholder="Re-Enter Password"
                   id="passChk"
-                  required
+                  onChange={e => this.reEnterValidator(e)}
                 />
-                <span id="passHint" className="hint">
+                <span id="passHint" className="err invalid">
                   Passwords do not match
                 </span>
               </div>
@@ -128,7 +142,7 @@ class Unencrypted extends Component {
                   style={{ width: "100%", margin: "0" }}
                   disabled={this.props.busyFlag}
                   className="button primary"
-                  onClick={() => this.encrypt()}
+                  onClick={e => this.encrypt(e)}
                 >
                   Submit
                 </button>
@@ -153,7 +167,7 @@ class Unencrypted extends Component {
                   <button
                     disabled={this.props.busyFlag}
                     className="button primary"
-                    onClick={() => this.showPrivKey()}
+                    onClick={e => this.showPrivKey(e)}
                   >
                     Submit
                   </button>
@@ -167,7 +181,7 @@ class Unencrypted extends Component {
                   <button
                     disabled={this.props.busyFlag}
                     className="button"
-                    onClick={() => this.copyPrivkey()}
+                    onClick={e => this.copyPrivkey(e)}
                   >
                     Copy
                   </button>
@@ -206,7 +220,7 @@ class Unencrypted extends Component {
                 <button
                   disabled={this.props.busyFlag}
                   className="button primary"
-                  onClick={() => this.importPrivKey()}
+                  onClick={e => this.importPrivKey(e)}
                 >
                   Submit
                 </button>
