@@ -7,7 +7,7 @@ import webpack from "webpack";
 import ExtractTextPlugin from "extract-text-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import merge from "webpack-merge";
-import BabiliPlugin from "babili-webpack-plugin";
+// import BabiliPlugin from "babili-webpack-plBabiliPluginugin";
 import baseConfig from "./webpack.config.base";
 import CheckNodeEnv from "./internals/scripts/CheckNodeEnv";
 
@@ -160,7 +160,7 @@ export default merge.smart(baseConfig, {
     /**
      * Babli is an ES6+ aware minifier based on the Babel toolchain (beta)
      */
-    new BabiliPlugin(),
+    // new BabiliPlugin(),
 
     new ExtractTextPlugin("style.css"),
 

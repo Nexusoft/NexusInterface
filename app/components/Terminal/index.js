@@ -9,8 +9,8 @@ import TerminalCore from "./TerminalCore";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
-import explorerImg from "images/icon-explorer.png";
-import homeIcon from "images/icon-home.png";
+import mainlogo from "images/logo.svg";
+import coreImg from "images/core.svg";
 
 export default class Terminal extends Component {
   componentDidMount() {
@@ -45,12 +45,14 @@ export default class Terminal extends Component {
           <ul className="tabs">
             <li>
               <NavLink to={`${this.props.match.url}/Console`}>
-                <img src="images/logo.svg" alt="Console" />Console
+                <img src={mainlogo} alt="Console" />
+                Console
               </NavLink>
             </li>
             <li>
               <NavLink to={`${this.props.match.url}/Core`}>
-                <img src="images/core.svg" alt="Core Output" />Core Output
+                <img src={coreImg} alt="Core Output" />
+                Core Output
               </NavLink>
             </li>
           </ul>
