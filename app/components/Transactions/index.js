@@ -12,6 +12,7 @@ import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiCon
 //import Analytics from "../../script/googleanalytics";
 
 import ContextMenuBuilder from "../../contextmenu";
+import config from "../../api/configuration";
 
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
 // import "react-table/react-table.css"
@@ -20,6 +21,7 @@ import ContextMenuBuilder from "../../contextmenu";
 //import tablestyles from "./react-table.css";
 import styles from "./style.css";
 
+let tempaddpress = new Map();
 
 const mapStateToProps = state => {
   return { ...state.transactions, ...state.common };
@@ -96,6 +98,44 @@ class Transactions extends Component {
     this.getTransactionData();
     this.updateChartAndTableDimensions();
     this.props.googleanalytics.SendScreen("Transactions");
+
+    let myaddresbook = this.readAddressBook();
+    console.log(myaddresbook);
+    for (let index = 0; index < myaddresbook.length; index++) {
+      const element = myaddresbook[index];
+      console.log(element);
+    }
+    for (let key in myaddresbook)
+    {
+      const hfff = myaddresbook[key];
+      console.log(hfff);
+      console.log(hfff["notMine"]);
+      const primaryadd = hfff["notMine"]["Primary"];
+      console.log(hfff["notMine"]["Primary"]);
+      if (primaryadd != undefined)
+      {
+        tempaddpress.set(primaryadd,key);
+      }
+      for (let addressname in hfff["notMine"])
+      {
+        tempaddpress.set(hfff["notMine"][addressname],key + "-" + addressname);
+      }
+      for (let addressname in hfff["mine"])
+      {
+        //console.log(key);
+        //let keymod = key;
+        if (key == "")
+        {
+          key = "Mine";
+          //keymod = "Mine";
+          console.log("AAAAAAAAAAAAAAAA");
+        }
+        tempaddpress.set(hfff["mine"][addressname],key + "-" + addressname);
+      }
+      //const mineadd = hff["mine"][""]
+    }
+
+    console.log(tempaddpress);
 
     this.updateChartAndTableDimensions = this.updateChartAndTableDimensions.bind(this);
     window.addEventListener('resize', this.updateChartAndTableDimensions, false);
@@ -188,14 +228,12 @@ class Transactions extends Component {
       
 
       let moreDatailsCallback = function() {
-          console.log("12121");
-          console.log(this.state);
+         
           this.setState(
             {
               open:true
             }
           )
-          // openmoredetailmodal();
       }
       moreDatailsCallback = moreDatailsCallback.bind(this);
 
@@ -206,7 +244,6 @@ class Transactions extends Component {
           label: "More Details",
           click() {
             moreDatailsCallback();
-           // openmoredetailmodal();
           }
         })
       );
@@ -226,7 +263,6 @@ class Transactions extends Component {
       }
       tablecopyaccountcallback = tablecopyaccountcallback.bind(this);
       
-      console.log(this);
       transactiontablecontextmenu.append(
         new remote.MenuItem({
           label: "Copy",
@@ -254,9 +290,6 @@ class Transactions extends Component {
         })
        
       );
-
-      console.log(transactiontablecontextmenu);
-
 
       let sendtoSendPagecallback = function()
       {
@@ -337,7 +370,11 @@ class Transactions extends Component {
           promisList.push(RPC.PROMISE("listtransactions",[element,9999,0]));
         });
         let tempWalletTransactions = [];
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
+
+        let settingsCheckDev = require('../../api/settings.js').GetSettings();
+
+        if (settingsCheckDev.devMode == true)
+        {
           tempWalletTransactions.push(this.TEMPaddfaketransaction());
           tempWalletTransactions.push(this.TEMPaddfaketransaction());
           tempWalletTransactions.push(this.TEMPaddfaketransaction());
@@ -347,7 +384,8 @@ class Transactions extends Component {
           tempWalletTransactions.push(this.TEMPaddfaketransaction());
           tempWalletTransactions.push(this.TEMPaddfaketransaction());
           tempWalletTransactions.push(this.TEMPaddfaketransaction());
-         
+          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+        }
 
           let objectheaders = Object.keys(this.state.walletTransactions[0]);
           let tabelheaders = [];
@@ -383,6 +421,8 @@ class Transactions extends Component {
               {
                 return;
               }
+              const getLable = tempaddpress.get(element2.address);
+              
               let tempTrans = 
               {
                 transactionnumber: index,
@@ -391,7 +431,7 @@ class Transactions extends Component {
                 category: element2.category,
                 amount: element2.amount,
                 txid: element2.txid,
-                account: element2.account,
+                account: getLable,
                 address: element2.address,
                 value:
                 {
@@ -548,6 +588,24 @@ class Transactions extends Component {
         addressFilter: addressfiltervalue
       }
     );
+  }
+
+  /// Read AddressBook
+  /// Taken From address page
+  /// Return:
+  ///   json || address in json format
+  readAddressBook()
+  {
+    let json = null;
+    try {
+      json = config.ReadJson("addressbook.json");
+      
+    } 
+    catch (err) 
+    {
+      json = {};
+    }
+    return json;
   }
 
   filterByCategory(inTransactions)
@@ -763,9 +821,14 @@ class Transactions extends Component {
     return aaaa.map((ele) =>
       {
         bbbb++;
+        let isPending = "";
+        if (ele.confirmations <= 120)
+        {
+          isPending = "(Pending)";
+        }
         return {
-                transactionnumber: bbbb,
-                time: ele.time,
+                transactionnumber: bbbb+isPending,
+                time: (new Date(ele.time * 1000)).toLocaleString(),
                 category: ele.category,
                 amount: ele.amount,
                 account: ele.account,
@@ -1444,14 +1507,22 @@ class Transactions extends Component {
   {
     let internalString = [];
     if (this.state.hoveringID != 999999999999){
+
       const selectedTransaction = this.state.walletTransactions[this.state.hoveringID];
       
+      
+        if (selectedTransaction.confirmations <= 120)
+        {
+          internalString.push(<a key="isPending">PENDING TRANSACTION</a>);
+          internalString.push(<br key="br6"/>);
+        }
+
       internalString.push(
           <a key="modal_amount">{"Amount: " + selectedTransaction.amount}</a>
         );
       internalString.push(<br key="br2"/>);
       internalString.push(
-          <a key="modal_time">{"Time: " + selectedTransaction.time}</a>
+          <a key="modal_time">{"Time: " + (new Date(selectedTransaction.time * 1000)).toLocaleString()}</a>
         );
       internalString.push(<br key="br3"/>);
       internalString.push(

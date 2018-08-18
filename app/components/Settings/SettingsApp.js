@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
 
+var currentBackupLocation = ""; //Might redo to use redux but this is only used to replace using json reader every render;
+
 export default class SettingsApp extends Component {
   //
   // componentDidMount - Initialize the settings
@@ -19,6 +21,18 @@ export default class SettingsApp extends Component {
     this.setDefaultUnitAmount(settings);
     this.setDeveloperMode(settings);
     this.setInfoPopup(settings);
+
+    if ( this.refs.backupInputField){
+    this.refs.backupInputField.webkitdirectory = true;
+    this.refs.backupInputField.directory = true;}
+    console.log(this.refs);
+  }
+
+  componentDidUpdate()
+  {
+    this.refs.backupInputField.webkitdirectory = true;
+    this.refs.backupInputField.directory = true;
+    console.log(this.refs);
   }
 
   //
@@ -145,6 +159,24 @@ export default class SettingsApp extends Component {
     if (settings.infopopups == true) {
       infopop.checked = true;
     }
+  }
+
+  /// Update Backup Locaton
+  /// Update settings so that we have the correct back up location
+  updateBackupLocation(event)
+  {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    let incomingPath = el.files[0].path;
+
+    console.log(incomingPath);
+
+    settingsObj.backupLocation = incomingPath;
+
+    settings.SaveSettings(settingsObj);
+    
   }
 
   //
@@ -302,7 +334,16 @@ export default class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
+  returnCurrentBackupLocation()
+  {
+    let currentLocation = require("../../api/settings.js").GetSettings();
+    //set state for currentlocation and return it 
+
+    return ("Current Location: " + currentLocation.backupLocation);
+  }
+
   render() {
+    console.log(this.refs);
     return (
       <section id="application">
         <form className="aligned">
@@ -311,6 +352,12 @@ export default class SettingsApp extends Component {
             <label htmlFor="wallpaper">Wallpaper</label>
             <input id="wallpaper" type="file" size="25" onChange={this.updateWallpaper} data-tooltip="The background wallpaper for your wallet"/>
           </div>
+
+          <div className="field">
+            <label htmlFor="backupLocation">Backup Locatiom</label>
+            <input webkitdirectory directory ref={i => this.backupInputField = i} id="backupLocation" type="file" size="25" onChange={this.updateBackupLocation} data-tooltip="Location where backups will be saved"  />
+          </div>
+          <label htmlFor="currentBackupLocation">{this.returnCurrentBackupLocation()} </label>
 
           <div className="field">
             <label htmlFor="infopopup">Information Popups</label>

@@ -265,7 +265,8 @@ export default class TerminalConsole extends Component {
   onAutoCompleteClick(inItem)
   {
     const inputRef = this.state.inputfield;
-    inputRef.focus();
+    inputRef.value - inItem;
+    //inputRef.focus();
     this.setState(
       {
         currentInput:inItem,
