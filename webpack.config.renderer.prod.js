@@ -10,6 +10,7 @@ import merge from "webpack-merge";
 // import BabiliPlugin from "babili-webpack-plBabiliPluginugin";
 import baseConfig from "./webpack.config.base";
 import CheckNodeEnv from "./internals/scripts/CheckNodeEnv";
+import CopyWebpackPlugin from "copy-webpack-plugin";
 
 CheckNodeEnv("production");
 
@@ -128,11 +129,12 @@ export default merge.smart(baseConfig, {
         use: {
           loader: "url-loader",
           options: {
-            limit: 10000,
+            // limit: 10000,
             mimetype: "image/svg+xml"
           }
         }
       },
+
       // Common Image Formats
       {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
@@ -151,6 +153,13 @@ export default merge.smart(baseConfig, {
      * NODE_ENV should be production so that modules do not perform certain
      * development checks
      */
+    new CopyWebpackPlugin([
+      {
+        from: "./app/GeoLite2-City_20180403/GeoLite2-City.mmdb",
+        to: path.join(__dirname, "app/dist")
+      }
+    ]),
+
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(
         process.env.NODE_ENV || "production"

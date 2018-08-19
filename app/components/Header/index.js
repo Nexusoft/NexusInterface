@@ -17,14 +17,12 @@ import unlockImg from "images/lock-minting.svg";
 import statGood from "images/status-good.svg";
 import statBad from "images/status-bad.svg";
 import stakeImg from "images/staking.svg";
-import logoFull from "../../images/logo-full-beta.svg";
+import logoFull from "images/logo-full-beta.svg";
 
 import GOOGLE from "../../script/googleanalytics";
 let heighestPeerBlock = 0;
 
 const mapStateToProps = state => {
-  // console.log(state.overview);
-
   return { ...state.overview, ...state.common };
 };
 
