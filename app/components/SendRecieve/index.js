@@ -38,6 +38,12 @@ const mapDispatchToProps = dispatch => ({
   updateAmount: returnAmount => {
     dispatch({ type: TYPE.UPDATE_AMOUNT, payload: returnAmount });
   },
+  AccountPicked: returnSelectedAccount => {
+    dispatch({ type: TYPE.SELECTED_ACCOUNT, payload: returnSelectedAccount });
+  },
+  changeAccount: returnAccountChanger => {
+    dispatch({ type: TYPE.CHANGE_ACCOUNT, payload: returnAccountChanger });
+  },
   updateMessage: returnMessage => {
     dispatch({ type: TYPE.UPDATE_MESSAGE, payload: returnMessage });
   },
@@ -52,6 +58,16 @@ const mapDispatchToProps = dispatch => ({
 
 class SendRecieve extends Component {
   componentDidMount() {
+    RPC.PROMISE("listaccounts").then(payload => {
+      this.props.changeAccount(
+        Object.entries(payload).map(e => {
+          return {
+            name: e[0],
+            val: e[1]
+          };
+        })
+      );
+    });
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
 
     this.props.googleanalytics.SendScreen("Send");
@@ -74,9 +90,11 @@ class SendRecieve extends Component {
       return (
         <button
           className="button large"
-          onClick={() => this.validateAddToQueue(alert("bitch"))}
+          onClick={() => {
+            if (confirm("Edit Entry?")) this.validateAddToQueue();
+          }}
         >
-          Hello
+          Edit Entry
         </button>
       );
     } else {
@@ -91,9 +109,42 @@ class SendRecieve extends Component {
       );
     }
   }
+
   nxsAmount(e) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === "")) {
       this.props.updateAmount(e.target.value);
+    } else {
+      return null;
+    }
+  }
+
+  accHud() {
+    if (this.props.SelectedAccount === "") {
+      return " My Account";
+    } else {
+      return this.props.SelectedAccount;
+    }
+  }
+
+  accountChanger() {
+    if (this.props.AccountChanger[1]) {
+      return this.props.AccountChanger.map(e => {
+        if (e.name === "") {
+          return (
+            <option key={e.name} value={e.name}>
+              My Account : {e.val}
+              NXS
+            </option>
+          );
+        } else {
+          return (
+            <option key={e.name} value={e.name}>
+              {e.name}: {e.val}
+              NXS
+            </option>
+          );
+        }
+      });
     } else {
       return null;
     }
@@ -138,34 +189,11 @@ class SendRecieve extends Component {
     }
   }
 
-  // sendMany() {
-  //   let keyCheck = Object.keys(this.props.Queue);
-  //   this.props.busy();
-  //   // sendmany <fromaccount> {address:amount,...} [minconf=1] [comment]
-  //   if (keyCheck.length > 0) {
-  //     console.log(
-  //       "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-  //       "{'" + this.props.Queue + "': " + parseFloat(this.props.Queue.val) + "}"
-  //     );
-  //     RPC.PROMISE("sendmany", [
-  //       "",
-  //       "{'" + this.props.Queue.key + "': " + this.props.Queue.val + "}"
-  //     ]);
-  //   } else {
-  //     RPC.PROMISE("sendtoaddress", [
-  //       keyCheck[1],
-  //       Object.values(this.props.Queue)[0]
-  //     ]).then(payoad => console.log(payload));
-  //     this.props.clearForm();
-  //     this.props.busy();
-  //   }
-  // }
-
   sendMany() {
     let keyCheck = Object.keys(this.props.Queue);
     this.props.busy();
     if (keyCheck.length > 1) {
-      RPC.PROMISE("sendmany", ["", this.props.Queue]);
+      RPC.PROMISE("sendmany", [this.props.SelectedAccount, this.props.Queue]);
     } else {
       RPC.PROMISE("sendtoaddress", [
         keyCheck[1],
@@ -174,6 +202,7 @@ class SendRecieve extends Component {
     }
     this.props.clearForm();
     this.props.busy();
+    this.props.clearQueue();
   }
 
   addAmount() {
@@ -183,9 +212,10 @@ class SendRecieve extends Component {
         return acc + val;
       });
       return (
-        <div id="feeCounter">
-          TOTAL: {sum.toFixed(8)} NXS
-          <p>FEE: {this.props.paytxfee.toFixed(8)} NXS </p>{" "}
+        <div id="summary">
+          TOTAL: {sum.toFixed(5)} NXS
+          <p>FEE: {this.props.paytxfee.toFixed(5)} NXS </p>
+          FROM: {this.accHud(this.props.SelectedAccount)}
         </div>
       );
     }
@@ -243,7 +273,9 @@ class SendRecieve extends Component {
               id="Remove"
               src="images/status-bad.svg"
               disabled={this.props.busyFlag}
-              onClick={() => this.props.removeQueue(e.key)}
+              onClick={() => {
+                if (confirm("Delete Entry?")) this.props.removeQueue(e.key);
+              }}
             />
           </td>
         </tr>
@@ -260,20 +292,29 @@ class SendRecieve extends Component {
     }
     return (
       <div id="sendrecieve">
-        <h2>Send Nexus</h2>
+        <h2>Send Nexus </h2>
         <div className="panel">
           <div id="container">
             <div className="box1">
               <div className="field">
-                <label>Nexus Address</label>
-                <input
-                  size="35"
-                  type="text"
-                  placeholder="Enter NXS Address"
-                  value={this.props.Address}
-                  onChange={e => this.props.updateAddress(e.target.value)}
-                  required
-                />
+                <select
+                  id="select"
+                  onChange={e => this.props.AccountPicked(e.target.value)}
+                >
+                  {this.accountChanger()}
+                </select>
+                <p>
+                  <label>Nexus Address</label>
+                  <input
+                    size="35"
+                    type="text"
+                    placeholder="Enter NXS Address"
+                    value={this.props.Address}
+                    onChange={e => this.props.updateAddress(e.target.value)}
+                    required
+                  />{" "}
+                </p>
+
                 <p>
                   <span className="hint">Amount Of Nexus</span>
                   <label>Nexus Amount</label>
@@ -299,22 +340,14 @@ class SendRecieve extends Component {
                 </p>
                 <div id="left-buttons">
                   {this.editQueue()}
-                  {/* <button
-                    className="button large"
-                    onClick={() => this.validateAddToQueue()}
-                  >
-                    {this.editQueue()}
-                  </button> */}
-
                   <input
                     type="reset"
                     value="Send Now"
                     className="button"
-                    onClick={() => this.sendOne()}
+                    onClick={() => {
+                      if (confirm("Send NXS?")) this.sendOne();
+                    }}
                   />
-                  <p className="balance">
-                    Wallet Balance {this.props.balance} NXS
-                  </p>
                 </div>
               </div>
             </div>
@@ -340,7 +373,8 @@ class SendRecieve extends Component {
                     value="Send All"
                     className="button primary"
                     onClick={() => {
-                      this.sendMany();
+                      if (confirm("Send All Transactions?"))
+                        console.log(this.sendMany());
                     }}
                   />
                   <input
@@ -348,11 +382,11 @@ class SendRecieve extends Component {
                     value="Clear Queue"
                     className="button primary"
                     onClick={() => {
-                      this.props.clearQueue();
+                      if (confirm("Clear All?")) this.props.clearQueue();
                     }}
-                  />{" "}
+                  />
                   <p>
-                    <div className="counter">{this.addAmount()}</div>{" "}
+                    <div className="counter">{this.addAmount()} </div>
                   </p>
                 </foot>{" "}
               </div>{" "}
