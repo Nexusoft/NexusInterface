@@ -34,6 +34,7 @@ export const SET_TRANSACTION_EXPLOREINFO = "SET_TRANSACTION_EXPLOREINFO";
 export const SET_DATE = "SET_DATE";
 export const WIPE_LOGIN_INFO = "WIPE_LOGIN_INFO";
 export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
+export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
 
 // common
 export const LOCK = "LOCK";
