@@ -17,6 +17,9 @@ import world from "../images/world.jpg";
 import { geoInterpolate } from 'd3-geo';
 var DAT = DAT || {};
 
+var CurveMeshs;
+var PillarMeshs;
+
 export default (DAT.Globe = function(container, opts) {
   opts = opts || {};
 
@@ -330,6 +333,10 @@ export default (DAT.Globe = function(container, opts) {
       initCurves(aaaaa,yyyyy);
   
       playCurve();
+
+      CurveMeshs = yyyyy;
+      PillarMeshs = this.points;
+
       scene.add(this.points);
       scene.add(yyyyy);
     }
@@ -465,6 +472,17 @@ export default (DAT.Globe = function(container, opts) {
   function removePoints()
   {
     console.log("REMOVED OLD POINTS");
+    cureves.forEach(element => {
+      element.stop();
+    });
+    scene.remove(CurveMeshs);
+    scene.remove(PillarMeshs);
+    CurveMeshs.geometry.dispose();
+    CurveMeshs.material.dispose();
+    CurveMeshs = null;
+    PillarMeshs.geometry.dispose();
+    PillarMeshs.material.dispose();
+    PillarMeshs = null;
   }
 
   function render() {

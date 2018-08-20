@@ -10,6 +10,7 @@ var glb;
 export default class NetworkGlobe extends Component {
   componentDidMount() {
     this.props.handleOnLineRender(this.testRestartLines);
+    this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
     const globeseries = [["peers", []]];
     const geoiplookup = maxmind.openSync(
       "app/GeoLite2-City_20180403/GeoLite2-City.mmdb"
@@ -41,6 +42,7 @@ export default class NetworkGlobe extends Component {
             globeseries[0][1].push(0.1); //temporary magnitude.
 
 
+
             glb = new DAT(this.threeRootElement);
             glb.addData(globeseries[0][1], {
               format: "magnitude",
@@ -48,7 +50,9 @@ export default class NetworkGlobe extends Component {
             });
             glb.createPoints();
             //  Start the animations on the globe
-            glb.animate();
+            
+             glb.animate();
+            
           });
         }
       }
@@ -73,7 +77,7 @@ export default class NetworkGlobe extends Component {
         if (response.statusCode === 200) {
           
           console.log(body);
-          RPC.PROMISE("getpeerinfo", []).then(payload => {
+          RPC.PROMISE("getpeerinfo", []).then(payload => {    
             var tmp = {};
             var ip = {};
             for (var i = 0; i < payload.length; i++) {
@@ -111,7 +115,23 @@ export default class NetworkGlobe extends Component {
     if ( glb != null && glb != undefined)
     {
       glb.playCurve();
+      
     }
+  }
+
+  RemoveOldPointsAndReDraw()
+  {
+
+    if (glb == null || glb == undefined)
+    {
+      return;
+    }
+    glb.removePoints();
+
+      setTimeout(() => {
+        glb.createPoints();
+        
+      }, 1000);
   }
 
   componentWillUnmount() {

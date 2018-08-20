@@ -108,6 +108,14 @@ class Overview extends Component {
         console.log("UPDATE BLOCKS");
         this.asdada();
       }
+      if (this.props.connections != previousprops.connections)
+      {
+        if (this.props.connections != 0 && previousprops.connections != 0)
+        {
+          console.log("REMOVED OLD BLOCKS AND DID A NEW ONE");
+          this.removeOldPoints();
+        }
+      }
     }
   }
 
@@ -427,7 +435,7 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
-        <NetworkGlobe handleOnLineRender={e => (this.asdada = e)} />
+        <NetworkGlobe handleOnLineRender={e => (this.asdada = e)} handleOnRemoveOldPoints = { e => (this.removeOldPoints = e)} />
         <div className="right-stats">
           <div
             id="nxs-connections-info"
