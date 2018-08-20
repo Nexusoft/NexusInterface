@@ -209,8 +209,7 @@ export default class MenuBuilder {
               let now = `${new Date()}`;
               let BackupDir = process.env.HOME + "/NexusBackups";
               let fs = require("fs");
-              if (fs.existsSync(BackupDir) == undefined)
-              {
+              if (fs.existsSync(BackupDir) == undefined) {
                 fs.mkdirSync(BackupDir);
               }
               RPC.PROMISE("backupwallet", [BackupDir + "/" + now + ".dat"]);
@@ -220,8 +219,7 @@ export default class MenuBuilder {
             label: "Open Backups Folder",
             click() {
               let fs = require("fs");
-              if (fs.existsSync(BackupDir) == undefined)
-              {
+              if (fs.existsSync(BackupDir) == undefined) {
                 fs.mkdirSync(BackupDir);
               }
               shell.openItem(process.env.HOME + "/NexusBackups");
@@ -229,12 +227,11 @@ export default class MenuBuilder {
           },
           {
             label: "Close",
-            role: 'close'
+            role: "close"
           },
           {
             label: "Close And Shutdown Deamon",
-            role: 'quit'
-            
+            role: "quit"
           }
         ]
       },
@@ -251,6 +248,13 @@ export default class MenuBuilder {
             label: "Application Settings",
             click() {
               history.push("/Settings/App");
+            }
+          },
+          {
+            label: "Toggle &Developer Tools",
+            accelerator: "Alt+Ctrl+I",
+            click: () => {
+              this.mainWindow.toggleDevTools();
             }
           }
           // {

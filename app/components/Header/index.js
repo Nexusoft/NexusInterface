@@ -14,12 +14,15 @@ import * as actionsCreators from "../../actions/headerActionCreators";
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
 import unlockImg from "images/lock-minting.svg";
+import statGood from "images/status-good.svg";
+import statBad from "images/status-bad.svg";
+import stakeImg from "images/staking.svg";
+import logoFull from "images/logo-full-beta.svg";
+
 import GOOGLE from "../../script/googleanalytics";
 let heighestPeerBlock = 0;
 
 const mapStateToProps = state => {
-  // console.log(state.overview);
-
   return { ...state.overview, ...state.common };
 };
 
@@ -95,9 +98,9 @@ class Header extends Component {
       });
     });
     if (heighestPeerBlock > this.props.blocks) {
-      return "images/status-bad.svg";
+      return statBad;
     } else {
-      return "images/status-good.svg";
+      return statGood;
     }
   }
 
@@ -124,7 +127,7 @@ class Header extends Component {
             </div>
           </div>
           <div className="icon">
-            <img src="images/staking.svg" />
+            <img src={stakeImg} />
             <div className="tooltip bottom">
               <div>Stake Weight: {this.props.stakeweight}%</div>
               <div>Interest Rate: {this.props.interestweight}%</div>
@@ -143,7 +146,7 @@ class Header extends Component {
           <img
             id="logo"
             className="animated zoomIn "
-            src="images/logo-full-beta.svg"
+            src={logoFull}
             alt="Nexus Logo"
           />
         </Link>
