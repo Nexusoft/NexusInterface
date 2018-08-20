@@ -186,7 +186,7 @@ class Addressbook extends Component {
 
         if (e.isvalid)
         {
-          if (psudoState[e.account] || psudoState[e.account] === "")
+          if (psudoState[e.account] || psudoState[e.account] === "myAccount")
           {
             if (!Object.values(psudoState[e.account].mine).includes(e.address))
             {

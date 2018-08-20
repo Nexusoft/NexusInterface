@@ -31,23 +31,24 @@ class Header extends Component {
     const menuBuilder = new MenuBuilder(
       require("electron").remote.getCurrentWindow().id
     );
-
+    var self = this;
     //console.log(visitor);
     this.props.SetGoogleAnalytics(GOOGLE);
     let encryptionStatus = false;
-    if (this.props.unlocked_until) {
+    if (this.props.unlocked_until !== undefined) {
       encryptionStatus = true;
     }
-    menuBuilder.buildMenu(this.props.history, encryptionStatus);
+    console.log(this.props);
+    menuBuilder.buildMenu(self);
 
     this.props.GetInfoDump();
 
-    var self = this;
     self.set = setInterval(function() {
       self.props.GetInfoDump();
     }, 1000);
     this.props.history.push("/");
   }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
       this.props.Unlock();

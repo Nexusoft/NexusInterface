@@ -31,7 +31,7 @@ class ContactList extends Component {
         return (
         
         <li key={i} onClick={() => this.select(item)}>
-
+        {/*  */}
           <span className="contact-avatar">
             <svg viewBox="0 0 100 100">
               <text x='50' y='50' dy='.35em'>

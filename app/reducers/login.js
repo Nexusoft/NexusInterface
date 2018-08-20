@@ -4,7 +4,8 @@ const initialState = {
   unlockUntillDate: "",
   accoutName: "",
   privKey: "",
-  address: ""
+  address: "",
+  errorMessage: "Password is required"
 };
 
 export default (state = initialState, action) => {
@@ -13,6 +14,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         unlockUntillDate: action.payload
+      };
+      break;
+    case TYPE.SET_ERROR_MESSAGE:
+      return {
+        ...state,
+        errorMessage: action.payload
       };
       break;
     case TYPE.WIPE_LOGIN_INFO:

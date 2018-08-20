@@ -18,14 +18,14 @@ class MyAddresses extends Component {
   buildmyaddresses() 
   {
 
-    return Object.keys(this.props.contacts[""].mine).map(function(item, i){
+    return Object.keys(this.props.contacts["myAccount"].mine).map(function(item, i){
 
       return (
 
         <tr className="contact-address">
           <td>{item}</td>
-          <td className="address" key={i} data-address={this.props.contacts[""].mine[item]} onClick={this.copyaddress}>
-            {this.props.contacts[""].mine[item]}
+          <td className="address" key={i} data-address={this.props.contacts["myAccount"].mine[item]} onClick={this.copyaddress}>
+            {this.props.contacts["myAccount"].mine[item]}
             <div className="tooltip left">Click to copy</div>
           </td>
         </tr>
