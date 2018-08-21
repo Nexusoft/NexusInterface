@@ -19,7 +19,7 @@ import * as actionsCreators from "../../actions/marketActionCreators";
 import binanceSmallLogo from "../../images/binanceSmallLogo.png";
 import bittrexSmallLogo from "../../images/bittrexSmallLogo.png";
 import cryptopiaSmallLogo from "../../images/cryptopiaSmallLogo.png";
-import arrow from "../../images/arrow.png";
+import arrow from "../../images/arrow.svg";
 
 import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
@@ -60,6 +60,10 @@ class Market extends Component {
     this.props.binanceCandlestickLoader();
     this.props.bittrexCandlestickLoader();
     this.props.cryptopiaCandlestickLoader();
+    this.props.binance24hrInfo();
+    this.props.bittrex24hrInfo();
+    this.props.cryptopia24hrInfo();
+    console.log(this.props);
     this.arbitageChecker();
   }
 
@@ -242,7 +246,6 @@ class Market extends Component {
   }
 
   formatBuyData(array) {
-    console.log("array", array);
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array
@@ -268,7 +271,6 @@ class Market extends Component {
   }
 
   formatSellData(array) {
-    console.log("array", array);
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array
@@ -320,18 +322,47 @@ class Market extends Component {
         break;
     }
   }
-
+  oneDayinfo(failedExchange) {
+    return (
+      <div>
+        <h3>
+          {failedExchange.charAt(0).toUpperCase() + failedExchange.slice(1)}{" "}
+          24hr Data
+        </h3>
+        {failedExchange === "cryptopia" ? (
+          <div>
+            Percent change: {this.props[failedExchange].info24hr.change}
+            {" %"}
+          </div>
+        ) : (
+          <div>
+            Price Change: {this.props[failedExchange].info24hr.change}
+            {" BTC"}
+          </div>
+        )}
+        <div>
+          High: {this.props[failedExchange].info24hr.high}
+          {" BTC"}
+        </div>
+        <div>
+          Low: {this.props[failedExchange].info24hr.low}
+          {" BTC"}
+        </div>
+        <div>
+          Volume: {this.props[failedExchange].info24hr.volume}
+          {" NXS"}
+        </div>
+      </div>
+    );
+  }
   render() {
     return (
       <div id="market">
         <h2>Market Information</h2>
-
         <a className="refresh" onClick={() => this.refresher()}>
           Refresh Market Data
         </a>
-
         <div className="alertbox">{this.arbitageAlert()}</div>
-
         <div className="panel">
           {this.props.loaded &&
             this.props.binance.buy[0] && (
@@ -342,8 +373,10 @@ class Market extends Component {
                     chartData={this.formatChartData("binanceBuy")}
                     chartSellData={this.formatChartData("binanceSell")}
                   />
-                  {this.props.binance.candlesticks[0] && (
+                  {this.props.binance.candlesticks[0] !== undefined ? (
                     <Candlestick data={this.props.binance.candlesticks} />
+                  ) : (
+                    this.oneDayinfo("binance")
                   )}
                 </div>
               </div>
@@ -357,8 +390,10 @@ class Market extends Component {
                     chartData={this.formatChartData("bittrexBuy")}
                     chartSellData={this.formatChartData("bittrexSell")}
                   />
-                  {this.props.bittrex.candlesticks[0] && (
+                  {this.props.bittrex.candlesticks[0] !== undefined ? (
                     <Candlestick data={this.props.bittrex.candlesticks} />
+                  ) : (
+                    this.oneDayinfo("bittrex")
                   )}
                 </div>
               </div>
@@ -373,8 +408,10 @@ class Market extends Component {
                     chartSellData={this.formatChartData("cryptopiaSell")}
                   />
 
-                  {this.props.cryptopia.candlesticks[0] && (
+                  {this.props.cryptopia.candlesticks[0] !== undefined ? (
                     <Candlestick data={this.props.cryptopia.candlesticks} />
+                  ) : (
+                    this.oneDayinfo("cryptopia")
                   )}
                 </div>
               </div>

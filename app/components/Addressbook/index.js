@@ -55,6 +55,7 @@ class Addressbook extends Component {
 
     RPC.GET("listaccounts", [0], this.loadAddressBook.bind(this));
 
+    this.props.googleanalytics.SendScreen("AddressBook");
   }
 
   //
@@ -441,28 +442,24 @@ class Addressbook extends Component {
     if (contact.newNotMine)
     {
 
-      for (var i in contact.newNotMine)
+      Object.keys(contact.newNotMine).map(function(item, index)
       {
 
-        let label = contact.newNotMine[i].label;
-        let address = contact.newNotMine[i].address;
-
-        console.log("Adding contact address: ", contact.newNotMine[i], label, address);
-
-        updatedContact.notMine[label] = address;
+        updatedContact.notMine[item] = contact.newNotMine[item];
 
         //TODO: Right now we fire and forget the setaccount, the logic needs to be reorganized to make sure it only adds the contact if the call is successful. If the item is added to the new contact in the call it won't appear in the contact due to the async call
 
-        RPC.PROMISE("setaccount", [address, contact.name])
+        RPC.PROMISE("setaccount", [contact.newNotMine[item], contact.name])
         .then(success => {
 
           console.log("Contact added");
 
         });
 
-      }
+      });
       
       delete contact.newNotMine; // prevents bug where same contact is edited twice and addresses get duplicated
+
     }
 
     newState[contact.name] = updatedContact;

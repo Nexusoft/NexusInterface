@@ -55,9 +55,73 @@
   height: fit-content;
   flex: 2;
 }
+.err {
+  box-sizing: border-box;
+  position: absolute;
+  display: inline-block;
+  visibility: hidden;
+  opacity: 0;
+  background: #444;
+  color: #fff;
+  padding: 0.25em 0.5em;
+  margin-left: 0.75em;
+  text-align: center;
+  transition: all 0.25s linear;
+  z-index: 1;
+}
+.err:before {
+  content: " ";
+  position: absolute;
+  top: 1em;
+  left: -1em;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin-top: -0.5em;
+  border-width: 0.5em;
+  border-style: solid;
+  border-color: #444;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  transition: all 0.25s linear;
+}
 
-#checkFeild {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+.err.invalid {
+  color: #fff;
+  background: red;
+}
+
+.err.invalid:before {
+  border-right-color: red;
+}
+
+*:focus + .err.invalid {
+  visibility: visible;
+  opacity: 1;
+}
+
+*:focus + .err.invalid:before {
+  opacity: 1;
+}
+.err {
+  top: auto;
+  margin: 0;
+  margin-left: 0.75em;
+}
+
+.err :before {
+  top: 1em;
+  left: -14px;
+  margin-top: -7px;
+  margin-left: 0;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: #444;
+  border-bottom-color: transparent;
+}
+
+*:invalid + .err :before {
+  border-right-color: red;
+  border-bottom-color: transparent;
 }

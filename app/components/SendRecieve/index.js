@@ -8,9 +8,15 @@ import * as TYPE from "../../actions/actiontypes";
 
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
+import { access } from "fs";
 
 const mapStateToProps = state => {
-  return { ...state.common, ...state.transactions, ...state.sendRecieve };
+  return {
+    ...state.common,
+    ...state.transactions,
+    ...state.sendRecieve,
+    ...state.overview
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -32,6 +38,12 @@ const mapDispatchToProps = dispatch => ({
   updateAmount: returnAmount => {
     dispatch({ type: TYPE.UPDATE_AMOUNT, payload: returnAmount });
   },
+  AccountPicked: returnSelectedAccount => {
+    dispatch({ type: TYPE.SELECTED_ACCOUNT, payload: returnSelectedAccount });
+  },
+  changeAccount: returnAccountChanger => {
+    dispatch({ type: TYPE.CHANGE_ACCOUNT, payload: returnAccountChanger });
+  },
   updateMessage: returnMessage => {
     dispatch({ type: TYPE.UPDATE_MESSAGE, payload: returnMessage });
   },
@@ -46,7 +58,19 @@ const mapDispatchToProps = dispatch => ({
 
 class SendRecieve extends Component {
   componentDidMount() {
+    RPC.PROMISE("listaccounts").then(payload => {
+      this.props.changeAccount(
+        Object.entries(payload).map(e => {
+          return {
+            name: e[0],
+            val: e[1]
+          };
+        })
+      );
+    });
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
+
+    this.props.googleanalytics.SendScreen("Send");
   }
 
   componentWillUnmount() {
@@ -61,6 +85,71 @@ class SendRecieve extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  editQueue() {
+    if (Object.keys(this.props.Queue).includes(this.props.Address)) {
+      return (
+        <button
+          className="button large"
+          onClick={() => {
+            if (confirm("Edit Entry?")) this.validateAddToQueue();
+          }}
+        >
+          Edit Entry
+        </button>
+      );
+    } else {
+      return (
+        <button
+          name="Add To Queue"
+          className="button large"
+          onClick={() => this.validateAddToQueue()}
+        >
+          Add To Queue
+        </button>
+      );
+    }
+  }
+
+  nxsAmount(e) {
+    if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === "")) {
+      this.props.updateAmount(e.target.value);
+    } else {
+      return null;
+    }
+  }
+
+  accHud() {
+    if (this.props.SelectedAccount === "") {
+      return " My Account";
+    } else {
+      return this.props.SelectedAccount;
+    }
+  }
+
+  accountChanger() {
+    if (this.props.AccountChanger[1]) {
+      return this.props.AccountChanger.map(e => {
+        if (e.name === "") {
+          return (
+            <option key={e.name} value={e.name}>
+              My Account : {e.val}
+              NXS
+            </option>
+          );
+        } else {
+          return (
+            <option key={e.name} value={e.name}>
+              {e.name}: {e.val}
+              NXS
+            </option>
+          );
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
   sendOne() {
     this.props.busy();
     if (!(this.props.Address === "") && this.props.Amount > 0) {
@@ -71,15 +160,15 @@ class SendRecieve extends Component {
               if (this.props.Message) {
                 RPC.PROMISE("sendtoaddress", [
                   this.props.Address,
-                  this.props.Amount,
-                  Message
+                  parseFloat(this.props.Amount),
+                  this.props.Message
                 ]);
                 this.props.clearForm();
                 this.props.busy();
               } else {
                 RPC.PROMISE("sendtoaddress", [
                   this.props.Address,
-                  this.props.Amount
+                  parseFloat(this.props.Amount)
                 ]).then(payoad => console.log(payload));
                 this.props.clearForm();
                 this.props.busy();
@@ -103,22 +192,34 @@ class SendRecieve extends Component {
   sendMany() {
     let keyCheck = Object.keys(this.props.Queue);
     this.props.busy();
-
     if (keyCheck.length > 1) {
-      RPC.PROMISE("sendmany", ["", this.props.Queue]).catch(e =>
-        alert(e.error.message)
-      );
+      RPC.PROMISE("sendmany", [this.props.SelectedAccount, this.props.Queue]);
     } else {
       RPC.PROMISE("sendtoaddress", [
         keyCheck[1],
         Object.values(this.props.Queue)[0]
       ]).then(payoad => console.log(payload));
-      this.props.clearForm();
-      this.props.busy();
+    }
+    this.props.clearForm();
+    this.props.busy();
+    this.props.clearQueue();
+  }
+
+  addAmount() {
+    let keyCheck = Object.keys(this.props.Queue);
+    if (keyCheck.length > 0) {
+      let sum = Object.values(this.props.Queue).reduce((acc, val) => {
+        return acc + val;
+      });
+      return (
+        <div id="summary">
+          TOTAL: {sum.toFixed(5)} NXS
+          <p>FEE: {this.props.paytxfee.toFixed(5)} NXS </p>
+          FROM: {this.accHud(this.props.SelectedAccount)}
+        </div>
+      );
     }
   }
-  addAmount() {}
-
   validateAddToQueue() {
     this.props.busy();
     if (!(this.props.Address === "") && this.props.Amount > 0) {
@@ -130,7 +231,7 @@ class SendRecieve extends Component {
             if (!payload.ismine) {
               this.props.addToQueue({
                 address: this.props.Address,
-                amount: this.props.Amount
+                amount: parseFloat(this.props.Amount)
               });
               this.props.busy();
             } else {
@@ -165,12 +266,16 @@ class SendRecieve extends Component {
     return queueArray.map((e, i) => {
       return (
         <tr key={i}>
-          <td>{e.key}</td>
-          <td>{e.val}</td>
-          <td>
-            <button
-              className="button primary"
-              onClick={() => this.props.removeQueue(e.key)}
+          <td className="td">{e.key}</td>
+          <td className="td">{e.val.toFixed(8)}</td>
+          <td className="td">
+            <img
+              id="Remove"
+              src="images/status-bad.svg"
+              disabled={this.props.busyFlag}
+              onClick={() => {
+                if (confirm("Delete Entry?")) this.props.removeQueue(e.key);
+              }}
             />
           </td>
         </tr>
@@ -182,119 +287,117 @@ class SendRecieve extends Component {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
       console.log(this.props.sendagain);
+
       this.props.SetSendAgainData(null);
     }
     return (
-      <div>
-        <h2> Send Nexus </h2>
+      <div id="sendrecieve">
+        <h2>Send Nexus </h2>
         <div className="panel">
-          <div />
           <div id="container">
-            <div>
-              {" "}
-              <div>
-                <div className="box">
-                  <legend>Create</legend>
-                  <div className="field">
-                    <label>Nexus Address</label>
-                    <input
-                      size="27"
-                      type="text"
-                      placeholder="Enter NXS Address"
-                      value={this.props.Address}
-                      onChange={e => this.props.updateAddress(e.target.value)}
-                      required
-                    />
-
-                    <span className="hint">Amount Of Nexus</span>
-                    <label>Nexus Amount</label>
-                    <input
-                      size="27"
-                      type="number"
-                      placeholder="Nexus Amount"
-                      value={this.props.Amount}
-                      onChange={e => {
-                        this.props.updateAmount(parseFloat(e.target.value));
-                      }}
-                      required
-                    />
-                    <p>
-                      <textarea
-                        value={this.props.Message}
-                        onChange={e => this.props.updateMessage(e.target.value)}
-                        name="message"
-                        rows="5"
-                        cols="28"
-                        placeholder="Enter Your Message"
-                      />
-                    </p>
-                  </div>
-                </div>
-                <div id="left-buttons">
+            <div className="box1">
+              <div className="field">
+                <select
+                  id="select"
+                  onChange={e => this.props.AccountPicked(e.target.value)}
+                >
+                  {this.accountChanger()}
+                </select>
+                <p>
+                  <label>Nexus Address</label>
                   <input
-                    type="button"
-                    value="Add To Queue"
-                    className="button primary"
-                    onClick={() => this.validateAddToQueue()}
-                  />
+                    size="35"
+                    type="text"
+                    placeholder="Enter NXS Address"
+                    value={this.props.Address}
+                    onChange={e => this.props.updateAddress(e.target.value)}
+                    required
+                  />{" "}
+                </p>
 
+                <p>
+                  <span className="hint">Amount Of Nexus</span>
+                  <label>Nexus Amount</label>
+                  <input
+                    className="input"
+                    type="text"
+                    placeholder="Nexus Amount"
+                    value={this.props.Amount}
+                    onChange={e => this.nxsAmount(e)}
+                    required
+                  />
+                </p>
+                <p>
+                  <label>Message</label>
+                  <textarea
+                    value={this.props.Message}
+                    onChange={e => this.props.updateMessage(e.target.value)}
+                    name="message"
+                    rows="5"
+                    cols="36"
+                    placeholder="Enter Your Message"
+                  />
+                </p>
+                <div id="left-buttons">
+                  {this.editQueue()}
                   <input
                     type="reset"
                     value="Send Now"
                     className="button"
-                    onClick={() => this.sendOne()}
+                    onClick={() => {
+                      if (confirm("Send NXS?")) this.sendOne();
+                    }}
                   />
                 </div>
               </div>
             </div>
-            <div>
-              {" "}
-              <table className="table">
-                <thead className="thead">
-                  <th>Address</th>
-                  <th>Amount</th>
-                  <th>Remove </th>
-                </thead>
 
-                <tbody className="tbody" />
-                {this.fillQueue()}
-              </table>
-            </div>
-            <tfoot className="tfoot">
-              <tr>
-                <td>
+            <div className="box2">
+              <div id="table-wraper">
+                <p>
+                  <label className="label">Queue</label>
+                </p>
+                <table className="table">
+                  <thead className="thead">
+                    <th>Address</th>
+                    <th>Amount</th>
+                    <th>Remove</th>
+                  </thead>
+                  <tr />
+                  {this.fillQueue()}
+                  <tbody className="tbody"> </tbody>
+                </table>
+                <foot className="foot">
                   <input
                     type="reset"
                     value="Send All"
                     className="button primary"
                     onClick={() => {
-                      this.sendMany();
+                      if (confirm("Send All Transactions?"))
+                        console.log(this.sendMany());
                     }}
                   />
-                </td>
-                <td>
                   <input
                     type="button"
                     value="Clear Queue"
                     className="button primary"
                     onClick={() => {
-                      this.props.clearQueue();
+                      if (confirm("Clear All?")) this.props.clearQueue();
                     }}
                   />
-                </td>
-              </tr>
-            </tfoot>
+                  <p>
+                    <div className="counter">{this.addAmount()} </div>
+                  </p>
+                </foot>{" "}
+              </div>{" "}
+            </div>
           </div>
-          <div id="feeCounter">
-            {" "}
-            TOTAL:
-            <p>Fee: 1,000,000</p>{" "}
-          </div>
-        </div>{" "}
+        </div>
       </div>
     );
   }
 }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps

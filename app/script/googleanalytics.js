@@ -7,7 +7,7 @@ var GA = {};
 let ua = require('universal-analytics');
 GA.visitor = null;
 GA.active = false;
-let settings = require("../script/settings").GetSettings();
+let settings = require("../api/settings").GetSettings();
 if (settings.googleAnalytics == null || settings.googleAnalytics == undefined || Boolean(settings.googleAnalytics) == true)
 {
     GA.visitor = ua('UA-117808839-1',);
@@ -24,7 +24,7 @@ GA.SendScreen = function(ScreenTitle)
     if (GA.active == false)
         return;
 
-    GA.visitor.screenview(ScreenTitle, "Nexus Wallet", "0.4.0").send();
+    GA.visitor.screenview(ScreenTitle, "Nexus Wallet", "0.4.1").send();
     console.log("Sent Screen: " + ScreenTitle);
 }
 

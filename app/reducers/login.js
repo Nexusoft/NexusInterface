@@ -5,6 +5,8 @@ const initialState = {
   accoutName: "",
   privKey: "",
   address: "",
+  errorMessage: "Password is required"
+  address: "",
   stakingFlag: false
 };
 
@@ -26,6 +28,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         stakingFlag: !state.stakingFlag
+      };
+      break;
+    case TYPE.SET_ERROR_MESSAGE:
+      return {
+        ...state,
+        errorMessage: action.payload
       };
       break;
     case TYPE.WIPE_LOGIN_INFO:

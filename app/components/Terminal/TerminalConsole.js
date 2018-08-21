@@ -174,7 +174,10 @@ export default class TerminalConsole extends Component {
 
   /// Handle arrow key press
   /// Handles what happens when the user presses arrow keys for the auto complete
-  handleAutocompleteArrowKeyPress = e => {
+  handleAutocompleteArrowKeyPress = (e) => {
+    ///NOT WORKING COME BACK TO THIS 
+
+
     /*
     console.log(this.state.currentInput);
     console.log(e.target.value);
@@ -226,11 +229,80 @@ export default class TerminalConsole extends Component {
 
   /// On Input Field Change
   /// What happens when the value of the inputfield changes
-  onInputfieldChange = e => {
-    this.setState({
-      currentInput: e.target.value
+  onInputfieldChange = (e) =>
+  {
+    this.inputfield = e.target;
+    this.setState(
+      {
+        currentInput: e.target.value
+      }, () => this.returnAutocomplete() );
+      
+  }
+
+  /// On Auto Complete Click
+  /// What happens when you click on an auto complete link
+  onAutoCompleteClick(inItem)
+  {
+    const inputRef = this.state.inputfield;
+    inputRef.focus();
+    this.setState(
+      {
+        currentInput:inItem,
+        autoComplete: []
+      }
+    );
+  }
+
+  /// Return Auto Complete
+  /// Returns the list of commands that should be displayed for the auto complete section
+  returnAutocomplete()
+  {
+  
+
+    const CommandList = this.state.commandList;
+    const CurrentInput = this.state.currentInput;
+    let tempCompandList = [];
+
+    ///Just incase 
+    if (CurrentInput == "")
+    {
+      this.setState(
+        {
+          autoComplete: []
+        }
+      );
+      return;
+    }
+
+
+    CommandList.forEach(element => {
+        if ( element.startsWith(CurrentInput))
+        {
+          tempCompandList.push(element);
+        }
     });
   };
+
+
+
+    this.setState(
+      {
+        autoComplete: tempAutoComplete
+      }
+    );
+  }
+
+  /// Remove Auto Complete Div
+  /// Removes all divs from the array
+  removeAutoCompleteDiv = (e) =>
+  {
+    this.setState(
+      {
+        autoComplete: []
+      }
+    );
+  }
+
 
   render() {
     return (
