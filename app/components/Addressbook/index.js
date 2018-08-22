@@ -29,76 +29,72 @@ class Addressbook extends Component {
     router: React.PropTypes.object
   };
 
-  constructor(props)
-  {
-    super(props);
+  // The following constructor is bad code practice because you either want
+  // to have the react-redux or the static constructor. not both.
+  // TODO: Remove this comment after we document basics.
+  // constructor(props)
+  // {
+  //   super(props);
 
-    this.state =
-    {
-      hoveredover: false,
+  //   this.state =
+  //   {
+  //     hoveredover: false,
 
-      contacts: null,
-      selectedContact: null,
-      showMyAddresses: false,
-      showAddContact: false,
-      showViewContact: false,
-      showEditContact: false,
-      addError: null
-    };
-  }
+  //     contacts: null,
+  //     selectedContact: null,
+  //     showMyAddresses: false,
+  //     showAddContact: false,
+  //     showViewContact: false,
+  //     showEditContact: false,
+  //     addError: null
+  //   };
+  // }
 
-  //
+
+  // TODO: read the json file at app start so it can be put into state.
+    // readAddressBook: Read the addressbook.json file and return the contents as an object, if it doesn't exist initialize the file
+    // readAddressBook()
+    // {
+    //   let json = null;
+
+    //   try {
+    //     json = config.ReadJson("addressbook.json");
+        
+    //   } 
+    //   catch (err) 
+    //   {
+    //     json = {};
+    //     config.WriteJson("addressbook.json", json);
+    //   }
+
+    //   return json;
+    // }
+
   // componentDidMount: get addressbook data
-  //
-
-  componentDidMount() {
-
-    RPC.GET("listaccounts", [0], this.loadAddressBook.bind(this));
-
+  // Anything that you are relying on being available for rendering the page from startup
+  componentDidMount()
+  {
+    RPC.PROMISE("listaccounts", [0]).then((payload)=> 
+    {
+      Promise.all(Object.keys(payload).map((elem)=>
+      {
+        return RPC.PROMISE("getaddressesbyaccount", [elem])
+      })).then(this.processAddresses);
+    });
     this.props.googleanalytics.SendScreen("AddressBook");
   }
 
-  //
-  // readAddressBook: Read the addressbook.json file and return the contents as an object, if it doesn't exist initialize the file
-  //
-
-  readAddressBook()
-  {
-    let json = null;
-
-    try {
-      json = config.ReadJson("addressbook.json");
-      
-    } 
-    catch (err) 
-    {
-      json = {};
-      config.WriteJson("addressbook.json", json);
-    }
-
-    return json;
-  }
-
-  //
-  // saveAddressBook: save the address book to disk, then save the contacts state
-  //
-
+  // TODO: Relocate to API saveAddressBook: save the address book to disk, then save the contacts state
   saveAddressBook(state) {
-
     config.WriteJson("addressbook.json", state);
-
     this.setState(
       {
         contacts: state
       }
     );
-
   }
 
-  //
   // loadAddressBook: Load the addressbook json and get the addresses from the core
-  //
-
   loadAddressBook(ResponseObject, Address, PostData)
   {
     if (ResponseObject.readyState != 4)
