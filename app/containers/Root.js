@@ -18,9 +18,19 @@ import Terminal from "../components/Terminal/index";
 import StyleGuide from "../components/StyleGuide/index";
 import List from "../components/List/index";
 import About from "../components/About/index";
+import settings from "../../app/api/settings";
 
 export default function Root({ store, history }) {
-  console.log(store);
+  let configSettings = settings.GetSettings();
+
+  if (configSettings.wallpaper) {
+    console.log("Applying custom wallpaper: " + configSettings.wallpaper);
+    document.body.style.setProperty(
+      "--background-main-image",
+      "url('" + configSettings.wallpaper + "')"
+    );
+  }
+
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
