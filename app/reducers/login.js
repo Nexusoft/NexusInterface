@@ -5,8 +5,7 @@ const initialState = {
   accoutName: "",
   privKey: "",
   address: "",
-  errorMessage: "Password is required"
-  address: "",
+  errorMessage: "Password is required",
   stakingFlag: false
 };
 

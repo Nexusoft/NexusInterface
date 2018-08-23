@@ -94,3 +94,11 @@ select.soflow-color {
   /* border-radius: 20px; */
   padding-left: 15px;
 }
+
+#Exchange-container h2 {
+  margin-bottom: 0;
+}
+
+#Exchange-container p {
+  margin-top: 0;
+}

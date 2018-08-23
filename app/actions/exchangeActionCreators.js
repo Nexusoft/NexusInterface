@@ -47,6 +47,12 @@ export const greenLightTransaction = bool => {
   };
 };
 
+export const clearQuote = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.CLEAR_QUOTE });
+  };
+};
+
 export const GetAvailaleCoins = () => {
   return dispatch => {
     Request(
@@ -60,6 +66,43 @@ export const GetAvailaleCoins = () => {
             type: TYPE.AVAILABLE_COINS,
             payload: response.body
           });
+        }
+      }
+    );
+  };
+};
+
+export const InitiateFastTransaction = (toAddress, refundAddress, pair) => {
+  return dispatch => {
+    Request(
+      {
+        method: "POST",
+        url: "https://shapeshift.io/shift",
+        json: {
+          withdrawal: toAddress,
+          pair: pair,
+          returnAddress: refundAddress
+        }
+      },
+      (error, response, body) => {
+        if (response.statusCode === 200) {
+          if (response.body.error) {
+            alert(response.body.error);
+          } else {
+            console.log(response);
+            dispatch({
+              type: TYPE.TRANSACTION_MODAL_ACTIVATE,
+              payload: {
+                depositAddress: response.body.deposit,
+                depositType: response.body.depositType,
+                orderId: response.body.orderId,
+                returnAddress: response.body.returnAddress,
+                returnAddressType: response.body.returnAddressType,
+                withdrawalAddress: response.body.withdrawal,
+                withdrawalType: response.body.withdrawalType
+              }
+            });
+          }
         }
       }
     );
@@ -88,21 +131,38 @@ export const GetQuote = (pair, ammount, callback) => {
   };
 };
 
-export const executeFastTrade = (pair, toAddress, refundAddress) => {
+export const InitiateQuotedTransaction = (pair, ammount, toAdd, refundAdd) => {
   return dispatch => {
     Request(
       {
         method: "POST",
-        url: "https://shapeshift.io/shift",
+        url: "https://shapeshift.io/sendamount",
         json: {
-          withdrawal: toAddress,
+          amount: ammount,
+          withdrawal: toAdd,
           pair: pair,
-          returnAddress: refundAddress
+          returnAddress: refundAdd
         }
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
-          console.log(response);
+          if (response.body.error) {
+            alert(response.body.error);
+          } else {
+            console.log(response);
+            dispatch({
+              type: TYPE.TRANSACTION_MODAL_ACTIVATE,
+              payload: {
+                depositAddress: response.body.success.deposit,
+                depositAmount: response.body.success.depositAmount,
+                quotedRate: response.body.success.quotedRate,
+                pair: response.body.success.pair,
+                expiration: response.body.success.expiration,
+                withdrawalAddress: response.body.success.withdrawal,
+                withdrawalAmount: response.body.success.withdrawalAmount
+              }
+            });
+          }
         }
       }
     );

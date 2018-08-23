@@ -8,7 +8,7 @@ import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 
-import arrow from "../../images/arrow.png";
+import arrow from "../../images/arrow.svg";
 import * as actionsCreators from "../../actions/exchangeActionCreators";
 
 const mapStateToProps = state => {
@@ -20,12 +20,7 @@ const mapDispatchToProps = dispatch =>
 
 class Fast extends Component {
   componentDidMount() {
-    window.addEventListener("contextmenu", this.setupcontextmenu, false);
     this.props.GetAvailaleCoins();
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
   componentDidUpdate(prevProps) {
@@ -51,14 +46,6 @@ class Fast extends Component {
         this.props.toggleWithinBounds();
       }
     }
-  }
-
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   transferCalculator() {
@@ -116,21 +103,32 @@ class Fast extends Component {
                 </div>
               </div>
             </div>
-            {this.props.withinBounds && (
-              <button
-                className="button primary hero"
-                onClick={() => {
-                  this.executeTrade();
-                }}
-              >
-                EXECUTE TRADE
-              </button>
-            )}
+            {this.buttonOrNoButton()}
           </div>
         );
       } else {
         return <h1>That pair is temporarily unavailable for trades.</h1>;
       }
+    } else return null;
+  }
+
+  buttonOrNoButton() {
+    if (
+      true
+      // this.props.withinBounds &&
+      // this.props.toAddress &&
+      // this.props.refundAddress
+    ) {
+      return (
+        <button
+          className="button primary hero"
+          onClick={() => {
+            this.executeTrade();
+          }}
+        >
+          EXECUTE TRADE
+        </button>
+      );
     } else return null;
   }
 
@@ -189,13 +187,52 @@ class Fast extends Component {
 
   executeTrade() {
     // if (this.props.loggedIn && this.props.from === "NXS") {
+    console.log("transaction");
     if (this.props.withinBounds) {
       let pair = this.props.from + "_" + this.props.to;
-      this.props.executeFastTrade(
-        pair,
-        this.props.toAddress,
-        this.props.refundAddress
-      );
+      if (this.props.toAddress !== "") {
+        if (this.props.refundAddress !== "") {
+          Request(
+            {
+              method: "GET",
+              url: `https://shapeshift.io/validateAddress/${
+                this.props.toAddress
+              }/${this.props.to}`
+            },
+            (error, response, body) => {
+              if (response.statusCode === 200) {
+                let res = JSON.parse(response.body);
+                if (!res.isvalid) {
+                  alert(`${res.error}\n ${this.props.to} Address.`);
+                } else {
+                  Request(
+                    {
+                      method: "GET",
+                      url: `https://shapeshift.io/validateAddress/${
+                        this.props.refundAddress
+                      }/${this.props.from}`
+                    },
+                    (error, response, body) => {
+                      if (response.statusCode === 200) {
+                        let res = JSON.parse(response.body);
+                        if (!res.isvalid) {
+                          alert(`${res.error}\n ${this.props.from} Address.`);
+                        } else {
+                          this.props.InitiateFastTransaction(
+                            this.props.toAddress,
+                            this.props.refundAddress,
+                            pair
+                          );
+                        }
+                      }
+                    }
+                  );
+                }
+              }
+            }
+          );
+        } else alert("Refund Address is required");
+      } else alert(`${this.currencylabel()} Address is required`);
     } else alert("Outside trade-able ammounts");
     // } else alert("Please unlock your wallet");
   }

@@ -61,7 +61,7 @@ export default class TerminalConsole extends Component {
     /// This is not a RPC command, so catch this input and clear the console
     if (this.state.currentInput.toLowerCase() == "clear") {
       this.resetnexusrpcconsole();
-      this.state.inputfield.value = ""; 
+      this.state.inputfield.value = "";
       return;
     }
     /// remove the command inputed
@@ -69,7 +69,7 @@ export default class TerminalConsole extends Component {
 
     /// Get the old console output so we can concat on it.
     let tempConsoleOutput = [...this.state.consoleoutput];
-  
+
     /// Split the input so that we can get the command and the arguments. THIS MIGHT BE AN ISSUE as I am just checking the US keyboard space
     let splitInput = this.state.currentInput.split(" ");
 
@@ -91,7 +91,7 @@ export default class TerminalConsole extends Component {
       }
       RPCArguments.push(element);
     }
-   
+
     /// Execute the command with the given args
     RPC.PROMISE(splitInput[0], RPCArguments)
       .then(payload => {
@@ -147,7 +147,7 @@ export default class TerminalConsole extends Component {
       })
       .catch(error => {
         /// If there is an error then return that error message and place it in the output.
-        
+
         tempConsoleOutput.push(error);
         this.setState({
           consoleoutput: tempConsoleOutput,
@@ -174,10 +174,8 @@ export default class TerminalConsole extends Component {
 
   /// Handle arrow key press
   /// Handles what happens when the user presses arrow keys for the auto complete
-  handleAutocompleteArrowKeyPress = (e) => {
-    ///NOT WORKING COME BACK TO THIS 
-
-
+  handleAutocompleteArrowKeyPress = e => {
+    ///NOT WORKING COME BACK TO THIS
     /*
     console.log(this.state.currentInput);
     console.log(e.target.value);
@@ -229,80 +227,60 @@ export default class TerminalConsole extends Component {
 
   /// On Input Field Change
   /// What happens when the value of the inputfield changes
-  onInputfieldChange = (e) =>
-  {
+  onInputfieldChange = e => {
     this.inputfield = e.target;
     this.setState(
       {
         currentInput: e.target.value
-      }, () => this.returnAutocomplete() );
-      
-  }
+      },
+      () => this.returnAutocomplete()
+    );
+  };
 
   /// On Auto Complete Click
   /// What happens when you click on an auto complete link
-  onAutoCompleteClick(inItem)
-  {
+  onAutoCompleteClick(inItem) {
     const inputRef = this.state.inputfield;
     inputRef.focus();
-    this.setState(
-      {
-        currentInput:inItem,
-        autoComplete: []
-      }
-    );
+    this.setState({
+      currentInput: inItem,
+      autoComplete: []
+    });
   }
 
   /// Return Auto Complete
   /// Returns the list of commands that should be displayed for the auto complete section
-  returnAutocomplete()
-  {
-  
-
+  returnAutocomplete() {
     const CommandList = this.state.commandList;
     const CurrentInput = this.state.currentInput;
     let tempCompandList = [];
 
-    ///Just incase 
-    if (CurrentInput == "")
-    {
-      this.setState(
-        {
-          autoComplete: []
-        }
-      );
+    ///Just incase
+    if (CurrentInput == "") {
+      this.setState({
+        autoComplete: []
+      });
       return;
     }
 
-
     CommandList.forEach(element => {
-        if ( element.startsWith(CurrentInput))
-        {
-          tempCompandList.push(element);
-        }
-    });
-  };
-
-
-
-    this.setState(
-      {
-        autoComplete: tempAutoComplete
+      if (element.startsWith(CurrentInput)) {
+        tempCompandList.push(element);
       }
-    );
+    });
+
+    this.setState({
+      autoComplete: tempAutoComplete
+    });
   }
 
   /// Remove Auto Complete Div
   /// Removes all divs from the array
-  removeAutoCompleteDiv = (e) =>
-  {
-    this.setState(
-      {
-        autoComplete: []
-      }
-    );
-  }
-
+  removeAutoCompleteDiv = e => {
+    this.setState({
+      autoComplete: []
+    });
+  };
 
   render() {
     return (

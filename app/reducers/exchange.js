@@ -11,7 +11,10 @@ const initialState = {
   withinBounds: false,
   marketPairData: {},
   quote: null,
-  greenLight: false
+  greenLight: false,
+  transaction: {},
+  transactionModalFlag: false,
+  email: ""
 };
 
 export default (state = initialState, action) => {
@@ -89,6 +92,34 @@ export default (state = initialState, action) => {
         greenLight: action.payload
       };
       break;
+    case TYPE.CLEAR_QUOTE:
+      return {
+        ...state,
+        greenLight: false,
+        quote: null
+      };
+      break;
+    case TYPE.TRANSACTION_MODAL_ACTIVATE:
+      return {
+        ...state,
+        transaction: { ...action.payload },
+        transactionModalFlag: true
+      };
+      break;
+    case TYPE.CLEAR_TRANSACTION:
+      return {
+        ...state,
+        transaction: {},
+        transactionModalFlag: false
+      };
+      break;
+    case TYPE.SET_EMAIL:
+      return {
+        ...state,
+        email: action.payload
+      };
+      break;
+
     default:
       return state;
   }

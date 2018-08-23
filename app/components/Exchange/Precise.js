@@ -8,7 +8,7 @@ import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 
-import arrow from "../../images/arrow.png";
+import arrow from "../../images/arrow.svg";
 import * as actionsCreators from "../../actions/exchangeActionCreators";
 
 const mapStateToProps = state => {
@@ -20,12 +20,7 @@ const mapDispatchToProps = dispatch =>
 
 class Precise extends Component {
   componentDidMount() {
-    window.addEventListener("contextmenu", this.setupcontextmenu, false);
     this.props.GetAvailaleCoins();
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
   componentDidUpdate(prevProps) {
@@ -51,14 +46,6 @@ class Precise extends Component {
         this.props.toggleWithinBounds();
       }
     }
-  }
-
-  setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   transferCalculator() {
@@ -112,6 +99,9 @@ class Precise extends Component {
   ammountHandler(value) {
     if (/^[0-9.]+$/.test(value) | (value === "")) {
       this.props.ammountUpdater(value);
+      if (this.props.greenLight) {
+        this.props.clearQuote();
+      }
     } else {
       return null;
     }
@@ -143,7 +133,51 @@ class Precise extends Component {
   }
 
   executeTransaction() {
-    console.log("execute");
+    let pair = this.props.from + "_" + this.props.to;
+    if (this.props.toAddress !== "") {
+      if (this.props.refundAddress !== "") {
+        Request(
+          {
+            method: "GET",
+            url: `https://shapeshift.io/validateAddress/${
+              this.props.toAddress
+            }/${this.props.to}`
+          },
+          (error, response, body) => {
+            if (response.statusCode === 200) {
+              let res = JSON.parse(response.body);
+              if (!res.isvalid) {
+                alert(`${res.error}\n ${this.props.to} Address.`);
+              } else {
+                Request(
+                  {
+                    method: "GET",
+                    url: `https://shapeshift.io/validateAddress/${
+                      this.props.refundAddress
+                    }/${this.props.from}`
+                  },
+                  (error, response, body) => {
+                    if (response.statusCode === 200) {
+                      let res = JSON.parse(response.body);
+                      if (!res.isvalid) {
+                        alert(`${res.error}\n ${this.props.from} Address.`);
+                      } else {
+                        this.props.InitiateQuotedTransaction(
+                          pair,
+                          this.props.ammount,
+                          this.props.toAddress,
+                          this.props.refundAddress
+                        );
+                      }
+                    }
+                  }
+                );
+              }
+            }
+          }
+        );
+      } else alert("Refund Address is required");
+    } else alert(`${this.currencylabel()} Address is required`);
   }
 
   buttonSwitcher() {
