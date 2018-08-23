@@ -11,6 +11,8 @@ import Modal from 'react-responsive-modal';
 import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer} from 'victory';
 //import Analytics from "../../script/googleanalytics";
 
+import transactionsimg from "../../images/transactions.svg";
+
 import ContextMenuBuilder from "../../contextmenu";
 
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
@@ -1493,7 +1495,7 @@ class Transactions extends Component {
 
         </Modal>
 
-        <h2>Transactions</h2>
+        <h2><img src={transactionsimg} className="hdr-img"/>Transactions</h2>
 
         <div className="panel">
 

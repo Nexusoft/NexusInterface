@@ -15,6 +15,9 @@ import ContextMenuBuilder from "../../contextmenu";
 
 import styles from "./style.css";
 
+// import images here
+import addressbookimg from "../../images/addressbook.svg";
+
 var psudoState = null;
 
 const mapStateToProps = state => {
@@ -714,7 +717,7 @@ class Addressbook extends Component {
 
       <div id="addressbook" className="animated fadeIn">
 
-        <h2>Address Book</h2>
+        <h2><img src={addressbookimg} className="hdr-img"/>Address Book</h2>
 
         <a className="refresh" onClick={() => this.exportAddressBook()}>Export Contacts</a>
 

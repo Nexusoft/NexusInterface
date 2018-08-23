@@ -10,6 +10,9 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
 
+// import images here
+import sendimg from "../../images/send.svg";
+
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -292,7 +295,7 @@ class SendRecieve extends Component {
     }
     return (
       <div id="sendrecieve" className="animated fadeIn">
-        <h2>Send Nexus </h2>
+        <h2><img src={sendimg} className="hdr-img"/>Send Nexus</h2>
         <div className="panel">
           <div id="container">
             <div className="box1">
