@@ -6,6 +6,7 @@ import Modal from 'react-responsive-modal';
 
 import config from "../../api/configuration";
 import * as RPC from "../../script/rpc";
+import * as TYPE from "../../actions/actiontypes";
 
 import MyAddresses from "./MyAddresses";
 import ContactList from "./ContactList";
@@ -18,13 +19,60 @@ import styles from "./style.css";
 var psudoState = null;
 
 const mapStateToProps = state => {
-  return { ...state.common };
+  return { ...state.common, ...state.addressbook };
 };
 
-const mapDispatchToProps = dispatch => ({});
+// we will use the dispatch to push data into this page.
+/* CRUD -> Create, {inherent Read}, Update, Delete
+We are probably going to create an action creator file for this.
+dispatch 1: add new address
+dispatch 2: edit existing address
+dispatch 3: edit phone number
+dispatch 4: edit notes
+dispatch 5: edit name // Not MVP
+dispatch 6: edit label for address
+dispatch 7: edit timezone
+dispatch 8: delete contact
+dispatch 9: delete contact address
+dispatch 10: load addressbook (probably out at the app level.)
+***** IF you add more don't forget to add actiontypes. *******
+## MORE... Not done yet
+dispatch 11: map myaddresses to accounts via label
+*/
+const mapDispatchToProps = dispatch => ({
+  addNewAddress: (contact, label, address)=> {
+    dispatch({type:TYPE.ADD_NEW_ADDRESS, payload: {contact:contact , label:label, address:address}})
+  },
+  editExistingAddress: (contact, label, newaddress)=> {
+    dispatch({type:TYPE.EDIT_ADDRESS, payload: {contact:contact , label:label, newaddress:newaddress}})
+  },
+  editPhoneNumber: (contact, phone)=> {
+    dispatch({type:TYPE.EDIT_PHONE, payload: {contact:contact , phone:phone}})
+  },
+  editContactNotes: (contact, notes)=> {
+    dispatch({type:TYPE.EDIT_NOTES, payload: {contact:contact , notes:notes}})
+  },
+  editContactName: (contact, name, newname)=> {
+    dispatch({type:TYPE.EDIT_ADDRESS, payload: {contact:contact , name:name, newname:newname}})
+  },
+  editAddressLabel: (contact, label, address)=> {
+    dispatch({type:TYPE.EDIT_ADDRESS_LABEL, payload: {contact:contact , label:label,  address:address}})
+  },
+  editContactTimezone: (contact, timezone)=> {
+    dispatch({type:TYPE.EDIT_TIMEZONE, payload: {contact:contact , timezone:timezone}})
+  },
+  deleteContact: (contact)=> {
+    dispatch({type:TYPE.DELETE_CONTACT, payload: {contact:contact}})
+  },
+  deleteContactAddress: (contact, label, address)=> {
+    dispatch({type:TYPE.DELETE_ADDRESS_FROM_CONTACT, payload: {contact:contact , label:label, address:address}})
+  }
+});
 
 class Addressbook extends Component {
-
+  // Now that we have added the action creator above for addnewaddress we can use it.
+  // this.props.addnewaddress(newaddress)
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // build() 
   // {
   //   if (this.props.contacts) {
@@ -73,33 +121,95 @@ class Addressbook extends Component {
   //     </div>
   //   );
   // }
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+// From myaddresses.js
+/*
+  buildmyaddresses() 
+  {
+    return Object.keys(this.props.contacts["myAccount"].mine).map(function(item, i){
+      return (
+        <tr className="contact-address">
+          <td>{item}</td>
+          <td className="address" key={i} data-address={this.props.contacts["myAccount"].mine[item]} onClick={this.copyaddress}>
+            {this.props.contacts["myAccount"].mine[item]}
+            <div className="tooltip left">Click to copy</div>
+          </td>
+        </tr>
+      )
+    }.bind(this));
+  }
+  
+  copyaddress(event) 
+  {
+    event.preventDefault();
+    let target = event.currentTarget;
+    let address = target.dataset.address;
+    // create a temporary input element and add it to the list item (no one will see it)
+    let input = document.createElement("input");
+    input.type = "text";
+    target.appendChild(input);
+    // set the value of the input to the selected address, then focus and select it
+    input.value = address;
+    input.focus();
+    input.select();
+    // copy it to clipboard
+    document.execCommand("Copy", false, null);
+    // remove the temporary element from the DOM
+    input.remove();
+    target.classList.add("copied");
+    setTimeout(function() {
+      target.classList.remove("copied");
+    }, 5000);
+  }
 
+  add = () => {
+    this.props.onAddReceiveAddress(this.refs.addReceiveAddressLabel.value);
+  }
+
+  close = () => {
+    this.props.onClose();
+  }
+
+  render() {
+    if (!this.props.show || this.props.contacts === null)
+    {
+      return null;
+    }
+    return (
+      <Modal 
+      open={this.props.show} 
+      onClose={this.close} 
+      center 
+      classNames={{ modal: 'modal addressbook-add-receive-addr-modal' }}>
+        <div id="addressbook-my-addresses">
+          <h3>
+            My Addresses
+          </h3>
+          <div id="addressbook-my-addresses-inputs">
+            <input ref="addReceiveAddressLabel" autoFocus type="text" placeholder="Label for new address"/>
+            <button className="button primary" onClick={this.add}>Add Address</button>
+          </div>
+          <div id="my-addresses-list">
+            <table>
+              <thead>
+                <th>Label</th>
+                <th>Address</th>
+              </thead>
+              <tbody>
+                {this.buildmyaddresses()}
+              </tbody>
+            </table>
+          </div>
+          <button className="button" onClick={this.close}>Close</button>
+        </div>
+      </Modal>
+    );
+  }
+*/
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
   static contextTypes = {
     router: React.PropTypes.object
   };
-
-  // The following constructor is bad code practice because you either want
-  // to have the react-redux or the static constructor. not both.
-  // TODO: Remove this comment after we document basics.
-  // constructor(props)
-  // {
-  //   super(props);
-
-  //   this.state =
-  //   {
-  //     hoveredover: false,
-
-  //     contacts: null,
-  //     selectedContact: null,
-  //     showMyAddresses: false,
-  //     showAddContact: false,
-  //     showViewContact: false,
-  //     showEditContact: false,
-  //     addError: null
-  //   };
-  // }
-
 
   // TODO: read the json file at app start so it can be put into state.
     // readAddressBook: Read the addressbook.json file and return the contents as an object, if it doesn't exist initialize the file
@@ -149,76 +259,47 @@ class Addressbook extends Component {
   {
     if (ResponseObject.readyState != 4)
       return;
-
     if (ResponseObject.status == 200)
     {
       let getAddressesPromises = [];
-      
       psudoState = this.readAddressBook();
-
       let results = JSON.parse(ResponseObject.responseText).result;
-
-      // if (psudoState === null)
       if (psudoState.length === 0)
       {
         psudoState = Object.assign(psudoState, results);
       }
-
       let accounts = Object.keys(results);
-
       for (let i = 0; i < accounts.length; i++) 
       {
-        // let account = accounts[i];
         getAddressesPromises.push(RPC.PROMISE("getaddressesbyaccount", [accounts[i]]));
       }
-
       Promise.all(getAddressesPromises).then(this.processAddresses);
     }
   }
 
-  //
   // processAddresses: Process addresses that get returned from getaddressesbyaccount call to the core
-  //
-
   processAddresses = (payload) => {
-  
     let validateAddressPromises = [];
-
     payload.map(element => {
-
       element.addresses.map(address => {
         validateAddressPromises.push(RPC.PROMISE("validateaddress", [address]));
       });
-
     });
-
     Promise.all(validateAddressPromises).then(this.processValidatedAddresses);
-
   }
 
-  //
   // processValidatedAddresses: Process validated addresses returned from validateaddress call to the core, then save the addressbook and set the default contact
-  //
-
   processValidatedAddresses = (payload) => {
-
       payload.map(this.processValidatedAddress);
-
       this.saveAddressBook(psudoState);
-
   }
 
-  //
   // processValidatedAddress: Process a validated address returned from validateaddress call to the core
-  //
-
   processValidatedAddress = (e, i) => {
-
       if (e.ismine)
       {
         if (typeof psudoState[e.account] !== "object")
         {
-
           psudoState[e.account] = {
             // numAddreses: 0,
             mine: {},
@@ -227,31 +308,25 @@ class Addressbook extends Component {
             timeZone: null,
             notes: null
           };
-
         }
-
         if (e.isvalid)
         {
           if (psudoState[e.account] || psudoState[e.account] === "myAccount")
           {
             if (!Object.values(psudoState[e.account].mine).includes(e.address))
             {
-
               psudoState[e.account].mine = Object.assign(
                 psudoState[e.account].mine,
                 { [i]: e.address }
               );
-
             }
           }
         }
       }
       else
       {
-
         if (typeof psudoState[e.account] !== "object")
         {
-
           psudoState[e.account] = {
             mine: {},
             notMine: {},
@@ -259,157 +334,106 @@ class Addressbook extends Component {
             timeZone: null,
             notes: null
           };
-
         }
-
         if (e.isvalid) {
           if (psudoState[e.account] || psudoState[e.account] === "")
           {
             if (!Object.values(psudoState[e.account].notMine).includes(e.address))
             {
-
               psudoState[e.account].notMine = Object.assign(
                 psudoState[e.account].notMine,
                 { [i]: e.address }
               );
-
             }
           }
         }
       }
   }
 
-  //
   // setContact: set a contact as the selectedContact, then set state to show the contact
-  //
-
   setContact = (index) => {
-
     let name = Object.keys(this.state.contacts)[index];
     let contact = {name: name, index: index, ...this.state.contacts[name]};
-
     this.setState({
       selectedContact: contact,
       showViewContact: true,
       showEditContact: false
     });
-
   };
 
-  //
   // showMyAddresses: show the my addresses modal
-  //
-
   showMyAddresses = () => {
-
     this.setState(
       {
         showMyAddresses: true
       }
     );
-
   }
 
-  //
   // showAddContact: show the add contact modal
-  //
-
   showAddContact = () => {
-
     this.setState(
       {
         showAddContact: true
       }
     );
-
   }
 
-  //
   // showEditContact: hide the view and show the edit contact screen
-  //
-
   showEditContact = () => {
-
     this.setState(
       {
         showViewContact: false,
         showEditContact: true
       }
     );
-
   }
 
-
-  //
   // closeViewContact: close the add contact modal
-  //
-
   closeViewContact = () => {
-
     this.setState(
       {
         showViewContact: false
       }
     );
-
   }
 
-  //
   // closeMyAddresses: close the my addresses modal
-  //
-
   closeMyAddresses = () => {
-    
     this.setState(
       {
         showMyAddresses: false
       }
     );
-
   }
 
-  //
   // closeAddContact: close the add contact modal
-  //
-
   closeAddContact = () => {
-    
     this.setState(
       {
         showAddContact: false,
         addError: null
       }
     );
-
   }
 
-  //
   // cancelEditContact: cancel editing the contact and return to the view screen
-  //
-
   cancelEditContact = () => {
-
     this.setState(
       {
         showViewContact: true,
         showEditContact: false
       }
     );
-
   }
 
-  //
   // addContact: add a new contact
-  //
-
   addContact = () => {
-    
     let name = document.getElementById("new-account-name").value;
     let phone = document.getElementById("new-account-phone").value;
     let timezone = JSON.parse(document.getElementById("new-account-timezone").value);
     let address = document.getElementById("new-account-address").value;
     let notes = document.getElementById("new-account-notes").value;
-
     // Validate the name is not blank
     if (name.trim() === "")
     {
@@ -420,17 +444,13 @@ class Addressbook extends Component {
       );
       return;
     }
-
     // Validate that the address is a valid address
     RPC.PROMISE("validateaddress", [address])
       .then(payload => {
-
         // Add the address to the account
         RPC.PROMISE("setaccount", [address, name])
           .then(success => {
-
             let newState = {...this.state.contacts};
-
             newState[name] = {
               mine: {},
               notMine: {
@@ -440,43 +460,29 @@ class Addressbook extends Component {
               timeZone: timezone,
               notes: notes.trim()
             };
-
             this.saveAddressBook(newState);
-
             this.closeAddContact();
-
           })
           .catch(e => {
-
             this.setState(
               {
                 addError: "Error adding address to the account: " + e
               }
             );
-
           });
-
       })
       .catch(e => {
-
         this.setState(
           {
             addError: "Please enter a valid Nexus address"
           }
         );
-
       });
-
   }
 
-  //
   // updateContact: called when the edit contact process is complete, find and update the contact in the state and save it to disk then go back to the view contact page
-  //
-
   updateContact = (contact) => {
-
     let newState = {...this.state.contacts};
-
     let updatedContact = {
       mine: contact.mine,
       notMine: contact.notMine,
@@ -484,79 +490,49 @@ class Addressbook extends Component {
       timeZone: contact.timeZone,
       notes: contact.notes
     };
-
     if (contact.newNotMine)
     {
-
       Object.keys(contact.newNotMine).map(function(item, index)
       {
-
         updatedContact.notMine[item] = contact.newNotMine[item];
-
         //TODO: Right now we fire and forget the setaccount, the logic needs to be reorganized to make sure it only adds the contact if the call is successful. If the item is added to the new contact in the call it won't appear in the contact due to the async call
-
         RPC.PROMISE("setaccount", [contact.newNotMine[item], contact.name])
         .then(success => {
-
           console.log("Contact added");
-
         });
-
       });
-      
       delete contact.newNotMine; // prevents bug where same contact is edited twice and addresses get duplicated
-
     }
-
     newState[contact.name] = updatedContact;
-
     this.saveAddressBook(newState);
-
     this.setState(
       {
         showViewContact: true,
         showEditContact: false
       }
     );
-
   }
 
-  //
   // addReceiveAddress: add a new receive address for the wallet, these show in My Addresses
-  //
-
   addReceiveAddress = (label) => {
-
     // Get a new address, if an account is provided the new address will be a receive address 
     // for that account, so transactions recieved at that address will be associated with the account
-
     //TODO: Do we need the "" 
     RPC.PROMISE("getnewaddress", [""])
       .then(payload => {
-
         // Copy the old state to a new object and get a new receive address key
         let newState = {...this.state.contacts};
-
         let newAddressKey = label === "" ? Object.keys(newState[""].mine).length : label;
-
         // Add new address to receive address list with new key
         newState[""].mine[newAddressKey] = payload;
-
         this.saveAddressBook(newState);
-
       });
-
   }
 
-  //
   // exportAddressBook: Export the address book to CSV format
-  //
-
   exportAddressBook()
   {
-
     const rows = []; //Set up a blank array for each row
-
     //This is so we can have named columns in the export, this will be row 1
     let NameEntry = [
       "Account Name",
@@ -567,7 +543,6 @@ class Addressbook extends Component {
       "Notes"
     ];
     rows.push(NameEntry);
-
     for (let account in this.state.contacts) {
       let accountname = "";
       // let mine = Array.from(psudoState[account].mine);
@@ -579,131 +554,129 @@ class Addressbook extends Component {
           return [key, this.state.contacts[account].notMine[key]];
         }
       );
-
       if (account === "") {
         accountname = "Receive Addresses";
       } else {
         accountname = account;
       }
-
       let timezone = "";
       switch (this.state.contacts[account].timeZone) {
         case 0:
-          timezone = "London";
+          timezone = "(UTC + 0.00hr)";
           break;
         case -60:
-          timezone = "Cabo Verde";
+          timezone = "(UTC - 1.00hr)";
           break;
         case -120:
-          timezone = "Fernando de Noronha";
+          timezone = "(UTC - 2.00hr)";
           break;
         case -180:
-          timezone = "Buenos Aires";
+          timezone = "(UTC - 3.00hr)";
           break;
         case -210:
-          timezone = "Newfoundland";
+          timezone = "(UTC - 3.50hr)";
           break;
         case -240:
-          timezone = "Santiago";
+          timezone = "(UTC - 4.00hr)";
           break;
         case -300:
-          timezone = "New York";
+          timezone = "(UTC - 5.00hr)";
           break;
         case -360:
-          timezone = "Chicago";
+          timezone = "(UTC - 6.00hr)";
           break;
         case -420:
-          timezone = "Phoenix";
+          timezone = "(UTC - 7.00hr)";
           break;
         case -480:
-          timezone = "Los Angeles";
+          timezone = "(UTC - 8.00hr)";
           break;
         case -540:
-          timezone = "Anchorage";
+          timezone = "(UTC - 9.00hr)";
           break;
         case -570:
-          timezone = "Marquesas Islands";
+          timezone = "(UTC - 9.50hr)";
           break;
         case -600:
-          timezone = "Papeete";
+          timezone = "(UTC - 10.00hr)";
           break;
         case -660:
-          timezone = "Niue";
+          timezone = "(UTC - 11.00hr)";
           break;
         case -720:
-          timezone = "Baker Island";
+          timezone = "(UTC - 12.00hr)";
           break;
         case 840:
-          timezone = "Line Islands";
+          timezone = "(UTC + 14.00hr)";
           break;
         case 780:
-          timezone = "Apia";
+          timezone = "(UTC + 13.00hr)";
           break;
         case 765:
-          timezone = "Chatham Islands";
+          timezone = "(UTC + 12.75hr)";
           break;
         case 720:
-          timezone = "Auckland";
+          timezone = "(UTC + 12.00hr)";
           break;
         case 660:
-          timezone = "Noumea";
+          timezone = "(UTC + 11.00hr)";
           break;
         case 630:
-          timezone = "Lord Howe Island";
+          timezone = "(UTC + 10.50hr)";
           break;
         case 600:
-          timezone = "Port Moresby";
+          timezone = "(UTC + 10.00hr)";
           break;
         case 570:
-          timezone = "Adelaide";
+          timezone = "(UTC + 9.50hr)";
           break;
         case 540:
-          timezone = "Tokyo";
+          timezone = "(UTC + 9.00hr)";
           break;
         case 525:
-          timezone = "Eucla";
+          timezone = "(UTC + 8.75hr)";
           break;
         case 510:
-          timezone = "Pyongyang";
+          timezone = "(UTC + 8.50hr)";
           break;
         case 480:
-          timezone = "Beijing";
+          timezone = "(UTC + 8.00hr)";
           break;
         case 420:
-          timezone = "Bangkok";
+          timezone = "(UTC + 7.00hr)";
           break;
         case 390:
-          timezone = "Yangon";
+          timezone = "(UTC + 6.50hr)";
           break;
         case 360:
-          timezone = "Almaty";
+          timezone = "(UTC + 6.00hr)";
           break;
         case 345:
-          timezone = "Kathmandu";
+          timezone = "(UTC + 5.75hr)";
           break;
         case 330:
-          timezone = "Delhi";
+          timezone = "(UTC + 5.50hr)";
           break;
         case 300:
-          timezone = "Karachi";
+          timezone = "(UTC + 5.00hr)";
           break;
         case 270:
-          timezone = "Kabul";
+          timezone = "(UTC + 4.50hr)";
           break;
         case 240:
-          timezone = "Dubai";
+          timezone = "(UTC + 4.00hr)";
           break;
         case 210:
-          timezone = "Tehran";
+          timezone = "(UTC + 3.50hr)";
           break;
         case 180:
-          timezone = "Moscow";
+          timezone = "(UTC + 3.00hr)";
           break;
         case 120:
-          timezone = "Athens";
+          timezone = "(UTC + 2.00hr)";
           break;
         case 60:
-          timezone = "Berlin";
+          timezone = "(UTC + 1.00hr)";
           break;
         default:
           timezone = this.state.contacts[account].timeZone;
@@ -744,116 +717,90 @@ class Addressbook extends Component {
     let link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "nexus-addressbook.csv"); //give link an action and a default name for the file. MUST BE .csv
-
     document.body.appendChild(link); // Required for FF
-
     link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
   }
 
-  //
   // render: render the component
-  //
-
   render() {
-
     return (
-
       <div id="addressbook">
-
         <h2>Address Book</h2>
-
         <a className="refresh" onClick={() => this.exportAddressBook()}>Export Contacts</a>
-
         <div className="panel">
-
           <div id="addressbook-controls">
             <div id="addressbook-search">
             </div>
             <button className="button ghost" onClick={this.showMyAddresses}>My Addresses</button>
             <button className="button primary" onClick={this.showAddContact}>Add Contact</button>
           </div>
-
-          <ContactList
-            contacts={this.state.contacts}
-            onSelect={this.setContact} />
-
-          <MyAddresses 
-            show={this.state.showMyAddresses}
-            onClose={this.closeMyAddresses}
-            contacts={this.state.contacts}
-            onAddReceiveAddress={this.addReceiveAddress} />
-
           <ContactView 
             show={this.state.showViewContact}
             onClose={this.closeViewContact}
             contact={this.state.selectedContact}
             onUpdate={this.updateContact}
             onEdit={this.showEditContact}/>
-
           <Modal 
             open={this.state.showAddContact} 
             onClose={this.closeAddContact} 
             center 
             classNames={{ modal: 'modal addressbook-add-contact-modal' }}>
-
             <h2 >Add Contact</h2>
-
             <FormError error={this.state.addError}/>
-
             <div className="field">
               <label htmlFor="new-account-name">Name</label>
               <input ref="addContactName" id="new-account-name" type="text" placeholder="Name" required/>
             </div>
-
             <div className="field">
               <label htmlFor="new-account-name">Phone #</label>
               <input id="new-account-phone" type="tel" placeholder="Phone #" />
             </div>
-
-            <div className="field">
-              <label htmlFor="new-account-timezone">Time Zone</label>
-              <select id="new-account-timezone">
-                <option value="0">London, Casablanca, Accra</option>
-                <option value="-60">Cabo Verde, Ittoqqortoormiit, Azores Islands</option>
-                <option value="-120">Fernando de Noronha, South Sandwich Islands</option>
-                <option value="-180">Buenos Aires, Montevideo, São Paulo</option>
-                <option value="-210">St. John's, Labrador, Newfoundland</option>
-                <option value="-240">Santiago, La Paz, Halifax</option>
-                <option value="-300">New York, Lima, Toronto</option>
-                <option value="-360">Chicago, Guatemala City, Mexico City</option>
-                <option value="-420">Phoenix, Calgary, Ciudad Juárez</option>
-                <option value="-480">Los Angeles, Vancouver, Tijuana</option>
-                <option value="-540">Anchorage</option>
-                <option value="-570">Marquesas Islands</option>
-                <option value="-600">Papeete, Honolulu</option>
-                <option value="-660">Niue, Jarvis Island, American Samoa</option>
-                <option value="-720">Baker Island, Howland Island</option>
-                <option value="840">Line Islands</option>
-                <option value="780">Apia, Nukuʻalofa</option>
-                <option value="765">Chatham Islands</option>
-                <option value="720">Auckland, Suva</option>
-                <option value="660">Noumea, Federated States of Micronesia</option>
-                <option value="630">Lord Howe Island</option>
-                <option value="600">Port Moresby, Sydney, Vladivostok</option>
-                <option value="570">Adelaide</option>
-                <option value="540">Seoul, Tokyo, Yakutsk</option>
-                <option value="525">Eucla</option>
-                <option value="510">Pyongyang</option>
-                <option value="480">Beijing, Singapore, Manila</option>
-                <option value="420">Jakarta, Bangkok, Ho Chi Minh City</option>
-                <option value="390">Yangon</option>
-                <option value="360">Almaty, Dhaka, Omsk</option>
-                <option value="345">Kathmandu</option>
-                <option value="330">Delhi, Colombo</option>
-                <option value="300">Karachi, Tashkent, Yekaterinburg</option>
-                <option value="270">Kabul</option>
-                <option value="240">Baku, Dubai, Samara</option>
-                <option value="210">Tehran</option>
-                <option value="180">Istanbul, Moscow, Nairobi</option>
-                <option value="120">Athens, Cairo, Johannesburg</option>
-                <option value="60">Berlin, Lagos, Madrid</option>
-              </select>
-            </div>
+            <div className="contact-detail">
+                <label>Local Time</label>
+                <span>
+                  <select ref="editTimeZone" defaultValue={this.props.contact.timeZone}>
+                    <option value="0"> (UTC + 0.00 hr) London, Casablanca, Accra</option>
+                    <option value="-60">(UTC - 1.00 hr) Cabo Verde, Ittoqqortoormiit, Azores Islands</option>
+                    <option value="-120">(UTC - 2.00 hr) Fernando de Noronha, South Sandwich Islands</option>
+                    <option value="-180">(UTC - 3.00 hr) Buenos Aires, Montevideo, São Paulo</option>
+                    <option value="-210">(UTC - 3.50 hr) St. John's, Labrador, Newfoundland</option>
+                    <option value="-240">(UTC - 4.00 hr) Santiago, La Paz, Halifax</option>
+                    <option value="-300">(UTC - 5.00 hr) New York, Lima, Toronto</option>
+                    <option value="-360">(UTC - 6.00 hr) Chicago, Guatemala City, Mexico City</option>
+                    <option value="-420">(UTC - 7.00 hr) Phoenix, Calgary, Ciudad Juárez</option>
+                    <option value="-480">(UTC - 8.00 hr) Los Angeles, Vancouver, Tijuana</option>
+                    <option value="-540">(UTC - 9.00 hr) Anchorage</option>
+                    <option value="-570">(UTC - 9.50 hr) Marquesas Islands</option>
+                    <option value="-600">(UTC - 10.00 hr) Papeete, Honolulu</option>
+                    <option value="-660">(UTC - 11.00 hr) Niue, Jarvis Island, American Samoa</option>
+                    <option value="-720">(UTC - 12.00 hr) Baker Island, Howland Island</option>
+                    <option value="840">(UTC + 14.00 hr) Line Islands</option>
+                    <option value="780">(UTC + 13.00 hr) Apia, Nukuʻalofa</option>
+                    <option value="765">(UTC + 12.75 hr) Chatham Islands</option>
+                    <option value="720">(UTC + 12.00 hr) Auckland, Suva</option>
+                    <option value="660">(UTC + 11.00 hr) Noumea, Federated States of Micronesia</option>
+                    <option value="630">(UTC + 10.50 hr) Lord Howe Island</option>
+                    <option value="600">(UTC + 10.00 hr) Port Moresby, Sydney, Vladivostok</option>
+                    <option value="570">(UTC + 9.50 hr) Adelaide</option>
+                    <option value="540">(UTC + 9.00 hr) Seoul, Tokyo, Yakutsk</option>
+                    <option value="525">(UTC + 8.75 hr) Eucla</option>
+                    <option value="510">(UTC + 8.50 hr) Pyongyang</option>
+                    <option value="480">(UTC + 8.00 hr) Beijing, Singapore, Manila</option>
+                    <option value="420">(UTC + 7.00 hr) Jakarta, Bangkok, Ho Chi Minh City</option>
+                    <option value="390">(UTC + 6.50 hr) Yangon</option>
+                    <option value="360">(UTC + 6.00 hr) Almaty, Dhaka, Omsk</option>
+                    <option value="345">(UTC + 5.75 hr) Kathmandu</option>
+                    <option value="330">(UTC + 5.50 hr) Delhi, Colombo</option>
+                    <option value="300">(UTC + 5.00 hr) Karachi, Tashkent, Yekaterinburg</option>
+                    <option value="270">(UTC + 4.50 hr) Kabul</option>
+                    <option value="240">(UTC + 4.00 hr) Baku, Dubai, Samara</option>
+                    <option value="210">(UTC + 3.50 hr) Tehran</option>
+                    <option value="180">(UTC + 3.00 hr) Istanbul, Moscow, Nairobi</option>
+                    <option value="120">(UTC + 2.00 hr) Athens, Cairo, Johannesburg</option>
+                    <option value="60">(UTC + 1.00 hr) Berlin, Lagos, Madrid</option>
+                  </select>
+                </span>
+             </div>
 
             <div className="field">
               <label htmlFor="new-account-notes">Notes</label>

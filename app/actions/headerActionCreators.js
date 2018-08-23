@@ -43,3 +43,9 @@ export const SetGoogleAnalytics = returnData => {
     dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload: returnData });
   };
 };
+
+export const LoadAddressBook = returnData => {
+  return dispatch => {
+    dispatch({type:TYPE.LOAD_ADDRESS_BOOK, payload: returnData});
+  };
+};
