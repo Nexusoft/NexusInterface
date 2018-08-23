@@ -712,7 +712,7 @@ class Addressbook extends Component {
 
     return (
 
-      <div id="addressbook">
+      <div id="addressbook" className="animated fadeIn">
 
         <h2>Address Book</h2>
 

@@ -56,7 +56,7 @@ class Settings extends Component {
     }
 
     return (
-      <div id="settings">
+      <div id="settings" className="animated fadeIn">
         <div id="settings-container">
           <h2>Settings</h2>
 

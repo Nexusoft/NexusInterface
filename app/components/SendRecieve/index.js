@@ -291,7 +291,7 @@ class SendRecieve extends Component {
       this.props.SetSendAgainData(null);
     }
     return (
-      <div id="sendrecieve">
+      <div id="sendrecieve" className="animated fadeIn">
         <h2>Send Nexus </h2>
         <div className="panel">
           <div id="container">

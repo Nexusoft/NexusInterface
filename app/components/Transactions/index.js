@@ -1483,11 +1483,11 @@ class Transactions extends Component {
    
     return (
 
-      <div id="transactions">
+      <div id="transactions" className="animated fadeIn">
 
         <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'modal' }}>
 
-          <h2 >Transaction Details</h2>
+          <h2>Transaction Details</h2>
 
           {this.returnModalInternal()}
 

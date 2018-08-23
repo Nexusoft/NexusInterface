@@ -80,7 +80,7 @@ class List extends Component {
   render() {
     return (
 
-      <div id="trustlist">
+      <div id="trustlist" className="animated fadeIn">
 
         <h2>Trust List</h2>
 

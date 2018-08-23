@@ -24,7 +24,7 @@ export default class StyleGuide extends Component {
 
   render() {
     return (
-      <div id="styleguide">
+      <div id="styleguide" className="animated fadeIn">
         <h2>Style Guide</h2>
 
         <div className="panel">

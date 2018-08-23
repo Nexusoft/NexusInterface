@@ -45,7 +45,7 @@ class BlockExplorer extends Component {
     }
 
     return (
-      <div id="blockexplorer">
+      <div id="blockexplorer" className="animated fadeIn">
         <h2>Block Explorer</h2>
 
         <div className="panel" />

@@ -38,7 +38,7 @@ export default class Terminal extends Component {
     }
 
     return (
-      <div id="terminal">
+      <div id="terminal" className="animated fadeIn">
         <h2>Console</h2>
 
         <div className="panel">

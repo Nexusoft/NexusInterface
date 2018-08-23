@@ -357,7 +357,7 @@ class Market extends Component {
   }
   render() {
     return (
-      <div id="market">
+      <div id="market" className="animated fadeIn">
         <h2>Market Information</h2>
         <a className="refresh" onClick={() => this.refresher()}>
           Refresh Market Data

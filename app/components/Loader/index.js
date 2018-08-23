@@ -11,7 +11,7 @@ const mapDispatchToProps = dispatch => ({});
 class Loader extends Component {
   render() {
     return (
-        <div id="loader">
+        <div id="loader" className="animated fadeIn">
             <div id="orbit-container">
                 <div id="orbit">
                     <div id="orbit-cirlce"></div>
