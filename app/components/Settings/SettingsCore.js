@@ -502,7 +502,7 @@ export default class SettingsCore extends Component {
 
             <div className="field">
               <label htmlFor="socks4Proxy">Connect through SOCKS4 proxy</label>
-              <input id="socks4Proxy" type="checkbox" className="switch" onChange={this.updateSocks4Proxy} data-tooltip="Connect to Nexus through a SOCKS4 proxt (e.g. when connecting through Tor"/>
+              <input id="socks4Proxy" type="checkbox" className="switch" onChange={this.updateSocks4Proxy} data-tooltip="Connect to Nexus through a SOCKS4 proxy (e.g. when connecting through Tor)"/>
             </div>
 
             <div className="field">
@@ -517,7 +517,7 @@ export default class SettingsCore extends Component {
 
             <div className="field">
               <label htmlFor="detatchDatabaseOnShutdown">Detach database on shutdown</label>
-              <input id="detatchDatabaseOnShutdown" type="checkbox" className="switch" onChange={this.updateDetatchDatabaseOnShutdown} data-tooltip="Detatch the database when shutting down the wallet"/>
+              <input id="detatchDatabaseOnShutdown" type="checkbox" className="switch" onChange={this.updateDetatchDatabaseOnShutdown} data-tooltip="Detach the database when shutting down the wallet"/>
             </div>
 
             <div className="field">

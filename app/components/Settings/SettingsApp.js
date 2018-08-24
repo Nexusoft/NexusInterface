@@ -313,13 +313,13 @@ export default class SettingsApp extends Component {
           </div>
 
           <div className="field">
-            <label htmlFor="infopopup">Information Popups</label>
+            <label htmlFor="infopopup">Information Pop-ups</label>
             <input
               id="infopopup"
               type="checkbox"
               className="switch"
               onChange={this.updateInfoPopUp}
-              data-tooltip="Triggers Popups that display additional information"
+              data-tooltip="Triggers pop-ups that display additional information"
             />
           </div>
           
