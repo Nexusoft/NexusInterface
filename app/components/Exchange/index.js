@@ -57,8 +57,6 @@ class Exchange extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
-  //  1535059168231
-
   modalContents() {
     if (this.props.transaction.expiration) {
       console.log(this.props.transaction.expiration);
@@ -98,12 +96,12 @@ class Exchange extends Component {
             }}
           />
           <br /> <br />
-          <button
+          {/* <button
             className="button primary"
             onClick={() => this.cancelTransaction()}
           >
             Cancel Transaction
-          </button>
+          </button> */}
         </div>
       );
     } else {
@@ -127,8 +125,11 @@ class Exchange extends Component {
           Hold on to it, you might need it.
           <br />
           <br />
-          {this.props.email !== "" ? (
-            <button className="button primary" onClick={this.requestRecipt()}>
+          {/* {this.props.email !== "" ? (
+            <button
+              className="button primary"
+              onClick={() => this.requestRecipt()}
+            >
               Email Receipt?
             </button>
           ) : (
@@ -142,57 +143,58 @@ class Exchange extends Component {
             onClick={() => this.cancelTransaction()}
           >
             Cancel Transaction
-          </button>
+          </button> */}
         </div>
       );
     }
   }
 
-  cancelTransaction() {
-    console.log("cancel");
+  // cancelTransaction() {
+  //   console.log("cancel");
 
-    Request(
-      {
-        method: "POST",
-        url: "https://shapeshift.io/cancelpending",
-        json: {
-          address: this.props.transaction.depositAddress
-        }
-      },
-      (error, response, body) => {
-        console.log(response);
-        if (response.statusCode === 200) {
-          if (!response.body.error) {
-            console.log(response);
-          }
-        } else {
-          console.log(response);
-        }
-      }
-    );
-  }
+  //   Request(
+  //     {
+  //       method: "POST",
+  //       url: "https://shapeshift.io/cancelpending",
+  //       json: {
+  //         address: this.props.transaction.depositAddress
+  //       }
+  //     },
+  //     (error, response, body) => {
+  //       console.log(response);
+  //       if (response.statusCode === 200) {
+  //         if (!response.body.error) {
+  //           console.log(response);
+  //         }
+  //       } else {
+  //         console.log(response);
+  //       }
+  //     }
+  //   );
+  // }
 
-  requestRecipt() {
-    Request(
-      {
-        method: "POST",
-        url: "https://shapeshift.io/sendamount",
-        json: {
-          email: this.props.email,
-          orderId: this.props.transaction.orderId
-        }
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          if (!response.body.error) {
-            console.log(response);
-          }
-        } else {
-          console.log(response);
-        }
-      }
-    );
-  }
+  // requestRecipt() {
+  //   console.log("email", this.props.email);
+  //   Request(
+  //     {
+  //       method: "POST",
+  //       url: "https://shapeshift.io/mail",
+  //       json: {
+  //         email: this.props.email,
+  //         orderId: this.props.transaction.orderId
+  //       }
+  //     },
+  //     (error, response, body) => {
+  //       if (response.statusCode === 200) {
+  //         if (!response.body.error) {
+  //           console.log(response);
+  //         }
+  //       } else {
+  //         console.log(response);
+  //       }
+  //     }
+  //   );
+  // }
 
   render() {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)

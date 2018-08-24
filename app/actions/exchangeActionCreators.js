@@ -23,6 +23,12 @@ export const setBusyFlag = () => {
   };
 };
 
+export const ToggleAcyncButtons = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.TOGGLE_ACYNC_BUTTONS });
+  };
+};
+
 export const FromSetter = from => {
   return dispatch => {
     dispatch({ type: TYPE.FROM_SETTER, payload: from });
@@ -122,6 +128,7 @@ export const GetQuote = (pair, ammount, callback) => {
           if (!response.body.error) {
             dispatch({ type: TYPE.SET_QUOTE, payload: response.body.success });
             dispatch({ type: TYPE.GREENLIGHT_TRANSACTION, payload: true });
+            dispatch({ type: TYPE.TOGGLE_ACYNC_BUTTONS });
           }
         } else {
           console.log(response);
@@ -163,6 +170,9 @@ export const InitiateQuotedTransaction = (pair, ammount, toAdd, refundAdd) => {
               }
             });
           }
+        } else {
+          alert(response.statusMessage);
+          dispatch({ type: TYPE.TOGGLE_ACYNC_BUTTONS });
         }
       }
     );

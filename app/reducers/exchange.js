@@ -14,7 +14,8 @@ const initialState = {
   greenLight: false,
   transaction: {},
   transactionModalFlag: false,
-  email: ""
+  email: "",
+  acyncButtonFlag: false
 };
 
 export default (state = initialState, action) => {
@@ -23,6 +24,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         availableCoins: action.payload
+      };
+      break;
+    case TYPE.TOGGLE_ACYNC_BUTTONS:
+      return {
+        ...state,
+        acyncButtonFlag: !state.acyncButtonFlag
       };
       break;
     case TYPE.FROM_SETTER:
@@ -103,7 +110,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         transaction: { ...action.payload },
-        transactionModalFlag: true
+        transactionModalFlag: true,
+        acyncButtonFlag: false
       };
       break;
     case TYPE.CLEAR_TRANSACTION:

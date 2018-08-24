@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import { remote } from "electron";
 import Request from "request";
 import { bindActionCreators } from "redux";
-
+import { Squares } from "react-activity";
+// import "react-activity/lib/Dots/Dots.css";
 import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
@@ -127,6 +128,7 @@ class Precise extends Component {
 
   getQuote() {
     if (this.props.withinBounds) {
+      this.props.ToggleAcyncButtons();
       let pair = this.props.from + "_" + this.props.to;
       this.props.GetQuote(pair, this.props.ammount);
     } else alert("Outside trade-able ammounts");
@@ -136,6 +138,7 @@ class Precise extends Component {
     let pair = this.props.from + "_" + this.props.to;
     if (this.props.toAddress !== "") {
       if (this.props.refundAddress !== "") {
+        this.props.ToggleAcyncButtons();
         Request(
           {
             method: "GET",
@@ -189,8 +192,13 @@ class Precise extends Component {
             onClick={() => {
               this.executeTransaction();
             }}
+            disabled={this.props.acyncButtonFlag}
           >
-            EXECUTE TRANSACTION
+            {this.props.acyncButtonFlag === false ? (
+              "EXECUTE TRANSACTION"
+            ) : (
+              <Squares color="white" />
+            )}
           </button>
         );
       } else {
@@ -200,8 +208,13 @@ class Precise extends Component {
             onClick={() => {
               this.getQuote();
             }}
+            disabled={this.props.acyncButtonFlag}
           >
-            GET QUOTE
+            {this.props.acyncButtonFlag === false ? (
+              "GET QUOTE"
+            ) : (
+              <Squares color="white" />
+            )}
           </button>
         );
       }

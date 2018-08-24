@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { remote } from "electron";
 import Request from "request";
 import { bindActionCreators } from "redux";
+import { Squares } from "react-activity";
 
 import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
@@ -125,8 +126,13 @@ class Fast extends Component {
           onClick={() => {
             this.executeTrade();
           }}
+          disabled={this.props.acyncButtonFlag}
         >
-          EXECUTE TRADE
+          {this.props.acyncButtonFlag === false ? (
+            "EXECUTE TRADE"
+          ) : (
+            <Squares color="white" />
+          )}
         </button>
       );
     } else return null;
@@ -192,6 +198,7 @@ class Fast extends Component {
       let pair = this.props.from + "_" + this.props.to;
       if (this.props.toAddress !== "") {
         if (this.props.refundAddress !== "") {
+          this.props.ToggleAcyncButtons();
           Request(
             {
               method: "GET",
