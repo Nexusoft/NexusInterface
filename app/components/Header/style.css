@@ -46,3 +46,54 @@
 .icon .tooltip {
   width: 120px;
 }
+
+/* MODAL STYLE */
+
+/* .transition-enter {
+  transform: scale(0);
+}
+.transition-enter-active {
+  transform: scale(1);
+  transition: transform 1000ms ease;
+}
+.transition-exit {
+  transform: scale(1);
+}
+.transition-exit-active {
+  transform: scale(0);
+  transition: transform 1000ms ease;
+} */
+.custom-overlay {
+  background: transparent;
+  transition: 5s;
+}
+.custom-modal {
+  background: var(--color-2);
+  position: fixed;
+  bottom: 80%;
+  right: 0px;
+  width: 270px;
+  left: 0px;
+  height: 55px;
+  font-size: 10px;
+  opacity: 0.5;
+  /* -webkit-animation: mymove 2s; */
+  animation: mymove;
+  animation-duration: 1s;
+  overflow: hidden;
+  white-space: nowrap;
+}
+@keyframes mymove {
+  from {
+    left: 0px;
+    width: 0;
+    margin: 0;
+    height: 55px;
+    overflow: hidden;
+  }
+
+  to {
+    width: 270px;
+    height: 55px;
+  }
+}

@@ -1,5 +1,6 @@
 #sendrecieve {
   position: relative;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -11,6 +12,7 @@
 #sendrecieve > .panel {
   flex: 1;
   overflow-y: auto;
+  padding-left: 50px;
 }
 #container {
   display: flex;
@@ -35,7 +37,7 @@
 }
 .foot {
   float: right;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .counter {
   float: right;
@@ -63,17 +65,20 @@
 }
 .label {
   font-size: 40px;
+  margin-top: 5px;
+  margin-bottom: 40px;
 }
 #table-wraper {
-  margin-top: -2%;
+  margin-top: 10px;
   text-align: center;
   width: 90%;
+  padding-bottom: 20px;
 }
 /* Generic table stylings */
 #table-wraper table {
   max-width: 100%;
   /* min-width: 50%; */
-  margin-top: -2%;
+  margin-top: -1%;
 
   overflow-y: scroll;
   height: 325px;

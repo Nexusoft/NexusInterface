@@ -4,7 +4,9 @@ const initialState = {
   loggedIn: false,
   googleanalytics: null,
   encrypted: false,
-  busyFlag: false
+  busyFlag: false,
+  open: false,
+  openSecondModal: false
 };
 
 export default (state = initialState, action) => {
@@ -44,6 +46,30 @@ export default (state = initialState, action) => {
       return {
         ...state,
         googleanalytics: action.payload
+      };
+      break;
+    case TYPE.SHOW_MODAL:
+      return {
+        ...state,
+        open: true
+      };
+      break;
+    case TYPE.HIDE_MODAL:
+      return {
+        ...state,
+        open: false
+      };
+      break;
+    case TYPE.SHOW_MODAL2:
+      return {
+        ...state,
+        openSecondModal: true
+      };
+      break;
+    case TYPE.HIDE_MODAL2:
+      return {
+        ...state,
+        openSecondModal: false
       };
       break;
 

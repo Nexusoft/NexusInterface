@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
 import * as RPC from "../../script/rpc";
-
+import Modal from "react-responsive-modal";
 import * as TYPE from "../../actions/actiontypes";
 
 import ContextMenuBuilder from "../../contextmenu";
@@ -127,12 +127,12 @@ class SendRecieve extends Component {
   }
 
   accountChanger() {
-    if (this.props.AccountChanger[1]) {
+    if (this.props.AccountChanger[0]) {
       return this.props.AccountChanger.map(e => {
         if (e.name === "") {
           return (
             <option key={e.name} value={e.name}>
-              My Account : {e.val}
+              My Account : {e.val.toFixed(5)}
               NXS
             </option>
           );
@@ -186,25 +186,40 @@ class SendRecieve extends Component {
           this.props.busy();
           alert("Invalid Address");
         });
+    } else {
+      this.props.busy();
     }
   }
 
   sendMany() {
-    let keyCheck = Object.keys(this.props.Queue);
     this.props.busy();
+    let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 1) {
-      RPC.PROMISE("sendmany", [this.props.SelectedAccount, this.props.Queue]);
-    } else {
+      RPC.PROMISE("sendmany", [this.props.SelectedAccount, this.props.Queue])
+        .then(payoad => this.props.busy())
+        .catch(e => {
+          this.props.busy();
+          alert("Empty Queue!");
+        });
+    } else if (this.props.Amount > 0) {
       RPC.PROMISE("sendtoaddress", [
         keyCheck[1],
         Object.values(this.props.Queue)[0]
-      ]).then(payoad => console.log(payload));
+      ])
+        .then(payoad => this.props.busy())
+        .catch(e => {
+          this.props.busy();
+          alert("No Addresses");
+        });
     }
     this.props.clearForm();
-    this.props.busy();
     this.props.clearQueue();
   }
 
+  areYouSure() {
+    let values = Object.values(this.props.Queue);
+    return values;
+  }
   addAmount() {
     let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 0) {
@@ -221,7 +236,6 @@ class SendRecieve extends Component {
     }
   }
   validateAddToQueue() {
-    this.props.busy();
     if (!(this.props.Address === "") && this.props.Amount > 0) {
       console.log(this.props.Address);
       RPC.PROMISE("validateaddress", [this.props.Address])
@@ -233,18 +247,14 @@ class SendRecieve extends Component {
                 address: this.props.Address,
                 amount: parseFloat(this.props.Amount)
               });
-              this.props.busy();
             } else {
-              this.props.busy();
               alert("This is an address regiestered to this wallet");
             }
           } else {
-            this.props.busy();
             alert("Invalid Address");
           }
         })
         .catch(e => {
-          this.props.busy();
           alert("Invalid Address");
         });
     }
@@ -267,12 +277,11 @@ class SendRecieve extends Component {
       return (
         <tr key={i}>
           <td className="td">{e.key}</td>
-          <td className="td">{e.val.toFixed(8)}</td>
+          <td className="td">{e.val.toFixed(5)}</td>
           <td className="td">
             <img
               id="Remove"
               src="images/status-bad.svg"
-              disabled={this.props.busyFlag}
               onClick={() => {
                 if (confirm("Delete Entry?")) this.props.removeQueue(e.key);
               }}
@@ -293,6 +302,9 @@ class SendRecieve extends Component {
     return (
       <div id="sendrecieve">
         <h2>Send Nexus </h2>
+        {/* <button onClick={() => console.log(this.props.OpenModal())}>
+          TESTING BUTTON
+        </button> */}
         <div className="panel">
           <div id="container">
             <div className="box1">
@@ -344,6 +356,7 @@ class SendRecieve extends Component {
                     type="reset"
                     value="Send Now"
                     className="button"
+                    disabled={this.props.busyFlag}
                     onClick={() => {
                       if (confirm("Send NXS?")) this.sendOne();
                     }}
@@ -354,8 +367,8 @@ class SendRecieve extends Component {
 
             <div className="box2">
               <div id="table-wraper">
-                <p>
-                  <label className="label">Queue</label>
+                <p className="label">
+                  <label>Queue</label>
                 </p>
                 <table className="table">
                   <thead className="thead">
@@ -363,9 +376,7 @@ class SendRecieve extends Component {
                     <th>Amount</th>
                     <th>Remove</th>
                   </thead>
-                  <tr />
                   {this.fillQueue()}
-                  <tbody className="tbody"> </tbody>
                 </table>
                 <foot className="foot">
                   <input
@@ -373,9 +384,14 @@ class SendRecieve extends Component {
                     value="Send All"
                     className="button primary"
                     onClick={() => {
-                      if (confirm("Send All Transactions?"))
+                      if (
+                        confirm(
+                          `Send All (Total: ${this.areYouSure()}) Transactions From ${this.accHud()} `
+                        )
+                      )
                         console.log(this.sendMany());
                     }}
+                    disabled={this.props.busyFlag}
                   />
                   <input
                     type="button"

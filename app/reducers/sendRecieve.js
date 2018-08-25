@@ -82,7 +82,6 @@ export default (state = initialState, action) => {
         Account: "",
         Message: ""
       };
-      break;
     default:
       return state;
   }
