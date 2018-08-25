@@ -11,6 +11,7 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
 
+import config from "../../api/configuration";
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
 import unlockImg from "images/lock-minting.svg";
@@ -39,6 +40,18 @@ class Header extends Component {
       encryptionStatus = true;
     }
     console.log(this.props);
+
+    let json = null;
+
+    try {
+      json = config.ReadJson("addressbook.json");
+    } catch (err) {
+      json = {};
+      config.WriteJson("addressbook.json", json);
+    }
+
+    this.props.LoadAddressBook(json);
+
     menuBuilder.buildMenu(self);
 
     this.props.GetInfoDump();

@@ -242,7 +242,6 @@ class Market extends Component {
   }
 
   formatBuyData(array) {
-    console.log("array", array);
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array
@@ -268,7 +267,6 @@ class Market extends Component {
   }
 
   formatSellData(array) {
-    console.log("array", array);
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array
