@@ -12,7 +12,6 @@ import * as actionsCreators from "../../actions/addressbookActionCreators";
 import TimeZoneSelector from "./timeZoneSelector";
 
 import ContactView from "./ContactView";
-
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 
@@ -20,73 +19,6 @@ const mapStateToProps = state => {
   return { ...state.common, ...state.addressbook };
 };
 
-// we will use the dispatch to push data into this page.
-/* CRUD -> Create, {inherent Read}, Update, Delete
-We are probably going to create an action creator file for this.
-dispatch 1: add new address
-dispatch 2: edit existing address
-dispatch 3: edit phone number
-dispatch 4: edit notes
-dispatch 5: edit name // Not MVP
-dispatch 6: edit label for address
-dispatch 7: edit timezone
-dispatch 8: delete contact
-dispatch 9: delete contact address
-dispatch 10: load addressbook (probably out at the app level.)
-***** IF you add more don't forget to add actiontypes. *******
-## MORE... Not done yet
-dispatch 11: map myaddresses to accounts via label addNewAddress: (contact, label, address) => {
-    dispatch({
-      type: TYPE.ADD_NEW_ADDRESS,
-      payload: { contact: contact, label: label, address: address }
-    });
-  },
-  editExistingAddress: (contact, label, newaddress) => {
-    dispatch({
-      type: TYPE.EDIT_ADDRESS,
-      payload: { contact: contact, label: label, newaddress: newaddress }
-    });
-  },
-  editPhoneNumber: (contact, phone) => {
-    dispatch({
-      type: TYPE.EDIT_PHONE,
-      payload: { contact: contact, phone: phone }
-    });
-  },
-  editContactNotes: (contact, notes) => {
-    dispatch({
-      type: TYPE.EDIT_NOTES,
-      payload: { contact: contact, notes: notes }
-    });
-  },
-  editContactName: (contact, name, newname) => {
-    dispatch({
-      type: TYPE.EDIT_ADDRESS,
-      payload: { contact: contact, name: name, newname: newname }
-    });
-  },
-  editAddressLabel: (contact, label, address) => {
-    dispatch({
-      type: TYPE.EDIT_ADDRESS_LABEL,
-      payload: { contact: contact, label: label, address: address }
-    });
-  },
-  editContactTimezone: (contact, timezone) => {
-    dispatch({
-      type: TYPE.EDIT_TIMEZONE,
-      payload: { contact: contact, timezone: timezone }
-    });
-  },
-  deleteContact: contact => {
-    dispatch({ type: TYPE.DELETE_CONTACT, payload: { contact: contact } });
-  },
-  deleteContactAddress: (contact, label, address) => {
-    dispatch({
-      type: TYPE.DELETE_ADDRESS_FROM_CONTACT,
-      payload: { contact: contact, label: label, address: address }
-    });
-  }
-*/
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
@@ -112,6 +44,13 @@ class Addressbook extends Component {
     }
     this.props.SelectedContact(sortedBook[0]);
   }
+
+  getinitial(name) {
+    if (name && name.length >= 1) return name.charAt(0);
+
+    return "M"; // My Addresses
+  }
+
   addContact() {
     this.props.AddContact(
       this.props.prototypeName,
@@ -201,22 +140,21 @@ class Addressbook extends Component {
         break;
     }
   }
+
   contactLister() {
     if (this.props.addressbook[0]) {
       return (
         <div id="contactList">
           {this.props.addressbook
             .sort((a, b) => {
-              var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-              var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+              var nameA = a.name.toUpperCase();
+              var nameB = b.name.toUpperCase();
               if (nameA < nameB) {
                 return -1;
               }
               if (nameA > nameB) {
                 return 1;
               }
-
-              // names must be equal
               return 0;
             })
             .map((contact, i) => {

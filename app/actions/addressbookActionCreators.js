@@ -74,7 +74,6 @@ export const AddContact = (name, address, num, notes, TZ) => {
         return { mine: mine, notMine: notMine };
       })
       .then(result => {
-        console.log(result);
         dispatch({
           type: TYPE.ADD_NEW_CONTACT,
           payload: {
@@ -86,9 +85,10 @@ export const AddContact = (name, address, num, notes, TZ) => {
             phoneNumber: num
           }
         });
+        dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
       })
       .catch(e => {
-        console.log();
+        console.log(e);
       });
   };
 };
