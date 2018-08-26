@@ -8,7 +8,7 @@ const initialState = {
   prototypeNotes: "",
   prototypeTimezone: 0,
   prototypePhoneNumber: "",
-  selected: {}
+  selected: 0
 };
 
 export default (state = initialState, action) => {
@@ -22,19 +22,31 @@ export default (state = initialState, action) => {
       });
       console.log(index);
       if (index === -1) {
+        let updatedAddressbook = [
+          ...state.addressbook,
+          {
+            name: action.payload.name,
+            mine: action.payload.mine,
+            notMine: action.payload.notMine,
+            notes: action.payload.notes,
+            timezone: action.payload.timezone,
+            phoneNumber: action.payload.phoneNumber
+          }
+        ];
+        updatedAddressbook.sort((a, b) => {
+          let nameA = a.name.toUpperCase();
+          let nameB = b.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        });
         return {
           ...state,
-          addressbook: [
-            ...state.addressbook,
-            {
-              name: action.payload.name,
-              mine: action.payload.mine,
-              notMine: action.payload.notMine,
-              notes: action.payload.notes,
-              timezone: action.payload.timezone,
-              phoneNumber: action.payload.phoneNumber
-            }
-          ]
+          addressbook: updatedAddressbook
         };
       } else if (action.payload.mine[0]) {
         if (
@@ -44,6 +56,7 @@ export default (state = initialState, action) => {
             }
           }) === -1
         ) {
+          console.log("mine new add");
           let updatedContact = {
             ...state.addressbook[index],
             mine: [...state.addressbook[index].mine, action.payload.mine],
@@ -51,26 +64,26 @@ export default (state = initialState, action) => {
             timezone: action.payload.timezone,
             phoneNumber: action.payload.phoneNumber
           };
+          let updatedAddressbook = state.addressbook;
+          updatedAddressbook.splice(index, 1, updatedContact);
+
           return {
             ...state,
-            addressbook: [
-              ...state.addressbook,
-              (state.addressbook[index]: updatedContact)
-            ]
+            addressbook: updatedAddressbook
           };
         } else {
+          console.log("mine no new add");
           let updatedContact = {
             ...state.addressbook[index],
             notes: action.payload.notes,
             timezone: action.payload.timezone,
             phoneNumber: action.payload.phoneNumber
           };
+          let updatedAddressbook = state.addressbook;
+          updatedAddressbook.splice(index, 1, updatedContact);
           return {
             ...state,
-            addressbook: [
-              ...state.addressbook,
-              (state.addressbook[index]: updatedContact)
-            ]
+            addressbook: updatedAddressbook
           };
         }
       } else if (
@@ -80,6 +93,7 @@ export default (state = initialState, action) => {
           }
         }) === -1
       ) {
+        console.log("notmine new add");
         let updatedContact = {
           ...state.addressbook[index],
           notMine: [
@@ -97,6 +111,8 @@ export default (state = initialState, action) => {
           addressbook: updatedAddressbook
         };
       } else {
+        console.log("notmine no new add");
+        console.log(action.payload);
         let updatedContact = {
           ...state.addressbook[index],
           notes: action.payload.notes,
@@ -105,6 +121,8 @@ export default (state = initialState, action) => {
         };
         let updatedAddressbook = state.addressbook;
         updatedAddressbook.splice(index, 1, updatedContact);
+        console.log(updatedContact);
+        console.log(updatedAddressbook);
         return {
           ...state,
           addressbook: updatedAddressbook

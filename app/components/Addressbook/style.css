@@ -38,8 +38,8 @@
   margin: calc(var(--line-height) * 1em - 1px) 0;
   padding: 0 calc(var(--line-height) * 1em);
   border-color: var(--border-color);
-
-  display: block;
+  margin-top: 0;
+  display: flex;
   -webkit-margin-start: 2px;
   -webkit-margin-end: 2px;
   -webkit-padding-before: 0.35em;
@@ -49,7 +49,7 @@
   min-width: -webkit-min-content;
   border-width: 2px;
   border-style: groove;
-
+  flex-direction: row;
   border-image: initial;
 }
 
@@ -82,6 +82,7 @@
 #addressbookContent {
   display: flex;
   flex-direction: row;
+  margin-top: 10px;
   width: 100%;
 }
 #addressbook-search {
@@ -101,4 +102,65 @@ select {
 
 #nxsaddress {
   width: 100%;
+}
+
+.contact-avatar {
+  flex: 0;
+  padding-right: 1em;
+  opacity: 1;
+}
+
+.contact-avatar svg {
+  text-anchor: middle;
+  fill: white;
+  font-size: 50px;
+  height: 32px;
+  width: 32px;
+  background-color: #555;
+  border-radius: 50%;
+  margin-right: 0.1em;
+  vertical-align: middle;
+}
+
+.contactAddresses {
+  flex: 1;
+  opacity: 0.65;
+  font-size: 0.875em;
+  margin-left: 2em;
+  display: flex;
+  justify-content: flex-end;
+}
+.contact {
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.contact:hover {
+  color: var(--color-2);
+}
+#contactDetails {
+  max-width: 100%;
+}
+#contactDetails img {
+  height: 10em;
+}
+
+#contactInformation {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+}
+#notesContainer {
+  max-width: 100%;
+}
+#notes {
+  max-width: 400px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+#addressDisplay {
+  display: grid;
+  grid-template-columns: auto auto;
 }

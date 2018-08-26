@@ -14,6 +14,7 @@ import TimeZoneSelector from "./timeZoneSelector";
 import ContactView from "./ContactView";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
+import profilePlaceholder from "images/Profile_Placeholder.png";
 
 const mapStateToProps = state => {
   return { ...state.common, ...state.addressbook };
@@ -25,29 +26,19 @@ const mapDispatchToProps = dispatch =>
 class Addressbook extends Component {
   // componentDidMount: get addressbook data
   // Anything that you are relying on being available for rendering the page from startup
-  componentDidMount() {
-    let sortedBook = [{}];
-    if (this.props.addressbook[0]) {
-      sortedBook = this.props.addressbook.sort((a, b) => {
-        var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-        var nameB = b.name.toUpperCase(); // ignore upper and lowercase
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
+  //   componentDidMount() {
 
-        // names must be equal
-        return 0;
+  //   }
+  componentDidUpdate(previousprops) {
+    if (this.props.addressbook.length > previousprops.addressbook.length) {
+      config.WriteJson("addressbook.json", {
+        addressbook: this.props.addressbook
       });
     }
-    this.props.SelectedContact(sortedBook[0]);
   }
 
   getinitial(name) {
     if (name && name.length >= 1) return name.charAt(0);
-
     return "M"; // My Addresses
   }
 
@@ -135,7 +126,9 @@ class Addressbook extends Component {
           </div>
         );
         break;
-
+      case "MY_ADDRESSES":
+        return <div>My addresses here</div>;
+        break;
       default:
         break;
     }
@@ -145,39 +138,102 @@ class Addressbook extends Component {
     if (this.props.addressbook[0]) {
       return (
         <div id="contactList">
-          {this.props.addressbook
-            .sort((a, b) => {
-              var nameA = a.name.toUpperCase();
-              var nameB = b.name.toUpperCase();
-              if (nameA < nameB) {
-                return -1;
-              }
-              if (nameA > nameB) {
-                return 1;
-              }
-              return 0;
-            })
-            .map((contact, i) => {
-              let addTotal = contact.mine.length + contact.notMine.length;
-              return (
-                <div
-                  key={i}
-                  onClick={() => this.props.SelectedContact(contact)}
-                >
-                  {contact.name} {addTotal}{" "}
-                  {addTotal > 1 ? "addresses" : "address"}
-                </div>
-              );
-            })}
+          {this.props.addressbook.map((contact, i) => {
+            let addTotal = contact.mine.length + contact.notMine.length;
+            return (
+              <div
+                key={i}
+                onClick={() => this.props.SelectedContact(i)}
+                className="contact"
+              >
+                <span className="contact-avatar">
+                  <svg viewBox="0 0 100 100">
+                    <text x="50" y="50" dy=".35em">
+                      {this.getinitial(contact.name)}
+                    </text>
+                  </svg>
+                </span>
+                <span className="contact-name">{contact.name}</span>
+                <span className="contactAddresses">
+                  {addTotal} {addTotal > 1 ? " addresses" : " address"}
+                </span>
+              </div>
+            );
+          })}
         </div>
       );
     }
   }
+
   showAddContactModal() {
     this.props.SetModalType("ADD_CONTACT");
     this.props.ToggleModal();
   }
-  // render: render the component
+
+  showMyAddresses() {
+    this.props.SetModalType("MY_ADDRESSES");
+    this.props.ToggleModal();
+  }
+
+  phoneFormatter() {
+    return this.props.addressbook[this.props.selected].phoneNumber;
+  }
+
+  localTimeFormater() {
+    let d = new Date();
+    let utc = new Date().getTimezoneOffset();
+    d.setMinutes(d.getMinutes() + utc);
+    d.setMinutes(
+      d.getMinutes() + this.props.addressbook[this.props.selected].timezone
+    );
+
+    let h = d.getHours();
+    let m = d.getMinutes();
+    let i = "AM";
+    if (h >= 12) {
+      i = "PM";
+      h = h - 12;
+    }
+    if (h === 0) {
+      h = "12";
+    }
+    if (m <= 9) {
+      m = `0${m}`;
+    }
+
+    return (
+      <div>
+        Local Time: {h}:{m} {i}
+      </div>
+    );
+  }
+
+  theirAddressLister() {
+    return (
+      <div>
+        <h3>Their addresses</h3>
+        <div>
+          {this.props.addressbook[this.props.selected].notMine.map((add, i) => {
+            return (
+              <div key={i + add.address}>
+                {add.label}: {add.address}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  myAddressLister() {
+    return (
+      <div>
+        <h3>My addresses</h3>
+        "ADDRESSES"
+      </div>
+    );
+  }
+
   render() {
     console.log(this.props);
     return (
@@ -221,12 +277,50 @@ class Addressbook extends Component {
           {this.props.addressbook.length > 0 ? (
             <div id="addressbookContent">
               <div id="contactListContainer">{this.contactLister()}</div>
-              <div id="contactDetailContainer">
-                <fieldset id="contactDetails">
-                  <legend>{this.props.selected.name}</legend>
-                  <div />
-                </fieldset>
-              </div>
+              {this.props.addressbook[this.props.selected].mine && (
+                <div id="contactDetailContainer">
+                  <fieldset id="contactDetails">
+                    <legend>
+                      {this.props.addressbook[this.props.selected].name}
+                    </legend>
+                    <div id="contactInformation">
+                      <div>
+                        <div> Phone number: {this.phoneFormatter()} </div>
+                        {this.localTimeFormater()}
+                        <div id="notesContainer">
+                          Notes:{" "}
+                          <div id="notes">
+                            {" "}
+                            {
+                              this.props.addressbook[this.props.selected].notes
+                            }{" "}
+                          </div>{" "}
+                        </div>
+                      </div>
+                      {this.props.addressbook[this.props.selected].imgSrc !==
+                      undefined ? (
+                        <img
+                          src={
+                            this.props.addressbook[this.props.selected].imgSrc
+                          }
+                        />
+                      ) : (
+                        <img src={profilePlaceholder} />
+                      )}
+                    </div>
+                  </fieldset>
+                  <div id="addressDisplay">
+                    {this.props.addressbook[this.props.selected].mine.length > 0
+                      ? this.myAddressLister()
+                      : null}
+
+                    {this.props.addressbook[this.props.selected].notMine
+                      .length > 0
+                      ? this.theirAddressLister()
+                      : null}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <h1 style={{ alignSelf: "center" }}>Your addressbook is empty</h1>
