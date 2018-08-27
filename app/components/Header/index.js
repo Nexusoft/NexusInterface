@@ -134,25 +134,27 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
-        {/* TESTING MODAL BUTTON<button onClick={() => this.props.OpenModal()} /> */}
-        <div id="notification">
-          <Modal
-            showCloseIcon={false}
-            open={this.props.open}
-            onClose={this.props.CloseModal}
-            classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
-          >
-            <h2>Transaction Received!</h2>
-          </Modal>
-          <Modal
-            showCloseIcon={false}
-            open={this.props.openSecondModal}
-            onClose={this.props.CloseModal2}
-            classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
-          >
-            <h2>Transaction Sent</h2>
-          </Modal>
-        </div>
+        <button
+          className="button hero"
+          onClick={() => this.props.OpenModal2()}
+        />
+
+        <Modal
+          showCloseIcon={false}
+          open={this.props.open}
+          onClose={this.props.CloseModal}
+          classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
+        >
+          <h2>Transaction Received!</h2>
+        </Modal>
+        <Modal
+          showCloseIcon={false}
+          open={this.props.openSecondModal}
+          onClose={this.props.CloseModal2}
+          classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
+        >
+          <h2>Transaction Sent</h2>
+        </Modal>
 
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">

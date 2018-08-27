@@ -65,35 +65,54 @@
 } */
 .custom-overlay {
   background: transparent;
-  transition: 5s;
+  padding: 0px;
 }
 .custom-modal {
   background: var(--color-2);
-  position: fixed;
+  position: absolute;
   bottom: 80%;
   right: 0px;
-  width: 270px;
-  left: 0px;
+  width: 250px;
+
   height: 55px;
   font-size: 10px;
-  opacity: 0.5;
-  /* -webkit-animation: mymove 2s; */
-  animation: mymove;
-  animation-duration: 1s;
+  margin: 0px;
+  border: 5px solid var(--color-5);
+  -webkit-animation: mymove 2.5s;
+  animation: mymove 2.5s;
   overflow: hidden;
   white-space: nowrap;
+  border-radius: 5px;
 }
 @keyframes mymove {
   from {
-    left: 0px;
+    right: 0px;
     width: 0;
-    margin: 0;
+    margin: 0px;
     height: 55px;
-    overflow: hidden;
   }
 
   to {
-    width: 270px;
+    right: 0px;
+    width: 250px;
     height: 55px;
+  }
+  0% {
+    background: var(--color-3);
+  }
+  20% {
+    background: var(--color-2);
+  }
+  40% {
+    background: var(--color-3);
+  }
+  60% {
+    background: var(--color-2);
+  }
+  80% {
+    background: var(--color-3);
+  }
+  100% {
+    background: var(--color-2);
   }
 }
