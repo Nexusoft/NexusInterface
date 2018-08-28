@@ -9,24 +9,39 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({});
 class Loader extends Component {
-  render() {
-    return (
-        <div id="loader" className="animated fadeIn">
-            <div id="orbit-container">
-                <div id="orbit">
-                    <div id="orbit-cirlce"></div>
+    state = {
+    loading: true
+    };
+
+    componentDidMount() {
+    setTimeout(() => this.setState({ loading: false }), 1500); 
+    }
+    
+    render() {
+    const { loading } = this.state;
+    
+    if(loading) {
+        return (
+            <div id="loader" className="animated fadeIn">
+                <div id="orbit-container">
+                    <div id="orbit">
+                        <div id="orbit-cirlce"></div>
+                    </div>
+                    <div id="tritium">
+                        <div id="proton1"></div>
+                        <div id="proton2"></div>
+                        <div id="proton3"></div>
+                    </div>           
                 </div>
-                <div id="tritium">
-                    <div id="proton1"></div>
-                    <div id="proton2"></div>
-                    <div id="proton3"></div>
-                </div>           
+                <div id="version">T R I T I U M</div>
             </div>
-            <div id="version">T R I T I U M</div>
-        </div>
-    );
-  }
+        ); 
+    }
+    
+    return null; // render null when app is ready
+    }
 }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
