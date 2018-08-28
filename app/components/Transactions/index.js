@@ -24,7 +24,7 @@ import styles from "./style.css";
 let tempaddpress = new Map();
 
 const mapStateToProps = state => {
-  return { ...state.transactions, ...state.common };
+  return { ...state.transactions, ...state.common, ...state.overview };
 };
 const mapDispatchToProps = dispatch => ({
   SetWalletTransactionArray: returnData =>
@@ -70,14 +70,27 @@ class Transactions extends Component {
                 fee: 0
         }
       ],
-      currentTransactions: [],
+      currentTransactions: [{transactionnumber: 0,
+        confirmations: 0,
+        time: 0,
+        category: "",
+        amount: 0,
+        txid: 0,
+        account: "",
+        address: "",
+        value: {
+          USD: 0,
+          BTC: 0
+        },
+        coin: "Nexus",
+        fee: 0}],
       tableColumns: [],
       displayTimeFrame: "All",
       DataThisIsShowing: [{}],
       amountFilter: 0,
       categoryFilter: "all",
       addressFilter: "",
-      zoomDomain: { x: [new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()), new Date()] },
+      zoomDomain: { x: [new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()).getTime(), new Date().getTime()], y:[0,1] },
       isHoveringOverTable: false,
       hoveringID: 999999999999,
       open: false,
@@ -93,6 +106,9 @@ class Transactions extends Component {
       }
     };
   }
+
+  /// Component Did Mount
+  /// Life cycle hook for page getting loaded
   componentDidMount() {
 
     this.getTransactionData();
@@ -103,36 +119,27 @@ class Transactions extends Component {
     console.log(myaddresbook);
     for (let index = 0; index < myaddresbook.length; index++) {
       const element = myaddresbook[index];
-      console.log(element);
     }
     for (let key in myaddresbook)
     {
-      const hfff = myaddresbook[key];
-      console.log(hfff);
-      console.log(hfff["notMine"]);
-      const primaryadd = hfff["notMine"]["Primary"];
-      console.log(hfff["notMine"]["Primary"]);
+      const eachAddress = myaddresbook[key];
+      const primaryadd = eachAddress["notMine"]["Primary"];
       if (primaryadd != undefined)
       {
         tempaddpress.set(primaryadd,key);
       }
-      for (let addressname in hfff["notMine"])
+      for (let addressname in eachAddress["notMine"])
       {
-        tempaddpress.set(hfff["notMine"][addressname],key + "-" + addressname);
+        tempaddpress.set(eachAddress["notMine"][addressname],key + "-" + addressname);
       }
-      for (let addressname in hfff["mine"])
+      for (let addressname in eachAddress["mine"])
       {
-        //console.log(key);
-        //let keymod = key;
         if (key == "")
         {
           key = "Mine";
-          //keymod = "Mine";
-          console.log("AAAAAAAAAAAAAAAA");
         }
-        tempaddpress.set(hfff["mine"][addressname],key + "-" + addressname);
+        tempaddpress.set(eachAddress["mine"][addressname],key + "-" + addressname);
       }
-      //const mineadd = hff["mine"][""]
     }
 
     console.log(tempaddpress);
@@ -142,7 +149,6 @@ class Transactions extends Component {
 
     if (this.state.exectuedHistoryData == false)
     {
-      this.gethistorydatajson();
       this.setState(
         {
           exectuedHistoryData:true
@@ -154,13 +160,24 @@ class Transactions extends Component {
     window.addEventListener("contextmenu", this.transactioncontextfunction, false);
   }
 
+  /// Component Did Update
+  /// Life cycle hook for prop update
+  componentDidUpdate(previousprops) {
+    if (this.props.txtotal != previousprops.txtotal) {
+      this.getTransactionData();
+    }
+  }
+
+  /// Component Will Unmount
+   /// Life cycle hook for leaving the page
   componentWillUnmount()
   {
     window.removeEventListener('resize', this.updateChartAndTableDimensions);
-
     window.removeEventListener("contextmenu",this.transactioncontextfunction);
   }
 
+  /// Update Chart and Table Dimensions
+  /// Updates the height and width of the chart and table when you resize the window 
   updateChartAndTableDimensions(event) {
 
     let chart = document.getElementById("transactions-chart");
@@ -188,161 +205,160 @@ class Transactions extends Component {
   }
 
   /// Transaction Context Function
-    /// This is the method that is called when the user pressed the right click 
-    /// Input:
-    ///   e || Event || Default Events given by the system for right click
-    transactioncontextfunction(e) {
-      // Prevent default action of right click
-      e.preventDefault();
+  /// This is the method that is called when the user pressed the right click 
+  /// Input:
+  ///   e || Event || Default Events given by the system for right click
+  transactioncontextfunction(e) {
+    // Prevent default action of right click
+    e.preventDefault();
 
 
 
-      const template = [
-        {
-          label: 'File',
-          submenu: [
-      
-            {
-              label: 'Copy',
-              role: 'copy',
-              
-            }
-          ]
-        },
-        {
-            label: 'Reload',
-            accelerator: 'CmdOrCtrl+R',
-            click (item, focusedWindow) {
-              if (focusedWindow) focusedWindow.reload()
-            }
-        }
-      ]
-      
-      console.log(this.state);
-      const yuup = new ContextMenuBuilder().defaultContext;
-      //build default
-      let defaultcontextmenu = remote.Menu.buildFromTemplate(yuup);
-      //create new custom
-      let transactiontablecontextmenu = new remote.Menu();
-
-      
-
-      let moreDatailsCallback = function() {
-         
-          this.setState(
-            {
-              open:true
-            }
-          )
-      }
-      moreDatailsCallback = moreDatailsCallback.bind(this);
-
-
-
-      transactiontablecontextmenu.append(
-        new remote.MenuItem({
-          label: "More Details",
-          click() {
-            moreDatailsCallback();
-          }
-        })
-      );
-
-      let tablecopyaddresscallback = function () {
-        this.copysomethingtotheclipboard(this.state.walletTransactions[this.state.hoveringID].address);
-      }
-      tablecopyaddresscallback = tablecopyaddresscallback.bind(this);
-      
-      let tablecopyamountcallback = function () {
-        this.copysomethingtotheclipboard(this.state.walletTransactions[this.state.hoveringID].amount);
-      }
-      tablecopyamountcallback = tablecopyamountcallback.bind(this);
-
-      let tablecopyaccountcallback = function () {
-        this.copysomethingtotheclipboard(this.state.walletTransactions[this.state.hoveringID].account);
-      }
-      tablecopyaccountcallback = tablecopyaccountcallback.bind(this);
-      
-      transactiontablecontextmenu.append(
-        new remote.MenuItem({
-          label: "Copy",
-          submenu: [
-      
-            {
-              label: "Address",
-              click() {
-                tablecopyaddresscallback();
-              }
-            },
-            {
-              label: "Account",
-              click() {
-                tablecopyaccountcallback();
-              }
-            },
-            {
-              label: "Amount",
-              click() {
-                tablecopyamountcallback();
-              }
-            }
-          ]
-        })
-       
-      );
-
-      let sendtoSendPagecallback = function()
+    const template = [
       {
-       
-        this.props.SetSendAgainData({
-          address: this.state.walletTransactions[this.state.hoveringID].address,
-          account: this.state.walletTransactions[this.state.hoveringID].account,
-          amount: this.state.walletTransactions[this.state.hoveringID].amount
-        });
-        this.context.router.history.push('/SendRecieve');
-      }
-      sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
-
-      let sendtoBlockExplorercallback = function() {
-        
-        this.props.SetExploreInfo(
+        label: 'File',
+        submenu: [
+    
           {
-            transactionId: this.state.walletTransactions[this.state.hoveringID].txid
-          }
-        );
-        this.context.router.history.push('/BlockExplorer');
-      }
-
-      sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
-
-      //Add Resending the transaction option
-      transactiontablecontextmenu.append(
-        new remote.MenuItem({
-          label: "Send Again",
-          click() {
-
-            sendtoSendPagecallback();
+            label: 'Copy',
+            role: 'copy',
             
           }
-        })
-      );
-      /*  Currently Block Explorer is turned off. 
-      //Add Open Explorer Option
-      transactiontablecontextmenu.append(
-        new remote.MenuItem({
-          label: "Open Explorer",
-          click() {
-            sendtoBlockExplorercallback();
+        ]
+      },
+      {
+          label: 'Reload',
+          accelerator: 'CmdOrCtrl+R',
+          click (item, focusedWindow) {
+            if (focusedWindow) focusedWindow.reload()
           }
-        })
-      );
-      */
-      if (this.state.isHoveringOverTable) {
-        transactiontablecontextmenu.popup(remote.getCurrentWindow());
-      } else {
-        defaultcontextmenu.popup(remote.getCurrentWindow());
       }
+    ]
+    
+    const yuup = new ContextMenuBuilder().defaultContext;
+    //build default
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(yuup);
+    //create new custom
+    let transactiontablecontextmenu = new remote.Menu();
+
+    
+
+    let moreDatailsCallback = function() {
+        
+        this.setState(
+          {
+            open:true
+          }
+        )
     }
+    moreDatailsCallback = moreDatailsCallback.bind(this);
+
+
+
+    transactiontablecontextmenu.append(
+      new remote.MenuItem({
+        label: "More Details",
+        click() {
+          moreDatailsCallback();
+        }
+      })
+    );
+
+    let tablecopyaddresscallback = function () {
+      this.copysomethingtotheclipboard(this.state.walletTransactions[this.state.hoveringID].address);
+    }
+    tablecopyaddresscallback = tablecopyaddresscallback.bind(this);
+    
+    let tablecopyamountcallback = function () {
+      this.copysomethingtotheclipboard(this.state.walletTransactions[this.state.hoveringID].amount);
+    }
+    tablecopyamountcallback = tablecopyamountcallback.bind(this);
+
+    let tablecopyaccountcallback = function () {
+      this.copysomethingtotheclipboard(this.state.walletTransactions[this.state.hoveringID].account);
+    }
+    tablecopyaccountcallback = tablecopyaccountcallback.bind(this);
+    
+    transactiontablecontextmenu.append(
+      new remote.MenuItem({
+        label: "Copy",
+        submenu: [
+    
+          {
+            label: "Address",
+            click() {
+              tablecopyaddresscallback();
+            }
+          },
+          {
+            label: "Account",
+            click() {
+              tablecopyaccountcallback();
+            }
+          },
+          {
+            label: "Amount",
+            click() {
+              tablecopyamountcallback();
+            }
+          }
+        ]
+      })
+      
+    );
+
+    let sendtoSendPagecallback = function()
+    {
+      
+      this.props.SetSendAgainData({
+        address: this.state.walletTransactions[this.state.hoveringID].address,
+        account: this.state.walletTransactions[this.state.hoveringID].account,
+        amount: this.state.walletTransactions[this.state.hoveringID].amount
+      });
+      this.context.router.history.push('/SendRecieve');
+    }
+    sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
+
+    let sendtoBlockExplorercallback = function() {
+      
+      this.props.SetExploreInfo(
+        {
+          transactionId: this.state.walletTransactions[this.state.hoveringID].txid
+        }
+      );
+      this.context.router.history.push('/BlockExplorer');
+    }
+
+    sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
+
+    //Add Resending the transaction option
+    transactiontablecontextmenu.append(
+      new remote.MenuItem({
+        label: "Send Again",
+        click() {
+
+          sendtoSendPagecallback();
+          
+        }
+      })
+    );
+    /*  Currently Block Explorer is turned off. 
+    //Add Open Explorer Option
+    transactiontablecontextmenu.append(
+      new remote.MenuItem({
+        label: "Open Explorer",
+        click() {
+          sendtoBlockExplorercallback();
+        }
+      })
+    );
+    */
+    if (this.state.isHoveringOverTable) {
+      transactiontablecontextmenu.popup(remote.getCurrentWindow());
+    } else {
+      defaultcontextmenu.popup(remote.getCurrentWindow());
+    }
+  }
 
 
   /// Copy Something To The Clipboard
@@ -359,6 +375,8 @@ class Transactions extends Component {
     document.body.removeChild(tempelement);
   }
 
+  /// Get Transaction Data
+  /// Gets all the data from each account held by the wallet
   getTransactionData()
   {
     RPC.PROMISE("listaccounts",[0]).then(payload =>
@@ -398,18 +416,12 @@ class Transactions extends Component {
             );
           });
 
-          this.setState(
-          {
-              tableColumns:tabelheaders,
-              currentTransactions:tempWalletTransactions,
-              zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date(tempWalletTransactions[tempWalletTransactions.length - 1].time * 1000)] }
-            
-          });
-
+         
            if ( promisList == null || promisList == undefined || promisList.length == 0)
           {
             return;
           }
+          
         Promise.all(promisList).then(payload =>
         {
           console.log(payload);
@@ -441,13 +453,6 @@ class Transactions extends Component {
                 coin: "Nexus",
                 fee: 0
               }
-
-             
-              let gothistorydata = this.findclosestdatapoint(tempTrans.time.toString());
-              //tempTrans.value.USD = gothistorydata.priceUSD;
-              //tempTrans.value.BTC = gothistorydata.priceBTC;
-              console.log(this.findclosestdatapoint(tempTrans.time.toString())); 
-              
               tempWalletTransactions.push(tempTrans);
              
             }
@@ -456,26 +461,26 @@ class Transactions extends Component {
           
           
           console.log(tempWalletTransactions);
-          
-          console.log(tempWalletTransactions);
+          tempWalletTransactions.sort((a,b) => {return (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0);} ); 
           this.props.SetWalletTransactionArray(tempWalletTransactions);
+          console.log(tempWalletTransactions);
+          
+
           console.log(this.props.walletitems);
           this.setState(
             {
-              walletTransactions:tempWalletTransactions,
-              currentTransactions:tempWalletTransactions,
               tableColumns:tabelheaders,
-              zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date(tempWalletTransactions[tempWalletTransactions.length - 1].time * 1000)] }
+              zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date((tempWalletTransactions[tempWalletTransactions.length - 1].time + 1000) * 1000)] }
             },() => {
-              console.log(this.state.walletTransactions);
+              console.log(this.props.walletitems);
               for (let index = 0; index < this.state.walletTransactions.length; index++) {
-              this.getDataorNewData(index);
+              //this.getDataorNewData(index);
             
               } 
             }
           );
-          this.forceUpdate();
-          this.gothroughdatathatneedsit();
+          //this.forceUpdate();
+          //this.gothroughdatathatneedsit();
         });
       }
     )
@@ -556,6 +561,8 @@ class Transactions extends Component {
     document.body.removeChild(link);
   }
 
+  /// Transaction Type Filter Callback
+  /// Callback for when you change the category filter
   transactiontypefiltercallback = (e) =>
   {
     console.log(e.target.value);
@@ -567,6 +574,8 @@ class Transactions extends Component {
     );
   }
 
+  /// Transaction Amount Filter Callback
+  /// Callback for when you change the amount filter
   transactionamountfiltercallback = (e) =>
   {
     console.log(e.target.value);
@@ -579,6 +588,8 @@ class Transactions extends Component {
     );
   }
 
+  /// Transaction Address Filter Callback
+  /// Callback for when you change the address filter
   transactionaddressfiltercallback = (e) =>
   {
     console.log(e.target.value);
@@ -608,6 +619,8 @@ class Transactions extends Component {
     return json;
   }
 
+  /// Filter By Category
+  /// Filter the transactions based on the CategoryFilter
   filterByCategory(inTransactions)
   {
     let tempTrans = [];
@@ -631,6 +644,8 @@ class Transactions extends Component {
     return tempTrans;
   }
 
+  /// Filter By Amount
+  /// Filter the transactions based on the AmountFilter
   filterbyAmount(inTransactions)
   {
     let tempTrans = [];
@@ -647,6 +662,8 @@ class Transactions extends Component {
     return tempTrans;
   }
 
+  /// Filter By Address
+  /// Filter the transactions based on the AddressFilter
   filterByAddress(inTransactions)
   {
     let tempTrans = [];
@@ -663,6 +680,8 @@ class Transactions extends Component {
     return tempTrans;
   }
 
+  /// Filter By Time
+  /// Filter the transactions based on the DisplayTimeFrame
   filterByTime(inTransactions)
   {
     let tempTrans = [];
@@ -686,9 +705,10 @@ class Transactions extends Component {
     {
       return inTransactions;
     }
-    
     todaydate = Math.round(todaydate.getTime() / 1000);
     pastdate = Math.round(pastdate.getTime() / 1000);
+
+    todaydate = todaydate + 10000;
 
     for (let index = 0; index < inTransactions.length; index++) {
       //just holding this to keep it clean
@@ -705,6 +725,8 @@ class Transactions extends Component {
     return tempTrans;
   }
 
+  ///Return All Filter 
+  /// Returns all the transaction that have been filtered by the filter
   returnAllFilters(inTransactions)
   {
     let tempTrans = inTransactions;
@@ -715,32 +737,13 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  returnPageDivs()
-  {
-    let temppagenum = 5;
-    let temppagenumarraya = [];
-    for (let index = 0; index < temppagenum; index++) {
-      
-      temppagenumarraya.push(index);
-      console.log("aaa");
-
-    }
-    return temppagenumarraya.map((ele) =>
-    { 
-      return (
-        <a key={ele} id={"pagenum-" + ele}>
-      {" " + ele + " "}
-      </a>
-      );
-    });
-  }
-
-
+  /// Temp Add Fack Transaction
+  /// DEV MODE: Create a fake transaction for testing. 
   TEMPaddfaketransaction()
   {
     let faketrans = 
     {
-      transactionnumber: (this.state.walletTransactions.length),
+      transactionnumber: (this.props.walletitems.length),
       confirmations: 1000,
       time: 3432423,
       category:  "",
@@ -755,7 +758,7 @@ class Transactions extends Component {
       coin: "Nexus",
       fee: 0
     }
-    let hhhh = function() {
+    let tempTransactionRandomCategory = function() {
       
         let temp = Math.ceil(Math.random() * 4);
         if (temp == 4)
@@ -776,16 +779,16 @@ class Transactions extends Component {
       
     }
 
-    let xxxx = function()
+    let tempTransactionRandomTime = function()
     {
       let start = new Date(2018,3,1);
         let end = new Date(2018,7,2);
-        let yuuu = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-        return yuuu.getTime() / 1000.0;
+        let randomtime = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        return randomtime.getTime() / 1000.0;
     }
 
-    faketrans.category = hhhh();
-    faketrans.time = xxxx();
+    faketrans.category = tempTransactionRandomCategory();
+    faketrans.time = tempTransactionRandomTime();
     faketrans.time = Math.round(faketrans.time);
 
     if (faketrans.category == "send")
@@ -798,38 +801,37 @@ class Transactions extends Component {
 
   }
 
-  clickprevious()
-  {
 
-  }
-
-  clicknext()
-  {
-    console.log("next");
-  }
 
   tryingsomething(e,indata)
   {
-    console.log(indata);
-    console.log("try");
+    //console.log(indata);
+    //console.log("try");
+    //Use this to debug. 
   }
 
+  /// Return Formated Table Data
+  /// Return the data to be placed into the Table
   returnFormatedTableData()
   {
-    const aaaa = this.returnAllFilters([...this.state.currentTransactions]);
-    let bbbb = 0;
-    return aaaa.map((ele) =>
+    if ( this.props.walletitems == undefined)
+    {
+      return [];
+    }
+    const formatedData = this.returnAllFilters([...this.props.walletitems]);
+    let txCounter = 0; // This is just to list out the transactions in order this is not apart of a transaction.
+    return formatedData.map((ele) =>
       {
-        bbbb++;
+        txCounter++;
         let isPending = "";
         if (ele.confirmations <= 120)
         {
           isPending = "(Pending)";
         }
         return {
-                transactionnumber: bbbb+isPending,
-                time: (new Date(ele.time * 1000)).toLocaleString(),
-                category: ele.category,
+                transactionnumber: (txCounter),
+                time:ele.time,
+                category: ele.category+isPending,
                 amount: ele.amount,
                 account: ele.account,
                 address: ele.address,
@@ -838,7 +840,10 @@ class Transactions extends Component {
       });
   }
 
-
+  /// Return Table Columns
+  /// Returns the columns and their rules/formats for the Table
+  /// Output:
+  ///   Array || Table Column array 
   returnTableColumns()
   {
     let tempColumns = [];
@@ -854,7 +859,9 @@ class Transactions extends Component {
     tempColumns.push(
       {
         Header: 'time',
-        accessor: 'time',
+        id: "time",
+        Cell : d => <div> {(new Date(d.value * 1000)).toLocaleString()} </div>, // We want to display the time in  a readable format
+        accessor: "time",
         maxWidth: 150
       }
     );
@@ -891,10 +898,18 @@ class Transactions extends Component {
     return tempColumns;
   }
 
+  /// Return Chart Data 
+  /// Returns formated data for the Victory Chart
+  /// Output:
+  ///    Array || Data Array
   returnChartData()
   {
-    const aaaa = this.returnAllFilters([...this.state.currentTransactions]);
-    return aaaa.map((ele) =>
+    if ( this.props.walletitems == undefined)
+    {
+      return [];
+    }
+    const filteredData = this.returnAllFilters([...this.props.walletitems]);
+    return filteredData.map((ele) =>
     {
       return{
         a:new Date(ele.time * 1000),
@@ -906,6 +921,8 @@ class Transactions extends Component {
     );
   }
 
+  /// Return Corrected Fill Color 
+  /// returns the correct fill color based on the category
   returnCorrectFillColor(inData)
   {
     if (inData.category == "receive")
@@ -922,6 +939,8 @@ class Transactions extends Component {
     }
   }
 
+  /// Return Correct Stoke Color
+  /// Returns the Correct color based on the category 
   returnCorrectStokeColor(inData)
   {
     if (inData.category == "receive")
@@ -937,16 +956,21 @@ class Transactions extends Component {
       return "#fff";
     }
   }
-  
+  /// Return Tooltip Lable
+  /// Returns the tooltip lable for the chart
   returnToolTipLable(inData)
   {
     return (inData.category + "\nAmount: " + inData.b + "\nTime:" + inData.a);
   }
 
+  /// Handle Zoom
+  /// The event listener for when you zoom in and out
   handleZoom(domain) {
     this.setState({ zoomDomain: domain });
   }
 
+  /// Mouse Over Callback
+  /// the callback for when you mouse over a transaction on the table. 
   mouseOverCallback(e, inData)
   {
     this.setState(
@@ -957,7 +981,8 @@ class Transactions extends Component {
       }
     )
   }
-
+  /// Mouse Out Callback
+  /// The call back for when the mouse moves out of the table div. 
   mouseOutCallback(e)
   {
     this.setState(
@@ -1210,35 +1235,9 @@ class Transactions extends Component {
   ///   Promise         || Promise to be executed
   createhistoricaldatapullpromise(urltoask, tokentocompare)
   {
-     /*
-    let setnewdatafunction = function(body)
-    {
-      let result = body;
-      console.log(result);
-      let previousDataFile = this.state.historyData;
-      //For each point returned at it to the historydatamap.
-      result["Data"].forEach(element => {
-        let tempdataobj = {};
-        let tempdataattribute = 'price' + tokentocompare;
-        tempdataobj[tempdataattribute] = element["open"];
-        let incomingelement = tempdataobj;
-
-        Object.assign(incomingelement,previousDataFile.get(element["time"]));
-        previousDataFile.set(element["time"],incomingelement);
-      });
-      this.setState(
-        {
-          historyData:previousDataFile
-        }
-      );
-    };
- */
+     
     this.setnewdatafunction.bind(this);
     
-
-    
-   
-
     let internalpromise = new Promise((resolve,reject) => this.gjggjgjgj(resolve,reject,urltoask,tokentocompare));
 
     return internalpromise;
@@ -1495,10 +1494,14 @@ class Transactions extends Component {
     }
   }
 
+  /// On Open Modal
+  /// Fired when you attempt to open the modal 
   onOpenModal = () => {
     this.setState({ open: true });
   };
 
+  /// On Close Modal
+  /// Fired when you attempt to open the modal
   onCloseModal = () => {
     this.setState({ open: false });
   };
@@ -1506,10 +1509,9 @@ class Transactions extends Component {
   returnModalInternal()
   {
     let internalString = [];
-    if (this.state.hoveringID != 999999999999){
+    if (this.state.hoveringID != 999999999999 && this.props.walletitems.length != 0){
 
-      const selectedTransaction = this.state.walletTransactions[this.state.hoveringID];
-      
+      const selectedTransaction = this.props.walletitems[this.state.hoveringID];
       
         if (selectedTransaction.confirmations <= 120)
         {
@@ -1541,27 +1543,16 @@ class Transactions extends Component {
   render() { 
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
-    const getBarData = () => {
-      return [
-        { x: new Date(1986, 1, 1), y: 2 },
-        { x: new Date(1996, 1, 1), y: 3 },
-        { x: new Date(2006, 1, 1), y: 5 },
-        { x: new Date(2016, 1, 1), y: 4 }
-      ];
-    };
-    const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
+    const VictoryZoomVoronoiContainer = createContainer("voronoi", "zoom");
     const open = this.state.open; 
-   
+
     return (
 
       <div id="transactions">
 
         <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'modal' }}>
-
           <h2 >Transaction Details</h2>
-
           {this.returnModalInternal()}
-
         </Modal>
 
         <h2>Transactions</h2>
@@ -1584,6 +1575,7 @@ class Transactions extends Component {
                   zoomDimension="x"
                   zoomDomain={this.state.zoomDomain}
                   onZoomDomainChange={this.handleZoom.bind(this)}
+                 
                 />
               }
             >
@@ -1628,38 +1620,6 @@ class Transactions extends Component {
               />
 
             </VictoryChart>
-
-            {/* <VictoryChart
-              padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
-              width={this.state.miniChartWidth}
-              height={this.state.miniChartHeight}
-              scale={{ x: "time" }}
-              theme={VictoryTheme.material}
-              domainPadding={{ x: 15 }}
-              padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
-              containerComponent={
-                <VictoryBrushContainer
-                  brushDimension="x"
-                  brushDomain={this.state.zoomDomain}
-                  brushStyle={{fill: "white", opacity: 0.1}}
-                  onBrushDomainChange={this.handleZoom.bind(this)}
-                />
-              }
-            >
-              <VictoryAxis/>
-              <VictoryBar
-                style={{
-                  data: { 
-                    stroke: "tomato",
-                    fill: (d) => this.returnCorrectFillColor(d),
-                    }
-                }}
-                data={this.returnChartData()}
-                x="a"
-                y="b"
-              />
-
-            </VictoryChart> */}
 
           </div>
 

@@ -106,9 +106,11 @@ class Overview extends Component {
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
         console.log("UPDATE BLOCKS");
-        this.asdada();
+        this.redrawCurves();
       }
-      if (this.props.connections != previousprops.connections)
+      
+    }
+    if (this.props.connections != previousprops.connections)
       {
         if (this.props.connections != 0 && previousprops.connections != 0)
         {
@@ -116,7 +118,6 @@ class Overview extends Component {
           this.removeOldPoints();
         }
       }
-    }
   }
 
   setupcontextmenu(e) {
@@ -435,7 +436,7 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
-        <NetworkGlobe handleOnLineRender={e => (this.asdada = e)} handleOnRemoveOldPoints = { e => (this.removeOldPoints = e)} />
+        <NetworkGlobe handleOnLineRender={e => (this.redrawCurves = e)} handleOnRemoveOldPoints = { e => (this.removeOldPoints = e)} />
         <div className="right-stats">
           <div
             id="nxs-connections-info"

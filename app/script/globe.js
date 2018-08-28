@@ -475,14 +475,18 @@ export default (DAT.Globe = function(container, opts) {
     cureves.forEach(element => {
       element.stop();
     });
-    scene.remove(CurveMeshs);
-    scene.remove(PillarMeshs);
-    CurveMeshs.geometry.dispose();
-    CurveMeshs.material.dispose();
-    CurveMeshs = null;
-    PillarMeshs.geometry.dispose();
-    PillarMeshs.material.dispose();
-    PillarMeshs = null;
+    if (CurveMeshs != null){
+      scene.remove(CurveMeshs);
+      CurveMeshs.geometry.dispose();
+      CurveMeshs.material.dispose();
+      CurveMeshs = null;
+    }
+    if (PillarMeshs != null){
+      scene.remove(PillarMeshs);
+      PillarMeshs.geometry.dispose();
+      PillarMeshs.material.dispose();
+      PillarMeshs = null;
+    }
   }
 
   function render() {
@@ -511,6 +515,7 @@ export default (DAT.Globe = function(container, opts) {
     });
     const curveMesh = new THREE.Mesh();
   
+    cureves.length = 0;
     allCoords.forEach((coords, index) => {
         const curve = new Curve(coords, material);
         cureves.push(curve);

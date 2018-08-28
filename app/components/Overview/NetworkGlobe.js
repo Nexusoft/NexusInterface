@@ -16,6 +16,8 @@ export default class NetworkGlobe extends Component {
       "app/GeoLite2-City_20180403/GeoLite2-City.mmdb"
     );
     let myIP = "";
+    glb = new DAT(this.threeRootElement);
+    glb.animate();
     Request(
       {
         url: "http://www.geoplugin.net/json.gp",
@@ -28,7 +30,12 @@ export default class NetworkGlobe extends Component {
           RPC.PROMISE("getpeerinfo", []).then(payload => {
             var tmp = {};
             var ip = {};
-            for (var i = 0; i < payload.length; i++) {
+            let maxnodestoadd = payload.length;
+            if ( maxnodestoadd > 20)
+            {
+              maxnodestoadd = 20;
+            }
+            for (var i = 0; i < maxnodestoadd; i++) {
               ip = payload[i].addr;
               ip = ip.split(":")[0];
               var tmp = geoiplookup.get(ip);
@@ -43,7 +50,7 @@ export default class NetworkGlobe extends Component {
 
 
 
-            glb = new DAT(this.threeRootElement);
+            //glb = new DAT(this.threeRootElement);
             glb.addData(globeseries[0][1], {
               format: "magnitude",
               name: globeseries[0][0]
@@ -51,7 +58,7 @@ export default class NetworkGlobe extends Component {
             glb.createPoints();
             //  Start the animations on the globe
             
-             glb.animate();
+             //glb.animate();
             
           });
         }
@@ -80,7 +87,12 @@ export default class NetworkGlobe extends Component {
           RPC.PROMISE("getpeerinfo", []).then(payload => {    
             var tmp = {};
             var ip = {};
-            for (var i = 0; i < payload.length; i++) {
+            let maxnodestoadd = payload.length;
+            if ( maxnodestoadd > 20)
+            {
+              maxnodestoadd = 20;
+            }
+            for (var i = 0; i < maxnodestoadd; i++) {
               ip = payload[i].addr;
               ip = ip.split(":")[0];
               var tmp = geoiplookup.get(ip);
