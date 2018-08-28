@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 
 import electron from "electron";
 import MenuBuilder from "../../menu";
-
+import Modal from "react-responsive-modal";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
@@ -28,6 +28,7 @@ const mapDispatchToProps = dispatch =>
 
 class Header extends Component {
   componentDidMount() {
+    console.log(this.props);
     const menuBuilder = new MenuBuilder(
       require("electron").remote.getCurrentWindow().id
     );
@@ -59,7 +60,29 @@ class Header extends Component {
       this.props.Unlock();
       this.props.Encrypted();
     }
+    if (this.props.txtotal < nextProps.txtotal) {
+      RPC.PROMISE("listtransactions").then(payload => {
+        console.log(nextProps.txtotal);
+        let MRT = payload.reduce((a, b) => {
+          if (a.time > b.time) {
+            return a;
+          } else {
+            return b;
+          }
+        });
+        console.log(MRT);
+        if (MRT.category === "receive") {
+          this.props.OpenModal();
+        } else if (MRT.category === "send") {
+          this.props.OpenModal2();
+        }
+      });
+    } else {
+      return null;
+    }
+    console.log(this.props.txtotal);
   }
+
   signInStatus() {
     if (this.props.unlocked_until === undefined) {
       return unencryptedImg;
@@ -103,9 +126,9 @@ class Header extends Component {
   returnSyncStatusTooltip() {
     if (heighestPeerBlock > this.props.blocks) {
       return (
-        "Syncing...\nBehind\n" +
-        (heighestPeerBlock - this.props.blocks).toString() +
-        "\nBlocks"
+        "Syncing...\nBehind\n"(
+          heighestPeerBlock - this.props.blocks
+        ).toString() + "\nBlocks"
       );
     } else {
       return "Synced";
@@ -115,6 +138,26 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
+        {/* TESTING MODAL BUTTON<button onClick={() => this.props.OpenModal()} /> */}
+        <div id="notification">
+          <Modal
+            showCloseIcon={false}
+            open={this.props.open}
+            onClose={this.props.CloseModal}
+            classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
+          >
+            <h2>Transaction Received!</h2>
+          </Modal>
+          <Modal
+            showCloseIcon={false}
+            open={this.props.openSecondModal}
+            onClose={this.props.CloseModal2}
+            classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
+          >
+            <h2>Transaction Sent</h2>
+          </Modal>
+        </div>
+
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />
