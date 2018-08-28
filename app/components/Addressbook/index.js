@@ -220,11 +220,40 @@ class Addressbook extends Component {
           </div>
         );
         break;
-      case "SET_CONTACT_PIC":
+      case "ADD_ADDRESS":
         return (
           <div>
-            <h3>Set a Profile Picture</h3>
-            <input type="file" />
+            <h3>
+              Add an address to{" "}
+              {this.props.addressbook[this.props.selected].name}
+            </h3>
+            <div className="field">
+              <label htmlFor="nxsaddress">Nexus Address</label>
+              <input
+                ref="addContactAddress"
+                id="nxsaddress"
+                type="text"
+                onChange={e => this.props.EditProtoAddress(e.target.value)}
+                value={this.props.prototypeAddress}
+                placeholder="Nexus Address"
+              />
+            </div>
+
+            <button
+              className="button primary"
+              onClick={() =>
+                this.props.AddAddress(
+                  this.props.addressbook[this.props.selected].name,
+                  this.props.prototypeAddress,
+                  this.props.selected
+                )
+              }
+            >
+              Add Address
+            </button>
+            <button className="button" onClick={() => this.props.ToggleModal()}>
+              Cancel
+            </button>
           </div>
         );
         break;
@@ -307,10 +336,13 @@ class Addressbook extends Component {
             return (
               <div key={i + add.address}>
                 <div> {add.label}:</div>
-                <div onClick={event => this.copyaddress(event)}>
+                <div
+                  data-tooltip="Triggers Popups that display additional information"
+                  onClick={event => this.copyaddress(event)}
+                >
                   {add.address}
                 </div>
-                <div className="tooltip">Click to copy</div>
+                {/* <div className="tooltip">Click to copy</div> */}
               </div>
             );
           })}
@@ -340,6 +372,11 @@ class Addressbook extends Component {
     );
   }
 
+  addAddressHandler() {
+    this.props.SetModalType("ADD_ADDRESS");
+    this.props.ToggleModal();
+  }
+
   showAddContactModal() {
     this.props.SetModalType("ADD_CONTACT");
     this.props.ToggleModal();
@@ -347,11 +384,6 @@ class Addressbook extends Component {
 
   showMyAddresses() {
     this.props.SetModalType("MY_ADDRESSES");
-    this.props.ToggleModal();
-  }
-
-  contactPicHandler() {
-    this.props.SetModalType("SET_CONTACT_PIC");
     this.props.ToggleModal();
   }
 
@@ -408,21 +440,59 @@ class Addressbook extends Component {
                       <div>
                         <div> Phone number: {this.phoneFormatter()} </div>
                         {this.localTimeFormater()}
-                        <div
-                          onClick={() => this.props.notesToggle()}
-                          id="notesContainer"
-                        >
-                          Notes:
-                          <div id="notes">
-                            {this.props.addressbook[this.props.selected].notes}
-                          </div>
+                        <div id="notesContainer">
+                          <label
+                            onDoubleClick={() =>
+                              this.props.NotesToggler(
+                                this.props.addressbook[this.props.selected]
+                                  .notes
+                              )
+                            }
+                            htmlFor="notes"
+                          >
+                            Notes:
+                          </label>
+                          {this.props.editNotes === true ? (
+                            <div>
+                              <textarea
+                                id="notes"
+                                name="notes"
+                                onDoubleClick={() =>
+                                  this.props.SaveNotes(
+                                    this.props.selected,
+                                    this.props.prototypeNotes
+                                  )
+                                }
+                                onChange={e =>
+                                  this.props.EditProtoNotes(e.target.value)
+                                }
+                                value={this.props.prototypeNotes}
+                                rows="3"
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              id="notes"
+                              name="notes"
+                              onDoubleClick={() =>
+                                this.props.NotesToggler(
+                                  this.props.addressbook[this.props.selected]
+                                    .notes
+                                )
+                              }
+                            >
+                              {
+                                this.props.addressbook[this.props.selected]
+                                  .notes
+                              }
+                            </div>
+                          )}
                         </div>
                       </div>
                       {this.props.addressbook[this.props.selected].imgSrc !==
                       undefined ? (
                         <label htmlFor="picUploader">
                           <img
-                            // onDoubleClick={() => this.contactPicHandler()}
                             src={
                               this.props.addressbook[this.props.selected].imgSrc
                             }
@@ -430,10 +500,7 @@ class Addressbook extends Component {
                         </label>
                       ) : (
                         <label htmlFor="picUploader">
-                          <img
-                            // onDoubleClick={() => this.contactPicHandler()}
-                            src={profilePlaceholder}
-                          />
+                          <img src={profilePlaceholder} />
                         </label>
                       )}
 
@@ -461,6 +528,14 @@ class Addressbook extends Component {
                       .length > 0
                       ? this.theirAddressLister()
                       : null}
+                  </div>
+                  <div id="buttonholder">
+                    <button
+                      className="button ghost hero"
+                      onClick={() => this.addAddressHandler()}
+                    >
+                      Add Address
+                    </button>
                   </div>
                 </div>
               )}

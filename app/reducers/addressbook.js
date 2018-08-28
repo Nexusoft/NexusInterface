@@ -10,7 +10,8 @@ const initialState = {
   prototypePhoneNumber: "",
   selected: 0,
   save: false,
-  myAccounts: []
+  myAccounts: [],
+  editNotes: false
 };
 
 export default (state = initialState, action) => {
@@ -171,29 +172,102 @@ export default (state = initialState, action) => {
         prototypeAddress: action.payload
       };
       break;
-    // dispatch 3
+    case TYPE.ADD_NEW_ADDRESS:
+      if (action.payload.newAddress.ismine) {
+        if (
+          state.addressbook[action.payload.index].mine.findIndex(ele => {
+            if (ele.address === action.payload.newAddress.address) {
+              return ele;
+            }
+          }) === -1
+        ) {
+          let updatedContact = {
+            ...state.addressbook[action.payload.index],
+            mine: [
+              ...state.addressbook[action.payload.index].mine,
+              { ...action.payload.newAddress }
+            ]
+          };
+          let updatedAddressbook = state.addressbook;
+          updatedAddressbook.splice(action.payload.contact, 1, updatedContact);
+
+          return {
+            ...state,
+            addressbook: updatedAddressbook,
+            save: true
+          };
+        } else return state;
+      } else if (
+        state.addressbook[action.payload.index].notMine.findIndex(ele => {
+          if (ele.address === action.payload.newAddress.address) {
+            return ele;
+          }
+        }) === -1
+      ) {
+        let updatedContact = {
+          ...state.addressbook[action.payload.index],
+          notMine: [
+            ...state.addressbook[action.payload.index].notMine,
+            { ...action.payload.newAddress }
+          ]
+        };
+        let updatedAddressbook = state.addressbook;
+        updatedAddressbook.splice(action.payload.index, 1, updatedContact);
+
+        return {
+          ...state,
+          addressbook: updatedAddressbook,
+          save: true
+        };
+      } else return state;
+
+      return {
+        ...state
+      };
+      break;
+
     case TYPE.EDIT_PHONE:
       return {
         ...state,
         prototypePhoneNumber: action.payload
       };
       break;
-    // dispatch 4
+
     case TYPE.EDIT_NOTES:
       return {
         ...state,
         prototypeNotes: action.payload
       };
       break;
-    // Not MVP
-    //   dispatch 5
+
     case TYPE.EDIT_NAME:
       return {
         ...state,
         prototypeName: action.payload
       };
       break;
+    case TYPE.TOGGLE_NOTES_EDIT:
+      return {
+        ...state,
+        prototypeNotes: action.payload,
+        editNotes: true
+      };
+      break;
+    case TYPE.SAVE_NOTES:
+      console.log(action.payload);
+      let newContact = {
+        ...state.addressbook[action.payload.index],
+        notes: action.payload.notes
+      };
+      let newAddressbook = state.addressbook;
+      newAddressbook.splice(action.payload.index, 1, newContact);
 
+      return {
+        ...state,
+        addressbook: newAddressbook,
+        editNotes: false
+      };
+      break;
     // //   dispatch 6 - like dispatch 2
     // case TYPE.EDIT_ADDRESS_LABEL:
     //     let index = state.addressbook.[action.payload.contact].thaddresses.findIndex((thaddelem)=> { thaddelem.address === action.payload.address})
@@ -252,6 +326,7 @@ export default (state = initialState, action) => {
         addressbook: [...action.payload]
       };
       break;
+
     case TYPE.SELECTED_CONTACT:
       return {
         ...state,

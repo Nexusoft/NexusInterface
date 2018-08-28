@@ -28,10 +28,17 @@
 #contactDetailContainer {
   flex: 2;
   margin-left: 20px;
+  align-items: center;
 }
 
 #contactList {
   flex: 1;
+}
+
+#buttonholder {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
 }
 
 #contactDetails {

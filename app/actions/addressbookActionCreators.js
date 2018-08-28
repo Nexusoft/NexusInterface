@@ -55,9 +55,25 @@ export const MyAccountsList = list => {
     dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
   };
 };
+export const NotesToggler = notes => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.TOGGLE_NOTES_EDIT,
+      payload: notes
+    });
+  };
+};
+
+export const SaveNotes = (selected, notes) => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.SAVE_NOTES,
+      payload: { notes: notes, index: selected }
+    });
+  };
+};
 
 export const ChangeContactImage = (path, contact) => {
-  console.log(path, contact);
   return dispatch => {
     dispatch({
       type: TYPE.CONTACT_IMAGE,
@@ -110,6 +126,40 @@ export const AddContact = (name, address, num, notes, TZ) => {
             timezone: TZ,
             phoneNumber: num
           }
+        });
+        dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+};
+
+export const AddAddress = (name, address, index) => {
+  return dispatch => {
+    RPC.PROMISE("validateaddress", [address])
+      .then(payload => {
+        if (payload.isvalid) {
+          if (payload.ismine) {
+            return {
+              label: `My Address for ${name}`,
+              ismine: true,
+              address: address
+            };
+          } else {
+            return {
+              label: `${name}'s Address`,
+              ismine: false,
+              address: address
+            };
+          }
+        } else alert("Invalid address: ", address);
+      })
+      .then(result => {
+        console.log(result);
+        dispatch({
+          type: TYPE.ADD_NEW_ADDRESS,
+          payload: { newAddress: result, index: index }
         });
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
       })
