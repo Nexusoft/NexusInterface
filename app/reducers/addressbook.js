@@ -8,7 +8,9 @@ const initialState = {
   prototypeNotes: "",
   prototypeTimezone: 0,
   prototypePhoneNumber: "",
-  selected: 0
+  selected: 0,
+  save: false,
+  myAccounts: []
 };
 
 export default (state = initialState, action) => {
@@ -20,7 +22,7 @@ export default (state = initialState, action) => {
           return ele;
         }
       });
-      console.log(index);
+
       if (index === -1) {
         let updatedAddressbook = [
           ...state.addressbook,
@@ -45,8 +47,10 @@ export default (state = initialState, action) => {
           return 0;
         });
         return {
+          // new contact
           ...state,
-          addressbook: updatedAddressbook
+          addressbook: updatedAddressbook,
+          save: true
         };
       } else if (action.payload.mine[0]) {
         if (
@@ -56,23 +60,23 @@ export default (state = initialState, action) => {
             }
           }) === -1
         ) {
-          console.log("mine new add");
+          console.log(action.payload.mine);
           let updatedContact = {
             ...state.addressbook[index],
-            mine: [...state.addressbook[index].mine, action.payload.mine],
+            mine: [...state.addressbook[index].mine, action.payload.mine[0]],
             notes: action.payload.notes,
             timezone: action.payload.timezone,
             phoneNumber: action.payload.phoneNumber
           };
           let updatedAddressbook = state.addressbook;
           updatedAddressbook.splice(index, 1, updatedContact);
-
           return {
+            // not new adding mine address
             ...state,
-            addressbook: updatedAddressbook
+            addressbook: updatedAddressbook,
+            save: true
           };
         } else {
-          console.log("mine no new add");
           let updatedContact = {
             ...state.addressbook[index],
             notes: action.payload.notes,
@@ -83,7 +87,8 @@ export default (state = initialState, action) => {
           updatedAddressbook.splice(index, 1, updatedContact);
           return {
             ...state,
-            addressbook: updatedAddressbook
+            addressbook: updatedAddressbook,
+            save: true
           };
         }
       } else if (
@@ -93,12 +98,11 @@ export default (state = initialState, action) => {
           }
         }) === -1
       ) {
-        console.log("notmine new add");
         let updatedContact = {
           ...state.addressbook[index],
           notMine: [
             ...state.addressbook[index].notMine,
-            action.payload.notMine
+            action.payload.notMine[0]
           ],
           notes: action.payload.notes,
           timezone: action.payload.timezone,
@@ -108,11 +112,10 @@ export default (state = initialState, action) => {
         updatedAddressbook.splice(index, 1, updatedContact);
         return {
           ...state,
-          addressbook: updatedAddressbook
+          addressbook: updatedAddressbook,
+          save: true
         };
       } else {
-        console.log("notmine no new add");
-        console.log(action.payload);
         let updatedContact = {
           ...state.addressbook[index],
           notes: action.payload.notes,
@@ -121,14 +124,29 @@ export default (state = initialState, action) => {
         };
         let updatedAddressbook = state.addressbook;
         updatedAddressbook.splice(index, 1, updatedContact);
-        console.log(updatedContact);
-        console.log(updatedAddressbook);
         return {
           ...state,
-          addressbook: updatedAddressbook
+          addressbook: updatedAddressbook,
+          save: true
         };
       }
-
+      break;
+    case TYPE.CONTACT_IMAGE:
+      let updatedContact = {
+        ...state.addressbook[action.payload.contact],
+        imgSrc: action.payload.path
+      };
+      let updatedAddressbook = state.addressbook;
+      updatedAddressbook.splice(action.payload.contact, 1, updatedContact);
+      return {
+        ...state,
+        addressbook: updatedAddressbook
+      };
+    case TYPE.MY_ACCOUNTS_LIST:
+      return {
+        ...state,
+        myAccounts: action.payload
+      };
       break;
     case TYPE.SET_MODAL_TYPE:
       return {
@@ -199,6 +217,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         prototypeTimezone: action.payload
+      };
+      break;
+    case TYPE.SET_SAVE_FLAG_FALSE:
+      return {
+        ...state,
+        save: false
       };
       break;
     // //   dispatch 8

@@ -164,3 +164,11 @@ select {
   display: grid;
   grid-template-columns: auto auto;
 }
+
+.myAddress {
+  margin-left: 20px;
+}
+
+#picUploader {
+  display: none;
+}

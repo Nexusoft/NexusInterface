@@ -50,6 +50,32 @@ export const SelectedContact = contact => {
   };
 };
 
+export const MyAccountsList = list => {
+  return dispatch => {
+    dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
+  };
+};
+
+export const ChangeContactImage = (path, contact) => {
+  console.log(path, contact);
+  return dispatch => {
+    dispatch({
+      type: TYPE.CONTACT_IMAGE,
+      payload: { path: path, contact: contact }
+    });
+  };
+};
+
+export const ToggleSaveFlag = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_SAVE_FLAG_FALSE });
+  };
+};
+export const ContactPicSetter = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_SAVE_FLAG_FALSE });
+  };
+};
 export const AddContact = (name, address, num, notes, TZ) => {
   let mine = [];
   let notMine = [];

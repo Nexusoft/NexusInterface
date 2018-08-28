@@ -26,14 +26,61 @@ const mapDispatchToProps = dispatch =>
 class Addressbook extends Component {
   // componentDidMount: get addressbook data
   // Anything that you are relying on being available for rendering the page from startup
-  //   componentDidMount() {
+  componentDidMount() {
+    this.loadMyAccounts();
+    this.props.googleanalytics.SendScreen("AddressBook");
+  }
 
-  //   }
+  loadMyAccounts() {
+    RPC.PROMISE("listaccounts", [0]).then(payload => {
+      Promise.all(
+        Object.keys(payload).map(account =>
+          RPC.PROMISE("getaddressesbyaccount", [account])
+        )
+      ).then(payload => {
+        let validateAddressPromises = [];
+
+        payload.map(element => {
+          element.addresses.map(address => {
+            validateAddressPromises.push(
+              RPC.PROMISE("validateaddress", [address])
+            );
+          });
+        });
+
+        Promise.all(validateAddressPromises).then(payload => {
+          let accountsList = [];
+          let myaccts = payload.map(e => {
+            if (e.ismine && e.isvalid) {
+              let index = accountsList.findIndex(ele => {
+                if (ele.account === e.account) {
+                  return ele;
+                }
+              });
+
+              if (index === -1) {
+                accountsList.push({
+                  account: e.account,
+                  addresses: [e.address]
+                });
+              } else {
+                accountsList[index].addresses.push(e.address);
+              }
+            }
+          });
+          this.props.MyAccountsList(accountsList);
+        });
+      });
+    });
+  }
+
   componentDidUpdate(previousprops) {
-    if (this.props.addressbook.length > previousprops.addressbook.length) {
+    if (this.props.save) {
+      console.log("SAVE");
       config.WriteJson("addressbook.json", {
         addressbook: this.props.addressbook
       });
+      this.props.ToggleSaveFlag();
     }
   }
 
@@ -42,14 +89,29 @@ class Addressbook extends Component {
     return "M"; // My Addresses
   }
 
-  addContact() {
-    this.props.AddContact(
-      this.props.prototypeName,
-      this.props.prototypeAddress,
-      this.props.prototypePhoneNumber,
-      this.props.prototypeNotes,
-      this.props.prototypeTimezone
-    );
+  copyaddress(event) {
+    event.preventDefault();
+    console.log(event.target.innerText);
+    let target = event.currentTarget;
+    let address = event.target.innerText;
+
+    // create a temporary input element and add it to the list item (no one will see it)
+    let input = document.createElement("input");
+    input.type = "text";
+    target.appendChild(input);
+
+    // set the value of the input to the selected address, then focus and select it
+    input.value = address;
+    input.focus();
+    input.select();
+
+    // copy it to clipboard
+    document.execCommand("Copy", false, null);
+
+    // remove the temporary element from the DOM
+    input.remove();
+
+    alert("copyed");
   }
 
   modalInternalBuilder() {
@@ -116,7 +178,15 @@ class Addressbook extends Component {
 
             <button
               className="button primary"
-              onClick={() => this.addContact()}
+              onClick={() =>
+                this.props.AddContact(
+                  this.props.prototypeName,
+                  this.props.prototypeAddress,
+                  this.props.prototypePhoneNumber,
+                  this.props.prototypeNotes,
+                  this.props.prototypeTimezone
+                )
+              }
             >
               {index === -1 ? "Add Contact" : "Edit Contact"}
             </button>
@@ -127,8 +197,38 @@ class Addressbook extends Component {
         );
         break;
       case "MY_ADDRESSES":
-        return <div>My addresses here</div>;
+        return (
+          <div>
+            {this.props.myAccounts.map((acct, i) => {
+              return (
+                <div key={acct + i}>
+                  <div>{acct.account === "" ? "My Account" : acct.account}</div>
+                  {acct.addresses.map(address => {
+                    return (
+                      <div
+                        key={address}
+                        onClick={event => this.copyaddress(event)}
+                        className="myAddress"
+                      >
+                        {address}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        );
         break;
+      case "SET_CONTACT_PIC":
+        return (
+          <div>
+            <h3>Set a Profile Picture</h3>
+            <input type="file" />
+          </div>
+        );
+        break;
+
       default:
         break;
     }
@@ -163,16 +263,6 @@ class Addressbook extends Component {
         </div>
       );
     }
-  }
-
-  showAddContactModal() {
-    this.props.SetModalType("ADD_CONTACT");
-    this.props.ToggleModal();
-  }
-
-  showMyAddresses() {
-    this.props.SetModalType("MY_ADDRESSES");
-    this.props.ToggleModal();
   }
 
   phoneFormatter() {
@@ -216,7 +306,11 @@ class Addressbook extends Component {
           {this.props.addressbook[this.props.selected].notMine.map((add, i) => {
             return (
               <div key={i + add.address}>
-                {add.label}: {add.address}
+                <div> {add.label}:</div>
+                <div onClick={event => this.copyaddress(event)}>
+                  {add.address}
+                </div>
+                <div className="tooltip">Click to copy</div>
               </div>
             );
           })}
@@ -229,9 +323,36 @@ class Addressbook extends Component {
     return (
       <div>
         <h3>My addresses</h3>
-        "ADDRESSES"
+        <div>
+          {this.props.addressbook[this.props.selected].mine.map((add, i) => {
+            console.log(add, i);
+            return (
+              <div key={i + add.address}>
+                <div>{add.label}: </div>{" "}
+                <div onClick={event => this.copyaddress(event)}>
+                  {add.address}{" "}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
+  }
+
+  showAddContactModal() {
+    this.props.SetModalType("ADD_CONTACT");
+    this.props.ToggleModal();
+  }
+
+  showMyAddresses() {
+    this.props.SetModalType("MY_ADDRESSES");
+    this.props.ToggleModal();
+  }
+
+  contactPicHandler() {
+    this.props.SetModalType("SET_CONTACT_PIC");
+    this.props.ToggleModal();
   }
 
   render() {
@@ -253,12 +374,12 @@ class Addressbook extends Component {
         <div className="panel">
           <div id="addressbook-controls">
             <div id="addressbook-search">
-              {this.props.addressbook.length > 0 && (
+              {/* {this.props.addressbook.length > 0 && (
                 <div>
                   <input type="text" />
                   <button id="searchContacts" />
                 </div>
-              )}
+              )} */}
             </div>
 
             <button
@@ -287,26 +408,48 @@ class Addressbook extends Component {
                       <div>
                         <div> Phone number: {this.phoneFormatter()} </div>
                         {this.localTimeFormater()}
-                        <div id="notesContainer">
-                          Notes:{" "}
+                        <div
+                          onClick={() => this.props.notesToggle()}
+                          id="notesContainer"
+                        >
+                          Notes:
                           <div id="notes">
-                            {" "}
-                            {
-                              this.props.addressbook[this.props.selected].notes
-                            }{" "}
-                          </div>{" "}
+                            {this.props.addressbook[this.props.selected].notes}
+                          </div>
                         </div>
                       </div>
                       {this.props.addressbook[this.props.selected].imgSrc !==
                       undefined ? (
-                        <img
-                          src={
-                            this.props.addressbook[this.props.selected].imgSrc
-                          }
-                        />
+                        <label htmlFor="picUploader">
+                          <img
+                            // onDoubleClick={() => this.contactPicHandler()}
+                            src={
+                              this.props.addressbook[this.props.selected].imgSrc
+                            }
+                          />
+                        </label>
                       ) : (
-                        <img src={profilePlaceholder} />
+                        <label htmlFor="picUploader">
+                          <img
+                            // onDoubleClick={() => this.contactPicHandler()}
+                            src={profilePlaceholder}
+                          />
+                        </label>
                       )}
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        name="picUploader"
+                        onChange={e =>
+                          this.props.ChangeContactImage(
+                            e.target.files[0].path,
+                            this.props.selected
+                          )
+                        }
+                        id="picUploader"
+                        data-tooltip="The profile image for this contact"
+                      />
                     </div>
                   </fieldset>
                   <div id="addressDisplay">

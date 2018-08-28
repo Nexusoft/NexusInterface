@@ -69,6 +69,7 @@ class Unencrypted extends Component {
     document.execCommand("Copy", false, null);
     output.type = "password";
   }
+
   reEnterValidator(e) {
     let newPass = document.getElementById("newPass");
     let passHint = document.getElementById("passHint");
@@ -79,6 +80,7 @@ class Unencrypted extends Component {
       passHint.style.visibility = "visible";
     }
   }
+
   encrypt(e) {
     e.preventDefault();
     let newPass, passChk, passHint;
@@ -107,6 +109,7 @@ class Unencrypted extends Component {
   componentWillUnmount() {
     this.props.wipe();
   }
+
   render() {
     return (
       <div id="securitylogin">
