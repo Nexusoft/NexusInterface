@@ -383,7 +383,12 @@ class Addressbook extends Component {
                       this.props.LabelToggler(add.label, add.address)
                     }
                   >
-                    {add.label}:
+                    {add.label === "'s Address"
+                      ? `${this.props.addressbook[this.props.selected].name}${
+                          add.label
+                        }`
+                      : add.label}
+                    :
                   </span>
                 )}
                 <div onClick={event => this.copyaddress(event)}>
@@ -407,7 +412,33 @@ class Addressbook extends Component {
             console.log(add, i);
             return (
               <div key={i + add.address}>
-                <div>{add.label}: </div>{" "}
+                {this.props.editAddressLabel === add.address ? (
+                  <input
+                    onChange={e => this.props.EditProtoLabel(e.target.value)}
+                    value={this.props.prototypeAddressLabel}
+                    onDoubleClick={() =>
+                      this.props.SaveLabel(
+                        this.props.selected,
+                        add.address,
+                        this.props.prototypeAddressLabel,
+                        true
+                      )
+                    }
+                  />
+                ) : (
+                  <span
+                    onDoubleClick={() =>
+                      this.props.LabelToggler(add.label, add.address)
+                    }
+                  >
+                    {add.label === "My Address for "
+                      ? `${add.label}${
+                          this.props.addressbook[this.props.selected].name
+                        }`
+                      : add.label}
+                    :
+                  </span>
+                )}
                 <div onClick={event => this.copyaddress(event)}>
                   {add.address}{" "}
                 </div>
