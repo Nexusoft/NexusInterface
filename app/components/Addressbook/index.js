@@ -364,7 +364,28 @@ class Addressbook extends Component {
           {this.props.addressbook[this.props.selected].notMine.map((add, i) => {
             return (
               <div key={i + add.address}>
-                <span> {add.label}:</span>
+                {this.props.editAddressLabel === add.address ? (
+                  <input
+                    onChange={e => this.props.EditProtoLabel(e.target.value)}
+                    value={this.props.prototypeAddressLabel}
+                    onDoubleClick={() =>
+                      this.props.SaveLabel(
+                        this.props.selected,
+                        add.address,
+                        this.props.prototypeAddressLabel,
+                        false
+                      )
+                    }
+                  />
+                ) : (
+                  <span
+                    onDoubleClick={() =>
+                      this.props.LabelToggler(add.label, add.address)
+                    }
+                  >
+                    {add.label}:
+                  </span>
+                )}
                 <div onClick={event => this.copyaddress(event)}>
                   {add.address}
                 </div>

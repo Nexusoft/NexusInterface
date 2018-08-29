@@ -44,6 +44,12 @@ export const EditProtoTZ = TZ => {
   };
 };
 
+export const EditProtoLabel = label => {
+  return dispatch => {
+    dispatch({ type: TYPE.EDIT_ADDRESS_LABEL, payload: label });
+  };
+};
+
 export const SelectedContact = contact => {
   return dispatch => {
     dispatch({ type: TYPE.SELECTED_CONTACT, payload: contact });
@@ -53,6 +59,32 @@ export const SelectedContact = contact => {
 export const MyAccountsList = list => {
   return dispatch => {
     dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
+  };
+};
+
+export const LabelToggler = (label, address) => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.TOGGLE_ADDRESS_LABEL_EDIT,
+      payload: { label: label, address: address }
+    });
+  };
+};
+
+export const SaveLabel = (selected, address, label, mine) => {
+  let newEntry = { ismine: mine, address: address, label: label };
+
+  return dispatch => {
+    dispatch({
+      type: TYPE.SAVE_ADDRESS_LABEL,
+      payload: {
+        newEntry: newEntry,
+        address: address,
+        newLabel: label,
+        index: selected,
+        ismine: mine
+      }
+    });
   };
 };
 
@@ -157,13 +189,13 @@ export const AddContact = (name, address, num, notes, TZ) => {
         if (payload.isvalid) {
           if (payload.ismine) {
             mine.push({
-              label: `My Address for ${name}`,
+              label: `My Address for `,
               ismine: true,
               address: address
             });
           } else {
             notMine.push({
-              label: `${name}'s Address`,
+              label: `'s Address`,
               ismine: false,
               address: address
             });

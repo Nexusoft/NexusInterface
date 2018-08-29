@@ -8,9 +8,11 @@ const initialState = {
   prototypeNotes: "",
   prototypeTimezone: 0,
   prototypePhoneNumber: "",
+  prototypeAddressLabel: "",
   selected: 0,
   save: false,
   myAccounts: [],
+  editAddressLabel: "",
   editNotes: false,
   editPhone: false,
   editAddress: false,
@@ -30,31 +32,29 @@ export default (state = initialState, action) => {
       });
 
       if (index === -1) {
-        let updatedAddressbook = [
-          ...state.addressbook,
-          {
-            name: action.payload.name,
-            mine: action.payload.mine,
-            notMine: action.payload.notMine,
-            notes: action.payload.notes,
-            timezone: action.payload.timezone,
-            phoneNumber: action.payload.phoneNumber
-          }
-        ];
-        updatedAddressbook.sort((a, b) => {
-          let nameA = a.name.toUpperCase();
-          let nameB = b.name.toUpperCase();
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-          return 0;
-        });
         return {
           ...state,
-          addressbook: updatedAddressbook,
+          addressbook: [
+            ...state.addressbook,
+            {
+              name: action.payload.name,
+              mine: action.payload.mine,
+              notMine: action.payload.notMine,
+              notes: action.payload.notes,
+              timezone: action.payload.timezone,
+              phoneNumber: action.payload.phoneNumber
+            }
+          ].sort((a, b) => {
+            let nameA = a.name.toUpperCase();
+            let nameB = b.name.toUpperCase();
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            return 0;
+          }),
           save: true
         };
       } else if (action.payload.mine[0]) {
@@ -65,32 +65,41 @@ export default (state = initialState, action) => {
             }
           }) === -1
         ) {
-          let updatedContact = {
-            ...state.addressbook[index],
-            mine: [...state.addressbook[index].mine, action.payload.mine[0]],
-            notes: action.payload.notes,
-            timezone: action.payload.timezone,
-            phoneNumber: action.payload.phoneNumber
-          };
-          let updatedAddressbook = state.addressbook;
-          updatedAddressbook.splice(index, 1, updatedContact);
           return {
             ...state,
-            addressbook: updatedAddressbook,
+            addressbook: state.addressbook.map((ele, i) => {
+              if (i === index) {
+                return {
+                  ...state.addressbook[index],
+                  mine: [
+                    ...state.addressbook[index].mine,
+                    action.payload.mine[0]
+                  ],
+                  notes: action.payload.notes,
+                  timezone: action.payload.timezone,
+                  phoneNumber: action.payload.phoneNumber
+                };
+              } else {
+                return ele;
+              }
+            }),
             save: true
           };
         } else {
-          let updatedContact = {
-            ...state.addressbook[index],
-            notes: action.payload.notes,
-            timezone: action.payload.timezone,
-            phoneNumber: action.payload.phoneNumber
-          };
-          let updatedAddressbook = state.addressbook;
-          updatedAddressbook.splice(index, 1, updatedContact);
           return {
             ...state,
-            addressbook: updatedAddressbook,
+            addressbook: state.addressbook.map((ele, i) => {
+              if (i === index) {
+                return {
+                  ...state.addressbook[index],
+                  notes: action.payload.notes,
+                  timezone: action.payload.timezone,
+                  phoneNumber: action.payload.phoneNumber
+                };
+              } else {
+                return ele;
+              }
+            }),
             save: true
           };
         }
@@ -101,49 +110,59 @@ export default (state = initialState, action) => {
           }
         }) === -1
       ) {
-        let updatedContact = {
-          ...state.addressbook[index],
-          notMine: [
-            ...state.addressbook[index].notMine,
-            action.payload.notMine[0]
-          ],
-          notes: action.payload.notes,
-          timezone: action.payload.timezone,
-          phoneNumber: action.payload.phoneNumber
-        };
-        let updatedAddressbook = state.addressbook;
-        updatedAddressbook.splice(index, 1, updatedContact);
         return {
           ...state,
-          addressbook: updatedAddressbook,
+          addressbook: state.addressbook.map((ele, i) => {
+            if (i === index) {
+              return {
+                ...state.addressbook[index],
+                notMine: [
+                  ...state.addressbook[index].notMine,
+                  action.payload.notMine[0]
+                ],
+                notes: action.payload.notes,
+                timezone: action.payload.timezone,
+                phoneNumber: action.payload.phoneNumber
+              };
+            } else {
+              return ele;
+            }
+          }),
           save: true
         };
       } else {
-        let updatedContact = {
-          ...state.addressbook[index],
-          notes: action.payload.notes,
-          timezone: action.payload.timezone,
-          phoneNumber: action.payload.phoneNumber
-        };
-        let updatedAddressbook = state.addressbook;
-        updatedAddressbook.splice(index, 1, updatedContact);
         return {
           ...state,
-          addressbook: updatedAddressbook,
+          addressbook: state.addressbook.map((ele, i) => {
+            if (i === index) {
+              return {
+                ...state.addressbook[index],
+                notes: action.payload.notes,
+                timezone: action.payload.timezone,
+                phoneNumber: action.payload.phoneNumber
+              };
+            } else {
+              return ele;
+            }
+          }),
           save: true
         };
       }
       break;
     case TYPE.CONTACT_IMAGE:
-      let updatedContact = {
-        ...state.addressbook[action.payload.contact],
-        imgSrc: action.payload.path
-      };
-      let updatedAddressbook = state.addressbook;
-      updatedAddressbook.splice(action.payload.contact, 1, updatedContact);
       return {
         ...state,
-        addressbook: updatedAddressbook
+        addressbook: state.addressbook.map((ele, i) => {
+          if (i === action.payload.contact) {
+            return {
+              ...state.addressbook[action.payload.contact],
+              imgSrc: action.payload.path
+            };
+          } else {
+            return ele;
+          }
+        }),
+        save: true
       };
     case TYPE.MY_ACCOUNTS_LIST:
       return {
@@ -183,19 +202,21 @@ export default (state = initialState, action) => {
             }
           }) === -1
         ) {
-          let updatedContact = {
-            ...state.addressbook[action.payload.index],
-            mine: [
-              ...state.addressbook[action.payload.index].mine,
-              { ...action.payload.newAddress }
-            ]
-          };
-          let updatedAddressbook = state.addressbook;
-          updatedAddressbook.splice(action.payload.contact, 1, updatedContact);
-
           return {
             ...state,
-            addressbook: updatedAddressbook,
+            addressbook: state.addressbook.map((ele, i) => {
+              if (i === index) {
+                return {
+                  ...state.addressbook[action.payload.index],
+                  mine: [
+                    ...state.addressbook[action.payload.index].mine,
+                    { ...action.payload.newAddress }
+                  ]
+                };
+              } else {
+                return ele;
+              }
+            }),
             save: true
           };
         } else return state;
@@ -206,19 +227,21 @@ export default (state = initialState, action) => {
           }
         }) === -1
       ) {
-        let updatedContact = {
-          ...state.addressbook[action.payload.index],
-          notMine: [
-            ...state.addressbook[action.payload.index].notMine,
-            { ...action.payload.newAddress }
-          ]
-        };
-        let updatedAddressbook = state.addressbook;
-        updatedAddressbook.splice(action.payload.index, 1, updatedContact);
-
         return {
           ...state,
-          addressbook: updatedAddressbook,
+          addressbook: state.addressbook.map((ele, i) => {
+            if (i === index) {
+              return {
+                ...state.addressbook[action.payload.index],
+                notMine: [
+                  ...state.addressbook[action.payload.index].notMine,
+                  { ...action.payload.newAddress }
+                ]
+              };
+            } else {
+              return ele;
+            }
+          }),
           save: true
         };
       } else return state;
@@ -244,6 +267,87 @@ export default (state = initialState, action) => {
       };
       break;
 
+    case TYPE.TOGGLE_ADDRESS_LABEL_EDIT:
+      return {
+        ...state,
+        prototypeAddressLabel: action.payload.label,
+        editAddressLabel: action.payload.address
+      };
+      break;
+    case TYPE.SAVE_ADDRESS_LABEL:
+      console.log(action.payload);
+      if (action.payload.ismine) {
+        let MIndex = state.addressbook[action.payload.index].mine.findIndex(
+          ele => {
+            if (ele.address === action.payload.address) {
+              return ele;
+            }
+          }
+        );
+        if (MIndex !== -1) {
+          return {
+            ...state,
+            addressbook: state.addressbook.map((ele, i) => {
+              if (i === action.payload.index) {
+                return {
+                  ...state.addressbook[action.payload.index],
+                  mine: state.addressbook[action.payload.index].mine.map(
+                    (ele, i) => {
+                      if (i === MIndex) {
+                        return action.payload.newEntry;
+                      } else {
+                        return ele;
+                      }
+                    }
+                  )
+                };
+              } else {
+                return ele;
+              }
+            }),
+            editAddressLabel: "",
+            save: true
+          };
+        }
+      } else {
+        let NMIndex = state.addressbook[action.payload.index].notMine.findIndex(
+          ele => {
+            if (ele.address === action.payload.address) {
+              return ele;
+            }
+          }
+        );
+
+        if (NMIndex !== -1) {
+          return {
+            ...state,
+            addressbook: state.addressbook.map((ele, i) => {
+              if (i === action.payload.index) {
+                return {
+                  ...state.addressbook[action.payload.index],
+                  notMine: state.addressbook[action.payload.index].notMine.map(
+                    (ele, i) => {
+                      if (i === NMIndex) {
+                        return action.payload.newEntry;
+                      } else {
+                        return ele;
+                      }
+                    }
+                  )
+                };
+              } else {
+                return ele;
+              }
+            }),
+            editAddressLabel: "",
+            save: true
+          };
+        } else {
+          return { ...state };
+        }
+      }
+      break;
+
     case TYPE.TOGGLE_NOTES_EDIT:
       return {
         ...state,
@@ -252,16 +356,18 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.SAVE_NOTES:
-      newContact = {
-        ...state.addressbook[action.payload.index],
-        notes: action.payload.notes
-      };
-      newAddressbook = state.addressbook;
-      newAddressbook.splice(action.payload.index, 1, newContact);
-
       return {
         ...state,
-        addressbook: newAddressbook,
+        addressbook: state.addressbook.map((ele, i) => {
+          if (i === action.payload.index) {
+            return {
+              ...state.addressbook[action.payload.index],
+              notes: action.payload.notes
+            };
+          } else {
+            return ele;
+          }
+        }),
         editNotes: false,
         save: true
       };
@@ -275,15 +381,18 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.SAVE_NAME:
-      newContact = {
-        ...state.addressbook[action.payload.index],
-        name: action.payload.name
-      };
-      newAddressbook = state.addressbook;
-      newAddressbook.splice(action.payload.index, 1, newContact);
       return {
         ...state,
-        addressbook: newAddressbook,
+        addressbook: state.addressbook.map((ele, i) => {
+          if (i === action.payload.index) {
+            return {
+              ...state.addressbook[action.payload.index],
+              name: action.payload.name
+            };
+          } else {
+            return ele;
+          }
+        }),
         editName: false,
         save: true
       };
@@ -296,15 +405,18 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.SAVE_TIMEZONE:
-      newContact = {
-        ...state.addressbook[action.payload.index],
-        timezone: action.payload.TZ
-      };
-      newAddressbook = state.addressbook;
-      newAddressbook.splice(action.payload.index, 1, newContact);
       return {
         ...state,
-        addressbook: newAddressbook,
+        addressbook: state.addressbook.map((ele, i) => {
+          if (i === action.payload.index) {
+            return {
+              ...state.addressbook[action.payload.index],
+              timezone: action.payload.TZ
+            };
+          } else {
+            return ele;
+          }
+        }),
         editTZ: false,
         save: true
       };
@@ -317,24 +429,28 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.SAVE_PHONE:
-      newContact = {
-        ...state.addressbook[action.payload.index],
-        phoneNumber: action.payload.Phone
-      };
-      newAddressbook = state.addressbook;
-      newAddressbook.splice(action.payload.index, 1, newContact);
       return {
         ...state,
-        addressbook: newAddressbook,
+        addressbook: state.addressbook.map((ele, i) => {
+          if (i === action.payload.index) {
+            return {
+              ...state.addressbook[action.payload.index],
+              phoneNumber: action.payload.Phone
+            };
+          } else {
+            return ele;
+          }
+        }),
         editPhone: false,
         save: true
       };
       break;
-    // //   dispatch 6 - like dispatch 2
-    // case TYPE.EDIT_ADDRESS_LABEL:
-    //   return { ...state };
-    //   break;
-    //   dispatch 7
+    case TYPE.EDIT_ADDRESS_LABEL:
+      return {
+        ...state,
+        prototypeAddressLabel: action.payload
+      };
+      break;
     case TYPE.EDIT_TIMEZONE:
       return {
         ...state,
