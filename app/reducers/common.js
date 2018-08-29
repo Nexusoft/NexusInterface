@@ -10,7 +10,7 @@ const initialState = {
   openThirdModal: false,
   modaltype: "",
   confirmation: false,
-  actionItem: ""
+  actionItem: "",
   modalVisable: false
 };
 
