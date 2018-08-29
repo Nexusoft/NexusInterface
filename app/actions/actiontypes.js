@@ -55,3 +55,6 @@ export const HIDE_MODAL = "HIDE_MODAL";
 export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL2 = "HIDE_MODAL2";
 export const SHOW_MODAL2 = "SHOW_MODAL2";
+export const HIDE_MODAL3 = "HIDE_MODAL3";
+export const SHOW_MODAL3 = "SHOW_MODAL3";
+export const CONFIRM = "CONFIRM";

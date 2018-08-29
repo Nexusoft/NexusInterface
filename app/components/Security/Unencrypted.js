@@ -15,7 +15,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
+  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  OpenModal: type => {
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  }
 });
 
 class Unencrypted extends Component {
@@ -71,7 +74,7 @@ class Unencrypted extends Component {
               pass.value = "";
               newPass.value = "";
               passChk.value = "";
-              alert("Wallet has been encrypted.");
+              this.props.OpenModal("Wallet has been encrypted.");
               this.props.history.push();
             }
           });

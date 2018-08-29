@@ -57,9 +57,7 @@
 #left-buttons {
   padding-top: 10px;
 }
-/* #thead {
-  width: 100%;
-} */
+
 .input {
   width: 350px;
 }
@@ -101,9 +99,26 @@
 
   /* min-width: 50%; */
 }
-#table-wraper .td {
-  border: 0.5px solid gray;
+
+/* CONFIRM MODAL */
+.custom-overlay2 {
+  padding: 0px;
 }
+.custom-modal2 {
+  background: #282828;
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+  margin-left: -150px;
+  margin-top: -150px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.no-button {
+  float: right;
+}
+
 .thead {
   /* width: 300px; */
   min-width: 50%;
@@ -134,4 +149,23 @@
   flex-direction: column;
   color: var(--color-5);
   text-align: right;
+}
+
+/* TABLE ANIMATION */
+.td {
+  animation: td 0.5s;
+  border: 1px solid #757272;
+}
+
+@keyframes td {
+  33% {
+    transform: translateX(-20px);
+  }
+  66% {
+    transform: translateX(10px);
+    background: #282828;
+  }
+  99% {
+    transform: translateX(0px);
+  }
 }

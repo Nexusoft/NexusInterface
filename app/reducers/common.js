@@ -6,7 +6,11 @@ const initialState = {
   encrypted: false,
   busyFlag: false,
   open: false,
-  openSecondModal: false
+  openSecondModal: false,
+  openThirdModal: false,
+  modaltype: "",
+  confirmation: false,
+  actionItem: ""
 };
 
 export default (state = initialState, action) => {
@@ -34,6 +38,7 @@ export default (state = initialState, action) => {
         ...state,
         encrypted: false
       };
+
       break;
     case TYPE.ENCRYPTED:
       return {
@@ -48,28 +53,55 @@ export default (state = initialState, action) => {
         googleanalytics: action.payload
       };
       break;
+
+    case TYPE.CONFIRM:
+      return {
+        ...state,
+        confirmation: action.payload
+      };
+      break;
     case TYPE.SHOW_MODAL:
       return {
         ...state,
-        open: true
+        open: true,
+        modaltype: action.payload
       };
       break;
     case TYPE.HIDE_MODAL:
       return {
         ...state,
-        open: false
+        open: false,
+        modaltype: action.payload
       };
       break;
     case TYPE.SHOW_MODAL2:
       return {
         ...state,
-        openSecondModal: true
+        openSecondModal: true,
+        modaltype: action.payload
       };
       break;
+
     case TYPE.HIDE_MODAL2:
       return {
         ...state,
-        openSecondModal: false
+        openSecondModal: false,
+        modaltype: action.payload
+      };
+      break;
+    case TYPE.SHOW_MODAL3:
+      return {
+        ...state,
+        openThirdModal: true,
+        modaltype: action.payload
+      };
+      break;
+
+    case TYPE.HIDE_MODAL3:
+      return {
+        ...state,
+        openThirdModal: false,
+        modaltype: action.payload
       };
       break;
 

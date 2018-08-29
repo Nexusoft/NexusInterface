@@ -49,70 +49,45 @@
 
 /* MODAL STYLE */
 
-/* .transition-enter {
-  transform: scale(0);
-}
-.transition-enter-active {
-  transform: scale(1);
-  transition: transform 1000ms ease;
-}
-.transition-exit {
-  transform: scale(1);
-}
-.transition-exit-active {
-  transform: scale(0);
-  transition: transform 1000ms ease;
-} */
 .custom-overlay {
   background: transparent;
   padding: 0px;
 }
+
 .custom-modal {
   background: var(--color-2);
   position: absolute;
   bottom: 80%;
   right: 0px;
-  width: 250px;
-
   height: 55px;
+
   font-size: 10px;
-  margin: 0px;
   border: 5px solid var(--color-5);
-  -webkit-animation: mymove 2.5s;
-  animation: mymove 2.5s;
-  overflow: hidden;
+  -webkit-animation: mymove 5s;
+  animation: mymove 5s;
   white-space: nowrap;
   border-radius: 5px;
+  -webkit-box-shadow: 0 3px 30px white;
+  -moz-box-shadow: 0 3px 30px white;
+  box-shadow: 0 3px 30px white;
 }
 @keyframes mymove {
-  from {
-    right: 0px;
-    width: 0;
-    margin: 0px;
-    height: 55px;
+  0% {
+    right: -5%;
+    background-color: var(--color-3);
+  }
+  25% {
+    right: 0%;
+    background-color: var(--color-2);
   }
 
-  to {
-    right: 0px;
-    width: 250px;
-    height: 55px;
+  50% {
+    right: 0%;
+    background-color: var(--color-3);
   }
-  0% {
-    background: var(--color-3);
-  }
-  20% {
-    background: var(--color-2);
-  }
-  40% {
-    background: var(--color-3);
-  }
-  60% {
-    background: var(--color-2);
-  }
-  80% {
-    background: var(--color-3);
-  }
+
   100% {
-    background: var(--color-2);
+    right: 0px;
+    background-color: var(--color-2);
   }
 }

@@ -53,7 +53,27 @@ const mapDispatchToProps = dispatch => ({
   removeQueue: returnQueue => {
     dispatch({ type: TYPE.REMOVE_FROM_QUEUE, payload: returnQueue });
   },
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
+  busy: () => {
+    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
+  },
+  OpenModal: type => {
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  },
+  OpenModal2: type => {
+    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
+  },
+  CloseModal2: type => {
+    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
+  },
+  OpenModal3: type => {
+    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
+  },
+  CloseModal3: type => {
+    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
+  },
+  Confirm: Answer => {
+    dispatch({ type: TYPE.CONFIRM, payload: Answer });
+  }
 });
 
 class SendRecieve extends Component {
@@ -91,7 +111,7 @@ class SendRecieve extends Component {
         <button
           className="button large"
           onClick={() => {
-            if (confirm("Edit Entry?")) this.validateAddToQueue();
+            this.props.OpenModal2("Edit Entry?");
           }}
         >
           Edit Entry
@@ -175,16 +195,18 @@ class SendRecieve extends Component {
               }
             } else {
               this.props.busy();
-              alert("This is an address regiestered to this wallet");
+              this.props.OpenModal(
+                "This is an address regiestered to this wallet"
+              );
             }
           } else {
             this.props.busy();
-            alert("Invalid Address");
+            this.props.OpenModal("Invalid Address");
           }
         })
         .catch(e => {
           this.props.busy();
-          alert("Invalid Address");
+          this.props.OpenModal("Invalid Address");
         });
     } else {
       this.props.busy();
@@ -199,7 +221,6 @@ class SendRecieve extends Component {
         .then(payoad => this.props.busy())
         .catch(e => {
           this.props.busy();
-          alert("Empty Queue!");
         });
     } else if (this.props.Amount > 0) {
       RPC.PROMISE("sendtoaddress", [
@@ -209,9 +230,10 @@ class SendRecieve extends Component {
         .then(payoad => this.props.busy())
         .catch(e => {
           this.props.busy();
-          alert("No Addresses");
+          this.props.OpenModal("No Addresses");
         });
     }
+    this.props.busy();
     this.props.clearForm();
     this.props.clearQueue();
   }
@@ -248,14 +270,16 @@ class SendRecieve extends Component {
                 amount: parseFloat(this.props.Amount)
               });
             } else {
-              alert("This is an address regiestered to this wallet");
+              this.props.OpenModal(
+                "This is an address regiestered to this wallet"
+              );
             }
           } else {
-            alert("Invalid Address");
+            this.props.OpenModal("Invalid Address");
           }
         })
         .catch(e => {
-          alert("Invalid Address");
+          this.props.OpenModal("Invalid Address");
         });
     }
   }
@@ -283,13 +307,181 @@ class SendRecieve extends Component {
               id="Remove"
               src="images/status-bad.svg"
               onClick={() => {
-                if (confirm("Delete Entry?")) this.props.removeQueue(e.key);
+                this.props.OpenModal3();
               }}
             />
           </td>
+          <Modal
+            classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}
+            showCloseIcon={false}
+            open={this.props.openThirdModal}
+            onClose={this.props.CloseModal3}
+          >
+            <div>
+              {" "}
+              <h2>Remove From Queue?</h2>
+              <input
+                value="Yes"
+                type="button"
+                className="button primary"
+                onClick={() => {
+                  this.props.removeQueue(e.key);
+                  this.props.CloseModal3();
+                }}
+              />
+              <div className="no-button">
+                <input
+                  value="No"
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    this.props.CloseModal3();
+                  }}
+                />
+              </div>
+            </div>
+          </Modal>
         </tr>
       );
     });
+  }
+  modalinternal2() {
+    switch (this.props.modaltype) {
+      case "send transaction?":
+        return (
+          <div>
+            <h2>Send Transaction?</h2>
+            <input
+              value="Yes"
+              type="button"
+              className="button primary"
+              onClick={() => {
+                this.sendOne();
+                this.props.CloseModal2();
+              }}
+            />
+            <div className="no-button">
+              <input
+                value="No"
+                className="button"
+                type="button"
+                onClick={() => this.props.CloseModal2()}
+              />
+            </div>
+          </div>
+        );
+        break;
+      case "Clear Queue?":
+        return (
+          <div>
+            <h2>Empty Queue?</h2>
+            <input
+              value="Yes"
+              type="button"
+              className="button primary"
+              onClick={() => {
+                this.props.clearQueue();
+                this.props.CloseModal2();
+              }}
+            />
+            <div className="no-button">
+              <input
+                value="No"
+                className="button"
+                type="button"
+                onClick={() => this.props.CloseModal2()}
+              />
+            </div>
+          </div>
+        );
+        break;
+      case "Send Multiple?":
+        return (
+          <div>
+            <h2>
+              {" "}
+              Send All (Total: {this.areYouSure()}) Transactions From $
+              {this.accHud()}{" "}
+            </h2>
+            <input
+              value="Yes"
+              type="button"
+              className="button primary"
+              onClick={() => {
+                console.log(this.sendMany());
+
+                this.props.CloseModal2();
+              }}
+            />
+            <div className="no-button">
+              <input
+                value="No"
+                className="button"
+                type="button"
+                onClick={() => {
+                  this.props.CloseModal2();
+                }}
+              />
+            </div>
+          </div>
+        );
+        break;
+      case "Edit Entry?":
+        return (
+          <div>
+            <h2>Edit Entry?</h2>
+            <input
+              value="Yes"
+              type="button"
+              className="button primary"
+              onClick={() => {
+                this.validateAddToQueue();
+                this.props.CloseModal2();
+              }}
+            />
+            <div className="no-button">
+              <input
+                value="No"
+                className="button"
+                type="button"
+                onClick={() => {
+                  this.props.CloseModal2();
+                }}
+              />
+            </div>
+          </div>
+        );
+        break;
+      case "Delete Entry?":
+        return (
+          <div>
+            <h2>Delete Entry?</h2>
+            <input
+              value="Yes"
+              type="button"
+              className="button primary"
+              onClick={() => {
+                this.props.CloseModal2();
+              }}
+            />
+            <div className="no-button">
+              <input
+                value="No"
+                className="button"
+                type="button"
+                onClick={() => {
+                  this.props.CloseModal2();
+                }}
+              />
+            </div>
+          </div>
+        );
+        break;
+
+      default:
+        "";
+        break;
+    }
   }
 
   render() {
@@ -302,9 +494,15 @@ class SendRecieve extends Component {
     return (
       <div id="sendrecieve">
         <h2>Send Nexus </h2>
-        {/* <button onClick={() => console.log(this.props.OpenModal())}>
-          TESTING BUTTON
-        </button> */}
+        <Modal
+          classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}
+          showCloseIcon={false}
+          open={this.props.openSecondModal}
+          onClose={this.props.CloseModal2}
+        >
+          {this.modalinternal2()}
+        </Modal>
+        <button>Testing</button>
         <div className="panel">
           <div id="container">
             <div className="box1">
@@ -356,9 +554,8 @@ class SendRecieve extends Component {
                     type="reset"
                     value="Send Now"
                     className="button"
-                    disabled={this.props.busyFlag}
                     onClick={() => {
-                      if (confirm("Send NXS?")) this.sendOne();
+                      this.props.OpenModal2("send transaction?");
                     }}
                   />
                 </div>
@@ -384,21 +581,15 @@ class SendRecieve extends Component {
                     value="Send All"
                     className="button primary"
                     onClick={() => {
-                      if (
-                        confirm(
-                          `Send All (Total: ${this.areYouSure()}) Transactions From ${this.accHud()} `
-                        )
-                      )
-                        console.log(this.sendMany());
+                      this.props.OpenModal2("Send Multiple?");
                     }}
-                    disabled={this.props.busyFlag}
                   />
                   <input
                     type="button"
                     value="Clear Queue"
                     className="button primary"
                     onClick={() => {
-                      if (confirm("Clear All?")) this.props.clearQueue();
+                      this.props.OpenModal2("Clear Queue?");
                     }}
                   />
                   <p>

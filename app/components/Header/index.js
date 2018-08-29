@@ -68,9 +68,9 @@ class Header extends Component {
         });
         console.log(MRT);
         if (MRT.category === "receive") {
-          this.props.OpenModal();
+          this.props.OpenModal("receive");
         } else if (MRT.category === "send") {
-          this.props.OpenModal2();
+          this.props.OpenModal("send");
         }
       });
     } else {
@@ -122,12 +122,47 @@ class Header extends Component {
   returnSyncStatusTooltip() {
     if (heighestPeerBlock > this.props.blocks) {
       return (
-        "Syncing...\nBehind\n"(
-          heighestPeerBlock - this.props.blocks
-        ).toString() + "\nBlocks"
+        "Syncing...\nBehind\n" +
+        (heighestPeerBlock - this.props.blocks).toString() +
+        "\nBlocks"
       );
     } else {
       return "Synced";
+    }
+  }
+  modalinternal() {
+    switch (this.props.modaltype) {
+      case "receive":
+        return <h2>Transaction Received</h2>;
+        break;
+      case "send":
+        return <h2>Transaction Sent</h2>;
+        break;
+      case "This is an address regiestered to this wallet":
+        return <h2>This is an address regiestered to this wallet</h2>;
+        break;
+      case "Invalid Address":
+        return <h2>Invalid Address</h2>;
+        break;
+      case "No Addresses":
+        return <h2>No Addresses</h2>;
+        break;
+      case "Empty Queue!":
+        return <h2>Queue Empty</h2>;
+        break;
+      case "Password has been changed.":
+        return <h2>Password has been changed.</h2>;
+        break;
+      case "Wallet has been encrypted":
+        return <h2>Wallet has been encrypted</h2>;
+        break;
+      case "Settings saved":
+        return <h2>Settings saved</h2>;
+        break;
+
+      default:
+        "";
+        break;
     }
   }
 
@@ -136,24 +171,17 @@ class Header extends Component {
       <div id="Header">
         <button
           className="button hero"
-          onClick={() => this.props.OpenModal2()}
+          onClick={() => this.props.OpenModal()}
         />
 
         <Modal
           showCloseIcon={false}
+          center={true}
           open={this.props.open}
           onClose={this.props.CloseModal}
           classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
         >
-          <h2>Transaction Received!</h2>
-        </Modal>
-        <Modal
-          showCloseIcon={false}
-          open={this.props.openSecondModal}
-          onClose={this.props.CloseModal2}
-          classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
-        >
-          <h2>Transaction Sent</h2>
+          {this.modalinternal()}
         </Modal>
 
         <div id="settings-menu" className="animated rotateInDownRight ">
