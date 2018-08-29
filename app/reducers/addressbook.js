@@ -11,12 +11,17 @@ const initialState = {
   selected: 0,
   save: false,
   myAccounts: [],
-  editNotes: false
+  editNotes: false,
+  editPhone: false,
+  editAddress: false,
+  editName: false,
+  editTZ: false
 };
 
 export default (state = initialState, action) => {
+  let newAddress, newContact, newAddressbook;
+
   switch (action.type) {
-    // dispatch 1
     case TYPE.ADD_NEW_CONTACT:
       let index = state.addressbook.findIndex(ele => {
         if (ele.name === action.payload.name) {
@@ -48,7 +53,6 @@ export default (state = initialState, action) => {
           return 0;
         });
         return {
-          // new contact
           ...state,
           addressbook: updatedAddressbook,
           save: true
@@ -61,7 +65,6 @@ export default (state = initialState, action) => {
             }
           }) === -1
         ) {
-          console.log(action.payload.mine);
           let updatedContact = {
             ...state.addressbook[index],
             mine: [...state.addressbook[index].mine, action.payload.mine[0]],
@@ -72,7 +75,6 @@ export default (state = initialState, action) => {
           let updatedAddressbook = state.addressbook;
           updatedAddressbook.splice(index, 1, updatedContact);
           return {
-            // not new adding mine address
             ...state,
             addressbook: updatedAddressbook,
             save: true
@@ -221,11 +223,6 @@ export default (state = initialState, action) => {
         };
       } else return state;
 
-      return {
-        ...state
-      };
-      break;
-
     case TYPE.EDIT_PHONE:
       return {
         ...state,
@@ -246,6 +243,7 @@ export default (state = initialState, action) => {
         prototypeName: action.payload
       };
       break;
+
     case TYPE.TOGGLE_NOTES_EDIT:
       return {
         ...state,
@@ -254,37 +252,87 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.SAVE_NOTES:
-      console.log(action.payload);
-      let newContact = {
+      newContact = {
         ...state.addressbook[action.payload.index],
         notes: action.payload.notes
       };
-      let newAddressbook = state.addressbook;
+      newAddressbook = state.addressbook;
       newAddressbook.splice(action.payload.index, 1, newContact);
 
       return {
         ...state,
         addressbook: newAddressbook,
-        editNotes: false
+        editNotes: false,
+        save: true
+      };
+      break;
+
+    case TYPE.TOGGLE_NAME_EDIT:
+      return {
+        ...state,
+        prototypeName: action.payload,
+        editName: true
+      };
+      break;
+    case TYPE.SAVE_NAME:
+      newContact = {
+        ...state.addressbook[action.payload.index],
+        name: action.payload.name
+      };
+      newAddressbook = state.addressbook;
+      newAddressbook.splice(action.payload.index, 1, newContact);
+      return {
+        ...state,
+        addressbook: newAddressbook,
+        editName: false,
+        save: true
+      };
+      break;
+    case TYPE.TOGGLE_TIMEZONE_EDIT:
+      return {
+        ...state,
+        prototypeTimezone: action.payload,
+        editTZ: true
+      };
+      break;
+    case TYPE.SAVE_TIMEZONE:
+      newContact = {
+        ...state.addressbook[action.payload.index],
+        timezone: action.payload.TZ
+      };
+      newAddressbook = state.addressbook;
+      newAddressbook.splice(action.payload.index, 1, newContact);
+      return {
+        ...state,
+        addressbook: newAddressbook,
+        editTZ: false,
+        save: true
+      };
+      break;
+    case TYPE.TOGGLE_PHONE_EDIT:
+      return {
+        ...state,
+        prototypeNotes: action.payload,
+        editPhone: true
+      };
+      break;
+    case TYPE.SAVE_PHONE:
+      newContact = {
+        ...state.addressbook[action.payload.index],
+        phoneNumber: action.payload.Phone
+      };
+      newAddressbook = state.addressbook;
+      newAddressbook.splice(action.payload.index, 1, newContact);
+      return {
+        ...state,
+        addressbook: newAddressbook,
+        editPhone: false,
+        save: true
       };
       break;
     // //   dispatch 6 - like dispatch 2
     // case TYPE.EDIT_ADDRESS_LABEL:
-    //     let index = state.addressbook.[action.payload.contact].thaddresses.findIndex((thaddelem)=> { thaddelem.address === action.payload.address})
-    //     return {
-    //         ...state,
-    //         addressbook: { ...state.addressbook,
-    //             [action.payload.contact]: {
-    //                 ...state[action.payload.contact],
-    //                 thaddresses: [...state.addressbook.[action.payload.contact].thaddresses,
-    //                 state.addressbook.[action.payload.contact].thaddresses[index]:   {
-    //                     ...state.addressbook.[action.payload.contact].thaddresses[index],
-    //                         label: action.payload.label
-    //                     }
-    //                 ]
-    //             }
-    //         }
-    //     };
+    //   return { ...state };
     //   break;
     //   dispatch 7
     case TYPE.EDIT_TIMEZONE:
@@ -320,13 +368,11 @@ export default (state = initialState, action) => {
     //     break;
     // //   dispatch 10
     case TYPE.LOAD_ADDRESS_BOOK:
-      // Could wire up the json reducer
       return {
         ...state,
         addressbook: [...action.payload]
       };
       break;
-
     case TYPE.SELECTED_CONTACT:
       return {
         ...state,

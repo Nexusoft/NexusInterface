@@ -322,7 +322,36 @@ class Addressbook extends Component {
 
     return (
       <div>
-        Local Time: {h}:{m} {i}
+        <span
+          onDoubleClick={() => {
+            if (this.props.editTZ) {
+              this.props.SaveTz(
+                this.props.selected,
+                this.props.prototypeTimezone
+              );
+            } else {
+              this.props.TzToggler(
+                this.props.addressbook[this.props.selected].timezone
+              );
+            }
+          }}
+        >
+          {" "}
+          Local Time:
+        </span>{" "}
+        {this.props.editTZ === true ? (
+          <TimeZoneSelector />
+        ) : (
+          <span
+            onDoubleClick={() =>
+              this.props.TzToggler(
+                this.props.addressbook[this.props.selected].timezone
+              )
+            }
+          >
+            {h}:{m} {i}
+          </span>
+        )}
       </div>
     );
   }
@@ -335,14 +364,11 @@ class Addressbook extends Component {
           {this.props.addressbook[this.props.selected].notMine.map((add, i) => {
             return (
               <div key={i + add.address}>
-                <div> {add.label}:</div>
-                <div
-                  data-tooltip="Triggers Popups that display additional information"
-                  onClick={event => this.copyaddress(event)}
-                >
+                <span> {add.label}:</span>
+                <div onClick={event => this.copyaddress(event)}>
                   {add.address}
                 </div>
-                {/* <div className="tooltip">Click to copy</div> */}
+                <span className="tooltip">Click to copy</span>
               </div>
             );
           })}
@@ -353,7 +379,7 @@ class Addressbook extends Component {
 
   myAddressLister() {
     return (
-      <div>
+      <div id="myAddresses">
         <h3>My addresses</h3>
         <div>
           {this.props.addressbook[this.props.selected].mine.map((add, i) => {
@@ -434,11 +460,82 @@ class Addressbook extends Component {
                 <div id="contactDetailContainer">
                   <fieldset id="contactDetails">
                     <legend>
-                      {this.props.addressbook[this.props.selected].name}
+                      {this.props.editName === true ? (
+                        <input
+                          ref="addContactName"
+                          id="new-account-name"
+                          type="text"
+                          value={this.props.prototypeName}
+                          onChange={e =>
+                            this.props.EditProtoName(e.target.value)
+                          }
+                          placeholder="Name"
+                          onDoubleClick={() =>
+                            this.props.SaveName(
+                              this.props.selected,
+                              this.props.prototypeName
+                            )
+                          }
+                        />
+                      ) : (
+                        <span
+                          onDoubleClick={() =>
+                            this.props.NameToggler(
+                              this.props.addressbook[this.props.selected].name
+                            )
+                          }
+                        >
+                          {this.props.addressbook[this.props.selected].name}
+                        </span>
+                      )}
                     </legend>
                     <div id="contactInformation">
                       <div>
-                        <div> Phone number: {this.phoneFormatter()} </div>
+                        <div>
+                          {" "}
+                          <label
+                            onDoubleClick={() =>
+                              this.props.PhoneToggler(
+                                this.props.addressbook[this.props.selected]
+                                  .notes
+                              )
+                            }
+                            htmlFor="phoneNumber"
+                          >
+                            Phone number:
+                          </label>
+                          {this.props.editPhone === true ? (
+                            <input
+                              id="phoneNumber"
+                              name="phoneNumber"
+                              type="tel"
+                              onChange={e =>
+                                this.props.EditProtoPhone(e.target.value)
+                              }
+                              value={this.props.prototypePhoneNumber}
+                              placeholder="Phone #"
+                              onDoubleClick={() =>
+                                this.props.SavePhone(
+                                  this.props.selected,
+                                  this.props.prototypePhoneNumber
+                                )
+                              }
+                            />
+                          ) : (
+                            <span
+                              onDoubleClick={() =>
+                                this.props.PhoneToggler(
+                                  this.props.addressbook[this.props.selected]
+                                    .notes
+                                )
+                              }
+                              id="phoneNumber"
+                            >
+                              {" "}
+                              {this.phoneFormatter()}
+                            </span>
+                          )}
+                        </div>
                         {this.localTimeFormater()}
                         <div id="notesContainer">
                           <label
@@ -520,13 +617,12 @@ class Addressbook extends Component {
                     </div>
                   </fieldset>
                   <div id="addressDisplay">
-                    {this.props.addressbook[this.props.selected].mine.length > 0
-                      ? this.myAddressLister()
-                      : null}
-
                     {this.props.addressbook[this.props.selected].notMine
                       .length > 0
                       ? this.theirAddressLister()
+                      : null}
+                    {this.props.addressbook[this.props.selected].mine.length > 0
+                      ? this.myAddressLister()
                       : null}
                   </div>
                   <div id="buttonholder">

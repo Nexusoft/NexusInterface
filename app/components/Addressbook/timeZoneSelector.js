@@ -15,7 +15,6 @@ class TimeZoneSelector extends Component {
         <select
           ref="editTimeZone"
           onChange={e => this.props.EditProtoTZ(parseInt(e.target.value))}
-          defaultValue={this.props.prototypeTimezone}
           value={this.props.prototypeTimezone}
         >
           <option value="0"> (UTC + 0.00 hr) London, Casablanca, Accra</option>

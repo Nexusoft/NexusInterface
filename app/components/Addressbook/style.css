@@ -168,10 +168,15 @@ select {
 }
 
 #addressDisplay {
-  display: grid;
-  grid-template-columns: auto auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: auto;
+  justify-content: space-between;
 }
-
+/* #myAddresses {
+  margin-left: 40px;
+} */
 .myAddress {
   margin-left: 20px;
 }

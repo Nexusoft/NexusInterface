@@ -55,6 +55,7 @@ export const MyAccountsList = list => {
     dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
   };
 };
+
 export const NotesToggler = notes => {
   return dispatch => {
     dispatch({
@@ -69,6 +70,61 @@ export const SaveNotes = (selected, notes) => {
     dispatch({
       type: TYPE.SAVE_NOTES,
       payload: { notes: notes, index: selected }
+    });
+  };
+};
+
+export const TzToggler = TZ => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.TOGGLE_TIMEZONE_EDIT,
+      payload: TZ
+    });
+  };
+};
+
+export const SaveTz = (selected, TZ) => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.SAVE_TIMEZONE,
+      payload: { TZ: TZ, index: selected }
+    });
+  };
+};
+
+export const NameToggler = name => {
+  console.log("name");
+  return dispatch => {
+    dispatch({
+      type: TYPE.TOGGLE_NAME_EDIT,
+      payload: name
+    });
+  };
+};
+
+export const SaveName = (selected, name) => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.SAVE_NAME,
+      payload: { name: name, index: selected }
+    });
+  };
+};
+
+export const PhoneToggler = notes => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.TOGGLE_PHONE_EDIT,
+      payload: notes
+    });
+  };
+};
+
+export const SavePhone = (selected, Phone) => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.SAVE_PHONE,
+      payload: { Phone: Phone, index: selected }
     });
   };
 };
