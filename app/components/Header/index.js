@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 
 import electron from "electron";
 import MenuBuilder from "../../menu";
-
+import Modal from "react-responsive-modal";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
@@ -28,6 +28,7 @@ const mapDispatchToProps = dispatch =>
 
 class Header extends Component {
   componentDidMount() {
+    console.log(this.props);
     const menuBuilder = new MenuBuilder(
       require("electron").remote.getCurrentWindow().id
     );
@@ -63,7 +64,29 @@ class Header extends Component {
       this.props.Unlock();
       this.props.Encrypted();
     }
+    if (this.props.txtotal < nextProps.txtotal) {
+      RPC.PROMISE("listtransactions").then(payload => {
+        console.log(nextProps.txtotal);
+        let MRT = payload.reduce((a, b) => {
+          if (a.time > b.time) {
+            return a;
+          } else {
+            return b;
+          }
+        });
+        console.log(MRT);
+        if (MRT.category === "receive") {
+          this.props.OpenModal("receive");
+        } else if (MRT.category === "send") {
+          this.props.OpenModal("send");
+        }
+      });
+    } else {
+      return null;
+    }
+    console.log(this.props.txtotal);
   }
+
   signInStatus() {
     if (this.props.unlocked_until === undefined) {
       return unencryptedImg;
@@ -115,10 +138,60 @@ class Header extends Component {
       return "Synced";
     }
   }
+  modalinternal() {
+    switch (this.props.modaltype) {
+      case "receive":
+        return <h2>Transaction Received</h2>;
+        break;
+      case "send":
+        return <h2>Transaction Sent</h2>;
+        break;
+      case "This is an address regiestered to this wallet":
+        return <h2>This is an address regiestered to this wallet</h2>;
+        break;
+      case "Invalid Address":
+        return <h2>Invalid Address</h2>;
+        break;
+      case "No Addresses":
+        return <h2>No Addresses</h2>;
+        break;
+      case "Empty Queue!":
+        return <h2>Queue Empty</h2>;
+        break;
+      case "Password has been changed.":
+        return <h2>Password has been changed.</h2>;
+        break;
+      case "Wallet has been encrypted":
+        return <h2>Wallet has been encrypted</h2>;
+        break;
+      case "Settings saved":
+        return <h2>Settings saved</h2>;
+        break;
+
+      default:
+        "";
+        break;
+    }
+  }
 
   render() {
     return (
       <div id="Header">
+        <button
+          className="button hero"
+          onClick={() => this.props.OpenModal()}
+        />
+
+        <Modal
+          showCloseIcon={false}
+          center={true}
+          open={this.props.open}
+          onClose={this.props.CloseModal}
+          classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
+        >
+          {this.modalinternal()}
+        </Modal>
+
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />

@@ -5,6 +5,12 @@ const initialState = {
   googleanalytics: null,
   encrypted: false,
   busyFlag: false,
+  open: false,
+  openSecondModal: false,
+  openThirdModal: false,
+  modaltype: "",
+  confirmation: false,
+  actionItem: ""
   modalVisable: false
 };
 
@@ -39,6 +45,7 @@ export default (state = initialState, action) => {
         ...state,
         encrypted: false
       };
+
       break;
     case TYPE.ENCRYPTED:
       return {
@@ -52,6 +59,7 @@ export default (state = initialState, action) => {
         googleanalytics: action.payload
       };
       break;
+
     default:
       return state;
   }

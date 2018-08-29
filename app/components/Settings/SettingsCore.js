@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
+import * as RPC from "../../script/rpc";
+import * as TYPE from "../../actions/actiontypes";
+import ContextMenuBuilder from "../../contextmenu";
+import { remote } from "electron";
+import { access } from "fs";
 
 export default class SettingsCore extends Component {
-
   //
   // componentDidMount - Initialize the settings
   //
 
   componentDidMount() {
-
     var settings = require("../../api/settings.js").GetSettings();
 
     //Core settings
@@ -24,7 +27,6 @@ export default class SettingsCore extends Component {
     this.setSocks4ProxyPort(settings);
     this.setDetatchDatabaseOnShutdown(settings);
     this.setOptionalTransactionFee(settings);
-
   }
 
   //
@@ -32,22 +34,24 @@ export default class SettingsCore extends Component {
   //
 
   setManualDaemon(settings) {
-
     var manualDaemon = document.getElementById("manualDaemon");
-    var manualDaemonSettings = document.getElementById("manual-daemon-settings");
-    var automaticDaemonSettings = document.getElementById("automatic-daemon-settings");
+    var manualDaemonSettings = document.getElementById(
+      "manual-daemon-settings"
+    );
+    var automaticDaemonSettings = document.getElementById(
+      "automatic-daemon-settings"
+    );
 
     if (settings.manualDaemon == true) {
       manualDaemon.checked = true;
     }
 
     if (manualDaemon.checked) {
-      manualDaemonSettings.style.display="block";
-      automaticDaemonSettings.style.display="none";
-    }
-    else {
-      manualDaemonSettings.style.display="none";
-      automaticDaemonSettings.style.display="block";
+      manualDaemonSettings.style.display = "block";
+      automaticDaemonSettings.style.display = "none";
+    } else {
+      manualDaemonSettings.style.display = "none";
+      automaticDaemonSettings.style.display = "block";
     }
   }
 
@@ -56,15 +60,11 @@ export default class SettingsCore extends Component {
   //
 
   setManualDaemonUser(settings) {
-
     var manualDaemonUser = document.getElementById("manualDaemonUser");
 
-    if ( settings.manualDaemonUser === undefined)
-    {
+    if (settings.manualDaemonUser === undefined) {
       manualDaemonUser.value = "rpcserver";
-    }
-    else
-    {
+    } else {
       manualDaemonUser.value = settings.manualDaemonUser;
     }
   }
@@ -74,15 +74,11 @@ export default class SettingsCore extends Component {
   //
 
   setManualDaemonPassword(settings) {
-
     var manualDaemonPassword = document.getElementById("manualDaemonPassword");
 
-    if ( settings.manualDaemonPassword === undefined)
-    {
+    if (settings.manualDaemonPassword === undefined) {
       manualDaemonPassword.value = "password";
-    }
-    else
-    {
+    } else {
       manualDaemonPassword.value = settings.manualDaemonPassword;
     }
   }
@@ -92,15 +88,11 @@ export default class SettingsCore extends Component {
   //
 
   setManualDaemonIP(settings) {
-
     var manualDaemonIP = document.getElementById("manualDaemonIP");
 
-    if ( settings.manualDaemonIP === undefined)
-    {
+    if (settings.manualDaemonIP === undefined) {
       manualDaemonIP.value = "127.0.0.1";
-    }
-    else
-    {
+    } else {
       manualDaemonIP.value = settings.manualDaemonIP;
     }
   }
@@ -110,15 +102,11 @@ export default class SettingsCore extends Component {
   //
 
   setManualDaemonPort(settings) {
-
     var manualDaemonPort = document.getElementById("manualDaemonPort");
 
-    if ( settings.manualDaemonPort === undefined)
-    {
+    if (settings.manualDaemonPort === undefined) {
       manualDaemonPort.value = "9336";
-    }
-    else
-    {
+    } else {
       manualDaemonPort.value = settings.manualDaemonPort;
     }
   }
@@ -128,11 +116,9 @@ export default class SettingsCore extends Component {
   //
 
   setMapPortUsingUpnp(settings) {
-
     var mapPortUsingUpnp = document.getElementById("mapPortUsingUpnp");
 
-    if ( settings.mapPortUsingUpnp === undefined)
-    {
+    if (settings.mapPortUsingUpnp === undefined) {
       mapPortUsingUpnp.checked = true;
     }
     if ( settings.mapPortUsingUpnp == true)
@@ -150,13 +136,11 @@ export default class SettingsCore extends Component {
   //
 
   setSocks4Proxy(settings) {
-
     var socks4Proxy = document.getElementById("socks4Proxy");
     var socks4ProxyIP = document.getElementById("socks4ProxyIP");
     var socks4ProxyPort = document.getElementById("socks4ProxyPort");
 
-    if ( settings.socks4Proxy === undefined)
-    {
+    if (settings.socks4Proxy === undefined) {
       socks4Proxy.checked = false;
     }
     if ( settings.socks4Proxy == true)
@@ -168,8 +152,7 @@ export default class SettingsCore extends Component {
       socks4Proxy.checked = false;
     }
 
-    if (!socks4Proxy.checked) 
-    {
+    if (!socks4Proxy.checked) {
       socks4ProxyIP.disabled = true;
       socks4ProxyPort.disabled = true;
     }
@@ -180,15 +163,11 @@ export default class SettingsCore extends Component {
   //
 
   setSocks4ProxyIP(settings) {
-
     var socks4ProxyIP = document.getElementById("socks4ProxyIP");
 
-    if ( settings.socks4ProxyIP === undefined)
-    {
+    if (settings.socks4ProxyIP === undefined) {
       socks4ProxyIP.value = "127.0.0.1";
-    }
-    else
-    {
+    } else {
       socks4ProxyIP.value = settings.socks4ProxyIP;
     }
   }
@@ -198,15 +177,11 @@ export default class SettingsCore extends Component {
   //
 
   setSocks4ProxyPort(settings) {
-
     var socks4ProxyPort = document.getElementById("socks4ProxyPort");
 
-    if ( settings.socks4ProxyPort === undefined)
-    {
+    if (settings.socks4ProxyPort === undefined) {
       socks4ProxyPort.value = "9050";
-    }
-    else
-    {
+    } else {
       socks4ProxyPort.value = settings.socks4ProxyPort;
     }
   }
@@ -216,11 +191,11 @@ export default class SettingsCore extends Component {
   //
 
   setDetatchDatabaseOnShutdown(settings) {
+    var detatchDatabaseOnShutdown = document.getElementById(
+      "detatchDatabaseOnShutdown"
+    );
 
-    var detatchDatabaseOnShutdown = document.getElementById("detatchDatabaseOnShutdown");
-
-    if ( settings.detatchDatabaseOnShutdown === undefined)
-    {
+    if (settings.detatchDatabaseOnShutdown === undefined) {
       detatchDatabaseOnShutdown.checked = false;
     }
     if ( settings.detatchDatabaseOnShutdown == true)
@@ -238,15 +213,13 @@ export default class SettingsCore extends Component {
   //
 
   setOptionalTransactionFee(settings) {
+    var optionalTransactionFee = document.getElementById(
+      "optionalTransactionFee"
+    );
 
-    var optionalTransactionFee = document.getElementById("optionalTransactionFee");
-
-    if ( settings.optionalTransactionFee === undefined)
-    {
+    if (settings.optionalTransactionFee === undefined) {
       optionalTransactionFee.value = "0.01";
-    }
-    else
-    {
+    } else {
       optionalTransactionFee.value = settings.optionalTransactionFee;
     }
   }
@@ -256,7 +229,6 @@ export default class SettingsCore extends Component {
   //
 
   updateManualDaemon(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -265,16 +237,19 @@ export default class SettingsCore extends Component {
     
     settings.SaveSettings(settingsObj);
 
-    var manualDaemonSettings = document.getElementById("manual-daemon-settings");
-    var automaticDaemonSettings = document.getElementById("automatic-daemon-settings");
+    var manualDaemonSettings = document.getElementById(
+      "manual-daemon-settings"
+    );
+    var automaticDaemonSettings = document.getElementById(
+      "automatic-daemon-settings"
+    );
 
     if (el.checked) {
-      manualDaemonSettings.style.display="block";
-      automaticDaemonSettings.style.display="none";
-    }
-    else {
-      manualDaemonSettings.style.display="none";
-      automaticDaemonSettings.style.display="block";
+      manualDaemonSettings.style.display = "block";
+      automaticDaemonSettings.style.display = "none";
+    } else {
+      manualDaemonSettings.style.display = "none";
+      automaticDaemonSettings.style.display = "block";
     }
   }
 
@@ -283,13 +258,12 @@ export default class SettingsCore extends Component {
   //
 
   updateManualDaemonUser(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
     settingsObj.manualDaemonUser = el.value;
-    
+
     settings.SaveSettings(settingsObj);
   }
 
@@ -298,13 +272,12 @@ export default class SettingsCore extends Component {
   //
 
   updateManualDaemonPassword(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
     settingsObj.manualDaemonPassword = el.value;
-    
+
     settings.SaveSettings(settingsObj);
   }
 
@@ -313,14 +286,22 @@ export default class SettingsCore extends Component {
   //
 
   updateManualDaemonIP(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
     settingsObj.manualDaemonIP = el.value;
-    
+
     settings.SaveSettings(settingsObj);
+  }
+  //
+  //TXFEEtoRPCServer
+  //
+
+  setTxFee() {
+    let TxFee = document.getElementById("optionalTransactionFee").value;
+    RPC.PROMISE("settxfee", [parseFloat(TxFee)]);
+    console.log(TxFee);
   }
 
   //
@@ -328,13 +309,12 @@ export default class SettingsCore extends Component {
   //
 
   updateManualDaemonPort(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
     settingsObj.manualDaemonPort = el.value;
-    
+
     settings.SaveSettings(settingsObj);
   }
 
@@ -343,7 +323,6 @@ export default class SettingsCore extends Component {
   //
 
   updateMapPortUsingUpnp(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -358,7 +337,6 @@ export default class SettingsCore extends Component {
   //
 
   updateSocks4Proxy(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -373,8 +351,7 @@ export default class SettingsCore extends Component {
     if (el.checked) {
       socks4ProxyIP.disabled = false;
       socks4ProxyPort.disabled = false;
-    }
-    else {
+    } else {
       socks4ProxyIP.disabled = true;
       socks4ProxyPort.disabled = true;
     }
@@ -385,7 +362,6 @@ export default class SettingsCore extends Component {
   //
 
   updateSocks4ProxyIP(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -400,7 +376,6 @@ export default class SettingsCore extends Component {
   //
 
   updateSocks4ProxyPort(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -415,7 +390,6 @@ export default class SettingsCore extends Component {
   //
 
   updateDetatchDatabaseOnShutdown(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -424,17 +398,14 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-
   //
   // Update optional transaction fee
   //
 
   updateOptionalTransactionFee(event) {
-
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
-
     settingsObj.optionalTransactionFee = el.value;
 
     settings.SaveSettings(settingsObj);
@@ -453,91 +424,161 @@ export default class SettingsCore extends Component {
   
   render() {
     return (
-
       <section id="core">
-
         <div className="note">
-
-          Changes to core settings will take effect the next time the core is restarted.
-
+          Changes to core settings will take effect the next time the core is
+          restarted.
         </div>
 
         <form className="aligned">
-
           <div className="field">
             <label htmlFor="manualDaemon">Manual Daemon Mode</label>
-            <input id="manualDaemon" type="checkbox" className="switch" onChange={this.updateManualDaemon} data-tooltip="Enable manual daemon mode if you are running the daemon manually outside of the wallet"/>
+            <input
+              id="manualDaemon"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateManualDaemon}
+              data-tooltip="Enable manual daemon mode if you are running the daemon manually outside of the wallet"
+            />
           </div>
 
           <div id="manual-daemon-settings">
-
             <div className="field">
-              <label htmlFor="manualDaemonUser" >Username</label>
-              <input id="manualDaemonUser" type="text" size="12" onChange={this.updateManualDaemonUser} data-tooltip="Username configured for manual daemon"/>
+              <label htmlFor="manualDaemonUser">Username</label>
+              <input
+                id="manualDaemonUser"
+                type="text"
+                size="12"
+                onChange={this.updateManualDaemonUser}
+                data-tooltip="Username configured for manual daemon"
+              />
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonPassword" >Password</label>
-              <input id="manualDaemonPassword" type="text" size="12" onChange={this.updateManualDaemonPassword} data-tooltip="Password configured for manual daemon"/>
+              <label htmlFor="manualDaemonPassword">Password</label>
+              <input
+                id="manualDaemonPassword"
+                type="text"
+                size="12"
+                onChange={this.updateManualDaemonPassword}
+                data-tooltip="Password configured for manual daemon"
+              />
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonIP" >IP Address</label>
-              <input id="manualDaemonIP" type="text" size="12" onChange={this.updateManualDaemonIP} data-tooltip="IP address configured for manual daemon"/>
+              <label htmlFor="manualDaemonIP">IP Address</label>
+              <input
+                id="manualDaemonIP"
+                type="text"
+                size="12"
+                onChange={this.updateManualDaemonIP}
+                data-tooltip="IP address configured for manual daemon"
+              />
             </div>
 
             <div className="field">
               <label htmlFor="manualDaemonPort">Port</label>
-              <input id="manualDaemonPort" type="text" size="3" onChange={this.updateManualDaemonPort} data-tooltip="Port configured for manual daemon"/>
+              <input
+                id="manualDaemonPort"
+                type="text"
+                size="3"
+                onChange={this.updateManualDaemonPort}
+                data-tooltip="Port configured for manual daemon"
+              />
             </div>
-          
           </div>
 
           <div id="automatic-daemon-settings">
-
             <div className="field">
               <label htmlFor="mapPortUsingUpnp">Map port using UPnP</label>
-              <input id="mapPortUsingUpnp" type="checkbox" className="switch" onChange={this.updateMapPortUsingUpnp} data-tooltip="Automatically open the Nexus client port on the router. This only works when your router supports UPnP and it is enabled."/>
+              <input
+                id="mapPortUsingUpnp"
+                type="checkbox"
+                className="switch"
+                onChange={this.updateMapPortUsingUpnp}
+                data-tooltip="Automatically open the Nexus client port on the router. This only works when your router supports UPnP and it is enabled."
+              />
             </div>
 
             <div className="field">
               <label htmlFor="socks4Proxy">Connect through SOCKS4 proxy</label>
-              <input id="socks4Proxy" type="checkbox" className="switch" onChange={this.updateSocks4Proxy} data-tooltip="Connect to Nexus through a SOCKS4 proxt (e.g. when connecting through Tor"/>
+              <input
+                id="socks4Proxy"
+                type="checkbox"
+                className="switch"
+                onChange={this.updateSocks4Proxy}
+                data-tooltip="Connect to Nexus through a SOCKS4 proxt (e.g. when connecting through Tor"
+              />
             </div>
 
             <div className="field">
               <label htmlFor="socks4ProxyIP">Proxy IP Address</label>
-              <input id="socks4ProxyIP" type="text" size="12" onChange={this.updateSocks4ProxyIP} data-tooltip="IP Address of SOCKS4 proxy server"/>
+              <input
+                id="socks4ProxyIP"
+                type="text"
+                size="12"
+                onChange={this.updateSocks4ProxyIP}
+                data-tooltip="IP Address of SOCKS4 proxy server"
+              />
             </div>
 
             <div className="field">
               <label htmlFor="socks4ProxyPort">Proxy Port</label>
-              <input id="socks4ProxyPort" type="text" size="3" onChange={this.updateSocks4ProxyPort} data-tooltip="Port of SOCKS4 proxy server"/>
+              <input
+                id="socks4ProxyPort"
+                type="text"
+                size="3"
+                onChange={this.updateSocks4ProxyPort}
+                data-tooltip="Port of SOCKS4 proxy server"
+              />
             </div>
 
             <div className="field">
-              <label htmlFor="detatchDatabaseOnShutdown">Detach database on shutdown</label>
-              <input id="detatchDatabaseOnShutdown" type="checkbox" className="switch" onChange={this.updateDetatchDatabaseOnShutdown} data-tooltip="Detatch the database when shutting down the wallet"/>
+              <label htmlFor="detatchDatabaseOnShutdown">
+                Detach database on shutdown
+              </label>
+              <input
+                id="detatchDatabaseOnShutdown"
+                type="checkbox"
+                className="switch"
+                onChange={this.updateDetatchDatabaseOnShutdown}
+                data-tooltip="Detatch the database when shutting down the wallet"
+              />
             </div>
 
             <div className="field">
-              <label htmlFor="optionalTransactionFee">Optional transaction fee (in NXS)</label>
-              <input id="optionalTransactionFee" type="text" size="6" onChange={this.updateOptionalTransactionFee} data-tooltip="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"/>
+              <label htmlFor="optionalTransactionFee">
+                Optional transaction fee (in NXS)
+              </label>{" "}
+              <form className="fee">
+                <input
+                  className="Txfee"
+                  id="optionalTransactionFee"
+                  type="number"
+                  onChange={this.updateOptionalTransactionFee}
+                  data-tooltip="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"
+                />
+                <button
+                  type="button"
+                  className="feebutton"
+                  onClick={() => {
+                    if (confirm("Change Fee?")) this.setTxFee();
+                  }}
+                >
+                  Update
+                </button>
+              </form>
             </div>
 
             <button id="restart-core" className="button primary" onClick={this.coreRestart}>Restart Core</button>
 
           </div>
 
-          <div className="clear-both"></div>
-
+          <div className="clear-both" />
         </form>
 
-      {/* <button className="button primary" onClick={application.restart()}>Restart Core</button> */}
-
-
+        {/* <button className="button primary" onClick={application.restart()}>Restart Core</button> */}
       </section>
-
     );
   }
 }

@@ -38,7 +38,42 @@ export const Unencrypted = () => {
     dispatch({ type: TYPE.UNENCRYPTED });
   };
 };
+export const OpenModal = content => {
+  return dispatch => {
+    dispatch({ type: TYPE.SHOW_MODAL, payload: content });
+  };
+};
+export const Confirm = Answer => {
+  return dispatch => {
+    dispatch({ type: TYPE.CONFIRM, payload: Answer });
+  };
+};
+export const CloseModal = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.HIDE_MODAL });
+  };
+};
+export const OpenModal2 = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.SHOW_MODAL2 });
+  };
+};
+export const CloseModal2 = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.HIDE_MODAL2 });
+  };
+};
 
+export const CloseModal3 = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.HIDE_MODAL3 });
+  };
+};
+export const OpenModal3 = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.OPEN_MODAL3 });
+  };
+};
 export const SetGoogleAnalytics = returnData => {
   return dispatch => {
     dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload: returnData });

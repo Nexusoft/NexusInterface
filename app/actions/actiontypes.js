@@ -53,6 +53,15 @@ export const UPDATE_MESSAGE = "UPDATE_MESSAGE";
 export const UPDATE_ACCOUNT_NAME = "UPDATE_ACCOUNT_NAME";
 export const CLEAR_QUEUE = "CLEAR_QUEUE";
 export const CLEAR_FORM = "CLEAR_FORM";
+export const CHANGE_ACCOUNT = "CHANGE_ACCOUNT";
+export const SELECTED_ACCOUNT = "SELECTED_ACCOUNT";
+export const HIDE_MODAL = "HIDE_MODAL";
+export const SHOW_MODAL = "SHOW_MODAL";
+export const HIDE_MODAL2 = "HIDE_MODAL2";
+export const SHOW_MODAL2 = "SHOW_MODAL2";
+export const HIDE_MODAL3 = "HIDE_MODAL3";
+export const SHOW_MODAL3 = "SHOW_MODAL3";
+export const CONFIRM = "CONFIRM";
 
 // Addressbook
 export const ADD_NEW_ADDRESS = "ADD_NEW_ADDRESS";
