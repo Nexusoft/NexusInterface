@@ -24,11 +24,78 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Addressbook extends Component {
-  // componentDidMount: get addressbook data
-  // Anything that you are relying on being available for rendering the page from startup
   componentDidMount() {
     this.loadMyAccounts();
+    this.addressbookContextMenu = this.addressbookContextMenu.bind(this);
+    window.addEventListener("contextmenu", this.addressbookContextMenu, false);
     this.props.googleanalytics.SendScreen("AddressBook");
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("contextmenu", this.addressbookContextMenu);
+  }
+
+  addressbookContextMenu() {
+    const txtTemplate = [
+      {
+        label: "Copy",
+        ccelerator: "CmdOrCtrl+C",
+        role: "copy"
+      },
+      {
+        label: "Paste",
+        ccelerator: "CmdOrCtrl+V",
+        role: "paste"
+      }
+    ];
+
+    const acctTemplate = [
+      {
+        label: "Copy",
+        ccelerator: "CmdOrCtrl+C",
+        role: "copy"
+      },
+      {
+        label: "Paste",
+        ccelerator: "CmdOrCtrl+V",
+        role: "paste"
+      }
+    ];
+
+    const addTemplate = [
+      {
+        label: "Copy",
+        ccelerator: "CmdOrCtrl+C",
+        role: "copy"
+      },
+      {
+        label: "Paste",
+        ccelerator: "CmdOrCtrl+V",
+        role: "paste"
+      }
+    ];
+
+    let addresscontextmenu = new remote.Menu();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    let acctMenu = remote.Menu.buildFromTemplate(acctTemplate);
+    let txtMenu = remote.Menu.buildFromTemplate(txtTemplate);
+    let addMenu = remote.Menu.buildFromTemplate(addTemplate);
+
+    switch (this.props.hoveredOver) {
+      case "account":
+        acctMenu.popup(remote.getCurrentWindow());
+        break;
+      case "address":
+        addMenu.popup(remote.getCurrentWindow());
+        break;
+      case "text":
+        txtMenu.popup(remote.getCurrentWindow());
+        break;
+      default:
+        defaultcontextmenu.popup(remote.getCurrentWindow());
+        break;
+    }
   }
 
   loadMyAccounts() {
@@ -86,7 +153,7 @@ class Addressbook extends Component {
 
   getinitial(name) {
     if (name && name.length >= 1) return name.charAt(0);
-    return "M"; // My Addresses
+    return "M";
   }
 
   copyaddress(event) {
@@ -241,13 +308,14 @@ class Addressbook extends Component {
 
             <button
               className="button primary"
-              onClick={() =>
+              onClick={() => {
+                console.log(this.props.selected);
                 this.props.AddAddress(
                   this.props.addressbook[this.props.selected].name,
                   this.props.prototypeAddress,
                   this.props.selected
-                )
-              }
+                );
+              }}
             >
               Add Address
             </button>
@@ -266,12 +334,16 @@ class Addressbook extends Component {
   contactLister() {
     if (this.props.addressbook[0]) {
       return (
-        <div id="contactList">
+        <div
+          id="contactList"
+          onMouseLeave={() => this.props.SetMousePosition("", "")}
+        >
           {this.props.addressbook.map((contact, i) => {
             let addTotal = contact.mine.length + contact.notMine.length;
             return (
               <div
                 key={i}
+                id={i}
                 onClick={() => this.props.SelectedContact(i)}
                 className="contact"
               >

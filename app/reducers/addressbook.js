@@ -17,12 +17,12 @@ const initialState = {
   editPhone: false,
   editAddress: false,
   editName: false,
-  editTZ: false
+  editTZ: false,
+  actionItem: "",
+  hoveredOver: ""
 };
 
 export default (state = initialState, action) => {
-  let newAddress, newContact, newAddressbook;
-
   switch (action.type) {
     case TYPE.ADD_NEW_CONTACT:
       let index = state.addressbook.findIndex(ele => {
@@ -205,7 +205,7 @@ export default (state = initialState, action) => {
           return {
             ...state,
             addressbook: state.addressbook.map((ele, i) => {
-              if (i === index) {
+              if (i === action.payload.index) {
                 return {
                   ...state.addressbook[action.payload.index],
                   mine: [
@@ -220,31 +220,34 @@ export default (state = initialState, action) => {
             save: true
           };
         } else return state;
-      } else if (
-        state.addressbook[action.payload.index].notMine.findIndex(ele => {
-          if (ele.address === action.payload.newAddress.address) {
-            return ele;
-          }
-        }) === -1
-      ) {
-        return {
-          ...state,
-          addressbook: state.addressbook.map((ele, i) => {
-            if (i === index) {
-              return {
-                ...state.addressbook[action.payload.index],
-                notMine: [
-                  ...state.addressbook[action.payload.index].notMine,
-                  { ...action.payload.newAddress }
-                ]
-              };
-            } else {
+      } else {
+        console.log(action.payload, state.addressbook[action.payload.index]);
+        if (
+          state.addressbook[action.payload.index].notMine.findIndex(ele => {
+            if (ele.address === action.payload.newAddress.address) {
               return ele;
             }
-          }),
-          save: true
-        };
-      } else return state;
+          }) === -1
+        ) {
+          return {
+            ...state,
+            addressbook: state.addressbook.map((ele, i) => {
+              if (i === action.payload.index) {
+                return {
+                  ...state.addressbook[action.payload.index],
+                  notMine: [
+                    ...state.addressbook[action.payload.index].notMine,
+                    { ...action.payload.newAddress }
+                  ]
+                };
+              } else {
+                return ele;
+              }
+            }),
+            save: true
+          };
+        } else return state;
+      }
 
     case TYPE.EDIT_PHONE:
       return {
@@ -463,16 +466,14 @@ export default (state = initialState, action) => {
         save: false
       };
       break;
-    // //   dispatch 8
-    // case TYPE.DELETE_CONTACT:
-    //     let temp = state.addressbook;
-    //     delete temp[action.payload.contact]
-    //     return {
-    //         ...state,
-    //         addressbook: temp
-    //     };
-    //   break;
-    // //   dispatch 9
+    //   dispatch 8
+    case TYPE.DELETE_CONTACT:
+      return {
+        ...state,
+        addressbook: state.addressbook.filter((ele, i) => i !== action.payload)
+      };
+      break;
+    //   dispatch 9
     // case TYPE.DELETE_ADDRESS_FROM_CONTACT:
     //     let index = state.addressbook.[action.payload.contact].thaddresses.findIndex((thaddelem)=> { thaddelem.label === action.payload.label})
     //     let temp = state.addressbook;
@@ -482,7 +483,7 @@ export default (state = initialState, action) => {
     //         addressbook: temp
     //     };
     //     break;
-    // //   dispatch 10
+    //   dispatch 10
     case TYPE.LOAD_ADDRESS_BOOK:
       return {
         ...state,
@@ -494,6 +495,14 @@ export default (state = initialState, action) => {
         ...state,
         selected: action.payload
       };
+      break;
+    case TYPE.SET_MOUSE_POSITION:
+      return {
+        ...state,
+        actionItem: action.payload.actionItem,
+        hoveredOver: action.payload.type
+      };
+      break;
     default:
       return state;
       break;
