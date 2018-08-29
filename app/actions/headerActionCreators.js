@@ -1,5 +1,6 @@
 import * as TYPE from "./actiontypes";
 import * as RPC from "../script/rpc";
+import config from "../api/configuration";
 
 export const GetInfoDump = () => {
   return dispatch => {
@@ -76,5 +77,21 @@ export const OpenModal3 = () => {
 export const SetGoogleAnalytics = returnData => {
   return dispatch => {
     dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload: returnData });
+  };
+};
+
+export const LoadAddressBook = () => {
+  let json = null;
+  if (config.Exists("addressbook.json")) {
+    json = config.ReadJson("addressbook.json");
+  } else {
+    json = {
+      addressbook: []
+    };
+    config.WriteJson("addressbook.json", json);
+  }
+
+  return dispatch => {
+    dispatch({ type: TYPE.LOAD_ADDRESS_BOOK, payload: json.addressbook });
   };
 };

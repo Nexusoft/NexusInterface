@@ -19,7 +19,7 @@ import * as actionsCreators from "../../actions/marketActionCreators";
 import binanceSmallLogo from "../../images/binanceSmallLogo.png";
 import bittrexSmallLogo from "../../images/bittrexSmallLogo.png";
 import cryptopiaSmallLogo from "../../images/cryptopiaSmallLogo.png";
-import arrow from "../../images/arrow.png";
+import arrow from "../../images/arrow.svg";
 
 import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
@@ -242,7 +242,6 @@ class Market extends Component {
   }
 
   formatBuyData(array) {
-    console.log("array", array);
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array
@@ -268,7 +267,6 @@ class Market extends Component {
   }
 
   formatSellData(array) {
-    console.log("array", array);
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array

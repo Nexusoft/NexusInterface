@@ -11,6 +11,8 @@ const initialState = {
   modaltype: "",
   confirmation: false,
   actionItem: ""
+  busyFlag: false,
+  modalVisable: false
 };
 
 export default (state = initialState, action) => {
@@ -19,6 +21,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loggedIn: false
+      };
+      break;
+    case TYPE.TOGGLE_MODAL_VIS_STATE:
+      return {
+        ...state,
+        modalVisable: !state.modalVisable
       };
       break;
     case TYPE.TOGGLE_BUSY_FLAG:
@@ -46,7 +54,6 @@ export default (state = initialState, action) => {
         encrypted: true
       };
       break;
-
     case TYPE.SET_GOOGLEANALYTICS:
       return {
         ...state,

@@ -148,7 +148,7 @@ export default (DAT.Globe = function(container, opts) {
     var points = curve.getPoints( 50 );
     var geometry = new THREE.BufferGeometry().setFromPoints( points );
 
-    var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+    var material = new THREE.LineBasicMaterial( { color : 0xff0000, linewidth: 60, fog: true } );
 
     // Create the final object to add to the scene
     var curveObject = new THREE.Line( geometry, material );
@@ -295,7 +295,7 @@ export default (DAT.Globe = function(container, opts) {
         this.points = new THREE.Mesh(
           this._baseGeometry,
           new THREE.MeshBasicMaterial({
-            color: 0xffffff,
+            color: 0x00ffff,
             vertexColors: THREE.FaceColors,
             morphTargets: true
           })
@@ -483,13 +483,13 @@ export default (DAT.Globe = function(container, opts) {
 
     renderer.render(scene, camera);
   }
-
+  // TODO: Figure out where to set the color of the arcs. The following currerntly does it.
   function initCurves(allCoords,incomingmesh) {
     const material = new THREE.MeshBasicMaterial({
       blending: THREE.AdditiveBlending,
       opacity: 0.6,
       transparent: true,
-      color: 0xe43c59
+      color: 0x00ffff
     });
     const curveMesh = new THREE.Mesh();
   
@@ -525,6 +525,8 @@ export default (DAT.Globe = function(container, opts) {
     curveGeometry.setDrawRange(0, 32);
   
    this.mesh =  new THREE.Line(curveGeometry, material);
+  //  this.mesh =  new THREE.MeshLine(curveGeometry, material);
+  //  this.mesh.setGeometry(curveGeometry, function(p) {return 3;});
 
    this.hasStopped = () => index > curveSegments;
 

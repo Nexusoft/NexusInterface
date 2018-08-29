@@ -8,6 +8,7 @@ import transactions from "./transactions";
 import common from "./common";
 import login from "./login";
 import sendRecieve from "./sendRecieve";
+import addressbook from "./addressbook"
 
 const rootReducer = combineReducers({
   overview,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   market,
   sendRecieve,
   transactions,
+  addressbook,
   common
 });
 

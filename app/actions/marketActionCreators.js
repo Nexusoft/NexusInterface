@@ -273,27 +273,30 @@ export const cryptopiaCandlestickLoader = () => {
         json: true
       },
       (error, response, body) => {
+        console.log(response);
         if (response.statusCode === 200) {
-          let res = body.Candle.reverse()
-            .map(e => {
-              return {
-                x: new Date(e[0]),
-                open: e[1],
-                close: e[4],
-                high: e[2],
-                low: e[3],
-                label: `Date: ${new Date(e[0]).getMonth() + 1}/${new Date(
-                  e[0]
-                ).getDate()}/${new Date(e[0]).getFullYear()}
+          if (body.charAt(0) !== "<") {
+            let res = body.Candle.reverse()
+              .map(e => {
+                return {
+                  x: new Date(e[0]),
+                  open: e[1],
+                  close: e[4],
+                  high: e[2],
+                  low: e[3],
+                  label: `Date: ${new Date(e[0]).getMonth() + 1}/${new Date(
+                    e[0]
+                  ).getDate()}/${new Date(e[0]).getFullYear()}
                 Open: ${e[1]}
                 Close: ${e[4]}
                 High: ${e[2]}
                 Low: ${e[3]}`
-              };
-            })
-            .slice(0, 30);
-          dispatch({ type: TYPE.CRYPTOPIA_CANDLESTICK, payload: res });
-          dispatch(marketDataLoaded());
+                };
+              })
+              .slice(0, 30);
+            dispatch({ type: TYPE.CRYPTOPIA_CANDLESTICK, payload: res });
+            dispatch(marketDataLoaded());
+          }
         }
       }
     );

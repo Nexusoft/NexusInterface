@@ -51,7 +51,7 @@ class Settings extends Component {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
       console.log("Redirecting to Application Settings");
-
+      console.log(this.props);
       return <Redirect to={`${this.props.match.url}/App`} />;
     }
 
@@ -77,8 +77,7 @@ class Settings extends Component {
               <li>
                 {this.props.encrypted !== true ? (
                   <NavLink to={`${this.props.match.url}/Unencrypted`}>
-                    <img src={lockImg} alt="Security" />
-                    Security
+                    <img src="images/lock-minting.svg" alt="Security" />Security
                   </NavLink>
                 ) : (
                   <NavLink to={`${this.props.match.url}/Security`}>
