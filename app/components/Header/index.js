@@ -31,12 +31,10 @@ const mapDispatchToProps = dispatch =>
 
 class Header extends Component {
   componentDidMount() {
-    console.log(this.props);
     const menuBuilder = new MenuBuilder(
       require("electron").remote.getCurrentWindow().id
     );
     var self = this;
-    //console.log(visitor);
     this.props.SetGoogleAnalytics(GOOGLE);
     let encryptionStatus = false;
     if (this.props.unlocked_until !== undefined) {
@@ -180,11 +178,6 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
-        <button
-          className="button hero"
-          onClick={() => this.props.OpenModal()}
-        />
-
         <Modal
           showCloseIcon={false}
           center={true}

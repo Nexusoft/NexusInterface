@@ -268,3 +268,21 @@ export const AddAddress = (name, address, index) => {
       });
   };
 };
+
+export const DeleteContact = actionItem => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.DELETE_CONTACT,
+      payload: actionItem
+    });
+  };
+};
+
+export const DeleteAddress = (actionItem, selectedIndex) => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.DELETE_ADDRESS_FROM_CONTACT,
+      payload: { ...actionItem, selectedContactIndex: selectedIndex }
+    });
+  };
+};

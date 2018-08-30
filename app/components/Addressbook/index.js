@@ -62,8 +62,7 @@ class Addressbook extends Component {
         role: "paste"
       },
       {
-        label: "Reload",
-        accelerator: "CmdOrCtrl+R",
+        label: "Delete Contact",
         click(item, focusedWindow) {
           deleteAccountCallback();
         }
@@ -71,7 +70,15 @@ class Addressbook extends Component {
     ];
 
     let deleteAccountCallback = () => {
-      console.log(this.props.actionItem);
+      if (
+        confirm(
+          `Are you sure you want to delete ${
+            this.props.addressbook[this.props.actionItem].name
+          }?`
+        )
+      ) {
+        this.props.DeleteContact(this.props.actionItem);
+      }
     };
 
     const addTemplate = [
@@ -84,9 +91,27 @@ class Addressbook extends Component {
         label: "Paste",
         ccelerator: "CmdOrCtrl+V",
         role: "paste"
+      },
+      {
+        label: "Delete Address",
+        click(item, focusedWindow) {
+          deleteAddressCallback();
+        }
       }
     ];
-
+    let deleteAddressCallback = () => {
+      if (
+        confirm(
+          `Are you sure you want to delete this address? ${
+            this.props.addressbook[this.props.selected][
+              this.props.actionItem.type
+            ][this.props.actionItem.index].address
+          }`
+        )
+      ) {
+        this.props.DeleteAddress(this.props.actionItem, this.props.selected);
+      }
+    };
     let addresscontextmenu = new remote.Menu();
     const contextmenu = new ContextMenuBuilder().defaultContext;
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
@@ -170,7 +195,6 @@ class Addressbook extends Component {
 
   copyaddress(event) {
     event.preventDefault();
-    console.log(event.target.innerText);
     let target = event.currentTarget;
     let address = event.target.innerText;
 
@@ -321,7 +345,6 @@ class Addressbook extends Component {
             <button
               className="button primary"
               onClick={() => {
-                console.log(this.props.selected);
                 this.props.AddAddress(
                   this.props.addressbook[this.props.selected].name,
                   this.props.prototypeAddress,
@@ -349,7 +372,6 @@ class Addressbook extends Component {
         <div
           id="contactList"
           onMouseOverCapture={() => this.props.SetMousePosition("", "")}
-          // onMouseUp={e => e.stopPropagation()}
         >
           {this.props.addressbook.map((contact, i) => {
             let addTotal = contact.mine.length + contact.notMine.length;
@@ -360,7 +382,6 @@ class Addressbook extends Component {
                 onClick={() => this.props.SelectedContact(i)}
                 onMouseOverCapture={e => {
                   this.props.SetMousePosition("account", i);
-                  // e.stopPropagation();
                 }}
                 className="contact"
               >
@@ -452,7 +473,15 @@ class Addressbook extends Component {
         <div>
           {this.props.addressbook[this.props.selected].notMine.map((add, i) => {
             return (
-              <div key={i + add.address}>
+              <div
+                onContextMenu={e => {
+                  this.props.SetMousePosition("address", {
+                    index: i,
+                    type: "notMine"
+                  });
+                }}
+                key={i + add.address}
+              >
                 {this.props.editAddressLabel === add.address ? (
                   <input
                     onChange={e => this.props.EditProtoLabel(e.target.value)}
@@ -498,9 +527,16 @@ class Addressbook extends Component {
         <h3>My addresses</h3>
         <div>
           {this.props.addressbook[this.props.selected].mine.map((add, i) => {
-            console.log(add, i);
             return (
-              <div key={i + add.address}>
+              <div
+                onContextMenu={e => {
+                  this.props.SetMousePosition("address", {
+                    index: i,
+                    type: "mine"
+                  });
+                }}
+                key={i + add.address}
+              >
                 {this.props.editAddressLabel === add.address ? (
                   <input
                     onChange={e => this.props.EditProtoLabel(e.target.value)}
@@ -555,7 +591,6 @@ class Addressbook extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div id="addressbook">
         <Modal
@@ -757,7 +792,12 @@ class Addressbook extends Component {
                       />
                     </div>
                   </fieldset>
-                  <div id="addressDisplay">
+                  <div
+                    id="addressDisplay"
+                    onMouseOverCapture={() =>
+                      this.props.SetMousePosition("", "")
+                    }
+                  >
                     {this.props.addressbook[this.props.selected].notMine
                       .length > 0
                       ? this.theirAddressLister()

@@ -386,16 +386,29 @@ export default (state = initialState, action) => {
     case TYPE.SAVE_NAME:
       return {
         ...state,
-        addressbook: state.addressbook.map((ele, i) => {
-          if (i === action.payload.index) {
-            return {
-              ...state.addressbook[action.payload.index],
-              name: action.payload.name
-            };
-          } else {
-            return ele;
-          }
-        }),
+        addressbook: state.addressbook
+          .map((ele, i) => {
+            if (i === action.payload.index) {
+              return {
+                ...state.addressbook[action.payload.index],
+                name: action.payload.name
+              };
+            } else {
+              return ele;
+            }
+          })
+          .sort((a, b) => {
+            let nameA = a.name.toUpperCase();
+            let nameB = b.name.toUpperCase();
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            return 0;
+          }),
+
         editName: false,
         save: true
       };
@@ -470,19 +483,31 @@ export default (state = initialState, action) => {
     case TYPE.DELETE_CONTACT:
       return {
         ...state,
-        addressbook: state.addressbook.filter((ele, i) => i !== action.payload)
+        addressbook: state.addressbook.filter((ele, i) => i !== action.payload),
+        save: true
       };
       break;
     //   dispatch 9
-    // case TYPE.DELETE_ADDRESS_FROM_CONTACT:
-    //     let index = state.addressbook.[action.payload.contact].thaddresses.findIndex((thaddelem)=> { thaddelem.label === action.payload.label})
-    //     let temp = state.addressbook;
-    //     delete temp.[action.payload.contact].thaddresses[index];
-    //     return {
-    //         ...state,
-    //         addressbook: temp
-    //     };
-    //     break;
+    case TYPE.DELETE_ADDRESS_FROM_CONTACT:
+      return {
+        ...state,
+        addressbook: state.addressbook.map((ele, i) => {
+          if (i === action.payload.selectedContactIndex) {
+            return {
+              ...state.addressbook[action.payload.selectedContactIndex],
+              [action.payload.type]: state.addressbook[
+                action.payload.selectedContactIndex
+              ][action.payload.type].filter(
+                (ele, i) => i !== action.payload.index
+              )
+            };
+          } else {
+            return ele;
+          }
+        }),
+        save: true
+      };
+      break;
     //   dispatch 10
     case TYPE.LOAD_ADDRESS_BOOK:
       return {

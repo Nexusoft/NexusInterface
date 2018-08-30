@@ -17,7 +17,6 @@ export const setAlertList = list => {
 
 export const removeAlert = index => {
   return dispatch => {
-    console.log(index);
     dispatch({ type: TYPE.REMOVE_ALERT, payload: index });
   };
 };
@@ -273,9 +272,8 @@ export const cryptopiaCandlestickLoader = () => {
         json: true
       },
       (error, response, body) => {
-        console.log(response);
         if (response.statusCode === 200) {
-          if (body.charAt(0) !== "<") {
+          if (body.Candle) {
             let res = body.Candle.reverse()
               .map(e => {
                 return {
