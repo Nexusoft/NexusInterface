@@ -9,7 +9,7 @@ import common from "./common";
 import login from "./login";
 import exchange from "./exchange";
 import sendRecieve from "./sendRecieve";
-import addressbook from "./addressbook"
+import addressbook from "./addressbook";
 
 const rootReducer = combineReducers({
   overview,
@@ -19,9 +19,9 @@ const rootReducer = combineReducers({
   market,
   sendRecieve,
   transactions,
-  exchange
-  common
-  addressbook,
+  exchange,
+  common,
+  addressbook
 });
 
 export default rootReducer;
