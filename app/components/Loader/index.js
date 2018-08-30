@@ -12,10 +12,6 @@ class Loader extends Component {
     state = {
     loading: true
     };
-
-    componentDidMount() {
-    setTimeout(() => this.setState({ loading: false }), 1500); 
-    }
     
     render() {
     const { loading } = this.state;

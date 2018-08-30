@@ -30,6 +30,7 @@ Panel
 	/* text-shadow: 0 1px 3px rgba(0,0,0,0.4); */
 	/* color: white; */
 	overflow: hidden;
+	min-height: 65vh;
 }
 
 /* TODO: this blur layer was causing issues if children weren't position: relative, and didn't scroll correctly */

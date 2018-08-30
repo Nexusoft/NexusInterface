@@ -148,23 +148,6 @@ export default class SettingsApp extends Component {
   }
 
   //
-  // Update Wallpaper
-  //
-
-  updateWallpaper(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
-    
-    console.log(el.files[0].path);
-    settingsObj.wallpaper = el.files[0].path;
-
-    settings.SaveSettings(settingsObj);
-
-    document.body.style.setProperty('--background-main-image', "url('" + el.files[0].path + "')");
-  }
-
-  //
   // Update info Popups
   //
 
@@ -306,22 +289,6 @@ export default class SettingsApp extends Component {
     return (
       <section id="application">
         <form className="aligned">
-
-          <div className="field">
-            <label htmlFor="wallpaper">Wallpaper</label>
-            <input id="wallpaper" type="file" size="25" onChange={this.updateWallpaper} data-tooltip="The background wallpaper for your wallet"/>
-          </div>
-
-          <div className="field">
-            <label htmlFor="infopopup">Information Pop-ups</label>
-            <input
-              id="infopopup"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateInfoPopUp}
-              data-tooltip="Triggers pop-ups that display additional information"
-            />
-          </div>
           
           <div className="field">
             <label htmlFor="autostart">Start at system startup</label>
