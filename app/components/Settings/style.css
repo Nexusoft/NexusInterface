@@ -139,24 +139,24 @@ form {
   outline: 0;
 }
 input[type="number"] {
-  width: 70px;
   height: 27px;
+  width: 60px;
+  border: 1.5px solid var(--color-4);
 }
 
 .fee {
   /* This bit sets up the horizontal layout */
   display: flex;
+  width: 100px;
   flex-direction: row;
-  flex-wrap: inherit;
-  /* This bit draws the box around it */
+  flex-wrap: wrap;
 }
 
 .Txfee {
   display: flex;
   /* Tell the input to use all the available space */
-  flex-grow: 2;
+  flex-grow: 1;
   /* And hide the input's outline, so the form looks like the outline */
-  border: 1px;
 }
 
 .feebutton {
@@ -164,5 +164,11 @@ input[type="number"] {
   border: 1px solid var(--color-4);
   background: var(--color-4);
   color: white;
-  margin-left: -22%;
+  margin-left: -10%;
+}
+#no-button {
+  float: right;
+}
+#ok-button {
+  float: left;
 }

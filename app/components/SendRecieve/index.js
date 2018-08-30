@@ -323,24 +323,28 @@ class SendRecieve extends Component {
             showCloseIcon={false}
             open={this.props.openThirdModal}
             onClose={this.props.CloseModal3}
+            center
           >
             <div>
               {" "}
               <h2>Remove From Queue?</h2>
-              <input
-                value="Yes"
-                type="button"
-                className="button primary"
-                onClick={() => {
-                  this.props.removeQueue(e.key);
-                  this.props.CloseModal3();
-                }}
-              />
-              <div className="no-button">
+              <div id="ok-button">
+                {" "}
+                <input
+                  value="Yes"
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    this.props.removeQueue(e.key);
+                    this.props.CloseModal3();
+                  }}
+                />
+              </div>
+              <div id="no-button">
                 <input
                   value="No"
                   type="button"
-                  className="button primary"
+                  className="button"
                   onClick={() => {
                     this.props.CloseModal3();
                   }}
@@ -358,21 +362,15 @@ class SendRecieve extends Component {
         return (
           <div>
             <h2>Send Transaction?</h2>
-            <input
-              value="Yes"
-              type="button"
-              className="button primary"
-              onClick={() => {
-                this.sendOne();
-                this.props.CloseModal2();
-              }}
-            />
-            <div className="no-button">
+            <div id="ok-button">
               <input
-                value="No"
-                className="button"
+                value="Yes"
                 type="button"
-                onClick={() => this.props.CloseModal2()}
+                className="button primary"
+                onClick={() => {
+                  this.sendOne();
+                  this.props.CloseModal2();
+                }}
               />
             </div>
           </div>
@@ -382,21 +380,16 @@ class SendRecieve extends Component {
         return (
           <div>
             <h2>Empty Queue?</h2>
-            <input
-              value="Yes"
-              type="button"
-              className="button primary"
-              onClick={() => {
-                this.props.clearQueue();
-                this.props.CloseModal2();
-              }}
-            />
-            <div className="no-button">
+            <div id="ok-button">
+              {" "}
               <input
-                value="No"
-                className="button"
+                value="Yes"
                 type="button"
-                onClick={() => this.props.CloseModal2()}
+                className="button primary"
+                onClick={() => {
+                  this.props.clearQueue();
+                  this.props.CloseModal2();
+                }}
               />
             </div>
           </div>
@@ -406,25 +399,16 @@ class SendRecieve extends Component {
         return (
           <div>
             <h2>
-              {" "}
-              Send All (Total: {this.areYouSure()}) Transactions From $
-              {this.accHud()}{" "}
+              Send All Transactions (Total: {this.areYouSure()}) From
+              {this.accHud()}
             </h2>
-            <input
-              value="Yes"
-              type="button"
-              className="button primary"
-              onClick={() => {
-                this.sendMany();
-                this.props.CloseModal2();
-              }}
-            />
-            <div className="no-button">
+            <div id="ok-button">
               <input
-                value="No"
-                className="button"
+                value="Yes"
                 type="button"
+                className="button primary"
                 onClick={() => {
+                  this.sendMany();
                   this.props.CloseModal2();
                 }}
               />
@@ -436,21 +420,13 @@ class SendRecieve extends Component {
         return (
           <div>
             <h2>Edit Entry?</h2>
-            <input
-              value="Yes"
-              type="button"
-              className="button primary"
-              onClick={() => {
-                this.validateAddToQueue();
-                this.props.CloseModal2();
-              }}
-            />
-            <div className="no-button">
+            <div id="ok-button">
               <input
-                value="No"
-                className="button"
+                value="Yes"
                 type="button"
+                className="button primary"
                 onClick={() => {
+                  this.validateAddToQueue();
                   this.props.CloseModal2();
                 }}
               />
@@ -462,19 +438,11 @@ class SendRecieve extends Component {
         return (
           <div>
             <h2>Delete Entry?</h2>
-            <input
-              value="Yes"
-              type="button"
-              className="button primary"
-              onClick={() => {
-                this.props.CloseModal2();
-              }}
-            />
-            <div className="no-button">
+            <div id="ok-button">
               <input
-                value="No"
-                className="button"
+                value="Yes"
                 type="button"
+                className="button primary"
                 onClick={() => {
                   this.props.CloseModal2();
                 }}
@@ -500,15 +468,29 @@ class SendRecieve extends Component {
     return (
       <div id="sendrecieve">
         <h2>Send Nexus </h2>
+        {/* <button onClick={() => this.props.OpenModal("Transaction Fee Set")}>
+          TEST
+        </button> */}
+
         <Modal
+          center
           classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}
         >
           {this.modalinternal2()}
+          <div id="no-button">
+            <input
+              value="No"
+              className="button"
+              type="button"
+              onClick={() => {
+                this.props.CloseModal2();
+              }}
+            />
+          </div>
         </Modal>
-        <button>Testing</button>
         <div className="panel">
           <div id="container">
             <div className="box1">

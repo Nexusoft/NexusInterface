@@ -170,6 +170,9 @@ class Header extends Component {
       case "Settings saved":
         return <h2>Settings saved</h2>;
         break;
+      case "Transaction Fee Set":
+        return <h2>Transaction Fee Set</h2>;
+        break;
 
       default:
         "";
@@ -180,10 +183,10 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
-        <button
+        {/* <button
           className="button hero"
           onClick={() => this.props.OpenModal()}
-        />
+        /> */}
 
         <Modal
           showCloseIcon={false}
