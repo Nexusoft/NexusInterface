@@ -166,3 +166,8 @@ input[type="number"] {
   color: white;
   margin-left: -22%;
 }
+
+
+#noPad {
+  margin-left: 0;
+}

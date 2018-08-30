@@ -155,13 +155,16 @@ export default class SettingsApp extends Component {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
-    
+
     console.log(el.files[0].path);
     settingsObj.wallpaper = el.files[0].path;
 
     settings.SaveSettings(settingsObj);
 
-    document.body.style.setProperty('--background-main-image', "url('" + el.files[0].path + "')");
+    document.body.style.setProperty(
+      "--background-main-image",
+      "url('" + el.files[0].path + "')"
+    );
   }
 
   //
@@ -258,20 +261,26 @@ export default class SettingsApp extends Component {
 
     settingsObj.googleAnalytics = el.checked;
 
-    if ( el.checked == true)
-    {
+    if (el.checked == true) {
       this.props.googleanalytics.EnableAnalytics();
 
-      this.props.googleanalytics.SendEvent("Settings","Analytics","Enabled",1);
-    }
-    else
-    {
-      this.props.googleanalytics.SendEvent("Settings","Analytics","Disabled",1);
+      this.props.googleanalytics.SendEvent(
+        "Settings",
+        "Analytics",
+        "Enabled",
+        1
+      );
+    } else {
+      this.props.googleanalytics.SendEvent(
+        "Settings",
+        "Analytics",
+        "Disabled",
+        1
+      );
       this.props.googleanalytics.DisableAnalytics();
     }
 
     settings.SaveSettings(settingsObj);
-
   }
 
   //
@@ -302,14 +311,32 @@ export default class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
+  saveEmail() {
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+    let emailFeild = document.getElementById("emailAddress");
+    let emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (emailregex.test(emailFeild.value)) {
+      settingsObj.email = emailFeild.value;
+      settings.SaveSettings(settingsObj);
+    } else alert("Invalid Email");
+  }
+
   render() {
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
     return (
       <section id="application">
         <form className="aligned">
-
           <div className="field">
             <label htmlFor="wallpaper">Wallpaper</label>
-            <input id="wallpaper" type="file" size="25" onChange={this.updateWallpaper} data-tooltip="The background wallpaper for your wallet"/>
+            <input
+              id="wallpaper"
+              type="file"
+              size="25"
+              onChange={this.updateWallpaper}
+              data-tooltip="The background wallpaper for your wallet"
+            />
           </div>
 
           <div className="field">
@@ -322,7 +349,7 @@ export default class SettingsApp extends Component {
               data-tooltip="Triggers Popups that display additional information"
             />
           </div>
-          
+
           <div className="field">
             <label htmlFor="autostart">Start at system startup</label>
             <input
@@ -389,6 +416,23 @@ export default class SettingsApp extends Component {
               onChange={this.updateDeveloperMode}
               data-tooltip="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
             />
+          </div>
+
+          <div className="field">
+            <label htmlFor="emailAddress">Email Address</label>
+            <input
+              id="emailAddress"
+              type="email"
+              placeholder={settingsObj.email || ""}
+              data-tooltip="Email address for email reciepts."
+            />
+            <button
+              className="button primary"
+              id="noPad"
+              onClick={() => this.saveEmail()}
+            >
+              Save
+            </button>
           </div>
 
           <div className="clear-both" />
