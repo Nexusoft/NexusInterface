@@ -10,8 +10,7 @@ const initialState = {
   openThirdModal: false,
   modaltype: "",
   confirmation: false,
-  actionItem: ""
-  busyFlag: false,
+  actionItem: "",
   modalVisable: false
 };
 
@@ -47,26 +46,6 @@ export default (state = initialState, action) => {
         encrypted: false
       };
 
-      break;
-    case TYPE.ENCRYPTED:
-      return {
-        ...state,
-        encrypted: true
-      };
-      break;
-    case TYPE.SET_GOOGLEANALYTICS:
-      return {
-        ...state,
-        googleanalytics: action.payload
-      };
-      break;
-
-    case TYPE.CONFIRM:
-      return {
-        ...state,
-        confirmation: action.payload
-      };
-      break;
     case TYPE.SHOW_MODAL:
       return {
         ...state,
@@ -109,6 +88,19 @@ export default (state = initialState, action) => {
         ...state,
         openThirdModal: false,
         modaltype: action.payload
+      };
+
+      break;
+    case TYPE.ENCRYPTED:
+      return {
+        ...state,
+        encrypted: true
+      };
+      break;
+    case TYPE.SET_GOOGLEANALYTICS:
+      return {
+        ...state,
+        googleanalytics: action.payload
       };
       break;
 

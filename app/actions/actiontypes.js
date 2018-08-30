@@ -92,3 +92,4 @@ export const SAVE_PHONE = "SAVE_PHONE";
 export const SAVE_NAME = "SAVE_NAME";
 export const SAVE_ADDRESS_LABEL = "SAVE_ADDRESS_LABEL";
 export const SAVE_TIMEZONE = "SAVE_TIMEZONE";
+export const SET_MOUSE_POSITION = "SET_MOUSE_POSITION";

@@ -217,25 +217,32 @@ class SendRecieve extends Component {
     this.props.busy();
     let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 1) {
+      console.log("tree");
       RPC.PROMISE("sendmany", [this.props.SelectedAccount, this.props.Queue])
-        .then(payoad => this.props.busy())
+        .then(payoad => {
+          this.props.busy();
+          this.props.clearForm();
+          this.props.clearQueue();
+        })
         .catch(e => {
           this.props.busy();
         });
-    } else if (this.props.Amount > 0) {
+    } else if (Object.values(this.props.Queue)[0] > 0) {
+      console.log("pee");
       RPC.PROMISE("sendtoaddress", [
-        keyCheck[1],
+        keyCheck[0],
         Object.values(this.props.Queue)[0]
       ])
-        .then(payoad => this.props.busy())
+        .then(payoad => {
+          this.props.busy();
+          this.props.clearForm();
+          this.props.clearQueue();
+        })
         .catch(e => {
           this.props.busy();
           this.props.OpenModal("No Addresses");
         });
     }
-    this.props.busy();
-    this.props.clearForm();
-    this.props.clearQueue();
   }
 
   areYouSure() {
@@ -408,8 +415,7 @@ class SendRecieve extends Component {
               type="button"
               className="button primary"
               onClick={() => {
-                console.log(this.sendMany());
-
+                this.sendMany();
                 this.props.CloseModal2();
               }}
             />

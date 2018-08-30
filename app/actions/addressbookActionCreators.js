@@ -172,14 +172,23 @@ export const ChangeContactImage = (path, contact) => {
 
 export const ToggleSaveFlag = () => {
   return dispatch => {
+    dispatch({ type: TYPE.CLEAR_PROTOTYPE });
     dispatch({ type: TYPE.SET_SAVE_FLAG_FALSE });
   };
 };
-export const ContactPicSetter = () => {
+
+export const SetMousePosition = (type, actionItem) => {
   return dispatch => {
-    dispatch({ type: TYPE.SET_SAVE_FLAG_FALSE });
+    dispatch({
+      type: TYPE.SET_MOUSE_POSITION,
+      payload: {
+        type: type,
+        actionItem: actionItem
+      }
+    });
   };
 };
+
 export const AddContact = (name, address, num, notes, TZ) => {
   let mine = [];
   let notMine = [];
@@ -215,6 +224,7 @@ export const AddContact = (name, address, num, notes, TZ) => {
             phoneNumber: num
           }
         });
+
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
       })
       .catch(e => {
@@ -224,19 +234,20 @@ export const AddContact = (name, address, num, notes, TZ) => {
 };
 
 export const AddAddress = (name, address, index) => {
+  console.log(name, address, index);
   return dispatch => {
     RPC.PROMISE("validateaddress", [address])
       .then(payload => {
         if (payload.isvalid) {
           if (payload.ismine) {
             return {
-              label: `My Address for ${name}`,
+              label: `My Address for `,
               ismine: true,
               address: address
             };
           } else {
             return {
-              label: `${name}'s Address`,
+              label: `'s Address`,
               ismine: false,
               address: address
             };
@@ -249,6 +260,7 @@ export const AddAddress = (name, address, index) => {
           type: TYPE.ADD_NEW_ADDRESS,
           payload: { newAddress: result, index: index }
         });
+
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
       })
       .catch(e => {
