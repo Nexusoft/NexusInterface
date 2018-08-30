@@ -46,6 +46,50 @@ export default (state = initialState, action) => {
         encrypted: false
       };
 
+    case TYPE.SHOW_MODAL:
+      return {
+        ...state,
+        open: true,
+        modaltype: action.payload
+      };
+      break;
+    case TYPE.HIDE_MODAL:
+      return {
+        ...state,
+        open: false,
+        modaltype: action.payload
+      };
+      break;
+    case TYPE.SHOW_MODAL2:
+      return {
+        ...state,
+        openSecondModal: true,
+        modaltype: action.payload
+      };
+      break;
+
+    case TYPE.HIDE_MODAL2:
+      return {
+        ...state,
+        openSecondModal: false,
+        modaltype: action.payload
+      };
+      break;
+    case TYPE.SHOW_MODAL3:
+      return {
+        ...state,
+        openThirdModal: true,
+        modaltype: action.payload
+      };
+      break;
+
+    case TYPE.HIDE_MODAL3:
+      return {
+        ...state,
+        openThirdModal: false,
+        modaltype: action.payload
+      };
+
       break;
     case TYPE.ENCRYPTED:
       return {

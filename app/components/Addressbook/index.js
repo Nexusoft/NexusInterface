@@ -15,6 +15,7 @@ import ContactView from "./ContactView";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 import profilePlaceholder from "images/Profile_Placeholder.png";
+import { callbackify } from "util";
 
 const mapStateToProps = state => {
   return { ...state.common, ...state.addressbook };
@@ -59,8 +60,19 @@ class Addressbook extends Component {
         label: "Paste",
         ccelerator: "CmdOrCtrl+V",
         role: "paste"
+      },
+      {
+        label: "Reload",
+        accelerator: "CmdOrCtrl+R",
+        click(item, focusedWindow) {
+          deleteAccountCallback();
+        }
       }
     ];
+
+    let deleteAccountCallback = () => {
+      console.log(this.props.actionItem);
+    };
 
     const addTemplate = [
       {
@@ -336,7 +348,8 @@ class Addressbook extends Component {
       return (
         <div
           id="contactList"
-          onMouseLeave={() => this.props.SetMousePosition("", "")}
+          onMouseOverCapture={() => this.props.SetMousePosition("", "")}
+          // onMouseUp={e => e.stopPropagation()}
         >
           {this.props.addressbook.map((contact, i) => {
             let addTotal = contact.mine.length + contact.notMine.length;
@@ -345,6 +358,10 @@ class Addressbook extends Component {
                 key={i}
                 id={i}
                 onClick={() => this.props.SelectedContact(i)}
+                onMouseOverCapture={e => {
+                  this.props.SetMousePosition("account", i);
+                  // e.stopPropagation();
+                }}
                 className="contact"
               >
                 <span className="contact-avatar">
