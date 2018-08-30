@@ -138,7 +138,7 @@ form {
 #settings input[type="file"]:active {
   outline: 0;
 }
-input[type="number"] {
+.fee input[type="number"] {
   height: 27px;
   width: 60px;
   border: 1.5px solid var(--color-4);
