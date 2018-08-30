@@ -143,11 +143,11 @@ export const SaveName = (selected, name) => {
   };
 };
 
-export const PhoneToggler = notes => {
+export const PhoneToggler = phone => {
   return dispatch => {
     dispatch({
       type: TYPE.TOGGLE_PHONE_EDIT,
-      payload: notes
+      payload: phone
     });
   };
 };

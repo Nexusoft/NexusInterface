@@ -247,7 +247,7 @@ class Addressbook extends Component {
               <input
                 id="new-account-phone"
                 type="tel"
-                onChange={e => this.props.EditProtoPhone(e.target.value)}
+                onChange={e => this.phoneNumberHandler(e.target.value)}
                 value={this.props.prototypePhoneNumber}
                 placeholder="Phone #"
               />
@@ -405,7 +405,18 @@ class Addressbook extends Component {
   }
 
   phoneFormatter() {
-    return this.props.addressbook[this.props.selected].phoneNumber;
+    let num = this.props.addressbook[this.props.selected].phoneNumber;
+    if (num.length === 12) {
+      return `+ ${num.substring(0, 2)} ${num.substring(2, 4)} ${num.substring(
+        4,
+        8
+      )} ${num.substring(8, 12)}`;
+    } else if (num.length === 10) {
+      return `(${num.substring(0, 3)}) ${num.substring(3, 6)}-${num.substring(
+        6,
+        10
+      )}`;
+    } else return num;
   }
 
   localTimeFormater() {
@@ -590,6 +601,14 @@ class Addressbook extends Component {
     this.props.ToggleModal();
   }
 
+  phoneNumberHandler(value) {
+    if (/^[0-9.]+$/.test(value) | (value === "")) {
+      this.props.EditProtoPhone(value);
+    } else {
+      return null;
+    }
+  }
+
   render() {
     return (
       <div id="addressbook">
@@ -673,7 +692,7 @@ class Addressbook extends Component {
                             onDoubleClick={() =>
                               this.props.PhoneToggler(
                                 this.props.addressbook[this.props.selected]
-                                  .notes
+                                  .phoneNumber
                               )
                             }
                             htmlFor="phoneNumber"
@@ -686,7 +705,7 @@ class Addressbook extends Component {
                               name="phoneNumber"
                               type="tel"
                               onChange={e =>
-                                this.props.EditProtoPhone(e.target.value)
+                                this.phoneNumberHandler(e.target.value)
                               }
                               value={this.props.prototypePhoneNumber}
                               placeholder="Phone #"
@@ -702,7 +721,7 @@ class Addressbook extends Component {
                               onDoubleClick={() =>
                                 this.props.PhoneToggler(
                                   this.props.addressbook[this.props.selected]
-                                    .notes
+                                    .phoneNumber
                                 )
                               }
                               id="phoneNumber"

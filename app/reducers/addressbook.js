@@ -440,7 +440,7 @@ export default (state = initialState, action) => {
     case TYPE.TOGGLE_PHONE_EDIT:
       return {
         ...state,
-        prototypeNotes: action.payload,
+        prototypePhoneNumber: action.payload,
         editPhone: true
       };
       break;
