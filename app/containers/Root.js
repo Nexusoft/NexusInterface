@@ -18,9 +18,25 @@ import Terminal from "../components/Terminal/index";
 import StyleGuide from "../components/StyleGuide/index";
 import List from "../components/List/index";
 import About from "../components/About/index";
+import Exchange from "../components/Exchange/index";
+import settings from "../../app/api/settings";
 
 export default function Root({ store, history }) {
-  console.log(store);
+  let configSettings = settings.GetSettings();
+
+  if (configSettings.wallpaper) {
+    let customBGImageUrl = configSettings.wallpaper;
+    if ( process.platform === "win32")
+        {
+          customBGImageUrl =  customBGImageUrl.replace(/\\/g, '/');
+        }
+    console.log("Applying custom wallpaper: " + customBGImageUrl);
+    document.body.style.setProperty(
+      "--background-main-image",
+      "url('" + customBGImageUrl + "')"
+    );
+  }
+
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
@@ -43,6 +59,7 @@ export default function Root({ store, history }) {
               <Route path="/Settings" component={Settings} />
               <Route path="/Terminal" component={Terminal} />
               <Route exact path="/StyleGuide" component={StyleGuide} />
+              <Route path="/Exchange" component={Exchange} />
               <Route exact path="/List" component={List} />
               <Route exact path="/About" component={About} />
             </div>

@@ -1,833 +1,910 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { remote } from "electron";
 import { Link } from "react-router-dom";
-import Modal from 'react-responsive-modal';
+import Modal from "react-responsive-modal";
 
 import config from "../../api/configuration";
 import * as RPC from "../../script/rpc";
+import * as TYPE from "../../actions/actiontypes";
+import * as actionsCreators from "../../actions/addressbookActionCreators";
+import TimeZoneSelector from "./timeZoneSelector";
 
-import MyAddresses from "./MyAddresses";
-import ContactList from "./ContactList";
 import ContactView from "./ContactView";
-import FormError from "./FormError";
 import ContextMenuBuilder from "../../contextmenu";
-
 import styles from "./style.css";
-
-var psudoState = null;
+import profilePlaceholder from "images/Profile_Placeholder.png";
+import { callbackify } from "util";
 
 const mapStateToProps = state => {
-  return { ...state.common };
+  return { ...state.common, ...state.addressbook };
 };
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(actionsCreators, dispatch);
 
 class Addressbook extends Component {
-
-  static contextTypes = {
-    router: React.PropTypes.object
-  };
-
-  constructor(props)
-  {
-    super(props);
-
-    this.state =
-    {
-      hoveredover: false,
-
-      contacts: null,
-      selectedContact: null,
-      showMyAddresses: false,
-      showAddContact: false,
-      showViewContact: false,
-      showEditContact: false,
-      addError: null
-    };
-  }
-
-  //
-  // componentDidMount: get addressbook data
-  //
-
   componentDidMount() {
-
-    RPC.GET("listaccounts", [0], this.loadAddressBook.bind(this));
-
+    this.loadMyAccounts();
+    this.addressbookContextMenu = this.addressbookContextMenu.bind(this);
+    window.addEventListener("contextmenu", this.addressbookContextMenu, false);
     this.props.googleanalytics.SendScreen("AddressBook");
   }
 
-  //
-  // readAddressBook: Read the addressbook.json file and return the contents as an object, if it doesn't exist initialize the file
-  //
-
-  readAddressBook()
-  {
-    let json = null;
-
-    try {
-      json = config.ReadJson("addressbook.json");
-      
-    } 
-    catch (err) 
-    {
-      json = {};
-      config.WriteJson("addressbook.json", json);
-    }
-
-    return json;
+  componentWillUnmount() {
+    window.removeEventListener("contextmenu", this.addressbookContextMenu);
   }
 
-  //
-  // saveAddressBook: save the address book to disk, then save the contacts state
-  //
-
-  saveAddressBook(state) {
-
-    config.WriteJson("addressbook.json", state);
-
-    this.setState(
+  addressbookContextMenu() {
+    const txtTemplate = [
       {
-        contacts: state
+        label: "Copy",
+        ccelerator: "CmdOrCtrl+C",
+        role: "copy"
+      },
+      {
+        label: "Paste",
+        ccelerator: "CmdOrCtrl+V",
+        role: "paste"
       }
-    );
+    ];
 
-  }
-
-  //
-  // loadAddressBook: Load the addressbook json and get the addresses from the core
-  //
-
-  loadAddressBook(ResponseObject, Address, PostData)
-  {
-    if (ResponseObject.readyState != 4)
-      return;
-
-    if (ResponseObject.status == 200)
-    {
-      let getAddressesPromises = [];
-      
-      psudoState = this.readAddressBook();
-
-      let results = JSON.parse(ResponseObject.responseText).result;
-
-      // if (psudoState === null)
-      if (psudoState.length === 0)
+    const acctTemplate = [
       {
-        psudoState = Object.assign(psudoState, results);
-      }
-
-      let accounts = Object.keys(results);
-
-      for (let i = 0; i < accounts.length; i++) 
+        label: "Copy",
+        ccelerator: "CmdOrCtrl+C",
+        role: "copy"
+      },
       {
-        // let account = accounts[i];
-        getAddressesPromises.push(RPC.PROMISE("getaddressesbyaccount", [accounts[i]]));
-      }
-
-      Promise.all(getAddressesPromises).then(this.processAddresses);
-    }
-  }
-
-  //
-  // processAddresses: Process addresses that get returned from getaddressesbyaccount call to the core
-  //
-
-  processAddresses = (payload) => {
-  
-    let validateAddressPromises = [];
-
-    payload.map(element => {
-
-      element.addresses.map(address => {
-        validateAddressPromises.push(RPC.PROMISE("validateaddress", [address]));
-      });
-
-    });
-
-    Promise.all(validateAddressPromises).then(this.processValidatedAddresses);
-
-  }
-
-  //
-  // processValidatedAddresses: Process validated addresses returned from validateaddress call to the core, then save the addressbook and set the default contact
-  //
-
-  processValidatedAddresses = (payload) => {
-
-      payload.map(this.processValidatedAddress);
-
-      this.saveAddressBook(psudoState);
-
-  }
-
-  //
-  // processValidatedAddress: Process a validated address returned from validateaddress call to the core
-  //
-
-  processValidatedAddress = (e, i) => {
-
-      if (e.ismine)
+        label: "Paste",
+        ccelerator: "CmdOrCtrl+V",
+        role: "paste"
+      },
       {
-        if (typeof psudoState[e.account] !== "object")
-        {
-
-          psudoState[e.account] = {
-            // numAddreses: 0,
-            mine: {},
-            notMine: {},
-            phoneNum: null,
-            timeZone: null,
-            notes: null
-          };
-
-        }
-
-        if (e.isvalid)
-        {
-          if (psudoState[e.account] || psudoState[e.account] === "")
-          {
-            if (!Object.values(psudoState[e.account].mine).includes(e.address))
-            {
-
-              psudoState[e.account].mine = Object.assign(
-                psudoState[e.account].mine,
-                { [i]: e.address }
-              );
-
-            }
-          }
+        label: "Delete Contact",
+        click(item, focusedWindow) {
+          deleteAccountCallback();
         }
       }
-      else
-      {
+    ];
 
-        if (typeof psudoState[e.account] !== "object")
-        {
-
-          psudoState[e.account] = {
-            mine: {},
-            notMine: {},
-            phoneNum: null,
-            timeZone: null,
-            notes: null
-          };
-
-        }
-
-        if (e.isvalid) {
-          if (psudoState[e.account] || psudoState[e.account] === "")
-          {
-            if (!Object.values(psudoState[e.account].notMine).includes(e.address))
-            {
-
-              psudoState[e.account].notMine = Object.assign(
-                psudoState[e.account].notMine,
-                { [i]: e.address }
-              );
-
-            }
-          }
-        }
+    let deleteAccountCallback = () => {
+      if (
+        confirm(
+          `Are you sure you want to delete ${
+            this.props.addressbook[this.props.actionItem].name
+          }?`
+        )
+      ) {
+        this.props.DeleteContact(this.props.actionItem);
       }
-  }
-
-  //
-  // setContact: set a contact as the selectedContact, then set state to show the contact
-  //
-
-  setContact = (index) => {
-
-    let name = Object.keys(this.state.contacts)[index];
-    let contact = {name: name, index: index, ...this.state.contacts[name]};
-
-    this.setState({
-      selectedContact: contact,
-      showViewContact: true,
-      showEditContact: false
-    });
-
-  };
-
-  //
-  // showMyAddresses: show the my addresses modal
-  //
-
-  showMyAddresses = () => {
-
-    this.setState(
-      {
-        showMyAddresses: true
-      }
-    );
-
-  }
-
-  //
-  // showAddContact: show the add contact modal
-  //
-
-  showAddContact = () => {
-
-    this.setState(
-      {
-        showAddContact: true
-      }
-    );
-
-  }
-
-  //
-  // showEditContact: hide the view and show the edit contact screen
-  //
-
-  showEditContact = () => {
-
-    this.setState(
-      {
-        showViewContact: false,
-        showEditContact: true
-      }
-    );
-
-  }
-
-
-  //
-  // closeViewContact: close the add contact modal
-  //
-
-  closeViewContact = () => {
-
-    this.setState(
-      {
-        showViewContact: false
-      }
-    );
-
-  }
-
-  //
-  // closeMyAddresses: close the my addresses modal
-  //
-
-  closeMyAddresses = () => {
-    
-    this.setState(
-      {
-        showMyAddresses: false
-      }
-    );
-
-  }
-
-  //
-  // closeAddContact: close the add contact modal
-  //
-
-  closeAddContact = () => {
-    
-    this.setState(
-      {
-        showAddContact: false,
-        addError: null
-      }
-    );
-
-  }
-
-  //
-  // cancelEditContact: cancel editing the contact and return to the view screen
-  //
-
-  cancelEditContact = () => {
-
-    this.setState(
-      {
-        showViewContact: true,
-        showEditContact: false
-      }
-    );
-
-  }
-
-  //
-  // addContact: add a new contact
-  //
-
-  addContact = () => {
-    
-    let name = document.getElementById("new-account-name").value;
-    let phone = document.getElementById("new-account-phone").value;
-    let timezone = JSON.parse(document.getElementById("new-account-timezone").value);
-    let address = document.getElementById("new-account-address").value;
-    let notes = document.getElementById("new-account-notes").value;
-
-    // Validate the name is not blank
-    if (name.trim() === "")
-    {
-      this.setState(
-        {
-          addError: "Please enter a contact name"
-        }
-      );
-      return;
-    }
-
-    // Validate that the address is a valid address
-    RPC.PROMISE("validateaddress", [address])
-      .then(payload => {
-
-        // Add the address to the account
-        RPC.PROMISE("setaccount", [address, name])
-          .then(success => {
-
-            let newState = {...this.state.contacts};
-
-            newState[name] = {
-              mine: {},
-              notMine: {
-                "Primary": address
-              },
-              phoneNum: phone.trim(),
-              timeZone: timezone,
-              notes: notes.trim()
-            };
-
-            this.saveAddressBook(newState);
-
-            this.closeAddContact();
-
-          })
-          .catch(e => {
-
-            this.setState(
-              {
-                addError: "Error adding address to the account: " + e
-              }
-            );
-
-          });
-
-      })
-      .catch(e => {
-
-        this.setState(
-          {
-            addError: "Please enter a valid Nexus address"
-          }
-        );
-
-      });
-
-  }
-
-  //
-  // updateContact: called when the edit contact process is complete, find and update the contact in the state and save it to disk then go back to the view contact page
-  //
-
-  updateContact = (contact) => {
-
-    let newState = {...this.state.contacts};
-
-    let updatedContact = {
-      mine: contact.mine,
-      notMine: contact.notMine,
-      phoneNum: contact.phoneNum,
-      timeZone: contact.timeZone,
-      notes: contact.notes
     };
 
-    if (contact.newNotMine)
-    {
-
-      Object.keys(contact.newNotMine).map(function(item, index)
+    const addTemplate = [
       {
+        label: "Copy",
+        ccelerator: "CmdOrCtrl+C",
+        role: "copy"
+      },
+      {
+        label: "Paste",
+        ccelerator: "CmdOrCtrl+V",
+        role: "paste"
+      },
+      {
+        label: "Delete Address",
+        click(item, focusedWindow) {
+          deleteAddressCallback();
+        }
+      }
+    ];
+    let deleteAddressCallback = () => {
+      if (
+        confirm(
+          `Are you sure you want to delete this address? ${
+            this.props.addressbook[this.props.selected][
+              this.props.actionItem.type
+            ][this.props.actionItem.index].address
+          }`
+        )
+      ) {
+        this.props.DeleteAddress(this.props.actionItem, this.props.selected);
+      }
+    };
+    let addresscontextmenu = new remote.Menu();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    let acctMenu = remote.Menu.buildFromTemplate(acctTemplate);
+    let txtMenu = remote.Menu.buildFromTemplate(txtTemplate);
+    let addMenu = remote.Menu.buildFromTemplate(addTemplate);
 
-        updatedContact.notMine[item] = contact.newNotMine[item];
+    switch (this.props.hoveredOver) {
+      case "account":
+        acctMenu.popup(remote.getCurrentWindow());
+        break;
+      case "address":
+        addMenu.popup(remote.getCurrentWindow());
+        break;
+      case "text":
+        txtMenu.popup(remote.getCurrentWindow());
+        break;
+      default:
+        defaultcontextmenu.popup(remote.getCurrentWindow());
+        break;
+    }
+  }
 
-        //TODO: Right now we fire and forget the setaccount, the logic needs to be reorganized to make sure it only adds the contact if the call is successful. If the item is added to the new contact in the call it won't appear in the contact due to the async call
+  loadMyAccounts() {
+    RPC.PROMISE("listaccounts", [0]).then(payload => {
+      Promise.all(
+        Object.keys(payload).map(account =>
+          RPC.PROMISE("getaddressesbyaccount", [account])
+        )
+      ).then(payload => {
+        let validateAddressPromises = [];
 
-        RPC.PROMISE("setaccount", [contact.newNotMine[item], contact.name])
-        .then(success => {
-
-          console.log("Contact added");
-
+        payload.map(element => {
+          element.addresses.map(address => {
+            validateAddressPromises.push(
+              RPC.PROMISE("validateaddress", [address])
+            );
+          });
         });
 
-      });
-      
-      delete contact.newNotMine; // prevents bug where same contact is edited twice and addresses get duplicated
+        Promise.all(validateAddressPromises).then(payload => {
+          let accountsList = [];
+          let myaccts = payload.map(e => {
+            if (e.ismine && e.isvalid) {
+              let index = accountsList.findIndex(ele => {
+                if (ele.account === e.account) {
+                  return ele;
+                }
+              });
 
+              if (index === -1) {
+                accountsList.push({
+                  account: e.account,
+                  addresses: [e.address]
+                });
+              } else {
+                accountsList[index].addresses.push(e.address);
+              }
+            }
+          });
+          this.props.MyAccountsList(accountsList);
+        });
+      });
+    });
+  }
+
+  componentDidUpdate(previousprops) {
+    if (this.props.save) {
+      console.log("SAVE");
+      config.WriteJson("addressbook.json", {
+        addressbook: this.props.addressbook
+      });
+      this.props.ToggleSaveFlag();
     }
-
-    newState[contact.name] = updatedContact;
-
-    this.saveAddressBook(newState);
-
-    this.setState(
-      {
-        showViewContact: true,
-        showEditContact: false
-      }
-    );
-
   }
 
-  //
-  // addReceiveAddress: add a new receive address for the wallet, these show in My Addresses
-  //
-
-  addReceiveAddress = (label) => {
-
-    // Get a new address, if an account is provided the new address will be a receive address 
-    // for that account, so transactions recieved at that address will be associated with the account
-
-    //TODO: Do we need the "" 
-    RPC.PROMISE("getnewaddress", [""])
-      .then(payload => {
-
-        // Copy the old state to a new object and get a new receive address key
-        let newState = {...this.state.contacts};
-
-        let newAddressKey = label === "" ? Object.keys(newState[""].mine).length : label;
-
-        // Add new address to receive address list with new key
-        newState[""].mine[newAddressKey] = payload;
-
-        this.saveAddressBook(newState);
-
-      });
-
+  getinitial(name) {
+    if (name && name.length >= 1) return name.charAt(0);
+    return "M";
   }
 
-  //
-  // exportAddressBook: Export the address book to CSV format
-  //
+  copyaddress(event) {
+    event.preventDefault();
+    let target = event.currentTarget;
+    let address = event.target.innerText;
 
-  exportAddressBook()
-  {
+    // create a temporary input element and add it to the list item (no one will see it)
+    let input = document.createElement("input");
+    input.type = "text";
+    target.appendChild(input);
 
-    const rows = []; //Set up a blank array for each row
+    // set the value of the input to the selected address, then focus and select it
+    input.value = address;
+    input.focus();
+    input.select();
 
-    //This is so we can have named columns in the export, this will be row 1
-    let NameEntry = [
-      "Account Name",
-      "Label",
-      "Address",
-      "Phone Number",
-      "Time Zone",
-      "Notes"
-    ];
-    rows.push(NameEntry);
+    // copy it to clipboard
+    document.execCommand("Copy", false, null);
 
-    for (let account in this.state.contacts) {
-      let accountname = "";
-      // let mine = Array.from(psudoState[account].mine);
-      let mine = Object.keys(this.state.contacts[account].mine).map(key => {
-        return [key, this.state.contacts[account].mine[key]];
-      });
-      let notMine = Object.keys(this.state.contacts[account].notMine).map(
-        key => {
-          return [key, this.state.contacts[account].notMine[key]];
-        }
-      );
+    // remove the temporary element from the DOM
+    input.remove();
 
-      if (account === "") {
-        accountname = "Receive Addresses";
-      } else {
-        accountname = account;
-      }
-
-      let timezone = "";
-      switch (this.state.contacts[account].timeZone) {
-        case 0:
-          timezone = "London";
-          break;
-        case -60:
-          timezone = "Cabo Verde";
-          break;
-        case -120:
-          timezone = "Fernando de Noronha";
-          break;
-        case -180:
-          timezone = "Buenos Aires";
-          break;
-        case -210:
-          timezone = "Newfoundland";
-          break;
-        case -240:
-          timezone = "Santiago";
-          break;
-        case -300:
-          timezone = "New York";
-          break;
-        case -360:
-          timezone = "Chicago";
-          break;
-        case -420:
-          timezone = "Phoenix";
-          break;
-        case -480:
-          timezone = "Los Angeles";
-          break;
-        case -540:
-          timezone = "Anchorage";
-          break;
-        case -570:
-          timezone = "Marquesas Islands";
-          break;
-        case -600:
-          timezone = "Papeete";
-          break;
-        case -660:
-          timezone = "Niue";
-          break;
-        case -720:
-          timezone = "Baker Island";
-          break;
-        case 840:
-          timezone = "Line Islands";
-          break;
-        case 780:
-          timezone = "Apia";
-          break;
-        case 765:
-          timezone = "Chatham Islands";
-          break;
-        case 720:
-          timezone = "Auckland";
-          break;
-        case 660:
-          timezone = "Noumea";
-          break;
-        case 630:
-          timezone = "Lord Howe Island";
-          break;
-        case 600:
-          timezone = "Port Moresby";
-          break;
-        case 570:
-          timezone = "Adelaide";
-          break;
-        case 540:
-          timezone = "Tokyo";
-          break;
-        case 525:
-          timezone = "Eucla";
-          break;
-        case 510:
-          timezone = "Pyongyang";
-          break;
-        case 480:
-          timezone = "Beijing";
-          break;
-        case 420:
-          timezone = "Bangkok";
-          break;
-        case 390:
-          timezone = "Yangon";
-          break;
-        case 360:
-          timezone = "Almaty";
-          break;
-        case 345:
-          timezone = "Kathmandu";
-          break;
-        case 330:
-          timezone = "Delhi";
-          break;
-        case 300:
-          timezone = "Karachi";
-          break;
-        case 270:
-          timezone = "Kabul";
-          break;
-        case 240:
-          timezone = "Dubai";
-          break;
-        case 210:
-          timezone = "Tehran";
-          break;
-        case 180:
-          timezone = "Moscow";
-          break;
-        case 120:
-          timezone = "Athens";
-          break;
-        case 60:
-          timezone = "Berlin";
-          break;
-        default:
-          timezone = this.state.contacts[account].timeZone;
-          break;
-      }
-
-      let tempentry = [
-        accountname,
-        "",
-        "",
-        this.state.contacts[account].phoneNum,
-        timezone,
-        this.state.contacts[account].notes
-      ];
-      rows.push(tempentry);
-      mine.map(arr => {
-        let isnum = /^\d+$/.test(arr[0]);
-        if (isnum) {
-          arr[0] = "My Address";
-        }
-        rows.push(["", arr[0], arr[1], "", "", ""]);
-      });
-      notMine.map(arr => {
-        let isnum = /^\d+$/.test(arr[0]);
-        if (isnum) {
-          arr[0] = "Their Address";
-        }
-        rows.push(["", arr[0], arr[1], "", "", ""]);
-      });
-    }
-    let csvContent = "data:text/csv;charset=utf-8,"; //Set formating
-    rows.forEach(function(rowArray) {
-      let row = rowArray.join(",");
-      csvContent += row + "\r\n";
-    }); //format each row
-
-    let encodedUri = encodeURI(csvContent); //Set up a uri, in Javascript we are basically making a Link to this file
-    let link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "nexus-addressbook.csv"); //give link an action and a default name for the file. MUST BE .csv
-
-    document.body.appendChild(link); // Required for FF
-
-    link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
+    alert("copyed");
   }
 
-  //
-  // render: render the component
-  //
+  modalInternalBuilder() {
+    let index = this.props.addressbook.findIndex(ele => {
+      if (ele.name === this.props.prototypeName) {
+        return ele;
+      }
+    });
 
-  render() {
-
-    return (
-
-      <div id="addressbook">
-
-        <h2>Address Book</h2>
-
-        <a className="refresh" onClick={() => this.exportAddressBook()}>Export Contacts</a>
-
-        <div className="panel">
-
-          <div id="addressbook-controls">
-            <div id="addressbook-search">
-            </div>
-            <button className="button ghost" onClick={this.showMyAddresses}>My Addresses</button>
-            <button className="button primary" onClick={this.showAddContact}>Add Contact</button>
-          </div>
-
-          <ContactList
-            contacts={this.state.contacts}
-            onSelect={this.setContact} />
-
-          <MyAddresses 
-            show={this.state.showMyAddresses}
-            onClose={this.closeMyAddresses}
-            contacts={this.state.contacts}
-            onAddReceiveAddress={this.addReceiveAddress} />
-
-          <ContactView 
-            show={this.state.showViewContact}
-            onClose={this.closeViewContact}
-            contact={this.state.selectedContact}
-            onUpdate={this.updateContact}
-            onEdit={this.showEditContact}/>
-
-          <Modal 
-            open={this.state.showAddContact} 
-            onClose={this.closeAddContact} 
-            center 
-            classNames={{ modal: 'modal addressbook-add-contact-modal' }}>
-
-            <h2 >Add Contact</h2>
-
-            <FormError error={this.state.addError}/>
+    switch (this.props.modalType) {
+      case "ADD_CONTACT":
+        return (
+          <div id="modalInternal">
+            {index === -1 ? <h2>Add Contact</h2> : <h2>Edit Contact</h2>}
 
             <div className="field">
               <label htmlFor="new-account-name">Name</label>
-              <input ref="addContactName" id="new-account-name" type="text" placeholder="Name" required/>
+              <input
+                ref="addContactName"
+                id="new-account-name"
+                type="text"
+                value={this.props.prototypeName}
+                onChange={e => this.props.EditProtoName(e.target.value)}
+                placeholder="Name"
+                required
+              />
             </div>
-
             <div className="field">
               <label htmlFor="new-account-name">Phone #</label>
-              <input id="new-account-phone" type="tel" placeholder="Phone #" />
+              <input
+                id="new-account-phone"
+                type="tel"
+                onChange={e => this.phoneNumberHandler(e.target.value)}
+                value={this.props.prototypePhoneNumber}
+                placeholder="Phone #"
+              />
             </div>
-
-            <div className="field">
-              <label htmlFor="new-account-timezone">Time Zone</label>
-              <select id="new-account-timezone">
-                <option value="0">London, Casablanca, Accra</option>
-                <option value="-60">Cabo Verde, Ittoqqortoormiit, Azores Islands</option>
-                <option value="-120">Fernando de Noronha, South Sandwich Islands</option>
-                <option value="-180">Buenos Aires, Montevideo, São Paulo</option>
-                <option value="-210">St. John's, Labrador, Newfoundland</option>
-                <option value="-240">Santiago, La Paz, Halifax</option>
-                <option value="-300">New York, Lima, Toronto</option>
-                <option value="-360">Chicago, Guatemala City, Mexico City</option>
-                <option value="-420">Phoenix, Calgary, Ciudad Juárez</option>
-                <option value="-480">Los Angeles, Vancouver, Tijuana</option>
-                <option value="-540">Anchorage</option>
-                <option value="-570">Marquesas Islands</option>
-                <option value="-600">Papeete, Honolulu</option>
-                <option value="-660">Niue, Jarvis Island, American Samoa</option>
-                <option value="-720">Baker Island, Howland Island</option>
-                <option value="840">Line Islands</option>
-                <option value="780">Apia, Nukuʻalofa</option>
-                <option value="765">Chatham Islands</option>
-                <option value="720">Auckland, Suva</option>
-                <option value="660">Noumea, Federated States of Micronesia</option>
-                <option value="630">Lord Howe Island</option>
-                <option value="600">Port Moresby, Sydney, Vladivostok</option>
-                <option value="570">Adelaide</option>
-                <option value="540">Seoul, Tokyo, Yakutsk</option>
-                <option value="525">Eucla</option>
-                <option value="510">Pyongyang</option>
-                <option value="480">Beijing, Singapore, Manila</option>
-                <option value="420">Jakarta, Bangkok, Ho Chi Minh City</option>
-                <option value="390">Yangon</option>
-                <option value="360">Almaty, Dhaka, Omsk</option>
-                <option value="345">Kathmandu</option>
-                <option value="330">Delhi, Colombo</option>
-                <option value="300">Karachi, Tashkent, Yekaterinburg</option>
-                <option value="270">Kabul</option>
-                <option value="240">Baku, Dubai, Samara</option>
-                <option value="210">Tehran</option>
-                <option value="180">Istanbul, Moscow, Nairobi</option>
-                <option value="120">Athens, Cairo, Johannesburg</option>
-                <option value="60">Berlin, Lagos, Madrid</option>
-              </select>
+            <div className="contact-detail">
+              <label>Local Time</label>
+              <TimeZoneSelector />
             </div>
 
             <div className="field">
               <label htmlFor="new-account-notes">Notes</label>
-              <textarea id="new-account-notes" rows="3"></textarea>
+              <textarea
+                id="new-account-notes"
+                onChange={e => this.props.EditProtoNotes(e.target.value)}
+                value={this.props.prototypeNotes}
+                rows="3"
+              />
             </div>
 
             <div className="field">
-              <label htmlFor="new-account-address">Nexus Address</label>
-              <input ref="addContactAddress" id="new-account-address" type="text" placeholder="Nexus Address"/>
+              <label htmlFor="nxsaddress">Nexus Address</label>
+              <input
+                ref="addContactAddress"
+                id="nxsaddress"
+                type="text"
+                onChange={e => this.props.EditProtoAddress(e.target.value)}
+                value={this.props.prototypeAddress}
+                placeholder="Nexus Address"
+              />
             </div>
-            
-            <button className="button primary" onClick={this.addContact}>Add Contact</button>
-            <button className="button" onClick={this.closeAddContact}>Cancel</button>
 
-          </Modal>
+            <button
+              className="button primary"
+              onClick={() =>
+                this.props.AddContact(
+                  this.props.prototypeName,
+                  this.props.prototypeAddress,
+                  this.props.prototypePhoneNumber,
+                  this.props.prototypeNotes,
+                  this.props.prototypeTimezone
+                )
+              }
+            >
+              {index === -1 ? "Add Contact" : "Edit Contact"}
+            </button>
+            <button
+              className="button"
+              onClick={() => this.props.ToggleCreateModal()}
+            >
+              Cancel
+            </button>
+          </div>
+        );
+        break;
+      case "MY_ADDRESSES":
+        return (
+          <div>
+            {this.props.myAccounts.map((acct, i) => {
+              return (
+                <div key={acct + i}>
+                  <div>{acct.account === "" ? "My Account" : acct.account}</div>
+                  {acct.addresses.map(address => {
+                    return (
+                      <span>
+                        <div
+                          key={address}
+                          onClick={event => this.copyaddress(event)}
+                          className="myAddress"
+                        >
+                          {address}
+                        </div>{" "}
+                        <span key={address + i} className="tooltip">
+                          Click to copy
+                        </span>{" "}
+                      </span>
+                    );
+                  })}
+                </div>
+              );
+            })}
+            <button
+              className="button primary"
+              onClick={() => this.props.SetModalType("NEW_MY_ADDRESS")}
+            >
+              Cerate new address
+            </button>
+          </div>
+        );
+        break;
+      case "ADD_ADDRESS":
+        return (
+          <div>
+            <h3>
+              Add an address to{" "}
+              {this.props.addressbook[this.props.selected].name}
+            </h3>
+            <div className="field">
+              <label htmlFor="nxsaddress">Nexus Address</label>
+              <input
+                ref="addContactAddress"
+                id="nxsaddress"
+                type="text"
+                onChange={e => this.props.EditProtoAddress(e.target.value)}
+                value={this.props.prototypeAddress}
+                placeholder="Nexus Address"
+              />
+            </div>
 
+            <button
+              className="button primary"
+              onClick={() => {
+                this.props.AddAddress(
+                  this.props.addressbook[this.props.selected].name,
+                  this.props.prototypeAddress,
+                  this.props.selected
+                );
+              }}
+            >
+              Add Address
+            </button>
+            <button className="button" onClick={() => this.props.ToggleModal()}>
+              Cancel
+            </button>
+          </div>
+        );
+        break;
+      case "NEW_MY_ADDRESS":
+        return (
+          <div>
+            <div className="field">
+              <label htmlFor="new-account-name">Name (Optional)</label>
+              <input
+                ref="addContactName"
+                id="new-account-name"
+                type="text"
+                value={this.props.prototypeName}
+                onChange={e => this.props.EditProtoName(e.target.value)}
+                placeholder="Name"
+                required
+              />
+            </div>
+            <button
+              className="button primary"
+              onClick={() => this.createAddress()}
+            >
+              Create
+            </button>
+          </div>
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  createAddress() {
+    if (this.props.prototypeName) {
+      RPC.PROMISE("getnewaddress", [this.props.prototypeName])
+        .then(success => {
+          this.props.ToggleModal();
+          this.loadMyAccounts();
+        })
+        .catch(e => {
+          alert(e);
+        });
+    } else {
+      RPC.PROMISE("getnewaddress", [""])
+        .then(success => {
+          this.props.ToggleModal();
+          this.loadMyAccounts();
+        })
+        .catch(e => {
+          alert(e);
+        });
+    }
+  }
+
+  contactLister() {
+    if (this.props.addressbook[0]) {
+      return (
+        <div
+          id="contactList"
+          onMouseOverCapture={() => this.props.SetMousePosition("", "")}
+        >
+          {this.props.addressbook.map((contact, i) => {
+            let addTotal = contact.mine.length + contact.notMine.length;
+            return (
+              <div
+                key={i}
+                id={i}
+                onClick={() => this.props.SelectedContact(i)}
+                onMouseOverCapture={e => {
+                  this.props.SetMousePosition("account", i);
+                }}
+                className="contact"
+              >
+                <span className="contact-avatar">
+                  <svg viewBox="0 0 100 100">
+                    <text x="50" y="50" dy=".35em">
+                      {this.getinitial(contact.name)}
+                    </text>
+                  </svg>
+                </span>
+                <span className="contact-name">{contact.name}</span>
+                <span className="contactAddresses">
+                  {addTotal} {addTotal > 1 ? " addresses" : " address"}
+                </span>
+              </div>
+            );
+          })}
         </div>
+      );
+    }
+  }
 
+  phoneFormatter() {
+    let num = this.props.addressbook[this.props.selected].phoneNumber;
+    if (num.length === 12) {
+      return `+ ${num.substring(0, 2)} ${num.substring(2, 4)} ${num.substring(
+        4,
+        8
+      )} ${num.substring(8, 12)}`;
+    } else if (num.length === 10) {
+      return `(${num.substring(0, 3)}) ${num.substring(3, 6)}-${num.substring(
+        6,
+        10
+      )}`;
+    } else return num;
+  }
+
+  localTimeFormater() {
+    let d = new Date();
+    let utc = new Date().getTimezoneOffset();
+    d.setMinutes(d.getMinutes() + utc);
+    d.setMinutes(
+      d.getMinutes() + this.props.addressbook[this.props.selected].timezone
+    );
+
+    let h = d.getHours();
+    let m = d.getMinutes();
+    let i = "AM";
+    if (h >= 12) {
+      i = "PM";
+      h = h - 12;
+    }
+    if (h === 0) {
+      h = "12";
+    }
+    if (m <= 9) {
+      m = `0${m}`;
+    }
+
+    return (
+      <div>
+        <span
+          onDoubleClick={() => {
+            if (this.props.editTZ) {
+              this.props.SaveTz(
+                this.props.selected,
+                this.props.prototypeTimezone
+              );
+            } else {
+              this.props.TzToggler(
+                this.props.addressbook[this.props.selected].timezone
+              );
+            }
+          }}
+        >
+          {" "}
+          Local Time:
+        </span>{" "}
+        {this.props.editTZ === true ? (
+          <TimeZoneSelector />
+        ) : (
+          <span
+            onDoubleClick={() =>
+              this.props.TzToggler(
+                this.props.addressbook[this.props.selected].timezone
+              )
+            }
+          >
+            {h}:{m} {i}
+          </span>
+        )}
       </div>
+    );
+  }
 
+  theirAddressLister() {
+    return (
+      <div>
+        <h3>Their addresses</h3>
+        <div>
+          {this.props.addressbook[this.props.selected].notMine.map((add, i) => {
+            return (
+              <div
+                onContextMenu={e => {
+                  this.props.SetMousePosition("address", {
+                    index: i,
+                    type: "notMine"
+                  });
+                }}
+                key={i + add.address}
+              >
+                {this.props.editAddressLabel === add.address ? (
+                  <input
+                    onChange={e => this.props.EditProtoLabel(e.target.value)}
+                    value={this.props.prototypeAddressLabel}
+                    onDoubleClick={() =>
+                      this.props.SaveLabel(
+                        this.props.selected,
+                        add.address,
+                        this.props.prototypeAddressLabel,
+                        false
+                      )
+                    }
+                  />
+                ) : (
+                  <span
+                    onDoubleClick={() =>
+                      this.props.LabelToggler(add.label, add.address)
+                    }
+                  >
+                    {add.label === "'s Address"
+                      ? `${this.props.addressbook[this.props.selected].name}${
+                          add.label
+                        }`
+                      : add.label}
+                    :
+                  </span>
+                )}
+                <div onClick={event => this.copyaddress(event)}>
+                  {add.address}
+                </div>
+                <span className="tooltip">Click to copy</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  myAddressLister() {
+    return (
+      <div id="myAddresses">
+        <h3>My addresses</h3>
+        <div>
+          {this.props.addressbook[this.props.selected].mine.map((add, i) => {
+            return (
+              <div
+                onContextMenu={e => {
+                  this.props.SetMousePosition("address", {
+                    index: i,
+                    type: "mine"
+                  });
+                }}
+                key={i + add.address}
+              >
+                {this.props.editAddressLabel === add.address ? (
+                  <input
+                    onChange={e => this.props.EditProtoLabel(e.target.value)}
+                    value={this.props.prototypeAddressLabel}
+                    onDoubleClick={() =>
+                      this.props.SaveLabel(
+                        this.props.selected,
+                        add.address,
+                        this.props.prototypeAddressLabel,
+                        true
+                      )
+                    }
+                  />
+                ) : (
+                  <span
+                    onDoubleClick={() =>
+                      this.props.LabelToggler(add.label, add.address)
+                    }
+                  >
+                    {add.label === "My Address for "
+                      ? `${add.label}${
+                          this.props.addressbook[this.props.selected].name
+                        }`
+                      : add.label}
+                    :
+                  </span>
+                )}
+                <div onClick={event => this.copyaddress(event)}>
+                  {add.address}{" "}
+                </div>
+              </div>
+            );
+          })}{" "}
+          <span className="tooltip">Click to copy</span>
+        </div>
+      </div>
+    );
+  }
+
+  addAddressHandler() {
+    this.props.SetModalType("ADD_ADDRESS");
+    this.props.ToggleModal();
+  }
+
+  showAddContactModal() {
+    this.props.SetModalType("ADD_CONTACT");
+    this.props.ToggleModal();
+  }
+
+  showMyAddresses() {
+    this.props.SetModalType("MY_ADDRESSES");
+    this.props.ToggleModal();
+  }
+
+  phoneNumberHandler(value) {
+    if (/^[0-9.]+$/.test(value) | (value === "")) {
+      this.props.EditProtoPhone(value);
+    } else {
+      return null;
+    }
+  }
+
+  render() {
+    return (
+      <div id="addressbook">
+        <Modal
+          open={this.props.modalVisable}
+          center
+          onClose={this.props.ToggleModal}
+          classNames={{ modal: "modal" }}
+        >
+          {this.modalInternalBuilder()}
+        </Modal>
+        <h2>Address Book</h2>
+        <a className="refresh" onClick={() => this.exportAddressBook()}>
+          Export Contacts
+        </a>
+        <div className="panel">
+          <div id="addressbook-controls">
+            <div id="addressbook-search">
+              {/* {this.props.addressbook.length > 0 && (
+                <div>
+                  <input type="text" />
+                  <button id="searchContacts" />
+                </div>
+              )} */}
+            </div>
+
+            <button
+              className="button ghost"
+              onClick={() => this.showMyAddresses()}
+            >
+              My Addresses
+            </button>
+            <button
+              className="button primary"
+              onClick={() => this.showAddContactModal()}
+            >
+              Add Contact
+            </button>
+          </div>
+          {this.props.addressbook.length > 0 ? (
+            <div id="addressbookContent">
+              <div id="contactListContainer">{this.contactLister()}</div>
+              {this.props.addressbook[this.props.selected].mine && (
+                <div id="contactDetailContainer">
+                  <fieldset id="contactDetails">
+                    <legend>
+                      {this.props.editName === true ? (
+                        <input
+                          ref="addContactName"
+                          id="new-account-name"
+                          type="text"
+                          value={this.props.prototypeName}
+                          onChange={e =>
+                            this.props.EditProtoName(e.target.value)
+                          }
+                          placeholder="Name"
+                          onDoubleClick={() =>
+                            this.props.SaveName(
+                              this.props.selected,
+                              this.props.prototypeName
+                            )
+                          }
+                        />
+                      ) : (
+                        <span
+                          onDoubleClick={() =>
+                            this.props.NameToggler(
+                              this.props.addressbook[this.props.selected].name
+                            )
+                          }
+                        >
+                          {this.props.addressbook[this.props.selected].name}
+                        </span>
+                      )}{" "}
+                      <div className="tooltip">Doubleclick to edit</div>
+                    </legend>
+                    <div id="contactInformation">
+                      <div>
+                        <div>
+                          {" "}
+                          <label
+                            onDoubleClick={() =>
+                              this.props.PhoneToggler(
+                                this.props.addressbook[this.props.selected]
+                                  .phoneNumber
+                              )
+                            }
+                            htmlFor="phoneNumber"
+                          >
+                            Phone number:
+                          </label>
+                          {this.props.editPhone === true ? (
+                            <input
+                              id="phoneNumber"
+                              name="phoneNumber"
+                              type="tel"
+                              onChange={e =>
+                                this.phoneNumberHandler(e.target.value)
+                              }
+                              value={this.props.prototypePhoneNumber}
+                              placeholder="Phone #"
+                              onDoubleClick={() =>
+                                this.props.SavePhone(
+                                  this.props.selected,
+                                  this.props.prototypePhoneNumber
+                                )
+                              }
+                            />
+                          ) : (
+                            <span
+                              onDoubleClick={() =>
+                                this.props.PhoneToggler(
+                                  this.props.addressbook[this.props.selected]
+                                    .phoneNumber
+                                )
+                              }
+                              id="phoneNumber"
+                            >
+                              {" "}
+                              {this.phoneFormatter()}
+                            </span>
+                          )}
+                          <span className="tooltip">Doubleclick to edit</span>
+                        </div>
+                        {this.localTimeFormater()}
+                        <div id="notesContainer">
+                          <label
+                            onDoubleClick={() =>
+                              this.props.NotesToggler(
+                                this.props.addressbook[this.props.selected]
+                                  .notes
+                              )
+                            }
+                            htmlFor="notes"
+                          >
+                            Notes:
+                          </label>
+                          {this.props.editNotes === true ? (
+                            <div>
+                              <textarea
+                                id="notes"
+                                name="notes"
+                                onDoubleClick={() =>
+                                  this.props.SaveNotes(
+                                    this.props.selected,
+                                    this.props.prototypeNotes
+                                  )
+                                }
+                                onChange={e =>
+                                  this.props.EditProtoNotes(e.target.value)
+                                }
+                                value={this.props.prototypeNotes}
+                                rows="3"
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              id="notes"
+                              name="notes"
+                              onDoubleClick={() =>
+                                this.props.NotesToggler(
+                                  this.props.addressbook[this.props.selected]
+                                    .notes
+                                )
+                              }
+                            >
+                              {
+                                this.props.addressbook[this.props.selected]
+                                  .notes
+                              }
+                            </div>
+                          )}
+                          <span className="tooltip">Doubleclick to edit</span>
+                        </div>
+                      </div>
+                      {this.props.addressbook[this.props.selected].imgSrc !==
+                      undefined ? (
+                        <label htmlFor="picUploader">
+                          <img
+                            src={
+                              this.props.addressbook[this.props.selected].imgSrc
+                            }
+                          />
+                        </label>
+                      ) : (
+                        <label htmlFor="picUploader">
+                          <img src={profilePlaceholder} />
+                        </label>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        name="picUploader"
+                        onChange={e =>
+                          this.props.ChangeContactImage(
+                            e.target.files[0].path,
+                            this.props.selected
+                          )
+                        }
+                        id="picUploader"
+                      />{" "}
+                      {/* <span className="tooltip left">
+                        Click to change photo
+                      </span> */}
+                    </div>
+                  </fieldset>
+                  <div
+                    id="addressDisplay"
+                    onMouseOverCapture={() =>
+                      this.props.SetMousePosition("", "")
+                    }
+                  >
+                    {this.props.addressbook[this.props.selected].notMine
+                      .length > 0
+                      ? this.theirAddressLister()
+                      : null}
+                    {this.props.addressbook[this.props.selected].mine.length > 0
+                      ? this.myAddressLister()
+                      : null}
+                  </div>
+                  <div id="buttonholder">
+                    <button
+                      className="button ghost hero"
+                      onClick={() => this.addAddressHandler()}
+                    >
+                      Add Address
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <h1 style={{ alignSelf: "center" }}>Your addressbook is empty</h1>
+          )}
+        </div>
+      </div>
     );
   }
 }

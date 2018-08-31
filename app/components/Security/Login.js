@@ -14,8 +14,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   setDate: date => dispatch({ type: TYPE.SET_DATE, payload: date }),
+  setErrorMessage: message =>
+    dispatch({ type: TYPE.SET_ERROR_MESSAGE, payload: message }),
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
+  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG })
 });
 
 class Login extends Component {
@@ -33,19 +36,29 @@ class Login extends Component {
 
   handleSubmit() {
     const unlockDate = new Date(this.props.unlockUntillDate);
+    const pass = document.getElementById("pass");
     const today = new Date();
     let unlockUntill = Math.round(
       (unlockDate.getTime() - today.getTime()) / 1000
     );
     this.props.busy();
-    RPC.PROMISE("walletpassphrase", [
-      document.getElementById("pass").value,
-      unlockUntill,
-      false
-    ]).then(payload => {
-      this.props.wipe();
-      this.props.busy();
-    });
+    RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, false])
+      .then(payload => {
+        this.props.wipe();
+        this.props.busy();
+      })
+      .catch(e => {
+        console.log(e.error.message);
+        if (
+          e.error.message ===
+          "Error: The wallet passphrase entered was incorrect."
+        ) {
+          let message = e.error.message.replace("Error: ", "");
+          this.props.setErrorMessage(message);
+          pass.value = "";
+          pass.focus();
+        }
+      });
   }
 
   render() {
@@ -78,11 +91,20 @@ class Login extends Component {
                 type="password"
                 placeholder="Password"
                 id="pass"
-                // value={this.props.password}
-                // onChange={e => this.props.setPassword(e.target.value)}
                 required
               />
-              <span className="hint">Password is required</span>
+              <span className="hint">{this.props.errorMessage}</span>
+            </div>
+
+            {/* STAKING FLAG STUFF */}
+            <div className="field" id="checkFeild">
+              <label>Staking Only:</label>
+              <input
+                type="checkbox"
+                className="switch"
+                value={this.props.stakeFlag}
+                onChange={() => this.props.stake()}
+              />
             </div>
           </fieldset>
 
@@ -94,7 +116,7 @@ class Login extends Component {
                 e.preventDefault();
                 this.handleSubmit();
               }}
-              disabled={this.props.busyFlag}
+              // disabled={this.props.busyFlag}
             />
           </p>
         </form>

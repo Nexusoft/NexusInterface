@@ -26,7 +26,7 @@ export default class SettingsCore extends Component {
     this.setSocks4ProxyIP(settings);
     this.setSocks4ProxyPort(settings);
     this.setDetatchDatabaseOnShutdown(settings);
-    this.setOptionalTransactionFee(settings);
+    // this.setOptionalTransactionFee(settings);
   }
 
   //
@@ -121,12 +121,10 @@ export default class SettingsCore extends Component {
     if (settings.mapPortUsingUpnp === undefined) {
       mapPortUsingUpnp.checked = true;
     }
-    if ( settings.mapPortUsingUpnp == true)
-    {
+    if (settings.mapPortUsingUpnp == true) {
       mapPortUsingUpnp.checked = true;
     }
-    if ( settings.mapPortUsingUpnp == false)
-    {
+    if (settings.mapPortUsingUpnp == false) {
       mapPortUsingUpnp.checked = false;
     }
   }
@@ -143,12 +141,10 @@ export default class SettingsCore extends Component {
     if (settings.socks4Proxy === undefined) {
       socks4Proxy.checked = false;
     }
-    if ( settings.socks4Proxy == true)
-    {
+    if (settings.socks4Proxy == true) {
       socks4Proxy.checked = true;
     }
-    if ( settings.socks4Proxy == false)
-    {
+    if (settings.socks4Proxy == false) {
       socks4Proxy.checked = false;
     }
 
@@ -198,29 +194,11 @@ export default class SettingsCore extends Component {
     if (settings.detatchDatabaseOnShutdown === undefined) {
       detatchDatabaseOnShutdown.checked = false;
     }
-    if ( settings.detatchDatabaseOnShutdown == true)
-    {
+    if (settings.detatchDatabaseOnShutdown == true) {
       detatchDatabaseOnShutdown.checked = true;
     }
-    if ( settings.detatchDatabaseOnShutdown == false)
-    {
+    if (settings.detatchDatabaseOnShutdown == false) {
       detatchDatabaseOnShutdown.checked = false;
-    }
-  }
-
-  //
-  // Set optional transaction fee
-  //
-
-  setOptionalTransactionFee(settings) {
-    var optionalTransactionFee = document.getElementById(
-      "optionalTransactionFee"
-    );
-
-    if (settings.optionalTransactionFee === undefined) {
-      optionalTransactionFee.value = "0.01";
-    } else {
-      optionalTransactionFee.value = settings.optionalTransactionFee;
     }
   }
 
@@ -234,7 +212,6 @@ export default class SettingsCore extends Component {
     var settingsObj = settings.GetSettings();
 
     settingsObj.manualDaemon = el.checked;
-    
     settings.SaveSettings(settingsObj);
 
     var manualDaemonSettings = document.getElementById(
@@ -293,15 +270,6 @@ export default class SettingsCore extends Component {
     settingsObj.manualDaemonIP = el.value;
 
     settings.SaveSettings(settingsObj);
-  }
-  //
-  //TXFEEtoRPCServer
-  //
-
-  setTxFee() {
-    let TxFee = document.getElementById("optionalTransactionFee").value;
-    RPC.PROMISE("settxfee", [parseFloat(TxFee)]);
-    console.log(TxFee);
   }
 
   //
@@ -399,29 +367,14 @@ export default class SettingsCore extends Component {
   }
 
   //
-  // Update optional transaction fee
-  //
-
-  updateOptionalTransactionFee(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
-    settingsObj.optionalTransactionFee = el.value;
-
-    settings.SaveSettings(settingsObj);
-  }
-
-  //
   // Restart the core
   //
 
   coreRestart() {
-
-    let core = require('electron').remote.getGlobal('core');
+    let core = require("electron").remote.getGlobal("core");
     core.restart();
-
   }
-  
+
   render() {
     return (
       <section id="core">
@@ -545,33 +498,13 @@ export default class SettingsCore extends Component {
                 data-tooltip="Detatch the database when shutting down the wallet"
               />
             </div>
-
-            <div className="field">
-              <label htmlFor="optionalTransactionFee">
-                Optional transaction fee (in NXS)
-              </label>{" "}
-              <form className="fee">
-                <input
-                  className="Txfee"
-                  id="optionalTransactionFee"
-                  type="number"
-                  onChange={this.updateOptionalTransactionFee}
-                  data-tooltip="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"
-                />
-                <button
-                  type="button"
-                  className="feebutton"
-                  onClick={() => {
-                    if (confirm("Change Fee?")) this.setTxFee();
-                  }}
-                >
-                  Update
-                </button>
-              </form>
-            </div>
-
-            <button id="restart-core" className="button primary" onClick={this.coreRestart}>Restart Core</button>
-
+            <button
+              id="restart-core"
+              className="button primary"
+              onClick={this.coreRestart}
+            >
+              Restart Core
+            </button>
           </div>
 
           <div className="clear-both" />

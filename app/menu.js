@@ -1,6 +1,7 @@
 import { app, Menu, shell, BrowserWindow, remote } from "electron";
 
 import * as RPC from "./script/rpc";
+import { callbackify } from "util";
 
 export default class MenuBuilder {
   mainWindow: remote.BrowserWindow;
@@ -9,7 +10,7 @@ export default class MenuBuilder {
     this.mainWindow = remote.getCurrentWindow();
   }
 
-  buildMenu(history, encryptionStatus) {
+  buildMenu(self) {
     if (
       process.env.NODE_ENV === "development" ||
       process.env.DEBUG_PROD === "true"
@@ -21,9 +22,9 @@ export default class MenuBuilder {
     let template;
 
     if (process.platform === "darwin") {
-      template = this.buildDarwinTemplate(history);
+      template = this.buildDarwinTemplate(self);
     } else {
-      template = this.buildDefaultTemplate(history);
+      template = this.buildDefaultTemplate(self);
     }
 
     const menu = remote.Menu.buildFromTemplate(template);
@@ -49,7 +50,7 @@ export default class MenuBuilder {
     });
   }
 
-  buildDarwinTemplate(history, encryptionStatus) {
+  buildDarwinTemplate(self) {
     const subMenuAbout = {
       label: "Electron",
       submenu: [
@@ -187,7 +188,7 @@ export default class MenuBuilder {
     return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
-  buildDefaultTemplate(history, encryptionStatus) {
+  buildDefaultTemplate(self) {
     const templateDefault = [
       {
         label: "&File",
@@ -195,10 +196,10 @@ export default class MenuBuilder {
           {
             label: "Lock/Unlock/Encrypt Wallet",
             click: () => {
-              if (encryptionStatus) {
-                history.push("/Settings/Unencrypted");
+              if (self.props.unlocked_until !== undefined) {
+                self.props.history.push("/Settings/Security");
               } else {
-                history.push("/Settings/Security");
+                self.props.history.push("/Settings/Unencrypted");
               }
             }
           },
@@ -279,6 +280,13 @@ export default class MenuBuilder {
             label: "Application Settings",
             click() {
               history.push("/Settings/App");
+            }
+          },
+          {
+            label: "Toggle &Developer Tools",
+            accelerator: "Alt+Ctrl+I",
+            click: () => {
+              this.mainWindow.toggleDevTools();
             }
           }
           // {

@@ -60,189 +60,191 @@ class Market extends Component {
     this.props.binanceCandlestickLoader();
     this.props.bittrexCandlestickLoader();
     this.props.cryptopiaCandlestickLoader();
-    this.arbitageChecker();
+    this.props.binance24hrInfo();
+    this.props.bittrex24hrInfo();
+    this.props.cryptopia24hrInfo();
+    // this.arbitageChecker();
   }
 
-  arbitageChecker() {
-    let lowArr = [],
-      highArr = [],
-      arbArr = [[], [], []];
+  // arbitageChecker() {
+  //   let lowArr = [],
+  //     highArr = [],
+  //     arbArr = [[], [], []];
 
-    let sellArr = [],
-      buyArr = [];
-    if (this.props.binance.sell[0]) {
-      sellArr.push({
-        exchange: "binance",
-        fee: 0.001,
-        arr: this.props.binance.sell
-      });
-    }
-    if (this.props.bittrex.sell[0]) {
-      sellArr.push({
-        exchange: "bittrex",
-        fee: 0.0025,
-        arr: this.props.bittrex.sell
-      });
-    }
-    if (this.props.cryptopia.sell[0]) {
-      sellArr.push({
-        exchange: "cryptopia",
-        fee: 0.002,
-        arr: this.props.cryptopia.sell
-      });
-    }
-    if (this.props.binance.sell[0]) {
-      buyArr.push({
-        exchange: "binance",
-        fee: 0.001,
-        arr: this.props.binance.buy
-      });
-    }
-    if (this.props.bittrex.sell[0]) {
-      buyArr.push({
-        exchange: "bittrex",
-        fee: 0.0025,
-        arr: this.props.bittrex.buy
-      });
-    }
-    if (this.props.cryptopia.sell[0]) {
-      buyArr.push({
-        exchange: "cryptopia",
-        fee: 0.002,
-        arr: this.props.cryptopia.buy
-      });
-    }
-    const compBuyArr = buyArr.map(obj => {
-      let volAgra = 0,
-        i = 0,
-        priceAgra = 0;
-      while (volAgra < this.props.tradeVolume) {
-        priceAgra = obj.arr[i].Price + priceAgra;
-        volAgra = obj.arr[i].Volume + volAgra;
-        ++i;
-      }
-      return {
-        exchange: obj.exchange,
-        priceAverage: priceAgra / i,
-        fee: obj.fee,
-        volAgra: volAgra,
-        buy: true
-      };
-    });
-    const compSellArr = sellArr.map(obj => {
-      let volAgra = 0,
-        i = 0,
-        priceAgra = 0;
-      while (volAgra < this.props.tradeVolume) {
-        priceAgra = obj.arr[i].Price + priceAgra;
-        volAgra = obj.arr[i].Volume + volAgra;
-        ++i;
-      }
-      return {
-        exchange: obj.exchange,
-        fee: obj.fee,
-        priceAverage: priceAgra / i,
-        volAgra: volAgra,
-        buy: false
-      };
-    });
+  //   let sellArr = [],
+  //     buyArr = [];
+  //   if (this.props.binance.sell[0]) {
+  //     sellArr.push({
+  //       exchange: "binance",
+  //       fee: 0.001,
+  //       arr: this.props.binance.sell
+  //     });
+  //   }
+  //   if (this.props.bittrex.sell[0]) {
+  //     sellArr.push({
+  //       exchange: "bittrex",
+  //       fee: 0.0025,
+  //       arr: this.props.bittrex.sell
+  //     });
+  //   }
+  //   if (this.props.cryptopia.sell[0]) {
+  //     sellArr.push({
+  //       exchange: "cryptopia",
+  //       fee: 0.002,
+  //       arr: this.props.cryptopia.sell
+  //     });
+  //   }
+  //   if (this.props.binance.sell[0]) {
+  //     buyArr.push({
+  //       exchange: "binance",
+  //       fee: 0.001,
+  //       arr: this.props.binance.buy
+  //     });
+  //   }
+  //   if (this.props.bittrex.sell[0]) {
+  //     buyArr.push({
+  //       exchange: "bittrex",
+  //       fee: 0.0025,
+  //       arr: this.props.bittrex.buy
+  //     });
+  //   }
+  //   if (this.props.cryptopia.sell[0]) {
+  //     buyArr.push({
+  //       exchange: "cryptopia",
+  //       fee: 0.002,
+  //       arr: this.props.cryptopia.buy
+  //     });
+  //   }
+  //   const compBuyArr = buyArr.map(obj => {
+  //     let volAgra = 0,
+  //       i = 0,
+  //       priceAgra = 0;
+  //     while (volAgra < this.props.tradeVolume) {
+  //       priceAgra = obj.arr[i].Price + priceAgra;
+  //       volAgra = obj.arr[i].Volume + volAgra;
+  //       ++i;
+  //     }
+  //     return {
+  //       exchange: obj.exchange,
+  //       priceAverage: priceAgra / i,
+  //       fee: obj.fee,
+  //       volAgra: volAgra,
+  //       buy: true
+  //     };
+  //   });
+  //   const compSellArr = sellArr.map(obj => {
+  //     let volAgra = 0,
+  //       i = 0,
+  //       priceAgra = 0;
+  //     while (volAgra < this.props.tradeVolume) {
+  //       priceAgra = obj.arr[i].Price + priceAgra;
+  //       volAgra = obj.arr[i].Volume + volAgra;
+  //       ++i;
+  //     }
+  //     return {
+  //       exchange: obj.exchange,
+  //       fee: obj.fee,
+  //       priceAverage: priceAgra / i,
+  //       volAgra: volAgra,
+  //       buy: false
+  //     };
+  //   });
 
-    const placeholderTreshold = -0.001;
-    let potentialAlerts = compBuyArr
-      .map((high, i1) => {
-        return compSellArr
-          .map((low, i2) => {
-            if (high.exchange !== low.exchange) {
-              let sellNXS =
-                high.priceAverage * this.props.tradeVolume -
-                high.priceAverage * this.props.tradeVolume * high.fee;
-              let buyNXS =
-                this.props.tradeVolume * low.priceAverage -
-                this.props.tradeVolume * low.priceAverage * low.fee;
+  //   const placeholderTreshold = -0.001;
+  //   let potentialAlerts = compBuyArr
+  //     .map((high, i1) => {
+  //       return compSellArr
+  //         .map((low, i2) => {
+  //           if (high.exchange !== low.exchange) {
+  //             let sellNXS =
+  //               high.priceAverage * this.props.tradeVolume -
+  //               high.priceAverage * this.props.tradeVolume * high.fee;
+  //             let buyNXS =
+  //               this.props.tradeVolume * low.priceAverage -
+  //               this.props.tradeVolume * low.priceAverage * low.fee;
 
-              let deltaBTC = sellNXS - buyNXS;
+  //             let deltaBTC = sellNXS - buyNXS;
 
-              if (deltaBTC > this.props.threshold) {
-                return {
-                  fromExcange: high.exchange,
-                  potentialProfit: deltaBTC.toFixed(8),
-                  toExchange: low.exchange
-                };
-              } else return null;
-            }
-          })
-          .filter(e => {
-            if (e) {
-              return e;
-            }
-          });
-      })
-      .filter(e => {
-        if (e.length != 0) {
-          return e;
-        }
-      });
-    let alerts;
-    if (potentialAlerts.length > 0) {
-      alerts = potentialAlerts.reduce((accumulator, currentValue) =>
-        accumulator.concat(currentValue)
-      );
-      this.props.setAlertList(alerts);
-    }
-  }
+  //             if (deltaBTC > this.props.threshold) {
+  //               return {
+  //                 fromExcange: high.exchange,
+  //                 potentialProfit: deltaBTC.toFixed(8),
+  //                 toExchange: low.exchange
+  //               };
+  //             } else return null;
+  //           }
+  //         })
+  //         .filter(e => {
+  //           if (e) {
+  //             return e;
+  //           }
+  //         });
+  //     })
+  //     .filter(e => {
+  //       if (e.length != 0) {
+  //         return e;
+  //       }
+  //     });
+  //   let alerts;
+  //   if (potentialAlerts.length > 0) {
+  //     alerts = potentialAlerts.reduce((accumulator, currentValue) =>
+  //       accumulator.concat(currentValue)
+  //     );
+  //     this.props.setAlertList(alerts);
+  //   }
+  // }
 
-  arbitageAlert() {
-    if (this.props.arbAlertList[0]) {
-      return this.props.arbAlertList.map((e, i) => {
-        let highsrc, lowsrc;
-        switch (e.fromExcange) {
-          case "binance":
-            highsrc = binanceSmallLogo;
-            break;
-          case "bittrex":
-            highsrc = bittrexSmallLogo;
-            break;
-          case "cryptopia":
-            highsrc = cryptopiaSmallLogo;
-            break;
-          default:
-            break;
-        }
-        switch (e.toExchange) {
-          case "binance":
-            lowsrc = binanceSmallLogo;
-            break;
-          case "bittrex":
-            lowsrc = bittrexSmallLogo;
-            break;
-          case "cryptopia":
-            lowsrc = cryptopiaSmallLogo;
-            break;
-          default:
-            break;
-        }
+  // arbitageAlert() {
+  //   if (this.props.arbAlertList[0]) {
+  //     return this.props.arbAlertList.map((e, i) => {
+  //       let highsrc, lowsrc;
+  //       switch (e.fromExcange) {
+  //         case "binance":
+  //           highsrc = binanceSmallLogo;
+  //           break;
+  //         case "bittrex":
+  //           highsrc = bittrexSmallLogo;
+  //           break;
+  //         case "cryptopia":
+  //           highsrc = cryptopiaSmallLogo;
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //       switch (e.toExchange) {
+  //         case "binance":
+  //           lowsrc = binanceSmallLogo;
+  //           break;
+  //         case "bittrex":
+  //           lowsrc = bittrexSmallLogo;
+  //           break;
+  //         case "cryptopia":
+  //           lowsrc = cryptopiaSmallLogo;
+  //           break;
+  //         default:
+  //           break;
+  //       }
 
-        return (
-          <div className="arbitrageAlert" key={`${i}`}>
-            <div>ARBITRAGE ALERT!</div>
-            <span onClick={() => this.props.removeAlert(i)}>X</span>
-            <div>
-              <img src={highsrc} alt={e.fromExcange} />
-              <img src={arrow} alt="right pointing arrow" />
-              <img src={lowsrc} alt={e.toExchange} />
-            </div>
-            <div>
-              {e.potentialProfit} potential average profit on a{" "}
-              {this.props.tradeVolume} NXS trade
-            </div>
-          </div>
-        );
-      });
-    } else return null;
-  }
+  //       return (
+  //         <div className="arbitrageAlert" key={`${i}`}>
+  //           <div>ARBITRAGE ALERT!</div>
+  //           <span onClick={() => this.props.removeAlert(i)}>X</span>
+  //           <div>
+  //             <img src={highsrc} alt={e.fromExcange} />
+  //             <img src={arrow} alt="right pointing arrow" />
+  //             <img src={lowsrc} alt={e.toExchange} />
+  //           </div>
+  //           <div>
+  //             {e.potentialProfit} potential average profit on a{" "}
+  //             {this.props.tradeVolume} NXS trade
+  //           </div>
+  //         </div>
+  //       );
+  //     });
+  //   } else return null;
+  // }
 
   formatBuyData(array) {
-    console.log("array", array);
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array
@@ -268,7 +270,6 @@ class Market extends Component {
   }
 
   formatSellData(array) {
-    console.log("array", array);
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array
@@ -320,7 +321,39 @@ class Market extends Component {
         break;
     }
   }
-
+  oneDayinfo(failedExchange) {
+    return (
+      <div>
+        <h3>
+          {failedExchange.charAt(0).toUpperCase() + failedExchange.slice(1)}{" "}
+          24hr Data
+        </h3>
+        {failedExchange === "cryptopia" ? (
+          <div>
+            Percent change: {this.props[failedExchange].info24hr.change}
+            {" %"}
+          </div>
+        ) : (
+          <div>
+            Price Change: {this.props[failedExchange].info24hr.change}
+            {" BTC"}
+          </div>
+        )}
+        <div>
+          High: {this.props[failedExchange].info24hr.high}
+          {" BTC"}
+        </div>
+        <div>
+          Low: {this.props[failedExchange].info24hr.low}
+          {" BTC"}
+        </div>
+        <div>
+          Volume: {this.props[failedExchange].info24hr.volume}
+          {" NXS"}
+        </div>
+      </div>
+    );
+  }
   render() {
     return (
       <div id="market">
@@ -328,7 +361,7 @@ class Market extends Component {
         <a className="refresh" onClick={() => this.refresher()}>
           Refresh Market Data
         </a>
-        <div className="alertbox">{this.arbitageAlert()}</div>
+        {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
         <div className="panel">
           {this.props.loaded &&
             this.props.binance.buy[0] && (
@@ -339,8 +372,10 @@ class Market extends Component {
                     chartData={this.formatChartData("binanceBuy")}
                     chartSellData={this.formatChartData("binanceSell")}
                   />
-                  {this.props.binance.candlesticks[0] && (
+                  {this.props.binance.candlesticks[0] !== undefined ? (
                     <Candlestick data={this.props.binance.candlesticks} />
+                  ) : (
+                    this.oneDayinfo("binance")
                   )}
                 </div>
               </div>
@@ -354,8 +389,10 @@ class Market extends Component {
                     chartData={this.formatChartData("bittrexBuy")}
                     chartSellData={this.formatChartData("bittrexSell")}
                   />
-                  {this.props.bittrex.candlesticks[0] && (
+                  {this.props.bittrex.candlesticks[0] !== undefined ? (
                     <Candlestick data={this.props.bittrex.candlesticks} />
+                  ) : (
+                    this.oneDayinfo("bittrex")
                   )}
                 </div>
               </div>
@@ -370,8 +407,10 @@ class Market extends Component {
                     chartSellData={this.formatChartData("cryptopiaSell")}
                   />
 
-                  {this.props.cryptopia.candlesticks[0] && (
+                  {this.props.cryptopia.candlesticks[0] !== undefined ? (
                     <Candlestick data={this.props.cryptopia.candlesticks} />
+                  ) : (
+                    this.oneDayinfo("cryptopia")
                   )}
                 </div>
               </div>
