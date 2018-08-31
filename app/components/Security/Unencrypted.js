@@ -15,7 +15,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
+  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  OpenModal: type => {
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  }
 });
 
 class Unencrypted extends Component {
@@ -69,6 +72,7 @@ class Unencrypted extends Component {
     document.execCommand("Copy", false, null);
     output.type = "password";
   }
+
   reEnterValidator(e) {
     let newPass = document.getElementById("newPass");
     let passHint = document.getElementById("passHint");
@@ -79,6 +83,7 @@ class Unencrypted extends Component {
       passHint.style.visibility = "visible";
     }
   }
+
   encrypt(e) {
     e.preventDefault();
     let newPass, passChk, passHint;
@@ -88,7 +93,15 @@ class Unencrypted extends Component {
     if (newPass.value.trim()) {
       if (newPass.value === passChk.value) {
         if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
-          RPC.GET("encryptwallet", [newPass.value], this.encryptCallback);
+          RPC.PROMISE("encryptwallet", [newPass.value]).then(payload => {
+            if (payload === null) {
+              pass.value = "";
+              newPass.value = "";
+              passChk.value = "";
+              this.props.OpenModal("Wallet has been encrypted.");
+              this.props.history.push();
+            }
+          });
         } else {
           passChk.value = "";
           passHint.innerText = "Password cannot start or end with spaces";
@@ -107,6 +120,7 @@ class Unencrypted extends Component {
   componentWillUnmount() {
     this.props.wipe();
   }
+
   render() {
     return (
       <div id="securitylogin">

@@ -4,7 +4,14 @@ const initialState = {
   loggedIn: false,
   googleanalytics: null,
   encrypted: false,
-  busyFlag: false
+  busyFlag: false,
+  open: false,
+  openSecondModal: false,
+  openThirdModal: false,
+  modaltype: "",
+  confirmation: false,
+  actionItem: "",
+  modalVisable: false
 };
 
 export default (state = initialState, action) => {
@@ -13,6 +20,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loggedIn: false
+      };
+      break;
+    case TYPE.TOGGLE_MODAL_VIS_STATE:
+      return {
+        ...state,
+        modalVisable: !state.modalVisable
       };
       break;
     case TYPE.TOGGLE_BUSY_FLAG:
@@ -32,6 +45,51 @@ export default (state = initialState, action) => {
         ...state,
         encrypted: false
       };
+
+    case TYPE.SHOW_MODAL:
+      return {
+        ...state,
+        open: true,
+        modaltype: action.payload
+      };
+      break;
+    case TYPE.HIDE_MODAL:
+      return {
+        ...state,
+        open: false,
+        modaltype: action.payload
+      };
+      break;
+    case TYPE.SHOW_MODAL2:
+      return {
+        ...state,
+        openSecondModal: true,
+        modaltype: action.payload
+      };
+      break;
+
+    case TYPE.HIDE_MODAL2:
+      return {
+        ...state,
+        openSecondModal: false,
+        modaltype: action.payload
+      };
+      break;
+    case TYPE.SHOW_MODAL3:
+      return {
+        ...state,
+        openThirdModal: true,
+        modaltype: action.payload
+      };
+      break;
+
+    case TYPE.HIDE_MODAL3:
+      return {
+        ...state,
+        openThirdModal: false,
+        modaltype: action.payload
+      };
+
       break;
     case TYPE.ENCRYPTED:
       return {
@@ -39,7 +97,6 @@ export default (state = initialState, action) => {
         encrypted: true
       };
       break;
-
     case TYPE.SET_GOOGLEANALYTICS:
       return {
         ...state,

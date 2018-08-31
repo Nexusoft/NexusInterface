@@ -5,7 +5,9 @@ const initialState = {
   Amount: 0,
   Account: "",
   Message: "",
-  Queue: {}
+  Queue: {},
+  AccountChanger: [],
+  SelectedAccount: ""
 };
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -41,10 +43,22 @@ export default (state = initialState, action) => {
         Account: action.payload
       };
       break;
+    case TYPE.SELECTED_ACCOUNT:
+      return {
+        ...state,
+        SelectedAccount: action.payload
+      };
+      break;
     case TYPE.CLEAR_QUEUE:
       return {
         ...state,
         Queue: {}
+      };
+      break;
+    case TYPE.CHANGE_ACCOUNT:
+      return {
+        ...state,
+        AccountChanger: action.payload
       };
       break;
     case TYPE.ADD_TO_QUEUE:
@@ -68,7 +82,6 @@ export default (state = initialState, action) => {
         Account: "",
         Message: ""
       };
-      break;
     default:
       return state;
   }

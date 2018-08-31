@@ -1,8 +1,8 @@
 {
   "name": "nexus-interface",
   "productName": "Nexus Interface",
-  "version": "0.4.1",
-  "buildDate": "August 11th 2018",
+  "version": "0.5.0",
+  "buildDate": "August 30th 2018",
   "description": "nexus interface electron wallet",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -135,6 +135,7 @@
     "babili-webpack-plugin": "^0.1.2",
     "chalk": "^2.0.1",
     "concurrently": "^3.6.1",
+    "copy-webpack-plugin": "^4.5.2",
     "cross-env": "^5.0.0",
     "cross-spawn": "^5.1.0",
     "css-loader": "^0.28.3",
@@ -191,6 +192,8 @@
     "history": "^4.6.3",
     "maxmind": "^2.6.0",
     "react": "^15.6.1",
+    "react-activity": "^1.2.2",
+    "react-countdown-now": "^1.3.0",
     "react-dom": "^15.6.1",
     "react-hot-loader": "3.0.0-beta.6",
     "react-redux": "^5.0.5",

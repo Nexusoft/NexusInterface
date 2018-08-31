@@ -5,7 +5,8 @@ const initialState = {
   accoutName: "",
   privKey: "",
   address: "",
-  errorMessage: "Password is required"
+  errorMessage: "Password is required",
+  stakingFlag: false
 };
 
 export default (state = initialState, action) => {
@@ -14,6 +15,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         unlockUntillDate: action.payload
+      };
+      break;
+    case TYPE.TOGGLE_BUSY_FLAG:
+      return {
+        ...state,
+        busyFlag: !state.busyFlag
+      };
+      break;
+    case TYPE.TOGGLE_STAKING_FLAG:
+      return {
+        ...state,
+        stakingFlag: !state.stakingFlag
       };
       break;
     case TYPE.SET_ERROR_MESSAGE:

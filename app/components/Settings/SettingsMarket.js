@@ -13,12 +13,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   setTradeVol: TV => dispatch({ type: TYPE.SET_TRADEVOL, payload: TV }),
-  setThershold: TH => dispatch({ type: TYPE.SET_THRESHOLD, payload: TH })
+  setThershold: TH => dispatch({ type: TYPE.SET_THRESHOLD, payload: TH }),
+  OpenModal: type => {
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  }
 });
 
 class SettingsMarket extends Component {
   feedback() {
-    alert("Settings saved");
+    this.props.OpenModal("Settings saved");
   }
   render() {
     return (

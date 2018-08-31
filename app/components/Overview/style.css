@@ -31,6 +31,14 @@ Table of Contents
   text-shadow: 2px 2px #111111;
 }
 
+.maxmindCopyright {
+  position: absolute;;
+  bottom: 0px;
+  z-index: 1;
+  color:#05a5ff;
+  opacity: 0.4 ;
+}
+
 /*------------------------------------------------------------------
 I. NEXUS EARTH VISUALIZATION
 ------------------------------------------------------------------*/

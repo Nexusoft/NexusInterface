@@ -17,7 +17,8 @@ const mapDispatchToProps = dispatch => ({
   setErrorMessage: message =>
     dispatch({ type: TYPE.SET_ERROR_MESSAGE, payload: message }),
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
+  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG })
 });
 
 class Login extends Component {
@@ -93,6 +94,17 @@ class Login extends Component {
                 required
               />
               <span className="hint">{this.props.errorMessage}</span>
+            </div>
+
+            {/* STAKING FLAG STUFF */}
+            <div className="field" id="checkFeild">
+              <label>Staking Only:</label>
+              <input
+                type="checkbox"
+                className="switch"
+                value={this.props.stakeFlag}
+                onChange={() => this.props.stake()}
+              />
             </div>
           </fieldset>
 

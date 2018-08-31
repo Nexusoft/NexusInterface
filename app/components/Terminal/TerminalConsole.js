@@ -5,7 +5,6 @@ import { timingSafeEqual } from "crypto";
 import * as RPC from "../../script/rpc";
 
 export default class TerminalConsole extends Component {
-
   constructor(props){
     super(props);
     this.state = {
@@ -17,12 +16,9 @@ export default class TerminalConsole extends Component {
       autoComplete:[],
       testnum: 99999
     }
-
   }  
 
   componentDidMount(){
-    //this.state.inputfield.focus(); 
-
     RPC.PROMISE("help", []).then(payload => {
       
       let CommandList = payload.split('\n');
@@ -265,7 +261,8 @@ export default class TerminalConsole extends Component {
   onAutoCompleteClick(inItem)
   {
     const inputRef = this.state.inputfield;
-    inputRef.focus();
+    inputRef.value = inItem;
+    //inputRef.focus();
     this.setState(
       {
         currentInput:inItem,

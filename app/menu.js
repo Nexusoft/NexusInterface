@@ -206,34 +206,63 @@ export default class MenuBuilder {
           {
             label: "Back-up Wallet",
             click: () => {
-              let now = `${new Date()}`;
+              let now = new Date().toISOString().replace(/[^0-9]/g, "_");
               let BackupDir = process.env.HOME + "/NexusBackups";
+              if ( process.platform === "win32")
+              {
+                BackupDir =  BackupDir.replace(/\\/g, '/');
+              }
               let fs = require("fs");
-              if (fs.existsSync(BackupDir) == undefined)
+              let ifBackupDirExists = fs.existsSync(BackupDir);
+              if (ifBackupDirExists == undefined || ifBackupDirExists == false)
               {
                 fs.mkdirSync(BackupDir);
               }
-              RPC.PROMISE("backupwallet", [BackupDir + "/" + now + ".dat"]);
+              RPC.PROMISE("backupwallet", [BackupDir + "/NexusBackup_" + now + ".dat"]);
             }
           },
           {
             label: "Open Backups Folder",
             click() {
-              let fs = require("fs");
-              if (fs.existsSync(BackupDir) == undefined)
+              let fs = require("fs"); 
+              let BackupDir = process.env.HOME + "/NexusBackups";
+              if ( process.platform === "win32")
+              {
+                BackupDir =  BackupDir.replace(/\\/g, '/');
+              }
+              let ifBackupDirExists = fs.existsSync(BackupDir);
+              if (ifBackupDirExists == undefined || ifBackupDirExists == false)
               {
                 fs.mkdirSync(BackupDir);
               }
-              shell.openItem(process.env.HOME + "/NexusBackups");
+              let asd = shell.openItem(BackupDir);
             }
           },
           {
-            label: "Close",
-            role: 'close'
+            label: "Send To Tray",
+            click(){
+              remote.getCurrentWindow().hide();
+             
+            }
           },
           {
-            label: "Close And Shutdown Deamon",
-            role: 'quit'
+            label: "Close Window Keep Daemon",
+            click(){
+              remote.getCurrentWindow().close();
+             
+            }
+          },
+          {
+            label: "Close And Shutdown Daemon",
+            click()
+            {
+              RPC.PROMISE("stop",[]).then(payload =>
+              {
+                setTimeout(() => {
+                  remote.getCurrentWindow().close();
+                }, 1000);
+              });
+            }
             
           }
         ]
@@ -251,6 +280,13 @@ export default class MenuBuilder {
             label: "Application Settings",
             click() {
               history.push("/Settings/App");
+            }
+          },
+          {
+            label: "Toggle &Developer Tools",
+            accelerator: "Alt+Ctrl+I",
+            click: () => {
+              this.mainWindow.toggleDevTools();
             }
           }
           // {

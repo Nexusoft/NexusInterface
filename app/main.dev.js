@@ -48,11 +48,14 @@ if (process.env.NODE_ENV === "production") {
 // Enable debugging for development or production with debug flag
 //
 
-if (process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true") {
-  require("electron-debug")();
-  const p = path.join(__dirname, "..", "app", "node_modules");
-  require("module").globalPaths.push(p);
-}
+// if (
+//   process.env.NODE_ENV === "development" ||
+//   process.env.DEBUG_PROD === "true"
+// ) {
+require("electron-debug")();
+const p = path.join(__dirname, "..", "app", "node_modules");
+require("module").globalPaths.push(p);
+// }
 
 //
 // Enable development tools for REACT and REDUX
@@ -88,12 +91,9 @@ function updateApplication() {
     autoUpdater.setFeedURL(data);
     autoUpdater.autoDownload = false;
     autoUpdater.checkForUpdates();
-  }
-  catch (err)
-  {
+  } catch (err) {
     log.error("Error checking for updates: " + err);
   }
-
 }
 
 //
@@ -101,20 +101,20 @@ function updateApplication() {
 //
 
 function setupTray() {
-
   let trayImage;
 
-  if (process.platform == 'darwin') {
+  if (process.platform == "darwin") {
     trayImage = path.join(__dirname, "/images/tray/iconTemplate.png");
-  }
-  else {
+  } else {
     trayImage = path.join(__dirname, "/images/tray/icon.png");
   }
 
   tray = new Tray(trayImage);
 
-  if (process.platform == 'darwin') {
-    tray.setPressedImage(path.join(__dirname, "/images/tray/iconHighlight.png"));
+  if (process.platform == "darwin") {
+    tray.setPressedImage(
+      path.join(__dirname, "/images/tray/iconHighlight.png")
+    );
   }
 
   var contextMenu = Menu.buildFromTemplate([
@@ -126,13 +126,26 @@ function setupTray() {
       {
           label: 'Quit Nexus', click: function () {
               app.isQuiting = true;
-              mainWindow.close();
+              let settings = require("./api/settings").GetSettings();
+              if (settings.manualDaemon == false){
+                RPC.PROMISE("stop",[]).then(payload =>
+                  {
+                    console.log(payload);
+                    setTimeout(() => {
+                      remote.getCurrentWindow().close();
+                    }, 1000);
+                  });
+              }
+              else
+              {
+                mainWindow.close();
+              }
+
           }
       }
-  ])
+  ]);
 
   tray.setContextMenu(contextMenu);
-
 }
 
 //
@@ -140,26 +153,22 @@ function setupTray() {
 //
 
 function createWindow() {
-
   let settings = require("./api/settings").GetSettings();
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
-
-    width: (settings.windowWidth === undefined ? 1600 : settings.windowWidth),
-    height: (settings.windowHeight === undefined ? 1650 : settings.windowHeight),
+    width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
+    height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
     icon: path.join(__dirname, "/images/nexus-icon.png"),
-    backgroundColor: '#232c39',
+    backgroundColor: "#232c39",
     show: false
-
   });
 
   // Load the index.html into the new browser window
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   // Show the window only once the contents finish loading, then check for updates
-  mainWindow.webContents.on('did-finish-load', function() {
-
+  mainWindow.webContents.on("did-finish-load", function() {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -168,16 +177,13 @@ function createWindow() {
     mainWindow.focus();
 
     //updateApplication(); // if updates are checked in app.on('ready') there is a chance the event doesn't make it to the UI if that hasn't loaded yet, this is safer
-
   });
 
   // Save the window dimensions once the resize event is completed
-  mainWindow.on("resize", function (event) {
-
+  mainWindow.on("resize", function(event) {
     clearTimeout(resizeTimer);
 
     resizeTimer = setTimeout(function() {
-
       // Resize event has been completed
       let settings = require("./api/settings");
       var settingsObj = settings.GetSettings();
@@ -186,53 +192,42 @@ function createWindow() {
       settingsObj.windowHeight = mainWindow.getBounds().height;
 
       settings.SaveSettings(settingsObj);
-
     }, 250);
-
   });
 
   // Emitted when the window has finished its close command.
-  mainWindow.on("closed", function (event) {
-    
-  });
+  mainWindow.on("closed", function(event) {});
 
   // Event when the window is minimized
-  mainWindow.on('minimize',function(event){
-
+  mainWindow.on("minimize", function(event) {
     let settings = require("./api/settings").GetSettings();
 
     if (settings.minimizeToTray) {
-
       event.preventDefault();
       mainWindow.hide();
-
     }
-
   });
 
   // Event when the window is requested to be closed
-  mainWindow.on('close', function (event) {
-
+  mainWindow.on("close", function(event) {
     let settings = require("./api/settings").GetSettings();
 
-    if(!app.isQuiting && settings.minimizeOnClose) {
-
-        event.preventDefault();
-        mainWindow.hide();
-        
+    if (!app.isQuiting && settings.minimizeOnClose) {
+      event.preventDefault();
+      mainWindow.hide();
     }
-
   });
-
 }
 
 //
 // Application Startup
 //
 
-app.on('ready', async () => {
-
-  if (process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true") {
+app.on("ready", async () => {
+  if (
+    process.env.NODE_ENV === "development" ||
+    process.env.DEBUG_PROD === "true"
+  ) {
     await installExtensions();
   }
 
@@ -241,7 +236,6 @@ app.on('ready', async () => {
   createWindow();
 
   setupTray();
-
 });
 
 //
@@ -249,16 +243,11 @@ app.on('ready', async () => {
 //
 
 app.on("window-all-closed", () => {
-
   if (process.platform !== "darwin") {
-
     core.stop(function() {
-
       app.quit();
-
     });
   }
-  
 });
 
 //

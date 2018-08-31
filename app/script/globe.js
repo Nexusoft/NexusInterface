@@ -17,6 +17,9 @@ import world from "../images/world.jpg";
 import { geoInterpolate } from 'd3-geo';
 var DAT = DAT || {};
 
+var CurveMeshs;
+var PillarMeshs;
+
 export default (DAT.Globe = function(container, opts) {
   opts = opts || {};
 
@@ -302,9 +305,9 @@ export default (DAT.Globe = function(container, opts) {
         );
       }
 
-      let aaaaa = [];
+      let tempPoints = [];
   
-      console.log(tempoints);
+      //console.log(tempoints);
       const lastpoint = tempoints[tempoints.length-1];
       for (let index = 0; index < (tempoints.length - 1); index++) {
         const element = tempoints[index];
@@ -313,12 +316,12 @@ export default (DAT.Globe = function(container, opts) {
         temparray.push(element.lng);
         temparray.push(parseFloat(lastpoint.lat));
         temparray.push(parseFloat(lastpoint.lng));
-        aaaaa.push(temparray);
+        tempPoints.push(temparray);
       }
       
-      console.log(aaaaa);
+      ///console.log(aaaaa);
 
-      let yyyyy = new THREE.Mesh(
+      let newCurveMesh = new THREE.Mesh(
         this._baseGeometry,
         new THREE.MeshBasicMaterial({
           color: 0xffffff,
@@ -327,11 +330,15 @@ export default (DAT.Globe = function(container, opts) {
         })
       );
   
-      initCurves(aaaaa,yyyyy);
+      initCurves(tempPoints,newCurveMesh);
   
       playCurve();
+
+      CurveMeshs = newCurveMesh;
+      PillarMeshs = this.points;
+
       scene.add(this.points);
-      scene.add(yyyyy);
+      scene.add(newCurveMesh);
     }
   }
 
@@ -454,7 +461,7 @@ export default (DAT.Globe = function(container, opts) {
 
   function playCurve()
   {
-    console.log(cureves);
+    //console.log(cureves);
     cureves.forEach(element => {
       element.restart();
       element.play();
@@ -464,7 +471,22 @@ export default (DAT.Globe = function(container, opts) {
 
   function removePoints()
   {
-    console.log("REMOVED OLD POINTS");
+    //console.log("REMOVED OLD POINTS");
+    cureves.forEach(element => {
+      element.stop();
+    });
+    if (CurveMeshs != null){
+      scene.remove(CurveMeshs);
+      CurveMeshs.geometry.dispose();
+      CurveMeshs.material.dispose();
+      CurveMeshs = null;
+    }
+    if (PillarMeshs != null){
+      scene.remove(PillarMeshs);
+      PillarMeshs.geometry.dispose();
+      PillarMeshs.material.dispose();
+      PillarMeshs = null;
+    }
   }
 
   function render() {
@@ -493,6 +515,7 @@ export default (DAT.Globe = function(container, opts) {
     });
     const curveMesh = new THREE.Mesh();
   
+    cureves.length = 0;
     allCoords.forEach((coords, index) => {
         const curve = new Curve(coords, material);
         cureves.push(curve);

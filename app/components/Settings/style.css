@@ -98,43 +98,82 @@ form {
   visibility: hidden;
 }
 #settings input[type="file"]::before {
-  content: 'Select a wallpaper';
+  content: "Select a wallpaper";
 
   display: inline-block;
-	position: relative;
+  position: relative;
   margin: 0;
-	padding: .4375em 1.25em;
-	vertical-align: middle;
-	line-height: var(--line-height);
+  padding: 0.4375em 1.25em;
+  vertical-align: middle;
+  line-height: var(--line-height);
 
-	outline: 0;
-	border: var(--button-border);
-	border-radius: var(--button-border-radius);
+  outline: 0;
+  border: var(--button-border);
+  border-radius: var(--button-border-radius);
 
-	background: var(--button-background);
-	box-shadow: var(--button-box-shadow);
-	text-shadow: var(--button-text-shadow);
+  background: var(--button-background);
+  box-shadow: var(--button-box-shadow);
+  text-shadow: var(--button-text-shadow);
 
-	color: var(--button-color);
+  color: var(--button-color);
 
-	font-size: inherit;
-	font-family: inherit;
-	text-decoration: none;
-	white-space: nowrap;
-	user-select: none;
+  font-size: inherit;
+  font-family: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
 
-	cursor: pointer;
-	
-	transition: all .1s ease;
+  cursor: pointer;
+
+  transition: all 0.1s ease;
 }
 #settings input[type="file"]:hover::before {
   color: var(--button-hover-color);
-	border: var(--button-hover-border);
-	background: var(--button-hover-background);
-	text-decoration: none;
-	transform: var(--button-hover-transform);
-	box-shadow: var(--button-hover-box-shadow);
+  border: var(--button-hover-border);
+  background: var(--button-hover-background);
+  text-decoration: none;
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-box-shadow);
 }
 #settings input[type="file"]:active {
   outline: 0;
+}
+.fee input[type="number"] {
+  height: 27px;
+  width: 60px;
+  border: 1.5px solid var(--color-4);
+}
+
+.fee {
+  /* This bit sets up the horizontal layout */
+  display: flex;
+  width: 100px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.Txfee {
+  display: flex;
+  /* Tell the input to use all the available space */
+  flex-grow: 1;
+  /* And hide the input's outline, so the form looks like the outline */
+}
+
+.feebutton {
+  /* Just a little styling to make it pretty */
+  border: 1px solid var(--color-4);
+  background: var(--color-4);
+  color: white;
+  margin-left: -10%;
+}
+#no-button {
+  float: right;
+}
+#ok-button {
+  float: left;
+}
+
+
+#noPad {
+  margin-left: 0;
 }
