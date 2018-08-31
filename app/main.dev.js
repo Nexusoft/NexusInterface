@@ -126,7 +126,23 @@ function setupTray() {
       {
           label: 'Quit Nexus', click: function () {
               app.isQuiting = true;
-              mainWindow.close();
+              
+
+              let settings = require("./api/settings").GetSettings();
+              if (settings.manualDaemon == false){
+                RPC.PROMISE("stop",[]).then(payload =>
+                  {
+                    console.log(payload);
+                    setTimeout(() => {
+                      remote.getCurrentWindow().close();
+                    }, 1000);
+                  });
+              }
+              else
+              {
+                mainWindow.close();
+              }
+
           }
       }
   ])

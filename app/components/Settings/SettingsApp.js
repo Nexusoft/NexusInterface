@@ -354,12 +354,6 @@ export default class SettingsApp extends Component {
           </div>
 
           <div className="field">
-            <label htmlFor="backupLocation">Backup Locatiom</label>
-            <input webkitdirectory directory ref={i => this.backupInputField = i} id="backupLocation" type="file" size="25" onChange={this.updateBackupLocation} data-tooltip="Location where backups will be saved"  />
-          </div>
-          <label htmlFor="currentBackupLocation">{this.returnCurrentBackupLocation()} </label>
-
-          <div className="field">
             <label htmlFor="infopopup">Information Popups</label>
             <input
               id="infopopup"

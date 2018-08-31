@@ -437,6 +437,7 @@ class Overview extends Component {
           </div>
         </div>
         <NetworkGlobe handleOnLineRender={e => (this.redrawCurves = e)} handleOnRemoveOldPoints = { e => (this.removeOldPoints = e)} />
+        <div className="maxmindCopyright" >Globe includes GeoLite2 data created by MaxMind <br/>available at <a href="http://www.maxmind.com">http://www.maxmind.com</a></div>
         <div className="right-stats">
           <div
             id="nxs-connections-info"

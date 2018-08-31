@@ -8,7 +8,7 @@ import * as RPC from "../../script/rpc";
 import { Promise } from "bluebird-lst";
 import * as TYPE from "../../actions/actiontypes";
 import Modal from 'react-responsive-modal';
-import { VictoryBar, VictoryChart, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer} from 'victory';
+import { VictoryBar, VictoryChart,VictoryLabel, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer, Flyout} from 'victory';
 //import Analytics from "../../script/googleanalytics";
 
 import ContextMenuBuilder from "../../contextmenu";
@@ -90,7 +90,7 @@ class Transactions extends Component {
       amountFilter: 0,
       categoryFilter: "all",
       addressFilter: "",
-      zoomDomain: { x: [new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()).getTime(), new Date().getTime()], y:[0,1] },
+      zoomDomain: { x: [new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()), new Date()], y:[0,1] },
       isHoveringOverTable: false,
       hoveringID: 999999999999,
       open: false,
@@ -459,14 +459,13 @@ class Transactions extends Component {
 
           });
           
-          
-          console.log(tempWalletTransactions);
+          //console.log(tempWalletTransactions);
           tempWalletTransactions.sort((a,b) => {return (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0);} ); 
           this.props.SetWalletTransactionArray(tempWalletTransactions);
-          console.log(tempWalletTransactions);
+          //console.log(tempWalletTransactions);
           
 
-          console.log(this.props.walletitems);
+          //console.log(this.props.walletitems);
           this.setState(
             {
               tableColumns:tabelheaders,
@@ -966,6 +965,27 @@ class Transactions extends Component {
   /// Handle Zoom
   /// The event listener for when you zoom in and out
   handleZoom(domain) {
+    //console.log(domain);
+    domain.y[0] = 5;
+    let high = 0;
+    let low = 0;
+    this.props.walletitems.forEach(element => {
+      if ( (element.time * 1000 >= domain.x[0]) && (element.time * 1000 <= domain.x[1]))
+      {
+        if (element.amount > high)
+        {
+          high = element.amount + 1;
+
+        }
+
+        if (element.amount < low)
+        {
+          low = element.amount -1;
+        }
+      }
+    });
+    domain.y[0] = low;
+    domain.y[1] = high;
     this.setState({ zoomDomain: domain });
   }
 
@@ -1057,40 +1077,7 @@ class Transactions extends Component {
     let promsiewait = new Promise(function(resolve, reject) {
       setTimeout(resolve, 1000);
     });
-    
-    let pppppp = function()
-    {
-      console.log((Array.from(this.state.historyData.keys())).length);
-        let appdataloc = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME);
-        appdataloc = appdataloc + "/.Nexus/";
-    
-        let fs = require('fs');
-    
-        fs.writeFile(appdataloc + 'historydata.json', JSON.stringify(this.mapToObject(this.state.historyData)),(err) => {
-          if (err != null){
-              console.log(err);
-              } 
-          });
-    }
 
-    pppppp = pppppp.bind(this);
-
-    let eeeeee = function()
-    {
-      setTimeout(() => {
-        console.log("777777777777777777");
-        pppppp();
-     
-       }, 10000);
-    }
-
-    eeeeee = eeeeee.bind(this);
-    
-    let finishandsavefilepromise = new Promise(function(resolve, reject) {
-     eeeeee();
-    }.bind(this));
-    finishandsavefilepromise = finishandsavefilepromise.bind(this);
-    this.createhistoricaldatapullpromise.bind(this);
     
     //Call the promises and make a chain.
     this.createhistoricaldatapullpromise(cryptocompareurl1,'USD')
@@ -1120,8 +1107,7 @@ class Transactions extends Component {
     .then(this.createhistoricaldatapullpromise(cryptocompareurl13,'USD'))
     .then(promsiewait)
     .then(this.createhistoricaldatapullpromise(cryptocompareurl14,'BTC'))
-    .then(promsiewait)
-    .then(finishandsavefilepromise);
+    .then(promsiewait);
   }
   
 
@@ -1192,9 +1178,6 @@ class Transactions extends Component {
           iiiiiii = "BTC";
         }
           this.setnewdatafunction(body,iiiiiii);
-          //resolve(iiiiiii);
-        
-        //jjjjjjjj(true);
       }
     }
 
@@ -1274,22 +1257,17 @@ class Transactions extends Component {
        // console.log(incomingthis);
         let cryptocompareurlUSD = incomingthis.createcryptocompareurl("USD",incomingthis.state.walletTransactions[incomingIndex].time);
         let cryptocompareurlBTC = incomingthis.createcryptocompareurl("BTC",incomingthis.state.walletTransactions[incomingIndex].time);
-       // incomingthis.createhistoricaldatapullpromise(cryptocompareurlUSD,'USD').then( () => 
-       // incomingthis.createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC').then( () => 
-        //  resolve(true)
-        //));
+
            let allpromise = [];
            allpromise.push( incomingthis.createhistoricaldatapullpromise(cryptocompareurlUSD,'USD'));
            allpromise.push(incomingthis.createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC'));
             Promise.all(allpromise).then((ttttt) => {setTimeout(() => {
               console.log("********"); console.log(ttttt); resolve(ttttt);
             }, 1000) } );
-            //.then(fooff => {console.log("daadada");})
             console.log("$$$$$$$$$$$$$$$$$$$$$$");
             setTimeout(() => {
               let ggggg = "true" + passthroughdata;
               console.log(ggggg)
-              //resolve(ggggg);
             }, 2000);
           }
           else
@@ -1308,32 +1286,10 @@ class Transactions extends Component {
           }
     });
   }
-
-  ttttttt(incomingIndex)
-  {
-    if (this.wwwwww(incomingIndex))
-    {
-      return false;
-    }
-    else
-    {
-      let founddata = this.findclosestdatapoint(this.state.walletTransactions[incomingIndex].time.toString())
-      let temp = this.state.walletTransactions;
-      temp[incomingIndex].value.USD = founddata.priceUSD;
-      temp[incomingIndex].value.BTC = founddata.priceBTC;
-      this.setState(
-        {
-          walletTransactions:temp
-        }
-      );
-      return true;
-    }
-  }
   
-  wwwwww(incomingIndex)
+  returnIfFoundHistoryData(incomingIndex)
   {
-    
-    let founddata = this.findclosestdatapoint(this.state.walletTransactions[incomingIndex].time.toString());
+    let founddata = this.findclosestdatapoint(this.props.walletitems[incomingIndex].time.toString());
     if(founddata == undefined)
     {
       return true;
@@ -1346,14 +1302,9 @@ class Transactions extends Component {
   
   getDataorNewData(incomingIndex)
   {
-    var that = this;
-    //console.log(that);
-    //console.log(this.state.walletTransactions);
-    let founddata = this.findclosestdatapoint(this.state.walletTransactions[incomingIndex].time.toString());
-    //console.log(founddata);
+    let founddata = this.findclosestdatapoint(this.props.walletitems[incomingIndex].time.toString());
     if(founddata == undefined)
     {
-     // console.log("!!!!!!!!!!!!!!!!!!!!!" + this.state.walletTransactions[incomingIndex]);
       let temp = this.state.transactionsToCheck;
       temp.push(incomingIndex);
       this.setState(
@@ -1365,14 +1316,10 @@ class Transactions extends Component {
     }
     else
     {
-      let tempwalletTrans = this.state.walletTransactions;
+      let tempwalletTrans = this.props.walletitems;
       tempwalletTrans[incomingIndex].value.USD = founddata.priceUSD;
       tempwalletTrans[incomingIndex].value.BTC = founddata.priceBTC;
-      that.setState(
-        {
-          walletTransactions:tempwalletTrans
-        }
-      );
+      this.props.SetWalletTransactionArray(tempwalletTrans);
       
     }
   }
@@ -1385,20 +1332,16 @@ class Transactions extends Component {
 
   addhistorydatatoprevious()
   {
-    let tempdata = this.state.walletTransactions;
+    let tempdata = this.props.walletitems;
     for (let index = 0; index < tempdata.length; index++) {
-      let founddata = this.findclosestdatapoint(this.state.walletTransactions[index].time.toString());
+      let founddata = this.findclosestdatapoint(this.props.walletitems[index].time.toString());
       if ( founddata != undefined){
         tempdata[index].value.USD = founddata.priceUSD;
         tempdata[index].value.BTC = founddata.priceBTC;
       }
     }
 
-    this.setState(
-    {
-      walletTransactions:tempdata
-    }
-    );
+   this.props.SetWalletTransactionArray(tempdata);
   }
 
 
@@ -1540,11 +1483,26 @@ class Transactions extends Component {
     return internalString;
   }
 
+  returnDefaultPageSize()
+  {
+    let defPagesize = 10;
+    if (this.props.walletitems != undefined)
+    {
+      defPagesize =  (this.props.walletitems.length < 10) ? 0 : 10;
+    }
+    else
+    {
+      defPagesize =  10;
+    }
+    return defPagesize;
+  }
+
   render() { 
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
     const VictoryZoomVoronoiContainer = createContainer("voronoi", "zoom");
-    const open = this.state.open; 
+    const open = this.state.open;
+    const pageSize = this.returnDefaultPageSize();
 
     return (
 
@@ -1565,6 +1523,7 @@ class Transactions extends Component {
               width={this.state.mainChartWidth}
               height={this.state.mainChartHeight}
               scale={{ x: "time" }} 
+              style={{ parent: { overflow: 'visible' }}}
               // theme={VictoryTheme.material}
               domainPadding={{ x: 30 }}
               // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
@@ -1588,8 +1547,22 @@ class Transactions extends Component {
                     strokeWidth: 1
                   }
                 }}
-                labelComponent={<VictoryTooltip/>}
-                labels={(d) => this.returnToolTipLable(d)}
+                labelComponent={<VictoryTooltip orientation={incomingProp => { 
+                  
+                  let internalDifference = this.state.zoomDomain.x[1].getTime() - this.state.zoomDomain.x[0].getTime();
+                  internalDifference = internalDifference / 2;
+                  internalDifference = this.state.zoomDomain.x[0].getTime() + internalDifference;
+                  if (incomingProp.a.getTime() <= internalDifference )
+                  {
+                    return "right";
+                  }
+                  else
+                  {
+                    return "left";
+                  }
+                
+                }} />}
+                  labels={(d) => this.returnToolTipLable(d)}
                 data={this.returnChartData()}
                 x="a"
                 y="b"
@@ -1624,8 +1597,6 @@ class Transactions extends Component {
           </div>
 
           <div id="transactions-filters">
-
-            {/* <a id="timeshown">Time Displaying: {this.state.displayTimeFrame}</a> <br/> */}
 
             <div id="filter-address" className="filter-field">
 
@@ -1672,9 +1643,7 @@ class Transactions extends Component {
 
           <div id="transactions-details">
 
-            <Table 
-            styles={this.state.tableHeight}
-            key="table-top" data={data} columns={columns} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
+            <Table key="table-top" data={data} columns={columns} minRows={pageSize} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
 
           </div>
 
@@ -1682,6 +1651,22 @@ class Transactions extends Component {
 
       </div>
 
+    );
+  }
+}
+
+//not being used save for later
+class CustomTooltip extends React.Component {
+  render() {
+    console.log(this.props);
+    return (
+      <g>
+        <VictoryLabel {...this.props}/>
+        <VictoryTooltip
+          {...this.props}
+          orientation="right"
+        />
+      </g>
     );
   }
 }

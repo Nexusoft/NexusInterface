@@ -126,7 +126,7 @@ class Header extends Component {
   returnSyncStatusTooltip() {
     if (heighestPeerBlock > this.props.blocks) {
       return (
-        "Syncing...\nBehind\n"(
+        "Syncing...\nBehind\n" + (
           heighestPeerBlock - this.props.blocks
         ).toString() + "\nBlocks"
       );

@@ -227,8 +227,11 @@ export default class MenuBuilder {
             }
           },
           {
-            label: "Close",
-            role: 'close'
+            label: "Send To Tray",
+            click(){
+              remote.getCurrentWindow().hide();
+             
+            }
           },
           {
             label: "Close And Shutdown Deamon",
