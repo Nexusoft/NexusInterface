@@ -87,7 +87,9 @@ export const InitiateFastTransaction = (toAddress, refundAddress, pair) => {
         json: {
           withdrawal: toAddress,
           pair: pair,
-          returnAddress: refundAddress
+          returnAddress: refundAddress,
+          apiKey:
+            "7740f2c6891ef57fc644ffcf7f6326a6e6e8a19219f05048aa1be83c0273dc3884872086b6e5ac11b9004a7a178af4b979c05745462a29236f2f48445d452825"
         }
       },
       (error, response, body) => {
@@ -116,6 +118,7 @@ export const InitiateFastTransaction = (toAddress, refundAddress, pair) => {
 };
 
 export const GetQuote = (pair, ammount, callback) => {
+  console.log(ammount);
   return dispatch => {
     Request(
       {
@@ -126,6 +129,7 @@ export const GetQuote = (pair, ammount, callback) => {
       (error, response, body) => {
         if (response.statusCode === 200) {
           if (!response.body.error) {
+            console.log(response);
             dispatch({ type: TYPE.SET_QUOTE, payload: response.body.success });
             dispatch({ type: TYPE.GREENLIGHT_TRANSACTION, payload: true });
             dispatch({ type: TYPE.TOGGLE_ACYNC_BUTTONS });
@@ -151,7 +155,9 @@ export const InitiateQuotedTransaction = (pair, ammount, toAdd, refundAdd) => {
           amount: ammount,
           withdrawal: toAdd,
           pair: pair,
-          returnAddress: refundAdd
+          returnAddress: refundAdd,
+          apiKey:
+            "7740f2c6891ef57fc644ffcf7f6326a6e6e8a19219f05048aa1be83c0273dc3884872086b6e5ac11b9004a7a178af4b979c05745462a29236f2f48445d452825"
         }
       },
       (error, response, body) => {
