@@ -257,7 +257,6 @@ export default class MenuBuilder {
             {
               RPC.PROMISE("stop",[]).then(payload =>
               {
-                console.log(payload);
                 setTimeout(() => {
                   remote.getCurrentWindow().close();
                 }, 1000);
