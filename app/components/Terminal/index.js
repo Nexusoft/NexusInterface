@@ -9,6 +9,7 @@ import TerminalCore from "./TerminalCore";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
+import consoleimg from "../../images/console.svg";
 import mainlogo from "images/logo.svg";
 import coreImg from "images/core.svg";
 
@@ -38,8 +39,8 @@ export default class Terminal extends Component {
     }
 
     return (
-      <div id="terminal">
-        <h2>Console</h2>
+      <div id="terminal" className="animated fadeIn">
+        <h2><img src={consoleimg} className="hdr-img"/>Console</h2>
 
         <div className="panel">
           <ul className="tabs">

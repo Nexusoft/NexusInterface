@@ -17,6 +17,9 @@ import styles from "./style.css";
 import profilePlaceholder from "images/Profile_Placeholder.png";
 import { callbackify } from "util";
 
+// import images here
+import addressbookimg from "../../images/addressbook.svg";
+
 const mapStateToProps = state => {
   return { ...state.common, ...state.addressbook };
 };
@@ -671,7 +674,7 @@ class Addressbook extends Component {
 
   render() {
     return (
-      <div id="addressbook">
+      <div id="addressbook" className="animated fadeIn">
         <Modal
           open={this.props.modalVisable}
           center
@@ -680,7 +683,7 @@ class Addressbook extends Component {
         >
           {this.modalInternalBuilder()}
         </Modal>
-        <h2>Address Book</h2>
+        <h2><img src={addressbookimg} className="hdr-img"/>Address Book</h2>
         <a className="refresh" onClick={() => this.exportAddressBook()}>
           Export Contacts
         </a>

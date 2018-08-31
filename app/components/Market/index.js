@@ -12,6 +12,7 @@ import Candlestick from "../Chart/Candlestick";
 import Alert from "../Alert";
 
 // import images
+import marketimg from "../../images/market.svg";
 import bittrexLogo from "../../images/BittrexLogo.png";
 import binanceLogo from "../../images/BINANCE.png";
 import cryptopiaLogo from "../../images/CryptopiaLogo.png";
@@ -356,8 +357,8 @@ class Market extends Component {
   }
   render() {
     return (
-      <div id="market">
-        <h2>Market Information</h2>
+      <div id="market" className="animated fadeIn">
+        <h2><img src={marketimg} className="hdr-img"/>Market Information</h2>
         <a className="refresh" onClick={() => this.refresher()}>
           Refresh Market Data
         </a>
