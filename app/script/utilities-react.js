@@ -32,6 +32,7 @@ export default class Table extends Component {
     {
         const data = this.props.data;
         const columns = this.props.columns;
+        const minRows = this.props.minRows;
         let defaultsorting = []
         if (this.props.defaultsortingid !== null)
         {
@@ -43,7 +44,7 @@ export default class Table extends Component {
             ]
         }
         return(
-            <ReactTable key="table-child" data={data} columns={columns} minRows = {0} defaultSorted = {defaultsorting} 
+            <ReactTable key="table-child" data={data} columns={columns} minRows = {minRows} defaultSorted = {defaultsorting} defaultPageSize={10}
             getTrProps={(state, rowInfo) => {
                 return {
                     onClick: (e) => {

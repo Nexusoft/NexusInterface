@@ -212,7 +212,6 @@ export default class SettingsCore extends Component {
     var settingsObj = settings.GetSettings();
 
     settingsObj.manualDaemon = el.checked;
-
     settings.SaveSettings(settingsObj);
 
     var manualDaemonSettings = document.getElementById(

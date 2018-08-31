@@ -25,10 +25,15 @@ export default function Root({ store, history }) {
   let configSettings = settings.GetSettings();
 
   if (configSettings.wallpaper) {
-    console.log("Applying custom wallpaper: " + configSettings.wallpaper);
+    let customBGImageUrl = configSettings.wallpaper;
+    if ( process.platform === "win32")
+        {
+          customBGImageUrl =  customBGImageUrl.replace(/\\/g, '/');
+        }
+    console.log("Applying custom wallpaper: " + customBGImageUrl);
     document.body.style.setProperty(
       "--background-main-image",
-      "url('" + configSettings.wallpaper + "')"
+      "url('" + customBGImageUrl + "')"
     );
   }
 

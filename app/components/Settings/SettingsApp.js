@@ -27,6 +27,8 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
+var currentBackupLocation = ""; //Might redo to use redux but this is only used to replace using json reader every render;
+
 class SettingsApp extends Component {
   //
   // componentDidMount - Initialize the settings
@@ -43,6 +45,18 @@ class SettingsApp extends Component {
     this.setGoogleAnalytics(settings);
     this.setDeveloperMode(settings);
     this.setInfoPopup(settings);
+
+    if ( this.refs.backupInputField){
+    this.refs.backupInputField.webkitdirectory = true;
+    this.refs.backupInputField.directory = true;}
+    console.log(this.refs);
+  }
+
+  componentDidUpdate()
+  {
+    this.refs.backupInputField.webkitdirectory = true;
+    this.refs.backupInputField.directory = true;
+    console.log(this.refs);
   }
 
   //
@@ -171,6 +185,24 @@ class SettingsApp extends Component {
     }
   }
 
+  /// Update Backup Locaton
+  /// Update settings so that we have the correct back up location
+  updateBackupLocation(event)
+  {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    let incomingPath = el.files[0].path;
+
+    console.log(incomingPath);
+
+    settingsObj.backupLocation = incomingPath;
+
+    settings.SaveSettings(settingsObj);
+    
+  }
+
   //
   // Update Wallpaper
   //
@@ -180,15 +212,16 @@ class SettingsApp extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    console.log(el.files[0].path);
-    settingsObj.wallpaper = el.files[0].path;
-
+    let imagePath = el.files[0].path;
+   //console.log(imagePath);
+    settingsObj.wallpaper = imagePath;
     settings.SaveSettings(settingsObj);
 
-    document.body.style.setProperty(
-      "--background-main-image",
-      "url('" + el.files[0].path + "')"
-    );
+    if ( process.platform === "win32")
+    {
+      imagePath =  imagePath.replace(/\\/g, '/');
+    }
+    document.body.style.setProperty('--background-main-image', "url(\"" + imagePath + "\")");
   }
 
   //
@@ -355,6 +388,14 @@ class SettingsApp extends Component {
     settingsObj.devMode = el.checked;
 
     settings.SaveSettings(settingsObj);
+  }
+
+  returnCurrentBackupLocation()
+  {
+    let currentLocation = require("../../api/settings.js").GetSettings();
+    //set state for currentlocation and return it 
+
+    return ("Current Location: " + currentLocation.backupLocation);
   }
 
   saveEmail() {
