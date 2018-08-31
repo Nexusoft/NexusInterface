@@ -46,8 +46,13 @@
       var settings = require("./api/settings").GetSettings();
 
       if (settings.wallpaper) {
-        console.log("Applying custom wallpaper: " + settings.wallpaper);
-        document.body.style.setProperty('--background-main-image', "url('" + settings.wallpaper + "')");
+        let customBGImageUrl = settings.wallpaper;
+        if ( process.platform === "win32")
+        {
+          customBGImageUrl =  customBGImageUrl.replace(/\\/g, '/');
+        }
+        console.log("Applying custom wallpaper: " + customBGImageUrl);
+        document.body.style.setProperty('--background-main-image', "url('" + customBGImageUrl + "')");
       }
 
     }
