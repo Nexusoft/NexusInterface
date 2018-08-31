@@ -106,17 +106,14 @@
 }
 .custom-modal2 {
   background: #282828;
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-  margin-left: -150px;
-  margin-top: -150px;
-  display: flex;
-  flex-wrap: wrap;
+  animation: mymove2 0.5s ease-in-out;
 }
-.no-button {
+
+#no-button {
   float: right;
+}
+#ok-button {
+  float: left;
 }
 
 .thead {
@@ -167,5 +164,19 @@
   }
   99% {
     transform: translateX(0px);
+  }
+}
+
+/* MODAL ANIMATION */
+@keyframes mymove2 {
+  0% {
+    top: -100%;
+  }
+  50% {
+    top: 25%;
+  }
+
+  100% {
+    top: 0px;
   }
 }
