@@ -53,7 +53,7 @@ export default class Footer extends Component {
             <div className="tooltip top">Style&nbsp;Guide</div>{" "}
           </NavLink>
           <NavLink to="/Exchange">
-            <img src="images/shapeshift.svg" alt="Exchange" />
+            <img src={shapeshift} alt="Exchange" />
             <div className="tooltip top">Exchange</div>
           </NavLink>
           <NavLink to="/List">
