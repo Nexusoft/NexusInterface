@@ -10,8 +10,8 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
 import consoleimg from "../../images/console.svg";
-import mainlogo from "images/logo.svg";
-import coreImg from "images/core.svg";
+import mainlogo from "../../images/logo.svg";
+import coreImg from "../../images/core.svg";
 
 export default class Terminal extends Component {
   componentDidMount() {

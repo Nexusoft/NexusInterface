@@ -18,6 +18,9 @@ import fastImg from "../../images/fast.svg";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
+// import images here
+import shapeshiftimg from "../../images/shapeshift.svg";
+
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -205,7 +208,7 @@ class Exchange extends Component {
     }
 
     return (
-      <div id="Exchange">
+      <div id="Exchange" className="animated fadeIn">
         <Modal
           open={this.props.transactionModalFlag}
           onClose={this.props.clearTransaction}
@@ -217,7 +220,7 @@ class Exchange extends Component {
 
         <div id="Exchange-container">
           <div>
-            <h2>Exchange</h2>
+            <h2><img src={shapeshiftimg} className="hdr-img"/>Exchange</h2>
             <p>powered by ShapeShift</p>
           </div>
           <div className="panel">

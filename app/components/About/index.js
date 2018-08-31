@@ -48,7 +48,7 @@ class About extends Component {
     
     render() {
         return (
-          <div id="About">
+          <div id="About" className="animated fadeIn">
             <h1> ABOUT NEXUS WALLET </h1>
             <row>
               <column>
