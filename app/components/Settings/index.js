@@ -7,6 +7,7 @@ import styles from "./style.css";
 import SettingsApp from "./SettingsApp";
 import SettingsCore from "./SettingsCore";
 import SettingsMarket from "./SettingsMarket";
+import SettingsStyle from "./SettingsStyle";
 import Security from "../Security/Security";
 import Login from "../Security/Login";
 import Unencrypted from "../Security/Unencrypted";
@@ -16,10 +17,12 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
 // import images here
-import coreImg from "images/core.svg";
-import logoImg from "images/logo.svg";
-import lockImg from "images/lock-minting.svg";
-import marketImg from "images/marketstats.svg";
+import settingsimg from "../../images/settings.svg";
+import coreImg from "../../images/core.svg";
+import logoImg from "../../images/logo.svg";
+import lockImg from "../../images/lock-minting.svg";
+import marketImg from "../../images/marketstats.svg";
+import styleImg from "../../images/developer.svg";
 
 const mapStateToProps = state => {
   return {
@@ -56,9 +59,9 @@ class Settings extends Component {
     }
 
     return (
-      <div id="settings">
+      <div id="settings" className="animated fadeIn">
         <div id="settings-container">
-          <h2>Settings</h2>
+          <h2><img src={settingsimg} className="hdr-img"/>Settings</h2>
 
           <div className="panel">
             <ul className="tabs">
@@ -93,6 +96,12 @@ class Settings extends Component {
                   Market
                 </NavLink>
               </li>
+              <li>
+                <NavLink to={`${this.props.match.url}/Style`}>
+                  <img src={styleImg} alt="Style" />
+                  Style
+                </NavLink>
+              </li>
             </ul>
 
             <div className="grid-container">
@@ -112,6 +121,10 @@ class Settings extends Component {
               <Route
                 path={`${this.props.match.path}/Market`}
                 component={SettingsMarket}
+              />
+              <Route
+                path={`${this.props.match.path}/Style`}
+                component={SettingsStyle}
               />
               <Route
                 path={`${this.props.match.path}/Security`}

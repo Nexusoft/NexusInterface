@@ -7,6 +7,8 @@ import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
+import trustimg from "../../images/trust-list.svg";
+
 const mapStateToProps = state => {
   return { ...state.list, ...state.common };
 };
@@ -64,8 +66,8 @@ class List extends Component {
 
   render() {
     return (
-      <div id="trustlist">
-        <h2>Trust List</h2>
+      <div id="trustlist" className="animated fadeIn">
+        <h2><img src={trustimg} className="hdr-img"/>Trust List</h2>
 
         <div className="panel">
           <div id="table-wrap">

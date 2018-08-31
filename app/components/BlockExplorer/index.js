@@ -7,6 +7,9 @@ import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import {remote} from "electron";
 
+import blockexplorerimg from "../../images/blockexplorer.svg";
+
+
 const mapStateToProps = state => {
   return { ...state.common, ...state.transactions };
 };
@@ -45,8 +48,8 @@ class BlockExplorer extends Component {
     }
 
     return (
-      <div id="blockexplorer">
-        <h2>Block Explorer</h2>
+      <div id="blockexplorer" className="animated fadeIn">
+        <h2><img src={blockexplorerimg} />Block Explorer</h2>
 
         <div className="panel" />
       </div>

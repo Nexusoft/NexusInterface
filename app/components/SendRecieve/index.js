@@ -10,6 +10,9 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
 
+// import images here
+import sendimg from "../../images/send.svg";
+
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -466,8 +469,8 @@ class SendRecieve extends Component {
       this.props.SetSendAgainData(null);
     }
     return (
-      <div id="sendrecieve">
-        <h2>Send Nexus </h2>
+      <div id="sendrecieve" className="animated fadeIn">
+        <h2><img src={sendimg} className="hdr-img"/>Send Nexus </h2>
         {/* <button onClick={() => this.props.OpenModal("Transaction Fee Set")}>
           TEST
         </button> */}

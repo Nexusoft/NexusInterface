@@ -11,6 +11,8 @@ import Modal from 'react-responsive-modal';
 import { VictoryBar, VictoryChart,VictoryLabel, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer, Flyout} from 'victory';
 //import Analytics from "../../script/googleanalytics";
 
+import transactionsimg from "../../images/transactions.svg";
+
 import ContextMenuBuilder from "../../contextmenu";
 import config from "../../api/configuration";
 
@@ -1566,14 +1568,16 @@ class Transactions extends Component {
 
     return (
 
-      <div id="transactions">
+      <div id="transactions" className="animated fadeIn">
 
         <Modal open={open} onClose={this.onCloseModal} center classNames={{ modal: 'modal' }}>
-          <h2 >Transaction Details</h2>
+
+          <h2>Transaction Details</h2>
+
           {this.returnModalInternal()}
         </Modal>
 
-        <h2>Transactions</h2>
+        <h2><img src={transactionsimg} className="hdr-img"/>Transactions</h2>
 
         <div className="panel">
 

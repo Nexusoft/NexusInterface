@@ -42,7 +42,7 @@ class SettingsMarket extends Component {
                 value={this.props.tradeVolume}
               />
               <span className="hint">
-                Volume Of NXS you would like to calculate arbitrage for.
+              Volume of NXS you would like to calculate arbitrage for
               </span>
             </div>
 
@@ -57,7 +57,7 @@ class SettingsMarket extends Component {
                 }
               />
               <span className="hint">
-                Threshold of profit to trigger an Arbitrage Alert
+              Threshold of profit to trigger an arbitrage alert
               </span>
             </div>
             <button onClick={() => this.feedback()} className="button primary">

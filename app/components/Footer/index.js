@@ -10,6 +10,7 @@ import addressImg from "images/addressbook.svg";
 import settingsImg from "images/settings.svg";
 import consoleImg from "images/console.svg";
 import styleImg from "images/developer.svg";
+import shapeshift from "images/shapeshift.svg";
 import listImg from "images/trust-list.svg";
 
 export default class Footer extends Component {
@@ -52,7 +53,7 @@ export default class Footer extends Component {
             <div className="tooltip top">Style&nbsp;Guide</div>{" "}
           </NavLink>
           <NavLink to="/Exchange">
-            <img src="images/shapeshiftlogo.png" alt="Exchange" />
+            <img src={shapeshift} alt="Exchange" />
             <div className="tooltip top">Exchange</div>
           </NavLink>
           <NavLink to="/List">

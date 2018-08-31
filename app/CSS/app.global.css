@@ -39,6 +39,8 @@
   /* COLOR PALETTE VARIABLES */
   --color-1: #111111; /* <-- Dark Grey */
   --color-2: #0ca4fb; /* <-- Nexus Blue */
+  --color-3: #556070; /* <-- Light Grey */
+  --color-4: #34495e; /* <-- Medium Grey */
   --color-5: #ffffff; /* <-- White */
 
   /* BACKGROUND IMAGE VARIABLES */
@@ -50,7 +52,8 @@
     rgba(17, 17, 17, 0),
     rgba(17, 17, 17, 0)
   );
-  /* --background-main-image:  url("https://images7.alphacoders.com/428/428134.jpg"); <-- Full Screen Background Image for Nexus Earth Theme */
+
+
   --background-main-image: url("../images/background/hero.svg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
 
   /* FONTS */
@@ -142,4 +145,11 @@ body {
 
 ::-webkit-scrollbar-corner {
   background: rgba(0, 0, 0, 0.5);
+}
+
+/* Header Image */
+.hdr-img {
+  height: 35px;
+  width: 35px;
+  padding-right: 20px;
 }

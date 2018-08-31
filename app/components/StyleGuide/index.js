@@ -5,6 +5,8 @@ import styles from "./style.css";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
+import styleimg from "../../images/developer.svg";
+
 export default class StyleGuide extends Component {
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
@@ -24,8 +26,8 @@ export default class StyleGuide extends Component {
 
   render() {
     return (
-      <div id="styleguide">
-        <h2>Style Guide</h2>
+      <div id="styleguide" className="animated fadeIn">
+        <h2><img src={styleimg} className="hdr-img"/>Style Guide</h2>
 
         <div className="panel">
           <div className="grid-container">

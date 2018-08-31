@@ -8,8 +8,8 @@ Tables
 :root {
 	--table-cell-border-width: 1px;
 	--table-cell-border-style: solid;
-	--table-cell-border-color: #556070;
-	--table-nested-background-color: #556070;
+	--table-cell-border-color: var(--color-3);
+	--table-nested-background-color: var(--color-3);
 	--table-padded-padding-horizontal: 0.5em;
 	--table-padded-padding-vertical: 0.375em;
 	--table-striped-background-color: rgba(255,255,255,0.05);
