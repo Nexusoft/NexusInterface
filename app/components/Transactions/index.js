@@ -24,7 +24,7 @@ import styles from "./style.css";
 let tempaddpress = new Map();
 
 const mapStateToProps = state => {
-  return { ...state.transactions, ...state.common, ...state.overview };
+  return { ...state.transactions, ...state.common, ...state.overview, ...state.addressbook };
 };
 const mapDispatchToProps = dispatch => ({
   SetWalletTransactionArray: returnData =>
@@ -103,7 +103,8 @@ class Transactions extends Component {
       miniChartHeight: 0,
       tableHeight: {
         height: 200
-      }
+      },
+      addressLabels: new Map()
     };
   }
 
@@ -111,38 +112,41 @@ class Transactions extends Component {
   /// Life cycle hook for page getting loaded
   componentDidMount() {
 
-    this.getTransactionData();
+    
     this.updateChartAndTableDimensions();
     this.props.googleanalytics.SendScreen("Transactions");
 
     let myaddresbook = this.readAddressBook();
-    console.log(myaddresbook);
-    for (let index = 0; index < myaddresbook.length; index++) {
-      const element = myaddresbook[index];
-    }
-    for (let key in myaddresbook)
+    if ( myaddresbook != undefined)
     {
-      const eachAddress = myaddresbook[key];
-      const primaryadd = eachAddress["notMine"]["Primary"];
-      if (primaryadd != undefined)
+      for (let key in myaddresbook.addressbook)
       {
-        tempaddpress.set(primaryadd,key);
-      }
-      for (let addressname in eachAddress["notMine"])
-      {
-        tempaddpress.set(eachAddress["notMine"][addressname],key + "-" + addressname);
-      }
-      for (let addressname in eachAddress["mine"])
-      {
-        if (key == "")
+        const eachAddress = myaddresbook.addressbook[key];
+        const primaryadd = eachAddress["notMine"]["Primary"];
+        if (primaryadd != undefined)
         {
-          key = "Mine";
+          tempaddpress.set(primaryadd,key);
         }
-        tempaddpress.set(eachAddress["mine"][addressname],key + "-" + addressname);
+        for (let addressname in eachAddress["notMine"])
+        {
+          tempaddpress.set(eachAddress["notMine"][addressname].address,eachAddress.name + "-" + eachAddress["notMine"][addressname].label);
+        }
       }
     }
-
-    console.log(tempaddpress);
+    for (let key in this.props.myAccounts)
+    {
+      for (let eachaddress in this.props.myAccounts[key].addresses)
+      {
+        tempaddpress.set(this.props.myAccounts[key].addresses[eachaddress],"Mine-" + this.props.myAccounts[key].account);
+      }
+    }
+    this.loadMyAccounts();
+    //console.log(tempaddpress);
+    this.setState(
+      {
+        addressLabels: tempaddpress
+      }
+    );
 
     this.updateChartAndTableDimensions = this.updateChartAndTableDimensions.bind(this);
     window.addEventListener('resize', this.updateChartAndTableDimensions, false);
@@ -158,6 +162,60 @@ class Transactions extends Component {
     
     this.transactioncontextfunction = this.transactioncontextfunction.bind(this);
     window.addEventListener("contextmenu", this.transactioncontextfunction, false);
+  }
+
+  loadMyAccounts() {
+    RPC.PROMISE("listaccounts", [0]).then(payload => {
+      Promise.all(
+        Object.keys(payload).map(account =>
+          RPC.PROMISE("getaddressesbyaccount", [account])
+        )
+      ).then(payload => {
+        let validateAddressPromises = [];
+
+        payload.map(element => {
+          element.addresses.map(address => {
+            validateAddressPromises.push(
+              RPC.PROMISE("validateaddress", [address])
+            );
+          });
+        });
+
+        Promise.all(validateAddressPromises).then(payload => {
+          let accountsList = [];
+          let myaccts = payload.map(e => {
+            if (e.ismine && e.isvalid) {
+              let index = accountsList.findIndex(ele => {
+                if (ele.account === e.account) {
+                  return ele;
+                }
+              });
+
+              if (index === -1) {
+                accountsList.push({
+                  account: e.account,
+                  addresses: [e.address]
+                });
+              } else {
+                accountsList[index].addresses.push(e.address);
+              }
+            }
+          });
+          for (let key in accountsList)
+          {
+            for (let eachaddress in accountsList[key].addresses)
+            {
+              tempaddpress.set(accountsList[key].addresses[eachaddress],"Mine-" + accountsList[key].account);
+            }
+          }
+          this.setState(
+            {
+              addressLabels: tempaddpress
+            },() => { this.getTransactionData();}
+          );
+        });
+      });
+    });
   }
 
   /// Component Did Update
@@ -331,6 +389,7 @@ class Transactions extends Component {
 
     sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
 
+    /* //Putting this on hold
     //Add Resending the transaction option
     transactiontablecontextmenu.append(
       new remote.MenuItem({
@@ -341,7 +400,7 @@ class Transactions extends Component {
           
         }
       })
-    );
+    ); */
     /*  Currently Block Explorer is turned off. 
     //Add Open Explorer Option
     transactiontablecontextmenu.append(
@@ -381,7 +440,7 @@ class Transactions extends Component {
   {
     RPC.PROMISE("listaccounts",[0]).then(payload =>
       {
-        console.log(payload);
+        //console.log(payload);
         let listedaccounts = Object.keys(payload);
         let promisList = [];
         listedaccounts.forEach(element => {
@@ -424,7 +483,7 @@ class Transactions extends Component {
           
         Promise.all(promisList).then(payload =>
         {
-          console.log(payload);
+          //console.log(payload);
           payload.forEach(element => {
             for (let index = 0; index < element.length; index++) {
               const element2 = element[index];
@@ -433,7 +492,7 @@ class Transactions extends Component {
               {
                 return;
               }
-              const getLable = tempaddpress.get(element2.address);
+              const getLable = this.state.addressLabels.get(element2.address);
               
               let tempTrans = 
               {
@@ -471,7 +530,7 @@ class Transactions extends Component {
               tableColumns:tabelheaders,
               zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date((tempWalletTransactions[tempWalletTransactions.length - 1].time + 1000) * 1000)] }
             },() => {
-              console.log(this.props.walletitems);
+              //console.log(this.props.walletitems);
               for (let index = 0; index < this.state.walletTransactions.length; index++) {
               //this.getDataorNewData(index);
             
@@ -966,7 +1025,8 @@ class Transactions extends Component {
   /// The event listener for when you zoom in and out
   handleZoom(domain) {
     //console.log(domain);
-    domain.y[0] = 5;
+    domain.x[0] = new Date(domain.x[0]);
+    domain.x[1] = new Date(domain.x[1]);
     let high = 0;
     let low = 0;
     this.props.walletitems.forEach(element => {

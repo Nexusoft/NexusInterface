@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => ({
 
 var currentBackupLocation = ""; //Might redo to use redux but this is only used to replace using json reader every render;
 
-export default class SettingsApp extends Component {
+class SettingsApp extends Component {
   //
   // componentDidMount - Initialize the settings
   //
