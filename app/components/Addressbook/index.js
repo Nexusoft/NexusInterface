@@ -293,7 +293,10 @@ class Addressbook extends Component {
             >
               {index === -1 ? "Add Contact" : "Edit Contact"}
             </button>
-            <button className="button" onClick={() => this.props.ToggleModal()}>
+            <button
+              className="button"
+              onClick={() => this.props.ToggleCreateModal()}
+            >
               Cancel
             </button>
           </div>
@@ -308,18 +311,29 @@ class Addressbook extends Component {
                   <div>{acct.account === "" ? "My Account" : acct.account}</div>
                   {acct.addresses.map(address => {
                     return (
-                      <div
-                        key={address}
-                        onClick={event => this.copyaddress(event)}
-                        className="myAddress"
-                      >
-                        {address}
-                      </div>
+                      <span>
+                        <div
+                          key={address}
+                          onClick={event => this.copyaddress(event)}
+                          className="myAddress"
+                        >
+                          {address}
+                        </div>{" "}
+                        <span key={address + i} className="tooltip">
+                          Click to copy
+                        </span>{" "}
+                      </span>
                     );
                   })}
                 </div>
               );
             })}
+            <button
+              className="button primary"
+              onClick={() => this.props.SetModalType("NEW_MY_ADDRESS")}
+            >
+              Cerate new address
+            </button>
           </div>
         );
         break;
@@ -360,9 +374,54 @@ class Addressbook extends Component {
           </div>
         );
         break;
-
+      case "NEW_MY_ADDRESS":
+        return (
+          <div>
+            <div className="field">
+              <label htmlFor="new-account-name">Name (Optional)</label>
+              <input
+                ref="addContactName"
+                id="new-account-name"
+                type="text"
+                value={this.props.prototypeName}
+                onChange={e => this.props.EditProtoName(e.target.value)}
+                placeholder="Name"
+                required
+              />
+            </div>
+            <button
+              className="button primary"
+              onClick={() => this.createAddress()}
+            >
+              Create
+            </button>
+          </div>
+        );
+        break;
       default:
         break;
+    }
+  }
+
+  createAddress() {
+    if (this.props.prototypeName) {
+      RPC.PROMISE("getnewaddress", [this.props.prototypeName])
+        .then(success => {
+          this.props.ToggleModal();
+          this.loadMyAccounts();
+        })
+        .catch(e => {
+          alert(e);
+        });
+    } else {
+      RPC.PROMISE("getnewaddress", [""])
+        .then(success => {
+          this.props.ToggleModal();
+          this.loadMyAccounts();
+        })
+        .catch(e => {
+          alert(e);
+        });
     }
   }
 
@@ -580,7 +639,8 @@ class Addressbook extends Component {
                 </div>
               </div>
             );
-          })}
+          })}{" "}
+          <span className="tooltip">Click to copy</span>
         </div>
       </div>
     );
@@ -682,7 +742,8 @@ class Addressbook extends Component {
                         >
                           {this.props.addressbook[this.props.selected].name}
                         </span>
-                      )}
+                      )}{" "}
+                      <div className="tooltip">Doubleclick to edit</div>
                     </legend>
                     <div id="contactInformation">
                       <div>
@@ -730,6 +791,7 @@ class Addressbook extends Component {
                               {this.phoneFormatter()}
                             </span>
                           )}
+                          <span className="tooltip">Doubleclick to edit</span>
                         </div>
                         {this.localTimeFormater()}
                         <div id="notesContainer">
@@ -779,6 +841,7 @@ class Addressbook extends Component {
                               }
                             </div>
                           )}
+                          <span className="tooltip">Doubleclick to edit</span>
                         </div>
                       </div>
                       {this.props.addressbook[this.props.selected].imgSrc !==
@@ -795,7 +858,6 @@ class Addressbook extends Component {
                           <img src={profilePlaceholder} />
                         </label>
                       )}
-
                       <input
                         type="file"
                         accept="image/*"
@@ -807,8 +869,10 @@ class Addressbook extends Component {
                           )
                         }
                         id="picUploader"
-                        data-tooltip="The profile image for this contact"
-                      />
+                      />{" "}
+                      {/* <span className="tooltip left">
+                        Click to change photo
+                      </span> */}
                     </div>
                   </fieldset>
                   <div

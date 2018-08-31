@@ -19,7 +19,8 @@ const initialState = {
   editName: false,
   editTZ: false,
   actionItem: "",
-  hoveredOver: ""
+  hoveredOver: "",
+  createAddress: false
 };
 
 export default (state = initialState, action) => {
@@ -519,6 +520,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selected: action.payload
+      };
+      break;
+    case TYPE.TOGGLE_CREATE_ADDRESS:
+      return {
+        ...state,
+        createAddress: !state.createAddress
       };
       break;
     case TYPE.SET_MOUSE_POSITION:

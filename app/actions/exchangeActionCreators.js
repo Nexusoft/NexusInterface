@@ -129,6 +129,9 @@ export const GetQuote = (pair, ammount, callback) => {
             dispatch({ type: TYPE.SET_QUOTE, payload: response.body.success });
             dispatch({ type: TYPE.GREENLIGHT_TRANSACTION, payload: true });
             dispatch({ type: TYPE.TOGGLE_ACYNC_BUTTONS });
+          } else {
+            dispatch({ type: TYPE.TOGGLE_ACYNC_BUTTONS });
+            alert(response.body.error);
           }
         } else {
           console.log(response);

@@ -286,3 +286,11 @@ export const DeleteAddress = (actionItem, selectedIndex) => {
     });
   };
 };
+
+export const ToggleCreateModal = () => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.TOGGLE_CREATE_ADDRESS
+    });
+  };
+};
