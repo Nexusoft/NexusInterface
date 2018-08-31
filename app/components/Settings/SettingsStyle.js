@@ -40,13 +40,17 @@ export default class SettingsStyle extends Component {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
-    
-    console.log(el.files[0].path);
-    settingsObj.wallpaper = el.files[0].path;
 
+    let imagePath = el.files[0].path;
+   //console.log(imagePath);
+    settingsObj.wallpaper = imagePath;
     settings.SaveSettings(settingsObj);
 
-    document.body.style.setProperty('--background-main-image', "url('" + el.files[0].path + "')");
+    if ( process.platform === "win32")
+    {
+      imagePath =  imagePath.replace(/\\/g, '/');
+    }
+    document.body.style.setProperty('--background-main-image', "url(\"" + imagePath + "\")");
   }
 
 
