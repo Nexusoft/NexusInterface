@@ -65,6 +65,7 @@ class List extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <div id="trustlist" className="animated fadeIn">
         <h2>
@@ -73,23 +74,25 @@ class List extends Component {
         </h2>
 
         <div className="panel">
-          {/* {this.props. */}
-          <div id="table-wrap">
-            <table>
-              <thead>
-                <th>
-                  <div>Address</div>
-                </th>
+          {this.props.isInSync === false ? (
+            <h2>Please let your wallet sync with the network.</h2>
+          ) : (
+            <div id="table-wrap">
+              <table>
+                <thead>
+                  <th>
+                    <div>Address</div>
+                  </th>
 
-                <th onClick={() => this.props.ToggleSortDir()}>
-                  <div>Interest Rate</div>
-                </th>
-              </thead>
+                  <th onClick={() => this.props.ToggleSortDir()}>
+                    <div>Interest Rate</div>
+                  </th>
+                </thead>
 
-              <tbody>{this.buildList()}</tbody>
-            </table>
-          </div>
-          {/* } */}
+                <tbody>{this.buildList()}</tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     );
