@@ -246,10 +246,10 @@ export const AddContact = (name, address, num, notes, TZ) => {
 };
 
 export const AddAddress = (name, address, index) => {
-  console.log(name, address, index);
   return dispatch => {
     RPC.PROMISE("validateaddress", [address])
       .then(payload => {
+        console.log(payload);
         if (payload.isvalid) {
           if (payload.ismine) {
             return {
@@ -272,11 +272,20 @@ export const AddAddress = (name, address, index) => {
           type: TYPE.ADD_NEW_ADDRESS,
           payload: { newAddress: result, index: index }
         });
-
+        dispatch({ type: TYPE.CLEAR_PROTOTYPE });
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
+        dispatch({ type: TYPE.SHOW_MODAL, payload: "Address Added" });
+        setTimeout(() => {
+          dispatch({ type: TYPE.HIDE_MODAL });
+        }, 3000);
       })
       .catch(e => {
-        console.log(e);
+        dispatch({ type: TYPE.CLEAR_PROTOTYPE });
+        dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
+        dispatch({ type: TYPE.SHOW_MODAL, payload: "Invalid Address" });
+        setTimeout(() => {
+          dispatch({ type: TYPE.HIDE_MODAL });
+        }, 3000);
       });
   };
 };

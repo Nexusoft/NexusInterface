@@ -301,10 +301,7 @@ class Addressbook extends Component {
             >
               {index === -1 ? "Add Contact" : "Edit Contact"}
             </button>
-            <button
-              className="button"
-              onClick={() => this.props.ToggleCreateModal()}
-            >
+            <button className="button" onClick={() => this.props.ToggleModal()}>
               Cancel
             </button>
           </div>
@@ -523,6 +520,14 @@ class Addressbook extends Component {
               );
             }
           }}
+          onKeyDown={e => {
+            if (e.which === 13 || e.which === 9) {
+              this.props.SaveTz(
+                this.props.selected,
+                this.props.prototypeTimezone
+              );
+            }
+          }}
         >
           {" "}
           Local Time:
@@ -693,9 +698,9 @@ class Addressbook extends Component {
           <img src={addressbookimg} className="hdr-img" />
           Address Book
         </h2>
-        <a className="refresh" onClick={() => this.exportAddressBook()}>
+        {/* <a className="refresh" onClick={() => this.exportAddressBook()}>
           Export Contacts
-        </a>
+        </a> */}
         <div className="panel">
           <div id="addressbook-controls">
             <div id="addressbook-search">
@@ -736,6 +741,14 @@ class Addressbook extends Component {
                           onChange={e =>
                             this.props.EditProtoName(e.target.value)
                           }
+                          onKeyDown={e => {
+                            if (e.which === 13 || e.which === 9) {
+                              this.props.SaveName(
+                                this.props.selected,
+                                this.props.prototypeName
+                              );
+                            }
+                          }}
                           placeholder="Name"
                           onDoubleClick={() =>
                             this.props.SaveName(
@@ -780,6 +793,14 @@ class Addressbook extends Component {
                               onChange={e =>
                                 this.phoneNumberHandler(e.target.value)
                               }
+                              onKeyDown={e => {
+                                if (e.which === 13 || e.which === 9) {
+                                  this.props.SavePhone(
+                                    this.props.selected,
+                                    this.props.prototypePhoneNumber
+                                  );
+                                }
+                              }}
                               value={this.props.prototypePhoneNumber}
                               placeholder="Phone #"
                               onDoubleClick={() =>
@@ -829,6 +850,14 @@ class Addressbook extends Component {
                                     this.props.prototypeNotes
                                   )
                                 }
+                                onKeyDown={e => {
+                                  if (e.which === 13 || e.which === 9) {
+                                    this.props.SaveNotes(
+                                      this.props.selected,
+                                      this.props.prototypeNotes
+                                    );
+                                  }
+                                }}
                                 onChange={e =>
                                   this.props.EditProtoNotes(e.target.value)
                                 }

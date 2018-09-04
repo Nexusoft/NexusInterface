@@ -97,7 +97,7 @@ class Header extends Component {
             return b;
           }
         });
-
+        console.log("MRT: ", MRT);
         if (MRT.category === "receive") {
           this.props.OpenModal("receive");
         } else if (MRT.category === "send") {
@@ -170,6 +170,9 @@ class Header extends Component {
         break;
       case "Invalid Address":
         return <h2>Invalid Address</h2>;
+        break;
+      case "Address Added":
+        return <h2>Address Added</h2>;
         break;
       case "No Addresses":
         return <h2>No Addresses</h2>;
