@@ -42,27 +42,34 @@ export default class SettingsStyle extends Component {
     var settingsObj = settings.GetSettings();
 
     let imagePath = el.files[0].path;
-   //console.log(imagePath);
+    //console.log(imagePath);
     settingsObj.wallpaper = imagePath;
     settings.SaveSettings(settingsObj);
 
-    if ( process.platform === "win32")
-    {
-      imagePath =  imagePath.replace(/\\/g, '/');
+    if (process.platform === "win32") {
+      imagePath = imagePath.replace(/\\/g, "/");
     }
-    document.body.style.setProperty('--background-main-image', "url(\"" + imagePath + "\")");
+    document.body.style.setProperty(
+      "--background-main-image",
+      'url("' + imagePath + '")'
+    );
   }
-
 
   render() {
     return (
       <section id="application">
         <form className="aligned">
-
-            <div className="field">
-                <label htmlFor="wallpaper">Wallpaper</label>
-                <input id="wallpaper" type="file" size="25" onChange={this.updateWallpaper} data-tooltip="The background wallpaper for your wallet"/>
-            </div>
+          <div className="field">
+            <label htmlFor="wallpaper">Wallpaper</label>
+            <input
+              id="wallpaper"
+              accept="image/*"
+              type="file"
+              size="25"
+              onChange={this.updateWallpaper}
+              data-tooltip="The background wallpaper for your wallet"
+            />
+          </div>
 
           <div className="clear-both" />
         </form>
