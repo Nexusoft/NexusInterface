@@ -67,9 +67,13 @@ class List extends Component {
   render() {
     return (
       <div id="trustlist" className="animated fadeIn">
-        <h2><img src={trustimg} className="hdr-img"/>Trust List</h2>
+        <h2>
+          <img src={trustimg} className="hdr-img" />
+          Trust List
+        </h2>
 
         <div className="panel">
+          {/* {this.props. */}
           <div id="table-wrap">
             <table>
               <thead>
@@ -85,6 +89,7 @@ class List extends Component {
               <tbody>{this.buildList()}</tbody>
             </table>
           </div>
+          {/* } */}
         </div>
       </div>
     );
