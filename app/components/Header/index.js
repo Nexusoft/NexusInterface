@@ -54,6 +54,15 @@ class Header extends Component {
     this.props.history.push("/");
   }
 
+  doNotify(context, message) {
+    Notification.requestPermission().then((result)=>{
+  
+        var myNotification = new Notification(context, {
+            'body': message
+        })
+    })
+  };
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
       this.props.Unlock();
@@ -77,9 +86,17 @@ class Header extends Component {
         });
         console.log(MRT);
         if (MRT.category === "receive") {
+          this.doNotify('Received', MRT.amount + ' NXS');
           this.props.OpenModal("receive");
         } else if (MRT.category === "send") {
+          this.doNotify('Sent', MRT.amount + ' NXS');
           this.props.OpenModal("send");
+        } else if (MRT.category === "genesis") {
+          this.doNotify('Genesis', MRT.amount + ' NXS');
+          this.props.OpenModal("genesis");
+        } else if (MRT.category === "trust") {
+          this.doNotify('Trust', MRT.amount + ' NXS');
+          this.props.OpenModal("trust");
         }
       });
     } else {
@@ -150,6 +167,12 @@ class Header extends Component {
         break;
       case "send":
         return <h2>Transaction Sent</h2>;
+        break;
+      case "genesis":
+        return <h2>Genesis Transaction</h2>;
+        break;
+      case "trust":
+        return <h2>Trust Transaction</h2>;
         break;
       case "This is an address regiestered to this wallet":
         return <h2>This is an address regiestered to this wallet</h2>;
@@ -226,7 +249,7 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
-
+        {/* <button onClick={()=>this.doNotify('test', 'just a test string')}> Test Notification </button> */}
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );
