@@ -11,7 +11,9 @@ const initialState = {
   modaltype: "",
   confirmation: false,
   actionItem: "",
-  modalVisable: false
+  modalVisable: false,
+  heighestPeerBlock: 0,
+  isInSync: false
 };
 
 export default (state = initialState, action) => {
@@ -27,6 +29,9 @@ export default (state = initialState, action) => {
         ...state,
         modalVisable: !state.modalVisable
       };
+      break;
+    case TYPE.SET_SYNC_STATUS:
+      return { ...state, isInSync: action.payload };
       break;
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
@@ -89,8 +94,12 @@ export default (state = initialState, action) => {
         openThirdModal: false,
         modaltype: action.payload
       };
-
       break;
+    case TYPE.SET_HIGHEST_PEER_BLOCK:
+      return {
+        ...state,
+        heighestPeerBlock: action.payload
+      };
     case TYPE.ENCRYPTED:
       return {
         ...state,
