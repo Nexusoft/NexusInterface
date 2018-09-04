@@ -2,6 +2,18 @@ import * as TYPE from "./actiontypes";
 import * as RPC from "../script/rpc";
 import config from "../api/configuration";
 
+export const OpenModal = content => {
+  return dispatch => {
+    dispatch({ type: TYPE.SHOW_MODAL, payload: content });
+  };
+};
+
+export const CloseModal = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.HIDE_MODAL });
+  };
+};
+
 export const ToggleModal = () => {
   return dispatch => {
     dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
