@@ -217,7 +217,12 @@ class Addressbook extends Component {
     // remove the temporary element from the DOM
     input.remove();
 
-    alert("copyed");
+    this.props.OpenModal("Copied");
+    setTimeout(() => {
+      if (this.props.open) {
+        this.props.CloseModal();
+      }
+    }, 3000);
   }
 
   modalInternalBuilder() {
@@ -673,6 +678,7 @@ class Addressbook extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <div id="addressbook" className="animated fadeIn">
         <Modal
@@ -683,7 +689,10 @@ class Addressbook extends Component {
         >
           {this.modalInternalBuilder()}
         </Modal>
-        <h2><img src={addressbookimg} className="hdr-img"/>Address Book</h2>
+        <h2>
+          <img src={addressbookimg} className="hdr-img" />
+          Address Book
+        </h2>
         <a className="refresh" onClick={() => this.exportAddressBook()}>
           Export Contacts
         </a>
