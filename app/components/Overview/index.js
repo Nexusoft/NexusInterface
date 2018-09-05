@@ -87,7 +87,6 @@ class Overview extends Component {
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
-          console.log(response);
           this.props.setBTC(body.data.quotes.BTC.price);
           this.props.set24hrChange(body.data.quotes.USD.percent_change_24h);
           this.props.setSupply(body.data.circulating_supply);
@@ -95,7 +94,6 @@ class Overview extends Component {
         }
       }
     );
-    console.log(this.props.history);
   }
 
   componentWillUnmount() {
@@ -108,16 +106,13 @@ class Overview extends Component {
         console.log("UPDATE BLOCKS");
         this.redrawCurves();
       }
-      
     }
-    if (this.props.connections != previousprops.connections)
-      {
-        if (this.props.connections != 0 && previousprops.connections != 0)
-        {
-          console.log("REMOVED OLD BLOCKS AND DID A NEW ONE");
-          this.removeOldPoints();
-        }
+    if (this.props.connections != previousprops.connections) {
+      if (this.props.connections != 0 && previousprops.connections != 0) {
+        console.log("REMOVED OLD BLOCKS AND DID A NEW ONE");
+        this.removeOldPoints();
       }
+    }
   }
 
   setupcontextmenu(e) {
@@ -130,7 +125,7 @@ class Overview extends Component {
 
   calculateUSDvalue() {
     let USDvalue = this.props.balance * this.props.USD;
-    console.log(this.props.BTC);
+
     if (USDvalue === 0) {
       USDvalue = `${USDvalue}.00`;
     } else {
@@ -144,7 +139,6 @@ class Overview extends Component {
     var settings = require("../../api/settings.js").GetSettings();
     settings.acceptedagreement = true;
     require("../../api/settings.js").SaveSettings(settings);
-    console.log("accepted");
   }
 
   returnLicenseModalInternal() {
@@ -436,8 +430,15 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
-        <NetworkGlobe handleOnLineRender={e => (this.redrawCurves = e)} handleOnRemoveOldPoints = { e => (this.removeOldPoints = e)} />
-        <div className="maxmindCopyright" >Globe includes GeoLite2 data created by MaxMind <br/>available at <a href="http://www.maxmind.com">http://www.maxmind.com</a></div>
+        <NetworkGlobe
+          handleOnLineRender={e => (this.redrawCurves = e)}
+          handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+        />
+        <div className="maxmindCopyright">
+          Globe includes GeoLite2 data created by MaxMind <br />
+          available at{" "}
+          <a href="http://www.maxmind.com">http://www.maxmind.com</a>
+        </div>
         <div className="right-stats">
           <div
             id="nxs-connections-info"

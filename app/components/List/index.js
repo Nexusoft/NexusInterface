@@ -65,7 +65,6 @@ class List extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div id="trustlist" className="animated fadeIn">
         <h2>

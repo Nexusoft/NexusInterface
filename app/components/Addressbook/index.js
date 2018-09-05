@@ -11,7 +11,6 @@ import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/addressbookActionCreators";
 import TimeZoneSelector from "./timeZoneSelector";
 
-import ContactView from "./ContactView";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 import profilePlaceholder from "images/Profile_Placeholder.png";
@@ -183,7 +182,6 @@ class Addressbook extends Component {
 
   componentDidUpdate(previousprops) {
     if (this.props.save) {
-      console.log("SAVE");
       config.WriteJson("addressbook.json", {
         addressbook: this.props.addressbook
       });
@@ -848,7 +846,7 @@ class Addressbook extends Component {
       if (e.notMine.length > 0) {
         e.notMine.map(add => {
           let label = "";
-          console.log(add.label);
+
           if (add.label === "'s Address") {
             label = e.name + add.label;
           } else {
@@ -859,8 +857,6 @@ class Addressbook extends Component {
         rows.push(["", `${e.name}'s addresses`, "", "", ""]);
         rows.push(tempNotMine);
       }
-
-      console.log(csvContent);
     });
     rows.forEach(function(rowArray) {
       let row = rowArray.join(",");
@@ -878,7 +874,6 @@ class Addressbook extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div id="addressbook" className="animated fadeIn">
         <Modal

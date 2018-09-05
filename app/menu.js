@@ -11,14 +11,6 @@ export default class MenuBuilder {
   }
 
   buildMenu(self) {
-    if (
-      process.env.NODE_ENV === "development" ||
-      process.env.DEBUG_PROD === "true"
-    ) {
-      // console.log(remote);
-      // this.setupDevelopmentEnvironment();
-    }
-
     let template;
 
     if (process.platform === "darwin") {
@@ -119,7 +111,6 @@ export default class MenuBuilder {
           label: "Toggle Developer Tools",
           accelerator: "Alt+Command+I",
           click: () => {
-            console.log(this.mainWindow);
             this.mainWindow.toggleDevTools();
           }
         }
@@ -208,31 +199,35 @@ export default class MenuBuilder {
             click: () => {
               let now = new Date().toISOString().replace(/[^0-9]/g, "_");
               let BackupDir = process.env.HOME + "/NexusBackups";
-              if ( process.platform === "win32")
-              {
-                BackupDir =  BackupDir.replace(/\\/g, '/');
+              if (process.platform === "win32") {
+                BackupDir = BackupDir.replace(/\\/g, "/");
               }
               let fs = require("fs");
               let ifBackupDirExists = fs.existsSync(BackupDir);
-              if (ifBackupDirExists == undefined || ifBackupDirExists == false)
-              {
+              if (
+                ifBackupDirExists == undefined ||
+                ifBackupDirExists == false
+              ) {
                 fs.mkdirSync(BackupDir);
               }
-              RPC.PROMISE("backupwallet", [BackupDir + "/NexusBackup_" + now + ".dat"]);
+              RPC.PROMISE("backupwallet", [
+                BackupDir + "/NexusBackup_" + now + ".dat"
+              ]);
             }
           },
           {
             label: "Open Backups Folder",
             click() {
-              let fs = require("fs"); 
+              let fs = require("fs");
               let BackupDir = process.env.HOME + "/NexusBackups";
-              if ( process.platform === "win32")
-              {
-                BackupDir =  BackupDir.replace(/\\/g, '/');
+              if (process.platform === "win32") {
+                BackupDir = BackupDir.replace(/\\/g, "/");
               }
               let ifBackupDirExists = fs.existsSync(BackupDir);
-              if (ifBackupDirExists == undefined || ifBackupDirExists == false)
-              {
+              if (
+                ifBackupDirExists == undefined ||
+                ifBackupDirExists == false
+              ) {
                 fs.mkdirSync(BackupDir);
               }
               let asd = shell.openItem(BackupDir);
@@ -240,30 +235,25 @@ export default class MenuBuilder {
           },
           {
             label: "Send To Tray",
-            click(){
+            click() {
               remote.getCurrentWindow().hide();
-             
             }
           },
           {
             label: "Close Window Keep Daemon",
-            click(){
+            click() {
               remote.getCurrentWindow().close();
-             
             }
           },
           {
             label: "Close And Shutdown Daemon",
-            click()
-            {
-              RPC.PROMISE("stop",[]).then(payload =>
-              {
+            click() {
+              RPC.PROMISE("stop", []).then(payload => {
                 setTimeout(() => {
                   remote.getCurrentWindow().close();
                 }, 1000);
               });
             }
-            
           }
         ]
       },

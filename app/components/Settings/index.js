@@ -54,14 +54,17 @@ class Settings extends Component {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
       console.log("Redirecting to Application Settings");
-      console.log(this.props);
+
       return <Redirect to={`${this.props.match.url}/App`} />;
     }
 
     return (
       <div id="settings" className="animated fadeIn">
         <div id="settings-container">
-          <h2><img src={settingsimg} className="hdr-img"/>Settings</h2>
+          <h2>
+            <img src={settingsimg} className="hdr-img" />
+            Settings
+          </h2>
 
           <div className="panel">
             <ul className="tabs">

@@ -68,7 +68,7 @@ const installExtensions = async () => {
 
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
-  ).catch(console.log);
+  ).catch();
 };
 
 //
@@ -118,31 +118,28 @@ function setupTray() {
   }
 
   var contextMenu = Menu.buildFromTemplate([
-      {
-          label: 'Open Nexus', click: function () {
-            mainWindow.show();
-          }
-      },
-      {
-          label: 'Quit Nexus', click: function () {
-              app.isQuiting = true;
-              let settings = require("./api/settings").GetSettings();
-              if (settings.manualDaemon == false){
-                RPC.PROMISE("stop",[]).then(payload =>
-                  {
-                    console.log(payload);
-                    setTimeout(() => {
-                      remote.getCurrentWindow().close();
-                    }, 1000);
-                  });
-              }
-              else
-              {
-                mainWindow.close();
-              }
-
-          }
+    {
+      label: "Open Nexus",
+      click: function() {
+        mainWindow.show();
       }
+    },
+    {
+      label: "Quit Nexus",
+      click: function() {
+        app.isQuiting = true;
+        let settings = require("./api/settings").GetSettings();
+        if (settings.manualDaemon == false) {
+          RPC.PROMISE("stop", []).then(payload => {
+            setTimeout(() => {
+              remote.getCurrentWindow().close();
+            }, 1000);
+          });
+        } else {
+          mainWindow.close();
+        }
+      }
+    }
   ]);
 
   tray.setContextMenu(contextMenu);

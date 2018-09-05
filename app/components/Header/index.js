@@ -30,16 +30,13 @@ const mapDispatchToProps = dispatch =>
 
 class Header extends Component {
   componentDidMount() {
-    const menuBuilder = new MenuBuilder(
-      require("electron").remote.getCurrentWindow().id
-    );
+    const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     var self = this;
     this.props.SetGoogleAnalytics(GOOGLE);
     let encryptionStatus = false;
     if (this.props.unlocked_until !== undefined) {
       encryptionStatus = true;
     }
-    console.log(this.props);
 
     this.props.LoadAddressBook();
 
@@ -97,7 +94,7 @@ class Header extends Component {
             return b;
           }
         });
-        console.log("MRT: ", MRT);
+
         if (MRT.category === "receive") {
           this.props.OpenModal("receive");
         } else if (MRT.category === "send") {

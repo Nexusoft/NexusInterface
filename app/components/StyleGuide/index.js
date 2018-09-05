@@ -27,7 +27,10 @@ export default class StyleGuide extends Component {
   render() {
     return (
       <div id="styleguide" className="animated fadeIn">
-        <h2><img src={styleimg} className="hdr-img"/>Style Guide</h2>
+        <h2>
+          <img src={styleimg} className="hdr-img" />
+          Style Guide
+        </h2>
 
         <div className="panel">
           <div className="grid-container">
@@ -820,8 +823,4 @@ export default class StyleGuide extends Component {
       </div>
     );
   }
-}
-
-function testmodal() {
-  console.log("test modal");
 }
