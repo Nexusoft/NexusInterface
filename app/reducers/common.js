@@ -13,7 +13,8 @@ const initialState = {
   actionItem: "",
   modalVisable: false,
   heighestPeerBlock: 0,
-  isInSync: false
+  isInSync: false,
+  blockDate: "Getting Next Block..."
 };
 
 export default (state = initialState, action) => {
@@ -49,6 +50,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         encrypted: false
+      };
+      break;
+    case TYPE.BLOCK_DATE:
+      return {
+        ...state,
+        blockDate: action.payload
       };
 
     case TYPE.SHOW_MODAL:

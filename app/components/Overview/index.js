@@ -68,7 +68,10 @@ const mapDispatchToProps = dispatch => ({
   setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
   setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
   set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
-  setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate })
+  setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate }),
+  BlockDate: stamp => {
+    dispatch({ type: TYPE.BLOCK_DATE, payload: stamp });
+  }
 });
 
 //let experimentalOpen = true;
@@ -104,9 +107,15 @@ class Overview extends Component {
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
         console.log("UPDATE BLOCKS");
+
         this.redrawCurves();
       }
     }
+    if (this.props.blocks > previousprops.blocks) {
+      let newDate = new Date();
+      this.props.BlockDate(newDate);
+    }
+
     if (this.props.connections != previousprops.connections) {
       if (this.props.connections != 0 && previousprops.connections != 0) {
         console.log("REMOVED OLD BLOCKS AND DID A NEW ONE");
@@ -341,6 +350,21 @@ class Overview extends Component {
     //if (testinglines == true)
   }
 
+  returnIfGlobeEnabled() {
+    let settings = require("../../api/settings.js").GetSettings();
+    let isglobeopen = settings.renderGlobe;
+    if (isglobeopen == false) {
+      return null;
+    } else {
+      return (
+        <NetworkGlobe
+          handleOnLineRender={e => (this.redrawCurves = e)}
+          handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+        />
+      );
+    }
+  }
+
   render() {
     const agreementOpen = this.returnIfLicenseShouldBeOpen();
     const experimentalOpenbool = this.returnIfExperimentalShouldBeOpen();
@@ -430,10 +454,7 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
-        <NetworkGlobe
-          handleOnLineRender={e => (this.redrawCurves = e)}
-          handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
-        />
+        {this.returnIfGlobeEnabled()}
         <div className="maxmindCopyright">
           Globe includes GeoLite2 data created by MaxMind <br />
           available at{" "}
@@ -465,7 +486,11 @@ class Overview extends Component {
           <div id="nxs-blocks-info" className="animated fadeInDown delay-1s">
             <div className="h2">Block Count</div>
             <img src={nxsblocks} />
+
             <div className="overviewValue">{this.props.blocks}</div>
+            <span className="tooltip left">
+              {this.props.blockDate.toLocaleString()}
+            </span>
           </div>
           <div
             id="nxs-trustweight-info"

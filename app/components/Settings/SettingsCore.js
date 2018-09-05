@@ -8,10 +8,9 @@ import { remote } from "electron";
 import { access } from "fs";
 
 export default class SettingsCore extends Component {
-  //
-  // componentDidMount - Initialize the settings
-  //
 
+  /// Compent Did Mount
+  /// React Lifecycle on page load. 
   componentDidMount() {
     var settings = require("../../api/settings.js").GetSettings();
 
@@ -29,10 +28,8 @@ export default class SettingsCore extends Component {
     // this.setOptionalTransactionFee(settings);
   }
 
-  //
-  // Set manual daemon mode
-  //
-
+  /// Set Manual Daemon
+  /// Sets the HTML element toggle for Manual Deamon Mode
   setManualDaemon(settings) {
     var manualDaemon = document.getElementById("manualDaemon");
     var manualDaemonSettings = document.getElementById(
@@ -55,10 +52,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Set manual daemon username
-  //
-
+  /// Set Manual Daemon User
+  /// Sets the HTML element toggle for ManuelDaemonUser
   setManualDaemonUser(settings) {
     var manualDaemonUser = document.getElementById("manualDaemonUser");
 
@@ -69,10 +64,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Set manual daemon password
-  //
-
+  /// Set Manual Daemon Password
+  /// Sets the HTML element toggle for ManualDaemonPassword
   setManualDaemonPassword(settings) {
     var manualDaemonPassword = document.getElementById("manualDaemonPassword");
 
@@ -83,10 +76,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Set manual daemon ip address
-  //
-
+  /// Set Manual Daemon IP
+  /// Sets the HTML element toggle for ManualDeamonIP
   setManualDaemonIP(settings) {
     var manualDaemonIP = document.getElementById("manualDaemonIP");
 
@@ -97,10 +88,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Set manual daemon port
-  //
-
+  /// Set Manual Daemon Port
+  /// Sets the HTML element toggle for ManualDaemonPort
   setManualDaemonPort(settings) {
     var manualDaemonPort = document.getElementById("manualDaemonPort");
 
@@ -111,10 +100,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Set map port using UPnP
-  //
-
+  /// Set Map Port Using Upnp
+  /// Sets the HTML element toggle for MapPortUsingUpnp
   setMapPortUsingUpnp(settings) {
     var mapPortUsingUpnp = document.getElementById("mapPortUsingUpnp");
 
@@ -129,10 +116,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Set SOCKS4 proxy
-  //
-
+  /// Set Socks4 Proxy
+  /// Sets the HTML element toggle for Socks4Proxy
   setSocks4Proxy(settings) {
     var socks4Proxy = document.getElementById("socks4Proxy");
     var socks4ProxyIP = document.getElementById("socks4ProxyIP");
@@ -154,10 +139,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Set SOCKS4 proxy IP address
-  //
-
+  /// Set Socks4ProxyIP
+  /// Sets the HTML element toggle for Socks4ProxyIP
   setSocks4ProxyIP(settings) {
     var socks4ProxyIP = document.getElementById("socks4ProxyIP");
 
@@ -168,10 +151,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Set SOCKS4 proxy port
-  //
-
+  /// Set Socks4 Proxy Port
+  /// Sets the HTML element toggle for Socks4ProxyPort
   setSocks4ProxyPort(settings) {
     var socks4ProxyPort = document.getElementById("socks4ProxyPort");
 
@@ -182,10 +163,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Set detach database on shutdown
-  //
-
+  /// Set Detatch Database On Shutdown
+  /// Sets the HTML element toggle for DetachDatabaseOnShutdown
   setDetatchDatabaseOnShutdown(settings) {
     var detatchDatabaseOnShutdown = document.getElementById(
       "detatchDatabaseOnShutdown"
@@ -202,10 +181,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Update manual daemon mode
-  //
-
+  /// Update Manual Daemon
+  /// Update the Settings for the ManualDaemon
   updateManualDaemon(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -230,10 +207,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Update manual daemon mode user
-  //
-
+  /// Update Manual Daemon User
+  /// Update the Settings for the ManualDaemonDaemonUser
   updateManualDaemonUser(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -244,10 +219,8 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update manual daemon mode password
-  //
-
+  /// Update Manuel Daemon Password
+  /// Update the Settings for the ManualDaemonPassword
   updateManualDaemonPassword(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -258,10 +231,8 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update manual daemon ip address
-  //
-
+  /// Update Manual Daemon IP
+  /// Update the Settings for the ManualDaemonIP
   updateManualDaemonIP(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -272,10 +243,8 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update manual daemon port
-  //
-
+  /// Update Manual Deamon Port
+  /// Update the Settings for the ManualDaemonPort
   updateManualDaemonPort(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -286,10 +255,8 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update map port using UPnP
-  //
-
+  /// Update Map Port Using Upnp
+  /// Update the Settings for the MapPortUsingUpnp
   updateMapPortUsingUpnp(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -300,10 +267,8 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update SOCKS4 proxy
-  //
-
+  /// Update Socks4 Proxy
+  /// Update the Settings for the Socks4Proxy
   updateSocks4Proxy(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -325,10 +290,8 @@ export default class SettingsCore extends Component {
     }
   }
 
-  //
-  // Update SOCKS4 proxy IP address
-  //
-
+  /// Update Socks4 Proxy IP
+  /// Update the Settings for the Socks4ProxyIP
   updateSocks4ProxyIP(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -339,10 +302,8 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update SOCKS4 proxy port
-  //
-
+  /// Update Socks4ProxyPort
+  /// Update the Settings for the Socks4ProxyPort
   updateSocks4ProxyPort(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -353,10 +314,8 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update detach database on shutdown
-  //
-
+  /// Update Detach Database On Shutdown
+  /// Update the Settings for the DetachOnShotdown
   updateDetatchDatabaseOnShutdown(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -366,10 +325,8 @@ export default class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Restart the core
-  //
-
+  /// Core Restart
+  /// Restart the Core
   coreRestart() {
     let core = require("electron").remote.getGlobal("core");
     core.restart();
