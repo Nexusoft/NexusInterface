@@ -473,10 +473,6 @@ class SendRecieve extends Component {
           <img src={sendimg} className="hdr-img" />
           Send Nexus
         </h2>
-        <button onClick={() => this.props.OpenModal("Wallet Locked")}>
-          TEST
-        </button>
-
         <Modal
           center
           classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}

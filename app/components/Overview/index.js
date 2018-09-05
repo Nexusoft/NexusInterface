@@ -353,17 +353,18 @@ class Overview extends Component {
     //if (testinglines == true)
   }
 
-  returnIfGlobeEnabled()
-  {
+  returnIfGlobeEnabled() {
     let settings = require("../../api/settings.js").GetSettings();
     let isglobeopen = settings.renderGlobe;
-    if (isglobeopen == false)
-    {
+    if (isglobeopen == false) {
       return null;
-    }
-    else{
-      return <NetworkGlobe handleOnLineRender={e => (this.redrawCurves = e)} handleOnRemoveOldPoints = { e => (this.removeOldPoints = e)} />;
-
+    } else {
+      return (
+        <NetworkGlobe
+          handleOnLineRender={e => (this.redrawCurves = e)}
+          handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+        />
+      );
     }
   }
 
@@ -456,10 +457,7 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.USDpercentChange}%</div>
           </div>
         </div>
-        <NetworkGlobe
-          handleOnLineRender={e => (this.redrawCurves = e)}
-          handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
-        />
+        {this.returnIfGlobeEnabled()}
         <div className="maxmindCopyright">
           Globe includes GeoLite2 data created by MaxMind <br />
           available at{" "}
