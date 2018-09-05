@@ -20,7 +20,6 @@ import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
 
 import GOOGLE from "../../script/googleanalytics";
-let heighestPeerBlock = 0;
 
 const mapStateToProps = state => {
   return { ...state.overview, ...state.common };
@@ -50,7 +49,7 @@ class Header extends Component {
 
     self.set = setInterval(function() {
       self.props.GetInfoDump();
-    }, 1000);
+    }, 20000);
     this.props.history.push("/");
   }
 
@@ -65,9 +64,32 @@ class Header extends Component {
       this.props.Unlock();
       this.props.Encrypted();
     }
+
+    if (nextProps.blocks !== this.props.blocks) {
+      RPC.PROMISE("getpeerinfo", [])
+        .then(peerresponse => {
+          let hpb = 0;
+          peerresponse.forEach(element => {
+            if (element.height >= hpb) {
+              hpb = element.height;
+            }
+          });
+
+          return hpb;
+        })
+        .then(hpb => {
+          this.props.SetHighestPeerBlock(hpb);
+        });
+    }
+
+    if (this.props.heighestPeerBlock > nextProps.blocks) {
+      this.props.SetSyncStatus(false);
+    } else {
+      this.props.SetSyncStatus(true);
+    }
+
     if (this.props.txtotal < nextProps.txtotal) {
       RPC.PROMISE("listtransactions").then(payload => {
-        console.log(nextProps.txtotal);
         let MRT = payload.reduce((a, b) => {
           if (a.time > b.time) {
             return a;
@@ -75,7 +97,7 @@ class Header extends Component {
             return b;
           }
         });
-        console.log(MRT);
+
         if (MRT.category === "receive") {
           this.props.OpenModal("receive");
         } else if (MRT.category === "send") {
@@ -85,7 +107,6 @@ class Header extends Component {
     } else {
       return null;
     }
-    console.log(this.props.txtotal);
   }
 
   signInStatus() {
@@ -118,14 +139,7 @@ class Header extends Component {
   }
 
   syncStatus() {
-    RPC.PROMISE("getpeerinfo", []).then(peerresponse => {
-      peerresponse.forEach(element => {
-        if (element.height >= heighestPeerBlock) {
-          heighestPeerBlock = element.height;
-        }
-      });
-    });
-    if (heighestPeerBlock > this.props.blocks) {
+    if (this.props.heighestPeerBlock > this.props.blocks) {
       return statBad;
     } else {
       return statGood;
@@ -133,10 +147,10 @@ class Header extends Component {
   }
 
   returnSyncStatusTooltip() {
-    if (heighestPeerBlock > this.props.blocks) {
+    if (this.props.heighestPeerBlock > this.props.blocks) {
       return (
         "Syncing...\nBehind\n" +
-        (heighestPeerBlock - this.props.blocks).toString() +
+        (this.props.heighestPeerBlock - this.props.blocks).toString() +
         "\nBlocks"
       );
     } else {
@@ -175,7 +189,9 @@ class Header extends Component {
       case "Transaction Fee Set":
         return <h2>Transaction Fee Set</h2>;
         break;
-
+      case "Copied":
+        return <h2>Copied</h2>;
+        break;
       default:
         "";
         break;
