@@ -5,49 +5,46 @@ import * as RPC from "./script/rpc";
 export default class ContextMenuBuilder {
   defaultContext: [];
 
-  constructor(defaultContext:[]) {
+  constructor(defaultContext: []) {
     this.defaultContext = this.ReturnDefaultContextMenu();
   }
 
-
-  ReturnDefaultContextMenu()
-  {
+  ReturnDefaultContextMenu() {
     const template = [
       {
-        label: 'Copy',
-        ccelerator: 'CmdOrCtrl+C',
-        role: 'copy',
+        label: "Copy",
+        ccelerator: "CmdOrCtrl+C",
+        role: "copy"
       },
       {
-        label: 'Paste',
-        ccelerator: 'CmdOrCtrl+V',
-            role: 'paste',
+        label: "Paste",
+        ccelerator: "CmdOrCtrl+V",
+        role: "paste"
       },
-      {type: 'separator'},
+      { type: "separator" },
 
       {
-          label: 'Reload',
-          accelerator: 'CmdOrCtrl+R',
-          click (item, focusedWindow) {
-            if (focusedWindow) focusedWindow.reload()
-          }
+        label: "Reload",
+        accelerator: "CmdOrCtrl+R",
+        click(item, focusedWindow) {
+          if (focusedWindow) focusedWindow.reload();
+        }
       },
       {
-        label: 'About',
-        accelerator: 'CmdOrCtrl+Y',
-        click (item, focusedWindow) {
-          console.log(focusedWindow);
-          focusedWindow.loadURL('/About');
+        label: "About",
+        accelerator: "CmdOrCtrl+Y",
+        click(item, focusedWindow) {
+          focusedWindow.loadURL("/About");
           //history.push('/About');
         }
       },
 
       {
-        label: 'Quit',
-        accelerator: 'alt+f4',
-        role: 'close'
+        label: "Quit",
+        accelerator: "alt+f4",
+        role: "close"
       }
-    ]
+    ];
     return template;
   }
 }

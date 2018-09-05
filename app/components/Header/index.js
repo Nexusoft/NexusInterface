@@ -30,16 +30,13 @@ const mapDispatchToProps = dispatch =>
 
 class Header extends Component {
   componentDidMount() {
-    const menuBuilder = new MenuBuilder(
-      require("electron").remote.getCurrentWindow().id
-    );
+    const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     var self = this;
     this.props.SetGoogleAnalytics(GOOGLE);
     let encryptionStatus = false;
     if (this.props.unlocked_until !== undefined) {
       encryptionStatus = true;
     }
-    console.log(this.props);
 
     this.props.LoadAddressBook();
 
@@ -170,6 +167,9 @@ class Header extends Component {
         break;
       case "Invalid Address":
         return <h2>Invalid Address</h2>;
+        break;
+      case "Address Added":
+        return <h2>Address Added</h2>;
         break;
       case "No Addresses":
         return <h2>No Addresses</h2>;

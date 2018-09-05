@@ -48,7 +48,6 @@ class Login extends Component {
         this.props.busy();
       })
       .catch(e => {
-        console.log(e.error.message);
         if (
           e.error.message ===
           "Error: The wallet passphrase entered was incorrect."

@@ -46,10 +46,10 @@ class SettingsApp extends Component {
     this.setInfoPopup(settings);
     this.setSavedTxFee(settings);
 
-    if ( this.refs.backupInputField){
-    this.refs.backupInputField.webkitdirectory = true;
-    this.refs.backupInputField.directory = true;}
-    console.log(this.refs);
+    if (this.refs.backupInputField) {
+      this.refs.backupInputField.webkitdirectory = true;
+      this.refs.backupInputField.directory = true;
+    }
   }
 
   /// Component Did Update
@@ -171,8 +171,7 @@ class SettingsApp extends Component {
 
   /// Update Backup Locaton
   /// Update settings so that we have the correct back up location
-  updateBackupLocation(event)
-  {
+  updateBackupLocation(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -184,7 +183,6 @@ class SettingsApp extends Component {
     settingsObj.backupLocation = incomingPath;
 
     settings.SaveSettings(settingsObj);
-    
   }
 
   /// Update info Popups
@@ -341,9 +339,9 @@ class SettingsApp extends Component {
   returnCurrentBackupLocation()
   {
     let currentLocation = require("../../api/settings.js").GetSettings();
-    //set state for currentlocation and return it 
+    //set state for currentlocation and return it
 
-    return ("Current Location: " + currentLocation.backupLocation);
+    return "Current Location: " + currentLocation.backupLocation;
   }
 
   /// Save Email
@@ -397,7 +395,6 @@ class SettingsApp extends Component {
           </div>
         </Modal>
         <form className="aligned">
-          
           <div className="field">
             <label htmlFor="autostart">Start at system startup</label>
             <input

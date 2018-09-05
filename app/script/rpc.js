@@ -119,7 +119,7 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args
     });
-    // console.log(PostData);
+
     var ResponseObject;
 
     /** Opera 8.0+, Firefox, Safari **/
@@ -144,7 +144,6 @@ export const PROMISE = (cmd, args) => {
 
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
-      // console.log(ResponseObject);
       if (ResponseObject.status == 404) {
         reject("RPC Command {" + cmd + "} Not Found");
       }

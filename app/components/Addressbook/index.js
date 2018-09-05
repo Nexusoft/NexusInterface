@@ -11,7 +11,6 @@ import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/addressbookActionCreators";
 import TimeZoneSelector from "./timeZoneSelector";
 
-import ContactView from "./ContactView";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 import profilePlaceholder from "images/Profile_Placeholder.png";
@@ -183,7 +182,6 @@ class Addressbook extends Component {
 
   componentDidUpdate(previousprops) {
     if (this.props.save) {
-      console.log("SAVE");
       config.WriteJson("addressbook.json", {
         addressbook: this.props.addressbook
       });
@@ -301,10 +299,7 @@ class Addressbook extends Component {
             >
               {index === -1 ? "Add Contact" : "Edit Contact"}
             </button>
-            <button
-              className="button"
-              onClick={() => this.props.ToggleCreateModal()}
-            >
+            <button className="button" onClick={() => this.props.ToggleModal()}>
               Cancel
             </button>
           </div>
@@ -523,6 +518,14 @@ class Addressbook extends Component {
               );
             }
           }}
+          onKeyDown={e => {
+            if (e.which === 13 || e.which === 9) {
+              this.props.SaveTz(
+                this.props.selected,
+                this.props.prototypeTimezone
+              );
+            }
+          }}
         >
           {" "}
           Local Time:
@@ -677,8 +680,200 @@ class Addressbook extends Component {
     }
   }
 
+  exportAddressBook() {
+    const rows = []; //Set up a blank array for each row
+    let csvContent = "data:text/csv;charset=utf-8,"; //Set formating
+    //This is so we can have named columns in the export, this will be row 1
+    let NameEntry = [
+      "Account Name",
+      "Label",
+      "Address",
+      "Phone Number",
+      "Time Zone",
+      "Notes"
+    ];
+    rows.push(NameEntry);
+    this.props.addressbook.map(e => {
+      let tempentry = [];
+      tempentry.push(e.name);
+      tempentry.push("");
+      tempentry.push("");
+      tempentry.push(e.phoneNumber);
+
+      let timezone = "";
+      switch (e.timezone) {
+        case 840:
+          timezone = "Line Islands";
+          break;
+        case 780:
+          timezone = "Apia";
+          break;
+        case 765:
+          timezone = "Chatham Islands";
+          break;
+        case 720:
+          timezone = "Auckland";
+          break;
+        case 660:
+          timezone = "Noumea";
+          break;
+        case 630:
+          timezone = "Lord Howe Island";
+          break;
+        case 600:
+          timezone = "Port Moresby";
+          break;
+        case 570:
+          timezone = "Adelaide";
+          break;
+        case 540:
+          timezone = "Tokyo";
+          break;
+        case 525:
+          timezone = "Eucla";
+          break;
+        case 510:
+          timezone = "Pyongyang";
+          break;
+        case 480:
+          timezone = "Beijing";
+          break;
+        case 420:
+          timezone = "Bangkok";
+          break;
+        case 390:
+          timezone = "Yangon";
+          break;
+        case 360:
+          timezone = "Almaty";
+          break;
+        case 345:
+          timezone = "Kathmandu";
+          break;
+        case 330:
+          timezone = "Delhi";
+          break;
+        case 300:
+          timezone = "Karachi";
+          break;
+        case 270:
+          timezone = "Kabul";
+          break;
+        case 240:
+          timezone = "Dubai";
+          break;
+        case 210:
+          timezone = "Tehran";
+          break;
+        case 180:
+          timezone = "Moscow";
+          break;
+        case 120:
+          timezone = "Athens";
+          break;
+        case 60:
+          timezone = "Berlin";
+          break;
+        case 0:
+          timezone = "London";
+          break;
+        case -60:
+          timezone = "Cabo Verde";
+          break;
+        case -120:
+          timezone = "Fernando de Noronha";
+          break;
+        case -180:
+          timezone = "Buenos Aires";
+          break;
+        case -210:
+          timezone = "Newfoundland";
+          break;
+        case -240:
+          timezone = "Santiago";
+          break;
+        case -300:
+          timezone = "New York";
+          break;
+        case -360:
+          timezone = "Chicago";
+          break;
+        case -420:
+          timezone = "Phoenix";
+          break;
+        case -480:
+          timezone = "Los Angeles";
+          break;
+        case -540:
+          timezone = "Anchorage";
+          break;
+        case -570:
+          timezone = "Marquesas Islands";
+          break;
+        case -600:
+          timezone = "Papeete";
+          break;
+        case -660:
+          timezone = "Niue";
+          break;
+        case -720:
+          timezone = "Baker Island";
+          break;
+
+        default:
+          timezone = "blank";
+          break;
+      }
+      tempentry.push(timezone);
+      tempentry.push(e.notes);
+      rows.push(tempentry);
+      let tempMine = [];
+
+      let tempNotMine = [];
+      if (e.mine.length > 0) {
+        e.mine.map(add => {
+          let label = "";
+          if (add.label === "My Address for ") {
+            label = add.label + e.name;
+          } else {
+            label = add.label;
+          }
+          tempMine.push(["", label, add.address, "", ""]);
+        });
+        rows.push(["", `My addresses for ${e.name}`, "", "", ""]);
+        rows.push(tempMine);
+      }
+      if (e.notMine.length > 0) {
+        e.notMine.map(add => {
+          let label = "";
+
+          if (add.label === "'s Address") {
+            label = e.name + add.label;
+          } else {
+            label = add.label;
+          }
+          tempNotMine.push(["", label, add.address, "", ""]);
+        });
+        rows.push(["", `${e.name}'s addresses`, "", "", ""]);
+        rows.push(tempNotMine);
+      }
+    });
+    rows.forEach(function(rowArray) {
+      let row = rowArray.join(",");
+      csvContent += row + "\r\n";
+    }); //format each row
+    let encodedUri = encodeURI(csvContent); //Set up a uri, in Javascript we are basically making a Link to this file
+    let link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "nexus-addressbook.csv"); //give link an action and a default name for the file. MUST BE .csv
+
+    document.body.appendChild(link); // Required for FF
+
+    link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
+    document.body.removeChild(link);
+  }
+
   render() {
-    console.log(this.props);
     return (
       <div id="addressbook" className="animated fadeIn">
         <Modal
@@ -736,6 +931,14 @@ class Addressbook extends Component {
                           onChange={e =>
                             this.props.EditProtoName(e.target.value)
                           }
+                          onKeyDown={e => {
+                            if (e.which === 13 || e.which === 9) {
+                              this.props.SaveName(
+                                this.props.selected,
+                                this.props.prototypeName
+                              );
+                            }
+                          }}
                           placeholder="Name"
                           onDoubleClick={() =>
                             this.props.SaveName(
@@ -780,6 +983,14 @@ class Addressbook extends Component {
                               onChange={e =>
                                 this.phoneNumberHandler(e.target.value)
                               }
+                              onKeyDown={e => {
+                                if (e.which === 13 || e.which === 9) {
+                                  this.props.SavePhone(
+                                    this.props.selected,
+                                    this.props.prototypePhoneNumber
+                                  );
+                                }
+                              }}
                               value={this.props.prototypePhoneNumber}
                               placeholder="Phone #"
                               onDoubleClick={() =>
@@ -829,6 +1040,14 @@ class Addressbook extends Component {
                                     this.props.prototypeNotes
                                   )
                                 }
+                                onKeyDown={e => {
+                                  if (e.which === 13 || e.which === 9) {
+                                    this.props.SaveNotes(
+                                      this.props.selected,
+                                      this.props.prototypeNotes
+                                    );
+                                  }
+                                }}
                                 onChange={e =>
                                   this.props.EditProtoNotes(e.target.value)
                                 }

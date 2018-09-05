@@ -90,7 +90,6 @@ class Overview extends Component {
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
-          console.log(response);
           this.props.setBTC(body.data.quotes.BTC.price);
           this.props.set24hrChange(body.data.quotes.USD.percent_change_24h);
           this.props.setSupply(body.data.circulating_supply);
@@ -98,7 +97,6 @@ class Overview extends Component {
         }
       }
     );
-    console.log(this.props.history);
   }
 
   componentWillUnmount() {
@@ -136,7 +134,7 @@ class Overview extends Component {
 
   calculateUSDvalue() {
     let USDvalue = this.props.balance * this.props.USD;
-    console.log(this.props.BTC);
+
     if (USDvalue === 0) {
       USDvalue = `${USDvalue}.00`;
     } else {
@@ -150,7 +148,6 @@ class Overview extends Component {
     var settings = require("../../api/settings.js").GetSettings();
     settings.acceptedagreement = true;
     require("../../api/settings.js").SaveSettings(settings);
-    console.log("accepted");
   }
 
   returnLicenseModalInternal() {
