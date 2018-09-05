@@ -33,6 +33,12 @@ export const Encrypted = () => {
   };
 };
 
+export const BlockDate = stamp => {
+  return dispatch => {
+    dispatch({ type: TYPE.BLOCK_DATE, payload: stamp });
+  };
+};
+
 export const Unencrypted = () => {
   return dispatch => {
     dispatch({ type: TYPE.UNENCRYPTED });
