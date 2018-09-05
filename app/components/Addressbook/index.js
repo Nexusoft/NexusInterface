@@ -682,6 +682,201 @@ class Addressbook extends Component {
     }
   }
 
+  exportAddressBook() {
+    const rows = []; //Set up a blank array for each row
+    let csvContent = "data:text/csv;charset=utf-8,"; //Set formating
+    //This is so we can have named columns in the export, this will be row 1
+    let NameEntry = [
+      "Account Name",
+      "Label",
+      "Address",
+      "Phone Number",
+      "Time Zone",
+      "Notes"
+    ];
+    rows.push(NameEntry);
+    this.props.addressbook.map(e => {
+      let tempentry = [];
+      tempentry.push(e.name);
+      tempentry.push("");
+      tempentry.push("");
+      tempentry.push(e.phoneNumber);
+
+      let timezone = "";
+      switch (e.timezone) {
+        case 840:
+          timezone = "Line Islands";
+          break;
+        case 780:
+          timezone = "Apia";
+          break;
+        case 765:
+          timezone = "Chatham Islands";
+          break;
+        case 720:
+          timezone = "Auckland";
+          break;
+        case 660:
+          timezone = "Noumea";
+          break;
+        case 630:
+          timezone = "Lord Howe Island";
+          break;
+        case 600:
+          timezone = "Port Moresby";
+          break;
+        case 570:
+          timezone = "Adelaide";
+          break;
+        case 540:
+          timezone = "Tokyo";
+          break;
+        case 525:
+          timezone = "Eucla";
+          break;
+        case 510:
+          timezone = "Pyongyang";
+          break;
+        case 480:
+          timezone = "Beijing";
+          break;
+        case 420:
+          timezone = "Bangkok";
+          break;
+        case 390:
+          timezone = "Yangon";
+          break;
+        case 360:
+          timezone = "Almaty";
+          break;
+        case 345:
+          timezone = "Kathmandu";
+          break;
+        case 330:
+          timezone = "Delhi";
+          break;
+        case 300:
+          timezone = "Karachi";
+          break;
+        case 270:
+          timezone = "Kabul";
+          break;
+        case 240:
+          timezone = "Dubai";
+          break;
+        case 210:
+          timezone = "Tehran";
+          break;
+        case 180:
+          timezone = "Moscow";
+          break;
+        case 120:
+          timezone = "Athens";
+          break;
+        case 60:
+          timezone = "Berlin";
+          break;
+        case 0:
+          timezone = "London";
+          break;
+        case -60:
+          timezone = "Cabo Verde";
+          break;
+        case -120:
+          timezone = "Fernando de Noronha";
+          break;
+        case -180:
+          timezone = "Buenos Aires";
+          break;
+        case -210:
+          timezone = "Newfoundland";
+          break;
+        case -240:
+          timezone = "Santiago";
+          break;
+        case -300:
+          timezone = "New York";
+          break;
+        case -360:
+          timezone = "Chicago";
+          break;
+        case -420:
+          timezone = "Phoenix";
+          break;
+        case -480:
+          timezone = "Los Angeles";
+          break;
+        case -540:
+          timezone = "Anchorage";
+          break;
+        case -570:
+          timezone = "Marquesas Islands";
+          break;
+        case -600:
+          timezone = "Papeete";
+          break;
+        case -660:
+          timezone = "Niue";
+          break;
+        case -720:
+          timezone = "Baker Island";
+          break;
+
+        default:
+          timezone = "blank";
+          break;
+      }
+      tempentry.push(timezone);
+      tempentry.push(e.notes);
+      rows.push(tempentry);
+      let tempMine = [];
+
+      let tempNotMine = [];
+      if (e.mine.length > 0) {
+        e.mine.map(add => {
+          let label = "";
+          if (add.label === "My Address for ") {
+            label = add.label + e.name;
+          } else {
+            label = add.label;
+          }
+          tempMine.push(["", label, add.address, "", ""]);
+        });
+        rows.push(["", `My addresses for ${e.name}`, "", "", ""]);
+        rows.push(tempMine);
+      }
+      if (e.notMine.length > 0) {
+        e.notMine.map(add => {
+          let label = "";
+          console.log(add.label);
+          if (add.label === "'s Address") {
+            label = e.name + add.label;
+          } else {
+            label = add.label;
+          }
+          tempNotMine.push(["", label, add.address, "", ""]);
+        });
+        rows.push(["", `${e.name}'s addresses`, "", "", ""]);
+        rows.push(tempNotMine);
+      }
+
+      console.log(csvContent);
+    });
+    rows.forEach(function(rowArray) {
+      let row = rowArray.join(",");
+      csvContent += row + "\r\n";
+    }); //format each row
+    let encodedUri = encodeURI(csvContent); //Set up a uri, in Javascript we are basically making a Link to this file
+    let link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "nexus-addressbook.csv"); //give link an action and a default name for the file. MUST BE .csv
+
+    document.body.appendChild(link); // Required for FF
+
+    link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
+    document.body.removeChild(link);
+  }
+
   render() {
     console.log(this.props);
     return (
@@ -698,9 +893,9 @@ class Addressbook extends Component {
           <img src={addressbookimg} className="hdr-img" />
           Address Book
         </h2>
-        {/* <a className="refresh" onClick={() => this.exportAddressBook()}>
+        <a className="refresh" onClick={() => this.exportAddressBook()}>
           Export Contacts
-        </a> */}
+        </a>
         <div className="panel">
           <div id="addressbook-controls">
             <div id="addressbook-search">
