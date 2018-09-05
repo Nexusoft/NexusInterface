@@ -816,7 +816,6 @@ export default class StyleGuide extends Component {
                   type="checkbox" class="switch" checked disabled&gt;
                 </code>
               </pre>
-              <input type="button" value="TestModal" onClick={testmodal()} />
             </section>
           </div>
         </div>
