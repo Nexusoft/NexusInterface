@@ -48,6 +48,8 @@ import nxsblocks from "../../images/blockexplorer-invert-white.svg";
 import interesticon from "../../images/interest.svg";
 import stakeicon from "../../images/staking-white.svg";
 
+import maxmindLogo from "../../images/maxmind-header-logo-compact.svg";
+
 import NetworkGlobe from "./NetworkGlobe";
 
 import ContextMenuBuilder from "../../contextmenu";
@@ -360,10 +362,15 @@ class Overview extends Component {
       return null;
     } else {
       return (
-        <NetworkGlobe
+        [[<NetworkGlobe
           handleOnLineRender={e => (this.redrawCurves = e)}
           handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
-        />
+        />],[<div className="maxmindCopyright">
+        <img id="hhhhhhh"
+              src={maxmindLogo} 
+              width="100px"
+              height="100px"
+        />Globe includes GeoLite2</div>]]
       );
     }
   }
@@ -458,11 +465,7 @@ class Overview extends Component {
           </div>
         </div>
         {this.returnIfGlobeEnabled()}
-        <div className="maxmindCopyright">
-          Globe includes GeoLite2 data created by MaxMind <br />
-          available at{" "}
-          <a href="http://www.maxmind.com">http://www.maxmind.com</a>
-        </div>
+        
         <div className="right-stats">
           <div
             id="nxs-connections-info"

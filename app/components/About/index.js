@@ -45,7 +45,7 @@ class About extends Component {
     {
       return this.props.version;
     }
-    
+
     render() {
         return (
           <div id="About" className="animated fadeIn">
@@ -63,11 +63,11 @@ class About extends Component {
                       <b>Build Date: </b> July 19th 2018 <br/> 
                     </column>
                   </row>
-                  <img id="update-image" src={updateicon} /> 
-                  <a id="update-text" >UPDATE</a> <br/>
+                  <br/>
+                  <br/>
                   <b>Copyright {this.getCurrentYear()} </b> Nexus,Videlicet,Peercoin <br/>
                   <br/>
-                  <b>THIS IS EXPERIMENTAL SOFTWARE AND THE NEXUS EMBASY HOLDS NO LIABILITY FOR THE USE OF THIS SOFTWARE</b>
+                  <b>THIS IS EXPERIMENTAL SOFTWARE AND THE NEXUS EMBASSY HOLDS NO LIABILITY FOR THE USE OF THIS SOFTWARE</b>
               </column>
               <column>
                   <h2>License Agreement</h2>
@@ -88,11 +88,15 @@ class About extends Component {
             <h2>Open Source Credits</h2>
               <dl>
                   <dt>Electron</dt>
-                  <dd>MIT</dd>
-                  <dt>Victory Chart</dt>
-                  <dd>MIT</dd>
                   <dt>React</dt>
-                  <dd>MIT</dd>
+                  <dd>< a href="https://reactjs.org/" > Reactjs.org </a> MIT License</dd>
+                  <dt>Redux</dt>
+                  <dd> <a href="https://redux.js.org/"> Redux.js.org </a> MIT License </dd>
+                  <dt>Babel</dt>
+                  <dd> <a href="https://babeljs.io/"> Babeljs.io </a> MIT License </dd>
+                  <dd> <a href="https://electronjs.org/">electronjs.org </a> MIT License</dd>
+                  <dt>Victory Chart</dt>
+                  <dd> <a href="https://formidable.com/open-source/victory/"> Formidable Labs </a> MIT License</dd>
                   <dt>MaxMind</dt>
                   <dd>Copyright &copy; 2018 MaxMind, Inc. This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/"> creativecommons.org </a>.
 This database incorporates <a href="http://www.geonames.org">GeoNames</a> geographical data, which is made available under the Creative Commons Attribution 3.0 License. To view a copy of this license, visit <a href="http://www.creativecommons.org/licenses/by/3.0/us/">creativecommons.org</a> .</dd>

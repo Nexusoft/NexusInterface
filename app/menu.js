@@ -235,7 +235,7 @@ export default class MenuBuilder {
               {
                 fs.mkdirSync(BackupDir);
               }
-              let asd = shell.openItem(BackupDir);
+              let didopen = shell.openItem(BackupDir);
             }
           },
           {
@@ -273,13 +273,13 @@ export default class MenuBuilder {
           {
             label: "Core Settings",
             click() {
-              history.push("/Settings/Core");
+              self.props.history.push("/Settings/Core");
             }
           },
           {
             label: "Application Settings",
             click() {
-              history.push("/Settings/App");
+              self.props.history.push("/Settings/App");
             }
           },
           {
@@ -289,27 +289,7 @@ export default class MenuBuilder {
               this.mainWindow.toggleDevTools();
             }
           }
-          // {
-          //   label: "Change Passphrase",
-          //   click() {
-          //     LOAD.Module(11, 1);
-          //   }
-          // },
-          // {
-          //   label: "Backup Wallet",
-          //   click() {
-          //     LOAD.Module(3, 1);
-          //   }
-          // },
-          // {
-          //   type: "separator"
-          // },
-          // {
-          //   label: "Options",
-          //   click() {
-          //     LOAD.Module(9, 1);
-          //   }
-          // }
+          
         ]
       },
       {
@@ -360,7 +340,7 @@ export default class MenuBuilder {
           {
             label: "About Nexus",
             click() {
-              history.push("/About");
+              self.props.history.push("/About");
             }
           },
           {
