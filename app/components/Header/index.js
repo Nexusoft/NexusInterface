@@ -189,6 +189,9 @@ class Header extends Component {
       case "Transaction Fee Set":
         return <h2>Transaction Fee Set</h2>;
         break;
+      case "Wallet Locked":
+        return <h2>Wallet Locked</h2>;
+        break;
       case "Copied":
         return <h2>Copied</h2>;
         break;

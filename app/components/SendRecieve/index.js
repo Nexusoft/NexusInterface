@@ -456,11 +456,10 @@ class SendRecieve extends Component {
         break;
 
       default:
-        "";
+        "Error";
         break;
     }
   }
-
   render() {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
@@ -470,10 +469,13 @@ class SendRecieve extends Component {
     }
     return (
       <div id="sendrecieve" className="animated fadeIn">
-        <h2><img src={sendimg} className="hdr-img"/>Send Nexus </h2>
-        {/* <button onClick={() => this.props.OpenModal("Transaction Fee Set")}>
+        <h2>
+          <img src={sendimg} className="hdr-img" />
+          Send Nexus
+        </h2>
+        <button onClick={() => this.props.OpenModal("Wallet Locked")}>
           TEST
-        </button> */}
+        </button>
 
         <Modal
           center
@@ -546,7 +548,14 @@ class SendRecieve extends Component {
                     value="Send Now"
                     className="button"
                     onClick={() => {
-                      this.props.OpenModal2("send transaction?");
+                      if (
+                        this.props.encrypted === false ||
+                        this.props.loggedIn === false
+                      ) {
+                        this.props.OpenModal2("send transaction?");
+                      } else {
+                        this.props.OpenModal("Wallet Locked");
+                      }
                     }}
                   />
                 </div>
@@ -572,7 +581,14 @@ class SendRecieve extends Component {
                     value="Send All"
                     className="button primary"
                     onClick={() => {
-                      this.props.OpenModal2("Send Multiple?");
+                      if (
+                        this.props.encrypted === false ||
+                        this.props.loggedIn === false
+                      ) {
+                        this.props.OpenModal2("Send Multiple?");
+                      } else {
+                        this.props.OpenModal("Wallet Locked");
+                      }
                     }}
                   />
                   <input
