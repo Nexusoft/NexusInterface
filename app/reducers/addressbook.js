@@ -222,7 +222,6 @@ export default (state = initialState, action) => {
           };
         } else return state;
       } else {
-        console.log(action.payload, state.addressbook[action.payload.index]);
         if (
           state.addressbook[action.payload.index].notMine.findIndex(ele => {
             if (ele.address === action.payload.newAddress.address) {
@@ -279,7 +278,6 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.SAVE_ADDRESS_LABEL:
-      console.log(action.payload);
       if (action.payload.ismine) {
         let MIndex = state.addressbook[action.payload.index].mine.findIndex(
           ele => {

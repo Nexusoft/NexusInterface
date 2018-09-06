@@ -62,7 +62,6 @@ class Exchange extends Component {
 
   modalContents() {
     if (this.props.transaction.expiration) {
-      console.log(this.props.transaction.expiration);
       return (
         <div>
           <h2>All right, let's get to it!</h2>
@@ -202,8 +201,6 @@ class Exchange extends Component {
   render() {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
-      console.log("Redirecting to Precise trading");
-
       return <Redirect to={`${this.props.match.url}/Precise`} />;
     }
 
@@ -220,7 +217,10 @@ class Exchange extends Component {
 
         <div id="Exchange-container">
           <div>
-            <h2><img src={shapeshiftimg} className="hdr-img"/>Exchange</h2>
+            <h2>
+              <img src={shapeshiftimg} className="hdr-img" />
+              Exchange
+            </h2>
             <p>powered by ShapeShift</p>
           </div>
           <div className="panel">

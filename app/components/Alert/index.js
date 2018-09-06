@@ -19,7 +19,6 @@ export default class Alert extends Component {
         }
       });
     });
-    console.log(this.state);
   }
 
   closeAlert(index) {

@@ -12,7 +12,8 @@ import { connect } from "react-redux";
 const mapStateToProps = state => {
   return {
     ...state.common,
-    ...state.sendRecieve
+    ...state.sendRecieve,
+    ...state.overview
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -30,55 +31,39 @@ const mapDispatchToProps = dispatch => ({
 var currentBackupLocation = ""; //Might redo to use redux but this is only used to replace using json reader every render;
 
 class SettingsApp extends Component {
-  //
-  // componentDidMount - Initialize the settings
-  //
-
+  
+  /// Compent Did Mount
+  /// React Lifecycle on page load. 
   componentDidMount() {
     var settings = require("../../api/settings.js").GetSettings();
     // this.setDefaultUnitAmount(settings);
     //Application settings
-    // this.setWallpaper(settings);
     this.setAutostart(settings);
     this.setMinimizeToTray(settings);
     this.setMinimizeOnClose(settings);
     this.setGoogleAnalytics(settings);
     this.setDeveloperMode(settings);
     this.setInfoPopup(settings);
+    this.setSavedTxFee(settings);
 
-    if ( this.refs.backupInputField){
-    this.refs.backupInputField.webkitdirectory = true;
-    this.refs.backupInputField.directory = true;}
-    console.log(this.refs);
+    if (this.refs.backupInputField) {
+      this.refs.backupInputField.webkitdirectory = true;
+      this.refs.backupInputField.directory = true;
+    }
   }
 
+  /// Component Did Update
+  /// React Lifecycle hook on when the page is updated
   componentDidUpdate()
   {
-    this.refs.backupInputField.webkitdirectory = true;
-    this.refs.backupInputField.directory = true;
-    console.log(this.refs);
+    // Left over on work in progress for having a select directoy 
+    //this.refs.backupInputField.webkitdirectory = true;
+    //this.refs.backupInputField.directory = true;
+    //console.log(this.refs);
   }
 
-  //
-  // Set wallpaper
-  //
-
-  // setWallpaper(settings) {
-  //   var wallpaper = document.getElementById("wallpaper");
-
-  //   if (settings.wallpaper === undefined) {
-  //     wallpaper.value = "../images/background/nexus-conference.png";
-  //     // wallpaper.value = "https://images7.alphacoders.com/428/428134.jpg";
-  //   } else {
-  //     wallpaper.value = settings.wallpaper;
-  //   }
-
-  // }
-
-  //
-  // Set autostart
-  //
-
+  /// Set Autostart
+  /// Sets the HTML element toggle for AutoStart
   setAutostart(settings) {
     var autostart = document.getElementById("autostart");
 
@@ -93,10 +78,8 @@ class SettingsApp extends Component {
     }
   }
 
-  //
-  // Set minimize to tray
-  //
-
+  /// Set Minimize To Tray
+  /// Sets the HTML element toggle for MinimizeToTray
   setMinimizeToTray(settings) {
     var minimizeToTray = document.getElementById("minimizeToTray");
 
@@ -111,10 +94,8 @@ class SettingsApp extends Component {
     }
   }
 
-  //
-  // Set minimize on close
-  //
-
+  /// Set Minimize On Close
+  /// Sets the HTML element toggle for MinimizeOnClose
   setMinimizeOnClose(settings) {
     var minimizeOnClose = document.getElementById("minimizeOnClose");
 
@@ -129,10 +110,8 @@ class SettingsApp extends Component {
     }
   }
 
-  //
-  // Set Google Analytics Enabled
-  //
-
+  /// Set Google Analytics Enabled
+  /// Sets the HTML element toggle for GoogleAnalytics
   setGoogleAnalytics(settings) {
     var googlesetting = document.getElementById("googleAnalytics");
 
@@ -161,10 +140,8 @@ class SettingsApp extends Component {
   //   }
   // }
 
-  //
-  // Set developer mode
-  //
-
+  /// Set Developer Mode
+  /// Sets the HTML element toggle for DevMode
   setDeveloperMode(settings) {
     var devmode = document.getElementById("devmode");
 
@@ -173,22 +150,28 @@ class SettingsApp extends Component {
     }
   }
 
-  //
   // Set info popup
-  //
-
   setInfoPopup(settings) {
-    var infopop = document.getElementById("infopopup");
+    var infopop = document.getElementById("infoPopUps");
 
-    if (settings.infopopups == true) {
+    if (settings.infopopups == true || settings.infopopups) {
       infopop.checked = true;
     }
   }
 
+  
+  /// Set Saved Tx Fee
+  /// Sets the TX fee based on the RPC server
+  setSavedTxFee(settings)
+  {
+    let settxobj = document.getElementById("optionalTransactionFee");
+    settxobj.value = this.props.paytxfee;
+    console.log(this.props.paytxfee);
+  }
+
   /// Update Backup Locaton
   /// Update settings so that we have the correct back up location
-  updateBackupLocation(event)
-  {
+  updateBackupLocation(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -200,13 +183,10 @@ class SettingsApp extends Component {
     settingsObj.backupLocation = incomingPath;
 
     settings.SaveSettings(settingsObj);
-    
   }
 
-  //
-  // Update info Popups
-  //
-
+  /// Update info Popups
+  /// Update Settings with the users Input
   updateInfoPopUp(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -217,10 +197,8 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update autostart
-  //
-
+  /// Update autostart
+  /// Update Settings with the users Input
   updateAutoStart(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -258,10 +236,8 @@ class SettingsApp extends Component {
     }
   }
 
-  //
-  // Update minimize to tray
-  //
-
+  /// Update Minimize To Tray
+  /// Update Settings with the users Input
   updateMinimizeToTray(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -272,10 +248,8 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update minimize on close
-  //
-
+  /// Update Minimize On Close
+  /// Update Settings with the users Input
   updateMinimizeOnClose(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -286,10 +260,8 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update enabled google analytics
-  //
-
+  /// Update Enabled Google Analytics
+  /// Update Settings with the users Input
   updateGoogleAnalytics(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -319,10 +291,8 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update optional transaction fee
-  //
-
+  /// Update Optional Transaction Fee
+  /// Update Settings with the users Input
   updateOptionalTransactionFee(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -331,20 +301,17 @@ class SettingsApp extends Component {
 
     settings.SaveSettings(settingsObj);
   }
-
-  //
-  // Set TxFee
-  //
-
+  
+  /// Set TxFee
+  /// Sets the transaction fee and sets that using at RPC command to the daemon
   setTxFee() {
     let TxFee = document.getElementById("optionalTransactionFee").value;
     RPC.PROMISE("settxfee", [parseFloat(TxFee)]);
     console.log(TxFee);
   }
-  //
-  // Update default unit amount
-  //
-
+  
+  /// Update Default Unit Amount
+  /// Update Settings with the users Input
   updateDefaultUnitAmount(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -355,10 +322,8 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  //
-  // Update developer mode
-  //
-
+  /// Update Developer Mode
+  /// Update Settings with the users Input
   updateDeveloperMode(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -369,14 +334,18 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
+  /// Return Backup Location
+  /// ?? WORK IN PROGRESS ?? 
   returnCurrentBackupLocation()
   {
     let currentLocation = require("../../api/settings.js").GetSettings();
-    //set state for currentlocation and return it 
+    //set state for currentlocation and return it
 
-    return ("Current Location: " + currentLocation.backupLocation);
+    return "Current Location: " + currentLocation.backupLocation;
   }
 
+  /// Save Email
+  /// Save Email to json file. 
   saveEmail() {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -426,7 +395,6 @@ class SettingsApp extends Component {
           </div>
         </Modal>
         <form className="aligned">
-          
           <div className="field">
             <label htmlFor="autostart">Start at system startup</label>
             <input
@@ -461,6 +429,17 @@ class SettingsApp extends Component {
           </div>
 
           <div className="field">
+            <label htmlFor="infoPopUps">Information Popups</label>
+            <input
+              id="infoPopUps"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateInfoPopUp}
+              data-tooltip="Show Informational Popups"
+            />
+          </div>
+
+          <div className="field">
             <label htmlFor="googleAnalytics">Send anonymous usage data</label>
             <input
               id="googleAnalytics"
@@ -476,16 +455,16 @@ class SettingsApp extends Component {
             <label htmlFor="optionalTransactionFee">
               Optional transaction fee (in NXS)
             </label>{" "}
-            <form className="fee">
+            <div className="fee">
               <input
                 className="Txfee"
                 id="optionalTransactionFee"
                 type="number"
-                onChange={this.optionalTransactionFee}
+                step="0.01"
+                min="0"
                 data-tooltip="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"
               />
               <button
-                type="button"
                 className="feebutton"
                 onClick={() => {
                   this.props.OpenModal2();
@@ -493,7 +472,7 @@ class SettingsApp extends Component {
               >
                 Set
               </button>
-            </form>
+            </div>
           </div>
           {/* <div className="field">
             <label htmlFor="defaultUnitAmount">Default unit amount</label>

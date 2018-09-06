@@ -33,6 +33,12 @@ export const Encrypted = () => {
   };
 };
 
+export const BlockDate = stamp => {
+  return dispatch => {
+    dispatch({ type: TYPE.BLOCK_DATE, payload: stamp });
+  };
+};
+
 export const Unencrypted = () => {
   return dispatch => {
     dispatch({ type: TYPE.UNENCRYPTED });
@@ -69,11 +75,25 @@ export const CloseModal3 = () => {
     dispatch({ type: TYPE.HIDE_MODAL3 });
   };
 };
+
 export const OpenModal3 = () => {
   return dispatch => {
     dispatch({ type: TYPE.OPEN_MODAL3 });
   };
 };
+
+export const SetSyncStatus = stat => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_SYNC_STATUS, payload: stat });
+  };
+};
+
+export const SetHighestPeerBlock = hpb => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_HIGHEST_PEER_BLOCK, payload: hpb });
+  };
+};
+
 export const SetGoogleAnalytics = returnData => {
   return dispatch => {
     dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload: returnData });

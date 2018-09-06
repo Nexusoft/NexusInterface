@@ -11,7 +11,10 @@ const initialState = {
   modaltype: "",
   confirmation: false,
   actionItem: "",
-  modalVisable: false
+  modalVisable: false,
+  heighestPeerBlock: 0,
+  isInSync: false,
+  blockDate: "Getting Next Block..."
 };
 
 export default (state = initialState, action) => {
@@ -27,6 +30,9 @@ export default (state = initialState, action) => {
         ...state,
         modalVisable: !state.modalVisable
       };
+      break;
+    case TYPE.SET_SYNC_STATUS:
+      return { ...state, isInSync: action.payload };
       break;
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
@@ -44,6 +50,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         encrypted: false
+      };
+      break;
+    case TYPE.BLOCK_DATE:
+      return {
+        ...state,
+        blockDate: action.payload
       };
 
     case TYPE.SHOW_MODAL:
@@ -89,8 +101,12 @@ export default (state = initialState, action) => {
         openThirdModal: false,
         modaltype: action.payload
       };
-
       break;
+    case TYPE.SET_HIGHEST_PEER_BLOCK:
+      return {
+        ...state,
+        heighestPeerBlock: action.payload
+      };
     case TYPE.ENCRYPTED:
       return {
         ...state,

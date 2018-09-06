@@ -12,23 +12,35 @@ export default class SettingsStyle extends Component {
 
     //Application settings
     this.setWallpaper(settings);
+    this.setRenderGlobe(settings);
   }
+  
+  /// Set Wallpaper
+  /// Sets the wallpaper value
+  setWallpaper(settings) {
+     var wallpaper = document.getElementById("wallpaper");
 
-  //
-  // Set Google Analytics Enabled
-  //
+     if (settings.wallpaper === undefined) {
+     //  wallpaper.value = "../images/background/nexus-conference.png";
+     } else {
+      // wallpaper.value = settings.wallpaper;
+     }
 
-  setGoogleAnalytics(settings) {
-    var googlesetting = document.getElementById("googleAnalytics");
+   }
 
-    if (settings.googleAnalytics === undefined) {
-      googlesetting.checked = true;
+  /// Set Render Globe
+  /// Set whether or not that the application will render out the globe on the overview page.  
+  setRenderGlobe(settings) {
+    let ifRenderGlobe = document.getElementById("renderGlobe");
+
+    if (settings.renderGlobe == undefined) {
+      ifRenderGlobe.checked = true;
     }
-    if (settings.googleAnalytics == true) {
-      googlesetting.checked = true;
+    if (settings.renderGlobe == true) {
+      ifRenderGlobe.checked = true;
     }
-    if (settings.googleAnalytics == false) {
-      googlesetting.checked = false;
+    if (settings.renderGlobe == false) {
+      ifRenderGlobe.checked = false;
     }
   }
 
@@ -42,27 +54,52 @@ export default class SettingsStyle extends Component {
     var settingsObj = settings.GetSettings();
 
     let imagePath = el.files[0].path;
-   //console.log(imagePath);
     settingsObj.wallpaper = imagePath;
     settings.SaveSettings(settingsObj);
 
-    if ( process.platform === "win32")
-    {
-      imagePath =  imagePath.replace(/\\/g, '/');
+    if (process.platform === "win32") {
+      imagePath = imagePath.replace(/\\/g, "/");
     }
-    document.body.style.setProperty('--background-main-image', "url(\"" + imagePath + "\")");
+    document.body.style.setProperty(
+      "--background-main-image",
+      'url("' + imagePath + '")'
+    );
   }
 
+  /// Update Render Globe
+  /// When you change the render settings update settings json
+  updateRenderGlobe(event)
+  {
+    let settings = require("../../api/settings.js").GetSettings();
+    settings.renderGlobe = event.target.checked;
+    require("../../api/settings.js").SaveSettings(settings);
+  }
 
   render() {
     return (
       <section id="application">
         <form className="aligned">
-
-            <div className="field">
-                <label htmlFor="wallpaper">Wallpaper</label>
-                <input id="wallpaper" type="file" size="25" onChange={this.updateWallpaper} data-tooltip="The background wallpaper for your wallet"/>
-            </div>
+          <div className="field">
+            <label htmlFor="wallpaper">Wallpaper</label>
+            <input
+              id="wallpaper"
+              accept="image/*"
+              type="file"
+              size="25"
+              onChange={this.updateWallpaper}
+              data-tooltip="The background wallpaper for your wallet"
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="renderGlobe">Render Globe</label>
+            <input
+              id="renderGlobe"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateRenderGlobe.bind(this)}
+              data-tooltip="Render the globe on the overview page"
+            />
+          </div>
 
           <div className="clear-both" />
         </form>

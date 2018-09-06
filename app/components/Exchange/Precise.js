@@ -267,7 +267,6 @@ class Precise extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div id="ExchngeContainer">
         <div id="shifty-pannel">
