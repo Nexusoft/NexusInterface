@@ -2,7 +2,7 @@ const log = require("electron-log");
 const statusdelay = 1000;
 
 var user = "rpcserver";
-var password = require('crypto').randomBytes(64).toString('hex');
+var password = null;
 var host = "http://127.0.0.1:9336";
 
 var coreprocess = null;
@@ -26,7 +26,7 @@ function SetCoreParameters(settings)
     }
     else {
         user = "rpcserver";
-        password = require('crypto').randomBytes(32).toString('hex');
+        password = (password==null)?require('crypto').randomBytes(32).toString('hex'):password;
         host = "http://127.0.0.1:9336";
     }
 

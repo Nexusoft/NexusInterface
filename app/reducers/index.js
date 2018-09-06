@@ -10,6 +10,7 @@ import login from "./login";
 import exchange from "./exchange";
 import sendRecieve from "./sendRecieve";
 import addressbook from "./addressbook";
+import terminal from "./terminal";
 
 const rootReducer = combineReducers({
   overview,
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   transactions,
   exchange,
   common,
-  addressbook
+  addressbook,
+  terminal
 });
 
 export default rootReducer;

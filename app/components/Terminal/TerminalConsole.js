@@ -4,52 +4,41 @@ import styles from "./style.css";
 import { timingSafeEqual } from "crypto";
 import * as RPC from "../../script/rpc";
 
-export default class TerminalConsole extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      //vars go here
-      consoleoutput: [],
-      currentInput: "",
-      inputfield: null,
-      commandList:[],
-      autoComplete:[],
-      testnum: 99999
-    }
-  }  
+// Added to migrate to Redux
+import * as TYPE from "../../actions/actiontypes";
+import { connect } from "react-redux";
 
+const mapStateToProps = state => {
+  return { ...state.terminal, ...state.common };
+};
+
+const mapDispatchToProps = dispatch => ({
+  setCommandList: (commandList) => dispatch({type:TYPE.SET_COMMAND_LIST , payload: commandList}),
+  printToConsole: (consoleOutput) => dispatch({type:TYPE.PRINT_TO_CONSOLE , payload: consoleOutput}),
+  resetMyConsole: () => dispatch({type:TYPE.RESET_MY_CONSOLE})
+});
+
+class TerminalConsole extends Component {
   componentDidMount(){
     RPC.PROMISE("help", []).then(payload => {
       
       let CommandList = payload.split('\n');
       console.log(CommandList);
-      this.setState(
-        {
-          commandList:CommandList
-        }
-      );
-    });
-  }
-
-  /// Reset Nexus RPC Console
-  /// Clean out the consoleoutput state
-  resetnexusrpcconsole()
-  {
-    this.setState({
-      consoleoutput:[]
+      this.props.setCommandList(CommandList);
     });
   }
 
   /// Process Output
   /// Process the consoleoutput and return JSX
+  // Called in the renderer so processing what gets put on screen stays here.
   processOutput()
   {
-    if ( this.state.inputfield != null)
+    if ( this.props.inputfield != null)
     {
-      this.state.inputfield.focus();
+      this.props.inputfield.focus();
     }
     let num = 0;
-    return  this.state.consoleoutput.map((i) => 
+    return  this.props.consoleoutput.map((i) => 
     {
       num++;
       return (
@@ -66,29 +55,27 @@ export default class TerminalConsole extends Component {
   processInput()
   {
     /// If Nothing Then just exit
-    if (this.state.currentInput == "")
+    if (this.props.currentInput == "")
     {
       return;
     }
     /// This is not a RPC command, so catch this input and clear the console
-    if (this.state.currentInput.toLowerCase() == "clear" )
+    if (this.props.currentInput.toLowerCase() == "clear" )
     {
-      this.resetnexusrpcconsole();
-      this.state.inputfield.value = ""; 
+      this.props.resetMyConsole();
+      this.props.inputfield.value = "";
       return;
     }
     /// remove the command inputed
-    this.state.inputfield.value = ""; 
+    this.props.inputfield.value = "";
     
     /// Get the old console output so we can concat on it.
-    let tempConsoleOutput = [...this.state.consoleoutput];
+    // let tempConsoleOutput = [...this.props.consoleOutput];
   
     /// Split the input so that we can get the command and the arguments. THIS MIGHT BE AN ISSUE as I am just checking the US keyboard space
-    let splitInput = this.state.currentInput.split(" ");
+    let splitInput = this.props.currentInput.split(" ");
 
-    let preSanatized = splitInput[0];
-
-    preSanatized = preSanatized.replace(/[^a-zA-Z0-9]/g, "");
+    let preSanatized = splitInput[0].replace(/[^a-zA-Z0-9]/g, "");
 
     splitInput[0] = preSanatized;
 
@@ -111,12 +98,12 @@ export default class TerminalConsole extends Component {
     RPC.PROMISE(splitInput[0], RPCArguments).then(payload => {
 
       /// If a single object is given back, output it
-      if(typeof payload === "string" || typeof payload === "number" ) {
-        if (typeof payload === "string"){
+      if(typeof payload === "string" || typeof payload === "number") {
+        if(typeof payload === "string") {
           let temppayload = payload;
           /// If we find there are end line characters then we need to make these line breaks
           temppayload.split('\n').map((item, key) => {
-            return tempConsoleOutput.push(<span key={key}>{item}<br/></span>);
+            return tempConsoleOutput.push(item);
           })
         }
         else
@@ -128,7 +115,6 @@ export default class TerminalConsole extends Component {
       else {
         for (let outputObject in payload)
         {
-          //ddd.push(aaa + ": " + payload[aaa]);
           if (typeof payload[outputObject] === "object")
             {
               tempConsoleOutput.push(outputObject + ": " );
@@ -148,27 +134,28 @@ export default class TerminalConsole extends Component {
 
         }
       }
-      /// Set the state to have this tempconsoleoutput
-      this.setState(
-      {
-        consoleoutput: tempConsoleOutput,
-        currentInput:""
-      }
-    );
     }).catch( error =>
       {
         /// If there is an error then return that error message and place it in the output.
-        
-        tempConsoleOutput.push(error);
-        this.setState(
-          {
-            consoleoutput: tempConsoleOutput,
-            currentInput:""
-          });
+        this.props.printToConsole(error);
+        // tempConsoleOutput.push(error);
+        // this.setState(
+        //   {
+        //     consoleOutput: tempConsoleOutput,
+        //     currentInput:""
+        //   });
       }
     );
   }
-
+  recallPreviousCommand() {
+    // history of at least 10 commands that were entered.
+  }
+  recallNextCommandOrClear() {
+    // terminates back to what the user typed last as a state 0.
+  }
+  autoFillAutoComplete() {
+    // it could check to see if its looking for any addresses, check the clipboard for an address...
+  }
   /// Set Input Field
   /// Sets up the input field so we can reference it later
   setInputFeild = (e) =>
@@ -186,6 +173,15 @@ export default class TerminalConsole extends Component {
     
     if (e.key === 'Enter') {
       this.processInput();
+    }
+    if (e.key === 'ArrowUp') {
+      this.recallPreviousCommand();
+    }
+    if (e.key === 'ArrowDown') {
+      this.recallNextCommandOrClear();
+    }
+    if (e.key === 'ArrowRight') {
+      this.autoFillAutoComplete();
     }
   }
 
@@ -346,10 +342,14 @@ export default class TerminalConsole extends Component {
 
         </div>
 
-        <button id="terminal-console-reset" className="button" onClick={() => this.resetnexusrpcconsole()}>Clear Console</button>
+        <button id="terminal-console-reset" className="button" onClick={() => this.props.resetMyConsole()}>Clear Console</button>
 
       </div>
 
     );
   }
 }
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TerminalConsole);
