@@ -1,4 +1,4 @@
-// overview
+// Overview
 export const GET_INFO_DUMP = "GET_INFO_DUMP";
 export const SET_EXPERIMENTAL_WARNING = "SET_EXPERIMENTAL_WARNING";
 export const USD_RATE = "USD_RATE";
@@ -6,11 +6,11 @@ export const BTC_RATE = "BTC_RATE";
 export const CHANGE_24 = "CHANGE_24";
 export const SET_SUPPLY = "SET_SUPPLY";
 
-// trust
+// Trust
 export const GET_TRUST_LIST = "GET_TRUST_LIST";
 export const TOGGLE_SORT_DIRECTION = "TOGGLE_SORT_DIRECTION";
 
-// market
+// Market
 export const CRYPTOPIA_ORDERBOOK = "CRYPTOPIA_ORDERBOOK";
 export const CRYPTOPIA_24 = "CRYPTOPIA_24";
 export const BITTREX_ORDERBOOK = "BITTREX_ORDERBOOK";
@@ -31,14 +31,14 @@ export const SET_WALL_TRANS = "SET_WALL_TRANS";
 export const SET_TRANSACTION_SENDAGAIN = "SET_TRANSACTION_SENDAGAIN";
 export const SET_TRANSACTION_EXPLOREINFO = "SET_TRANSACTION_EXPLOREINFO";
 
-// login
+// Login
 export const SET_DATE = "SET_DATE";
 export const WIPE_LOGIN_INFO = "WIPE_LOGIN_INFO";
 export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
 export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
 export const TOGGLE_STAKING_FLAG = "TOGGLE_STAKING_FLAG";
 
-// common
+// Common
 export const LOCK = "LOCK";
 export const UNLOCK = "UNLOCK";
 export const SET_GOOGLEANALYTICS = "SET_GOOGLEANALYTICS";
@@ -47,7 +47,7 @@ export const UNENCRYPTED = "UNENCRYPTED";
 export const TOGGLE_MODAL_VIS_STATE = "TOGGLE_MODAL_VIS_STATE";
 export const BLOCK_DATE = "BLOCK_DATE";
 
-// send
+// Send
 export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
 export const REMOVE_FROM_QUEUE = "REMOVE_FROM_QUEUE";
 export const UPDATE_ADDRESS = "UPDATE_ADDRESS";
@@ -66,7 +66,7 @@ export const HIDE_MODAL3 = "HIDE_MODAL3";
 export const SHOW_MODAL3 = "SHOW_MODAL3";
 export const CONFIRM = "CONFIRM";
 
-// exchange
+// Exchange
 export const AVAILABLE_COINS = "AVAILABLE_COINS";
 export const FROM_SETTER = "FROM_SETTER";
 export const TO_SETTER = "TO_SETTER";
@@ -117,3 +117,6 @@ export const SET_MOUSE_POSITION = "SET_MOUSE_POSITION";
 export const TOGGLE_CREATE_ADDRESS = "TOGGLE_CREATE_ADDRESS";
 export const SET_HIGHEST_PEER_BLOCK = "SET_HIGHEST_PEER_BLOCK";
 export const SET_SYNC_STATUS = "SET_SYNC_STATUS";
+
+// Settings
+export const GET_SETTINGS = "GET_SETTINGS";

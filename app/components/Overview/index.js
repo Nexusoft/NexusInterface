@@ -47,7 +47,7 @@ import trust100 from "../../images/trust00.svg";
 import nxsblocks from "../../images/blockexplorer-invert-white.svg";
 import interesticon from "../../images/interest.svg";
 import stakeicon from "../../images/staking-white.svg";
-
+import { GetSettings } from "../../api/settings.js";
 import NetworkGlobe from "./NetworkGlobe";
 
 import ContextMenuBuilder from "../../contextmenu";
@@ -62,16 +62,13 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  setExperimentalWarning: returndata => {
-    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: returndata });
-  },
+  setExperimentalWarning: returndata =>
+    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: returndata }),
   setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
   setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
   set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
   setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate }),
-  BlockDate: stamp => {
-    dispatch({ type: TYPE.BLOCK_DATE, payload: stamp });
-  }
+  BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp })
 });
 
 //let experimentalOpen = true;
@@ -144,8 +141,7 @@ class Overview extends Component {
   }
 
   closeLicenseModal() {
-    this.setState({ open: false });
-    var settings = require("../../api/settings.js").GetSettings();
+    var settings = GetSettings();
     settings.acceptedagreement = true;
     require("../../api/settings.js").SaveSettings(settings);
   }
@@ -188,47 +184,32 @@ class Overview extends Component {
         ACCEPT
       </button>
     );
-    internalString.push(
-      <button
-        key="agreement-button-reject"
-        className="btn btn-action"
-        onClick={() => remote.app.quit()}
-      >
-        REJECT
-      </button>
-    );
-
-    return internalString;
   }
 
   returnExperimentalModalInternal() {
-    let internalString = [];
-
-    internalString.push(
-      "CONSIDER THIS SOFTWARE EXPERIMENTAL. PLEASE BACK UP WALLET FREQUENTLY "
+    return (
+      <div>
+        <h3>
+          CONSIDER THIS SOFTWARE EXPERIMENTAL. <br />
+          PLEASE BACK UP WALLET FREQUENTLY.
+        </h3>
+        <br key="br2" />
+        <button
+          key="experiment-button-accept"
+          className="button"
+          onClick={this.closeExperimentalModal}
+        >
+          OK
+        </button>
+        <button
+          key="experiment-button-noshow"
+          className="button"
+          onClick={() => this.dontShowExperimentalAgain()}
+        >
+          Don't show this again
+        </button>
+      </div>
     );
-    internalString.push(<br key="br2" />);
-
-    internalString.push(
-      <button
-        key="experiment-button-accept"
-        className="btn btn-action"
-        onClick={this.closeExperimentalModal}
-      >
-        OK
-      </button>
-    );
-    internalString.push(
-      <button
-        key="experiment-button-noshow"
-        className="btn btn-action"
-        onClick={() => this.dontShowExperimentalAgain()}
-      >
-        Don't show this again
-      </button>
-    );
-
-    return internalString;
   }
 
   closeExperimentalModal = () => {
@@ -237,7 +218,7 @@ class Overview extends Component {
   };
 
   dontShowExperimentalAgain() {
-    let settings = require("../../api/settings.js").GetSettings();
+    let settings = GetSettings();
     settings["experimentalWarning"] = false;
     require("../../api/settings.js").SaveSettings(settings);
     this.props.setExperimentalWarning(false);
@@ -346,7 +327,7 @@ class Overview extends Component {
   }
 
   returnIfLicenseShouldBeOpen() {
-    let settings = require("../../api/settings.js").GetSettings();
+    let settings = GetSettings();
     return !settings.acceptedagreement;
   }
 
@@ -354,7 +335,7 @@ class Overview extends Component {
     if (this.returnIfLicenseShouldBeOpen()) {
       return false;
     }
-    let settings = require("../../api/settings.js").GetSettings();
+    let settings = GetSettings();
     if (this.props.experimentalOpen == true) {
       if (settings.experimentalWarning == null) {
         return true;
@@ -375,7 +356,7 @@ class Overview extends Component {
   }
 
   returnIfGlobeEnabled() {
-    let settings = require("../../api/settings.js").GetSettings();
+    let settings = GetSettings();
     let isglobeopen = settings.renderGlobe;
     if (isglobeopen == false) {
       return null;
@@ -409,6 +390,15 @@ class Overview extends Component {
         </Modal>
         <Modal
           key="experiment-modal"
+          open={experimentalOpenbool}
+          onClose={this.closeExperimentalModal}
+          center
+          classNames={{ modal: "modal" }}
+        >
+          {this.returnExperimentalModalInternal()}
+        </Modal>
+        <Modal
+          key="encrypted-modal"
           open={experimentalOpenbool}
           onClose={this.closeExperimentalModal}
           center
