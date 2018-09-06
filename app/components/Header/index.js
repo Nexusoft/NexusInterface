@@ -56,11 +56,10 @@ class Header extends Component {
 
   doNotify(context, message) {
     Notification.requestPermission().then((result)=>{
-  
         var myNotification = new Notification(context, {
             'body': message
-        })
-    })
+        });
+    });
   };
 
   componentWillReceiveProps(nextProps) {
@@ -249,7 +248,7 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
-        {/* <button onClick={()=>this.doNotify('test', 'just a test string')}> Test Notification </button> */}
+        <button onClick={()=>this.doNotify('test', 'just a test string')}> Test Notification </button>
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );

@@ -132,6 +132,5 @@ configuration.GetAppDataDirectory = function() {
   const electron = require("electron");
   const path = require("path");
   const app = electron.app || electron.remote.app;
-
   return path.join(app.getPath("appData"), app.getName()) + "/";
 };

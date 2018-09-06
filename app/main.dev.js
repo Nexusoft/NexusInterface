@@ -40,21 +40,7 @@ const installExtensions = async () => {
 // Initialize application updater and check for updates
 function updateApplication() {
   // TODO: IMPORTANT: Prior to going live, remove this code and revoke the github token. Feed URL logic only applies with a private github repository
-
-  const data = {
-    provider: "github",
-    owner: "Nexusoft",
-    repo: "NexusInterface",
-    token: "606ac051f55833592161e2e87334fe57c218ae9c"
-  };
-
-  try {
-    autoUpdater.setFeedURL(data);
-    autoUpdater.autoDownload = false;
-    autoUpdater.checkForUpdates();
-  } catch (err) {
-    log.error("Error checking for updates: " + err);
-  }
+  // ************* Done I removed it.
 }
 
 // Set up the icon in the system tray
