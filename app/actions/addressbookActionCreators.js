@@ -137,7 +137,6 @@ export const SaveTz = (selected, TZ) => {
 };
 
 export const NameToggler = name => {
-  console.log("name");
   return dispatch => {
     dispatch({
       type: TYPE.TOGGLE_NAME_EDIT,
@@ -240,13 +239,15 @@ export const AddContact = (name, address, num, notes, TZ) => {
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
       })
       .catch(e => {
-        console.log(e);
+        dispatch({ type: TYPE.SHOW_MODAL, payload: "Invalid Address" });
+        setTimeout(() => {
+          dispatch({ type: TYPE.HIDE_MODAL });
+        }, 3000);
       });
   };
 };
 
 export const AddAddress = (name, address, index) => {
-  console.log(name, address, index);
   return dispatch => {
     RPC.PROMISE("validateaddress", [address])
       .then(payload => {
@@ -267,16 +268,24 @@ export const AddAddress = (name, address, index) => {
         } else alert("Invalid address: ", address);
       })
       .then(result => {
-        console.log(result);
         dispatch({
           type: TYPE.ADD_NEW_ADDRESS,
           payload: { newAddress: result, index: index }
         });
-
+        dispatch({ type: TYPE.CLEAR_PROTOTYPE });
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
+        dispatch({ type: TYPE.SHOW_MODAL, payload: "Address Added" });
+        setTimeout(() => {
+          dispatch({ type: TYPE.HIDE_MODAL });
+        }, 3000);
       })
       .catch(e => {
-        console.log(e);
+        dispatch({ type: TYPE.CLEAR_PROTOTYPE });
+        dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
+        dispatch({ type: TYPE.SHOW_MODAL, payload: "Invalid Address" });
+        setTimeout(() => {
+          dispatch({ type: TYPE.HIDE_MODAL });
+        }, 3000);
       });
   };
 };

@@ -106,7 +106,10 @@ class Transactions extends Component {
       tableHeight: {
         height: 200
       },
-      addressLabels: new Map()
+      addressLabels: new Map(),
+      refreshInterval: undefined,
+      highlightedBlockNum: "Loading",
+      highlightedBlockHash: "Loading"
     };
   }
 
@@ -144,8 +147,16 @@ class Transactions extends Component {
     }
     this.loadMyAccounts();
     //console.log(tempaddpress);
+
+    let interval = setInterval( () => {
+
+      console.log("THIS IS THE INTERVAL WORKING");
+       this.getTransactionData(false);
+       },30000
+      );
     this.setState(
       {
+        refreshInterval: interval,
         addressLabels: tempaddpress
       }
     );
@@ -161,6 +172,7 @@ class Transactions extends Component {
         }
       );
     }
+
     
     this.transactioncontextfunction = this.transactioncontextfunction.bind(this);
     window.addEventListener("contextmenu", this.transactioncontextfunction, false);
@@ -213,7 +225,7 @@ class Transactions extends Component {
           this.setState(
             {
               addressLabels: tempaddpress
-            },() => { this.getTransactionData();}
+            },() => { this.getTransactionData(true);}
           );
         });
       });
@@ -224,7 +236,7 @@ class Transactions extends Component {
   /// Life cycle hook for prop update
   componentDidUpdate(previousprops) {
     if (this.props.txtotal != previousprops.txtotal) {
-      this.getTransactionData();
+      this.getTransactionData(false);
     }
   }
 
@@ -305,11 +317,31 @@ class Transactions extends Component {
 
     let moreDatailsCallback = function() {
         
+
+      RPC.PROMISE("gettransaction",[this.props.walletitems[this.state.hoveringID].txid]).then (payload => 
+        {console.log(payload)
+
+          RPC.PROMISE("getblock",[payload.blockhash]).then(payload2 => {
+            console.log(payload2);
+            this.setState(
+              {
+                highlightedBlockHash: payload.blockhash,
+                highlightedBlockNum: payload2.height
+              }
+            );
+          });
+        }
+      );
+
         this.setState(
           {
+            highlightedBlockHash: "Loading",
+            highlightedBlockNum: "Loading",
             open:true
           }
         )
+
+
     }
     moreDatailsCallback = moreDatailsCallback.bind(this);
 
@@ -438,7 +470,7 @@ class Transactions extends Component {
 
   /// Get Transaction Data
   /// Gets all the data from each account held by the wallet
-  getTransactionData()
+  getTransactionData(resetZoom)
   {
     RPC.PROMISE("listaccounts",[0]).then(payload =>
       {
@@ -525,12 +557,18 @@ class Transactions extends Component {
           this.props.SetWalletTransactionArray(tempWalletTransactions);
           //console.log(tempWalletTransactions);
           
+          let tempZoom = this.state.zoomDomain;
+
+          if ( resetZoom == true)
+          {
+            tempZoom  = { x: [new Date(tempWalletTransactions[0].time * 1000), new Date((tempWalletTransactions[tempWalletTransactions.length - 1].time + 1000) * 1000)] };
+          }
 
           //console.log(this.props.walletitems);
           this.setState(
             {
               tableColumns:tabelheaders,
-              zoomDomain: { x: [new Date(tempWalletTransactions[0].time * 1000), new Date((tempWalletTransactions[tempWalletTransactions.length - 1].time + 1000) * 1000)] }
+              zoomDomain: tempZoom
             },() => {
               //console.log(this.props.walletitems);
               for (let index = 0; index < this.state.walletTransactions.length; index++) {
@@ -867,7 +905,14 @@ class Transactions extends Component {
   {
     //console.log(indata);
     //console.log("try");
-    //Use this to debug. 
+    //Use this to debug.
+    console.log(this); 
+    this.setState(
+      {
+      hoveringID:indata.index
+      }
+    );
+   // hoveringID:inData.index
   }
 
   /// Return Formated Table Data
@@ -884,7 +929,7 @@ class Transactions extends Component {
       {
         txCounter++;
         let isPending = "";
-        if (ele.confirmations <= 120)
+        if (ele.confirmations <= 12)
         {
           isPending = "(Pending)";
         }
@@ -920,9 +965,9 @@ class Transactions extends Component {
       {
         Header: 'time',
         id: "time",
-        Cell : d => <div> {(new Date(d.value * 1000)).toLocaleString()} </div>, // We want to display the time in  a readable format
+        Cell : d => <div> {(new Date(d.value * 1000)).toUTCString()} </div>, // We want to display the time in  a readable format
         accessor: "time",
-        maxWidth: 150
+        maxWidth: 200
       }
     );
 
@@ -937,7 +982,8 @@ class Transactions extends Component {
     tempColumns.push(
       {
         Header: 'amount',
-        accessor: 'amount'
+        accessor: 'amount',
+        maxWidth: 100
       }
     );
 
@@ -945,7 +991,7 @@ class Transactions extends Component {
       {
         Header: 'account',
         accessor: 'account',
-        maxWidth: 200
+        maxWidth: 150
       }
     );
 
@@ -1057,8 +1103,7 @@ class Transactions extends Component {
   {
     this.setState(
       {
-        isHoveringOverTable:true,
-        hoveringID:inData.index
+        isHoveringOverTable:true
 
       }
     )
@@ -1225,28 +1270,28 @@ class Transactions extends Component {
       console.log(this.state.historyData);
     };
 
-    uuuuuuuuuu = function(error, response, body) {
+    processHistoryReponse = function(error, response, body) {
       if (!error && response.statusCode === 200) {
         console.log(response["request"]["path"]);
-        let iiiiiii;
+        let symbolToLook;
         if ( response["request"]["path"].includes("USD",10) == true)
         {
           console.log("99999999999999");
-          iiiiiii = "USD";
+          symbolToLook = "USD";
         }
         if ( response["request"]["path"].includes("BTC",10) == true)
         {
           console.log("0000000000000000000");
-          iiiiiii = "BTC";
+          symbolToLook = "BTC";
         }
-          this.setnewdatafunction(body,iiiiiii);
+          this.setnewdatafunction(body,symbolToLook);
       }
     }
 
-    kfkfkfkfkfk = function(resolve,reject,urltoask,tokentocomapre)
+    handleHistoryReQuest = function(resolve,reject,urltoask,tokentocomapre)
       {
-        this.uuuuuuuuuu.bind(this);
-        let jjjjjjjj = resolve;
+        this.processHistoryReponse.bind(this);
+       
 
         Request(
           {
@@ -1254,19 +1299,19 @@ class Transactions extends Component {
             json: true,
 
           },
-          this.uuuuuuuuuu.bind(this)
+          this.processHistoryReponse.bind(this)
         ).on("response",() => resolve(true));
        
       }
 
-      gjggjgjgj = function(resolve,reject,urltoask,tokentocomapre)
+      handleHistoryReQuest = function(resolve,reject,urltoask,tokentocomapre)
     {
 
 
-      this.kfkfkfkfkfk = this.kfkfkfkfkfk.bind(this);
+      this.historyProcessChain = this.historyProcessChain.bind(this);
             setTimeout(() => {
         
-              this.kfkfkfkfkfk(resolve,reject,urltoask,tokentocomapre);
+              this.historyProcessChain(resolve,reject,urltoask,tokentocomapre);
 
     }, 250 + Math.floor(Math.random() * 2000) );
     }
@@ -1518,7 +1563,7 @@ class Transactions extends Component {
 
       const selectedTransaction = this.props.walletitems[this.state.hoveringID];
       
-        if (selectedTransaction.confirmations <= 120)
+        if (selectedTransaction.confirmations <= 12)
         {
           internalString.push(<a key="isPending">PENDING TRANSACTION</a>);
           internalString.push(<br key="br6"/>);
@@ -1538,6 +1583,14 @@ class Transactions extends Component {
       internalString.push(<br key="br4"/>);
       internalString.push(
           <a key="modal_Confirms">{"Confirmations: " + selectedTransaction.confirmations}</a>
+        );
+        internalString.push(<br key="br5"/>);
+        internalString.push(
+          <a style={{overflowWrap:"normal"}} key="modal_BlockHash">{"Block Hash: " + this.state.highlightedBlockHash}</a>
+        );
+        internalString.push(<br key="br6"/>);
+        internalString.push(
+          <a key="modal_BlockNumber">{"Block Number: " + this.state.highlightedBlockNum}</a>
         );
       
     }
@@ -1707,7 +1760,7 @@ class Transactions extends Component {
 
           <div id="transactions-details">
 
-            <Table key="table-top" data={data} columns={columns} minRows={pageSize} selectCallback={this.tryingsomething} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
+            <Table key="table-top" data={data} columns={columns} minRows={pageSize} selectCallback={this.tryingsomething.bind(this)} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
 
           </div>
 

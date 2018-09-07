@@ -54,7 +54,6 @@ export default class SettingsStyle extends Component {
     var settingsObj = settings.GetSettings();
 
     let imagePath = el.files[0].path;
-    //console.log(imagePath);
     settingsObj.wallpaper = imagePath;
     settings.SaveSettings(settingsObj);
 

@@ -30,7 +30,7 @@ configuration.Read = function(filename) {
   var fs = require("fs");
 
   try {
-    console.log(this.GetAppDataDirectory() + filename);
+    // console.log(this.GetAppDataDirectory() + filename);
     return fs.readFileSync(this.GetAppDataDirectory() + filename);
   } catch (err) {
     console.log("Error reading file: " + filename + " => " + err);
@@ -132,6 +132,5 @@ configuration.GetAppDataDirectory = function() {
   const electron = require("electron");
   const path = require("path");
   const app = electron.app || electron.remote.app;
-
   return path.join(app.getPath("appData"), app.getName()) + "/";
 };

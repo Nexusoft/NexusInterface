@@ -97,7 +97,6 @@ export const InitiateFastTransaction = (toAddress, refundAddress, pair) => {
           if (response.body.error) {
             alert(response.body.error);
           } else {
-            console.log(response);
             dispatch({
               type: TYPE.TRANSACTION_MODAL_ACTIVATE,
               payload: {
@@ -118,7 +117,6 @@ export const InitiateFastTransaction = (toAddress, refundAddress, pair) => {
 };
 
 export const GetQuote = (pair, ammount, callback) => {
-  console.log(ammount);
   return dispatch => {
     Request(
       {
@@ -129,7 +127,6 @@ export const GetQuote = (pair, ammount, callback) => {
       (error, response, body) => {
         if (response.statusCode === 200) {
           if (!response.body.error) {
-            console.log(response);
             dispatch({ type: TYPE.SET_QUOTE, payload: response.body.success });
             dispatch({ type: TYPE.GREENLIGHT_TRANSACTION, payload: true });
             dispatch({ type: TYPE.TOGGLE_ACYNC_BUTTONS });
@@ -138,7 +135,6 @@ export const GetQuote = (pair, ammount, callback) => {
             alert(response.body.error);
           }
         } else {
-          console.log(response);
         }
       }
     );
@@ -165,7 +161,6 @@ export const InitiateQuotedTransaction = (pair, ammount, toAdd, refundAdd) => {
           if (response.body.error) {
             alert(response.body.error);
           } else {
-            console.log(response);
             dispatch({
               type: TYPE.TRANSACTION_MODAL_ACTIVATE,
               payload: {

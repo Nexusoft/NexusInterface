@@ -64,34 +64,23 @@ Available RPC methods:
 /** 
 	Collection of RPC calls to populate the data for the GUI.
 	Add new Interface Specific Utilities Here. Module Specific Functions go In Module Scripts.
-	
 **/
-// var RPC = RPC || {};
 export const COMMANDS = {};
 export const CALLBACK = {};
 
-//
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
-//
-
 export const GETHOST = () => {
   let core = require("electron").remote.getGlobal("core");
   return core.host;
 };
 
-//
 // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
-//
-
 export const GETUSER = () => {
   let core = require("electron").remote.getGlobal("core");
   return core.user;
 };
 
-//
 // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
-//
-
 export const GETPASSWORD = () => {
   let core = require("electron").remote.getGlobal("core");
   return core.password;
@@ -119,7 +108,7 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args
     });
-    // console.log(PostData);
+
     var ResponseObject;
 
     /** Opera 8.0+, Firefox, Safari **/
@@ -144,7 +133,6 @@ export const PROMISE = (cmd, args) => {
 
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
-      // console.log(ResponseObject);
       if (ResponseObject.status == 404) {
         reject("RPC Command {" + cmd + "} Not Found");
       }
@@ -186,22 +174,22 @@ export const PROMISE = (cmd, args) => {
   });
 };
 
-export const GETWITHPASS = (cmd, args, Callback, passdata) => {
-  var PostData = JSON.stringify({
-    method: cmd,
-    params: args,
-    passthrough: passdata
-  });
+// export const GETWITHPASS = (cmd, args, Callback, passdata) => {
+//   var PostData = JSON.stringify({
+//     method: cmd,
+//     params: args,
+//     passthrough: passdata
+//   });
 
-  POST(
-    GETHOST(),
-    PostData,
-    "TAG-ID-deprecate",
-    Callback,
-    GETUSER(),
-    GETPASSWORD()
-  );
-};
+//   POST(
+//     GETHOST(),
+//     PostData,
+//     "TAG-ID-deprecate",
+//     Callback,
+//     GETUSER(),
+//     GETPASSWORD()
+//   );
+// };
 
 //TODO: clean this up... still not diving into this yet. prototype first...
 export const POST = (

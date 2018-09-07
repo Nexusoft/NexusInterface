@@ -15,7 +15,8 @@ const initialState = {
   modalVisable: false,
   heighestPeerBlock: 0,
   isInSync: false,
-  blockDate: "Getting Next Block..."
+  blockDate: "Getting Next Block...",
+  portAvailable: false
 };
 
 export default (state = initialState, action) => {
@@ -133,6 +134,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         googleanalytics: action.payload
+      };
+      break;
+
+      case TYPE.PORT_AVAILABLE:
+      return{
+        ...state,
+        portAvailable: action.payload
       };
       break;
 

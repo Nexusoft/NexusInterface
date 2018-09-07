@@ -76,6 +76,12 @@ export const CloseModal3 = () => {
   };
 };
 
+export const setSettings = settings => {
+  return dispatch => {
+    dispatch({ type: TYPE.GET_SETTINGS, payload: settings });
+  };
+};
+
 export const OpenModal3 = () => {
   return dispatch => {
     dispatch({ type: TYPE.OPEN_MODAL3 });
@@ -102,6 +108,12 @@ export const SetSyncStatus = stat => {
 export const SetHighestPeerBlock = hpb => {
   return dispatch => {
     dispatch({ type: TYPE.SET_HIGHEST_PEER_BLOCK, payload: hpb });
+  };
+};
+
+export const SetPortIsAvailable = isAvailable => {
+  return dispatch => {
+    dispatch({ type: TYPE.PORT_AVAILABLE, payload: isAvailable });
   };
 };
 

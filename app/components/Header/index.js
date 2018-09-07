@@ -10,6 +10,7 @@ import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
+import { GetSettings } from "../../api/settings.js";
 
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
@@ -21,6 +22,8 @@ import logoFull from "images/logo-full-beta.svg";
 
 import GOOGLE from "../../script/googleanalytics";
 
+var checkportinterval; // shouldbemoved
+
 const mapStateToProps = state => {
   return { ...state.overview, ...state.common };
 };
@@ -30,16 +33,14 @@ const mapDispatchToProps = dispatch =>
 
 class Header extends Component {
   componentDidMount() {
-    const menuBuilder = new MenuBuilder(
-      require("electron").remote.getCurrentWindow().id
-    );
+    this.props.setSettings(GetSettings());
+    const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     var self = this;
     this.props.SetGoogleAnalytics(GOOGLE);
     let encryptionStatus = false;
     if (this.props.unlocked_until !== undefined) {
       encryptionStatus = true;
     }
-    console.log(this.props);
 
     this.props.LoadAddressBook();
 
@@ -50,7 +51,21 @@ class Header extends Component {
     self.set = setInterval(function() {
       self.props.GetInfoDump();
     }, 20000);
+
+    checkportinterval = setInterval(function()
+    {
+      self.checkIfPortOpen();
+    }, 20000);
+
     this.props.history.push("/");
+  }
+
+  doNotify(context, message) {
+    Notification.requestPermission().then(result => {
+      var myNotification = new Notification(context, {
+        body: message
+      });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -99,14 +114,40 @@ class Header extends Component {
         });
 
         if (MRT.category === "receive") {
+          this.doNotify("Received", MRT.amount + " NXS");
           this.props.OpenModal("receive");
         } else if (MRT.category === "send") {
+          this.doNotify("Sent", MRT.amount + " NXS");
           this.props.OpenModal("send");
+        } else if (MRT.category === "genesis") {
+          this.doNotify("Genesis", MRT.amount + " NXS");
+          this.props.OpenModal("genesis");
+        } else if (MRT.category === "trust") {
+          this.doNotify("Trust", MRT.amount + " NXS");
+          this.props.OpenModal("trust");
         }
       });
     } else {
       return null;
     }
+  }
+
+  checkIfPortOpen()
+  {
+    const isPortAvailable = require('is-port-available');
+ 
+    var port = 8325;
+    isPortAvailable(port).then( status =>{
+        if(status)
+        {
+          this.props.SetPortIsAvailable(true);
+        } 
+        else{
+          this.props.SetPortIsAvailable(false);
+            console.log('Port ' + port + ' IS NOT available!');
+            console.log('Reason : ' + isPortAvailable.lastError);
+        }
+    });
   }
 
   signInStatus() {
@@ -165,11 +206,20 @@ class Header extends Component {
       case "send":
         return <h2>Transaction Sent</h2>;
         break;
+      case "genesis":
+        return <h2>Genesis Transaction</h2>;
+        break;
+      case "trust":
+        return <h2>Trust Transaction</h2>;
+        break;
       case "This is an address regiestered to this wallet":
         return <h2>This is an address regiestered to this wallet</h2>;
         break;
       case "Invalid Address":
         return <h2>Invalid Address</h2>;
+        break;
+      case "Address Added":
+        return <h2>Address Added</h2>;
         break;
       case "No Addresses":
         return <h2>No Addresses</h2>;
@@ -201,6 +251,18 @@ class Header extends Component {
     }
   }
 
+  returnIfPortAvailable()
+  {
+    if (this.props.portAvailable == false)
+    {
+      return <div className="noDaemonPort"> DAEMON NOT AVAILABLE </div>
+    }
+    else
+    {
+      return null;
+    }
+  }
+
   render() {
     return (
       <div id="Header">
@@ -213,7 +275,7 @@ class Header extends Component {
         >
           {this.modalinternal()}
         </Modal>
-
+        {this.returnIfPortAvailable()}
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />
@@ -245,7 +307,10 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
-
+        <button onClick={() => this.doNotify("test", "just a test string")}>
+          {" "}
+          Test Notification{" "}
+        </button>
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );

@@ -4,6 +4,7 @@ import styles from "./style.css";
 import { connect } from "react-redux";
 import Modal from "react-responsive-modal";
 import * as TYPE from "../../actions/actiontypes";
+import { NavLink } from "react-router-dom";
 
 // importing images here because of a weird webpack issue
 import USD from "../../images/USD.svg";
@@ -47,7 +48,9 @@ import trust100 from "../../images/trust00.svg";
 import nxsblocks from "../../images/blockexplorer-invert-white.svg";
 import interesticon from "../../images/interest.svg";
 import stakeicon from "../../images/staking-white.svg";
+import maxmindLogo from "../../images/maxmind-header-logo-compact.svg";
 
+import { GetSettings, SaveSettings } from "../../api/settings.js";
 import NetworkGlobe from "./NetworkGlobe";
 
 import ContextMenuBuilder from "../../contextmenu";
@@ -57,24 +60,24 @@ import Request from "request";
 const mapStateToProps = state => {
   return {
     ...state.overview,
-    ...state.common
+    ...state.common,
+    ...state.settings
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  setExperimentalWarning: returndata => {
-    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: returndata });
-  },
+  setExperimentalWarning: save =>
+    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
   setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
   setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
   set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
   setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate }),
-  BlockDate: stamp => {
-    dispatch({ type: TYPE.BLOCK_DATE, payload: stamp });
-  }
+  BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
+  acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
+  toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
+  ignoreEncryptionWarning: () =>
+    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING })
 });
-
-//let experimentalOpen = true;
 
 class Overview extends Component {
   componentDidMount() {
@@ -90,7 +93,6 @@ class Overview extends Component {
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
-          console.log(response);
           this.props.setBTC(body.data.quotes.BTC.price);
           this.props.set24hrChange(body.data.quotes.USD.percent_change_24h);
           this.props.setSupply(body.data.circulating_supply);
@@ -98,7 +100,6 @@ class Overview extends Component {
         }
       }
     );
-    console.log(this.props.history);
   }
 
   componentWillUnmount() {
@@ -109,13 +110,17 @@ class Overview extends Component {
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
         console.log("UPDATE BLOCKS");
-
+        console.log(this.props);
         this.redrawCurves();
       }
     }
     if (this.props.blocks > previousprops.blocks) {
       let newDate = new Date();
       this.props.BlockDate(newDate);
+    }
+
+    if (this.props.saveSettingsFlag) {
+      require("../../api/settings.js").SaveSettings(this.props.settings);
     }
 
     if (this.props.connections != previousprops.connections) {
@@ -129,14 +134,14 @@ class Overview extends Component {
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
+
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   calculateUSDvalue() {
     let USDvalue = this.props.balance * this.props.USD;
-    console.log(this.props.BTC);
+
     if (USDvalue === 0) {
       USDvalue = `${USDvalue}.00`;
     } else {
@@ -146,81 +151,70 @@ class Overview extends Component {
   }
 
   closeLicenseModal() {
-    this.setState({ open: false });
-    var settings = require("../../api/settings.js").GetSettings();
-    settings.acceptedagreement = true;
-    require("../../api/settings.js").SaveSettings(settings);
-    console.log("accepted");
+    this.props.acceptMITAgreement();
   }
 
   returnLicenseModalInternal() {
-    let internalString = [];
-
-    internalString.push("MIT LICENSE GOES HERE");
-    internalString.push(<br key="br1" />);
-    internalString.push(
-      <button
-        key="agreement-button-accept"
-        className="btn btn-action"
-        onClick={() => this.closeLicenseModal()}
-      >
-        ACCEPT
-      </button>
+    return (
+      <div>
+        The MIT License (MIT)
+        <br />
+        Copyright (c) 2015-present C. T. Lin
+        <br />
+        Permission is hereby granted, free of charge, to any person obtaining a
+        copy of this software and associated documentation files (the
+        "Software"), to deal in the Software without restriction, including
+        without limitation the rights to use, copy, modify, merge, publish,
+        distribute, sublicense, and/or sell copies of the Software, and to
+        permit persons to whom the Software is furnished to do so, subject to
+        the following conditions:
+        <br />
+        The above copyright notice and this permission notice shall be included
+        in all copies or substantial portions of the Software.
+        <br />
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+        OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+        MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+        IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+        CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+        TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+        SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        <br />
+        <button
+          key="agreement-button-accept"
+          className="button primary"
+          onClick={() => this.closeLicenseModal()}
+        >
+          ACCEPT
+        </button>
+      </div>
     );
-    internalString.push(
-      <button
-        key="agreement-button-reject"
-        className="btn btn-action"
-        onClick={() => remote.app.quit()}
-      >
-        REJECT
-      </button>
-    );
-
-    return internalString;
   }
 
   returnExperimentalModalInternal() {
-    let internalString = [];
-
-    internalString.push(
-      "CONSIDER THIS SOFTWARE EXPERIMENTAL. PLEASE BACK UP WALLET FREQUENTLY "
+    return (
+      <div>
+        <h3>
+          CONSIDER THIS SOFTWARE EXPERIMENTAL. <br />
+          PLEASE BACK UP WALLET FREQUENTLY.
+        </h3>
+        <br key="br2" />
+        <button
+          key="experiment-button-accept"
+          className="button"
+          onClick={() => this.props.setExperimentalWarning(false)}
+        >
+          OK
+        </button>
+        <button
+          key="experiment-button-noshow"
+          className="button"
+          onClick={() => this.props.setExperimentalWarning(true)}
+        >
+          Don't show this again
+        </button>
+      </div>
     );
-    internalString.push(<br key="br2" />);
-
-    internalString.push(
-      <button
-        key="experiment-button-accept"
-        className="btn btn-action"
-        onClick={this.closeExperimentalModal}
-      >
-        OK
-      </button>
-    );
-    internalString.push(
-      <button
-        key="experiment-button-noshow"
-        className="btn btn-action"
-        onClick={() => this.dontShowExperimentalAgain()}
-      >
-        Don't show this again
-      </button>
-    );
-
-    return internalString;
-  }
-
-  closeExperimentalModal = () => {
-    this.props.setExperimentalWarning(false);
-    this.forceUpdate();
-  };
-
-  dontShowExperimentalAgain() {
-    let settings = require("../../api/settings.js").GetSettings();
-    settings["experimentalWarning"] = false;
-    require("../../api/settings.js").SaveSettings(settings);
-    this.props.setExperimentalWarning(false);
-    this.forceUpdate();
   }
 
   connectionsImage() {
@@ -324,77 +318,33 @@ class Overview extends Component {
     }
   }
 
-  returnIfLicenseShouldBeOpen() {
-    let settings = require("../../api/settings.js").GetSettings();
-    return !settings.acceptedagreement;
-  }
-
-  returnIfExperimentalShouldBeOpen() {
-    if (this.returnIfLicenseShouldBeOpen()) {
-      return false;
-    }
-    let settings = require("../../api/settings.js").GetSettings();
-    if (this.props.experimentalOpen == true) {
-      if (settings.experimentalWarning == null) {
-        return true;
-      }
-
-      if (settings.experimentalWarning == false) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  }
-
   returnIfDrawLines() {
     //if (testinglines == true)
   }
 
   returnIfGlobeEnabled() {
-    let settings = require("../../api/settings.js").GetSettings();
+    let settings = GetSettings();
     let isglobeopen = settings.renderGlobe;
     if (isglobeopen == false) {
       return null;
     } else {
       return (
-        <NetworkGlobe
+        [[<NetworkGlobe
           handleOnLineRender={e => (this.redrawCurves = e)}
           handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
-        />
+        />],[<div className="maxmindCopyright">
+        <img id="hhhhhhh"
+              src={maxmindLogo} 
+              width="100px"
+              height="100px"
+        />Globe includes GeoLite2</div>]]
       );
     }
   }
 
   render() {
-    const agreementOpen = this.returnIfLicenseShouldBeOpen();
-    const experimentalOpenbool = this.returnIfExperimentalShouldBeOpen();
     return (
       <div id="overviewPage">
-        <Modal
-          key="agreement-modal"
-          open={agreementOpen}
-          onClose={() => {
-            return true;
-          }}
-          center
-          showCloseIcon={false}
-          classNames={{ modal: "modal" }}
-        >
-          <h2>License Agreement</h2>
-          {this.returnLicenseModalInternal()}
-        </Modal>
-        <Modal
-          key="experiment-modal"
-          open={experimentalOpenbool}
-          onClose={this.closeExperimentalModal}
-          center
-          classNames={{ modal: "modal" }}
-        >
-          {this.returnExperimentalModalInternal()}
-        </Modal>
         <div className="left-stats">
           <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
             <div className="h2">
@@ -458,11 +408,7 @@ class Overview extends Component {
           </div>
         </div>
         {this.returnIfGlobeEnabled()}
-        <div className="maxmindCopyright">
-          Globe includes GeoLite2 data created by MaxMind <br />
-          available at{" "}
-          <a href="http://www.maxmind.com">http://www.maxmind.com</a>
-        </div>
+        
         <div className="right-stats">
           <div
             id="nxs-connections-info"
@@ -521,7 +467,51 @@ class Overview extends Component {
             <img src={stakeicon} />
             <div className="overviewValue">{this.props.stakeweight}</div>
           </div>
-        </div>
+        </div>{" "}
+        <Modal
+          key="agreement-modal"
+          open={!this.props.settings.acceptedagreement}
+          onClose={() => true}
+          center
+          showCloseIcon={false}
+          classNames={{ modal: "modal" }}
+        >
+          <h2>License Agreement</h2>
+          {this.returnLicenseModalInternal()}
+        </Modal>
+        <Modal
+          key="experiment-modal"
+          open={
+            this.props.settings.experimentalWarning &&
+            this.props.experimentalOpen
+          }
+          onClose={this.closeExperimentalModal}
+          center
+          classNames={{ modal: "modal" }}
+        >
+          {this.returnExperimentalModalInternal()}
+        </Modal>
+        <Modal
+          key="encrypted-modal"
+          open={
+            !this.props.encrypted && !this.props.ignoreEncryptionWarningFlag
+          }
+          onClose={() => this.props.ignoreEncryptionWarning()}
+          center
+          classNames={{ modal: "modal" }}
+        >
+          <h3>Hey, your wallet is not encrypted.</h3>
+          <p>You really should encrypt your wallet to keep your Nexus safe.</p>
+          <NavLink to="/Settings/Unencrypted">
+            <button className="button primary">Take Me There</button>
+          </NavLink>
+          <button
+            className="button negative"
+            onClick={() => this.props.ignoreEncryptionWarning()}
+          >
+            Ignore
+          </button>
+        </Modal>
       </div>
     );
   }

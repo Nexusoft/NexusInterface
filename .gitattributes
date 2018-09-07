@@ -1,5 +1,6 @@
 * text eol=lf
-*.mmdb binary
+*.png binary
 *.ico binary
 *.icns binary
 *.mmbd binary
+*.jpg binary

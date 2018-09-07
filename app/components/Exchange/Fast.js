@@ -193,7 +193,7 @@ class Fast extends Component {
 
   executeTrade() {
     // if (this.props.loggedIn && this.props.from === "NXS") {
-    console.log("transaction");
+
     if (this.props.withinBounds) {
       let pair = this.props.from + "_" + this.props.to;
       if (this.props.toAddress !== "") {
@@ -245,7 +245,6 @@ class Fast extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div id="ExchngeContainer">
         <div id="shifty-pannel">
