@@ -1,15 +1,3 @@
-/* eslint global-require: 1*/
-
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `npm run build` or `npm run build-main`, this file is compiled to
- * `./app/main.prod.js` using webpack. This gives us some performance wins.
- *
- *
- */
 import { app, BrowserWindow, remote, Tray, Menu, ipcMain } from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
@@ -22,84 +10,40 @@ let mainWindow;
 let tray;
 let resizeTimer;
 
-//
 // Global Objects
-//
-
 global.core = core;
 
-//
 // Configure Updater
-//
-
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = "info";
 
-//
 // Enable source map support
-//
-
 if (process.env.NODE_ENV === "production") {
   const sourceMapSupport = require("source-map-support");
   sourceMapSupport.install();
 }
 
-//
-// Enable debugging for development or production with debug flag
-//
-
-// if (
-//   process.env.NODE_ENV === "development" ||
-//   process.env.DEBUG_PROD === "true"
-// ) {
 require("electron-debug")();
 const p = path.join(__dirname, "..", "app", "node_modules");
 require("module").globalPaths.push(p);
-// }
 
-//
 // Enable development tools for REACT and REDUX
-//
-
 const installExtensions = async () => {
   const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ["REACT_DEVELOPER_TOOLS", "REDUX_DEVTOOLS"];
-
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch();
 };
 
-//
 // Initialize application updater and check for updates
-//
-
 function updateApplication() {
-  //
   // TODO: IMPORTANT: Prior to going live, remove this code and revoke the github token. Feed URL logic only applies with a private github repository
-  //
-
-  const data = {
-    provider: "github",
-    owner: "Nexusoft",
-    repo: "NexusInterface",
-    token: "606ac051f55833592161e2e87334fe57c218ae9c"
-  };
-
-  try {
-    autoUpdater.setFeedURL(data);
-    autoUpdater.autoDownload = false;
-    autoUpdater.checkForUpdates();
-  } catch (err) {
-    log.error("Error checking for updates: " + err);
-  }
+  // ************* Done I removed it.
 }
 
-//
 // Set up the icon in the system tray
-//
-
 function setupTray() {
   let trayImage;
 
@@ -216,10 +160,7 @@ function createWindow() {
   });
 }
 
-//
 // Application Startup
-//
-
 app.on("ready", async () => {
   if (
     process.env.NODE_ENV === "development" ||
@@ -227,18 +168,12 @@ app.on("ready", async () => {
   ) {
     await installExtensions();
   }
-
-  core.start();
-
   createWindow();
-
   setupTray();
+  core.start();
 });
 
-//
 // Application Shutdown
-//
-
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     core.stop(function() {

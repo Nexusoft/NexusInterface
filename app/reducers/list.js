@@ -11,11 +11,13 @@ export default (state = initialState, action) => {
         ...state,
         trustlist: [...action.payload]
       };
+      break;
     case TYPE.TOGGLE_SORT_DIRECTION:
       return {
         ...state,
         acc: !state.acc
       };
+      break;
     default:
       return state;
   }
