@@ -21,6 +21,8 @@ import logoFull from "images/logo-full-beta.svg";
 
 import GOOGLE from "../../script/googleanalytics";
 
+var checkportinterval;
+
 const mapStateToProps = state => {
   return { ...state.overview, ...state.common };
 };
@@ -47,6 +49,12 @@ class Header extends Component {
     self.set = setInterval(function() {
       self.props.GetInfoDump();
     }, 20000);
+
+    checkportinterval = setInterval(function()
+    {
+      self.checkIfPortOpen();
+    }, 10000);
+
     this.props.history.push("/");
   }
 
@@ -104,6 +112,24 @@ class Header extends Component {
     } else {
       return null;
     }
+  }
+
+  checkIfPortOpen()
+  {
+    const isPortAvailable = require('is-port-available');
+ 
+    var port = 9336;
+    isPortAvailable(port).then( status =>{
+        if(status)
+        {
+          this.props.SetPortIsAvailable(true);
+        } 
+        else{
+          this.props.SetPortIsAvailable(false);
+            console.log('Port ' + port + ' IS NOT available!');
+            console.log('Reason : ' + isPortAvailable.lastError);
+        }
+    });
   }
 
   signInStatus() {
@@ -201,6 +227,18 @@ class Header extends Component {
     }
   }
 
+  returnIfPortAvailable()
+  {
+    if (this.props.portAvailable == false)
+    {
+      return <div className="noDeamonPort"> DAEMON NOT AVAILABLE </div>
+    }
+    else
+    {
+      return null;
+    }
+  }
+
   render() {
     return (
       <div id="Header">
@@ -213,7 +251,7 @@ class Header extends Component {
         >
           {this.modalinternal()}
         </Modal>
-
+        {this.returnIfPortAvailable()}
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />

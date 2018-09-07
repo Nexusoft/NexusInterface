@@ -47,6 +47,10 @@
   width: 120px;
 }
 
+.noDeamonPort{
+  padding: 0px;
+}
+
 /* MODAL STYLE */
 
 .custom-overlay {
