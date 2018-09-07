@@ -546,7 +546,7 @@ class SendRecieve extends Component {
                     onClick={() => {
                       if (
                         this.props.encrypted === false ||
-                        this.props.loggedIn === false
+                        this.props.loggedIn === true
                       ) {
                         this.props.OpenModal2("send transaction?");
                       } else {

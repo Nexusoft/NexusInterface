@@ -18,7 +18,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SET_ERROR_MESSAGE, payload: message }),
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
   busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
-  stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG })
+  stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG }),
+  getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload })
 });
 
 class Login extends Component {
@@ -45,7 +46,16 @@ class Login extends Component {
     RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, false])
       .then(payload => {
         this.props.wipe();
-        this.props.busy();
+
+        RPC.PROMISE("getinfo", [])
+          .then(payload => {
+            delete payload.timestamp;
+            return payload;
+          })
+          .then(payload => {
+            // this.props.busy();
+            this.props.getInfo(payload);
+          });
       })
       .catch(e => {
         if (

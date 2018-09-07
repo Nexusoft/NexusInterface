@@ -4,6 +4,7 @@ import styles from "./style.css";
 import { connect } from "react-redux";
 import Modal from "react-responsive-modal";
 import * as TYPE from "../../actions/actiontypes";
+import { NavLink } from "react-router-dom";
 
 // importing images here because of a weird webpack issue
 import USD from "../../images/USD.svg";
@@ -47,7 +48,7 @@ import trust100 from "../../images/trust00.svg";
 import nxsblocks from "../../images/blockexplorer-invert-white.svg";
 import interesticon from "../../images/interest.svg";
 import stakeicon from "../../images/staking-white.svg";
-import { GetSettings } from "../../api/settings.js";
+import { GetSettings, SaveSettings } from "../../api/settings.js";
 import NetworkGlobe from "./NetworkGlobe";
 
 import ContextMenuBuilder from "../../contextmenu";
@@ -57,21 +58,24 @@ import Request from "request";
 const mapStateToProps = state => {
   return {
     ...state.overview,
-    ...state.common
+    ...state.common,
+    ...state.settings
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  setExperimentalWarning: returndata =>
-    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: returndata }),
+  setExperimentalWarning: save =>
+    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
   setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
   setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
   set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
   setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate }),
-  BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp })
+  BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
+  acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
+  toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
+  ignoreEncryptionWarning: () =>
+    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING })
 });
-
-//let experimentalOpen = true;
 
 class Overview extends Component {
   componentDidMount() {
@@ -104,13 +108,17 @@ class Overview extends Component {
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
         console.log("UPDATE BLOCKS");
-
+        console.log(this.props);
         this.redrawCurves();
       }
     }
     if (this.props.blocks > previousprops.blocks) {
       let newDate = new Date();
       this.props.BlockDate(newDate);
+    }
+
+    if (this.props.saveSettingsFlag) {
+      require("../../api/settings.js").SaveSettings(this.props.settings);
     }
 
     if (this.props.connections != previousprops.connections) {
@@ -124,7 +132,7 @@ class Overview extends Component {
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
+
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
@@ -141,48 +149,43 @@ class Overview extends Component {
   }
 
   closeLicenseModal() {
-    var settings = GetSettings();
-    settings.acceptedagreement = true;
-    require("../../api/settings.js").SaveSettings(settings);
+    this.props.acceptMITAgreement();
   }
 
   returnLicenseModalInternal() {
-    let internalString = [];
-
-    internalString.push(`The MIT License (MIT)`);
-    internalString.push(<br key="br1" />);
-
-    internalString.push(`Copyright (c) 2015-present C. T. Lin`);
-    internalString.push(<br key="br1" />);
-    
-    internalString.push(` Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:`);
-    internalString.push(<br key="br1" />);
-    
-    internalString.push(`The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.`);
-    internalString.push(<br key="br1" />);
-
-     internalString.push(`THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.`);
-    internalString.push(<br key="br1" />);
-    internalString.push(
-      <button
-        key="agreement-button-accept"
-        className="btn btn-action"
-        onClick={() => this.closeLicenseModal()}
-      >
-        ACCEPT
-      </button>
+    return (
+      <div>
+        The MIT License (MIT)
+        <br />
+        Copyright (c) 2015-present C. T. Lin
+        <br />
+        Permission is hereby granted, free of charge, to any person obtaining a
+        copy of this software and associated documentation files (the
+        "Software"), to deal in the Software without restriction, including
+        without limitation the rights to use, copy, modify, merge, publish,
+        distribute, sublicense, and/or sell copies of the Software, and to
+        permit persons to whom the Software is furnished to do so, subject to
+        the following conditions:
+        <br />
+        The above copyright notice and this permission notice shall be included
+        in all copies or substantial portions of the Software.
+        <br />
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+        OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+        MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+        IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+        CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+        TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+        SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        <br />
+        <button
+          key="agreement-button-accept"
+          className="button primary"
+          onClick={() => this.closeLicenseModal()}
+        >
+          ACCEPT
+        </button>
+      </div>
     );
   }
 
@@ -197,32 +200,19 @@ class Overview extends Component {
         <button
           key="experiment-button-accept"
           className="button"
-          onClick={this.closeExperimentalModal}
+          onClick={() => this.props.setExperimentalWarning(false)}
         >
           OK
         </button>
         <button
           key="experiment-button-noshow"
           className="button"
-          onClick={() => this.dontShowExperimentalAgain()}
+          onClick={() => this.props.setExperimentalWarning(true)}
         >
           Don't show this again
         </button>
       </div>
     );
-  }
-
-  closeExperimentalModal = () => {
-    this.props.setExperimentalWarning(false);
-    this.forceUpdate();
-  };
-
-  dontShowExperimentalAgain() {
-    let settings = GetSettings();
-    settings["experimentalWarning"] = false;
-    require("../../api/settings.js").SaveSettings(settings);
-    this.props.setExperimentalWarning(false);
-    this.forceUpdate();
   }
 
   connectionsImage() {
@@ -326,31 +316,6 @@ class Overview extends Component {
     }
   }
 
-  returnIfLicenseShouldBeOpen() {
-    let settings = GetSettings();
-    return !settings.acceptedagreement;
-  }
-
-  returnIfExperimentalShouldBeOpen() {
-    if (this.returnIfLicenseShouldBeOpen()) {
-      return false;
-    }
-    let settings = GetSettings();
-    if (this.props.experimentalOpen == true) {
-      if (settings.experimentalWarning == null) {
-        return true;
-      }
-
-      if (settings.experimentalWarning == false) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  }
-
   returnIfDrawLines() {
     //if (testinglines == true)
   }
@@ -371,41 +336,8 @@ class Overview extends Component {
   }
 
   render() {
-    const agreementOpen = this.returnIfLicenseShouldBeOpen();
-    const experimentalOpenbool = this.returnIfExperimentalShouldBeOpen();
     return (
       <div id="overviewPage">
-        <Modal
-          key="agreement-modal"
-          open={agreementOpen}
-          onClose={() => {
-            return true;
-          }}
-          center
-          showCloseIcon={false}
-          classNames={{ modal: "modal" }}
-        >
-          <h2>License Agreement</h2>
-          {this.returnLicenseModalInternal()}
-        </Modal>
-        <Modal
-          key="experiment-modal"
-          open={experimentalOpenbool}
-          onClose={this.closeExperimentalModal}
-          center
-          classNames={{ modal: "modal" }}
-        >
-          {this.returnExperimentalModalInternal()}
-        </Modal>
-        <Modal
-          key="encrypted-modal"
-          open={experimentalOpenbool}
-          onClose={this.closeExperimentalModal}
-          center
-          classNames={{ modal: "modal" }}
-        >
-          {this.returnExperimentalModalInternal()}
-        </Modal>
         <div className="left-stats">
           <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
             <div className="h2">
@@ -532,7 +464,51 @@ class Overview extends Component {
             <img src={stakeicon} />
             <div className="overviewValue">{this.props.stakeweight}</div>
           </div>
-        </div>
+        </div>{" "}
+        <Modal
+          key="agreement-modal"
+          open={!this.props.settings.acceptedagreement}
+          onClose={() => true}
+          center
+          showCloseIcon={false}
+          classNames={{ modal: "modal" }}
+        >
+          <h2>License Agreement</h2>
+          {this.returnLicenseModalInternal()}
+        </Modal>
+        <Modal
+          key="experiment-modal"
+          open={
+            this.props.settings.experimentalWarning &&
+            this.props.experimentalOpen
+          }
+          onClose={this.closeExperimentalModal}
+          center
+          classNames={{ modal: "modal" }}
+        >
+          {this.returnExperimentalModalInternal()}
+        </Modal>
+        <Modal
+          key="encrypted-modal"
+          open={
+            !this.props.encrypted && !this.props.ignoreEncryptionWarningFlag
+          }
+          onClose={() => this.props.ignoreEncryptionWarning()}
+          center
+          classNames={{ modal: "modal" }}
+        >
+          <h3>Hey, your wallet is not encrypted.</h3>
+          <p>You really should encrypt your wallet to keep your Nexus safe.</p>
+          <NavLink to="/Settings/Unencrypted">
+            <button className="button primary">Take Me There</button>
+          </NavLink>
+          <button
+            className="button negative"
+            onClick={() => this.props.ignoreEncryptionWarning()}
+          >
+            Ignore
+          </button>
+        </Modal>
       </div>
     );
   }

@@ -10,6 +10,7 @@ import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
+import { GetSettings } from "../../api/settings.js";
 
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
@@ -30,6 +31,7 @@ const mapDispatchToProps = dispatch =>
 
 class Header extends Component {
   componentDidMount() {
+    this.props.setSettings(GetSettings());
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     var self = this;
     this.props.SetGoogleAnalytics(GOOGLE);
@@ -51,12 +53,12 @@ class Header extends Component {
   }
 
   doNotify(context, message) {
-    Notification.requestPermission().then((result)=>{
-        var myNotification = new Notification(context, {
-            'body': message
-        });
+    Notification.requestPermission().then(result => {
+      var myNotification = new Notification(context, {
+        body: message
+      });
     });
-  };
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
@@ -104,16 +106,16 @@ class Header extends Component {
         });
 
         if (MRT.category === "receive") {
-          this.doNotify('Received', MRT.amount + ' NXS');
+          this.doNotify("Received", MRT.amount + " NXS");
           this.props.OpenModal("receive");
         } else if (MRT.category === "send") {
-          this.doNotify('Sent', MRT.amount + ' NXS');
+          this.doNotify("Sent", MRT.amount + " NXS");
           this.props.OpenModal("send");
         } else if (MRT.category === "genesis") {
-          this.doNotify('Genesis', MRT.amount + ' NXS');
+          this.doNotify("Genesis", MRT.amount + " NXS");
           this.props.OpenModal("genesis");
         } else if (MRT.category === "trust") {
-          this.doNotify('Trust', MRT.amount + ' NXS');
+          this.doNotify("Trust", MRT.amount + " NXS");
           this.props.OpenModal("trust");
         }
       });
@@ -267,7 +269,10 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
-        <button onClick={()=>this.doNotify('test', 'just a test string')}> Test Notification </button>
+        <button onClick={() => this.doNotify("test", "just a test string")}>
+          {" "}
+          Test Notification{" "}
+        </button>
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );
