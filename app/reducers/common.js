@@ -8,6 +8,7 @@ const initialState = {
   open: false,
   openSecondModal: false,
   openThirdModal: false,
+  openFourthModal: false,
   modaltype: "",
   confirmation: false,
   actionItem: "",
@@ -99,6 +100,21 @@ export default (state = initialState, action) => {
       return {
         ...state,
         openThirdModal: false,
+        modaltype: action.payload
+      };
+      break;
+    case TYPE.SHOW_MODAL4:
+      return {
+        ...state,
+        openFourthModal: true,
+        modaltype: action.payload
+      };
+      break;
+
+    case TYPE.HIDE_MODAL4:
+      return {
+        ...state,
+        openFourthModal: false,
         modaltype: action.payload
       };
       break;

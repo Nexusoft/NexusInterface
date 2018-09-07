@@ -64,6 +64,8 @@ export const HIDE_MODAL2 = "HIDE_MODAL2";
 export const SHOW_MODAL2 = "SHOW_MODAL2";
 export const HIDE_MODAL3 = "HIDE_MODAL3";
 export const SHOW_MODAL3 = "SHOW_MODAL3";
+export const HIDE_MODAL4 = "HIDE_MODAL4";
+export const SHOW_MODAL4 = "SHOW_MODAL4";
 export const CONFIRM = "CONFIRM";
 
 // exchange

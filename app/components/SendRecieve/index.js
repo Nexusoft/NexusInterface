@@ -12,13 +12,16 @@ import { access } from "fs";
 
 // import images here
 import sendimg from "../../images/send.svg";
+import plusimg from "../../images/plus.svg";
+import addressbookimg from "../../images/addressbook.svg";
 
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.transactions,
     ...state.sendRecieve,
-    ...state.overview
+    ...state.overview,
+    ...state.addressbook
   };
 };
 
@@ -73,6 +76,12 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal3: type => {
     dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
+  },
+  OpenModal4: type => {
+    dispatch({ type: TYPE.SHOW_MODAL4, payload: type });
+  },
+  CloseModal4: type => {
+    dispatch({ type: TYPE.HIDE_MODAL4, payload: type });
   },
   Confirm: Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
@@ -294,6 +303,32 @@ class SendRecieve extends Component {
     }
   }
 
+  addressBookToQueue() {
+    return this.props.addressbook.map((e, i) => {
+      return (
+        <tr>
+          <td className="td" key={e.name + i}>
+            {" "}
+            {e.name}
+          </td>
+          {e.notMine.map((ele, i) => {
+            return (
+              <td
+                onClick={() => this.props.updateAddress(ele.address)}
+                className="td"
+                id="AddressBookSelect"
+                key={ele.address + i}
+              >
+                {ele.address}
+                <span className="tooltip left">Click To Populate Field</span>
+              </td>
+            );
+          })}
+        </tr>
+      );
+    });
+  }
+
   fillQueue() {
     let Keys = Object.keys(this.props.Queue);
     let values = Object.values(this.props.Queue);
@@ -454,6 +489,25 @@ class SendRecieve extends Component {
           </div>
         );
         break;
+        break;
+      case "Address Lookup":
+        return (
+          <div className="addressModal">
+            <h2 className="addressModalHeader">
+              Lookup Address <img src={addressbookimg} className="hdr-img" />
+            </h2>
+            <div>
+              <table className="table">
+                <thead className="thead">
+                  <th>Name</th>
+                  <th>Address</th>
+                </thead>
+                {this.addressBookToQueue()}
+              </table>
+            </div>
+          </div>
+        );
+        break;
 
       default:
         "Error";
@@ -473,6 +527,18 @@ class SendRecieve extends Component {
           <img src={sendimg} className="hdr-img" />
           Send Nexus
         </h2>
+        {/* ADDRESS MODAL */}
+        <Modal
+          center
+          classNames={{ overlay: "custom-overlay3", modal: "custom-modal3" }}
+          showCloseIcon={true}
+          open={this.props.openFourthModal}
+          onClose={this.props.CloseModal4}
+        >
+          {this.modalinternal2()}
+        </Modal>
+
+        {/* CONFIRMATION MODAL */}
         <Modal
           center
           classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}
@@ -483,7 +549,7 @@ class SendRecieve extends Component {
           {this.modalinternal2()}
           <div id="no-button">
             <input
-              value="No"
+              value="Cancel"
               className="button"
               type="button"
               onClick={() => {
@@ -496,14 +562,22 @@ class SendRecieve extends Component {
           <div id="container">
             <div className="box1">
               <div className="field">
+                <div className="Addresslookup">
+                  <span className="tooltip top">Lookup Address</span>
+                  <img
+                    src={plusimg}
+                    className="lookupButton"
+                    onClick={() => this.props.OpenModal4("Address Lookup")}
+                  />
+                </div>
                 <select
                   id="select"
                   onChange={e => this.props.AccountPicked(e.target.value)}
                 >
                   {this.accountChanger()}
-                </select>
+                </select>{" "}
                 <p>
-                  <label>Nexus Address</label>
+                  <label>Nexus Address</label>{" "}
                   <input
                     size="35"
                     type="text"
@@ -513,7 +587,6 @@ class SendRecieve extends Component {
                     required
                   />{" "}
                 </p>
-
                 <p>
                   <span className="hint">Amount Of Nexus</span>
                   <label>Nexus Amount</label>
