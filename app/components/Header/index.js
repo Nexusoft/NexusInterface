@@ -21,7 +21,7 @@ import logoFull from "images/logo-full-beta.svg";
 
 import GOOGLE from "../../script/googleanalytics";
 
-var checkportinterval;
+var checkportinterval; // shouldbemoved
 
 const mapStateToProps = state => {
   return { ...state.overview, ...state.common };
@@ -53,7 +53,7 @@ class Header extends Component {
     checkportinterval = setInterval(function()
     {
       self.checkIfPortOpen();
-    }, 10000);
+    }, 20000);
 
     this.props.history.push("/");
   }
@@ -118,7 +118,7 @@ class Header extends Component {
   {
     const isPortAvailable = require('is-port-available');
  
-    var port = 9336;
+    var port = 8325;
     isPortAvailable(port).then( status =>{
         if(status)
         {
@@ -231,7 +231,7 @@ class Header extends Component {
   {
     if (this.props.portAvailable == false)
     {
-      return <div className="noDeamonPort"> DAEMON NOT AVAILABLE </div>
+      return <div className="noDaemonPort"> DAEMON NOT AVAILABLE </div>
     }
     else
     {
