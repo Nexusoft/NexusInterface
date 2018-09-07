@@ -76,6 +76,12 @@ export const CloseModal3 = () => {
   };
 };
 
+export const setSettings = settings => {
+  return dispatch => {
+    dispatch({ type: TYPE.GET_SETTINGS, payload: settings });
+  };
+};
+
 export const OpenModal3 = () => {
   return dispatch => {
     dispatch({ type: TYPE.OPEN_MODAL3 });
