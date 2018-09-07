@@ -45,6 +45,7 @@ export const ENCRYPTED = "ENCRYPTED";
 export const UNENCRYPTED = "UNENCRYPTED";
 export const TOGGLE_MODAL_VIS_STATE = "TOGGLE_MODAL_VIS_STATE";
 export const BLOCK_DATE = "BLOCK_DATE";
+export const PORT_AVAILABLE = "PORT_AVAILABLE";
 
 // Send
 export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
