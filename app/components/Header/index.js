@@ -20,7 +20,13 @@ import statBad from "images/status-bad.svg";
 import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
 
+import testimg from "images/tray/testimg.png";
+
 import GOOGLE from "../../script/googleanalytics";
+
+////
+import configuration from "../../api/configuration";
+////
 
 const mapStateToProps = state => {
   return { ...state.overview, ...state.common };
@@ -43,7 +49,7 @@ class Header extends Component {
     this.props.LoadAddressBook();
 
     menuBuilder.buildMenu(self);
-
+    this.setupTray();
     this.props.GetInfoDump();
 
     self.set = setInterval(function() {
@@ -58,6 +64,57 @@ class Header extends Component {
         body: message
       });
     });
+  }
+
+  // Set up the icon in the system tray
+  setupTray() {
+    let trayImage = "";
+
+    if (process.platform == "darwin") {
+      trayImage =
+        configuration.GetAppDataDirectory() +
+        "tray/Nexus_Tray_Icon_Template_16.png";
+    } else {
+      trayImage =
+        configuration.GetAppDataDirectory() + "tray/Nexus_Tray_Icon_16.png";
+    }
+    // ("images/tray/testimg.png");
+
+    let tray = new electron.remote.Tray(trayImage);
+
+    if (process.platform == "darwin") {
+      tray.setPressedImage(
+        configuration.GetAppDataDirectory() +
+          "tray/Nexus_Tray_Icon_Highlight_16.png"
+      );
+    }
+
+    var contextMenu = electron.remote.Menu.buildFromTemplate([
+      {
+        label: "Open Nexus",
+        click: function() {
+          electron.remote.getCurrentWindow().id.show();
+        }
+      },
+      {
+        label: "Quit Nexus",
+        click: function() {
+          // app.isQuiting = true;
+          let settings = require("../../api/settings").GetSettings();
+          if (settings.manualDaemon == false) {
+            RPC.PROMISE("stop", []).then(payload => {
+              setTimeout(() => {
+                remote.getCurrentWindow().close();
+              }, 1000);
+            });
+          } else {
+            mainWindow.close();
+          }
+        }
+      }
+    ]);
+
+    tray.setContextMenu(contextMenu);
   }
 
   componentWillReceiveProps(nextProps) {

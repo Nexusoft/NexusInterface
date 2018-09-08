@@ -3,7 +3,7 @@ import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import MenuBuilder from "./menu";
 import core from "./api/core";
-
+import configuration from "./api/configuration";
 const path = require("path");
 
 let mainWindow;
@@ -50,7 +50,7 @@ function setupTray() {
   if (process.platform == "darwin") {
     trayImage = path.join(__dirname, "/images/tray/iconTemplate.png");
   } else {
-    trayImage = path.join(__dirname, "/images/tray/icon.png");
+    trayImage = path.join(__dirname, "/images/tray/Nexus_App_Icon_16.png");
   }
 
   tray = new Tray(trayImage);
@@ -95,12 +95,17 @@ function setupTray() {
 
 function createWindow() {
   let settings = require("./api/settings").GetSettings();
-
+  console.log(
+    configuration.GetAppDataDirectory() + "tray/Nexus_App_Icon_512.png"
+  );
+  console.log(__dirname + "/images/tray/Nexus_App_Icon_512.png");
   // Create the main browser window
   mainWindow = new BrowserWindow({
     width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
     height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
-    icon: path.join(__dirname, "/images/nexus-icon.png"),
+    icon:
+      configuration.GetAppDataDirectory() +
+      "/images/tray/Nexus_App_Icon_64.png",
     backgroundColor: "#232c39",
     show: false
   });
@@ -169,7 +174,7 @@ app.on("ready", async () => {
     await installExtensions();
   }
   createWindow();
-  setupTray();
+  // setupTray();
   core.start();
 });
 
