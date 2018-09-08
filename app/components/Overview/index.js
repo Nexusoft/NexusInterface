@@ -481,11 +481,11 @@ class Overview extends Component {
         </Modal>
         <Modal
           key="experiment-modal"
-          open={
+          open={ this.props.settings.acceptedagreement && (
             this.props.settings.experimentalWarning &&
-            this.props.experimentalOpen
+            this.props.experimentalOpen)
           }
-          onClose={this.closeExperimentalModal}
+          onClose={() => this.props.setExperimentalWarning(false)}
           center
           classNames={{ modal: "modal" }}
         >
@@ -494,7 +494,7 @@ class Overview extends Component {
         <Modal
           key="encrypted-modal"
           open={
-            !this.props.encrypted && !this.props.ignoreEncryptionWarningFlag
+            (!this.props.experimentalOpen && this.props.settings.acceptedagreement) && (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)
           }
           onClose={() => this.props.ignoreEncryptionWarning()}
           center

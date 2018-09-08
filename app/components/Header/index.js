@@ -51,11 +51,11 @@ class Header extends Component {
     self.set = setInterval(function() {
       self.props.GetInfoDump();
     }, 20000);
-
+    self.checkIfPortOpen();
     checkportinterval = setInterval(function()
     {
       self.checkIfPortOpen();
-    }, 20000);
+    }, 10000);
 
     this.props.history.push("/");
   }
@@ -307,10 +307,6 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
-        <button onClick={() => this.doNotify("test", "just a test string")}>
-          {" "}
-          Test Notification{" "}
-        </button>
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );
