@@ -6,11 +6,22 @@ import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
+import { connect } from "react-redux";
 
-export default class SettingsCore extends Component {
+const mapStateToProps = state => {
+  return {
+    ...state.common,
+    ...state.settings
+  };
+};
+const mapDispatchToProps = dispatch => ({
+  setSettings: settings =>
+    dispatch({ type: TYPE.GET_SETTINGS, payload: settings })
+});
 
+class SettingsCore extends Component {
   /// Compent Did Mount
-  /// React Lifecycle on page load. 
+  /// React Lifecycle on page load.
   componentDidMount() {
     var settings = require("../../api/settings.js").GetSettings();
 
@@ -26,6 +37,10 @@ export default class SettingsCore extends Component {
     this.setSocks4ProxyPort(settings);
     this.setDetatchDatabaseOnShutdown(settings);
     // this.setOptionalTransactionFee(settings);
+  }
+
+  componentWillUnmount() {
+    this.props.setSettings(require("../../api/settings.js").GetSettings());
   }
 
   /// Set Manual Daemon
@@ -472,3 +487,7 @@ export default class SettingsCore extends Component {
     );
   }
 }
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsCore);

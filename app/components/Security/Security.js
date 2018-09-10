@@ -16,9 +16,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
   busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
-  OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
-  }
+  OpenModal: type => dispatch({ type: TYPE.SHOW_MODAL, payload: type }),
+  getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload })
 });
 
 class Security extends Component {
@@ -27,6 +26,14 @@ class Security extends Component {
     RPC.PROMISE("walletlock", []).then(payload => {
       this.props.wipe();
       this.props.busy();
+      RPC.PROMISE("getinfo", [])
+        .then(payload => {
+          delete payload.timestamp;
+          return payload;
+        })
+        .then(payload => {
+          this.props.getInfo(payload);
+        });
     });
   }
   showPrivKey(e) {
@@ -169,7 +176,7 @@ class Security extends Component {
               <p>
                 <button
                   style={{ width: "100%", margin: "0" }}
-                  disabled={this.props.busyFlag}
+                  // disabled={this.props.busyFlag}
                   className="button primary"
                   onClick={() => this.changePassword(e)}
                 >

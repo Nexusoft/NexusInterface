@@ -37,12 +37,8 @@ const installExtensions = async () => {
   ).catch();
 };
 
-// Initialize application updater and check for updates
-function updateApplication() {
-  // TODO: IMPORTANT: Prior to going live, remove this code and revoke the github token. Feed URL logic only applies with a private github repository
-  // ************* Done I removed it.
-}
 
+//
 // Set up the icon in the system tray
 function setupTray() {
   let trayImage;
@@ -62,28 +58,30 @@ function setupTray() {
   }
 
   var contextMenu = Menu.buildFromTemplate([
-    {
-      label: "Open Nexus",
-      click: function() {
-        mainWindow.show();
-      }
-    },
-    {
-      label: "Quit Nexus",
-      click: function() {
-        app.isQuiting = true;
-        let settings = require("./api/settings").GetSettings();
-        if (settings.manualDaemon == false) {
-          RPC.PROMISE("stop", []).then(payload => {
-            setTimeout(() => {
-              remote.getCurrentWindow().close();
-            }, 1000);
-          });
-        } else {
+      {
+          label: 'Open Nexus', click: function () {
+            mainWindow.show();
+          }
+      },
+      {
+        label: 'Quit Nexus and Keep Daemon', click: function () {
+          app.isQuiting = true;
           mainWindow.close();
         }
-      }
-    }
+      },
+      {
+        label: 'Quit Nexus and Quit Daemon', click: function () {
+            app.isQuiting = true;
+            RPC.PROMISE("stop",[]).then(payload =>
+            {
+              console.log(payload);
+              setTimeout(() => {
+              remote.getCurrentWindow().close();
+              }, 1000);
+            });
+        }
+      },
+      
   ]);
 
   tray.setContextMenu(contextMenu);
@@ -180,48 +178,4 @@ app.on("window-all-closed", () => {
       app.quit();
     });
   }
-});
-
-//
-// Auto Updater Events
-//
-
-autoUpdater.on("checking-for-update", () => {
-  mainWindow.webContents.send("update-checking");
-});
-
-autoUpdater.on("update-available", info => {
-  mainWindow.webContents.send("update-available");
-});
-
-autoUpdater.on("update-not-available", info => {
-  mainWindow.webContents.send("update-not-available");
-});
-
-autoUpdater.on("download-progress", progress => {
-  mainWindow.webContents.send("update-download-progress", progress);
-});
-
-autoUpdater.on("update-downloaded", info => {
-  mainWindow.webContents.send("update-downloaded");
-});
-
-autoUpdater.on("error", err => {
-  mainWindow.webContents.send("update-error", err);
-});
-
-//
-// Application Events
-//
-
-ipcMain.on("update-application", (event, arg) => {
-  updateApplication();
-});
-
-ipcMain.on("update-download", (event, arg) => {
-  autoUpdater.downloadUpdate();
-});
-
-ipcMain.on("update-quit-and-install", (event, arg) => {
-  autoUpdater.quitAndInstall();
 });
