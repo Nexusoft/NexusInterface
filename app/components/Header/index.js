@@ -267,7 +267,7 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
-        <button onClick={()=>this.doNotify('test', 'just a test string')}> Test Notification </button>
+        {/* <button onClick={()=>this.doNotify('test', 'just a test string')}> Test Notification </button> */}
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );

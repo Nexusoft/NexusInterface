@@ -8,6 +8,7 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import { connect } from "react-redux";
 
+let currentHistoryIndex = -1;
 const mapStateToProps = state => {
   return { ...state.terminal, ...state.common };
 };
@@ -15,7 +16,16 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   setCommandList: (commandList) => dispatch({type:TYPE.SET_COMMAND_LIST , payload: commandList}),
   printToConsole: (consoleOutput) => dispatch({type:TYPE.PRINT_TO_CONSOLE , payload: consoleOutput}),
-  resetMyConsole: () => dispatch({type:TYPE.RESET_MY_CONSOLE})
+  resetMyConsole: () => dispatch({type:TYPE.RESET_MY_CONSOLE}),
+  onInputfieldChange: (consoleInput) => dispatch({type:TYPE.ON_INPUT_FIELD_CHANGE, payload: consoleInput}),
+  setInputFeild: (input) => dispatch({type:TYPE.SET_INPUT_FEILD, payload: input}),
+  onAutoCompleteClick: (inItem) => dispatch({type:TYPE.ON_AUTO_COMPLETE_CLICK, payload: inItem}),
+  returnAutocomplete: (currentInput) => dispatch({type:TYPE.RETURN_AUTO_COMPLETE, payload: currentInput}),
+  // removeAutoCompleteDiv: () => dispatch({type:TYPE.REMOVE_AUTO_COMPLETE_DIV}),
+  recallPreviousCommand: (currentCommandItem) => dispatch({type:TYPE.RECALL_PREVIOUS_COMMAND, payload: currentCommandItem}),
+  recallNextCommandOrClear: (currentCommandItem) => dispatch({type:TYPE.RECALL_NEXT_COMMAND_OR_CLEAR, payload: currentCommandItem}),
+  addToHistory: (currentCommandItem) => dispatch({type:TYPE.ADD_TO_HISTORY, payload: currentCommandItem})
+  // handleKeyboardInput: (key) => dispatch({type:TYPE.HANDLE_KEYBOARD_INPUT, payload: key})
 });
 
 class TerminalConsole extends Component {
@@ -33,17 +43,17 @@ class TerminalConsole extends Component {
   // Called in the renderer so processing what gets put on screen stays here.
   processOutput()
   {
-    if ( this.props.inputfield != null)
+    // if ( this.props.currentInput != null)
+    // {
+    //   this.props.currentInput.focus();
+    // }
+    // let num = 0;
+    return  this.props.consoleOutput.map((item, key) => 
     {
-      this.props.inputfield.focus();
-    }
-    let num = 0;
-    return  this.props.consoleoutput.map((i) => 
-    {
-      num++;
+      // num++;
       return (
-        <div key = {num}>
-        {i}
+        <div key = {key}>
+        {item}
         </div>
       )
     });
@@ -63,14 +73,13 @@ class TerminalConsole extends Component {
     if (this.props.currentInput.toLowerCase() == "clear" )
     {
       this.props.resetMyConsole();
-      this.props.inputfield.value = "";
+      this.props.setInputFeild("");
       return;
     }
     /// remove the command inputed
-    this.props.inputfield.value = "";
     
     /// Get the old console output so we can concat on it.
-    // let tempConsoleOutput = [...this.props.consoleOutput];
+    let tempConsoleOutput = [...this.props.consoleOutput];
   
     /// Split the input so that we can get the command and the arguments. THIS MIGHT BE AN ISSUE as I am just checking the US keyboard space
     let splitInput = this.props.currentInput.split(" ");
@@ -81,6 +90,8 @@ class TerminalConsole extends Component {
 
     /// this is the argument array
     let RPCArguments = [];
+    this.props.addToHistory(splitInput[0]);
+    this.props.setInputFeild("");
 
 
     /// Get all the words after the first one and place them into the RPCargs array
@@ -105,10 +116,14 @@ class TerminalConsole extends Component {
           temppayload.split('\n').map((item, key) => {
             return tempConsoleOutput.push(item);
           })
+          // this is so that you have tha data available to display on the screen 
+          this.props.printToConsole(tempConsoleOutput);
         }
         else
         {
           tempConsoleOutput.push(payload);
+          // this is so that you have tha data available to display on the screen 
+          this.props.printToConsole(tempConsoleOutput);
         }
       }
       /// If it is a object with multi variables then output them on each line 
@@ -118,9 +133,13 @@ class TerminalConsole extends Component {
           if (typeof payload[outputObject] === "object")
             {
               tempConsoleOutput.push(outputObject + ": " );
+              // this is so that you have tha data available to display on the screen 
+              // this.props.printToConsole(tempConsoleOutput);
             }
             else{
               tempConsoleOutput.push(outputObject + ": " + payload[outputObject]);
+              // this is so that you have tha data available to display on the screen 
+              // this.props.printToConsole(tempConsoleOutput);
             }
             
             //If it is a object then we need to display ever var on a new line.
@@ -130,9 +149,13 @@ class TerminalConsole extends Component {
                 /// Probably need to do this in css but I add a tab to make it look cleaner
                 tempConsoleOutput.push('       ' + interalres + ":" + payload[outputObject][interalres]);
               }
+              // this is so that you have tha data available to display on the screen 
+              // this.props.printToConsole(tempConsoleOutput);
             }
 
         }
+        this.props.printToConsole(tempConsoleOutput);
+
       }
     }).catch( error =>
       {
@@ -147,179 +170,54 @@ class TerminalConsole extends Component {
       }
     );
   }
-  recallPreviousCommand() {
-    // history of at least 10 commands that were entered.
-  }
-  recallNextCommandOrClear() {
-    // terminates back to what the user typed last as a state 0.
-  }
-  autoFillAutoComplete() {
-    // it could check to see if its looking for any addresses, check the clipboard for an address...
-  }
-  /// Set Input Field
-  /// Sets up the input field so we can reference it later
-  setInputFeild = (e) =>
-  {
-    this.setState(
-      {
-        inputfield:e
-      }
-    )
-  }
 
-  ///Handle Enter Key Press
-  /// Handles what happens when the user presses the enter key
-  handleEnterKeyPress = (e) => {
+  ///Handle enter key being presssed.
+  handleKeyboardInput = (e) => {
     
     if (e.key === 'Enter') {
+      console.log("enter key pressed");
       this.processInput();
+      currentHistoryIndex = -1;
     }
+  }
+
+  handleKeyboardArrows = (e) => {
+    // e.preventDefault();
+    // this.props.setInputFeild("arrows being pressed");
     if (e.key === 'ArrowUp') {
-      this.recallPreviousCommand();
-    }
-    if (e.key === 'ArrowDown') {
-      this.recallNextCommandOrClear();
-    }
-    if (e.key === 'ArrowRight') {
-      this.autoFillAutoComplete();
-    }
-  }
-
-  /// Handle arrow key press
-  /// Handles what happens when the user presses arrow keys for the auto complete
-  handleAutocompleteArrowKeyPress = (e) => {
-    ///NOT WORKING COME BACK TO THIS 
-
-
-    /*
-    console.log(this.state.currentInput);
-    console.log(e.target.value);
-
-    let pdpdpdp = this.state.testnum;
-    
-    if (pdpdpdp == 9999)
-    {
-      pdpdpdp = -1;
-    }
-
-    if (e.key === 'ArrowDown')
-    {
-      pdpdpdp++;
-    }
-
-    if (e.key === 'ArrowUp')
-    {
-      pdpdpdp--; 
-    }
-    if (e.target.value == "")
-    {
-      pdpdpdp = 9999;
-    }
-
-    let tempcommand = this.state.autoComplete[pdpdpdp]
-
-    if ( tempcommand != null)
-    {
-      console.log(tempcommand.props.children[0]);
-      e.target.value = tempcommand.props.children[0];
-      this.setState(
-        {
-          testnum:-1
-        }
-      )
-    }
-
-    
-
-    this.setState(
-      {
-        testnum:pdpdpdp
+      currentHistoryIndex++;
+      console.log("ArrowUp key pressed");
+      if(this.props.commandHistory[currentHistoryIndex]){
+        this.props.setInputFeild(this.props.commandHistory[currentHistoryIndex]);
       }
-    , () => {console.log(this.state.testnum)}); 
-
-      */
-  }
-
-  /// On Input Field Change
-  /// What happens when the value of the inputfield changes
-  onInputfieldChange = (e) =>
-  {
-    this.inputfield = e.target;
-    this.setState(
-      {
-        currentInput: e.target.value
-      }, () => this.returnAutocomplete() );
-      
-  }
-
-  /// On Auto Complete Click
-  /// What happens when you click on an auto complete link
-  onAutoCompleteClick(inItem)
-  {
-    const inputRef = this.state.inputfield;
-    inputRef.value = inItem;
-    //inputRef.focus();
-    this.setState(
-      {
-        currentInput:inItem,
-        autoComplete: []
+      else {
+        this.props.setInputFeild("");
+        currentHistoryIndex = -1;
       }
-    );
+    }
+    else if (e.key === 'ArrowDown') {
+      currentHistoryIndex--;
+      if(currentHistoryIndex <= -1){
+        currentHistoryIndex = -1;
+        this.props.setInputFeild("");
+      }
+      else {
+        this.props.setInputFeild(this.props.commandHistory[currentHistoryIndex]);
+      }
+      console.log("ArrowDown key pressed");
+    }
+    else if (e.key === 'ArrowRight') {
+      console.log("ArrowRight key pressed");
+    }
   }
 
   /// Return Auto Complete
-  /// Returns the list of commands that should be displayed for the auto complete section
-  returnAutocomplete()
+  autoComplete()
   {
-  
-
-    const CommandList = this.state.commandList;
-    const CurrentInput = this.state.currentInput;
-    let tempCompandList = [];
-
-    ///Just incase 
-    if (CurrentInput == "")
-    {
-      this.setState(
-        {
-          autoComplete: []
-        }
-      );
-      return;
-    }
-
-
-    CommandList.forEach(element => {
-        if ( element.startsWith(CurrentInput))
-        {
-          tempCompandList.push(element);
-        }
+    return this.props.filteredCmdList.map((item, key) => {
+      return (<a key={key} onMouseDown={ () => this.onAutoCompleteClick(item)}>{item}<br/></a>);
     });
-    let tempAutoComplete = [];
-    tempCompandList.map((item, key) => {
-      return tempAutoComplete.push(<a key={key} onMouseDown={ () => this.onAutoCompleteClick(item)}>{item}<br/></a>);
-    })
-
-
-
-    this.setState(
-      {
-        autoComplete: tempAutoComplete
-      }
-    );
   }
-
-  /// Remove Auto Complete Div
-  /// Removes all divs from the array
-  removeAutoCompleteDiv = (e) =>
-  {
-    this.setState(
-      {
-        autoComplete: []
-      }
-    );
-  }
-
 
   render() {
 
@@ -329,11 +227,21 @@ class TerminalConsole extends Component {
 
         <div id="terminal-console-input">
 
-          <input id="input-text" autoFocus ref={this.setInputFeild} type="text" value={this.currentInput} placeholder="Enter console commands here (ex: getinfo, help)" onChange={this.onInputfieldChange} onKeyPress={this.handleEnterKeyPress} onKeyDown={this.handleAutocompleteArrowKeyPress} onBlur={this.removeAutoCompleteDiv}/>
+          <input 
+            id="input-text" 
+            autoFocus 
+            type="text" 
+            value={this.props.currentInput} 
+            placeholder="Enter console commands here (ex: getinfo, help)" 
+            onChange={(e)=> this.props.onInputfieldChange(e.target.value)} 
+            onKeyPress={(e) => this.handleKeyboardInput(e)} 
+            onKeyDown={(e) => this.handleKeyboardArrows(e)}
+            // onBlur={this.props.removeAutoCompleteDiv()}
+          />
           <button id="input-submit" className="button primary" value="Execute" onClick={() => this.processInput()}>Execute</button>
         
          <div key="autocomplete" style={{position:'absolute',  top:'100%', zIndex: 99, background: 'black'}}>
-        {this.state.autoComplete} </div>
+        {this.autoComplete()} </div>
         </div>
        
         <div id="terminal-console-output">

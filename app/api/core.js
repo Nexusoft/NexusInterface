@@ -127,7 +127,7 @@ class Core extends EventEmitter {
         super();
     }
     get user() { return user;}
-    get password() { return password;}
+    get password() { return "password";}
     get host() { return host;}
     get event() { return eventEmitter;}
     get process() { return coreprocess;}
