@@ -37,11 +37,6 @@ const installExtensions = async () => {
   ).catch();
 };
 
-// Initialize application updater and check for updates
-function updateApplication() {
-  // TODO: IMPORTANT: Prior to going live, remove this code and revoke the github token. Feed URL logic only applies with a private github repository
-  // ************* Done I removed it.
-}
 
 //
 // Create Application Window
@@ -136,48 +131,4 @@ app.on("window-all-closed", () => {
       app.quit();
     });
   }
-});
-
-//
-// Auto Updater Events
-//
-
-autoUpdater.on("checking-for-update", () => {
-  mainWindow.webContents.send("update-checking");
-});
-
-autoUpdater.on("update-available", info => {
-  mainWindow.webContents.send("update-available");
-});
-
-autoUpdater.on("update-not-available", info => {
-  mainWindow.webContents.send("update-not-available");
-});
-
-autoUpdater.on("download-progress", progress => {
-  mainWindow.webContents.send("update-download-progress", progress);
-});
-
-autoUpdater.on("update-downloaded", info => {
-  mainWindow.webContents.send("update-downloaded");
-});
-
-autoUpdater.on("error", err => {
-  mainWindow.webContents.send("update-error", err);
-});
-
-//
-// Application Events
-//
-
-ipcMain.on("update-application", (event, arg) => {
-  updateApplication();
-});
-
-ipcMain.on("update-download", (event, arg) => {
-  autoUpdater.downloadUpdate();
-});
-
-ipcMain.on("update-quit-and-install", (event, arg) => {
-  autoUpdater.quitAndInstall();
 });

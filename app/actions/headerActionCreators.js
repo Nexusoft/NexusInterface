@@ -100,6 +100,12 @@ export const SetHighestPeerBlock = hpb => {
   };
 };
 
+export const SetPortIsAvailable = isAvailable => {
+  return dispatch => {
+    dispatch({ type: TYPE.PORT_AVAILABLE, payload: isAvailable });
+  };
+};
+
 export const SetGoogleAnalytics = returnData => {
   return dispatch => {
     dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload: returnData });

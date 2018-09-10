@@ -10,6 +10,7 @@ import login from "./login";
 import exchange from "./exchange";
 import sendRecieve from "./sendRecieve";
 import addressbook from "./addressbook";
+import terminal from "./terminal";
 import settings from "./settings";
 
 const rootReducer = combineReducers({
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   exchange,
   common,
   addressbook,
+  terminal,
   settings
 });
 
