@@ -43,52 +43,6 @@ function updateApplication() {
   // ************* Done I removed it.
 }
 
-// Set up the icon in the system tray
-function setupTray() {
-  let trayImage;
-
-  if (process.platform == "darwin") {
-    trayImage = path.join(__dirname, "/images/tray/iconTemplate.png");
-  } else {
-    trayImage = path.join(__dirname, "/images/tray/Nexus_App_Icon_16.png");
-  }
-
-  tray = new Tray(trayImage);
-
-  if (process.platform == "darwin") {
-    tray.setPressedImage(
-      path.join(__dirname, "/images/tray/iconHighlight.png")
-    );
-  }
-
-  var contextMenu = Menu.buildFromTemplate([
-    {
-      label: "Open Nexus",
-      click: function() {
-        mainWindow.show();
-      }
-    },
-    {
-      label: "Quit Nexus",
-      click: function() {
-        app.isQuiting = true;
-        let settings = require("./api/settings").GetSettings();
-        if (settings.manualDaemon == false) {
-          RPC.PROMISE("stop", []).then(payload => {
-            setTimeout(() => {
-              remote.getCurrentWindow().close();
-            }, 1000);
-          });
-        } else {
-          mainWindow.close();
-        }
-      }
-    }
-  ]);
-
-  tray.setContextMenu(contextMenu);
-}
-
 //
 // Create Application Window
 //
@@ -103,9 +57,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
     height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
-    icon:
-      configuration.GetAppDataDirectory() +
-      "/images/tray/Nexus_App_Icon_64.png",
+    icon: configuration.GetAppDataDirectory() + "tray/Nexus_App_Icon_64.png",
     backgroundColor: "#232c39",
     show: false
   });
@@ -174,7 +126,6 @@ app.on("ready", async () => {
     await installExtensions();
   }
   createWindow();
-  // setupTray();
   core.start();
 });
 

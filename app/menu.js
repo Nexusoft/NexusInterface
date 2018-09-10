@@ -311,7 +311,10 @@ export default class MenuBuilder {
                   label: "&Reload",
                   accelerator: "Ctrl+R",
                   click: () => {
-                    this.mainWindow.webContents.reload();
+                    console.log(tray);
+                    tray.destroy();
+
+                    // this.mainWindow.webContents.reload();
                   }
                 },
 

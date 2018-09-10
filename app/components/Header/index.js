@@ -20,14 +20,11 @@ import statBad from "images/status-bad.svg";
 import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
 
-import testimg from "images/tray/testimg.png";
-
 import GOOGLE from "../../script/googleanalytics";
-
-////
 import configuration from "../../api/configuration";
-////
 
+var tray = tray || null;
+let mainWindow = electron.remote.getCurrentWindow();
 const mapStateToProps = state => {
   return { ...state.overview, ...state.common };
 };
@@ -49,7 +46,8 @@ class Header extends Component {
     this.props.LoadAddressBook();
 
     menuBuilder.buildMenu(self);
-    this.setupTray();
+    if (tray === null) this.setupTray();
+
     this.props.GetInfoDump();
 
     self.set = setInterval(function() {
@@ -69,31 +67,35 @@ class Header extends Component {
   // Set up the icon in the system tray
   setupTray() {
     let trayImage = "";
-
+    // let mainWindow = electron.remote.getCurrentWindow();
+    console.log(electron.remote.getCurrentWindow());
     if (process.platform == "darwin") {
       trayImage =
         configuration.GetAppDataDirectory() +
-        "tray/Nexus_Tray_Icon_Template_16.png";
+        "tray/Nexus_Tray_Icon_Template_32.png";
     } else {
       trayImage =
-        configuration.GetAppDataDirectory() + "tray/Nexus_Tray_Icon_16.png";
+        configuration.GetAppDataDirectory() + "tray/Nexus_Tray_Icon_32.png";
     }
-    // ("images/tray/testimg.png");
 
-    let tray = new electron.remote.Tray(trayImage);
-
+    tray = new electron.remote.Tray(trayImage);
+    tray.setToolTip("the nexus interface");
     if (process.platform == "darwin") {
       tray.setPressedImage(
         configuration.GetAppDataDirectory() +
-          "tray/Nexus_Tray_Icon_Highlight_16.png"
+          "tray/Nexus_Tray_Icon_Highlight_32.png"
       );
     }
 
+    tray.on("double-click", () => {
+      mainWindow.show();
+    });
+    console.log(electron.remote);
     var contextMenu = electron.remote.Menu.buildFromTemplate([
       {
-        label: "Open Nexus",
+        label: "Show Nexus",
         click: function() {
-          electron.remote.getCurrentWindow().id.show();
+          mainWindow.show();
         }
       },
       {
@@ -326,10 +328,7 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
-        <button onClick={() => this.doNotify("test", "just a test string")}>
-          {" "}
-          Test Notification{" "}
-        </button>
+
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );
