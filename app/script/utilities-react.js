@@ -49,10 +49,15 @@ export default class Table extends Component {
                 return {
                     onClick: (e) => {
                        
+                        this.props.onMouseOverCallback(e,rowInfo);
                         this.props.selectCallback(e,rowInfo);
                         this.setState({
                             selected: rowInfo.index
                         })
+                    },
+                    onMouseDown: (e) =>
+                    {
+                        this.props.selectCallback(e,rowInfo);
                     },
                     onMouseOver: (e) =>
                     {

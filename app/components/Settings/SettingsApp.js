@@ -25,15 +25,16 @@ const mapDispatchToProps = dispatch => ({
   },
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
-  }
+  },
+  setSettings: settings =>
+    dispatch({ type: TYPE.GET_SETTINGS, payload: settings })
 });
 
 var currentBackupLocation = ""; //Might redo to use redux but this is only used to replace using json reader every render;
 
 class SettingsApp extends Component {
-  
   /// Compent Did Mount
-  /// React Lifecycle on page load. 
+  /// React Lifecycle on page load.
   componentDidMount() {
     var settings = require("../../api/settings.js").GetSettings();
     // this.setDefaultUnitAmount(settings);
@@ -51,12 +52,14 @@ class SettingsApp extends Component {
       this.refs.backupInputField.directory = true;
     }
   }
-
+  componentWillUnmount() {
+    this.props.setSettings(require("../../api/settings.js").GetSettings());
+  }
   /// Component Did Update
   /// React Lifecycle hook on when the page is updated
-  componentDidUpdate()
-  {
-    // Left over on work in progress for having a select directoy 
+  componentDidUpdate() {
+    this.props.setSettings(require("../../api/settings.js").GetSettings());
+    // Left over on work in progress for having a select directoy
     //this.refs.backupInputField.webkitdirectory = true;
     //this.refs.backupInputField.directory = true;
     //console.log(this.refs);
@@ -159,11 +162,9 @@ class SettingsApp extends Component {
     }
   }
 
-  
   /// Set Saved Tx Fee
   /// Sets the TX fee based on the RPC server
-  setSavedTxFee(settings)
-  {
+  setSavedTxFee(settings) {
     let settxobj = document.getElementById("optionalTransactionFee");
     settxobj.value = this.props.paytxfee;
     console.log(this.props.paytxfee);
@@ -301,7 +302,7 @@ class SettingsApp extends Component {
 
     settings.SaveSettings(settingsObj);
   }
-  
+
   /// Set TxFee
   /// Sets the transaction fee and sets that using at RPC command to the daemon
   setTxFee() {
@@ -309,7 +310,7 @@ class SettingsApp extends Component {
     RPC.PROMISE("settxfee", [parseFloat(TxFee)]);
     console.log(TxFee);
   }
-  
+
   /// Update Default Unit Amount
   /// Update Settings with the users Input
   updateDefaultUnitAmount(event) {
@@ -335,9 +336,8 @@ class SettingsApp extends Component {
   }
 
   /// Return Backup Location
-  /// ?? WORK IN PROGRESS ?? 
-  returnCurrentBackupLocation()
-  {
+  /// ?? WORK IN PROGRESS ??
+  returnCurrentBackupLocation() {
     let currentLocation = require("../../api/settings.js").GetSettings();
     //set state for currentlocation and return it
 
@@ -345,7 +345,7 @@ class SettingsApp extends Component {
   }
 
   /// Save Email
-  /// Save Email to json file. 
+  /// Save Email to json file.
   saveEmail() {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
