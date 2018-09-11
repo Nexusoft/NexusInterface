@@ -335,7 +335,7 @@ class Addressbook extends Component {
               className="button primary"
               onClick={() => this.props.SetModalType("NEW_MY_ADDRESS")}
             >
-              Cerate new address
+              Create new address
             </button>
           </div>
         );

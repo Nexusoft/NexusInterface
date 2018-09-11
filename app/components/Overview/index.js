@@ -345,6 +345,50 @@ class Overview extends Component {
   render() {
     return (
       <div id="overviewPage">
+        <Modal
+          key="agreement-modal"
+          open={!this.props.settings.acceptedagreement}
+          onClose={() => true}
+          center
+          showCloseIcon={false}
+          classNames={{ modal: "modal" }}
+        >
+          <h2>License Agreement</h2>
+          {this.returnLicenseModalInternal()}
+        </Modal>
+        <Modal
+          key="experiment-modal"
+          open={
+            this.props.settings.experimentalWarning &&
+            this.props.experimentalOpen
+          }
+          onClose={this.closeExperimentalModal}
+          center
+          classNames={{ modal: "modal" }}
+        >
+          {this.returnExperimentalModalInternal()}
+        </Modal>
+        <Modal
+          key="encrypted-modal"
+          open={
+            !this.props.encrypted && !this.props.ignoreEncryptionWarningFlag
+          }
+          onClose={() => this.props.ignoreEncryptionWarning()}
+          center
+          classNames={{ modal: "modal" }}
+        >
+          <h3>Hey, your wallet is not encrypted.</h3>
+          <p>You really should encrypt your wallet to keep your Nexus safe.</p>
+          <NavLink to="/Settings/Unencrypted">
+            <button className="button primary">Take Me There</button>
+          </NavLink>
+          <button
+            className="button negative"
+            onClick={() => this.props.ignoreEncryptionWarning()}
+          >
+            Ignore
+          </button>
+        </Modal>
         <div className="left-stats">
           <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
             <div className="h2">
@@ -468,50 +512,6 @@ class Overview extends Component {
             <div className="overviewValue">{this.props.stakeweight}</div>
           </div>
         </div>{" "}
-        <Modal
-          key="agreement-modal"
-          open={!this.props.settings.acceptedagreement}
-          onClose={() => true}
-          center
-          showCloseIcon={false}
-          classNames={{ modal: "modal" }}
-        >
-          <h2>License Agreement</h2>
-          {this.returnLicenseModalInternal()}
-        </Modal>
-        <Modal
-          key="experiment-modal"
-          open={ this.props.settings.acceptedagreement && (
-            this.props.settings.experimentalWarning &&
-            this.props.experimentalOpen)
-          }
-          onClose={() => this.props.setExperimentalWarning(false)}
-          center
-          classNames={{ modal: "modal" }}
-        >
-          {this.returnExperimentalModalInternal()}
-        </Modal>
-        <Modal
-          key="encrypted-modal"
-          open={
-            (!this.props.experimentalOpen && this.props.settings.acceptedagreement) && (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)
-          }
-          onClose={() => this.props.ignoreEncryptionWarning()}
-          center
-          classNames={{ modal: "modal" }}
-        >
-          <h3>Hey, your wallet is not encrypted.</h3>
-          <p>You really should encrypt your wallet to keep your Nexus safe.</p>
-          <NavLink to="/Settings/Unencrypted">
-            <button className="button primary">Take Me There</button>
-          </NavLink>
-          <button
-            className="button negative"
-            onClick={() => this.props.ignoreEncryptionWarning()}
-          >
-            Ignore
-          </button>
-        </Modal>
       </div>
     );
   }

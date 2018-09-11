@@ -153,12 +153,12 @@ export default merge.smart(baseConfig, {
      * NODE_ENV should be production so that modules do not perform certain
      * development checks
      */
-    new CopyWebpackPlugin([
-      {
-        from: "./app/GeoLite2-City_20180403/GeoLite2-City.mmdb",
-        to: path.join(__dirname, "app/dist")
-      }
-    ]),
+    // new CopyWebpackPlugin([
+    //   {
+    //     from: "./app/GeoLite2-City_20180403/GeoLite2-City.mmdb",
+    //     to: path.join(__dirname, "app/dist")
+    //   }
+    // ]),
 
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(

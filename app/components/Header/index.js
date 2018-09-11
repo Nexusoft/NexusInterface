@@ -21,7 +21,10 @@ import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
 
 import GOOGLE from "../../script/googleanalytics";
+import configuration from "../../api/configuration";
 
+var tray = tray || null;
+let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
 
 const mapStateToProps = state => {
@@ -45,6 +48,7 @@ class Header extends Component {
     this.props.LoadAddressBook();
 
     menuBuilder.buildMenu(self);
+    if (tray === null) this.setupTray();
 
     this.props.GetInfoDump();
 
@@ -66,6 +70,61 @@ class Header extends Component {
         body: message
       });
     });
+  }
+
+  // Set up the icon in the system tray
+  setupTray() {
+    let trayImage = "";
+    // let mainWindow = electron.remote.getCurrentWindow();
+    console.log(electron.remote.getCurrentWindow());
+    if (process.platform == "darwin") {
+      trayImage =
+        configuration.GetAppDataDirectory() +
+        "tray/Nexus_Tray_Icon_Template_32.png";
+    } else {
+      trayImage =
+        configuration.GetAppDataDirectory() + "tray/Nexus_Tray_Icon_32.png";
+    }
+
+    tray = new electron.remote.Tray(trayImage);
+    tray.setToolTip("the nexus interface");
+    if (process.platform == "darwin") {
+      tray.setPressedImage(
+        configuration.GetAppDataDirectory() +
+          "tray/Nexus_Tray_Icon_Highlight_32.png"
+      );
+    }
+
+    tray.on("double-click", () => {
+      mainWindow.show();
+    });
+    console.log(electron.remote);
+    var contextMenu = electron.remote.Menu.buildFromTemplate([
+      {
+        label: "Show Nexus",
+        click: function() {
+          mainWindow.show();
+        }
+      },
+      {
+        label: "Quit Nexus",
+        click: function() {
+          // app.isQuiting = true;
+          let settings = require("../../api/settings").GetSettings();
+          if (settings.manualDaemon == false) {
+            RPC.PROMISE("stop", []).then(payload => {
+              setTimeout(() => {
+                remote.getCurrentWindow().close();
+              }, 1000);
+            });
+          } else {
+            mainWindow.close();
+          }
+        }
+      }
+    ]);
+
+    tray.setContextMenu(contextMenu);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -307,6 +366,7 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
+
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );

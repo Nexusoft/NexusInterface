@@ -26,7 +26,6 @@ function SetCoreParameters(settings) {
       settings.manualDaemonPort === undefined
         ? "9336"
         : settings.manualDaemonPort;
-
     user =
       settings.manualDaemonUser === undefined
         ? "rpcserver"
