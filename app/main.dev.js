@@ -1,4 +1,4 @@
-import { app, BrowserWindow, remote, Tray, Menu, ipcMain } from "electron";
+import { app, BrowserWindow, remote, Tray, Menu, ipcMain, globalShortcut } from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import MenuBuilder from "./menu";
@@ -160,6 +160,7 @@ function createWindow() {
 
 // Application Startup
 app.on("ready", async () => {
+
   if (
     process.env.NODE_ENV === "development" ||
     process.env.DEBUG_PROD === "true"
@@ -169,6 +170,9 @@ app.on("ready", async () => {
   createWindow();
   setupTray();
   core.start();
+  const ret = globalShortcut.register('Escape', function() {
+    mainWindow.setFullScreen(false);
+  });
 });
 
 // Application Shutdown
@@ -178,4 +182,14 @@ app.on("window-all-closed", () => {
       app.quit();
     });
   }
+  globalShortcut.unregister('Escape');
+
+  globalShortcut.unregisterAll();
+});
+
+app.on('will-quit', function(){
+
+  globalShortcut.unregister('Escape');
+
+  globalShortcut.unregisterAll();
 });
