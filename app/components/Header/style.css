@@ -48,7 +48,9 @@
 }
 
 .noDaemonPort{
+  position: absolute;
   padding: 0px;
+  top: 90px;
 }
 
 /* MODAL STYLE */

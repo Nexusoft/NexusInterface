@@ -24,6 +24,7 @@ Table of Contents
   letter-spacing: 3px;
   margin-right: -3px;
   text-shadow: 2px 2px #111111;
+  font-weight: 800;
 }
 .h2-nospace {
   font-size: .8em;
