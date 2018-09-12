@@ -467,7 +467,7 @@ class Addressbook extends Component {
               className="button ghost"
               onClick={() => this.props.SetModalType("MY_ADDRESSES")}
             >
-              My Addresses
+              Back
             </button>
           </div>
         );
