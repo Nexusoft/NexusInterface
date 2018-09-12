@@ -16,7 +16,8 @@ const initialState = {
   heighestPeerBlock: 0,
   isInSync: false,
   blockDate: "Getting Next Block...",
-  portAvailable: false
+  portAvailable: false,
+  Search: ""
 };
 
 export default (state = initialState, action) => {
@@ -31,6 +32,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         modalVisable: !state.modalVisable
+      };
+      break;
+    case TYPE.SEARCH:
+      return {
+        ...state,
+        Search: action.payload
       };
       break;
     case TYPE.SET_SYNC_STATUS:
@@ -137,8 +144,8 @@ export default (state = initialState, action) => {
       };
       break;
 
-      case TYPE.PORT_AVAILABLE:
-      return{
+    case TYPE.PORT_AVAILABLE:
+      return {
         ...state,
         portAvailable: action.payload
       };

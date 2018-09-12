@@ -20,7 +20,7 @@ import { callbackify } from "util";
 import addressbookimg from "../../images/addressbook.svg";
 
 const mapStateToProps = state => {
-  return { ...state.common, ...state.addressbook };
+  return { ...state.common, ...state.addressbook, ...state.sendReceive };
 };
 
 const mapDispatchToProps = dispatch =>
@@ -222,6 +222,50 @@ class Addressbook extends Component {
       }
     }, 3000);
   }
+  MyAddressesTable() {
+    let filteredAddress = this.props.myAccounts.filter(acct => {
+      if (acct.account === "") {
+        let dummie = "My Account";
+        return (
+          dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
+        );
+      } else {
+        console.log(acct);
+        return (
+          acct.account
+            .toLowerCase()
+            .indexOf(this.props.Search.toLowerCase()) !== -1
+        );
+      }
+    });
+    return (
+      <div id="Addresstable-wraper">
+        {filteredAddress.map((acct, i) => {
+          return (
+            <tr>
+              <td key={acct + i} className="tdAccounts">
+                {acct.account === "" ? <span>My Account</span> : acct.account}
+              </td>
+              {acct.addresses.map(address => {
+                return (
+                  <td
+                    className="tdd"
+                    key={address}
+                    onClick={event => this.copyaddress(event)}
+                  >
+                    {address}{" "}
+                    <span key={address + i} className="tooltip">
+                      Click to copy
+                    </span>
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
+      </div>
+    );
+  }
 
   modalInternalBuilder() {
     let index = this.props.addressbook.findIndex(ele => {
@@ -234,7 +278,17 @@ class Addressbook extends Component {
       case "ADD_CONTACT":
         return (
           <div id="modalInternal">
-            {index === -1 ? <h2>Add Contact</h2> : <h2>Edit Contact</h2>}
+            {index === -1 ? (
+              <h2 className="m1">
+                <img src={addressbookimg} className="hdr-img" />
+                Add Contact
+              </h2>
+            ) : (
+              <h2 className="m1">
+                <img src={addressbookimg} className="hdr-img" />
+                Edit Contact
+              </h2>
+            )}
 
             <div className="field">
               <label htmlFor="new-account-name">Name</label>
@@ -307,35 +361,32 @@ class Addressbook extends Component {
         break;
       case "MY_ADDRESSES":
         return (
-          <div>
-            {this.props.myAccounts.map((acct, i) => {
-              return (
-                <div key={acct + i}>
-                  <div>{acct.account === "" ? "My Account" : acct.account}</div>
-                  {acct.addresses.map(address => {
-                    return (
-                      <span>
-                        <div
-                          key={address}
-                          onClick={event => this.copyaddress(event)}
-                          className="myAddress"
-                        >
-                          {address}
-                        </div>{" "}
-                        <span key={address + i} className="tooltip">
-                          Click to copy
-                        </span>{" "}
-                      </span>
-                    );
-                  })}
-                </div>
-              );
-            })}
+          <div id="Addresstable-wraper">
+            <h2 className="m1">
+              <img src={addressbookimg} className="hdr-img" />
+              My Addresses
+            </h2>
+            <table className="myAddressTable">
+              <thead className="AddressThead">
+                <th className="short-column">
+                  Accounts
+                  <input
+                    className="searchaccount"
+                    type="text"
+                    placeholder="Search By Account"
+                    value={this.props.Search}
+                    onChange={e => this.props.SearchName(e.target.value)}
+                    required
+                  />
+                </th>
+              </thead>
+              {this.MyAddressesTable()}
+            </table>
             <button
               className="button primary"
               onClick={() => this.props.SetModalType("NEW_MY_ADDRESS")}
             >
-              Cerate new address
+              Create New Address
             </button>
           </div>
         );
@@ -343,15 +394,18 @@ class Addressbook extends Component {
       case "ADD_ADDRESS":
         return (
           <div>
-            <h3>
-              Add an address to{" "}
-              {this.props.addressbook[this.props.selected].name}
-            </h3>
-            <div className="field">
+            <h2 className="m1">
+              <img src={addressbookimg} className="hdr-img" />
+              Add Address To{" "}
+              <span className="chosen">
+                ({this.props.addressbook[this.props.selected].name})
+              </span>
+            </h2>
+            <div className="create2">
               <label htmlFor="nxsaddress">Nexus Address</label>
               <input
                 ref="addContactAddress"
-                id="nxsaddress"
+                id="new-account-name"
                 type="text"
                 onChange={e => this.props.EditProtoAddress(e.target.value)}
                 value={this.props.prototypeAddress}
@@ -360,6 +414,7 @@ class Addressbook extends Component {
             </div>
 
             <button
+              id="Add"
               className="button primary"
               onClick={() => {
                 this.props.AddAddress(
@@ -371,7 +426,11 @@ class Addressbook extends Component {
             >
               Add Address
             </button>
-            <button className="button" onClick={() => this.props.ToggleModal()}>
+            <button
+              id="back"
+              className="button"
+              onClick={() => this.props.ToggleModal()}
+            >
               Cancel
             </button>
           </div>
@@ -380,7 +439,11 @@ class Addressbook extends Component {
       case "NEW_MY_ADDRESS":
         return (
           <div>
-            <div className="field">
+            <h2 className="m1">
+              <img src={addressbookimg} className="hdr-img" />
+              Create
+            </h2>
+            <div className="create">
               <label htmlFor="new-account-name">Name (Optional)</label>
               <input
                 ref="addContactName"
@@ -388,15 +451,23 @@ class Addressbook extends Component {
                 type="text"
                 value={this.props.prototypeName}
                 onChange={e => this.props.EditProtoName(e.target.value)}
-                placeholder="Name"
+                placeholder="Enter Address Name"
                 required
               />
-            </div>
+            </div>{" "}
             <button
-              className="button primary"
+              id="Add"
+              className="ghost button"
               onClick={() => this.createAddress()}
             >
-              Create
+              Create Address
+            </button>
+            <button
+              id="back"
+              className="button ghost"
+              onClick={() => this.props.SetModalType("MY_ADDRESSES")}
+            >
+              My Addresses
             </button>
           </div>
         );
@@ -880,7 +951,7 @@ class Addressbook extends Component {
           open={this.props.modalVisable}
           center
           onClose={this.props.ToggleModal}
-          classNames={{ modal: "modal" }}
+          classNames={{ modal: "custom-modal4" }}
         >
           {this.modalInternalBuilder()}
         </Modal>

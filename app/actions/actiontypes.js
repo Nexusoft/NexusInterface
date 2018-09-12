@@ -67,6 +67,7 @@ export const SHOW_MODAL3 = "SHOW_MODAL3";
 export const HIDE_MODAL4 = "HIDE_MODAL4";
 export const SHOW_MODAL4 = "SHOW_MODAL4";
 export const CONFIRM = "CONFIRM";
+export const SEARCH = "SEARCH";
 
 // Exchange
 export const AVAILABLE_COINS = "AVAILABLE_COINS";

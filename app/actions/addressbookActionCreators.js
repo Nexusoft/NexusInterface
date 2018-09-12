@@ -13,6 +13,11 @@ export const CloseModal = () => {
     dispatch({ type: TYPE.HIDE_MODAL });
   };
 };
+export const SearchName = Search => {
+  return dispatch => {
+    dispatch({ type: TYPE.SEARCH, payload: Search });
+  };
+};
 
 export const ToggleModal = () => {
   return dispatch => {

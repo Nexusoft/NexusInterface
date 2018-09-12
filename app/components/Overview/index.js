@@ -107,16 +107,16 @@ class Overview extends Component {
   }
 
   componentDidUpdate(previousprops) {
+    if (this.props.blocks > previousprops.blocks) {
+      let newDate = new Date();
+      this.props.BlockDate(newDate);
+    }
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
         console.log("UPDATE BLOCKS");
         console.log(this.props);
         this.redrawCurves();
       }
-    }
-    if (this.props.blocks > previousprops.blocks) {
-      let newDate = new Date();
-      this.props.BlockDate(newDate);
     }
 
     if (this.props.saveSettingsFlag) {
@@ -328,17 +328,20 @@ class Overview extends Component {
     if (isglobeopen == false) {
       return null;
     } else {
-      return (
-        [[<NetworkGlobe
-          handleOnLineRender={e => (this.redrawCurves = e)}
-          handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
-        />],[<div className="maxmindCopyright">
-        <img id="hhhhhhh"
-              src={maxmindLogo} 
-              width="100px"
-              height="100px"
-        />Globe includes GeoLite2</div>]]
-      );
+      return [
+        [
+          <NetworkGlobe
+            handleOnLineRender={e => (this.redrawCurves = e)}
+            handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+          />
+        ],
+        [
+          <div className="maxmindCopyright">
+            <img id="hhhhhhh" src={maxmindLogo} width="100px" height="100px" />
+            Globe includes GeoLite2
+          </div>
+        ]
+      ];
     }
   }
 
@@ -408,7 +411,6 @@ class Overview extends Component {
           </div>
         </div>
         {this.returnIfGlobeEnabled()}
-        
         <div className="right-stats">
           <div
             id="nxs-connections-info"
