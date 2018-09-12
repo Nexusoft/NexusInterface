@@ -1,9 +1,9 @@
-import { app, BrowserWindow, remote, Tray, Menu, ipcMain } from "electron";
+import { app, BrowserWindow, remote, Tray, Menu, ipcMain, globalShortcut } from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import MenuBuilder from "./menu";
 import core from "./api/core";
-
+import configuration from "./api/configuration";
 const path = require("path");
 
 let mainWindow;
@@ -39,66 +39,20 @@ const installExtensions = async () => {
 
 
 //
-// Set up the icon in the system tray
-function setupTray() {
-  let trayImage;
-
-  if (process.platform == "darwin") {
-    trayImage = path.join(__dirname, "/images/tray/iconTemplate.png");
-  } else {
-    trayImage = path.join(__dirname, "/images/tray/icon.png");
-  }
-
-  tray = new Tray(trayImage);
-
-  if (process.platform == "darwin") {
-    tray.setPressedImage(
-      path.join(__dirname, "/images/tray/iconHighlight.png")
-    );
-  }
-
-  var contextMenu = Menu.buildFromTemplate([
-      {
-          label: 'Open Nexus', click: function () {
-            mainWindow.show();
-          }
-      },
-      {
-        label: 'Quit Nexus and Keep Daemon', click: function () {
-          app.isQuiting = true;
-          mainWindow.close();
-        }
-      },
-      {
-        label: 'Quit Nexus and Quit Daemon', click: function () {
-            app.isQuiting = true;
-            RPC.PROMISE("stop",[]).then(payload =>
-            {
-              console.log(payload);
-              setTimeout(() => {
-              remote.getCurrentWindow().close();
-              }, 1000);
-            });
-        }
-      },
-      
-  ]);
-
-  tray.setContextMenu(contextMenu);
-}
-
-//
 // Create Application Window
 //
 
 function createWindow() {
   let settings = require("./api/settings").GetSettings();
-
+  console.log(
+    configuration.GetAppDataDirectory() + "tray/Nexus_App_Icon_512.png"
+  );
+  console.log(__dirname + "/images/tray/Nexus_App_Icon_512.png");
   // Create the main browser window
   mainWindow = new BrowserWindow({
     width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
     height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
-    icon: path.join(__dirname, "/images/nexus-icon.png"),
+    icon: configuration.GetAppDataDirectory() + "tray/Nexus_App_Icon_64.png",
     backgroundColor: "#232c39",
     show: false
   });
@@ -160,6 +114,7 @@ function createWindow() {
 
 // Application Startup
 app.on("ready", async () => {
+
   if (
     process.env.NODE_ENV === "development" ||
     process.env.DEBUG_PROD === "true"
@@ -167,8 +122,10 @@ app.on("ready", async () => {
     await installExtensions();
   }
   createWindow();
-  setupTray();
   core.start();
+  const ret = globalShortcut.register('Escape', function() {
+    mainWindow.setFullScreen(false);
+  });
 });
 
 // Application Shutdown
@@ -178,4 +135,14 @@ app.on("window-all-closed", () => {
       app.quit();
     });
   }
+  globalShortcut.unregister('Escape');
+
+  globalShortcut.unregisterAll();
+});
+
+app.on('will-quit', function(){
+
+  globalShortcut.unregister('Escape');
+
+  globalShortcut.unregisterAll();
 });
