@@ -113,6 +113,7 @@ body {
 
 #app-navigation {
   grid-area: navigation;
+  background: #000055;
 }
 
 #app-loader {
