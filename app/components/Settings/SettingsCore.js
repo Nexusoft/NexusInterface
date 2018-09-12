@@ -16,7 +16,11 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => ({
   setSettings: settings =>
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings })
+    dispatch({ type: TYPE.GET_SETTINGS, payload: settings }),
+  OpenModal: type => {
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  },
+  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL })
 });
 
 class SettingsCore extends Component {
@@ -41,6 +45,10 @@ class SettingsCore extends Component {
 
   componentWillUnmount() {
     this.props.setSettings(require("../../api/settings.js").GetSettings());
+    this.props.OpenModal("Settings saved");
+    setTimeout(() => {
+      this.props.CloseModal();
+    }, 2000);
   }
 
   /// Set Manual Daemon
