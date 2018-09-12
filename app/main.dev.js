@@ -37,17 +37,13 @@ const installExtensions = async () => {
   ).catch();
 };
 
-
 //
 // Create Application Window
 //
 
 function createWindow() {
   let settings = require("./api/settings").GetSettings();
-  console.log(
-    configuration.GetAppDataDirectory() + "tray/Nexus_App_Icon_512.png"
-  );
-  console.log(__dirname + "/images/tray/Nexus_App_Icon_512.png");
+
   // Create the main browser window
   mainWindow = new BrowserWindow({
     width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
