@@ -26,6 +26,7 @@
   margin: 1em 0;
   display: block;
   max-height: 49px;
+  filter: hue-rotate(0deg) brightness(100%);
 }
 
 #settings-menu {

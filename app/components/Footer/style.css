@@ -43,17 +43,23 @@
 #navigation a {
   display: block;
   position: relative;
-  /* filter: grayscale(1) brightness(200%); */
+  filter: hue-rotate(0deg) grayscale(100%) brightness(200%);
+}
+
+#navigation a img {
+  display: block;
+  position: relative;
+  filter: hue-rotate(0deg) brightness(100%);
 }
 
 #navigation a:hover {
   display: block;
-  /* filter: grayscale(0); */
   margin-top: -4px;
+  filter: hue-rotate(0deg) brightness(100%);
 }
 
 #navigation a.active {
-  /* filter: drop-shadow(0px 0px 10px #0ca4fb) grayscale(1) brightness(200%) ; */
+  filter: hue-rotate(0deg) brightness(100%);
 }
 
 #navigation a.active::before {

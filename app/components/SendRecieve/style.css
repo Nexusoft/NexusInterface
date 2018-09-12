@@ -77,9 +77,8 @@
   max-width: 100%;
   /* min-width: 50%; */
   margin-top: -1%;
-
-  overflow-y: scroll;
-  height: 325px;
+  overflow: auto;
+  min-height: 300px;
   display: block;
 }
 #table-wraper table tbody td,

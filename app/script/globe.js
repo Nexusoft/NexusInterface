@@ -114,7 +114,7 @@ export default (DAT.Globe = function(container, opts) {
 
     scene = new THREE.Scene();
 
-    var geometry = new THREE.SphereGeometry(200, 40, 30);
+    var geometry = new THREE.SphereGeometry(200, 40, 40);
 
     shader = Shaders["earth"];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
@@ -450,7 +450,7 @@ export default (DAT.Globe = function(container, opts) {
 
   function zoom(delta) {
     distanceTarget -= delta;
-    distanceTarget = distanceTarget > 1100 ? 1100 : distanceTarget;
+    distanceTarget = distanceTarget > 1200 ? 1200 : distanceTarget;
     distanceTarget = distanceTarget < 350 ? 350 : distanceTarget;
   }
 
