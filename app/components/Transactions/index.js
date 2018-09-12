@@ -9,7 +9,7 @@ import { Promise } from "bluebird-lst";
 import * as TYPE from "../../actions/actiontypes";
 import Modal from 'react-responsive-modal';
 import { VictoryBar, VictoryChart,VictoryLabel, VictoryStack, VictoryGroup, VictoryVoronoiContainer, VictoryAxis, VictoryTooltip,VictoryZoomContainer, VictoryBrushContainer, VictoryLine, VictoryTheme, createContainer, Flyout} from 'victory';
-//import Analytics from "../../script/googleanalytics";
+
 
 import transactionsimg from "../../images/transactions.svg";
 
@@ -24,6 +24,7 @@ import config from "../../api/configuration";
 import styles from "./style.css";
 
 let tempaddpress = new Map();
+var rp = require('request-promise');
 
 const mapStateToProps = state => {
   return { ...state.transactions, ...state.common, ...state.overview, ...state.addressbook };
@@ -40,6 +41,14 @@ const mapDispatchToProps = dispatch => ({
   SetExploreInfo: returnData =>
   {
     dispatch({type:TYPE.SET_TRANSACTION_EXPLOREINFO,payload:returnData})
+  },
+  UpdateConfirmationsOnTransactions: returnData =>
+  {
+    dispatch({type:TYPE.UPDATE_CONFIRMATIONS,payload:returnData})
+  },
+  UpdateCoinValueOnTransaction: returnData =>
+  {
+    dispatch({type: TYPE.UPDATE_COINVALUE, payload:returnData})
   }
 });
 
@@ -121,6 +130,8 @@ class Transactions extends Component {
     this.updateChartAndTableDimensions();
     this.props.googleanalytics.SendScreen("Transactions");
 
+
+    this.gethistorydatajson();    
     let myaddresbook = this.readAddressBook();
     if ( myaddresbook != undefined)
     {
@@ -150,8 +161,14 @@ class Transactions extends Component {
 
     let interval = setInterval( () => {
 
+
+      let ffff = function (params) {
+       
+          this.props.UpdateConfirmationsOnTransactions(params);
+        
+      }
       console.log("THIS IS THE INTERVAL WORKING");
-       this.getTransactionData(false);
+       this.getTransactionData(false,ffff.bind(this));
        },30000
       );
     this.setState(
@@ -172,8 +189,6 @@ class Transactions extends Component {
         }
       );
     }
-
-    
     this.transactioncontextfunction = this.transactioncontextfunction.bind(this);
     window.addEventListener("contextmenu", this.transactioncontextfunction, false);
   }
@@ -470,7 +485,7 @@ class Transactions extends Component {
 
   /// Get Transaction Data
   /// Gets all the data from each account held by the wallet
-  getTransactionData(resetZoom)
+  getTransactionData(resetZoom,finishingCallback)
   {
     RPC.PROMISE("listaccounts",[0]).then(payload =>
       {
@@ -546,14 +561,30 @@ class Transactions extends Component {
                 coin: "Nexus",
                 fee: 0
               }
+              let closestData = this.findclosestdatapoint(element2.time.toString());
+              if (closestData != undefined)
+              {
+                tempTrans.value.USD = closestData.USD;
+                tempTrans.value.BTC = closestData.BTC;
+              }
               tempWalletTransactions.push(tempTrans);
              
             }
 
           });
           
+          
+
           //console.log(tempWalletTransactions);
           tempWalletTransactions.sort((a,b) => {return (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0);} ); 
+
+          if (finishingCallback != undefined)
+          {
+            console.log(finishingCallback)
+            finishingCallback(tempWalletTransactions);
+            return;
+          }
+
           this.props.SetWalletTransactionArray(tempWalletTransactions);
           //console.log(tempWalletTransactions);
           
@@ -564,21 +595,39 @@ class Transactions extends Component {
             tempZoom  = { x: [new Date(tempWalletTransactions[0].time * 1000), new Date((tempWalletTransactions[tempWalletTransactions.length - 1].time + 1000) * 1000)] };
           }
 
+
           //console.log(this.props.walletitems);
           this.setState(
             {
               tableColumns:tabelheaders,
               zoomDomain: tempZoom
-            },() => {
-              //console.log(this.props.walletitems);
-              for (let index = 0; index < this.state.walletTransactions.length; index++) {
-              //this.getDataorNewData(index);
-            
-              } 
-            }
+            },
           );
-          //this.forceUpdate();
-          //this.gothroughdatathatneedsit();
+
+          if (resetZoom)
+          {
+            let promisnew = new Promise( (resolve,reject) => {
+              tempWalletTransactions.forEach(element => {
+                let temphistoryData = this.findclosestdatapoint(element.time.toString());
+                if (temphistoryData == undefined)
+                {
+                  let temp = this.state.transactionsToCheck;
+                  temp.push(element.time);
+                  this.setState(
+                    {
+                      transactionsToCheck:temp
+                    }
+                  );
+                }
+              });
+              resolve();
+              });
+              promisnew.then( () =>  {
+                console.log(this.state);
+                this.gothroughdatathatneedsit();
+              }
+              );
+          }
         });
       }
     )
@@ -1142,9 +1191,6 @@ class Transactions extends Component {
         
     }
     catch (err) {
-      //File is not found or corrupted, make a new one. 
-      //onsole.log(err);
-      this.getAllhourData();
     }
   }
 
@@ -1155,301 +1201,74 @@ class Transactions extends Component {
   ///   timestamptolook || String || timestamp string ( in seconds) that will be the to var in looking up data
   createcryptocompareurl(coinsym, timestamptolook)
   {
-    let tempurl = "https://min-api.cryptocompare.com/data/histohour?fsym=NXS&tsym=" + coinsym + "&limit=2000&toTs=" + timestamptolook;
+    let tempurl = "https://min-api.cryptocompare.com/data/pricehistorical?fsym=NXS&tsyms=" + coinsym + "&ts=" + timestamptolook;
     return tempurl;
   }
 
-  /// Get All Hour Data
-  /// Gather 2 years of data for a new history json file
-  getAllhourData()
+
+
+  setHistoryValuesOnTransaction(timeID,USDvalue,BTCValue)
   {
-
-    // We first have a download of data from may to the last known data that cryptocompare has data for. 
-    // This is not great but we can only get data in 15 calls persecond so this is a good start. 
-    let nowepoch = (Math.ceil(new Date(2018,5,8,10,25,25,500) /1000));
-    let cryptocompareurl1 = this.createcryptocompareurl("USD",nowepoch);
-    let cryptocompareurl8 = this.createcryptocompareurl("BTC",nowepoch);
-    let cryptocompareurl2 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 1))))) ;
-    let cryptocompareurl5 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 1))))) ;
-    let cryptocompareurl3 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 2))))) ;
-    let cryptocompareurl6 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 2))))) ;
-    let cryptocompareurl4 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 3))))) ;
-    let cryptocompareurl7 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 3))))) ;
-    let cryptocompareurl9 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 4))))) ;
-    let cryptocompareurl10 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 4))))) ;
-    let cryptocompareurl11 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 5))))) ;
-    let cryptocompareurl12 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 5))))) ;
-    let cryptocompareurl13 = this.createcryptocompareurl("USD",(Math.ceil(new Date(nowepoch - (7776000 * 6))))) ;
-    let cryptocompareurl14 = this.createcryptocompareurl("BTC",(Math.ceil(new Date(nowepoch - (7776000 * 6))))) ;
-    let promsiewait = new Promise(function(resolve, reject) {
-      setTimeout(resolve, 1000);
-    });
-
-    
-    //Call the promises and make a chain.
-    this.createhistoricaldatapullpromise(cryptocompareurl1,'USD')
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl2,'USD'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl3,'USD'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl4,'USD'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl5,'BTC'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl6,'BTC'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl7,'BTC'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl8,'BTC'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl9,'USD'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl10,'BTC'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl11,'USD'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl12,'BTC'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl13,'USD'))
-    .then(promsiewait)
-    .then(this.createhistoricaldatapullpromise(cryptocompareurl14,'BTC'))
-    .then(promsiewait);
+    let dataToChange = 
+    {
+      time: timeID,
+      value:
+        {
+           USD: USDvalue,
+           BTC: BTCValue
+        }
+    }
+    this.props.UpdateCoinValueOnTransaction(dataToChange);
   }
   
-
-  /// Grab More History Data
-  /// If more data is need give this a timestamp and troubled transaction then added to the history file
-  /// Input :
-  ///   intimestamp       || String || String Timestamp
-  ///   trnsactionIndex   || Number || The index that needs more data
-  grabmorehistorydata(intimestamp,transactionIndex)
+  downloadHistoryOnTransaction(inEle)
   {
-    //This locks from calling the api at the same time.
-    TRANSACTIONS.gettingmoredata = true;
-    console.log("NeededNewInfo");
+    let USDurl = this.createcryptocompareurl("USD",inEle);
+    let BTCurl = this.createcryptocompareurl("BTC",inEle);
 
-    //Create the URL's 
-    let cryptocompareurlUSD = createcryptocompareurl("USD",intimestamp);
-    let cryptocompareurlBTC = createcryptocompareurl("BTC",intimestamp);
-
-    
-    //Get Both new USD and BTC Data
-    this.createhistoricaldatapullpromise(cryptocompareurlUSD,'USD').
-    then(data => {console.log(data);this.createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC').
-    then( data => {
-      setTimeout(() => {
-        console.log(this.state.historyData);
-        //TRANSACTIONS.gettingmoredata = false;
-        //TRANSACTIONS.getpriceattime(transactionIndex); //Now there is more data, process that transaction.
-      })
-    }); });
-
-  }
-
-  setnewdatafunction(body,tokentocompare)
-    {
-      let result = body;
-      console.log(result);
-      let previousDataFile = this.state.historyData;
-      //For each point returned at it to the historydatamap.
-      result["Data"].forEach(element => {
-        let tempdataobj = {};
-        let tempdataattribute = 'price' + tokentocompare;
-        tempdataobj[tempdataattribute] = element["open"];
-        let incomingelement = tempdataobj;
-
-        Object.assign(incomingelement,previousDataFile.get(element["time"]));
-        previousDataFile.set(element["time"],incomingelement);
-      });
-      this.setState(
-        {
-          historyData:previousDataFile
-        }
-      );
-      console.log(this.state.historyData);
-    };
-
-    processHistoryReponse = function(error, response, body) {
-      if (!error && response.statusCode === 200) {
-        console.log(response["request"]["path"]);
-        let symbolToLook;
-        if ( response["request"]["path"].includes("USD",10) == true)
-        {
-          console.log("99999999999999");
-          symbolToLook = "USD";
-        }
-        if ( response["request"]["path"].includes("BTC",10) == true)
-        {
-          console.log("0000000000000000000");
-          symbolToLook = "BTC";
-        }
-          this.setnewdatafunction(body,symbolToLook);
-      }
-    }
-
-    handleHistoryReQuest = function(resolve,reject,urltoask,tokentocomapre)
-      {
-        this.processHistoryReponse.bind(this);
-       
-
-        Request(
+     rp(USDurl).then(
+       payload =>
+       {
+         
+         let incomingUSD = JSON.parse(payload)
+         console.log(incomingUSD)
+         setTimeout(() => {
+           rp(BTCurl).then(payload2 =>
           {
-            url: urltoask,
-            json: true,
+            let incomingBTC = JSON.parse(payload2)
+            console.log(incomingBTC);
+            this.setHistoryValuesOnTransaction(inEle,incomingUSD['NXS']['USD'],incomingBTC['NXS']['BTC'])
+            let tempHistory = this.state.historyData;
+            tempHistory.set(inEle,{USD:incomingUSD['NXS']['USD'],BTC:incomingBTC['NXS']['BTC']});
+            this.setState(
+              {
+                historyData: tempHistory
+              }
+            );
+          });
+         }, 500);
+       }
+     )
 
-          },
-          this.processHistoryReponse.bind(this)
-        ).on("response",() => resolve(true));
-       
-      }
-
-      handleHistoryReQuest = function(resolve,reject,urltoask,tokentocomapre)
-    {
-
-
-      this.historyProcessChain = this.historyProcessChain.bind(this);
-            setTimeout(() => {
-        
-              this.historyProcessChain(resolve,reject,urltoask,tokentocomapre);
-
-    }, 250 + Math.floor(Math.random() * 2000) );
-    }
-
-  /// Create History Data pull promise
-  /// This will create and return a promise based on the cryptocompare url, and needs which coin to get info from (the api only accepts one coin at a time)
-  /// Input :
-  ///   urltoask        || String || URL to attach to this promise to look up
-  ///   tokentocomapre  || String || Either 'USD' or 'BTC'
-  /// Output :
-  ///   Promise         || Promise to be executed
-  createhistoricaldatapullpromise(urltoask, tokentocompare)
-  {
-     
-    this.setnewdatafunction.bind(this);
-    
-    let internalpromise = new Promise((resolve,reject) => this.gjggjgjgj(resolve,reject,urltoask,tokentocompare));
-
-    return internalpromise;
   }
 
-  
 
   gothroughdatathatneedsit()
   {
-    
-
     let historyPromiseList = [];
     for (let index = 0; index < this.state.transactionsToCheck.length; index++) {
+      let daylayaction = new Promise(resolve => setTimeout(resolve, (500 * index)))
       const element = this.state.transactionsToCheck[index];
-      historyPromiseList.push({incomingIndex:element,this:this});
-     
+      daylayaction.then(() => this.downloadHistoryOnTransaction(element));
       
     }
 
-    historyPromiseList.reduce((p, v) => p.then((otp) => this.generateHistoryPromise(v.this,v.incomingIndex,otp)), Promise.resolve()).then(() => {setTimeout(() => {
-       this.afterHistoryPromiseProcessAndSave()
-    }, 3000) });
+    setTimeout(() => {
+      this.SaveHistoryDataToJson();
+    }, (this.state.transactionsToCheck.length * 1000) + 1000);
+    
   }
 
-  generateHistoryPromise(incomingthis,incomingIndex,passthroughdata)
-  {
-    return new Promise(function(resolve, reject) {
-   
-      let founddata = incomingthis.findclosestdatapoint(incomingthis.state.walletTransactions[incomingIndex].time.toString());
-      if(founddata == undefined)
-      {
-        
-        
-       // console.log(incomingthis);
-        let cryptocompareurlUSD = incomingthis.createcryptocompareurl("USD",incomingthis.state.walletTransactions[incomingIndex].time);
-        let cryptocompareurlBTC = incomingthis.createcryptocompareurl("BTC",incomingthis.state.walletTransactions[incomingIndex].time);
-
-           let allpromise = [];
-           allpromise.push( incomingthis.createhistoricaldatapullpromise(cryptocompareurlUSD,'USD'));
-           allpromise.push(incomingthis.createhistoricaldatapullpromise(cryptocompareurlBTC,'BTC'));
-            Promise.all(allpromise).then((ttttt) => {setTimeout(() => {
-              console.log("********"); console.log(ttttt); resolve(ttttt);
-            }, 1000) } );
-            console.log("$$$$$$$$$$$$$$$$$$$$$$");
-            setTimeout(() => {
-              let ggggg = "true" + passthroughdata;
-              console.log(ggggg)
-            }, 2000);
-          }
-          else
-          {
-            console.log("Didn;t need more");
-            let founddata = incomingthis.findclosestdatapoint(incomingthis.state.walletTransactions[incomingIndex].time.toString())
-            let temp = incomingthis.state.walletTransactions;
-            temp[incomingIndex].value.USD = founddata.priceUSD;
-            temp[incomingIndex].value.BTC = founddata.priceBTC;
-            incomingthis.setState(
-              {
-                walletTransactions:temp
-              }
-            );
-            resolve(false);
-          }
-    });
-  }
-  
-  returnIfFoundHistoryData(incomingIndex)
-  {
-    let founddata = this.findclosestdatapoint(this.props.walletitems[incomingIndex].time.toString());
-    if(founddata == undefined)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-  
-  getDataorNewData(incomingIndex)
-  {
-    let founddata = this.findclosestdatapoint(this.props.walletitems[incomingIndex].time.toString());
-    if(founddata == undefined)
-    {
-      let temp = this.state.transactionsToCheck;
-      temp.push(incomingIndex);
-      this.setState(
-        {
-          transactionsToCheck:temp
-        }
-      );
-
-    }
-    else
-    {
-      let tempwalletTrans = this.props.walletitems;
-      tempwalletTrans[incomingIndex].value.USD = founddata.priceUSD;
-      tempwalletTrans[incomingIndex].value.BTC = founddata.priceBTC;
-      this.props.SetWalletTransactionArray(tempwalletTrans);
-      
-    }
-  }
-
-  afterHistoryPromiseProcessAndSave()
-  {
-    this.addhistorydatatoprevious();
-    this.SaveHistoryDataToJson();
-  }
-
-  addhistorydatatoprevious()
-  {
-    let tempdata = this.props.walletitems;
-    for (let index = 0; index < tempdata.length; index++) {
-      let founddata = this.findclosestdatapoint(this.props.walletitems[index].time.toString());
-      if ( founddata != undefined){
-        tempdata[index].value.USD = founddata.priceUSD;
-        tempdata[index].value.BTC = founddata.priceBTC;
-      }
-    }
-
-   this.props.SetWalletTransactionArray(tempdata);
-  }
 
 
   SaveHistoryDataToJson()
@@ -1498,26 +1317,16 @@ class Transactions extends Component {
   ///     Object || A object that contains priceUSD and priceBTC
   findclosestdatapoint(intimestamp)
   {
-    
-    console.log(intimestamp);
-    let modifiedtimestamp = intimestamp.substring(0,8);
-    modifiedtimestamp += "00";
-    console.log(modifiedtimestamp);
-    let numberremainder = Number(modifiedtimestamp) % 3600;
-    let datatograb; 
-
-    console.log(numberremainder);
-
-    datatograb = this.state.historyData.get((Number(modifiedtimestamp)  + numberremainder));
-
-    
-
-    if ( datatograb == undefined) 
+    let datatograb = this.state.historyData.get((Number(intimestamp)));
+    if ( (datatograb == undefined))
     {
-      datatograb = this.state.historyData.get((Number(modifiedtimestamp)  - numberremainder));
-    } 
-    console.log(datatograb);
-    return datatograb;
+      return undefined;
+    }
+    else
+    {
+      return datatograb;
+    }
+
   }
 
     
