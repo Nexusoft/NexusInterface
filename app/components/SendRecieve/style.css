@@ -124,6 +124,10 @@
   height: 15px;
   width: 15px;
 }
+#Remove:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
 .balance {
   margin-left: 10px;
 }
@@ -152,6 +156,12 @@
 .td {
   animation: td 0.5s;
   border: 1px solid #757272;
+  width: 40%;
+}
+.td:hover {
+  animation: td 0.5s;
+  border: 1px solid #757272;
+  width: 40%;
 }
 
 @keyframes td {
@@ -179,4 +189,115 @@
   100% {
     top: 0px;
   }
+}
+
+.Addresslookup {
+  float: right;
+}
+.lookupButton:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+.lookupButton {
+  margin-left: 8px;
+  color: var(--color-5);
+  background-color: transparent;
+  height: 30px;
+  width: 30px;
+  border-color: var(--color-2);
+  border-radius: 100px;
+}
+/* AddressModal */
+.custom-overlay3 {
+  padding: 0px;
+}
+.custom-modal3 {
+  background: #282828;
+  /* animation: mymove2 0.5s ease-in-out; */
+  height: 500px;
+
+  width: 700px;
+  max-width: 100%;
+}
+.addressModalHeader {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#addressPopulateButton:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+#addressPopulateButton {
+  padding-right: 0px;
+
+  border-radius: 10px;
+  height: 20px;
+}
+
+#AddressBookSelect:hover {
+  color: var(--color-2);
+}
+
+#AddressCancel {
+  float: right;
+}
+#InnerPopulate {
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  padding: 0px;
+  border-radius: 5px;
+}
+
+#InnerPopulate:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+#AddressTable {
+  max-width: 100%;
+  /* min-width: 50%; */
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 325px;
+  display: block;
+  width: 100%;
+  margin-top: 10%;
+}
+
+.short-column {
+  width: 10%;
+}
+.long-column {
+  width: 70%;
+}
+.searchBar {
+  width: 100%;
+  float: right;
+  height: 20px;
+  margin-top: -6.8%;
+}
+.AddressThead {
+  position: absolute;
+  margin-top: -5%;
+  width: 95%;
+}
+.tdn {
+  animation: td 0.5s;
+  border: 1px solid var(--color-2);
+  width: 20%;
+  color: var(--color-2);
+}
+.dt {
+  display: flex;
+  border-bottom: 1px solid var(--color-3);
+  width: 110%;
+}
+.tdPop {
+  align-items: flex-end;
+}
+.dt:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
