@@ -49,17 +49,16 @@
 #navigation a img {
   display: block;
   position: relative;
-  filter: hue-rotate(0deg) brightness(100%);
 }
 
 #navigation a:hover {
   display: block;
   margin-top: -4px;
-  filter: hue-rotate(0deg) brightness(100%);
+  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
 }
 
 #navigation a.active {
-  filter: hue-rotate(0deg) brightness(100%);
+  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
 }
 
 #navigation a.active::before {
