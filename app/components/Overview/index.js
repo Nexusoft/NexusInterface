@@ -406,7 +406,7 @@ class Overview extends Component {
             className="animated fadeInDown delay-1s"
           >
             <div className="h2">
-              Currency Value <span className="h2-nospace">(USD)</span>
+              Balance <span className="h2-nospace">(USD)</span>
             </div>
             <img src={USD} />
             <div className="overviewValue">{this.calculateUSDvalue()}</div>

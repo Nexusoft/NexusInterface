@@ -77,8 +77,7 @@ export default (state = initialState, action) => {
     case TYPE.HIDE_MODAL:
       return {
         ...state,
-        open: false,
-        modaltype: action.payload
+        open: false
       };
       break;
     case TYPE.SHOW_MODAL2:
@@ -92,8 +91,7 @@ export default (state = initialState, action) => {
     case TYPE.HIDE_MODAL2:
       return {
         ...state,
-        openSecondModal: false,
-        modaltype: action.payload
+        openSecondModal: false
       };
       break;
     case TYPE.SHOW_MODAL3:

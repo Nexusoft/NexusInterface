@@ -93,12 +93,12 @@ class Settings extends Component {
                   </NavLink>
                 )}
               </li>
-              <li>
+              {/* <li>
                 <NavLink to={`${this.props.match.url}/Market`}>
                   <img src={marketImg} alt="Market" />
                   Market
                 </NavLink>
-              </li>
+              </li> */}
               <li>
                 <NavLink to={`${this.props.match.url}/Style`}>
                   <img src={styleImg} alt="Style" />

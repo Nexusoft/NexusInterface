@@ -2,6 +2,7 @@ import * as TYPE from "../actions/actiontypes";
 
 const initialState = {
   unlockUntillDate: "",
+  unlockUntillTime: "00:00",
   accoutName: "",
   privKey: "",
   address: "",
@@ -15,6 +16,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         unlockUntillDate: action.payload
+      };
+      break;
+    case TYPE.SET_TIME:
+      return {
+        ...state,
+        unlockUntillTime: action.payload
       };
       break;
     case TYPE.TOGGLE_BUSY_FLAG:
