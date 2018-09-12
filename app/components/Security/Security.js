@@ -86,27 +86,34 @@ class Security extends Component {
     passChk = document.getElementById("passChk");
     passHint = document.getElementById("passHint");
     if (pass.value.trim()) {
-      if (newPass.value === passChk.value) {
-        if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
-          RPC.PROMISE("walletpassphrasechange", [
-            pass.value,
-            newPass.value
-          ]).then(payload => {
-            if (payload === null) {
-              pass.value = "";
-              newPass.value = "";
-              passChk.value = "";
-              this.props.OpenModal("Password has been changed.");
-            }
-          });
+      if (/[-$&/*|<>]/.test(newPass.value)) {
+        if (newPass.value === passChk.value) {
+          if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
+            RPC.PROMISE("walletpassphrasechange", [
+              pass.value,
+              newPass.value
+            ]).then(payload => {
+              if (payload === null) {
+                pass.value = "";
+                newPass.value = "";
+                passChk.value = "";
+                this.props.OpenModal("Password has been changed.");
+              }
+            });
+          } else {
+            passChk.value = "";
+            passHint.innerText = "Password cannot start or end with spaces";
+            passChk.focus();
+          }
         } else {
           passChk.value = "";
-          passHint.innerText = "Password cannot start or end with spaces";
+          passHint.innerText = "Passwords do not match";
           passChk.focus();
         }
       } else {
         passChk.value = "";
-        passHint.innerText = "Passwords do not match";
+        passHint.style.visibility = "visible";
+        passHint.innerText = "Passwords cannot contain -$&/*|<>";
         passChk.focus();
       }
     } else {
@@ -188,7 +195,7 @@ class Security extends Component {
           <button
             style={{ width: "100%", margin: "0" }}
             id="lockWallet"
-            className="button default"
+            className="button primary"
             // disabled={this.props.busyFlag}
             onClick={e => {
               e.preventDefault();

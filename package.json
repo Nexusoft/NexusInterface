@@ -40,8 +40,9 @@
       "package.json"
     ],
     "extraResources": [
-      "GeoLite2-City_20180403/**/*",
-      "cores/**/*"
+      "./GeoLite2-City_20180403/**/*",
+      "./images/tray/**/*",
+      "./cores/**/*"
     ],
     "publish": {
       "provider": "github"

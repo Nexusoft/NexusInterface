@@ -56,8 +56,7 @@ class Header extends Component {
       self.props.GetInfoDump();
     }, 20000);
     self.checkIfPortOpen();
-    checkportinterval = setInterval(function()
-    {
+    checkportinterval = setInterval(function() {
       self.checkIfPortOpen();
     }, 10000);
 
@@ -191,21 +190,18 @@ class Header extends Component {
     }
   }
 
-  checkIfPortOpen()
-  {
-    const isPortAvailable = require('is-port-available');
- 
+  checkIfPortOpen() {
+    const isPortAvailable = require("is-port-available");
+
     var port = 8325;
-    isPortAvailable(port).then( status =>{
-        if(status)
-        {
-          this.props.SetPortIsAvailable(true);
-        } 
-        else{
-          this.props.SetPortIsAvailable(false);
-            console.log('Port ' + port + ' IS NOT available!');
-            console.log('Reason : ' + isPortAvailable.lastError);
-        }
+    isPortAvailable(port).then(status => {
+      if (status) {
+        this.props.SetPortIsAvailable(true);
+      } else {
+        this.props.SetPortIsAvailable(false);
+        console.log("Port " + port + " IS NOT available!");
+        console.log("Reason : " + isPortAvailable.lastError);
+      }
     });
   }
 
@@ -257,7 +253,9 @@ class Header extends Component {
       return "Synced";
     }
   }
+
   modalinternal() {
+    console.log(this.props.modaltype);
     switch (this.props.modaltype) {
       case "receive":
         return <h2>Transaction Received</h2>;
@@ -301,6 +299,12 @@ class Header extends Component {
       case "Wallet Locked":
         return <h2>Wallet Locked</h2>;
         break;
+      case "Wallet Backup":
+        return <h2>Wallet Backed Up</h2>;
+        break;
+      case "Invalid Transaction Fee":
+        return <h2>Invalid Transaction Fee</h2>;
+        break;
       case "Copied":
         return <h2>Copied</h2>;
         break;
@@ -310,14 +314,10 @@ class Header extends Component {
     }
   }
 
-  returnIfPortAvailable()
-  {
-    if (this.props.portAvailable == false)
-    {
-      return <div className="noDaemonPort"> DAEMON NOT AVAILABLE </div>
-    }
-    else
-    {
+  returnIfPortAvailable() {
+    if (this.props.portAvailable == false) {
+      return <div className="noDaemonPort"> DAEMON NOT AVAILABLE </div>;
+    } else {
       return null;
     }
   }

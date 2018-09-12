@@ -36,6 +36,7 @@ export const WIPE_LOGIN_INFO = "WIPE_LOGIN_INFO";
 export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
 export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
 export const TOGGLE_STAKING_FLAG = "TOGGLE_STAKING_FLAG";
+export const SET_TIME = "SET_TIME";
 
 // Common
 export const LOCK = "LOCK";

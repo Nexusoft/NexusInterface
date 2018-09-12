@@ -70,7 +70,6 @@
   z-index: 1;
 }
 .err:before {
-  content: " ";
   position: absolute;
   top: 1em;
   left: -1em;
