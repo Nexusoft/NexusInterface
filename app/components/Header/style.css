@@ -26,6 +26,7 @@
   margin: 1em 0;
   display: block;
   max-height: 49px;
+  filter: hue-rotate(0deg) brightness(100%) grayscale(0%);
 }
 
 #settings-menu {
@@ -41,6 +42,7 @@
   padding: 0 5px;
   width: 20px;
   height: 20px;
+  filter: hue-rotate(0deg) brightness(100%) grayscale(0%);
 }
 
 .icon .tooltip {
@@ -48,7 +50,9 @@
 }
 
 .noDaemonPort{
+  position: absolute;
   padding: 0px;
+  top: 90px;
 }
 
 /* MODAL STYLE */

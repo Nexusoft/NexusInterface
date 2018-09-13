@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto");
+@import url("https://fonts.googleapis.com/css?family=Lato");
 
 @import "./animations/animate.css";
 
@@ -54,10 +54,10 @@
   );
 
 
-  --background-main-image: url("../images/background/hero.svg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
+  --background-main-image: url("../images/background/Wallet-Design-Blue-AquaStars2-BG.png"); /* <-- Full Screen Background Image for Nexus Earth Theme */
 
   /* FONTS */
-  --font-1: "Myriad Pro"; /* <-- Sourced Above in First @font-face*/
+  --font-1: "Lato"; /* <-- Sourced Above in First @font-face*/
   --font-2: "Franklin Gothic"; /* <-- Sourced Above in Second @font-face */
 }
 
@@ -145,6 +145,10 @@ body {
 
 ::-webkit-scrollbar-corner {
   background: rgba(0, 0, 0, 0.5);
+}
+
+svg {
+  fill:currentColor;
 }
 
 /* Header Image */

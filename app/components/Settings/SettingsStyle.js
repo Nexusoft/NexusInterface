@@ -21,7 +21,7 @@ export default class SettingsStyle extends Component {
      var wallpaper = document.getElementById("wallpaper");
 
      if (settings.wallpaper === undefined) {
-     //  wallpaper.value = "../images/background/nexus-conference.png";
+     //  wallpaper.value = "../images/background/Wallet-Design-Blue-AquaStars2-BG.png";
      } else {
       // wallpaper.value = settings.wallpaper;
      }
