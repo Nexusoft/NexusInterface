@@ -45,21 +45,62 @@ class Header extends Component {
     this.props.LoadAddressBook();
 
     menuBuilder.buildMenu(self);
-
+    this.loadMyAccounts();
     this.props.GetInfoDump();
 
     self.set = setInterval(function() {
       self.props.GetInfoDump();
     }, 20000);
     self.checkIfPortOpen();
-    checkportinterval = setInterval(function()
-    {
+    checkportinterval = setInterval(function() {
       self.checkIfPortOpen();
     }, 10000);
 
     this.props.history.push("/");
   }
 
+  loadMyAccounts() {
+    RPC.PROMISE("listaccounts", [0]).then(payload => {
+      Promise.all(
+        Object.keys(payload).map(account =>
+          RPC.PROMISE("getaddressesbyaccount", [account])
+        )
+      ).then(payload => {
+        let validateAddressPromises = [];
+
+        payload.map(element => {
+          element.addresses.map(address => {
+            validateAddressPromises.push(
+              RPC.PROMISE("validateaddress", [address])
+            );
+          });
+        });
+
+        Promise.all(validateAddressPromises).then(payload => {
+          let accountsList = [];
+          let myaccts = payload.map(e => {
+            if (e.ismine && e.isvalid) {
+              let index = accountsList.findIndex(ele => {
+                if (ele.account === e.account) {
+                  return ele;
+                }
+              });
+
+              if (index === -1) {
+                accountsList.push({
+                  account: e.account,
+                  addresses: [e.address]
+                });
+              } else {
+                accountsList[index].addresses.push(e.address);
+              }
+            }
+          });
+          this.props.MyAccountsList(accountsList);
+        });
+      });
+    });
+  }
   doNotify(context, message) {
     Notification.requestPermission().then(result => {
       var myNotification = new Notification(context, {
@@ -132,21 +173,18 @@ class Header extends Component {
     }
   }
 
-  checkIfPortOpen()
-  {
-    const isPortAvailable = require('is-port-available');
- 
+  checkIfPortOpen() {
+    const isPortAvailable = require("is-port-available");
+
     var port = 8325;
-    isPortAvailable(port).then( status =>{
-        if(status)
-        {
-          this.props.SetPortIsAvailable(true);
-        } 
-        else{
-          this.props.SetPortIsAvailable(false);
-            console.log('Port ' + port + ' IS NOT available!');
-            console.log('Reason : ' + isPortAvailable.lastError);
-        }
+    isPortAvailable(port).then(status => {
+      if (status) {
+        this.props.SetPortIsAvailable(true);
+      } else {
+        this.props.SetPortIsAvailable(false);
+        console.log("Port " + port + " IS NOT available!");
+        console.log("Reason : " + isPortAvailable.lastError);
+      }
     });
   }
 
@@ -251,14 +289,10 @@ class Header extends Component {
     }
   }
 
-  returnIfPortAvailable()
-  {
-    if (this.props.portAvailable == false)
-    {
-      return <div className="noDaemonPort"> DAEMON NOT AVAILABLE </div>
-    }
-    else
-    {
+  returnIfPortAvailable() {
+    if (this.props.portAvailable == false) {
+      return <div className="noDaemonPort"> DAEMON NOT AVAILABLE </div>;
+    } else {
       return null;
     }
   }

@@ -54,6 +54,11 @@ export const Confirm = Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
   };
 };
+export const MyAccountsList = list => {
+  return dispatch => {
+    dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
+  };
+};
 export const CloseModal = () => {
   return dispatch => {
     dispatch({ type: TYPE.HIDE_MODAL });
