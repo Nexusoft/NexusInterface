@@ -79,6 +79,12 @@ export default (state = initialState, action) => {
         styleChangeFlag: true
       };
       break;
+    case TYPE.RESET_CUSTOM_STYLING:
+      return {
+        ...state,
+        customStyling: initialState.customStyling
+      };
+      break;
     case TYPE.UNSET_STYLE_FLAG:
       return {
         ...state,

@@ -19,7 +19,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
-  ChangeColor1: hex => dispatch({ type: TYPE.CHANGE_COLOR_1, payload: hex })
+  ChangeColor1: hex => dispatch({ type: TYPE.CHANGE_COLOR_1, payload: hex }),
+  ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING })
 });
 
 class SettingsStyle extends Component {
@@ -110,9 +111,10 @@ class SettingsStyle extends Component {
               <ChromePicker
                 color={this.props.customStyling.MC2}
                 disableAlpha={true}
-                onChangeComplete={(color, event) =>
-                  this.props.ChangeColor1(color.hex)
-                }
+                onChangeComplete={(color, event) => {
+                  console.log(color);
+                  this.props.ChangeColor1(color.hex);
+                }}
               />
             </div>
             <button className="button primary">Save Settings</button>
@@ -120,13 +122,13 @@ class SettingsStyle extends Component {
               className="button"
               onClick={e => {
                 e.preventDefault();
-                this.props.styleTest();
+                this.props.ResetStyle();
               }}
             >
               Reset Style Settings
             </button>
             <div className="clear-both" />
-          </form>{" "}
+          </form>
         </section>
       </div>
     );
