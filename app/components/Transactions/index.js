@@ -56,8 +56,6 @@ class Transactions extends Component {
   static contextTypes = {
     router: React.PropTypes.object
   };
-
-
   constructor(props)
   {
     super(props);
@@ -81,23 +79,8 @@ class Transactions extends Component {
                 fee: 0
         }
       ],
-      currentTransactions: [{transactionnumber: 0,
-        confirmations: 0,
-        time: 0,
-        category: "",
-        amount: 0,
-        txid: 0,
-        account: "",
-        address: "",
-        value: {
-          USD: 0,
-          BTC: 0
-        },
-        coin: "Nexus",
-        fee: 0}],
       tableColumns: [],
       displayTimeFrame: "All",
-      DataThisIsShowing: [{}],
       amountFilter: 0,
       categoryFilter: "all",
       addressFilter: "",
@@ -105,7 +88,6 @@ class Transactions extends Component {
       isHoveringOverTable: false,
       hoveringID: 999999999999,
       open: false,
-      exectuedHistoryData: false,
       historyData: new Map(),
       transactionsToCheck:[],
       mainChartWidth: 0,
@@ -118,7 +100,8 @@ class Transactions extends Component {
       addressLabels: new Map(),
       refreshInterval: undefined,
       highlightedBlockNum: "Loading",
-      highlightedBlockHash: "Loading"
+      highlightedBlockHash: "Loading",
+      needsHistorySave: false
     };
   }
 
@@ -126,7 +109,7 @@ class Transactions extends Component {
   /// Life cycle hook for page getting loaded
   componentDidMount() {
 
-    
+    this._isMounted = true;    
     this.updateChartAndTableDimensions();
     this.props.googleanalytics.SendScreen("Transactions");
 
@@ -156,19 +139,12 @@ class Transactions extends Component {
         tempaddpress.set(this.props.myAccounts[key].addresses[eachaddress],"Mine-" + this.props.myAccounts[key].account);
       }
     }
-    this.loadMyAccounts();
-    //console.log(tempaddpress);
+    
+    this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
 
     let interval = setInterval( () => {
 
-
-      let ffff = function (params) {
-       
-          this.props.UpdateConfirmationsOnTransactions(params);
-        
-      }
-      console.log("THIS IS THE INTERVAL WORKING");
-       this.getTransactionData(false,ffff.bind(this));
+       this.getTransactionData(this.setConfirmationsCallback.bind(this));
        },30000
       );
     this.setState(
@@ -181,77 +157,16 @@ class Transactions extends Component {
     this.updateChartAndTableDimensions = this.updateChartAndTableDimensions.bind(this);
     window.addEventListener('resize', this.updateChartAndTableDimensions, false);
 
-    if (this.state.exectuedHistoryData == false)
-    {
-      this.setState(
-        {
-          exectuedHistoryData:true
-        }
-      );
-    }
+
     this.transactioncontextfunction = this.transactioncontextfunction.bind(this);
     window.addEventListener("contextmenu", this.transactioncontextfunction, false);
-  }
-
-  loadMyAccounts() {
-    RPC.PROMISE("listaccounts", [0]).then(payload => {
-      Promise.all(
-        Object.keys(payload).map(account =>
-          RPC.PROMISE("getaddressesbyaccount", [account])
-        )
-      ).then(payload => {
-        let validateAddressPromises = [];
-
-        payload.map(element => {
-          element.addresses.map(address => {
-            validateAddressPromises.push(
-              RPC.PROMISE("validateaddress", [address])
-            );
-          });
-        });
-
-        Promise.all(validateAddressPromises).then(payload => {
-          let accountsList = [];
-          let myaccts = payload.map(e => {
-            if (e.ismine && e.isvalid) {
-              let index = accountsList.findIndex(ele => {
-                if (ele.account === e.account) {
-                  return ele;
-                }
-              });
-
-              if (index === -1) {
-                accountsList.push({
-                  account: e.account,
-                  addresses: [e.address]
-                });
-              } else {
-                accountsList[index].addresses.push(e.address);
-              }
-            }
-          });
-          for (let key in accountsList)
-          {
-            for (let eachaddress in accountsList[key].addresses)
-            {
-              tempaddpress.set(accountsList[key].addresses[eachaddress],"Mine-" + accountsList[key].account);
-            }
-          }
-          this.setState(
-            {
-              addressLabels: tempaddpress
-            },() => { this.getTransactionData(true);}
-          );
-        });
-      });
-    });
   }
 
   /// Component Did Update
   /// Life cycle hook for prop update
   componentDidUpdate(previousprops) {
     if (this.props.txtotal != previousprops.txtotal) {
-      this.getTransactionData(false);
+      this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
     }
   }
 
@@ -259,9 +174,75 @@ class Transactions extends Component {
    /// Life cycle hook for leaving the page
   componentWillUnmount()
   {
+    this._isMounted = false;
+    this.SaveHistoryDataToJson();
+    clearInterval(this.state.refreshInterval);
+    this.setState(
+      {
+        refreshInterval: null
+      }
+    );
     window.removeEventListener('resize', this.updateChartAndTableDimensions);
     window.removeEventListener("contextmenu",this.transactioncontextfunction);
   }
+
+  /// Set COnfirmations Callback
+  /// The callback for when we want to update just the confirmations
+  setConfirmationsCallback(incomingData)
+  {
+    this.props.UpdateConfirmationsOnTransactions(incomingData);
+  }
+
+  /// Set On Mount Transaction Callback
+  /// The callback for the on Mount State
+  setOnmountTransactionsCallback(incomingData)
+  {
+    let objectheaders = Object.keys(this.state.walletTransactions[0]);
+          let tabelheaders = [];
+          objectheaders.forEach(element => {
+            tabelheaders.push(
+              {
+                Header: element,
+                accessor: element
+              }
+            );
+          });
+    
+    this.props.SetWalletTransactionArray(incomingData);
+    this.setState(
+      {
+        tableColumns:tabelheaders,
+        zoomDomain: { x: [new Date(incomingData[0].time * 1000), new Date((incomingData[incomingData.length - 1].time + 1000) * 1000)] }
+      },
+    );
+    /// Just trying to give some space on this not important call
+    setTimeout(() => {
+      
+    
+    let promisnew = new Promise( (resolve,reject) => {
+      let temp = this.state.transactionsToCheck;
+      incomingData.forEach(element => {
+        let temphistoryData = this.findclosestdatapoint(element.time.toString());
+        if (temphistoryData == undefined)
+        {
+          temp.push(element.time);
+        }
+      });
+        
+        resolve(temp);
+      });
+      promisnew.then( (payload) =>  {
+        this.setState(
+          {
+            transactionsToCheck:payload
+          }
+        );
+        this.gothroughdatathatneedsit();
+      }
+      );
+    }, 1000);
+  }
+
 
   /// Update Chart and Table Dimensions
   /// Updates the height and width of the chart and table when you resize the window 
@@ -299,68 +280,44 @@ class Transactions extends Component {
     // Prevent default action of right click
     e.preventDefault();
 
-
-
-    const template = [
-      {
-        label: 'File',
-        submenu: [
-    
-          {
-            label: 'Copy',
-            role: 'copy',
-            
-          }
-        ]
-      },
-      {
-          label: 'Reload',
-          accelerator: 'CmdOrCtrl+R',
-          click (item, focusedWindow) {
-            if (focusedWindow) focusedWindow.reload()
-          }
-      }
-    ]
-    
-    const yuup = new ContextMenuBuilder().defaultContext;
+    const defaultcontextData = new ContextMenuBuilder().defaultContext;
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(yuup);
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(defaultcontextData);
     //create new custom
     let transactiontablecontextmenu = new remote.Menu();
 
     
-
+    //Creates the action that happens when you click 
     let moreDatailsCallback = function() {
-        
-
-      RPC.PROMISE("gettransaction",[this.props.walletitems[this.state.hoveringID].txid]).then (payload => 
-        {console.log(payload)
-
-          RPC.PROMISE("getblock",[payload.blockhash]).then(payload2 => {
-            console.log(payload2);
-            this.setState(
-              {
-                highlightedBlockHash: payload.blockhash,
-                highlightedBlockNum: payload2.height
-              }
-            );
-          });
+      this.setState(
+        {
+          highlightedBlockHash: "Loading",
+          highlightedBlockNum: "Loading",
+          open:true
         }
-      );
+      )
 
-        this.setState(
-          {
-            highlightedBlockHash: "Loading",
-            highlightedBlockNum: "Loading",
-            open:true
+      if (this.props.walletitems[this.state.hoveringID].confirmations != 0 ){
+
+        RPC.PROMISE("gettransaction",[this.props.walletitems[this.state.hoveringID].txid]).then (payload => 
+          {console.log(payload)
+
+            RPC.PROMISE("getblock",[payload.blockhash]).then(payload2 => {
+              console.log(payload2);
+              this.setState(
+                {
+                  highlightedBlockHash: payload.blockhash,
+                  highlightedBlockNum: payload2.height
+                }
+              );
+            });
           }
-        )
-
-
+        );
+      }
     }
     moreDatailsCallback = moreDatailsCallback.bind(this);
 
-
+    // Build out the context menu
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
@@ -414,6 +371,8 @@ class Transactions extends Component {
       
     );
 
+    // Additional Functions for the context menu
+
     let sendtoSendPagecallback = function()
     {
       
@@ -424,10 +383,9 @@ class Transactions extends Component {
       });
       this.context.router.history.push('/SendRecieve');
     }
-    sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
+    //sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
 
     let sendtoBlockExplorercallback = function() {
-      
       this.props.SetExploreInfo(
         {
           transactionId: this.state.walletTransactions[this.state.hoveringID].txid
@@ -436,7 +394,7 @@ class Transactions extends Component {
       this.context.router.history.push('/BlockExplorer');
     }
 
-    sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
+    //sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
 
     /* //Putting this on hold
     //Add Resending the transaction option
@@ -485,154 +443,97 @@ class Transactions extends Component {
 
   /// Get Transaction Data
   /// Gets all the data from each account held by the wallet
-  getTransactionData(resetZoom,finishingCallback)
+  getTransactionData(finishingCallback)
   {
-    RPC.PROMISE("listaccounts",[0]).then(payload =>
+    const incomingMyAccounts = this.props.myAccounts;
+    let listedaccounts = [];
+    let promisList = [];
+
+    incomingMyAccounts.forEach(element => {
+        listedaccounts.push(element.account);
+        promisList.push(RPC.PROMISE("listtransactions",[element.account,9999,0]));
+      });
+    let tempWalletTransactions = [];
+
+    let settingsCheckDev = require('../../api/settings.js').GetSettings();
+
+    /// If in Dev Mode add some random transactions
+    if (settingsCheckDev.devMode == true)
+    {
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+    }
+        if ( promisList == null || promisList == undefined || promisList.length == 0)
       {
-        //console.log(payload);
-        let listedaccounts = Object.keys(payload);
-        let promisList = [];
-        listedaccounts.forEach(element => {
-          promisList.push(RPC.PROMISE("listtransactions",[element,9999,0]));
-        });
-        let tempWalletTransactions = [];
-
-        let settingsCheckDev = require('../../api/settings.js').GetSettings();
-
-        if (settingsCheckDev.devMode == true)
-        {
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
-          tempWalletTransactions.push(this.TEMPaddfaketransaction());
+        return;
+      }
+      
+    Promise.all(promisList).then(payload =>
+    {
+      payload.forEach(element => {
+        for (let index = 0; index < element.length; index++) {
+          const element2 = element[index];
+          // if a move happend don't place it in the chart or table. 
+          if (element2.category === "move")
+          {
+            return;
+          }
+          const getLable = this.state.addressLabels.get(element2.address);
+          
+          let tempTrans = 
+          {
+            transactionnumber: index,
+            confirmations: element2.confirmations,
+            time: element2.time,
+            category: element2.category,
+            amount: element2.amount,
+            txid: element2.txid,
+            account: getLable,
+            address: element2.address,
+            value:
+            {
+              USD:0,
+              BTC:0
+            },
+            coin: "Nexus",
+            fee: 0
+          }
+          let closestData = this.findclosestdatapoint(element2.time.toString());
+          if (closestData != undefined)
+          {
+            tempTrans.value.USD = closestData.USD;
+            tempTrans.value.BTC = closestData.BTC;
+          }
+          tempWalletTransactions.push(tempTrans);
+          
         }
 
-          let objectheaders = Object.keys(this.state.walletTransactions[0]);
-          let tabelheaders = [];
-          objectheaders.forEach(element => {
-            tabelheaders.push(
-              {
-                Header: element,
-                accessor: element
-              }
-            );
-          });
+      });
 
-         
-           if ( promisList == null || promisList == undefined || promisList.length == 0)
-          {
-            return;
-          }
-          
-        Promise.all(promisList).then(payload =>
-        {
-          //console.log(payload);
-          payload.forEach(element => {
-            for (let index = 0; index < element.length; index++) {
-              const element2 = element[index];
-              // if a move happend don't place it in the chart or table. 
-              if (element2.category === "move")
-              {
-                return;
-              }
-              const getLable = this.state.addressLabels.get(element2.address);
-              
-              let tempTrans = 
-              {
-                transactionnumber: index,
-                confirmations: element2.confirmations,
-                time: element2.time,
-                category: element2.category,
-                amount: element2.amount,
-                txid: element2.txid,
-                account: getLable,
-                address: element2.address,
-                value:
-                {
-                  USD:0,
-                  BTC:0
-                },
-                coin: "Nexus",
-                fee: 0
-              }
-              let closestData = this.findclosestdatapoint(element2.time.toString());
-              if (closestData != undefined)
-              {
-                tempTrans.value.USD = closestData.USD;
-                tempTrans.value.BTC = closestData.BTC;
-              }
-              tempWalletTransactions.push(tempTrans);
-             
-            }
+      tempWalletTransactions.sort((a,b) => {return (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0);} );
 
-          });
-          
-          
-
-          //console.log(tempWalletTransactions);
-          tempWalletTransactions.sort((a,b) => {return (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0);} ); 
-
-          if (finishingCallback != undefined)
-          {
-            console.log(finishingCallback)
-            finishingCallback(tempWalletTransactions);
-            return;
-          }
-
-          this.props.SetWalletTransactionArray(tempWalletTransactions);
-          //console.log(tempWalletTransactions);
-          
-          let tempZoom = this.state.zoomDomain;
-
-          if ( resetZoom == true)
-          {
-            tempZoom  = { x: [new Date(tempWalletTransactions[0].time * 1000), new Date((tempWalletTransactions[tempWalletTransactions.length - 1].time + 1000) * 1000)] };
-          }
-
-
-          //console.log(this.props.walletitems);
-          this.setState(
-            {
-              tableColumns:tabelheaders,
-              zoomDomain: tempZoom
-            },
-          );
-
-          if (resetZoom)
-          {
-            let promisnew = new Promise( (resolve,reject) => {
-              tempWalletTransactions.forEach(element => {
-                let temphistoryData = this.findclosestdatapoint(element.time.toString());
-                if (temphistoryData == undefined)
-                {
-                  let temp = this.state.transactionsToCheck;
-                  temp.push(element.time);
-                  this.setState(
-                    {
-                      transactionsToCheck:temp
-                    }
-                  );
-                }
-              });
-              resolve();
-              });
-              promisnew.then( () =>  {
-                console.log(this.state);
-                this.gothroughdatathatneedsit();
-              }
-              );
-          }
-        });
+      if (finishingCallback != undefined)
+      {
+        finishingCallback(tempWalletTransactions);
+        return;
       }
-    )
+      else
+      {
+          this.props.SetWalletTransactionArray(tempWalletTransactions);
+      }
+    });
   }
 
+  /// Transaction Time Frame Change
+  /// Set the display property in state from the dropdown element
   transactionTimeframeChange(event)
   {
     this.setState(
@@ -647,7 +548,7 @@ class Transactions extends Component {
     //Analytics.GANALYTICS.SendEvent("Transactions","CSV",this.state.displayTimeFrame,1);
 
  
-    this.saveCSV(this.returnAllFilters([...this.state.currentTransactions]));
+    this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
   }
 
   /// Save CSV
@@ -949,19 +850,15 @@ class Transactions extends Component {
   }
 
 
-
-  tryingsomething(e,indata)
+  /// Table Select CallBack
+  /// What happens when you select something in the table
+  tableSelectCallback(e,indata)
   {
-    //console.log(indata);
-    //console.log("try");
-    //Use this to debug.
-    console.log(this); 
     this.setState(
       {
       hoveringID:indata.index
       }
     );
-   // hoveringID:inData.index
   }
 
   /// Return Formated Table Data
@@ -1206,7 +1103,12 @@ class Transactions extends Component {
   }
 
 
-
+  /// Set History Values On Transaction
+  /// Build a object from incoming data then dispatch that to redux to populate that transaction
+  /// Input:
+  ///     timeID    || String || Timestamp
+  ///     USDValue  || Float  || The value in USD
+  ///     BTCValue  || Float  || The value in BTC
   setHistoryValuesOnTransaction(timeID,USDvalue,BTCValue)
   {
     let dataToChange = 
@@ -1221,8 +1123,18 @@ class Transactions extends Component {
     this.props.UpdateCoinValueOnTransaction(dataToChange);
   }
   
+  /// Download History On Transaction
+  /// Download both USD and BTC history on the incoming transaction
+  /// Input:
+  ///     inEle   || String || the timestamp of the transaction
   downloadHistoryOnTransaction(inEle)
   {
+
+    if(this._isMounted == false)
+    {
+      return;
+    }
+
     let USDurl = this.createcryptocompareurl("USD",inEle);
     let BTCurl = this.createcryptocompareurl("BTC",inEle);
 
@@ -1231,20 +1143,30 @@ class Transactions extends Component {
        {
          
          let incomingUSD = JSON.parse(payload)
-         console.log(incomingUSD)
+         ///console.log(incomingUSD)
          setTimeout(() => {
+           if(this._isMounted == false)
+           {
+             return;
+           }
            rp(BTCurl).then(payload2 =>
           {
+            if(this._isMounted == false)
+            {
+             return;
+            }
             let incomingBTC = JSON.parse(payload2)
-            console.log(incomingBTC);
+            //console.log(incomingBTC);
             this.setHistoryValuesOnTransaction(inEle,incomingUSD['NXS']['USD'],incomingBTC['NXS']['BTC'])
             let tempHistory = this.state.historyData;
             tempHistory.set(inEle,{USD:incomingUSD['NXS']['USD'],BTC:incomingBTC['NXS']['BTC']});
             this.setState(
               {
-                historyData: tempHistory
+                historyData: tempHistory,
+                needsHistorySave: true
               }
             );
+            
           });
          }, 500);
        }
@@ -1252,27 +1174,48 @@ class Transactions extends Component {
 
   }
 
-
+  /// Go Through Data That needs It
+  /// Go through all the data points that need to download new data a execute that promise
   gothroughdatathatneedsit()
   {
     let historyPromiseList = [];
     for (let index = 0; index < this.state.transactionsToCheck.length; index++) {
-      let daylayaction = new Promise(resolve => setTimeout(resolve, (500 * index)))
+      let daylayaction = new Promise((resolve,reject) => 
+                  {
+                    if(this._isMounted == false)
+                    {
+                      reject();
+                    }
+                    setTimeout(resolve, (500 * index));
+                  });
       const element = this.state.transactionsToCheck[index];
       daylayaction.then(() => this.downloadHistoryOnTransaction(element));
       
     }
 
-    setTimeout(() => {
-      this.SaveHistoryDataToJson();
-    }, (this.state.transactionsToCheck.length * 1000) + 1000);
+    if (this.state.transactionsToCheck.length != 0)
+    {
+      setTimeout(() => {
+        this.SaveHistoryDataToJson();
+      }, (this.state.transactionsToCheck.length * 1000) + 1000);
+    }
     
   }
 
 
-
+  /// Save History Data To Json
+  /// Save the history data to a json file 
   SaveHistoryDataToJson()
   {
+    if ( this.state.historyData.size == 0 || this.state.needsHistorySave == false )
+    {
+      return;
+    }
+    this.setState(
+      {
+        needsHistorySave: false
+      }
+    );
     let appdataloc = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME);
     appdataloc = appdataloc + "/.Nexus/";
     console.log("Saving");
@@ -1375,7 +1318,7 @@ class Transactions extends Component {
         if (selectedTransaction.confirmations <= 12)
         {
           internalString.push(<a key="isPending">PENDING TRANSACTION</a>);
-          internalString.push(<br key="br6"/>);
+          internalString.push(<br key="br10"/>);
         }
 
       internalString.push(
@@ -1569,7 +1512,7 @@ class Transactions extends Component {
 
           <div id="transactions-details">
 
-            <Table key="table-top" data={data} columns={columns} minRows={pageSize} selectCallback={this.tryingsomething.bind(this)} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
+            <Table key="table-top" data={data} columns={columns} minRows={pageSize} selectCallback={this.tableSelectCallback.bind(this)} defaultsortingid={1} onMouseOverCallback={this.mouseOverCallback.bind(this)} onMouseOutCallback={this.mouseOutCallback.bind(this)}/>
 
           </div>
 
