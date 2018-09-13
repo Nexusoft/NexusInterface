@@ -11,6 +11,7 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
 import { GetSettings } from "../../api/settings.js";
+import CustomProperties from "react-custom-properties";
 
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
@@ -136,16 +137,6 @@ class Header extends Component {
     } else if (nextProps.unlocked_until >= 0) {
       this.props.Unlock();
       this.props.Encrypted();
-    }
-
-    if (nextProps.styleChangeFlag) {
-      var style = getComputedStyle(document.body);
-      style.getPropertyValue("--color-1");
-      document.documentElement.style.setProperty(
-        "--color-1",
-        this.props.customStyle.MC1
-      );
-      console.log("StyleChange");
     }
 
     if (nextProps.blocks !== this.props.blocks) {
@@ -334,6 +325,16 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
+        <CustomProperties
+          global
+          properties={{
+            "--color-1": this.props.customStyling.MC1,
+            "--color-2": this.props.customStyling.MC2,
+            "--color-3": this.props.customStyling.MC3,
+            "--color-4": this.props.customStyling.MC4,
+            "--color-5": this.props.customStyling.MC5
+          }}
+        />
         <Modal
           showCloseIcon={false}
           center={true}

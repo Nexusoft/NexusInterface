@@ -19,7 +19,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
-  styleTest: () => dispatch({ type: TYPE.CHANGE_COLOR_1 })
+  ChangeColor1: hex => dispatch({ type: TYPE.CHANGE_COLOR_1, payload: hex })
 });
 
 class SettingsStyle extends Component {
@@ -107,7 +107,13 @@ class SettingsStyle extends Component {
                   <option>color4 </option>
                 </select>
               </label>
-              <ChromePicker />
+              <ChromePicker
+                color={this.props.customStyling.MC2}
+                disableAlpha={true}
+                onChangeComplete={(color, event) =>
+                  this.props.ChangeColor1(color.hex)
+                }
+              />
             </div>
             <button className="button primary">Save Settings</button>
             <button

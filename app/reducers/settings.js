@@ -74,7 +74,7 @@ export default (state = initialState, action) => {
         ...state,
         customStyling: {
           ...state.customStyling,
-          MC1: action.payload
+          MC2: action.payload
         },
         styleChangeFlag: true
       };
