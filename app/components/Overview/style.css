@@ -97,6 +97,7 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   height: 35px;
   padding-top: 5px;
   padding-left: 20px;
+  filter: hue-rotate(0deg) grayscale(100%) brightness(200%);
 }
 .left-stats > div {
   margin: 1em 0;
@@ -123,12 +124,16 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
   padding-top: 5px;
   padding-right: 20px;
   left: -55px;
+  filter: hue-rotate(0deg) grayscale(100%) brightness(200%);
 }
 .right-stats > div {
   margin: 1em 0;
 }
 .right-stats > div img {
   float: left;
+}
+#nxs-getinfo-connections-image {
+  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
 }
 
 /*------------------------------------------------------------------
