@@ -107,16 +107,16 @@ class Overview extends Component {
   }
 
   componentDidUpdate(previousprops) {
+    if (this.props.blocks > previousprops.blocks) {
+      let newDate = new Date();
+      this.props.BlockDate(newDate);
+    }
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
         console.log("UPDATE BLOCKS");
         console.log(this.props);
         this.redrawCurves();
       }
-    }
-    if (this.props.blocks > previousprops.blocks) {
-      let newDate = new Date();
-      this.props.BlockDate(newDate);
     }
 
     if (this.props.saveSettingsFlag) {

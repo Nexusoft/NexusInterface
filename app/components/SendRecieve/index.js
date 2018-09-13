@@ -12,13 +12,16 @@ import { access } from "fs";
 
 // import images here
 import sendimg from "../../images/send.svg";
+import plusimg from "../../images/plus.svg";
+import addressbookimg from "../../images/addressbook.svg";
 
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.transactions,
     ...state.sendRecieve,
-    ...state.overview
+    ...state.overview,
+    ...state.addressbook
   };
 };
 
@@ -29,11 +32,17 @@ const mapDispatchToProps = dispatch => ({
   updateAddress: returnAddress => {
     dispatch({ type: TYPE.UPDATE_ADDRESS, payload: returnAddress });
   },
+  SearchName: returnSearch => {
+    dispatch({ type: TYPE.SEARCH, payload: returnSearch });
+  },
   clearQueue: () => {
     dispatch({ type: TYPE.CLEAR_QUEUE });
   },
   clearForm: () => {
     dispatch({ type: TYPE.CLEAR_FORM });
+  },
+  clearSearch: () => {
+    dispatch({ type: TYPE.CLEAR_SEARCHBAR });
   },
   addToQueue: returnQueue => {
     dispatch({ type: TYPE.ADD_TO_QUEUE, payload: returnQueue });
@@ -62,6 +71,9 @@ const mapDispatchToProps = dispatch => ({
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
+  CloseModal: type => {
+    dispatch({ type: TYPE.HIDE_MODAL, payload: type });
+  },
   OpenModal2: type => {
     dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
   },
@@ -73,6 +85,12 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal3: type => {
     dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
+  },
+  OpenModal4: type => {
+    dispatch({ type: TYPE.SHOW_MODAL4, payload: type });
+  },
+  CloseModal4: type => {
+    dispatch({ type: TYPE.HIDE_MODAL4, payload: type });
   },
   Confirm: Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
@@ -294,6 +312,59 @@ class SendRecieve extends Component {
     }
   }
 
+  addressBookToQueue() {
+    let filteredAddress = this.props.addressbook.filter(e => {
+      return (
+        e.name.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
+      );
+    });
+    return filteredAddress.map((e, i) => {
+      return (
+        <tr>
+          <td className="tdn" key={e.name + i}>
+            {" "}
+            {e.name}
+          </td>
+          {e.notMine.map((ele, i) => {
+            return (
+              <td
+                onClick={() => {
+                  this.props.updateAddress(ele.address);
+                  this.props.OpenModal("Copied");
+                  setTimeout(() => {
+                    if (this.props.open) {
+                      this.props.CloseModal();
+                    }
+                  }, 3000);
+                }}
+                className="dt"
+                key={ele.address + i}
+              >
+                {ele.address}
+                <span key={ele.address + i} className="tooltip right">
+                  {" "}
+                  Copy To Field
+                </span>
+              </td>
+            );
+          })}
+          {/* {e.notMine.map((ele, i) => {
+            return (
+              <td className="tdPop">
+                <img
+                  id="InnerPopulate"
+                  src={plusimg}
+                  onClick={() => this.props.updateAddress(ele.address)}
+                />
+                <span className="tooltip left">Click To Populate Field</span>
+              </td>
+            );
+          })} */}
+        </tr>
+      );
+    });
+  }
+
   fillQueue() {
     let Keys = Object.keys(this.props.Queue);
     let values = Object.values(this.props.Queue);
@@ -310,7 +381,10 @@ class SendRecieve extends Component {
     return queueArray.map((e, i) => {
       return (
         <tr key={i}>
-          <td className="td">{e.key}</td>
+          <td className="td" onClick={() => this.props.updateAddress(e.key)}>
+            <span className="tooltip ">Click To Edit</span>
+            {e.key}
+          </td>
           <td className="td">{e.val.toFixed(5)}</td>
           <td className="td">
             <img
@@ -359,8 +433,40 @@ class SendRecieve extends Component {
       );
     });
   }
+
+  modalinternal3() {
+    switch (this.props.LookUpModalType) {
+      case "Address Lookup":
+        return (
+          <div className="Addresstable-wraper">
+            {" "}
+            <h2 className="addressModalHeader">
+              Lookup Address <img src={addressbookimg} className="hdr-img" />
+            </h2>
+            <table id="AddressTable">
+              <thead className="AddressThead">
+                <th className="short-column">Name</th>
+                <th className="long-column">Address</th>
+                <th className="short-column">
+                  <input
+                    className="searchBar"
+                    type="text"
+                    placeholder="Search Address"
+                    value={this.props.Search}
+                    onChange={e => this.props.SearchName(e.target.value)}
+                    required
+                  />
+                </th>
+              </thead>
+              {this.addressBookToQueue()}
+            </table>
+          </div>
+        );
+    }
+  }
+
   modalinternal2() {
-    switch (this.props.modaltype) {
+    switch (this.props.SendReceiveModalType) {
       case "send transaction?":
         return (
           <div>
@@ -422,7 +528,7 @@ class SendRecieve extends Component {
       case "Edit Entry?":
         return (
           <div>
-            <h2>Edit Entry?</h2>
+            <h2>Edit This Entry?</h2>
             <div id="ok-button">
               <input
                 value="Yes"
@@ -454,12 +560,40 @@ class SendRecieve extends Component {
           </div>
         );
         break;
+      case "Address Lookup":
+        return (
+          <div className="Addresstable-wraper">
+            {" "}
+            <h2 className="addressModalHeader">
+              Lookup Address <img src={addressbookimg} className="hdr-img" />
+            </h2>
+            <table id="AddressTable">
+              <thead className="AddressThead">
+                <th className="short-column">Name</th>
+                <th className="long-column">Address</th>
+                <th className="short-column">
+                  <input
+                    className="searchBar"
+                    type="text"
+                    placeholder="Search Address"
+                    value={this.props.Search}
+                    onChange={e => this.props.SearchName(e.target.value)}
+                    required
+                  />
+                </th>
+              </thead>
+              {this.addressBookToQueue()}
+            </table>
+          </div>
+        );
+        break;
 
       default:
         "Error";
         break;
     }
   }
+
   render() {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
@@ -473,6 +607,18 @@ class SendRecieve extends Component {
           <img src={sendimg} className="hdr-img" />
           Send Nexus
         </h2>
+        {/* ADDRESS MODAL */}
+        <Modal
+          center
+          classNames={{ overlay: "custom-overlay3", modal: "custom-modal3" }}
+          showCloseIcon={true}
+          open={this.props.openFourthModal}
+          onClose={this.props.CloseModal4}
+        >
+          {this.modalinternal3()}
+        </Modal>
+
+        {/* CONFIRMATION MODAL */}
         <Modal
           center
           classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}
@@ -483,7 +629,7 @@ class SendRecieve extends Component {
           {this.modalinternal2()}
           <div id="no-button">
             <input
-              value="No"
+              value="Cancel"
               className="button"
               type="button"
               onClick={() => {
@@ -501,9 +647,20 @@ class SendRecieve extends Component {
                   onChange={e => this.props.AccountPicked(e.target.value)}
                 >
                   {this.accountChanger()}
-                </select>
+                </select>{" "}
                 <p>
-                  <label>Nexus Address</label>
+                  <label>Nexus Address</label>{" "}
+                  <div className="Addresslookup">
+                    <span className="tooltip top">Lookup Address</span>
+                    <img
+                      src={plusimg}
+                      className="lookupButton"
+                      onClick={() => {
+                        this.props.clearSearch();
+                        this.props.OpenModal4("Address Lookup");
+                      }}
+                    />
+                  </div>
                   <input
                     size="35"
                     type="text"
@@ -511,9 +668,8 @@ class SendRecieve extends Component {
                     value={this.props.Address}
                     onChange={e => this.props.updateAddress(e.target.value)}
                     required
-                  />{" "}
+                  />
                 </p>
-
                 <p>
                   <span className="hint">Amount Of Nexus</span>
                   <label>Nexus Amount</label>
@@ -528,6 +684,7 @@ class SendRecieve extends Component {
                 </p>
                 <p>
                   <label>Message</label>
+
                   <textarea
                     value={this.props.Message}
                     onChange={e => this.props.updateMessage(e.target.value)}

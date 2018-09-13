@@ -73,6 +73,8 @@
 }
 #addressbook-search {
   flex: 1;
+  /* margin-bottom: -16px; */
+  margin-left: -15px;
 }
 
 #addressbook-controls button {
@@ -177,10 +179,105 @@ select {
 /* #myAddresses {
   margin-left: 40px;
 } */
-.myAddress {
-  margin-left: 20px;
-}
 
 #picUploader {
   display: none;
+}
+.tdd {
+  animation: tdd 0.5s;
+
+  display: flex;
+  border: 1px solid var(--color-3);
+}
+.custom-modal4 {
+  background: #282828;
+  /* animation: mymove2 0.5s ease-in-out; */
+  height: 500px;
+  min-width: 10%;
+  width: 700px;
+  max-width: 100%;
+  height: fit-content;
+}
+
+.myAddressTable {
+  max-width: 100%;
+  /* min-width: 50%; */
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 280px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  margin-top: 10%;
+}
+.tdAccounts {
+  font-weight: bold;
+  color: var(--color-2);
+  width: 100%;
+  text-align: center;
+  border: 0.5px solid var(--color-2);
+  animation: tdd 0.5s;
+}
+.tdd:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+.searchaccount {
+  float: right;
+  background: blue;
+}
+@keyframes tdd {
+  33% {
+    transform: translateX(-20px);
+  }
+  66% {
+    transform: translateX(10px);
+    background: #282828;
+  }
+  99% {
+    transform: translateX(0px);
+  }
+}
+.create {
+  background: var(--color-2);
+  padding-top: 10px;
+  padding-bottom: 15px;
+  display: flex;
+  align-items: center;
+  margin-top: 15%;
+  width: 105.3%;
+  justify-content: center;
+  flex-direction: column;
+
+  margin-left: -19px;
+}
+#back {
+  float: right;
+  margin-top: 50px;
+  margin-bottom: 60px;
+}
+.m1 {
+  margin: 0px;
+}
+.chosen {
+  color: var(--color-2);
+}
+#Add {
+  float: left;
+  margin-top: 50px;
+  margin-bottom: 60px;
+}
+.create2 {
+  background: var(--color-2);
+  padding-top: 10px;
+  padding-bottom: 15px;
+  display: flex;
+  align-items: center;
+  margin-top: 15%;
+  width: 105.3%;
+  justify-content: center;
+  flex-direction: column;
+
+  margin-left: -19px;
 }

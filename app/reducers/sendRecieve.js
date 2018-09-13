@@ -7,7 +7,9 @@ const initialState = {
   Message: "",
   Queue: {},
   AccountChanger: [],
-  SelectedAccount: ""
+  SelectedAccount: "",
+  SendReceiveModalType: "",
+  LookUpModalType: ""
 };
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -23,6 +25,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         Queue: newQ
+      };
+    case TYPE.SHOW_MODAL2:
+      return {
+        ...state,
+        open: true,
+        SendReceiveModalType: action.payload
+      };
+    case TYPE.SHOW_MODAL4:
+      return {
+        ...state,
+        open: true,
+        LookUpModalType: action.payload
       };
       break;
     case TYPE.UPDATE_AMOUNT:

@@ -8,6 +8,7 @@ const initialState = {
   open: false,
   openSecondModal: false,
   openThirdModal: false,
+  openFourthModal: false,
   modaltype: "",
   confirmation: false,
   actionItem: "",
@@ -15,7 +16,9 @@ const initialState = {
   heighestPeerBlock: 0,
   isInSync: false,
   blockDate: "Getting Next Block...",
-  portAvailable: false
+  portAvailable: false,
+  Search: "",
+  contactSearch: ""
 };
 
 export default (state = initialState, action) => {
@@ -30,6 +33,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         modalVisable: !state.modalVisable
+      };
+      break;
+    case TYPE.SEARCH:
+      return {
+        ...state,
+        Search: action.payload
+      };
+      break;
+    case TYPE.CONTACT_SEARCH:
+      return {
+        ...state,
+        contactSearch: action.payload
       };
       break;
     case TYPE.SET_SYNC_STATUS:
@@ -101,11 +116,34 @@ export default (state = initialState, action) => {
         modaltype: action.payload
       };
       break;
+    case TYPE.SHOW_MODAL4:
+      return {
+        ...state,
+        openFourthModal: true,
+        modaltype: action.payload
+      };
+      break;
+
+    case TYPE.HIDE_MODAL4:
+      return {
+        ...state,
+        openFourthModal: false,
+        modaltype: action.payload
+      };
+      break;
     case TYPE.SET_HIGHEST_PEER_BLOCK:
       return {
         ...state,
         heighestPeerBlock: action.payload
       };
+      break;
+    case TYPE.CLEAR_SEARCHBAR:
+      return {
+        ...state,
+        Search: "",
+        contactSearch: ""
+      };
+      break;
     case TYPE.ENCRYPTED:
       return {
         ...state,
