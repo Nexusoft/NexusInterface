@@ -47,6 +47,7 @@ export const UNENCRYPTED = "UNENCRYPTED";
 export const TOGGLE_MODAL_VIS_STATE = "TOGGLE_MODAL_VIS_STATE";
 export const BLOCK_DATE = "BLOCK_DATE";
 export const PORT_AVAILABLE = "PORT_AVAILABLE";
+export const CLEAR_SEARCHBAR = "CLEAR_SEARCHBAR";
 
 // Send
 export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
@@ -69,6 +70,7 @@ export const HIDE_MODAL4 = "HIDE_MODAL4";
 export const SHOW_MODAL4 = "SHOW_MODAL4";
 export const CONFIRM = "CONFIRM";
 export const SEARCH = "SEARCH";
+export const CONTACT_SEARCH = "CONTACT_SEARCH";
 
 // Exchange
 export const AVAILABLE_COINS = "AVAILABLE_COINS";

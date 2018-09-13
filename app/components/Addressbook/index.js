@@ -500,6 +500,17 @@ class Addressbook extends Component {
   }
 
   contactLister() {
+    let filteredAddress = this.props.addressbook.map((contact, i) => {
+      if (
+        contact.name
+          .toLowerCase()
+          .indexOf(this.props.contactSearch.toLowerCase()) !== -1
+      ) {
+        console.log(contact.name);
+        return `${contact.name}`;
+      }
+    });
+    console.log(filteredAddress);
     if (this.props.addressbook[0]) {
       return (
         <div
@@ -508,29 +519,33 @@ class Addressbook extends Component {
         >
           {this.props.addressbook.map((contact, i) => {
             let addTotal = contact.mine.length + contact.notMine.length;
-            return (
-              <div
-                key={i}
-                id={i}
-                onClick={() => this.props.SelectedContact(i)}
-                onMouseOverCapture={e => {
-                  this.props.SetMousePosition("account", i);
-                }}
-                className="contact"
-              >
-                <span className="contact-avatar">
-                  <svg viewBox="0 0 100 100">
-                    <text x="50" y="50" dy=".35em">
-                      {this.getinitial(contact.name)}
-                    </text>
-                  </svg>
-                </span>
-                <span className="contact-name">{contact.name}</span>
-                <span className="contactAddresses">
-                  {addTotal} {addTotal > 1 ? " addresses" : " address"}
-                </span>
-              </div>
-            );
+            if (filteredAddress.includes(contact.name)) {
+              return (
+                <div
+                  key={i}
+                  id={i}
+                  onClick={() => this.props.SelectedContact(i)}
+                  onMouseOverCapture={e => {
+                    this.props.SetMousePosition("account", i);
+                  }}
+                  className="contact"
+                >
+                  <span className="contact-avatar">
+                    <svg viewBox="0 0 100 100">
+                      <text x="50" y="50" dy=".35em">
+                        {this.getinitial(contact.name)}
+                      </text>
+                    </svg>
+                  </span>
+                  <span className="contact-name">{contact.name}</span>
+                  <span className="contactAddresses">
+                    {addTotal} {addTotal > 1 ? " addresses" : " address"}
+                  </span>
+                </div>
+              );
+            } else {
+              return null;
+            }
           })}
         </div>
       );
@@ -952,6 +967,7 @@ class Addressbook extends Component {
           center
           onClose={this.props.ToggleModal}
           classNames={{ modal: "custom-modal4" }}
+          onExited={this.props.clearPrototype}
         >
           {this.modalInternalBuilder()}
         </Modal>
@@ -965,17 +981,22 @@ class Addressbook extends Component {
         <div className="panel">
           <div id="addressbook-controls">
             <div id="addressbook-search">
-              {/* {this.props.addressbook.length > 0 && (
-                <div>
-                  <input type="text" />
-                  <button id="searchContacts" />
-                </div>
-              )} */}
+              <input
+                className="searchaccount"
+                type="text"
+                placeholder="Search Contact"
+                value={this.props.contactSearch}
+                onChange={e => this.props.ContactSearch(e.target.value)}
+                required
+              />
             </div>
 
             <button
               className="button ghost"
-              onClick={() => this.showMyAddresses()}
+              onClick={() => {
+                this.props.clearSearch();
+                this.showMyAddresses();
+              }}
             >
               My Addresses
             </button>
