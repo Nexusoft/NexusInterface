@@ -114,7 +114,7 @@ export default (DAT.Globe = function(container, opts) {
 
     scene = new THREE.Scene();
 
-    var geometry = new THREE.SphereGeometry(200, 30, 20);
+    var geometry = new THREE.SphereGeometry(200, 40, 30);
 
     shader = Shaders["earth"];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
