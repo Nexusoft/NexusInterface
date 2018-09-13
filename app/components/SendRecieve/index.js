@@ -41,6 +41,9 @@ const mapDispatchToProps = dispatch => ({
   clearForm: () => {
     dispatch({ type: TYPE.CLEAR_FORM });
   },
+  clearSearch: () => {
+    dispatch({ type: TYPE.CLEAR_SEARCHBAR });
+  },
   addToQueue: returnQueue => {
     dispatch({ type: TYPE.ADD_TO_QUEUE, payload: returnQueue });
   },
@@ -67,6 +70,9 @@ const mapDispatchToProps = dispatch => ({
   },
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  },
+  CloseModal: type => {
+    dispatch({ type: TYPE.HIDE_MODAL, payload: type });
   },
   OpenModal2: type => {
     dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
@@ -322,11 +328,23 @@ class SendRecieve extends Component {
           {e.notMine.map((ele, i) => {
             return (
               <td
-                onClick={() => this.props.updateAddress(ele.address)}
+                onClick={() => {
+                  this.props.updateAddress(ele.address);
+                  this.props.OpenModal("Copied");
+                  setTimeout(() => {
+                    if (this.props.open) {
+                      this.props.CloseModal();
+                    }
+                  }, 3000);
+                }}
                 className="dt"
                 key={ele.address + i}
               >
                 {ele.address}
+                <span key={ele.address + i} className="tooltip right">
+                  {" "}
+                  Copy To Field
+                </span>
               </td>
             );
           })}
@@ -415,8 +433,40 @@ class SendRecieve extends Component {
       );
     });
   }
+
+  modalinternal3() {
+    switch (this.props.LookUpModalType) {
+      case "Address Lookup":
+        return (
+          <div className="Addresstable-wraper">
+            {" "}
+            <h2 className="addressModalHeader">
+              Lookup Address <img src={addressbookimg} className="hdr-img" />
+            </h2>
+            <table id="AddressTable">
+              <thead className="AddressThead">
+                <th className="short-column">Name</th>
+                <th className="long-column">Address</th>
+                <th className="short-column">
+                  <input
+                    className="searchBar"
+                    type="text"
+                    placeholder="Search Address"
+                    value={this.props.Search}
+                    onChange={e => this.props.SearchName(e.target.value)}
+                    required
+                  />
+                </th>
+              </thead>
+              {this.addressBookToQueue()}
+            </table>
+          </div>
+        );
+    }
+  }
+
   modalinternal2() {
-    switch (this.props.modaltype) {
+    switch (this.props.SendReceiveModalType) {
       case "send transaction?":
         return (
           <div>
@@ -510,7 +560,6 @@ class SendRecieve extends Component {
           </div>
         );
         break;
-        break;
       case "Address Lookup":
         return (
           <div className="Addresstable-wraper">
@@ -566,7 +615,7 @@ class SendRecieve extends Component {
           open={this.props.openFourthModal}
           onClose={this.props.CloseModal4}
         >
-          {this.modalinternal2()}
+          {this.modalinternal3()}
         </Modal>
 
         {/* CONFIRMATION MODAL */}
@@ -606,7 +655,10 @@ class SendRecieve extends Component {
                     <img
                       src={plusimg}
                       className="lookupButton"
-                      onClick={() => this.props.OpenModal4("Address Lookup")}
+                      onClick={() => {
+                        this.props.clearSearch();
+                        this.props.OpenModal4("Address Lookup");
+                      }}
                     />
                   </div>
                   <input

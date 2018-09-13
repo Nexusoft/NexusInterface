@@ -17,7 +17,8 @@ const initialState = {
   isInSync: false,
   blockDate: "Getting Next Block...",
   portAvailable: false,
-  Search: ""
+  Search: "",
+  contactSearch: ""
 };
 
 export default (state = initialState, action) => {
@@ -38,6 +39,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         Search: action.payload
+      };
+      break;
+    case TYPE.CONTACT_SEARCH:
+      return {
+        ...state,
+        contactSearch: action.payload
       };
       break;
     case TYPE.SET_SYNC_STATUS:
@@ -129,6 +136,14 @@ export default (state = initialState, action) => {
         ...state,
         heighestPeerBlock: action.payload
       };
+      break;
+    case TYPE.CLEAR_SEARCHBAR:
+      return {
+        ...state,
+        Search: "",
+        contactSearch: ""
+      };
+      break;
     case TYPE.ENCRYPTED:
       return {
         ...state,
