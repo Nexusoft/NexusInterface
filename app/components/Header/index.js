@@ -28,7 +28,7 @@ let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
 
 const mapStateToProps = state => {
-  return { ...state.overview, ...state.common };
+  return { ...state.overview, ...state.common, ...state.settings };
 };
 
 const mapDispatchToProps = dispatch =>
@@ -136,6 +136,16 @@ class Header extends Component {
     } else if (nextProps.unlocked_until >= 0) {
       this.props.Unlock();
       this.props.Encrypted();
+    }
+
+    if (nextProps.styleChangeFlag) {
+      var style = getComputedStyle(document.body);
+      style.getPropertyValue("--color-1");
+      document.documentElement.style.setProperty(
+        "--color-1",
+        this.props.customStyle.MC1
+      );
+      console.log("StyleChange");
     }
 
     if (nextProps.blocks !== this.props.blocks) {
@@ -255,7 +265,6 @@ class Header extends Component {
   }
 
   modalinternal() {
-    console.log(this.props.modaltype);
     switch (this.props.modaltype) {
       case "receive":
         return <h2>Transaction Received</h2>;
