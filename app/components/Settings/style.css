@@ -4,6 +4,16 @@
   display: flex;
   flex-direction: column;
 }
+/* 
+#SettingsStyle {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#styleForm {
+  flex: 1;
+} */
 
 #settings > h2 {
   flex: 0;
@@ -172,7 +182,6 @@ form {
 #ok-button {
   float: left;
 }
-
 
 #noPad {
   margin-left: 0;

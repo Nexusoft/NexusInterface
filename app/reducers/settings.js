@@ -9,9 +9,17 @@ const initialState = {
     windowHeight: 1388,
     devMode: false
   },
+  customStyling: {
+    MC1: "#111111",
+    MC2: "#0ca4fb",
+    MC3: "#556070",
+    MC4: "#34495e",
+    MC5: "#ffffff"
+  },
   ignoreEncryptionWarningFlag: false,
   experimentalOpen: true,
-  saveSettings: false
+  saveSettings: false,
+  styleChangeFlag: false
 };
 
 export default (state = initialState, action) => {
@@ -59,6 +67,22 @@ export default (state = initialState, action) => {
       return {
         ...state,
         saveSettingsFlag: false
+      };
+      break;
+    case TYPE.CHANGE_COLOR_1:
+      return {
+        ...state,
+        customStyling: {
+          ...state.customStyling,
+          MC1: action.payload
+        },
+        styleChangeFlag: true
+      };
+      break;
+    case TYPE.UNSET_STYLE_FLAG:
+      return {
+        ...state,
+        styleChangeFlag: false
       };
       break;
     default:
