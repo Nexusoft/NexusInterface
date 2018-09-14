@@ -323,9 +323,7 @@ class Overview extends Component {
   }
 
   returnIfGlobeEnabled() {
-    let settings = GetSettings();
-    let isglobeopen = settings.renderGlobe;
-    if (isglobeopen == false) {
+    if (this.props.settings.renderGlobe == false) {
       return null;
     } else {
       return [
