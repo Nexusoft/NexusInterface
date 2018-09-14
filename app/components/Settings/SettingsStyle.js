@@ -20,11 +20,42 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   ChangeColor1: hex => dispatch({ type: TYPE.CHANGE_COLOR_1, payload: hex }),
+  ChangeColor2: hex => dispatch({ type: TYPE.CHANGE_COLOR_2, payload: hex }),
+  ChangeColor3: hex => dispatch({ type: TYPE.CHANGE_COLOR_3, payload: hex }),
+  ChangeColor4: hex => dispatch({ type: TYPE.CHANGE_COLOR_4, payload: hex }),
+  ChangeColor5: hex => dispatch({ type: TYPE.CHANGE_COLOR_5, payload: hex }),
+  setSelectedColorProp: selected =>
+    dispatch({ type: TYPE.SET_SELECTED_COLOR_PROP, payload: selected }),
+  ChangeNexusLogoColor: (setting, hex) =>
+    dispatch({
+      type: TYPE.SET_NEXUS_LOGO_COLOR,
+      payload: { setting: setting, hex: hex }
+    }),
+  ChangeIconMenuColor: (setting, hex) =>
+    dispatch({
+      type: TYPE.SET_ICON_MENU_COLOR,
+      payload: { setting: setting, hex: hex }
+    }),
+  ChangeFooterColor: (setting, hex) =>
+    dispatch({
+      type: TYPE.SET_FOOTER_COLOR,
+      payload: { setting: setting, hex: hex }
+    }),
+  ChangeFooterHoverColor: (setting, hex) =>
+    dispatch({
+      type: TYPE.SET_FOOTER_HOVER_COLOR,
+      payload: { setting: setting, hex: hex }
+    }),
+  ChangeFooterActiveColor: (setting, hex) =>
+    dispatch({
+      type: TYPE.SET_FOOTER_ACTIVE_COLOR,
+      payload: { setting: setting, hex: hex }
+    }),
   ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING })
 });
 
 class SettingsStyle extends Component {
-  setRenderGlobe(settings) {
+  setRenderGlobe() {
     let ifRenderGlobe = document.getElementById("renderGlobe");
 
     if (settings.renderGlobe == undefined) {
@@ -58,6 +89,88 @@ class SettingsStyle extends Component {
       "--background-main-image",
       'url("' + imagePath + '")'
     );
+  }
+
+  handleColorChange(color) {
+    console.log(color);
+
+    let H = color.hsl.h - 196.3;
+    let S = 100 + (color.hsl.s * 100 - 100);
+    let L = 100 + (color.hsl.l * 100 - 46.9);
+    let filterSetting = `hue-rotate(${H}deg) brightness(${L}%) grayscale(0%) saturate(${S}%)`;
+
+    switch (this.props.selectedColorProp) {
+      case "MC1":
+        this.props.ChangeColor1(color.hex);
+        break;
+      case "MC2":
+        this.props.ChangeColor2(color.hex);
+        break;
+      case "MC3":
+        this.props.ChangeColor3(color.hex);
+        break;
+      case "MC4":
+        this.props.ChangeColor4(color.hex);
+        break;
+      case "MC5":
+        this.props.ChangeColor5(color.hex);
+        break;
+      case "NXSlogo":
+        this.props.ChangeNexusLogoColor(filterSetting, color.hex);
+        break;
+      case "iconMenu":
+        this.props.ChangeIconMenuColor(filterSetting, color.hex);
+        break;
+      case "footer":
+        this.props.ChangeFooterColor(filterSetting, color.hex);
+        break;
+      case "footerHover":
+        this.props.ChangeFooterHoverColor(filterSetting, color.hex);
+        break;
+      case "footerActive":
+        this.props.ChangeFooterActiveColor(filterSetting, color.hex);
+        break;
+      default:
+        break;
+    }
+  }
+
+  colorPresetter() {
+    this.props.customStyling[this.props.selectedColorProp];
+    switch (this.props.selectedColorProp) {
+      case "MC1":
+        return this.props.customStyling.MC1;
+        break;
+      case "MC2":
+        return this.props.customStyling.MC2;
+        break;
+      case "MC3":
+        return this.props.customStyling.MC3;
+        break;
+      case "MC4":
+        return this.props.customStyling.MC4;
+        break;
+      case "MC5":
+        return this.props.customStyling.MC5;
+        break;
+      case "NXSlogo":
+        return this.props.NXSlogoRGB;
+        break;
+      case "iconMenu":
+        return this.props.iconMenuRGB;
+        break;
+      case "footer":
+        return this.props.footerRGB;
+        break;
+      case "footerHover":
+        return this.props.footerHoverRGB;
+        break;
+      case "footerActive":
+        return this.props.footerActiveRGB;
+        break;
+      default:
+        break;
+    }
   }
 
   /// Update Render Globe
@@ -101,19 +214,28 @@ class SettingsStyle extends Component {
                     maxWidth: "80%"
                   }}
                   id="select"
+                  onChange={e => {
+                    console.log("selector");
+                    this.props.setSelectedColorProp(e.target.value);
+                  }}
                 >
-                  <option>color1 </option>
-                  <option>color2 </option>
-                  <option>color3 </option>
-                  <option>color4 </option>
+                  <option value="MC1">color 1 </option>
+                  <option value="MC2">color 2 </option>
+                  <option value="MC3">color 3 </option>
+                  <option value="MC4">color 4 </option>
+                  <option value="MC5">color 5 </option>
+                  <option value="NXSlogo">Nexus Logo Color</option>
+                  <option value="iconMenu">Icon Color</option>
+                  <option value="footer">Footer Base Color</option>
+                  <option value="footerHover">Footer Hover Color</option>
+                  <option value="footerActive">Footer Active Color</option>
                 </select>
               </label>
               <ChromePicker
-                color={this.props.customStyling.MC2}
+                color={this.colorPresetter()}
                 disableAlpha={true}
                 onChangeComplete={(color, event) => {
-                  console.log(color);
-                  this.props.ChangeColor1(color.hex);
+                  this.handleColorChange(color);
                 }}
               />
             </div>

@@ -332,9 +332,15 @@ class Header extends Component {
             "--color-2": this.props.customStyling.MC2,
             "--color-3": this.props.customStyling.MC3,
             "--color-4": this.props.customStyling.MC4,
-            "--color-5": this.props.customStyling.MC5
+            "--color-5": this.props.customStyling.MC5,
+            "--nxs-logo": this.props.customStyling.NXSlogo,
+            "--icon-menu": this.props.customStyling.iconMenu,
+            "--footer": this.props.customStyling.footer,
+            "--footer-hover": this.props.customStyling.footerHover,
+            "--footer-active": this.props.customStyling.footerActive
           }}
         />
+        {console.log(this.props.customStyling.NXSlogo)}
         <Modal
           showCloseIcon={false}
           center={true}

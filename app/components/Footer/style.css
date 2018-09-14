@@ -43,7 +43,7 @@
 #navigation a {
   display: block;
   position: relative;
-  filter: hue-rotate(0deg) grayscale(100%) brightness(200%);
+  filter: var(--footer);
 }
 
 #navigation a img {
@@ -54,11 +54,11 @@
 #navigation a:hover {
   display: block;
   margin-top: -4px;
-  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  filter: var(--footer-hover);
 }
 
 #navigation a.active {
-  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  filter: var(--footer-active);
 }
 
 #navigation a.active::before {
