@@ -142,7 +142,7 @@ class Transactions extends Component {
     {
       for (let eachaddress in this.props.myAccounts[key].addresses)
       {
-        tempaddpress.set(this.props.myAccounts[key].addresses[eachaddress],"Mine-" + this.props.myAccounts[key].account);
+        tempaddpress.set(this.props.myAccounts[key].addresses[eachaddress],"My Address-" + this.props.myAccounts[key].account);
       }
     }
     this.loadMyAccounts();
@@ -219,7 +219,7 @@ class Transactions extends Component {
           {
             for (let eachaddress in accountsList[key].addresses)
             {
-              tempaddpress.set(accountsList[key].addresses[eachaddress],"Mine-" + accountsList[key].account);
+              tempaddpress.set(accountsList[key].addresses[eachaddress],"My Account-" + accountsList[key].account);
             }
           }
           this.setState(
