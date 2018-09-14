@@ -328,19 +328,20 @@ class Header extends Component {
         <CustomProperties
           global
           properties={{
-            "--color-1": this.props.customStyling.MC1,
-            "--color-2": this.props.customStyling.MC2,
-            "--color-3": this.props.customStyling.MC3,
-            "--color-4": this.props.customStyling.MC4,
-            "--color-5": this.props.customStyling.MC5,
-            "--nxs-logo": this.props.customStyling.NXSlogo,
-            "--icon-menu": this.props.customStyling.iconMenu,
-            "--footer": this.props.customStyling.footer,
-            "--footer-hover": this.props.customStyling.footerHover,
-            "--footer-active": this.props.customStyling.footerActive
+            "--color-1": this.props.settings.customStyling.MC1,
+            "--color-2": this.props.settings.customStyling.MC2,
+            "--color-3": this.props.settings.customStyling.MC3,
+            "--color-4": this.props.settings.customStyling.MC4,
+            "--color-5": this.props.settings.customStyling.MC5,
+            "--nxs-logo": this.props.settings.customStyling.NXSlogo,
+            "--icon-menu": this.props.settings.customStyling.iconMenu,
+            "--footer": this.props.settings.customStyling.footer,
+            "--footer-hover": this.props.settings.customStyling.footerHover,
+            "--footer-active": this.props.settings.customStyling.footerActive,
+            "--background-main-image": `url('${this.props.settings.wallpaper}')`
           }}
         />
-        {console.log(this.props.customStyling.NXSlogo)}
+
         <Modal
           showCloseIcon={false}
           center={true}

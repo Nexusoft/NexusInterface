@@ -19,6 +19,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
+  SetWalpaper: path => dispatch({ type: TYPE.SET_WALLPAPER, payload: path }),
   ChangeColor1: hex => dispatch({ type: TYPE.CHANGE_COLOR_1, payload: hex }),
   ChangeColor2: hex => dispatch({ type: TYPE.CHANGE_COLOR_2, payload: hex }),
   ChangeColor3: hex => dispatch({ type: TYPE.CHANGE_COLOR_3, payload: hex }),
@@ -51,54 +52,37 @@ const mapDispatchToProps = dispatch => ({
       type: TYPE.SET_FOOTER_ACTIVE_COLOR,
       payload: { setting: setting, hex: hex }
     }),
-  ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING })
+  ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
+  ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER })
 });
 
 class SettingsStyle extends Component {
-  setRenderGlobe() {
-    let ifRenderGlobe = document.getElementById("renderGlobe");
+  constructor() {
+    super();
 
-    if (settings.renderGlobe == undefined) {
-      ifRenderGlobe.checked = true;
-    }
-    if (settings.renderGlobe == true) {
-      ifRenderGlobe.checked = true;
-    }
-    if (settings.renderGlobe == false) {
-      ifRenderGlobe.checked = false;
-    }
+    this.updateWallpaper = this.updateWallpaper.bind(this);
   }
 
-  //
-  // Update Wallpaper
-  //
-
   updateWallpaper(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
-
+    console.log(event);
+    let el = event.target;
     let imagePath = el.files[0].path;
-    settingsObj.wallpaper = imagePath;
-    settings.SaveSettings(settingsObj);
-
     if (process.platform === "win32") {
       imagePath = imagePath.replace(/\\/g, "/");
     }
-    document.body.style.setProperty(
-      "--background-main-image",
-      'url("' + imagePath + '")'
-    );
+    this.props.SetWalpaper(imagePath);
   }
 
   handleColorChange(color) {
-    console.log(color);
-
+    let filterSetting;
     let H = color.hsl.h - 196.3;
     let S = 100 + (color.hsl.s * 100 - 100);
     let L = 100 + (color.hsl.l * 100 - 46.9);
-    let filterSetting = `hue-rotate(${H}deg) brightness(${L}%) grayscale(0%) saturate(${S}%)`;
-
+    if (color.hex === "#ffffff") {
+      filterSetting = "hue-rotate(0deg) brightness(200%) grayscale(100%)";
+    } else {
+      filterSetting = `hue-rotate(${H}deg) brightness(${L}%) grayscale(0%) saturate(${S}%)`;
+    }
     switch (this.props.selectedColorProp) {
       case "MC1":
         this.props.ChangeColor1(color.hex);
@@ -136,22 +120,22 @@ class SettingsStyle extends Component {
   }
 
   colorPresetter() {
-    this.props.customStyling[this.props.selectedColorProp];
+    this.props.settings.customStyling[this.props.selectedColorProp];
     switch (this.props.selectedColorProp) {
       case "MC1":
-        return this.props.customStyling.MC1;
+        return this.props.settings.customStyling.MC1;
         break;
       case "MC2":
-        return this.props.customStyling.MC2;
+        return this.props.settings.customStyling.MC2;
         break;
       case "MC3":
-        return this.props.customStyling.MC3;
+        return this.props.settings.customStyling.MC3;
         break;
       case "MC4":
-        return this.props.customStyling.MC4;
+        return this.props.settings.customStyling.MC4;
         break;
       case "MC5":
-        return this.props.customStyling.MC5;
+        return this.props.settings.customStyling.MC5;
         break;
       case "NXSlogo":
         return this.props.NXSlogoRGB;
@@ -173,12 +157,14 @@ class SettingsStyle extends Component {
     }
   }
 
-  /// Update Render Globe
-  /// When you change the render settings update settings json
-  updateRenderGlobe(event) {
+  updateRenderGlobe() {
     let settings = require("../../api/settings.js").GetSettings();
-    settings.renderGlobe = event.target.checked;
+    settings.renderGlobe = !this.props.settings.renderGlobe;
     require("../../api/settings.js").SaveSettings(settings);
+  }
+
+  SaveSettings() {
+    require("../../api/settings.js").SaveSettings(this.props.settings);
   }
 
   render() {
@@ -203,7 +189,11 @@ class SettingsStyle extends Component {
                 id="renderGlobe"
                 type="checkbox"
                 className="switch"
-                onChange={this.updateRenderGlobe.bind(this)}
+                checked={this.props.settings.renderGlobe}
+                onChange={() => {
+                  this.props.ToggleGlobeRender();
+                  this.updateRenderGlobe();
+                }}
                 data-tooltip="Render the globe on the overview page"
               />
             </div>
@@ -239,7 +229,15 @@ class SettingsStyle extends Component {
                 }}
               />
             </div>
-            <button className="button primary">Save Settings</button>
+            <button
+              className="button primary"
+              onClick={e => {
+                e.preventDefault();
+                this.SaveSettings();
+              }}
+            >
+              Save Settings
+            </button>
             <button
               className="button"
               onClick={e => {

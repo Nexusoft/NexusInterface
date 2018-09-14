@@ -124,5 +124,4 @@
 #navigation a:hover img {
   display: block;
   margin: 0.625em;
-  filter: grayscale(1) brightness(200%);
 }
