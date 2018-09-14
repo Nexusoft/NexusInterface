@@ -3,6 +3,7 @@ import * as TYPE from "../actions/actiontypes";
 const initialState = {
   Address: "",
   Amount: 0,
+  USDAmount: 0,
   Account: "",
   Message: "",
   Queue: {},
@@ -42,7 +43,8 @@ export default (state = initialState, action) => {
     case TYPE.UPDATE_AMOUNT:
       return {
         ...state,
-        Amount: action.payload
+        Amount: action.payload.Amount,
+        USDAmount: action.payload.USDAmount
       };
       break;
     case TYPE.UPDATE_MESSAGE:
@@ -85,7 +87,8 @@ export default (state = initialState, action) => {
         Address: "",
         Amount: 0,
         Account: "",
-        Message: ""
+        Message: "",
+        USDAmount: 0
       };
       break;
     case TYPE.CLEAR_FORM:
@@ -94,7 +97,8 @@ export default (state = initialState, action) => {
         Address: "",
         Amount: 0,
         Account: "",
-        Message: ""
+        Message: "",
+        USDAmount: 0
       };
     default:
       return state;

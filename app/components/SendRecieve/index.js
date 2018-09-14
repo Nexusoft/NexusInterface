@@ -47,8 +47,11 @@ const mapDispatchToProps = dispatch => ({
   addToQueue: returnQueue => {
     dispatch({ type: TYPE.ADD_TO_QUEUE, payload: returnQueue });
   },
-  updateAmount: returnAmount => {
-    dispatch({ type: TYPE.UPDATE_AMOUNT, payload: returnAmount });
+  updateAmount: (NxsVal, USD) => {
+    dispatch({
+      type: TYPE.UPDATE_AMOUNT,
+      payload: { USDAmount: USD, Amount: NxsVal }
+    });
   },
   AccountPicked: returnSelectedAccount => {
     dispatch({ type: TYPE.SELECTED_ACCOUNT, payload: returnSelectedAccount });
@@ -151,9 +154,16 @@ class SendRecieve extends Component {
     }
   }
 
-  nxsAmount(e) {
+  nxsAmount(e, isNxs) {
+    console.log(this.props.USD);
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === "")) {
-      this.props.updateAmount(e.target.value);
+      if (isNxs) {
+        let Usd = e.target.value * this.props.USD;
+        this.props.updateAmount(e.target.value, Usd.toFixed(2));
+      } else {
+        let NxsValue = e.target.value / this.props.USD;
+        this.props.updateAmount(NxsValue.toFixed(5), e.target.value);
+      }
     } else {
       return null;
     }
@@ -364,6 +374,27 @@ class SendRecieve extends Component {
       );
     });
   }
+
+  // calculateUSDvalue(e) {
+  //   let USDvalue = this.props.USDAmount * this.props.USD;
+
+  //   if (USDvalue === 0) {
+  //     USDvalue = USDvalue;
+  //   } else {
+  //     USDvalue = USDvalue;
+  //   }
+  //   return USDvalue;
+  // }
+  // calculateNexusVxalue(e) {
+  //   let USDvalue = this.props.Amount * this.props.USD;
+
+  //   if (USDvalue === 0) {
+  //     USDvalue = USDvalue;
+  //   } else {
+  //     USDvalue = USDvalue;
+  //   }
+  //   return USDvalue;
+  // }
 
   fillQueue() {
     let Keys = Object.keys(this.props.Queue);
@@ -671,16 +702,34 @@ class SendRecieve extends Component {
                   />
                 </p>
                 <p>
-                  <span className="hint">Amount Of Nexus</span>
-                  <label>Nexus Amount</label>
-                  <input
-                    className="input"
-                    type="text"
-                    placeholder="Nexus Amount"
-                    value={this.props.Amount}
-                    onChange={e => this.nxsAmount(e)}
-                    required
-                  />
+                  {" "}
+                  <div className="convertor">
+                    <label>Nexus Amount</label>{" "}
+                    <label className="UsdConvertorLabel">USD</label>
+                  </div>
+                  <div className="convertor">
+                    {" "}
+                    <span className="hint">Amount Of Nexus</span>
+                    <input
+                      className="input"
+                      type="text"
+                      placeholder="0.00000"
+                      value={this.props.Amount}
+                      onChange={e => this.nxsAmount(e, true)}
+                      required
+                    />{" "}
+                    <label>=</label>
+                    <input
+                      className="input"
+                      type="text"
+                      placeholder="0.00"
+                      value={this.props.USDAmount}
+                      onChange={e => {
+                        this.nxsAmount(e);
+                      }}
+                      required
+                    />
+                  </div>
                 </p>
                 <p>
                   <label>Message</label>
@@ -690,7 +739,7 @@ class SendRecieve extends Component {
                     onChange={e => this.props.updateMessage(e.target.value)}
                     name="message"
                     rows="5"
-                    cols="36"
+                    cols="41"
                     placeholder="Enter Your Message"
                   />
                 </p>
