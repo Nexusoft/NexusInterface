@@ -18,6 +18,23 @@ export const SearchName = Search => {
     dispatch({ type: TYPE.SEARCH, payload: Search });
   };
 };
+export const ContactSearch = contactSearch => {
+  return dispatch => {
+    dispatch({ type: TYPE.CONTACT_SEARCH, payload: contactSearch });
+  };
+};
+
+export const clearSearch = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.CLEAR_SEARCHBAR });
+  };
+};
+
+export const clearPrototype = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.CLEAR_PROTOTYPE });
+  };
+};
 
 export const ToggleModal = () => {
   return dispatch => {

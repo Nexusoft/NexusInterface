@@ -11,6 +11,7 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
 import { GetSettings } from "../../api/settings.js";
+import CustomProperties from "react-custom-properties";
 
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
@@ -28,7 +29,7 @@ let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
 
 const mapStateToProps = state => {
-  return { ...state.overview, ...state.common };
+  return { ...state.overview, ...state.common, ...state.settings };
 };
 
 const mapDispatchToProps = dispatch =>
@@ -255,7 +256,6 @@ class Header extends Component {
   }
 
   modalinternal() {
-    console.log(this.props.modaltype);
     switch (this.props.modaltype) {
       case "receive":
         return <h2>Transaction Received</h2>;
@@ -325,6 +325,23 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
+        <CustomProperties
+          global
+          properties={{
+            "--color-1": this.props.settings.customStyling.MC1,
+            "--color-2": this.props.settings.customStyling.MC2,
+            "--color-3": this.props.settings.customStyling.MC3,
+            "--color-4": this.props.settings.customStyling.MC4,
+            "--color-5": this.props.settings.customStyling.MC5,
+            "--nxs-logo": this.props.settings.customStyling.NXSlogo,
+            "--icon-menu": this.props.settings.customStyling.iconMenu,
+            "--footer": this.props.settings.customStyling.footer,
+            "--footer-hover": this.props.settings.customStyling.footerHover,
+            "--footer-active": this.props.settings.customStyling.footerActive,
+            "--background-main-image": `url('${this.props.settings.wallpaper}')`
+          }}
+        />
+
         <Modal
           showCloseIcon={false}
           center={true}

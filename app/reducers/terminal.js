@@ -5,10 +5,10 @@ const initialState = {
   //vars go here
   consoleOutput: [],
   currentInput: "",
-  commandList:[],
-  autoComplete:[],
+  commandList: [],
+  autoComplete: [],
   testnum: 99999,
-  commandHistory:[],
+  commandHistory: [],
   currentHistoryIndex: 0,
   filteredCmdList: []
 };
@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
       break;
     case TYPE.PRINT_TO_CONSOLE:
       var payloadCopy = action.payload;
-      for(var i; i < state.consoleOutput.length; i++) { 
+      for (var i; i < state.consoleOutput.length; i++) {
         payloadCopy.push(state.consoleOutput[i]);
       }
       return {
@@ -34,7 +34,7 @@ export default (state = initialState, action) => {
     case TYPE.RESET_MY_CONSOLE:
       return {
         ...state,
-        consoleOutput : []
+        consoleOutput: []
       };
       break;
     case TYPE.ON_INPUT_FIELD_CHANGE:
@@ -46,52 +46,52 @@ export default (state = initialState, action) => {
     case TYPE.SET_INPUT_FEILD:
       return {
         ...state,
-        currentInput : action.payload
+        currentInput: action.payload
       };
       break;
     case TYPE.ON_AUTO_COMPLETE_CLICK:
       return {
         ...state,
-        currentInput : action.payload,
-        autoComplete : []
+        currentInput: action.payload,
+        autoComplete: []
       };
       break;
     case TYPE.RETURN_AUTO_COMPLETE:
       // foreach commandlist starts with current input push into string aray
       // needs commandlist, a copy of the ones that go into it, and a returned array of commandlist that is less.
       let filteredCmdListTmp = [];
-      for(var i = 0; i < commandList.length; i++) {
-        if(commandList[i].indexOf(action.payload) != -1) {
+      for (var i = 0; i < commandList.length; i++) {
+        if (commandList[i].indexOf(action.payload) != -1) {
           filteredCmdList.push(commandList[i]);
         }
       }
       return {
         ...state,
-        filteredCmdList : filteredCmdListTmp
+        filteredCmdList: filteredCmdListTmp
       };
       break;
     case TYPE.REMOVE_AUTO_COMPLETE_DIV:
       return {
         ...state,
-        currentInput : action.payload
+        currentInput: action.payload
       };
       break;
     case TYPE.RECALL_PREVIOUS_COMMAND:
       return {
         ...state,
-        commandHistory : action.payload
+        commandHistory: action.payload
       };
       break;
-      case TYPE.RECALL_NEXT_COMMAND_OR_CLEAR:
+    case TYPE.RECALL_NEXT_COMMAND_OR_CLEAR:
       return {
         ...state,
-        currentInput : action.payload
+        currentInput: action.payload
       };
       break;
-      case TYPE.ADD_TO_HISTORY:
+    case TYPE.ADD_TO_HISTORY:
       return {
         ...state,
-        commandHistory : [...state.commandHistory, action.payload]
+        commandHistory: [...state.commandHistory, action.payload]
       };
       break;
 

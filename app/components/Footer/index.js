@@ -39,7 +39,6 @@ export default class Footer extends Component {
             <img src={addressImg} alt="Address Book" />
             <div className="tooltip top">Address&nbsp;Book</div>
           </NavLink>
-
           <NavLink to="/Settings">
             <img src={settingsImg} alt="Settings" />
             <div className="tooltip top">Settings</div>

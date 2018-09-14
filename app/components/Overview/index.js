@@ -323,9 +323,7 @@ class Overview extends Component {
   }
 
   returnIfGlobeEnabled() {
-    let settings = GetSettings();
-    let isglobeopen = settings.renderGlobe;
-    if (isglobeopen == false) {
+    if (this.props.settings.renderGlobe == false) {
       return null;
     } else {
       return [
@@ -393,13 +391,25 @@ class Overview extends Component {
           </button>
         </Modal>
         <div className="left-stats">
-          <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
-            <div className="h2">
-              Balance <span className="h2-nospace">(NXS)</span>
+          {this.props.stake > 0 ? (
+            <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
+              <div className="h2">
+                Balance and Stake <span className="h2-nospace">(NXS)</span>
+              </div>
+              <img src={nxsStake} />
+              <div className="overviewValue">
+                {this.props.balance + this.props.stake}
+              </div>
             </div>
-            <img src={nxsStake} />
-            <div className="overviewValue">{this.props.balance}</div>
-          </div>
+          ) : (
+            <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
+              <div className="h2">
+                Balance <span className="h2-nospace">(NXS)</span>
+              </div>
+              <img src={nxsStake} />
+              <div className="overviewValue">{this.props.balance}</div>
+            </div>
+          )}
 
           <div
             id="nxs-currency-value-info"
