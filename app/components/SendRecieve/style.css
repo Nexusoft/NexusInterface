@@ -59,7 +59,13 @@
 }
 
 .input {
-  width: 350px;
+  width: 175px;
+}
+.convertor {
+  display: flex;
+}
+.UsdConvertorLabel {
+  padding-left: 80px;
 }
 .label {
   font-size: 40px;
