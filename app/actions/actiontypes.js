@@ -36,6 +36,7 @@ export const WIPE_LOGIN_INFO = "WIPE_LOGIN_INFO";
 export const TOGGLE_BUSY_FLAG = "TOGGLE_BUSY_FLAG";
 export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
 export const TOGGLE_STAKING_FLAG = "TOGGLE_STAKING_FLAG";
+export const SET_TIME = "SET_TIME";
 
 // Common
 export const LOCK = "LOCK";
@@ -64,7 +65,10 @@ export const HIDE_MODAL2 = "HIDE_MODAL2";
 export const SHOW_MODAL2 = "SHOW_MODAL2";
 export const HIDE_MODAL3 = "HIDE_MODAL3";
 export const SHOW_MODAL3 = "SHOW_MODAL3";
+export const HIDE_MODAL4 = "HIDE_MODAL4";
+export const SHOW_MODAL4 = "SHOW_MODAL4";
 export const CONFIRM = "CONFIRM";
+export const SEARCH = "SEARCH";
 
 // Exchange
 export const AVAILABLE_COINS = "AVAILABLE_COINS";

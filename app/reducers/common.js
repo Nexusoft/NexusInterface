@@ -8,6 +8,7 @@ const initialState = {
   open: false,
   openSecondModal: false,
   openThirdModal: false,
+  openFourthModal: false,
   modaltype: "",
   confirmation: false,
   actionItem: "",
@@ -15,7 +16,8 @@ const initialState = {
   heighestPeerBlock: 0,
   isInSync: false,
   blockDate: "Getting Next Block...",
-  portAvailable: false
+  portAvailable: false,
+  Search: ""
 };
 
 export default (state = initialState, action) => {
@@ -30,6 +32,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         modalVisable: !state.modalVisable
+      };
+      break;
+    case TYPE.SEARCH:
+      return {
+        ...state,
+        Search: action.payload
       };
       break;
     case TYPE.SET_SYNC_STATUS:
@@ -69,8 +77,7 @@ export default (state = initialState, action) => {
     case TYPE.HIDE_MODAL:
       return {
         ...state,
-        open: false,
-        modaltype: action.payload
+        open: false
       };
       break;
     case TYPE.SHOW_MODAL2:
@@ -84,8 +91,7 @@ export default (state = initialState, action) => {
     case TYPE.HIDE_MODAL2:
       return {
         ...state,
-        openSecondModal: false,
-        modaltype: action.payload
+        openSecondModal: false
       };
       break;
     case TYPE.SHOW_MODAL3:
@@ -100,6 +106,21 @@ export default (state = initialState, action) => {
       return {
         ...state,
         openThirdModal: false,
+        modaltype: action.payload
+      };
+      break;
+    case TYPE.SHOW_MODAL4:
+      return {
+        ...state,
+        openFourthModal: true,
+        modaltype: action.payload
+      };
+      break;
+
+    case TYPE.HIDE_MODAL4:
+      return {
+        ...state,
+        openFourthModal: false,
         modaltype: action.payload
       };
       break;
@@ -121,8 +142,8 @@ export default (state = initialState, action) => {
       };
       break;
 
-      case TYPE.PORT_AVAILABLE:
-      return{
+    case TYPE.PORT_AVAILABLE:
+      return {
         ...state,
         portAvailable: action.payload
       };

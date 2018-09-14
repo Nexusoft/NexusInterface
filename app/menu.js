@@ -197,7 +197,13 @@ export default class MenuBuilder {
           {
             label: "Back-up Wallet",
             click: () => {
-              let now = new Date().toISOString().replace(/[^0-9]/g, "_");
+              let now = new Date()
+                .toString()
+                .slice(0, 24)
+                .split(" ")
+                .reduce((a, b) => {
+                  return a + "_" + b;
+                });
               let BackupDir = process.env.HOME + "/NexusBackups";
               if (process.platform === "win32") {
                 BackupDir = BackupDir.replace(/\\/g, "/");
@@ -279,7 +285,6 @@ export default class MenuBuilder {
               this.mainWindow.toggleDevTools();
             }
           }
-          
         ]
       },
       {

@@ -26,6 +26,7 @@ const mapDispatchToProps = dispatch => ({
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
+  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   setSettings: settings =>
     dispatch({ type: TYPE.GET_SETTINGS, payload: settings })
 });
@@ -307,8 +308,14 @@ class SettingsApp extends Component {
   /// Sets the transaction fee and sets that using at RPC command to the daemon
   setTxFee() {
     let TxFee = document.getElementById("optionalTransactionFee").value;
-    RPC.PROMISE("settxfee", [parseFloat(TxFee)]);
-    console.log(TxFee);
+    if (parseFloat(TxFee) > 0) {
+      RPC.PROMISE("settxfee", [parseFloat(TxFee)]);
+      this.props.OpenModal("Transaction Fee Set");
+      setTimeout(() => this.props.CloseModal(), 3000);
+    } else {
+      this.props.OpenModal("Invalid Transaction Fee");
+      setTimeout(() => this.props.CloseModal(), 3000);
+    }
   }
 
   /// Update Default Unit Amount
@@ -357,6 +364,34 @@ class SettingsApp extends Component {
     } else alert("Invalid Email");
   }
 
+  backupWallet(e) {
+    e.preventDefault();
+    let now = new Date()
+      .toString()
+      .slice(0, 24)
+      .split(" ")
+      .reduce((a, b) => {
+        return a + "_" + b;
+      });
+
+    let BackupDir = process.env.HOME + "/NexusBackups";
+    if (process.platform === "win32") {
+      BackupDir = BackupDir.replace(/\\/g, "/");
+    }
+    let fs = require("fs");
+    let ifBackupDirExists = fs.existsSync(BackupDir);
+    if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+      fs.mkdirSync(BackupDir);
+    }
+    console.log(now);
+    RPC.PROMISE("backupwallet", [
+      BackupDir + "/NexusBackup_" + now + ".dat"
+    ]).then(payload => {
+      this.props.OpenModal("Wallet Backup");
+      setTimeout(() => this.props.CloseModal(), 3000);
+    });
+  }
+
   render() {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -379,7 +414,6 @@ class SettingsApp extends Component {
               onClick={() => {
                 this.setTxFee();
                 this.props.CloseModal2();
-                this.props.OpenModal("Transaction Fee Set");
               }}
             />
             <div id="no-button">
@@ -498,7 +532,7 @@ class SettingsApp extends Component {
             />
           </div>
 
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="emailAddress">Email Address</label>
             <input
               id="emailAddress"
@@ -513,8 +547,15 @@ class SettingsApp extends Component {
             >
               Save
             </button>
+          </div> */}
+          <div>
+            <button
+              className="button primary"
+              onClick={e => this.backupWallet(e)}
+            >
+              Backup wallet
+            </button>
           </div>
-
           <div className="clear-both" />
         </form>
       </section>

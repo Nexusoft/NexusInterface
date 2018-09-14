@@ -87,6 +87,17 @@ export const OpenModal3 = () => {
     dispatch({ type: TYPE.OPEN_MODAL3 });
   };
 };
+export const CloseModal4 = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.HIDE_MODAL4 });
+  };
+};
+
+export const OpenModal4 = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.OPEN_MODAL4 });
+  };
+};
 
 export const SetSyncStatus = stat => {
   return dispatch => {
