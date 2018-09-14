@@ -97,7 +97,7 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   height: 35px;
   padding-top: 5px;
   padding-left: 20px;
-  filter: hue-rotate(0deg) grayscale(100%) brightness(200%);
+  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
 }
 .left-stats > div {
   margin: 1em 0;
@@ -124,7 +124,7 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
   padding-top: 5px;
   padding-right: 20px;
   left: -55px;
-  filter: hue-rotate(0deg) grayscale(100%) brightness(200%);
+  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
 }
 .right-stats > div {
   margin: 1em 0;
@@ -139,7 +139,15 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
 /*------------------------------------------------------------------
 MEDIA QUERIES
 ------------------------------------------------------------------*/
-@media (min-width: 768px) {
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
 }
 @media (min-width: 1024px) {
 }
