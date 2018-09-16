@@ -80,6 +80,8 @@ class SettingsStyle extends Component {
     let L = 100 + (color.hsl.l * 100 - 46.9);
     if (color.hex === "#ffffff") {
       filterSetting = "hue-rotate(0deg) brightness(200%) grayscale(100%)";
+    } else if (color.hex === "#000000") {
+      filterSetting = "hue-rotate(0deg) brightness(0%) grayscale(100%)";
     } else {
       filterSetting = `hue-rotate(${H}deg) brightness(${L}%) grayscale(0%) saturate(${S}%)`;
     }
