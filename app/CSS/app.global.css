@@ -159,4 +159,5 @@ svg {
   height: 35px;
   width: 35px;
   padding-right: 20px;
+  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
 }
