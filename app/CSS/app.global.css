@@ -47,6 +47,8 @@
   --footer: hue-rotate(0deg) grayscale(100%) brightness(100%);
   --footer-hover: hue-rotate(0deg) grayscale(0%) brightness(100%);
   --footer-active: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  --maxmind-copyright: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  --panel-background-color: rgba(47, 50, 65, 0.7);
   /* BACKGROUND IMAGE VARIABLES */
   /* --background-main-gradient: linear-gradient(
       rgba(17, 17, 17, 0.45),
@@ -159,5 +161,5 @@ svg {
   height: 35px;
   width: 35px;
   padding-right: 20px;
-  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  filter: var(--footer);
 }

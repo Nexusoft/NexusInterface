@@ -338,7 +338,13 @@ class Header extends Component {
             "--footer": this.props.settings.customStyling.footer,
             "--footer-hover": this.props.settings.customStyling.footerHover,
             "--footer-active": this.props.settings.customStyling.footerActive,
-            "--background-main-image": `url('${this.props.settings.wallpaper}')`
+            "--background-main-image": `url('${
+              this.props.settings.wallpaper
+            }')`,
+            "--panel-background-color": this.props.settings.customStyling
+              .pannelBack,
+            "--maxMind-copyright": this.props.settings.customStyling
+              .maxMindCopyright
           }}
         />
 
