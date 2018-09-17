@@ -52,6 +52,8 @@ const mapDispatchToProps = dispatch => ({
       type: TYPE.SET_FOOTER_ACTIVE_COLOR,
       payload: { setting: setting, hex: hex }
     }),
+  ChangePanelColor: rgb =>
+    dispatch({ type: TYPE.CHANGE_PANEL_COLOR, payload: rgb }),
   ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
   ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER })
 });
@@ -116,6 +118,12 @@ class SettingsStyle extends Component {
       case "footerActive":
         this.props.ChangeFooterActiveColor(filterSetting, color.hex);
         break;
+      case "panel":
+        let newPannelBack = `rgba(${color.rgb.r}, ${color.rgb.g}, ${
+          color.rgb.b
+        }, 0.7)`;
+        this.props.ChangePanelColor(newPannelBack);
+        break;
       default:
         break;
     }
@@ -153,6 +161,9 @@ class SettingsStyle extends Component {
         break;
       case "footerActive":
         return this.props.footerActiveRGB;
+        break;
+      case "panel":
+        return this.props.settings.customStyling.pannelBack;
         break;
       default:
         break;
@@ -216,6 +227,7 @@ class SettingsStyle extends Component {
                   <option value="MC3">color 3 </option>
                   <option value="MC4">color 4 </option>
                   <option value="MC5">color 5 </option>
+                  <option value="panel">Panel Background Color</option>
                   <option value="NXSlogo">Nexus Logo Color</option>
                   <option value="iconMenu">Status Icon Color</option>
                   <option value="footer">Footer Base Color</option>
