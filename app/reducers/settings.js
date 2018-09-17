@@ -8,7 +8,7 @@ const initialState = {
     windowWidth: 1600,
     windowHeight: 1388,
     devMode: false,
-    wallpaper: "./images/background/Wallet-Design-Blue-AquaStars2-BG.png",
+    wallpaper: "./images/background/starrynight.jpeg",
     renderGlobe: true,
     customStyling: {
       MC1: "#111111",
