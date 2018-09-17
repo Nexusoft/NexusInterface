@@ -44,7 +44,7 @@
   --color-5: #ffffff; /* <-- White */
   --nxs-logo: hue-rotate(0deg) brightness(100%) grayscale(0%);
   --icon-menu: hue-rotate(0deg) brightness(100%) grayscale(0%);
-  --footer: hue-rotate(0deg) grayscale(100%) brightness(200%);
+  --footer: hue-rotate(0deg) grayscale(100%) brightness(100%);
   --footer-hover: hue-rotate(0deg) grayscale(0%) brightness(100%);
   --footer-active: hue-rotate(0deg) grayscale(0%) brightness(100%);
   /* BACKGROUND IMAGE VARIABLES */
@@ -57,7 +57,7 @@
     rgba(17, 17, 17, 0)
   );
 
-  --background-main-image: url("../images/background/Wallet-Design-Blue-AquaStars2-BG.png"); /* <-- Full Screen Background Image for Nexus Earth Theme */
+  --background-main-image: url("../images/background/starrynight.jpeg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
 
   /* FONTS */
   --font-1: "Lato"; /* <-- Sourced Above in First @font-face*/

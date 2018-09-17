@@ -215,7 +215,7 @@ class SettingsStyle extends Component {
                   <option value="MC4">color 4 </option>
                   <option value="MC5">color 5 </option>
                   <option value="NXSlogo">Nexus Logo Color</option>
-                  <option value="iconMenu">Icon Color</option>
+                  <option value="iconMenu">Status Icon Color</option>
                   <option value="footer">Footer Base Color</option>
                   <option value="footerHover">Footer Hover Color</option>
                   <option value="footerActive">Footer Active Color</option>
