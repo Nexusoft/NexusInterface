@@ -36,8 +36,9 @@ Table of Contents
   position: absolute;;
   bottom: 0px;
   z-index: 1;
-  color:#05a5ff;
+  color:var(--color-2);
   opacity: 0.4 ;
+  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
 }
 
 /*------------------------------------------------------------------
