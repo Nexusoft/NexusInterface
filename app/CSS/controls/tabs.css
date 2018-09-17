@@ -4,8 +4,8 @@ Tabs
 */
 
 :root {
-	--tabs-background-color: #222;
-	--tabs-color: #ccc;
+	--tabs-background-color: var(--color-4);
+	--tabs-color: var(--color-4);
 }
 
 .tabs {
@@ -15,7 +15,7 @@ Tabs
     align-items: flex-start;
     margin: 0 0 1em 0;
     padding: 0;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--color-4);
 }
 
 .tabs li {
@@ -35,16 +35,16 @@ Tabs
 }
 
 .tabs li a:hover {
-    color: #fff;
+    color: var(--color-5);
 }
 
 .tabs li a.active {
-    color: #fff;
-    border-bottom: 1px solid #0ca4fb;
+    color: var(--color-5);
+    border-bottom: 1px solid var(--color-2);
 }
 
 .tabs li a.active:hover {
-    color: #0ca4fb;
+    color: var(--color-2);
 }
 
 .tabs li:first-of-type a {
@@ -55,7 +55,10 @@ Tabs
     height: 20px;
     margin-right: .75em;
     vertical-align: -4px;
-    filter: grayscale(1) brightness(200%);
+    filter: grayscale(100%) brightness(200%) opacity(50%);
+}
+.tabs li:hover img {
+    filter: grayscale(100%) brightness(200%);
 }
 
 .tabs li a.active img {
