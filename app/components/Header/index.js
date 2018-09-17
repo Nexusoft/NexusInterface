@@ -75,7 +75,7 @@ class Header extends Component {
   // Set up the icon in the system tray
   setupTray() {
     let trayImage = "";
-    // let mainWindow = electron.remote.getCurrentWindow();
+    let mainWindow = electron.remote.getCurrentWindow();
     console.log(electron.remote.getCurrentWindow());
     if (process.platform == "darwin") {
       trayImage =
@@ -87,7 +87,7 @@ class Header extends Component {
     }
 
     tray = new electron.remote.Tray(trayImage);
-    tray.setToolTip("the nexus interface");
+    // tray.setToolTip("the nexus interface");
     if (process.platform == "darwin") {
       tray.setPressedImage(
         configuration.GetAppDataDirectory() +
@@ -98,7 +98,7 @@ class Header extends Component {
     tray.on("double-click", () => {
       mainWindow.show();
     });
-    console.log(electron.remote);
+
     var contextMenu = electron.remote.Menu.buildFromTemplate([
       {
         label: "Show Nexus",
