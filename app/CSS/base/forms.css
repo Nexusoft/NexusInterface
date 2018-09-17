@@ -8,11 +8,11 @@ Forms
 :root {
   --input-border-width: 0;
   --input-border-style: solid;
-  --input-border-color: #fff;
+  --input-border-color: var(--color-5);
   --input-border-radius: 0;
-  --input-background-color: #fff;
-  --input-color: #777;
-  --input-focus-color: #000;
+  --input-background-color: var(--color-5);
+  --input-color: var(--color-4);
+  --input-focus-color: var(--color-1);
   --input-invalid-border-color: red;
   --field-align-label-width: 25%;
 }

@@ -5,7 +5,7 @@ Progress Bar
 
 :root {
 	--progress-track-background-color: rgba(0,0,0,0.25);
-	--progress-background-color: #0ca4fb;
+	--progress-background-color: var(--color-2);
 	--progress-transition-timing: .4s;
 }
 

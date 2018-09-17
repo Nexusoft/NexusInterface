@@ -9,10 +9,10 @@ Text
 	--base-font-size: 1;
 	--line-height:  1.625;
 
-	--border-color: #556070;
+	--border-color: var(--color-3);
 
 	--body-font-size: 1;
-	--body-font-color: #fff;
+	--body-font-color: var(--color-5);
 	--body-font-family: 'Lato', sans-serif;;
 	--body-font-weight: normal;
 	
@@ -21,32 +21,32 @@ Text
 	--header-font-weight: bold;
 	
 	--h1-font-size: 3; /*3.4375;*/
-	--h1-font-color: #fff;
+	--h1-font-color: var(--color-5);
 	--h1-font-family: 'Lato', sans-serif;;
 	--h1-font-weight: 600;
 	
 	--h2-font-size: 2.25;
-	--h2-font-color: #fff;
+	--h2-font-color: var(--color-5);
 	--h2-font-family: 'Lato', sans-serif;;
 	--h2-font-weight: 600;
 	
 	--h3-font-size: 1.75;
-	--h3-font-color: #fff;
+	--h3-font-color: var(--color-5);
 	--h3-font-family: 'Lato', sans-serif;;
 	--h3-font-weight: 600;
 	
 	--h4-font-size: 1.125;
-	--h4-font-color: #fff;
+	--h4-font-color: var(--color-5);
 	--h4-font-family: 'Lato', sans-serif;;
 	--h4-font-weight: 400;
 	
 	--h5-font-size: 1;
-	--h5-font-color: #fff;
+	--h5-font-color: var(--color-5);
 	--h5-font-family: 'Lato', sans-serif;;
 	--h5-font-weight: 400;
 	
 	--h6-font-size: 1;
-	--h6-font-color: #fff;
+	--h6-font-color: var(--color-5);
 	--h6-font-family: 'Lato', sans-serif;;
 	--h6-font-weight: 400;
 	
@@ -74,11 +74,11 @@ Text
 
 	--quote-border-width: .25em;
 	--quote-border-style: solid;
-	--quote-border-color: #fff;
+	--quote-border-color: var(--color-5);
 	--quote-border-radius: 0;
 
-	--img-border-color: #fff;
-	--hr-border-color: #fff;
+	--img-border-color: var(--color-5);
+	--hr-border-color: var(--color-5);
 }
 
 /* Element Styles */

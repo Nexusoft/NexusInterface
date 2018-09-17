@@ -4,8 +4,8 @@ Modal
 */
 
 :root {
-    --modal-background-color: #282828;
-    --modal-close-button-color: #888;
+    --modal-background-color: var(--color-1);
+    --modal-close-button-color: var(--color-5);
 }
 
 .modal {

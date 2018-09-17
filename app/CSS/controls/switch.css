@@ -4,9 +4,9 @@ Switch
 */
 
 :root {
-	--switch-default-background-color: #666;
-	--switch-checked-background-color: #0ebeff;
-	--switch-slider-color: #fff;
+	--switch-default-background-color: var(--color-4);
+	--switch-checked-background-color: var(--color-2);
+	--switch-slider-color: var(--color-5);
 }
 
 input[type="checkbox"].switch{
