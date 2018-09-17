@@ -187,16 +187,21 @@ select {
   animation: tdd 0.5s;
 
   display: flex;
-  border: 1px solid var(--color-3);
+
+  text-align: center;
+
+  border-spacing: 0px;
+  border-collapse: collapse;
 }
 .custom-modal4 {
   background: #282828;
   /* animation: mymove2 0.5s ease-in-out; */
-  height: 500px;
+  height: 550px;
   min-width: 10%;
   width: 700px;
   max-width: 100%;
   height: fit-content;
+  overflow: hidden;
 }
 
 .myAddressTable {
@@ -215,13 +220,15 @@ select {
   font-weight: bold;
   color: var(--color-2);
   width: 100%;
+
   text-align: center;
+
   border: 0.5px solid var(--color-2);
+  border-spacing: 0px;
   animation: tdd 0.5s;
 }
 .tdd:hover {
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.24), 0 0 5px 5px rgba(0, 0, 0, 0.19);
 }
 .searchaccount {
   float: right;
@@ -280,4 +287,6 @@ select {
   flex-direction: column;
 
   margin-left: -19px;
+}
+#Addresstable-wraper {
 }
