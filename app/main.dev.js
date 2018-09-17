@@ -1,9 +1,18 @@
-import { app, BrowserWindow, remote, Tray, Menu, ipcMain, globalShortcut } from "electron";
+import {
+  app,
+  BrowserWindow,
+  remote,
+  Tray,
+  Menu,
+  ipcMain,
+  globalShortcut
+} from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import MenuBuilder from "./menu";
 import core from "./api/core";
 import configuration from "./api/configuration";
+import settings from "./api/settings";
 const path = require("path");
 
 let mainWindow;
@@ -110,17 +119,31 @@ function createWindow() {
 
 // Application Startup
 app.on("ready", async () => {
-
   if (
     process.env.NODE_ENV === "development" ||
     process.env.DEBUG_PROD === "true"
   ) {
     await installExtensions();
   }
+
   createWindow();
   core.start();
-  const ret = globalShortcut.register('Escape', function() {
+  const ret = globalShortcut.register("Escape", function() {
     mainWindow.setFullScreen(false);
+  });
+
+  mainWindow.on("close", function(e) {
+    const settings = require("./api/settings.js").GetSettings();
+    if (settings) {
+      if (settings.minimizeToTray) {
+        e.preventDefault();
+        mainWindow.hide();
+      } else {
+        app.quit();
+      }
+    } else {
+      app.quit();
+    }
   });
 });
 
@@ -131,14 +154,13 @@ app.on("window-all-closed", () => {
       app.quit();
     });
   }
-  globalShortcut.unregister('Escape');
+  globalShortcut.unregister("Escape");
 
   globalShortcut.unregisterAll();
 });
 
-app.on('will-quit', function(){
-
-  globalShortcut.unregister('Escape');
+app.on("will-quit", function() {
+  globalShortcut.unregister("Escape");
 
   globalShortcut.unregisterAll();
 });

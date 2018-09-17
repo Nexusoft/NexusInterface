@@ -2,8 +2,8 @@ import * as TYPE from "../actions/actiontypes";
 
 const initialState = {
   Address: "",
-  Amount: 0,
-  USDAmount: 0,
+  Amount: "",
+  USDAmount: "",
   Account: "",
   Message: "",
   Queue: {},
@@ -85,20 +85,20 @@ export default (state = initialState, action) => {
           [action.payload.address]: action.payload.amount
         },
         Address: "",
-        Amount: 0,
+        Amount: "",
         Account: "",
         Message: "",
-        USDAmount: 0
+        USDAmount: ""
       };
       break;
     case TYPE.CLEAR_FORM:
       return {
         ...state,
         Address: "",
-        Amount: 0,
+        Amount: "",
         Account: "",
         Message: "",
-        USDAmount: 0
+        USDAmount: ""
       };
     default:
       return state;
