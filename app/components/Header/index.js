@@ -353,7 +353,7 @@ class Header extends Component {
           center={true}
           open={this.props.open}
           onClose={this.props.CloseModal}
-          classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
+          classNames={{ modal: "custom-modal" }}
         >
           {this.modalinternal()}
         </Modal>

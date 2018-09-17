@@ -427,7 +427,7 @@ class SendRecieve extends Component {
             />
           </td>
           <Modal
-            classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}
+            classNames={{ modal: "custom-modal2" }}
             showCloseIcon={false}
             open={this.props.openThirdModal}
             onClose={this.props.CloseModal3}
@@ -641,7 +641,7 @@ class SendRecieve extends Component {
         {/* ADDRESS MODAL */}
         <Modal
           center
-          classNames={{ overlay: "custom-overlay3", modal: "custom-modal3" }}
+          classNames={{ modal: "custom-modal3" }}
           showCloseIcon={true}
           open={this.props.openFourthModal}
           onClose={this.props.CloseModal4}
@@ -652,7 +652,7 @@ class SendRecieve extends Component {
         {/* CONFIRMATION MODAL */}
         <Modal
           center
-          classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}
+          classNames={{ modal: "custom-modal2" }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}

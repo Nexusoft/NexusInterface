@@ -399,7 +399,7 @@ class SettingsApp extends Component {
       <section id="application">
         <Modal
           center
-          classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}
+          classNames={{ modal: "custom-modal2" }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}
