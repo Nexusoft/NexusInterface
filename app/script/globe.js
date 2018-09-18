@@ -14,7 +14,7 @@
 import * as THREE from "three";
 import world from "../images/world-light.jpg";
 
-import { geoInterpolate } from 'd3-geo';
+import { geoInterpolate } from "d3-geo";
 var DAT = DAT || {};
 
 var CurveMeshs;
@@ -143,27 +143,28 @@ export default (DAT.Globe = function(container, opts) {
       transparent: true
     });
 
-    var curve = new THREE.CatmullRomCurve3( [
-      new THREE.Vector3(0,0,0),
-      new THREE.Vector3(99,99,99)
-    ] );
+    var curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(99, 99, 99)
+    ]);
 
-    var points = curve.getPoints( 50 );
-    var geometry = new THREE.BufferGeometry().setFromPoints( points );
+    var points = curve.getPoints(50);
+    var geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-    var material = new THREE.LineBasicMaterial( { color : 0xff0000, linewidth: 60, fog: true } );
+    var material = new THREE.LineBasicMaterial({
+      color: 0xff0000,
+      linewidth: 60,
+      fog: true
+    });
 
     // Create the final object to add to the scene
-    var curveObject = new THREE.Line( geometry, material );
-    
+    var curveObject = new THREE.Line(geometry, material);
 
     //scene.add(curveObject);
 
-    
-
     mesh = new THREE.Mesh(geometry, material);
     mesh.scale.set(1.1, 1.1, 1.1);
-    
+
     scene.add(mesh);
 
     geometry = new THREE.BoxGeometry(0.75, 0.75, 1);
@@ -253,11 +254,10 @@ export default (DAT.Globe = function(container, opts) {
       size = data[i + 2];
       size = size * 200;
 
-      if ((i+ step)  == (data.length))
-      {
-        color = {r:0,g:1,b:0};
+      if (i + step == data.length) {
+        color = { r: 0, g: 1, b: 0 };
       }
-     
+
       addPoint(lat, lng, size, color, subgeo);
     }
     if (opts.animated) {
@@ -268,7 +268,6 @@ export default (DAT.Globe = function(container, opts) {
     } else {
       this._baseGeometry = subgeo;
     }
-
   }
 
   function createPoints() {
@@ -284,11 +283,9 @@ export default (DAT.Globe = function(container, opts) {
         );
       } else {
         if (this._baseGeometry.morphTargets.length < 8) {
-          console.log("t l", this._baseGeometry.morphTargets.length);
           var padding = 8 - this._baseGeometry.morphTargets.length;
-          console.log("padding", padding);
+
           for (var i = 0; i <= padding; i++) {
-            console.log("padding", i);
             this._baseGeometry.morphTargets.push({
               name: "morphPadding" + i,
               vertices: this._baseGeometry.vertices
@@ -306,10 +303,9 @@ export default (DAT.Globe = function(container, opts) {
       }
 
       let tempPoints = [];
-  
-      //console.log(tempoints);
-      const lastpoint = tempoints[tempoints.length-1];
-      for (let index = 0; index < (tempoints.length - 1); index++) {
+
+      const lastpoint = tempoints[tempoints.length - 1];
+      for (let index = 0; index < tempoints.length - 1; index++) {
         const element = tempoints[index];
         let temparray = [];
         temparray.push(element.lat);
@@ -318,8 +314,6 @@ export default (DAT.Globe = function(container, opts) {
         temparray.push(parseFloat(lastpoint.lng));
         tempPoints.push(temparray);
       }
-      
-      ///console.log(aaaaa);
 
       let newCurveMesh = new THREE.Mesh(
         this._baseGeometry,
@@ -329,9 +323,9 @@ export default (DAT.Globe = function(container, opts) {
           morphTargets: true
         })
       );
-  
-      initCurves(tempPoints,newCurveMesh);
-  
+
+      initCurves(tempPoints, newCurveMesh);
+
       playCurve();
 
       CurveMeshs = newCurveMesh;
@@ -342,9 +336,8 @@ export default (DAT.Globe = function(container, opts) {
     }
   }
 
-  function returnPointVector3(lat, lng)
-  {
-    let vector3 = new THREE.Vector3(0,0,0);
+  function returnPointVector3(lat, lng) {
+    let vector3 = new THREE.Vector3(0, 0, 0);
     var phi = ((90 - lat) * Math.PI) / 180;
     var theta = ((180 - lng) * Math.PI) / 180;
 
@@ -368,7 +361,7 @@ export default (DAT.Globe = function(container, opts) {
     point.scale.z = Math.max(size, 0.1); // avoid non-invertible matrix
     point.updateMatrix();
 
-    tempoints.push({lat:lat,lng:lng});
+    tempoints.push({ lat: lat, lng: lng });
 
     for (var i = 0; i < point.geometry.faces.length; i++) {
       point.geometry.faces[i].color = color;
@@ -459,29 +452,24 @@ export default (DAT.Globe = function(container, opts) {
     render();
   }
 
-  function playCurve()
-  {
-    //console.log(cureves);
+  function playCurve() {
     cureves.forEach(element => {
       element.restart();
       element.play();
     });
   }
 
-
-  function removePoints()
-  {
-    //console.log("REMOVED OLD POINTS");
+  function removePoints() {
     cureves.forEach(element => {
       element.stop();
     });
-    if (CurveMeshs != null){
+    if (CurveMeshs != null) {
       scene.remove(CurveMeshs);
       CurveMeshs.geometry.dispose();
       CurveMeshs.material.dispose();
       CurveMeshs = null;
     }
-    if (PillarMeshs != null){
+    if (PillarMeshs != null) {
       scene.remove(PillarMeshs);
       PillarMeshs.geometry.dispose();
       PillarMeshs.material.dispose();
@@ -506,7 +494,7 @@ export default (DAT.Globe = function(container, opts) {
     renderer.render(scene, camera);
   }
   // TODO: Figure out where to set the color of the arcs. The following currerntly does it.
-  function initCurves(allCoords,incomingmesh) {
+  function initCurves(allCoords, incomingmesh) {
     const material = new THREE.MeshBasicMaterial({
       blending: THREE.AdditiveBlending,
       opacity: 0.6,
@@ -514,67 +502,69 @@ export default (DAT.Globe = function(container, opts) {
       color: 0x00ffff
     });
     const curveMesh = new THREE.Mesh();
-  
+
     cureves.length = 0;
     allCoords.forEach((coords, index) => {
-        const curve = new Curve(coords, material);
-        cureves.push(curve);
-        curveMesh.add(curve.mesh);
+      const curve = new Curve(coords, material);
+      cureves.push(curve);
+      curveMesh.add(curve.mesh);
     });
-  
+
     incomingmesh.add(curveMesh);
   }
 
   function Curve(coords, material) {
     const { spline } = getSplineFromCoords(coords);
-  
+
     const curveSegments = 32;
     let index = 0;
     // add curve geometry
     const curveGeometry = new THREE.BufferGeometry();
     const points = new Float32Array(curveSegments * 3);
     const vertices = spline.getPoints(curveSegments - 1);
-  
+
     for (let i = 0, j = 0; i < vertices.length; i++) {
       const vertex = vertices[i];
       points[j++] = vertex.x;
       points[j++] = vertex.y;
       points[j++] = vertex.z;
     }
-  
+
     // !!!
     // You can use setDrawRange to animate the curve
-    curveGeometry.addAttribute('position', new THREE.BufferAttribute(points, 3));
+    curveGeometry.addAttribute(
+      "position",
+      new THREE.BufferAttribute(points, 3)
+    );
     curveGeometry.setDrawRange(0, 32);
-  
-   this.mesh =  new THREE.Line(curveGeometry, material);
-  //  this.mesh =  new THREE.MeshLine(curveGeometry, material);
-  //  this.mesh.setGeometry(curveGeometry, function(p) {return 3;});
 
-   this.hasStopped = () => index > curveSegments;
+    this.mesh = new THREE.Line(curveGeometry, material);
+    //  this.mesh =  new THREE.MeshLine(curveGeometry, material);
+    //  this.mesh.setGeometry(curveGeometry, function(p) {return 3;});
 
-   this.play = () => {
-     if (this.hasStopped()) return;
-     index += 1;
-     curveGeometry.setDrawRange(0, index);
-     curveGeometry.attributes.position.needsUpdate = true;
-     setTimeout(() => {
-       this.play();
-     }, 50);
-   };
- 
-   this.stop = () => {
-     curveGeometry.setDrawRange(0, curveSegments);
-     this.index = curveSegments + 1;
-   };
- 
-   this.restart = () => {
-     index = 1;
-     curveGeometry.setDrawRange(0, 1);
-   };
- 
-   //isPlaying ? this.restart() : this.stop();
+    this.hasStopped = () => index > curveSegments;
 
+    this.play = () => {
+      if (this.hasStopped()) return;
+      index += 1;
+      curveGeometry.setDrawRange(0, index);
+      curveGeometry.attributes.position.needsUpdate = true;
+      setTimeout(() => {
+        this.play();
+      }, 50);
+    };
+
+    this.stop = () => {
+      curveGeometry.setDrawRange(0, curveSegments);
+      this.index = curveSegments + 1;
+    };
+
+    this.restart = () => {
+      index = 1;
+      curveGeometry.setDrawRange(0, 1);
+    };
+
+    //isPlaying ? this.restart() : this.stop();
   }
 
   function getSplineFromCoords(coords) {
@@ -582,19 +572,27 @@ export default (DAT.Globe = function(container, opts) {
     const startLng = coords[1];
     const endLat = coords[2];
     const endLng = coords[3];
-  
+
     const globeradius = 200;
 
     // spline vertices
     const start = coordinateToPosition(startLat, startLng, globeradius);
     const end = coordinateToPosition(endLat, endLng, globeradius);
-    const altitude = clamp(start.distanceTo(end) * .75, 10, globeradius);
+    const altitude = clamp(start.distanceTo(end) * 0.75, 10, globeradius);
     const interpolate = geoInterpolate([startLng, startLat], [endLng, endLat]);
     const midCoord1 = interpolate(0.25);
     const midCoord2 = interpolate(0.75);
-    const mid1 = coordinateToPosition(midCoord1[1], midCoord1[0], globeradius + altitude);
-    const mid2 = coordinateToPosition(midCoord2[1], midCoord2[0], globeradius + altitude);
-  
+    const mid1 = coordinateToPosition(
+      midCoord1[1],
+      midCoord1[0],
+      globeradius + altitude
+    );
+    const mid2 = coordinateToPosition(
+      midCoord2[1],
+      midCoord2[0],
+      globeradius + altitude
+    );
+
     return {
       start,
       end,
@@ -602,20 +600,20 @@ export default (DAT.Globe = function(container, opts) {
     };
   }
   function clamp(num, min, max) {
-    return num <= min ? min : (num >= max ? max : num)};
+    return num <= min ? min : num >= max ? max : num;
+  }
 
   function coordinateToPosition(lat, lng, radius) {
     const DEGREE_TO_RADIAN = Math.PI / 180;
     const phi = (90 - lat) * DEGREE_TO_RADIAN;
-    const theta = (lng) * DEGREE_TO_RADIAN;
-  
+    const theta = lng * DEGREE_TO_RADIAN;
+
     return new THREE.Vector3(
-      - radius * Math.sin(phi) * Math.cos(theta),
+      -radius * Math.sin(phi) * Math.cos(theta),
       radius * Math.cos(phi),
       radius * Math.sin(phi) * Math.sin(theta)
     );
   }
-
 
   init();
   this.animate = animate;

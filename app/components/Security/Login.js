@@ -46,16 +46,16 @@ class Login extends Component {
     let hoursAndMin = this.props.unlockUntillTime.split(":").reduce((h, m) => {
       return parseInt(h) * 60 + parseInt(m);
     });
-    console.log(hoursAndMin);
+
     let unlockUntill = Math.round(
       tzcorrection +
         hoursAndMin +
         (unlockDate.getTime() - today.getTime()) / 1000
     );
     this.props.busy();
-    console.log(unlockUntill);
+
     // if (this.props.stakingFlag) {
-    //   console.log("stake");
+    //
     //   RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, true])
     //     .then(payload => {
     //       this.props.wipe();
@@ -81,7 +81,7 @@ class Login extends Component {
     //       }
     //     });
     // } else {
-    //   console.log("no stake");
+
     RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, false])
       .then(payload => {
         this.props.wipe();

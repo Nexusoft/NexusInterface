@@ -155,9 +155,6 @@ export default class MenuBuilder {
                 label: "Reload",
                 accelerator: "Command+R",
                 click: () => {
-                  // console.log(tray);
-                  // tray.destroy();
-
                   this.mainWindow.webContents.reload();
                 }
               },
@@ -328,10 +325,7 @@ export default class MenuBuilder {
                   label: "Reload",
                   accelerator: "Ctrl+R",
                   click: () => {
-                    console.log(tray);
-                    tray.destroy();
-
-                    // this.mainWindow.webContents.reload();
+                    this.mainWindow.webContents.reload();
                   }
                 },
 

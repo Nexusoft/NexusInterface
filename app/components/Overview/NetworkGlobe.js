@@ -4,7 +4,7 @@ import DAT from "../../script/globe";
 import * as RPC from "../../script/rpc";
 import maxmind from "maxmind";
 import Request from "request";
-import configuration from "../../api/configuration"
+import configuration from "../../api/configuration";
 
 var glb;
 
@@ -108,7 +108,6 @@ export default class NetworkGlobe extends Component {
   }
 
   testRestartLines() {
-    console.log("ReDraw lines");
     if (glb != null && glb != undefined) {
       glb.playCurve();
     }

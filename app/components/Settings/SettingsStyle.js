@@ -66,7 +66,6 @@ class SettingsStyle extends Component {
   }
 
   updateWallpaper(event) {
-    console.log(event);
     let el = event.target;
     let imagePath = el.files[0].path;
     if (process.platform === "win32") {
@@ -218,7 +217,6 @@ class SettingsStyle extends Component {
                   }}
                   id="select"
                   onChange={e => {
-                    console.log("selector");
                     this.props.setSelectedColorProp(e.target.value);
                   }}
                 >

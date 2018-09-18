@@ -66,7 +66,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  setExperimentalWarning: save => dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
+  setExperimentalWarning: save =>
+    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
   setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
   setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
   set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
@@ -74,7 +75,8 @@ const mapDispatchToProps = dispatch => ({
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
   acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
   toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
-  ignoreEncryptionWarning: () => dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING })
+  ignoreEncryptionWarning: () =>
+    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING })
 });
 
 class Overview extends Component {
@@ -111,8 +113,6 @@ class Overview extends Component {
     }
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
-        console.log("UPDATE BLOCKS");
-        console.log(this.props);
         this.redrawCurves();
       }
     }
@@ -123,7 +123,6 @@ class Overview extends Component {
 
     if (this.props.connections != previousprops.connections) {
       if (this.props.connections != 0 && previousprops.connections != 0) {
-        console.log("REMOVED OLD BLOCKS AND DID A NEW ONE");
         this.removeOldPoints();
       }
     }
@@ -340,10 +339,9 @@ class Overview extends Component {
       ];
     }
   }
-  numberWithCommas = (x) => {
-    if(x)
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
+  numberWithCommas = x => {
+    if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
   render() {
     return (
       <div id="overviewPage">
@@ -364,7 +362,7 @@ class Overview extends Component {
             this.props.settings.experimentalWarning &&
             this.props.experimentalOpen
           }
-          onClose={this.closeExperimentalModal}
+          onClose={() => this.closeExperimentalModal()}
           center
           classNames={{ modal: "modal" }}
         >
@@ -451,7 +449,12 @@ class Overview extends Component {
               Market Cap <span className="h2-nospace">(USD)</span>
             </div>
             <img src={supplyicon} />
-            <div className="overviewValue">${this.numberWithCommas((this.props.circulatingSupply * this.props.USD).toFixed(0))}</div>
+            <div className="overviewValue">
+              $
+              {this.numberWithCommas(
+                (this.props.circulatingSupply * this.props.USD).toFixed(0)
+              )}
+            </div>
           </div>
 
           <div
@@ -492,7 +495,9 @@ class Overview extends Component {
             <div className="h2">Block Count</div>
             <img src={nxsblocks} />
 
-            <div className="overviewValue">{this.numberWithCommas(this.props.blocks)}</div>
+            <div className="overviewValue">
+              {this.numberWithCommas(this.props.blocks)}
+            </div>
             <span className="tooltip left">
               {this.props.blockDate.toLocaleString()}
             </span>
@@ -508,7 +513,7 @@ class Overview extends Component {
             />
             <div className="overviewValue">{this.props.blockweight}</div>
           </div>
-          
+
           <div
             id="nxs-trustweight-info"
             className="animated fadeInDown delay-1s"
@@ -517,7 +522,7 @@ class Overview extends Component {
             <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
             <div className="overviewValue">{this.props.trustweight}</div>
           </div>
-          
+
           <div
             id="nxs-stakeweight-info"
             className="animated fadeInDown delay-1s"

@@ -2,19 +2,34 @@ import * as TYPE from "../actions/actiontypes";
 
 const initialState = {
   binance: {
-    // info24hr: {},
+    info24hr: {
+      change: 0,
+      high: 0,
+      low: 0,
+      volume: 0
+    },
     buy: [],
     sell: [],
     candlesticks: []
   },
   cryptopia: {
-    // info24hr: {},
+    info24hr: {
+      change: 0,
+      high: 0,
+      low: 0,
+      volume: 0
+    },
     buy: [],
     sell: [],
     candlesticks: []
   },
   bittrex: {
-    // info24hr: {},
+    info24hr: {
+      change: 0,
+      high: 0,
+      low: 0,
+      volume: 0
+    },
     buy: [],
     sell: [],
     candlesticks: []

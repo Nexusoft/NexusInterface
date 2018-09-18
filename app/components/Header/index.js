@@ -120,7 +120,7 @@ class Header extends Component {
   setupTray() {
     let trayImage = "";
     let mainWindow = electron.remote.getCurrentWindow();
-    console.log(electron.remote.getCurrentWindow());
+
     if (process.platform == "darwin") {
       trayImage =
         configuration.GetAppDataDirectory() +
@@ -184,7 +184,7 @@ class Header extends Component {
     }
 
     if (nextProps.blocks !== this.props.blocks) {
-      RPC.PROMISE("getpeerinfo", [],this.props)
+      RPC.PROMISE("getpeerinfo", [], this.props)
         .then(peerresponse => {
           let hpb = 0;
           peerresponse.forEach(element => {
