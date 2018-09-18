@@ -54,6 +54,7 @@ class Header extends Component {
     this.props.GetInfoDump();
 
     self.set = setInterval(function() {
+      self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
     }, 20000);
     self.checkIfPortOpen();
@@ -140,7 +141,7 @@ class Header extends Component {
     }
 
     if (nextProps.blocks !== this.props.blocks) {
-      RPC.PROMISE("getpeerinfo", [])
+      RPC.PROMISE("getpeerinfo", [],this.props)
         .then(peerresponse => {
           let hpb = 0;
           peerresponse.forEach(element => {

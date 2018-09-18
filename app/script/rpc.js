@@ -102,7 +102,7 @@ export const GET = (cmd, args, Callback) => {
   );
 };
 
-export const PROMISE = (cmd, args) => {
+export const PROMISE = (cmd, args, props = null) => {
   return new Promise((resolve, reject) => {
     var PostData = JSON.stringify({
       method: cmd,
@@ -110,6 +110,11 @@ export const PROMISE = (cmd, args) => {
     });
 
     var ResponseObject;
+
+    if (props != null)
+    {
+      props.AddRPCCall(cmd);
+    }
 
     /** Opera 8.0+, Firefox, Safari **/
     try {

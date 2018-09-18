@@ -138,3 +138,9 @@ export const LoadAddressBook = () => {
     dispatch({ type: TYPE.LOAD_ADDRESS_BOOK, payload: json.addressbook });
   };
 };
+
+export const AddRPCCall = returnCall => {
+  return dispatch => {
+    dispatch({type:TYPE.ADD_RPC_CALL, payload:returnCall});
+  }
+}
