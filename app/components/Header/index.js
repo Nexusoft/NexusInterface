@@ -48,6 +48,13 @@ class Header extends Component {
 
     this.props.LoadAddressBook();
 
+    console.log(
+      configuration.GetAppDataDirectory()
+      // electron.remote.app.getAppPath(),
+      // __dirname,
+      // electron.remote.app
+    );
+
     menuBuilder.buildMenu(self);
     if (tray === null) this.setupTray();
 
@@ -77,21 +84,30 @@ class Header extends Component {
     let trayImage = "";
     let mainWindow = electron.remote.getCurrentWindow();
     console.log(electron.remote.getCurrentWindow());
+    const path = require("path");
     if (process.platform == "darwin") {
-      trayImage =
-        configuration.GetAppDataDirectory() +
-        "tray/Nexus_Tray_Icon_Template_32.png";
+      trayImage = path.join(
+        configuration.GetAppDataDirectory(),
+        "tray",
+        "Nexus_Tray_Icon_Template_32.png"
+      );
     } else {
-      trayImage =
-        configuration.GetAppDataDirectory() + "tray/Nexus_Tray_Icon_32.png";
+      trayImage = path.join(
+        configuration.GetAppDataDirectory(),
+        "tray",
+        "Nexus_Tray_Icon_32.png"
+      );
     }
 
     tray = new electron.remote.Tray(trayImage);
     // tray.setToolTip("the nexus interface");
     if (process.platform == "darwin") {
       tray.setPressedImage(
-        configuration.GetAppDataDirectory() +
-          "tray/Nexus_Tray_Icon_Highlight_32.png"
+        path.join(
+          configuration.GetAppDataDirectory(),
+          "tray",
+          "Nexus_Tray_Icon_Highlight_32.png"
+        )
       );
     }
 
@@ -358,6 +374,7 @@ class Header extends Component {
           {this.modalinternal()}
         </Modal>
         {this.returnIfPortAvailable()}
+        <button onClick={() => configuration.test()}>test</button>
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />

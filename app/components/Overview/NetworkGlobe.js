@@ -4,7 +4,7 @@ import DAT from "../../script/globe";
 import * as RPC from "../../script/rpc";
 import maxmind from "maxmind";
 import Request from "request";
-import configuration from "../../api/configuration"
+import configuration from "../../api/configuration";
 
 var glb;
 
@@ -12,9 +12,10 @@ export default class NetworkGlobe extends Component {
   componentDidMount() {
     this.props.handleOnLineRender(this.testRestartLines);
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
+    const path = require("path");
     const globeseries = [["peers", []]];
     const geoiplookup = maxmind.openSync(
-      configuration.GetAppDataDirectory() + "GeoLite2-City.mmdb"
+      path.join(configuration.GetAppDataDirectory(), "GeoLite2-City.mmdb")
     );
     let myIP = "";
     glb = new DAT(this.threeRootElement);
@@ -64,7 +65,7 @@ export default class NetworkGlobe extends Component {
   updatePointsOnGlobe() {
     const globeseries = [["peers", []]];
     const geoiplookup = maxmind.openSync(
-      "app/GeoLite2-City_20180403/GeoLite2-City.mmdb"
+      path.join(configuration.GetAppDataDirectory(), "GeoLite2-City.mmdb")
     );
     let myIP = "";
     Request(

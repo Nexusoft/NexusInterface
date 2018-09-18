@@ -3,7 +3,7 @@
   "productName": "Nexus Interface",
   "version": "0.6.0",
   "buildDate": "September 07th 2018",
-  "description": "nexus interface electron wallet",
+  "description": "nexus-interface",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
@@ -187,6 +187,7 @@
     "auto-launch": "^5.0.5",
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",
+    "electron-directory": "0.0.3",
     "electron-log": "^2.2.17",
     "electron-updater": "^3.1.1",
     "font-awesome": "^4.7.0",
