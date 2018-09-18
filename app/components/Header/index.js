@@ -133,7 +133,7 @@ class Header extends Component {
       trayImage = path.join(
         configuration.GetAppDataDirectory(),
         "tray",
-        "Nexus_Tray_Icon_Template_32.png"
+        "Nexus_Tray_Icon_Template_16.png"
       );
     } else {
       trayImage = path.join(
@@ -150,7 +150,7 @@ class Header extends Component {
         path.join(
           configuration.GetAppDataDirectory(),
           "tray",
-          "Nexus_Tray_Icon_Highlight_32.png"
+          "Nexus_Tray_Icon_Highlight_16.png"
         )
       );
     }
@@ -167,7 +167,8 @@ class Header extends Component {
         }
       },
       {
-        label: 'Quit Nexus and Keep Daemon', click: function () {
+        label: "Quit Nexus and Keep Daemon",
+        click: function() {
           app.isQuiting = true;
           mainWindow.close();
         }
