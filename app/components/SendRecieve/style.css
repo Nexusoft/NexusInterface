@@ -106,7 +106,9 @@
 }
 
 /* CONFIRM MODAL */
-.custom-overlay2 {
+.custom-overlay {
+  position: absolute;
+  background: #282828;
   padding: 0px;
 }
 .custom-modal2 {
@@ -215,6 +217,7 @@
 /* AddressModal */
 .custom-overlay3 {
   padding: 0px;
+  position: absolute;
 }
 .custom-modal3 {
   background: #282828;
@@ -293,16 +296,16 @@
   border: 1px solid var(--color-2);
   width: 20%;
   color: var(--color-2);
+  word-wrap: none;
 }
 .dt {
   display: flex;
-  border-bottom: 1px solid var(--color-3);
+
   width: 110%;
 }
 .tdPop {
   align-items: flex-end;
 }
 .dt:hover {
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.24), 0 0 5px 5px rgba(0, 0, 0, 0.19);
 }

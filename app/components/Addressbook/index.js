@@ -250,11 +250,11 @@ class Addressbook extends Component {
                 return (
                   <td
                     className="tdd"
-                    key={address}
+                    key={address + i}
                     onClick={event => this.copyaddress(event)}
                   >
-                    {address}{" "}
-                    <span key={address + i} className="tooltip">
+                    {address}
+                    <span key={address + i} className="tooltip ">
                       Click to copy
                     </span>
                   </td>

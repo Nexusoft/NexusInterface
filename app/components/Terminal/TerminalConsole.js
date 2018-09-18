@@ -20,8 +20,8 @@ const mapDispatchToProps = dispatch => ({
   onInputfieldChange: (consoleInput) => dispatch({type:TYPE.ON_INPUT_FIELD_CHANGE, payload: consoleInput}),
   setInputFeild: (input) => dispatch({type:TYPE.SET_INPUT_FEILD, payload: input}),
   onAutoCompleteClick: (inItem) => dispatch({type:TYPE.ON_AUTO_COMPLETE_CLICK, payload: inItem}),
-  returnAutocomplete: (currentInput) => dispatch({type:TYPE.RETURN_AUTO_COMPLETE, payload: currentInput}),
-  // removeAutoCompleteDiv: () => dispatch({type:TYPE.REMOVE_AUTO_COMPLETE_DIV}),
+  //returnAutocomplete: (currentInput) => dispatch({type:TYPE.RETURN_AUTO_COMPLETE, payload: currentInput}), //No longer using
+  removeAutoCompleteDiv: () => dispatch({type:TYPE.REMOVE_AUTO_COMPLETE_DIV}),
   recallPreviousCommand: (currentCommandItem) => dispatch({type:TYPE.RECALL_PREVIOUS_COMMAND, payload: currentCommandItem}),
   recallNextCommandOrClear: (currentCommandItem) => dispatch({type:TYPE.RECALL_NEXT_COMMAND_OR_CLEAR, payload: currentCommandItem}),
   addToHistory: (currentCommandItem) => dispatch({type:TYPE.ADD_TO_HISTORY, payload: currentCommandItem})
@@ -181,6 +181,7 @@ class TerminalConsole extends Component {
     
     if (e.key === 'Enter') {
       console.log("enter key pressed");
+      this.props.removeAutoCompleteDiv();
       this.processInput();
       currentHistoryIndex = -1;
     }
@@ -220,7 +221,7 @@ class TerminalConsole extends Component {
   autoComplete()
   {
     return this.props.filteredCmdList.map((item, key) => {
-      return (<a key={key} onMouseDown={ () => this.onAutoCompleteClick(item)}>{item}<br/></a>);
+      return (<a key={key} onMouseDown={ () => this.props.onAutoCompleteClick(item)}>{item}<br/></a>);
     });
   }
 

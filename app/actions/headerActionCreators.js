@@ -54,6 +54,11 @@ export const Confirm = Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
   };
 };
+export const MyAccountsList = list => {
+  return dispatch => {
+    dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
+  };
+};
 export const CloseModal = () => {
   return dispatch => {
     dispatch({ type: TYPE.HIDE_MODAL });
@@ -138,3 +143,9 @@ export const LoadAddressBook = () => {
     dispatch({ type: TYPE.LOAD_ADDRESS_BOOK, payload: json.addressbook });
   };
 };
+
+export const AddRPCCall = returnCall => {
+  return dispatch => {
+    dispatch({type:TYPE.ADD_RPC_CALL, payload:returnCall});
+  }
+}

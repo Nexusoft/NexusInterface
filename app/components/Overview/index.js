@@ -379,7 +379,7 @@ class Overview extends Component {
           center
           classNames={{ modal: "modal" }}
         >
-          <h3>Hey, your wallet is not encrypted.</h3>
+          <h3> Your Wallet Is Not Encrypted!</h3>
           <p>You really should encrypt your wallet to keep your Nexus safe.</p>
           <NavLink to="/Settings/Unencrypted">
             <button className="button primary">Take Me There</button>
