@@ -44,69 +44,98 @@ export default class MenuBuilder {
 
   buildDarwinTemplate(self) {
     const subMenuAbout = {
-      label: "Electron",
+      label: "File",
       submenu: [
         {
-          label: "About ElectronReact",
-          selector: "orderFrontStandardAboutPanel:"
-        },
-        { type: "separator" },
-        { label: "Services", submenu: [] },
-        { type: "separator" },
-        {
-          label: "Hide ElectronReact",
-          accelerator: "Command+H",
-          selector: "hide:"
-        },
-        {
-          label: "Hide Others",
-          accelerator: "Command+Shift+H",
-          selector: "hideOtherApplications:"
-        },
-        { label: "Show All", selector: "unhideAllApplications:" },
-        { type: "separator" },
-        {
-          label: "Quit",
-          accelerator: "Command+Q",
+          label: "Lock/Unlock/Encrypt Wallet",
           click: () => {
-            app.quit();
+            if (self.props.unlocked_until !== undefined) {
+              self.props.history.push("/Settings/Security");
+            } else {
+              self.props.history.push("/Settings/Unencrypted");
+            }
+          }
+        },
+        {
+          label: "Back-up Wallet",
+          click: () => {
+            let now = new Date()
+              .toString()
+              .slice(0, 24)
+              .split(" ")
+              .reduce((a, b) => {
+                return a + "_" + b;
+              });
+            let BackupDir = process.env.HOME + "/NexusBackups";
+            if (process.platform === "win32") {
+              BackupDir = BackupDir.replace(/\\/g, "/");
+            }
+            let fs = require("fs");
+            let ifBackupDirExists = fs.existsSync(BackupDir);
+            if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+              fs.mkdirSync(BackupDir);
+            }
+            RPC.PROMISE("backupwallet", [
+              BackupDir + "/NexusBackup_" + now + ".dat"
+            ]);
+          }
+        },
+        {
+          label: "Open Backups Folder",
+          click() {
+            let fs = require("fs");
+            let BackupDir = process.env.HOME + "/NexusBackups";
+            if (process.platform === "win32") {
+              BackupDir = BackupDir.replace(/\\/g, "/");
+            }
+            let ifBackupDirExists = fs.existsSync(BackupDir);
+            if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+              fs.mkdirSync(BackupDir);
+            }
+            let didopen = shell.openItem(BackupDir);
+          }
+        },
+        {
+          label: "Send To Tray",
+          click() {
+            remote.getCurrentWindow().hide();
+          }
+        },
+        {
+          label: "Close Window Keep Daemon",
+          click() {
+            remote.getCurrentWindow().close();
+          }
+        },
+        {
+          label: "Close And Shutdown Daemon",
+          click() {
+            RPC.PROMISE("stop", []).then(payload => {
+              setTimeout(() => {
+                remote.getCurrentWindow().close();
+              }, 1000);
+            });
           }
         }
       ]
     };
-    const subMenuEdit = {
-      label: "Edit",
-      submenu: [
-        { label: "Undo", accelerator: "Command+Z", selector: "undo:" },
-        { label: "Redo", accelerator: "Shift+Command+Z", selector: "redo:" },
-        { type: "separator" },
-        { label: "Cut", accelerator: "Command+X", selector: "cut:" },
-        { label: "Copy", accelerator: "Command+C", selector: "copy:" },
-        { label: "Paste", accelerator: "Command+V", selector: "paste:" },
-        {
-          label: "Select All",
-          accelerator: "Command+A",
-          selector: "selectAll:"
-        }
-      ]
-    };
-    const subMenuViewDev = {
-      label: "View",
+    const subMenuView = {
+      label: "Settings",
       submenu: [
         {
-          label: "Reload",
-          accelerator: "Command+R",
-          click: () => {
-            this.mainWindow.webContents.reload();
+          label: "Core Settings",
+          click() {
+            self.props.history.push("/Settings/Core");
           }
         },
         {
-          label: "Toggle Full Screen",
-          accelerator: "Ctrl+Command+F",
-          click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+          label: "Application Settings",
+          click() {
+            self.props.history.push("/Settings/App");
           }
         },
+
+        //TODO: take this out before 1.0
         {
           label: "Toggle Developer Tools",
           accelerator: "Alt+Command+I",
@@ -116,67 +145,70 @@ export default class MenuBuilder {
         }
       ]
     };
-    const subMenuViewProd = {
-      label: "View",
-      submenu: [
-        {
-          label: "Toggle Full Screen",
-          accelerator: "Ctrl+Command+F",
-          click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
-          }
-        }
-      ]
-    };
+
     const subMenuWindow = {
-      label: "Window",
-      submenu: [
-        {
-          label: "Minimize",
-          accelerator: "Command+M",
-          selector: "performMiniaturize:"
-        },
-        { label: "Close", accelerator: "Command+W", selector: "performClose:" },
-        { type: "separator" },
-        { label: "Bring All to Front", selector: "arrangeInFront:" }
-      ]
+      label: "View",
+      submenu:
+        process.env.NODE_ENV === "development"
+          ? [
+              {
+                label: "Reload",
+                accelerator: "Command+R",
+                click: () => {
+                  // console.log(tray);
+                  // tray.destroy();
+
+                  this.mainWindow.webContents.reload();
+                }
+              },
+
+              {
+                label: "Toggle Full Screen",
+                accelerator: "F11",
+                click: () => {
+                  remote
+                    .getCurrentWindow()
+                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
+                }
+              }
+            ]
+          : [
+              {
+                label: "Toggle Full Screen",
+                accelerator: "F11",
+                click: () => {
+                  // this.mainWindow.setFullScreen(
+                  //   !this.mainWindow.isFullScreen()
+                  // );
+                }
+              }
+            ]
     };
     const subMenuHelp = {
       label: "Help",
       submenu: [
         {
-          label: "Learn More",
+          label: "About Nexus",
           click() {
-            shell.openExternal("http://electron.atom.io");
+            self.props.history.push("/About");
           }
         },
         {
-          label: "Documentation",
+          label: "NexusEarth",
           click() {
-            shell.openExternal(
-              "https://github.com/atom/electron/tree/master/docs#readme"
-            );
+            shell.openExternal("http://nexusearth.com");
           }
         },
         {
-          label: "Community Discussions",
+          label: "Nexusoft Github",
           click() {
-            shell.openExternal("https://discuss.atom.io/c/electron");
-          }
-        },
-        {
-          label: "Search Issues",
-          click() {
-            shell.openExternal("https://github.com/atom/electron/issues");
+            shell.openExternal("http://github.com/Nexusoft");
           }
         }
       ]
     };
 
-    const subMenuView =
-      process.env.NODE_ENV === "development" ? subMenuViewDev : subMenuViewProd;
-
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+    return [subMenuAbout, subMenuView, subMenuWindow, subMenuHelp];
   }
 
   buildDefaultTemplate(self) {
@@ -293,7 +325,7 @@ export default class MenuBuilder {
           process.env.NODE_ENV === "development"
             ? [
                 {
-                  label: "&Reload",
+                  label: "Reload",
                   accelerator: "Ctrl+R",
                   click: () => {
                     console.log(tray);
@@ -322,7 +354,7 @@ export default class MenuBuilder {
               ]
             : [
                 {
-                  label: "Toggle &Full Screen",
+                  label: "Toggle Full Screen",
                   accelerator: "F11",
                   click: () => {
                     // this.mainWindow.setFullScreen(
@@ -351,12 +383,6 @@ export default class MenuBuilder {
             label: "Nexusoft Github",
             click() {
               shell.openExternal("http://github.com/Nexusoft");
-            }
-          },
-          {
-            label: "Electron Documentation",
-            click() {
-              shell.openExternal("http://electron.atom.io");
             }
           }
         ]
