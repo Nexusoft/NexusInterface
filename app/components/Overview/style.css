@@ -27,17 +27,18 @@ Table of Contents
   font-weight: 800;
 }
 .h2-nospace {
-  font-size: .8em;
+  font-size: 0.8em;
   letter-spacing: 0px;
   text-shadow: 2px 2px #111111;
 }
 
 .maxmindCopyright {
-  position: absolute;;
+  position: absolute;
   bottom: 0px;
   z-index: 1;
-  color:#05a5ff;
-  opacity: 0.4 ;
+  color: var(--color-2);
+  opacity: 0.4;
+  filter: var(--nxs-logo);
 }
 
 /*------------------------------------------------------------------
@@ -97,7 +98,7 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   height: 35px;
   padding-top: 5px;
   padding-left: 20px;
-  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  filter: var(--footer);
 }
 .left-stats > div {
   margin: 1em 0;
@@ -124,7 +125,7 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
   padding-top: 5px;
   padding-right: 20px;
   left: -55px;
-  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  filter: var(--footer);
 }
 .right-stats > div {
   margin: 1em 0;

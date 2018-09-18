@@ -8,7 +8,7 @@ const initialState = {
     windowWidth: 1600,
     windowHeight: 1388,
     devMode: false,
-    wallpaper: "./images/background/Wallet-Design-Blue-AquaStars2-BG.png",
+    wallpaper: "./images/background/starrynight.jpeg",
     renderGlobe: true,
     customStyling: {
       MC1: "#111111",
@@ -20,7 +20,9 @@ const initialState = {
       iconMenu: "hue-rotate(0deg) brightness(100%) grayscale(0%)",
       footer: "hue-rotate(0deg) grayscale(100%) brightness(200%)",
       footerHover: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
-      footerActive: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
+      footerActive: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
+      pannelBack: "rgba(47, 50, 65, 0.7)",
+      maxMindCopyright: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
     }
   },
   NXSlogoRGB: "rgb(0,174,239)",
@@ -205,6 +207,20 @@ export default (state = initialState, action) => {
         },
         footerHoverRGB: action.payload.hex
       };
+
+    case TYPE.CHANGE_PANEL_COLOR:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          customStyling: {
+            ...state.settings.customStyling,
+            pannelBack: action.payload
+          }
+        },
+        footerHoverRGB: action.payload.hex
+      };
+
     case TYPE.SET_ICON_MENU_COLOR:
       return {
         ...state,

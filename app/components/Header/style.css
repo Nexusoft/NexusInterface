@@ -59,6 +59,7 @@
 
 .custom-overlay {
   background: transparent;
+  position: absolute;
   padding: 0px;
 }
 
