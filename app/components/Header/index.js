@@ -124,7 +124,7 @@ class Header extends Component {
     if (process.platform == "darwin") {
       trayImage =
         configuration.GetAppDataDirectory() +
-        "tray/Nexus_Tray_Icon_Template_32.png";
+        "tray/Nexus_Tray_Icon_Template_16.png";
     } else {
       trayImage =
         configuration.GetAppDataDirectory() + "tray/Nexus_Tray_Icon_32.png";
@@ -135,7 +135,7 @@ class Header extends Component {
     if (process.platform == "darwin") {
       tray.setPressedImage(
         configuration.GetAppDataDirectory() +
-          "tray/Nexus_Tray_Icon_Highlight_32.png"
+          "tray/Nexus_Tray_Icon_Highlight_16.png"
       );
     }
 
@@ -151,7 +151,8 @@ class Header extends Component {
         }
       },
       {
-        label: 'Quit Nexus and Keep Daemon', click: function () {
+        label: "Quit Nexus and Keep Daemon",
+        click: function() {
           app.isQuiting = true;
           mainWindow.close();
         }
