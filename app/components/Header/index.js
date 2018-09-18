@@ -384,7 +384,6 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
-
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );
