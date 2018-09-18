@@ -106,69 +106,74 @@ class TerminalConsole extends Component {
     }
    
     /// Execute the command with the given args
-    RPC.PROMISE(splitInput[0], RPCArguments).then(payload => {
+    if(this.props.commandList.indexOf(splitInput[0]) != -1){
+      RPC.PROMISE(splitInput[0], RPCArguments).then(payload => {
 
-      /// If a single object is given back, output it
-      if(typeof payload === "string" || typeof payload === "number") {
-        if(typeof payload === "string") {
-          let temppayload = payload;
-          /// If we find there are end line characters then we need to make these line breaks
-          temppayload.split('\n').map((item, key) => {
-            return tempConsoleOutput.push(item);
-          })
-          // this is so that you have tha data available to display on the screen 
-          this.props.printToConsole(tempConsoleOutput);
+        /// If a single object is given back, output it
+        if(typeof payload === "string" || typeof payload === "number") {
+          if(typeof payload === "string") {
+            let temppayload = payload;
+            /// If we find there are end line characters then we need to make these line breaks
+            temppayload.split('\n').map((item, key) => {
+              return tempConsoleOutput.push(item);
+            })
+            // this is so that you have tha data available to display on the screen 
+            this.props.printToConsole(tempConsoleOutput);
+          }
+          else
+          {
+            tempConsoleOutput.push(payload);
+            // this is so that you have tha data available to display on the screen 
+            this.props.printToConsole(tempConsoleOutput);
+          }
         }
-        else
-        {
-          tempConsoleOutput.push(payload);
-          // this is so that you have tha data available to display on the screen 
-          this.props.printToConsole(tempConsoleOutput);
-        }
-      }
-      /// If it is a object with multi variables then output them on each line 
-      else {
-        for (let outputObject in payload)
-        {
-          if (typeof payload[outputObject] === "object")
-            {
-              tempConsoleOutput.push(outputObject + ": " );
-              // this is so that you have tha data available to display on the screen 
-              // this.props.printToConsole(tempConsoleOutput);
-            }
-            else{
-              tempConsoleOutput.push(outputObject + ": " + payload[outputObject]);
-              // this is so that you have tha data available to display on the screen 
-              // this.props.printToConsole(tempConsoleOutput);
-            }
-            
-            //If it is a object then we need to display ever var on a new line.
-            if (typeof payload[outputObject] === "object"){
-              for (let interalres in payload[outputObject])
+        /// If it is a object with multi variables then output them on each line 
+        else {
+          for (let outputObject in payload)
+          {
+            if (typeof payload[outputObject] === "object")
               {
-                /// Probably need to do this in css but I add a tab to make it look cleaner
-                tempConsoleOutput.push('       ' + interalres + ":" + payload[outputObject][interalres]);
+                tempConsoleOutput.push(outputObject + ": " );
+                // this is so that you have tha data available to display on the screen 
+                // this.props.printToConsole(tempConsoleOutput);
               }
-              // this is so that you have tha data available to display on the screen 
-              // this.props.printToConsole(tempConsoleOutput);
-            }
+              else{
+                tempConsoleOutput.push(outputObject + ": " + payload[outputObject]);
+                // this is so that you have tha data available to display on the screen 
+                // this.props.printToConsole(tempConsoleOutput);
+              }
+              
+              //If it is a object then we need to display ever var on a new line.
+              if (typeof payload[outputObject] === "object"){
+                for (let interalres in payload[outputObject])
+                {
+                  /// Probably need to do this in css but I add a tab to make it look cleaner
+                  tempConsoleOutput.push('       ' + interalres + ":" + payload[outputObject][interalres]);
+                }
+                // this is so that you have tha data available to display on the screen 
+                // this.props.printToConsole(tempConsoleOutput);
+              }
+
+          }
+          this.props.printToConsole(tempConsoleOutput);
 
         }
-        this.props.printToConsole(tempConsoleOutput);
-
-      }
-    }).catch( error =>
-      {
-        /// If there is an error then return that error message and place it in the output.
-        this.props.printToConsole(error);
-        // tempConsoleOutput.push(error);
-        // this.setState(
-        //   {
-        //     consoleOutput: tempConsoleOutput,
-        //     currentInput:""
-        //   });
-      }
-    );
+      }).catch( error =>
+        {
+          /// If there is an error then return that error message and place it in the output.
+          this.props.printToConsole(error);
+          // tempConsoleOutput.push(error);
+          // this.setState(
+          //   {
+          //     consoleOutput: tempConsoleOutput,
+          //     currentInput:""
+          //   });
+        }
+      );
+    }
+    else {
+      this.props.printToConsole(["Command invalid"]);
+    }
   }
 
   ///Handle enter key being presssed.

@@ -66,8 +66,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  setExperimentalWarning: save =>
-    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
+  setExperimentalWarning: save => dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
   setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
   setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
   set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
@@ -75,8 +74,7 @@ const mapDispatchToProps = dispatch => ({
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
   acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
   toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
-  ignoreEncryptionWarning: () =>
-    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING })
+  ignoreEncryptionWarning: () => dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING })
 });
 
 class Overview extends Component {
@@ -342,7 +340,10 @@ class Overview extends Component {
       ];
     }
   }
-
+  numberWithCommas = (x) => {
+    if(x)
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
   render() {
     return (
       <div id="overviewPage">
@@ -436,10 +437,10 @@ class Overview extends Component {
             className="animated fadeInDown delay-1s"
           >
             <div className="h2">
-              Market Price <span className="h2-nospace">(BTC)</span>
+              Market Price <span className="h2-nospace">(USD)</span>
             </div>
             <img src={marketicon} />
-            <div className="overviewValue">{this.props.BTC.toFixed(8)}</div>
+            <div className="overviewValue">${this.props.USD.toFixed(2)}</div>
           </div>
 
           <div
@@ -447,10 +448,10 @@ class Overview extends Component {
             className="animated fadeInDown delay-1s"
           >
             <div className="h2">
-              Circulating Supply <span className="h2-nospace">(NXS)</span>
+              Market Cap <span className="h2-nospace">(USD)</span>
             </div>
             <img src={supplyicon} />
-            <div className="overviewValue">{this.props.circulatingSupply}</div>
+            <div className="overviewValue">${this.numberWithCommas((this.props.circulatingSupply * this.props.USD).toFixed(0))}</div>
           </div>
 
           <div
@@ -467,6 +468,16 @@ class Overview extends Component {
         {this.returnIfGlobeEnabled()}
         <div className="right-stats">
           <div
+            id="nxs-interestweight-info"
+            className="animated fadeInDown delay-1s"
+          >
+            <div className="h2">Interest Rate</div>
+            <img src={interesticon} />
+            <div className="overviewValue">
+              {this.props.interestweight + "%"}
+            </div>
+          </div>
+          <div
             id="nxs-connections-info"
             className="animated fadeInDown delay-1s"
           >
@@ -476,6 +487,15 @@ class Overview extends Component {
               src={this.connectionsImage()}
             />
             <div className="overviewValue">{this.props.connections}</div>
+          </div>
+          <div id="nxs-blocks-info" className="animated fadeInDown delay-1s">
+            <div className="h2">Block Count</div>
+            <img src={nxsblocks} />
+
+            <div className="overviewValue">{this.numberWithCommas(this.props.blocks)}</div>
+            <span className="tooltip left">
+              {this.props.blockDate.toLocaleString()}
+            </span>
           </div>
           <div
             id="nxs-blockweight-info"
@@ -488,15 +508,7 @@ class Overview extends Component {
             />
             <div className="overviewValue">{this.props.blockweight}</div>
           </div>
-          <div id="nxs-blocks-info" className="animated fadeInDown delay-1s">
-            <div className="h2">Block Count</div>
-            <img src={nxsblocks} />
-
-            <div className="overviewValue">{this.props.blocks}</div>
-            <span className="tooltip left">
-              {this.props.blockDate.toLocaleString()}
-            </span>
-          </div>
+          
           <div
             id="nxs-trustweight-info"
             className="animated fadeInDown delay-1s"
@@ -505,16 +517,7 @@ class Overview extends Component {
             <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
             <div className="overviewValue">{this.props.trustweight}</div>
           </div>
-          <div
-            id="nxs-interestweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">Interest Rate</div>
-            <img src={interesticon} />
-            <div className="overviewValue">
-              {this.props.interestweight + "%"}
-            </div>
-          </div>
+          
           <div
             id="nxs-stakeweight-info"
             className="animated fadeInDown delay-1s"
