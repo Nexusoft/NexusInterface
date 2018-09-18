@@ -79,14 +79,16 @@ export const cryptopia24hrInfo = () => {
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
-          let data = body.Data;
-          let res = {
-            change: data.Change,
-            high: data.High,
-            low: data.Low,
-            volume: data.Volume
-          };
-          dispatch({ type: TYPE.CRYPTOPIA_24, payload: res });
+          if (response.body) {
+            let data = body.Data;
+            let res = {
+              change: data.Change,
+              high: data.High,
+              low: data.Low,
+              volume: data.Volume
+            };
+            dispatch({ type: TYPE.CRYPTOPIA_24, payload: res });
+          }
         }
       }
     );

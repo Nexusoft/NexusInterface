@@ -152,7 +152,6 @@ class Exchange extends Component {
   }
 
   // cancelTransaction() {
-  //   console.log("cancel");
 
   //   Request(
   //     {
@@ -163,20 +162,20 @@ class Exchange extends Component {
   //       }
   //     },
   //     (error, response, body) => {
-  //       console.log(response);
+
   //       if (response.statusCode === 200) {
   //         if (!response.body.error) {
-  //           console.log(response);
+  //
   //         }
   //       } else {
-  //         console.log(response);
+
   //       }
   //     }
   //   );
   // }
 
   // requestRecipt() {
-  //   console.log("email", this.props.email);
+
   //   Request(
   //     {
   //       method: "POST",
@@ -189,10 +188,9 @@ class Exchange extends Component {
   //     (error, response, body) => {
   //       if (response.statusCode === 200) {
   //         if (!response.body.error) {
-  //           console.log(response);
+
   //         }
   //       } else {
-  //         console.log(response);
   //       }
   //     }
   //   );

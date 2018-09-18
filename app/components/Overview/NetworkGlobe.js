@@ -109,7 +109,6 @@ export default class NetworkGlobe extends Component {
   }
 
   testRestartLines() {
-    console.log("ReDraw lines");
     if (glb != null && glb != undefined) {
       glb.playCurve();
     }

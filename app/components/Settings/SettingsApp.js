@@ -63,7 +63,6 @@ class SettingsApp extends Component {
     // Left over on work in progress for having a select directoy
     //this.refs.backupInputField.webkitdirectory = true;
     //this.refs.backupInputField.directory = true;
-    //console.log(this.refs);
   }
 
   /// Set Autostart
@@ -168,7 +167,6 @@ class SettingsApp extends Component {
   setSavedTxFee(settings) {
     let settxobj = document.getElementById("optionalTransactionFee");
     settxobj.value = this.props.paytxfee;
-    console.log(this.props.paytxfee);
   }
 
   /// Update Backup Locaton
@@ -179,8 +177,6 @@ class SettingsApp extends Component {
     var settingsObj = settings.GetSettings();
 
     let incomingPath = el.files[0].path;
-
-    console.log(incomingPath);
 
     settingsObj.backupLocation = incomingPath;
 
@@ -383,7 +379,7 @@ class SettingsApp extends Component {
     if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
       fs.mkdirSync(BackupDir);
     }
-    console.log(now);
+
     RPC.PROMISE("backupwallet", [
       BackupDir + "/NexusBackup_" + now + ".dat"
     ]).then(payload => {
@@ -399,7 +395,7 @@ class SettingsApp extends Component {
       <section id="application">
         <Modal
           center
-          classNames={{ overlay: "custom-overlay2", modal: "custom-modal2" }}
+          classNames={{ modal: "custom-modal2" }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}

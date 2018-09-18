@@ -18,7 +18,8 @@ const initialState = {
   blockDate: "Getting Next Block...",
   portAvailable: false,
   Search: "",
-  contactSearch: ""
+  contactSearch: "",
+  rpcCallList: []
 };
 
 export default (state = initialState, action) => {
@@ -163,6 +164,13 @@ export default (state = initialState, action) => {
         portAvailable: action.payload
       };
       break;
+      case TYPE.ADD_RPC_CALL:
+      let oldArray = state.rpcCallList;
+      oldArray.push(action.payload);
+      return{
+        ...state,
+        rpcCallList: oldArray
+      };
 
     default:
       return state;

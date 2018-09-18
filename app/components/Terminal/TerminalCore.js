@@ -3,8 +3,19 @@ import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { timingSafeEqual } from "crypto";
 import * as RPC from "../../script/rpc";
+import * as TYPE from "../../actions/actiontypes";
+import { connect } from "react-redux";
 
-export default class TerminalCore extends Component {
+
+const mapStateToProps = state => {
+  return { ...state.terminal, ...state.common };
+};
+
+const mapDispatchToProps = dispatch => (
+  {}
+);
+
+class TerminalCore extends Component {
 
   constructor(props){
     super(props);
@@ -15,11 +26,25 @@ export default class TerminalCore extends Component {
     }
 
   }  
+  
+  componentDidUpdate(prevProps)
+  {
+    //if (this.props.rpcCallList.length != prevProps.rpcCallList.length) {
+     // this.forceUpdate();
+    //}
+  }
+
+  componentWillReceiveProps(nextProps)
+  {
+    if (this.props.rpcCallList.length != nextProps.rpcCallList.length) {
+      this.forceUpdate();
+    }
+  }
 
   processDeamonOutput()
   {
     let num = 0;
-    return this.state.deamonoutput.map((i) =>
+    return this.props.rpcCallList.map((i) =>
     {
       num++;
       return (
@@ -31,15 +56,15 @@ export default class TerminalCore extends Component {
   }
 
   render() {
-
     return (
-
       <div id="terminal-core-output">
-
         {this.processDeamonOutput()}
-        
       </div>
-
     );
   }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TerminalCore);

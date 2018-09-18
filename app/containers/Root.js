@@ -22,21 +22,6 @@ import Exchange from "../components/Exchange/index";
 import settings from "../../app/api/settings";
 
 export default function Root({ store, history }) {
-  // let configSettings = settings.GetSettings();
-
-  // if (configSettings.wallpaper) {
-  //   let customBGImageUrl = configSettings.wallpaper;
-  //   if ( process.platform === "win32")
-  //       {
-  //         customBGImageUrl =  customBGImageUrl.replace(/\\/g, '/');
-  //       }
-  //   console.log("Applying custom wallpaper: " + customBGImageUrl);
-  //   document.body.style.setProperty(
-  //     "--background-main-image",
-  //     "url('" + customBGImageUrl + "')"
-  //   );
-  // }
-
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>

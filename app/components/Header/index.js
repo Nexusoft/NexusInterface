@@ -56,11 +56,13 @@ class Header extends Component {
     );
 
     menuBuilder.buildMenu(self);
+    this.loadMyAccounts();
     if (tray === null) this.setupTray();
 
     this.props.GetInfoDump();
 
     self.set = setInterval(function() {
+      self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
     }, 20000);
     self.checkIfPortOpen();
@@ -71,6 +73,48 @@ class Header extends Component {
     this.props.history.push("/");
   }
 
+  loadMyAccounts() {
+    RPC.PROMISE("listaccounts", [0]).then(payload => {
+      Promise.all(
+        Object.keys(payload).map(account =>
+          RPC.PROMISE("getaddressesbyaccount", [account])
+        )
+      ).then(payload => {
+        let validateAddressPromises = [];
+
+        payload.map(element => {
+          element.addresses.map(address => {
+            validateAddressPromises.push(
+              RPC.PROMISE("validateaddress", [address])
+            );
+          });
+        });
+
+        Promise.all(validateAddressPromises).then(payload => {
+          let accountsList = [];
+          let myaccts = payload.map(e => {
+            if (e.ismine && e.isvalid) {
+              let index = accountsList.findIndex(ele => {
+                if (ele.account === e.account) {
+                  return ele;
+                }
+              });
+
+              if (index === -1) {
+                accountsList.push({
+                  account: e.account,
+                  addresses: [e.address]
+                });
+              } else {
+                accountsList[index].addresses.push(e.address);
+              }
+            }
+          });
+          this.props.MyAccountsList(accountsList);
+        });
+      });
+    });
+  }
   doNotify(context, message) {
     Notification.requestPermission().then(result => {
       var myNotification = new Notification(context, {
@@ -123,9 +167,14 @@ class Header extends Component {
         }
       },
       {
-        label: "Quit Nexus",
+        label: 'Quit Nexus and Keep Daemon', click: function () {
+          app.isQuiting = true;
+          mainWindow.close();
+        }
+      },
+      {
+        label: "Quit Nexus and Quit Daemon",
         click: function() {
-          // app.isQuiting = true;
           let settings = require("../../api/settings").GetSettings();
           if (settings.manualDaemon == false) {
             RPC.PROMISE("stop", []).then(payload => {
@@ -156,7 +205,7 @@ class Header extends Component {
     }
 
     if (nextProps.blocks !== this.props.blocks) {
-      RPC.PROMISE("getpeerinfo", [])
+      RPC.PROMISE("getpeerinfo", [], this.props)
         .then(peerresponse => {
           let hpb = 0;
           peerresponse.forEach(element => {
@@ -369,7 +418,7 @@ class Header extends Component {
           center={true}
           open={this.props.open}
           onClose={this.props.CloseModal}
-          classNames={{ overlay: "custom-overlay", modal: "custom-modal" }}
+          classNames={{ modal: "custom-modal" }}
         >
           {this.modalinternal()}
         </Modal>
@@ -406,7 +455,6 @@ class Header extends Component {
             alt="Nexus Logo"
           />
         </Link>
-
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );

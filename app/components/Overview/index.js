@@ -113,8 +113,6 @@ class Overview extends Component {
     }
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
-        console.log("UPDATE BLOCKS");
-        console.log(this.props);
         this.redrawCurves();
       }
     }
@@ -125,7 +123,6 @@ class Overview extends Component {
 
     if (this.props.connections != previousprops.connections) {
       if (this.props.connections != 0 && previousprops.connections != 0) {
-        console.log("REMOVED OLD BLOCKS AND DID A NEW ONE");
         this.removeOldPoints();
       }
     }
@@ -342,7 +339,9 @@ class Overview extends Component {
       ];
     }
   }
-
+  numberWithCommas = x => {
+    if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
   render() {
     return (
       <div id="overviewPage">
@@ -359,11 +358,11 @@ class Overview extends Component {
         </Modal>
         <Modal
           key="experiment-modal"
-          open={
+          open={ this.props.settings.acceptedagreement && (
             this.props.settings.experimentalWarning &&
-            this.props.experimentalOpen
+            this.props.experimentalOpen)
           }
-          onClose={this.closeExperimentalModal}
+          onClose={() => this.props.setExperimentalWarning(false)}
           center
           classNames={{ modal: "modal" }}
         >
@@ -372,13 +371,13 @@ class Overview extends Component {
         <Modal
           key="encrypted-modal"
           open={
-            !this.props.encrypted && !this.props.ignoreEncryptionWarningFlag
+            (!this.props.experimentalOpen && this.props.settings.acceptedagreement) && (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)
           }
           onClose={() => this.props.ignoreEncryptionWarning()}
           center
           classNames={{ modal: "modal" }}
         >
-          <h3>Hey, your wallet is not encrypted.</h3>
+          <h3> Your Wallet Is Not Encrypted!</h3>
           <p>You really should encrypt your wallet to keep your Nexus safe.</p>
           <NavLink to="/Settings/Unencrypted">
             <button className="button primary">Take Me There</button>
@@ -436,10 +435,10 @@ class Overview extends Component {
             className="animated fadeInDown delay-1s"
           >
             <div className="h2">
-              Market Price <span className="h2-nospace">(BTC)</span>
+              Market Price <span className="h2-nospace">(USD)</span>
             </div>
             <img src={marketicon} />
-            <div className="overviewValue">{this.props.BTC.toFixed(8)}</div>
+            <div className="overviewValue">${this.props.USD.toFixed(2)}</div>
           </div>
 
           <div
@@ -447,10 +446,15 @@ class Overview extends Component {
             className="animated fadeInDown delay-1s"
           >
             <div className="h2">
-              Circulating Supply <span className="h2-nospace">(NXS)</span>
+              Market Cap <span className="h2-nospace">(USD)</span>
             </div>
             <img src={supplyicon} />
-            <div className="overviewValue">{this.props.circulatingSupply}</div>
+            <div className="overviewValue">
+              $
+              {this.numberWithCommas(
+                (this.props.circulatingSupply * this.props.USD).toFixed(0)
+              )}
+            </div>
           </div>
 
           <div
@@ -467,6 +471,16 @@ class Overview extends Component {
         {this.returnIfGlobeEnabled()}
         <div className="right-stats">
           <div
+            id="nxs-interestweight-info"
+            className="animated fadeInDown delay-1s"
+          >
+            <div className="h2">Interest Rate</div>
+            <img src={interesticon} />
+            <div className="overviewValue">
+              {this.props.interestweight + "%"}
+            </div>
+          </div>
+          <div
             id="nxs-connections-info"
             className="animated fadeInDown delay-1s"
           >
@@ -476,6 +490,17 @@ class Overview extends Component {
               src={this.connectionsImage()}
             />
             <div className="overviewValue">{this.props.connections}</div>
+          </div>
+          <div id="nxs-blocks-info" className="animated fadeInDown delay-1s">
+            <div className="h2">Block Count</div>
+            <img src={nxsblocks} />
+
+            <div className="overviewValue">
+              {this.numberWithCommas(this.props.blocks)}
+            </div>
+            <span className="tooltip left">
+              {this.props.blockDate.toLocaleString()}
+            </span>
           </div>
           <div
             id="nxs-blockweight-info"
@@ -488,15 +513,7 @@ class Overview extends Component {
             />
             <div className="overviewValue">{this.props.blockweight}</div>
           </div>
-          <div id="nxs-blocks-info" className="animated fadeInDown delay-1s">
-            <div className="h2">Block Count</div>
-            <img src={nxsblocks} />
 
-            <div className="overviewValue">{this.props.blocks}</div>
-            <span className="tooltip left">
-              {this.props.blockDate.toLocaleString()}
-            </span>
-          </div>
           <div
             id="nxs-trustweight-info"
             className="animated fadeInDown delay-1s"
@@ -505,16 +522,7 @@ class Overview extends Component {
             <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
             <div className="overviewValue">{this.props.trustweight}</div>
           </div>
-          <div
-            id="nxs-interestweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">Interest Rate</div>
-            <img src={interesticon} />
-            <div className="overviewValue">
-              {this.props.interestweight + "%"}
-            </div>
-          </div>
+
           <div
             id="nxs-stakeweight-info"
             className="animated fadeInDown delay-1s"
