@@ -159,8 +159,11 @@ class TerminalConsole extends Component {
       }
     }).catch( error =>
       {
+        console.log("ERROR");
+        let errorout = [];
+        errorout.push(error);
         /// If there is an error then return that error message and place it in the output.
-        this.props.printToConsole(error);
+        this.props.printToConsole(errorout);
         // tempConsoleOutput.push(error);
         // this.setState(
         //   {
