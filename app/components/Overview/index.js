@@ -362,7 +362,11 @@ class Overview extends Component {
             this.props.settings.experimentalWarning &&
             this.props.experimentalOpen)
           }
+<<<<<<< Updated upstream
           onClose={() => this.props.setExperimentalWarning(false)}
+=======
+          onClose={() => this.closeExperimentalModal()}
+>>>>>>> Stashed changes
           center
           classNames={{ modal: "modal" }}
         >
