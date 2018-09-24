@@ -140,12 +140,14 @@ class Header extends Component {
       if (process.platform == "darwin") {
         trayImage = path.join(
           configuration.GetAppResourceDir(),
+          "images",
           "tray",
           "Nexus_Tray_Icon_Template_16.png"
         );
       } else {
         trayImage = path.join(
           configuration.GetAppResourceDir(),
+          "images",
           "tray",
           "Nexus_Tray_Icon_32.png"
         );
@@ -168,6 +170,7 @@ class Header extends Component {
       tray.setPressedImage(
         path.join(
           configuration.GetAppResourceDir(),
+          "images",
           "tray",
           "Nexus_Tray_Icon_Highlight_16.png"
         )

@@ -149,5 +149,5 @@ configuration.GetAppDataDirectory = function() {
 configuration.GetAppResourceDir = function() {
   const electron = require("electron");
   const app = electron.app || electron.remote.app;
-  return app.getAppPath().replace("app.asar", "");
+  return app.getAppPath().replace(".asar", "");
 };

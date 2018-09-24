@@ -1,4 +1,6 @@
 import * as TYPE from "../actions/actiontypes";
+import configuration from "../api/configuration";
+const path = require("path");
 
 const initialState = {
   settings: {
@@ -8,7 +10,12 @@ const initialState = {
     windowWidth: 1600,
     windowHeight: 1388,
     devMode: false,
-    wallpaper: "./images/background/starrynight.jpeg",
+    wallpaper: path.join(
+      configuration.GetAppResourceDir(),
+      "images",
+      "background",
+      "starrynight.jpeg"
+    ),
     renderGlobe: true,
     customStyling: {
       MC1: "#111111",

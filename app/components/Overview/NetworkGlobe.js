@@ -14,9 +14,24 @@ export default class NetworkGlobe extends Component {
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
     const path = require("path");
     const globeseries = [["peers", []]];
-    const geoiplookup = maxmind.openSync(
-      path.join(configuration.GetAppDataDirectory(), "GeoLite2-City.mmdb")
-    );
+    let geoiplookup = "";
+    if (process.env.NODE_ENV === "development") {
+      geoiplookup = maxmind.openSync(
+        path.join(
+          configuration.GetAppDataDirectory(),
+
+          "GeoLite2-City.mmdb"
+        )
+      );
+    } else {
+      geoiplookup = maxmind.openSync(
+        path.join(
+          configuration.GetAppResourceDir(),
+          "GeoLite2-City_20180403",
+          "GeoLite2-City.mmdb"
+        )
+      );
+    }
     let myIP = "";
     glb = new DAT(this.threeRootElement);
     glb.animate();
