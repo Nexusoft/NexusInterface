@@ -147,24 +147,8 @@ configuration.GetAppDataDirectory = function() {
 };
 
 configuration.test = function() {
-  var electronDirectory = require("electron-directory"),
-    dirHelper,
-    electronExecPath,
-    applicationJsPath;
-
-  electronDirectory(__dirname)
-    .then(function(electronDirectoryInstance) {
-      dirHelper = electronDirectoryInstance;
-      console.log(dirHelper);
-      return dirHelper.getElectronPath();
-    })
-    .then(function(info) {
-      electronExecPath = info;
-      console.log(electronExecPath);
-      return dirHelper.getApplicationPath();
-    })
-    .then(function(info) {
-      applicationJsPath = info;
-      console.log(applicationJsPath);
-    });
+  const electron = require("electron");
+  const path = require("path");
+  const app = electron.app || electron.remote.app;
+  console.log(app.getAppPath().replace("app.asar", ""));
 };
