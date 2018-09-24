@@ -12,9 +12,9 @@ var configuration = exports;
 
 configuration.Exists = function(filename) {
   var fs = require("fs");
-
+  const path = require("path");
   try {
-    fs.accessSync(this.GetAppDataDirectory() + filename);
+    fs.accessSync(path.join(this.GetAppDataDirectory(), filename));
 
     return true;
   } catch (err) {
@@ -28,10 +28,10 @@ configuration.Exists = function(filename) {
 
 configuration.Read = function(filename) {
   var fs = require("fs");
-
+  const path = require("path");
   try {
     // console.log(this.GetAppDataDirectory() + filename);
-    return fs.readFileSync(this.GetAppDataDirectory() + filename);
+    return fs.readFileSync(path.join(this.GetAppDataDirectory(), filename));
   } catch (err) {
     console.log("Error reading file: " + filename + " => " + err);
 
@@ -61,9 +61,9 @@ configuration.ReadJson = function(filename) {
 
 configuration.Write = function(filename, content) {
   var fs = require("fs");
-
+  const path = require("path");
   try {
-    fs.writeFileSync(this.GetAppDataDirectory() + filename, content);
+    fs.writeFileSync(path.join(this.GetAppDataDirectory(), filename), content);
 
     return true;
   } catch (err) {
@@ -91,9 +91,9 @@ configuration.WriteJson = function(filename, json) {
 
 configuration.Delete = function(filename) {
   var fs = require("fs");
-
+  const path = require("path");
   try {
-    fs.unlink(this.GetAppDataDirectory() + filename);
+    fs.unlink(path.join(this.GetAppDataDirectory(), filename));
 
     return true;
   } catch (err) {
@@ -109,11 +109,11 @@ configuration.Delete = function(filename) {
 
 configuration.Rename = function(oldFilename, newFilename) {
   var fs = require("fs");
-
+  const path = require("path");
   try {
     fs.renameSync(
-      this.GetAppDataDirectory() + oldFilename,
-      this.GetAppDataDirectory() + newFilename
+      path.join(this.GetAppDataDirectory(), oldFilename),
+      path.join(this.GetAppDataDirectory(), newFilename)
     );
 
     return true;

@@ -42,7 +42,8 @@
     "extraResources": [
       "./app/GeoLite2-City_20180403/**/*",
       "./app/images/tray/**/*",
-      "./app/cores/**/*"
+      "./app/cores/**/*",
+      "./app/images/background/**/*"
     ],
     "publish": {
       "provider": "github"

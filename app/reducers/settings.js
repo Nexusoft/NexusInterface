@@ -1,7 +1,17 @@
 import * as TYPE from "../actions/actiontypes";
 import configuration from "../api/configuration";
 const path = require("path");
-
+let defaultWallpaperPath = "";
+if (process.env.NODE_ENV === "development") {
+  defaultWallpaperPath = "../images/background/starrynight.jpeg";
+} else {
+  defaultWallpaperPath = path.join(
+    configuration.GetAppResourceDir(),
+    "images",
+    "background",
+    "starrynight.jpeg"
+  );
+}
 const initialState = {
   settings: {
     manualDaemon: true,
@@ -10,12 +20,7 @@ const initialState = {
     windowWidth: 1600,
     windowHeight: 1388,
     devMode: false,
-    wallpaper: path.join(
-      configuration.GetAppResourceDir(),
-      "images",
-      "background",
-      "starrynight.jpeg"
-    ),
+    wallpaper: defaultWallpaperPath,
     renderGlobe: true,
     customStyling: {
       MC1: "#111111",
