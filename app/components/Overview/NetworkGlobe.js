@@ -17,11 +17,7 @@ export default class NetworkGlobe extends Component {
     let geoiplookup = "";
     if (process.env.NODE_ENV === "development") {
       geoiplookup = maxmind.openSync(
-        path.join(
-          configuration.GetAppDataDirectory(),
-
-          "GeoLite2-City.mmdb"
-        )
+        path.join(configuration.GetAppDataDirectory(), "GeoLite2-City.mmdb")
       );
     } else {
       geoiplookup = maxmind.openSync(
