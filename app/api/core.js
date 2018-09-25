@@ -1,15 +1,27 @@
+import configuration from "./configuration";
 const log = require("electron-log");
 const statusdelay = 1000;
-
-var user = "rpcserver";
-var password = require("crypto")
-  .randomBytes(64)
-  .toString("hex");
-var host = "http://127.0.0.1:9336";
 
 var coreprocess = null;
 var settings = require("./settings");
 var responding = false;
+
+var user = "rpcserver";
+var password = require("crypto")
+      .randomBytes(32)
+      .toString("hex");
+var host;
+var port;
+var ip;
+
+//Set data directory by OS for automatic daemon mode
+if (process.platform === "win32") {
+  var datadir = process.env.APPDATA + "\\nexus-interface";
+} else if (process.platform === "darwin") {
+  var datadir = process.env.HOME + "/Library/Application\ Support/nexus-interface";
+} else {
+  var datadir = process.env.HOME + "/.config/nexus-interface";
+}
 
 const EventEmitter = require("events");
 
@@ -24,32 +36,39 @@ function SetCoreParameters(settings) {
         : settings.manualDaemonIP;
     let port =
       settings.manualDaemonPort === undefined
-        ? "9336"
+        ? "8325"
         : settings.manualDaemonPort;
     user =
       settings.manualDaemonUser === undefined
-        ? "rpcserver"
+        ? user
         : settings.manualDaemonUser;
     password =
       settings.manualDaemonPassword === undefined
-        ? "password"
+        ? password
         : settings.manualDaemonPassword;
+    datadir =
+      settings.manualDaemonDataDir === undefined
+        ? datadir
+        : settings.manualDaemonDataDir;
     host = "http://" + ip + ":" + port;
   } else {
-    user = "rpcserver";
-    password = require("crypto")
-      .randomBytes(32)
-      .toString("hex");
-    host = "http://127.0.0.1:9336";
+    user = user;
+    password = password;
+    port = "8325";
+    ip = "127.0.0.1";
+    host = "http://" + ip + ":" + port;
+
   }
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push("-rpcuser=" + user);
   parameters.push("-rpcpassword=" + password);
+  parameters.push("-rpcport=" + port);
+  parameters.push("-datadir=" + datadir);
   parameters.push("-printtoconsole"); // Enable console functionality via stdout
+  parameters.push("-server");
   parameters.push("-verbose=" + "2"); // <-- Make a setting for this
-  parameters.push("-llpallowip=" + "127.0.0.1:8325"); // <-- Make a setting for this
-
+  parameters.push("-rpcallowip=" + ip);
   // Disable upnp (default is 1)
   if (settings.mapPortUsingUpnp == false) parameters.push("-upnp=0");
 
@@ -60,7 +79,13 @@ function SetCoreParameters(settings) {
     );
 
   // Enable mining (default is 0)
-  if (settings.miningEnabled == true) parameters.push("-mining=1");
+  if (settings.enableMining == true) {
+    parameters.push("-mining=1");
+    parameters.push("-llpallowip=127.0.0.1:8325");
+  }
+
+  // Enable staking (default is 0)
+  if (settings.enableStaking == true) parameters.push("-stake=1");
 
   // Enable detach database on shutdown (default is 0)
   if (settings.detatchDatabaseOnShutdown == true)
@@ -77,13 +102,15 @@ function GetResourcesDirectory() {
 
 // GetCoreBinaryPath: Get the path to the specific core binary for the user's system
 function GetCoreBinaryPath() {
-  var coreBinaryPath =
-    GetResourcesDirectory() +
+  const path = require("path");
+  var coreBinaryPath = path.join(
+    configuration.GetAppResourceDir(),
     "cores/nexus" +
     "-" +
     process.platform +
     "-" +
-    process.arch;
+    process.arch
+  );
   if (process.platform === "win32") {
     coreBinaryPath += ".exe";
   }
@@ -148,7 +175,7 @@ class Core extends EventEmitter {
     return user;
   }
   get password() {
-    return "password";
+    return password;
   }
   get host() {
     return host;

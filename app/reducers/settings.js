@@ -3,13 +3,13 @@ import configuration from "../api/configuration";
 const path = require("path");
 let defaultWallpaperPath = "";
 if (process.env.NODE_ENV === "development") {
-  defaultWallpaperPath = "../images/background/starrynight.jpeg";
+  defaultWallpaperPath = "../images/background/starrynight.jpg";
 } else {
   defaultWallpaperPath = path.join(
     configuration.GetAppResourceDir(),
     "images",
     "background",
-    "starrynight.jpeg"
+    "starrynight.jpg"
   );
 }
 const initialState = {
