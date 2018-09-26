@@ -1,11 +1,3 @@
-#overviewPage {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: 100%;
-  margin: 0 -10%;
-}
-
 /*------------------------------------------------------------------
 [OVERVIEW MODULE Stylesheet] Overview Module CSS
 --------------------------------------------------------------------
@@ -58,7 +50,7 @@ I. NEXUS EARTH VISUALIZATION
   left: 0px;
   width: 100%;
   height: 100%;
-  text-align: left;
+  text-align: center;
   overflow: hidden;
 }
 canvas {
@@ -80,6 +72,13 @@ II. BALANCE
 /*------------------------------------------------------------------
 III. CONTAINER
 ------------------------------------------------------------------*/
+#overviewPage {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100%;
+  margin: 0 -10%;
+}
 
 /*------------------------------------------------------------------
 IV. LEFT CONTENT - connection, Block Weight, Block Count
@@ -140,7 +139,79 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
 /*------------------------------------------------------------------
 MEDIA QUERIES
 ------------------------------------------------------------------*/
+
 @media (min-width: 300px) {
+  #overviewPage {
+    margin: 0 -30px;
+  }
+  #logo {
+    margin: 1em 0 .5em 0;
+  }
+  #settings-menu {
+    top: 6em;
+    right: 105px;
+  }
+  canvas{
+    position:absolute;
+    width: 100%;
+  }
+  #nxs-earth {
+    opacity: .3;
+    text-align: left;
+  }
+  .left-stats {
+    position: absolute;
+    left: 0px;
+    width: 300px;
+    top: 8em;
+  }
+  .left-stats > div {
+    margin: .5em 0;
+  }
+  .left-stats > div img {
+    float: left;
+  }
+  .left-stats img {
+    position: relative;
+    width: 35px;
+    height: 35px;
+    padding-top: 5px;
+    padding-left: 20px;
+    filter: var(--footer);
+  }
+  .right-stats {
+    display: none;
+    position: absolute;
+    right: 0px;
+    width: 100px;
+    top: 8em;
+    padding-right: 15px;
+  }
+  .right-stats img {
+    position: relative;
+    left: 0px;
+    width: 20px;
+    height: 20px;
+    padding-top: 5px;
+    padding-right: 10px;
+  }
+  .h2 {
+    font-size: 1em;
+    letter-spacing: 0px;
+    text-shadow: 1px 1px #111111;
+    font-weight: 800;
+    text-align: left;
+    margin-left: 80px;
+  }
+  .overviewValue {
+    position: absolute;
+    font-size: 1.8em;
+    text-align: left;
+    margin-left: 80px;
+  }
+  .maxmindCopyright{
+    display: none;
+  }
 }
 @media (min-width: 375px) {
 }
