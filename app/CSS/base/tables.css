@@ -29,8 +29,7 @@ table {
 	/* .bordered styles */
 	margin-top: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
 	margin-bottom: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
-	border: 1px solid var(--border-color);
-	border-left: 0;
+	border: 2px solid var(--border-color);
 }
 
 table th,
