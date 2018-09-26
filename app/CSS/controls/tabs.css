@@ -65,5 +65,5 @@ Tabs
     height: 20px;
     margin-right: .75em;
     vertical-align: -4px;
-    filter: none;
+    filter: var(--footer-active);
 }
