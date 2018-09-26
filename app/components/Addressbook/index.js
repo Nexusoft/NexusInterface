@@ -15,7 +15,7 @@ import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 import profilePlaceholder from "images/Profile_Placeholder.png";
 import { callbackify } from "util";
-
+import csv from "csvtojson";
 // import images here
 import addressbookimg from "../../images/addressbook.svg";
 
@@ -771,11 +771,11 @@ class Addressbook extends Component {
     let csvContent = "data:text/csv;charset=utf-8,"; //Set formating
     //This is so we can have named columns in the export, this will be row 1
     let NameEntry = [
-      "Account Name",
+      "AccountName",
       "Label",
       "Address",
-      "Phone Number",
-      "Time Zone",
+      "PhoneNumber",
+      "TimeZone",
       "Notes"
     ];
     rows.push(NameEntry);
@@ -959,6 +959,25 @@ class Addressbook extends Component {
     document.body.removeChild(link);
   }
 
+  importAddressBook(path) {
+    console.log("you got it again: ", path);
+    csv().fromFile(path).then((jsonObj) => {
+      // console.log("file read: ", jsonObj);
+      var tmpAccount = {};
+      var ii = 0;
+      for(var i =0; i < jsonObj.length; i++)
+      {
+        if(jsonObj[i].AccountName !== "") {
+          tmpAccount[ii]=(jsonObj[i])
+          ii++;
+        }
+        else {
+          tmpAccount[ii] = ...jsonObj[i];
+        }
+      }
+      console.log(tmpAccount);
+    });
+  }
   render() {
     return (
       <div id="addressbook" className="animated fadeIn">
@@ -978,6 +997,7 @@ class Addressbook extends Component {
         <a className="refresh" onClick={() => this.exportAddressBook()}>
           Export Contacts
         </a>
+        <input type="file" onChange={(e) => this.importAddressBook(e.target.files[0].path)}/>
         <div className="panel">
           <div id="addressbook-controls">
             <div id="addressbook-search">

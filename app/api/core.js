@@ -28,15 +28,16 @@ const EventEmitter = require("events");
 // SetCoreParameters: Get the path to local resources for the application (depending on running packaged vs via npm start)
 function SetCoreParameters(settings) {
   let parameters = [];
+  let ip, port;
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
-    let ip =
+     ip =
       settings.manualDaemonIP === undefined
         ? "127.0.0.1"
         : settings.manualDaemonIP;
-    let port =
+     port =
       settings.manualDaemonPort === undefined
-        ? "8325"
+        ? "9336"
         : settings.manualDaemonPort;
     user =
       settings.manualDaemonUser === undefined
@@ -44,7 +45,7 @@ function SetCoreParameters(settings) {
         : settings.manualDaemonUser;
     password =
       settings.manualDaemonPassword === undefined
-        ? password
+        ? "password"
         : settings.manualDaemonPassword;
     datadir =
       settings.manualDaemonDataDir === undefined
@@ -54,7 +55,7 @@ function SetCoreParameters(settings) {
   } else {
     user = user;
     password = password;
-    port = "8325";
+    port = "9336";
     ip = "127.0.0.1";
     host = "http://" + ip + ":" + port;
 
@@ -81,7 +82,7 @@ function SetCoreParameters(settings) {
   // Enable mining (default is 0)
   if (settings.enableMining == true) {
     parameters.push("-mining=1");
-    parameters.push("-llpallowip=127.0.0.1:8325");
+    parameters.push("-llpallowip=127.0.0.1:9336");
   }
 
   // Enable staking (default is 0)
