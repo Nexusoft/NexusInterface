@@ -152,7 +152,7 @@ class SettingsCore extends Component {
 
   /// Set Manual Daemon Data Directory
   /// Sets the HTML element toggle for ManualDaemonDatadir
-  setManualDaemonDatadir(settings) {
+  setManualDaemonDataDir(settings) {
     var manualDaemonDatadir = document.getElementById("manualDaemonDatadir");
 
     if (settings.manualDaemonDatadir === undefined) {
