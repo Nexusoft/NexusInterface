@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
         ...state,
-        busyFlag: !state.busyFlag
+        busyFlag: action.payload
       };
       break;
     case TYPE.UNLOCK:
@@ -164,10 +164,10 @@ export default (state = initialState, action) => {
         portAvailable: action.payload
       };
       break;
-      case TYPE.ADD_RPC_CALL:
+    case TYPE.ADD_RPC_CALL:
       let oldArray = state.rpcCallList;
       oldArray.push(action.payload);
-      return{
+      return {
         ...state,
         rpcCallList: oldArray
       };

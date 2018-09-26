@@ -15,17 +15,17 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   OpenModal: type => dispatch({ type: TYPE.SHOW_MODAL, payload: type }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload })
 });
 
 class Security extends Component {
   lockWallet() {
-    this.props.busy();
+    this.props.busy(true);
     RPC.PROMISE("walletlock", []).then(payload => {
       this.props.wipe();
-      this.props.busy();
+      this.props.busy(false);
       RPC.PROMISE("getinfo", [])
         .then(payload => {
           delete payload.timestamp;
@@ -183,7 +183,7 @@ class Security extends Component {
               <p>
                 <button
                   style={{ width: "100%", margin: "0" }}
-                  // disabled={this.props.busyFlag}
+                  disabled={this.props.busyFlag}
                   className="button primary"
                   onClick={() => this.changePassword(e)}
                 >
@@ -196,7 +196,7 @@ class Security extends Component {
             style={{ width: "100%", margin: "0" }}
             id="lockWallet"
             className="button primary"
-            // disabled={this.props.busyFlag}
+            disabled={this.props.busyFlag}
             onClick={e => {
               e.preventDefault();
               this.lockWallet();
@@ -220,7 +220,7 @@ class Security extends Component {
                     required
                   />
                   <button
-                    // disabled={this.props.busyFlag}
+                    disabled={this.props.busyFlag}
                     className="button primary"
                     onClick={e => this.showPrivKey(e)}
                   >
@@ -234,7 +234,7 @@ class Security extends Component {
                 <div className="expander">
                   <input type="password" id="privKeyOutput" />
                   <button
-                    // disabled={this.props.busyFlag}
+                    disabled={this.props.busyFlag}
                     className="button"
                     onClick={e => this.copyPrivkey(e)}
                   >
