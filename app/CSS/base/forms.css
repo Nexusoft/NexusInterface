@@ -161,7 +161,7 @@ fieldset.aligned .field,
 form div.field.aligned {
   float: none;
   margin: 1.625em 0; /* a field generally is 4 lines including label + field + top margin + bottom margin */
-  padding: 0 0 0 var(--field-align-label-width);
+  padding: 0 0 0 320px;
 }
 
 .aligned .field label,

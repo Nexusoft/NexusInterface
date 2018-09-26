@@ -142,13 +142,11 @@
   background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
   height: 29px;
   overflow: hidden;
-  width: 240px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   background-color: var(--color-3);
-
-  width: 350px;
+  width: 280px;
   color: var(--color-5);
   margin-bottom: -15px;
 }
