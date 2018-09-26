@@ -72,7 +72,7 @@ li {
 
 body {
   position: relative;
-  color: white;
+  color: var(--color-5);
   height: 100vh;
   background-color: #232c39;
   background-image: var(--background-main-gradient),
