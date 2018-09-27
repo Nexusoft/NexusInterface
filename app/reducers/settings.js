@@ -22,6 +22,7 @@ const initialState = {
     devMode: false,
     wallpaper: defaultWallpaperPath,
     renderGlobe: true,
+    fiatCurrency: "USD",
     customStyling: {
       MC1: "#111111",
       MC2: "#0ca4fb",
@@ -273,6 +274,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         styleChangeFlag: false
+      };
+      break;
+    case TYPE.SET_FIAT_CURRENCY:
+      return {
+        ...state,
+        settings:{
+          ...state.settings,
+          fiatCurrency: action.payload
+        }
       };
       break;
     default:
