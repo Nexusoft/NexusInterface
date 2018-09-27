@@ -281,7 +281,7 @@ class Header extends Component {
   checkIfPortOpen() {
     const isPortAvailable = require("is-port-available");
 
-    var port = 8325;
+    var port = 9336;
     isPortAvailable(port).then(status => {
       if (status) {
         this.props.SetPortIsAvailable(true);

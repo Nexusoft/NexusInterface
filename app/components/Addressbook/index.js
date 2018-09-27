@@ -15,7 +15,7 @@ import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
 import profilePlaceholder from "images/Profile_Placeholder.png";
 import { callbackify } from "util";
-
+import csv from "csvtojson";
 // import images here
 import addressbookimg from "../../images/addressbook.svg";
 
@@ -771,19 +771,15 @@ class Addressbook extends Component {
     let csvContent = "data:text/csv;charset=utf-8,"; //Set formating
     //This is so we can have named columns in the export, this will be row 1
     let NameEntry = [
-      "Account Name",
-      "Label",
-      "Address",
-      "Phone Number",
-      "Time Zone",
-      "Notes"
+      "AccountName", //a
+      "PhoneNumber", //b
+      "TimeZone",    //c
+      "Notes"        //d
     ];
-    rows.push(NameEntry);
+    rows.push(NameEntry); //how we get our header line
     this.props.addressbook.map(e => {
       let tempentry = [];
       tempentry.push(e.name);
-      tempentry.push("");
-      tempentry.push("");
       tempentry.push(e.phoneNumber);
 
       let timezone = "";
@@ -912,7 +908,7 @@ class Addressbook extends Component {
       }
       tempentry.push(timezone);
       tempentry.push(e.notes);
-      rows.push(tempentry);
+      // rows.push(tempentry); // moving down.
       let tempMine = [];
 
       let tempNotMine = [];
@@ -924,10 +920,11 @@ class Addressbook extends Component {
           } else {
             label = add.label;
           }
-          tempMine.push(["", label, add.address, "", ""]);
+          tempMine.push([ label, add.address]);
         });
-        rows.push(["", `My addresses for ${e.name}`, "", "", ""]);
-        rows.push(tempMine);
+        // rows.push(["", `My addresses for ${e.name}`, "", "", ""]);
+        // rows.push(tempMine);
+        tempentry.push(tempMine);
       }
       if (e.notMine.length > 0) {
         e.notMine.map(add => {
@@ -938,11 +935,13 @@ class Addressbook extends Component {
           } else {
             label = add.label;
           }
-          tempNotMine.push(["", label, add.address, "", ""]);
+          tempNotMine.push([label, add.address]);
         });
-        rows.push(["", `${e.name}'s addresses`, "", "", ""]);
-        rows.push(tempNotMine);
+        // rows.push(["", `${e.name}'s addresses`, "", "", ""]);
+        // rows.push(tempNotMine);
+        tempentry.push(tempNotMine);
       }
+      rows.push(tempentry);
     });
     rows.forEach(function(rowArray) {
       let row = rowArray.join(",");
@@ -959,6 +958,45 @@ class Addressbook extends Component {
     document.body.removeChild(link);
   }
 
+  importAddressBook(path) {
+    console.log("you got it again: ", path);
+    csv().fromFile(path).then((jsonObj) => {
+      // console.log(jsonObj);
+      for(var i = 0; i < jsonObj.length; i++){
+        console.log(jsonObj[i]);
+        // dispatch a new account... (map it )
+        var name = jsonObj[i].AccountName;
+        var phone = jsonObj[i].PhoneNumber;
+        var notes = jsonObj[i].Notes;
+        var tz = jsonObj[i].TimeZone;
+        var label;
+        var address;
+        for(var k in jsonObj[i])
+        {
+          var key = k;
+          var val = jsonObj[i][k];
+
+          if(key.includes("field"))
+          {
+            var num = (key.slice(5, key.length));
+            if(num % 2 == 1){
+              label = val;
+            }
+            else {
+              address = val;
+              // (name, address, num, notes, TZ)
+              this.props.AddContact(name, address, phone, notes, tz);
+              // so here is where we have unique address label pairs, we should add this now.
+              // also we don't really know how they had things labeled so we should check to see if they are ours or not.
+              label = "";
+              address = "";
+            }
+          }
+          
+        }
+      }
+    });
+  }
   render() {
     return (
       <div id="addressbook" className="animated fadeIn">
@@ -978,6 +1016,7 @@ class Addressbook extends Component {
         <a className="refresh" onClick={() => this.exportAddressBook()}>
           Export Contacts
         </a>
+        <input type="file" onChange={(e) => this.importAddressBook(e.target.files[0].path)}/>
         <div className="panel">
           <div id="addressbook-controls">
             <div id="addressbook-search">

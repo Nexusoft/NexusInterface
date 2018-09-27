@@ -533,6 +533,21 @@ export default (state = initialState, action) => {
         hoveredOver: action.payload.type
       };
       break;
+    case TYPE.IMPORT_CONTACT:
+      let indexof = state.addressbook.findIndex(ele => {
+        if (ele.name === action.payload.name) {
+          return ele;
+        }
+      });
+      if(indexof == -1) {
+        // not in the addressbook, so make it!
+        console.log("Not in there so make it");
+      }
+      else {
+        // it is in the address book so update it!
+        console.log("contact exists update it");
+      }
+      return state;
     default:
       return state;
       break;
