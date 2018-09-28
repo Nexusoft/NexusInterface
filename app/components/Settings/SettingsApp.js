@@ -64,7 +64,7 @@ class SettingsApp extends Component {
   /// Component Did Update
   /// React Lifecycle hook on when the page is updated
   componentDidUpdate() {
-    this.props.setSettings(require("../../api/settings.js").GetSettings());
+    // this.props.setSettings(require("../../api/settings.js").GetSettings());
     // Left over on work in progress for having a select directoy
     //this.refs.backupInputField.webkitdirectory = true;
     //this.refs.backupInputField.directory = true;
@@ -395,63 +395,12 @@ class SettingsApp extends Component {
 
   OnFiatCurrencyChange(e)
   {
-    //console.log(e);
-    //console.log(this);
-    console.log(e.target.value);
-    //if ( e.target.value != this.props.settings.fiatCurrency){
-      this.props.setFiatCurrency(e.target.value);
-      //this.props.OpenModal(true);
-    //}
-  }
-
-  returnOptionsForFiat()
-  {
-    /*
-              <option key="AUD" value="AUD">Australian Dollar</option>
-              <option key="BRL" value="BRL">Brazilian Real</option>
-              <option key="GPB" value="GPB">British Pound</option>
-              <option key="CAD" value="CAD">Canadian Dollar</option>
-              <option key="CLP" value="CLP">Chilean Peso</option>
-              <option key="CNY" value="CNY">Chinese Yuan</option>
-              <option key="CZK" value="CZK">Czeck Koruna</option>
-              <option key="EUR" value="EUR">Euro</option>
-              <option key="HKD" value="HKD">Hong Kong Dollar</option>
-              <option key="INR" value="INR">Israeli Shekel</option>
-              <option key="JPY" value="JPY">Japanese Yen</option>
-              <option key="KRW" value="KRW">Korean Won</option>
-              <option key="MYR" value="MYR">Malaysian Ringgit</option>
-              <option key="MXN" value="MXN">Mexican Peso</option>
-              <option key="NZD" value="NZD">New Zealand Dollar</option>
-              <option key="PKR" value="PKR">Pakistan Rupee</option>
-              <option key="RUB" value="RUB">Russian Ruble</option>
-              <option key="SAR" value="SAR">Saudi Riyal</option>
-              <option key="SGD" value="SGD">Singapore Dollar</option>
-              <option key="ZAR" value="ZAR">South African Rand</option>
-              <option key="CHF" value="CHF">Swiss Franc</option>
-              <option key="TWD" value="TWD">Taiwan Dollar</option>
-              <option key="AED" value="AED">United Arab Emirates Dirham</option>
-              <option key="USD" value="USD">United States Dollar</option>
-    */
-
-    let tutuut = [
-      {
-        code: "USD",
-        name: "United State Dollar"
-      },
-      {
-        code: "AED",
-        name: "United Arab Emirates Dirham"
-      }
-    ]
-
-    return tutuut.map( e =>
-    {
-      return (
-        <option key={e.code} value={e.code}>
-          {e.name}
-        </option>
-      );
-    });
+    this.props.setFiatCurrency(e.target.value);
+    let settings = require("../../api/settings.js").GetSettings();
+    settings.fiatCurrency = e.target.value;
+    this.props.setSettings(settings);
+    require("../../api/settings.js").SaveSettings(settings);
+    
   }
 
   render() {
