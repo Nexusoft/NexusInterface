@@ -106,11 +106,11 @@ export default (DAT.Globe = function(container, opts) {
     container.style.font = "13px/20px Arial, sans-serif";
 
     var shader, uniforms, material;
-    w = container.offsetWidth || window.innerWidth;
-    h = container.offsetHeight || window.innerHeight;
+    w = window.innerWidth;
+    h = window.innerHeight;
 
-    camera = new THREE.PerspectiveCamera(30, w / h, 1, 10000);
-    camera.position.z = distance;
+    camera = new THREE.PerspectiveCamera(30, w / h, 0.1, 1500);
+    // camera.position.z = distance;
 
     scene = new THREE.Scene();
 
@@ -129,6 +129,7 @@ export default (DAT.Globe = function(container, opts) {
 
     mesh = new THREE.Mesh(geometry, material);
     mesh.rotation.y = Math.PI;
+    mesh.name = "globeObj";
     scene.add(mesh);
 
     shader = Shaders["atmosphere"];
@@ -435,10 +436,35 @@ export default (DAT.Globe = function(container, opts) {
     }
   }
 
+  var prevW = 0;
+  var prevH = 0;
+  var scale = 1;
   function onWindowResize(event) {
-    camera.aspect = container.offsetWidth / container.offsetHeight;
+    // if(prevH == 0 || prevW == 0)
+    // {
+    //   prevH = event.target.innerHeight;
+    //   prevW = event.target.innerWidth;
+    // }
+    // else {
+    //   scale = (event.target.innerHeight / prevH)*(event.target.innerWidth / prevW);
+    //   prevH = event.target.innerHeight;
+    //   prevW = event.target.innerWidth;
+    // }
+    // console.log(scene);
+    // var glb = scene.getObjectByName("globeObj");
+    // glb.scale(.5,.5);
+    // console.log(event);
+    // glb.scale.x = scale;
+    // glb.scale.y = scale;
+    // glb.scale.z = scale;
+    // console.log(glb);
+    // console.log(scene);
+    // scene.scale = new Vector3(.9,.9,.9); // vector3 undefined might revisit.
+    // console.log(container);
+
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   function zoom(delta) {

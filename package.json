@@ -3,7 +3,7 @@
   "productName": "Nexus Interface",
   "version": "0.6.0",
   "buildDate": "September 07th 2018",
-  "description": "nexus interface electron wallet",
+  "description": "nexus-interface",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
@@ -37,12 +37,14 @@
       "app.html",
       "main.prod.js",
       "main.prod.js.map",
-      "package.json"
+      "package.json",
+      "resources/**/*"
     ],
     "extraResources": [
-      "./GeoLite2-City_20180403/**/*",
-      "./images/tray/**/*",
-      "./cores/**/*"
+      "./app/GeoLite2-City_20180403/**/*",
+      "./app/images/tray/**/*",
+      "./app/cores/**/*",
+      "./app/images/background/**/*"
     ],
     "publish": {
       "provider": "github"
@@ -68,8 +70,7 @@
     },
     "linux": {
       "target": [
-        "deb",
-        "AppImage"
+        "deb"
       ]
     },
     "directories": {
@@ -100,7 +101,7 @@
   "homepage": "https://github.com/Nexusoft/Nexus-Interface-React/#readme",
   "jest": {
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
+      "\\.(mmdb|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
       "\\.(css|less|sass|scss)$": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
@@ -185,8 +186,10 @@
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
+    "csvtojson": "^2.0.8",
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",
+    "electron-directory": "0.0.3",
     "electron-log": "^2.2.17",
     "electron-updater": "^3.1.1",
     "font-awesome": "^4.7.0",

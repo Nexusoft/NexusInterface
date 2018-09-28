@@ -52,12 +52,34 @@ const installExtensions = async () => {
 
 function createWindow() {
   let settings = require("./api/settings").GetSettings();
+  let iconPath = "";
+  if (process.env.NODE_ENV === "development") {
+    iconPath = path.join(
+      configuration.GetAppDataDirectory(),
+      "tray",
+      "Nexus_App_Icon_64.png"
+    );
+  } else if (process.platform == "darwin") {
+    iconPath = path.join(
+      configuration.GetAppResourceDir(),
+      "images",
+      "tray",
+      "nexuslogo.ico"
+    );
+  } else {
+    iconPath = path.join(
+      configuration.GetAppResourceDir(),
+      "images",
+      "tray",
+      "Nexus_App_Icon_64.png"
+    );
+  }
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
     width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
     height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
-    icon: configuration.GetAppDataDirectory() + "tray/Nexus_App_Icon_64.png",
+    icon: iconPath,
     backgroundColor: "#232c39",
     show: false
   });

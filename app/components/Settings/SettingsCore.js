@@ -35,6 +35,9 @@ class SettingsCore extends Component {
     this.setManualDaemonPassword(settings);
     this.setManualDaemonIP(settings);
     this.setManualDaemonPort(settings);
+    this.setManualDaemonDataDir(settings);
+    this.setEnableMining(settings);
+    this.setEnableStaking(settings);
     this.setMapPortUsingUpnp(settings);
     this.setSocks4Proxy(settings);
     this.setSocks4ProxyIP(settings);
@@ -49,6 +52,30 @@ class SettingsCore extends Component {
     setTimeout(() => {
       this.props.CloseModal();
     }, 2000);
+  }
+
+  /// Set Enable Mining
+  /// Sets the HTML element toggle for Enable Mining
+  setEnableMining(settings) {
+    var enableMining = document.getElementById("enableMining");
+
+    if (settings.enableMining == true) {
+      enableMining.checked = true;
+    } else {
+      enableMining.checked = false;
+    }
+  }
+
+  /// Set Enable Staking
+  /// Sets the HTML element toggle for Enable Staking
+  setEnableStaking(settings) {
+    var enableStaking = document.getElementById("enableStaking");
+
+    if (settings.enableStaking == true) {
+      enableStaking.checked = true;
+    } else {
+      enableStaking.checked = false;
+    }
   }
 
   /// Set Manual Daemon
@@ -120,6 +147,18 @@ class SettingsCore extends Component {
       manualDaemonPort.value = "9336";
     } else {
       manualDaemonPort.value = settings.manualDaemonPort;
+    }
+  }
+
+  /// Set Manual Daemon Data Directory
+  /// Sets the HTML element toggle for ManualDaemonDatadir
+  setManualDaemonDataDir(settings) {
+    var manualDaemonDatadir = document.getElementById("manualDaemonDatadir");
+
+    if (settings.manualDaemonDatadir === undefined) {
+      manualDaemonDatadir.value = "Nexus_trit";
+    } else {
+      manualDaemonDatadir.value = settings.manualDaemonDatadir;
     }
   }
 
@@ -204,6 +243,30 @@ class SettingsCore extends Component {
     }
   }
 
+  /// Update Enable Mining
+  /// Update Settings with the users Input
+  updateEnableMining(event) {
+    var el = even.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.enableMining = el.checked;
+
+    settings.SaveSettings(settingsObj);
+  }
+
+  /// Update Enable Staking
+  /// Update Settings with the users Input
+  updateEnableStaking(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.enableStaking = el.checked;
+
+    settings.SaveSettings(settingsObj);
+  }
+
   /// Update Manual Daemon
   /// Update the Settings for the ManualDaemon
   updateManualDaemon(event) {
@@ -274,6 +337,18 @@ class SettingsCore extends Component {
     var settingsObj = settings.GetSettings();
 
     settingsObj.manualDaemonPort = el.value;
+
+    settings.SaveSettings(settingsObj);
+  }
+
+  /// Update Manual Deamon Data Directory
+  /// Update the Settings for the ManualDaemonDatadir
+  updateManualDaemonDatadir(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.manualDaemonDatadir = el.value;
 
     settings.SaveSettings(settingsObj);
   }
@@ -365,6 +440,28 @@ class SettingsCore extends Component {
 
         <form className="aligned">
           <div className="field">
+            <label htmlFor="enableMining">Enable Mining</label>
+            <input
+              id="enableMining"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateEnableMining}
+              data-tooltip="Enable/Disable mining to the wallet"
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="enableStaking">Enable Staking</label>
+            <input
+              id="enableStaking"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateEnableStaking}
+              data-tooltip="Enable/Disable staking on the wallet"
+            />
+          </div>
+
+          <div className="field">
             <label htmlFor="manualDaemon">Manual Daemon Mode</label>
             <input
               id="manualDaemon"
@@ -417,6 +514,17 @@ class SettingsCore extends Component {
                 size="3"
                 onChange={this.updateManualDaemonPort}
                 data-tooltip="Port configured for manual daemon"
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="manualDaemonDatadir">Data Directory Name</label>
+              <input
+                id="manualDaemonDatadir"
+                type="text"
+                size="12"
+                onChange={this.updateManualDaemonDatadir}
+                data-tooltip="Data directory configured for manual daemon"
               />
             </div>
           </div>

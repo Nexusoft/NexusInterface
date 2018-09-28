@@ -72,8 +72,9 @@ class Fast extends Component {
     if (
       this.props.to &&
       this.props.from &&
-      this.props.from !== this.props.to &&
-      !this.props.busyFlag
+      this.props.from !== this.props.to
+      //  &&
+      // !this.props.busyFlag
     ) {
       if (this.props.availablePair) {
         return (

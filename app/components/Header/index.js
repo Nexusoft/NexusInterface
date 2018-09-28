@@ -120,25 +120,62 @@ class Header extends Component {
   setupTray() {
     let trayImage = "";
     let mainWindow = electron.remote.getCurrentWindow();
-
-    if (process.platform == "darwin") {
-      trayImage =
-        configuration.GetAppDataDirectory() +
-        "tray/Nexus_Tray_Icon_Template_16.png";
+    console.log(electron.remote.getCurrentWindow());
+    const path = require("path");
+    if (process.env.NODE_ENV === "development") {
+      if (process.platform == "darwin") {
+        trayImage = path.join(
+          configuration.GetAppDataDirectory(),
+          "tray",
+          "Nexus_Tray_Icon_Template_16.png"
+        );
+      } else {
+        trayImage = path.join(
+          configuration.GetAppDataDirectory(),
+          "tray",
+          "Nexus_Tray_Icon_32.png"
+        );
+      }
     } else {
-      trayImage =
-        configuration.GetAppDataDirectory() + "tray/Nexus_Tray_Icon_32.png";
+      if (process.platform == "darwin") {
+        trayImage = path.join(
+          configuration.GetAppResourceDir(),
+          "images",
+          "tray",
+          "Nexus_Tray_Icon_Template_16.png"
+        );
+      } else {
+        trayImage = path.join(
+          configuration.GetAppResourceDir(),
+          "images",
+          "tray",
+          "Nexus_Tray_Icon_32.png"
+        );
+      }
     }
 
     tray = new electron.remote.Tray(trayImage);
     // tray.setToolTip("the nexus interface");
-    if (process.platform == "darwin") {
+    if (process.env.NODE_ENV === "development") {
+      if (process.platform == "darwin") {
+        tray.setPressedImage(
+          path.join(
+            configuration.GetAppDataDirectory(),
+            "tray",
+            "Nexus_Tray_Icon_Highlight_16.png"
+          )
+        );
+      }
+    } else {
       tray.setPressedImage(
-        configuration.GetAppDataDirectory() +
-          "tray/Nexus_Tray_Icon_Highlight_16.png"
+        path.join(
+          configuration.GetAppResourceDir(),
+          "images",
+          "tray",
+          "Nexus_Tray_Icon_Highlight_16.png"
+        )
       );
     }
-
     tray.on("double-click", () => {
       mainWindow.show();
     });
@@ -244,7 +281,7 @@ class Header extends Component {
   checkIfPortOpen() {
     const isPortAvailable = require("is-port-available");
 
-    var port = 8325;
+    var port = 9336;
     isPortAvailable(port).then(status => {
       if (status) {
         this.props.SetPortIsAvailable(true);
@@ -408,6 +445,7 @@ class Header extends Component {
           {this.modalinternal()}
         </Modal>
         {this.returnIfPortAvailable()}
+
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />

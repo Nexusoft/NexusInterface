@@ -1,7 +1,7 @@
 {
   "name": "nexus-interface",
-  "productName": "nexus interface electron wallet",
-  "version": "0.4.1",
+  "productName": "nexus-interface",
+  "version": "0.6.0",
   "description": "nexus interface electron wallet",
   "main": "./main.prod.js",
   "author": {

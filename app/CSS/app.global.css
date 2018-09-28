@@ -59,7 +59,7 @@
     rgba(17, 17, 17, 0)
   );
 
-  --background-main-image: url("../images/background/starrynight.jpeg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
+  --background-main-image: url("../images/background/starrynight.jpg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
 
   /* FONTS */
   --font-1: "Lato"; /* <-- Sourced Above in First @font-face*/
