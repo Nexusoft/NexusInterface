@@ -163,3 +163,28 @@ svg {
   padding-right: 20px;
   filter: var(--footer);
 }
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+  #app-content-container {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

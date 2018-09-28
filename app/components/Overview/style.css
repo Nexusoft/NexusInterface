@@ -144,13 +144,6 @@ MEDIA QUERIES
   #overviewPage {
     margin: 0 -30px;
   }
-  #logo {
-    margin: 1em 0 .5em 0;
-  }
-  #settings-menu {
-    top: 6em;
-    right: 105px;
-  }
   canvas{
     position:absolute;
     width: 100%;

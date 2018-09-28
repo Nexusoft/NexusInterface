@@ -58,3 +58,24 @@ Panel
   filter: initial;
   margin: 0;
 }
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

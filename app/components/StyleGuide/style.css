@@ -284,21 +284,23 @@ Switched
 	--field-align-label-width: 45%;
 }
 
-/*
-Media Queries
-=====================================
-*/
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
 
-/* @media (min-width: 1200px) {
-	#colors {--column-width: 8;}
-	#headers {--column-width: 8;}
-	#forms-aligned {--column-width: 8;}
-	#buttons {--column-width: 8;}
+@media (min-width: 300px) {
 }
-
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
 @media (min-width: 1600px) {
-	#colors {--column-width: 6;}
-	#headers {--column-width: 6;}
-	#forms-aligned {--column-width: 6;}
-	#buttons {--column-width: 6;}
-} */
+}

@@ -307,3 +307,33 @@
 .dt:hover {
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.24), 0 0 5px 5px rgba(0, 0, 0, 0.19);
 }
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+  #sendrecieve > .panel {
+    padding-left: 0;
+  }
+  h2 {
+    padding-top: 20px;
+  }
+  #sendrecieve h2 img  {
+    display: none;
+  }
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}
