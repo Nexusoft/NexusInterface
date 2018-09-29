@@ -45,7 +45,8 @@ const mapStateToProps = state => {
     ...state.transactions,
     ...state.common,
     ...state.overview,
-    ...state.addressbook
+    ...state.addressbook,
+    ...state.settings
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -634,13 +635,15 @@ class Transactions extends Component {
   saveCSV(DataToSave) {
     const rows = []; //Set up a blank array for each row
 
+    let currencyValueLable = this.props.settings.fiatCurrency + " Value";
+
     //This is so we can have named columns in the export, this will be row 1
     let NameEntry = [
       "Number",
       "Account",
       "Address",
       "Amount",
-      "USD Value",
+      currencyValueLable,
       "BTC Value",
       "Type",
       "Time",
