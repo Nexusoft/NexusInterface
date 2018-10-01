@@ -17,7 +17,7 @@ const mapDispatchToProps = dispatch => ({
   setErrorMessage: message =>
     dispatch({ type: TYPE.SET_ERROR_MESSAGE, payload: message }),
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
   setTime: time => dispatch({ type: TYPE.SET_TIME, payload: time })
@@ -52,7 +52,7 @@ class Login extends Component {
         hoursAndMin +
         (unlockDate.getTime() - today.getTime()) / 1000
     );
-    this.props.busy();
+    this.props.busy(true);
 
     // if (this.props.stakingFlag) {
     //
@@ -91,7 +91,7 @@ class Login extends Component {
             return payload;
           })
           .then(payload => {
-            // this.props.busy();
+            this.props.busy(false);
             this.props.getInfo(payload);
           });
       })
@@ -172,7 +172,7 @@ class Login extends Component {
                 e.preventDefault();
                 this.handleSubmit();
               }}
-              // disabled={this.props.busyFlag}
+              disabled={this.props.busyFlag}
             />
           </p>
         </form>

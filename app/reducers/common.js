@@ -58,7 +58,7 @@ export default (state = initialState, action) => {
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
         ...state,
-        busyFlag: !state.busyFlag
+        busyFlag: action.payload
       };
       break;
     case TYPE.UNLOCK:

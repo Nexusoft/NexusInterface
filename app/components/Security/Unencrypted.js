@@ -15,7 +15,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   }
@@ -102,6 +102,7 @@ class Unencrypted extends Component {
                 pass.value = "";
                 newPass.value = "";
                 passChk.value = "";
+                this.props.busy(false);
                 this.props.OpenModal("Wallet has been encrypted.");
                 this.props.history.push();
               }
@@ -192,7 +193,7 @@ class Unencrypted extends Component {
                     required
                   />
                   <button
-                    // disabled={this.props.busyFlag}
+                    disabled={this.props.busyFlag}
                     className="button primary"
                     onClick={e => this.showPrivKey(e)}
                   >
@@ -206,7 +207,7 @@ class Unencrypted extends Component {
                 <div className="expander">
                   <input type="password" id="privKeyOutput" />
                   <button
-                    // disabled={this.props.busyFlag}
+                    disabled={this.props.busyFlag}
                     className="button"
                     onClick={e => this.copyPrivkey(e)}
                   >
@@ -245,7 +246,7 @@ class Unencrypted extends Component {
               </div>
               <p>
                 <button
-                  // disabled={this.props.busyFlag}
+                  disabled={this.props.busyFlag}
                   className="button primary"
                   onClick={e => this.importPrivKey(e)}
                 >

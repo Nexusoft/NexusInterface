@@ -17,9 +17,9 @@ export const toggleWithinBounds = () => {
   };
 };
 
-export const setBusyFlag = () => {
+export const setBusyFlag = setting => {
   return dispatch => {
-    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
+    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting });
   };
 };
 
@@ -194,15 +194,15 @@ export const GetPairMarketInfo = pair => {
         if (response.statusCode === 200) {
           if (!response.body.error) {
             dispatch({ type: TYPE.MARKET_PAIR_DATA, payload: response.body });
-            dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
+            dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: false });
           }
         } else if (
           response.body.error ===
           "That pair is temporarily unavailable for trades."
         ) {
           dispatch({ type: TYPE.AVAILABLE_PAIR_FLAG, payload: false });
-          dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
-        } else dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
+          dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: false });
+        } else dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: false });
       }
     );
   };
