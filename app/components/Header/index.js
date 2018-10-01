@@ -46,7 +46,6 @@ class Header extends Component {
       encryptionStatus = true;
     }
 
-    console.log("whatup");
     this.props.SetMarketAveData();
     this.props.LoadAddressBook();
 
@@ -402,6 +401,12 @@ class Header extends Component {
         break;
       case "Copied":
         return <h2>Copied</h2>;
+        break;
+      case "Style Settings Saved":
+        return <h2>Style Settings Saved</h2>;
+        break;
+      case "Core Settings Saved":
+        return <h2>Core Settings Saved</h2>;
         break;
       default:
         "";
