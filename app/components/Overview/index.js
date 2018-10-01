@@ -329,6 +329,48 @@ class Overview extends Component {
   numberWithCommas = x => {
     if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
+  calculateUSDvalue() {
+    let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
+      if (ele.name === "USD") {
+        return ele;
+      }
+    });
+
+    let USDvalue = this.props.balance * selectedCurrancyValue[0].price;
+
+    if (USDvalue === 0) {
+      USDvalue = `${USDvalue}.00`;
+    } else {
+      USDvalue = USDvalue.toFixed(2);
+    }
+    return `$${USDvalue}`;
+  }
+  marketPriceFormatter() {
+    let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
+      if (ele.name === "$") {
+        return ele;
+      }
+    });
+    return selectedCurrancyValue[0].price;
+  }
+
+  marketCapFormatter() {
+    let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
+      if (ele.name === "$") {
+        return ele;
+      }
+    });
+    return selectedCurrancyValue[0].marketCap;
+  }
+
+  pctChange24hrFormatter() {
+    let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
+      if (ele.name === "$") {
+        return ele;
+      }
+    });
+    return selectedCurrancyValue[0].changePct24Hr;
+  }
   render() {
     return (
       <div id="overviewPage">
@@ -428,7 +470,7 @@ class Overview extends Component {
               Market Price <span className="h2-nospace">(USD)</span>
             </div>
             <img src={marketicon} />
-            <div className="overviewValue">${this.props.USD.toFixed(2)}</div>
+            <div className="overviewValue">{this.marketPriceFormatter()}</div>
           </div>
 
           <div
@@ -439,12 +481,7 @@ class Overview extends Component {
               Market Cap <span className="h2-nospace">(USD)</span>
             </div>
             <img src={supplyicon} />
-            <div className="overviewValue">
-              $
-              {this.numberWithCommas(
-                (this.props.circulatingSupply * this.props.USD).toFixed(0)
-              )}
-            </div>
+            <div className="overviewValue">{this.marketCapFormatter()}</div>
           </div>
 
           <div
@@ -455,7 +492,9 @@ class Overview extends Component {
               24hr Change <span className="h2-nospace">(USD %)</span>
             </div>
             <img src={hours24icon} />
-            <div className="overviewValue">{this.props.USDpercentChange}%</div>
+            <div className="overviewValue">
+              {this.pctChange24hrFormatter()}%
+            </div>
           </div>
         </div>
         {this.returnIfGlobeEnabled()}
