@@ -19,7 +19,11 @@ const initialState = {
   portAvailable: false,
   Search: "",
   contactSearch: "",
-  rpcCallList: []
+  rpcCallList: [],
+  rawBTCvalues: [],
+  rawNXSvalues: [],
+  displayBTCvalues: [],
+  displayNXSvalues: []
 };
 
 export default (state = initialState, action) => {
@@ -54,7 +58,7 @@ export default (state = initialState, action) => {
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
         ...state,
-        busyFlag: !state.busyFlag
+        busyFlag: action.payload
       };
       break;
     case TYPE.UNLOCK:
@@ -164,14 +168,22 @@ export default (state = initialState, action) => {
         portAvailable: action.payload
       };
       break;
-      case TYPE.ADD_RPC_CALL:
+    case TYPE.ADD_RPC_CALL:
       let oldArray = state.rpcCallList;
       oldArray.push(action.payload);
-      return{
+      return {
         ...state,
         rpcCallList: oldArray
       };
-
+    case TYPE.SET_MKT_AVE_DATA:
+      return {
+        ...state,
+        displayBTCvalues: action.payload.displayBTC,
+        rawBTCvalues: action.payload.rawBTC,
+        displayNXSvalues: action.payload.displayNXS,
+        rawNXSvalues: action.payload.rawNXS
+      };
+      break;
     default:
       return state;
   }

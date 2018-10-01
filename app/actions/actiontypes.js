@@ -51,6 +51,7 @@ export const BLOCK_DATE = "BLOCK_DATE";
 export const PORT_AVAILABLE = "PORT_AVAILABLE";
 export const CLEAR_SEARCHBAR = "CLEAR_SEARCHBAR";
 export const ADD_RPC_CALL = "ADD_RPC_CALL";
+export const SET_MKT_AVE_DATA = "SET_MKT_AVE_DATA";
 
 // Send
 export const ADD_TO_QUEUE = "ADD_TO_QUEUE";

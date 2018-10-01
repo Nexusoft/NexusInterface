@@ -8,17 +8,18 @@ var responding = false;
 
 var user = "rpcserver";
 var password = require("crypto")
-      .randomBytes(32)
-      .toString("hex");
-var host;
-var port;
-var ip;
+  .randomBytes(32)
+  .toString("hex");
 
+var port = "9336";
+var ip = "127.0.0.1";
+var host = "http://" + ip + ":" + port;
 //Set data directory by OS for automatic daemon mode
 if (process.platform === "win32") {
   var datadir = process.env.APPDATA + "\\nexus-interface";
 } else if (process.platform === "darwin") {
-  var datadir = process.env.HOME + "/Library/Application\ Support/nexus-interface";
+  var datadir =
+    process.env.HOME + "/Library/Application Support/nexus-interface";
 } else {
   var datadir = process.env.HOME + "/.config/nexus-interface";
 }
@@ -31,11 +32,11 @@ function SetCoreParameters(settings) {
   let ip, port;
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
-     ip =
+    ip =
       settings.manualDaemonIP === undefined
         ? "127.0.0.1"
         : settings.manualDaemonIP;
-     port =
+    port =
       settings.manualDaemonPort === undefined
         ? "9336"
         : settings.manualDaemonPort;
@@ -58,9 +59,8 @@ function SetCoreParameters(settings) {
     port = "9336";
     ip = "127.0.0.1";
     host = "http://" + ip + ":" + port;
-
   }
-
+  //
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push("-rpcuser=" + user);
   parameters.push("-rpcpassword=" + password);
@@ -84,7 +84,7 @@ function SetCoreParameters(settings) {
     parameters.push("-mining=1");
     parameters.push("-llpallowip=127.0.0.1:9336");
   }
-
+  // :9336
   // Enable staking (default is 0)
   if (settings.enableStaking == true) parameters.push("-stake=1");
 
@@ -106,11 +106,7 @@ function GetCoreBinaryPath() {
   const path = require("path");
   var coreBinaryPath = path.join(
     configuration.GetAppResourceDir(),
-    "cores/nexus" +
-    "-" +
-    process.platform +
-    "-" +
-    process.arch
+    "cores/nexus" + "-" + process.platform + "-" + process.arch
   );
   if (process.platform === "win32") {
     coreBinaryPath += ".exe";
