@@ -330,46 +330,62 @@ class Overview extends Component {
     if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
   calculateUSDvalue() {
-    let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
-      if (ele.name === "USD") {
-        return ele;
+    if (this.props.rawNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
+        if (ele.name === "USD") {
+          return ele;
+        }
+      });
+
+      let USDvalue = this.props.balance * selectedCurrancyValue[0].price;
+
+      if (USDvalue === 0) {
+        USDvalue = `${USDvalue}.00`;
+      } else {
+        USDvalue = USDvalue.toFixed(2);
       }
-    });
-
-    let USDvalue = this.props.balance * selectedCurrancyValue[0].price;
-
-    if (USDvalue === 0) {
-      USDvalue = `${USDvalue}.00`;
+      return `$${USDvalue}`;
     } else {
-      USDvalue = USDvalue.toFixed(2);
+      return "$0";
     }
-    return `$${USDvalue}`;
   }
   marketPriceFormatter() {
-    let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
-      if (ele.name === "$") {
-        return ele;
-      }
-    });
-    return selectedCurrancyValue[0].price;
+    if (this.props.displayNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
+        if (ele.name === "$") {
+          return ele;
+        }
+      });
+      return selectedCurrancyValue[0].price;
+    } else {
+      return "$0";
+    }
   }
 
   marketCapFormatter() {
-    let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
-      if (ele.name === "$") {
-        return ele;
-      }
-    });
-    return selectedCurrancyValue[0].marketCap;
+    if (this.props.displayNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
+        if (ele.name === "$") {
+          return ele;
+        }
+      });
+      return selectedCurrancyValue[0].marketCap;
+    } else {
+      return "$0";
+    }
   }
 
   pctChange24hrFormatter() {
-    let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
-      if (ele.name === "$") {
-        return ele;
-      }
-    });
-    return selectedCurrancyValue[0].changePct24Hr;
+    if (this.props.displayNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
+        if (ele.name === "$") {
+          return ele;
+        }
+      });
+      return selectedCurrancyValue[0].changePct24Hr;
+    } else {
+      return "0";
+    }
   }
   render() {
     return (
