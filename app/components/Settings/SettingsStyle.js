@@ -177,6 +177,7 @@ class SettingsStyle extends Component {
 
   SaveSettings() {
     require("../../api/settings.js").SaveSettings(this.props.settings);
+    this.props.OpenModal("Style Settings Saved");
   }
 
   render() {

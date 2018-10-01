@@ -48,7 +48,7 @@ class SettingsCore extends Component {
 
   componentWillUnmount() {
     this.props.setSettings(require("../../api/settings.js").GetSettings());
-    this.props.OpenModal("Settings saved");
+    this.props.OpenModal("Core Settings Saved");
     setTimeout(() => {
       this.props.CloseModal();
     }, 2000);
