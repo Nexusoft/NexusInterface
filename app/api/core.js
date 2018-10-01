@@ -132,42 +132,6 @@ function CoreBinaryExists() {
   }
 }
 
-// rpcGet: Send a message to the RPC
-function rpcGet(command, args, callback) {
-  var postdata = JSON.stringify({
-    method: command,
-    params: args
-  });
-  rpcPost(host, postdata, "TAG-ID-deprecate", callback, user, password);
-}
-
-// rpcPost: Send a message to the RPC
-function rpcPost(
-  address,
-  postdata,
-  tagid,
-  callback,
-  username,
-  passwd,
-  content
-) {
-  var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-  var response = new XMLHttpRequest();
-  /** Handle the Tag ID being omitted. **/
-  if (tagid == undefined) tagid = "";
-  /** Establish the Callback Function. **/
-  response.onreadystatechange = function() {
-    if (callback != undefined) callback(response, address, postdata, tagid);
-  };
-  /** Generate the AJAX Request. **/
-  if (username == undefined && passwd == undefined)
-    response.open("POST", address, true);
-  else response.open("POST", address, true, username, passwd);
-  if (content !== undefined) response.setRequestHeader("Content-type", content);
-  /** Send off the Post Data. **/
-  response.send(postdata);
-}
-
 class Core extends EventEmitter {
   constructor() {
     super();
@@ -191,26 +155,6 @@ class Core extends EventEmitter {
     return responding;
   }
 
-  // checkresponding: Check if the core is responding to incoming RPC requests
-  checkresponding() {
-    var _this = this;
-    rpcGet("getinfo", [], function(response, address, postdata) {
-      if (response.readyState != 4) return;
-      if (response.status != 200) {
-        log.info("Core Manager: Waiting for core to respond for requests");
-        setTimeout(function() {
-          _this.checkresponding();
-        }, statusdelay);
-      } else {
-        log.info("Core Manager: Core is ready for requests");
-        responding = true;
-        _this.emit("started");
-      }
-    });
-    return;
-  }
-
-  // start: Start up the core with necessary parameters and return the spawned process
   start() {
     if (coreprocess != null) return;
     let settings = require("./settings").GetSettings();

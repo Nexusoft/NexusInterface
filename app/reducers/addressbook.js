@@ -540,11 +540,11 @@ export default (state = initialState, action) => {
         }
       });
       if(indexof == -1) {
-        // not in the addressbook, so make it!
+        // contact not in the addressbook, so make it!
         console.log("Not in there so make it");
       }
       else {
-        // it is in the address book so update it!
+        // contact is in the address book so update it!
         console.log("contact exists update it");
       }
       return state;

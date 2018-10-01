@@ -671,7 +671,7 @@ class SendRecieve extends Component {
                 >
                   {this.accountChanger()}
                 </select>{" "}
-                <p>
+                <div>
                   <label>Nexus Address</label>{" "}
                   <div className="Addresslookup">
                     <span className="tooltip top">Lookup Address</span>
@@ -692,8 +692,8 @@ class SendRecieve extends Component {
                     onChange={e => this.props.updateAddress(e.target.value)}
                     required
                   />
-                </p>
-                <p>
+                </div>
+                <div>
                   {" "}
                   <div className="convertor">
                     <label>Nexus Amount</label>{" "}
@@ -722,8 +722,8 @@ class SendRecieve extends Component {
                       required
                     />
                   </div>
-                </p>
-                <p>
+                </div>
+                <div>
                   <label>Message</label>
 
                   <textarea
@@ -734,7 +734,7 @@ class SendRecieve extends Component {
                     cols="41"
                     placeholder="Enter Your Message"
                   />
-                </p>
+                </div>
                 <div id="left-buttons">
                   {this.editQueue()}
                   <input
@@ -763,9 +763,11 @@ class SendRecieve extends Component {
                 </p>
                 <table className="table">
                   <thead className="thead">
-                    <th>Address</th>
-                    <th>Amount</th>
-                    <th>Remove</th>
+                    <tr>
+                      <th>Address</th>
+                      <th>Amount</th>
+                      <th>Remove</th>
+                    </tr>
                   </thead>
                   {this.fillQueue()}
                 </table>
@@ -793,9 +795,9 @@ class SendRecieve extends Component {
                       this.props.OpenModal2("Clear Queue?");
                     }}
                   />
-                  <p>
+                  <div>
                     <div className="counter">{this.addAmount()} </div>
-                  </p>
+                  </div>
                 </foot>{" "}
               </div>{" "}
             </div>
