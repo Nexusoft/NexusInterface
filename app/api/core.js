@@ -82,7 +82,7 @@ function SetCoreParameters(settings) {
   // Enable mining (default is 0)
   if (settings.enableMining == true) {
     parameters.push("-mining=1");
-    parameters.push("-llpallowip=127.0.0.1");
+    parameters.push("-llpallowip=127.0.0.1:9336");
   }
   // :9336
   // Enable staking (default is 0)
