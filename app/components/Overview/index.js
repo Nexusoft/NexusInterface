@@ -68,10 +68,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   setExperimentalWarning: save =>
     dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
-  setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
-  setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
-  set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
-  setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate }),
+
+  // setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
+  // setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
+  // set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
+  // setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate }),
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
   acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
   toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
@@ -86,20 +87,6 @@ class Overview extends Component {
     if (this.props.googleanalytics != null) {
       this.props.googleanalytics.SendScreen("Overview");
     }
-    Request(
-      {
-        url: "https://api.coinmarketcap.com/v2/ticker/789/?convert=BTC",
-        json: true
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          this.props.setBTC(body.data.quotes.BTC.price);
-          this.props.set24hrChange(body.data.quotes.USD.percent_change_24h);
-          this.props.setSupply(body.data.circulating_supply);
-          this.props.setUSD(body.data.quotes.USD.price);
-        }
-      }
-    );
   }
 
   componentWillUnmount() {

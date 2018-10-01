@@ -144,7 +144,7 @@ class SettingsCore extends Component {
     var manualDaemonPort = document.getElementById("manualDaemonPort");
 
     if (settings.manualDaemonPort === undefined) {
-      manualDaemonPort.value = "8325";
+      manualDaemonPort.value = "9336";
     } else {
       manualDaemonPort.value = settings.manualDaemonPort;
     }

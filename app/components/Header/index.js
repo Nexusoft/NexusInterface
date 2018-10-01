@@ -46,6 +46,8 @@ class Header extends Component {
       encryptionStatus = true;
     }
 
+    console.log("whatup");
+    this.props.SetMarketAveData();
     this.props.LoadAddressBook();
 
     menuBuilder.buildMenu(self);
@@ -58,10 +60,13 @@ class Header extends Component {
       self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
     }, 20000);
-    self.checkIfPortOpen();
-    checkportinterval = setInterval(function() {
-      self.checkIfPortOpen();
-    }, 10000);
+    // self.checkIfPortOpen();
+    // checkportinterval = setInterval(function() {
+    //   self.checkIfPortOpen();
+    // }, 10000);
+    self.mktData = setInterval(function() {
+      self.props.SetMarketAveData();
+    }, 900000);
 
     this.props.history.push("/");
   }
@@ -177,7 +182,10 @@ class Header extends Component {
       );
     }
     tray.on("double-click", () => {
-      mainWindow.show();
+      if (!mainWindow.isVisible()) {
+        console.log("Show Ya Dingus");
+        mainWindow.show();
+      }
     });
 
     var contextMenu = electron.remote.Menu.buildFromTemplate([
@@ -281,7 +289,7 @@ class Header extends Component {
   checkIfPortOpen() {
     const isPortAvailable = require("is-port-available");
 
-    var port = 8325;
+    var port = 9336;
     isPortAvailable(port).then(status => {
       if (status) {
         this.props.SetPortIsAvailable(true);
