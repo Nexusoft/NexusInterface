@@ -26,33 +26,35 @@ const mapDispatchToProps = dispatch => ({
 class Login extends Component {
   getMinDate() {
     const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
-    let month = tomorrow.getMonth() + 1;
+
+    let month = today.getMonth() + 1;
     if (month < 10) {
       month = "0" + month;
     }
-
-    return `${tomorrow.getFullYear()}-${month}-${tomorrow.getDate()}`;
+    let hours = today.getHours();
+    if (hours < 10) {
+      hours = "0" + hours;
+    }
+    let minutes = today.getMinutes();
+    if (minutes < 10) {
+      minutes = "0" + minutes;
+    }
+    console.log(
+      `${today.getFullYear()}-${month}-${today.getDate()}T${today.getHours()}:${today.getMinutes()}`
+    );
+    return `${today.getFullYear()}-${month}-${today.getDate()}T${hours}:${minutes}`;
   }
 
   handleSubmit() {
     const unlockDate = new Date(this.props.unlockUntillDate);
 
     const pass = document.getElementById("pass");
-    const today = new Date();
-    let tzcorrection = today.getTimezoneOffset() * 60;
-
-    let hoursAndMin = this.props.unlockUntillTime.split(":").reduce((h, m) => {
-      return parseInt(h) * 60 + parseInt(m);
-    });
-
+    let today = new Date();
     let unlockUntill = Math.round(
-      tzcorrection +
-        hoursAndMin +
-        (unlockDate.getTime() - today.getTime()) / 1000
+      (unlockDate.getTime() - today.getTime()) / 1000
     );
-    this.props.busy(true);
+    console.log(unlockUntill, pass);
+    // this.props.busy(true);
 
     // if (this.props.stakingFlag) {
     //
@@ -100,6 +102,7 @@ class Login extends Component {
           e.error.message ===
           "Error: The wallet passphrase entered was incorrect."
         ) {
+          this.props.busy(false);
           let message = e.error.message.replace("Error: ", "");
           this.props.setErrorMessage(message);
           pass.value = "";
@@ -107,6 +110,16 @@ class Login extends Component {
         }
       });
     // }
+  }
+  setUnlockDate(input) {
+    let today = new Date();
+
+    let inputDate = new Date(input);
+    inputDate = new Date(inputDate);
+
+    if (inputDate >= today) {
+      this.props.setDate(input);
+    }
   }
 
   render() {
@@ -123,24 +136,15 @@ class Login extends Component {
             <div className="field">
               <label>Unlock Untill:</label>
               <input
-                type="date"
+                type="datetime-local"
                 min={this.getMinDate()}
                 value={this.props.unlockUntillDate}
-                onChange={e => this.props.setDate(e.target.value)}
+                onChange={e => this.setUnlockDate(e.target.value)}
                 required
-                style={{ width: "100%" }}
               />
               <span className="hint">Unlock untill date is required.</span>
             </div>
-            <div className="field">
-              <input
-                type="time"
-                value={this.props.unlockUntillTime}
-                onChange={e => this.props.setTime(e.target.value)}
-                required
-                style={{ width: "100%" }}
-              />
-            </div>
+
             <div className="field">
               <label>Password:</label>
               <input
@@ -148,6 +152,7 @@ class Login extends Component {
                 placeholder="Password"
                 id="pass"
                 required
+                style={{ width: "100%" }}
               />
               <span className="hint">{this.props.errorMessage}</span>
             </div>
@@ -172,7 +177,7 @@ class Login extends Component {
                 e.preventDefault();
                 this.handleSubmit();
               }}
-              disabled={this.props.busyFlag}
+              // disabled={this.props.busyFlag}
             />
           </p>
         </form>

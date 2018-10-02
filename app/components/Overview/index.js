@@ -306,11 +306,18 @@ class Overview extends Component {
           <NetworkGlobe
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+            pillarColor={this.props.settings.customStyling.globePillarColorRGB}
+            archColor={this.props.settings.customStyling.globeArchColorRGB}
           />
         ],
         [
           <div className="maxmindCopyright">
-            <img id="hhhhhhh" src={maxmindLogo} width="100px" height="100px" />
+            <img
+              id="maxmindCopyLogo"
+              src={maxmindLogo}
+              width="100px"
+              height="100px"
+            />
             Globe includes GeoLite2
           </div>
         ]
@@ -453,7 +460,10 @@ class Overview extends Component {
             className="animated fadeInDown delay-1s"
           >
             <div className="h2">
-              Balance <span className="h2-nospace">({this.props.settings.fiatCurrency})</span>
+              Balance{" "}
+              <span className="h2-nospace">
+                ({this.props.settings.fiatCurrency})
+              </span>
             </div>
             <img src={USD} />
             <div className="overviewValue">{this.calculateUSDvalue()}</div>
@@ -473,7 +483,10 @@ class Overview extends Component {
             className="animated fadeInDown delay-1s"
           >
             <div className="h2">
-              Market Price <span className="h2-nospace">({this.props.settings.fiatCurrency})</span>
+              Market Price{" "}
+              <span className="h2-nospace">
+                ({this.props.settings.fiatCurrency})
+              </span>
             </div>
             <img src={marketicon} />
             <div className="overviewValue">{this.marketPriceFormatter()}</div>
@@ -484,7 +497,10 @@ class Overview extends Component {
             className="animated fadeInDown delay-1s"
           >
             <div className="h2">
-              Market Cap <span className="h2-nospace">({this.props.settings.fiatCurrency})</span>
+              Market Cap{" "}
+              <span className="h2-nospace">
+                ({this.props.settings.fiatCurrency})
+              </span>
             </div>
             <img src={supplyicon} />
             <div className="overviewValue">{this.marketCapFormatter()}</div>
@@ -495,7 +511,10 @@ class Overview extends Component {
             className="animated fadeInDown delay-1s"
           >
             <div className="h2">
-              24hr Change <span className="h2-nospace">({this.props.settings.fiatCurrency} %)</span>
+              24hr Change{" "}
+              <span className="h2-nospace">
+                ({this.props.settings.fiatCurrency} %)
+              </span>
             </div>
             <img src={hours24icon} />
             <div className="overviewValue">

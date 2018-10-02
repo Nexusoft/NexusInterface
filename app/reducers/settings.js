@@ -35,6 +35,8 @@ const initialState = {
       footerHover: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
       footerActive: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
       pannelBack: "rgba(47, 50, 65, 0.7)",
+      globePillarColorRGB: "rgb(0,255,255)",
+      globeArchColorRGB: "rgb(0,255,255)",
       maxMindCopyright: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
     }
   },
@@ -43,6 +45,7 @@ const initialState = {
   footerActiveRGB: "rgb(0,174,239)",
   footerHoverRGB: "rgb(0,174,239)",
   iconMenuRGB: "rgb(0,174,239)",
+
   ignoreEncryptionWarningFlag: false,
   experimentalOpen: true,
   saveSettings: false,
@@ -246,6 +249,30 @@ export default (state = initialState, action) => {
         },
         iconMenuRGB: action.payload.hex
       };
+    case TYPE.CHANGE_GLOBE_PILLAR_COLOR:
+      console.log(action.payload);
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          customStyling: {
+            ...state.settings.customStyling,
+            globePillarColorRGB: action.payload.hex
+          }
+        }
+      };
+    case TYPE.CHANGE_GLOBE_ARCH_COLOR:
+      console.log("arch" + action.payload);
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          customStyling: {
+            ...state.settings.customStyling,
+            globeArchColorRGB: action.payload.hex
+          }
+        }
+      };
     case TYPE.RESET_CUSTOM_STYLING:
       return {
         ...state,
@@ -258,7 +285,8 @@ export default (state = initialState, action) => {
         footerRGB: initialState.footerRGB,
         footerActiveRGB: initialState.footerActiveRGB,
         footerHoverRGB: initialState.footerHoverRGB,
-        iconMenuRGB: initialState.iconMenuRGB
+        iconMenuRGB: initialState.iconMenuRGB,
+        globeArchColorRGB: initialState.globeArchColorRGB
       };
       break;
     case TYPE.TOGGLE_GLOBE_RENDER:
@@ -279,7 +307,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_FIAT_CURRENCY:
       return {
         ...state,
-        settings:{
+        settings: {
           ...state.settings,
           fiatCurrency: action.payload
         }

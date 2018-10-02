@@ -47,10 +47,10 @@ export default class Footer extends Component {
             <img src={consoleImg} alt="Console" />
             <div className="tooltip top">Console</div>
           </NavLink>
-          <NavLink to="/StyleGuide">
+          {/* <NavLink to="/StyleGuide">
             <img src={styleImg} alt="Style Guide" />
             <div className="tooltip top">Style&nbsp;Guide</div>{" "}
-          </NavLink>
+          </NavLink> */}
           <NavLink to="/Exchange">
             <img src={shapeshift} alt="Exchange" />
             <div className="tooltip top">Exchange</div>

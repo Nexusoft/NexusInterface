@@ -54,6 +54,10 @@ const mapDispatchToProps = dispatch => ({
     }),
   ChangePanelColor: rgb =>
     dispatch({ type: TYPE.CHANGE_PANEL_COLOR, payload: rgb }),
+  ChangeGlobePillarColor: (setting, hex) =>
+    dispatch({ type: TYPE.CHANGE_GLOBE_PILLAR_COLOR, payload: { hex: hex } }),
+  ChangeGlobeArchColor: (setting, hex) =>
+    dispatch({ type: TYPE.CHANGE_GLOBE_ARCH_COLOR, payload: { hex: hex } }),
   ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
   ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER })
 });
@@ -76,6 +80,7 @@ class SettingsStyle extends Component {
 
   handleColorChange(color) {
     let filterSetting;
+    console.log(color);
     let H = color.hsl.h - 196.3;
     let S = 100 + (color.hsl.s * 100 - 100);
     let L = 100 + (color.hsl.l * 100 - 46.9);
@@ -86,6 +91,7 @@ class SettingsStyle extends Component {
     } else {
       filterSetting = `hue-rotate(${H}deg) brightness(${L}%) grayscale(0%) saturate(${S}%)`;
     }
+
     switch (this.props.selectedColorProp) {
       case "MC1":
         this.props.ChangeColor1(color.hex);
@@ -116,6 +122,12 @@ class SettingsStyle extends Component {
         break;
       case "footerActive":
         this.props.ChangeFooterActiveColor(filterSetting, color.hex);
+        break;
+      case "globePillar":
+        this.props.ChangeGlobePillarColor(filterSetting, color.hex);
+        break;
+      case "globeArch":
+        this.props.ChangeGlobeArchColor(filterSetting, color.hex);
         break;
       case "panel":
         let newPannelBack = `rgba(${color.rgb.r}, ${color.rgb.g}, ${
@@ -160,6 +172,12 @@ class SettingsStyle extends Component {
         break;
       case "footerActive":
         return this.props.footerActiveRGB;
+        break;
+      case "globePillar":
+        return this.props.settings.customStyling.globePillarColorRGB;
+        break;
+      case "globeArch":
+        return this.props.settings.customStyling.globeArchColorRGB;
         break;
       case "panel":
         return this.props.settings.customStyling.pannelBack;
@@ -232,6 +250,8 @@ class SettingsStyle extends Component {
                   <option value="footer">Footer Base Color</option>
                   <option value="footerHover">Footer Hover Color</option>
                   <option value="footerActive">Footer Active Color</option>
+                  <option value="globePillar">Globe Pillar Color</option>
+                  <option value="globeArch">Globe Arch Color</option>
                 </select>
               </label>
               <ChromePicker
