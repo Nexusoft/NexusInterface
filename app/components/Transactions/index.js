@@ -653,6 +653,13 @@ class Transactions extends Component {
     ];
     rows.push(NameEntry);
 
+    let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
+      if (ele.name === this.props.settings.fiatCurrency) {
+        return ele;
+      }
+    });
+
+
     //Below: add a new data entry as a new row
     for (let i = 0; i < DataToSave.length; i++) {
       //Add each column here,

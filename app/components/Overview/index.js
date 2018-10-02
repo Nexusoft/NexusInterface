@@ -57,6 +57,8 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import Request from "request";
 
+import * as helpers from "../../script/helper.js";
+
 const mapStateToProps = state => {
   return {
     ...state.overview,
@@ -121,17 +123,6 @@ class Overview extends Component {
 
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
-  }
-
-  calculateUSDvalue() {
-    let USDvalue = this.props.balance * this.props.USD;
-
-    if (USDvalue === 0) {
-      USDvalue = `${USDvalue}.00`;
-    } else {
-      USDvalue = USDvalue.toFixed(2);
-    }
-    return `$${USDvalue}`;
   }
 
   closeLicenseModal() {
@@ -332,19 +323,18 @@ class Overview extends Component {
   calculateUSDvalue() {
     if (this.props.rawNXSvalues[0]) {
       let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
-        if (ele.name === "USD") {
+        if (ele.name === this.props.settings.fiatCurrency) {
           return ele;
         }
       });
 
-      let USDvalue = this.props.balance * selectedCurrancyValue[0].price;
-
-      if (USDvalue === 0) {
-        USDvalue = `${USDvalue}.00`;
+      let currencyValue = this.props.balance * selectedCurrancyValue[0].price;
+      if (currencyValue === 0) {
+        currencyValue = `${currencyValue}.00`;
       } else {
-        USDvalue = USDvalue.toFixed(2);
+        currencyValue = currencyValue.toFixed(2);
       }
-      return `$${USDvalue}`;
+      return `${helpers.ReturnCurrencySymbol(selectedCurrancyValue[0].name,this.props.displayNXSvalues)+currencyValue}`;
     } else {
       return "$0";
     }
@@ -352,7 +342,7 @@ class Overview extends Component {
   marketPriceFormatter() {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
-        if (ele.name === "$") {
+        if (ele.name === this.props.settings.fiatCurrency) {
           return ele;
         }
       });
@@ -365,7 +355,7 @@ class Overview extends Component {
   marketCapFormatter() {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
-        if (ele.name === "$") {
+        if (ele.name === this.props.settings.fiatCurrency) {
           return ele;
         }
       });
@@ -378,7 +368,7 @@ class Overview extends Component {
   pctChange24hrFormatter() {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
-        if (ele.name === "$") {
+        if (ele.name === this.props.settings.fiatCurrency) {
           return ele;
         }
       });

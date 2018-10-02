@@ -43,20 +43,26 @@ export const SetMarketAveData = () => {
               name: ele.TOSYMBOL
             };
           });
-          let displayBTC = Object.values(body.DISPLAY.BTC).map(ele => {
+          let displayBTC = Object.values(body.RAW.BTC).map(ele => {
+            let curCode = ele.TOSYMBOL;
+            let displayEle = body.DISPLAY.NXS[curCode];
             return {
-              changePct24Hr: ele.CHANGEPCT24HOUR,
-              marketCap: ele.MKTCAP,
-              price: ele.PRICE,
-              name: ele.TOSYMBOL
+              changePct24Hr: displayEle.CHANGEPCT24HOUR,
+              marketCap: displayEle.MKTCAP,
+              price: displayEle.PRICE,
+              name: curCode,
+              symbol: displayEle.TOSYMBOL
             };
           });
-          let displayNXS = Object.values(body.DISPLAY.NXS).map(ele => {
+          let displayNXS = Object.values(body.RAW.NXS).map(ele => {            
+            let curCode = ele.TOSYMBOL;
+            let displayEle = body.DISPLAY.NXS[curCode];
             return {
-              changePct24Hr: ele.CHANGEPCT24HOUR,
-              marketCap: ele.MKTCAP,
-              price: ele.PRICE,
-              name: ele.TOSYMBOL
+              changePct24Hr: displayEle.CHANGEPCT24HOUR,
+              marketCap: displayEle.MKTCAP,
+              price: displayEle.PRICE,
+              name: curCode,
+              symbol: displayEle.TOSYMBOL
             };
           });
           dispatch({
