@@ -1,6 +1,7 @@
 import * as TYPE from "./actiontypes";
 import * as RPC from "../script/rpc";
 import config from "../api/configuration";
+import Request from "request";
 
 export const GetInfoDump = () => {
   return dispatch => {
@@ -12,6 +13,74 @@ export const GetInfoDump = () => {
       .then(payload => {
         dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload });
       });
+  };
+};
+
+export const SetMarketAveData = () => {
+  return dispatch => {
+    Request(
+      {
+        url:
+          "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=NXS,BTC&tsyms=BTC,USD,EUR,AUD,BRL,GBP,CAD,CLP,CNY,CZK,HKD,INR,JPY,KRW,MYR,MXN,NZD,PKR,RUB,SAR,SGD,ZAR,CHF,TWD,AED",
+        json: true
+      },
+      (error, response, body) => {
+        console.log(body);
+        if (response.statusCode === 200) {
+          let rawBTC = Object.values(body.RAW.BTC).map(ele => {
+            return {
+              changePct24Hr: ele.CHANGEPCT24HOUR,
+              marketCap: ele.MKTCAP,
+              price: ele.PRICE,
+              name: ele.TOSYMBOL
+            };
+          });
+          let rawNXS = Object.values(body.RAW.NXS).map(ele => {
+            return {
+              changePct24Hr: ele.CHANGEPCT24HOUR,
+              marketCap: ele.MKTCAP,
+              price: ele.PRICE,
+              name: ele.TOSYMBOL
+            };
+          });
+          let displayBTC = Object.values(body.DISPLAY.BTC).map(ele => {
+            return {
+              changePct24Hr: ele.CHANGEPCT24HOUR,
+              marketCap: ele.MKTCAP,
+              price: ele.PRICE,
+              name: ele.TOSYMBOL
+            };
+          });
+          let displayNXS = Object.values(body.DISPLAY.NXS).map(ele => {
+            return {
+              changePct24Hr: ele.CHANGEPCT24HOUR,
+              marketCap: ele.MKTCAP,
+              price: ele.PRICE,
+              name: ele.TOSYMBOL
+            };
+          });
+          dispatch({
+            type: TYPE.SET_MKT_AVE_DATA,
+            payload: {
+              rawBTC: rawBTC,
+              rawNXS: rawNXS,
+              displayBTC: displayBTC,
+              displayNXS: displayNXS
+            }
+          });
+          console.log(
+            "raw btc",
+            rawBTC,
+            "rawnxs",
+            rawNXS,
+            "dispalay btc",
+            displayBTC,
+            "display nxs",
+            displayNXS
+          );
+        }
+      }
+    );
   };
 };
 
@@ -146,6 +215,6 @@ export const LoadAddressBook = () => {
 
 export const AddRPCCall = returnCall => {
   return dispatch => {
-    dispatch({type:TYPE.ADD_RPC_CALL, payload:returnCall});
-  }
-}
+    dispatch({ type: TYPE.ADD_RPC_CALL, payload: returnCall });
+  };
+};

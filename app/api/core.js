@@ -8,17 +8,18 @@ var responding = false;
 
 var user = "rpcserver";
 var password = require("crypto")
-      .randomBytes(32)
-      .toString("hex");
-var host;
-var port;
-var ip;
+  .randomBytes(32)
+  .toString("hex");
 
+var port = "9336";
+var ip = "127.0.0.1";
+var host = "http://" + ip + ":" + port;
 //Set data directory by OS for automatic daemon mode
 if (process.platform === "win32") {
   var datadir = process.env.APPDATA + "\\nexus-interface";
 } else if (process.platform === "darwin") {
-  var datadir = process.env.HOME + "/Library/Application\ Support/nexus-interface";
+  var datadir =
+    process.env.HOME + "/Library/Application Support/nexus-interface";
 } else {
   var datadir = process.env.HOME + "/.config/nexus-interface";
 }
@@ -31,11 +32,11 @@ function SetCoreParameters(settings) {
   let ip, port;
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
-     ip =
+    ip =
       settings.manualDaemonIP === undefined
         ? "127.0.0.1"
         : settings.manualDaemonIP;
-     port =
+    port =
       settings.manualDaemonPort === undefined
         ? "9336"
         : settings.manualDaemonPort;
@@ -58,9 +59,8 @@ function SetCoreParameters(settings) {
     port = "9336";
     ip = "127.0.0.1";
     host = "http://" + ip + ":" + port;
-
   }
-
+  //
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push("-rpcuser=" + user);
   parameters.push("-rpcpassword=" + password);
@@ -84,7 +84,7 @@ function SetCoreParameters(settings) {
     parameters.push("-mining=1");
     parameters.push("-llpallowip=127.0.0.1:9336");
   }
-
+  // :9336
   // Enable staking (default is 0)
   if (settings.enableStaking == true) parameters.push("-stake=1");
 
@@ -106,11 +106,7 @@ function GetCoreBinaryPath() {
   const path = require("path");
   var coreBinaryPath = path.join(
     configuration.GetAppResourceDir(),
-    "cores/nexus" +
-    "-" +
-    process.platform +
-    "-" +
-    process.arch
+    "cores/nexus" + "-" + process.platform + "-" + process.arch
   );
   if (process.platform === "win32") {
     coreBinaryPath += ".exe";
@@ -130,42 +126,6 @@ function CoreBinaryExists() {
     log.info("Core binary does not exist: " + GetCoreBinaryPath());
     return false;
   }
-}
-
-// rpcGet: Send a message to the RPC
-function rpcGet(command, args, callback) {
-  var postdata = JSON.stringify({
-    method: command,
-    params: args
-  });
-  rpcPost(host, postdata, "TAG-ID-deprecate", callback, user, password);
-}
-
-// rpcPost: Send a message to the RPC
-function rpcPost(
-  address,
-  postdata,
-  tagid,
-  callback,
-  username,
-  passwd,
-  content
-) {
-  var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-  var response = new XMLHttpRequest();
-  /** Handle the Tag ID being omitted. **/
-  if (tagid == undefined) tagid = "";
-  /** Establish the Callback Function. **/
-  response.onreadystatechange = function() {
-    if (callback != undefined) callback(response, address, postdata, tagid);
-  };
-  /** Generate the AJAX Request. **/
-  if (username == undefined && passwd == undefined)
-    response.open("POST", address, true);
-  else response.open("POST", address, true, username, passwd);
-  if (content !== undefined) response.setRequestHeader("Content-type", content);
-  /** Send off the Post Data. **/
-  response.send(postdata);
 }
 
 class Core extends EventEmitter {
@@ -191,26 +151,6 @@ class Core extends EventEmitter {
     return responding;
   }
 
-  // checkresponding: Check if the core is responding to incoming RPC requests
-  checkresponding() {
-    var _this = this;
-    rpcGet("getinfo", [], function(response, address, postdata) {
-      if (response.readyState != 4) return;
-      if (response.status != 200) {
-        log.info("Core Manager: Waiting for core to respond for requests");
-        setTimeout(function() {
-          _this.checkresponding();
-        }, statusdelay);
-      } else {
-        log.info("Core Manager: Core is ready for requests");
-        responding = true;
-        _this.emit("started");
-      }
-    });
-    return;
-  }
-
-  // start: Start up the core with necessary parameters and return the spawned process
   start() {
     if (coreprocess != null) return;
     let settings = require("./settings").GetSettings();

@@ -33,7 +33,7 @@ class Loader extends Component {
                         <div id="proton3"></div>
                     </div>           
                 </div>
-                <div id="version">T R I T I U M</div>
+                <div id="version">Nexus Tritium Wallet</div>
             </div>
         ); 
     }

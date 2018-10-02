@@ -68,8 +68,8 @@ const mapDispatchToProps = dispatch => ({
   removeQueue: returnQueue => {
     dispatch({ type: TYPE.REMOVE_FROM_QUEUE, payload: returnQueue });
   },
-  busy: () => {
-    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
+  busy: setting => {
+    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting });
   },
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
@@ -201,7 +201,7 @@ class SendRecieve extends Component {
   }
 
   sendOne() {
-    this.props.busy();
+    this.props.busy(true);
     if (!(this.props.Address === "") && this.props.Amount > 0) {
       RPC.PROMISE("validateaddress", [this.props.Address])
         .then(payload => {
@@ -214,47 +214,47 @@ class SendRecieve extends Component {
                   this.props.Message
                 ]);
                 this.props.clearForm();
-                this.props.busy();
+                this.props.busy(false);
               } else {
                 RPC.PROMISE("sendtoaddress", [
                   this.props.Address,
                   parseFloat(this.props.Amount)
                 ]);
                 this.props.clearForm();
-                this.props.busy();
+                this.props.busy(false);
               }
             } else {
-              this.props.busy();
+              this.props.busy(false);
               this.props.OpenModal(
                 "This is an address regiestered to this wallet"
               );
             }
           } else {
-            this.props.busy();
+            this.props.busy(false);
             this.props.OpenModal("Invalid Address");
           }
         })
         .catch(e => {
-          this.props.busy();
+          this.props.busy(false);
           this.props.OpenModal("Invalid Address");
         });
     } else {
-      this.props.busy();
+      this.props.busy(false);
     }
   }
 
   sendMany() {
-    this.props.busy();
+    this.props.busy(true);
     let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 1) {
       RPC.PROMISE("sendmany", [this.props.SelectedAccount, this.props.Queue])
         .then(payoad => {
-          this.props.busy();
+          this.props.busy(false);
           this.props.clearForm();
           this.props.clearQueue();
         })
         .catch(e => {
-          this.props.busy();
+          this.props.busy(false);
         });
     } else if (Object.values(this.props.Queue)[0] > 0) {
       RPC.PROMISE("sendtoaddress", [
@@ -262,12 +262,12 @@ class SendRecieve extends Component {
         Object.values(this.props.Queue)[0]
       ])
         .then(payoad => {
-          this.props.busy();
+          this.props.busy(false);
           this.props.clearForm();
           this.props.clearQueue();
         })
         .catch(e => {
-          this.props.busy();
+          this.props.busy(false);
           this.props.OpenModal("No Addresses");
         });
     }
@@ -671,7 +671,7 @@ class SendRecieve extends Component {
                 >
                   {this.accountChanger()}
                 </select>{" "}
-                <p>
+                <div>
                   <label>Nexus Address</label>{" "}
                   <div className="Addresslookup">
                     <span className="tooltip top">Lookup Address</span>
@@ -692,8 +692,8 @@ class SendRecieve extends Component {
                     onChange={e => this.props.updateAddress(e.target.value)}
                     required
                   />
-                </p>
-                <p>
+                </div>
+                <div>
                   {" "}
                   <div className="convertor">
                     <label>Nexus Amount</label>{" "}
@@ -722,8 +722,8 @@ class SendRecieve extends Component {
                       required
                     />
                   </div>
-                </p>
-                <p>
+                </div>
+                <div>
                   <label>Message</label>
 
                   <textarea
@@ -734,7 +734,7 @@ class SendRecieve extends Component {
                     cols="41"
                     placeholder="Enter Your Message"
                   />
-                </p>
+                </div>
                 <div id="left-buttons">
                   {this.editQueue()}
                   <input
@@ -763,9 +763,11 @@ class SendRecieve extends Component {
                 </p>
                 <table className="table">
                   <thead className="thead">
-                    <th>Address</th>
-                    <th>Amount</th>
-                    <th>Remove</th>
+                    <tr>
+                      <th>Address</th>
+                      <th>Amount</th>
+                      <th>Remove</th>
+                    </tr>
                   </thead>
                   {this.fillQueue()}
                 </table>
@@ -793,9 +795,9 @@ class SendRecieve extends Component {
                       this.props.OpenModal2("Clear Queue?");
                     }}
                   />
-                  <p>
+                  <div>
                     <div className="counter">{this.addAmount()} </div>
-                  </p>
+                  </div>
                 </foot>{" "}
               </div>{" "}
             </div>
