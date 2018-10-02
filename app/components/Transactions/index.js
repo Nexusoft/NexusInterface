@@ -594,7 +594,7 @@ class Transactions extends Component {
           };
           let closestData = this.findclosestdatapoint(element2.time.toString());
           if (closestData != undefined) {
-            tempTrans.value.USD = closestData.USD;
+            tempTrans.value[this.props.settings.fiatCurrency] = closestData[this.props.settings.fiatCurrency];
             tempTrans.value.BTC = closestData.BTC;
           }
           tempWalletTransactions.push(tempTrans);
@@ -653,13 +653,6 @@ class Transactions extends Component {
     ];
     rows.push(NameEntry);
 
-    let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
-      if (ele.name === this.props.settings.fiatCurrency) {
-        return ele;
-      }
-    });
-
-
     //Below: add a new data entry as a new row
     for (let i = 0; i < DataToSave.length; i++) {
       //Add each column here,
@@ -668,7 +661,7 @@ class Transactions extends Component {
         DataToSave[i].account,
         DataToSave[i].address,
         DataToSave[i].amount,
-        (DataToSave[i].amount * DataToSave[i].value.USD).toFixed(2),
+        (DataToSave[i].amount * DataToSave[i].value[this.props.settings.fiatCurrency]).toFixed(2),
         (DataToSave[i].amount * DataToSave[i].value.BTC).toFixed(8),
         DataToSave[i].category,
         DataToSave[i].time,
@@ -1116,7 +1109,7 @@ class Transactions extends Component {
     let dataToChange = {
       time: timeID,
       value: {
-        USD: USDvalue,
+        [this.props.settings.fiatCurrency]: USDvalue,
         BTC: BTCValue
       }
     };
@@ -1132,7 +1125,7 @@ class Transactions extends Component {
       return;
     }
 
-    let USDurl = this.createcryptocompareurl("USD", inEle);
+    let USDurl = this.createcryptocompareurl([this.props.settings.fiatCurrency], inEle);
     let BTCurl = this.createcryptocompareurl("BTC", inEle);
 
     rp(USDurl).then(payload => {
@@ -1150,14 +1143,24 @@ class Transactions extends Component {
 
           this.setHistoryValuesOnTransaction(
             inEle,
-            incomingUSD["NXS"]["USD"],
+            incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
             incomingBTC["NXS"]["BTC"]
           );
           let tempHistory = this.state.historyData;
-          tempHistory.set(inEle, {
-            USD: incomingUSD["NXS"]["USD"],
-            BTC: incomingBTC["NXS"]["BTC"]
-          });
+          if (this.state.historyData.has(inEle))
+          {
+            tempHistory.set(inEle, {
+              ...this.state.historyData.get(inEle),
+              [this.props.settings.fiatCurrency]: incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
+              BTC: incomingBTC["NXS"]["BTC"]
+            });
+          }
+          else{
+            tempHistory.set(inEle, {
+              [this.props.settings.fiatCurrency]: incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
+              BTC: incomingBTC["NXS"]["BTC"]
+            });
+          }
           this.setState({
             historyData: tempHistory,
             needsHistorySave: true
@@ -1258,7 +1261,14 @@ class Transactions extends Component {
     if (datatograb == undefined) {
       return undefined;
     } else {
-      return datatograb;
+
+      if (datatograb[[this.props.settings.fiatCurrency]] == undefined)
+      {
+        return undefined;
+      }
+      else{
+        return datatograb;
+      }
     }
   }
 
