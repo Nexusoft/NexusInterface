@@ -174,10 +174,10 @@ class SettingsStyle extends Component {
         return this.props.footerActiveRGB;
         break;
       case "globePillar":
-        return this.props.globePillarColorRGB;
+        return this.props.settings.customStyling.globePillarColorRGB;
         break;
       case "globeArch":
-        return this.props.globeArchColorRGB;
+        return this.props.settings.customStyling.globeArchColorRGB;
         break;
       case "panel":
         return this.props.settings.customStyling.pannelBack;

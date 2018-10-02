@@ -328,8 +328,8 @@ class Overview extends Component {
           <NetworkGlobe
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
-            pillarColor={this.props.globePillarColorRGB}
-            archColor={this.props.globeArchColorRGB}
+            pillarColor={this.props.settings.customStyling.globePillarColorRGB}
+            archColor={this.props.settings.customStyling.globeArchColorRGB}
           />
         ],
         [
