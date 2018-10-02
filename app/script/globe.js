@@ -30,6 +30,7 @@ export default (DAT.Globe = function(container, opts) {
       c.setHSL(0.6 - x * 0.5, 1.0, 0.5); // Controls the vertical line colors
       return c;
     };
+  var colorArch = opts.colorArch || 0x00ffff;
   var imgDir = opts.imgDir || "images/";
 
   var Shaders = {
@@ -525,7 +526,7 @@ export default (DAT.Globe = function(container, opts) {
       blending: THREE.AdditiveBlending,
       opacity: 0.6,
       transparent: true,
-      color: 0x00ffff
+      color: colorArch
     });
     const curveMesh = new THREE.Mesh();
 
