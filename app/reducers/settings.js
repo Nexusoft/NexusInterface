@@ -43,6 +43,8 @@ const initialState = {
   footerActiveRGB: "rgb(0,174,239)",
   footerHoverRGB: "rgb(0,174,239)",
   iconMenuRGB: "rgb(0,174,239)",
+  globePillarColorRGB: "rgb(0,255,255)",
+  globeArchColorRGB:"rgb(0,255,255)",
   ignoreEncryptionWarningFlag: false,
   experimentalOpen: true,
   saveSettings: false,
@@ -246,6 +248,18 @@ export default (state = initialState, action) => {
         },
         iconMenuRGB: action.payload.hex
       };
+    case TYPE.CHANGE_GLOBE_PILLAR_COLOR:
+      console.log(action.payload);
+      return {
+        ...state,
+        globePillarColorRGB: action.payload.hex
+      };
+    case TYPE.CHANGE_GLOBE_ARCH_COLOR:
+      console.log("arch" + action.payload);
+      return {
+        ...state,
+        globeArchColorRGB: action.payload.hex
+      };
     case TYPE.RESET_CUSTOM_STYLING:
       return {
         ...state,
@@ -258,7 +272,9 @@ export default (state = initialState, action) => {
         footerRGB: initialState.footerRGB,
         footerActiveRGB: initialState.footerActiveRGB,
         footerHoverRGB: initialState.footerHoverRGB,
-        iconMenuRGB: initialState.iconMenuRGB
+        iconMenuRGB: initialState.iconMenuRGB,
+        globeArchColorRGB: initialState.globeArchColorRGB,
+        globePillarColorRGB: initialState.globePillarColorRGB
       };
       break;
     case TYPE.TOGGLE_GLOBE_RENDER:

@@ -5,6 +5,7 @@ import * as RPC from "../../script/rpc";
 import maxmind from "maxmind";
 import Request from "request";
 import configuration from "../../api/configuration";
+import * as THREE from "three";
 
 var glb;
 
@@ -29,7 +30,18 @@ export default class NetworkGlobe extends Component {
       );
     }
     let myIP = "";
-    glb = new DAT(this.threeRootElement);
+    let rColor = 100;
+    let gColor = 100;
+    let bColor = 100;
+    console.log(this.props.pillarColor);
+    let incomingPillarColor = this.props.pillarColor; //return new THREE.Color(incomingPillarColor.r,incomingPillarColor.g,incomingPillarColor.b)
+    let incomingArchColor = this.props.archColor;//0x006868; //this.props.archColor;
+    let globeOptions = 
+    {
+      colorFn: function(x) { return new THREE.Color(incomingPillarColor);},
+      colorArch: incomingArchColor
+    }
+    glb = new DAT(this.threeRootElement,globeOptions);
     glb.animate();
     Request(
       {

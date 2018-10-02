@@ -328,11 +328,13 @@ class Overview extends Component {
           <NetworkGlobe
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+            pillarColor = {this.props.globePillarColorRGB}
+            archColor = {this.props.globeArchColorRGB}
           />
         ],
         [
           <div className="maxmindCopyright">
-            <img id="hhhhhhh" src={maxmindLogo} width="100px" height="100px" />
+            <img id="maxmindCopyLogo" src={maxmindLogo} width="100px" height="100px" />
             Globe includes GeoLite2
           </div>
         ]
