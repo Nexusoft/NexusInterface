@@ -30,12 +30,8 @@ export default class NetworkGlobe extends Component {
       );
     }
     let myIP = "";
-    let rColor = 100;
-    let gColor = 100;
-    let bColor = 100;
-    console.log(this.props.pillarColor);
-    let incomingPillarColor = this.props.pillarColor; //return new THREE.Color(incomingPillarColor.r,incomingPillarColor.g,incomingPillarColor.b)
-    let incomingArchColor = this.props.archColor;//0x006868; //this.props.archColor;
+    let incomingPillarColor = this.props.pillarColor; 
+    let incomingArchColor = this.props.archColor;
     let globeOptions = 
     {
       colorFn: function(x) { return new THREE.Color(incomingPillarColor);},
