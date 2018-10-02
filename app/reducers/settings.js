@@ -44,7 +44,7 @@ const initialState = {
   footerHoverRGB: "rgb(0,174,239)",
   iconMenuRGB: "rgb(0,174,239)",
   globePillarColorRGB: "rgb(0,255,255)",
-  globeArchColorRGB:"rgb(0,255,255)",
+  globeArchColorRGB: "rgb(0,255,255)",
   ignoreEncryptionWarningFlag: false,
   experimentalOpen: true,
   saveSettings: false,
@@ -295,7 +295,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_FIAT_CURRENCY:
       return {
         ...state,
-        settings:{
+        settings: {
           ...state.settings,
           fiatCurrency: action.payload
         }

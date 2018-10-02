@@ -56,7 +56,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.CHANGE_PANEL_COLOR, payload: rgb }),
   ChangeGlobePillarColor: (setting, hex) =>
     dispatch({ type: TYPE.CHANGE_GLOBE_PILLAR_COLOR, payload: { hex: hex } }),
-  ChangeGlobeArchColor: (setting,hex) =>
+  ChangeGlobeArchColor: (setting, hex) =>
     dispatch({ type: TYPE.CHANGE_GLOBE_ARCH_COLOR, payload: { hex: hex } }),
   ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
   ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER })
@@ -174,10 +174,10 @@ class SettingsStyle extends Component {
         return this.props.footerActiveRGB;
         break;
       case "globePillar":
-        this.props.globePillarColorRGB;
+        return this.props.globePillarColorRGB;
         break;
       case "globeArch":
-        this.props.globeArchColorRGB;
+        return this.props.globeArchColorRGB;
         break;
       case "panel":
         return this.props.settings.customStyling.pannelBack;
