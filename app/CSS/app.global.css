@@ -1,0 +1,165 @@
+@import url("https://fonts.googleapis.com/css?family=Lato");
+
+@import "./animations/animate.css";
+
+@import "./base/normalize.css";
+@import "./base/grid.css";
+@import "./base/buttons.css";
+@import "./base/forms.css";
+@import "./base/palette.css";
+@import "./base/tables.css";
+@import "./base/text.css";
+
+@import "./controls/modal.css";
+@import "./controls/panel.css";
+@import "./controls/progress.css";
+@import "./controls/react-table.css";
+@import "./controls/switch.css";
+@import "./controls/tabs.css";
+@import "./controls/tooltip.css";
+
+@import "~font-awesome/css/font-awesome.css";
+@import "../components/Footer/style.css";
+@import "../components/Header/style.css";
+@import "../components/Addressbook/style.css";
+@import "../components/BlockExplorer/style.css";
+@import "../components/List/style.css";
+@import "../components/Market/style.css";
+@import "../components/Overview/style.css";
+@import "../components/Security/style.css";
+@import "../components/StyleGuide/style.css";
+@import "../components/SendRecieve/style.css";
+@import "../components/Settings/style.css";
+@import "../components/Terminal/style.css";
+@import "../components/Transactions/style.css";
+@import "../components/Exchange/style.css";
+@import "../components/Loader/style.css";
+@import "../../node_modules/react-activity/lib/Squares/Squares.css";
+:root {
+  /* COLOR PALETTE VARIABLES */
+  --color-1: #111111; /* <-- Dark Grey */
+  --color-2: #0ca4fb; /* <-- Nexus Blue */
+  --color-3: #556070; /* <-- Light Grey */
+  --color-4: #34495e; /* <-- Medium Grey */
+  --color-5: #ffffff; /* <-- White */
+  --nxs-logo: hue-rotate(0deg) brightness(100%) grayscale(0%);
+  --icon-menu: hue-rotate(0deg) brightness(100%) grayscale(0%);
+  --footer: hue-rotate(0deg) grayscale(100%) brightness(100%);
+  --footer-hover: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  --footer-active: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  --maxmind-copyright: hue-rotate(0deg) grayscale(0%) brightness(100%);
+  --panel-background-color: rgba(47, 50, 65, 0.7);
+  /* BACKGROUND IMAGE VARIABLES */
+  /* --background-main-gradient: linear-gradient(
+      rgba(17, 17, 17, 0.45),
+      rgba(17, 17, 17, 0.45)
+    ); */
+  --background-main-gradient: linear-gradient(
+    rgba(17, 17, 17, 0),
+    rgba(17, 17, 17, 0)
+  );
+
+  --background-main-image: url("../images/background/starrynight.jpg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
+
+  /* FONTS */
+  --font-1: "Lato"; /* <-- Sourced Above in First @font-face*/
+  --font-2: "Franklin Gothic"; /* <-- Sourced Above in Second @font-face */
+}
+
+li {
+  list-style: none;
+}
+
+body {
+  position: relative;
+  color: white;
+  height: 100vh;
+  background-color: #232c39;
+  background-image: var(--background-main-gradient),
+    var(--background-main-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* font-family: Arial, Helvetica, Helvetica Neue, serif; */
+  font-family: "Roboto", sans-serif;
+  overflow-y: hidden;
+}
+
+#root {
+  height: 100%;
+}
+
+#app {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: 85px auto 75px;
+  grid-template-areas:
+    "header"
+    "content"
+    "navigation";
+}
+
+#app-header {
+  grid-area: header;
+}
+
+#app-content {
+  grid-area: content;
+  overflow: auto;
+}
+
+#app-content-container {
+  height: 100%;
+  max-width: 80%;
+  margin: 0 auto;
+  /* position: relative; */
+}
+
+#app-navigation {
+  grid-area: navigation;
+}
+
+#app-loader {
+  grid-area: content;
+  position: absolute;
+  top: calc(50% - 190px);
+  left: calc(50% - 150px);
+  width: 300px;
+  height: 300px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Track */
+/* ::-webkit-scrollbar-track {
+} */
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--color-2);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: var(--color-2);
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+svg {
+  fill: currentColor;
+}
+
+/* Header Image */
+.hdr-img {
+  height: 35px;
+  width: 35px;
+  padding-right: 20px;
+  filter: var(--footer);
+}

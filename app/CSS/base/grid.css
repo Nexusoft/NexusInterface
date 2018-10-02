@@ -1,0 +1,37 @@
+/*
+Grid
+=================================
+*/
+
+/* Default Settings */
+
+:root {
+	--columns: 4;
+	--gutter: .8125em;
+}
+
+@media (min-width: 1200px) {
+	:root {--columns: 8;}
+}
+
+@media (min-width: 1600px) {
+	:root {--columns: 12;}
+}
+
+/* Grid Container */
+
+.grid-container{
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 calc(var(--gutter) - ( var(--gutter) * 2) ); /* remove gutter from sides so children sit flush at the sides of the container */
+	margin: 0 var(--gutter); /* add gutter so the middle and edge gutters are consistent */
+}
+   
+/* Grid Children */
+
+.grid-container > * {
+	box-sizing: border-box;
+	padding-right: calc(var(--gutter));
+	padding-left: calc(var(--gutter));
+	flex-basis: calc((100% / var(--columns)) * var(--column-width)); 
+}

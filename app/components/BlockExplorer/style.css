@@ -1,0 +1,15 @@
+#blockexplorer {
+	position: relative;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+#blockexplorer > h2 {
+	flex: 0;
+}
+
+#blockexplorer > .panel {
+	flex: 1;
+	overflow-y: auto;
+}

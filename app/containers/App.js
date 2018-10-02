@@ -1,6 +1,5 @@
-// @flow
-import React, { Component } from 'react';
-import type { Children } from 'react';
+import React, { Component } from "react";
+import type { Children } from "react";
 
 export default class App extends Component {
   props: {
@@ -8,10 +7,6 @@ export default class App extends Component {
   };
 
   render() {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    );
+    return <div id="app">{this.props.children}</div>;
   }
 }

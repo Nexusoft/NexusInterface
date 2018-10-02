@@ -1,0 +1,311 @@
+#sendrecieve {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#sendrecieve > .h2 {
+  flex: 0;
+}
+
+#sendrecieve > .panel {
+  flex: 1;
+  overflow-y: auto;
+  padding-left: 50px;
+}
+#container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+
+  flex-direction: row;
+}
+.box1 {
+  display: flex;
+}
+.box2 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+
+  /* width: 100%;
+  max-width: 100%;
+  min-width: 50%; */
+}
+.foot {
+  float: right;
+  margin-top: 10px;
+}
+.counter {
+  float: right;
+  width: auto;
+}
+/* .tbody {
+  line-height: 1em;
+  color: white;
+  display: block;
+} */
+/* .table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+} */
+
+#left-buttons {
+  padding-top: 10px;
+}
+
+.input {
+  width: 175px;
+}
+.convertor {
+  display: flex;
+}
+.UsdConvertorLabel {
+  padding-left: 80px;
+}
+.label {
+  font-size: 40px;
+  margin-top: 5px;
+  margin-bottom: 40px;
+}
+#table-wraper {
+  margin-top: 10px;
+  text-align: center;
+  width: 90%;
+  padding-bottom: 20px;
+}
+/* Generic table stylings */
+#table-wraper table {
+  max-width: 100%;
+  /* min-width: 50%; */
+  margin-top: -1%;
+  overflow: auto;
+  min-height: 300px;
+  display: block;
+}
+#table-wraper table tbody td,
+#table-wraper table thead th,
+#table-wraper table tfoot th {
+  border-width: 1px;
+  min-width: 0%;
+  width: 100%;
+}
+
+#table-wraper .tbody {
+  /* height: 299px; */
+  position: relative;
+  width: 100%;
+  border-collapse: collapse;
+  overflow: auto;
+
+  /* min-width: 50%; */
+}
+
+/* CONFIRM MODAL */
+.custom-overlay {
+  position: absolute;
+  background: #282828;
+  padding: 0px;
+}
+.custom-modal2 {
+  background: #282828;
+  animation: mymove2 0.5s ease-in-out;
+}
+
+#no-button {
+  float: right;
+}
+#ok-button {
+  float: left;
+}
+
+.thead {
+  /* width: 300px; */
+  min-width: 50%;
+}
+#Remove {
+  height: 15px;
+  width: 15px;
+}
+#Remove:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+.balance {
+  margin-left: 10px;
+}
+#select {
+  background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
+  height: 29px;
+  overflow: hidden;
+  width: 240px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background-color: var(--color-3);
+
+  width: 350px;
+  color: var(--color-5);
+  margin-bottom: -15px;
+}
+#summary {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-5);
+  text-align: right;
+}
+
+/* TABLE ANIMATION */
+.td {
+  animation: td 0.5s;
+  border: 1px solid #757272;
+  width: 40%;
+}
+.td:hover {
+  animation: td 0.5s;
+  border: 1px solid #757272;
+  width: 40%;
+}
+
+@keyframes td {
+  33% {
+    transform: translateX(-20px);
+  }
+  66% {
+    transform: translateX(10px);
+    background: #282828;
+  }
+  99% {
+    transform: translateX(0px);
+  }
+}
+
+/* MODAL ANIMATION */
+@keyframes mymove2 {
+  0% {
+    top: -100%;
+  }
+  50% {
+    top: 25%;
+  }
+
+  100% {
+    top: 0px;
+  }
+}
+
+.Addresslookup {
+  float: right;
+}
+.lookupButton:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+.lookupButton {
+  margin-left: 8px;
+  color: var(--color-5);
+  background-color: transparent;
+  height: 30px;
+  width: 30px;
+  border-color: var(--color-2);
+  border-radius: 100px;
+}
+/* AddressModal */
+.custom-overlay3 {
+  padding: 0px;
+  position: absolute;
+}
+.custom-modal3 {
+  background: #282828;
+  /* animation: mymove2 0.5s ease-in-out; */
+  height: 500px;
+
+  width: 700px;
+  max-width: 100%;
+}
+.addressModalHeader {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#addressPopulateButton:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+#addressPopulateButton {
+  padding-right: 0px;
+
+  border-radius: 10px;
+  height: 20px;
+}
+
+#AddressBookSelect:hover {
+  color: var(--color-2);
+}
+
+#AddressCancel {
+  float: right;
+}
+#InnerPopulate {
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  padding: 0px;
+  border-radius: 5px;
+}
+
+#InnerPopulate:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+#AddressTable {
+  max-width: 100%;
+  /* min-width: 50%; */
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 325px;
+  display: block;
+  width: 100%;
+  margin-top: 10%;
+}
+
+.short-column {
+  width: 10%;
+}
+.long-column {
+  width: 70%;
+}
+.searchBar {
+  width: 100%;
+  float: right;
+  height: 20px;
+  margin-top: -6.8%;
+}
+.AddressThead {
+  position: absolute;
+  margin-top: -5%;
+  width: 95%;
+}
+.tdn {
+  animation: td 0.5s;
+  border: 1px solid var(--color-2);
+  width: 20%;
+  color: var(--color-2);
+  word-wrap: none;
+}
+.dt {
+  display: flex;
+
+  width: 110%;
+}
+.tdPop {
+  align-items: flex-end;
+}
+.dt:hover {
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.24), 0 0 5px 5px rgba(0, 0, 0, 0.19);
+}

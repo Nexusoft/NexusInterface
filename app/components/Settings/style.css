@@ -1,0 +1,188 @@
+#settings {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+/* 
+#SettingsStyle {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#styleForm {
+  flex: 1;
+} */
+
+#settings > h2 {
+  flex: 0;
+}
+
+#settings > .panel {
+  flex: 1;
+  overflow-y: auto;
+}
+
+#settings > .panel > .tabs {
+  position: relative;
+}
+
+section {
+  --column-width: 6;
+  position: relative;
+  padding-top: calc(var(--gutter));
+  padding-bottom: calc(var(--gutter));
+}
+
+@media (min-width: 1200px) {
+  section {
+    --column-width: 8;
+  }
+}
+
+@media (min-width: 1600px) {
+  section {
+    --column-width: 12;
+  }
+}
+
+.clear-both {
+  clear: both;
+}
+
+/* Settings imported from PreAlpha */
+
+section {
+  --column-width: 4;
+  --field-align-label-width: 75%;
+  position: relative;
+  padding-top: calc(var(--gutter));
+  padding-bottom: calc(var(--gutter));
+}
+
+/* @media (min-width: 800px) {
+	section {--column-width: 2;}
+}
+
+@media (min-width: 1200px) {
+	section {--column-width: 4;}
+}
+
+@media (min-width: 1600px) {
+	section {--column-width: 4;}
+} */
+
+/*
+Form
+=====================================
+*/
+
+form {
+  position: relative;
+  /* padding: calc(var(--line-height) * 1em);
+	padding-top: 0; */
+  border: 1px solid transparent;
+  text-align: left;
+}
+
+.panel {
+  padding: calc(var(--line-height) * 1em);
+}
+
+.note {
+  padding: 1em;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+#settings input[type="file"] {
+  margin: 0;
+  padding: 0;
+  height: 2em;
+  background: transparent;
+  color: transparent;
+  outline: 0;
+}
+#settings input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden;
+}
+#settings input[type="file"]::before {
+  content: "Select a wallpaper";
+
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  padding: 0.4375em 1.25em;
+  vertical-align: middle;
+  line-height: var(--line-height);
+
+  outline: 0;
+  border: var(--button-border);
+  border-radius: var(--button-border-radius);
+
+  background: var(--button-background);
+  box-shadow: var(--button-box-shadow);
+  text-shadow: var(--button-text-shadow);
+
+  color: var(--button-color);
+
+  font-size: inherit;
+  font-family: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+
+  cursor: pointer;
+
+  transition: all 0.1s ease;
+}
+#settings input[type="file"]:hover::before {
+  color: var(--button-hover-color);
+  border: var(--button-hover-border);
+  background: var(--button-hover-background);
+  text-decoration: none;
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-box-shadow);
+}
+#settings input[type="file"]:active {
+  outline: 0;
+}
+.fee input[type="number"] {
+  height: 27px;
+  width: 60px;
+  border: 1.5px solid var(--color-4);
+}
+
+.fee {
+  /* This bit sets up the horizontal layout */
+  display: flex;
+  width: 100px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.Txfee {
+  display: flex;
+  /* Tell the input to use all the available space */
+  flex-grow: 1;
+  /* And hide the input's outline, so the form looks like the outline */
+}
+
+.feebutton {
+  /* Just a little styling to make it pretty */
+  border: 1px solid var(--color-4);
+  background: var(--color-4);
+  color: var(--color-5);
+  margin-left: -10%;
+}
+#no-button {
+  float: right;
+}
+#ok-button {
+  float: left;
+}
+
+#noPad {
+  margin-left: 0;
+}

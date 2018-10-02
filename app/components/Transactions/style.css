@@ -1,0 +1,85 @@
+#transactions {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#transactions > h2 {
+  flex: 0;
+}
+
+#transactions > .panel {
+  flex: 1;
+  overflow-y: auto;
+  
+  display: flex;
+  flex-direction: column;
+}
+
+#transactions-filters {
+  order: 1;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
+  margin-top: -.5em;
+  min-height: min-content;
+}
+
+#transactions-filters .filter-field {
+  flex: 1 1 auto;
+  margin-right: .75em;
+}
+
+#transactions-filters .filter-field label {
+  display: block;
+  font-size: .75em;
+  text-transform: uppercase;
+  opacity: .75;
+  letter-spacing: 1px;
+}
+
+#transactions-filters .filter-field input,
+#transactions-filters .filter-field select {
+  width: 100%;
+  max-width: 100%;
+}
+
+#transactions-filters .button {
+  margin: 0;
+  align-self: flex-end;
+  font-size: 13px;
+  line-height: 26px;
+  padding: 2px 14px;
+}
+
+#filter-address {
+  width: 20em;
+}
+
+#filter-timeframe,
+#filter-type,
+#filter-minimum {
+  flex-grow: 0 !important;
+  width: 7em;
+}
+
+#transactions-chart {
+  display: none;
+  flex: 0;
+  height: 150px;
+  margin-bottom: 1em;
+	border: 1px solid var(--border-color);
+  order: 2;
+}
+
+#transactions-details {
+  order: 3;
+  flex: 1;
+  flex-basis: auto;
+  font-size: .875em;
+}
+
+@media (min-height: 800px) {
+	#transactions-chart {display: block;}
+}

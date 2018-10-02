@@ -1,86 +1,192 @@
-/* eslint global-require: 1, flowtype-errors/show-errors: 0 */
+import {
+  app,
+  BrowserWindow,
+  remote,
+  Tray,
+  Menu,
+  ipcMain,
+  globalShortcut
+} from "electron";
+import log from "electron-log";
+import { autoUpdater } from "electron-updater";
+import MenuBuilder from "./menu";
+import core from "./api/core";
+import configuration from "./api/configuration";
+import settings from "./api/settings";
+const path = require("path");
 
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `npm run build` or `npm run build-main`, this file is compiled to
- * `./app/main.prod.js` using webpack. This gives us some performance wins.
- *
- * @flow
- */
-import { app, BrowserWindow } from 'electron';
-import MenuBuilder from './menu';
+let mainWindow;
+let tray;
+let resizeTimer;
+var keepDaemon = false;
 
-let mainWindow = null;
+// Global Objects
+global.core = core;
 
-if (process.env.NODE_ENV === 'production') {
-  const sourceMapSupport = require('source-map-support');
+// Configure Updater
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = "info";
+
+// Enable source map support
+if (process.env.NODE_ENV === "production") {
+  const sourceMapSupport = require("source-map-support");
   sourceMapSupport.install();
 }
 
-if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
-  require('electron-debug')();
-  const path = require('path');
-  const p = path.join(__dirname, '..', 'app', 'node_modules');
-  require('module').globalPaths.push(p);
-}
+require("electron-debug")();
+const p = path.join(__dirname, "..", "app", "node_modules");
+require("module").globalPaths.push(p);
 
+// Enable development tools for REACT and REDUX
 const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
+  const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = [
-    'REACT_DEVELOPER_TOOLS',
-    'REDUX_DEVTOOLS'
-  ];
-
-  return Promise
-    .all(extensions.map(name => installer.default(installer[name], forceDownload)))
-    .catch(console.log);
+  const extensions = ["REACT_DEVELOPER_TOOLS", "REDUX_DEVTOOLS"];
+  return Promise.all(
+    extensions.map(name => installer.default(installer[name], forceDownload))
+  ).catch();
 };
 
+//
+// Create Application Window
+//
 
-/**
- * Add event listeners...
- */
-
-app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
+function createWindow() {
+  let settings = require("./api/settings").GetSettings();
+  let iconPath = "";
+  if (process.env.NODE_ENV === "development") {
+    iconPath = path.join(
+      configuration.GetAppDataDirectory(),
+      "tray",
+      "Nexus_App_Icon_64.png"
+    );
+  } else if (process.platform == "darwin") {
+    iconPath = path.join(
+      configuration.GetAppResourceDir(),
+      "images",
+      "tray",
+      "nexuslogo.ico"
+    );
+  } else {
+    iconPath = path.join(
+      configuration.GetAppResourceDir(),
+      "images",
+      "tray",
+      "Nexus_App_Icon_64.png"
+    );
   }
-});
 
-
-app.on('ready', async () => {
-  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
-    await installExtensions();
-  }
-
+  // Create the main browser window
   mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728
+    width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
+    height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
+    icon: iconPath,
+    backgroundColor: "#232c39",
+    show: false
   });
 
+  // Load the index.html into the new browser window
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
+  // Show the window only once the contents finish loading, then check for updates
+  mainWindow.webContents.on("did-finish-load", function() {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
+
     mainWindow.show();
     mainWindow.focus();
+
+    //updateApplication(); // if updates are checked in app.on('ready') there is a chance the event doesn't make it to the UI if that hasn't loaded yet, this is safer
   });
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
+  // Save the window dimensions once the resize event is completed
+  mainWindow.on("resize", function(event) {
+    clearTimeout(resizeTimer);
+
+    resizeTimer = setTimeout(function() {
+      // Resize event has been completed
+      let settings = require("./api/settings");
+      var settingsObj = settings.GetSettings();
+
+      settingsObj.windowWidth = mainWindow.getBounds().width;
+      settingsObj.windowHeight = mainWindow.getBounds().height;
+
+      settings.SaveSettings(settingsObj);
+    }, 250);
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  // Emitted when the window has finished its close command.
+  mainWindow.on("closed", function(event) {});
+
+  // Event when the window is minimized
+  mainWindow.on("minimize", function(event) {
+    let settings = require("./api/settings").GetSettings();
+
+    if (settings.minimizeToTray) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+  });
+
+  // Event when the window is requested to be closed
+  mainWindow.on("close", function(event) {
+    let settings = require("./api/settings").GetSettings();
+
+    if (!app.isQuiting && settings.minimizeOnClose) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+  });
+}
+
+// Application Startup
+app.on("ready", async () => {
+  if (
+    process.env.NODE_ENV === "development" ||
+    process.env.DEBUG_PROD === "true"
+  ) {
+    await installExtensions();
+  }
+
+  createWindow();
+  core.start();
+  const ret = globalShortcut.register("Escape", function() {
+    mainWindow.setFullScreen(false);
+  });
+
+  mainWindow.on("close", function(e) {
+    const settings = require("./api/settings.js").GetSettings();
+    if (keepDaemon !== true || keepDaemon === undefined) {
+      core.stop();
+    }
+    if (settings) {
+      if (settings.minimizeToTray) {
+        e.preventDefault();
+        mainWindow.hide();
+      } else {
+        app.quit();
+      }
+    } else {
+      app.quit();
+    }
+  });
+});
+
+// Application Shutdown
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    core.stop(function() {
+      app.quit();
+    });
+  }
+  globalShortcut.unregister("Escape");
+
+  globalShortcut.unregisterAll();
+});
+
+app.on("will-quit", function() {
+  globalShortcut.unregister("Escape");
+
+  globalShortcut.unregisterAll();
 });

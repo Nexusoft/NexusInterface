@@ -1,0 +1,25 @@
+#trustlist {
+	position: relative;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+#trustlist > h2 {
+	flex: 0;
+}
+
+#trustlist > .panel {
+	flex: 1;
+	overflow-y: auto;
+}
+
+#trustlist #table-wrap {
+  height: 100%;
+  width: 100%;
+  overflow-x: auto;
+}
+
+#trustlist table {
+  margin: 0;
+}

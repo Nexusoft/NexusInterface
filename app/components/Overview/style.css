@@ -1,0 +1,158 @@
+#overviewPage {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100%;
+  margin: 0 -10%;
+}
+
+/*------------------------------------------------------------------
+[OVERVIEW MODULE Stylesheet] Overview Module CSS
+--------------------------------------------------------------------
+Table of Contents
+	I	General
+	II	Nexus Earth Visualization
+	III	Balance
+	IV	Container
+	V	Left Content - connection, Block Weight, Block Count
+	VI	Right Content - Trust Weight, Interest Weight, Stake Weight
+
+/*------------------------------------------------------------------
+	I. GENERAL
+------------------------------------------------------------------*/
+.h2 {
+  letter-spacing: 1px;
+  margin-right: -3px;
+  text-shadow: 2px 2px #111111;
+  font-weight: 800;
+}
+.h2-nospace {
+  font-size: 0.8em;
+  letter-spacing: 0px;
+  text-shadow: 2px 2px #111111;
+}
+
+.maxmindCopyright {
+  position: absolute;
+  bottom: 0px;
+  z-index: 1;
+  color: var(--color-2);
+  opacity: 0.4;
+  filter: var(--nxs-logo);
+}
+
+/*------------------------------------------------------------------
+I. NEXUS EARTH VISUALIZATION
+------------------------------------------------------------------*/
+.earth {
+  margin: 0 auto;
+  order: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  align-items: center;
+}
+#nxs-earth {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  overflow: hidden;
+}
+canvas {
+  overflow: hidden;
+}
+
+/*------------------------------------------------------------------
+II. BALANCE
+------------------------------------------------------------------*/
+.overviewValue {
+  font-size: 1.8em;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-right: -1px;
+  margin-top: 2px;
+  text-shadow: 2px 2px #111111;
+}
+
+/*------------------------------------------------------------------
+III. CONTAINER
+------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------
+IV. LEFT CONTENT - connection, Block Weight, Block Count
+------------------------------------------------------------------*/
+.left-stats {
+  display: flex;
+  width: 275px;
+  flex-direction: column;
+  align-self: center;
+  text-align: right;
+  z-index: 1;
+}
+.left-stats img {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  padding-top: 5px;
+  padding-left: 20px;
+  filter: var(--footer);
+}
+.left-stats > div {
+  margin: 1em 0;
+}
+.left-stats > div img {
+  float: right;
+}
+
+/*------------------------------------------------------------------
+V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
+------------------------------------------------------------------*/
+.right-stats {
+  display: flex;
+  width: 275px;
+  flex-direction: column;
+  align-self: center;
+  text-align: left;
+  z-index: 1;
+}
+.right-stats img {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  padding-top: 5px;
+  padding-right: 20px;
+  left: -55px;
+  filter: var(--footer);
+}
+.right-stats > div {
+  margin: 1em 0;
+}
+.right-stats > div img {
+  float: left;
+}
+#nxs-getinfo-connections-image {
+  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}
