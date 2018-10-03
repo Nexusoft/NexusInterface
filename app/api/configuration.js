@@ -148,6 +148,18 @@ configuration.GetAppDataDirectory = function() {
 
 configuration.GetAppResourceDir = function() {
   const electron = require("electron");
+  const path = require("path");
   const app = electron.app || electron.remote.app;
-  return app.getAppPath().replace(".asar", "");
+  let rawPath = path.dirname(app.getPath("exe")) + "/resources/app/";
+  if (process.platform == "win32") {
+    return path.win32.normalize(rawPath);
+  } else {
+    return path.normalize(rawPath);
+  }
 };
+
+//configuration.GetDaemonDataDir = function() {
+//  const electron = require("electron");
+//  const path = require("path");
+//  const app = electron.app || electron.remote.app;
+//  let rawPath =  path.dirname(app.getPath("appdata")) +

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
-
+import core from "../../api/core";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
@@ -36,7 +36,6 @@ class Unencrypted extends Component {
     }
   }
   coreRestart() {
-    let core = require("electron").remote.getGlobal("core");
     core.start();
   }
 

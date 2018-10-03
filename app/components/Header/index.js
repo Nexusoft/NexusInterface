@@ -59,10 +59,7 @@ class Header extends Component {
       self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
     }, 20000);
-    // self.checkIfPortOpen();
-    // checkportinterval = setInterval(function() {
-    //   self.checkIfPortOpen();
-    // }, 10000);
+
     self.mktData = setInterval(function() {
       self.props.SetMarketAveData();
     }, 900000);
@@ -181,10 +178,7 @@ class Header extends Component {
       );
     }
     tray.on("double-click", () => {
-      if (!mainWindow.isVisible()) {
-        console.log("Show Ya Dingus");
-        mainWindow.show();
-      }
+      mainWindow.show();
     });
 
     var contextMenu = electron.remote.Menu.buildFromTemplate([
@@ -197,6 +191,7 @@ class Header extends Component {
       {
         label: "Quit Nexus and Keep Daemon",
         click: function() {
+          var keepDaemon = true;
           app.isQuiting = true;
           mainWindow.close();
         }
@@ -283,21 +278,6 @@ class Header extends Component {
     } else {
       return null;
     }
-  }
-
-  checkIfPortOpen() {
-    const isPortAvailable = require("is-port-available");
-
-    var port = 9336;
-    isPortAvailable(port).then(status => {
-      if (status) {
-        this.props.SetPortIsAvailable(true);
-      } else {
-        this.props.SetPortIsAvailable(false);
-        console.log("Port " + port + " IS NOT available!");
-        console.log("Reason : " + isPortAvailable.lastError);
-      }
-    });
   }
 
   signInStatus() {
@@ -414,14 +394,6 @@ class Header extends Component {
     }
   }
 
-  returnIfPortAvailable() {
-    if (this.props.portAvailable == false) {
-      return <div className="noDaemonPort"> DAEMON NOT AVAILABLE </div>;
-    } else {
-      return null;
-    }
-  }
-
   render() {
     return (
       <div id="Header">
@@ -457,7 +429,6 @@ class Header extends Component {
         >
           {this.modalinternal()}
         </Modal>
-        {this.returnIfPortAvailable()}
 
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">

@@ -104,6 +104,7 @@ export default class MenuBuilder {
         {
           label: "Close Window Keep Daemon",
           click() {
+            var keepDaemon = true;
             remote.getCurrentWindow().close();
           }
         },
@@ -277,6 +278,7 @@ export default class MenuBuilder {
           {
             label: "Close Window Keep Daemon",
             click() {
+              var keepDaemon = true;
               remote.getCurrentWindow().close();
             }
           },
@@ -310,7 +312,7 @@ export default class MenuBuilder {
           {
             label: "Toggle &Developer Tools",
             accelerator: "Alt+Ctrl+I",
-            click: () => {
+            click: () => { 
               this.mainWindow.toggleDevTools();
             }
           }

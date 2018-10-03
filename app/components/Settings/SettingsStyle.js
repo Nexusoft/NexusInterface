@@ -80,7 +80,6 @@ class SettingsStyle extends Component {
 
   handleColorChange(color) {
     let filterSetting;
-    console.log(color);
     let H = color.hsl.h - 196.3;
     let S = 100 + (color.hsl.s * 100 - 100);
     let L = 100 + (color.hsl.l * 100 - 46.9);
@@ -91,7 +90,6 @@ class SettingsStyle extends Component {
     } else {
       filterSetting = `hue-rotate(${H}deg) brightness(${L}%) grayscale(0%) saturate(${S}%)`;
     }
-
     switch (this.props.selectedColorProp) {
       case "MC1":
         this.props.ChangeColor1(color.hex);

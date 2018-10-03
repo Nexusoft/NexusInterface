@@ -539,11 +539,10 @@ export default (state = initialState, action) => {
           return ele;
         }
       });
-      if(indexof == -1) {
+      if (indexof == -1) {
         // contact not in the addressbook, so make it!
         console.log("Not in there so make it");
-      }
-      else {
+      } else {
         // contact is in the address book so update it!
         console.log("contact exists update it");
       }

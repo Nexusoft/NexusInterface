@@ -70,11 +70,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   setExperimentalWarning: save =>
     dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
-
-  // setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
-  // setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
-  // set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
-  // setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate }),
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
   acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
   toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
@@ -341,7 +336,10 @@ class Overview extends Component {
       } else {
         currencyValue = currencyValue.toFixed(2);
       }
-      return `${helpers.ReturnCurrencySymbol(selectedCurrancyValue[0].name,this.props.displayNXSvalues)+currencyValue}`;
+      return `${helpers.ReturnCurrencySymbol(
+        selectedCurrancyValue[0].name,
+        this.props.displayNXSvalues
+      ) + currencyValue}`;
     } else {
       return "$0";
     }

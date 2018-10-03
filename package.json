@@ -1,9 +1,9 @@
 {
-  "name": "nexus-interface",
-  "productName": "Nexus Interface",
-  "version": "0.6.0",
-  "buildDate": "September 07th 2018",
-  "description": "nexus-interface",
+  "name": "nexus-tritium-beta",
+  "productName": "Nexus Tritium Wallet (Beta)",
+  "version": "0.8.0",
+  "buildDate": "October 02th 2018",
+  "description": "Nexus Tritium Wallet (Beta)",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
@@ -17,20 +17,21 @@
     "package": "npm run build && build --publish never",
     "package-all": "npm run build && build -mwl",
     "package-linux": "npm run build && build --linux",
+    "package-mac": "npm run build && build --mac",
     "package-win": "npm run build && build --win --x64",
     "prestart": "npm run build",
     "start": "cross-env NODE_ENV=production electron ./app/",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./app/main.dev",
     "start-renderer-dev": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack.config.renderer.dev.js",
-    "test": "cross-env NODE_ENV=test BABEL_DISABLE_CAsCHE=1 node --trace-warnings ./test/runTests.js",
+    "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js",
     "test-e2e": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js e2e",
     "test-watch": "npm test -- --watch",
     "version2": "node ./internals/scripts/UpdateBuildDate.js"
   },
   "browserslist": "electron 1.6",
   "build": {
-    "productName": "Nexus Interface",
-    "appId": "com.nexusearth.NexusInterface",
+    "productName": "Nexus Tritium Wallet (Beta)",
+    "appId": "com.nexusearth.NexusTritiumBeta",
     "files": [
       "dist/",
       "node_modules/",
@@ -41,15 +42,22 @@
       "resources/**/*"
     ],
     "extraResources": [
-      "./app/GeoLite2-City_20180403/**/*",
+      "./app/GeoLite2-City/**/*",
       "./app/images/tray/**/*",
       "./app/cores/**/*",
-      "./app/images/background/**/*"
+      "./app/images/background/**/*",
+      "license.txt",
+      "installerSidebar.bmp"
     ],
     "publish": {
       "provider": "github"
     },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.utilities"
+    },
     "dmg": {
+      "background": "resources/background.jpg",
       "contents": [
         {
           "x": 129,
@@ -68,8 +76,18 @@
         "nsis"
       ]
     },
-    "linux": {
-      "target": [
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "runAfterFinish": false,
+      "allowToChangeInstallationDirectory": true,
+      "menuCategory": "Nexus",
+      "installerSidebar": "installerSidebar.bmp",
+      "license": "resources/license.txt",
+      "shortcutName": "Tritium Wallet (Beta)",
+      "artifactName": "Nexus Tritium (Beta) Setup.exe"
+    },
+    "linux": { "target": [
         "deb"
       ]
     },
@@ -83,9 +101,9 @@
     "url": "git+https://github.com/Nexusoft/Nexus-Interface-React.git"
   },
   "author": {
-    "name": "Dillon Dugan",
-    "email": "dillon.dugan@nexus.io",
-    "url": "https://github.com/chentsulin"
+    "name": "The Nexus Embassy",
+    "email": "TheNexusEmbassy@nexus.io",
+    "url": "https://github.com/Nexusoft"
   },
   "license": "MIT",
   "bugs": {
@@ -186,15 +204,15 @@
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
-    "csvtojson": "^2.0.8",
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",
     "electron-directory": "0.0.3",
     "electron-log": "^2.2.17",
     "electron-updater": "^3.1.1",
     "font-awesome": "^4.7.0",
+    "getmac": "^1.4.6",
     "history": "^4.6.3",
-    "is-port-available": "^0.1.5",
+    "macaddress": "^0.2.9",
     "maxmind": "^2.6.0",
     "react": "^15.6.1",
     "react-activity": "^1.2.2",
@@ -214,9 +232,11 @@
     "redux-thunk": "^2.3.0",
     "request-promise": "^4.2.2",
     "source-map-support": "^0.4.15",
+    "systeminformation": "^3.45.6",
     "three": "^0.93.0",
     "universal-analytics": "^0.4.17",
     "victory": "^0.27.2",
+    "wait-on": "^3.0.1",
     "xmlhttprequest": "^1.8.0"
   },
   "devEngines": {

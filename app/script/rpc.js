@@ -67,25 +67,40 @@ Available RPC methods:
 **/
 export const COMMANDS = {};
 export const CALLBACK = {};
-
+import core from "../api/core";
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 export const GETHOST = () => {
-  let core = require("electron").remote.getGlobal("core");
+  // let core = require("electron").remote.getGlobal("core");
   return core.host;
 };
 
 // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
 export const GETUSER = () => {
-  let core = require("electron").remote.getGlobal("core");
+  // let core = require("electron").remote.getGlobal("core");
   return core.user;
 };
 
 // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
 export const GETPASSWORD = () => {
-  let core = require("electron").remote.getGlobal("core");
+  // let core = require("electron").remote.getGlobal("core");
   return core.password;
 };
 
+export const GET = (cmd, args, Callback) => {
+  var PostData = JSON.stringify({
+    method: cmd,
+    params: args
+  });
+
+  POST(
+    GETHOST(),
+    PostData,
+    "TAG-ID-deprecate",
+    Callback,
+    GETUSER(),
+    GETPASSWORD()
+  );
+};
 
 export const PROMISE = (cmd, args, props = null) => {
   return new Promise((resolve, reject) => {
@@ -93,11 +108,10 @@ export const PROMISE = (cmd, args, props = null) => {
       method: cmd,
       params: args
     });
-
+    console.log(PostData);
     var ResponseObject;
 
-    if (props != null)
-    {
+    if (props != null) {
       props.AddRPCCall(cmd);
     }
 
@@ -161,4 +175,77 @@ export const PROMISE = (cmd, args, props = null) => {
 
     ResponseObject.send(PostData);
   });
+};
+
+// export const GETWITHPASS = (cmd, args, Callback, passdata) => {
+//   var PostData = JSON.stringify({
+//     method: cmd,
+//     params: args,
+//     passthrough: passdata
+//   });
+
+//   POST(
+//     GETHOST(),
+//     PostData,
+//     "TAG-ID-deprecate",
+//     Callback,
+//     GETUSER(),
+//     GETPASSWORD()
+//   );
+// };
+
+//TODO: clean this up... still not diving into this yet. prototype first...
+export const POST = (
+  Address,
+  PostData,
+  TagID,
+  Callback,
+  Username,
+  Password,
+  Content
+) => {
+  /** Object to handle the AJAX Requests. */
+  var ResponseObject;
+
+  /** Opera 8.0+, Firefox, Safari **/
+  try {
+    ResponseObject = new XMLHttpRequest();
+  } catch (e) {
+    /** Internet Explorer - All Versions **/
+    try {
+      ResponseObject = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (e) {
+      try {
+        ResponseObject = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (e) {
+        try {
+          ResponseObject = new ActiveXObject("Msxml2.XMLHTTP.6.0");
+        } catch (e) {
+          return false;
+        }
+      }
+    }
+  }
+
+  /** Asynchronous event on AJAX Completion. */
+  if (Callback == undefined) Callback = AJAX.CALLBACK.Post;
+
+  /** Handle the Tag ID being omitted. **/
+  if (TagID == undefined) TagID = "";
+
+  /** Establish the Callback Function. **/
+  ResponseObject.onreadystatechange = () => {
+    Callback(ResponseObject, Address, PostData, TagID);
+  };
+
+  /** Generate the AJAX Request. **/
+  if (Username == undefined && Password == undefined)
+    ResponseObject.open("POST", Address, true);
+  else ResponseObject.open("POST", Address, true, Username, Password);
+
+  if (Content !== undefined)
+    ResponseObject.setRequestHeader("Content-type", Content);
+
+  /** Send off the Post Data. **/
+  ResponseObject.send(PostData);
 };

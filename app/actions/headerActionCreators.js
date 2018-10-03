@@ -221,6 +221,10 @@ export const LoadAddressBook = () => {
 
 export const AddRPCCall = returnCall => {
   return dispatch => {
+<<<<<<< HEAD
     dispatch({ type: TYPE.ADD_RPC_CALL, payload: returnCall });
+=======
+    dispatch({type:TYPE.ADD_RPC_CALL, payload:returnCall});
+>>>>>>> nexus_beta_gui_pub
   };
 };

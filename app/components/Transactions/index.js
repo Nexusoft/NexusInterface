@@ -594,7 +594,8 @@ class Transactions extends Component {
           };
           let closestData = this.findclosestdatapoint(element2.time.toString());
           if (closestData != undefined) {
-            tempTrans.value[this.props.settings.fiatCurrency] = closestData[this.props.settings.fiatCurrency];
+            tempTrans.value[this.props.settings.fiatCurrency] =
+              closestData[this.props.settings.fiatCurrency];
             tempTrans.value.BTC = closestData.BTC;
           }
           tempWalletTransactions.push(tempTrans);
@@ -661,7 +662,10 @@ class Transactions extends Component {
         DataToSave[i].account,
         DataToSave[i].address,
         DataToSave[i].amount,
-        (DataToSave[i].amount * DataToSave[i].value[this.props.settings.fiatCurrency]).toFixed(2),
+        (
+          DataToSave[i].amount *
+          DataToSave[i].value[this.props.settings.fiatCurrency]
+        ).toFixed(2),
         (DataToSave[i].amount * DataToSave[i].value.BTC).toFixed(8),
         DataToSave[i].category,
         DataToSave[i].time,
@@ -1125,7 +1129,10 @@ class Transactions extends Component {
       return;
     }
 
-    let USDurl = this.createcryptocompareurl([this.props.settings.fiatCurrency], inEle);
+    let USDurl = this.createcryptocompareurl(
+      [this.props.settings.fiatCurrency],
+      inEle
+    );
     let BTCurl = this.createcryptocompareurl("BTC", inEle);
 
     rp(USDurl).then(payload => {
@@ -1147,17 +1154,17 @@ class Transactions extends Component {
             incomingBTC["NXS"]["BTC"]
           );
           let tempHistory = this.state.historyData;
-          if (this.state.historyData.has(inEle))
-          {
+          if (this.state.historyData.has(inEle)) {
             tempHistory.set(inEle, {
               ...this.state.historyData.get(inEle),
-              [this.props.settings.fiatCurrency]: incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
+              [this.props.settings.fiatCurrency]:
+                incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
               BTC: incomingBTC["NXS"]["BTC"]
             });
-          }
-          else{
+          } else {
             tempHistory.set(inEle, {
-              [this.props.settings.fiatCurrency]: incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
+              [this.props.settings.fiatCurrency]:
+                incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
               BTC: incomingBTC["NXS"]["BTC"]
             });
           }
@@ -1261,12 +1268,9 @@ class Transactions extends Component {
     if (datatograb == undefined) {
       return undefined;
     } else {
-
-      if (datatograb[[this.props.settings.fiatCurrency]] == undefined)
-      {
+      if (datatograb[[this.props.settings.fiatCurrency]] == undefined) {
         return undefined;
-      }
-      else{
+      } else {
         return datatograb;
       }
     }

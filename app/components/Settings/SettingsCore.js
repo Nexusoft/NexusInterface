@@ -7,6 +7,7 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
 import { connect } from "react-redux";
+import core from "../../api/core";
 
 const mapStateToProps = state => {
   return {
@@ -151,14 +152,14 @@ class SettingsCore extends Component {
   }
 
   /// Set Manual Daemon Data Directory
-  /// Sets the HTML element toggle for ManualDaemonDatadir
+  /// Sets the HTML element toggle for ManualDaemonDataDir
   setManualDaemonDataDir(settings) {
-    var manualDaemonDatadir = document.getElementById("manualDaemonDatadir");
+    var manualDaemonDataDir = document.getElementById("manualDaemonDataDir");
 
-    if (settings.manualDaemonDatadir === undefined) {
-      manualDaemonDatadir.value = "Nexus_trit";
+    if (settings.manualDaemonDataDir === undefined) {
+      manualDaemonDataDir.value = "Nexus_trit";
     } else {
-      manualDaemonDatadir.value = settings.manualDaemonDatadir;
+      manualDaemonDataDir.value = settings.manualDaemonDataDir;
     }
   }
 
@@ -342,13 +343,13 @@ class SettingsCore extends Component {
   }
 
   /// Update Manual Deamon Data Directory
-  /// Update the Settings for the ManualDaemonDatadir
-  updateManualDaemonDatadir(event) {
+  /// Update the Settings for the ManualDaemonDataDir
+  updateManualDaemonDataDir(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonDatadir = el.value;
+    settingsObj.manualDaemonDataDir = el.value;
 
     settings.SaveSettings(settingsObj);
   }
@@ -426,7 +427,6 @@ class SettingsCore extends Component {
   /// Core Restart
   /// Restart the Core
   coreRestart() {
-    let core = require("electron").remote.getGlobal("core");
     core.restart();
   }
 
@@ -518,12 +518,12 @@ class SettingsCore extends Component {
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonDatadir">Data Directory Name</label>
+              <label htmlFor="manualDaemonDataDir">Data Directory Name</label>
               <input
-                id="manualDaemonDatadir"
+                id="manualDaemonDataDir"
                 type="text"
                 size="12"
-                onChange={this.updateManualDaemonDatadir}
+                onChange={this.updateManualDaemonDataDir}
                 data-tooltip="Data directory configured for manual daemon"
               />
             </div>

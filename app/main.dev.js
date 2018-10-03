@@ -18,6 +18,7 @@ const path = require("path");
 let mainWindow;
 let tray;
 let resizeTimer;
+var keepDaemon = false;
 
 // Global Objects
 global.core = core;
@@ -32,7 +33,7 @@ if (process.env.NODE_ENV === "production") {
   sourceMapSupport.install();
 }
 
-require("electron-debug")();
+require("electron-debug");
 const p = path.join(__dirname, "..", "app", "node_modules");
 require("module").globalPaths.push(p);
 
@@ -137,7 +138,7 @@ function createWindow() {
       mainWindow.hide();
     }
   });
-}
+};
 
 // Application Startup
 app.on("ready", async () => {
@@ -156,6 +157,9 @@ app.on("ready", async () => {
 
   mainWindow.on("close", function(e) {
     const settings = require("./api/settings.js").GetSettings();
+    if (keepDaemon !== true || keepDaemon === undefined) {
+      core.stop();
+    }
     if (settings) {
       if (settings.minimizeToTray) {
         e.preventDefault();

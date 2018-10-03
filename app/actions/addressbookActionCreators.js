@@ -4,7 +4,7 @@ import config from "../api/configuration";
 
 export const ImportContact = contact => {
   return dispatch => {
-    dispatch({ type: TYPE.IMPORT_CONTACT, payload: contact});
+    dispatch({ type: TYPE.IMPORT_CONTACT, payload: contact });
   };
 };
 

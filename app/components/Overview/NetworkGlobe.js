@@ -24,20 +24,21 @@ export default class NetworkGlobe extends Component {
       geoiplookup = maxmind.openSync(
         path.join(
           configuration.GetAppResourceDir(),
-          "GeoLite2-City_20180403",
+          "GeoLite2-City",
           "GeoLite2-City.mmdb"
         )
       );
     }
     let myIP = "";
-    let incomingPillarColor = this.props.pillarColor; 
+    let incomingPillarColor = this.props.pillarColor;
     let incomingArchColor = this.props.archColor;
-    let globeOptions = 
-    {
-      colorFn: function(x) { return new THREE.Color(incomingPillarColor);},
+    let globeOptions = {
+      colorFn: function(x) {
+        return new THREE.Color(incomingPillarColor);
+      },
       colorArch: incomingArchColor
-    }
-    glb = new DAT(this.threeRootElement,globeOptions);
+    };
+    glb = new DAT(this.threeRootElement, globeOptions);
     glb.animate();
     Request(
       {
@@ -84,7 +85,11 @@ export default class NetworkGlobe extends Component {
   updatePointsOnGlobe() {
     const globeseries = [["peers", []]];
     const geoiplookup = maxmind.openSync(
-      path.join(configuration.GetAppDataDirectory(), "GeoLite2-City.mmdb")
+      path.join(
+        configuration.GetAppDataDirectory(),
+        "GeoLite2-City",
+        "GeoLite2-City.mmdb"
+      )
     );
     let myIP = "";
     Request(

@@ -3,7 +3,7 @@ import configuration from "../api/configuration";
 const path = require("path");
 let defaultWallpaperPath = "";
 if (process.env.NODE_ENV === "development") {
-  defaultWallpaperPath = "../images/background/starrynight.jpg";
+  defaultWallpaperPath = "./images/background/starrynight.jpg";
 } else {
   defaultWallpaperPath = path.join(
     configuration.GetAppResourceDir(),
@@ -11,10 +11,14 @@ if (process.env.NODE_ENV === "development") {
     "background",
     "starrynight.jpg"
   );
+  if (process.platform === "win32") {
+    defaultWallpaperPath = defaultWallpaperPath.replace(/\\/g, "/");
+  }
 }
+
 const initialState = {
   settings: {
-    manualDaemon: true,
+    manualDaemon: false,
     acceptedagreement: false,
     experimentalWarning: true,
     windowWidth: 1600,
@@ -45,7 +49,6 @@ const initialState = {
   footerActiveRGB: "rgb(0,174,239)",
   footerHoverRGB: "rgb(0,174,239)",
   iconMenuRGB: "rgb(0,174,239)",
-
   ignoreEncryptionWarningFlag: false,
   experimentalOpen: true,
   saveSettings: false,
@@ -285,8 +288,7 @@ export default (state = initialState, action) => {
         footerRGB: initialState.footerRGB,
         footerActiveRGB: initialState.footerActiveRGB,
         footerHoverRGB: initialState.footerHoverRGB,
-        iconMenuRGB: initialState.iconMenuRGB,
-        globeArchColorRGB: initialState.globeArchColorRGB
+        iconMenuRGB: initialState.iconMenuRGB
       };
       break;
     case TYPE.TOGGLE_GLOBE_RENDER:

@@ -9,37 +9,37 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({});
 class Loader extends Component {
-    state = {
+  state = {
     loading: true
-    };
+  };
 
-    componentDidMount() {
-        setTimeout(() => this.setState({ loading: false }), 5000); 
-    }
-    
-    render() {
+  componentDidMount() {
+    setTimeout(() => this.setState({ loading: false }), 5000);
+  }
+
+  render() {
     const { loading } = this.state;
-    
-    if(loading) {
-        return (
-            <div id="loader" className="animated fadeIn">
-                <div id="orbit-container">
-                    <div id="orbit">
-                        <div id="orbit-cirlce"></div>
-                    </div>
-                    <div id="tritium">
-                        <div id="proton1"></div>
-                        <div id="proton2"></div>
-                        <div id="proton3"></div>
-                    </div>           
-                </div>
-                <div id="version">Nexus Tritium Wallet</div>
+
+    if (loading) {
+      return (
+        <div id="loader" className="animated fadeIn">
+          <div id="orbit-container">
+            <div id="orbit">
+              <div id="orbit-cirlce" />
             </div>
-        ); 
+            <div id="tritium">
+              <div id="proton1" />
+              <div id="proton2" />
+              <div id="proton3" />
+            </div>
+          </div>
+          <div id="version">Nexus Tritium Wallet</div>
+        </div>
+      );
     }
-    
+
     return null; // render null when app is ready
-    }
+  }
 }
 
 export default connect(
