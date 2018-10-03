@@ -110,6 +110,9 @@ MEDIA QUERIES
   #hdr-line {
     margin-top: -10px;
   }
+  .noDaemonPort {
+    top: 70px;
+  }
   #settings-menu {
     display: block;
     top: 6em;

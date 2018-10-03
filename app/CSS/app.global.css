@@ -171,7 +171,6 @@ MEDIA QUERIES
 @media (min-width: 300px) {
   #app-content-container {
     max-width: 100%;
-    overflow-x: hidden;
   }
 }
 @media (min-width: 375px) {
@@ -183,6 +182,9 @@ MEDIA QUERIES
 @media (min-width: 800px) {
 }
 @media (min-width: 1024px) {
+  #app-content-container {
+    max-width: 80%;
+  }
 }
 @media (min-width: 1200px) {
 }

@@ -86,10 +86,6 @@ form {
   text-align: left;
 }
 
-.panel {
-  padding: calc(var(--line-height) * 1em);
-}
-
 .note {
   padding: 1em;
   border: 2px dashed rgba(255, 255, 255, 0.2);
@@ -192,9 +188,6 @@ MEDIA QUERIES
 ------------------------------------------------------------------*/
 
 @media (min-width: 300px) {
-  .panel {
-    padding: 0;
-  }
 }
 @media (min-width: 375px) {
 }
