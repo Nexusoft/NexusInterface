@@ -230,7 +230,6 @@ class Addressbook extends Component {
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
         );
       } else {
-        console.log(acct);
         return (
           acct.account
             .toLowerCase()
@@ -506,11 +505,10 @@ class Addressbook extends Component {
           .toLowerCase()
           .indexOf(this.props.contactSearch.toLowerCase()) !== -1
       ) {
-        console.log(contact.name);
         return `${contact.name}`;
       }
     });
-    console.log(filteredAddress);
+
     if (this.props.addressbook[0]) {
       return (
         <div

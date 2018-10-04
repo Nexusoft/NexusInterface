@@ -90,6 +90,7 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   flex-direction: column;
   align-self: center;
   text-align: right;
+  margin-top: -2em;
   z-index: 1;
 }
 .left-stats img {
@@ -100,8 +101,14 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   padding-left: 20px;
   filter: var(--footer);
 }
-.left-stats > div {
-  margin: 1em 0;
+.left-stats > div > div {
+  margin: 2em 0;
+}
+.left-top-stats {
+  margin-bottom: -1em;
+}
+.left-bottom-stats {
+  margin-top: -1em;
 }
 .left-stats > div img {
   float: right;
@@ -116,6 +123,7 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
   flex-direction: column;
   align-self: center;
   text-align: left;
+  margin-top: -2em;
   z-index: 1;
 }
 .right-stats img {
@@ -127,8 +135,8 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
   left: -55px;
   filter: var(--footer);
 }
-.right-stats > div {
-  margin: 1em 0;
+.right-stats > div > div {
+  margin: 2em 0;
 }
 .right-stats > div img {
   float: left;
