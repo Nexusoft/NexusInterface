@@ -489,7 +489,7 @@ class Overview extends Component {
             <div className="left-bottom-stats">
               <div
                 id="nxs-market-price-info"
-                className="animated fadeInDown delay-1s"
+                className="animated fadeInDown"
               >
                 <div className="h2">
                   Market Price{" "}
@@ -505,7 +505,7 @@ class Overview extends Component {
 
               <div
                 id="nxs-market-price-info"
-                className="animated fadeInDown delay-1s"
+                className="animated fadeInDown"
               >
                 <div className="h2">
                   Market Cap{" "}
@@ -519,7 +519,7 @@ class Overview extends Component {
 
               <div
                 id="nxs-market-price-info"
-                className="animated fadeInDown delay-1s"
+                className="animated fadeInDown"
               >
                 <div className="h2">
                   24hr Change{" "}
