@@ -100,8 +100,11 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   padding-left: 20px;
   filter: var(--footer);
 }
-.left-stats > div {
+.left-stats > div > div {
   margin: 1em 0;
+}
+.left-stats > div > div:last-child {
+  margin: 0;
 }
 .left-stats > div img {
   float: right;
@@ -127,7 +130,7 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
   left: -55px;
   filter: var(--footer);
 }
-.right-stats > div {
+.right-stats > div > div {
   margin: 1em 0;
 }
 .right-stats > div img {
