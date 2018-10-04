@@ -15,7 +15,11 @@ class TimeZoneSelector extends Component {
         <select
           ref="editTimeZone"
           onChange={e => {
-            this.props.SaveTz(this.props.selected, parseInt(e.target.value));
+            if (this.props.editTZ) {
+              this.props.SaveTz(this.props.selected, parseInt(e.target.value));
+            } else {
+              this.props.EditProtoTZ(parseInt(e.target.value));
+            }
           }}
           value={this.props.prototypeTimezone}
         >
