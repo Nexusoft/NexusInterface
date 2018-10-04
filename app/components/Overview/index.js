@@ -308,6 +308,8 @@ class Overview extends Component {
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
             pillarColor={this.props.settings.customStyling.globePillarColorRGB}
             archColor={this.props.settings.customStyling.globeArchColorRGB}
+            globeColor = {this.props.settings.customStyling.globeMultiColorRGB}
+
           />
         ],
         [

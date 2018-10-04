@@ -35,7 +35,8 @@ export default class NetworkGlobe extends Component {
     let globeOptions = 
     {
       colorFn: function(x) { return new THREE.Color(incomingPillarColor);},
-      colorArch: incomingArchColor
+      colorArch: incomingArchColor,
+      colorGlobe: this.props.globeColor
     }
     glb = new DAT(this.threeRootElement,globeOptions);
     glb.animate();

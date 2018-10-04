@@ -12,7 +12,8 @@
  */
 
 import * as THREE from "three";
-import world from "../images/world-light.jpg";
+import world from "../images/world-light-white.jpg";
+import globeShader from "../script/globeShader.js";
 
 import { geoInterpolate } from "d3-geo";
 var DAT = DAT || {};
@@ -31,6 +32,7 @@ export default (DAT.Globe = function(container, opts) {
       return c;
     };
   var colorArch = opts.colorArch || 0x00ffff;
+  var colorGlobe = opts.colorGlobe || 0xffffff;
   var imgDir = opts.imgDir || "images/";
 
   var Shaders = {
@@ -48,14 +50,15 @@ export default (DAT.Globe = function(container, opts) {
         "}"
       ].join("\n"),
       fragmentShader: [
-        "uniform sampler2D texture;",
+        "uniform sampler2D _texture;",
+        "uniform vec4 colorMod;",
         "varying vec3 vNormal;",
         "varying vec2 vUv;",
         "void main() {",
-        "vec3 diffuse = texture2D( texture, vUv ).xyz;",
+        "vec3 diffuse = texture2D( _texture, vUv ).xyz;",
         "float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );",
         "vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );",
-        "gl_FragColor = vec4( diffuse + atmosphere, 1.0 );",
+        "gl_FragColor = vec4( (diffuse*colorMod.xyz) + atmosphere, 1.0 );",
         "}"
       ].join("\n")
     },
@@ -116,17 +119,33 @@ export default (DAT.Globe = function(container, opts) {
     scene = new THREE.Scene();
 
     var geometry = new THREE.SphereGeometry(200, 40, 30);
-
+    
     shader = Shaders["earth"];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+    let colormoddd = new THREE.Color(colorGlobe);
+    let globeR = colormoddd.r / 1;
+    let globeG = colormoddd.g / 1;
+    let globeB = colormoddd.b / 1;
 
-    uniforms["texture"].value = new THREE.TextureLoader().load(world);
+    console.log(globeR + " " + globeG + " " + globeB + " ");
+
+    //uniforms["texture"].value = new THREE.TextureLoader().load(world);
+    uniforms["_texture"] = {type: "t",value: new THREE.TextureLoader().load(world) };
+    uniforms["colorMod"] = { type: "v4", value: new THREE.Vector4( globeR, globeG, globeB, 1.0 ) };
+
+    console.log(colorArch);
+    console.log(uniforms);
+    console.log(globeShader(1));
+    console.log(globeShader(0));
+
     // imgDir + "world.jpg"
     material = new THREE.ShaderMaterial({
       uniforms: uniforms,
       vertexShader: shader.vertexShader,
-      fragmentShader: shader.fragmentShader
+      fragmentShader: shader.fragmentShader,
     });
+
+    console.log(material);
 
     mesh = new THREE.Mesh(geometry, material);
     mesh.rotation.y = Math.PI;
