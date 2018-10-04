@@ -54,7 +54,7 @@ export const SetMarketAveData = () => {
               symbol: displayEle.TOSYMBOL
             };
           });
-          let displayNXS = Object.values(body.RAW.NXS).map(ele => {            
+          let displayNXS = Object.values(body.RAW.NXS).map(ele => {
             let curCode = ele.TOSYMBOL;
             let displayEle = body.DISPLAY.NXS[curCode];
             return {
@@ -221,10 +221,6 @@ export const LoadAddressBook = () => {
 
 export const AddRPCCall = returnCall => {
   return dispatch => {
-<<<<<<< HEAD
     dispatch({ type: TYPE.ADD_RPC_CALL, payload: returnCall });
-=======
-    dispatch({type:TYPE.ADD_RPC_CALL, payload:returnCall});
->>>>>>> nexus_beta_gui_pub
   };
 };

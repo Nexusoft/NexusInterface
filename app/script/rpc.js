@@ -140,10 +140,13 @@ export const PROMISE = (cmd, args, props = null) => {
       if (ResponseObject.status == 404) {
         reject("RPC Command {" + cmd + "} Not Found");
       }
+      if (ResponseObject.status == 401) {
+        console.error(ResponseObject.response);
+      }
       if (ResponseObject.status == 500) {
         reject(JSON.parse(ResponseObject.statusText));
       }
-
+      console.log(ResponseObject);
       if (cmd === "validateaddress") {
         if (JSON.parse(ResponseObject.response).result.isvalid === false) {
           reject(JSON.parse(ResponseObject.response).result.isvalid);

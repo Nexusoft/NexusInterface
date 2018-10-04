@@ -172,7 +172,11 @@ class Core extends EventEmitter {
     return user;
   }
   get password() {
-    return password;
+    if (process.env.NODE_ENV === "development") {
+      return "password";
+    } else {
+      return password;
+    }
   }
   get host() {
     return host;
