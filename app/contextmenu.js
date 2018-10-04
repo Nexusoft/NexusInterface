@@ -20,30 +20,25 @@ export default class ContextMenuBuilder {
         label: "Paste",
         ccelerator: "CmdOrCtrl+V",
         role: "paste"
-      },
-      { type: "separator" },
+      }
+      // ,
+      // { type: "separator" },
 
       //{
-        //label: "Reload",
-        //accelerator: "CmdOrCtrl+R",
-        //click(item, focusedWindow) {
-          //if (focusedWindow) focusedWindow.reload();
-        //}
+      //label: "Reload",
+      //accelerator: "CmdOrCtrl+R",
+      //click(item, focusedWindow) {
+      //if (focusedWindow) focusedWindow.reload();
+      //}
       //},
-      {
-        label: "About",
-        accelerator: "CmdOrCtrl+Y",
-        click(item, focusedWindow) {
-          focusedWindow.loadURL("/About");
-          //history.push('/About');
-        }
-      },
-
-      {
-        label: "Quit",
-        accelerator: "alt+f4",
-        role: "close"
-      }
+      // {
+      //   label: "About",
+      //   ccelerator: "CmdOrCtrl+Y",
+      //   click(item, focusedWindow) {
+      //     focusedWindow.loadURL("/About");
+      //     //history.push('/About');
+      //   }
+      // }
     ];
     return template;
   }

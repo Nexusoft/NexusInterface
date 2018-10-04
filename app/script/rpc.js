@@ -137,6 +137,7 @@ export const PROMISE = (cmd, args, props = null) => {
 
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
+      console.log(ResponseObject);
       if (ResponseObject.status == 404) {
         reject("RPC Command {" + cmd + "} Not Found");
       }
@@ -144,7 +145,7 @@ export const PROMISE = (cmd, args, props = null) => {
         console.error(ResponseObject.response);
       }
       if (ResponseObject.status == 500) {
-        reject(JSON.parse(ResponseObject.statusText));
+        reject(JSON.parse(ResponseObject.responseText));
       }
       console.log(ResponseObject);
       if (cmd === "validateaddress") {

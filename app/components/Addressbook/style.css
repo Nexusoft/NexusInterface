@@ -183,6 +183,9 @@ select {
 #picUploader {
   display: none;
 }
+#importAddressbook {
+  display: none;
+}
 .tdd {
   animation: tdd 0.5s;
 
@@ -289,4 +292,24 @@ select {
   margin-left: -19px;
 }
 #Addresstable-wraper {
+}
+
+.impexpblock {
+  display: inline-block;
+  position: absolute;
+  top: 4em;
+  right: 0;
+  font-family: var(--mono-font-family);
+  font-size: 0.875em;
+  opacity: 0.75;
+  color: #fff;
+  cursor: pointer;
+}
+a.impexp {
+  font-family: var(--mono-font-family);
+  font-size: 0.875em;
+  opacity: 0.75;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 20px;
 }

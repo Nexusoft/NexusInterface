@@ -207,7 +207,7 @@ class SettingsApp extends Component {
     var AutoLaunch = require("auto-launch");
     /// Change Name when we need to
     var autolaunchsettings = new AutoLaunch({
-      name: "nexus-interface"
+      name: "nexus-tritium-beta"
     });
     ///No need for a path as it will be set automaticly
 

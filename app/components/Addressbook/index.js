@@ -1011,13 +1011,20 @@ class Addressbook extends Component {
           <img src={addressbookimg} className="hdr-img" />
           Address Book
         </h2>
-        <a className="refresh" onClick={() => this.exportAddressBook()}>
-          Export Contacts
-        </a>
-        <input
-          type="file"
-          onChange={e => this.importAddressBook(e.target.files[0].path)}
-        />
+        <div className="impexpblock">
+          <a className="impexp" onClick={() => this.exportAddressBook()}>
+            Export Contacts
+          </a>
+          <label htmlFor="importAddressbook">
+            <a className="impexp">Import Contacts</a>
+          </label>
+          <input
+            name="importAddressbook"
+            id="importAddressbook"
+            type="file"
+            onChange={e => this.importAddressBook(e.target.files[0].path)}
+          />
+        </div>
         <div className="panel">
           <div id="addressbook-controls">
             <div id="addressbook-search">
