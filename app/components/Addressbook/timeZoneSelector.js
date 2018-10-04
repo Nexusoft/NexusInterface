@@ -14,7 +14,9 @@ class TimeZoneSelector extends Component {
       <span>
         <select
           ref="editTimeZone"
-          onChange={e => this.props.EditProtoTZ(parseInt(e.target.value))}
+          onChange={e => {
+            this.props.SaveTz(this.props.selected, parseInt(e.target.value));
+          }}
           value={this.props.prototypeTimezone}
         >
           <option value="0"> (UTC + 0.00 hr) London, Casablanca, Accra</option>
