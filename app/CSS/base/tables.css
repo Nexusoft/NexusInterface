@@ -41,14 +41,10 @@ table td {
 	border-top-color: var(--table-cell-border-color);
 	text-align: left;
 	vertical-align: top;
-
-	/* .padded styles */
 	padding-top: calc(var(--line-height) * var(--table-padded-padding-vertical));
 	padding-bottom: calc(var(--line-height) * var(--table-padded-padding-vertical));
 	padding-left: calc(var(--line-height) * var(--table-padded-padding-horizontal));
 	padding-right: calc(var(--line-height) * var(--table-padded-padding-horizontal));
-
-	/* .bordered styles */
 	border-left: 1px solid var(--border-color);
 }
 

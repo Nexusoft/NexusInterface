@@ -14,6 +14,7 @@
   overflow-y: auto;
   padding-left: 50px;
 }
+
 #container {
   display: flex;
   flex-wrap: wrap;
@@ -30,10 +31,6 @@
   display: flex;
   justify-content: center;
   flex-direction: row;
-
-  /* width: 100%;
-  max-width: 100%;
-  min-width: 50%; */
 }
 .foot {
   float: right;
@@ -43,16 +40,6 @@
   float: right;
   width: auto;
 }
-/* .tbody {
-  line-height: 1em;
-  color: white;
-  display: block;
-} */
-/* .table {
-  border-spacing: 0;
-  border-collapse: collapse;
-  width: 100%;
-} */
 
 #left-buttons {
   padding-top: 10px;
@@ -324,6 +311,9 @@ MEDIA QUERIES
   }
 }
 @media (min-width: 375px) {
+  #sendrecieve > .panel {
+    padding-left: 50px;
+  }
 }
 @media (min-width: 480px) {
 }

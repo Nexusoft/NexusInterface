@@ -29,6 +29,10 @@ MEDIA QUERIES
 ------------------------------------------------------------------*/
 
 @media (min-width: 300px) {
+	#trustlist table th,
+	#trustlist table td {
+		word-break: break-all;
+	}
 }
 @media (min-width: 375px) {
 }
