@@ -433,157 +433,180 @@ class Overview extends Component {
           </button>
         </Modal>
         <div className="left-stats">
-          {this.props.stake > 0 ? (
-            <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
-              <div className="h2">
-                Balance and Stake <span className="h2-nospace">(NXS)</span>
+          {this.props.connections === undefined ? null : (
+            <div>
+              {this.props.stake > 0 ? (
+                <div
+                  id="nxs-balance-info"
+                  className="animated fadeInDown delay-1s"
+                >
+                  <div className="h2">
+                    Balance and Stake <span className="h2-nospace">(NXS)</span>
+                  </div>
+                  <img src={nxsStake} />
+                  <div className="overviewValue">
+                    {this.props.balance + this.props.stake}
+                  </div>
+                </div>
+              ) : (
+                <div
+                  id="nxs-balance-info"
+                  className="animated fadeInDown delay-1s"
+                >
+                  <div className="h2">
+                    Balance <span className="h2-nospace">(NXS)</span>
+                  </div>
+                  <img src={nxsStake} />
+                  <div className="overviewValue">{this.props.balance}</div>
+                </div>
+              )}
+
+              <div
+                id="nxs-currency-value-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">
+                  Balance{" "}
+                  <span className="h2-nospace">
+                    ({this.props.settings.fiatCurrency})
+                  </span>
+                </div>
+                <img src={USD} />
+                <div className="overviewValue">{this.calculateUSDvalue()}</div>
               </div>
-              <img src={nxsStake} />
-              <div className="overviewValue">
-                {this.props.balance + this.props.stake}
+              <div
+                id="nxs-transactions-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Transactions</div>
+                <img src={transactionsArrows} />
+                <div className="overviewValue">{this.props.txtotal}</div>
               </div>
-            </div>
-          ) : (
-            <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
-              <div className="h2">
-                Balance <span className="h2-nospace">(NXS)</span>
-              </div>
-              <img src={nxsStake} />
-              <div className="overviewValue">{this.props.balance}</div>
             </div>
           )}
 
-          <div
-            id="nxs-currency-value-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              Balance{" "}
-              <span className="h2-nospace">
-                ({this.props.settings.fiatCurrency})
-              </span>
-            </div>
-            <img src={USD} />
-            <div className="overviewValue">{this.calculateUSDvalue()}</div>
-          </div>
+          {this.props.displayNXSvalues[0] === undefined ? null : (
+            <div>
+              <div
+                id="nxs-market-price-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">
+                  Market Price{" "}
+                  <span className="h2-nospace">
+                    ({this.props.settings.fiatCurrency})
+                  </span>
+                </div>
+                <img src={marketicon} />
+                <div className="overviewValue">
+                  {this.marketPriceFormatter()}
+                </div>
+              </div>
 
-          <div
-            id="nxs-transactions-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">Transactions</div>
-            <img src={transactionsArrows} />
-            <div className="overviewValue">{this.props.txtotal}</div>
-          </div>
+              <div
+                id="nxs-market-price-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">
+                  Market Cap{" "}
+                  <span className="h2-nospace">
+                    ({this.props.settings.fiatCurrency})
+                  </span>
+                </div>
+                <img src={supplyicon} />
+                <div className="overviewValue">{this.marketCapFormatter()}</div>
+              </div>
 
-          <div
-            id="nxs-market-price-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              Market Price{" "}
-              <span className="h2-nospace">
-                ({this.props.settings.fiatCurrency})
-              </span>
+              <div
+                id="nxs-market-price-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">
+                  24hr Change{" "}
+                  <span className="h2-nospace">
+                    ({this.props.settings.fiatCurrency} %)
+                  </span>
+                </div>
+                <img src={hours24icon} />
+                <div className="overviewValue">
+                  {this.pctChange24hrFormatter()}%
+                </div>
+              </div>
             </div>
-            <img src={marketicon} />
-            <div className="overviewValue">{this.marketPriceFormatter()}</div>
-          </div>
-
-          <div
-            id="nxs-market-price-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              Market Cap{" "}
-              <span className="h2-nospace">
-                ({this.props.settings.fiatCurrency})
-              </span>
-            </div>
-            <img src={supplyicon} />
-            <div className="overviewValue">{this.marketCapFormatter()}</div>
-          </div>
-
-          <div
-            id="nxs-market-price-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              24hr Change{" "}
-              <span className="h2-nospace">
-                ({this.props.settings.fiatCurrency} %)
-              </span>
-            </div>
-            <img src={hours24icon} />
-            <div className="overviewValue">
-              {this.pctChange24hrFormatter()}%
-            </div>
-          </div>
+          )}
         </div>
-        {this.returnIfGlobeEnabled()}
+        {this.returnIfGlobeEnabled()}{" "}
         <div className="right-stats">
-          <div
-            id="nxs-interestweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">Interest Rate</div>
-            <img src={interesticon} />
-            <div className="overviewValue">
-              {this.props.interestweight + "%"}
+          {" "}
+          {this.props.connections === undefined ? null : (
+            <div>
+              <div
+                id="nxs-interestweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Interest Rate</div>
+                <img src={interesticon} />
+                <div className="overviewValue">
+                  {this.props.interestweight + "%"}
+                </div>
+              </div>
+              <div
+                id="nxs-connections-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Connections</div>
+                <img
+                  id="nxs-getinfo-connections-image"
+                  src={this.connectionsImage()}
+                />
+                <div className="overviewValue">{this.props.connections}</div>
+              </div>
+              <div
+                id="nxs-blocks-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Block Count</div>
+                <img src={nxsblocks} />
+
+                <div className="overviewValue">
+                  {this.numberWithCommas(this.props.blocks)}
+                </div>
+                <span className="tooltip left">
+                  {this.props.blockDate.toLocaleString()}
+                </span>
+              </div>
+              <div
+                id="nxs-blockweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Block Weight</div>
+                <img
+                  src={this.blockWeightImage()}
+                  id="nxs-getinfo-blockweight-image"
+                />
+                <div className="overviewValue">{this.props.blockweight}</div>
+              </div>
+
+              <div
+                id="nxs-trustweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Trust Weight</div>
+                <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
+                <div className="overviewValue">{this.props.trustweight}</div>
+              </div>
+
+              <div
+                id="nxs-stakeweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Stake Weight</div>
+                <img src={stakeicon} />
+                <div className="overviewValue">{this.props.stakeweight}</div>
+              </div>
             </div>
-          </div>
-          <div
-            id="nxs-connections-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">Connections</div>
-            <img
-              id="nxs-getinfo-connections-image"
-              src={this.connectionsImage()}
-            />
-            <div className="overviewValue">{this.props.connections}</div>
-          </div>
-          <div id="nxs-blocks-info" className="animated fadeInDown delay-1s">
-            <div className="h2">Block Count</div>
-            <img src={nxsblocks} />
-
-            <div className="overviewValue">
-              {this.numberWithCommas(this.props.blocks)}
-            </div>
-            <span className="tooltip left">
-              {this.props.blockDate.toLocaleString()}
-            </span>
-          </div>
-          <div
-            id="nxs-blockweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">Block Weight</div>
-            <img
-              src={this.blockWeightImage()}
-              id="nxs-getinfo-blockweight-image"
-            />
-            <div className="overviewValue">{this.props.blockweight}</div>
-          </div>
-
-          <div
-            id="nxs-trustweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">Trust Weight</div>
-            <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
-            <div className="overviewValue">{this.props.trustweight}</div>
-          </div>
-
-          <div
-            id="nxs-stakeweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">Stake Weight</div>
-            <img src={stakeicon} />
-            <div className="overviewValue">{this.props.stakeweight}</div>
-          </div>
-        </div>{" "}
+          )}
+        </div>
       </div>
     );
   }
