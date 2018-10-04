@@ -434,7 +434,7 @@ class Overview extends Component {
         </Modal>
         <div className="left-stats">
           {this.props.connections === undefined ? null : (
-            <div>
+            <div className="left-top-stats">
               {this.props.stake > 0 ? (
                 <div
                   id="nxs-balance-info"
@@ -486,7 +486,7 @@ class Overview extends Component {
           )}
 
           {this.props.displayNXSvalues[0] === undefined ? null : (
-            <div>
+            <div className="left-bottom-stats">
               <div
                 id="nxs-market-price-info"
                 className="animated fadeInDown delay-1s"
