@@ -141,11 +141,14 @@ class Fast extends Component {
 
   optionbuilder() {
     return Object.values(this.props.availableCoins).map(e => {
-      return (
-        <option key={e.symbol} value={e.symbol}>
-          {e.name}
-        </option>
-      );
+      console.log(e);
+      if (e.status === "available") {
+        return (
+          <option key={e.symbol} value={e.symbol}>
+            {e.name}
+          </option>
+        );
+      } else return null;
     });
   }
 
