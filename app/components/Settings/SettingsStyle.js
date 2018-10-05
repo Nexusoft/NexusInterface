@@ -237,11 +237,15 @@ class SettingsStyle extends Component {
                     this.props.setSelectedColorProp(e.target.value);
                   }}
                 >
-                  <option value="MC1">color 1 </option>
-                  <option value="MC2">color 2 </option>
-                  <option value="MC3">color 3 </option>
-                  <option value="MC4">color 4 </option>
-                  <option value="MC5">color 5 </option>
+                  <option value="MC1">Tool Tip Color </option>
+                  <option value="MC2">
+                    Accent Color (active lines and buttons)
+                  </option>
+                  <option value="MC3">Table Header Color)</option>
+                  <option value="MC4">
+                    Accent Color (inactive lines and buttons)
+                  </option>
+                  <option value="MC5">Text Color</option>
                   <option value="panel">Panel Background Color</option>
                   <option value="NXSlogo">Nexus Logo Color</option>
                   <option value="iconMenu">Status Icon Color</option>
