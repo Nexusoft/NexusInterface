@@ -205,6 +205,7 @@
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
+    "copy-to-clipboard": "^3.0.8",
     "csvtojson": "^2.0.8",
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",

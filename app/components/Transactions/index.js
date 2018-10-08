@@ -30,6 +30,8 @@ import transactionsimg from "../../images/transactions.svg";
 import ContextMenuBuilder from "../../contextmenu";
 import config from "../../api/configuration";
 
+import copy from 'copy-to-clipboard';
+
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
 // import "react-table/react-table.css"
 
@@ -554,35 +556,7 @@ class Transactions extends Component {
   /// Input :
   ///   instringtocopy      || String || String to copy
   copysomethingtotheclipboard(instringtocopy) {
-   /*
-    let tempelement = document.createElement("textarea");
-    tempelement.value = instringtocopy;
-    document.body.appendChild(tempelement);
-    tempelement.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempelement);
-*/
-  //this.textCopyArea.value = instringtocopy;
-    
-
-    
-    this.setState(
-      {
-        copyBuffer: instringtocopy
-      },
-      () => {
-        
-        console.log(instringtocopy);
-       this.textCopyArea.focus();
-        this.textCopyArea.select();
-        document.execCommand("copy");
-        console.log(this.textCopyArea);
-        console.log(this.textCopyArea.value);
-    //let tempcopy = this.textCopyArea;
-      }
-    )  ;
-    
-
+    copy(instringtocopy);
   }
 
   /// Get Transaction Data
@@ -955,13 +929,21 @@ class Transactions extends Component {
   /// Table Select CallBack
   /// What happens when you select something in the table
   tableSelectCallback(e, indata) {
-    console.log(e.target.innerText);
-    console.log(indata);
-    //e.target.select();
-    //document.execCommand('copy');
-    this.setState({
-      hoveringID: indata.index
+
+    if (this.state.hoveringID != indata.index)
+    {
+      this.setState({
+        isHoveringOverTable:  true
+      }, () =>
+    {
+      this.setState({
+        hoveringID: indata.index
+      });
+      console.log(indata.index);
+      console.log(this.state.isHoveringOverTable);
+      console.log(this.state.hoveringID);
     });
+    }
   }
 
   /// Return Formated Table Data
@@ -1112,6 +1094,8 @@ class Transactions extends Component {
   /// Mouse Over Callback
   /// the callback for when you mouse over a transaction on the table.
   mouseOverCallback(e, inData) {
+    if (this.state.isHoveringOverTable == true)
+    {return;}
     this.setState({
       isHoveringOverTable: true
     });
@@ -1119,6 +1103,8 @@ class Transactions extends Component {
   /// Mouse Out Callback
   /// The call back for when the mouse moves out of the table div.
   mouseOutCallback(e) {
+    if (this.state.isHoveringOverTable == false)
+    {return;}
     this.setState({
       isHoveringOverTable: false
     });
@@ -1454,7 +1440,6 @@ class Transactions extends Component {
 
     return (
       <div id="transactions" className="animated fadeIn">
-      <textarea id="copyDiv" style={{height:"0px", width:"0px",visibility:"hidden"}} ref={(newelement) => this.textCopyArea = newelement} value={"this.state.copyBuffer"} ></textarea>
         <Modal
           open={open}
           onClose={this.onCloseModal}
