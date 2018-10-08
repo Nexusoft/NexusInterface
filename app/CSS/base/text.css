@@ -265,3 +265,30 @@ img {
 hr {
 	border-color: var(--hr-border-color);
 }
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+	h2 {
+		text-align: center;
+	}
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+	h2 {
+		text-align: left;
+	}
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

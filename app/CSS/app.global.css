@@ -72,7 +72,7 @@ li {
 
 body {
   position: relative;
-  color: white;
+  color: var(--color-5);
   height: 100vh;
   background-color: #232c39;
   background-image: var(--background-main-gradient),
@@ -81,7 +81,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   /* font-family: Arial, Helvetica, Helvetica Neue, serif; */
-  font-family: "Roboto", sans-serif;
+  font-family: "Lato", sans-serif;
   overflow-y: hidden;
 }
 
@@ -162,4 +162,31 @@ svg {
   width: 35px;
   padding-right: 20px;
   filter: var(--footer);
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+  #app-content-container {
+    max-width: 100%;
+  }
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+  #app-content-container {
+    max-width: 80%;
+  }
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
 }

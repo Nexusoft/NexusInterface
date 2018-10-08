@@ -125,3 +125,39 @@
   display: block;
   margin: 0.625em;
 }
+
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+  .maxmindCopyright{
+    display: none;
+  }
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+  .maxmindCopyright{
+    display: block;
+    position: absolute;
+    left: 5px;
+    bottom: 0px;
+    z-index: 1;
+    color: var(--color-2);
+    opacity: 0.4;
+    filter: var(--nxs-logo);
+    
+  }
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

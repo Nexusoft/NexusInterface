@@ -541,16 +541,6 @@ class Overview extends Component {
           {this.props.connections === undefined ? null : (
             <div>
               <div
-                id="nxs-interestweight-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">Interest Rate</div>
-                <img src={interesticon} />
-                <div className="overviewValue">
-                  {this.props.interestweight + "%"}
-                </div>
-              </div>
-              <div
                 id="nxs-connections-info"
                 className="animated fadeInDown delay-1s"
               >
@@ -560,6 +550,16 @@ class Overview extends Component {
                   src={this.connectionsImage()}
                 />
                 <div className="overviewValue">{this.props.connections}</div>
+              </div>
+              <div
+                id="nxs-interestweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Interest Rate</div>
+                <img src={interesticon} />
+                <div className="overviewValue">
+                  {this.props.interestweight + "%"}
+                </div>
               </div>
               <div
                 id="nxs-blocks-info"

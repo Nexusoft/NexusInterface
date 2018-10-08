@@ -12,7 +12,7 @@
  */
 
 import * as THREE from "three";
-import world from "../images/world-light.jpg";
+import world from "../images/Map.jpg";
 
 import { geoInterpolate } from "d3-geo";
 var DAT = DAT || {};

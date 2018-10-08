@@ -29,8 +29,7 @@ table {
 	/* .bordered styles */
 	margin-top: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
 	margin-bottom: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
-	border: 1px solid var(--border-color);
-	border-left: 0;
+	border: 2px solid var(--border-color);
 }
 
 table th,
@@ -42,14 +41,10 @@ table td {
 	border-top-color: var(--table-cell-border-color);
 	text-align: left;
 	vertical-align: top;
-
-	/* .padded styles */
 	padding-top: calc(var(--line-height) * var(--table-padded-padding-vertical));
 	padding-bottom: calc(var(--line-height) * var(--table-padded-padding-vertical));
 	padding-left: calc(var(--line-height) * var(--table-padded-padding-horizontal));
 	padding-right: calc(var(--line-height) * var(--table-padded-padding-horizontal));
-
-	/* .bordered styles */
 	border-left: 1px solid var(--border-color);
 }
 
@@ -84,27 +79,23 @@ table table {
 	background-color: var(--table-nested-background-color);
 }
 
-/* table.padded th,
-table.padded td {
-	padding-top: calc(var(--line-height) * var(--table-padded-padding-vertical));
-	padding-bottom: calc(var(--line-height) * var(--table-padded-padding-vertical));
-	padding-left: calc(var(--line-height) * var(--table-padded-padding-horizontal));
-	padding-right: calc(var(--line-height) * var(--table-padded-padding-horizontal));
-} */
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
 
-/* table.bordered {
-	margin-top: calc(var(--line-height) * 1em - 1px);
-	margin-bottom: calc(var(--line-height) * 1em - 1px);
-	border: 1px solid var(--border-color);
-	border-left: 0;
-} */
-
-/* table.bordered th,
-table.bordered td {
-	border-left: 1px solid var(--border-color);
-} */
-
-/* table.striped tbody > tr:nth-child(odd) > td,
-table.striped tbody > tr:nth-child(odd) > th {
-	background-color: var(--table-striped-background-color);
-} */
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}
