@@ -161,7 +161,7 @@ svg {
   height: 35px;
   width: 35px;
   padding-right: 20px;
-  filter: var(--footer);
+  filter: var(--icon-menu);
 }
 
 /*------------------------------------------------------------------

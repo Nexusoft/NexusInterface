@@ -344,6 +344,7 @@ class Overview extends Component {
       return "$0";
     }
   }
+
   marketPriceFormatter() {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
@@ -382,6 +383,7 @@ class Overview extends Component {
       return "0";
     }
   }
+
   render() {
     return (
       <div id="overviewPage">
