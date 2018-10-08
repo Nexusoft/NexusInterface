@@ -64,6 +64,9 @@ const mapDispatchToProps = dispatch => ({
   },
   UpdateCoinValueOnTransaction: returnData => {
     dispatch({ type: TYPE.UPDATE_COINVALUE, payload: returnData });
+  },
+  UpdateFeeOnTransaction: returnData => {
+    dispatch({ type: TYPE.UPDATE_FEEVALUE, payload: returnData });
   }
 });
 
@@ -73,6 +76,9 @@ class Transactions extends Component {
   };
   constructor(props) {
     super(props);
+    this.copyRef = element => {
+      this.textCopyArea = element;
+    }
     this.state = {
       walletTransactions: [
         {
@@ -102,7 +108,7 @@ class Transactions extends Component {
           new Date(
             new Date().getFullYear() - 1,
             new Date().getMonth(),
-            new Date().getDate()
+            new Date().getDate(),1,1,1,1
           ),
           new Date()
         ],
@@ -124,7 +130,8 @@ class Transactions extends Component {
       refreshInterval: undefined,
       highlightedBlockNum: "Loading",
       highlightedBlockHash: "Loading",
-      needsHistorySave: false
+      needsHistorySave: false,
+      copyBuffer: ""
     };
   }
 
@@ -165,7 +172,7 @@ class Transactions extends Component {
 
     let interval = setInterval(() => {
       this.getTransactionData(this.setConfirmationsCallback.bind(this));
-    }, 30000);
+    }, 60000);
     this.setState({
       refreshInterval: interval,
       addressLabels: tempaddpress
@@ -288,14 +295,25 @@ class Transactions extends Component {
     });
 
     this.props.SetWalletTransactionArray(incomingData);
-    this.setState({
-      tableColumns: tabelheaders,
-      zoomDomain: {
+    let tempZoomDomain = {
+      x: [
+        new Date(),
+        new Date(new Date().getFullYear() + 1,1,1,1,1,1,1)
+      ]
+    }
+    
+    if (incomingData != undefined && incomingData.length > 0)
+    {
+      tempZoomDomain = {
         x: [
           new Date(incomingData[0].time * 1000),
           new Date((incomingData[incomingData.length - 1].time + 1000) * 1000)
         ]
       }
+    }
+    this.setState({
+      tableColumns: tabelheaders,
+      zoomDomain: tempZoomDomain
     });
     /// Just trying to give some space on this not important call
     setTimeout(() => {
@@ -317,6 +335,13 @@ class Transactions extends Component {
           transactionsToCheck: payload
         });
         this.gothroughdatathatneedsit();
+      });
+
+      incomingData.forEach(element => {
+        if (element.category == "send")
+        RPC.PROMISE("gettransaction",[element.txid]).then( payload => {
+           this.setFeeValuesOnTransaction(element.time,payload.fee);
+        });
       });
     }, 1000);
   }
@@ -418,23 +443,32 @@ class Transactions extends Component {
     );
 
     let tablecopyaddresscallback = function() {
-      this.copysomethingtotheclipboard(
-        this.state.walletTransactions[this.state.hoveringID].address
-      );
+      if (this.state.hoveringID != 999999999999)
+      {
+        this.copysomethingtotheclipboard(
+          this.props.walletitems[this.state.hoveringID].address
+        );
+      }
     };
     tablecopyaddresscallback = tablecopyaddresscallback.bind(this);
 
     let tablecopyamountcallback = function() {
-      this.copysomethingtotheclipboard(
-        this.state.walletTransactions[this.state.hoveringID].amount
-      );
+      if (this.state.hoveringID != 999999999999)
+      {
+        this.copysomethingtotheclipboard(
+          this.props.walletitems[this.state.hoveringID].amount
+        );
+       }
     };
     tablecopyamountcallback = tablecopyamountcallback.bind(this);
 
     let tablecopyaccountcallback = function() {
-      this.copysomethingtotheclipboard(
-        this.state.walletTransactions[this.state.hoveringID].account
-      );
+      if (this.state.hoveringID != 999999999999)
+      {
+        this.copysomethingtotheclipboard(
+          this.props.walletitems[this.state.hoveringID].account
+        );
+      }
     };
     tablecopyaccountcallback = tablecopyaccountcallback.bind(this);
 
@@ -520,12 +554,35 @@ class Transactions extends Component {
   /// Input :
   ///   instringtocopy      || String || String to copy
   copysomethingtotheclipboard(instringtocopy) {
+   /*
     let tempelement = document.createElement("textarea");
     tempelement.value = instringtocopy;
     document.body.appendChild(tempelement);
     tempelement.select();
     document.execCommand("copy");
     document.body.removeChild(tempelement);
+*/
+  //this.textCopyArea.value = instringtocopy;
+    
+
+    
+    this.setState(
+      {
+        copyBuffer: instringtocopy
+      },
+      () => {
+        
+        console.log(instringtocopy);
+       this.textCopyArea.focus();
+        this.textCopyArea.select();
+        document.execCommand("copy");
+        console.log(this.textCopyArea);
+        console.log(this.textCopyArea.value);
+    //let tempcopy = this.textCopyArea;
+      }
+    )  ;
+    
+
   }
 
   /// Get Transaction Data
@@ -898,6 +955,10 @@ class Transactions extends Component {
   /// Table Select CallBack
   /// What happens when you select something in the table
   tableSelectCallback(e, indata) {
+    console.log(e.target.innerText);
+    console.log(indata);
+    //e.target.select();
+    //document.execCommand('copy');
     this.setState({
       hoveringID: indata.index
     });
@@ -1120,6 +1181,19 @@ class Transactions extends Component {
     this.props.UpdateCoinValueOnTransaction(dataToChange);
   }
 
+  /// Set Fee Values On Transaction
+  /// Build a object from incoming data then dispatch that to redux to populate that transaction
+  /// Input:
+  ///     timeID    || String || Timestamp
+  ///     feeValue  || Float  || The value of the send Fee
+  setFeeValuesOnTransaction(timeID, feeValue) {
+    let dataToChange = {
+      time: timeID,
+      fee: feeValue
+    };
+    this.props.UpdateFeeOnTransaction(dataToChange);
+  }
+
   /// Download History On Transaction
   /// Download both USD and BTC history on the incoming transaction
   /// Input:
@@ -1321,6 +1395,13 @@ class Transactions extends Component {
         <a key="modal_amount">{"Amount: " + selectedTransaction.amount}</a>
       );
       internalString.push(<br key="br2" />);
+      if (selectedTransaction.category == "send")
+      {
+        internalString.push(
+          <a key="modal_fee">{"Fee: " + selectedTransaction.fee}</a>
+        );
+        internalString.push(<br key="br11" />);
+      }
       internalString.push(
         <a key="modal_time">
           {"Time: " +
@@ -1363,7 +1444,7 @@ class Transactions extends Component {
     }
     return defPagesize;
   }
-
+  
   render() {
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
@@ -1373,6 +1454,7 @@ class Transactions extends Component {
 
     return (
       <div id="transactions" className="animated fadeIn">
+      <textarea id="copyDiv" style={{height:"0px", width:"0px",visibility:"hidden"}} ref={(newelement) => this.textCopyArea = newelement} value={"this.state.copyBuffer"} ></textarea>
         <Modal
           open={open}
           onClose={this.onCloseModal}

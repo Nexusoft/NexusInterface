@@ -229,7 +229,7 @@ class Header extends Component {
     }
 
     if (nextProps.blocks !== this.props.blocks) {
-      RPC.PROMISE("getpeerinfo", [], this.props)
+      RPC.PROMISE("getpeerinfo", [])
         .then(peerresponse => {
           let hpb = 0;
           peerresponse.forEach(element => {

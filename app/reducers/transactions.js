@@ -70,7 +70,26 @@ export default (state = initialState, action) => {
         })
       }; 
       break;
-    
+    case TYPE.UPDATE_FEEVALUE:
+      return{
+        ...state,
+        walletitems: state.walletitems.map((e,i)=>
+        {
+          let replaceElement = action.payload;
+          if (replaceElement != undefined && e.time == replaceElement.time)
+            {
+              return {
+                ...e,
+                fee: replaceElement.fee
+              }
+            }
+            else
+            {
+              return e;
+            }
+        })
+      }; 
+      break;
 
     default:
       return state;
