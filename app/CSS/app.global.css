@@ -42,6 +42,7 @@
   --color-3: #556070; /* <-- Light Grey */
   --color-4: #34495e; /* <-- Medium Grey */
   --color-5: #ffffff; /* <-- White */
+  --color-6: #ffffff; /* <-- White */
   --nxs-logo: hue-rotate(0deg) brightness(100%) grayscale(0%);
   --icon-menu: hue-rotate(0deg) brightness(100%) grayscale(0%);
   --footer: hue-rotate(0deg) grayscale(100%) brightness(100%);
@@ -155,7 +156,15 @@ body {
 svg {
   fill: currentColor;
 }
+/* Under Construction */
+/* input[type="text"] {
+  background-color: var(--color-6) !important;
+}
 
+input[type="text"]::placeholder {
+  color: var(--color-5);
+} */
+/* Under Construction */
 /* Header Image */
 .hdr-img {
   height: 35px;
