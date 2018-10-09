@@ -14,14 +14,15 @@ import { access } from "fs";
 import sendimg from "../../images/send.svg";
 import plusimg from "../../images/plus.svg";
 import addressbookimg from "../../images/addressbook.svg";
-
+import * as helpers from "../../script/helper.js";
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.transactions,
     ...state.sendRecieve,
     ...state.overview,
-    ...state.addressbook
+    ...state.addressbook,
+    ...state.settings
   };
 };
 
@@ -157,10 +158,10 @@ class SendRecieve extends Component {
   nxsAmount(e, isNxs) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === "")) {
       if (isNxs) {
-        let Usd = e.target.value * this.props.USD;
+        let Usd = e.target.value * this.calculateUSDvalue();
         this.props.updateAmount(e.target.value, Usd.toFixed(2));
       } else {
-        let NxsValue = e.target.value / this.props.USD;
+        let NxsValue = e.target.value / this.calculateUSDvalue();
         this.props.updateAmount(NxsValue.toFixed(5), e.target.value);
       }
     } else {
@@ -370,6 +371,29 @@ class SendRecieve extends Component {
     });
   }
 
+  calculateUSDvalue() {
+    if (this.props.rawNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
+        if (ele.name === this.props.settings.fiatCurrency) {
+          return ele;
+        }
+      });
+
+      let currencyValue = selectedCurrancyValue[0].price;
+      if (currencyValue === 0) {
+        currencyValue = `${currencyValue}.00`;
+      } else {
+        currencyValue = currencyValue.toFixed(2);
+      }
+      // return `${helpers.ReturnCurrencySymbol(
+      //   selectedCurrancyValue[0].name,
+      //   this.props.displayNXSvalues
+      // ) + currencyValue}`;
+      return currencyValue;
+    } else {
+      return 0;
+    }
+  }
   // calculateUSDvalue(e) {
   //   let USDvalue = this.props.USDAmount * this.props.USD;
 
@@ -697,7 +721,10 @@ class SendRecieve extends Component {
                   {" "}
                   <div className="convertor">
                     <label>Nexus Amount</label>{" "}
-                    <label className="UsdConvertorLabel">USD</label>
+                    <label className="UsdConvertorLabel">
+                      {" "}
+                      {this.props.settings.fiatCurrency}
+                    </label>
                   </div>
                   <div className="convertor">
                     {" "}
