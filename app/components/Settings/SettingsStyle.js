@@ -194,6 +194,9 @@ class SettingsStyle extends Component {
   SaveSettings() {
     require("../../api/settings.js").SaveSettings(this.props.settings);
     this.props.OpenModal("Style Settings Saved");
+    setTimeout(() => {
+      this.props.CloseModal();
+    }, 3000);
   }
 
   render() {
@@ -237,21 +240,16 @@ class SettingsStyle extends Component {
                     this.props.setSelectedColorProp(e.target.value);
                   }}
                 >
-                  <option value="MC1">Tool Tip Color </option>
-                  <option value="MC2">
-                    Accent Color (active lines and buttons)
-                  </option>
+                  <option value="MC2">Accent Color 1</option>
+                  <option value="MC4">Accent Color 2</option>
                   <option value="MC3">Table Header Color)</option>
-                  <option value="MC4">
-                    Accent Color (inactive lines and buttons)
-                  </option>
+                  <option value="MC1">Tool Tip Color </option>
                   <option value="MC5">Text Color</option>
                   <option value="panel">Panel Background Color</option>
                   <option value="NXSlogo">Nexus Logo Color</option>
-                  <option value="iconMenu">Status Icon Color</option>
-                  <option value="footer">Footer Base Color</option>
-                  <option value="footerHover">Footer Hover Color</option>
-                  <option value="footerActive">Footer Active Color</option>
+                  <option value="iconMenu">Icon Color</option>
+                  <option value="footer">Navigation Base Color</option>
+                  <option value="footerActive">Navigation Active Color</option>
                   <option value="globePillar">Globe Pillar Color</option>
                   <option value="globeArch">Globe Arch Color</option>
                 </select>
