@@ -1,7 +1,14 @@
+/*
+  Title: Security
+  Description: Render the unlocked security page
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 
+// Internal Dependencies
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
@@ -21,6 +28,12 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Security extends Component {
+  // React Method (Life cycle hook)
+  componentWillUnmount() {
+    this.props.wipe();
+  }
+
+  // Class Methods
   lockWallet() {
     this.props.busy(true);
     RPC.PROMISE("walletlock", []).then(payload => {
@@ -36,6 +49,7 @@ class Security extends Component {
         });
     });
   }
+
   showPrivKey(e) {
     e.preventDefault();
     let addressInput = document.getElementById("privKeyAddress");
@@ -133,9 +147,7 @@ class Security extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.props.wipe();
-  }
+  // Mandatory React method
   render() {
     if (!this.props.loggedIn) {
       return (
@@ -287,6 +299,8 @@ class Security extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

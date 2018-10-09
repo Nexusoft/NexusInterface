@@ -1,11 +1,19 @@
+/*
+  Title: Style Settings
+  Description: Settings specifically for style, background color pickers etc.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
 import { connect } from "react-redux";
 import { ChromePicker } from "react-color";
 
+// Internal Dependencies
 import * as TYPE from "../../actions/actiontypes";
+import styles from "./style.css";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -63,6 +71,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsStyle extends Component {
+  // Class Methods
   constructor() {
     super();
 
@@ -196,6 +205,7 @@ class SettingsStyle extends Component {
     this.props.OpenModal("Style Settings Saved");
   }
 
+  // Mandatory React method
   render() {
     return (
       <div>
@@ -290,6 +300,7 @@ class SettingsStyle extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -1,10 +1,18 @@
+/*
+Title: Precise Exhange page
+Description: Handle Precise exchanges through shapeshift api.
+Last Modified by: Brian Smith
+*/
+
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { remote } from "electron";
 import Request from "request";
 import { bindActionCreators } from "redux";
 import { Squares } from "react-activity";
-// import "react-activity/lib/Dots/Dots.css";
+
+// Internal Dependencies
 import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
@@ -12,18 +20,19 @@ import styles from "./style.css";
 import arrow from "../../images/arrow.svg";
 import * as actionsCreators from "../../actions/exchangeActionCreators";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.common, ...state.exchange };
 };
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Precise extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.props.GetAvailaleCoins();
   }
-
+  // React Method (Life cycle hook)
   componentDidUpdate(prevProps) {
     let pair = this.props.from + "_" + this.props.to;
     if (
@@ -49,6 +58,7 @@ class Precise extends Component {
     }
   }
 
+  // Class methods
   transferCalculator() {
     let tradeAmmt = parseFloat(this.props.ammount);
     if (this.props.quote) {
@@ -269,6 +279,7 @@ class Precise extends Component {
     } else return null;
   }
 
+  // Mandatory React method
   render() {
     return (
       <div id="ExchngeContainer">
@@ -353,6 +364,7 @@ class Precise extends Component {
     );
   }
 }
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -1,16 +1,23 @@
+/*
+  Title: Settings Market page
+  Description: Antequated, 
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
-import styles from "./style.css";
 import { connect } from "react-redux";
 
+// Internal Dependencies
 import * as TYPE from "../../actions/actiontypes";
 import * as RPC from "../../script/rpc";
+import styles from "./style.css";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.market
   };
 };
-
 const mapDispatchToProps = dispatch => ({
   setTradeVol: TV => dispatch({ type: TYPE.SET_TRADEVOL, payload: TV }),
   setThershold: TH => dispatch({ type: TYPE.SET_THRESHOLD, payload: TH }),
@@ -20,9 +27,11 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsMarket extends Component {
+  // Class methods
   feedback() {
     this.props.OpenModal("Settings saved");
   }
+  // Mandatory React method
   render() {
     return (
       <div id="SettingsMarket">
@@ -42,7 +51,7 @@ class SettingsMarket extends Component {
                 value={this.props.tradeVolume}
               />
               <span className="hint">
-              Volume of NXS you would like to calculate arbitrage for
+                Volume of NXS you would like to calculate arbitrage for
               </span>
             </div>
 
@@ -57,7 +66,7 @@ class SettingsMarket extends Component {
                 }
               />
               <span className="hint">
-              Threshold of profit to trigger an arbitrage alert
+                Threshold of profit to trigger an arbitrage alert
               </span>
             </div>
             <button onClick={() => this.feedback()} className="button primary">
@@ -70,6 +79,7 @@ class SettingsMarket extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps
