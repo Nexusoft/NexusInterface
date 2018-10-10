@@ -42,6 +42,7 @@ import styles from "./style.css";
 let tempaddpress = new Map();
 var rp = require("request-promise");
 
+
 const mapStateToProps = state => {
   return {
     ...state.transactions,
@@ -81,6 +82,8 @@ class Transactions extends Component {
     this.copyRef = element => {
       this.textCopyArea = element;
     }
+    this.hoveringID = 999999999999;
+    this.isHoveringOverTable = false;
     this.state = {
       walletTransactions: [
         {
@@ -418,9 +421,9 @@ class Transactions extends Component {
         open: true
       });
 
-      if (this.props.walletitems[this.state.hoveringID].confirmations != 0) {
+      if (this.props.walletitems[this.hoveringID].confirmations != 0) {
         RPC.PROMISE("gettransaction", [
-          this.props.walletitems[this.state.hoveringID].txid
+          this.props.walletitems[this.hoveringID].txid
         ]).then(payload => {
           RPC.PROMISE("getblock", [payload.blockhash]).then(payload2 => {
             this.setState({
@@ -445,30 +448,30 @@ class Transactions extends Component {
     );
 
     let tablecopyaddresscallback = function() {
-      if (this.state.hoveringID != 999999999999)
+      if (this.hoveringID != 999999999999)
       {
         this.copysomethingtotheclipboard(
-          this.props.walletitems[this.state.hoveringID].address
+          this.props.walletitems[this.hoveringID].address
         );
       }
     };
     tablecopyaddresscallback = tablecopyaddresscallback.bind(this);
 
     let tablecopyamountcallback = function() {
-      if (this.state.hoveringID != 999999999999)
+      if (this.hoveringID != 999999999999)
       {
         this.copysomethingtotheclipboard(
-          this.props.walletitems[this.state.hoveringID].amount
+          this.props.walletitems[this.hoveringID].amount
         );
        }
     };
     tablecopyamountcallback = tablecopyamountcallback.bind(this);
 
     let tablecopyaccountcallback = function() {
-      if (this.state.hoveringID != 999999999999)
+      if (this.hoveringID != 999999999999)
       {
         this.copysomethingtotheclipboard(
-          this.props.walletitems[this.state.hoveringID].account
+          this.props.walletitems[this.hoveringID].account
         );
       }
     };
@@ -504,9 +507,9 @@ class Transactions extends Component {
 
     let sendtoSendPagecallback = function() {
       this.props.SetSendAgainData({
-        address: this.state.walletTransactions[this.state.hoveringID].address,
-        account: this.state.walletTransactions[this.state.hoveringID].account,
-        amount: this.state.walletTransactions[this.state.hoveringID].amount
+        address: this.state.walletTransactions[this.hoveringID].address,
+        account: this.state.walletTransactions[this.hoveringID].account,
+        amount: this.state.walletTransactions[this.hoveringID].amount
       });
       this.context.router.history.push("/SendRecieve");
     };
@@ -514,7 +517,7 @@ class Transactions extends Component {
 
     let sendtoBlockExplorercallback = function() {
       this.props.SetExploreInfo({
-        transactionId: this.state.walletTransactions[this.state.hoveringID].txid
+        transactionId: this.state.walletTransactions[this.hoveringID].txid
       });
       this.context.router.history.push("/BlockExplorer");
     };
@@ -544,7 +547,8 @@ class Transactions extends Component {
       })
     );
     */
-    if (this.state.isHoveringOverTable) {
+ 
+    if (this.isHoveringOverTable) {
       transactiontablecontextmenu.popup(remote.getCurrentWindow());
     } else {
       defaultcontextmenu.popup(remote.getCurrentWindow());
@@ -929,21 +933,14 @@ class Transactions extends Component {
   /// Table Select CallBack
   /// What happens when you select something in the table
   tableSelectCallback(e, indata) {
-
-    if (this.state.hoveringID != indata.index)
-    {
-      this.setState({
-        isHoveringOverTable:  true
-      }, () =>
-    {
-      this.setState({
-        hoveringID: indata.index
-      });
-      console.log(indata.index);
-      console.log(this.state.isHoveringOverTable);
-      console.log(this.state.hoveringID);
-    });
-    }
+    console.log(e.target.innerText);
+    console.log(indata);
+    //e.target.select();
+    //document.execCommand('copy');
+    //this.setState({
+    //  hoveringID: indata.index
+    //});
+    this.hoveringID = indata.index;
   }
 
   /// Return Formated Table Data
@@ -1094,20 +1091,14 @@ class Transactions extends Component {
   /// Mouse Over Callback
   /// the callback for when you mouse over a transaction on the table.
   mouseOverCallback(e, inData) {
-    if (this.state.isHoveringOverTable == true)
-    {return;}
-    this.setState({
-      isHoveringOverTable: true
-    });
+    
+    this.isHoveringOverTable = true;
   }
   /// Mouse Out Callback
   /// The call back for when the mouse moves out of the table div.
   mouseOutCallback(e) {
-    if (this.state.isHoveringOverTable == false)
-    {return;}
-    this.setState({
-      isHoveringOverTable: false
-    });
+  
+    this.isHoveringOverTable = false;
   }
 
   /// Get History Data Json
@@ -1367,10 +1358,10 @@ class Transactions extends Component {
   returnModalInternal() {
     let internalString = [];
     if (
-      this.state.hoveringID != 999999999999 &&
+      this.hoveringID != 999999999999 &&
       this.props.walletitems.length != 0
     ) {
-      const selectedTransaction = this.props.walletitems[this.state.hoveringID];
+      const selectedTransaction = this.props.walletitems[this.hoveringID];
 
       if (selectedTransaction.confirmations <= 12) {
         internalString.push(<a key="isPending">PENDING TRANSACTION</a>);
