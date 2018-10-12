@@ -401,7 +401,22 @@ class Header extends Component {
         break;
     }
   }
-
+  daemonStatus() {
+    switch ("DAEMON_STATUS_FUNCTION_CALL_HERE") {
+      case "starting":
+        return <span>Daemon is starting...</span>;
+        break;
+      case "error":
+        return <span>Daemon error, please contact support.</span>;
+        break;
+      case "loaded":
+        return null;
+        break;
+      default:
+        return null;
+        break;
+    }
+  }
   // Mandatory React method
   render() {
     return (
@@ -471,6 +486,7 @@ class Header extends Component {
           />
         </Link>
         <div id="hdr-line" className="animated fadeIn " />
+        {this.daemonStatus()}
       </div>
     );
   }
