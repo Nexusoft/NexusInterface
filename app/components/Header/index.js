@@ -402,20 +402,26 @@ class Header extends Component {
     }
   }
   daemonStatus() {
-    switch ("DAEMON_STATUS_FUNCTION_CALL_HERE") {
-      case "starting":
-        return <span>Daemon is starting...</span>;
-        break;
-      case "error":
-        return <span>Daemon error, please contact support.</span>;
-        break;
-      case "loaded":
-        return null;
-        break;
-      default:
-        return null;
-        break;
-    }
+    // switch ("DAEMON_STATUS_FUNCTION_CALL_HERE") {
+    //   case "starting":
+    //     return <span>Daemon is starting...</span>;
+    //     break;
+    //   case "error":
+    //     return <span>Daemon error, please contact support.</span>;
+    //     break;
+    //   case "loaded":
+    //     return null;
+    //     break;
+    //   default:
+    //     return null;
+    //     break;
+    // }
+    if (
+      this.props.settings.manualDaemon === false &&
+      this.props.connections === undefined
+    ) {
+      return <span>Loading Daemon. Please wait...</span>;
+    } else return null;
   }
   // Mandatory React method
   render() {
