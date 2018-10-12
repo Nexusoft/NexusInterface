@@ -23,9 +23,9 @@ var host = "http://" + ip + ":" + port;
 if (process.platform === "win32") {
   var datadir = process.env.APPDATA + "\\Nexus_Tritium_Data";
 } else if (process.platform === "darwin") {
-  var datadir = process.env.HOME + "Nexus_Tritium_Data";
+  var datadir = process.env.HOME + "/Nexus_Tritium_Data";
 } else {
-  var datadir = process.env.HOME + "Nexus_Tritium_Data";
+  var datadir = process.env.HOME + "/.Nexus_Tritium_Data";
 }
 
 const EventEmitter = require("events");

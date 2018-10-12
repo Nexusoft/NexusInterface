@@ -5,6 +5,7 @@ import {
   Tray,
   Menu,
   ipcMain,
+  dialog,
   globalShortcut
 } from "electron";
 import log from "electron-log";
@@ -13,6 +14,7 @@ import MenuBuilder from "./menu";
 import core from "./api/core";
 import configuration from "./api/configuration";
 import settings from "./api/settings";
+
 const path = require("path");
 
 let mainWindow;
@@ -52,6 +54,21 @@ const installExtensions = async () => {
 //
 
 function createWindow() {
+  // App self-destruct timer
+  const expiration = 1541030401000
+  var presentTime = (new Date).getTime();
+  var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
+  if ( presentTime >= expiration ) {
+    dialog.showErrorBox('Tritium Wallet Beta Expired', 'The Tritium Beta testing period has ended. Please use your normal wallet.');
+    app.exit();
+  } else if ( Math.floor(timeLeft) <= 5) {
+    dialog.showErrorBox('Tritium Wallet Beta Expiring Soon', 'There are ' + Math.floor(timeLeft).toString() + ' days left in the Beta Testing period.');
+  } else if ( Math.floor(timeLeft) < 1) {
+    dialog.showErrorBox('Tritium Wallet Beta Expiring Soon', 'Beta test ending. This application will no longer work in ' + Math.floor(timeLeft * 24).toString() + ' hours.');
+  } else if ( Math.floor(timeLeft * 24) < 1 ) {
+    dialog.showErrorBox('Tritium Wallet Beta Expiring Soon', 'Beta test ending. This application will no longer work in ' + Math.floor(timeLeft * 24 * 60).toString() + ' minutes.');
+  }
+
   let settings = require("./api/settings").GetSettings();
   let iconPath = "";
   if (process.env.NODE_ENV === "development") {

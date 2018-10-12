@@ -1,15 +1,15 @@
 {
   "name": "nexus-tritium-beta",
-  "productName": "Nexus_Tritium_Wallet_(Beta)",
+  "productName": "Nexus_Tritium_Wallet_Beta",
   "version": "0.8.0",
-  "description": "Nexus_Tritium_Wallet_(Beta)",
+  "description": "Nexus_Tritium_Wallet_Beta",
   "main": "./main.prod.js",
   "author": {
     "name": "The Nexus Embassy",
     "email": "TheNexusEmbassy@nexus.io"
   },
   "scripts": {
-    "postinstall": "npm rebuild --runtime=electron --target=1.6.6 --disturl=https://atom.io/download/atom-shell --build-from-source"
+    "postinstall": "npm rebuild --runtime=electron --target=3.0.4 --disturl=https://atom.io/download/atom-shell --build-from-source"
   },
   "license": "MIT",
   "dependencies": {}

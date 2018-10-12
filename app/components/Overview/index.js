@@ -171,10 +171,21 @@ class Overview extends Component {
   returnExperimentalModalInternal() {
     return (
       <div>
-        <h3>
-          CONSIDER THIS SOFTWARE EXPERIMENTAL. <br />
-          PLEASE BACK UP WALLET FREQUENTLY.
-        </h3>
+        <h4>
+         THIS SOFTWARE IS EXPERIMENTAL AND IN BETA
+         TESTING. BY DEFAULT IT WILL NOT USE
+         ANY EXISTING NEXUS WALLET NOR ADDRESSES THAT
+         YOU MAY ALREADY HAVE.
+         <br />
+         <br />
+         AS SUCH, THIS WALLET SHOULD <b><u>NOT</u></b>
+         BE USED AS YOUR PRIMARY WALLET AND DOING SO
+         MAY AFFECT YOUR ABILITY TO ACCESS YOUR COINS
+         UP TO AND INCLUDING LOSING THEM PERMANENTLY.
+         <br />
+         <br />
+         USE THIS SOFTWARE AT YOUR OWN RISK.
+        </h4>
         <br key="br2" />
         <button
           key="experiment-button-accept"

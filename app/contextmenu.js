@@ -13,12 +13,12 @@ export default class ContextMenuBuilder {
     const template = [
       {
         label: "Copy",
-        ccelerator: "CmdOrCtrl+C",
+        accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
         label: "Paste",
-        ccelerator: "CmdOrCtrl+V",
+        accelerator: "CmdOrCtrl+V",
         role: "paste"
       }
       // ,
