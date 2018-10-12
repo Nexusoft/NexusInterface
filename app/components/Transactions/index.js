@@ -5,7 +5,7 @@ import { remote } from "electron";
 import Request from "request";
 import Table from "../../script/utilities-react";
 import * as RPC from "../../script/rpc";
-import { Promise } from "bluebird-lst";
+import { Promise, map } from "bluebird-lst";
 import * as TYPE from "../../actions/actiontypes";
 import Modal from "react-responsive-modal";
 import {
@@ -342,12 +342,20 @@ class Transactions extends Component {
         this.gothroughdatathatneedsit();
       });
 
+      let feePromises = [];
       incomingData.forEach(element => {
-        if (element.category == "send")
-        RPC.PROMISE("gettransaction",[element.txid]).then( payload => {
-           this.setFeeValuesOnTransaction(element.time,payload.fee);
-        });
+        if (element.category == "send"){
+        feePromises.push( RPC.PROMISE("gettransaction",[element.txid]));
+        }
       });
+      Promise.all(feePromises).then( payload => {
+        let feeData = new Map();
+        payload.map(element => {
+          feeData.set(element.time,element.fee);
+        });
+        this.setFeeValuesOnTransaction(feeData)
+      }
+      );
     }, 1000);
   }
 
@@ -1161,14 +1169,9 @@ class Transactions extends Component {
   /// Set Fee Values On Transaction
   /// Build a object from incoming data then dispatch that to redux to populate that transaction
   /// Input:
-  ///     timeID    || String || Timestamp
-  ///     feeValue  || Float  || The value of the send Fee
-  setFeeValuesOnTransaction(timeID, feeValue) {
-    let dataToChange = {
-      time: timeID,
-      fee: feeValue
-    };
-    this.props.UpdateFeeOnTransaction(dataToChange);
+  ///     incomingChangeData    || Array || Data that needs to be changed.
+  setFeeValuesOnTransaction(incomingChangeData) {
+    this.props.UpdateFeeOnTransaction(incomingChangeData);
   }
 
   /// Download History On Transaction
