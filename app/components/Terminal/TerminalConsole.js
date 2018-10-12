@@ -92,6 +92,12 @@ class TerminalConsole extends Component {
 
     splitInput[0] = preSanatized;
 
+    for (let index = 1; index < splitInput.length; index++) {
+      //splitInput[index] = splitInput[index].replace(/['"`]/g,"");
+      
+    }
+
+    //console.log(splitInput);
     /// this is the argument array
     let RPCArguments = [];
     this.props.addToHistory(splitInput[0]);
@@ -101,14 +107,14 @@ class TerminalConsole extends Component {
     for (let tempindex = 1; tempindex < splitInput.length; tempindex++) {
       let element = splitInput[tempindex];
       /// If this is a number we need to format it an int
-      if (isNaN(Number(element)) === false) {
+      if (element != "" && isNaN(Number(element)) === false) {
         element = parseFloat(element);
       }
       RPCArguments.push(element);
     }
 
     /// Execute the command with the given args
-    if (this.props.commandList.indexOf(splitInput[0]) != -1) {
+    if (this.props.commandList.some(function(v){ return v.indexOf(splitInput[0])>=0 }) == true) {
       RPC.PROMISE(splitInput[0], RPCArguments)
         .then(payload => {
           /// If a single object is given back, output it

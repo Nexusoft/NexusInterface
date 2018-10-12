@@ -140,6 +140,8 @@ export const PROMISE = (cmd, args) => {
 
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
+      //console.log(args);
+      //console.log(PostData);
       if (ResponseObject.status == 404) {
         reject("RPC Command {" + cmd + "} Not Found");
       }
