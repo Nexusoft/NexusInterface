@@ -7,3 +7,4 @@
 *.bmp binary
 *.svg binary
 *.jpeg binary
+app/cores/* binary

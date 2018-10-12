@@ -136,7 +136,7 @@ class Overview extends Component {
       <div>
         The MIT License (MIT)
         <br />
-        Copyright (c) 2015-present C. T. Lin
+        Copyright {this.getCurrentYear()} Nexus
         <br />
         Permission is hereby granted, free of charge, to any person obtaining a
         copy of this software and associated documentation files (the
