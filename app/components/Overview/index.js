@@ -132,11 +132,15 @@ class Overview extends Component {
   }
 
   returnLicenseModalInternal() {
+    
+    let tempYear = new Date();
+   
+    
     return (
       <div>
         The MIT License (MIT)
         <br />
-        Copyright {this.getCurrentYear()} Nexus
+        Copyright {tempYear} Nexus
         <br />
         Permission is hereby granted, free of charge, to any person obtaining a
         copy of this software and associated documentation files (the
