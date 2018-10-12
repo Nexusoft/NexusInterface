@@ -1,3 +1,9 @@
+/*
+Title: MarkaetDepth
+Description: Handle how to draw graph for market depth
+Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import {
   VictoryArea,
@@ -11,6 +17,7 @@ import {
 } from "victory";
 
 export default class MarketDepth extends Component {
+  // Mandatory React method
   render() {
     return (
       <div className="marketDepthInner">

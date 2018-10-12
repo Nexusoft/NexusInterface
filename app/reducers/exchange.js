@@ -23,7 +23,9 @@ export default (state = initialState, action) => {
     case TYPE.AVAILABLE_COINS:
       return {
         ...state,
-        availableCoins: action.payload
+        availableCoins: action.payload,
+        to: Object.values(action.payload)[0].symbol,
+        from: Object.values(action.payload)[0].symbol
       };
       break;
     case TYPE.TOGGLE_ACYNC_BUTTONS:

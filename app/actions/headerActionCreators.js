@@ -1,8 +1,18 @@
+/*
+Title: Header Action Creators
+Description: Redux action creators for the header.
+Last Modified by: Brian Smith
+*/
+
+// External Dependencies
+import Request from "request";
+
+// Internal Dependencies
 import * as TYPE from "./actiontypes";
 import * as RPC from "../script/rpc";
 import config from "../api/configuration";
-import Request from "request";
 
+// Header Action Creators
 export const GetInfoDump = () => {
   return dispatch => {
     RPC.PROMISE("getinfo", [])

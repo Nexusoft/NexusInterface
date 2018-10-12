@@ -23,52 +23,42 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.UPDATE_CONFIRMATIONS:
-      let tempNewItems = state.walletitems.map((e,i)=>
-        {
-          let replaceElement = action.payload[i];
-          if (replaceElement != undefined && e.txid == replaceElement.txid)
-            {
-              return {
-                ...e,
-                confirmations: replaceElement.confirmations
-              }
-            }
-            else
-            {
-              return e;
-            }
+      let tempNewItems = state.walletitems.map((e, i) => {
+        let replaceElement = action.payload[i];
+        if (replaceElement != undefined && e.txid == replaceElement.txid) {
+          return {
+            ...e,
+            confirmations: replaceElement.confirmations
+          };
+        } else {
+          return e;
         }
-      )
-      if (state.walletitems.length != action.payload.length)
-      {
-        /// A new transaction came in before we could update, revert so that there is no issue. 
+      });
+      if (state.walletitems.length != action.payload.length) {
+        // A new transaction came in before we could update, revert so that there is no issue.
         tempNewItems = state.walletitems;
       }
-      return{
+      return {
         ...state,
-        walletitems:tempNewItems 
-      }; 
+        walletitems: tempNewItems
+      };
       break;
 
     case TYPE.UPDATE_COINVALUE:
-      return{
+      return {
         ...state,
-        walletitems: state.walletitems.map((e,i)=>
-        {
+        walletitems: state.walletitems.map((e, i) => {
           let replaceElement = action.payload;
-          if (replaceElement != undefined && e.time == replaceElement.time)
-            {
-              return {
-                ...e,
-                value: replaceElement.value
-              }
-            }
-            else
-            {
-              return e;
-            }
+          if (replaceElement != undefined && e.time == replaceElement.time) {
+            return {
+              ...e,
+              value: replaceElement.value
+            };
+          } else {
+            return e;
+          }
         })
-      }; 
+      };
       break;
     case TYPE.UPDATE_FEEVALUE:
     let tempTransactionsWithfeeValues = state.walletitems.map((e,i)=>

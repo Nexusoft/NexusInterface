@@ -1,11 +1,3 @@
-#overviewPage {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: 100%;
-  margin: 0 -10%;
-}
-
 /*------------------------------------------------------------------
 [OVERVIEW MODULE Stylesheet] Overview Module CSS
 --------------------------------------------------------------------
@@ -38,7 +30,7 @@ Table of Contents
   z-index: 1;
   color: var(--color-2);
   opacity: 0.4;
-  filter: var(--nxs-logo);
+  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
 }
 
 /*------------------------------------------------------------------
@@ -80,6 +72,13 @@ II. BALANCE
 /*------------------------------------------------------------------
 III. CONTAINER
 ------------------------------------------------------------------*/
+#overviewPage {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100%;
+  margin: 0 -10%;
+}
 
 /*------------------------------------------------------------------
 IV. LEFT CONTENT - connection, Block Weight, Block Count
@@ -99,7 +98,7 @@ IV. LEFT CONTENT - connection, Block Weight, Block Count
   height: 35px;
   padding-top: 5px;
   padding-left: 20px;
-  filter: var(--footer);
+  filter: var(--icon-menu);
 }
 .left-stats > div > div {
   margin: 2em 0;
@@ -133,7 +132,7 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
   padding-top: 5px;
   padding-right: 20px;
   left: -55px;
-  filter: var(--footer);
+  filter: var(--icon-menu);
 }
 .right-stats > div > div {
   margin: 2em 0;
@@ -148,6 +147,7 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
 /*------------------------------------------------------------------
 MEDIA QUERIES
 ------------------------------------------------------------------*/
+
 @media (min-width: 300px) {
 }
 @media (min-width: 375px) {

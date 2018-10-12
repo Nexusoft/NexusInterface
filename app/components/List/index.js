@@ -1,18 +1,27 @@
+/*
+  Title: List
+  Description: This module displays the trust list with sorting
+   on percents. This is also a basic example for a module.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { remote } from "electron";
+
+// Internal Dependencies
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
-
 import ContextMenuBuilder from "../../contextmenu";
-import { remote } from "electron";
 
+// Images
 import trustimg from "../../images/trust-list.svg";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.list, ...state.common };
 };
-
 const mapDispatchToProps = dispatch => ({
   GetListDump: returnedData =>
     dispatch({ type: TYPE.GET_TRUST_LIST, payload: returnedData }),
@@ -20,6 +29,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class List extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     RPC.PROMISE("getnetworktrustkeys", []).then(payload => {
       this.props.GetListDump(payload.keys);
@@ -27,11 +37,12 @@ class List extends Component {
     this.props.googleanalytics.SendScreen("TrustList");
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  // Class methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -64,6 +75,7 @@ class List extends Component {
     }
   }
 
+  // Mandatory React method
   render() {
     return (
       <div id="trustlist" className="animated fadeIn">
@@ -98,6 +110,7 @@ class List extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

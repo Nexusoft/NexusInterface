@@ -65,5 +65,26 @@ Tabs
     height: 20px;
     margin-right: .75em;
     vertical-align: -4px;
-    filter: none;
+    filter: var(--footer-active);
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
 }

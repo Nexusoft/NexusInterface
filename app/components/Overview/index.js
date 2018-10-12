@@ -1,3 +1,9 @@
+/*
+  Title: Overview
+  Description: the landing page for the application.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
@@ -5,8 +11,16 @@ import { connect } from "react-redux";
 import Modal from "react-responsive-modal";
 import * as TYPE from "../../actions/actiontypes";
 import { NavLink } from "react-router-dom";
+import { remote } from "electron";
+import Request from "request";
 
-// importing images here because of a weird webpack issue
+// Internal Dependencies
+import { GetSettings, SaveSettings } from "../../api/settings.js";
+import NetworkGlobe from "./NetworkGlobe";
+import ContextMenuBuilder from "../../contextmenu";
+import * as helpers from "../../script/helper.js";
+
+// Images
 import USD from "../../images/USD.svg";
 import transactionsArrows from "../../images/transactions-arrows.svg";
 import marketicon from "../../images/marketstats-white.svg";
@@ -50,15 +64,7 @@ import interesticon from "../../images/interest.svg";
 import stakeicon from "../../images/staking-white.svg";
 import maxmindLogo from "../../images/maxmind-header-logo-compact.svg";
 
-import { GetSettings, SaveSettings } from "../../api/settings.js";
-import NetworkGlobe from "./NetworkGlobe";
-
-import ContextMenuBuilder from "../../contextmenu";
-import { remote } from "electron";
-import Request from "request";
-
-import * as helpers from "../../script/helper.js";
-
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.overview,
@@ -66,7 +72,6 @@ const mapStateToProps = state => {
     ...state.settings
   };
 };
-
 const mapDispatchToProps = dispatch => ({
   setExperimentalWarning: save =>
     dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
@@ -78,6 +83,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Overview extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
 
@@ -85,11 +91,11 @@ class Overview extends Component {
       this.props.googleanalytics.SendScreen("Overview");
     }
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
-
+  // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.blocks > previousprops.blocks) {
       let newDate = new Date();
@@ -112,6 +118,7 @@ class Overview extends Component {
     }
   }
 
+  // Class methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -164,10 +171,21 @@ class Overview extends Component {
   returnExperimentalModalInternal() {
     return (
       <div>
-        <h3>
-          CONSIDER THIS SOFTWARE EXPERIMENTAL. <br />
-          PLEASE BACK UP WALLET FREQUENTLY.
-        </h3>
+        <h4>
+         THIS SOFTWARE IS EXPERIMENTAL AND IN BETA
+         TESTING. BY DEFAULT IT WILL NOT USE
+         ANY EXISTING NEXUS WALLET NOR ADDRESSES THAT
+         YOU MAY ALREADY HAVE.
+         <br />
+         <br />
+         AS SUCH, THIS WALLET SHOULD <b><u>NOT</u></b>
+         BE USED AS YOUR PRIMARY WALLET AND DOING SO
+         MAY AFFECT YOUR ABILITY TO ACCESS YOUR COINS
+         UP TO AND INCLUDING LOSING THEM PERMANENTLY.
+         <br />
+         <br />
+         USE THIS SOFTWARE AT YOUR OWN RISK.
+        </h4>
         <br key="br2" />
         <button
           key="experiment-button-accept"
@@ -319,9 +337,11 @@ class Overview extends Component {
       ];
     }
   }
-  numberWithCommas = x => {
+
+  numberWithCommas(x) {
     if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
+  }
+
   calculateUSDvalue() {
     if (this.props.rawNXSvalues[0]) {
       let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
@@ -344,6 +364,7 @@ class Overview extends Component {
       return "$0";
     }
   }
+
   marketPriceFormatter() {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
@@ -382,6 +403,8 @@ class Overview extends Component {
       return "0";
     }
   }
+
+  // Mandatory React method
   render() {
     return (
       <div id="overviewPage">
@@ -541,16 +564,6 @@ class Overview extends Component {
           {this.props.connections === undefined ? null : (
             <div>
               <div
-                id="nxs-interestweight-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">Interest Rate</div>
-                <img src={interesticon} />
-                <div className="overviewValue">
-                  {this.props.interestweight + "%"}
-                </div>
-              </div>
-              <div
                 id="nxs-connections-info"
                 className="animated fadeInDown delay-1s"
               >
@@ -560,6 +573,16 @@ class Overview extends Component {
                   src={this.connectionsImage()}
                 />
                 <div className="overviewValue">{this.props.connections}</div>
+              </div>
+              <div
+                id="nxs-interestweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Interest Rate</div>
+                <img src={interesticon} />
+                <div className="overviewValue">
+                  {this.props.interestweight + "%"}
+                </div>
               </div>
               <div
                 id="nxs-blocks-info"
@@ -611,6 +634,8 @@ class Overview extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -1,14 +1,23 @@
+/*
+  Title: 
+  Description: 
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
-import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actions/actiontypes";
-import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
 import { connect } from "react-redux";
-import core from "../../api/core";
 
+// Internal Dependencies
+import styles from "./style.css";
+import core from "../../api/core";
+import * as TYPE from "../../actions/actiontypes";
+import * as RPC from "../../script/rpc";
+import ContextMenuBuilder from "../../contextmenu";
+
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -25,8 +34,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsCore extends Component {
-  /// Compent Did Mount
-  /// React Lifecycle on page load.
+  // React Method (Life cycle hook)
   componentDidMount() {
     var settings = require("../../api/settings.js").GetSettings();
 
@@ -46,7 +54,7 @@ class SettingsCore extends Component {
     this.setDetatchDatabaseOnShutdown(settings);
     // this.setOptionalTransactionFee(settings);
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     this.props.setSettings(require("../../api/settings.js").GetSettings());
     this.props.OpenModal("Core Settings Saved");
@@ -55,8 +63,7 @@ class SettingsCore extends Component {
     }, 2000);
   }
 
-  /// Set Enable Mining
-  /// Sets the HTML element toggle for Enable Mining
+  // Class Methods
   setEnableMining(settings) {
     var enableMining = document.getElementById("enableMining");
 
@@ -67,8 +74,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Enable Staking
-  /// Sets the HTML element toggle for Enable Staking
   setEnableStaking(settings) {
     var enableStaking = document.getElementById("enableStaking");
 
@@ -79,8 +84,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon
-  /// Sets the HTML element toggle for Manual Deamon Mode
   setManualDaemon(settings) {
     var manualDaemon = document.getElementById("manualDaemon");
     var manualDaemonSettings = document.getElementById(
@@ -103,8 +106,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon User
-  /// Sets the HTML element toggle for ManuelDaemonUser
   setManualDaemonUser(settings) {
     var manualDaemonUser = document.getElementById("manualDaemonUser");
 
@@ -115,8 +116,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon Password
-  /// Sets the HTML element toggle for ManualDaemonPassword
   setManualDaemonPassword(settings) {
     var manualDaemonPassword = document.getElementById("manualDaemonPassword");
 
@@ -127,8 +126,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon IP
-  /// Sets the HTML element toggle for ManualDeamonIP
   setManualDaemonIP(settings) {
     var manualDaemonIP = document.getElementById("manualDaemonIP");
 
@@ -139,8 +136,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon Port
-  /// Sets the HTML element toggle for ManualDaemonPort
   setManualDaemonPort(settings) {
     var manualDaemonPort = document.getElementById("manualDaemonPort");
 
@@ -151,8 +146,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon Data Directory
-  /// Sets the HTML element toggle for ManualDaemonDataDir
   setManualDaemonDataDir(settings) {
     var manualDaemonDataDir = document.getElementById("manualDaemonDataDir");
 
@@ -163,8 +156,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Map Port Using Upnp
-  /// Sets the HTML element toggle for MapPortUsingUpnp
   setMapPortUsingUpnp(settings) {
     var mapPortUsingUpnp = document.getElementById("mapPortUsingUpnp");
 
@@ -179,8 +170,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Socks4 Proxy
-  /// Sets the HTML element toggle for Socks4Proxy
   setSocks4Proxy(settings) {
     var socks4Proxy = document.getElementById("socks4Proxy");
     var socks4ProxyIP = document.getElementById("socks4ProxyIP");
@@ -202,8 +191,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Socks4ProxyIP
-  /// Sets the HTML element toggle for Socks4ProxyIP
   setSocks4ProxyIP(settings) {
     var socks4ProxyIP = document.getElementById("socks4ProxyIP");
 
@@ -214,8 +201,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Socks4 Proxy Port
-  /// Sets the HTML element toggle for Socks4ProxyPort
   setSocks4ProxyPort(settings) {
     var socks4ProxyPort = document.getElementById("socks4ProxyPort");
 
@@ -226,8 +211,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Detatch Database On Shutdown
-  /// Sets the HTML element toggle for DetachDatabaseOnShutdown
   setDetatchDatabaseOnShutdown(settings) {
     var detatchDatabaseOnShutdown = document.getElementById(
       "detatchDatabaseOnShutdown"
@@ -244,8 +227,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Update Enable Mining
-  /// Update Settings with the users Input
   updateEnableMining(event) {
     var el = even.target;
     var settings = require("../../api/settings.js");
@@ -256,8 +237,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Enable Staking
-  /// Update Settings with the users Input
   updateEnableStaking(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -268,8 +247,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Manual Daemon
-  /// Update the Settings for the ManualDaemon
   updateManualDaemon(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -294,8 +271,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Update Manual Daemon User
-  /// Update the Settings for the ManualDaemonDaemonUser
   updateManualDaemonUser(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -306,8 +281,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Manuel Daemon Password
-  /// Update the Settings for the ManualDaemonPassword
   updateManualDaemonPassword(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -318,8 +291,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Manual Daemon IP
-  /// Update the Settings for the ManualDaemonIP
   updateManualDaemonIP(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -330,8 +301,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Manual Deamon Port
-  /// Update the Settings for the ManualDaemonPort
   updateManualDaemonPort(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -342,8 +311,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Manual Deamon Data Directory
-  /// Update the Settings for the ManualDaemonDataDir
   updateManualDaemonDataDir(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -354,8 +321,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Map Port Using Upnp
-  /// Update the Settings for the MapPortUsingUpnp
   updateMapPortUsingUpnp(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -366,8 +331,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Socks4 Proxy
-  /// Update the Settings for the Socks4Proxy
   updateSocks4Proxy(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -389,8 +352,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Update Socks4 Proxy IP
-  /// Update the Settings for the Socks4ProxyIP
   updateSocks4ProxyIP(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -401,8 +362,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Socks4ProxyPort
-  /// Update the Settings for the Socks4ProxyPort
   updateSocks4ProxyPort(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -413,8 +372,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Detach Database On Shutdown
-  /// Update the Settings for the DetachOnShotdown
   updateDetatchDatabaseOnShutdown(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -424,12 +381,11 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Core Restart
-  /// Restart the Core
   coreRestart() {
     core.restart();
   }
 
+  // Mandatory React method
   render() {
     return (
       <section id="core">
@@ -603,6 +559,8 @@ class SettingsCore extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

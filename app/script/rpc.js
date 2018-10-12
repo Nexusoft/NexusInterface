@@ -109,7 +109,6 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args
     });
-    //console.log(PostData);
     var ResponseObject;
 
     let store = require("../store/configureStore");
@@ -149,9 +148,8 @@ export const PROMISE = (cmd, args) => {
         console.error(ResponseObject.response);
       }
       if (ResponseObject.status == 500) {
-        reject(JSON.parse(ResponseObject.statusText));
+        reject(JSON.parse(ResponseObject.responseText));
       }
-      //console.log(ResponseObject);
       if (cmd === "validateaddress") {
         if (JSON.parse(ResponseObject.response).result.isvalid === false) {
           reject(JSON.parse(ResponseObject.response).result.isvalid);

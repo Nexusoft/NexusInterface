@@ -1,43 +1,66 @@
+/* 
+  Title: Addressbook
+  Description: This is where you manage your Nexus addresses 
+  for your own wallet and the outside world. You can import 
+  and export your addressbook here, add labels to addresses 
+  as well as store important inforamtion about each of your 
+  contacts.
+  Last Modified by: Brian Smith
+*/
+
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { remote } from "electron";
 import { Link } from "react-router-dom";
 import Modal from "react-responsive-modal";
+import csv from "csvtojson";
+import { callbackify } from "util";
 
+// Internal Dependencies
 import config from "../../api/configuration";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/addressbookActionCreators";
 import TimeZoneSelector from "./timeZoneSelector";
-
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
+
+// Images
 import profilePlaceholder from "images/Profile_Placeholder.png";
-import { callbackify } from "util";
-import csv from "csvtojson";
-// import images here
 import addressbookimg from "../../images/addressbook.svg";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.common, ...state.addressbook, ...state.sendReceive };
 };
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Addressbook extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.loadMyAccounts();
     this.addressbookContextMenu = this.addressbookContextMenu.bind(this);
     window.addEventListener("contextmenu", this.addressbookContextMenu, false);
     this.props.googleanalytics.SendScreen("AddressBook");
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.addressbookContextMenu);
   }
+  // React Method (Life cycle hook)
+  componentDidUpdate(previousprops) {
+    if (this.props.save) {
+      config.WriteJson("addressbook.json", {
+        addressbook: this.props.addressbook
+      });
+      this.props.ToggleSaveFlag();
+    }
+  }
 
+  // Class methods
   addressbookContextMenu() {
     const txtTemplate = [
       {
@@ -180,15 +203,6 @@ class Addressbook extends Component {
     });
   }
 
-  componentDidUpdate(previousprops) {
-    if (this.props.save) {
-      config.WriteJson("addressbook.json", {
-        addressbook: this.props.addressbook
-      });
-      this.props.ToggleSaveFlag();
-    }
-  }
-
   getinitial(name) {
     if (name && name.length >= 1) return name.charAt(0);
     return "M";
@@ -222,6 +236,7 @@ class Addressbook extends Component {
       }
     }, 3000);
   }
+
   MyAddressesTable() {
     let filteredAddress = this.props.myAccounts.filter(acct => {
       if (acct.account === "") {
@@ -230,7 +245,6 @@ class Addressbook extends Component {
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
         );
       } else {
-        console.log(acct);
         return (
           acct.account
             .toLowerCase()
@@ -506,11 +520,10 @@ class Addressbook extends Component {
           .toLowerCase()
           .indexOf(this.props.contactSearch.toLowerCase()) !== -1
       ) {
-        console.log(contact.name);
         return `${contact.name}`;
       }
     });
-    console.log(filteredAddress);
+
     if (this.props.addressbook[0]) {
       return (
         <div
@@ -995,6 +1008,8 @@ class Addressbook extends Component {
         }
       });
   }
+
+  // Mandatory React method
   render() {
     return (
       <div id="addressbook" className="animated fadeIn">
@@ -1011,13 +1026,20 @@ class Addressbook extends Component {
           <img src={addressbookimg} className="hdr-img" />
           Address Book
         </h2>
-        <a className="refresh" onClick={() => this.exportAddressBook()}>
-          Export Contacts
-        </a>
-        <input
-          type="file"
-          onChange={e => this.importAddressBook(e.target.files[0].path)}
-        />
+        <div className="impexpblock">
+          <a className="impexp" onClick={() => this.exportAddressBook()}>
+            Export Contacts
+          </a>
+          <label htmlFor="importAddressbook">
+            <a className="impexp">Import Contacts</a>
+          </label>
+          <input
+            name="importAddressbook"
+            id="importAddressbook"
+            type="file"
+            onChange={e => this.importAddressBook(e.target.files[0].path)}
+          />
+        </div>
         <div className="panel">
           <div id="addressbook-controls">
             <div id="addressbook-search">
@@ -1272,6 +1294,7 @@ class Addressbook extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps
