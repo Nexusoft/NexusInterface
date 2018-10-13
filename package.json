@@ -39,7 +39,8 @@
       "main.prod.js",
       "main.prod.js.map",
       "package.json",
-      "resources/**/*"
+      "resources/**/*",
+      "installerSiderbar.bmp"
     ],
     "extraResources": [
       "./app/GeoLite2-City/**/*",
@@ -82,7 +83,7 @@
       "runAfterFinish": false,
       "allowToChangeInstallationDirectory": true,
       "menuCategory": "Nexus",
-      "installerSidebar": "installerSidebar.bmp",
+      "installerSidebar": "resources/installerSidebar.bmp",
       "license": "resources/license.txt",
       "shortcutName": "Tritium Wallet Beta",
       "artifactName": "Nexus Tritium Wallet Beta Setup.exe"

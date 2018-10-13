@@ -178,7 +178,7 @@ class Overview extends Component {
          YOU MAY ALREADY HAVE.
          <br />
          <br />
-         AS SUCH, THIS WALLET SHOULD <b><u>NOT</u></b>
+         AS SUCH, THIS WALLET SHOULD <b><u>NOT </u></b>
          BE USED AS YOUR PRIMARY WALLET AND DOING SO
          MAY AFFECT YOUR ABILITY TO ACCESS YOUR COINS
          UP TO AND INCLUDING LOSING THEM PERMANENTLY.
