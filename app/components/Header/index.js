@@ -421,7 +421,7 @@ class Header extends Component {
       this.props.connections === undefined
     ) {
       return <span>Loading Daemon. Please wait...</span>;
-    } else return null;
+    } else { return null };
   }
   // Mandatory React method
   render() {

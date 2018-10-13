@@ -2,7 +2,7 @@
   "name": "nexus-tritium-beta",
   "productName": "Nexus_Tritium_Wallet_Beta",
   "version": "0.8.0",
-  "buildDate": "October 02th 2018",
+  "buildDate": "October 12th 2018",
   "description": "Nexus_Tritium_Wallet_Beta",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -28,7 +28,7 @@
     "test-watch": "npm test -- --watch",
     "version2": "node ./internals/scripts/UpdateBuildDate.js"
   },
-  "browserslist": "defaults",
+  "browserslist": "electron 1.8.8",
   "build": {
     "productName": "Nexus_Tritium_Wallet_Beta",
     "appId": "com.nexusearth.NexusTritiumBeta",
@@ -120,7 +120,7 @@
   "homepage": "https://github.com/Nexusoft/Nexus-Interface-React/#readme",
   "jest": {
     "moduleNameMapper": {
-      "\\.(mmdb|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
+      "\\.(mmdb|jpg|jpeg|bmp|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
       "\\.(css|less|sass|scss)$": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
