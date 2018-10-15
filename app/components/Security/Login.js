@@ -142,7 +142,7 @@ class Login extends Component {
           <fieldset>
             <legend>Login</legend>
             <div className="field">
-              <label>Unlock Untill:</label>
+              <label>Unlock Until:</label>
               <input
                 type="datetime-local"
                 min={this.getMinDate()}
@@ -150,7 +150,7 @@ class Login extends Component {
                 onChange={e => this.setUnlockDate(e.target.value)}
                 required
               />
-              <span className="hint">Unlock untill date is required.</span>
+              <span className="hint">Unlock until date is required.</span>
             </div>
 
             <div className="field">
