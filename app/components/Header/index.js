@@ -481,7 +481,7 @@ class Header extends Component {
             </div>
           </div>
           <div className="icon">
-            <img id="syncStatus" src={this.syncStatus()} />
+            <img id="syncStatus" className="sync-img" src={this.syncStatus()} />
             <div className="tooltip bottom" style={{ right: "100%" }}>
               <div>{this.returnSyncStatusTooltip()}</div>
             </div>
