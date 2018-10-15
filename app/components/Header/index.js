@@ -1,41 +1,48 @@
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-
 import electron from "electron";
-import MenuBuilder from "../../menu";
 import Modal from "react-responsive-modal";
+import CustomProperties from "react-custom-properties";
+
+// Internal Dependencies
+import MenuBuilder from "../../menu";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
 import { GetSettings } from "../../api/settings.js";
-import CustomProperties from "react-custom-properties";
+import GOOGLE from "../../script/googleanalytics";
+import configuration from "../../api/configuration";
 
+// Images
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
 import unlockImg from "images/lock-minting.svg";
 import statGood from "images/status-good.svg";
-import statBad from "images/status-bad.svg";
+import statBad from "images/sync.svg";
 import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
-
-import GOOGLE from "../../script/googleanalytics";
-import configuration from "../../api/configuration";
 
 var tray = tray || null;
 let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.overview, ...state.common, ...state.settings };
+  return {
+    ...state.overview,
+    ...state.common,
+    ...state.settings
+  };
 };
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.props.setSettings(GetSettings());
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
@@ -66,7 +73,72 @@ class Header extends Component {
 
     this.props.history.push("/");
   }
+  // React Method (Life cycle hook)
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.unlocked_until === undefined) {
+      this.props.Unlock();
+      this.props.Unencrypted();
+    } else if (nextProps.unlocked_until === 0) {
+      this.props.Lock();
+      this.props.Encrypted();
+    } else if (nextProps.unlocked_until >= 0) {
+      this.props.Unlock();
+      this.props.Encrypted();
+    }
 
+    if (nextProps.blocks !== this.props.blocks) {
+      RPC.PROMISE("getpeerinfo", [], this.props)
+        .then(peerresponse => {
+          let hpb = 0;
+          peerresponse.forEach(element => {
+            if (element.height >= hpb) {
+              hpb = element.height;
+            }
+          });
+
+          return hpb;
+        })
+        .then(hpb => {
+          this.props.SetHighestPeerBlock(hpb);
+        });
+    }
+
+    if (this.props.heighestPeerBlock > nextProps.blocks) {
+      this.props.SetSyncStatus(false);
+    } else {
+      this.props.SetSyncStatus(true);
+    }
+
+    if (this.props.txtotal < nextProps.txtotal) {
+      RPC.PROMISE("listtransactions").then(payload => {
+        let MRT = payload.reduce((a, b) => {
+          if (a.time > b.time) {
+            return a;
+          } else {
+            return b;
+          }
+        });
+
+        if (MRT.category === "receive") {
+          this.doNotify("Received", MRT.amount + " NXS");
+          this.props.OpenModal("receive");
+        } else if (MRT.category === "send") {
+          this.doNotify("Sent", MRT.amount + " NXS");
+          this.props.OpenModal("send");
+        } else if (MRT.category === "genesis") {
+          this.doNotify("Genesis", MRT.amount + " NXS");
+          this.props.OpenModal("genesis");
+        } else if (MRT.category === "trust") {
+          this.doNotify("Trust", MRT.amount + " NXS");
+          this.props.OpenModal("trust");
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  // Class methods
   loadMyAccounts() {
     RPC.PROMISE("listaccounts", [0]).then(payload => {
       Promise.all(
@@ -109,6 +181,7 @@ class Header extends Component {
       });
     });
   }
+
   doNotify(context, message) {
     Notification.requestPermission().then(result => {
       var myNotification = new Notification(context, {
@@ -117,7 +190,6 @@ class Header extends Component {
     });
   }
 
-  // Set up the icon in the system tray
   setupTray() {
     let trayImage = "";
     let mainWindow = electron.remote.getCurrentWindow();
@@ -216,70 +288,6 @@ class Header extends Component {
     tray.setContextMenu(contextMenu);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.unlocked_until === undefined) {
-      this.props.Unlock();
-      this.props.Unencrypted();
-    } else if (nextProps.unlocked_until === 0) {
-      this.props.Lock();
-      this.props.Encrypted();
-    } else if (nextProps.unlocked_until >= 0) {
-      this.props.Unlock();
-      this.props.Encrypted();
-    }
-
-    if (nextProps.blocks !== this.props.blocks) {
-      RPC.PROMISE("getpeerinfo", [], this.props)
-        .then(peerresponse => {
-          let hpb = 0;
-          peerresponse.forEach(element => {
-            if (element.height >= hpb) {
-              hpb = element.height;
-            }
-          });
-
-          return hpb;
-        })
-        .then(hpb => {
-          this.props.SetHighestPeerBlock(hpb);
-        });
-    }
-
-    if (this.props.heighestPeerBlock > nextProps.blocks) {
-      this.props.SetSyncStatus(false);
-    } else {
-      this.props.SetSyncStatus(true);
-    }
-
-    if (this.props.txtotal < nextProps.txtotal) {
-      RPC.PROMISE("listtransactions").then(payload => {
-        let MRT = payload.reduce((a, b) => {
-          if (a.time > b.time) {
-            return a;
-          } else {
-            return b;
-          }
-        });
-
-        if (MRT.category === "receive") {
-          this.doNotify("Received", MRT.amount + " NXS");
-          this.props.OpenModal("receive");
-        } else if (MRT.category === "send") {
-          this.doNotify("Sent", MRT.amount + " NXS");
-          this.props.OpenModal("send");
-        } else if (MRT.category === "genesis") {
-          this.doNotify("Genesis", MRT.amount + " NXS");
-          this.props.OpenModal("genesis");
-        } else if (MRT.category === "trust") {
-          this.doNotify("Trust", MRT.amount + " NXS");
-          this.props.OpenModal("trust");
-        }
-      });
-    } else {
-      return null;
-    }
-  }
-
   signInStatus() {
     if (this.props.unlocked_until === undefined) {
       return unencryptedImg;
@@ -311,8 +319,10 @@ class Header extends Component {
 
   syncStatus() {
     if (this.props.heighestPeerBlock > this.props.blocks) {
+      // rotates
       return statBad;
     } else {
+      // doesn't
       return statGood;
     }
   }
@@ -393,7 +403,31 @@ class Header extends Component {
         break;
     }
   }
-
+  daemonStatus() {
+    // switch ("DAEMON_STATUS_FUNCTION_CALL_HERE") {
+    //   case "starting":
+    //     return <span>Daemon is starting...</span>;
+    //     break;
+    //   case "error":
+    //     return <span>Daemon error, please contact support.</span>;
+    //     break;
+    //   case "loaded":
+    //     return null;
+    //     break;
+    //   default:
+    //     return null;
+    //     break;
+    // }
+    if (
+      this.props.settings.manualDaemon === false &&
+      this.props.connections === undefined
+    ) {
+      return <span>Loading Daemon. Please wait...</span>;
+    } else {
+      return null;
+    }
+  }
+  // Mandatory React method
   render() {
     return (
       <div id="Header">
@@ -447,7 +481,7 @@ class Header extends Component {
             </div>
           </div>
           <div className="icon">
-            <img src={this.syncStatus()} />
+            <img id="syncStatus" src={this.syncStatus()} />
             <div className="tooltip bottom" style={{ right: "100%" }}>
               <div>{this.returnSyncStatusTooltip()}</div>
             </div>
@@ -462,10 +496,13 @@ class Header extends Component {
           />
         </Link>
         <div id="hdr-line" className="animated fadeIn " />
+        {this.daemonStatus()}
       </div>
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

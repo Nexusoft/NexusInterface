@@ -1,12 +1,15 @@
+/*
+  Title: Transactions Module
+  Description: 
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { remote } from "electron";
 import Request from "request";
-import Table from "../../script/utilities-react";
-import * as RPC from "../../script/rpc";
 import { Promise } from "bluebird-lst";
-import * as TYPE from "../../actions/actiontypes";
 import Modal from "react-responsive-modal";
 import {
   VictoryBar,
@@ -24,22 +27,29 @@ import {
   createContainer,
   Flyout
 } from "victory";
+var rp = require("request-promise");
 
-import transactionsimg from "../../images/transactions.svg";
-
+// Internal Dependencies
+import Table from "../../script/utilities-react";
+import * as RPC from "../../script/rpc";
+import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import config from "../../api/configuration";
+import styles from "./style.css";
+
+// Images
+import transactionsimg from "../../images/transactions.svg";
 
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
 // import "react-table/react-table.css"
 
 /* TODO: THIS DOESN"T WORK EITHER, COULD BE DUE TO WEBPACK CONFIG FOR ExtractTextPlugin? */
 //import tablestyles from "./react-table.css";
-import styles from "./style.css";
 
+// Global variables
 let tempaddpress = new Map();
-var rp = require("request-promise");
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.transactions,
@@ -128,8 +138,7 @@ class Transactions extends Component {
     };
   }
 
-  /// Component Did Mount
-  /// Life cycle hook for page getting loaded
+  // React Method (Life cycle hook)
   componentDidMount() {
     this._isMounted = true;
     this.updateChartAndTableDimensions();
@@ -189,7 +198,26 @@ class Transactions extends Component {
       false
     );
   }
+  // React Method (Life cycle hook)
+  componentDidUpdate(previousprops) {
+    if (this.props.txtotal != previousprops.txtotal) {
+      this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
+    }
+  }
 
+  // React Method (Life cycle hook)
+  componentWillUnmount() {
+    this._isMounted = false;
+    this.SaveHistoryDataToJson();
+    clearInterval(this.state.refreshInterval);
+    this.setState({
+      refreshInterval: null
+    });
+    window.removeEventListener("resize", this.updateChartAndTableDimensions);
+    window.removeEventListener("contextmenu", this.transactioncontextfunction);
+  }
+
+  // Class Methods
   loadMyAccounts() {
     RPC.PROMISE("listaccounts", [0]).then(payload => {
       Promise.all(
@@ -248,35 +276,12 @@ class Transactions extends Component {
     });
   }
 
-  /// Component Did Update
-  /// Life cycle hook for prop update
-  componentDidUpdate(previousprops) {
-    if (this.props.txtotal != previousprops.txtotal) {
-      this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
-    }
-  }
-
-  /// Component Will Unmount
-  /// Life cycle hook for leaving the page
-  componentWillUnmount() {
-    this._isMounted = false;
-    this.SaveHistoryDataToJson();
-    clearInterval(this.state.refreshInterval);
-    this.setState({
-      refreshInterval: null
-    });
-    window.removeEventListener("resize", this.updateChartAndTableDimensions);
-    window.removeEventListener("contextmenu", this.transactioncontextfunction);
-  }
-
-  /// Set COnfirmations Callback
-  /// The callback for when we want to update just the confirmations
+  // The callback for when we want to update just the confirmations
   setConfirmationsCallback(incomingData) {
     this.props.UpdateConfirmationsOnTransactions(incomingData);
   }
 
-  /// Set On Mount Transaction Callback
-  /// The callback for the on Mount State
+  // The callback for the on Mount State
   setOnmountTransactionsCallback(incomingData) {
     let objectheaders = Object.keys(this.state.walletTransactions[0]);
     let tabelheaders = [];
@@ -297,7 +302,7 @@ class Transactions extends Component {
         ]
       }
     });
-    /// Just trying to give some space on this not important call
+    // Just trying to give some space on this not important call
     setTimeout(() => {
       let promisnew = new Promise((resolve, reject) => {
         let temp = this.state.transactionsToCheck;
@@ -321,8 +326,7 @@ class Transactions extends Component {
     }, 1000);
   }
 
-  /// Update Chart and Table Dimensions
-  /// Updates the height and width of the chart and table when you resize the window
+  // Updates the height and width of the chart and table when you resize the window
   updateChartAndTableDimensions(event) {
     let chart = document.getElementById("transactions-chart");
     let filters = document.getElementById("transactions-filters");
@@ -369,10 +373,9 @@ class Transactions extends Component {
     });
   }
 
-  /// Transaction Context Function
-  /// This is the method that is called when the user pressed the right click
-  /// Input:
-  ///   e || Event || Default Events given by the system for right click
+  // This is the method that is called when the user pressed the right click
+  // Input:
+  //   e || Event || Default Events given by the system for right click
   transactioncontextfunction(e) {
     // Prevent default action of right click
     e.preventDefault();
@@ -515,10 +518,8 @@ class Transactions extends Component {
     }
   }
 
-  /// Copy Something To The Clipboard
-  /// Copies the input to the clipboard
-  /// Input :
-  ///   instringtocopy      || String || String to copy
+  // Input :
+  //   instringtocopy      || String || String to copy
   copysomethingtotheclipboard(instringtocopy) {
     let tempelement = document.createElement("textarea");
     tempelement.value = instringtocopy;
@@ -528,8 +529,7 @@ class Transactions extends Component {
     document.body.removeChild(tempelement);
   }
 
-  /// Get Transaction Data
-  /// Gets all the data from each account held by the wallet
+  // Gets all the data from each account held by the wallet
   getTransactionData(finishingCallback) {
     const incomingMyAccounts = this.props.myAccounts;
     let listedaccounts = [];
@@ -545,7 +545,7 @@ class Transactions extends Component {
 
     let settingsCheckDev = require("../../api/settings.js").GetSettings();
 
-    /// If in Dev Mode add some random transactions
+    // If in Dev Mode add some random transactions
     if (settingsCheckDev.devMode == true) {
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
@@ -615,8 +615,7 @@ class Transactions extends Component {
     });
   }
 
-  /// Transaction Time Frame Change
-  /// Set the display property in state from the dropdown element
+  // Set the display property in state from the dropdown element
   transactionTimeframeChange(event) {
     this.setState({
       displayTimeFrame: event.target.options[event.target.selectedIndex].value
@@ -629,10 +628,9 @@ class Transactions extends Component {
     this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
   }
 
-  /// Save CSV
-  /// creates a CSV file then prompts the user to save that file
-  /// Input :
-  ///   DataToSave  || Object Array || Transactions to save
+  // creates a CSV file then prompts the user to save that file
+  // Input :
+  //   DataToSave  || Object Array || Transactions to save
   saveCSV(DataToSave) {
     const rows = []; //Set up a blank array for each row
 
@@ -692,8 +690,7 @@ class Transactions extends Component {
     document.body.removeChild(link);
   }
 
-  /// Transaction Type Filter Callback
-  /// Callback for when you change the category filter
+  // Callback for when you change the category filter
   transactiontypefiltercallback = e => {
     const catSearch = e.target.value;
     this.setState({
@@ -701,8 +698,7 @@ class Transactions extends Component {
     });
   };
 
-  /// Transaction Amount Filter Callback
-  /// Callback for when you change the amount filter
+  // Callback for when you change the amount filter
   transactionamountfiltercallback = e => {
     const amountFilterValue = e.target.value;
     this.setState({
@@ -710,8 +706,7 @@ class Transactions extends Component {
     });
   };
 
-  /// Transaction Address Filter Callback
-  /// Callback for when you change the address filter
+  // Callback for when you change the address filter
   transactionaddressfiltercallback = e => {
     const addressfiltervalue = e.target.value;
     this.setState({
@@ -719,10 +714,9 @@ class Transactions extends Component {
     });
   };
 
-  /// Read AddressBook
-  /// Taken From address page
-  /// Return:
-  ///   json || address in json format
+  // Taken From address page
+  // Return:
+  //   json || address in json format
   readAddressBook() {
     let json = null;
     try {
@@ -733,8 +727,7 @@ class Transactions extends Component {
     return json;
   }
 
-  /// Filter By Category
-  /// Filter the transactions based on the CategoryFilter
+  // Filter the transactions based on the CategoryFilter
   filterByCategory(inTransactions) {
     let tempTrans = [];
     const categoryFilterValue = this.state.categoryFilter;
@@ -752,8 +745,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  /// Filter By Amount
-  /// Filter the transactions based on the AmountFilter
+  // Filter the transactions based on the AmountFilter
   filterbyAmount(inTransactions) {
     let tempTrans = [];
     const amountFilterValue = this.state.amountFilter;
@@ -768,8 +760,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  /// Filter By Address
-  /// Filter the transactions based on the AddressFilter
+  // Filter the transactions based on the AddressFilter
   filterByAddress(inTransactions) {
     let tempTrans = [];
     const addressfiltervalue = this.state.addressFilter;
@@ -785,8 +776,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  /// Filter By Time
-  /// Filter the transactions based on the DisplayTimeFrame
+  // Filter the transactions based on the DisplayTimeFrame
   filterByTime(inTransactions) {
     let tempTrans = [];
     const timeFilterValue = this.state.displayTimeFrame;
@@ -832,8 +822,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  ///Return All Filter
-  /// Returns all the transaction that have been filtered by the filter
+  // Returns all the transaction that have been filtered by the filter
   returnAllFilters(inTransactions) {
     let tempTrans = inTransactions;
     tempTrans = this.filterByTime(tempTrans);
@@ -843,8 +832,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  /// Temp Add Fack Transaction
-  /// DEV MODE: Create a fake transaction for testing.
+  // DEV MODE: Create a fake transaction for testing.
   TEMPaddfaketransaction() {
     let faketrans = {
       transactionnumber: this.props.walletitems.length,
@@ -895,16 +883,14 @@ class Transactions extends Component {
     return faketrans;
   }
 
-  /// Table Select CallBack
-  /// What happens when you select something in the table
+  // What happens when you select something in the table
   tableSelectCallback(e, indata) {
     this.setState({
       hoveringID: indata.index
     });
   }
 
-  /// Return Formated Table Data
-  /// Return the data to be placed into the Table
+  // Return the data to be placed into the Table
   returnFormatedTableData() {
     if (this.props.walletitems == undefined) {
       return [];
@@ -928,10 +914,9 @@ class Transactions extends Component {
     });
   }
 
-  /// Return Table Columns
-  /// Returns the columns and their rules/formats for the Table
-  /// Output:
-  ///   Array || Table Column array
+  // Returns the columns and their rules/formats for the Table
+  // Output:
+  //   Array || Table Column array
   returnTableColumns() {
     let tempColumns = [];
 
@@ -974,10 +959,9 @@ class Transactions extends Component {
     return tempColumns;
   }
 
-  /// Return Chart Data
-  /// Returns formated data for the Victory Chart
-  /// Output:
-  ///    Array || Data Array
+  // Returns formated data for the Victory Chart
+  // Output:
+  //    Array || Data Array
   returnChartData() {
     if (this.props.walletitems == undefined) {
       return [];
@@ -993,8 +977,7 @@ class Transactions extends Component {
     });
   }
 
-  /// Return Corrected Fill Color
-  /// returns the correct fill color based on the category
+  // returns the correct fill color based on the category
   returnCorrectFillColor(inData) {
     if (inData.category == "receive") {
       return "#0ca4fb";
@@ -1005,8 +988,7 @@ class Transactions extends Component {
     }
   }
 
-  /// Return Correct Stoke Color
-  /// Returns the Correct color based on the category
+  // Returns the Correct color based on the category
   returnCorrectStokeColor(inData) {
     if (inData.category == "receive") {
       return "#0ca4fb";
@@ -1016,14 +998,13 @@ class Transactions extends Component {
       return "#fff";
     }
   }
-  /// Return Tooltip Lable
-  /// Returns the tooltip lable for the chart
+
+  // Returns the tooltip lable for the chart
   returnToolTipLable(inData) {
     return inData.category + "\nAmount: " + inData.b + "\nTime:" + inData.a;
   }
 
-  /// Handle Zoom
-  /// The event listener for when you zoom in and out
+  // The event listener for when you zoom in and out
   handleZoom(domain) {
     domain.x[0] = new Date(domain.x[0]);
     domain.x[1] = new Date(domain.x[1]);
@@ -1048,23 +1029,21 @@ class Transactions extends Component {
     this.setState({ zoomDomain: domain });
   }
 
-  /// Mouse Over Callback
-  /// the callback for when you mouse over a transaction on the table.
+  // the callback for when you mouse over a transaction on the table.
   mouseOverCallback(e, inData) {
     this.setState({
       isHoveringOverTable: true
     });
   }
-  /// Mouse Out Callback
-  /// The call back for when the mouse moves out of the table div.
+
+  // The call back for when the mouse moves out of the table div.
   mouseOutCallback(e) {
     this.setState({
       isHoveringOverTable: false
     });
   }
 
-  /// Get History Data Json
-  /// Either load in the file from local or start downloading more data and make a new one.
+  // Either load in the file from local or start downloading more data and make a new one.
   gethistorydatajson() {
     let fs = require("fs");
 
@@ -1089,11 +1068,10 @@ class Transactions extends Component {
     } catch (err) {}
   }
 
-  /// Create Cryptocompare Url
-  /// Helper method to create URL's quickly
-  /// Input :
-  ///   coinsym         || String || The symbol for the coin/fiat we are looking for MUST BE IN CAPS
-  ///   timestamptolook || String || timestamp string ( in seconds) that will be the to var in looking up data
+  // Helper method to create URL's quickly
+  // Input :
+  //   coinsym         || String || The symbol for the coin/fiat we are looking for MUST BE IN CAPS
+  //   timestamptolook || String || timestamp string ( in seconds) that will be the to var in looking up data
   createcryptocompareurl(coinsym, timestamptolook) {
     let tempurl =
       "https://min-api.cryptocompare.com/data/pricehistorical?fsym=NXS&tsyms=" +
@@ -1103,12 +1081,11 @@ class Transactions extends Component {
     return tempurl;
   }
 
-  /// Set History Values On Transaction
-  /// Build a object from incoming data then dispatch that to redux to populate that transaction
-  /// Input:
-  ///     timeID    || String || Timestamp
-  ///     USDValue  || Float  || The value in USD
-  ///     BTCValue  || Float  || The value in BTC
+  // Build a object from incoming data then dispatch that to redux to populate that transaction
+  // Input:
+  //     timeID    || String || Timestamp
+  //     USDValue  || Float  || The value in USD
+  //     BTCValue  || Float  || The value in BTC
   setHistoryValuesOnTransaction(timeID, USDvalue, BTCValue) {
     let dataToChange = {
       time: timeID,
@@ -1120,10 +1097,9 @@ class Transactions extends Component {
     this.props.UpdateCoinValueOnTransaction(dataToChange);
   }
 
-  /// Download History On Transaction
-  /// Download both USD and BTC history on the incoming transaction
-  /// Input:
-  ///     inEle   || String || the timestamp of the transaction
+  // Download both USD and BTC history on the incoming transaction
+  // Input:
+  //     inEle   || String || the timestamp of the transaction
   downloadHistoryOnTransaction(inEle) {
     if (this._isMounted == false) {
       return;
@@ -1177,8 +1153,7 @@ class Transactions extends Component {
     });
   }
 
-  /// Go Through Data That needs It
-  /// Go through all the data points that need to download new data a execute that promise
+  // Go through all the data points that need to download new data a execute that promise
   gothroughdatathatneedsit() {
     let historyPromiseList = [];
     for (
@@ -1203,8 +1178,7 @@ class Transactions extends Component {
     }
   }
 
-  /// Save History Data To Json
-  /// Save the history data to a json file
+  // Save the history data to a json file
   SaveHistoryDataToJson() {
     if (
       this.state.historyData.size == 0 ||
@@ -1235,14 +1209,13 @@ class Transactions extends Component {
     );
   }
 
-  /// Map To Object
-  /// Used to transform a Map to a Object so that we can save it to a json file
-  /// http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
-  /// Based on code from http://2ality.com/2015/08/es6-map-json.html
-  /// Input :
-  ///   aMap    || Map || A map of the data
-  /// Output :
-  ///   Object  || A object that replaces the map but contains the same data.
+  // Used to transform a Map to a Object so that we can save it to a json file
+  // http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
+  // Based on code from http://2ality.com/2015/08/es6-map-json.html
+  // Input :
+  //   aMap    || Map || A map of the data
+  // Output :
+  //   Object  || A object that replaces the map but contains the same data.
   mapToObject(aMap) {
     let obj = Object.create(null);
 
@@ -1257,12 +1230,11 @@ class Transactions extends Component {
     return obj;
   }
 
-  /// Find CLoses Data Point
-  /// If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC
-  /// Input :
-  ///   intimestamp || String || Timestamp to look up
-  /// Output :
-  ///     Object || A object that contains priceUSD and priceBTC
+  // If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC
+  // Input :
+  //   intimestamp || String || Timestamp to look up
+  // Output :
+  //     Object || A object that contains priceUSD and priceBTC
   findclosestdatapoint(intimestamp) {
     let datatograb = this.state.historyData.get(Number(intimestamp));
     if (datatograb == undefined) {
@@ -1276,14 +1248,13 @@ class Transactions extends Component {
     }
   }
 
-  /// Compare Data
-  /// Compares a Data to a from Data and a To Data and returns a Bool
-  /// Input :
-  ///   indate    || Date || Date to check
-  ///   starttime || Date || Date from
-  ///   endtime   || Date || Date to
-  /// Output :
-  ///   Bool || Is this true or not
+  // Compares a Data to a from Data and a To Data and returns a Bool
+  // Input :
+  //   indate    || Date || Date to check
+  //   starttime || Date || Date from
+  //   endtime   || Date || Date to
+  // Output :
+  //   Bool || Is this true or not
   comparedate(indate, starttime, endtime) {
     if (starttime <= indate && indate <= endtime) {
       return true;
@@ -1292,17 +1263,15 @@ class Transactions extends Component {
     }
   }
 
-  /// On Open Modal
-  /// Fired when you attempt to open the modal
-  onOpenModal = () => {
+  // Fired when you attempt to open the modal
+  onOpenModal() {
     this.setState({ open: true });
-  };
+  }
 
-  /// On Close Modal
-  /// Fired when you attempt to open the modal
-  onCloseModal = () => {
+  // Fired when you attempt to open the modal
+  onCloseModal() {
     this.setState({ open: false });
-  };
+  }
 
   returnModalInternal() {
     let internalString = [];
@@ -1364,6 +1333,7 @@ class Transactions extends Component {
     return defPagesize;
   }
 
+  // Mandatory React method
   render() {
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
@@ -1554,6 +1524,7 @@ class Transactions extends Component {
 
 //not being used save for later
 class CustomTooltip extends React.Component {
+  // Mandatory React method
   render() {
     return (
       <g>
@@ -1563,6 +1534,8 @@ class CustomTooltip extends React.Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

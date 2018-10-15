@@ -58,7 +58,7 @@
 #navigation a:hover {
   display: block;
   margin-top: -4px;
-  filter: var(--footer-hover);
+  filter: var(--footer-active);
 }
 
 #navigation a.active {
@@ -114,9 +114,9 @@
   }
 }
 
-#navigation a.active:hover {
-  /* filter: drop-shadow(0px 0px 10px #0ca4fb) grayscale(0) ; */
-}
+/* #navigation a.active:hover { */
+/* filter: drop-shadow(0px 0px 10px #0ca4fb) grayscale(0) ; */
+/* } */
 
 #navigation a img {
   display: block;
@@ -130,13 +130,12 @@
   margin: 0.625em;
 }
 
-
 /*------------------------------------------------------------------
 MEDIA QUERIES
 ------------------------------------------------------------------*/
 
 @media (min-width: 300px) {
-  .maxmindCopyright{
+  .maxmindCopyright {
     display: none;
   }
 }
@@ -149,7 +148,7 @@ MEDIA QUERIES
 @media (min-width: 800px) {
 }
 @media (min-width: 1024px) {
-  .maxmindCopyright{
+  .maxmindCopyright {
     display: block;
     position: absolute;
     left: 5px;
@@ -158,7 +157,6 @@ MEDIA QUERIES
     color: var(--color-2);
     opacity: 0.4;
     filter: var(--nxs-logo);
-    
   }
 }
 @media (min-width: 1200px) {

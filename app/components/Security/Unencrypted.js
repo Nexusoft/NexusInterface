@@ -1,18 +1,26 @@
+/*
+  Title: 
+  Description: 
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
+
+// Internal Dependencies
 import core from "../../api/core";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.login
   };
 };
-
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
   busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
@@ -22,6 +30,12 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Unencrypted extends Component {
+  // React Method (Life cycle hook)
+  componentWillUnmount() {
+    this.props.wipe();
+  }
+
+  // Class Methods
   showPrivKey(e) {
     e.preventDefault();
     let addressInput = document.getElementById("privKeyAddress");
@@ -127,10 +141,7 @@ class Unencrypted extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.props.wipe();
-  }
-
+  // Mandatory React method
   render() {
     return (
       <div id="securitylogin">
@@ -259,6 +270,8 @@ class Unencrypted extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -4,7 +4,8 @@ rm -r release
 rm -r app/dist
 rm app/*.map
 rm app/main.prod.js
-rm -r ~/.config/nexus-interface
+rm dll
+rm -r ~/.config/Nexus_Tritium_Wallet_Beta
 echo ""
 echo "Cleaned things up!"
 echo ""

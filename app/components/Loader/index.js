@@ -1,22 +1,31 @@
+/*
+  Title: Loader
+  Description: Creates the loader image of tritium animated.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
 import { connect } from "react-redux";
 
+// Internal Dependencies
+import styles from "./style.css";
+
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.common };
 };
+const mapDispatchToProps = dispatch => {};
 
-const mapDispatchToProps = dispatch => ({});
 class Loader extends Component {
   state = {
     loading: true
   };
-
+  // React Method (Life cycle hook)
   componentDidMount() {
     setTimeout(() => this.setState({ loading: false }), 5000);
   }
-
+  // Mandatory React method
   render() {
     const { loading } = this.state;
 
@@ -42,6 +51,7 @@ class Loader extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

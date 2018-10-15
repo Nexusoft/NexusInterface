@@ -175,9 +175,9 @@ export default class MenuBuilder {
                 label: "Toggle Full Screen",
                 accelerator: "F11",
                 click: () => {
-                  // this.mainWindow.setFullScreen(
-                  //   !this.mainWindow.isFullScreen()
-                  // );
+                  remote
+                    .getCurrentWindow()
+                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
                 }
               }
             ]
@@ -312,7 +312,7 @@ export default class MenuBuilder {
           {
             label: "Toggle &Developer Tools",
             accelerator: "Alt+Ctrl+I",
-            click: () => { 
+            click: () => {
               this.mainWindow.toggleDevTools();
             }
           }
@@ -332,7 +332,7 @@ export default class MenuBuilder {
                 },
 
                 {
-                  label: "Toggle &Full Screen",
+                  label: "Toggle Full Screen",
                   accelerator: "F11",
                   click: () => {
                     remote
@@ -353,9 +353,9 @@ export default class MenuBuilder {
                   label: "Toggle Full Screen",
                   accelerator: "F11",
                   click: () => {
-                    // this.mainWindow.setFullScreen(
-                    //   !this.mainWindow.isFullScreen()
-                    // );
+                    remote
+                      .getCurrentWindow()
+                      .setFullScreen(!remote.getCurrentWindow().isFullScreen());
                   }
                 }
               ]

@@ -1,17 +1,25 @@
+/*
+  Title: Login Settings
+  Description: Renders the login page.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
-import styles from "./style.css";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
+
+// Internal Dependencies
+import styles from "./style.css";
 import * as TYPE from "../../actions/actiontypes";
 import * as RPC from "../../script/rpc";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.login
   };
 };
-
 const mapDispatchToProps = dispatch => ({
   setDate: date => dispatch({ type: TYPE.SET_DATE, payload: date }),
   setErrorMessage: message =>
@@ -115,13 +123,13 @@ class Login extends Component {
     let today = new Date();
 
     let inputDate = new Date(input);
-    inputDate = new Date(inputDate);
 
     if (inputDate >= today) {
       this.props.setDate(input);
     }
   }
 
+  // Mandatory React method
   render() {
     if (this.props.loggedIn) {
       return (
@@ -186,6 +194,7 @@ class Login extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

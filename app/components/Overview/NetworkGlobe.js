@@ -1,15 +1,25 @@
+/*
+  Title: Network Globe
+  Description: Creates the network globe for the overview.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
+
+import maxmind from "maxmind";
+import Request from "request";
+import * as THREE from "three";
+
+// Internal Dependencies
 import styles from "./style.css";
 import DAT from "../../script/globe";
 import * as RPC from "../../script/rpc";
-import maxmind from "maxmind";
-import Request from "request";
 import configuration from "../../api/configuration";
-import * as THREE from "three";
 
 var glb;
 
 export default class NetworkGlobe extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.props.handleOnLineRender(this.testRestartLines);
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
@@ -81,7 +91,11 @@ export default class NetworkGlobe extends Component {
       }
     );
   }
-
+  // React Method (Life cycle hook)
+  componentWillUnmount() {
+    this.threeRootElement.remove();
+  }
+  // Class Methods
   updatePointsOnGlobe() {
     const globeseries = [["peers", []]];
     const geoiplookup = maxmind.openSync(
@@ -149,15 +163,14 @@ export default class NetworkGlobe extends Component {
     }, 1000);
   }
 
-  componentWillUnmount() {
-    this.threeRootElement.remove();
-  }
   getResourcesDirectory() {
     let appPath = require("electron").remote.app.getAppPath();
 
     if (process.cwd() === appPath) return "./";
     else return process.resourcesPath + "/";
   }
+
+  // Mandatory React method
   render() {
     return (
       <div id="nxs-earth" className="earth">

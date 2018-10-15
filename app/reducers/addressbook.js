@@ -150,6 +150,7 @@ export default (state = initialState, action) => {
         };
       }
       break;
+
     case TYPE.CONTACT_IMAGE:
       return {
         ...state,
@@ -165,6 +166,7 @@ export default (state = initialState, action) => {
         }),
         save: true
       };
+      break;
     case TYPE.MY_ACCOUNTS_LIST:
       return {
         ...state,
@@ -248,7 +250,7 @@ export default (state = initialState, action) => {
           };
         } else return state;
       }
-
+      break;
     case TYPE.EDIT_PHONE:
       return {
         ...state,

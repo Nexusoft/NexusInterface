@@ -1,3 +1,10 @@
+/*
+Title: Exchange Module
+Description: Shapeshift integration
+Last Modified by: Brian Smith
+*/
+
+// External Dependencies
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { Route, Redirect } from "react-router";
@@ -5,29 +12,29 @@ import { connect } from "react-redux";
 import Modal from "react-responsive-modal";
 import { Link } from "react-router-dom";
 import Request from "request";
+import { remote } from "electron";
 import Countdown from "react-countdown-now";
 
+// Internal Dependencies
 import styles from "./style.css";
 import Fast from "./Fast";
 import Precise from "./Precise";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
+import ContextMenuBuilder from "../../contextmenu";
+
+// Images
+import shapeshiftimg from "../../images/shapeshift.svg";
 import bullseye from "../../images/bullseye.svg";
 import fastImg from "../../images/fast.svg";
 
-import ContextMenuBuilder from "../../contextmenu";
-import { remote } from "electron";
-
-// import images here
-import shapeshiftimg from "../../images/shapeshift.svg";
-
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.exchange
   };
 };
-
 const mapDispatchToProps = dispatch => ({
   clearTransaction: () => {
     dispatch({ type: TYPE.CLEAR_TRANSACTION });
@@ -38,6 +45,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Exchange extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.props.googleanalytics.SendScreen("Exchange");
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
@@ -47,11 +55,12 @@ class Exchange extends Component {
       this.props.emailForRecipt(settingsObj.email);
     }
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  // Class methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -151,51 +160,7 @@ class Exchange extends Component {
     }
   }
 
-  // cancelTransaction() {
-
-  //   Request(
-  //     {
-  //       method: "POST",
-  //       url: "https://shapeshift.io/cancelpending",
-  //       json: {
-  //         address: this.props.transaction.depositAddress
-  //       }
-  //     },
-  //     (error, response, body) => {
-
-  //       if (response.statusCode === 200) {
-  //         if (!response.body.error) {
-  //
-  //         }
-  //       } else {
-
-  //       }
-  //     }
-  //   );
-  // }
-
-  // requestRecipt() {
-
-  //   Request(
-  //     {
-  //       method: "POST",
-  //       url: "https://shapeshift.io/mail",
-  //       json: {
-  //         email: this.props.email,
-  //         orderId: this.props.transaction.orderId
-  //       }
-  //     },
-  //     (error, response, body) => {
-  //       if (response.statusCode === 200) {
-  //         if (!response.body.error) {
-
-  //         }
-  //       } else {
-  //       }
-  //     }
-  //   );
-  // }
-
+  // Mandatory React method
   render() {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
@@ -258,6 +223,8 @@ class Exchange extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -1,7 +1,16 @@
+/*
+Title: Footer
+Description: Bottom Menu
+Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+
+// Internal Dependencies
 import styles from "./style.css";
 
+// Images
 import mainlogo from "images/logo.svg";
 import sendImg from "images/send.svg";
 import marketImg from "images/market.svg";
@@ -14,6 +23,7 @@ import shapeshift from "images/shapeshift.svg";
 import listImg from "images/trust-list.svg";
 
 export default class Footer extends Component {
+  // Mandatory React method
   render() {
     return (
       <div id="Footer">

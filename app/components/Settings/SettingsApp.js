@@ -1,14 +1,23 @@
+/*
+  Title: App settings
+  Description: Control App settings.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
-import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actions/actiontypes";
-import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
 import Modal from "react-responsive-modal";
 import { connect } from "react-redux";
 
+// Internal Dependencies
+import styles from "./style.css";
+import * as RPC from "../../script/rpc";
+import * as TYPE from "../../actions/actiontypes";
+import ContextMenuBuilder from "../../contextmenu";
+
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -38,8 +47,7 @@ const mapDispatchToProps = dispatch => ({
 var currentBackupLocation = ""; //Might redo to use redux but this is only used to replace using json reader every render;
 
 class SettingsApp extends Component {
-  /// Compent Did Mount
-  /// React Lifecycle on page load.
+  // React Method (Life cycle hook)
   componentDidMount() {
     var settings = require("../../api/settings.js").GetSettings();
     // this.setDefaultUnitAmount(settings);
@@ -58,12 +66,12 @@ class SettingsApp extends Component {
     }
     //this.OnFiatCurrencyChange = this.OnFiatCurrencyChange.bind(this);
   }
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     this.props.setSettings(require("../../api/settings.js").GetSettings());
   }
 
-  /// Set Autostart
-  /// Sets the HTML element toggle for AutoStart
+  // Class Methods
   setAutostart(settings) {
     var autostart = document.getElementById("autostart");
 
@@ -78,8 +86,6 @@ class SettingsApp extends Component {
     }
   }
 
-  /// Set Minimize To Tray
-  /// Sets the HTML element toggle for MinimizeToTray
   setMinimizeToTray(settings) {
     var minimizeToTray = document.getElementById("minimizeToTray");
 
@@ -94,8 +100,6 @@ class SettingsApp extends Component {
     }
   }
 
-  /// Set Minimize On Close
-  /// Sets the HTML element toggle for MinimizeOnClose
   setMinimizeOnClose(settings) {
     var minimizeOnClose = document.getElementById("minimizeOnClose");
 
@@ -110,8 +114,6 @@ class SettingsApp extends Component {
     }
   }
 
-  /// Set Google Analytics Enabled
-  /// Sets the HTML element toggle for GoogleAnalytics
   setGoogleAnalytics(settings) {
     var googlesetting = document.getElementById("googleAnalytics");
 
@@ -125,11 +127,7 @@ class SettingsApp extends Component {
       googlesetting.checked = false;
     }
   }
-
-  //
-  // Set default unit amount
-  //
-
+  // TODO: Finish this method.
   // setDefaultUnitAmount(settings) {
   //   var defaultUnitAmount = document.getElementById("defaultUnitAmount");
 
@@ -140,8 +138,6 @@ class SettingsApp extends Component {
   //   }
   // }
 
-  /// Set Developer Mode
-  /// Sets the HTML element toggle for DevMode
   setDeveloperMode(settings) {
     var devmode = document.getElementById("devmode");
 
@@ -150,7 +146,6 @@ class SettingsApp extends Component {
     }
   }
 
-  // Set info popup
   setInfoPopup(settings) {
     var infopop = document.getElementById("infoPopUps");
 
@@ -159,15 +154,11 @@ class SettingsApp extends Component {
     }
   }
 
-  /// Set Saved Tx Fee
-  /// Sets the TX fee based on the RPC server
   setSavedTxFee(settings) {
     let settxobj = document.getElementById("optionalTransactionFee");
     settxobj.value = this.props.paytxfee;
   }
 
-  /// Update Backup Locaton
-  /// Update settings so that we have the correct back up location
   updateBackupLocation(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -180,8 +171,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update info Popups
-  /// Update Settings with the users Input
   updateInfoPopUp(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -192,8 +181,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update autostart
-  /// Update Settings with the users Input
   updateAutoStart(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -203,17 +190,16 @@ class SettingsApp extends Component {
 
     settings.SaveSettings(settingsObj);
 
-    ///This is the code that will create a reg to have the OS auto start the app
+    //This is the code that will create a reg to have the OS auto start the app
     var AutoLaunch = require("auto-launch");
-    /// Change Name when we need to
+    // Change Name when we need to
     var autolaunchsettings = new AutoLaunch({
-      // name: "nexus-tritium-beta"
-      name: "nexus-tritium-beta"
-      // path: app.getPath()
+      name: "nexus-tritium-beta",
+      path: path.dirname(app.getPath("exe"))
     });
-    ///No need for a path as it will be set automaticly
+    //No need for a path as it will be set automaticly
 
-    ///Check selector
+    //Check selector
     if (el.checked == true) {
       autolaunchsettings.enable();
       autolaunchsettings
@@ -228,13 +214,11 @@ class SettingsApp extends Component {
           // handle error
         });
     } else {
-      /// Will Remove the property that makes it auto play
+      // Will Remove the property that makes it auto play
       autolaunchsettings.disable();
     }
   }
 
-  /// Update Minimize To Tray
-  /// Update Settings with the users Input
   updateMinimizeToTray(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -245,8 +229,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Minimize On Close
-  /// Update Settings with the users Input
   updateMinimizeOnClose(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -257,8 +239,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Enabled Google Analytics
-  /// Update Settings with the users Input
   updateGoogleAnalytics(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -288,8 +268,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Optional Transaction Fee
-  /// Update Settings with the users Input
   updateOptionalTransactionFee(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -299,8 +277,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Set TxFee
-  /// Sets the transaction fee and sets that using at RPC command to the daemon
   setTxFee() {
     let TxFee = document.getElementById("optionalTransactionFee").value;
     if (parseFloat(TxFee) > 0) {
@@ -313,8 +289,6 @@ class SettingsApp extends Component {
     }
   }
 
-  /// Update Default Unit Amount
-  /// Update Settings with the users Input
   updateDefaultUnitAmount(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -325,8 +299,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Developer Mode
-  /// Update Settings with the users Input
   updateDeveloperMode(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -337,8 +309,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Return Backup Location
-  /// ?? WORK IN PROGRESS ??
   returnCurrentBackupLocation() {
     let currentLocation = require("../../api/settings.js").GetSettings();
     //set state for currentlocation and return it
@@ -346,8 +316,6 @@ class SettingsApp extends Component {
     return "Current Location: " + currentLocation.backupLocation;
   }
 
-  /// Save Email
-  /// Save Email to json file.
   saveEmail() {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -395,6 +363,7 @@ class SettingsApp extends Component {
     require("../../api/settings.js").SaveSettings(settings);
   }
 
+  // Mandatory React method
   render() {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
@@ -647,6 +616,8 @@ class SettingsApp extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -1,27 +1,40 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import styles from "./style.css";
-import { connect } from "react-redux";
-import * as RPC from "../../script/rpc";
-import Modal from "react-responsive-modal";
-import * as TYPE from "../../actions/actiontypes";
+/*
+Title: SendRecieve
+Description: Should be renamed this is where you send 
+nexus from. You can send one, send many from a queue, 
+calculate based off of fiat pair etc.
+Last Modified by: Brian Smith
+*/
 
-import ContextMenuBuilder from "../../contextmenu";
+// External Dependencies
+import React, { Component } from "react";
 import { remote } from "electron";
 import { access } from "fs";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import Modal from "react-responsive-modal";
 
-// import images here
+// Internal Dependencies
+import ContextMenuBuilder from "../../contextmenu";
+import styles from "./style.css";
+import * as RPC from "../../script/rpc";
+import * as TYPE from "../../actions/actiontypes";
+import * as helpers from "../../script/helper.js";
+
+// Images
 import sendimg from "../../images/send.svg";
 import plusimg from "../../images/plus.svg";
 import addressbookimg from "../../images/addressbook.svg";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.transactions,
     ...state.sendRecieve,
     ...state.overview,
-    ...state.addressbook
+    ...state.addressbook,
+    ...state.settings
   };
 };
 
@@ -101,6 +114,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SendRecieve extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     RPC.PROMISE("listaccounts").then(payload => {
       this.props.changeAccount(
@@ -116,15 +130,15 @@ class SendRecieve extends Component {
 
     this.props.googleanalytics.SendScreen("Send");
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  // Class methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
-    //build default
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
@@ -157,10 +171,10 @@ class SendRecieve extends Component {
   nxsAmount(e, isNxs) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === "")) {
       if (isNxs) {
-        let Usd = e.target.value * this.props.USD;
+        let Usd = e.target.value * this.calculateUSDvalue();
         this.props.updateAmount(e.target.value, Usd.toFixed(2));
       } else {
-        let NxsValue = e.target.value / this.props.USD;
+        let NxsValue = e.target.value / this.calculateUSDvalue();
         this.props.updateAmount(NxsValue.toFixed(5), e.target.value);
       }
     } else {
@@ -277,6 +291,7 @@ class SendRecieve extends Component {
     let values = Object.values(this.props.Queue);
     return values;
   }
+
   addAmount() {
     let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 0) {
@@ -292,6 +307,7 @@ class SendRecieve extends Component {
       );
     }
   }
+
   validateAddToQueue() {
     if (!(this.props.Address === "") && this.props.Amount > 0) {
       RPC.PROMISE("validateaddress", [this.props.Address])
@@ -370,26 +386,29 @@ class SendRecieve extends Component {
     });
   }
 
-  // calculateUSDvalue(e) {
-  //   let USDvalue = this.props.USDAmount * this.props.USD;
+  calculateUSDvalue() {
+    if (this.props.rawNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
+        if (ele.name === this.props.settings.fiatCurrency) {
+          return ele;
+        }
+      });
 
-  //   if (USDvalue === 0) {
-  //     USDvalue = USDvalue;
-  //   } else {
-  //     USDvalue = USDvalue;
-  //   }
-  //   return USDvalue;
-  // }
-  // calculateNexusVxalue(e) {
-  //   let USDvalue = this.props.Amount * this.props.USD;
-
-  //   if (USDvalue === 0) {
-  //     USDvalue = USDvalue;
-  //   } else {
-  //     USDvalue = USDvalue;
-  //   }
-  //   return USDvalue;
-  // }
+      let currencyValue = selectedCurrancyValue[0].price;
+      if (currencyValue === 0) {
+        currencyValue = `${currencyValue}.00`;
+      } else {
+        currencyValue = currencyValue.toFixed(2);
+      }
+      // return `${helpers.ReturnCurrencySymbol(
+      //   selectedCurrancyValue[0].name,
+      //   this.props.displayNXSvalues
+      // ) + currencyValue}`;
+      return currencyValue;
+    } else {
+      return 0;
+    }
+  }
 
   fillQueue() {
     let Keys = Object.keys(this.props.Queue);
@@ -619,8 +638,9 @@ class SendRecieve extends Component {
     }
   }
 
+  // Mandatory React method
   render() {
-    ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
+    //THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
       this.props.SetSendAgainData(null);
     }
@@ -697,7 +717,10 @@ class SendRecieve extends Component {
                   {" "}
                   <div className="convertor">
                     <label>Nexus Amount</label>{" "}
-                    <label className="UsdConvertorLabel">USD</label>
+                    <label className="UsdConvertorLabel">
+                      {" "}
+                      {this.props.settings.fiatCurrency}
+                    </label>
                   </div>
                   <div className="convertor">
                     {" "}
@@ -808,6 +831,7 @@ class SendRecieve extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

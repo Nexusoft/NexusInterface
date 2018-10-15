@@ -1,18 +1,27 @@
+/*
+Title: Block Exporer
+Description: Unfinished block explorer see nxsorbitalscan for examples.
+Last Modified by: Brian Smith
+*/
+
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
-import * as TYPE from "../../actions/actiontypes";
-
-import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
+// Internal Dependencies
+import * as TYPE from "../../actions/actiontypes";
+import ContextMenuBuilder from "../../contextmenu";
+
+// Images
 import blockexplorerimg from "../../images/blockexplorer.svg";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.common, ...state.transactions };
 };
-
 const mapDispatchToProps = dispatch => ({
   SetExploreInfo: returnData => {
     dispatch({ type: TYPE.SET_TRANSACTION_EXPLOREINFO, payload: returnData });
@@ -20,14 +29,16 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class BlockExplorer extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  // Class methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -36,6 +47,7 @@ class BlockExplorer extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  // Mandatory React method
   render() {
     if (this.props.exploreinfo != undefined && this.props.exploreinfo != null) {
       this.props.SetExploreInfo(null);
@@ -53,6 +65,8 @@ class BlockExplorer extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps
