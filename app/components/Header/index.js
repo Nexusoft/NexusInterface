@@ -393,6 +393,9 @@ class Header extends Component {
       case "Style Settings Saved":
         return <h2>Style Settings Saved</h2>;
         break;
+      case "No ammount set":
+        return <h2>No Ammount Set</h2>;
+        break;
       case "Core Settings Saved":
         return <h2>Core Settings Saved</h2>;
         break;
@@ -421,7 +424,9 @@ class Header extends Component {
       this.props.connections === undefined
     ) {
       return <span>Loading Daemon. Please wait...</span>;
-    } else { return null };
+    } else {
+      return null;
+    }
   }
   // Mandatory React method
   render() {

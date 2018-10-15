@@ -763,17 +763,18 @@ class SendRecieve extends Component {
                   <button
                     className="button"
                     onClick={() => {
-                      if (
-                        !(this.props.Address === "") &&
-                        this.props.Amount > 0
-                      ) {
-                        if (
-                          this.props.encrypted === false ||
-                          this.props.loggedIn === true
-                        ) {
-                          this.props.OpenModal2("send transaction?");
+                      if (!(this.props.Address === "")) {
+                        if (this.props.Amount > 0) {
+                          if (
+                            this.props.encrypted === false ||
+                            this.props.loggedIn === true
+                          ) {
+                            this.props.OpenModal2("send transaction?");
+                          } else {
+                            this.props.OpenModal("Wallet Locked");
+                          }
                         } else {
-                          this.props.OpenModal("Wallet Locked");
+                          this.props.OpenModal("No ammount set");
                         }
                       } else {
                         this.props.OpenModal("Invalid Address");
