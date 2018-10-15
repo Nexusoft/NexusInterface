@@ -318,8 +318,10 @@ class Header extends Component {
   }
 
   syncStatus() {
+    let syncStatus = document.getElementById("syncStatus");
     if (this.props.heighestPeerBlock > this.props.blocks) {
       // rotates
+      syncStatus.classList.remove("sync-img");
       return statBad;
     } else {
       // doesn't
@@ -481,7 +483,11 @@ class Header extends Component {
             </div>
           </div>
           <div className="icon">
-            <img id="syncStatus" className="sync-img" src={this.syncStatus()} />
+            {this.props.heighestPeerBlock > this.props.blocks ? (
+              <img id="syncing" className="sync-img" src={statBad} />
+            ) : (
+              <img id="synced" src={statGood} />
+            )}
             <div className="tooltip bottom" style={{ right: "100%" }}>
               <div>{this.returnSyncStatusTooltip()}</div>
             </div>
