@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { Route, Redirect } from "react-router";
 import { connect } from "react-redux";
-
+import { FormattedMessage } from "react-intl";
 import styles from "./style.css";
 import SettingsApp from "./SettingsApp";
 import SettingsCore from "./SettingsCore";
@@ -26,7 +26,8 @@ import styleImg from "../../images/developer.svg";
 
 const mapStateToProps = state => {
   return {
-    ...state.common
+    ...state.common,
+    ...state.intl
   };
 };
 
@@ -63,7 +64,10 @@ class Settings extends Component {
         <div id="settings-container">
           <h2>
             <img src={settingsimg} className="hdr-img" />
-            Settings
+            <FormattedMessage
+              id="Settings.Settings"
+              defaultMessage="Settings"
+            />
           </h2>
 
           <div className="panel">
@@ -71,25 +75,34 @@ class Settings extends Component {
               <li>
                 <NavLink to={`${this.props.match.url}/App`}>
                   <img src={logoImg} alt="Application" />
-                  Application
+                  <FormattedMessage
+                    id="Settings.Application"
+                    defaultMessage="Application"
+                  />
                 </NavLink>
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Core`}>
                   <img src={coreImg} alt="Core" />
-                  Core
+                  <FormattedMessage id="Settings.Core" defaultMessage="Core" />
                 </NavLink>
               </li>
               <li>
                 {this.props.encrypted !== true ? (
                   <NavLink to={`${this.props.match.url}/Unencrypted`}>
                     <img src={lockImg} alt="Security" />
-                    Security
+                    <FormattedMessage
+                      id="Settings.Security"
+                      defaultMessage="Security"
+                    />
                   </NavLink>
                 ) : (
                   <NavLink to={`${this.props.match.url}/Security`}>
                     <img src={lockImg} alt="Security" />
-                    Security
+                    <FormattedMessage
+                      id="Settings.Security"
+                      defaultMessage="Security"
+                    />
                   </NavLink>
                 )}
               </li>
@@ -102,7 +115,10 @@ class Settings extends Component {
               <li>
                 <NavLink to={`${this.props.match.url}/Style`}>
                   <img src={styleImg} alt="Style" />
-                  Style
+                  <FormattedMessage
+                    id="Settings.Style"
+                    defaultMessage="Style"
+                  />
                 </NavLink>
               </li>
             </ul>

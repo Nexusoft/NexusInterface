@@ -107,8 +107,12 @@ form {
 #settings input[type="file"]::-webkit-file-upload-button {
   visibility: hidden;
 }
+
+.wallpaperDiv {
+  margin-left: -10px;
+}
 #settings input[type="file"]::before {
-  content: "Select a wallpaper";
+  /* content: "Select a wallpaper"; */
 
   display: inline-block;
   position: relative;
@@ -155,11 +159,26 @@ form {
 }
 
 .fee {
-  /* This bit sets up the horizontal layout */
   display: flex;
   width: 100px;
   flex-direction: row;
   flex-wrap: wrap;
+}
+.langSet {
+  display: flex;
+  width: 125px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.language {
+  /* background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0; */
+
+  width: 300px;
+
+  /* background-color: var(--color-3); */
+
+  color: var(--color-4);
 }
 
 .Txfee {

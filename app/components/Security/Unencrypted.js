@@ -5,6 +5,7 @@ import { Redirect } from "react-router";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
+import { FormattedMessage } from "react-intl";
 
 const mapStateToProps = state => {
   return {
@@ -137,31 +138,69 @@ class Unencrypted extends Component {
         <div className="securitySubContainer">
           <form>
             <fieldset>
-              <legend>Encrypt Wallet</legend>
+              <legend>
+                <FormattedMessage
+                  id="Settings.EncryptWallet"
+                  defaultMessage="Encrypt Wallet"
+                />
+              </legend>
 
               <div className="field">
-                <label>Password:</label>
-                <input
-                  type="password"
-                  placeholder="New Password"
-                  id="newPass"
-                  required
-                />
+                <label>
+                  <FormattedMessage
+                    id="Settings.Password"
+                    defaultMessage="Password"
+                  />
+                  :
+                </label>
+                <FormattedMessage
+                  id="Settings.NewPassword"
+                  defaultMessage="New Password"
+                >
+                  {np => (
+                    <input
+                      type="password"
+                      placeholder={np}
+                      id="newPass"
+                      required
+                    />
+                  )}
+                </FormattedMessage>
                 <span className="hint">
-                  Password is required and cannot contain these characters{" "}
+                  <FormattedMessage
+                    id="Settings.CannotContain"
+                    defaultMessage="Password is required and cannot contain these characters"
+                  />{" "}
                   {`-$&/*|<>`}
                 </span>
               </div>
               <div className="field">
-                <label>Re-Enter Password:</label>
-                <input
-                  type="password"
-                  placeholder="Re-Enter Password"
-                  id="passChk"
-                  onChange={e => this.reEnterValidator(e)}
-                />
+                <label>
+                  {" "}
+                  <FormattedMessage
+                    id="Settings.Re-Enter"
+                    defaultMessage="Re-Enter Password"
+                  />
+                  :
+                </label>
+                <FormattedMessage
+                  id="Settings.Re-Enter"
+                  defaultMessage="Re-Enter Password"
+                >
+                  {rp => (
+                    <input
+                      type="password"
+                      placeholder={rp}
+                      id="passChk"
+                      onChange={e => this.reEnterValidator(e)}
+                    />
+                  )}
+                </FormattedMessage>
                 <span id="passHint" className="err invalid">
-                  Passwords do not match
+                  <FormattedMessage
+                    id="Settings.PasswordsMatch"
+                    defaultMessage="Passwords do not match"
+                  />
                 </span>
               </div>
               <p>
@@ -171,7 +210,10 @@ class Unencrypted extends Component {
                   className="button primary"
                   onClick={e => this.encrypt(e)}
                 >
-                  Submit
+                  <FormattedMessage
+                    id="Settings.Submit"
+                    defaultMessage="Submit"
+                  />
                 </button>
               </p>
             </fieldset>
@@ -180,29 +222,56 @@ class Unencrypted extends Component {
         <div className="securitySubContainer privKey">
           <form>
             <fieldset>
-              <legend>View private key for address</legend>
+              <legend>
+                <FormattedMessage
+                  id="Settings.ViewPrivateKey"
+                  defaultMessage="View private key for address"
+                />
+              </legend>
 
               <div className="field">
-                <label>Address:</label>
-                <div className="expander">
-                  <input
-                    type="text"
-                    id="privKeyAddress"
-                    placeholder="Enter Address Here"
-                    required
+                <label>
+                  <FormattedMessage
+                    id="Settings.Address"
+                    defaultMessage="Address"
                   />
+                  :
+                </label>
+                <div className="expander">
+                  <FormattedMessage
+                    id="Settings.EnterAddressHere"
+                    defaultMessage="Enter Address Here"
+                  >
+                    {eah => (
+                      <input
+                        type="text"
+                        id="privKeyAddress"
+                        placeholder={eah}
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                   <button
                     // disabled={this.props.busyFlag}
                     className="button primary"
                     onClick={e => this.showPrivKey(e)}
                   >
-                    Submit
+                    <FormattedMessage
+                      id="Settings.Submit"
+                      defaultMessage="Submit"
+                    />
                   </button>
                 </div>
               </div>
 
               <div className="field">
-                <label>Private Key:</label>
+                <label>
+                  <FormattedMessage
+                    id="Settings.PrivateKey"
+                    defaultMessage="Private Key"
+                  />
+                  :
+                </label>
                 <div className="expander">
                   <input type="password" id="privKeyOutput" />
                   <button
@@ -210,7 +279,10 @@ class Unencrypted extends Component {
                     className="button"
                     onClick={e => this.copyPrivkey(e)}
                   >
-                    Copy
+                    <FormattedMessage
+                      id="Settings.Copy"
+                      defaultMessage="Copy"
+                    />
                   </button>
                 </div>
               </div>
@@ -220,27 +292,58 @@ class Unencrypted extends Component {
         <div className="securitySubContainer privKey">
           <form>
             <fieldset>
-              <legend>Import Private Key</legend>
+              <legend>
+                <FormattedMessage
+                  id="Settings.ImportPrivateKey"
+                  defaultMessage="Import Private Key"
+                />
+              </legend>
               <div className="field">
-                <label>Account Name:</label>
-                <div className="expander">
-                  <input
-                    type="Text"
-                    placeholder="Account Name"
-                    id="acctName"
-                    required
+                <label>
+                  <FormattedMessage
+                    id="Settings.AccountName"
+                    defaultMessage="Account Name"
                   />
+                  :
+                </label>
+                <div className="expander">
+                  <FormattedMessage
+                    id="Settings.AccountName"
+                    defaultMessage="Account"
+                  >
+                    {an => (
+                      <input
+                        type="Text"
+                        placeholder={an}
+                        id="acctName"
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                 </div>
               </div>
               <div className="field">
-                <label>Private Key:</label>
-                <div className="expander">
-                  <input
-                    type="password"
-                    placeholder="Private Key"
-                    id="privateKey"
-                    required
+                <label>
+                  <FormattedMessage
+                    id="Settings.PrivateKey"
+                    defaultMessage="Private Key"
                   />
+                  :
+                </label>
+                <div className="expander">
+                  <FormattedMessage
+                    id="Settings.PrivateKey"
+                    defaultMessage="Private Key"
+                  >
+                    {pk => (
+                      <input
+                        type="password"
+                        placeholder={pk}
+                        id="privateKey"
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                 </div>
               </div>
               <p>
@@ -249,7 +352,10 @@ class Unencrypted extends Component {
                   className="button primary"
                   onClick={e => this.importPrivKey(e)}
                 >
-                  Submit
+                  <FormattedMessage
+                    id="Settings.AccountName"
+                    defaultMessage="Account"
+                  />
                 </button>
               </p>
             </fieldset>

@@ -7,6 +7,7 @@ const initialState = {
     experimentalWarning: true,
     windowWidth: 1600,
     windowHeight: 1388,
+
     devMode: false,
     wallpaper: "./images/background/starrynight.jpeg",
     renderGlobe: true,

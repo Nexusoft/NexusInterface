@@ -1,6 +1,9 @@
 import Request from "request";
 import * as TYPE from "./actiontypes";
-
+import { FormattedMessage } from "react-intl";
+import React from "react";
+import locale from "../reducers/intl";
+import messages from "../containers/messages";
 //action creator for loaded flag
 
 export const marketDataLoaded = () => {
@@ -190,7 +193,8 @@ export const bittrexDepthLoader = () => {
 
 // actions creators for candlestick data
 
-export const binanceCandlestickLoader = () => {
+export const binanceCandlestickLoader = any => {
+  console.log(any);
   return dispatch => {
     Request(
       {
@@ -208,13 +212,15 @@ export const binanceCandlestickLoader = () => {
                 close: parseFloat(e[4]),
                 high: parseFloat(e[2]),
                 low: parseFloat(e[3]),
-                label: `Date: ${new Date(e[0]).getMonth() + 1}/${new Date(
+                label: `${
+                  messages[any.props.locale]["Market.Date"]
+                }: ${new Date(e[0]).getMonth() + 1}/${new Date(
                   e[0]
                 ).getDate()}/${new Date(e[0]).getFullYear()}
-              Open: ${parseFloat(e[1])}
-              Close: ${parseFloat(e[4])}
-              High: ${parseFloat(e[2])}
-              Low: ${parseFloat(e[3])}`
+             ${messages[any.props.locale]["Market.Open"]}: ${parseFloat(e[1])}
+             ${messages[any.props.locale]["Market.Close"]}: ${parseFloat(e[4])}
+             ${messages[any.props.locale]["Market.High"]}: ${parseFloat(e[2])}
+              ${messages[any.props.locale]["Market.Low"]}: ${parseFloat(e[3])}`
               };
             })
             .slice(0, 30);
@@ -226,7 +232,7 @@ export const binanceCandlestickLoader = () => {
   };
 };
 
-export const bittrexCandlestickLoader = () => {
+export const bittrexCandlestickLoader = any => {
   return dispatch => {
     Request(
       {
@@ -245,13 +251,15 @@ export const bittrexCandlestickLoader = () => {
                 close: e.C,
                 high: e.H,
                 low: e.L,
-                label: `Date: ${new Date(e.T).getMonth() + 1}/${new Date(
+                label: `${
+                  messages[any.props.locale]["Market.Date"]
+                }: ${new Date(e.T).getMonth() + 1}/${new Date(
                   e.T
                 ).getDate()}/${new Date(e.T).getFullYear()}
-                Open: ${e.O}
-                Close: ${e.C}
-                High: ${e.H}
-                Low: ${e.L}`
+                ${messages[any.props.locale]["Market.Open"]}: ${e.O}
+                ${messages[any.props.locale]["Market.Close"]}: ${e.C}
+                ${messages[any.props.locale]["Market.High"]}: ${e.H}
+                ${messages[any.props.locale]["Market.Low"]}: ${e.L}`
               };
             })
             .slice(0, 30);
@@ -263,7 +271,7 @@ export const bittrexCandlestickLoader = () => {
   };
 };
 
-export const cryptopiaCandlestickLoader = () => {
+export const cryptopiaCandlestickLoader = any => {
   return dispatch => {
     Request(
       {
@@ -282,13 +290,15 @@ export const cryptopiaCandlestickLoader = () => {
                   close: e[4],
                   high: e[2],
                   low: e[3],
-                  label: `Date: ${new Date(e[0]).getMonth() + 1}/${new Date(
+                  label: `${
+                    messages[any.props.locale]["Market.Date"]
+                  }: ${new Date(e[0]).getMonth() + 1}/${new Date(
                     e[0]
                   ).getDate()}/${new Date(e[0]).getFullYear()}
-                Open: ${e[1]}
-                Close: ${e[4]}
-                High: ${e[2]}
-                Low: ${e[3]}`
+                  ${messages[any.props.locale]["Market.Open"]}: ${e[1]}
+                  ${messages[any.props.locale]["Market.Close"]}: ${e[4]}
+                  ${messages[any.props.locale]["Market.High"]}: ${e[2]}
+                  ${messages[any.props.locale]["Market.Low"]}: ${e[3]}`
                 };
               })
               .slice(0, 30);

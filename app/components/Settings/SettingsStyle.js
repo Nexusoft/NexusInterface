@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./style.css";
 import { connect } from "react-redux";
 import { ChromePicker } from "react-color";
-
+import { FormattedMessage } from "react-intl";
 import * as TYPE from "../../actions/actiontypes";
 
 const mapStateToProps = state => {
@@ -185,8 +185,14 @@ class SettingsStyle extends Component {
       <div>
         <section id="SettingsStyle">
           <form id="styleForm" className="aligned">
-            <div className="field">
-              <label htmlFor="wallpaper">Wallpaper</label>
+            {" "}
+            <div className="wallpaperDiv">
+              <label htmlFor="wallpaper" className="button">
+                <FormattedMessage
+                  id="Settings.Wallpaper"
+                  defaultMessage="Wallpapar"
+                />
+              </label>
               <input
                 id="wallpaper"
                 accept="image/*"
@@ -195,9 +201,14 @@ class SettingsStyle extends Component {
                 onChange={this.updateWallpaper}
                 data-tooltip="The background wallpaper for your wallet"
               />
-            </div>
+            </div>{" "}
             <div className="field">
-              <label htmlFor="renderGlobe">Render Globe</label>
+              <label htmlFor="renderGlobe">
+                <FormattedMessage
+                  id="Settings.RenderGlobe"
+                  defaultMessage="Render Globe"
+                />
+              </label>
               <input
                 id="renderGlobe"
                 type="checkbox"
@@ -250,7 +261,10 @@ class SettingsStyle extends Component {
                 this.SaveSettings();
               }}
             >
-              Save Settings
+              <FormattedMessage
+                id="Settings.SaveSettings"
+                defaultMessage="Save Settings"
+              />
             </button>
             <button
               className="button"
@@ -259,7 +273,10 @@ class SettingsStyle extends Component {
                 this.props.ResetStyle();
               }}
             >
-              Reset Style Settings
+              <FormattedMessage
+                id="Settings.ResetStyle"
+                defaultMessage="Reset Style Settings"
+              />
             </button>
             <div className="clear-both" />
           </form>

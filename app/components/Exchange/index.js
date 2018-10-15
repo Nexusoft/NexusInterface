@@ -14,7 +14,7 @@ import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import bullseye from "../../images/bullseye.svg";
 import fastImg from "../../images/fast.svg";
-
+import { FormattedMessage } from "react-intl";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
@@ -219,22 +219,33 @@ class Exchange extends Component {
           <div>
             <h2>
               <img src={shapeshiftimg} className="hdr-img" />
-              Exchange
+              <FormattedMessage
+                id="Exchange.Exchange"
+                defaultMessage="Exchange"
+              />
             </h2>
-            <p>powered by ShapeShift</p>
+            <p>
+              <FormattedMessage
+                id="Exchange.ShoutOut"
+                defaultMessage="powered by ShapeShift"
+              />
+            </p>
           </div>
           <div className="panel">
             <ul className="tabs">
               <li>
                 <NavLink to={`${this.props.match.url}/Precise`}>
                   <img src={bullseye} alt="Precise" />
-                  Precise
+                  <FormattedMessage
+                    id="Exchange.Precise"
+                    defaultMessage="Precise"
+                  />
                 </NavLink>
               </li>
               <li>
                 <NavLink to={`${this.props.match.url}/Fast`}>
                   <img src={fastImg} alt="Fast" />
-                  Fast
+                  <FormattedMessage id="Exchange.Fast" defaultMessage="Fast" />
                 </NavLink>
               </li>
             </ul>

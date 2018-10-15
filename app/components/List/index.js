@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
-
+import { FormattedMessage } from "react-intl";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
@@ -69,22 +69,41 @@ class List extends Component {
       <div id="trustlist" className="animated fadeIn">
         <h2>
           <img src={trustimg} className="hdr-img" />
-          Trust List
+          <FormattedMessage
+            id="TrustList.TrustList"
+            defaultMessage="Trust List"
+          />
         </h2>
 
         <div className="panel">
           {this.props.isInSync === false ? (
-            <h2>Please let your wallet sync with the network.</h2>
+            <h2>
+              <FormattedMessage
+                id="TrustList.SyncMsg"
+                defaultMessage="Please let your wallet sync with the network"
+              />
+            </h2>
           ) : (
             <div id="table-wrap">
               <table>
                 <thead>
                   <th>
-                    <div>Address</div>
+                    <div>
+                      <FormattedMessage
+                        id="TrustList.Address"
+                        defaultMessage="Address"
+                      />
+                    </div>
                   </th>
 
                   <th onClick={() => this.props.ToggleSortDir()}>
-                    <div>Interest Rate</div>
+                    <div>
+                      {" "}
+                      <FormattedMessage
+                        id="TrustList.InterestRate"
+                        defaultMessage="Interest Rate"
+                      />
+                    </div>
                   </th>
                 </thead>
 

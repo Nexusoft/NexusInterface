@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import * as RPC from "../../script/rpc";
 import Modal from "react-responsive-modal";
 import * as TYPE from "../../actions/actiontypes";
-
+import { FormattedMessage } from "react-intl";
 import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
@@ -138,7 +138,10 @@ class SendRecieve extends Component {
             this.props.OpenModal2("Edit Entry?");
           }}
         >
-          Edit Entry
+          <FormattedMessage
+            id="sendReceive.EditQueue"
+            defaultMessage="Edit Entry"
+          />
         </button>
       );
     } else {
@@ -148,7 +151,10 @@ class SendRecieve extends Component {
           className="button large"
           onClick={() => this.validateAddToQueue()}
         >
-          Add To Queue
+          <FormattedMessage
+            id="sendReceive.AddToQueue"
+            defaultMessage="Add To Queue"
+          />
         </button>
       );
     }
@@ -171,34 +177,49 @@ class SendRecieve extends Component {
 
   accHud() {
     if (this.props.SelectedAccount === "") {
-      return " My Account";
+      return (
+        <FormattedMessage
+          id="sendReceive.MyAccount"
+          defaultMessage="My Account"
+        />
+      );
     } else {
       return this.props.SelectedAccount;
     }
   }
 
   accountChanger() {
-    if (this.props.AccountChanger[0]) {
-      return this.props.AccountChanger.map(e => {
-        if (e.name === "") {
-          return (
-            <option key={e.name} value={e.name}>
-              My Account : {e.val.toFixed(5)}
-              NXS
-            </option>
-          );
-        } else {
-          return (
-            <option key={e.name} value={e.name}>
-              {e.name}: {e.val}
-              NXS
-            </option>
-          );
-        }
-      });
-    } else {
-      return null;
-    }
+    if (this.props)
+      if (this.props.AccountChanger[0]) {
+        return this.props.AccountChanger.map(e => {
+          if (e.name === "") {
+            return (
+              <FormattedMessage
+                id="sendReceive.MyAccount"
+                defaultMessage="My Account"
+                key={e.name}
+                value={e.name}
+              >
+                {placeholder => (
+                  <option>
+                    {placeholder} : {e.val.toFixed(5)}
+                    NXS
+                  </option>
+                )}
+              </FormattedMessage>
+            );
+          } else {
+            return (
+              <option key={e.name} value={e.name}>
+                {e.name}: {e.val}
+                NXS
+              </option>
+            );
+          }
+        });
+      } else {
+        return null;
+      }
   }
 
   sendOne() {
@@ -288,9 +309,21 @@ class SendRecieve extends Component {
       });
       return (
         <div id="summary">
-          TOTAL: {sum.toFixed(5)} NXS
-          <p>FEE: {this.props.paytxfee.toFixed(5)} NXS </p>
-          FROM: {this.accHud(this.props.SelectedAccount)}
+          <p>
+            <FormattedMessage id="sendReceive.Total" defaultMessage="TOTAL" />:{" "}
+            {""}
+            {sum.toFixed(5)} NXS
+          </p>
+
+          <p>
+            <FormattedMessage id="sendReceive.Fee" defaultMessage="FEE" />:{" "}
+            {this.props.paytxfee.toFixed(5)} NXS
+          </p>
+
+          <p>
+            <FormattedMessage id="sendReceive.From" defaultMessage="FROM" />:{" "}
+            {this.accHud(this.props.SelectedAccount)}
+          </p>
         </div>
       );
     }
@@ -353,7 +386,10 @@ class SendRecieve extends Component {
                 {ele.address}
                 <span key={ele.address + i} className="tooltip right">
                   {" "}
-                  Copy To Field
+                  <FormattedMessage
+                    id="sendReceive.CopyToFeild"
+                    defaultMessage="Copy To Field"
+                  />
                 </span>
               </td>
             );
@@ -413,7 +449,12 @@ class SendRecieve extends Component {
       return (
         <tr key={i}>
           <td className="td" onClick={() => this.props.updateAddress(e.key)}>
-            <span className="tooltip ">Click To Edit</span>
+            <span className="tooltip ">
+              <FormattedMessage
+                id="sendReceive.ClickToEdit"
+                defaultMessage="Click To Edit"
+              />
+            </span>
             {e.key}
           </td>
           <td className="td">{e.val.toFixed(5)}</td>
@@ -435,28 +476,40 @@ class SendRecieve extends Component {
           >
             <div>
               {" "}
-              <h2>Remove From Queue?</h2>
-              <div id="ok-button">
-                {" "}
-                <input
-                  value="Yes"
-                  type="button"
-                  className="button primary"
-                  onClick={() => {
-                    this.props.removeQueue(e.key);
-                    this.props.CloseModal3();
-                  }}
+              <h2>
+                <FormattedMessage
+                  id="sendReceive.RemoveFromQueue"
+                  defaultMessage="Remove From Queue"
                 />
+              </h2>
+              <div id="ok-button">
+                <FormattedMessage id="sendReceive.Yes">
+                  {yes => (
+                    <input
+                      value={yes}
+                      type="button"
+                      className="button primary"
+                      onClick={() => {
+                        this.props.removeQueue(e.key);
+                        this.props.CloseModal3();
+                      }}
+                    />
+                  )}
+                </FormattedMessage>
               </div>
               <div id="no-button">
-                <input
-                  value="No"
-                  type="button"
-                  className="button"
-                  onClick={() => {
-                    this.props.CloseModal3();
-                  }}
-                />
+                <FormattedMessage id="sendReceive.No" defaultMessage="No">
+                  {no => (
+                    <input
+                      value={no}
+                      type="button"
+                      className="button"
+                      onClick={() => {
+                        this.props.CloseModal3();
+                      }}
+                    />
+                  )}
+                </FormattedMessage>
               </div>
             </div>
           </Modal>
@@ -472,21 +525,42 @@ class SendRecieve extends Component {
           <div className="Addresstable-wraper">
             {" "}
             <h2 className="addressModalHeader">
-              Lookup Address <img src={addressbookimg} className="hdr-img" />
+              <FormattedMessage
+                id="sendReceive.Lookup"
+                defaultMessage="Lookup Address"
+              />{" "}
+              <img src={addressbookimg} className="hdr-img" />
             </h2>
             <table id="AddressTable">
               <thead className="AddressThead">
-                <th className="short-column">Name</th>
-                <th className="long-column">Address</th>
                 <th className="short-column">
-                  <input
-                    className="searchBar"
-                    type="text"
-                    placeholder="Search Address"
-                    value={this.props.Search}
-                    onChange={e => this.props.SearchName(e.target.value)}
-                    required
+                  <FormattedMessage
+                    id="sendReceive.Name"
+                    defaultMessage="Name"
                   />
+                </th>
+                <th className="long-column">
+                  <FormattedMessage
+                    id="sendReceive.Address"
+                    defaultMessage="Address"
+                  />
+                </th>
+                <th className="short-column">
+                  <FormattedMessage
+                    id="sendReceive.Lookup"
+                    defaultMessage="Search Address"
+                  >
+                    {placeholder => (
+                      <input
+                        className="searchBar"
+                        type="text"
+                        placeholder={placeholder}
+                        value={this.props.Search}
+                        onChange={e => this.props.SearchName(e.target.value)}
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                 </th>
               </thead>
               {this.addressBookToQueue()}
@@ -501,17 +575,26 @@ class SendRecieve extends Component {
       case "send transaction?":
         return (
           <div>
-            <h2>Send Transaction?</h2>
-            <div id="ok-button">
-              <input
-                value="Yes"
-                type="button"
-                className="button primary"
-                onClick={() => {
-                  this.sendOne();
-                  this.props.CloseModal2();
-                }}
+            <h2>
+              <FormattedMessage
+                id="sendReceive.SendTransaction"
+                defaultMessage="Send Transaction"
               />
+            </h2>
+            <div id="ok-button">
+              <FormattedMessage id="sendReceive.Yes" defaultMessage="Yes">
+                {corn => (
+                  <input
+                    value={corn}
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.sendOne();
+                      this.props.CloseModal2();
+                    }}
+                  />
+                )}
+              </FormattedMessage>
             </div>
           </div>
         );
@@ -519,18 +602,26 @@ class SendRecieve extends Component {
       case "Clear Queue?":
         return (
           <div>
-            <h2>Empty Queue?</h2>
-            <div id="ok-button">
-              {" "}
-              <input
-                value="Yes"
-                type="button"
-                className="button primary"
-                onClick={() => {
-                  this.props.clearQueue();
-                  this.props.CloseModal2();
-                }}
+            <h2>
+              <FormattedMessage
+                id="sendReceive.ClearQueue"
+                defaultMessage="Clear Queue?"
               />
+            </h2>
+            <div id="ok-button">
+              <FormattedMessage id="sendReceive.Yes" defaultMessage="Yes">
+                {yes => (
+                  <input
+                    value={yes}
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.props.clearQueue();
+                      this.props.CloseModal2();
+                    }}
+                  />
+                )}
+              </FormattedMessage>
             </div>
           </div>
         );
@@ -539,19 +630,29 @@ class SendRecieve extends Component {
         return (
           <div>
             <h2>
-              Send All Transactions (Total: {this.areYouSure()}) From
+              <FormattedMessage
+                id="sendReceive.SendAllFrom"
+                defaultMessage="Send All Transactions From: "
+              >
+                {/* Send All Transactions (Total: {this.areYouSure()}) From */}
+              </FormattedMessage>
+
               {this.accHud()}
             </h2>
             <div id="ok-button">
-              <input
-                value="Yes"
-                type="button"
-                className="button primary"
-                onClick={() => {
-                  this.sendMany();
-                  this.props.CloseModal2();
-                }}
-              />
+              <FormattedMessage id="sendReceive.Yes" defaultMessage="Yes">
+                {yes => (
+                  <input
+                    value={yes}
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.sendMany();
+                      this.props.CloseModal2();
+                    }}
+                  />
+                )}
+              </FormattedMessage>
             </div>
           </div>
         );
@@ -559,65 +660,87 @@ class SendRecieve extends Component {
       case "Edit Entry?":
         return (
           <div>
-            <h2>Edit This Entry?</h2>
-            <div id="ok-button">
-              <input
-                value="Yes"
-                type="button"
-                className="button primary"
-                onClick={() => {
-                  this.validateAddToQueue();
-                  this.props.CloseModal2();
-                }}
+            <h2>
+              <FormattedMessage
+                id="sendReceive.EditEntry"
+                defaultMessage="Edit Entry"
               />
-            </div>
-          </div>
-        );
-        break;
-      case "Delete Entry?":
-        return (
-          <div>
-            <h2>Delete Entry?</h2>
-            <div id="ok-button">
-              <input
-                value="Yes"
-                type="button"
-                className="button primary"
-                onClick={() => {
-                  this.props.CloseModal2();
-                }}
-              />
-            </div>
-          </div>
-        );
-        break;
-      case "Address Lookup":
-        return (
-          <div className="Addresstable-wraper">
-            {" "}
-            <h2 className="addressModalHeader">
-              Lookup Address <img src={addressbookimg} className="hdr-img" />
             </h2>
-            <table id="AddressTable">
-              <thead className="AddressThead">
-                <th className="short-column">Name</th>
-                <th className="long-column">Address</th>
-                <th className="short-column">
+            <div id="ok-button">
+              <FormattedMessage id="sendReceive.Yes" defaultMessage="Yes">
+                {Yes => (
                   <input
-                    className="searchBar"
-                    type="text"
-                    placeholder="Search Address"
-                    value={this.props.Search}
-                    onChange={e => this.props.SearchName(e.target.value)}
-                    required
+                    value={Yes}
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.validateAddToQueue();
+                      this.props.CloseModal2();
+                    }}
                   />
-                </th>
-              </thead>
-              {this.addressBookToQueue()}
-            </table>
+                )}
+              </FormattedMessage>
+            </div>
           </div>
         );
         break;
+      // case "Delete Entry?":
+      //   return (
+      //     <div>
+      //       <h2>
+      //         <FormattedMessage
+      //           id="sendReceive.DeleteEntry"
+      //           defaultMessage="Delete Entry?"
+      //         />
+      //       </h2>
+      //       <div id="ok-button">
+      //         <FormattedMessage id="sendReceive.Yes">
+      //           {yes => (
+      //             <input
+      //               value={yes}
+      //               type="button"
+      //               className="button primary"
+      //               onClick={() => {
+      //                 this.props.CloseModal2();
+      //               }}
+      //             />
+      //           )}
+      //         </FormattedMessage>
+      //       </div>
+      //     </div>
+      //   );
+      //   break;
+      // case "Address Lookup":
+      //   return (
+      //     <div className="Addresstable-wraper">
+      //       {" "}
+      //       <h2 className="addressModalHeader">
+      //         <FormattedMessage
+      //           id="sendReceive.Lookup"
+      //           defaultMessage="Lookup Address"
+      //         />{" "}
+      //         <img src={addressbookimg} className="hdr-img" />
+      //       </h2>
+      //       <table id="AddressTable">
+      //         <thead className="AddressThead">
+      //           <th className="short-column">Name</th>
+      //           <th className="long-column">Address</th>
+      //           <th className="short-column">
+      //             <input
+      //               className="searchBar"
+      //               type="text"
+      //               placeholder="Search Address"
+      //               value={this.props.Search}
+      //               onChange={e => this.props.SearchName(e.target.value)}
+      //               required
+      //             />
+      //           </th>
+      //         </thead>
+      //         {this.addressBookToQueue()}
+      //       </table>
+      //     </div>
+      //   );
+      //   break;
 
       default:
         "Error";
@@ -636,7 +759,10 @@ class SendRecieve extends Component {
       <div id="sendrecieve" className="animated fadeIn">
         <h2>
           <img src={sendimg} className="hdr-img" />
-          Send Nexus
+          <FormattedMessage
+            id="sendReceive.SendNexus"
+            defaultMessage="Send Nexus"
+          />
         </h2>
         {/* ADDRESS MODAL */}
         <Modal
@@ -659,14 +785,18 @@ class SendRecieve extends Component {
         >
           {this.modalinternal2()}
           <div id="no-button">
-            <input
-              value="Cancel"
-              className="button"
-              type="button"
-              onClick={() => {
-                this.props.CloseModal2();
-              }}
-            />
+            <FormattedMessage id="sendReceive.Cancel" defaultMessage="Cancel">
+              {cancel => (
+                <input
+                  value={cancel}
+                  className="button"
+                  type="button"
+                  onClick={() => {
+                    this.props.CloseModal2();
+                  }}
+                />
+              )}
+            </FormattedMessage>
           </div>
         </Modal>
         <div className="panel">
@@ -680,9 +810,19 @@ class SendRecieve extends Component {
                   {this.accountChanger()}
                 </select>{" "}
                 <p>
-                  <label>Nexus Address</label>{" "}
+                  <label>
+                    <FormattedMessage
+                      id="sendReceive.Address"
+                      defaultMessage="Nexus Address"
+                    />
+                  </label>
                   <div className="Addresslookup">
-                    <span className="tooltip top">Lookup Address</span>
+                    <span className="tooltip top">
+                      <FormattedMessage
+                        id="sendReceive.Lookup"
+                        defaultMessage="Lookup Address"
+                      />
+                    </span>
                     <img
                       src={plusimg}
                       className="lookupButton"
@@ -692,24 +832,36 @@ class SendRecieve extends Component {
                       }}
                     />
                   </div>
-                  <input
-                    size="35"
-                    type="text"
-                    placeholder="Enter NXS Address"
-                    value={this.props.Address}
-                    onChange={e => this.props.updateAddress(e.target.value)}
-                    required
-                  />
+                  <FormattedMessage
+                    id="sendReceive.Address"
+                    defaultMessage="Nexus Address"
+                  >
+                    {placeholder => (
+                      <input
+                        size="35"
+                        type="text"
+                        placeholder={placeholder}
+                        value={this.props.Address}
+                        onChange={e => this.props.updateAddress(e.target.value)}
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                 </p>
                 <p>
                   {" "}
                   <div className="convertor">
-                    <label>Nexus Amount</label>{" "}
+                    <label>
+                      {" "}
+                      <FormattedMessage
+                        id="sendReceive.Amount"
+                        defaultMessage="Nexus Amount"
+                      />
+                    </label>{" "}
                     <label className="UsdConvertorLabel">USD</label>
                   </div>
                   <div className="convertor">
                     {" "}
-                    <span className="hint">Amount Of Nexus</span>
                     <input
                       className="input"
                       type="text"
@@ -732,34 +884,55 @@ class SendRecieve extends Component {
                   </div>
                 </p>
                 <p>
-                  <label>Message</label>
-
-                  <textarea
-                    value={this.props.Message}
-                    onChange={e => this.props.updateMessage(e.target.value)}
-                    name="message"
-                    rows="5"
-                    cols="41"
-                    placeholder="Enter Your Message"
-                  />
+                  <label>
+                    <FormattedMessage
+                      id="sendReceive.Message"
+                      defaultMessage="Message"
+                    />
+                  </label>
+                  <FormattedMessage
+                    id="sendReceive.EnterYourMessage"
+                    defaultMessage="Enter Your Message"
+                  >
+                    {placeholder => (
+                      <textarea
+                        value={this.props.Message}
+                        onChange={e => this.props.updateMessage(e.target.value)}
+                        name="message"
+                        rows="5"
+                        cols="41"
+                        placeholder={placeholder}
+                      />
+                    )}
+                  </FormattedMessage>
                 </p>
                 <div id="left-buttons">
                   {this.editQueue()}
-                  <input
-                    type="reset"
-                    value="Send Now"
+                  <button
                     className="button"
                     onClick={() => {
                       if (
-                        this.props.encrypted === false ||
-                        this.props.loggedIn === true
+                        !(this.props.Address === "") &&
+                        this.props.Amount > 0
                       ) {
-                        this.props.OpenModal2("send transaction?");
+                        if (
+                          this.props.encrypted === false ||
+                          this.props.loggedIn === true
+                        ) {
+                          this.props.OpenModal2("send transaction?");
+                        } else {
+                          this.props.OpenModal("Wallet Locked");
+                        }
                       } else {
-                        this.props.OpenModal("Wallet Locked");
+                        this.props.OpenModal("Invalid Address");
                       }
                     }}
-                  />
+                  >
+                    <FormattedMessage
+                      id="sendReceive.SendNow"
+                      defaultMessage="Send Now"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
@@ -767,20 +940,39 @@ class SendRecieve extends Component {
             <div className="box2">
               <div id="table-wraper">
                 <p className="label">
-                  <label>Queue</label>
+                  <label>
+                    <FormattedMessage
+                      id="sendReceive.Queue"
+                      defaultMessage="Queue"
+                    />
+                  </label>
                 </p>
                 <table className="table">
                   <thead className="thead">
-                    <th>Address</th>
-                    <th>Amount</th>
-                    <th>Remove</th>
+                    <th>
+                      <FormattedMessage
+                        id="sendReceive.TableAddress"
+                        defaultMessage="Address"
+                      />
+                    </th>
+                    <th>
+                      <FormattedMessage
+                        id="sendReceive.TableAmount"
+                        defaultMessage="Amount"
+                      />
+                    </th>
+                    <th>
+                      <FormattedMessage
+                        id="sendReceive.Remove"
+                        defaultMessage="Remove"
+                      />
+                    </th>
                   </thead>
                   {this.fillQueue()}
                 </table>
                 <foot className="foot">
-                  <input
+                  <button
                     type="reset"
-                    value="Send All"
                     className="button primary"
                     onClick={() => {
                       if (
@@ -792,15 +984,26 @@ class SendRecieve extends Component {
                         this.props.OpenModal("Wallet Locked");
                       }
                     }}
-                  />
-                  <input
+                  >
+                    <FormattedMessage
+                      id="sendReceive.SendAll"
+                      defaultMessage="SendAll"
+                    />
+                  </button>
+
+                  <button
                     type="button"
-                    value="Clear Queue"
                     className="button primary"
                     onClick={() => {
                       this.props.OpenModal2("Clear Queue?");
                     }}
-                  />
+                  >
+                    <FormattedMessage
+                      id="sendReceive.ClearQueue"
+                      defaultMessage="Clear Queue"
+                    />
+                  </button>
+
                   <p>
                     <div className="counter">{this.addAmount()} </div>
                   </p>

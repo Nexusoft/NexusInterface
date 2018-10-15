@@ -13,7 +13,22 @@ import addressbook from "./addressbook";
 import terminal from "./terminal";
 import settings from "./settings";
 
+import intl from "./intl";
+import { addLocaleData } from "react-intl";
+import ru from "react-intl/locale-data/ru";
+import en from "react-intl/locale-data/en";
+import { FormattedMessage } from "react-intl";
+// import { intlReducer } from "react-intl-redux";
+import itLocaleData from "react-intl/locale-data/it";
+import enLocaleData from "react-intl/locale-data/en";
+import ruLocaleData from "react-intl/locale-data/ru";
+
+addLocaleData([...itLocaleData, ...ruLocaleData]);
+addLocaleData(ru);
+addLocaleData(en);
+
 const rootReducer = combineReducers({
+  intl,
   overview,
   routerReducer,
   list,

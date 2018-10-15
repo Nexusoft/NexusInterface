@@ -8,12 +8,14 @@ import { remote } from "electron";
 import { access } from "fs";
 import Modal from "react-responsive-modal";
 import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
 
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.sendRecieve,
-    ...state.overview
+    ...state.overview,
+    ...state.intl
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -405,32 +407,49 @@ class SettingsApp extends Component {
           onClose={this.props.CloseModal2}
         >
           <div>
-            {" "}
-            <h2>Set (New) Transaction Fee?</h2>
-            <input
-              value="Yes"
-              type="button"
-              className="button primary"
-              onClick={() => {
-                this.setTxFee();
-                this.props.CloseModal2();
-              }}
-            />
-            <div id="no-button">
-              <input
-                value="No"
-                type="button"
-                className="button primary"
-                onClick={() => {
-                  this.props.CloseModal2();
-                }}
+            <h2>
+              <FormattedMessage
+                id="Settings.SetFee"
+                defaultMessage="Set Transaction Fee?"
               />
+            </h2>
+            <FormattedMessage id="Settings.Yes">
+              {yes => (
+                <input
+                  value={yes}
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    this.setTxFee();
+                    this.props.CloseModal2();
+                  }}
+                />
+              )}
+            </FormattedMessage>
+            <div id="no-button">
+              <FormattedMessage id="Settings.No">
+                {no => (
+                  <input
+                    value={no}
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.props.CloseModal2();
+                    }}
+                  />
+                )}
+              </FormattedMessage>
             </div>
           </div>
         </Modal>
         <form className="aligned">
           <div className="field">
-            <label htmlFor="autostart">Start at system startup</label>
+            <label htmlFor="autostart">
+              <FormattedMessage
+                id="Settings.StartUp"
+                defaultMessage="Start at system startup"
+              />
+            </label>
             <input
               id="autostart"
               type="checkbox"
@@ -441,7 +460,12 @@ class SettingsApp extends Component {
           </div>
 
           <div className="field">
-            <label htmlFor="minimizeToTray">Minimize to tray</label>
+            <label htmlFor="minimizeToTray">
+              <FormattedMessage
+                id="Settings.MinimizeTray"
+                defaultMessage="Minimize to tray"
+              />
+            </label>
             <input
               id="minimizeToTray"
               type="checkbox"
@@ -452,7 +476,13 @@ class SettingsApp extends Component {
           </div>
 
           <div className="field">
-            <label htmlFor="minimizeOnClose">Minimize on close</label>
+            <label htmlFor="minimizeOnClose">
+              {" "}
+              <FormattedMessage
+                id="Settings.MinimizeClose"
+                defaultMessage="Minimize On Close"
+              />
+            </label>
             <input
               id="minimizeOnClose"
               type="checkbox"
@@ -463,7 +493,13 @@ class SettingsApp extends Component {
           </div>
 
           <div className="field">
-            <label htmlFor="infoPopUps">Information Popups</label>
+            <label htmlFor="infoPopUps">
+              {" "}
+              <FormattedMessage
+                id="Settings.InformationPop"
+                defaultMessage="Information Popups"
+              />
+            </label>
             <input
               id="infoPopUps"
               type="checkbox"
@@ -474,7 +510,12 @@ class SettingsApp extends Component {
           </div>
 
           <div className="field">
-            <label htmlFor="googleAnalytics">Send anonymous usage data</label>
+            <label htmlFor="googleAnalytics">
+              <FormattedMessage
+                id="Settings.UsageData"
+                defaultMessage="Send anonymous usage data"
+              />
+            </label>
             <input
               id="googleAnalytics"
               type="checkbox"
@@ -487,8 +528,11 @@ class SettingsApp extends Component {
           {/* NEXUS FEE */}
           <div className="field">
             <label htmlFor="optionalTransactionFee">
-              Optional transaction fee (in NXS)
-            </label>{" "}
+              <FormattedMessage
+                id="Settings.OptionalFee"
+                defaultMessage="Optional transaction fee (NXS)"
+              />
+            </label>
             <div className="fee">
               <input
                 className="Txfee"
@@ -504,7 +548,7 @@ class SettingsApp extends Component {
                   this.props.OpenModal2();
                 }}
               >
-                Set
+                <FormattedMessage id="Settings.Set" defaultMessage="Set" />
               </button>
             </div>
           </div>
@@ -522,7 +566,12 @@ class SettingsApp extends Component {
           </div> */}
 
           <div className="field">
-            <label htmlFor="devmode">Developer Mode</label>
+            <label htmlFor="devmode">
+              <FormattedMessage
+                id="Settings.DeveloperMode"
+                defaultMessage="Developer Mode"
+              />
+            </label>
             <input
               id="devmode"
               type="checkbox"
@@ -553,7 +602,10 @@ class SettingsApp extends Component {
               className="button primary"
               onClick={e => this.backupWallet(e)}
             >
-              Backup wallet
+              <FormattedMessage
+                id="Settings.BackupWallet"
+                defaultMessage="Backup Wallet"
+              />
             </button>
           </div>
           <div className="clear-both" />

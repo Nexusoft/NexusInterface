@@ -7,11 +7,14 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
 import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
+import * as FlagFile from "../../actions/LanguageFlags";
 
 const mapStateToProps = state => {
   return {
     ...state.common,
-    ...state.settings
+    ...state.settings,
+    ...state.intl
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -19,6 +22,12 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.GET_SETTINGS, payload: settings }),
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  },
+  localeChange: returnSelectedLocale => {
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
+  },
+  SwitchLocale: locale => {
+    dispatch({ type: TYPE.UPDATE_LOCALES });
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL })
 });
@@ -356,16 +365,25 @@ class SettingsCore extends Component {
   }
 
   render() {
+    console.log(FlagFile.America);
     return (
       <section id="core">
         <div className="note">
-          Changes to core settings will take effect the next time the core is
-          restarted.
+          <FormattedMessage
+            id="Settings.ChangesNexTime"
+            defaultMesage="Changes to core settings will take effect the next time the core is restarted"
+          />
         </div>
 
         <form className="aligned">
           <div className="field">
-            <label htmlFor="manualDaemon">Manual Daemon Mode</label>
+            <label htmlFor="manualDaemon">
+              {" "}
+              <FormattedMessage
+                id="Settings.ManualDaemonMode"
+                defaultMesage="Manual Daemon Mode"
+              />
+            </label>
             <input
               id="manualDaemon"
               type="checkbox"
@@ -377,7 +395,12 @@ class SettingsCore extends Component {
 
           <div id="manual-daemon-settings">
             <div className="field">
-              <label htmlFor="manualDaemonUser">Username</label>
+              <label htmlFor="manualDaemonUser">
+                <FormattedMessage
+                  id="Settings.Username"
+                  defaultMesage="Username"
+                />
+              </label>
               <input
                 id="manualDaemonUser"
                 type="text"
@@ -388,7 +411,13 @@ class SettingsCore extends Component {
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonPassword">Password</label>
+              <label htmlFor="manualDaemonPassword">
+                {" "}
+                <FormattedMessage
+                  id="Settings.Password"
+                  defaultMesage="Password"
+                />
+              </label>
               <input
                 id="manualDaemonPassword"
                 type="text"
@@ -399,7 +428,13 @@ class SettingsCore extends Component {
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonIP">IP Address</label>
+              <label htmlFor="manualDaemonIP">
+                {" "}
+                <FormattedMessage
+                  id="Settings.IpAddress"
+                  defaultMesage="Ip Address"
+                />
+              </label>
               <input
                 id="manualDaemonIP"
                 type="text"
@@ -410,7 +445,9 @@ class SettingsCore extends Component {
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonPort">Port</label>
+              <label htmlFor="manualDaemonPort">
+                <FormattedMessage id="Settings.Port" defaultMesage="Port" />
+              </label>
               <input
                 id="manualDaemonPort"
                 type="text"
@@ -423,7 +460,13 @@ class SettingsCore extends Component {
 
           <div id="automatic-daemon-settings">
             <div className="field">
-              <label htmlFor="mapPortUsingUpnp">Map port using UPnP</label>
+              <label htmlFor="mapPortUsingUpnp">
+                {" "}
+                <FormattedMessage
+                  id="Settings.UPnp"
+                  defaultMesage="Map port using UPnP"
+                />
+              </label>
               <input
                 id="mapPortUsingUpnp"
                 type="checkbox"
@@ -434,7 +477,12 @@ class SettingsCore extends Component {
             </div>
 
             <div className="field">
-              <label htmlFor="socks4Proxy">Connect through SOCKS4 proxy</label>
+              <label htmlFor="socks4Proxy">
+                <FormattedMessage
+                  id="Settings.Socks4proxy"
+                  defaultMesage="Connect through SOCKS4 proxy"
+                />
+              </label>
               <input
                 id="socks4Proxy"
                 type="checkbox"
@@ -445,7 +493,12 @@ class SettingsCore extends Component {
             </div>
 
             <div className="field">
-              <label htmlFor="socks4ProxyIP">Proxy IP Address</label>
+              <label htmlFor="socks4ProxyIP">
+                <FormattedMessage
+                  id="Settings.ProxyIP"
+                  defaultMesage="Proxy IP Address"
+                />
+              </label>
               <input
                 id="socks4ProxyIP"
                 type="text"
@@ -456,7 +509,12 @@ class SettingsCore extends Component {
             </div>
 
             <div className="field">
-              <label htmlFor="socks4ProxyPort">Proxy Port</label>
+              <label htmlFor="socks4ProxyPort">
+                <FormattedMessage
+                  id="Settings.ProxyPort"
+                  defaultMesage="Proxy Port"
+                />
+              </label>
               <input
                 id="socks4ProxyPort"
                 type="text"
@@ -468,7 +526,10 @@ class SettingsCore extends Component {
 
             <div className="field">
               <label htmlFor="detatchDatabaseOnShutdown">
-                Detach database on shutdown
+                <FormattedMessage
+                  id="Settings.Detach"
+                  defaultMesage="Detach database on shutdown"
+                />
               </label>
               <input
                 id="detatchDatabaseOnShutdown"
@@ -478,15 +539,70 @@ class SettingsCore extends Component {
                 data-tooltip="Detatch the database when shutting down the wallet"
               />
             </div>
+
             <button
               id="restart-core"
               className="button primary"
               onClick={this.coreRestart}
             >
-              Restart Core
+              <FormattedMessage
+                id="Settings.RestartCore"
+                defaultMesage="Restart Core"
+              />
             </button>
           </div>
 
+          <div className="field">
+            <label htmlFor="optionalTransactionFee">
+              <FormattedMessage
+                id="Settings.Language"
+                defaultMesage="Language"
+              />
+            </label>
+            <div className="langSet">
+              <select
+                className="language"
+                onChange={e => this.props.localeChange(e.target.value)}
+                value={this.props.tempStorage}
+              >
+                <option value="en">
+                  <FormattedMessage
+                    id="Settings.English"
+                    defaultMesage="English"
+                  />
+                </option>
+                <option value="ru" data-icon="glyphicon glyphicon-eye-open">
+                  <FormattedMessage
+                    id="Settings.Russian"
+                    defaultMesage="Russian"
+                  />
+                </option>
+              </select>
+              <span className="flag-icon-background flag-icon-gr" />
+              {/* <button
+                type="button"
+                className="feebutton"
+                onClick={() => this.props.SwitchLocale()}
+              >
+                <FormattedMessage id="Settings.Set" defaultMesage="Set" />
+              </button> */}
+            </div>
+          </div>
+
+          {/* <select
+            onChange={e => this.props.localeChange(e.target.value)}
+             value={this.props.tempStorage}
+          >
+            <option value="en">English</option>
+            <option value="ru">Russian</option>
+          </select>
+          <button
+            type="button"
+            className="medium button"
+            onClick={() => this.props.SwitchLocale()}
+          >
+            Asshole
+          </button> */}
           <div className="clear-both" />
         </form>
 

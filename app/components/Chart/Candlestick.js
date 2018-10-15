@@ -11,6 +11,7 @@ import {
 
 export default class Candlestick extends Component {
   render() {
+    console.log(this.props.data);
     return (
       <div className="marketDepthInner">
         <VictoryChart

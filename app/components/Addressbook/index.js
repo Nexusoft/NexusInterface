@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 import { remote } from "electron";
 import { Link } from "react-router-dom";
 import Modal from "react-responsive-modal";
-
 import config from "../../api/configuration";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
@@ -18,9 +17,15 @@ import { callbackify } from "util";
 
 // import images here
 import addressbookimg from "../../images/addressbook.svg";
+import { FormattedMessage } from "react-intl";
 
 const mapStateToProps = state => {
-  return { ...state.common, ...state.addressbook, ...state.sendReceive };
+  return {
+    ...state.common,
+    ...state.addressbook,
+    ...state.sendReceive,
+    ...state.intl
+  };
 };
 
 const mapDispatchToProps = dispatch =>
@@ -225,7 +230,9 @@ class Addressbook extends Component {
   MyAddressesTable() {
     let filteredAddress = this.props.myAccounts.filter(acct => {
       if (acct.account === "") {
-        let dummie = "My Account";
+        let dummie = this.props.messages[this.props.locale][
+          "AddressBook.MyAccount"
+        ];
         return (
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
         );
@@ -244,7 +251,14 @@ class Addressbook extends Component {
           return (
             <tr>
               <td key={acct + i} className="tdAccounts">
-                {acct.account === "" ? <span>My Account</span> : acct.account}
+                {acct.account === "" ? (
+                  <FormattedMessage
+                    id="AddressBook.MyAccount"
+                    defaultMessage="My Account"
+                  />
+                ) : (
+                  acct.account
+                )}
               </td>
               {acct.addresses.map(address => {
                 return (
@@ -255,7 +269,10 @@ class Addressbook extends Component {
                   >
                     {address}
                     <span key={address + i} className="tooltip ">
-                      Click to copy
+                      <FormattedMessage
+                        id="AddressBook.Copy"
+                        defaultMessage="Click To Copy"
+                      />
                     </span>
                   </td>
                 );
@@ -281,44 +298,75 @@ class Addressbook extends Component {
             {index === -1 ? (
               <h2 className="m1">
                 <img src={addressbookimg} className="hdr-img" />
-                Add Contact
+                <FormattedMessage
+                  id="AddressBook.addContact"
+                  defaultMessage="Add Contact"
+                />
               </h2>
             ) : (
               <h2 className="m1">
                 <img src={addressbookimg} className="hdr-img" />
-                Edit Contact
+                <FormattedMessage
+                  id="AddressBook.EditContact"
+                  defaultMessage="Edit Contact"
+                />
               </h2>
             )}
 
             <div className="field">
-              <label htmlFor="new-account-name">Name</label>
-              <input
-                ref="addContactName"
-                id="new-account-name"
-                type="text"
-                value={this.props.prototypeName}
-                onChange={e => this.props.EditProtoName(e.target.value)}
-                placeholder="Name"
-                required
-              />
+              <label htmlFor="new-account-name">
+                <FormattedMessage id="AddressBook.Name" defaultMessage="Name" />
+              </label>
+              <FormattedMessage id="AddressBook.Name" defaultMessage="Name">
+                {N => (
+                  <input
+                    ref="addContactName"
+                    id="new-account-name"
+                    type="text"
+                    value={this.props.prototypeName}
+                    onChange={e => this.props.EditProtoName(e.target.value)}
+                    placeholder={N}
+                    required
+                  />
+                )}
+              </FormattedMessage>
             </div>
             <div className="field">
-              <label htmlFor="new-account-name">Phone #</label>
-              <input
-                id="new-account-phone"
-                type="tel"
-                onChange={e => this.phoneNumberHandler(e.target.value)}
-                value={this.props.prototypePhoneNumber}
-                placeholder="Phone #"
-              />
+              <label htmlFor="new-account-name">
+                <FormattedMessage
+                  id="AddressBook.Phone"
+                  defaultMessage="Phone"
+                />
+              </label>
+              <FormattedMessage id="AddressBook.Phone" defaultMessage="Phone">
+                {phone => (
+                  <input
+                    id="new-account-phone"
+                    type="tel"
+                    onChange={e => this.phoneNumberHandler(e.target.value)}
+                    value={this.props.prototypePhoneNumber}
+                    placeholder={phone}
+                  />
+                )}
+              </FormattedMessage>
             </div>
             <div className="contact-detail">
-              <label>Local Time</label>
+              <label>
+                <FormattedMessage
+                  id="AddressBook.LocalTime"
+                  defaultMessage="Local Time"
+                />
+              </label>
               <TimeZoneSelector />
             </div>
 
             <div className="field">
-              <label htmlFor="new-account-notes">Notes</label>
+              <label htmlFor="new-account-notes">
+                <FormattedMessage
+                  id="AddressBook.Notes"
+                  defaultMessage="Notes"
+                />
+              </label>
               <textarea
                 id="new-account-notes"
                 onChange={e => this.props.EditProtoNotes(e.target.value)}
@@ -328,15 +376,27 @@ class Addressbook extends Component {
             </div>
 
             <div className="field">
-              <label htmlFor="nxsaddress">Nexus Address</label>
-              <input
-                ref="addContactAddress"
-                id="nxsaddress"
-                type="text"
-                onChange={e => this.props.EditProtoAddress(e.target.value)}
-                value={this.props.prototypeAddress}
-                placeholder="Nexus Address"
-              />
+              <label htmlFor="nxsaddress">
+                <FormattedMessage
+                  id="AddressBook.NexusAddress"
+                  defaultMessage="Nexus Address"
+                />
+              </label>
+              <FormattedMessage
+                id="AddressBook.NexusAddress"
+                defaultMessage="Nexus Address"
+              >
+                {na => (
+                  <input
+                    ref="addContactAddress"
+                    id="nxsaddress"
+                    type="text"
+                    onChange={e => this.props.EditProtoAddress(e.target.value)}
+                    value={this.props.prototypeAddress}
+                    placeholder={na}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <button
@@ -351,10 +411,23 @@ class Addressbook extends Component {
                 )
               }
             >
-              {index === -1 ? "Add Contact" : "Edit Contact"}
+              {index === -1 ? (
+                <FormattedMessage
+                  id="AddressBook.addContact"
+                  defaultMessage=" Add Contact"
+                />
+              ) : (
+                <FormattedMessage
+                  id="AddressBook.EditContact"
+                  defaultMessage="Edit Contact"
+                />
+              )}
             </button>
             <button className="button" onClick={() => this.props.ToggleModal()}>
-              Cancel
+              <FormattedMessage
+                id="AddressBook.Cancel"
+                defaultMessage="Cancel"
+              />
             </button>
           </div>
         );
@@ -364,20 +437,33 @@ class Addressbook extends Component {
           <div id="Addresstable-wraper">
             <h2 className="m1">
               <img src={addressbookimg} className="hdr-img" />
-              My Addresses
+              <FormattedMessage
+                id="AddressBook.MyAddresses"
+                defaultMessage="My Addresses"
+              />
             </h2>
             <table className="myAddressTable">
               <thead className="AddressThead">
                 <th className="short-column">
-                  Accounts
-                  <input
-                    className="searchaccount"
-                    type="text"
-                    placeholder="Search By Account"
-                    value={this.props.Search}
-                    onChange={e => this.props.SearchName(e.target.value)}
-                    required
+                  <FormattedMessage
+                    id="AddressBook.Account"
+                    defaultMessage="Accounts"
                   />
+                  <FormattedMessage
+                    id="AddressBook.SearchAccount"
+                    defaultMessage="Search By Account"
+                  >
+                    {sba => (
+                      <input
+                        className="searchaccount"
+                        type="text"
+                        placeholder={sba}
+                        value={this.props.Search}
+                        onChange={e => this.props.SearchName(e.target.value)}
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                 </th>
               </thead>
               {this.MyAddressesTable()}
@@ -386,7 +472,10 @@ class Addressbook extends Component {
               className="button primary"
               onClick={() => this.props.SetModalType("NEW_MY_ADDRESS")}
             >
-              Create New Address
+              <FormattedMessage
+                id="AddressBook.CreateAddress"
+                defaultMessage="Create New Address"
+              />
             </button>
           </div>
         );
@@ -396,21 +485,36 @@ class Addressbook extends Component {
           <div>
             <h2 className="m1">
               <img src={addressbookimg} className="hdr-img" />
-              Add Address To{" "}
+              <FormattedMessage
+                id="AddressBook.AddAddressTO"
+                defaultMessage="Add Address To"
+              />{" "}
               <span className="chosen">
                 ({this.props.addressbook[this.props.selected].name})
               </span>
             </h2>
             <div className="create2">
-              <label htmlFor="nxsaddress">Nexus Address</label>
-              <input
-                ref="addContactAddress"
-                id="new-account-name"
-                type="text"
-                onChange={e => this.props.EditProtoAddress(e.target.value)}
-                value={this.props.prototypeAddress}
-                placeholder="Nexus Address"
-              />
+              <label htmlFor="nxsaddress">
+                <FormattedMessage
+                  id="AddressBook.NexusAddress"
+                  defaultMessage="Nexus Address"
+                />
+              </label>
+              <FormattedMessage
+                id="AddressBook.NexusAddress"
+                defaultMessage="Nexus Address"
+              >
+                {na => (
+                  <input
+                    ref="addContactAddress"
+                    id="new-account-name"
+                    type="text"
+                    onChange={e => this.props.EditProtoAddress(e.target.value)}
+                    value={this.props.prototypeAddress}
+                    placeholder={na}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <button
@@ -424,14 +528,20 @@ class Addressbook extends Component {
                 );
               }}
             >
-              Add Address
+              <FormattedMessage
+                id="AddressBook.AddAddress"
+                defaultMessage="Add Address"
+              />
             </button>
             <button
               id="back"
               className="button"
               onClick={() => this.props.ToggleModal()}
             >
-              Cancel
+              <FormattedMessage
+                id="AddressBook.Cancel"
+                defaultMessage="Cancel"
+              />
             </button>
           </div>
         );
@@ -441,33 +551,51 @@ class Addressbook extends Component {
           <div>
             <h2 className="m1">
               <img src={addressbookimg} className="hdr-img" />
-              Create
+              <FormattedMessage
+                id="AddressBook.Create"
+                defaultMessage="Create"
+              />
             </h2>
             <div className="create">
-              <label htmlFor="new-account-name">Name (Optional)</label>
-              <input
-                ref="addContactName"
-                id="new-account-name"
-                type="text"
-                value={this.props.prototypeName}
-                onChange={e => this.props.EditProtoName(e.target.value)}
-                placeholder="Enter Address Name"
-                required
-              />
+              <label htmlFor="new-account-name">
+                <FormattedMessage
+                  id="AddressBook.NameOption"
+                  defaultMessage="Name (Optional)"
+                />
+              </label>
+              <FormattedMessage
+                id="AddressBook.EnterAddressName"
+                defaultMessage="Enter Address Name"
+              >
+                {EAN => (
+                  <input
+                    ref="addContactName"
+                    id="new-account-name"
+                    type="text"
+                    value={this.props.prototypeName}
+                    onChange={e => this.props.EditProtoName(e.target.value)}
+                    placeholder={EAN}
+                    required
+                  />
+                )}
+              </FormattedMessage>
             </div>{" "}
             <button
               id="Add"
               className="ghost button"
               onClick={() => this.createAddress()}
             >
-              Create Address
+              <FormattedMessage
+                id="AddressBook.CreateAddress"
+                defaultMessage="Create Address"
+              />
             </button>
             <button
               id="back"
               className="button ghost"
               onClick={() => this.props.SetModalType("MY_ADDRESSES")}
             >
-              Back
+              <FormattedMessage id="AddressBook.Back" defaultMessage="Back" />
             </button>
           </div>
         );
@@ -539,7 +667,18 @@ class Addressbook extends Component {
                   </span>
                   <span className="contact-name">{contact.name}</span>
                   <span className="contactAddresses">
-                    {addTotal} {addTotal > 1 ? " addresses" : " address"}
+                    {addTotal}{" "}
+                    {addTotal > 1 ? (
+                      <FormattedMessage
+                        id="AddressBook.Addresses"
+                        defaultMessage="Addresses"
+                      />
+                    ) : (
+                      <FormattedMessage
+                        id="AddressBook.Address"
+                        defaultMessage="Address"
+                      />
+                    )}
                   </span>
                 </div>
               );
@@ -613,9 +752,12 @@ class Addressbook extends Component {
             }
           }}
         >
-          {" "}
-          Local Time:
-        </span>{" "}
+          <FormattedMessage
+            id="AddressBook.LocalTime"
+            defaultMessage="Local Time"
+          />
+          :
+        </span>
         {this.props.editTZ === true ? (
           <TimeZoneSelector />
         ) : (
@@ -636,7 +778,12 @@ class Addressbook extends Component {
   theirAddressLister() {
     return (
       <div>
-        <h3>Their addresses</h3>
+        <h3>
+          <FormattedMessage
+            id="AddressBook.TheirAddresses"
+            defaultMessage="Their Addresses"
+          />
+        </h3>
         <div>
           {this.props.addressbook[this.props.selected].notMine.map((add, i) => {
             return (
@@ -669,8 +816,12 @@ class Addressbook extends Component {
                     }
                   >
                     {add.label === "'s Address"
-                      ? `${this.props.addressbook[this.props.selected].name}${
-                          add.label
+                      ? `${
+                          this.props.addressbook[this.props.selected].name
+                        } ${" "}${
+                          this.props.messages[this.props.locale][
+                            "AddressBook.Address"
+                          ]
                         }`
                       : add.label}
                     :
@@ -679,7 +830,12 @@ class Addressbook extends Component {
                 <div onClick={event => this.copyaddress(event)}>
                   {add.address}
                 </div>
-                <span className="tooltip">Click to copy</span>
+                <span className="tooltip">
+                  <FormattedMessage
+                    id="AddressBook.Copy"
+                    defaultMessage="Click To Copy"
+                  />
+                </span>
               </div>
             );
           })}
@@ -973,22 +1129,35 @@ class Addressbook extends Component {
         </Modal>
         <h2>
           <img src={addressbookimg} className="hdr-img" />
-          Address Book
+          <FormattedMessage
+            id="AddressBook.AddressBook"
+            defaultMessage="Address Book"
+          />
         </h2>
         <a className="refresh" onClick={() => this.exportAddressBook()}>
-          Export Contacts
+          <FormattedMessage
+            id="AddressBook.Export"
+            defaultMessage="Export Contacts"
+          />
         </a>
         <div className="panel">
           <div id="addressbook-controls">
             <div id="addressbook-search">
-              <input
-                className="searchaccount"
-                type="text"
-                placeholder="Search Contact"
-                value={this.props.contactSearch}
-                onChange={e => this.props.ContactSearch(e.target.value)}
-                required
-              />
+              <FormattedMessage
+                id="AddressBook.searchC"
+                defaultMessage="Search Contact"
+              >
+                {searchContact => (
+                  <input
+                    className="searchaccount"
+                    type="text"
+                    placeholder={searchContact}
+                    value={this.props.contactSearch}
+                    onChange={e => this.props.ContactSearch(e.target.value)}
+                    required
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <button
@@ -998,13 +1167,19 @@ class Addressbook extends Component {
                 this.showMyAddresses();
               }}
             >
-              My Addresses
+              <FormattedMessage
+                id="AddressBook.MyAddresses"
+                defaultMessage="My Addresses"
+              />
             </button>
             <button
               className="button primary"
               onClick={() => this.showAddContactModal()}
             >
-              Add Contact
+              <FormattedMessage
+                id="AddressBook.addContact"
+                defaultMessage="Add Contact"
+              />
             </button>
           </div>
           {this.props.addressbook.length > 0 ? (
@@ -1015,30 +1190,37 @@ class Addressbook extends Component {
                   <fieldset id="contactDetails">
                     <legend>
                       {this.props.editName === true ? (
-                        <input
-                          ref="addContactName"
-                          id="new-account-name"
-                          type="text"
-                          value={this.props.prototypeName}
-                          onChange={e =>
-                            this.props.EditProtoName(e.target.value)
-                          }
-                          onKeyDown={e => {
-                            if (e.which === 13 || e.which === 9) {
-                              this.props.SaveName(
-                                this.props.selected,
-                                this.props.prototypeName
-                              );
-                            }
-                          }}
-                          placeholder="Name"
-                          onDoubleClick={() =>
-                            this.props.SaveName(
-                              this.props.selected,
-                              this.props.prototypeName
-                            )
-                          }
-                        />
+                        <FormattedMessage
+                          id="AddressBook.Name"
+                          defaultMessage="Name"
+                        >
+                          {n => (
+                            <input
+                              ref="addContactName"
+                              id="new-account-name"
+                              type="text"
+                              value={this.props.prototypeName}
+                              onChange={e =>
+                                this.props.EditProtoName(e.target.value)
+                              }
+                              onKeyDown={e => {
+                                if (e.which === 13 || e.which === 9) {
+                                  this.props.SaveName(
+                                    this.props.selected,
+                                    this.props.prototypeName
+                                  );
+                                }
+                              }}
+                              placeholder={n}
+                              onDoubleClick={() =>
+                                this.props.SaveName(
+                                  this.props.selected,
+                                  this.props.prototypeName
+                                )
+                              }
+                            />
+                          )}
+                        </FormattedMessage>
                       ) : (
                         <span
                           onDoubleClick={() =>
@@ -1050,7 +1232,12 @@ class Addressbook extends Component {
                           {this.props.addressbook[this.props.selected].name}
                         </span>
                       )}{" "}
-                      <div className="tooltip">Doubleclick to edit</div>
+                      <div className="tooltip">
+                        <FormattedMessage
+                          id="AddressBook.ClickToEdit"
+                          defaultMessage="Doubleclick To Edit"
+                        />
+                      </div>
                     </legend>
                     <div id="contactInformation">
                       <div>
@@ -1065,33 +1252,44 @@ class Addressbook extends Component {
                             }
                             htmlFor="phoneNumber"
                           >
-                            Phone number:
+                            <FormattedMessage
+                              id="AddressBook.PhoneNumber"
+                              defaultMessage="Phone Number"
+                            />
+                            :
                           </label>
                           {this.props.editPhone === true ? (
-                            <input
-                              id="phoneNumber"
-                              name="phoneNumber"
-                              type="tel"
-                              onChange={e =>
-                                this.phoneNumberHandler(e.target.value)
-                              }
-                              onKeyDown={e => {
-                                if (e.which === 13 || e.which === 9) {
-                                  this.props.SavePhone(
-                                    this.props.selected,
-                                    this.props.prototypePhoneNumber
-                                  );
-                                }
-                              }}
-                              value={this.props.prototypePhoneNumber}
-                              placeholder="Phone #"
-                              onDoubleClick={() =>
-                                this.props.SavePhone(
-                                  this.props.selected,
-                                  this.props.prototypePhoneNumber
-                                )
-                              }
-                            />
+                            <FormattedMessage
+                              id="AddressBook.Phone"
+                              defaultMessage="Phone#"
+                            >
+                              {phoneNum => (
+                                <input
+                                  id="phoneNumber"
+                                  name="phoneNumber"
+                                  type="tel"
+                                  onChange={e =>
+                                    this.phoneNumberHandler(e.target.value)
+                                  }
+                                  onKeyDown={e => {
+                                    if (e.which === 13 || e.which === 9) {
+                                      this.props.SavePhone(
+                                        this.props.selected,
+                                        this.props.prototypePhoneNumber
+                                      );
+                                    }
+                                  }}
+                                  value={this.props.prototypePhoneNumber}
+                                  placeholder={phoneNum}
+                                  onDoubleClick={() =>
+                                    this.props.SavePhone(
+                                      this.props.selected,
+                                      this.props.prototypePhoneNumber
+                                    )
+                                  }
+                                />
+                              )}
+                            </FormattedMessage>
                           ) : (
                             <span
                               onDoubleClick={() =>
@@ -1106,7 +1304,12 @@ class Addressbook extends Component {
                               {this.phoneFormatter()}
                             </span>
                           )}
-                          <span className="tooltip">Doubleclick to edit</span>
+                          <span className="tooltip">
+                            <FormattedMessage
+                              id="AddressBook.ClickToEdit"
+                              defaultMessage="Doubleclick To Edit"
+                            />
+                          </span>
                         </div>
                         {this.localTimeFormater()}
                         <div id="notesContainer">
@@ -1119,7 +1322,11 @@ class Addressbook extends Component {
                             }
                             htmlFor="notes"
                           >
-                            Notes:
+                            <FormattedMessage
+                              id="AddressBook.Notes"
+                              defaultMessage="Notes"
+                            />
+                            :
                           </label>
                           {this.props.editNotes === true ? (
                             <div>
@@ -1164,7 +1371,12 @@ class Addressbook extends Component {
                               }
                             </div>
                           )}
-                          <span className="tooltip">Doubleclick to edit</span>
+                          <span className="tooltip">
+                            <FormattedMessage
+                              id="AddressBook.ClickToEdit"
+                              defaultMessage="Doubleclick To Edit"
+                            />
+                          </span>
                         </div>
                       </div>
                       {this.props.addressbook[this.props.selected].imgSrc !==
@@ -1217,14 +1429,22 @@ class Addressbook extends Component {
                       className="button ghost hero"
                       onClick={() => this.addAddressHandler()}
                     >
-                      Add Address
+                      <FormattedMessage
+                        id="AddressBook.AddAddress"
+                        defaultMessage="Add Address"
+                      />
                     </button>
                   </div>
                 </div>
               )}
             </div>
           ) : (
-            <h1 style={{ alignSelf: "center" }}>Your addressbook is empty</h1>
+            <h1 style={{ alignSelf: "center" }}>
+              <FormattedMessage
+                id="AddressBook.BookEmpty"
+                defaultMessage="Your Addressbook Is Empty"
+              />
+            </h1>
           )}
         </div>
       </div>

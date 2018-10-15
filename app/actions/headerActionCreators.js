@@ -15,6 +15,12 @@ export const GetInfoDump = () => {
   };
 };
 
+export const SwitchLocale = locale => {
+  return dispatch => {
+    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
+  };
+};
+
 export const Lock = () => {
   return dispatch => {
     dispatch({ type: TYPE.LOCK });

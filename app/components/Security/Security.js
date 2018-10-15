@@ -248,7 +248,7 @@ class Security extends Component {
         <div className="securitySubContainer privKey">
           <form>
             <fieldset>
-              <legend>Import Private Key</legend>
+              <legend>Import Private Keys</legend>
               <div className="field">
                 <label>Account Name:</label>
                 <div className="expander">

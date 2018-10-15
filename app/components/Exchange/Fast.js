@@ -4,7 +4,7 @@ import { remote } from "electron";
 import Request from "request";
 import { bindActionCreators } from "redux";
 import { Squares } from "react-activity";
-
+import { FormattedMessage } from "react-intl";
 import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
@@ -61,10 +61,24 @@ class Fast extends Component {
           </div>
         );
       } else {
-        return <div>Trade Maximum Exceeded</div>;
+        return (
+          <div>
+            <FormattedMessage
+              id="Exchange.TradeExceed"
+              defaultMessage="Trade Maximum Exceeded"
+            />
+          </div>
+        );
       }
     } else {
-      return <div>Trade Minimum Unmet</div>;
+      return (
+        <div>
+          <FormattedMessage
+            id="Exchange.TradeUnMet"
+            defaultMessage="Trade Minimum Unmet"
+          />
+        </div>
+      );
     }
   }
 
@@ -81,7 +95,12 @@ class Fast extends Component {
             <div id="confirmation">
               <div id="sendSideConfirm">
                 <div className="confirmationWords">
-                  <h3>YOU ARE SENDING</h3>
+                  <h3>
+                    <FormattedMessage
+                      id="Exchange.YouAreSending"
+                      defaultMessage="YOU ARE SENDING"
+                    />
+                  </h3>
                   <div>
                     {this.props.ammount} {this.props.from}
                   </div>
@@ -98,7 +117,12 @@ class Fast extends Component {
                   src={this.props.availableCoins[this.props.to].image}
                 />
                 <div className="confirmationWords">
-                  <h3>YOU WILL RECIEVE</h3>
+                  <h3>
+                    <FormattedMessage
+                      id="Exchange.YouWillReceive"
+                      defaultMessage="YOU WILL RECEIVE"
+                    />
+                  </h3>
 
                   {this.transferCalculator()}
                 </div>
@@ -108,7 +132,15 @@ class Fast extends Component {
           </div>
         );
       } else {
-        return <h1>That pair is temporarily unavailable for trades.</h1>;
+        return (
+          <h1>
+            <FormattedMessage
+              id="Exchange.Exchange.NotAvailible"
+              defaultMessage="That pair is temporarily unavailable for trades"
+            />
+            .
+          </h1>
+        );
       }
     } else return null;
   }
@@ -129,7 +161,10 @@ class Fast extends Component {
           disabled={this.props.acyncButtonFlag}
         >
           {this.props.acyncButtonFlag === false ? (
-            "EXECUTE TRADE"
+            <FormattedMessage
+              id="Exchange.ExecuteTrade"
+              defaultMessage="Execute Trade"
+            />
           ) : (
             <Squares color="white" />
           )}
@@ -251,7 +286,9 @@ class Fast extends Component {
           <div>
             <form>
               <fieldset>
-                <legend>Send</legend>
+                <legend>
+                  <FormattedMessage id="Exchange.Send" defaultMessage="Send" />
+                </legend>
 
                 <div className="field">
                   <select
@@ -263,23 +300,39 @@ class Fast extends Component {
                   </select>
                 </div>
                 <div className="field">
-                  <label>Trade Ammount:</label>
-                  <input
-                    type="text"
-                    placeholder={
-                      this.minAmmount() +
-                      " " +
-                      this.props.from +
-                      " Minimum Tade"
-                    }
-                    value={this.props.ammount}
-                    onChange={e => this.ammountHandler(e.target.value)}
-                    required
-                  />
+                  <label>
+                    <FormattedMessage
+                      id="Exchange.TradeAmount"
+                      defaultMessage="Trade Amount"
+                    />
+                    :
+                  </label>
+                  <FormattedMessage
+                    id="Exchange.MinTrade"
+                    defaultMessage="Minimum trade"
+                  >
+                    {MT => (
+                      <input
+                        type="text"
+                        placeholder={
+                          this.minAmmount() + " " + this.props.from + MT
+                        }
+                        value={this.props.ammount}
+                        onChange={e => this.ammountHandler(e.target.value)}
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                 </div>
                 {this.props.from !== "NXS" ? (
                   <div className="field">
-                    <label>Refund Address:</label>
+                    <label>
+                      <FormattedMessage
+                        id="Exchange.RefundAddress"
+                        defaultMessage="Refund Address"
+                      />
+                      :
+                    </label>
                     <input
                       type="text"
                       value={this.props.refundAddress}
@@ -299,7 +352,12 @@ class Fast extends Component {
           <div>
             <form style={{ display: "flex", height: "100%" }}>
               <fieldset>
-                <legend>Recieve</legend>
+                <legend>
+                  <FormattedMessage
+                    id="Exchange.Receive"
+                    defaultMessage="Receive"
+                  />
+                </legend>
                 <div className="field">
                   <select
                     className="soflow-color"
@@ -311,7 +369,14 @@ class Fast extends Component {
                 </div>
 
                 <div className="field">
-                  <label>{this.currencylabel()} Address:</label>
+                  <label>
+                    {this.currencylabel()}{" "}
+                    <FormattedMessage
+                      id="Exchange.BCAddress"
+                      defaultMessage="Blackcoin Address"
+                    />
+                    :
+                  </label>
                   <input
                     type="text"
                     value={this.props.toAddress}

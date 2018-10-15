@@ -8,7 +8,7 @@ import styles from "./style.css";
 import * as TYPE from "../../actions/actiontypes";
 import MarketDepth from "../Chart/MarketDepth";
 import Candlestick from "../Chart/Candlestick";
-
+import { FormattedMessage } from "react-intl";
 import Alert from "../Alert";
 
 // import images
@@ -28,7 +28,7 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
 const mapStateToProps = state => {
-  return { ...state.market, ...state.common };
+  return { ...state.market, ...state.common, ...state.intl };
 };
 
 const mapDispatchToProps = dispatch =>
@@ -55,12 +55,13 @@ class Market extends Component {
   }
 
   refresher() {
+    let any = this;
     this.props.binanceDepthLoader();
     this.props.bittrexDepthLoader();
     this.props.cryptopiaDepthLoader();
-    this.props.binanceCandlestickLoader();
-    this.props.bittrexCandlestickLoader();
-    this.props.cryptopiaCandlestickLoader();
+    this.props.binanceCandlestickLoader(any);
+    this.props.bittrexCandlestickLoader(any);
+    this.props.cryptopiaCandlestickLoader(any);
     this.props.binance24hrInfo();
     this.props.bittrex24hrInfo();
     this.props.cryptopia24hrInfo();
@@ -252,6 +253,7 @@ class Market extends Component {
       .map(e => {
         newQuantity = prevQuantity + e.Volume;
         prevQuantity = newQuantity;
+
         if (e.Price < array[0].Price * 0.05) {
           return {
             x: 0,
@@ -261,7 +263,11 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `Price: ${e.Price} \n Volume: ${newQuantity}`
+            label: `${
+              this.props.messages[this.props.locale]["Market.Price"]
+            }: ${e.Price} \n ${
+              this.props.messages[this.props.locale]["Market.Volume"]
+            }: ${newQuantity}`
           };
         }
       })
@@ -341,7 +347,7 @@ class Market extends Component {
           </div>
         )}
         <div>
-          High: {this.props[failedExchange].info24hr.high}
+          Highsss: {this.props[failedExchange].info24hr.high}
           {" BTC"}
         </div>
         <div>
@@ -358,9 +364,18 @@ class Market extends Component {
   render() {
     return (
       <div id="market" className="animated fadeIn">
-        <h2><img src={marketimg} className="hdr-img"/>Market Information</h2>
+        <h2>
+          <img src={marketimg} className="hdr-img" />
+          <FormattedMessage
+            id="Market.Information"
+            defaultMessage="Market Information"
+          />
+        </h2>
         <a className="refresh" onClick={() => this.refresher()}>
-          Refresh Market Data
+          <FormattedMessage
+            id="Market.Refreash"
+            defaultMessage="Refresh Market Data"
+          />
         </a>
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
         <div className="panel">

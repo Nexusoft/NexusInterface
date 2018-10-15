@@ -1,8 +1,8 @@
 import React from "react";
-import { Provider } from "react-redux";
+// import { Provider } from "react-redux";
 import { ConnectedRouter } from "react-router-redux";
 import { Route } from "react-router";
-
+// import { FormattedMessage, IntlProvider } from "react-intl-redux";
 import App from "./App";
 import Loader from "../components/Loader/index";
 import Overview from "../components/Overview/index";
@@ -20,7 +20,14 @@ import List from "../components/List/index";
 import About from "../components/About/index";
 import Exchange from "../components/Exchange/index";
 import settings from "../../app/api/settings";
-
+import messages from "./messages";
+import locale from "../reducers/intl";
+import enLocaleData from "react-intl/locale-data/en";
+import { addLocaleData } from "react-intl";
+import { updateIntl } from "react-intl-redux";
+import localesReducer from "../reducers/intl";
+import { connect, Provider } from "react-redux";
+import IntlWrapper from "../containers/intlWrapper";
 export default function Root({ store, history }) {
   // let configSettings = settings.GetSettings();
 
@@ -44,7 +51,6 @@ export default function Root({ store, history }) {
           <div id="app-header">
             <Route path="/" component={Header} />
           </div>
-
           <div id="app-content">
             <div id="app-content-container">
               <div id="app-loader">

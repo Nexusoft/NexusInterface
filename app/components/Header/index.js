@@ -23,13 +23,19 @@ import logoFull from "images/logo-full-beta.svg";
 
 import GOOGLE from "../../script/googleanalytics";
 import configuration from "../../api/configuration";
+import { FormattedMessage } from "react-intl";
 
 var tray = tray || null;
 let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
 
 const mapStateToProps = state => {
-  return { ...state.overview, ...state.common, ...state.settings };
+  return {
+    ...state.overview,
+    ...state.common,
+    ...state.settings,
+    ...state.intl
+  };
 };
 
 const mapDispatchToProps = dispatch =>
@@ -223,14 +229,45 @@ class Header extends Component {
     );
 
     if (this.props.unlocked_until === undefined) {
-      return "Wallet Unencrypted";
+      return (
+        <FormattedMessage
+          id="Header.WalletUnencrypted"
+          defaultMessage="Wallet Unencrypted"
+        />
+      );
     } else if (this.props.unlocked_until === 0) {
-      return "Wallet Locked";
+      return (
+        <FormattedMessage
+          id="Header.UnlockedUntil"
+          defaultMessage="Unlocked Until"
+        />
+      );
     } else if (this.props.unlocked_until >= 0) {
       if (this.props.minting_only) {
-        return "Unlocked until: " + unlockDate + " STAKING ONLY";
+        return (
+          (
+            <FormattedMessage
+              id="Header.UnlockedUntil"
+              defaultMessage="Unlocked Until"
+            />
+          ) +
+          unlockDate +
+          (
+            <FormattedMessage
+              id="Header.StakingOnly"
+              defaultMessage="Staking Only"
+            />
+          )
+        );
       } else {
-        return "Unlocked until: " + unlockDate;
+        return (
+          (
+            <FormattedMessage
+              id="Header.UnlockedUntil"
+              defaultMessage="Unlocked Until"
+            />
+          ) + unlockDate
+        );
       }
     }
   }
@@ -246,12 +283,12 @@ class Header extends Component {
   returnSyncStatusTooltip() {
     if (this.props.heighestPeerBlock > this.props.blocks) {
       return (
-        "Syncing...\nBehind\n" +
+        <FormattedMessage id="Header.Synching" defaultMessage="Syncing..." /> +
         (this.props.heighestPeerBlock - this.props.blocks).toString() +
-        "\nBlocks"
+        <FormattedMessage id="Header.Blocks" defaultMessage="Blocks" />
       );
     } else {
-      return "Synced";
+      return <FormattedMessage id="Header.Synched" defaultMessage="Synched" />;
     }
   }
 
@@ -274,6 +311,9 @@ class Header extends Component {
         break;
       case "Invalid Address":
         return <h2>Invalid Address</h2>;
+        break;
+      case "Invalid":
+        return <h2>Invalid</h2>;
         break;
       case "Address Added":
         return <h2>Address Added</h2>;
@@ -347,7 +387,6 @@ class Header extends Component {
               .maxMindCopyright
           }}
         />
-
         <Modal
           showCloseIcon={false}
           center={true}
@@ -367,11 +406,36 @@ class Header extends Component {
           </div>
           <div className="icon">
             <img src={stakeImg} />
+
             <div className="tooltip bottom">
-              <div>Stake Weight: {this.props.stakeweight}%</div>
-              <div>Interest Rate: {this.props.interestweight}%</div>
-              <div>Trust Weight: {this.props.trustweight}%</div>
-              <div>Block Weight: {this.props.blockweight}</div>
+              <div>
+                <FormattedMessage
+                  id="Header.StakeWeight"
+                  defaultMessage="Stake Weight"
+                />
+                : {this.props.stakeweight}%
+              </div>
+              <div>
+                <FormattedMessage
+                  id="Header.InterestRate"
+                  defaultMessage="Interest Rate"
+                />
+                : {this.props.interestweight}%
+              </div>
+              <div>
+                <FormattedMessage
+                  id="Header.TrustWeight"
+                  defaultMessage="Trust Weight"
+                />
+                : {this.props.trustweight}%
+              </div>
+              <div>
+                <FormattedMessage
+                  id="Header.BlockWeight"
+                  defaultMessage="Block Weight"
+                />
+                : {this.props.blockweight}
+              </div>
             </div>
           </div>
           <div className="icon">
@@ -381,15 +445,15 @@ class Header extends Component {
             </div>
           </div>
         </div>
+
         <Link to="/">
           <img
             id="logo"
-            className="animated zoomIn "
+            className="animated zoomIn"
             src={logoFull}
             alt="Nexus Logo"
           />
         </Link>
-
         <div id="hdr-line" className="animated fadeIn " />
       </div>
     );

@@ -157,6 +157,7 @@
   flex-direction: column;
   color: var(--color-5);
   text-align: right;
+  margin-top: -10px;
 }
 
 /* TABLE ANIMATION */
