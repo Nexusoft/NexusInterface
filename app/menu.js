@@ -47,7 +47,7 @@ export default class MenuBuilder {
       label: "File",
       submenu: [
         {
-          label: "Lock/Unlock/Encrypt Wallet",
+          label: "Key Management",
           click: () => {
             if (self.props.unlocked_until !== undefined) {
               self.props.history.push("/Settings/Security");
@@ -81,7 +81,7 @@ export default class MenuBuilder {
           }
         },
         {
-          label: "Open Backups Folder",
+          label: "View Backups",
           click() {
             let fs = require("fs");
             let BackupDir = process.env.HOME + "/NexusBackups";
@@ -109,7 +109,7 @@ export default class MenuBuilder {
           }
         },
         {
-          label: "Close And Shutdown Daemon",
+          label: "Quit Nexus Wallet",
           click() {
             RPC.PROMISE("stop", []).then(payload => {
               setTimeout(() => {
@@ -133,6 +133,22 @@ export default class MenuBuilder {
           label: "Application Settings",
           click() {
             self.props.history.push("/Settings/App");
+          }
+        },
+        {
+          label: "Key Management Settings",
+          click() {
+            if (self.props.unlocked_until !== undefined) {
+              self.props.history.push("/Settings/Security");
+            } else {
+              self.props.history.push("/Settings/Unencrypted");
+            }
+          }
+        },
+        {
+          label: "Style Settings",
+          click() {
+            self.props.history.push("/Settings/Style");
           }
         },
 
@@ -175,9 +191,9 @@ export default class MenuBuilder {
                 label: "Toggle Full Screen",
                 accelerator: "F11",
                 click: () => {
-                  // this.mainWindow.setFullScreen(
-                  //   !this.mainWindow.isFullScreen()
-                  // );
+                  remote
+                    .getCurrentWindow()
+                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
                 }
               }
             ]
@@ -215,7 +231,7 @@ export default class MenuBuilder {
         label: "&File",
         submenu: [
           {
-            label: "Lock/Unlock/Encrypt Wallet",
+            label: "Key Management",
             click: () => {
               if (self.props.unlocked_until !== undefined) {
                 self.props.history.push("/Settings/Security");
@@ -248,11 +264,11 @@ export default class MenuBuilder {
               }
               RPC.PROMISE("backupwallet", [
                 BackupDir + "/NexusBackup_" + now + ".dat"
-              ]);
+              ]).then(self.props.OpenModal("Wallet Backup"));
             }
           },
           {
-            label: "Open Backups Folder",
+            label: "View Backups",
             click() {
               let fs = require("fs");
               let BackupDir = process.env.HOME + "/NexusBackups";
@@ -283,7 +299,7 @@ export default class MenuBuilder {
             }
           },
           {
-            label: "Close And Shutdown Daemon",
+            label: "Quit Nexus Wallet",
             click() {
               RPC.PROMISE("stop", []).then(payload => {
                 setTimeout(() => {
@@ -310,9 +326,25 @@ export default class MenuBuilder {
             }
           },
           {
+            label: "Key Management Settings",
+            click() {
+              if (self.props.unlocked_until !== undefined) {
+                self.props.history.push("/Settings/Security");
+              } else {
+                self.props.history.push("/Settings/Unencrypted");
+              }
+            }
+          },
+          {
+            label: "Style Settings",
+            click() {
+              self.props.history.push("/Settings/Style");
+            }
+          },
+          {
             label: "Toggle &Developer Tools",
             accelerator: "Alt+Ctrl+I",
-            click: () => { 
+            click: () => {
               this.mainWindow.toggleDevTools();
             }
           }
@@ -332,7 +364,7 @@ export default class MenuBuilder {
                 },
 
                 {
-                  label: "Toggle &Full Screen",
+                  label: "Toggle Full Screen",
                   accelerator: "F11",
                   click: () => {
                     remote
@@ -353,9 +385,9 @@ export default class MenuBuilder {
                   label: "Toggle Full Screen",
                   accelerator: "F11",
                   click: () => {
-                    // this.mainWindow.setFullScreen(
-                    //   !this.mainWindow.isFullScreen()
-                    // );
+                    remote
+                      .getCurrentWindow()
+                      .setFullScreen(!remote.getCurrentWindow().isFullScreen());
                   }
                 }
               ]

@@ -55,9 +55,13 @@ export default class Table extends Component {
                             selected: rowInfo.index
                         })
                     },
-                    onMouseDown: (e) =>
+                    onContextMenu: (e) =>
                     {
                         this.props.selectCallback(e,rowInfo);
+                    },
+                    onMouseDown: (e) =>
+                    {
+                        this.props.onMouseOverCallback(e,rowInfo);
                     },
                     onMouseOver: (e) =>
                     {

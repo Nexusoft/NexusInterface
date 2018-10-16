@@ -51,6 +51,11 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class TerminalConsole extends Component {
+
+  constructor(props) {
+    super(props);
+    this.inputRef = null;
+  }
   // React Method (Life cycle hook)
   componentDidMount() {
     RPC.PROMISE("help", []).then(payload => {
@@ -80,19 +85,29 @@ class TerminalConsole extends Component {
     let splitInput = this.props.currentInput.split(" ");
     let preSanatized = splitInput[0].replace(/[^a-zA-Z0-9]/g, "");
     splitInput[0] = preSanatized;
+
+    for (let index = 1; index < splitInput.length; index++) {
+      //splitInput[index] = splitInput[index].replace(/['"`]/g,"");
+      
+    }
+
+    //console.log(splitInput);
+    /// this is the argument array
     let RPCArguments = [];
     this.props.addToHistory(splitInput[0]);
     this.props.setInputFeild("");
 
     for (let tempindex = 1; tempindex < splitInput.length; tempindex++) {
       let element = splitInput[tempindex];
-      if (isNaN(Number(element)) === false) {
+      /// If this is a number we need to format it an int
+      if (element != "" && isNaN(Number(element)) === false) {
         element = parseFloat(element);
       }
       RPCArguments.push(element);
     }
 
-    if (this.props.commandList.indexOf(splitInput[0]) != -1) {
+    /// Execute the command with the given args
+    if (this.props.commandList.some(function(v){ return v.indexOf(splitInput[0])>=0 }) == true) {
       RPC.PROMISE(splitInput[0], RPCArguments)
         .then(payload => {
           if (typeof payload === "string" || typeof payload === "number") {
@@ -175,7 +190,13 @@ class TerminalConsole extends Component {
   autoComplete() {
     return this.props.filteredCmdList.map((item, key) => {
       return (
-        <a key={key} onMouseDown={() => this.props.onAutoCompleteClick(item)}>
+        <a key={key} onMouseDown={() => {
+          setTimeout(() => {
+            //I don't like this but the issue is that the click event fires on the output div which breaks the focus, so using a timer
+            this.inputRef.focus(); 
+          }, 100); 
+          this.props.onAutoCompleteClick(item);
+            }}>
           {item}
           <br />
         </a>
@@ -190,6 +211,7 @@ class TerminalConsole extends Component {
         <div id="terminal-console-input">
           <input
             id="input-text"
+            ref={element => this.inputRef = element}
             autoFocus
             type="text"
             value={this.props.currentInput}

@@ -212,7 +212,7 @@ class Addressbook extends Component {
     event.preventDefault();
     let target = event.currentTarget;
     let address = event.target.innerText;
-
+    console.log(target, address);
     // create a temporary input element and add it to the list item (no one will see it)
     let input = document.createElement("input");
     input.type = "text";
@@ -262,13 +262,11 @@ class Addressbook extends Component {
               </td>
               {acct.addresses.map(address => {
                 return (
-                  <td
-                    className="tdd"
-                    key={address + i}
-                    onClick={event => this.copyaddress(event)}
-                  >
-                    {address}
-                    <span key={address + i} className="tooltip ">
+                  <td className="tdd" key={address + i}>
+                    <span onClick={event => this.copyaddress(event)}>
+                      {address}
+                    </span>
+                    <span key={address + i} className="tooltip">
                       Click to copy
                     </span>
                   </td>
@@ -374,36 +372,38 @@ class Addressbook extends Component {
         );
         break;
       case "MY_ADDRESSES":
-        return (
-          <div id="Addresstable-wraper">
-            <h2 className="m1">
-              <img src={addressbookimg} className="hdr-img" />
-              My Addresses
-            </h2>
-            <table className="myAddressTable">
-              <thead className="AddressThead">
-                <th className="short-column">
-                  Accounts
-                  <input
-                    className="searchaccount"
-                    type="text"
-                    placeholder="Search By Account"
-                    value={this.props.Search}
-                    onChange={e => this.props.SearchName(e.target.value)}
-                    required
-                  />
-                </th>
-              </thead>
-              {this.MyAddressesTable()}
-            </table>
-            <button
-              className="button primary"
-              onClick={() => this.props.SetModalType("NEW_MY_ADDRESS")}
-            >
-              Create New Address
-            </button>
-          </div>
-        );
+        if (this.props.myAccounts.length > 0) {
+          return (
+            <div id="Addresstable-wraper">
+              <h2 className="m1">
+                <img src={addressbookimg} className="hdr-img" />
+                My Addresses
+              </h2>
+              <table className="myAddressTable">
+                <thead className="AddressThead">
+                  <th className="short-column">
+                    Accounts
+                    <input
+                      className="searchaccount"
+                      type="text"
+                      placeholder="Search By Account"
+                      value={this.props.Search}
+                      onChange={e => this.props.SearchName(e.target.value)}
+                      required
+                    />
+                  </th>
+                </thead>
+                {this.MyAddressesTable()}
+              </table>
+              <button
+                className="button primary"
+                onClick={() => this.props.SetModalType("NEW_MY_ADDRESS")}
+              >
+                Create New Address
+              </button>
+            </div>
+          );
+        } else return <h2>Please wait for Daemon to respond.</h2>;
         break;
       case "ADD_ADDRESS":
         return (
@@ -1057,6 +1057,7 @@ class Addressbook extends Component {
               className="button ghost"
               onClick={() => {
                 this.props.clearSearch();
+                this.loadMyAccounts();
                 this.showMyAddresses();
               }}
             >

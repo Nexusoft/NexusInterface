@@ -22,7 +22,7 @@ import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
 import unlockImg from "images/lock-minting.svg";
 import statGood from "images/status-good.svg";
-import statBad from "images/status-bad.svg";
+import statBad from "images/sync.svg";
 import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
 
@@ -52,7 +52,7 @@ class Header extends Component {
     if (this.props.unlocked_until !== undefined) {
       encryptionStatus = true;
     }
-
+    console.log(configuration.GetAppResourceDir());
     this.props.SetMarketAveData();
     this.props.LoadAddressBook();
 
@@ -318,9 +318,13 @@ class Header extends Component {
   }
 
   syncStatus() {
+    let syncStatus = document.getElementById("syncStatus");
     if (this.props.heighestPeerBlock > this.props.blocks) {
+      // rotates
+      syncStatus.classList.remove("sync-img");
       return statBad;
     } else {
+      // doesn't
       return statGood;
     }
   }
@@ -393,6 +397,19 @@ class Header extends Component {
       case "Style Settings Saved":
         return <h2>Style Settings Saved</h2>;
         break;
+      case "No ammount set":
+        return <h2>No Ammount Set</h2>;
+        break;
+      case "FutureDate":
+        return (
+          <h2>
+            Unlock until date/time must be at least an hour in the future.
+          </h2>
+        );
+        break;
+      case "Incorrect Passsword":
+        return <h2>Incorrect Passsword</h2>;
+        break;
       case "Core Settings Saved":
         return <h2>Core Settings Saved</h2>;
         break;
@@ -421,7 +438,9 @@ class Header extends Component {
       this.props.connections === undefined
     ) {
       return <span>Loading Daemon. Please wait...</span>;
-    } else { return null };
+    } else {
+      return null;
+    }
   }
   // Mandatory React method
   render() {
@@ -477,7 +496,11 @@ class Header extends Component {
             </div>
           </div>
           <div className="icon">
-            <img src={this.syncStatus()} />
+            {this.props.heighestPeerBlock > this.props.blocks ? (
+              <img id="syncing" className="sync-img" src={statBad} />
+            ) : (
+              <img id="synced" src={statGood} />
+            )}
             <div className="tooltip bottom" style={{ right: "100%" }}>
               <div>{this.returnSyncStatusTooltip()}</div>
             </div>

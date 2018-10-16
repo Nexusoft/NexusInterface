@@ -182,7 +182,7 @@ class Unencrypted extends Component {
                   className="button primary"
                   onClick={e => this.encrypt(e)}
                 >
-                  Submit
+                  Encrypt and Restart
                 </button>
               </p>
             </fieldset>

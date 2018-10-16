@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { remote } from "electron";
 import Request from "request";
-import { Promise } from "bluebird-lst";
+import { Promise } from "bluebird-lst";;
 import Modal from "react-responsive-modal";
 import {
   VictoryBar,
@@ -39,6 +39,8 @@ import styles from "./style.css";
 
 // Images
 import transactionsimg from "../../images/transactions.svg";
+
+import copy from 'copy-to-clipboard';
 
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
 // import "react-table/react-table.css"
@@ -74,6 +76,9 @@ const mapDispatchToProps = dispatch => ({
   },
   UpdateCoinValueOnTransaction: returnData => {
     dispatch({ type: TYPE.UPDATE_COINVALUE, payload: returnData });
+  },
+  UpdateFeeOnTransaction: returnData => {
+    dispatch({ type: TYPE.UPDATE_FEEVALUE, payload: returnData });
   }
 });
 
@@ -83,6 +88,11 @@ class Transactions extends Component {
   };
   constructor(props) {
     super(props);
+    this.copyRef = element => {
+      this.textCopyArea = element;
+    }
+    this.hoveringID = 999999999999;
+    this.isHoveringOverTable = false;
     this.state = {
       walletTransactions: [
         {
@@ -112,7 +122,7 @@ class Transactions extends Component {
           new Date(
             new Date().getFullYear() - 1,
             new Date().getMonth(),
-            new Date().getDate()
+            new Date().getDate(),1,1,1,1
           ),
           new Date()
         ],
@@ -134,7 +144,8 @@ class Transactions extends Component {
       refreshInterval: undefined,
       highlightedBlockNum: "Loading",
       highlightedBlockHash: "Loading",
-      needsHistorySave: false
+      needsHistorySave: false,
+      copyBuffer: ""
     };
   }
 
@@ -174,7 +185,7 @@ class Transactions extends Component {
 
     let interval = setInterval(() => {
       this.getTransactionData(this.setConfirmationsCallback.bind(this));
-    }, 30000);
+    }, 60000);
     this.setState({
       refreshInterval: interval,
       addressLabels: tempaddpress
@@ -293,14 +304,25 @@ class Transactions extends Component {
     });
 
     this.props.SetWalletTransactionArray(incomingData);
-    this.setState({
-      tableColumns: tabelheaders,
-      zoomDomain: {
+    let tempZoomDomain = {
+      x: [
+        new Date(),
+        new Date(new Date().getFullYear() + 1,1,1,1,1,1,1)
+      ]
+    }
+    
+    if (incomingData != undefined && incomingData.length > 0)
+    {
+      tempZoomDomain = {
         x: [
           new Date(incomingData[0].time * 1000),
           new Date((incomingData[incomingData.length - 1].time + 1000) * 1000)
         ]
       }
+    }
+    this.setState({
+      tableColumns: tabelheaders,
+      zoomDomain: tempZoomDomain
     });
     // Just trying to give some space on this not important call
     setTimeout(() => {
@@ -323,6 +345,21 @@ class Transactions extends Component {
         });
         this.gothroughdatathatneedsit();
       });
+
+      let feePromises = [];
+      incomingData.forEach(element => {
+        if (element.category == "send"){
+        feePromises.push( RPC.PROMISE("gettransaction",[element.txid]));
+        }
+      });
+      Promise.all(feePromises).then( payload => {
+        let feeData = new Map();
+        payload.map(element => {
+          feeData.set(element.time,element.fee);
+        });
+        this.setFeeValuesOnTransaction(feeData)
+      }
+      );
     }, 1000);
   }
 
@@ -394,9 +431,9 @@ class Transactions extends Component {
         open: true
       });
 
-      if (this.props.walletitems[this.state.hoveringID].confirmations != 0) {
+      if (this.props.walletitems[this.hoveringID].confirmations != 0) {
         RPC.PROMISE("gettransaction", [
-          this.props.walletitems[this.state.hoveringID].txid
+          this.props.walletitems[this.hoveringID].txid
         ]).then(payload => {
           RPC.PROMISE("getblock", [payload.blockhash]).then(payload2 => {
             this.setState({
@@ -421,23 +458,32 @@ class Transactions extends Component {
     );
 
     let tablecopyaddresscallback = function() {
-      this.copysomethingtotheclipboard(
-        this.state.walletTransactions[this.state.hoveringID].address
-      );
+      if (this.hoveringID != 999999999999)
+      {
+        this.copysomethingtotheclipboard(
+          this.props.walletitems[this.hoveringID].address
+        );
+      }
     };
     tablecopyaddresscallback = tablecopyaddresscallback.bind(this);
 
     let tablecopyamountcallback = function() {
-      this.copysomethingtotheclipboard(
-        this.state.walletTransactions[this.state.hoveringID].amount
-      );
+      if (this.hoveringID != 999999999999)
+      {
+        this.copysomethingtotheclipboard(
+          this.props.walletitems[this.hoveringID].amount
+        );
+       }
     };
     tablecopyamountcallback = tablecopyamountcallback.bind(this);
 
     let tablecopyaccountcallback = function() {
-      this.copysomethingtotheclipboard(
-        this.state.walletTransactions[this.state.hoveringID].account
-      );
+      if (this.hoveringID != 999999999999)
+      {
+        this.copysomethingtotheclipboard(
+          this.props.walletitems[this.hoveringID].account
+        );
+      }
     };
     tablecopyaccountcallback = tablecopyaccountcallback.bind(this);
 
@@ -471,9 +517,9 @@ class Transactions extends Component {
 
     let sendtoSendPagecallback = function() {
       this.props.SetSendAgainData({
-        address: this.state.walletTransactions[this.state.hoveringID].address,
-        account: this.state.walletTransactions[this.state.hoveringID].account,
-        amount: this.state.walletTransactions[this.state.hoveringID].amount
+        address: this.state.walletTransactions[this.hoveringID].address,
+        account: this.state.walletTransactions[this.hoveringID].account,
+        amount: this.state.walletTransactions[this.hoveringID].amount
       });
       this.context.router.history.push("/SendRecieve");
     };
@@ -481,7 +527,7 @@ class Transactions extends Component {
 
     let sendtoBlockExplorercallback = function() {
       this.props.SetExploreInfo({
-        transactionId: this.state.walletTransactions[this.state.hoveringID].txid
+        transactionId: this.state.walletTransactions[this.hoveringID].txid
       });
       this.context.router.history.push("/BlockExplorer");
     };
@@ -511,7 +557,8 @@ class Transactions extends Component {
       })
     );
     */
-    if (this.state.isHoveringOverTable) {
+ 
+    if (this.isHoveringOverTable) {
       transactiontablecontextmenu.popup(remote.getCurrentWindow());
     } else {
       defaultcontextmenu.popup(remote.getCurrentWindow());
@@ -521,12 +568,7 @@ class Transactions extends Component {
   // Input :
   //   instringtocopy      || String || String to copy
   copysomethingtotheclipboard(instringtocopy) {
-    let tempelement = document.createElement("textarea");
-    tempelement.value = instringtocopy;
-    document.body.appendChild(tempelement);
-    tempelement.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempelement);
+    copy(instringtocopy);
   }
 
   // Gets all the data from each account held by the wallet
@@ -885,9 +927,14 @@ class Transactions extends Component {
 
   // What happens when you select something in the table
   tableSelectCallback(e, indata) {
-    this.setState({
-      hoveringID: indata.index
-    });
+    console.log(e.target.innerText);
+    console.log(indata);
+    //e.target.select();
+    //document.execCommand('copy');
+    //this.setState({
+    //  hoveringID: indata.index
+    //});
+    this.hoveringID = indata.index;
   }
 
   // Return the data to be placed into the Table
@@ -1031,16 +1078,14 @@ class Transactions extends Component {
 
   // the callback for when you mouse over a transaction on the table.
   mouseOverCallback(e, inData) {
-    this.setState({
-      isHoveringOverTable: true
-    });
+    
+    this.isHoveringOverTable = true;
   }
 
   // The call back for when the mouse moves out of the table div.
   mouseOutCallback(e) {
-    this.setState({
-      isHoveringOverTable: false
-    });
+  
+    this.isHoveringOverTable = false;
   }
 
   // Either load in the file from local or start downloading more data and make a new one.
@@ -1095,6 +1140,14 @@ class Transactions extends Component {
       }
     };
     this.props.UpdateCoinValueOnTransaction(dataToChange);
+  }
+
+  /// Set Fee Values On Transaction
+  /// Build a object from incoming data then dispatch that to redux to populate that transaction
+  /// Input:
+  ///     incomingChangeData    || Array || Data that needs to be changed.
+  setFeeValuesOnTransaction(incomingChangeData) {
+    this.props.UpdateFeeOnTransaction(incomingChangeData);
   }
 
   // Download both USD and BTC history on the incoming transaction
@@ -1276,10 +1329,10 @@ class Transactions extends Component {
   returnModalInternal() {
     let internalString = [];
     if (
-      this.state.hoveringID != 999999999999 &&
+      this.hoveringID != 999999999999 &&
       this.props.walletitems.length != 0
     ) {
-      const selectedTransaction = this.props.walletitems[this.state.hoveringID];
+      const selectedTransaction = this.props.walletitems[this.hoveringID];
 
       if (selectedTransaction.confirmations <= 12) {
         internalString.push(<a key="isPending">PENDING TRANSACTION</a>);
@@ -1290,6 +1343,13 @@ class Transactions extends Component {
         <a key="modal_amount">{"Amount: " + selectedTransaction.amount}</a>
       );
       internalString.push(<br key="br2" />);
+      if (selectedTransaction.category == "send")
+      {
+        internalString.push(
+          <a key="modal_fee">{"Fee: " + selectedTransaction.fee}</a>
+        );
+        internalString.push(<br key="br11" />);
+      }
       internalString.push(
         <a key="modal_time">
           {"Time: " +

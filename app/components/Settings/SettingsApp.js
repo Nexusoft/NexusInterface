@@ -554,7 +554,8 @@ class SettingsApp extends Component {
               />
               <button
                 className="feebutton"
-                onClick={() => {
+                onClick={e => {
+                  e.preventDefault();
                   this.props.OpenModal2();
                 }}
               >

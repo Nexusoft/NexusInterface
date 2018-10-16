@@ -67,6 +67,7 @@ Available RPC methods:
 **/
 export const COMMANDS = {};
 export const CALLBACK = {};
+import * as TYPE from "../actions/actiontypes";
 import core from "../api/core";
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 export const GETHOST = () => {
@@ -102,17 +103,18 @@ export const GET = (cmd, args, Callback) => {
   );
 };
 
-export const PROMISE = (cmd, args, props = null) => {
+export const PROMISE = (cmd, args) => {
   return new Promise((resolve, reject) => {
     var PostData = JSON.stringify({
       method: cmd,
       params: args
     });
-
     var ResponseObject;
 
-    if (props != null) {
-      props.AddRPCCall(cmd);
+    let store = require("../store/configureStore");
+    if (cmd != "help"){
+      ///Send the command to the dispatch so we can place it in the output log
+      store.store.dispatch({ type: TYPE.ADD_RPC_CALL, payload: cmd });
     }
 
     /** Opera 8.0+, Firefox, Safari **/
@@ -137,6 +139,8 @@ export const PROMISE = (cmd, args, props = null) => {
 
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
+      //console.log(args);
+      //console.log(PostData);
       if (ResponseObject.status == 404) {
         reject("RPC Command {" + cmd + "} Not Found");
       }
@@ -146,7 +150,6 @@ export const PROMISE = (cmd, args, props = null) => {
       if (ResponseObject.status == 500) {
         reject(JSON.parse(ResponseObject.responseText));
       }
-
       if (cmd === "validateaddress") {
         if (JSON.parse(ResponseObject.response).result.isvalid === false) {
           reject(JSON.parse(ResponseObject.response).result.isvalid);

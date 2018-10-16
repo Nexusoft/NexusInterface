@@ -8,7 +8,7 @@ Last Modified by: Brian Smith
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-
+import { shell } from "electron";
 // Internal Dependencies
 import styles from "./style.css";
 import * as TYPE from "../../actions/actiontypes";
@@ -102,28 +102,50 @@ class About extends Component {
           <h2>Open Source Credits</h2>
           <dl>
             <dt>Electron</dt>
+            <dd>
+              {" "}
+              <a onClick={() => shell.openExternal("https://electronjs.org/")}>
+                electronjs.org{" "}
+              </a>{" "}
+              MIT License
+            </dd>
             <dt>React</dt>
             <dd>
-              <a href="https://reactjs.org/"> Reactjs.org </a> MIT License
+              <a onClick={() => shell.openExternal("https://reactjs.org/")}>
+                {" "}
+                Reactjs.org{" "}
+              </a>{" "}
+              MIT License
             </dd>
             <dt>Redux</dt>
             <dd>
               {" "}
-              <a href="https://redux.js.org/"> Redux.js.org </a> MIT License{" "}
+              <a onClick={() => shell.openExternal("https://redux.js.org/")}>
+                {" "}
+                Redux.js.org{" "}
+              </a>{" "}
+              MIT License{" "}
             </dd>
             <dt>Babel</dt>
             <dd>
               {" "}
-              <a href="https://babeljs.io/"> Babeljs.io </a> MIT License{" "}
+              <a onClick={() => shell.openExternal("https://babeljs.io/")}>
+                {" "}
+                Babeljs.io{" "}
+              </a>{" "}
+              MIT License{" "}
             </dd>
-            <dd>
-              {" "}
-              <a href="https://electronjs.org/">electronjs.org </a> MIT License
-            </dd>
+
             <dt>Victory Chart</dt>
             <dd>
               {" "}
-              <a href="https://formidable.com/open-source/victory/">
+              <a
+                onClick={() =>
+                  shell.openExternal(
+                    "https://formidable.com/open-source/victory/"
+                  )
+                }
+              >
                 {" "}
                 Formidable Labs{" "}
               </a>{" "}
@@ -134,15 +156,30 @@ class About extends Component {
               Copyright &copy; 2018 MaxMind, Inc. This work is licensed under
               the Creative Commons Attribution-ShareAlike 4.0 International
               License. To view a copy of this license, visit{" "}
-              <a href="http://creativecommons.org/licenses/by-sa/4.0/">
+              <a
+                onClick={() =>
+                  shell.openExternal(
+                    "http://creativecommons.org/licenses/by-sa/4.0/"
+                  )
+                }
+              >
                 {" "}
                 creativecommons.org{" "}
               </a>
               . This database incorporates{" "}
-              <a href="http://www.geonames.org">GeoNames</a> geographical data,
-              which is made available under the Creative Commons Attribution 3.0
-              License. To view a copy of this license, visit{" "}
-              <a href="http://www.creativecommons.org/licenses/by/3.0/us/">
+              <a onClick={() => shell.openExternal("http://www.geonames.org")}>
+                GeoNames
+              </a>{" "}
+              geographical data, which is made available under the Creative
+              Commons Attribution 3.0 License. To view a copy of this license,
+              visit{" "}
+              <a
+                onClick={() =>
+                  shell.openExternal(
+                    "http://www.creativecommons.org/licenses/by/3.0/us/"
+                  )
+                }
+              >
                 creativecommons.org
               </a>{" "}
               .

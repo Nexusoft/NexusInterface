@@ -134,6 +134,7 @@ body {
 ::-webkit-scrollbar {
   width: 10px;
   background: rgba(0, 0, 0, 0.5);
+  z-index: 10000000;
 }
 
 /* Track */
