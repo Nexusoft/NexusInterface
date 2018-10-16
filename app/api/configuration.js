@@ -150,7 +150,12 @@ configuration.GetAppResourceDir = function() {
   const electron = require("electron");
   const path = require("path");
   const app = electron.app || electron.remote.app;
-  let rawPath = path.dirname(app.getPath("exe")) + "/resources/app/";
+  let rawPath = "";
+  if (process.platform === "darwin") {
+    rawPath = path.dirname(app.getPath("exe")) + "../Resources/app/";
+  } else {
+    rawPath = path.dirname(app.getPath("exe")) + "/resources/app/";
+  }
   if (process.platform == "win32") {
     return path.win32.normalize(rawPath);
   } else {

@@ -967,7 +967,9 @@ class Addressbook extends Component {
 
     document.body.appendChild(link); // Required for FF
     this.props.OpenModal("Contacts Exported");
-    // setTimeout(() => this.props.CloseModal(), 3000);
+    setTimeout(() => {
+      this.props.CloseModal();
+    }, 3000);
     link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
     document.body.removeChild(link);
   }

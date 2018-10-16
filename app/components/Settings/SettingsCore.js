@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { remote } from "electron";
 import { access } from "fs";
 import { connect } from "react-redux";
+import Modal from "react-responsive-modal";
 
 // Internal Dependencies
 import styles from "./style.css";
@@ -30,7 +31,13 @@ const mapDispatchToProps = dispatch => ({
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
-  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL })
+  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
+  OpenModal2: type => {
+    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
+  },
+  CloseModal2: type => {
+    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
+  }
 });
 
 class SettingsCore extends Component {
@@ -53,14 +60,6 @@ class SettingsCore extends Component {
     this.setSocks4ProxyPort(settings);
     this.setDetatchDatabaseOnShutdown(settings);
     // this.setOptionalTransactionFee(settings);
-  }
-  // React Method (Life cycle hook)
-  componentWillUnmount() {
-    this.props.setSettings(require("../../api/settings.js").GetSettings());
-    this.props.OpenModal("Core Settings Saved");
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 2000);
   }
 
   // Class Methods
@@ -389,10 +388,47 @@ class SettingsCore extends Component {
   render() {
     return (
       <section id="core">
-        <div className="note">
-          Changes to core settings will take effect the next time the core is
-          restarted.
-        </div>
+        <Modal
+          center
+          classNames={{ modal: "custom-modal2" }}
+          showCloseIcon={false}
+          open={this.props.openSecondModal}
+          onClose={this.props.CloseModal2}
+        >
+          <div>
+            <h2>Save Settings?</h2>
+            <div className="note">
+              Changes to core settings will take effect the next time the core
+              is restarted.
+            </div>
+
+            <input
+              value="Yes"
+              type="button"
+              className="button primary"
+              onClick={() => {
+                this.props.setSettings(
+                  require("../../api/settings.js").GetSettings()
+                );
+                this.props.CloseModal2();
+                this.props.OpenModal("Core Settings Saved");
+                setTimeout(() => {
+                  this.props.CloseModal();
+                }, 2000);
+              }}
+            />
+            <div id="no-button">
+              <input
+                value="No"
+                type="button"
+                className="button primary"
+                onClick={() => {
+                  this.props.CloseModal2();
+                }}
+              />
+            </div>
+          </div>
+        </Modal>
 
         <form className="aligned">
           <div className="field">
@@ -545,9 +581,22 @@ class SettingsCore extends Component {
             <button
               id="restart-core"
               className="button primary"
-              onClick={this.coreRestart}
+              onClick={e => {
+                e.preventDefault();
+                core.restart();
+              }}
             >
               Restart Core
+            </button>
+            <button
+              // id="restart-core"
+              className="button primary"
+              onClick={e => {
+                e.preventDefault();
+                this.props.OpenModal2();
+              }}
+            >
+              Save Settings
             </button>
           </div>
 
