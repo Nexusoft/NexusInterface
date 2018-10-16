@@ -135,6 +135,22 @@ export default class MenuBuilder {
             self.props.history.push("/Settings/App");
           }
         },
+        {
+          label: "Key Management Settings",
+          click() {
+            if (self.props.unlocked_until !== undefined) {
+              self.props.history.push("/Settings/Security");
+            } else {
+              self.props.history.push("/Settings/Unencrypted");
+            }
+          }
+        },
+        {
+          label: "Style Settings",
+          click() {
+            self.props.history.push("/Settings/Style");
+          }
+        },
 
         //TODO: take this out before 1.0
         {
@@ -307,6 +323,22 @@ export default class MenuBuilder {
             label: "Application Settings",
             click() {
               self.props.history.push("/Settings/App");
+            }
+          },
+          {
+            label: "Key Management Settings",
+            click() {
+              if (self.props.unlocked_until !== undefined) {
+                self.props.history.push("/Settings/Security");
+              } else {
+                self.props.history.push("/Settings/Unencrypted");
+              }
+            }
+          },
+          {
+            label: "Style Settings",
+            click() {
+              self.props.history.push("/Settings/Style");
             }
           },
           {
