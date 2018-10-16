@@ -637,12 +637,10 @@ class SendRecieve extends Component {
               </td>
               {acct.addresses.map(address => {
                 return (
-                  <td
-                    className="tdd"
-                    key={address + i}
-                    onClick={event => this.copyaddress(event)}
-                  >
-                    {address}
+                  <td className="tdd" key={address + i}>
+                    <span onClick={event => this.copyaddress(event)}>
+                      {address}
+                    </span>
                     <span key={address + i} className="tooltip ">
                       Click to copy
                     </span>
@@ -876,7 +874,7 @@ class SendRecieve extends Component {
                     <div className="convertor">
                       <label>NXS Amount</label>{" "}
                       <label className="UsdConvertorLabel">
-                        {" "}
+                        {"   "}
                         {this.props.settings.fiatCurrency}
                       </label>
                     </div>
@@ -924,12 +922,19 @@ class SendRecieve extends Component {
                       className="button"
                       onClick={() => {
                         if (
-                          this.props.encrypted === false ||
-                          this.props.loggedIn === true
+                          !(this.props.Address === "") &&
+                          this.props.Amount > 0
                         ) {
-                          this.props.OpenModal2("send transaction?");
+                          if (
+                            this.props.encrypted === false ||
+                            this.props.loggedIn === true
+                          ) {
+                            this.props.OpenModal2("send transaction?");
+                          } else {
+                            this.props.OpenModal("Wallet Locked");
+                          }
                         } else {
-                          this.props.OpenModal("Wallet Locked");
+                          this.props.OpenModal("Please Fill Out Field");
                         }
                       }}
                     />
@@ -959,12 +964,19 @@ class SendRecieve extends Component {
                       className="button primary"
                       onClick={() => {
                         if (
-                          this.props.encrypted === false ||
-                          this.props.loggedIn === false
+                          !(this.props.Address === "") &&
+                          this.props.Amount > 0
                         ) {
-                          this.props.OpenModal2("Send Multiple?");
+                          if (
+                            this.props.encrypted === false ||
+                            this.props.loggedIn === false
+                          ) {
+                            this.props.OpenModal2("Send Multiple?");
+                          } else {
+                            this.props.OpenModal("Wallet Locked");
+                          }
                         } else {
-                          this.props.OpenModal("Wallet Locked");
+                          this.props.OpenModal("Empty Queue!");
                         }
                       }}
                     />
