@@ -26,6 +26,7 @@ export default (state = initialState, action) => {
       for (var i; i < state.consoleOutput.length; i++) {
         payloadCopy.push(state.consoleOutput[i]);
       }
+      payloadCopy.push("\n  ")
       return {
         ...state,
         consoleOutput: payloadCopy

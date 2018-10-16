@@ -51,6 +51,11 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class TerminalConsole extends Component {
+
+  constructor(props) {
+    super(props);
+    this.inputRef = null;
+  }
   // React Method (Life cycle hook)
   componentDidMount() {
     RPC.PROMISE("help", []).then(payload => {
@@ -185,7 +190,13 @@ class TerminalConsole extends Component {
   autoComplete() {
     return this.props.filteredCmdList.map((item, key) => {
       return (
-        <a key={key} onMouseDown={() => this.props.onAutoCompleteClick(item)}>
+        <a key={key} onMouseDown={() => {
+          setTimeout(() => {
+            //I don't like this but the issue is that the click event fires on the output div which breaks the focus, so using a timer
+            this.inputRef.focus(); 
+          }, 100); 
+          this.props.onAutoCompleteClick(item);
+            }}>
           {item}
           <br />
         </a>
@@ -200,6 +211,7 @@ class TerminalConsole extends Component {
         <div id="terminal-console-input">
           <input
             id="input-text"
+            ref={element => this.inputRef = element}
             autoFocus
             type="text"
             value={this.props.currentInput}
