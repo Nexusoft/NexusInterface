@@ -47,7 +47,7 @@ export default class MenuBuilder {
       label: "File",
       submenu: [
         {
-          label: "Lock/Unlock/Encrypt Wallet",
+          label: "Key Management",
           click: () => {
             if (self.props.unlocked_until !== undefined) {
               self.props.history.push("/Settings/Security");
@@ -81,7 +81,7 @@ export default class MenuBuilder {
           }
         },
         {
-          label: "Open Backups Folder",
+          label: "View Backups",
           click() {
             let fs = require("fs");
             let BackupDir = process.env.HOME + "/NexusBackups";
@@ -109,7 +109,7 @@ export default class MenuBuilder {
           }
         },
         {
-          label: "Close And Shutdown Daemon",
+          label: "Quit Nexus Wallet",
           click() {
             RPC.PROMISE("stop", []).then(payload => {
               setTimeout(() => {
@@ -133,6 +133,22 @@ export default class MenuBuilder {
           label: "Application Settings",
           click() {
             self.props.history.push("/Settings/App");
+          }
+        },
+        {
+          label: "Key Management Settings",
+          click() {
+            if (self.props.unlocked_until !== undefined) {
+              self.props.history.push("/Settings/Security");
+            } else {
+              self.props.history.push("/Settings/Unencrypted");
+            }
+          }
+        },
+        {
+          label: "Style Settings",
+          click() {
+            self.props.history.push("/Settings/Style");
           }
         },
 
@@ -215,7 +231,7 @@ export default class MenuBuilder {
         label: "&File",
         submenu: [
           {
-            label: "Lock/Unlock/Encrypt Wallet",
+            label: "Key Management",
             click: () => {
               if (self.props.unlocked_until !== undefined) {
                 self.props.history.push("/Settings/Security");
@@ -252,7 +268,7 @@ export default class MenuBuilder {
             }
           },
           {
-            label: "Open Backups Folder",
+            label: "View Backups",
             click() {
               let fs = require("fs");
               let BackupDir = process.env.HOME + "/NexusBackups";
@@ -283,7 +299,7 @@ export default class MenuBuilder {
             }
           },
           {
-            label: "Close And Shutdown Daemon",
+            label: "Quit Nexus Wallet",
             click() {
               RPC.PROMISE("stop", []).then(payload => {
                 setTimeout(() => {
@@ -307,6 +323,22 @@ export default class MenuBuilder {
             label: "Application Settings",
             click() {
               self.props.history.push("/Settings/App");
+            }
+          },
+          {
+            label: "Key Management Settings",
+            click() {
+              if (self.props.unlocked_until !== undefined) {
+                self.props.history.push("/Settings/Security");
+              } else {
+                self.props.history.push("/Settings/Unencrypted");
+              }
+            }
+          },
+          {
+            label: "Style Settings",
+            click() {
+              self.props.history.push("/Settings/Style");
             }
           },
           {

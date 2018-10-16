@@ -10,36 +10,70 @@ export default class ContextMenuBuilder {
   }
 
   ReturnDefaultContextMenu() {
-    const template = [
-      {
-        label: "Copy",
-        accelerator: "CmdOrCtrl+C",
-        role: "copy"
-      },
-      {
-        label: "Paste",
-        accelerator: "CmdOrCtrl+V",
-        role: "paste"
-      }
-      // ,
-      // { type: "separator" },
+    let template = [];
+    if (process.platform === "darwin") {
+      template = [
+        {
+          label: "Copy",
+          accelerator: "Cmd+C",
+          role: "copy"
+        },
+        {
+          label: "Paste",
+          accelerator: "Cmd+V",
+          role: "paste"
+        }
+        // ,
+        // { type: "separator" },
 
-      //{
-      //label: "Reload",
-      //accelerator: "CmdOrCtrl+R",
-      //click(item, focusedWindow) {
-      //if (focusedWindow) focusedWindow.reload();
-      //}
-      //},
-      // {
-      //   label: "About",
-      //   ccelerator: "CmdOrCtrl+Y",
-      //   click(item, focusedWindow) {
-      //     focusedWindow.loadURL("/About");
-      //     //history.push('/About');
-      //   }
-      // }
-    ];
+        //{
+        //label: "Reload",
+        //accelerator: "CmdOrCtrl+R",
+        //click(item, focusedWindow) {
+        //if (focusedWindow) focusedWindow.reload();
+        //}
+        //},
+        // {
+        //   label: "About",
+        //   ccelerator: "CmdOrCtrl+Y",
+        //   click(item, focusedWindow) {
+        //     focusedWindow.loadURL("/About");
+        //     //history.push('/About');
+        //   }
+        // }
+      ];
+    } else {
+      template = [
+        {
+          label: "Copy",
+          accelerator: "Ctrl+C",
+          role: "copy"
+        },
+        {
+          label: "Paste",
+          accelerator: "Ctrl+V",
+          role: "paste"
+        }
+        // ,
+        // { type: "separator" },
+
+        //{
+        //label: "Reload",
+        //accelerator: "CmdOrCtrl+R",
+        //click(item, focusedWindow) {
+        //if (focusedWindow) focusedWindow.reload();
+        //}
+        //},
+        // {
+        //   label: "About",
+        //   ccelerator: "CmdOrCtrl+Y",
+        //   click(item, focusedWindow) {
+        //     focusedWindow.loadURL("/About");
+        //     //history.push('/About');
+        //   }
+        // }
+      ];
+    }
     return template;
   }
 }

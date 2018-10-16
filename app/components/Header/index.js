@@ -52,7 +52,7 @@ class Header extends Component {
     if (this.props.unlocked_until !== undefined) {
       encryptionStatus = true;
     }
-
+    console.log(configuration.GetAppResourceDir());
     this.props.SetMarketAveData();
     this.props.LoadAddressBook();
 
@@ -396,6 +396,19 @@ class Header extends Component {
         break;
       case "Style Settings Saved":
         return <h2>Style Settings Saved</h2>;
+        break;
+      case "No ammount set":
+        return <h2>No Ammount Set</h2>;
+        break;
+      case "FutureDate":
+        return (
+          <h2>
+            Unlock until date/time must be at least an hour in the future.
+          </h2>
+        );
+        break;
+      case "Incorrect Passsword":
+        return <h2>Incorrect Passsword</h2>;
         break;
       case "Core Settings Saved":
         return <h2>Core Settings Saved</h2>;

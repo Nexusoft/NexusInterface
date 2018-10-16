@@ -760,21 +760,29 @@ class SendRecieve extends Component {
                 </div>
                 <div id="left-buttons">
                   {this.editQueue()}
-                  <input
-                    type="reset"
-                    value="Send Now"
+                  <button
                     className="button"
                     onClick={() => {
-                      if (
-                        this.props.encrypted === false ||
-                        this.props.loggedIn === true
-                      ) {
-                        this.props.OpenModal2("send transaction?");
+                      if (!(this.props.Address === "")) {
+                        if (this.props.Amount > 0) {
+                          if (
+                            this.props.encrypted === false ||
+                            this.props.loggedIn === true
+                          ) {
+                            this.props.OpenModal2("send transaction?");
+                          } else {
+                            this.props.OpenModal("Wallet Locked");
+                          }
+                        } else {
+                          this.props.OpenModal("No ammount set");
+                        }
                       } else {
-                        this.props.OpenModal("Wallet Locked");
+                        this.props.OpenModal("Invalid Address");
                       }
                     }}
-                  />
+                  >
+                    Send Now
+                  </button>
                 </div>
               </div>
             </div>

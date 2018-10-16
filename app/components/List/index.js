@@ -20,7 +20,7 @@ import trustimg from "../../images/trust-list.svg";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.list, ...state.common };
+  return { ...state.list, ...state.common, ...state.overview };
 };
 const mapDispatchToProps = dispatch => ({
   GetListDump: returnedData =>
@@ -85,7 +85,8 @@ class List extends Component {
         </h2>
 
         <div className="panel">
-          {this.props.isInSync === false ? (
+          {this.props.isInSync === false ||
+          this.props.connections === undefined ? (
             <h2>Please let your wallet sync with the network.</h2>
           ) : (
             <div id="table-wrap">
