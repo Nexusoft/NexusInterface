@@ -400,6 +400,9 @@ class Header extends Component {
       case "No ammount set":
         return <h2>No Ammount Set</h2>;
         break;
+      case "Please Fill Out Field":
+        return <h2>Please Fill Out Field</h2>;
+        break;
       case "FutureDate":
         return (
           <h2>

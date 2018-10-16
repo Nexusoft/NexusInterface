@@ -206,6 +206,7 @@ textarea {
 .custom-overlay3 {
   padding: 0px;
   position: absolute;
+  overflow: hidden;
 }
 .custom-modal3 {
   background: #282828;
@@ -296,6 +297,27 @@ textarea {
 }
 .dt:hover {
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.24), 0 0 5px 5px rgba(0, 0, 0, 0.19);
+}
+
+a.impexp {
+  font-family: var(--mono-font-family);
+  font-size: 0.875em;
+  opacity: 0.75;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.impexpblock {
+  display: inline-block;
+  position: absolute;
+  top: 4em;
+  right: 0;
+  font-family: var(--mono-font-family);
+  font-size: 0.875em;
+  opacity: 0.75;
+  color: #fff;
+  cursor: pointer;
 }
 
 /*------------------------------------------------------------------
