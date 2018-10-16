@@ -118,6 +118,7 @@ class Unencrypted extends Component {
                 this.props.busy(false);
                 this.props.OpenModal("Wallet has been encrypted.");
                 this.props.history.push();
+                // Start the daemon again... give it maybe 5 seconds.
               }
             });
           } else {

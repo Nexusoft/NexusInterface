@@ -139,6 +139,7 @@ configuration.GetAppDataDirectory = function() {
   //     app.getName()
   //   )
   // );
+  console.log(app.getName());
   return path.join(
     app.getPath("appData").replace("/Electron/", app.getName()),
 

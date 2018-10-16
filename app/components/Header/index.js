@@ -272,15 +272,15 @@ class Header extends Component {
         label: "Quit Nexus and Quit Daemon",
         click: function() {
           let settings = require("../../api/settings").GetSettings();
-          if (settings.manualDaemon == false) {
-            RPC.PROMISE("stop", []).then(payload => {
-              setTimeout(() => {
-                remote.getCurrentWindow().close();
-              }, 1000);
-            });
-          } else {
-            mainWindow.close();
-          }
+          // if (settings.manualDaemon == false) {
+          RPC.PROMISE("stop", []).then(payload => {
+            setTimeout(() => {
+              mainWindow.close();
+            }, 1000);
+          });
+          // } else {
+          // mainWindow.close();
+          // }
         }
       }
     ]);
