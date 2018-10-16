@@ -28,7 +28,11 @@ const mapDispatchToProps = dispatch => ({
   busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
-  setTime: time => dispatch({ type: TYPE.SET_TIME, payload: time })
+  setTime: time => dispatch({ type: TYPE.SET_TIME, payload: time }),
+  OpenModal: type => {
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  },
+  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL })
 });
 
 class Login extends Component {
@@ -39,36 +43,33 @@ class Login extends Component {
     if (month < 10) {
       month = "0" + month;
     }
-    let hours = today.getHours();
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    let minutes = today.getMinutes();
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-    console.log(
-      `${today.getFullYear()}-${month}-${today.getDate()}T${today.getHours()}:${today.getMinutes()}`
-    );
-    return `${today.getFullYear()}-${month}-${today.getDate()}T${hours}:${minutes}`;
+
+    return `${today.getFullYear()}-${month}-${today.getDate()}`;
   }
 
   handleSubmit() {
-    const unlockDate = new Date(this.props.unlockUntillDate);
-
-    const pass = document.getElementById("pass");
     let today = new Date();
+    let unlockDate = new Date(this.props.unlockUntillDate);
+    unlockDate = new Date(unlockDate.setMinutes(today.getTimezoneOffset()));
+    unlockDate = new Date(
+      unlockDate.setHours(this.props.unlockUntillTime.slice(0, 2))
+    );
+    unlockDate = new Date(
+      unlockDate.setMinutes(this.props.unlockUntillTime.slice(3))
+    );
+    const pass = document.getElementById("pass");
+
     let unlockUntill = Math.round(
       (unlockDate.getTime() - today.getTime()) / 1000
     );
-    console.log(unlockUntill, pass);
+    console.log(unlockUntill);
     // this.props.busy(true);
 
     // if (this.props.stakingFlag) {
     //
-    //   RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, true])
-    //     .then(payload => {
-    //       this.props.wipe();
+    //   RPC.PROMISE("walletpassphrase", [pass.value, unSET_TIMElockUntill, true])
+    //     .then(payload => {SET_TIME
+    //       this.props.wipe();SET_TIME
     //       RPC.PROMISE("getinfo", [])
     //         .then(payload => {
     //           delete payload.timestamp;
@@ -92,45 +93,54 @@ class Login extends Component {
     //     });
     // } else {
 
-    RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, false])
-      .then(payload => {
-        this.props.wipe();
-        RPC.PROMISE("getinfo", [])
-          .then(payload => {
-            delete payload.timestamp;
-            return payload;
-          })
-          .then(payload => {
-            this.props.busy(false);
-            this.props.getInfo(payload);
-          });
-      })
-      .catch(e => {
-        if (
-          e.error.message ===
-          "Error: The wallet passphrase entered was incorrect."
-        ) {
-          this.props.busy(false);
-          let message = e.error.message.replace("Error: ", "");
-          this.props.setErrorMessage(message);
+    if (unlockUntill !== NaN && unlockUntill > 3600) {
+      console.log("unlocked");
+      RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, false])
+        .then(payload => {
+          this.props.wipe();
+          RPC.PROMISE("getinfo", [])
+            .then(payload => {
+              delete payload.timestamp;
+              return payload;
+            })
+            .then(payload => {
+              this.props.busy(false);
+              this.props.getInfo(payload);
+            });
+        })
+        .catch(e => {
           pass.value = "";
-          pass.focus();
-        }
-      });
+          if (
+            e.error.message ===
+            "Error: The wallet passphrase entered was incorrect."
+          ) {
+            this.props.busy(false);
+            this.props.OpenModal("Incorrect Passsword");
+            pass.focus();
+          } else if (e.error.message === "value is type null, expected int") {
+            this.props.busy(false);
+            this.props.OpenModal("FutureDate");
+            pass.focus();
+          }
+        });
+    } else {
+      this.props.OpenModal("FutureDate");
+      setTimeout(() => {
+        this.props.CloseModal();
+      }, 3000);
+    }
     // }
   }
   setUnlockDate(input) {
     let today = new Date();
-
     let inputDate = new Date(input);
-
-    if (inputDate >= today) {
-      this.props.setDate(input);
-    }
+    inputDate = new Date(inputDate.setMinutes(today.getTimezoneOffset()));
+    this.props.setDate(input);
   }
 
   // Mandatory React method
   render() {
+    console.log(this.props);
     if (this.props.loggedIn) {
       return (
         <Redirect to={this.props.match.path.replace("/Login", "/Security")} />
@@ -142,17 +152,26 @@ class Login extends Component {
           <fieldset>
             <legend>Login</legend>
             <div className="field">
-              <label>Unlock Untill:</label>
+              <label>Unlock Until Date:</label>
               <input
-                type="datetime-local"
+                type="date"
                 min={this.getMinDate()}
                 value={this.props.unlockUntillDate}
                 onChange={e => this.setUnlockDate(e.target.value)}
                 required
               />
-              <span className="hint">Unlock untill date is required.</span>
+              <span className="hint">Unlock until date is required.</span>
             </div>
-
+            <div className="field">
+              <label>Unlock Until Time:</label>
+              <input
+                type="time"
+                value={this.props.unlockUntillTime}
+                onChange={e => this.props.setTime(e.target.value)}
+                required
+              />
+              <span className="hint">Unlock until time is required.</span>
+            </div>
             <div className="field">
               <label>Password:</label>
               <input
@@ -162,7 +181,6 @@ class Login extends Component {
                 required
                 style={{ width: "100%" }}
               />
-              <span className="hint">{this.props.errorMessage}</span>
             </div>
 
             {/* STAKING FLAG STUFF  TURNED OFF UNTILL WE HAVE A FLAG COMING BACK FROM THE DAEMON TELLING US THAT ITS UNLOCKED FOR STAKING ONLY */}
