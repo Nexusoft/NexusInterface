@@ -32,6 +32,10 @@
 
 /* RESPONSIVE MENU */
 
+#navigation-mobile {
+  display: none;
+}
+
 /* END RESPONSIVE */
 
 #navigation {

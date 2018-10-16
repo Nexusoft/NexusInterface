@@ -60,6 +60,28 @@ export default (state = initialState, action) => {
         })
       };
       break;
+    case TYPE.UPDATE_FEEVALUE:
+    let tempTransactionsWithfeeValues = state.walletitems.map((e,i)=>
+        {
+            let replaceElement = action.payload.get(e.time);
+            if (replaceElement != undefined)
+              {
+                return {
+                  ...e,
+                  fee: replaceElement
+                }
+              }
+              else
+              {
+                return e;
+              }
+        }
+      )
+      return{
+        ...state,
+        walletitems: tempTransactionsWithfeeValues
+      }; 
+      break;
 
     default:
       return state;

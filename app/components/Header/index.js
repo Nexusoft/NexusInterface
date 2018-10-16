@@ -22,7 +22,7 @@ import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
 import unlockImg from "images/lock-minting.svg";
 import statGood from "images/status-good.svg";
-import statBad from "images/status-bad.svg";
+import statBad from "images/sync.svg";
 import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
 
@@ -318,9 +318,13 @@ class Header extends Component {
   }
 
   syncStatus() {
+    let syncStatus = document.getElementById("syncStatus");
     if (this.props.heighestPeerBlock > this.props.blocks) {
+      // rotates
+      syncStatus.classList.remove("sync-img");
       return statBad;
     } else {
+      // doesn't
       return statGood;
     }
   }
@@ -492,7 +496,11 @@ class Header extends Component {
             </div>
           </div>
           <div className="icon">
-            <img src={this.syncStatus()} />
+            {this.props.heighestPeerBlock > this.props.blocks ? (
+              <img id="syncing" className="sync-img" src={statBad} />
+            ) : (
+              <img id="synced" src={statGood} />
+            )}
             <div className="tooltip bottom" style={{ right: "100%" }}>
               <div>{this.returnSyncStatusTooltip()}</div>
             </div>
