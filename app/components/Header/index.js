@@ -413,6 +413,9 @@ class Header extends Component {
       case "Core Settings Saved":
         return <h2>Core Settings Saved</h2>;
         break;
+      case "Contacts Exported":
+        return <h2>Contacts Exported</h2>;
+        break;
       default:
         "";
         break;
