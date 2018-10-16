@@ -264,7 +264,7 @@ export default class MenuBuilder {
               }
               RPC.PROMISE("backupwallet", [
                 BackupDir + "/NexusBackup_" + now + ".dat"
-              ]);
+              ]).then(self.props.OpenModal("Wallet Backup"));
             }
           },
           {
