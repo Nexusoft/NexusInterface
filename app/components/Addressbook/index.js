@@ -65,12 +65,12 @@ class Addressbook extends Component {
     const txtTemplate = [
       {
         label: "Copy",
-        ccelerator: "CmdOrCtrl+C",
+        accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
         label: "Paste",
-        ccelerator: "CmdOrCtrl+V",
+        accelerator: "CmdOrCtrl+V",
         role: "paste"
       }
     ];
@@ -78,12 +78,12 @@ class Addressbook extends Component {
     const acctTemplate = [
       {
         label: "Copy",
-        ccelerator: "CmdOrCtrl+C",
+        accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
         label: "Paste",
-        ccelerator: "CmdOrCtrl+V",
+        accelerator: "CmdOrCtrl+V",
         role: "paste"
       },
       {
@@ -109,12 +109,12 @@ class Addressbook extends Component {
     const addTemplate = [
       {
         label: "Copy",
-        ccelerator: "CmdOrCtrl+C",
+        accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
         label: "Paste",
-        ccelerator: "CmdOrCtrl+V",
+        accelerator: "CmdOrCtrl+V",
         role: "paste"
       },
       {
