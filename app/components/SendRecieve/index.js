@@ -45,6 +45,11 @@ const mapDispatchToProps = dispatch => ({
   updateAddress: returnAddress => {
     dispatch({ type: TYPE.UPDATE_ADDRESS, payload: returnAddress });
   },
+
+  MyAccountsList: list => {
+    dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
+  },
+
   SearchName: returnSearch => {
     dispatch({ type: TYPE.SEARCH, payload: returnSearch });
   },
@@ -129,10 +134,83 @@ class SendRecieve extends Component {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
 
     this.props.googleanalytics.SendScreen("Send");
+    this.loadMyAccounts();
   }
+  loadMyAccounts() {
+    RPC.PROMISE("listaccounts", [0]).then(payload => {
+      Promise.all(
+        Object.keys(payload).map(account =>
+          RPC.PROMISE("getaddressesbyaccount", [account])
+        )
+      ).then(payload => {
+        let validateAddressPromises = [];
+
+        payload.map(element => {
+          element.addresses.map(address => {
+            validateAddressPromises.push(
+              RPC.PROMISE("validateaddress", [address])
+            );
+          });
+        });
+
+        Promise.all(validateAddressPromises).then(payload => {
+          let accountsList = [];
+          let myaccts = payload.map(e => {
+            if (e.ismine && e.isvalid) {
+              let index = accountsList.findIndex(ele => {
+                if (ele.account === e.account) {
+                  return ele;
+                }
+              });
+
+              if (index === -1) {
+                accountsList.push({
+                  account: e.account,
+                  addresses: [e.address]
+                });
+              } else {
+                accountsList[index].addresses.push(e.address);
+              }
+            }
+          });
+          this.props.MyAccountsList(accountsList);
+        });
+      });
+    });
+  }
+
   // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
+  }
+
+  copyaddress(event) {
+    event.preventDefault();
+    let target = event.currentTarget;
+    let address = event.target.innerText;
+
+    // create a temporary input element and add it to the list item (no one will see it)
+    let input = document.createElement("input");
+    input.type = "text";
+    target.appendChild(input);
+
+    // set the value of the input to the selected address, then focus and select it
+    input.value = address;
+    input.focus();
+    input.select();
+
+    // copy it to clipboard
+    document.execCommand("Copy", false, null);
+
+    // remove the temporary element from the DOM
+    input.remove();
+
+    this.props.OpenModal("Copied");
+    setTimeout(() => {
+      if (this.props.open) {
+        this.props.CloseModal();
+      }
+    }, 3000);
   }
 
   // Class methods
@@ -440,7 +518,7 @@ class SendRecieve extends Component {
             />
           </td>
           <Modal
-            classNames={{ modal: "custom-modal2" }}
+            classNames={{ modal: "custom-modal2", overlay: "custom-overlay3" }}
             showCloseIcon={false}
             open={this.props.openThirdModal}
             onClose={this.props.CloseModal3}
@@ -483,7 +561,6 @@ class SendRecieve extends Component {
       case "Address Lookup":
         return (
           <div className="Addresstable-wraper">
-            {" "}
             <h2 className="addressModalHeader">
               Lookup Address <img src={addressbookimg} className="hdr-img" />
             </h2>
@@ -506,7 +583,77 @@ class SendRecieve extends Component {
             </table>
           </div>
         );
+        break;
+      case "MINE":
+        return (
+          <div id="Addresstable-wraper">
+            <h2 className="m1">
+              <img src={addressbookimg} className="hdr-img" />
+              My Addresses
+            </h2>
+            <table className="myAddressTable">
+              <thead className="AddressThead">
+                <th className="short-column">
+                  Accounts
+                  <input
+                    className="searchaccount"
+                    type="text"
+                    placeholder="Search By Account"
+                    value={this.props.Search}
+                    onChange={e => this.props.SearchName(e.target.value)}
+                    required
+                  />
+                </th>
+              </thead>
+              {this.MyAddressesTable()}
+            </table>
+          </div>
+        );
     }
+  }
+
+  MyAddressesTable() {
+    let filteredAddress = this.props.myAccounts.filter(acct => {
+      if (acct.account === "") {
+        let dummie = "My Account";
+        return (
+          dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
+        );
+      } else {
+        return (
+          acct.account
+            .toLowerCase()
+            .indexOf(this.props.Search.toLowerCase()) !== -1
+        );
+      }
+    });
+    return (
+      <div id="Addresstable-wraper">
+        {filteredAddress.map((acct, i) => {
+          return (
+            <tr>
+              <td key={acct + i} className="tdAccounts">
+                {acct.account === "" ? <span>My Account</span> : acct.account}
+              </td>
+              {acct.addresses.map(address => {
+                return (
+                  <td
+                    className="tdd"
+                    key={address + i}
+                    onClick={event => this.copyaddress(event)}
+                  >
+                    {address}
+                    <span key={address + i} className="tooltip ">
+                      Click to copy
+                    </span>
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
+      </div>
+    );
   }
 
   modalinternal2() {
@@ -551,10 +698,7 @@ class SendRecieve extends Component {
       case "Send Multiple?":
         return (
           <div>
-            <h2>
-              Send All Transactions (Total: {this.areYouSure()}) From
-              {this.accHud()}
-            </h2>
+            <h2>Send All Transactions From: {this.accHud()}</h2>
             <div id="ok-button">
               <input
                 value="Yes"
@@ -648,12 +792,21 @@ class SendRecieve extends Component {
       <div id="sendrecieve" className="animated fadeIn">
         <h2>
           <img src={sendimg} className="hdr-img" />
-          Send Nexus
+          Send NXS
+          <label />
         </h2>
+        <div className="impexpblock">
+          <label>
+            <a className="impexp" onClick={() => this.props.OpenModal4("MINE")}>
+              View My Addresses
+            </a>
+          </label>
+        </div>
+
         {/* ADDRESS MODAL */}
         <Modal
           center
-          classNames={{ modal: "custom-modal3" }}
+          classNames={{ modal: "custom-modal3", overlay: "custom-overlay3" }}
           showCloseIcon={true}
           open={this.props.openFourthModal}
           onClose={this.props.CloseModal4}
@@ -664,7 +817,7 @@ class SendRecieve extends Component {
         {/* CONFIRMATION MODAL */}
         <Modal
           center
-          classNames={{ modal: "custom-modal2" }}
+          classNames={{ modal: "custom-modal2", overlay: "custom-overlay3" }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}
@@ -682,149 +835,155 @@ class SendRecieve extends Component {
           </div>
         </Modal>
         <div className="panel">
-          <div id="container">
-            <div className="box1">
-              <div className="field">
-                <select
-                  id="select"
-                  onChange={e => this.props.AccountPicked(e.target.value)}
-                >
-                  {this.accountChanger()}
-                </select>{" "}
-                <div>
-                  <label>Nexus Address</label>{" "}
-                  <div className="Addresslookup">
-                    <span className="tooltip top">Lookup Address</span>
-                    <img
-                      src={plusimg}
-                      className="lookupButton"
-                      onClick={() => {
-                        this.props.clearSearch();
-                        this.props.OpenModal4("Address Lookup");
-                      }}
-                    />
-                  </div>
-                  <input
-                    size="35"
-                    type="text"
-                    placeholder="Enter NXS Address"
-                    value={this.props.Address}
-                    onChange={e => this.props.updateAddress(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  {" "}
-                  <div className="convertor">
-                    <label>Nexus Amount</label>{" "}
-                    <label className="UsdConvertorLabel">
-                      {" "}
-                      {this.props.settings.fiatCurrency}
-                    </label>
-                  </div>
-                  <div className="convertor">
-                    {" "}
-                    <span className="hint">Amount Of Nexus</span>
-                    <input
-                      className="input"
-                      type="text"
-                      placeholder="0.00000"
-                      value={this.props.Amount}
-                      onChange={e => this.nxsAmount(e, true)}
-                      required
-                    />{" "}
-                    <label>=</label>
-                    <input
-                      className="input"
-                      type="text"
-                      placeholder="0.00"
-                      value={this.props.USDAmount}
-                      onChange={e => {
-                        this.nxsAmount(e);
-                      }}
-                      required
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label>Message</label>
+          {this.props.isInSync === false ||
+          this.props.connections === undefined ? (
+            <h2>Please let your wallet sync with the network.</h2>
+          ) : (
+            <div id="container">
+              <div className="box1">
+                <div className="field">
+                  <select
+                    id="select"
+                    onChange={e => this.props.AccountPicked(e.target.value)}
+                  >
+                    {this.accountChanger()}
+                  </select>{" "}
+                  <div>
+                    <label>NXS Address</label>{" "}
+                    <div className="Addresslookup" title="Lookup Address">
+                      <img
+                        src={plusimg}
+                        className="lookupButton"
+                        onClick={() => {
+                          this.props.clearSearch();
+                          this.props.OpenModal4("Address Lookup");
+                        }}
+                      />
 
-                  <textarea
-                    value={this.props.Message}
-                    onChange={e => this.props.updateMessage(e.target.value)}
-                    name="message"
-                    rows="5"
-                    cols="41"
-                    placeholder="Enter Your Message"
-                  />
-                </div>
-                <div id="left-buttons">
-                  {this.editQueue()}
-                  <input
-                    type="reset"
-                    value="Send Now"
-                    className="button"
-                    onClick={() => {
-                      if (
-                        this.props.encrypted === false ||
-                        this.props.loggedIn === true
-                      ) {
-                        this.props.OpenModal2("send transaction?");
-                      } else {
-                        this.props.OpenModal("Wallet Locked");
-                      }
-                    }}
-                  />
+                      <span className="hint">Lookup&nbsp;Address</span>
+                    </div>
+                    <input
+                      size="35"
+                      type="text"
+                      placeholder="Enter NXS Address"
+                      value={this.props.Address}
+                      onChange={e => this.props.updateAddress(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div>
+                    {" "}
+                    <div className="convertor">
+                      <label>NXS Amount</label>{" "}
+                      <label className="UsdConvertorLabel">
+                        {" "}
+                        {this.props.settings.fiatCurrency}
+                      </label>
+                    </div>
+                    <div className="convertor">
+                      {" "}
+                      <span className="hint">Amount Of NXS</span>
+                      <input
+                        className="input"
+                        type="text"
+                        placeholder="0.00000"
+                        value={this.props.Amount}
+                        onChange={e => this.nxsAmount(e, true)}
+                        required
+                      />{" "}
+                      <label>=</label>
+                      <input
+                        className="input"
+                        type="text"
+                        placeholder="0.00"
+                        value={this.props.USDAmount}
+                        onChange={e => {
+                          this.nxsAmount(e);
+                        }}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label>Message</label>
+
+                    <textarea
+                      value={this.props.Message}
+                      onChange={e => this.props.updateMessage(e.target.value)}
+                      name="message"
+                      rows="5"
+                      cols="41"
+                      placeholder="Enter Your Message"
+                    />
+                  </div>
+                  <div id="left-buttons">
+                    {this.editQueue()}
+                    <input
+                      type="reset"
+                      value="Send Now"
+                      className="button"
+                      onClick={() => {
+                        if (
+                          this.props.encrypted === false ||
+                          this.props.loggedIn === true
+                        ) {
+                          this.props.OpenModal2("send transaction?");
+                        } else {
+                          this.props.OpenModal("Wallet Locked");
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="box2">
-              <div id="table-wraper">
-                <p className="label">
-                  <label>Queue</label>
-                </p>
-                <table className="table">
-                  <thead className="thead">
-                    <tr>
-                      <th>Address</th>
-                      <th>Amount</th>
-                      <th>Remove</th>
-                    </tr>
-                  </thead>
-                  {this.fillQueue()}
-                </table>
-                <foot className="foot">
-                  <input
-                    type="reset"
-                    value="Send All"
-                    className="button primary"
-                    onClick={() => {
-                      if (
-                        this.props.encrypted === false ||
-                        this.props.loggedIn === false
-                      ) {
-                        this.props.OpenModal2("Send Multiple?");
-                      } else {
-                        this.props.OpenModal("Wallet Locked");
-                      }
-                    }}
-                  />
-                  <input
-                    type="button"
-                    value="Clear Queue"
-                    className="button primary"
-                    onClick={() => {
-                      this.props.OpenModal2("Clear Queue?");
-                    }}
-                  />
-                  <div>
-                    <div className="counter">{this.addAmount()} </div>
-                  </div>
-                </foot>{" "}
-              </div>{" "}
+              <div className="box2">
+                <div id="table-wraper">
+                  <p className="label">
+                    <label>Queue</label>
+                  </p>
+                  <table className="table">
+                    <thead className="thead">
+                      <tr>
+                        <th>Address</th>
+                        <th>Amount</th>
+                        <th>Remove</th>
+                      </tr>
+                    </thead>
+                    {this.fillQueue()}
+                  </table>
+                  <foot className="foot">
+                    <input
+                      type="reset"
+                      value="Send All"
+                      className="button primary"
+                      onClick={() => {
+                        if (
+                          this.props.encrypted === false ||
+                          this.props.loggedIn === false
+                        ) {
+                          this.props.OpenModal2("Send Multiple?");
+                        } else {
+                          this.props.OpenModal("Wallet Locked");
+                        }
+                      }}
+                    />
+                    <input
+                      type="button"
+                      value="Clear Queue"
+                      className="button primary"
+                      onClick={() => {
+                        this.props.OpenModal2("Clear Queue?");
+                      }}
+                    />
+                    <div>
+                      <div className="counter">{this.addAmount()} </div>
+                    </div>
+                  </foot>{" "}
+                </div>{" "}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     );
