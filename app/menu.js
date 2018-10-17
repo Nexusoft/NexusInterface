@@ -120,6 +120,17 @@ export default class MenuBuilder {
               }, 1000);
             });
           }
+        },
+        { type: "separator" },
+        {
+          label: "Copy",
+          accelerator: "CmdOrCtrl+C",
+          role: "copy"
+        },
+        {
+          label: "Paste",
+          accelerator: "CmdOrCtrl+V",
+          role: "paste"
         }
       ]
     };
