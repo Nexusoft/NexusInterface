@@ -146,10 +146,12 @@ class TerminalConsole extends Component {
           }
         })
         .catch(error => {
-          this.props.printToConsole(error);
+          tempConsoleOutput.push([error]);
+          this.props.printToConsole(tempConsoleOutput);
         });
     } else {
-      this.props.printToConsole(["Command invalid"]);
+      tempConsoleOutput.push([this.props.currentInput + " is a Command invalid"]);
+      this.props.printToConsole(tempConsoleOutput);
     }
   }
 
