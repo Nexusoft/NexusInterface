@@ -237,6 +237,7 @@ class Core extends EventEmitter {
           log.info("Core Manager: Core has returned an error: " + err);
         });
         coreprocess.once("exit", (code, signal) => {
+          log.info(code, signal);
           log.info("Core Manager: Core has exited unexpectedly");
         });
         coreprocess.once("close", (code, signal) => {

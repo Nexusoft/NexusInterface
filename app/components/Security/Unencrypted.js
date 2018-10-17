@@ -89,14 +89,17 @@ class Unencrypted extends Component {
   reEnterValidator(e) {
     let newPass = document.getElementById("newPass");
     let passHint = document.getElementById("passHint");
+
     if (e.target.value === newPass.value) {
       e.preventDefault();
       passHint.style.visibility = "hidden";
-    } else {
+    } else if (e.target.value.length === newPass.value.length) {
       if (passHint.innerText !== "Passwords do not match") {
         passHint.innerText = "Passwords do not match";
       }
       passHint.style.visibility = "visible";
+    } else {
+      passHint.style.visibility = "hidden";
     }
   }
 
@@ -105,6 +108,7 @@ class Unencrypted extends Component {
     let newPass = document.getElementById("newPass");
     let passChk = document.getElementById("passChk");
     let passHint = document.getElementById("passHint");
+
     passHint.innerText = "Passwords do not match";
     if (newPass.value.trim()) {
       if (!/[-$&/*|<>]/.test(newPass.value)) {
@@ -149,7 +153,9 @@ class Unencrypted extends Component {
           <form>
             <fieldset>
               <legend>Encrypt Wallet</legend>
-
+              <div style={{ "margin-top": "26px" }} className="note">
+                Password cannot contain these characters {`-$&/*|<>`}
+              </div>
               <div className="field">
                 <label>Password:</label>
                 <input
@@ -158,10 +164,7 @@ class Unencrypted extends Component {
                   id="newPass"
                   required
                 />
-                <span className="hint">
-                  Password is required and cannot contain these characters{" "}
-                  {`-$&/*|<>`}
-                </span>
+                {/* className="hint" */}
               </div>
               <div className="field">
                 <label>Re-Enter Password:</label>
@@ -171,7 +174,11 @@ class Unencrypted extends Component {
                   id="passChk"
                   onChange={e => this.reEnterValidator(e)}
                 />
-                <span id="passHint" className="err invalid">
+                <span
+                  id="passHint"
+                  style={{ visibility: "hidden" }}
+                  className="err invalid"
+                >
                   Passwords do not match
                 </span>
               </div>
