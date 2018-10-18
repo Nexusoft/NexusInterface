@@ -98,7 +98,7 @@ class Addressbook extends Component {
       if (
         confirm(
           `Are you sure you want to delete ${
-            this.props.addressbook[this.props.actionItem].name
+          this.props.addressbook[this.props.actionItem].name
           }?`
         )
       ) {
@@ -128,9 +128,9 @@ class Addressbook extends Component {
       if (
         confirm(
           `Are you sure you want to delete this address? ${
-            this.props.addressbook[this.props.selected][
-              this.props.actionItem.type
-            ][this.props.actionItem.index].address
+          this.props.addressbook[this.props.selected][
+            this.props.actionItem.type
+          ][this.props.actionItem.index].address
           }`
         )
       ) {
@@ -296,11 +296,11 @@ class Addressbook extends Component {
                 Add Contact
               </h2>
             ) : (
-              <h2 className="m1">
-                <img src={addressbookimg} className="hdr-img" />
-                Edit Contact
+                <h2 className="m1">
+                  <img src={addressbookimg} className="hdr-img" />
+                  Edit Contact
               </h2>
-            )}
+              )}
 
             <div className="field">
               <label htmlFor="new-account-name">Name</label>
@@ -583,9 +583,10 @@ class Addressbook extends Component {
   localTimeFormater() {
     let d = new Date();
     let utc = new Date().getTimezoneOffset();
+    console.log(parseInt(this.props.addressbook[this.props.selected].timezone));
     d.setMinutes(d.getMinutes() + utc);
     d.setMinutes(
-      d.getMinutes() + this.props.addressbook[this.props.selected].timezone
+      d.getMinutes() + parseInt(this.props.addressbook[this.props.selected].timezone)
     );
 
     let h = d.getHours();
@@ -632,16 +633,16 @@ class Addressbook extends Component {
         {this.props.editTZ === true ? (
           <TimeZoneSelector />
         ) : (
-          <span
-            onDoubleClick={() =>
-              this.props.TzToggler(
-                this.props.addressbook[this.props.selected].timezone
-              )
-            }
-          >
-            {h}:{m} {i}
-          </span>
-        )}
+            <span
+              onDoubleClick={() =>
+                this.props.TzToggler(
+                  this.props.addressbook[this.props.selected].timezone
+                )
+              }
+            >
+              {h}:{m} {i}
+            </span>
+          )}
       </div>
     );
   }
@@ -676,19 +677,19 @@ class Addressbook extends Component {
                     }
                   />
                 ) : (
-                  <span
-                    onDoubleClick={() =>
-                      this.props.LabelToggler(add.label, add.address)
-                    }
-                  >
-                    {add.label === "'s Address"
-                      ? `${this.props.addressbook[this.props.selected].name}${
-                          add.label
+                    <span
+                      onDoubleClick={() =>
+                        this.props.LabelToggler(add.label, add.address)
+                      }
+                    >
+                      {add.label === "'s Address"
+                        ? `${this.props.addressbook[this.props.selected].name}${
+                        add.label
                         }`
-                      : add.label}
-                    :
+                        : add.label}
+                      :
                   </span>
-                )}
+                  )}
                 <div onClick={event => this.copyaddress(event)}>
                   {add.address}
                 </div>
@@ -731,19 +732,19 @@ class Addressbook extends Component {
                     }
                   />
                 ) : (
-                  <span
-                    onDoubleClick={() =>
-                      this.props.LabelToggler(add.label, add.address)
-                    }
-                  >
-                    {add.label === "My Address for "
-                      ? `${add.label}${
-                          this.props.addressbook[this.props.selected].name
+                    <span
+                      onDoubleClick={() =>
+                        this.props.LabelToggler(add.label, add.address)
+                      }
+                    >
+                      {add.label === "My Address for "
+                        ? `${add.label}${
+                        this.props.addressbook[this.props.selected].name
                         }`
-                      : add.label}
-                    :
+                        : add.label}
+                      :
                   </span>
-                )}
+                  )}
                 <div onClick={event => this.copyaddress(event)}>
                   {add.address}{" "}
                 </div>
@@ -795,131 +796,131 @@ class Addressbook extends Component {
       tempentry.push(e.name);
       tempentry.push(e.phoneNumber);
 
-      let timezone = "";
-      switch (e.timezone) {
-        case 840:
-          timezone = "Line Islands";
-          break;
-        case 780:
-          timezone = "Apia";
-          break;
-        case 765:
-          timezone = "Chatham Islands";
-          break;
-        case 720:
-          timezone = "Auckland";
-          break;
-        case 660:
-          timezone = "Noumea";
-          break;
-        case 630:
-          timezone = "Lord Howe Island";
-          break;
-        case 600:
-          timezone = "Port Moresby";
-          break;
-        case 570:
-          timezone = "Adelaide";
-          break;
-        case 540:
-          timezone = "Tokyo";
-          break;
-        case 525:
-          timezone = "Eucla";
-          break;
-        case 510:
-          timezone = "Pyongyang";
-          break;
-        case 480:
-          timezone = "Beijing";
-          break;
-        case 420:
-          timezone = "Bangkok";
-          break;
-        case 390:
-          timezone = "Yangon";
-          break;
-        case 360:
-          timezone = "Almaty";
-          break;
-        case 345:
-          timezone = "Kathmandu";
-          break;
-        case 330:
-          timezone = "Delhi";
-          break;
-        case 300:
-          timezone = "Karachi";
-          break;
-        case 270:
-          timezone = "Kabul";
-          break;
-        case 240:
-          timezone = "Dubai";
-          break;
-        case 210:
-          timezone = "Tehran";
-          break;
-        case 180:
-          timezone = "Moscow";
-          break;
-        case 120:
-          timezone = "Athens";
-          break;
-        case 60:
-          timezone = "Berlin";
-          break;
-        case 0:
-          timezone = "London";
-          break;
-        case -60:
-          timezone = "Cabo Verde";
-          break;
-        case -120:
-          timezone = "Fernando de Noronha";
-          break;
-        case -180:
-          timezone = "Buenos Aires";
-          break;
-        case -210:
-          timezone = "Newfoundland";
-          break;
-        case -240:
-          timezone = "Santiago";
-          break;
-        case -300:
-          timezone = "New York";
-          break;
-        case -360:
-          timezone = "Chicago";
-          break;
-        case -420:
-          timezone = "Phoenix";
-          break;
-        case -480:
-          timezone = "Los Angeles";
-          break;
-        case -540:
-          timezone = "Anchorage";
-          break;
-        case -570:
-          timezone = "Marquesas Islands";
-          break;
-        case -600:
-          timezone = "Papeete";
-          break;
-        case -660:
-          timezone = "Niue";
-          break;
-        case -720:
-          timezone = "Baker Island";
-          break;
+      // let timezone = "";
+      // switch (e.timezone) {
+      //   case 840:
+      //     timezone = "Line Islands";
+      //     break;
+      //   case 780:
+      //     timezone = "Apia";
+      //     break;
+      //   case 765:
+      //     timezone = "Chatham Islands";
+      //     break;
+      //   case 720:
+      //     timezone = "Auckland";
+      //     break;
+      //   case 660:
+      //     timezone = "Noumea";
+      //     break;
+      //   case 630:
+      //     timezone = "Lord Howe Island";
+      //     break;
+      //   case 600:
+      //     timezone = "Port Moresby";
+      //     break;
+      //   case 570:
+      //     timezone = "Adelaide";
+      //     break;
+      //   case 540:
+      //     timezone = "Tokyo";
+      //     break;
+      //   case 525:
+      //     timezone = "Eucla";
+      //     break;
+      //   case 510:
+      //     timezone = "Pyongyang";
+      //     break;
+      //   case 480:
+      //     timezone = "Beijing";
+      //     break;
+      //   case 420:
+      //     timezone = "Bangkok";
+      //     break;
+      //   case 390:
+      //     timezone = "Yangon";
+      //     break;
+      //   case 360:
+      //     timezone = "Almaty";
+      //     break;
+      //   case 345:
+      //     timezone = "Kathmandu";
+      //     break;
+      //   case 330:
+      //     timezone = "Delhi";
+      //     break;
+      //   case 300:
+      //     timezone = "Karachi";
+      //     break;
+      //   case 270:
+      //     timezone = "Kabul";
+      //     break;
+      //   case 240:
+      //     timezone = "Dubai";
+      //     break;
+      //   case 210:
+      //     timezone = "Tehran";
+      //     break;
+      //   case 180:
+      //     timezone = "Moscow";
+      //     break;
+      //   case 120:
+      //     timezone = "Athens";
+      //     break;
+      //   case 60:
+      //     timezone = "Berlin";
+      //     break;
+      //   case 0:
+      //     timezone = "London";
+      //     break;
+      //   case -60:
+      //     timezone = "Cabo Verde";
+      //     break;
+      //   case -120:
+      //     timezone = "Fernando de Noronha";
+      //     break;
+      //   case -180:
+      //     timezone = "Buenos Aires";
+      //     break;
+      //   case -210:
+      //     timezone = "Newfoundland";
+      //     break;
+      //   case -240:
+      //     timezone = "Santiago";
+      //     break;
+      //   case -300:
+      //     timezone = "New York";
+      //     break;
+      //   case -360:
+      //     timezone = "Chicago";
+      //     break;
+      //   case -420:
+      //     timezone = "Phoenix";
+      //     break;
+      //   case -480:
+      //     timezone = "Los Angeles";
+      //     break;
+      //   case -540:
+      //     timezone = "Anchorage";
+      //     break;
+      //   case -570:
+      //     timezone = "Marquesas Islands";
+      //     break;
+      //   case -600:
+      //     timezone = "Papeete";
+      //     break;
+      //   case -660:
+      //     timezone = "Niue";
+      //     break;
+      //   case -720:
+      //     timezone = "Baker Island";
+      //     break;
 
-        default:
-          timezone = "blank";
-          break;
-      }
-      tempentry.push(timezone);
+      //   default:
+      //     timezone = "blank";
+      //     break;
+      // }
+      tempentry.push(e.timezone);
       tempentry.push(e.notes);
       // rows.push(tempentry); // moving down.
       let tempMine = [];
@@ -956,7 +957,8 @@ class Addressbook extends Component {
       }
       rows.push(tempentry);
     });
-    rows.forEach(function(rowArray) {
+
+    rows.forEach(function (rowArray) {
       let row = rowArray.join(",");
       csvContent += row + "\r\n";
     }); //format each row
@@ -976,8 +978,7 @@ class Addressbook extends Component {
 
   importAddressBook(path) {
     console.log("you got it again: ", path);
-    csv()
-      .fromFile(path)
+    csv().fromFile(path)
       .then(jsonObj => {
         // console.log(jsonObj);
         for (var i = 0; i < jsonObj.length; i++) {
@@ -1106,16 +1107,16 @@ class Addressbook extends Component {
                           }
                         />
                       ) : (
-                        <span
-                          onDoubleClick={() =>
-                            this.props.NameToggler(
-                              this.props.addressbook[this.props.selected].name
-                            )
-                          }
-                        >
-                          {this.props.addressbook[this.props.selected].name}
-                        </span>
-                      )}{" "}
+                          <span
+                            onDoubleClick={() =>
+                              this.props.NameToggler(
+                                this.props.addressbook[this.props.selected].name
+                              )
+                            }
+                          >
+                            {this.props.addressbook[this.props.selected].name}
+                          </span>
+                        )}{" "}
                       <div className="tooltip">Doubleclick to edit</div>
                     </legend>
                     <div id="contactInformation">
@@ -1159,19 +1160,19 @@ class Addressbook extends Component {
                               }
                             />
                           ) : (
-                            <span
-                              onDoubleClick={() =>
-                                this.props.PhoneToggler(
-                                  this.props.addressbook[this.props.selected]
-                                    .phoneNumber
-                                )
-                              }
-                              id="phoneNumber"
-                            >
-                              {" "}
-                              {this.phoneFormatter()}
-                            </span>
-                          )}
+                              <span
+                                onDoubleClick={() =>
+                                  this.props.PhoneToggler(
+                                    this.props.addressbook[this.props.selected]
+                                      .phoneNumber
+                                  )
+                                }
+                                id="phoneNumber"
+                              >
+                                {" "}
+                                {this.phoneFormatter()}
+                              </span>
+                            )}
                           <span className="tooltip">Doubleclick to edit</span>
                         </div>
                         {this.localTimeFormater()}
@@ -1214,39 +1215,39 @@ class Addressbook extends Component {
                               />
                             </div>
                           ) : (
-                            <div
-                              id="notes"
-                              name="notes"
-                              onDoubleClick={() =>
-                                this.props.NotesToggler(
+                              <div
+                                id="notes"
+                                name="notes"
+                                onDoubleClick={() =>
+                                  this.props.NotesToggler(
+                                    this.props.addressbook[this.props.selected]
+                                      .notes
+                                  )
+                                }
+                              >
+                                {
                                   this.props.addressbook[this.props.selected]
                                     .notes
-                                )
-                              }
-                            >
-                              {
-                                this.props.addressbook[this.props.selected]
-                                  .notes
-                              }
-                            </div>
-                          )}
+                                }
+                              </div>
+                            )}
                           <span className="tooltip">Doubleclick to edit</span>
                         </div>
                       </div>
                       {this.props.addressbook[this.props.selected].imgSrc !==
-                      undefined ? (
-                        <label htmlFor="picUploader">
-                          <img
-                            src={
-                              this.props.addressbook[this.props.selected].imgSrc
-                            }
-                          />
-                        </label>
-                      ) : (
-                        <label htmlFor="picUploader">
-                          <img src={profilePlaceholder} />
-                        </label>
-                      )}
+                        undefined ? (
+                          <label htmlFor="picUploader">
+                            <img
+                              src={
+                                this.props.addressbook[this.props.selected].imgSrc
+                              }
+                            />
+                          </label>
+                        ) : (
+                          <label htmlFor="picUploader">
+                            <img src={profilePlaceholder} />
+                          </label>
+                        )}
                       <input
                         type="file"
                         accept="image/*"
@@ -1290,8 +1291,8 @@ class Addressbook extends Component {
               )}
             </div>
           ) : (
-            <h1 style={{ alignSelf: "center" }}>Your addressbook is empty</h1>
-          )}
+              <h1 style={{ alignSelf: "center" }}>Your addressbook is empty</h1>
+            )}
         </div>
       </div>
     );
