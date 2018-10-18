@@ -153,7 +153,7 @@ configuration.GetAppResourceDir = function() {
   const app = electron.app || electron.remote.app;
   let rawPath = "";
   if (process.platform === "darwin") {
-    rawPath = path.dirname(app.getPath("exe")) + "../Resources/app/";
+    rawPath = path.dirname(app.getPath("exe")) + "/../Resources/app/";
   } else {
     rawPath = path.dirname(app.getPath("exe")) + "/resources/app/";
   }

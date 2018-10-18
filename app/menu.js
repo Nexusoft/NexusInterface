@@ -68,6 +68,7 @@ export default class MenuBuilder {
               });
             let BackupDir = process.env.HOME + "/NexusBackups";
             if (process.platform === "win32") {
+              BackupDir = app.getPath("documents") + "/NexusBackups";
               BackupDir = BackupDir.replace(/\\/g, "/");
             }
             let fs = require("fs");
@@ -85,7 +86,9 @@ export default class MenuBuilder {
           click() {
             let fs = require("fs");
             let BackupDir = process.env.HOME + "/NexusBackups";
+            console.log(process.env);
             if (process.platform === "win32") {
+              BackupDir = process.env.USERPROFILE + "/NexusBackups";
               BackupDir = BackupDir.replace(/\\/g, "/");
             }
             let ifBackupDirExists = fs.existsSync(BackupDir);
@@ -117,6 +120,17 @@ export default class MenuBuilder {
               }, 1000);
             });
           }
+        },
+        { type: "separator" },
+        {
+          label: "Copy",
+          accelerator: "CmdOrCtrl+C",
+          role: "copy"
+        },
+        {
+          label: "Paste",
+          accelerator: "CmdOrCtrl+V",
+          role: "paste"
         }
       ]
     };
@@ -252,6 +266,7 @@ export default class MenuBuilder {
                 });
               let BackupDir = process.env.HOME + "/NexusBackups";
               if (process.platform === "win32") {
+                BackupDir = process.env.USERPROFILE + "/NexusBackups";
                 BackupDir = BackupDir.replace(/\\/g, "/");
               }
               let fs = require("fs");
@@ -273,6 +288,7 @@ export default class MenuBuilder {
               let fs = require("fs");
               let BackupDir = process.env.HOME + "/NexusBackups";
               if (process.platform === "win32") {
+                BackupDir = process.env.USERPROFILE + "/NexusBackups";
                 BackupDir = BackupDir.replace(/\\/g, "/");
               }
               let ifBackupDirExists = fs.existsSync(BackupDir);

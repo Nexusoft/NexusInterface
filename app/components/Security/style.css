@@ -45,6 +45,10 @@
   flex: 2;
 }
 
+#password-note {
+  margin-top: 1.625em 0;
+}
+
 .expander {
   display: flex;
   align-items: baseline;
@@ -124,7 +128,6 @@
   border-right-color: red;
   border-bottom-color: transparent;
 }
-
 
 /*------------------------------------------------------------------
 MEDIA QUERIES
