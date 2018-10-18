@@ -13,7 +13,6 @@
 
 import * as THREE from "three";
 import world from "../images/world-light-white.jpg";
-import globeShader from "../script/globeShader.js";
 
 import { geoInterpolate } from "d3-geo";
 var DAT = DAT || {};
@@ -135,8 +134,6 @@ export default (DAT.Globe = function(container, opts) {
 
     console.log(colorArch);
     console.log(uniforms);
-    console.log(globeShader(1));
-    console.log(globeShader(0));
 
     // imgDir + "world.jpg"
     material = new THREE.ShaderMaterial({
