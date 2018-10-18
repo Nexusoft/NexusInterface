@@ -18,6 +18,7 @@ import GOOGLE from "../../script/googleanalytics";
 import configuration from "../../api/configuration";
 
 // Images
+import questionmark from "images/questionmark.svg";
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
 import unlockImg from "images/lock-minting.svg";
@@ -289,12 +290,16 @@ class Header extends Component {
   }
 
   signInStatus() {
-    if (this.props.unlocked_until === undefined) {
-      return unencryptedImg;
-    } else if (this.props.unlocked_until === 0) {
-      return lockedImg;
-    } else if (this.props.unlocked_until >= 0) {
-      return unlockImg;
+    if (this.props.connections === undefined) {
+      return questionmark;
+    } else {
+      if (this.props.unlocked_until === undefined) {
+        return unencryptedImg;
+      } else if (this.props.unlocked_until === 0) {
+        return lockedImg;
+      } else if (this.props.unlocked_until >= 0) {
+        return unlockImg;
+      }
     }
   }
 
@@ -303,23 +308,29 @@ class Header extends Component {
       "en",
       { weekday: "long", year: "numeric", month: "long", day: "numeric" }
     );
-
-    if (this.props.unlocked_until === undefined) {
-      return "Wallet Unencrypted";
-    } else if (this.props.unlocked_until === 0) {
-      return "Wallet Locked";
-    } else if (this.props.unlocked_until >= 0) {
-      if (this.props.minting_only) {
-        return "Unlocked until: " + unlockDate + " STAKING ONLY";
-      } else {
-        return "Unlocked until: " + unlockDate;
+    if (this.props.connections === undefined) {
+      return "Daemon Not Loaded";
+    } else {
+      if (this.props.unlocked_until === undefined) {
+        return "Wallet Unencrypted";
+      } else if (this.props.unlocked_until === 0) {
+        return "Wallet Locked";
+      } else if (this.props.unlocked_until >= 0) {
+        if (this.props.minting_only) {
+          return "Unlocked until: " + unlockDate + " STAKING ONLY";
+        } else {
+          return "Unlocked until: " + unlockDate;
+        }
       }
     }
   }
 
   syncStatus() {
     let syncStatus = document.getElementById("syncStatus");
-    if (this.props.heighestPeerBlock > this.props.blocks) {
+    if (
+      this.props.connections === undefined ||
+      this.props.heighestPeerBlock > this.props.blocks
+    ) {
       // rotates
       syncStatus.classList.remove("sync-img");
       return statBad;
@@ -330,14 +341,18 @@ class Header extends Component {
   }
 
   returnSyncStatusTooltip() {
-    if (this.props.heighestPeerBlock > this.props.blocks) {
-      return (
-        "Syncing...\nBehind\n" +
-        (this.props.heighestPeerBlock - this.props.blocks).toString() +
-        "\nBlocks"
-      );
+    if (this.props.connections === undefined) {
+      return "Daemon Not Loaded";
     } else {
-      return "Synced";
+      if (this.props.heighestPeerBlock > this.props.blocks) {
+        return (
+          "Syncing...\nBehind\n" +
+          (this.props.heighestPeerBlock - this.props.blocks).toString() +
+          "\nBlocks"
+        );
+      } else {
+        return "Synced";
+      }
     }
   }
 
@@ -492,6 +507,7 @@ class Header extends Component {
               <div>{this.signInStatusMessage()}</div>
             </div>
           </div>
+          {/* wrap this in a check too... */}
           <div className="icon">
             <img src={stakeImg} />
             <div className="tooltip bottom">
