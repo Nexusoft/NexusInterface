@@ -42,13 +42,13 @@ export default class NetworkGlobe extends Component {
     let myIP = "";
     let incomingPillarColor = this.props.pillarColor;
     let incomingArchColor = this.props.archColor;
-    let globeOptions = {
-      colorFn: function(x) {
-        return new THREE.Color(incomingPillarColor);
-      },
-      colorArch: incomingArchColor
-    };
-    glb = new DAT(this.threeRootElement, globeOptions);
+    let globeOptions = 
+    {
+      colorFn: function(x) { return new THREE.Color(incomingPillarColor);},
+      colorArch: incomingArchColor,
+      colorGlobe: this.props.globeColor
+    }
+    glb = new DAT(this.threeRootElement,globeOptions);
     glb.animate();
     Request(
       {
