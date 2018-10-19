@@ -227,6 +227,7 @@ class Core extends EventEmitter {
           );
           fs.mkdirSync(datadir);
         }
+
         log.info("Core Manager: Starting core");
         var spawn = require("child_process").spawn;
         coreprocess = spawn(GetCoreBinaryPath(), parameters, {

@@ -42,7 +42,37 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
-  // React Method (Life cycle hook)
+  testDownload() {
+    var remote = require("remote-file-size");
+    let us = this;
+    us.total = 0;
+    us.requestTotal = remote(
+      "https://nexusearth.com/bootstrap/LLD-Database/recent.zip",
+      function(err, o) {
+        us.total = o;
+      }
+    );
+    const fs = require("fs");
+    const download = require("download");
+    let recentDBDuplexStream = download(
+      "https://nexusearth.com/bootstrap/LLD-Database/recent.zip",
+      { extract: true }
+    );
+    let thing = 0;
+    recentDBDuplexStream.on("data", data => {
+      console.log((otherthing.bytesWritten / us.total) * 100);
+    });
+    recentDBDuplexStream.pipe(
+      fs.createWriteStream(configuration.GetAppDataDirectory() + "/recentDB")
+    );
+    // setInterval(() => {
+    //   console.log(
+    //     "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    //   );
+    // }, 1000);
+  }
+
+  // React Method (Life cycle hook) https://nexusearth.com/bootstrap/LLD-Database/recent.zip
   componentDidMount() {
     this.props.setSettings(GetSettings());
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
@@ -269,7 +299,7 @@ class Header extends Component {
         }
       },
       {
-        label: "Quit Nexus and Quit Daemon",
+        label: "Quit Nexus",
         click: function() {
           let settings = require("../../api/settings").GetSettings();
           if (settings.manualDaemon == false) {
@@ -452,6 +482,7 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
+        <button onClick={() => this.testDownload()}>test download</button>
         <CustomProperties
           global
           properties={{
