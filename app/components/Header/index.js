@@ -283,9 +283,16 @@ class Header extends Component {
   returnSyncStatusTooltip() {
     if (this.props.heighestPeerBlock > this.props.blocks) {
       return (
-        <FormattedMessage id="Header.Synching" defaultMessage="Syncing..." /> +
-        (this.props.heighestPeerBlock - this.props.blocks).toString() +
-        <FormattedMessage id="Header.Blocks" defaultMessage="Blocks" />
+        <div>
+          {" "}
+          <FormattedMessage
+            id="Header.Synching"
+            defaultMessage="Syncing..."
+          />{" "}
+          {(this.props.heighestPeerBlock - this.props.blocks).toString()}
+          {"  "}
+          <FormattedMessage id="Header.Blocks" defaultMessage="Blocks" />
+        </div>
       );
     } else {
       return <FormattedMessage id="Header.Synched" defaultMessage="Synched" />;

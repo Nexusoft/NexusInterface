@@ -147,7 +147,6 @@ class Transactions extends Component {
   componentDidMount() {
     this.updateChartAndTableDimensions();
     this.props.googleanalytics.SendScreen("Transactions");
-
     let myaddresbook = this.readAddressBook();
     if (myaddresbook != undefined) {
       for (let key in myaddresbook.addressbook) {
@@ -180,6 +179,7 @@ class Transactions extends Component {
       console.log("THIS IS THE INTERVAL WORKING");
       this.getTransactionData(false);
     }, 30000);
+
     this.setState({
       refreshInterval: interval,
       addressLabels: tempaddpress
@@ -934,6 +934,16 @@ class Transactions extends Component {
       if (ele.confirmations <= 12) {
         isPending = "(Pending)";
       }
+      if (ele.category === "send") {
+        return (ele.category = this.props.messages[this.props.locale][
+          "transactions.Sent"
+        ]);
+      } else if (ele.category === "receive") {
+        return (ele.category = this.props.messages[this.props.locale][
+          "transactions.Received"
+        ]);
+      }
+
       return {
         transactionnumber: txCounter,
         time: ele.time,
@@ -1021,6 +1031,16 @@ class Transactions extends Component {
     });
   }
 
+  returnCorrectFillColor(inData) {
+    if (inData.category == "receive") {
+      return "#0ca4fb";
+    } else if (inData.category == "send") {
+      return "#035";
+    } else {
+      return "#fff";
+    }
+  }
+
   /// Return Corrected Fill Color
   /// returns the correct fill color based on the category
   returnCorrectFillColor(inData) {
@@ -1047,7 +1067,13 @@ class Transactions extends Component {
   /// Return Tooltip Lable
   /// Returns the tooltip lable for the chart
   returnToolTipLable(inData) {
-    return inData.category + "\nAmount: " + inData.b + "\nTime:" + inData.a;
+    return (
+      inData.category +
+      `\n${this.props.messages[this.props.locale]["transactions.AMOUNT"]}: ` +
+      inData.b +
+      `\n${this.props.messages[this.props.locale]["transactions.TIME"]}: ` +
+      inData.a
+    );
   }
 
   /// Handle Zoom

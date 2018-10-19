@@ -571,7 +571,7 @@ class SettingsCore extends Component {
                     defaultMesage="English"
                   />
                 </option>
-                <option value="ru" data-icon="glyphicon glyphicon-eye-open">
+                <option value="ru">
                   <FormattedMessage
                     id="Settings.Russian"
                     defaultMesage="Russian"
@@ -579,13 +579,13 @@ class SettingsCore extends Component {
                 </option>
               </select>
               <span className="flag-icon-background flag-icon-gr" />
-              {/* <button
+              <button
                 type="button"
                 className="feebutton"
                 onClick={() => this.props.SwitchLocale()}
               >
                 <FormattedMessage id="Settings.Set" defaultMesage="Set" />
-              </button> */}
+              </button>
             </div>
           </div>
 

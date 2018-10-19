@@ -158,6 +158,17 @@ class Overview extends Component {
     this.props.acceptMITAgreement();
   }
 
+  BlockRapper() {
+    if (this.props.blockDate === "Getting Next Block...") {
+      return (
+        <FormattedMessage
+          id="ToolTip.GettingNextBlock"
+          defaultMessage="Getting Next Block..."
+        />
+      );
+    }
+  }
+
   returnLicenseModalInternal() {
     return (
       <div>
@@ -567,7 +578,7 @@ class Overview extends Component {
 
             <div className="overviewValue">{this.props.blocks}</div>
             <span className="tooltip left">
-              {this.props.blockDate.toLocaleString()}
+              {this.BlockRapper(this.props.blockDate.toLocaleString())}
             </span>
           </div>
           <div

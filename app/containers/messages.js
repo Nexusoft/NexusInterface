@@ -75,6 +75,9 @@ export default {
     "transactions.Previous": "Previous",
     "transactions.Next": "Next",
     "transactions.MyAccount": "My Account",
+    "transactions.Received": "Received",
+    "transactions.AMOUNT": "Amount",
+    "transactions.TIME": "Time",
 
     //Market//
     "Market.Information": "Market Information",
@@ -251,7 +254,6 @@ export default {
     "Header.InterestRate": "Interest Rate",
     "Header.BlockWeight": "Block Weight",
     "Header.TrustWeight": "Trust Weight",
-
     "Header.WalletUnencrypted": "Wallet Unencrypted",
     "Header.WalletLocked": "Wallet Locked",
     "Header.UnlockedUntil": "Unlocked until",
@@ -341,6 +343,9 @@ export default {
     "transactions.Previous": "предыдущий",
     "transactions.Next": "следующий",
     "transactions.MyAccount": "Мой аккаунт",
+    "transactions.Received": "получено",
+    "transactions.AMOUNT": "Количество",
+    "transactions.TIME": "Время",
 
     //Market//
     "Market.Information": "Информация о рынке",
