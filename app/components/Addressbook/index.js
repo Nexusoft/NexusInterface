@@ -1053,270 +1053,265 @@ class Addressbook extends Component {
             />
           </div>
         )}
-        <div className="panel">
-          {this.props.connections === undefined ? (
-            <h2>Please wait for the daemon to load</h2>
-          ) : (
-            <div>
-              <div id="addressbook-controls">
-                <div id="addressbook-search">
-                  <input
-                    className="searchaccount"
-                    type="text"
-                    placeholder="Search Contact"
-                    value={this.props.contactSearch}
-                    onChange={e => this.props.ContactSearch(e.target.value)}
-                    required
-                  />
-                </div>
 
-                <button
-                  className="button ghost"
-                  onClick={() => {
-                    this.props.clearSearch();
-                    this.loadMyAccounts();
-                    this.showMyAddresses();
-                  }}
-                >
-                  My Addresses
-                </button>
-                <button
-                  className="button primary"
-                  onClick={() => this.showAddContactModal()}
-                >
-                  Add Contact
-                </button>
+        {this.props.connections === undefined ? (
+          <div className="panel">
+            {" "}
+            <h2>Please wait for the daemon to load</h2>
+          </div>
+        ) : (
+          <div className="panel">
+            <div id="addressbook-controls">
+              <div id="addressbook-search">
+                <input
+                  className="searchaccount"
+                  type="text"
+                  placeholder="Search Contact"
+                  value={this.props.contactSearch}
+                  onChange={e => this.props.ContactSearch(e.target.value)}
+                  required
+                />
               </div>
-              {this.props.addressbook.length > 0 ? (
-                <div id="addressbookContent">
-                  <div id="contactListContainer">{this.contactLister()}</div>
-                  {this.props.addressbook[this.props.selected].mine && (
-                    <div id="contactDetailContainer">
-                      <fieldset id="contactDetails">
-                        <legend>
-                          {this.props.editName === true ? (
-                            <input
-                              ref="addContactName"
-                              id="new-account-name"
-                              type="text"
-                              value={this.props.prototypeName}
-                              onChange={e =>
-                                this.props.EditProtoName(e.target.value)
-                              }
-                              onKeyDown={e => {
-                                if (e.which === 13 || e.which === 9) {
-                                  this.props.SaveName(
-                                    this.props.selected,
-                                    this.props.prototypeName
-                                  );
-                                }
-                              }}
-                              placeholder="Name"
-                              onDoubleClick={() =>
+
+              <button
+                className="button ghost"
+                onClick={() => {
+                  this.props.clearSearch();
+                  this.loadMyAccounts();
+                  this.showMyAddresses();
+                }}
+              >
+                My Addresses
+              </button>
+              <button
+                className="button primary"
+                onClick={() => this.showAddContactModal()}
+              >
+                Add Contact
+              </button>
+            </div>
+            {this.props.addressbook.length > 0 ? (
+              <div id="addressbookContent">
+                <div id="contactListContainer">{this.contactLister()}</div>
+                {this.props.addressbook[this.props.selected].mine && (
+                  <div id="contactDetailContainer">
+                    <fieldset id="contactDetails">
+                      <legend>
+                        {this.props.editName === true ? (
+                          <input
+                            ref="addContactName"
+                            id="new-account-name"
+                            type="text"
+                            value={this.props.prototypeName}
+                            onChange={e =>
+                              this.props.EditProtoName(e.target.value)
+                            }
+                            onKeyDown={e => {
+                              if (e.which === 13 || e.which === 9) {
                                 this.props.SaveName(
                                   this.props.selected,
                                   this.props.prototypeName
-                                )
+                                );
                               }
-                            />
-                          ) : (
-                            <span
-                              onDoubleClick={() =>
-                                this.props.NameToggler(
-                                  this.props.addressbook[this.props.selected]
-                                    .name
-                                )
-                              }
-                            >
-                              {this.props.addressbook[this.props.selected].name}
-                            </span>
-                          )}{" "}
-                          <div className="tooltip">Doubleclick to edit</div>
-                        </legend>
-                        <div id="contactInformation">
+                            }}
+                            placeholder="Name"
+                            onDoubleClick={() =>
+                              this.props.SaveName(
+                                this.props.selected,
+                                this.props.prototypeName
+                              )
+                            }
+                          />
+                        ) : (
+                          <span
+                            onDoubleClick={() =>
+                              this.props.NameToggler(
+                                this.props.addressbook[this.props.selected].name
+                              )
+                            }
+                          >
+                            {this.props.addressbook[this.props.selected].name}
+                          </span>
+                        )}{" "}
+                        <div className="tooltip">Doubleclick to edit</div>
+                      </legend>
+                      <div id="contactInformation">
+                        <div>
                           <div>
-                            <div>
-                              {" "}
-                              <label
+                            {" "}
+                            <label
+                              onDoubleClick={() =>
+                                this.props.PhoneToggler(
+                                  this.props.addressbook[this.props.selected]
+                                    .phoneNumber
+                                )
+                              }
+                              htmlFor="phoneNumber"
+                            >
+                              Phone number:
+                            </label>
+                            {this.props.editPhone === true ? (
+                              <input
+                                id="phoneNumber"
+                                name="phoneNumber"
+                                type="tel"
+                                onChange={e =>
+                                  this.phoneNumberHandler(e.target.value)
+                                }
+                                onKeyDown={e => {
+                                  if (e.which === 13 || e.which === 9) {
+                                    this.props.SavePhone(
+                                      this.props.selected,
+                                      this.props.prototypePhoneNumber
+                                    );
+                                  }
+                                }}
+                                value={this.props.prototypePhoneNumber}
+                                placeholder="Phone #"
+                                onDoubleClick={() =>
+                                  this.props.SavePhone(
+                                    this.props.selected,
+                                    this.props.prototypePhoneNumber
+                                  )
+                                }
+                              />
+                            ) : (
+                              <span
                                 onDoubleClick={() =>
                                   this.props.PhoneToggler(
                                     this.props.addressbook[this.props.selected]
                                       .phoneNumber
                                   )
                                 }
-                                htmlFor="phoneNumber"
+                                id="phoneNumber"
                               >
-                                Phone number:
-                              </label>
-                              {this.props.editPhone === true ? (
-                                <input
-                                  id="phoneNumber"
-                                  name="phoneNumber"
-                                  type="tel"
-                                  onChange={e =>
-                                    this.phoneNumberHandler(e.target.value)
+                                {" "}
+                                {this.phoneFormatter()}
+                              </span>
+                            )}
+                            <span className="tooltip">Doubleclick to edit</span>
+                          </div>
+                          {this.localTimeFormater()}
+                          <div id="notesContainer">
+                            <label
+                              onDoubleClick={() =>
+                                this.props.NotesToggler(
+                                  this.props.addressbook[this.props.selected]
+                                    .notes
+                                )
+                              }
+                              htmlFor="notes"
+                            >
+                              Notes:
+                            </label>
+                            {this.props.editNotes === true ? (
+                              <div>
+                                <textarea
+                                  id="notes"
+                                  name="notes"
+                                  onDoubleClick={() =>
+                                    this.props.SaveNotes(
+                                      this.props.selected,
+                                      this.props.prototypeNotes
+                                    )
                                   }
                                   onKeyDown={e => {
                                     if (e.which === 13 || e.which === 9) {
-                                      this.props.SavePhone(
+                                      this.props.SaveNotes(
                                         this.props.selected,
-                                        this.props.prototypePhoneNumber
+                                        this.props.prototypeNotes
                                       );
                                     }
                                   }}
-                                  value={this.props.prototypePhoneNumber}
-                                  placeholder="Phone #"
-                                  onDoubleClick={() =>
-                                    this.props.SavePhone(
-                                      this.props.selected,
-                                      this.props.prototypePhoneNumber
-                                    )
+                                  onChange={e =>
+                                    this.props.EditProtoNotes(e.target.value)
                                   }
+                                  value={this.props.prototypeNotes}
+                                  rows="3"
                                 />
-                              ) : (
-                                <span
-                                  onDoubleClick={() =>
-                                    this.props.PhoneToggler(
-                                      this.props.addressbook[
-                                        this.props.selected
-                                      ].phoneNumber
-                                    )
-                                  }
-                                  id="phoneNumber"
-                                >
-                                  {" "}
-                                  {this.phoneFormatter()}
-                                </span>
-                              )}
-                              <span className="tooltip">
-                                Doubleclick to edit
-                              </span>
-                            </div>
-                            {this.localTimeFormater()}
-                            <div id="notesContainer">
-                              <label
+                              </div>
+                            ) : (
+                              <div
+                                id="notes"
+                                name="notes"
                                 onDoubleClick={() =>
                                   this.props.NotesToggler(
                                     this.props.addressbook[this.props.selected]
                                       .notes
                                   )
                                 }
-                                htmlFor="notes"
                               >
-                                Notes:
-                              </label>
-                              {this.props.editNotes === true ? (
-                                <div>
-                                  <textarea
-                                    id="notes"
-                                    name="notes"
-                                    onDoubleClick={() =>
-                                      this.props.SaveNotes(
-                                        this.props.selected,
-                                        this.props.prototypeNotes
-                                      )
-                                    }
-                                    onKeyDown={e => {
-                                      if (e.which === 13 || e.which === 9) {
-                                        this.props.SaveNotes(
-                                          this.props.selected,
-                                          this.props.prototypeNotes
-                                        );
-                                      }
-                                    }}
-                                    onChange={e =>
-                                      this.props.EditProtoNotes(e.target.value)
-                                    }
-                                    value={this.props.prototypeNotes}
-                                    rows="3"
-                                  />
-                                </div>
-                              ) : (
-                                <div
-                                  id="notes"
-                                  name="notes"
-                                  onDoubleClick={() =>
-                                    this.props.NotesToggler(
-                                      this.props.addressbook[
-                                        this.props.selected
-                                      ].notes
-                                    )
-                                  }
-                                >
-                                  {
-                                    this.props.addressbook[this.props.selected]
-                                      .notes
-                                  }
-                                </div>
-                              )}
-                              <span className="tooltip">
-                                Doubleclick to edit
-                              </span>
-                            </div>
-                          </div>
-                          {this.props.addressbook[this.props.selected]
-                            .imgSrc !== undefined ? (
-                            <label htmlFor="picUploader">
-                              <img
-                                src={
+                                {
                                   this.props.addressbook[this.props.selected]
-                                    .imgSrc
+                                    .notes
                                 }
-                              />
-                            </label>
-                          ) : (
-                            <label htmlFor="picUploader">
-                              <img src={profilePlaceholder} />
-                            </label>
-                          )}
-                          <input
-                            type="file"
-                            accept="image/*"
-                            name="picUploader"
-                            onChange={e =>
-                              this.props.ChangeContactImage(
-                                e.target.files[0].path,
-                                this.props.selected
-                              )
-                            }
-                            id="picUploader"
-                          />{" "}
+                              </div>
+                            )}
+                            <span className="tooltip">Doubleclick to edit</span>
+                          </div>
                         </div>
-                      </fieldset>
-                      <div
-                        id="addressDisplay"
-                        onMouseOverCapture={() =>
-                          this.props.SetMousePosition("", "")
-                        }
-                      >
-                        {this.props.addressbook[this.props.selected].notMine
-                          .length > 0
-                          ? this.theirAddressLister()
-                          : null}
-                        {this.props.addressbook[this.props.selected].mine
-                          .length > 0
-                          ? this.myAddressLister()
-                          : null}
+                        {this.props.addressbook[this.props.selected].imgSrc !==
+                        undefined ? (
+                          <label htmlFor="picUploader">
+                            <img
+                              src={
+                                this.props.addressbook[this.props.selected]
+                                  .imgSrc
+                              }
+                            />
+                          </label>
+                        ) : (
+                          <label htmlFor="picUploader">
+                            <img src={profilePlaceholder} />
+                          </label>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          name="picUploader"
+                          onChange={e =>
+                            this.props.ChangeContactImage(
+                              e.target.files[0].path,
+                              this.props.selected
+                            )
+                          }
+                          id="picUploader"
+                        />{" "}
                       </div>
-                      <div id="buttonholder">
-                        <button
-                          className="button ghost hero"
-                          onClick={() => this.addAddressHandler()}
-                        >
-                          Add Address
-                        </button>
-                      </div>
+                    </fieldset>
+                    <div
+                      id="addressDisplay"
+                      onMouseOverCapture={() =>
+                        this.props.SetMousePosition("", "")
+                      }
+                    >
+                      {this.props.addressbook[this.props.selected].notMine
+                        .length > 0
+                        ? this.theirAddressLister()
+                        : null}
+                      {this.props.addressbook[this.props.selected].mine.length >
+                      0
+                        ? this.myAddressLister()
+                        : null}
                     </div>
-                  )}
-                </div>
-              ) : (
-                <h1 style={{ alignSelf: "center" }}>
-                  Your Address Book has no contacts
-                </h1>
-              )}
-            </div>
-          )}
-        </div>
+                    <div id="buttonholder">
+                      <button
+                        className="button ghost hero"
+                        onClick={() => this.addAddressHandler()}
+                      >
+                        Add Address
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <h1 style={{ alignSelf: "center" }}>
+                Your Address Book has no contacts
+              </h1>
+            )}
+          </div>
+        )}
       </div>
     );
   }
