@@ -1418,8 +1418,10 @@ class Transactions extends Component {
           <img src={transactionsimg} className="hdr-img" />
           Transactions
         </h2>
-        {this.props.connections === undefined ? (<h2>Please wait for the daemon to load</h2>) : (
+        
         <div className="panel">
+        {this.props.connections === undefined ? (<h2>Please wait for the daemon to load</h2>) : (
+          <div>
           <div id="transactions-chart">
             <VictoryChart
               width={this.state.mainChartWidth}
@@ -1576,7 +1578,9 @@ class Transactions extends Component {
               onMouseOutCallback={this.mouseOutCallback.bind(this)}
             />
           </div> 
-        </div>)}
+          </div>
+        )}
+        </div>
       </div>
     );
   }
