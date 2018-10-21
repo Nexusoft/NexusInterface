@@ -20,7 +20,7 @@ const path = require("path");
 let mainWindow;
 let tray;
 let resizeTimer;
-let keepDaemon = false;
+// let keepDaemon = false;
 // Global Objects
 global.core = core;
 
@@ -197,8 +197,9 @@ app.on("ready", async () => {
 
   mainWindow.on("close", function(e) {
     const settings = require("./api/settings.js").GetSettings();
-    if (keepDaemon != true || keepDaemon === undefined) {
-      log.info(keepDaemon);
+    console.log("KEEP DAEMON SETTINGS:", settings);
+    if (settings.keepDaemon != true || settings.keepDaemon === undefined) {
+      log.info(settings.keepDaemon);
       core.stop();
     }
     if (settings) {
@@ -217,7 +218,7 @@ app.on("ready", async () => {
 // Application Shutdown
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-      app.quit();
+    app.quit();
   }
   globalShortcut.unregister("Escape");
 

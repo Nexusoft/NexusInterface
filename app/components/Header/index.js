@@ -13,7 +13,7 @@ import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
-import { GetSettings } from "../../api/settings.js";
+import { GetSettings, SaveSettings } from "../../api/settings.js";
 import GOOGLE from "../../script/googleanalytics";
 import configuration from "../../api/configuration";
 
@@ -45,6 +45,11 @@ const mapDispatchToProps = dispatch =>
 class Header extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
+    let settings = GetSettings();
+    if (settings.keepDaemon !== false) {
+      settings.keepDaemon = false;
+      SaveSettings(settings);
+    }
     this.props.setSettings(GetSettings());
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     var self = this;
