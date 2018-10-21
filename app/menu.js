@@ -63,9 +63,8 @@ export default class MenuBuilder {
               .toString()
               .slice(0, 24)
               .split(" ")
-              .reduce((a, b) => {
-                return a + "_" + b;
-              });
+              .reduce((a, b) => {return a + "_" + b;})
+              .replace(/:/g, "_");
             let BackupDir = process.env.HOME + "/NexusBackups";
             if (process.platform === "win32") {
               BackupDir = app.getPath("documents") + "/NexusBackups";
@@ -107,7 +106,8 @@ export default class MenuBuilder {
         {
           label: "Close Window Keep Daemon",
           click() {
-            var keepDaemon = true;
+            const keepDaemon = true;
+            log.info(keepDaemon);
             remote.getCurrentWindow().close();
           }
         },
@@ -261,9 +261,8 @@ export default class MenuBuilder {
                 .toString()
                 .slice(0, 24)
                 .split(" ")
-                .reduce((a, b) => {
-                  return a + "_" + b;
-                });
+                .reduce((a, b) => {return a + "_" + b;})
+                .replace(/:/g, "_");
               let BackupDir = process.env.HOME + "/NexusBackups";
               if (process.platform === "win32") {
                 BackupDir = process.env.USERPROFILE + "/NexusBackups";
@@ -310,7 +309,8 @@ export default class MenuBuilder {
           {
             label: "Close Window Keep Daemon",
             click() {
-              var keepDaemon = true;
+              const keepDaemon = true;
+              log.info(keepDaemon);
               remote.getCurrentWindow().close();
             }
           },

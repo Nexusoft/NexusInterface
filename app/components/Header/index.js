@@ -196,16 +196,20 @@ class Header extends Component {
     let mainWindow = electron.remote.getCurrentWindow();
     console.log(electron.remote.getCurrentWindow());
     const path = require("path");
+    const app = electron.app || electron.remote.app;
+
     if (process.env.NODE_ENV === "development") {
       if (process.platform == "darwin") {
         trayImage = path.join(
-          configuration.GetAppDataDirectory(),
+          __dirname,
+          "images",
           "tray",
           "Nexus_Tray_Icon_Template_16.png"
         );
       } else {
         trayImage = path.join(
-          configuration.GetAppDataDirectory(),
+          __dirname,
+          "images",
           "tray",
           "Nexus_Tray_Icon_32.png"
         );
@@ -234,7 +238,8 @@ class Header extends Component {
       if (process.platform == "darwin") {
         tray.setPressedImage(
           path.join(
-            configuration.GetAppDataDirectory(),
+            __dirname,
+            "images",
             "tray",
             "Nexus_Tray_Icon_Highlight_16.png"
           )

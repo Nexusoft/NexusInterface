@@ -18,7 +18,7 @@ import * as TYPE from "../../actions/actiontypes";
 const mapStateToProps = state => {
   return { ...state.terminal, ...state.common };
 };
-const mapDispatchToProps = dispatch => {};
+//const mapDispatchToProps = dispatch => {};
 
 class TerminalCore extends Component {
   constructor(props) {
@@ -58,6 +58,6 @@ class TerminalCore extends Component {
 
 // Mandatory React-Redux method
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
+//  mapDispatchToProps
 )(TerminalCore);

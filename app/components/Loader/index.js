@@ -15,7 +15,7 @@ import styles from "./style.css";
 const mapStateToProps = state => {
   return { ...state.common };
 };
-const mapDispatchToProps = dispatch => {};
+//const mapDispatchToProps = dispatch => {};
 
 class Loader extends Component {
   state = {
@@ -53,6 +53,6 @@ class Loader extends Component {
 
 // Mandatory React-Redux method
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
+//  mapDispatchToProps
 )(Loader);
