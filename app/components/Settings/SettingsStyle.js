@@ -66,6 +66,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.CHANGE_GLOBE_PILLAR_COLOR, payload: { hex: hex } }),
   ChangeGlobeArchColor: (setting, hex) =>
     dispatch({ type: TYPE.CHANGE_GLOBE_ARCH_COLOR, payload: { hex: hex } }),
+  ChangeGlobeMultiColor: (setting, hex) =>
+    dispatch({ type: TYPE.CHANGE_GLOBE_MULTI_COLOR, payload: { hex: hex } }),
   ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
   ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER })
 });
@@ -136,6 +138,9 @@ class SettingsStyle extends Component {
       case "globeArch":
         this.props.ChangeGlobeArchColor(filterSetting, color.hex);
         break;
+      case "globeMulti":
+        this.props.ChangeGlobeMultiColor(filterSetting, color.hex);
+        break;
       case "panel":
         let newPannelBack = `rgba(${color.rgb.r}, ${color.rgb.g}, ${
           color.rgb.b
@@ -185,6 +190,9 @@ class SettingsStyle extends Component {
         break;
       case "globeArch":
         return this.props.settings.customStyling.globeArchColorRGB;
+        break;
+      case "globeMulti":
+        return this.props.settings.customStyling.globeMultiColorRGB;
         break;
       case "panel":
         return this.props.settings.customStyling.pannelBack;
@@ -257,9 +265,11 @@ class SettingsStyle extends Component {
                   <option value="MC5">Text Color</option>
                   <option value="panel">Panel Background Color</option>
                   <option value="NXSlogo">Nexus Logo Color</option>
-                  <option value="iconMenu">Icon Color</option>
-                  <option value="footer">Navigation Base Color</option>
-                  <option value="footerActive">Navigation Active Color</option>
+                  <option value="iconMenu">Status Icon Color</option>
+                  <option value="footer">Footer Base Color</option>
+                  <option value="footerHover">Footer Hover Color</option>
+                  <option value="footerActive">Footer Active Color</option>
+                  <option value="globeMulti">Globe Color</option>
                   <option value="globePillar">Globe Pillar Color</option>
                   <option value="globeArch">Globe Arch Color</option>
                 </select>

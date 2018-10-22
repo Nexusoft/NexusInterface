@@ -333,9 +333,8 @@ class SettingsApp extends Component {
       .toString()
       .slice(0, 24)
       .split(" ")
-      .reduce((a, b) => {
-        return a + "_" + b;
-      });
+      .reduce((a, b) => {return a + "_" + b;})
+      .replace(/:/g, "_");
 
     let BackupDir = process.env.HOME + "/NexusBackups";
     if (process.platform === "win32") {

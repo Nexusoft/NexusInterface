@@ -13,11 +13,12 @@ import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
-import { GetSettings } from "../../api/settings.js";
+import { GetSettings, SaveSettings } from "../../api/settings.js";
 import GOOGLE from "../../script/googleanalytics";
 import configuration from "../../api/configuration";
 
 // Images
+import questionmark from "images/questionmark.svg";
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
 import unlockImg from "images/lock-minting.svg";
@@ -74,6 +75,11 @@ class Header extends Component {
 
   // React Method (Life cycle hook) https://nexusearth.com/bootstrap/LLD-Database/recent.zip
   componentDidMount() {
+    let settings = GetSettings();
+    if (settings.keepDaemon !== false) {
+      settings.keepDaemon = false;
+      SaveSettings(settings);
+    }
     this.props.setSettings(GetSettings());
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     var self = this;
@@ -225,16 +231,20 @@ class Header extends Component {
     let mainWindow = electron.remote.getCurrentWindow();
     console.log(electron.remote.getCurrentWindow());
     const path = require("path");
+    const app = electron.app || electron.remote.app;
+
     if (process.env.NODE_ENV === "development") {
       if (process.platform == "darwin") {
         trayImage = path.join(
-          configuration.GetAppDataDirectory(),
+          __dirname,
+          "images",
           "tray",
           "Nexus_Tray_Icon_Template_16.png"
         );
       } else {
         trayImage = path.join(
-          configuration.GetAppDataDirectory(),
+          __dirname,
+          "images",
           "tray",
           "Nexus_Tray_Icon_32.png"
         );
@@ -263,7 +273,8 @@ class Header extends Component {
       if (process.platform == "darwin") {
         tray.setPressedImage(
           path.join(
-            configuration.GetAppDataDirectory(),
+            __dirname,
+            "images",
             "tray",
             "Nexus_Tray_Icon_Highlight_16.png"
           )
@@ -302,15 +313,15 @@ class Header extends Component {
         label: "Quit Nexus",
         click: function() {
           let settings = require("../../api/settings").GetSettings();
-          if (settings.manualDaemon == false) {
-            RPC.PROMISE("stop", []).then(payload => {
-              setTimeout(() => {
-                remote.getCurrentWindow().close();
-              }, 1000);
-            });
-          } else {
-            mainWindow.close();
-          }
+          // if (settings.manualDaemon == false) {
+          RPC.PROMISE("stop", []).then(payload => {
+            setTimeout(() => {
+              mainWindow.close();
+            }, 1000);
+          });
+          // } else {
+          // mainWindow.close();
+          // }
         }
       }
     ]);
@@ -319,12 +330,16 @@ class Header extends Component {
   }
 
   signInStatus() {
-    if (this.props.unlocked_until === undefined) {
-      return unencryptedImg;
-    } else if (this.props.unlocked_until === 0) {
-      return lockedImg;
-    } else if (this.props.unlocked_until >= 0) {
-      return unlockImg;
+    if (this.props.connections === undefined) {
+      return questionmark;
+    } else {
+      if (this.props.unlocked_until === undefined) {
+        return unencryptedImg;
+      } else if (this.props.unlocked_until === 0) {
+        return lockedImg;
+      } else if (this.props.unlocked_until >= 0) {
+        return unlockImg;
+      }
     }
   }
 
@@ -333,23 +348,29 @@ class Header extends Component {
       "en",
       { weekday: "long", year: "numeric", month: "long", day: "numeric" }
     );
-
-    if (this.props.unlocked_until === undefined) {
-      return "Wallet Unencrypted";
-    } else if (this.props.unlocked_until === 0) {
-      return "Wallet Locked";
-    } else if (this.props.unlocked_until >= 0) {
-      if (this.props.minting_only) {
-        return "Unlocked until: " + unlockDate + " STAKING ONLY";
-      } else {
-        return "Unlocked until: " + unlockDate;
+    if (this.props.connections === undefined) {
+      return "Daemon Not Loaded";
+    } else {
+      if (this.props.unlocked_until === undefined) {
+        return "Wallet Unencrypted";
+      } else if (this.props.unlocked_until === 0) {
+        return "Wallet Locked";
+      } else if (this.props.unlocked_until >= 0) {
+        if (this.props.minting_only) {
+          return "Unlocked until: " + unlockDate + " STAKING ONLY";
+        } else {
+          return "Unlocked until: " + unlockDate;
+        }
       }
     }
   }
 
   syncStatus() {
     let syncStatus = document.getElementById("syncStatus");
-    if (this.props.heighestPeerBlock > this.props.blocks) {
+    if (
+      this.props.connections === undefined ||
+      this.props.heighestPeerBlock > this.props.blocks
+    ) {
       // rotates
       syncStatus.classList.remove("sync-img");
       return statBad;
@@ -360,14 +381,18 @@ class Header extends Component {
   }
 
   returnSyncStatusTooltip() {
-    if (this.props.heighestPeerBlock > this.props.blocks) {
-      return (
-        "Syncing...\nBehind\n" +
-        (this.props.heighestPeerBlock - this.props.blocks).toString() +
-        "\nBlocks"
-      );
+    if (this.props.connections === undefined) {
+      return "Daemon Not Loaded";
     } else {
-      return "Synced";
+      if (this.props.heighestPeerBlock > this.props.blocks) {
+        return (
+          "Syncing...\nBehind\n" +
+          (this.props.heighestPeerBlock - this.props.blocks).toString() +
+          "\nBlocks"
+        );
+      } else {
+        return "Synced";
+      }
     }
   }
 
@@ -523,6 +548,7 @@ class Header extends Component {
               <div>{this.signInStatusMessage()}</div>
             </div>
           </div>
+          {/* wrap this in a check too... */}
           <div className="icon">
             <img src={stakeImg} />
             <div className="tooltip bottom">

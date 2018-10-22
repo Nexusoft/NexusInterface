@@ -54,6 +54,7 @@ class SettingsCore extends Component {
     this.setManualDaemonDataDir(settings);
     this.setEnableMining(settings);
     this.setEnableStaking(settings);
+    this.setVerboseLevel(settings);
     this.setMapPortUsingUpnp(settings);
     this.setSocks4Proxy(settings);
     this.setSocks4ProxyIP(settings);
@@ -80,6 +81,16 @@ class SettingsCore extends Component {
       enableStaking.checked = true;
     } else {
       enableStaking.checked = false;
+    }
+  }
+
+  setVerboseLevel(settings) {
+    var verboseLevel = document.getElementById("verboseLevel");
+
+    if (settings.verboseLevel === undefined) {
+      verboseLevel.value = "2";
+    } else {
+      verboseLevel.value = settings.verboseLevel;
     }
   }
 
@@ -242,6 +253,16 @@ class SettingsCore extends Component {
     var settingsObj = settings.GetSettings();
 
     settingsObj.enableStaking = el.checked;
+
+    settings.SaveSettings(settingsObj);
+  }
+
+  updateVerboseLevel(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.verboseLevel = el.value;
 
     settings.SaveSettings(settingsObj);
   }
@@ -454,6 +475,17 @@ class SettingsCore extends Component {
           </div>
 
           <div className="field">
+            <label htmlFor="verboseLevel">Verbose level</label>
+            <input
+              id="verboseLevel"
+              type="text"
+              size="3"
+              onChange={this.updateVerboseLevel}
+              data-tooltip="Verbose level for logs"
+            />
+          </div>
+
+          <div className="field">
             <label htmlFor="manualDaemon">Manual Daemon Mode</label>
             <input
               id="manualDaemon"
@@ -503,7 +535,7 @@ class SettingsCore extends Component {
               <input
                 id="manualDaemonPort"
                 type="text"
-                size="3"
+                size="5"
                 onChange={this.updateManualDaemonPort}
                 data-tooltip="Port configured for manual daemon"
               />

@@ -28,7 +28,11 @@ export default class NetworkGlobe extends Component {
     let geoiplookup = "";
     if (process.env.NODE_ENV === "development") {
       geoiplookup = maxmind.openSync(
-        path.join(configuration.GetAppDataDirectory(), "GeoLite2-City.mmdb")
+        path.join(
+          __dirname,
+          "GeoLite2-City",
+          "GeoLite2-City.mmdb"
+        )
       );
     } else {
       geoiplookup = maxmind.openSync(
@@ -42,13 +46,13 @@ export default class NetworkGlobe extends Component {
     let myIP = "";
     let incomingPillarColor = this.props.pillarColor;
     let incomingArchColor = this.props.archColor;
-    let globeOptions = {
-      colorFn: function(x) {
-        return new THREE.Color(incomingPillarColor);
-      },
-      colorArch: incomingArchColor
-    };
-    glb = new DAT(this.threeRootElement, globeOptions);
+    let globeOptions = 
+    {
+      colorFn: function(x) { return new THREE.Color(incomingPillarColor);},
+      colorArch: incomingArchColor,
+      colorGlobe: this.props.globeColor
+    }
+    glb = new DAT(this.threeRootElement,globeOptions);
     glb.animate();
     Request(
       {
@@ -98,13 +102,23 @@ export default class NetworkGlobe extends Component {
   // Class Methods
   updatePointsOnGlobe() {
     const globeseries = [["peers", []]];
-    const geoiplookup = maxmind.openSync(
-      path.join(
-        configuration.GetAppDataDirectory(),
-        "GeoLite2-City",
-        "GeoLite2-City.mmdb"
+    if (process.env.NODE_ENV === "development") {
+      const geoiplookup = maxmind.openSync(
+        path.join(
+          __dirname,
+          "GeoLite2-City",
+          "GeoLite2-City.mmdb"
+        )
       )
-    );
+    } else {
+      const geoiplookup = maxmind.openSync(
+        path.join(
+          configuration.GetAppDataDirectory(),
+          "GeoLite2-City",
+          "GeoLite2-City.mmdb"
+        )
+      )
+    }
     let myIP = "";
     Request(
       {

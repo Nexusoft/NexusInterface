@@ -36,7 +36,7 @@ const mapStateToProps = state => {
     ...state.common
   };
 };
-const mapDispatchToProps = dispatch => {};
+//const mapDispatchToProps = dispatch => {};
 
 class Settings extends Component {
   // React Method (Life cycle hook)
@@ -166,6 +166,6 @@ class Settings extends Component {
 
 // Mandatory React-Redux method
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
+//  mapDispatchToProps
 )(Settings);

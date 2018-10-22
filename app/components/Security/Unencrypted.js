@@ -111,7 +111,7 @@ class Unencrypted extends Component {
 
     passHint.innerText = "Passwords do not match";
     if (newPass.value.trim()) {
-      if (!/[-$&/*|<>]/.test(newPass.value)) {
+      if (!/[-$/&*|<>]/.test(newPass.value)) {
         if (newPass.value === passChk.value) {
           if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
             RPC.PROMISE("encryptwallet", [newPass.value]).then(payload => {
@@ -122,6 +122,7 @@ class Unencrypted extends Component {
                 this.props.busy(false);
                 this.props.OpenModal("Wallet has been encrypted.");
                 this.props.history.push();
+                // Start the daemon again... give it maybe 5 seconds.
               }
             });
           } else {
@@ -137,7 +138,7 @@ class Unencrypted extends Component {
       } else {
         passChk.value = "";
         passHint.style.visibility = "visible";
-        passHint.innerText = "Passwords cannot contain -$&/*|<>";
+        passHint.innerText = "Passwords cannot contain -$/&*|<>";
         passChk.focus();
       }
     } else {
@@ -153,8 +154,8 @@ class Unencrypted extends Component {
           <form>
             <fieldset>
               <legend>Encrypt Wallet</legend>
-              <div style={{ "margin-top": "26px" }} className="note">
-                Password cannot contain these characters {`-$&/*|<>`}
+              <div style={{ "marginTop": "26px" }} className="note">
+                Password cannot contain these characters {`-$/&*|<>`}
               </div>
               <div className="field">
                 <label>Password:</label>

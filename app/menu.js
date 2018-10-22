@@ -2,6 +2,7 @@ import { app, Menu, shell, BrowserWindow, remote } from "electron";
 
 import * as RPC from "./script/rpc";
 import { callbackify } from "util";
+import { GetSettings, SaveSettings } from "../app/api/settings";
 
 export default class MenuBuilder {
   mainWindow: remote.BrowserWindow;
@@ -65,7 +66,8 @@ export default class MenuBuilder {
               .split(" ")
               .reduce((a, b) => {
                 return a + "_" + b;
-              });
+              })
+              .replace(/:/g, "_");
             let BackupDir = process.env.HOME + "/NexusBackups";
             if (process.platform === "win32") {
               BackupDir = app.getPath("documents") + "/NexusBackups";
@@ -107,7 +109,8 @@ export default class MenuBuilder {
         {
           label: "Close Window Keep Daemon",
           click() {
-            var keepDaemon = true;
+            const keepDaemon = true;
+            log.info(keepDaemon);
             remote.getCurrentWindow().close();
           }
         },
@@ -263,7 +266,8 @@ export default class MenuBuilder {
                 .split(" ")
                 .reduce((a, b) => {
                   return a + "_" + b;
-                });
+                })
+                .replace(/:/g, "_");
               let BackupDir = process.env.HOME + "/NexusBackups";
               if (process.platform === "win32") {
                 BackupDir = process.env.USERPROFILE + "/NexusBackups";
@@ -310,7 +314,11 @@ export default class MenuBuilder {
           {
             label: "Close Window Keep Daemon",
             click() {
-              var keepDaemon = true;
+              let settings = GetSettings();
+              if (settings.keepDaemon !== true) {
+                settings.keepDaemon = true;
+                SaveSettings(settings);
+              }
               remote.getCurrentWindow().close();
             }
           },

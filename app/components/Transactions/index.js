@@ -1,6 +1,6 @@
 /*
   Title: Transactions Module
-  Description: 
+  Description:
   Last Modified by: Brian Smith
 */
 // External Dependencies
@@ -542,7 +542,7 @@ class Transactions extends Component {
         click() {
 
           sendtoSendPagecallback();
-          
+ 
         }
       })
     ); */
@@ -1418,8 +1418,9 @@ class Transactions extends Component {
           <img src={transactionsimg} className="hdr-img" />
           Transactions
         </h2>
-
         <div className="panel">
+        {this.props.connections === undefined ? (<h2>Please wait for the daemon to load</h2>) : (
+          <div>
           <div id="transactions-chart">
             <VictoryChart
               width={this.state.mainChartWidth}
@@ -1575,7 +1576,9 @@ class Transactions extends Component {
               onMouseOverCallback={this.mouseOverCallback.bind(this)}
               onMouseOutCallback={this.mouseOutCallback.bind(this)}
             />
+          </div> 
           </div>
+        )}
         </div>
       </div>
     );

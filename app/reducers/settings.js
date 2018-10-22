@@ -41,6 +41,7 @@ const initialState = {
       pannelBack: "rgba(47, 50, 65, 0.7)",
       globePillarColorRGB: "rgb(0,255,255)",
       globeArchColorRGB: "rgb(0,255,255)",
+      globeMultiColorRGB: "rgb(0,151,228)",
       maxMindCopyright: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
     }
   },
@@ -264,6 +265,7 @@ export default (state = initialState, action) => {
           }
         }
       };
+      break;
     case TYPE.CHANGE_GLOBE_ARCH_COLOR:
       console.log("arch" + action.payload);
       return {
@@ -276,6 +278,19 @@ export default (state = initialState, action) => {
           }
         }
       };
+      break;
+    case TYPE.CHANGE_GLOBE_MULTI_COLOR:
+      return{
+        ...state,
+        settings: {
+          ...state.settings,
+          customStyling:
+          {
+            ...state.settings.customStyling,
+            globeMultiColorRGB: action.payload.hex
+          }
+        }
+      }
     case TYPE.RESET_CUSTOM_STYLING:
       return {
         ...state,
@@ -288,7 +303,10 @@ export default (state = initialState, action) => {
         footerRGB: initialState.footerRGB,
         footerActiveRGB: initialState.footerActiveRGB,
         footerHoverRGB: initialState.footerHoverRGB,
-        iconMenuRGB: initialState.iconMenuRGB
+        iconMenuRGB: initialState.iconMenuRGB,
+        globeArchColorRGB: initialState.globeArchColorRGB,
+        globePillarColorRGB: initialState.globePillarColorRGB,
+        globeMultiColorRGB: initialState.globeMultiColorRGB
       };
       break;
     case TYPE.TOGGLE_GLOBE_RENDER:

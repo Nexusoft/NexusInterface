@@ -22,7 +22,7 @@ import updateicon from "../../images/unlock.png";
 const mapStateToProps = state => {
   return { ...state.overview };
 };
-const mapDispatchToProps = dispatch => {};
+//const mapDispatchToProps = dispatch => {};
 
 class About extends Component {
   // Class Methods
@@ -193,6 +193,6 @@ class About extends Component {
 
 // Mandatory React-Redux method
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
+//  mapDispatchToProps
 )(About);

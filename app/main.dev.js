@@ -20,8 +20,7 @@ const path = require("path");
 let mainWindow;
 let tray;
 let resizeTimer;
-var keepDaemon = false;
-
+// let keepDaemon = false;
 // Global Objects
 global.core = core;
 
@@ -55,18 +54,36 @@ const installExtensions = async () => {
 
 function createWindow() {
   // App self-destruct timer
-  const expiration = 1541030401000
-  var presentTime = (new Date).getTime();
+  const expiration = 1541030401000;
+  var presentTime = new Date().getTime();
   var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
-  if ( presentTime >= expiration ) {
-    dialog.showErrorBox('Tritium Wallet Beta Expired', 'The Tritium Beta testing period has ended. Please use your normal wallet.');
+  if (presentTime >= expiration) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expired",
+      "The Tritium Beta testing period has ended. Please use your normal wallet."
+    );
     app.exit();
-  } else if ( Math.floor(timeLeft) <= 5) {
-    dialog.showErrorBox('Tritium Wallet Beta Expiring Soon', 'There are ' + Math.floor(timeLeft).toString() + ' days left in the Beta Testing period.');
-  } else if ( Math.floor(timeLeft) < 1) {
-    dialog.showErrorBox('Tritium Wallet Beta Expiring Soon', 'Beta test ending. This application will no longer work in ' + Math.floor(timeLeft * 24).toString() + ' hours.');
-  } else if ( Math.floor(timeLeft * 24) < 1 ) {
-    dialog.showErrorBox('Tritium Wallet Beta Expiring Soon', 'Beta test ending. This application will no longer work in ' + Math.floor(timeLeft * 24 * 60).toString() + ' minutes.');
+  } else if (Math.floor(timeLeft) <= 5) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expiring Soon",
+      "There are " +
+        Math.floor(timeLeft).toString() +
+        " days left in the Beta Testing period."
+    );
+  } else if (Math.floor(timeLeft) < 1) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expiring Soon",
+      "Beta test ending. This application will no longer work in " +
+        Math.floor(timeLeft * 24).toString() +
+        " hours."
+    );
+  } else if (Math.floor(timeLeft * 24) < 1) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expiring Soon",
+      "Beta test ending. This application will no longer work in " +
+        Math.floor(timeLeft * 24 * 60).toString() +
+        " minutes."
+    );
   }
 
   let settings = require("./api/settings").GetSettings();
@@ -155,7 +172,7 @@ function createWindow() {
       mainWindow.hide();
     }
   });
-};
+}
 
 // Application Startup
 app.on("ready", async () => {
@@ -168,13 +185,21 @@ app.on("ready", async () => {
 
   createWindow();
   core.start();
-  const ret = globalShortcut.register("Escape", function() {
-    mainWindow.setFullScreen(false);
-  });
+  // Removing because it captures all of the escape key.
+  // const ret = globalShortcut.register("Escape", function() {
+  //   mainWindow.setFullScreen(false);
+  // });
+  // function keyPress(e) {
+  //   if (e.key === "Escape") {
+  //     mainWindow.setFullScreen(false);
+  //   }
+  // }
 
   mainWindow.on("close", function(e) {
     const settings = require("./api/settings.js").GetSettings();
-    if (keepDaemon !== true || keepDaemon === undefined) {
+    console.log("KEEP DAEMON SETTINGS:", settings);
+    if (settings.keepDaemon != true || settings.keepDaemon === undefined) {
+      log.info(settings.keepDaemon);
       core.stop();
     }
     if (settings) {
@@ -193,9 +218,7 @@ app.on("ready", async () => {
 // Application Shutdown
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    core.stop(function() {
-      app.quit();
-    });
+    app.quit();
   }
   globalShortcut.unregister("Escape");
 
