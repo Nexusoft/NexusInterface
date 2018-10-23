@@ -2,6 +2,12 @@ import * as TYPE from "./actiontypes";
 import * as RPC from "../script/rpc";
 import config from "../api/configuration";
 
+export const ImportContact = contact => {
+  return dispatch => {
+    dispatch({ type: TYPE.IMPORT_CONTACT, payload: contact });
+  };
+};
+
 export const OpenModal = content => {
   return dispatch => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: content });

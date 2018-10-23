@@ -1,7 +1,14 @@
+/*
+  Title: Security
+  Description: Render the unlocked security page
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 
+// Internal Dependencies
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
@@ -15,17 +22,23 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   OpenModal: type => dispatch({ type: TYPE.SHOW_MODAL, payload: type }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload })
 });
 
 class Security extends Component {
+  // React Method (Life cycle hook)
+  componentWillUnmount() {
+    this.props.wipe();
+  }
+
+  // Class Methods
   lockWallet() {
-    this.props.busy();
+    this.props.busy(true);
     RPC.PROMISE("walletlock", []).then(payload => {
       this.props.wipe();
-      this.props.busy();
+      this.props.busy(false);
       RPC.PROMISE("getinfo", [])
         .then(payload => {
           delete payload.timestamp;
@@ -36,6 +49,7 @@ class Security extends Component {
         });
     });
   }
+
   showPrivKey(e) {
     e.preventDefault();
     let addressInput = document.getElementById("privKeyAddress");
@@ -133,9 +147,7 @@ class Security extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.props.wipe();
-  }
+  // Mandatory React method
   render() {
     if (!this.props.loggedIn) {
       return (
@@ -183,7 +195,7 @@ class Security extends Component {
               <p>
                 <button
                   style={{ width: "100%", margin: "0" }}
-                  // disabled={this.props.busyFlag}
+                  disabled={this.props.busyFlag}
                   className="button primary"
                   onClick={() => this.changePassword(e)}
                 >
@@ -196,7 +208,7 @@ class Security extends Component {
             style={{ width: "100%", margin: "0" }}
             id="lockWallet"
             className="button primary"
-            // disabled={this.props.busyFlag}
+            disabled={this.props.busyFlag}
             onClick={e => {
               e.preventDefault();
               this.lockWallet();
@@ -220,7 +232,7 @@ class Security extends Component {
                     required
                   />
                   <button
-                    // disabled={this.props.busyFlag}
+                    disabled={this.props.busyFlag}
                     className="button primary"
                     onClick={e => this.showPrivKey(e)}
                   >
@@ -234,7 +246,7 @@ class Security extends Component {
                 <div className="expander">
                   <input type="password" id="privKeyOutput" />
                   <button
-                    // disabled={this.props.busyFlag}
+                    disabled={this.props.busyFlag}
                     className="button"
                     onClick={e => this.copyPrivkey(e)}
                   >
@@ -287,6 +299,8 @@ class Security extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

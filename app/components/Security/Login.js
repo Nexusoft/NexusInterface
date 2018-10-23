@@ -1,64 +1,75 @@
+/*
+  Title: Login Settings
+  Description: Renders the login page.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
-import styles from "./style.css";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
+
+// Internal Dependencies
+import styles from "./style.css";
 import * as TYPE from "../../actions/actiontypes";
 import * as RPC from "../../script/rpc";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.login
   };
 };
-
 const mapDispatchToProps = dispatch => ({
   setDate: date => dispatch({ type: TYPE.SET_DATE, payload: date }),
   setErrorMessage: message =>
     dispatch({ type: TYPE.SET_ERROR_MESSAGE, payload: message }),
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
-  setTime: time => dispatch({ type: TYPE.SET_TIME, payload: time })
+  setTime: time => dispatch({ type: TYPE.SET_TIME, payload: time }),
+  OpenModal: type => {
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  },
+  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL })
 });
 
 class Login extends Component {
   getMinDate() {
     const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
-    let month = tomorrow.getMonth() + 1;
+
+    let month = today.getMonth() + 1;
     if (month < 10) {
       month = "0" + month;
     }
 
-    return `${tomorrow.getFullYear()}-${month}-${tomorrow.getDate()}`;
+    return `${today.getFullYear()}-${month}-${today.getDate()}`;
   }
 
   handleSubmit() {
-    const unlockDate = new Date(this.props.unlockUntillDate);
-
-    const pass = document.getElementById("pass");
-    const today = new Date();
-    let tzcorrection = today.getTimezoneOffset() * 60;
-
-    let hoursAndMin = this.props.unlockUntillTime.split(":").reduce((h, m) => {
-      return parseInt(h) * 60 + parseInt(m);
-    });
-    console.log(hoursAndMin);
-    let unlockUntill = Math.round(
-      tzcorrection +
-        hoursAndMin +
-        (unlockDate.getTime() - today.getTime()) / 1000
+    let today = new Date();
+    let unlockDate = new Date(this.props.unlockUntillDate);
+    unlockDate = new Date(unlockDate.setMinutes(today.getTimezoneOffset()));
+    unlockDate = new Date(
+      unlockDate.setHours(this.props.unlockUntillTime.slice(0, 2))
     );
-    this.props.busy();
+    unlockDate = new Date(
+      unlockDate.setMinutes(this.props.unlockUntillTime.slice(3))
+    );
+    const pass = document.getElementById("pass");
+
+    let unlockUntill = Math.round(
+      (unlockDate.getTime() - today.getTime()) / 1000
+    );
     console.log(unlockUntill);
+    // this.props.busy(true);
+
     // if (this.props.stakingFlag) {
-    //   console.log("stake");
-    //   RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, true])
-    //     .then(payload => {
-    //       this.props.wipe();
+    //
+    //   RPC.PROMISE("walletpassphrase", [pass.value, unSET_TIMElockUntill, true])
+    //     .then(payload => {SET_TIME
+    //       this.props.wipe();SET_TIME
     //       RPC.PROMISE("getinfo", [])
     //         .then(payload => {
     //           delete payload.timestamp;
@@ -81,35 +92,55 @@ class Login extends Component {
     //       }
     //     });
     // } else {
-    //   console.log("no stake");
-    RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, false])
-      .then(payload => {
-        this.props.wipe();
-        RPC.PROMISE("getinfo", [])
-          .then(payload => {
-            delete payload.timestamp;
-            return payload;
-          })
-          .then(payload => {
-            // this.props.busy();
-            this.props.getInfo(payload);
-          });
-      })
-      .catch(e => {
-        if (
-          e.error.message ===
-          "Error: The wallet passphrase entered was incorrect."
-        ) {
-          let message = e.error.message.replace("Error: ", "");
-          this.props.setErrorMessage(message);
+
+    if (unlockUntill !== NaN && unlockUntill > 3600) {
+      console.log("unlocked");
+      RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, false])
+        .then(payload => {
+          this.props.wipe();
+          RPC.PROMISE("getinfo", [])
+            .then(payload => {
+              delete payload.timestamp;
+              return payload;
+            })
+            .then(payload => {
+              this.props.busy(false);
+              this.props.getInfo(payload);
+            });
+        })
+        .catch(e => {
           pass.value = "";
-          pass.focus();
-        }
-      });
+          if (
+            e.error.message ===
+            "Error: The wallet passphrase entered was incorrect."
+          ) {
+            this.props.busy(false);
+            this.props.OpenModal("Incorrect Passsword");
+            pass.focus();
+          } else if (e.error.message === "value is type null, expected int") {
+            this.props.busy(false);
+            this.props.OpenModal("FutureDate");
+            pass.focus();
+          }
+        });
+    } else {
+      this.props.OpenModal("FutureDate");
+      setTimeout(() => {
+        this.props.CloseModal();
+      }, 3000);
+    }
     // }
   }
+  setUnlockDate(input) {
+    let today = new Date();
+    let inputDate = new Date(input);
+    inputDate = new Date(inputDate.setMinutes(today.getTimezoneOffset()));
+    this.props.setDate(input);
+  }
 
+  // Mandatory React method
   render() {
+    console.log(this.props);
     if (this.props.loggedIn) {
       return (
         <Redirect to={this.props.match.path.replace("/Login", "/Security")} />
@@ -121,25 +152,25 @@ class Login extends Component {
           <fieldset>
             <legend>Login</legend>
             <div className="field">
-              <label>Unlock Untill:</label>
+              <label>Unlock Until Date:</label>
               <input
                 type="date"
                 min={this.getMinDate()}
                 value={this.props.unlockUntillDate}
-                onChange={e => this.props.setDate(e.target.value)}
+                onChange={e => this.setUnlockDate(e.target.value)}
                 required
-                style={{ width: "100%" }}
               />
-              <span className="hint">Unlock untill date is required.</span>
+              <span className="hint">Unlock until date is required.</span>
             </div>
             <div className="field">
+              <label>Unlock Until Time:</label>
               <input
                 type="time"
                 value={this.props.unlockUntillTime}
                 onChange={e => this.props.setTime(e.target.value)}
                 required
-                style={{ width: "100%" }}
               />
+              <span className="hint">Unlock until time is required.</span>
             </div>
             <div className="field">
               <label>Password:</label>
@@ -148,8 +179,8 @@ class Login extends Component {
                 placeholder="Password"
                 id="pass"
                 required
+                style={{ width: "100%" }}
               />
-              <span className="hint">{this.props.errorMessage}</span>
             </div>
 
             {/* STAKING FLAG STUFF  TURNED OFF UNTILL WE HAVE A FLAG COMING BACK FROM THE DAEMON TELLING US THAT ITS UNLOCKED FOR STAKING ONLY */}
@@ -181,6 +212,7 @@ class Login extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

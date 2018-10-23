@@ -1,29 +1,41 @@
+/*
+Title: Fast Exchange Page
+Description: Handle fast transactions for the exchange module
+Last Modified by: Brian Smith
+*/
+
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { remote } from "electron";
 import Request from "request";
 import { bindActionCreators } from "redux";
 import { Squares } from "react-activity";
+
+// Internal Dependencies
 import { FormattedMessage } from "react-intl";
 import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
+import * as actionsCreators from "../../actions/exchangeActionCreators";
 import styles from "./style.css";
 
+// Images
 import arrow from "../../images/arrow.svg";
-import * as actionsCreators from "../../actions/exchangeActionCreators";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.common, ...state.exchange };
 };
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Fast extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.props.GetAvailaleCoins();
   }
 
+  // React Method (Life cycle hook)
   componentDidUpdate(prevProps) {
     let pair = this.props.from + "_" + this.props.to;
     if (
@@ -49,6 +61,7 @@ class Fast extends Component {
     }
   }
 
+  // Class methods
   transferCalculator() {
     let tradeAmmt = parseFloat(this.props.ammount);
     if (tradeAmmt > this.props.marketPairData.minimum) {
@@ -86,8 +99,9 @@ class Fast extends Component {
     if (
       this.props.to &&
       this.props.from &&
-      this.props.from !== this.props.to &&
-      !this.props.busyFlag
+      this.props.from !== this.props.to
+      //  &&
+      // !this.props.busyFlag
     ) {
       if (this.props.availablePair) {
         return (
@@ -175,11 +189,13 @@ class Fast extends Component {
 
   optionbuilder() {
     return Object.values(this.props.availableCoins).map(e => {
-      return (
-        <option key={e.symbol} value={e.symbol}>
-          {e.name}
-        </option>
-      );
+      if (e.status === "available") {
+        return (
+          <option key={e.symbol} value={e.symbol}>
+            {e.name}
+          </option>
+        );
+      } else return null;
     });
   }
 
@@ -208,6 +224,7 @@ class Fast extends Component {
       return null;
     }
   }
+
   toFromHandler(e, switcher) {
     if (switcher === "to") {
       if (e.target.value !== this.props.from) {
@@ -228,7 +245,12 @@ class Fast extends Component {
 
   executeTrade() {
     // if (this.props.loggedIn && this.props.from === "NXS") {
-
+      this.props.googleanalytics.SendEvent(
+        "Shapeshift",
+        "Fast",
+        "Sent",
+        1
+      );
     if (this.props.withinBounds) {
       let pair = this.props.from + "_" + this.props.to;
       if (this.props.toAddress !== "") {
@@ -279,6 +301,7 @@ class Fast extends Component {
     // } else alert("Please unlock your wallet");
   }
 
+  // Mandatory React method
   render() {
     return (
       <div id="ExchngeContainer">
@@ -393,6 +416,8 @@ class Fast extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

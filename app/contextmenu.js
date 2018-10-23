@@ -10,41 +10,35 @@ export default class ContextMenuBuilder {
   }
 
   ReturnDefaultContextMenu() {
-    const template = [
+    return [
       {
         label: "Copy",
-        ccelerator: "CmdOrCtrl+C",
+        accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
         label: "Paste",
-        ccelerator: "CmdOrCtrl+V",
+        accelerator: "CmdOrCtrl+V",
         role: "paste"
-      },
-      { type: "separator" },
-
-      {
-        label: "Reload",
-        accelerator: "CmdOrCtrl+R",
-        click(item, focusedWindow) {
-          if (focusedWindow) focusedWindow.reload();
-        }
-      },
-      {
-        label: "About",
-        accelerator: "CmdOrCtrl+Y",
-        click(item, focusedWindow) {
-          focusedWindow.loadURL("/About");
-          //history.push('/About');
-        }
-      },
-
-      {
-        label: "Quit",
-        accelerator: "alt+f4",
-        role: "close"
       }
+      // ,
+      // { type: "separator" },
+
+      //{
+      //label: "Reload",
+      //accelerator: "CmdOrCtrl+R",
+      //click(item, focusedWindow) {
+      //if (focusedWindow) focusedWindow.reload();
+      //}
+      //},
+      // {
+      //   label: "About",
+      //   accelerator: "CmdOrCtrl+Y",
+      //   click(item, focusedWindow) {
+      //     focusedWindow.loadURL("/About");
+      //     //history.push('/About');
+      //   }
+      // }
     ];
-    return template;
   }
 }

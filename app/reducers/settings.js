@@ -1,16 +1,33 @@
 import * as TYPE from "../actions/actiontypes";
+import configuration from "../api/configuration";
+const path = require("path");
+let defaultWallpaperPath = "";
+if (process.env.NODE_ENV === "development") {
+  defaultWallpaperPath = "./images/background/starrynight.jpg";
+} else {
+  defaultWallpaperPath = path.join(
+    configuration.GetAppResourceDir(),
+    "images",
+    "background",
+    "starrynight.jpg"
+  );
+  if (process.platform === "win32") {
+    defaultWallpaperPath = defaultWallpaperPath.replace(/\\/g, "/");
+  }
+}
 
 const initialState = {
   settings: {
-    manualDaemon: true,
+    manualDaemon: false,
     acceptedagreement: false,
     experimentalWarning: true,
     windowWidth: 1600,
     windowHeight: 1388,
 
     devMode: false,
-    wallpaper: "./images/background/starrynight.jpeg",
+    wallpaper: defaultWallpaperPath,
     renderGlobe: true,
+    fiatCurrency: "USD",
     customStyling: {
       MC1: "#111111",
       MC2: "#0ca4fb",
@@ -23,6 +40,9 @@ const initialState = {
       footerHover: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
       footerActive: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
       pannelBack: "rgba(47, 50, 65, 0.7)",
+      globePillarColorRGB: "rgb(0,255,255)",
+      globeArchColorRGB: "rgb(0,255,255)",
+      globeMultiColorRGB: "rgb(0,151,228)",
       maxMindCopyright: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
     }
   },
@@ -234,6 +254,44 @@ export default (state = initialState, action) => {
         },
         iconMenuRGB: action.payload.hex
       };
+    case TYPE.CHANGE_GLOBE_PILLAR_COLOR:
+      console.log(action.payload);
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          customStyling: {
+            ...state.settings.customStyling,
+            globePillarColorRGB: action.payload.hex
+          }
+        }
+      };
+      break;
+    case TYPE.CHANGE_GLOBE_ARCH_COLOR:
+      console.log("arch" + action.payload);
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          customStyling: {
+            ...state.settings.customStyling,
+            globeArchColorRGB: action.payload.hex
+          }
+        }
+      };
+      break;
+    case TYPE.CHANGE_GLOBE_MULTI_COLOR:
+      return{
+        ...state,
+        settings: {
+          ...state.settings,
+          customStyling:
+          {
+            ...state.settings.customStyling,
+            globeMultiColorRGB: action.payload.hex
+          }
+        }
+      }
     case TYPE.RESET_CUSTOM_STYLING:
       return {
         ...state,
@@ -246,7 +304,10 @@ export default (state = initialState, action) => {
         footerRGB: initialState.footerRGB,
         footerActiveRGB: initialState.footerActiveRGB,
         footerHoverRGB: initialState.footerHoverRGB,
-        iconMenuRGB: initialState.iconMenuRGB
+        iconMenuRGB: initialState.iconMenuRGB,
+        globeArchColorRGB: initialState.globeArchColorRGB,
+        globePillarColorRGB: initialState.globePillarColorRGB,
+        globeMultiColorRGB: initialState.globeMultiColorRGB
       };
       break;
     case TYPE.TOGGLE_GLOBE_RENDER:
@@ -262,6 +323,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         styleChangeFlag: false
+      };
+      break;
+    case TYPE.SET_FIAT_CURRENCY:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          fiatCurrency: action.payload
+        }
       };
       break;
     default:

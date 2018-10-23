@@ -1,7 +1,16 @@
+/*
+  Title: Settings Module
+  Description: 
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { Route, Redirect } from "react-router";
 import { connect } from "react-redux";
+import { remote } from "electron";
+
+// Internal Dependencies
 import { FormattedMessage } from "react-intl";
 import styles from "./style.css";
 import SettingsApp from "./SettingsApp";
@@ -12,11 +21,9 @@ import Security from "../Security/Security";
 import Login from "../Security/Login";
 import Unencrypted from "../Security/Unencrypted";
 import * as RPC from "../../script/rpc";
-
 import ContextMenuBuilder from "../../contextmenu";
-import { remote } from "electron";
 
-// import images here
+// Images
 import settingsimg from "../../images/settings.svg";
 import coreImg from "../../images/core.svg";
 import logoImg from "../../images/logo.svg";
@@ -24,25 +31,27 @@ import lockImg from "../../images/lock-minting.svg";
 import marketImg from "../../images/marketstats.svg";
 import styleImg from "../../images/developer.svg";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.intl
   };
 };
-
-const mapDispatchToProps = dispatch => ({});
+//const mapDispatchToProps = dispatch => {};
 
 class Settings extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.props.googleanalytics.SendScreen("Settings");
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  // Class Methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -51,6 +60,7 @@ class Settings extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  // Mandatory React method
   render() {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
@@ -170,7 +180,9 @@ class Settings extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
+//  mapDispatchToProps
 )(Settings);

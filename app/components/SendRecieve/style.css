@@ -1,3 +1,7 @@
+textarea {
+  resize: vertical;
+}
+
 #sendrecieve {
   position: relative;
   height: 100%;
@@ -14,6 +18,7 @@
   overflow-y: auto;
   padding-left: 50px;
 }
+
 #container {
   display: flex;
   flex-wrap: wrap;
@@ -30,10 +35,6 @@
   display: flex;
   justify-content: center;
   flex-direction: row;
-
-  /* width: 100%;
-  max-width: 100%;
-  min-width: 50%; */
 }
 .foot {
   float: right;
@@ -43,16 +44,6 @@
   float: right;
   width: auto;
 }
-/* .tbody {
-  line-height: 1em;
-  color: white;
-  display: block;
-} */
-/* .table {
-  border-spacing: 0;
-  border-collapse: collapse;
-  width: 100%;
-} */
 
 #left-buttons {
   padding-top: 10px;
@@ -142,13 +133,11 @@
   background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
   height: 29px;
   overflow: hidden;
-  width: 240px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   background-color: var(--color-3);
-
-  width: 350px;
+  width: 280px;
   color: var(--color-5);
   margin-bottom: -15px;
 }
@@ -208,17 +197,17 @@
 }
 .lookupButton {
   margin-left: 8px;
-  color: var(--color-5);
-  background-color: transparent;
+
   height: 30px;
   width: 30px;
-  border-color: var(--color-2);
+  filter: var(--icon-menu);
   border-radius: 100px;
 }
 /* AddressModal */
 .custom-overlay3 {
   padding: 0px;
   position: absolute;
+  overflow: hidden;
 }
 .custom-modal3 {
   background: #282828;
@@ -309,4 +298,46 @@
 }
 .dt:hover {
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.24), 0 0 5px 5px rgba(0, 0, 0, 0.19);
+}
+
+a.impexp {
+  font-family: var(--mono-font-family);
+  font-size: 0.875em;
+  opacity: 0.75;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.impexpblock {
+  display: inline-block;
+  position: absolute;
+  top: 4em;
+  right: 0;
+  font-family: var(--mono-font-family);
+  font-size: 0.875em;
+  opacity: 0.75;
+  color: #fff;
+  cursor: pointer;
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
 }

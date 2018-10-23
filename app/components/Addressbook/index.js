@@ -1,24 +1,38 @@
+/* 
+  Title: Addressbook
+  Description: This is where you manage your Nexus addresses 
+  for your own wallet and the outside world. You can import 
+  and export your addressbook here, add labels to addresses 
+  as well as store important inforamtion about each of your 
+  contacts.
+  Last Modified by: Brian Smith
+*/
+
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { remote } from "electron";
 import { Link } from "react-router-dom";
 import Modal from "react-responsive-modal";
+import csv from "csvtojson";
+import { callbackify } from "util";
+
+// Internal Dependencies
 import config from "../../api/configuration";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/addressbookActionCreators";
 import TimeZoneSelector from "./timeZoneSelector";
-
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
-import profilePlaceholder from "images/Profile_Placeholder.png";
-import { callbackify } from "util";
 
-// import images here
+// Images
+import profilePlaceholder from "images/Profile_Placeholder.png";
 import addressbookimg from "../../images/addressbook.svg";
 import { FormattedMessage } from "react-intl";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -26,33 +40,44 @@ const mapStateToProps = state => {
     ...state.sendReceive,
     ...state.intl
   };
+    ...state.overview,
 };
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Addressbook extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.loadMyAccounts();
     this.addressbookContextMenu = this.addressbookContextMenu.bind(this);
     window.addEventListener("contextmenu", this.addressbookContextMenu, false);
     this.props.googleanalytics.SendScreen("AddressBook");
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.addressbookContextMenu);
   }
+  // React Method (Life cycle hook)
+  componentDidUpdate(previousprops) {
+    if (this.props.save) {
+      config.WriteJson("addressbook.json", {
+        addressbook: this.props.addressbook
+      });
+      this.props.ToggleSaveFlag();
+    }
+  }
 
+  // Class methods
   addressbookContextMenu() {
     const txtTemplate = [
       {
         label: "Copy",
-        ccelerator: "CmdOrCtrl+C",
+        accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
         label: "Paste",
-        ccelerator: "CmdOrCtrl+V",
+        accelerator: "CmdOrCtrl+V",
         role: "paste"
       }
     ];
@@ -60,12 +85,12 @@ class Addressbook extends Component {
     const acctTemplate = [
       {
         label: "Copy",
-        ccelerator: "CmdOrCtrl+C",
+        accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
         label: "Paste",
-        ccelerator: "CmdOrCtrl+V",
+        accelerator: "CmdOrCtrl+V",
         role: "paste"
       },
       {
@@ -91,12 +116,12 @@ class Addressbook extends Component {
     const addTemplate = [
       {
         label: "Copy",
-        ccelerator: "CmdOrCtrl+C",
+        accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
         label: "Paste",
-        ccelerator: "CmdOrCtrl+V",
+        accelerator: "CmdOrCtrl+V",
         role: "paste"
       },
       {
@@ -185,15 +210,6 @@ class Addressbook extends Component {
     });
   }
 
-  componentDidUpdate(previousprops) {
-    if (this.props.save) {
-      config.WriteJson("addressbook.json", {
-        addressbook: this.props.addressbook
-      });
-      this.props.ToggleSaveFlag();
-    }
-  }
-
   getinitial(name) {
     if (name && name.length >= 1) return name.charAt(0);
     return "M";
@@ -203,7 +219,7 @@ class Addressbook extends Component {
     event.preventDefault();
     let target = event.currentTarget;
     let address = event.target.innerText;
-
+    console.log(target, address);
     // create a temporary input element and add it to the list item (no one will see it)
     let input = document.createElement("input");
     input.type = "text";
@@ -227,6 +243,7 @@ class Addressbook extends Component {
       }
     }, 3000);
   }
+
   MyAddressesTable() {
     let filteredAddress = this.props.myAccounts.filter(acct => {
       if (acct.account === "") {
@@ -237,7 +254,6 @@ class Addressbook extends Component {
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
         );
       } else {
-        console.log(acct);
         return (
           acct.account
             .toLowerCase()
@@ -433,6 +449,7 @@ class Addressbook extends Component {
         );
         break;
       case "MY_ADDRESSES":
+        if (this.props.myAccounts.length > 0) {
         return (
           <div id="Addresstable-wraper">
             <h2 className="m1">
@@ -479,6 +496,7 @@ class Addressbook extends Component {
             </button>
           </div>
         );
+        } else return <h2>Please wait for Daemon to respond.</h2>;
         break;
       case "ADD_ADDRESS":
         return (
@@ -634,11 +652,10 @@ class Addressbook extends Component {
           .toLowerCase()
           .indexOf(this.props.contactSearch.toLowerCase()) !== -1
       ) {
-        console.log(contact.name);
         return `${contact.name}`;
       }
     });
-    console.log(filteredAddress);
+
     if (this.props.addressbook[0]) {
       return (
         <div
@@ -709,9 +726,11 @@ class Addressbook extends Component {
   localTimeFormater() {
     let d = new Date();
     let utc = new Date().getTimezoneOffset();
+    console.log(parseInt(this.props.addressbook[this.props.selected].timezone));
     d.setMinutes(d.getMinutes() + utc);
     d.setMinutes(
-      d.getMinutes() + this.props.addressbook[this.props.selected].timezone
+      d.getMinutes() +
+        parseInt(this.props.addressbook[this.props.selected].timezone)
     );
 
     let h = d.getHours();
@@ -923,152 +942,155 @@ class Addressbook extends Component {
   }
 
   exportAddressBook() {
+    this.props.googleanalytics.SendEvent(
+      "AddressBook",
+      "IOAddress",
+      "Export",
+      1
+    );
+
     const rows = []; //Set up a blank array for each row
     let csvContent = "data:text/csv;charset=utf-8,"; //Set formating
     //This is so we can have named columns in the export, this will be row 1
     let NameEntry = [
-      "Account Name",
-      "Label",
-      "Address",
-      "Phone Number",
-      "Time Zone",
-      "Notes"
+      "AccountName", //a
+      "PhoneNumber", //b
+      "TimeZone", //c
+      "Notes" //d
     ];
-    rows.push(NameEntry);
+    rows.push(NameEntry); //how we get our header line
     this.props.addressbook.map(e => {
       let tempentry = [];
       tempentry.push(e.name);
-      tempentry.push("");
-      tempentry.push("");
       tempentry.push(e.phoneNumber);
 
-      let timezone = "";
-      switch (e.timezone) {
-        case 840:
-          timezone = "Line Islands";
-          break;
-        case 780:
-          timezone = "Apia";
-          break;
-        case 765:
-          timezone = "Chatham Islands";
-          break;
-        case 720:
-          timezone = "Auckland";
-          break;
-        case 660:
-          timezone = "Noumea";
-          break;
-        case 630:
-          timezone = "Lord Howe Island";
-          break;
-        case 600:
-          timezone = "Port Moresby";
-          break;
-        case 570:
-          timezone = "Adelaide";
-          break;
-        case 540:
-          timezone = "Tokyo";
-          break;
-        case 525:
-          timezone = "Eucla";
-          break;
-        case 510:
-          timezone = "Pyongyang";
-          break;
-        case 480:
-          timezone = "Beijing";
-          break;
-        case 420:
-          timezone = "Bangkok";
-          break;
-        case 390:
-          timezone = "Yangon";
-          break;
-        case 360:
-          timezone = "Almaty";
-          break;
-        case 345:
-          timezone = "Kathmandu";
-          break;
-        case 330:
-          timezone = "Delhi";
-          break;
-        case 300:
-          timezone = "Karachi";
-          break;
-        case 270:
-          timezone = "Kabul";
-          break;
-        case 240:
-          timezone = "Dubai";
-          break;
-        case 210:
-          timezone = "Tehran";
-          break;
-        case 180:
-          timezone = "Moscow";
-          break;
-        case 120:
-          timezone = "Athens";
-          break;
-        case 60:
-          timezone = "Berlin";
-          break;
-        case 0:
-          timezone = "London";
-          break;
-        case -60:
-          timezone = "Cabo Verde";
-          break;
-        case -120:
-          timezone = "Fernando de Noronha";
-          break;
-        case -180:
-          timezone = "Buenos Aires";
-          break;
-        case -210:
-          timezone = "Newfoundland";
-          break;
-        case -240:
-          timezone = "Santiago";
-          break;
-        case -300:
-          timezone = "New York";
-          break;
-        case -360:
-          timezone = "Chicago";
-          break;
-        case -420:
-          timezone = "Phoenix";
-          break;
-        case -480:
-          timezone = "Los Angeles";
-          break;
-        case -540:
-          timezone = "Anchorage";
-          break;
-        case -570:
-          timezone = "Marquesas Islands";
-          break;
-        case -600:
-          timezone = "Papeete";
-          break;
-        case -660:
-          timezone = "Niue";
-          break;
-        case -720:
-          timezone = "Baker Island";
-          break;
+      // let timezone = "";
+      // switch (e.timezone) {
+      //   case 840:
+      //     timezone = "Line Islands";
+      //     break;
+      //   case 780:
+      //     timezone = "Apia";
+      //     break;
+      //   case 765:
+      //     timezone = "Chatham Islands";
+      //     break;
+      //   case 720:
+      //     timezone = "Auckland";
+      //     break;
+      //   case 660:
+      //     timezone = "Noumea";
+      //     break;
+      //   case 630:
+      //     timezone = "Lord Howe Island";
+      //     break;
+      //   case 600:
+      //     timezone = "Port Moresby";
+      //     break;
+      //   case 570:
+      //     timezone = "Adelaide";
+      //     break;
+      //   case 540:
+      //     timezone = "Tokyo";
+      //     break;
+      //   case 525:
+      //     timezone = "Eucla";
+      //     break;
+      //   case 510:
+      //     timezone = "Pyongyang";
+      //     break;
+      //   case 480:
+      //     timezone = "Beijing";
+      //     break;
+      //   case 420:
+      //     timezone = "Bangkok";
+      //     break;
+      //   case 390:
+      //     timezone = "Yangon";
+      //     break;
+      //   case 360:
+      //     timezone = "Almaty";
+      //     break;
+      //   case 345:
+      //     timezone = "Kathmandu";
+      //     break;
+      //   case 330:
+      //     timezone = "Delhi";
+      //     break;
+      //   case 300:
+      //     timezone = "Karachi";
+      //     break;
+      //   case 270:
+      //     timezone = "Kabul";
+      //     break;
+      //   case 240:
+      //     timezone = "Dubai";
+      //     break;
+      //   case 210:
+      //     timezone = "Tehran";
+      //     break;
+      //   case 180:
+      //     timezone = "Moscow";
+      //     break;
+      //   case 120:
+      //     timezone = "Athens";
+      //     break;
+      //   case 60:
+      //     timezone = "Berlin";
+      //     break;
+      //   case 0:
+      //     timezone = "London";
+      //     break;
+      //   case -60:
+      //     timezone = "Cabo Verde";
+      //     break;
+      //   case -120:
+      //     timezone = "Fernando de Noronha";
+      //     break;
+      //   case -180:
+      //     timezone = "Buenos Aires";
+      //     break;
+      //   case -210:
+      //     timezone = "Newfoundland";
+      //     break;
+      //   case -240:
+      //     timezone = "Santiago";
+      //     break;
+      //   case -300:
+      //     timezone = "New York";
+      //     break;
+      //   case -360:
+      //     timezone = "Chicago";
+      //     break;
+      //   case -420:
+      //     timezone = "Phoenix";
+      //     break;
+      //   case -480:
+      //     timezone = "Los Angeles";
+      //     break;
+      //   case -540:
+      //     timezone = "Anchorage";
+      //     break;
+      //   case -570:
+      //     timezone = "Marquesas Islands";
+      //     break;
+      //   case -600:
+      //     timezone = "Papeete";
+      //     break;
+      //   case -660:
+      //     timezone = "Niue";
+      //     break;
+      //   case -720:
+      //     timezone = "Baker Island";
+      //     break;
 
-        default:
-          timezone = "blank";
-          break;
-      }
-      tempentry.push(timezone);
+      //   default:
+      //     timezone = "blank";
+      //     break;
+      // }
+      tempentry.push(e.timezone);
       tempentry.push(e.notes);
-      rows.push(tempentry);
+      // rows.push(tempentry); // moving down.
       let tempMine = [];
 
       let tempNotMine = [];
@@ -1080,10 +1102,11 @@ class Addressbook extends Component {
           } else {
             label = add.label;
           }
-          tempMine.push(["", label, add.address, "", ""]);
+          tempMine.push([label, add.address]);
         });
-        rows.push(["", `My addresses for ${e.name}`, "", "", ""]);
-        rows.push(tempMine);
+        // rows.push(["", `My addresses for ${e.name}`, "", "", ""]);
+        // rows.push(tempMine);
+        tempentry.push(tempMine);
       }
       if (e.notMine.length > 0) {
         e.notMine.map(add => {
@@ -1094,12 +1117,15 @@ class Addressbook extends Component {
           } else {
             label = add.label;
           }
-          tempNotMine.push(["", label, add.address, "", ""]);
+          tempNotMine.push([label, add.address]);
         });
-        rows.push(["", `${e.name}'s addresses`, "", "", ""]);
-        rows.push(tempNotMine);
+        // rows.push(["", `${e.name}'s addresses`, "", "", ""]);
+        // rows.push(tempNotMine);
+        tempentry.push(tempNotMine);
       }
+      rows.push(tempentry);
     });
+
     rows.forEach(function(rowArray) {
       let row = rowArray.join(",");
       csvContent += row + "\r\n";
@@ -1110,11 +1136,59 @@ class Addressbook extends Component {
     link.setAttribute("download", "nexus-addressbook.csv"); //give link an action and a default name for the file. MUST BE .csv
 
     document.body.appendChild(link); // Required for FF
-
+    this.props.OpenModal("Contacts Exported");
+    setTimeout(() => {
+      this.props.CloseModal();
+    }, 3000);
     link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
     document.body.removeChild(link);
   }
 
+  importAddressBook(path) {
+    this.props.googleanalytics.SendEvent(
+      "AddressBook",
+      "IOAddress",
+      "Import",
+      1
+    );
+    console.log("you got it again: ", path);
+    csv()
+      .fromFile(path)
+      .then(jsonObj => {
+        // console.log(jsonObj);
+        for (var i = 0; i < jsonObj.length; i++) {
+          console.log(jsonObj[i]);
+          // dispatch a new account... (map it )
+          var name = jsonObj[i].AccountName;
+          var phone = jsonObj[i].PhoneNumber;
+          var notes = jsonObj[i].Notes;
+          var tz = jsonObj[i].TimeZone;
+          var label;
+          var address;
+          for (var k in jsonObj[i]) {
+            var key = k;
+            var val = jsonObj[i][k];
+
+            if (key.includes("field")) {
+              var num = key.slice(5, key.length);
+              if (num % 2 == 1) {
+                label = val;
+              } else {
+                address = val;
+                // (name, address, num, notes, TZ)
+                this.props.AddContact(name, address, phone, notes, tz);
+                // so here is where we have unique address label pairs, we should add this now.
+                // also we don't really know how they had things labeled so we should check to see if they are ours or not.
+                label = "";
+                address = "";
+              }
+            }
+          }
+        }
+      });
+  }
+
+  // Mandatory React method
   render() {
     return (
       <div id="addressbook" className="animated fadeIn">
@@ -1134,240 +1208,226 @@ class Addressbook extends Component {
             defaultMessage="Address Book"
           />
         </h2>
-        <a className="refresh" onClick={() => this.exportAddressBook()}>
-          <FormattedMessage
-            id="AddressBook.Export"
-            defaultMessage="Export Contacts"
-          />
-        </a>
-        <div className="panel">
-          <div id="addressbook-controls">
-            <div id="addressbook-search">
-              <FormattedMessage
-                id="AddressBook.searchC"
-                defaultMessage="Search Contact"
-              >
-                {searchContact => (
-                  <input
-                    className="searchaccount"
-                    type="text"
-                    placeholder={searchContact}
-                    value={this.props.contactSearch}
-                    onChange={e => this.props.ContactSearch(e.target.value)}
-                    required
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-
-            <button
-              className="button ghost"
-              onClick={() => {
-                this.props.clearSearch();
-                this.showMyAddresses();
-              }}
-            >
-              <FormattedMessage
-                id="AddressBook.MyAddresses"
-                defaultMessage="My Addresses"
-              />
-            </button>
-            <button
-              className="button primary"
-              onClick={() => this.showAddContactModal()}
-            >
-              <FormattedMessage
-                id="AddressBook.addContact"
-                defaultMessage="Add Contact"
-              />
-            </button>
+        {this.props.connections === undefined ? null : (
+          <div className="impexpblock">
+            <a className="impexp" onClick={() => this.exportAddressBook()}>
+              Export Contacts
+            </a>
+            <label htmlFor="importAddressbook">
+              <a className="impexp">Import Contacts</a>
+            </label>
+            <input
+              name="importAddressbook"
+              id="importAddressbook"
+              type="file"
+              onChange={e => this.importAddressBook(e.target.files[0].path)}
+            />
           </div>
-          {this.props.addressbook.length > 0 ? (
-            <div id="addressbookContent">
-              <div id="contactListContainer">{this.contactLister()}</div>
-              {this.props.addressbook[this.props.selected].mine && (
-                <div id="contactDetailContainer">
-                  <fieldset id="contactDetails">
-                    <legend>
-                      {this.props.editName === true ? (
-                        <FormattedMessage
-                          id="AddressBook.Name"
-                          defaultMessage="Name"
-                        >
-                          {n => (
-                            <input
-                              ref="addContactName"
-                              id="new-account-name"
-                              type="text"
-                              value={this.props.prototypeName}
-                              onChange={e =>
-                                this.props.EditProtoName(e.target.value)
-                              }
-                              onKeyDown={e => {
-                                if (e.which === 13 || e.which === 9) {
-                                  this.props.SaveName(
-                                    this.props.selected,
-                                    this.props.prototypeName
-                                  );
-                                }
-                              }}
-                              placeholder={n}
-                              onDoubleClick={() =>
+        )}
+
+        {this.props.connections === undefined ? (
+          <div className="panel">
+            {" "}
+            <h2>Please wait for the daemon to load</h2>
+          </div>
+        ) : (
+          <div className="panel">
+            <div id="addressbook-controls">
+              <div id="addressbook-search">
+                <input
+                  className="searchaccount"
+                  type="text"
+                  placeholder="Search Contact"
+                  value={this.props.contactSearch}
+                  onChange={e => this.props.ContactSearch(e.target.value)}
+                  required
+                />
+              </div>
+
+              <button
+                className="button ghost"
+                onClick={() => {
+                  this.props.clearSearch();
+                  this.loadMyAccounts();
+                  this.showMyAddresses();
+                }}
+              >
+                My Addresses
+              </button>
+              <button
+                className="button primary"
+                onClick={() => this.showAddContactModal()}
+              >
+                Add Contact
+              </button>
+            </div>
+            {this.props.addressbook.length > 0 ? (
+              <div id="addressbookContent">
+                <div id="contactListContainer">{this.contactLister()}</div>
+                {this.props.addressbook[this.props.selected].mine && (
+                  <div id="contactDetailContainer">
+                    <fieldset id="contactDetails">
+                      <legend>
+                        {this.props.editName === true ? (
+                          <input
+                            ref="addContactName"
+                            id="new-account-name"
+                            type="text"
+                            value={this.props.prototypeName}
+                            onChange={e =>
+                              this.props.EditProtoName(e.target.value)
+                            }
+                            onKeyDown={e => {
+                              if (e.which === 13 || e.which === 9) {
                                 this.props.SaveName(
                                   this.props.selected,
                                   this.props.prototypeName
-                                )
+                                );
                               }
-                            />
-                          )}
-                        </FormattedMessage>
-                      ) : (
-                        <span
-                          onDoubleClick={() =>
-                            this.props.NameToggler(
-                              this.props.addressbook[this.props.selected].name
-                            )
-                          }
-                        >
-                          {this.props.addressbook[this.props.selected].name}
-                        </span>
-                      )}{" "}
-                      <div className="tooltip">
-                        <FormattedMessage
-                          id="AddressBook.ClickToEdit"
-                          defaultMessage="Doubleclick To Edit"
-                        />
-                      </div>
-                    </legend>
-                    <div id="contactInformation">
-                      <div>
-                        <div>
-                          {" "}
-                          <label
+                            }}
+                            placeholder="Name"
                             onDoubleClick={() =>
-                              this.props.PhoneToggler(
-                                this.props.addressbook[this.props.selected]
-                                  .phoneNumber
+                              this.props.SaveName(
+                                this.props.selected,
+                                this.props.prototypeName
                               )
                             }
-                            htmlFor="phoneNumber"
+                          />
+                        ) : (
+                          <span
+                            onDoubleClick={() =>
+                              this.props.NameToggler(
+                                this.props.addressbook[this.props.selected].name
+                              )
+                            }
                           >
-                            <FormattedMessage
-                              id="AddressBook.PhoneNumber"
-                              defaultMessage="Phone Number"
-                            />
-                            :
-                          </label>
-                          {this.props.editPhone === true ? (
-                            <FormattedMessage
-                              id="AddressBook.Phone"
-                              defaultMessage="Phone#"
-                            >
-                              {phoneNum => (
-                                <input
-                                  id="phoneNumber"
-                                  name="phoneNumber"
-                                  type="tel"
-                                  onChange={e =>
-                                    this.phoneNumberHandler(e.target.value)
-                                  }
-                                  onKeyDown={e => {
-                                    if (e.which === 13 || e.which === 9) {
-                                      this.props.SavePhone(
-                                        this.props.selected,
-                                        this.props.prototypePhoneNumber
-                                      );
-                                    }
-                                  }}
-                                  value={this.props.prototypePhoneNumber}
-                                  placeholder={phoneNum}
-                                  onDoubleClick={() =>
-                                    this.props.SavePhone(
-                                      this.props.selected,
-                                      this.props.prototypePhoneNumber
-                                    )
-                                  }
-                                />
-                              )}
-                            </FormattedMessage>
-                          ) : (
-                            <span
+                            {this.props.addressbook[this.props.selected].name}
+                          </span>
+                        )}{" "}
+                        <div className="tooltip">Doubleclick to edit</div>
+                      </legend>
+                      <div id="contactInformation">
+                        <div>
+                          <div>
+                            {" "}
+                            <label
                               onDoubleClick={() =>
                                 this.props.PhoneToggler(
                                   this.props.addressbook[this.props.selected]
                                     .phoneNumber
                                 )
                               }
-                              id="phoneNumber"
+                              htmlFor="phoneNumber"
                             >
-                              {" "}
-                              {this.phoneFormatter()}
-                            </span>
-                          )}
-                          <span className="tooltip">
-                            <FormattedMessage
-                              id="AddressBook.ClickToEdit"
-                              defaultMessage="Doubleclick To Edit"
-                            />
-                          </span>
-                        </div>
-                        {this.localTimeFormater()}
-                        <div id="notesContainer">
-                          <label
-                            onDoubleClick={() =>
-                              this.props.NotesToggler(
-                                this.props.addressbook[this.props.selected]
-                                  .notes
-                              )
-                            }
-                            htmlFor="notes"
-                          >
-                            <FormattedMessage
-                              id="AddressBook.Notes"
-                              defaultMessage="Notes"
-                            />
-                            :
-                          </label>
-                          {this.props.editNotes === true ? (
-                            <div>
-                              <textarea
-                                id="notes"
-                                name="notes"
-                                onDoubleClick={() =>
-                                  this.props.SaveNotes(
-                                    this.props.selected,
-                                    this.props.prototypeNotes
-                                  )
+                              Phone number:
+                            </label>
+                            {this.props.editPhone === true ? (
+                              <input
+                                id="phoneNumber"
+                                name="phoneNumber"
+                                type="tel"
+                                onChange={e =>
+                                  this.phoneNumberHandler(e.target.value)
                                 }
                                 onKeyDown={e => {
                                   if (e.which === 13 || e.which === 9) {
-                                    this.props.SaveNotes(
+                                    this.props.SavePhone(
                                       this.props.selected,
-                                      this.props.prototypeNotes
+                                      this.props.prototypePhoneNumber
                                     );
                                   }
                                 }}
-                                onChange={e =>
-                                  this.props.EditProtoNotes(e.target.value)
+                                value={this.props.prototypePhoneNumber}
+                                placeholder="Phone #"
+                                onDoubleClick={() =>
+                                  this.props.SavePhone(
+                                    this.props.selected,
+                                    this.props.prototypePhoneNumber
+                                  )
                                 }
-                                value={this.props.prototypeNotes}
-                                rows="3"
                               />
-                            </div>
-                          ) : (
-                            <div
-                              id="notes"
-                              name="notes"
+                            ) : (
+                              <span
+                                onDoubleClick={() =>
+                                  this.props.PhoneToggler(
+                                    this.props.addressbook[this.props.selected]
+                                      .phoneNumber
+                                  )
+                                }
+                                id="phoneNumber"
+                              >
+                                {" "}
+                                {this.phoneFormatter()}
+                              </span>
+                            )}
+                            <span className="tooltip">Doubleclick to edit</span>
+                          </div>
+                          {this.localTimeFormater()}
+                          <div id="notesContainer">
+                            <label
                               onDoubleClick={() =>
                                 this.props.NotesToggler(
                                   this.props.addressbook[this.props.selected]
                                     .notes
                                 )
                               }
+                              htmlFor="notes"
                             >
-                              {
+                              Notes:
+                            </label>
+                            {this.props.editNotes === true ? (
+                              <div>
+                                <textarea
+                                  id="notes"
+                                  name="notes"
+                                  onDoubleClick={() =>
+                                    this.props.SaveNotes(
+                                      this.props.selected,
+                                      this.props.prototypeNotes
+                                    )
+                                  }
+                                  onKeyDown={e => {
+                                    if (e.which === 13 || e.which === 9) {
+                                      this.props.SaveNotes(
+                                        this.props.selected,
+                                        this.props.prototypeNotes
+                                      );
+                                    }
+                                  }}
+                                  onChange={e =>
+                                    this.props.EditProtoNotes(e.target.value)
+                                  }
+                                  value={this.props.prototypeNotes}
+                                  rows="3"
+                                />
+                              </div>
+                            ) : (
+                              <div
+                                id="notes"
+                                name="notes"
+                                onDoubleClick={() =>
+                                  this.props.NotesToggler(
+                                    this.props.addressbook[this.props.selected]
+                                      .notes
+                                  )
+                                }
+                              >
+                                {
+                                  this.props.addressbook[this.props.selected]
+                                    .notes
+                                }
+                              </div>
+                            )}
+                            <span className="tooltip">Doubleclick to edit</span>
+                          </div>
+                        </div>
+                        {this.props.addressbook[this.props.selected].imgSrc !==
+                        undefined ? (
+                          <label htmlFor="picUploader">
+                            <img
+                              src={
                                 this.props.addressbook[this.props.selected]
-                                  .notes
+                                  .imgSrc
                               }
                             </div>
                           )}
@@ -1379,50 +1439,30 @@ class Addressbook extends Component {
                           </span>
                         </div>
                       </div>
-                      {this.props.addressbook[this.props.selected].imgSrc !==
-                      undefined ? (
-                        <label htmlFor="picUploader">
-                          <img
-                            src={
-                              this.props.addressbook[this.props.selected].imgSrc
-                            }
-                          />
-                        </label>
-                      ) : (
-                        <label htmlFor="picUploader">
-                          <img src={profilePlaceholder} />
-                        </label>
-                      )}
-                      <input
-                        type="file"
-                        accept="image/*"
-                        name="picUploader"
-                        onChange={e =>
-                          this.props.ChangeContactImage(
-                            e.target.files[0].path,
-                            this.props.selected
-                          )
-                        }
-                        id="picUploader"
-                      />{" "}
-                      {/* <span className="tooltip left">
-                        Click to change photo
-                      </span> */}
+                    </fieldset>
+                    <div
+                      id="addressDisplay"
+                      onMouseOverCapture={() =>
+                        this.props.SetMousePosition("", "")
+                      }
+                    >
+                      {this.props.addressbook[this.props.selected].notMine
+                        .length > 0
+                        ? this.theirAddressLister()
+                        : null}
+                      {this.props.addressbook[this.props.selected].mine.length >
+                      0
+                        ? this.myAddressLister()
+                        : null}
                     </div>
-                  </fieldset>
-                  <div
-                    id="addressDisplay"
-                    onMouseOverCapture={() =>
-                      this.props.SetMousePosition("", "")
-                    }
-                  >
-                    {this.props.addressbook[this.props.selected].notMine
-                      .length > 0
-                      ? this.theirAddressLister()
-                      : null}
-                    {this.props.addressbook[this.props.selected].mine.length > 0
-                      ? this.myAddressLister()
-                      : null}
+                    <div id="buttonholder">
+                      <button
+                        className="button ghost hero"
+                        onClick={() => this.addAddressHandler()}
+                      >
+                        Add Address
+                      </button>
+                    </div>
                   </div>
                   <div id="buttonholder">
                     <button
@@ -1452,6 +1492,7 @@ class Addressbook extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

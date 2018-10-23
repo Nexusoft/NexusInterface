@@ -1,23 +1,58 @@
+/*
+  Title: Network Globe
+  Description: Creates the network globe for the overview.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
+
+import maxmind from "maxmind";
+import Request from "request";
+import * as THREE from "three";
+
+// Internal Dependencies
 import styles from "./style.css";
 import DAT from "../../script/globe";
 import * as RPC from "../../script/rpc";
-import maxmind from "maxmind";
-import Request from "request";
-import configuration from "../../api/configuration"
+import configuration from "../../api/configuration";
 
 var glb;
 
 export default class NetworkGlobe extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.props.handleOnLineRender(this.testRestartLines);
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
+    const path = require("path");
     const globeseries = [["peers", []]];
-    const geoiplookup = maxmind.openSync(
-      configuration.GetAppDataDirectory() + "GeoLite2-City.mmdb"
-    );
+    let geoiplookup = "";
+    if (process.env.NODE_ENV === "development") {
+      geoiplookup = maxmind.openSync(
+        path.join(
+          __dirname,
+          "GeoLite2-City",
+          "GeoLite2-City.mmdb"
+        )
+      );
+    } else {
+      geoiplookup = maxmind.openSync(
+        path.join(
+          configuration.GetAppResourceDir(),
+          "GeoLite2-City",
+          "GeoLite2-City.mmdb"
+        )
+      );
+    }
     let myIP = "";
-    glb = new DAT(this.threeRootElement);
+    let incomingPillarColor = this.props.pillarColor;
+    let incomingArchColor = this.props.archColor;
+    let globeOptions = 
+    {
+      colorFn: function(x) { return new THREE.Color(incomingPillarColor);},
+      colorArch: incomingArchColor,
+      colorGlobe: this.props.globeColor
+    }
+    glb = new DAT(this.threeRootElement,globeOptions);
     glb.animate();
     Request(
       {
@@ -60,12 +95,30 @@ export default class NetworkGlobe extends Component {
       }
     );
   }
-
+  // React Method (Life cycle hook)
+  componentWillUnmount() {
+    this.threeRootElement.remove();
+  }
+  // Class Methods
   updatePointsOnGlobe() {
     const globeseries = [["peers", []]];
-    const geoiplookup = maxmind.openSync(
-      "app/GeoLite2-City_20180403/GeoLite2-City.mmdb"
-    );
+    if (process.env.NODE_ENV === "development") {
+      const geoiplookup = maxmind.openSync(
+        path.join(
+          __dirname,
+          "GeoLite2-City",
+          "GeoLite2-City.mmdb"
+        )
+      )
+    } else {
+      const geoiplookup = maxmind.openSync(
+        path.join(
+          configuration.GetAppDataDirectory(),
+          "GeoLite2-City",
+          "GeoLite2-City.mmdb"
+        )
+      )
+    }
     let myIP = "";
     Request(
       {
@@ -108,7 +161,6 @@ export default class NetworkGlobe extends Component {
   }
 
   testRestartLines() {
-    console.log("ReDraw lines");
     if (glb != null && glb != undefined) {
       glb.playCurve();
     }
@@ -125,15 +177,14 @@ export default class NetworkGlobe extends Component {
     }, 1000);
   }
 
-  componentWillUnmount() {
-    this.threeRootElement.remove();
-  }
   getResourcesDirectory() {
     let appPath = require("electron").remote.app.getAppPath();
 
     if (process.cwd() === appPath) return "./";
     else return process.resourcesPath + "/";
   }
+
+  // Mandatory React method
   render() {
     return (
       <div id="nxs-earth" className="earth">

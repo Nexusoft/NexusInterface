@@ -1,34 +1,38 @@
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-
 import electron from "electron";
-import MenuBuilder from "../../menu";
 import Modal from "react-responsive-modal";
+import CustomProperties from "react-custom-properties";
+
+// Internal Dependencies
+import MenuBuilder from "../../menu";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
-import { GetSettings } from "../../api/settings.js";
-import CustomProperties from "react-custom-properties";
+import { GetSettings, SaveSettings } from "../../api/settings.js";
+import GOOGLE from "../../script/googleanalytics";
+import configuration from "../../api/configuration";
 
+// Images
+import questionmark from "images/questionmark.svg";
 import lockedImg from "images/lock-encrypted.svg";
 import unencryptedImg from "images/lock-unencrypted.svg";
 import unlockImg from "images/lock-minting.svg";
 import statGood from "images/status-good.svg";
-import statBad from "images/status-bad.svg";
+import statBad from "images/sync.svg";
 import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
 
-import GOOGLE from "../../script/googleanalytics";
-import configuration from "../../api/configuration";
 import { FormattedMessage } from "react-intl";
-
 var tray = tray || null;
 let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.overview,
@@ -37,12 +41,17 @@ const mapStateToProps = state => {
     ...state.intl
   };
 };
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
+    let settings = GetSettings();
+    if (settings.keepDaemon !== false) {
+      settings.keepDaemon = false;
+      SaveSettings(settings);
+    }
     this.props.setSettings(GetSettings());
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     var self = this;
@@ -51,88 +60,28 @@ class Header extends Component {
     if (this.props.unlocked_until !== undefined) {
       encryptionStatus = true;
     }
-
+    console.log(configuration.GetAppResourceDir());
+    this.props.SetMarketAveData();
     this.props.LoadAddressBook();
 
     menuBuilder.buildMenu(self);
+    this.loadMyAccounts();
     if (tray === null) this.setupTray();
 
     this.props.GetInfoDump();
 
     self.set = setInterval(function() {
+      self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
     }, 20000);
-    self.checkIfPortOpen();
-    checkportinterval = setInterval(function() {
-      self.checkIfPortOpen();
-    }, 10000);
+
+    self.mktData = setInterval(function() {
+      self.props.SetMarketAveData();
+    }, 900000);
 
     this.props.history.push("/");
   }
-
-  doNotify(context, message) {
-    Notification.requestPermission().then(result => {
-      var myNotification = new Notification(context, {
-        body: message
-      });
-    });
-  }
-
-  // Set up the icon in the system tray
-  setupTray() {
-    let trayImage = "";
-    let mainWindow = electron.remote.getCurrentWindow();
-    console.log(electron.remote.getCurrentWindow());
-    if (process.platform == "darwin") {
-      trayImage =
-        configuration.GetAppDataDirectory() +
-        "tray/Nexus_Tray_Icon_Template_32.png";
-    } else {
-      trayImage =
-        configuration.GetAppDataDirectory() + "tray/Nexus_Tray_Icon_32.png";
-    }
-
-    tray = new electron.remote.Tray(trayImage);
-    // tray.setToolTip("the nexus interface");
-    if (process.platform == "darwin") {
-      tray.setPressedImage(
-        configuration.GetAppDataDirectory() +
-          "tray/Nexus_Tray_Icon_Highlight_32.png"
-      );
-    }
-
-    tray.on("double-click", () => {
-      mainWindow.show();
-    });
-
-    var contextMenu = electron.remote.Menu.buildFromTemplate([
-      {
-        label: "Show Nexus",
-        click: function() {
-          mainWindow.show();
-        }
-      },
-      {
-        label: "Quit Nexus",
-        click: function() {
-          // app.isQuiting = true;
-          let settings = require("../../api/settings").GetSettings();
-          if (settings.manualDaemon == false) {
-            RPC.PROMISE("stop", []).then(payload => {
-              setTimeout(() => {
-                remote.getCurrentWindow().close();
-              }, 1000);
-            });
-          } else {
-            mainWindow.close();
-          }
-        }
-      }
-    ]);
-
-    tray.setContextMenu(contextMenu);
-  }
-
+  // React Method (Life cycle hook)
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
       this.props.Unlock();
@@ -146,7 +95,7 @@ class Header extends Component {
     }
 
     if (nextProps.blocks !== this.props.blocks) {
-      RPC.PROMISE("getpeerinfo", [])
+      RPC.PROMISE("getpeerinfo", [], this.props)
         .then(peerresponse => {
           let hpb = 0;
           peerresponse.forEach(element => {
@@ -197,28 +146,172 @@ class Header extends Component {
     }
   }
 
-  checkIfPortOpen() {
-    const isPortAvailable = require("is-port-available");
+  // Class methods
+  loadMyAccounts() {
+    RPC.PROMISE("listaccounts", [0]).then(payload => {
+      Promise.all(
+        Object.keys(payload).map(account =>
+          RPC.PROMISE("getaddressesbyaccount", [account])
+        )
+      ).then(payload => {
+        let validateAddressPromises = [];
 
-    var port = 8325;
-    isPortAvailable(port).then(status => {
-      if (status) {
-        this.props.SetPortIsAvailable(true);
-      } else {
-        this.props.SetPortIsAvailable(false);
-        console.log("Port " + port + " IS NOT available!");
-        console.log("Reason : " + isPortAvailable.lastError);
-      }
+        payload.map(element => {
+          element.addresses.map(address => {
+            validateAddressPromises.push(
+              RPC.PROMISE("validateaddress", [address])
+            );
+          });
+        });
+
+        Promise.all(validateAddressPromises).then(payload => {
+          let accountsList = [];
+          let myaccts = payload.map(e => {
+            if (e.ismine && e.isvalid) {
+              let index = accountsList.findIndex(ele => {
+                if (ele.account === e.account) {
+                  return ele;
+                }
+              });
+
+              if (index === -1) {
+                accountsList.push({
+                  account: e.account,
+                  addresses: [e.address]
+                });
+              } else {
+                accountsList[index].addresses.push(e.address);
+              }
+            }
+          });
+          this.props.MyAccountsList(accountsList);
+        });
+      });
     });
   }
 
+  doNotify(context, message) {
+    Notification.requestPermission().then(result => {
+      var myNotification = new Notification(context, {
+        body: message
+      });
+    });
+  }
+
+  setupTray() {
+    let trayImage = "";
+    let mainWindow = electron.remote.getCurrentWindow();
+    console.log(electron.remote.getCurrentWindow());
+    const path = require("path");
+    const app = electron.app || electron.remote.app;
+
+    if (process.env.NODE_ENV === "development") {
+      if (process.platform == "darwin") {
+        trayImage = path.join(
+          __dirname,
+          "images",
+          "tray",
+          "Nexus_Tray_Icon_Template_16.png"
+        );
+      } else {
+        trayImage = path.join(
+          __dirname,
+          "images",
+          "tray",
+          "Nexus_Tray_Icon_32.png"
+        );
+      }
+    } else {
+      if (process.platform == "darwin") {
+        trayImage = path.join(
+          configuration.GetAppResourceDir(),
+          "images",
+          "tray",
+          "Nexus_Tray_Icon_Template_16.png"
+        );
+      } else {
+        trayImage = path.join(
+          configuration.GetAppResourceDir(),
+          "images",
+          "tray",
+          "Nexus_Tray_Icon_32.png"
+        );
+      }
+    }
+
+    tray = new electron.remote.Tray(trayImage);
+    // tray.setToolTip("the nexus interface");
+    if (process.env.NODE_ENV === "development") {
+      if (process.platform == "darwin") {
+        tray.setPressedImage(
+          path.join(
+            __dirname,
+            "images",
+            "tray",
+            "Nexus_Tray_Icon_Highlight_16.png"
+          )
+        );
+      }
+    } else {
+      tray.setPressedImage(
+        path.join(
+          configuration.GetAppResourceDir(),
+          "images",
+          "tray",
+          "Nexus_Tray_Icon_Highlight_16.png"
+        )
+      );
+    }
+    tray.on("double-click", () => {
+      mainWindow.show();
+    });
+
+    var contextMenu = electron.remote.Menu.buildFromTemplate([
+      {
+        label: "Show Nexus",
+        click: function() {
+          mainWindow.show();
+        }
+      },
+      {
+        label: "Quit Nexus and Keep Daemon",
+        click: function() {
+          var keepDaemon = true;
+          app.isQuiting = true;
+          mainWindow.close();
+        }
+      },
+      {
+        label: "Quit Nexus and Quit Daemon",
+        click: function() {
+          let settings = require("../../api/settings").GetSettings();
+          // if (settings.manualDaemon == false) {
+          RPC.PROMISE("stop", []).then(payload => {
+            setTimeout(() => {
+              mainWindow.close();
+            }, 1000);
+          });
+          // } else {
+          // mainWindow.close();
+          // }
+        }
+      }
+    ]);
+
+    tray.setContextMenu(contextMenu);
+  }
+
   signInStatus() {
-    if (this.props.unlocked_until === undefined) {
-      return unencryptedImg;
-    } else if (this.props.unlocked_until === 0) {
-      return lockedImg;
-    } else if (this.props.unlocked_until >= 0) {
-      return unlockImg;
+    if (this.props.connections === undefined) {
+      return questionmark;
+    } else {
+      if (this.props.unlocked_until === undefined) {
+        return unencryptedImg;
+      } else if (this.props.unlocked_until === 0) {
+        return lockedImg;
+      } else if (this.props.unlocked_until >= 0) {
+        return unlockImg;
+      }
     }
   }
 
@@ -273,14 +366,23 @@ class Header extends Component {
   }
 
   syncStatus() {
-    if (this.props.heighestPeerBlock > this.props.blocks) {
+    let syncStatus = document.getElementById("syncStatus");
+    if (
+      this.props.connections === undefined ||
+      this.props.heighestPeerBlock > this.props.blocks
+    ) {
+      // rotates
+      syncStatus.classList.remove("sync-img");
       return statBad;
     } else {
+      // doesn't
       return statGood;
     }
   }
 
   returnSyncStatusTooltip() {
+    if (this.props.connections === undefined) {
+      return "Daemon Not Loaded";
     if (this.props.heighestPeerBlock > this.props.blocks) {
       return (
         <div>
@@ -355,20 +457,61 @@ class Header extends Component {
       case "Copied":
         return <h2>Copied</h2>;
         break;
+      case "Style Settings Saved":
+        return <h2>Style Settings Saved</h2>;
+        break;
+      case "No ammount set":
+        return <h2>No Ammount Set</h2>;
+        break;
+      case "Please Fill Out Field":
+        return <h2>Please Fill Out Field</h2>;
+        break;
+      case "FutureDate":
+        return (
+          <h2>
+            Unlock until date/time must be at least an hour in the future.
+          </h2>
+        );
+        break;
+      case "Incorrect Passsword":
+        return <h2>Incorrect Passsword</h2>;
+        break;
+      case "Core Settings Saved":
+        return <h2>Core Settings Saved</h2>;
+        break;
+      case "Contacts Exported":
+        return <h2>Contacts Exported</h2>;
+        break;
       default:
         "";
         break;
     }
   }
-
-  returnIfPortAvailable() {
-    if (this.props.portAvailable == false) {
-      return <div className="noDaemonPort"> DAEMON NOT AVAILABLE </div>;
+  daemonStatus() {
+    // switch ("DAEMON_STATUS_FUNCTION_CALL_HERE") {
+    //   case "starting":
+    //     return <span>Daemon is starting...</span>;
+    //     break;
+    //   case "error":
+    //     return <span>Daemon error, please contact support.</span>;
+    //     break;
+    //   case "loaded":
+    //     return null;
+    //     break;
+    //   default:
+    //     return null;
+    //     break;
+    // }
+    if (
+      this.props.settings.manualDaemon === false &&
+      this.props.connections === undefined
+    ) {
+      return <span>Loading Daemon. Please wait...</span>;
     } else {
       return null;
     }
   }
-
+  // Mandatory React method
   render() {
     return (
       <div id="Header">
@@ -403,7 +546,7 @@ class Header extends Component {
         >
           {this.modalinternal()}
         </Modal>
-        {this.returnIfPortAvailable()}
+
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />
@@ -411,6 +554,7 @@ class Header extends Component {
               <div>{this.signInStatusMessage()}</div>
             </div>
           </div>
+          {/* wrap this in a check too... */}
           <div className="icon">
             <img src={stakeImg} />
 
@@ -446,7 +590,11 @@ class Header extends Component {
             </div>
           </div>
           <div className="icon">
-            <img src={this.syncStatus()} />
+            {this.props.heighestPeerBlock > this.props.blocks ? (
+              <img id="syncing" className="sync-img" src={statBad} />
+            ) : (
+              <img id="synced" src={statGood} />
+            )}
             <div className="tooltip bottom" style={{ right: "100%" }}>
               <div>{this.returnSyncStatusTooltip()}</div>
             </div>
@@ -462,10 +610,13 @@ class Header extends Component {
           />
         </Link>
         <div id="hdr-line" className="animated fadeIn " />
+        {this.daemonStatus()}
       </div>
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

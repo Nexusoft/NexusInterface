@@ -150,6 +150,7 @@ export default (state = initialState, action) => {
         };
       }
       break;
+
     case TYPE.CONTACT_IMAGE:
       return {
         ...state,
@@ -165,6 +166,7 @@ export default (state = initialState, action) => {
         }),
         save: true
       };
+      break;
     case TYPE.MY_ACCOUNTS_LIST:
       return {
         ...state,
@@ -248,7 +250,7 @@ export default (state = initialState, action) => {
           };
         } else return state;
       }
-
+      break;
     case TYPE.EDIT_PHONE:
       return {
         ...state,
@@ -533,6 +535,20 @@ export default (state = initialState, action) => {
         hoveredOver: action.payload.type
       };
       break;
+    case TYPE.IMPORT_CONTACT:
+      let indexof = state.addressbook.findIndex(ele => {
+        if (ele.name === action.payload.name) {
+          return ele;
+        }
+      });
+      if (indexof == -1) {
+        // contact not in the addressbook, so make it!
+        console.log("Not in there so make it");
+      } else {
+        // contact is in the address book so update it!
+        console.log("contact exists update it");
+      }
+      return state;
     default:
       return state;
       break;

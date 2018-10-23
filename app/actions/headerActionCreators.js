@@ -1,7 +1,18 @@
+/*
+Title: Header Action Creators
+Description: Redux action creators for the header.
+Last Modified by: Brian Smith
+*/
+
+// External Dependencies
+import Request from "request";
+
+// Internal Dependencies
 import * as TYPE from "./actiontypes";
 import * as RPC from "../script/rpc";
 import config from "../api/configuration";
 
+// Header Action Creators
 export const GetInfoDump = () => {
   return dispatch => {
     RPC.PROMISE("getinfo", [])
@@ -12,6 +23,80 @@ export const GetInfoDump = () => {
       .then(payload => {
         dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload });
       });
+  };
+};
+
+export const SetMarketAveData = () => {
+  return dispatch => {
+    Request(
+      {
+        url:
+          "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=NXS,BTC&tsyms=BTC,USD,EUR,AUD,BRL,GBP,CAD,CLP,CNY,CZK,HKD,INR,JPY,KRW,MYR,MXN,NZD,PKR,RUB,SAR,SGD,ZAR,CHF,TWD,AED",
+        json: true
+      },
+      (error, response, body) => {
+        console.log(body);
+        if (response.statusCode === 200) {
+          let rawBTC = Object.values(body.RAW.BTC).map(ele => {
+            return {
+              changePct24Hr: ele.CHANGEPCT24HOUR,
+              marketCap: ele.MKTCAP,
+              price: ele.PRICE,
+              name: ele.TOSYMBOL
+            };
+          });
+          let rawNXS = Object.values(body.RAW.NXS).map(ele => {
+            return {
+              changePct24Hr: ele.CHANGEPCT24HOUR,
+              marketCap: ele.MKTCAP,
+              price: ele.PRICE,
+              name: ele.TOSYMBOL
+            };
+          });
+          let displayBTC = Object.values(body.RAW.BTC).map(ele => {
+            let curCode = ele.TOSYMBOL;
+            let displayEle = body.DISPLAY.NXS[curCode];
+            return {
+              changePct24Hr: displayEle.CHANGEPCT24HOUR,
+              marketCap: displayEle.MKTCAP,
+              price: displayEle.PRICE,
+              name: curCode,
+              symbol: displayEle.TOSYMBOL
+            };
+          });
+          let displayNXS = Object.values(body.RAW.NXS).map(ele => {
+            let curCode = ele.TOSYMBOL;
+            let displayEle = body.DISPLAY.NXS[curCode];
+            return {
+              changePct24Hr: displayEle.CHANGEPCT24HOUR,
+              marketCap: displayEle.MKTCAP,
+              price: displayEle.PRICE,
+              name: curCode,
+              symbol: displayEle.TOSYMBOL
+            };
+          });
+          dispatch({
+            type: TYPE.SET_MKT_AVE_DATA,
+            payload: {
+              rawBTC: rawBTC,
+              rawNXS: rawNXS,
+              displayBTC: displayBTC,
+              displayNXS: displayNXS
+            }
+          });
+          console.log(
+            "raw btc",
+            rawBTC,
+            "rawnxs",
+            rawNXS,
+            "dispalay btc",
+            displayBTC,
+            "display nxs",
+            displayNXS
+          );
+        }
+      }
+    );
   };
 };
 
@@ -58,6 +143,11 @@ export const OpenModal = content => {
 export const Confirm = Answer => {
   return dispatch => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
+  };
+};
+export const MyAccountsList = list => {
+  return dispatch => {
+    dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
   };
 };
 export const CloseModal = () => {
@@ -142,5 +232,11 @@ export const LoadAddressBook = () => {
 
   return dispatch => {
     dispatch({ type: TYPE.LOAD_ADDRESS_BOOK, payload: json.addressbook });
+  };
+};
+
+export const AddRPCCall = returnCall => {
+  return dispatch => {
+    dispatch({ type: TYPE.ADD_RPC_CALL, payload: returnCall });
   };
 };

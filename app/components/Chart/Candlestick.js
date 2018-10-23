@@ -1,5 +1,11 @@
-import React, { Component } from "react";
+/*
+Title: Candlestick
+Description: Handle how to draw candle sticks
+Last Modified by: Brian Smith
+*/
 
+// External Dependencies
+import React, { Component } from "react";
 import {
   VictoryChart,
   VictoryAxis,
@@ -10,6 +16,7 @@ import {
 } from "victory";
 
 export default class Candlestick extends Component {
+  // Mandatory React method
   render() {
     console.log(this.props.data);
     return (

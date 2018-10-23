@@ -1,55 +1,88 @@
+import configuration from "./configuration";
+import MenuBuilder from "../menu.js";
+
 const log = require("electron-log");
 const statusdelay = 1000;
-
-var user = "rpcserver";
-var password = require("crypto")
-  .randomBytes(64)
-  .toString("hex");
-var host = "http://127.0.0.1:9336";
+const crypto = require("crypto");
 
 var coreprocess = null;
 var settings = require("./settings");
 var responding = false;
+var user = "rpcserver";
+//Generate automatic daemon password from machines hardware info
+var macaddress = require("macaddress");
+var secret = "secret";
+if (process.platform === 'darwin') {
+  const secret = process.env.USER + process.env.HOME + process.env.SHELL;
+} else {
+  const secret = JSON.stringify(macaddress.networkInterfaces(), null, 2);
+}
+var password = crypto
+  .createHmac("sha256", secret)
+  .update("pass")
+  .digest("hex");
+
+var port = "9336";
+var ip = "127.0.0.1";
+var host = "http://" + ip + ":" + port;
+var verbose = "2" // <--Lower to 0 after beta ends
+
+//Set data directory by OS for automatic daemon mode
+if (process.platform === "win32") {
+  var datadir = process.env.APPDATA + "\\Nexus_Tritium_Data";
+} else if (process.platform === "darwin") {
+  var datadir = process.env.HOME + "/Nexus_Tritium_Data";
+} else {
+  var datadir = process.env.HOME + "/.Nexus_Tritium_Data";
+}
 
 const EventEmitter = require("events");
 
 // SetCoreParameters: Get the path to local resources for the application (depending on running packaged vs via npm start)
 function SetCoreParameters(settings) {
-  let parameters = [];
+  var parameters = [];
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
-    let ip =
+    ip =
       settings.manualDaemonIP === undefined
         ? "127.0.0.1"
         : settings.manualDaemonIP;
-    let port =
+    port =
       settings.manualDaemonPort === undefined
         ? "9336"
         : settings.manualDaemonPort;
     user =
       settings.manualDaemonUser === undefined
-        ? "rpcserver"
+        ? user
         : settings.manualDaemonUser;
     password =
       settings.manualDaemonPassword === undefined
-        ? "password"
+        ? password
         : settings.manualDaemonPassword;
+    datadir =
+      settings.manualDaemonDataDir === undefined
+        ? datadir
+        : settings.manualDaemonDataDir;
     host = "http://" + ip + ":" + port;
   } else {
-    user = "rpcserver";
-    password = require("crypto")
-      .randomBytes(32)
-      .toString("hex");
-    host = "http://127.0.0.1:9336";
+    user = user;
+    password = password;
   }
+
+    verbose =
+      settings.verboseLevel === undefined
+        ? verbose
+        : settings.verboseLevel;
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push("-rpcuser=" + user);
   parameters.push("-rpcpassword=" + password);
-  parameters.push("-printtoconsole"); // Enable console functionality via stdout
-  parameters.push("-verbose=" + "2"); // <-- Make a setting for this
-  parameters.push("-llpallowip=" + "127.0.0.1:8325"); // <-- Make a setting for this
-
+  parameters.push("-rpcport=" + port);
+  parameters.push("-datadir=" + datadir);
+  //  parameters.push("-printtoconsole"); // Enable console functionality via stdout
+  parameters.push("-server");
+  parameters.push("-verbose=" + verbose); // <-- Make a setting for this
+  parameters.push("-rpcallowip=" + ip);
   // Disable upnp (default is 1)
   if (settings.mapPortUsingUpnp == false) parameters.push("-upnp=0");
 
@@ -60,7 +93,13 @@ function SetCoreParameters(settings) {
     );
 
   // Enable mining (default is 0)
-  if (settings.miningEnabled == true) parameters.push("-mining=1");
+  if (settings.enableMining == true) {
+    parameters.push("-mining=1");
+    parameters.push("-llpallowip=127.0.0.1:9325");
+  }
+
+  // Enable staking (default is 0)
+  if (settings.enableStaking == true) parameters.push("-stake=1");
 
   // Enable detach database on shutdown (default is 0)
   if (settings.detatchDatabaseOnShutdown == true)
@@ -75,15 +114,31 @@ function GetResourcesDirectory() {
   return "app/";
 }
 
+function GetCoreBinaryName() {
+  var coreBinaryName = "nexus" + "-" + process.platform + "-" + process.arch;
+  if (process.platform === "win32") {
+    coreBinaryName += ".exe";
+  }
+  return coreBinaryName;
+}
+
 // GetCoreBinaryPath: Get the path to the specific core binary for the user's system
 function GetCoreBinaryPath() {
-  var coreBinaryPath =
-    GetResourcesDirectory() +
-    "cores/nexus" +
-    "-" +
-    process.platform +
-    "-" +
-    process.arch;
+  const path = require("path");
+  if (process.env.NODE_ENV === "development") {
+    var coreBinaryPath = path.normalize(path.join(
+      __dirname,
+      "..",
+      "cores",
+      GetCoreBinaryName()
+    ));
+  } else {
+    var coreBinaryPath = path.join(
+      configuration.GetAppResourceDir(),
+      "cores",
+      GetCoreBinaryName()
+    );
+  }
   if (process.platform === "win32") {
     coreBinaryPath += ".exe";
   }
@@ -103,6 +158,29 @@ function CoreBinaryExists() {
     return false;
   }
 }
+
+//function isCoreRunning() {
+//  const exec = require('child_process').exec;
+
+//  const isRunning = (query, cb) => {
+//    let platform = process.platform;
+//    let cmd = '';
+//    switch (platform) {
+//      case 'win32' : cmd = `tasklist`; break;
+//      case 'darwin' : cmd = `ps -ax | grep ${query}`; break;
+//     case 'linux' : cmd = `ps -A`; break;
+//      default: break;
+//    }
+//    log.info("query: " + query
+//    exec(cmd, (err, stdout, stderr) => {
+//      cb(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);
+//    });
+//  }
+
+//  isRunning(GetCoreBinaryName(), (status) => {
+//    return status;
+//  });
+//}
 
 // rpcGet: Send a message to the RPC
 function rpcGet(command, args, callback) {
@@ -148,7 +226,7 @@ class Core extends EventEmitter {
     return user;
   }
   get password() {
-    return "password";
+    return password;
   }
   get host() {
     return host;
@@ -187,17 +265,30 @@ class Core extends EventEmitter {
     if (coreprocess != null) return;
     let settings = require("./settings").GetSettings();
     let parameters = SetCoreParameters(settings);
+    let coreBinaryName = GetCoreBinaryName();
     if (settings.manualDaemon == true) {
       log.info("Core Manager: Manual daemon mode, skipping starting core");
     } else {
       if (CoreBinaryExists()) {
+        const fs = require("fs");
+        if (!fs.existsSync(datadir)) {
+          log.info(
+            "Core Manager: Data Directory path not found. Creating folder: " +
+              datadir
+          );
+          fs.mkdirSync(datadir);
+        }
         log.info("Core Manager: Starting core");
         var spawn = require("child_process").spawn;
-        coreprocess = spawn(GetCoreBinaryPath(), parameters, { shell: false });
+        coreprocess = spawn(GetCoreBinaryPath(), parameters, {
+          shell: false,
+          detached: true
+        });
         coreprocess.on("error", err => {
           log.info("Core Manager: Core has returned an error: " + err);
         });
         coreprocess.once("exit", (code, signal) => {
+          log.info(code, signal);
           log.info("Core Manager: Core has exited unexpectedly");
         });
         coreprocess.once("close", (code, signal) => {
@@ -217,7 +308,6 @@ class Core extends EventEmitter {
     }
     this.emit("starting");
   }
-
   // stop: Stop the core from running by sending SIGTERM to the process
   stop(callback) {
     // if coreprocess is null we were in manual daemon mode, just exec the callback
@@ -225,24 +315,24 @@ class Core extends EventEmitter {
       if (callback) callback();
       return;
     }
-    log.info(
-      "Core Manager: Core is stopping (process id: " + coreprocess.pid + ")"
-    );
-    var _this = this;
-    coreprocess.once("error", err => {
-      log.info("Core Manager: Core has returned an error: " + err);
-    });
-    coreprocess.once("exit", (code, signal) => {
-      log.info("Core Manager: Core has exited");
-    });
-    coreprocess.once("close", (code, signal) => {
-      log.info("Core Manager: Core stdio streams have closed");
-      //_this.removeListener('close', _this.onClose);
-      coreprocess = null;
-      responding = false;
-      if (callback) callback();
-    });
-    coreprocess.kill();
+      log.info(
+        "Core Manager: Core is stopping (process id: " + coreprocess.pid + ")"
+      );
+      var _this = this;
+      coreprocess.once("error", err => {
+        log.info("Core Manager: Core has returned an error: " + err);
+      });
+      coreprocess.once("exit", (code, signal) => {
+        log.info("Core Manager: Core has exited");
+      });
+      coreprocess.once("close", (code, signal) => {
+        log.info("Core Manager: Core stdio streams have closed");
+        //_this.removeListener('close', _this.onClose);
+        coreprocess = null;
+        responding = false;
+        if (callback) callback();
+      });
+      coreprocess.kill();
     this.emit("stopping");
   }
 

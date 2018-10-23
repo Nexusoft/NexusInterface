@@ -21,6 +21,8 @@ export default merge.smart(baseConfig, {
 
   entry: "./app/index",
 
+  // mode: "production",
+
   output: {
     path: path.join(__dirname, "app/dist"),
     publicPath: "../dist/",

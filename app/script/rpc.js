@@ -67,22 +67,23 @@ Available RPC methods:
 **/
 export const COMMANDS = {};
 export const CALLBACK = {};
-
+import * as TYPE from "../actions/actiontypes";
+import core from "../api/core";
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 export const GETHOST = () => {
-  let core = require("electron").remote.getGlobal("core");
+  // let core = require("electron").remote.getGlobal("core");
   return core.host;
 };
 
 // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
 export const GETUSER = () => {
-  let core = require("electron").remote.getGlobal("core");
+  // let core = require("electron").remote.getGlobal("core");
   return core.user;
 };
 
 // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
 export const GETPASSWORD = () => {
-  let core = require("electron").remote.getGlobal("core");
+  // let core = require("electron").remote.getGlobal("core");
   return core.password;
 };
 
@@ -108,8 +109,13 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args
     });
-
     var ResponseObject;
+
+    let store = require("../store/configureStore");
+    if (cmd != "help"){
+      ///Send the command to the dispatch so we can place it in the output log
+      store.store.dispatch({ type: TYPE.ADD_RPC_CALL, payload: cmd });
+    }
 
     /** Opera 8.0+, Firefox, Safari **/
     try {
@@ -133,13 +139,17 @@ export const PROMISE = (cmd, args) => {
 
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
+      //console.log(args);
+      //console.log(PostData);
       if (ResponseObject.status == 404) {
         reject("RPC Command {" + cmd + "} Not Found");
       }
-      if (ResponseObject.status == 500) {
-        reject(JSON.parse(ResponseObject.statusText));
+      if (ResponseObject.status == 401) {
+        console.error(ResponseObject.response);
       }
-
+      if (ResponseObject.status == 500) {
+        reject(JSON.parse(ResponseObject.responseText));
+      }
       if (cmd === "validateaddress") {
         if (JSON.parse(ResponseObject.response).result.isvalid === false) {
           reject(JSON.parse(ResponseObject.response).result.isvalid);
@@ -155,7 +165,6 @@ export const PROMISE = (cmd, args) => {
       } else {
         payload = JSON.parse(ResponseObject.response).result;
       }
-
       resolve(payload);
     };
 

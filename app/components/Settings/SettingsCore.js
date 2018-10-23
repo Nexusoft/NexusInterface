@@ -1,9 +1,11 @@
+/*
+  Title: 
+  Description: 
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
-import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actions/actiontypes";
-import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
 import { connect } from "react-redux";
@@ -11,6 +13,14 @@ import Modal from "react-responsive-modal";
 import { FormattedMessage } from "react-intl";
 import * as FlagFile from "../../actions/LanguageFlags";
 
+// Internal Dependencies
+import styles from "./style.css";
+import core from "../../api/core";
+import * as TYPE from "../../actions/actiontypes";
+import * as RPC from "../../script/rpc";
+import ContextMenuBuilder from "../../contextmenu";
+
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -40,8 +50,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsCore extends Component {
-  /// Compent Did Mount
-  /// React Lifecycle on page load.
+  // React Method (Life cycle hook)
   componentDidMount() {
     var settings = require("../../api/settings.js").GetSettings();
 
@@ -51,6 +60,10 @@ class SettingsCore extends Component {
     this.setManualDaemonPassword(settings);
     this.setManualDaemonIP(settings);
     this.setManualDaemonPort(settings);
+    this.setManualDaemonDataDir(settings);
+    this.setEnableMining(settings);
+    this.setEnableStaking(settings);
+    this.setVerboseLevel(settings);
     this.setMapPortUsingUpnp(settings);
     this.setSocks4Proxy(settings);
     this.setSocks4ProxyIP(settings);
@@ -59,16 +72,37 @@ class SettingsCore extends Component {
     // this.setOptionalTransactionFee(settings);
   }
 
-  componentWillUnmount() {
-    this.props.setSettings(require("../../api/settings.js").GetSettings());
-    this.props.OpenModal("Settings saved");
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 2000);
+  // Class Methods
+  setEnableMining(settings) {
+    var enableMining = document.getElementById("enableMining");
+
+    if (settings.enableMining == true) {
+      enableMining.checked = true;
+    } else {
+      enableMining.checked = false;
+    }
   }
 
-  /// Set Manual Daemon
-  /// Sets the HTML element toggle for Manual Deamon Mode
+  setEnableStaking(settings) {
+    var enableStaking = document.getElementById("enableStaking");
+
+    if (settings.enableStaking == true) {
+      enableStaking.checked = true;
+    } else {
+      enableStaking.checked = false;
+    }
+  }
+
+  setVerboseLevel(settings) {
+    var verboseLevel = document.getElementById("verboseLevel");
+
+    if (settings.verboseLevel === undefined) {
+      verboseLevel.value = "2";
+    } else {
+      verboseLevel.value = settings.verboseLevel;
+    }
+  }
+
   setManualDaemon(settings) {
     var manualDaemon = document.getElementById("manualDaemon");
     var manualDaemonSettings = document.getElementById(
@@ -91,8 +125,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon User
-  /// Sets the HTML element toggle for ManuelDaemonUser
   setManualDaemonUser(settings) {
     var manualDaemonUser = document.getElementById("manualDaemonUser");
 
@@ -103,8 +135,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon Password
-  /// Sets the HTML element toggle for ManualDaemonPassword
   setManualDaemonPassword(settings) {
     var manualDaemonPassword = document.getElementById("manualDaemonPassword");
 
@@ -115,8 +145,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon IP
-  /// Sets the HTML element toggle for ManualDeamonIP
   setManualDaemonIP(settings) {
     var manualDaemonIP = document.getElementById("manualDaemonIP");
 
@@ -127,8 +155,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Manual Daemon Port
-  /// Sets the HTML element toggle for ManualDaemonPort
   setManualDaemonPort(settings) {
     var manualDaemonPort = document.getElementById("manualDaemonPort");
 
@@ -139,8 +165,16 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Map Port Using Upnp
-  /// Sets the HTML element toggle for MapPortUsingUpnp
+  setManualDaemonDataDir(settings) {
+    var manualDaemonDataDir = document.getElementById("manualDaemonDataDir");
+
+    if (settings.manualDaemonDataDir === undefined) {
+      manualDaemonDataDir.value = "Nexus_trit";
+    } else {
+      manualDaemonDataDir.value = settings.manualDaemonDataDir;
+    }
+  }
+
   setMapPortUsingUpnp(settings) {
     var mapPortUsingUpnp = document.getElementById("mapPortUsingUpnp");
 
@@ -155,8 +189,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Socks4 Proxy
-  /// Sets the HTML element toggle for Socks4Proxy
   setSocks4Proxy(settings) {
     var socks4Proxy = document.getElementById("socks4Proxy");
     var socks4ProxyIP = document.getElementById("socks4ProxyIP");
@@ -178,8 +210,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Socks4ProxyIP
-  /// Sets the HTML element toggle for Socks4ProxyIP
   setSocks4ProxyIP(settings) {
     var socks4ProxyIP = document.getElementById("socks4ProxyIP");
 
@@ -190,8 +220,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Socks4 Proxy Port
-  /// Sets the HTML element toggle for Socks4ProxyPort
   setSocks4ProxyPort(settings) {
     var socks4ProxyPort = document.getElementById("socks4ProxyPort");
 
@@ -202,8 +230,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Set Detatch Database On Shutdown
-  /// Sets the HTML element toggle for DetachDatabaseOnShutdown
   setDetatchDatabaseOnShutdown(settings) {
     var detatchDatabaseOnShutdown = document.getElementById(
       "detatchDatabaseOnShutdown"
@@ -220,8 +246,36 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Update Manual Daemon
-  /// Update the Settings for the ManualDaemon
+  updateEnableMining(event) {
+    var el = even.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.enableMining = el.checked;
+
+    settings.SaveSettings(settingsObj);
+  }
+
+  updateEnableStaking(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.enableStaking = el.checked;
+
+    settings.SaveSettings(settingsObj);
+  }
+
+  updateVerboseLevel(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.verboseLevel = el.value;
+
+    settings.SaveSettings(settingsObj);
+  }
+
   updateManualDaemon(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -246,8 +300,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Update Manual Daemon User
-  /// Update the Settings for the ManualDaemonDaemonUser
   updateManualDaemonUser(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -258,8 +310,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Manuel Daemon Password
-  /// Update the Settings for the ManualDaemonPassword
   updateManualDaemonPassword(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -270,8 +320,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Manual Daemon IP
-  /// Update the Settings for the ManualDaemonIP
   updateManualDaemonIP(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -282,8 +330,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Manual Deamon Port
-  /// Update the Settings for the ManualDaemonPort
   updateManualDaemonPort(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -294,8 +340,16 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Map Port Using Upnp
-  /// Update the Settings for the MapPortUsingUpnp
+  updateManualDaemonDataDir(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.manualDaemonDataDir = el.value;
+
+    settings.SaveSettings(settingsObj);
+  }
+
   updateMapPortUsingUpnp(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -306,8 +360,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Socks4 Proxy
-  /// Update the Settings for the Socks4Proxy
   updateSocks4Proxy(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -329,8 +381,6 @@ class SettingsCore extends Component {
     }
   }
 
-  /// Update Socks4 Proxy IP
-  /// Update the Settings for the Socks4ProxyIP
   updateSocks4ProxyIP(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -341,8 +391,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Socks4ProxyPort
-  /// Update the Settings for the Socks4ProxyPort
   updateSocks4ProxyPort(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -353,8 +401,6 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Update Detach Database On Shutdown
-  /// Update the Settings for the DetachOnShotdown
   updateDetatchDatabaseOnShutdown(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -364,13 +410,11 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
-  /// Core Restart
-  /// Restart the Core
   coreRestart() {
-    let core = require("electron").remote.getGlobal("core");
     core.restart();
   }
 
+  // Mandatory React method
   render() {
     console.log(FlagFile.America);
     return (
@@ -438,15 +482,70 @@ class SettingsCore extends Component {
           />
         </div>
 
+            <input
+              value="Yes"
+              type="button"
+              className="button primary"
+              onClick={() => {
+                this.props.setSettings(
+                  require("../../api/settings.js").GetSettings()
+                );
+                this.props.CloseModal2();
+                this.props.OpenModal("Core Settings Saved");
+                setTimeout(() => {
+                  this.props.CloseModal();
+                }, 2000);
+              }}
+            />
+            <div id="no-button">
+              <input
+                value="No"
+                type="button"
+                className="button primary"
+                onClick={() => {
+                  this.props.CloseModal2();
+                }}
+              />
+            </div>
+          </div>
+        </Modal>
+
         <form className="aligned">
           <div className="field">
-            <label htmlFor="manualDaemon">
-              {" "}
-              <FormattedMessage
-                id="Settings.ManualDaemonMode"
-                defaultMesage="Manual Daemon Mode"
-              />
-            </label>
+            <label htmlFor="enableMining">Enable Mining</label>
+            <input
+              id="enableMining"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateEnableMining}
+              data-tooltip="Enable/Disable mining to the wallet"
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="enableStaking">Enable Staking</label>
+            <input
+              id="enableStaking"
+              type="checkbox"
+              className="switch"
+              onChange={this.updateEnableStaking}
+              data-tooltip="Enable/Disable staking on the wallet"
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="verboseLevel">Verbose level</label>
+            <input
+              id="verboseLevel"
+              type="text"
+              size="3"
+              onChange={this.updateVerboseLevel}
+              data-tooltip="Verbose level for logs"
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="manualDaemon">Manual Daemon Mode</label>
             <input
               id="manualDaemon"
               type="checkbox"
@@ -514,9 +613,20 @@ class SettingsCore extends Component {
               <input
                 id="manualDaemonPort"
                 type="text"
-                size="3"
+                size="5"
                 onChange={this.updateManualDaemonPort}
                 data-tooltip="Port configured for manual daemon"
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="manualDaemonDataDir">Data Directory Name</label>
+              <input
+                id="manualDaemonDataDir"
+                type="text"
+                size="12"
+                onChange={this.updateManualDaemonDataDir}
+                data-tooltip="Data directory configured for manual daemon"
               />
             </div>
           </div>
@@ -606,12 +716,25 @@ class SettingsCore extends Component {
             <button
               id="restart-core"
               className="button primary"
-              onClick={this.coreRestart}
+              onClick={e => {
+                e.preventDefault();
+                core.restart();
+              }}
             >
               <FormattedMessage
                 id="Settings.RestartCore"
                 defaultMesage="Restart Core"
               />
+            </button>
+            <button
+              // id="restart-core"
+              className="button primary"
+              onClick={e => {
+                e.preventDefault();
+                this.props.OpenModal2();
+              }}
+            >
+              Save Settings
             </button>
           </div>
 
@@ -675,6 +798,8 @@ class SettingsCore extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

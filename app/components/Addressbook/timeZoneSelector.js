@@ -1,20 +1,38 @@
+/*
+Title: Time Zone Selector
+Description: Support class for selecting your contacts timezone
+Last Modified by: Brian Smith
+*/
+
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+
+// Internal Dependencies
 import * as actionsCreators from "../../actions/addressbookActionCreators";
 
+// React-Redux mandatory methods
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 const mapStateToProps = state => {
   return { ...state.common, ...state.addressbook };
 };
+
 class TimeZoneSelector extends Component {
+  // Mandatory React method
   render() {
     return (
       <span>
         <select
           ref="editTimeZone"
-          onChange={e => this.props.EditProtoTZ(parseInt(e.target.value))}
+          onChange={e => {
+            if (this.props.editTZ) {
+              this.props.SaveTz(this.props.selected, parseInt(e.target.value));
+            } else {
+              this.props.EditProtoTZ(parseInt(e.target.value));
+            }
+          }}
           value={this.props.prototypeTimezone}
         >
           <option value="0"> (UTC + 0.00 hr) London, Casablanca, Accra</option>
@@ -93,6 +111,8 @@ class TimeZoneSelector extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

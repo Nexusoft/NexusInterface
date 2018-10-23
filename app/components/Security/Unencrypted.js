@@ -1,28 +1,42 @@
+/*
+  Title: 
+  Description: 
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 
+// Internal Dependencies
+import core from "../../api/core";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import { FormattedMessage } from "react-intl";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.login
   };
 };
-
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
+  busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   }
 });
 
 class Unencrypted extends Component {
+  // React Method (Life cycle hook)
+  componentWillUnmount() {
+    this.props.wipe();
+  }
+
+  // Class Methods
   showPrivKey(e) {
     e.preventDefault();
     let addressInput = document.getElementById("privKeyAddress");
@@ -37,7 +51,6 @@ class Unencrypted extends Component {
     }
   }
   coreRestart() {
-    let core = require("electron").remote.getGlobal("core");
     core.start();
   }
 
@@ -77,14 +90,17 @@ class Unencrypted extends Component {
   reEnterValidator(e) {
     let newPass = document.getElementById("newPass");
     let passHint = document.getElementById("passHint");
+
     if (e.target.value === newPass.value) {
       e.preventDefault();
       passHint.style.visibility = "hidden";
-    } else {
+    } else if (e.target.value.length === newPass.value.length) {
       if (passHint.innerText !== "Passwords do not match") {
         passHint.innerText = "Passwords do not match";
       }
       passHint.style.visibility = "visible";
+    } else {
+      passHint.style.visibility = "hidden";
     }
   }
 
@@ -93,9 +109,10 @@ class Unencrypted extends Component {
     let newPass = document.getElementById("newPass");
     let passChk = document.getElementById("passChk");
     let passHint = document.getElementById("passHint");
+
     passHint.innerText = "Passwords do not match";
     if (newPass.value.trim()) {
-      if (!/[-$&/*|<>]/.test(newPass.value)) {
+      if (!/[-$/&*|<>]/.test(newPass.value)) {
         if (newPass.value === passChk.value) {
           if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
             RPC.PROMISE("encryptwallet", [newPass.value]).then(payload => {
@@ -103,8 +120,10 @@ class Unencrypted extends Component {
                 pass.value = "";
                 newPass.value = "";
                 passChk.value = "";
+                this.props.busy(false);
                 this.props.OpenModal("Wallet has been encrypted.");
                 this.props.history.push();
+                // Start the daemon again... give it maybe 5 seconds.
               }
             });
           } else {
@@ -120,7 +139,7 @@ class Unencrypted extends Component {
       } else {
         passChk.value = "";
         passHint.style.visibility = "visible";
-        passHint.innerText = "Passwords cannot contain -$&/*|<>";
+        passHint.innerText = "Passwords cannot contain -$/&*|<>";
         passChk.focus();
       }
     } else {
@@ -128,79 +147,41 @@ class Unencrypted extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.props.wipe();
-  }
-
+  // Mandatory React method
   render() {
     return (
       <div id="securitylogin">
         <div className="securitySubContainer">
           <form>
             <fieldset>
-              <legend>
-                <FormattedMessage
-                  id="Settings.EncryptWallet"
-                  defaultMessage="Encrypt Wallet"
-                />
-              </legend>
-
-              <div className="field">
-                <label>
-                  <FormattedMessage
-                    id="Settings.Password"
-                    defaultMessage="Password"
-                  />
-                  :
-                </label>
-                <FormattedMessage
-                  id="Settings.NewPassword"
-                  defaultMessage="New Password"
-                >
-                  {np => (
-                    <input
-                      type="password"
-                      placeholder={np}
-                      id="newPass"
-                      required
-                    />
-                  )}
-                </FormattedMessage>
-                <span className="hint">
-                  <FormattedMessage
-                    id="Settings.CannotContain"
-                    defaultMessage="Password is required and cannot contain these characters"
-                  />{" "}
-                  {`-$&/*|<>`}
-                </span>
+              <legend>Encrypt Wallet</legend>
+              <div style={{ "marginTop": "26px" }} className="note">
+                Password cannot contain these characters {`-$/&*|<>`}
               </div>
               <div className="field">
-                <label>
-                  {" "}
-                  <FormattedMessage
-                    id="Settings.Re-Enter"
-                    defaultMessage="Re-Enter Password"
-                  />
-                  :
-                </label>
-                <FormattedMessage
-                  id="Settings.Re-Enter"
-                  defaultMessage="Re-Enter Password"
+                <label>Password:</label>
+                <input
+                  type="password"
+                  placeholder="New Password"
+                  id="newPass"
+                  required
+                />
+                {/* className="hint" */}
+              </div>
+              <div className="field">
+                <label>Re-Enter Password:</label>
+                <input
+                  type="password"
+                  placeholder="Re-Enter Password"
+                  id="passChk"
+                  onChange={e => this.reEnterValidator(e)}
+                />
+                <span
+                  id="passHint"
+                  style={{ visibility: "hidden" }}
+                  className="err invalid"
                 >
-                  {rp => (
-                    <input
-                      type="password"
-                      placeholder={rp}
-                      id="passChk"
-                      onChange={e => this.reEnterValidator(e)}
-                    />
-                  )}
-                </FormattedMessage>
-                <span id="passHint" className="err invalid">
-                  <FormattedMessage
-                    id="Settings.PasswordsMatch"
-                    defaultMessage="Passwords do not match"
-                  />
+                  Passwords do not match
                 </span>
               </div>
               <p>
@@ -210,10 +191,7 @@ class Unencrypted extends Component {
                   className="button primary"
                   onClick={e => this.encrypt(e)}
                 >
-                  <FormattedMessage
-                    id="Settings.Submit"
-                    defaultMessage="Submit"
-                  />
+                  Encrypt and Restart
                 </button>
               </p>
             </fieldset>
@@ -252,7 +230,7 @@ class Unencrypted extends Component {
                     )}
                   </FormattedMessage>
                   <button
-                    // disabled={this.props.busyFlag}
+                    disabled={this.props.busyFlag}
                     className="button primary"
                     onClick={e => this.showPrivKey(e)}
                   >
@@ -275,7 +253,7 @@ class Unencrypted extends Component {
                 <div className="expander">
                   <input type="password" id="privKeyOutput" />
                   <button
-                    // disabled={this.props.busyFlag}
+                    disabled={this.props.busyFlag}
                     className="button"
                     onClick={e => this.copyPrivkey(e)}
                   >
@@ -348,7 +326,7 @@ class Unencrypted extends Component {
               </div>
               <p>
                 <button
-                  // disabled={this.props.busyFlag}
+                  disabled={this.props.busyFlag}
                   className="button primary"
                   onClick={e => this.importPrivKey(e)}
                 >
@@ -365,6 +343,8 @@ class Unencrypted extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

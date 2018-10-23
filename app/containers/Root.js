@@ -29,21 +29,6 @@ import localesReducer from "../reducers/intl";
 import { connect, Provider } from "react-redux";
 import IntlWrapper from "../containers/intlWrapper";
 export default function Root({ store, history }) {
-  // let configSettings = settings.GetSettings();
-
-  // if (configSettings.wallpaper) {
-  //   let customBGImageUrl = configSettings.wallpaper;
-  //   if ( process.platform === "win32")
-  //       {
-  //         customBGImageUrl =  customBGImageUrl.replace(/\\/g, '/');
-  //       }
-  //   console.log("Applying custom wallpaper: " + customBGImageUrl);
-  //   document.body.style.setProperty(
-  //     "--background-main-image",
-  //     "url('" + customBGImageUrl + "')"
-  //   );
-  // }
-
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>

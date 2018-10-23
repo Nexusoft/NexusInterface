@@ -1,51 +1,56 @@
+/*
+  Title: Market
+  Description: Creates the market module
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import ReactTable from "react-table";
+import { remote } from "electron";
+import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
 
+// Internal Dependencies
 import styles from "./style.css";
 import * as TYPE from "../../actions/actiontypes";
 import MarketDepth from "../Chart/MarketDepth";
 import Candlestick from "../Chart/Candlestick";
 import { FormattedMessage } from "react-intl";
-import Alert from "../Alert";
+import ContextMenuBuilder from "../../contextmenu";
+import * as actionsCreators from "../../actions/marketActionCreators";
 
-// import images
+// Images
 import marketimg from "../../images/market.svg";
 import bittrexLogo from "../../images/BittrexLogo.png";
 import binanceLogo from "../../images/BINANCE.png";
 import cryptopiaLogo from "../../images/CryptopiaLogo.png";
-import * as actionsCreators from "../../actions/marketActionCreators";
 import binanceSmallLogo from "../../images/binanceSmallLogo.png";
 import bittrexSmallLogo from "../../images/bittrexSmallLogo.png";
 import cryptopiaSmallLogo from "../../images/cryptopiaSmallLogo.png";
 import arrow from "../../images/arrow.svg";
 
-import { VictoryArea, VictoryChart, VictoryAnimation } from "victory";
-
-import ContextMenuBuilder from "../../contextmenu";
-import { remote } from "electron";
-
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.market, ...state.common, ...state.intl };
 };
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Market extends Component {
-  // thunk API calls to the exchanges
+  // React Method (Life cycle hook)
   componentDidMount() {
     this.refresher();
     this.props.googleanalytics.SendScreen("Market");
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  // Class Methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -67,7 +72,7 @@ class Market extends Component {
     this.props.cryptopia24hrInfo();
     // this.arbitageChecker();
   }
-
+  // TODO: Implement the arbitrage work below.
   // arbitageChecker() {
   //   let lowArr = [],
   //     highArr = [],
@@ -328,6 +333,7 @@ class Market extends Component {
         break;
     }
   }
+
   oneDayinfo(failedExchange) {
     return (
       <div>
@@ -361,6 +367,8 @@ class Market extends Component {
       </div>
     );
   }
+
+  // Mandatory React method
   render() {
     return (
       <div id="market" className="animated fadeIn">
@@ -436,6 +444,8 @@ class Market extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -1,15 +1,15 @@
 {
-  "name": "nexus-interface",
-  "productName": "nexus interface electron wallet",
-  "version": "0.4.1",
-  "description": "nexus interface electron wallet",
+  "name": "nexus-tritium-beta",
+  "productName": "Nexus_Tritium_Wallet_Beta",
+  "version": "0.8.1",
+  "description": "Nexus_Tritium_Wallet_Beta",
   "main": "./main.prod.js",
   "author": {
-    "name": "Dillon Dugan",
-    "email": "dillon.dugan@nexus.io"
+    "name": "The Nexus Embassy",
+    "email": "TheNexusEmbassy@nexus.io"
   },
   "scripts": {
-    "postinstall": "npm rebuild --runtime=electron --target=1.6.6 --disturl=https://atom.io/download/atom-shell --build-from-source"
+    "postinstall": "npm rebuild --runtime=electron --target=1.8.8 --disturl=https://atom.io/download/atom-shell --build-from-source"
   },
   "license": "MIT",
   "dependencies": {}

@@ -1,21 +1,31 @@
+/*
+  Title: Style Guide
+  Description: Not for production mode, this module is just for development purposes
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
-
-import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 
+// Internal Dependencies
+import styles from "./style.css";
+import ContextMenuBuilder from "../../contextmenu";
+
+// Images
 import styleimg from "../../images/developer.svg";
 
 export default class StyleGuide extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  // Class Methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -24,6 +34,7 @@ export default class StyleGuide extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  // Mandatory React method
   render() {
     return (
       <div id="styleguide" className="animated fadeIn">

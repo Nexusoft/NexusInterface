@@ -1,19 +1,25 @@
+/*
+  Title: Terminal Console page
+  Description: 
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
+import { connect } from "react-redux";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
 import { timingSafeEqual } from "crypto";
-import * as RPC from "../../script/rpc";
 
-// Added to migrate to Redux
+// Internal Dependencies
+import styles from "./style.css";
+import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
-import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
 
 let currentHistoryIndex = -1;
+
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.terminal, ...state.common };
 };
-
 const mapDispatchToProps = dispatch => ({
   setCommandList: commandList =>
     dispatch({ type: TYPE.SET_COMMAND_LIST, payload: commandList }),
@@ -26,9 +32,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SET_INPUT_FEILD, payload: input }),
   onAutoCompleteClick: inItem =>
     dispatch({ type: TYPE.ON_AUTO_COMPLETE_CLICK, payload: inItem }),
-  returnAutocomplete: currentInput =>
-    dispatch({ type: TYPE.RETURN_AUTO_COMPLETE, payload: currentInput }),
-  // removeAutoCompleteDiv: () => dispatch({type:TYPE.REMOVE_AUTO_COMPLETE_DIV}),
+  //returnAutocomplete: (currentInput) => dispatch({type:TYPE.RETURN_AUTO_COMPLETE, payload: currentInput}), //No longer using
+  removeAutoCompleteDiv: () =>
+    dispatch({ type: TYPE.REMOVE_AUTO_COMPLETE_DIV }),
   recallPreviousCommand: currentCommandItem =>
     dispatch({
       type: TYPE.RECALL_PREVIOUS_COMMAND,
@@ -45,148 +51,129 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class TerminalConsole extends Component {
+
+  constructor(props) {
+    super(props);
+    this.inputRef = null;
+  }
+  // React Method (Life cycle hook)
   componentDidMount() {
     RPC.PROMISE("help", []).then(payload => {
       let CommandList = payload.split("\n");
-      console.log(CommandList);
       this.props.setCommandList(CommandList);
     });
   }
 
-  /// Process Output
-  /// Process the consoleoutput and return JSX
-  // Called in the renderer so processing what gets put on screen stays here.
+  // Class Methods
   processOutput() {
-    // if ( this.props.currentInput != null)
-    // {
-    //   this.props.currentInput.focus();
-    // }
-    // let num = 0;
     return this.props.consoleOutput.map((item, key) => {
-      // num++;
       return <div key={key}>{item}</div>;
     });
   }
 
-  /// Process Input
-  /// Process the input the user types in the rpc command input field
   processInput() {
-    /// If Nothing Then just exit
     if (this.props.currentInput == "") {
       return;
     }
-    /// This is not a RPC command, so catch this input and clear the console
     if (this.props.currentInput.toLowerCase() == "clear") {
       this.props.resetMyConsole();
       this.props.setInputFeild("");
       return;
     }
-    /// remove the command inputed
 
-    /// Get the old console output so we can concat on it.
+    this.props.googleanalytics.SendEvent(
+      "Terminal",
+      "Console",
+      "UseCommand",
+      1
+    );
+
     let tempConsoleOutput = [...this.props.consoleOutput];
-
-    /// Split the input so that we can get the command and the arguments. THIS MIGHT BE AN ISSUE as I am just checking the US keyboard space
     let splitInput = this.props.currentInput.split(" ");
-
     let preSanatized = splitInput[0].replace(/[^a-zA-Z0-9]/g, "");
-
     splitInput[0] = preSanatized;
 
+    for (let index = 1; index < splitInput.length; index++) {
+      //splitInput[index] = splitInput[index].replace(/['"`]/g,"");
+      
+    }
+
+    //console.log(splitInput);
     /// this is the argument array
     let RPCArguments = [];
     this.props.addToHistory(splitInput[0]);
     this.props.setInputFeild("");
 
-    /// Get all the words after the first one and place them into the RPCargs array
     for (let tempindex = 1; tempindex < splitInput.length; tempindex++) {
       let element = splitInput[tempindex];
       /// If this is a number we need to format it an int
-      if (isNaN(Number(element)) === false) {
+      if (element != "" && isNaN(Number(element)) === false) {
         element = parseFloat(element);
       }
       RPCArguments.push(element);
     }
 
     /// Execute the command with the given args
-    RPC.PROMISE(splitInput[0], RPCArguments)
-      .then(payload => {
-        /// If a single object is given back, output it
-        if (typeof payload === "string" || typeof payload === "number") {
-          if (typeof payload === "string") {
-            let temppayload = payload;
-            /// If we find there are end line characters then we need to make these line breaks
-            temppayload.split("\n").map((item, key) => {
-              return tempConsoleOutput.push(item);
-            });
-            // this is so that you have tha data available to display on the screen
-            this.props.printToConsole(tempConsoleOutput);
-          } else {
-            tempConsoleOutput.push(payload);
-            // this is so that you have tha data available to display on the screen
-            this.props.printToConsole(tempConsoleOutput);
-          }
-        }
-        /// If it is a object with multi variables then output them on each line
-        else {
-          for (let outputObject in payload) {
-            if (typeof payload[outputObject] === "object") {
-              tempConsoleOutput.push(outputObject + ": ");
-              // this is so that you have tha data available to display on the screen
-              // this.props.printToConsole(tempConsoleOutput);
+    if (this.props.commandList.some(function(v){ return v.indexOf(splitInput[0])>=0 }) == true) {
+      RPC.PROMISE(splitInput[0], RPCArguments)
+        .then(payload => {
+          if (typeof payload === "string" || typeof payload === "number") {
+            if (typeof payload === "string") {
+              let temppayload = payload;
+              temppayload.split("\n").map((item, key) => {
+                return tempConsoleOutput.push(item);
+              });
+              this.props.printToConsole(tempConsoleOutput);
             } else {
-              tempConsoleOutput.push(
-                outputObject + ": " + payload[outputObject]
-              );
-              // this is so that you have tha data available to display on the screen
-              // this.props.printToConsole(tempConsoleOutput);
+              tempConsoleOutput.push(payload);
+              this.props.printToConsole(tempConsoleOutput);
             }
-
-            //If it is a object then we need to display ever var on a new line.
-            if (typeof payload[outputObject] === "object") {
-              for (let interalres in payload[outputObject]) {
-                /// Probably need to do this in css but I add a tab to make it look cleaner
+          } else {
+            for (let outputObject in payload) {
+              if (typeof payload[outputObject] === "object") {
+                tempConsoleOutput.push(outputObject + ": ");
+              } else {
                 tempConsoleOutput.push(
-                  "       " +
-                    interalres +
-                    ":" +
-                    payload[outputObject][interalres]
+                  outputObject + ": " + payload[outputObject]
                 );
               }
-              // this is so that you have tha data available to display on the screen
-              // this.props.printToConsole(tempConsoleOutput);
+
+              if (typeof payload[outputObject] === "object") {
+                for (let interalres in payload[outputObject]) {
+                  tempConsoleOutput.push(
+                    "       " +
+                      interalres +
+                      ":" +
+                      payload[outputObject][interalres]
+                  );
+                }
+              }
             }
+            this.props.printToConsole(tempConsoleOutput);
           }
+        })
+        .catch(error => {
+          tempConsoleOutput.push([error]);
           this.props.printToConsole(tempConsoleOutput);
-        }
-      })
-      .catch(error => {
-        /// If there is an error then return that error message and place it in the output.
-        this.props.printToConsole(error);
-        // tempConsoleOutput.push(error);
-        // this.setState(
-        //   {
-        //     consoleOutput: tempConsoleOutput,
-        //     currentInput:""
-        //   });
-      });
+        });
+    } else {
+      tempConsoleOutput.push([this.props.currentInput + " is a Command invalid"]);
+      this.props.printToConsole(tempConsoleOutput);
+    }
   }
 
-  ///Handle enter key being presssed.
   handleKeyboardInput = e => {
     if (e.key === "Enter") {
-      console.log("enter key pressed");
+      this.props.removeAutoCompleteDiv();
       this.processInput();
       currentHistoryIndex = -1;
     }
   };
 
   handleKeyboardArrows = e => {
-    // e.preventDefault();
-    // this.props.setInputFeild("arrows being pressed");
     if (e.key === "ArrowUp") {
       currentHistoryIndex++;
-      console.log("ArrowUp key pressed");
+
       if (this.props.commandHistory[currentHistoryIndex]) {
         this.props.setInputFeild(
           this.props.commandHistory[currentHistoryIndex]
@@ -205,17 +192,20 @@ class TerminalConsole extends Component {
           this.props.commandHistory[currentHistoryIndex]
         );
       }
-      console.log("ArrowDown key pressed");
     } else if (e.key === "ArrowRight") {
-      console.log("ArrowRight key pressed");
     }
   };
 
-  /// Return Auto Complete
   autoComplete() {
     return this.props.filteredCmdList.map((item, key) => {
       return (
-        <a key={key} onMouseDown={() => this.onAutoCompleteClick(item)}>
+        <a key={key} onMouseDown={() => {
+          setTimeout(() => {
+            //I don't like this but the issue is that the click event fires on the output div which breaks the focus, so using a timer
+            this.inputRef.focus(); 
+          }, 100); 
+          this.props.onAutoCompleteClick(item);
+            }}>
           {item}
           <br />
         </a>
@@ -223,35 +213,29 @@ class TerminalConsole extends Component {
     });
   }
 
+  // Mandatory React method
   render() {
     return (
       <div id="terminal-console">
         <div id="terminal-console-input">
-          <FormattedMessage
-            id="Console.CommandsHere"
-            defaultMessage="Enter Console Commands Here (ex: getinfo, help)"
-          >
-            {ECCH => (
-              <input
-                id="input-text"
-                autoFocus
-                type="text"
-                value={this.props.currentInput}
-                placeholder={ECCH}
-                onChange={e => this.props.onInputfieldChange(e.target.value)}
-                onKeyPress={e => this.handleKeyboardInput(e)}
-                onKeyDown={e => this.handleKeyboardArrows(e)}
-                // onBlur={this.props.removeAutoCompleteDiv()}
-              />
-            )}
-          </FormattedMessage>
+          <input
+            id="input-text"
+            ref={element => this.inputRef = element}
+            autoFocus
+            type="text"
+            value={this.props.currentInput}
+            placeholder="Enter console commands here (ex: getinfo, help)"
+            onChange={e => this.props.onInputfieldChange(e.target.value)}
+            onKeyPress={e => this.handleKeyboardInput(e)}
+            onKeyDown={e => this.handleKeyboardArrows(e)}
+          />
           <button
             id="input-submit"
             className="button primary"
             value="Execute"
             onClick={() => this.processInput()}
           >
-            <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
+            Execute
           </button>
 
           <div
@@ -274,15 +258,14 @@ class TerminalConsole extends Component {
           className="button"
           onClick={() => this.props.resetMyConsole()}
         >
-          <FormattedMessage
-            id="Console.ClearConsole"
-            defaultMessage="Clear Console"
-          />
+          Clear Console
         </button>
       </div>
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

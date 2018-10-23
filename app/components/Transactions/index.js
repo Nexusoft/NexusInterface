@@ -1,12 +1,15 @@
+/*
+  Title: Transactions Module
+  Description:
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { remote } from "electron";
 import Request from "request";
-import Table from "../../script/utilities-react";
-import * as RPC from "../../script/rpc";
-import { Promise } from "bluebird-lst";
-import * as TYPE from "../../actions/actiontypes";
+import { Promise } from "bluebird-lst";;
 import Modal from "react-responsive-modal";
 import {
   VictoryBar,
@@ -24,29 +27,38 @@ import {
   createContainer,
   Flyout
 } from "victory";
-//import Analytics from "../../script/googleanalytics";
-import { FormattedMessage } from "react-intl";
-import transactionsimg from "../../images/transactions.svg";
+var rp = require("request-promise");
 
+// Internal Dependencies
+import Table from "../../script/utilities-react";
+import * as RPC from "../../script/rpc";
+import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import config from "../../api/configuration";
+import styles from "./style.css";
+
+// Images
+import transactionsimg from "../../images/transactions.svg";
+
+import copy from 'copy-to-clipboard';
 
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
 // import "react-table/react-table.css"
 
 /* TODO: THIS DOESN"T WORK EITHER, COULD BE DUE TO WEBPACK CONFIG FOR ExtractTextPlugin? */
 //import tablestyles from "./react-table.css";
-import styles from "./style.css";
 
+// Global variables
 let tempaddpress = new Map();
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.transactions,
     ...state.common,
     ...state.overview,
     ...state.addressbook,
-    ...state.intl
+    ...state.settings
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -58,6 +70,15 @@ const mapDispatchToProps = dispatch => ({
   },
   SetExploreInfo: returnData => {
     dispatch({ type: TYPE.SET_TRANSACTION_EXPLOREINFO, payload: returnData });
+  },
+  UpdateConfirmationsOnTransactions: returnData => {
+    dispatch({ type: TYPE.UPDATE_CONFIRMATIONS, payload: returnData });
+  },
+  UpdateCoinValueOnTransaction: returnData => {
+    dispatch({ type: TYPE.UPDATE_COINVALUE, payload: returnData });
+  },
+  UpdateFeeOnTransaction: returnData => {
+    dispatch({ type: TYPE.UPDATE_FEEVALUE, payload: returnData });
   }
 });
 
@@ -65,9 +86,13 @@ class Transactions extends Component {
   static contextTypes = {
     router: React.PropTypes.object
   };
-
   constructor(props) {
     super(props);
+    this.copyRef = element => {
+      this.textCopyArea = element;
+    }
+    this.hoveringID = 999999999999;
+    this.isHoveringOverTable = false;
     this.state = {
       walletTransactions: [
         {
@@ -87,27 +112,8 @@ class Transactions extends Component {
           fee: 0
         }
       ],
-      currentTransactions: [
-        {
-          transactionnumber: 0,
-          confirmations: 0,
-          time: 0,
-          category: "",
-          amount: 0,
-          txid: 0,
-          account: "",
-          address: "",
-          value: {
-            USD: 0,
-            BTC: 0
-          },
-          coin: "Nexus",
-          fee: 0
-        }
-      ],
       tableColumns: [],
       displayTimeFrame: "All",
-      DataThisIsShowing: [{}],
       amountFilter: 0,
       categoryFilter: "all",
       addressFilter: "",
@@ -116,7 +122,7 @@ class Transactions extends Component {
           new Date(
             new Date().getFullYear() - 1,
             new Date().getMonth(),
-            new Date().getDate()
+            new Date().getDate(),1,1,1,1
           ),
           new Date()
         ],
@@ -125,7 +131,6 @@ class Transactions extends Component {
       isHoveringOverTable: false,
       hoveringID: 999999999999,
       open: false,
-      exectuedHistoryData: false,
       historyData: new Map(),
       transactionsToCheck: [],
       mainChartWidth: 0,
@@ -138,15 +143,19 @@ class Transactions extends Component {
       addressLabels: new Map(),
       refreshInterval: undefined,
       highlightedBlockNum: "Loading",
-      highlightedBlockHash: "Loading"
+      highlightedBlockHash: "Loading",
+      needsHistorySave: false,
+      copyBuffer: ""
     };
   }
 
-  /// Component Did Mount
-  /// Life cycle hook for page getting loaded
+  // React Method (Life cycle hook)
   componentDidMount() {
+    this._isMounted = true;
     this.updateChartAndTableDimensions();
     this.props.googleanalytics.SendScreen("Transactions");
+
+    this.gethistorydatajson();
     let myaddresbook = this.readAddressBook();
     if (myaddresbook != undefined) {
       for (let key in myaddresbook.addressbook) {
@@ -167,19 +176,16 @@ class Transactions extends Component {
       for (let eachaddress in this.props.myAccounts[key].addresses) {
         tempaddpress.set(
           this.props.myAccounts[key].addresses[eachaddress],
-
           "My Address-" + this.props.myAccounts[key].account
         );
       }
     }
-    this.loadMyAccounts();
-    //console.log(tempaddpress);
+
+    this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
 
     let interval = setInterval(() => {
-      console.log("THIS IS THE INTERVAL WORKING");
-      this.getTransactionData(false);
-    }, 30000);
-
+      this.getTransactionData(this.setConfirmationsCallback.bind(this));
+    }, 60000);
     this.setState({
       refreshInterval: interval,
       addressLabels: tempaddpress
@@ -194,12 +200,6 @@ class Transactions extends Component {
       false
     );
 
-    if (this.state.exectuedHistoryData == false) {
-      this.setState({
-        exectuedHistoryData: true
-      });
-    }
-
     this.transactioncontextfunction = this.transactioncontextfunction.bind(
       this
     );
@@ -209,7 +209,26 @@ class Transactions extends Component {
       false
     );
   }
+  // React Method (Life cycle hook)
+  componentDidUpdate(previousprops) {
+    if (this.props.txtotal != previousprops.txtotal) {
+      this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
+    }
+  }
 
+  // React Method (Life cycle hook)
+  componentWillUnmount() {
+    this._isMounted = false;
+    this.SaveHistoryDataToJson();
+    clearInterval(this.state.refreshInterval);
+    this.setState({
+      refreshInterval: null
+    });
+    window.removeEventListener("resize", this.updateChartAndTableDimensions);
+    window.removeEventListener("contextmenu", this.transactioncontextfunction);
+  }
+
+  // Class Methods
   loadMyAccounts() {
     RPC.PROMISE("listaccounts", [0]).then(payload => {
       Promise.all(
@@ -247,16 +266,11 @@ class Transactions extends Component {
               }
             }
           });
-
           for (let key in accountsList) {
             for (let eachaddress in accountsList[key].addresses) {
               tempaddpress.set(
                 accountsList[key].addresses[eachaddress],
-                <FormattedMessage
-                  id="transactions.MyAccount"
-                  defaultMessage="My Account"
-                />
-                // + accountsList[key].account
+                "My Account-" + accountsList[key].account
               );
             }
           }
@@ -274,23 +288,83 @@ class Transactions extends Component {
     });
   }
 
-  /// Component Did Update
-  /// Life cycle hook for prop update
-  componentDidUpdate(previousprops) {
-    if (this.props.txtotal != previousprops.txtotal) {
-      this.getTransactionData(false);
+  // The callback for when we want to update just the confirmations
+  setConfirmationsCallback(incomingData) {
+    this.props.UpdateConfirmationsOnTransactions(incomingData);
+  }
+
+  // The callback for the on Mount State
+  setOnmountTransactionsCallback(incomingData) {
+    let objectheaders = Object.keys(this.state.walletTransactions[0]);
+    let tabelheaders = [];
+    objectheaders.forEach(element => {
+      tabelheaders.push({
+        Header: element,
+        accessor: element
+      });
+    });
+
+    this.props.SetWalletTransactionArray(incomingData);
+    let tempZoomDomain = {
+      x: [
+        new Date(),
+        new Date(new Date().getFullYear() + 1,1,1,1,1,1,1)
+      ]
     }
+    
+    if (incomingData != undefined && incomingData.length > 0)
+    {
+      tempZoomDomain = {
+        x: [
+          new Date(incomingData[0].time * 1000),
+          new Date((incomingData[incomingData.length - 1].time + 1000) * 1000)
+        ]
+      }
+    }
+    this.setState({
+      tableColumns: tabelheaders,
+      zoomDomain: tempZoomDomain
+    });
+    // Just trying to give some space on this not important call
+    setTimeout(() => {
+      let promisnew = new Promise((resolve, reject) => {
+        let temp = this.state.transactionsToCheck;
+        incomingData.forEach(element => {
+          let temphistoryData = this.findclosestdatapoint(
+            element.time.toString()
+          );
+          if (temphistoryData == undefined) {
+            temp.push(element.time);
+          }
+        });
+
+        resolve(temp);
+      });
+      promisnew.then(payload => {
+        this.setState({
+          transactionsToCheck: payload
+        });
+        this.gothroughdatathatneedsit();
+      });
+
+      let feePromises = [];
+      incomingData.forEach(element => {
+        if (element.category == "send"){
+        feePromises.push( RPC.PROMISE("gettransaction",[element.txid]));
+        }
+      });
+      Promise.all(feePromises).then( payload => {
+        let feeData = new Map();
+        payload.map(element => {
+          feeData.set(element.time,element.fee);
+        });
+        this.setFeeValuesOnTransaction(feeData)
+      }
+      );
+    }, 1000);
   }
 
-  /// Component Will Unmount
-  /// Life cycle hook for leaving the page
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateChartAndTableDimensions);
-    window.removeEventListener("contextmenu", this.transactioncontextfunction);
-  }
-
-  /// Update Chart and Table Dimensions
-  /// Updates the height and width of the chart and table when you resize the window
+  // Updates the height and width of the chart and table when you resize the window
   updateChartAndTableDimensions(event) {
     let chart = document.getElementById("transactions-chart");
     let filters = document.getElementById("transactions-filters");
@@ -337,61 +411,43 @@ class Transactions extends Component {
     });
   }
 
-  /// Transaction Context Function
-  /// This is the method that is called when the user pressed the right click
-  /// Input:
-  ///   e || Event || Default Events given by the system for right click
+  // This is the method that is called when the user pressed the right click
+  // Input:
+  //   e || Event || Default Events given by the system for right click
   transactioncontextfunction(e) {
     // Prevent default action of right click
     e.preventDefault();
 
-    const template = [
-      {
-        label: "File",
-        submenu: [
-          {
-            label: "Copy",
-            role: "copy"
-          }
-        ]
-      },
-      {
-        label: "Reload",
-        accelerator: "CmdOrCtrl+R",
-        click(item, focusedWindow) {
-          if (focusedWindow) focusedWindow.reload();
-        }
-      }
-    ];
-
-    const yuup = new ContextMenuBuilder().defaultContext;
+    const defaultcontextData = new ContextMenuBuilder().defaultContext;
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(yuup);
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(defaultcontextData);
     //create new custom
     let transactiontablecontextmenu = new remote.Menu();
 
+    //Creates the action that happens when you click
     let moreDatailsCallback = function() {
-      RPC.PROMISE("gettransaction", [
-        this.props.walletitems[this.state.hoveringID].txid
-      ]).then(payload => {
-        console.log(payload);
-
-        RPC.PROMISE("getblock", [payload.blockhash]).then(payload2 => {
-          console.log(payload2);
-          this.setState({
-            highlightedBlockHash: payload.blockhash,
-            highlightedBlockNum: payload2.height
-          });
-        });
-      });
-
       this.setState({
         highlightedBlockHash: "Loading",
         highlightedBlockNum: "Loading",
         open: true
       });
+
+      if (this.props.walletitems[this.hoveringID].confirmations != 0) {
+        RPC.PROMISE("gettransaction", [
+          this.props.walletitems[this.hoveringID].txid
+        ]).then(payload => {
+          RPC.PROMISE("getblock", [payload.blockhash]).then(payload2 => {
+            this.setState({
+              highlightedBlockHash: payload.blockhash,
+              highlightedBlockNum: payload2.height
+            });
+          });
+        });
+      }
     };
     moreDatailsCallback = moreDatailsCallback.bind(this);
+
+    // Build out the context menu
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
@@ -403,23 +459,32 @@ class Transactions extends Component {
     );
 
     let tablecopyaddresscallback = function() {
-      this.copysomethingtotheclipboard(
-        this.state.walletTransactions[this.state.hoveringID].address
-      );
+      if (this.hoveringID != 999999999999)
+      {
+        this.copysomethingtotheclipboard(
+          this.props.walletitems[this.hoveringID].address
+        );
+      }
     };
     tablecopyaddresscallback = tablecopyaddresscallback.bind(this);
 
     let tablecopyamountcallback = function() {
-      this.copysomethingtotheclipboard(
-        this.state.walletTransactions[this.state.hoveringID].amount
-      );
+      if (this.hoveringID != 999999999999)
+      {
+        this.copysomethingtotheclipboard(
+          this.props.walletitems[this.hoveringID].amount
+        );
+       }
     };
     tablecopyamountcallback = tablecopyamountcallback.bind(this);
 
     let tablecopyaccountcallback = function() {
-      this.copysomethingtotheclipboard(
-        this.state.walletTransactions[this.state.hoveringID].account
-      );
+      if (this.hoveringID != 999999999999)
+      {
+        this.copysomethingtotheclipboard(
+          this.props.walletitems[this.hoveringID].account
+        );
+      }
     };
     tablecopyaccountcallback = tablecopyaccountcallback.bind(this);
 
@@ -449,24 +514,26 @@ class Transactions extends Component {
       })
     );
 
+    // Additional Functions for the context menu
+
     let sendtoSendPagecallback = function() {
       this.props.SetSendAgainData({
-        address: this.state.walletTransactions[this.state.hoveringID].address,
-        account: this.state.walletTransactions[this.state.hoveringID].account,
-        amount: this.state.walletTransactions[this.state.hoveringID].amount
+        address: this.state.walletTransactions[this.hoveringID].address,
+        account: this.state.walletTransactions[this.hoveringID].account,
+        amount: this.state.walletTransactions[this.hoveringID].amount
       });
       this.context.router.history.push("/SendRecieve");
     };
-    sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
+    //sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
 
     let sendtoBlockExplorercallback = function() {
       this.props.SetExploreInfo({
-        transactionId: this.state.walletTransactions[this.state.hoveringID].txid
+        transactionId: this.state.walletTransactions[this.hoveringID].txid
       });
       this.context.router.history.push("/BlockExplorer");
     };
 
-    sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
+    //sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
 
     /* //Putting this on hold
     //Add Resending the transaction option
@@ -476,7 +543,7 @@ class Transactions extends Component {
         click() {
 
           sendtoSendPagecallback();
-          
+ 
         }
       })
     ); */
@@ -491,147 +558,107 @@ class Transactions extends Component {
       })
     );
     */
-    if (this.state.isHoveringOverTable) {
+ 
+    if (this.isHoveringOverTable) {
       transactiontablecontextmenu.popup(remote.getCurrentWindow());
     } else {
       defaultcontextmenu.popup(remote.getCurrentWindow());
     }
   }
 
-  /// Copy Something To The Clipboard
-  /// Copies the input to the clipboard
-  /// Input :
-  ///   instringtocopy      || String || String to copy
+  // Input :
+  //   instringtocopy      || String || String to copy
   copysomethingtotheclipboard(instringtocopy) {
-    let tempelement = document.createElement("textarea");
-    tempelement.value = instringtocopy;
-    document.body.appendChild(tempelement);
-    tempelement.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempelement);
+    copy(instringtocopy);
   }
 
-  /// Get Transaction Data
-  /// Gets all the data from each account held by the wallet
-  getTransactionData(resetZoom) {
-    RPC.PROMISE("listaccounts", [0]).then(payload => {
-      //console.log(payload);
-      let listedaccounts = Object.keys(payload);
-      let promisList = [];
-      listedaccounts.forEach(element => {
-        promisList.push(RPC.PROMISE("listtransactions", [element, 9999, 0]));
-      });
-      let tempWalletTransactions = [];
+  // Gets all the data from each account held by the wallet
+  getTransactionData(finishingCallback) {
+    const incomingMyAccounts = this.props.myAccounts;
+    let listedaccounts = [];
+    let promisList = [];
 
-      let settingsCheckDev = require("../../api/settings.js").GetSettings();
+    incomingMyAccounts.forEach(element => {
+      listedaccounts.push(element.account);
+      promisList.push(
+        RPC.PROMISE("listtransactions", [element.account, 9999, 0])
+      );
+    });
+    let tempWalletTransactions = [];
 
-      if (settingsCheckDev.devMode == true) {
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-        tempWalletTransactions.push(this.TEMPaddfaketransaction());
-      }
+    let settingsCheckDev = require("../../api/settings.js").GetSettings();
 
-      let objectheaders = Object.keys(this.state.walletTransactions[0]);
-      let tabelheaders = [];
-      objectheaders.forEach(element => {
-        tabelheaders.push({
-          Header: element,
-          accessor: element
-        });
-      });
+    // If in Dev Mode add some random transactions
+    if (settingsCheckDev.devMode == true) {
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+    }
+    if (
+      promisList == null ||
+      promisList == undefined ||
+      promisList.length == 0
+    ) {
+      return;
+    }
 
-      if (
-        promisList == null ||
-        promisList == undefined ||
-        promisList.length == 0
-      ) {
-        return;
-      }
-
-      Promise.all(promisList).then(payload => {
-        //console.log(payload);
-        payload.forEach(element => {
-          for (let index = 0; index < element.length; index++) {
-            const element2 = element[index];
-            // if a move happend don't place it in the chart or table.
-            if (element2.category === "move") {
-              return;
-            }
-            const getLable = this.state.addressLabels.get(element2.address);
-
-            let tempTrans = {
-              transactionnumber: index,
-              confirmations: element2.confirmations,
-              time: element2.time,
-              category: element2.category,
-              amount: element2.amount,
-              txid: element2.txid,
-              account: getLable,
-              address: element2.address,
-              value: {
-                USD: 0,
-                BTC: 0
-              },
-              coin: "Nexus",
-              fee: 0
-            };
-            tempWalletTransactions.push(tempTrans);
+    Promise.all(promisList).then(payload => {
+      payload.forEach(element => {
+        for (let index = 0; index < element.length; index++) {
+          const element2 = element[index];
+          // if a move happend don't place it in the chart or table.
+          if (element2.category === "move") {
+            return;
           }
-        });
+          const getLable = this.state.addressLabels.get(element2.address);
 
-        //console.log(tempWalletTransactions);
-        tempWalletTransactions.sort((a, b) => {
-          return a.time > b.time ? 1 : b.time > a.time ? -1 : 0;
-        });
-        this.props.SetWalletTransactionArray(tempWalletTransactions);
-        //console.log(tempWalletTransactions);
-
-        let tempZoom = this.state.zoomDomain;
-
-        if (resetZoom == true) {
-          tempZoom = {
-            x: [
-              new Date(tempWalletTransactions[0].time * 1000),
-              new Date(
-                (tempWalletTransactions[tempWalletTransactions.length - 1]
-                  .time +
-                  1000) *
-                  1000
-              )
-            ]
+          let tempTrans = {
+            transactionnumber: index,
+            confirmations: element2.confirmations,
+            time: element2.time,
+            category: element2.category,
+            amount: element2.amount,
+            txid: element2.txid,
+            account: getLable,
+            address: element2.address,
+            value: {
+              USD: 0,
+              BTC: 0
+            },
+            coin: "Nexus",
+            fee: 0
           };
-        }
-
-        //console.log(this.props.walletitems);
-        this.setState(
-          {
-            tableColumns: tabelheaders,
-            zoomDomain: tempZoom
-          },
-          () => {
-            //console.log(this.props.walletitems);
-            for (
-              let index = 0;
-              index < this.state.walletTransactions.length;
-              index++
-            ) {
-              //this.getDataorNewData(index);
-            }
+          let closestData = this.findclosestdatapoint(element2.time.toString());
+          if (closestData != undefined) {
+            tempTrans.value[this.props.settings.fiatCurrency] =
+              closestData[this.props.settings.fiatCurrency];
+            tempTrans.value.BTC = closestData.BTC;
           }
-        );
-        //this.forceUpdate();
-        //this.gothroughdatathatneedsit();
+          tempWalletTransactions.push(tempTrans);
+        }
       });
+
+      tempWalletTransactions.sort((a, b) => {
+        return a.time > b.time ? 1 : b.time > a.time ? -1 : 0;
+      });
+
+      if (finishingCallback != undefined) {
+        finishingCallback(tempWalletTransactions);
+        return;
+      } else {
+        this.props.SetWalletTransactionArray(tempWalletTransactions);
+      }
     });
   }
 
+  // Set the display property in state from the dropdown element
   transactionTimeframeChange(event) {
     this.setState({
       displayTimeFrame: event.target.options[event.target.selectedIndex].value
@@ -639,25 +666,30 @@ class Transactions extends Component {
   }
 
   DownloadCSV() {
-    //Analytics.GANALYTICS.SendEvent("Transactions","CSV",this.state.displayTimeFrame,1);
-
-    this.saveCSV(this.returnAllFilters([...this.state.currentTransactions]));
+    this.props.googleanalytics.SendEvent(
+      "Transaction",
+      "Data",
+      "Download CSV",
+      1
+    );
+    this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
   }
 
-  /// Save CSV
-  /// creates a CSV file then prompts the user to save that file
-  /// Input :
-  ///   DataToSave  || Object Array || Transactions to save
+  // creates a CSV file then prompts the user to save that file
+  // Input :
+  //   DataToSave  || Object Array || Transactions to save
   saveCSV(DataToSave) {
     const rows = []; //Set up a blank array for each row
-    console.log(DataToSave);
+
+    let currencyValueLable = this.props.settings.fiatCurrency + " Value";
+
     //This is so we can have named columns in the export, this will be row 1
     let NameEntry = [
       "Number",
       "Account",
       "Address",
       "Amount",
-      "USD Value",
+      currencyValueLable,
       "BTC Value",
       "Type",
       "Time",
@@ -675,7 +707,10 @@ class Transactions extends Component {
         DataToSave[i].account,
         DataToSave[i].address,
         DataToSave[i].amount,
-        (DataToSave[i].amount * DataToSave[i].value.USD).toFixed(2),
+        (
+          DataToSave[i].amount *
+          DataToSave[i].value[this.props.settings.fiatCurrency]
+        ).toFixed(2),
         (DataToSave[i].amount * DataToSave[i].value.BTC).toFixed(8),
         DataToSave[i].category,
         DataToSave[i].time,
@@ -702,41 +737,33 @@ class Transactions extends Component {
     document.body.removeChild(link);
   }
 
-  /// Transaction Type Filter Callback
-  /// Callback for when you change the category filter
+  // Callback for when you change the category filter
   transactiontypefiltercallback = e => {
-    console.log(e.target.value);
     const catSearch = e.target.value;
     this.setState({
       categoryFilter: catSearch
     });
   };
 
-  /// Transaction Amount Filter Callback
-  /// Callback for when you change the amount filter
+  // Callback for when you change the amount filter
   transactionamountfiltercallback = e => {
-    console.log(e.target.value);
-
     const amountFilterValue = e.target.value;
     this.setState({
       amountFilter: amountFilterValue
     });
   };
 
-  /// Transaction Address Filter Callback
-  /// Callback for when you change the address filter
+  // Callback for when you change the address filter
   transactionaddressfiltercallback = e => {
-    console.log(e.target.value);
     const addressfiltervalue = e.target.value;
     this.setState({
       addressFilter: addressfiltervalue
     });
   };
 
-  /// Read AddressBook
-  /// Taken From address page
-  /// Return:
-  ///   json || address in json format
+  // Taken From address page
+  // Return:
+  //   json || address in json format
   readAddressBook() {
     let json = null;
     try {
@@ -747,8 +774,7 @@ class Transactions extends Component {
     return json;
   }
 
-  /// Filter By Category
-  /// Filter the transactions based on the CategoryFilter
+  // Filter the transactions based on the CategoryFilter
   filterByCategory(inTransactions) {
     let tempTrans = [];
     const categoryFilterValue = this.state.categoryFilter;
@@ -766,8 +792,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  /// Filter By Amount
-  /// Filter the transactions based on the AmountFilter
+  // Filter the transactions based on the AmountFilter
   filterbyAmount(inTransactions) {
     let tempTrans = [];
     const amountFilterValue = this.state.amountFilter;
@@ -782,8 +807,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  /// Filter By Address
-  /// Filter the transactions based on the AddressFilter
+  // Filter the transactions based on the AddressFilter
   filterByAddress(inTransactions) {
     let tempTrans = [];
     const addressfiltervalue = this.state.addressFilter;
@@ -799,8 +823,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  /// Filter By Time
-  /// Filter the transactions based on the DisplayTimeFrame
+  // Filter the transactions based on the DisplayTimeFrame
   filterByTime(inTransactions) {
     let tempTrans = [];
     const timeFilterValue = this.state.displayTimeFrame;
@@ -846,8 +869,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  ///Return All Filter
-  /// Returns all the transaction that have been filtered by the filter
+  // Returns all the transaction that have been filtered by the filter
   returnAllFilters(inTransactions) {
     let tempTrans = inTransactions;
     tempTrans = this.filterByTime(tempTrans);
@@ -857,8 +879,7 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  /// Temp Add Fack Transaction
-  /// DEV MODE: Create a fake transaction for testing.
+  // DEV MODE: Create a fake transaction for testing.
   TEMPaddfaketransaction() {
     let faketrans = {
       transactionnumber: this.props.walletitems.length,
@@ -905,23 +926,23 @@ class Transactions extends Component {
     if (faketrans.category == "send") {
       faketrans.amount = faketrans.amount * -1;
     }
-    console.log(faketrans);
+
     return faketrans;
   }
 
-  tryingsomething(e, indata) {
-    //console.log(indata);
-    //console.log("try");
-    //Use this to debug.
-    console.log(this);
-    this.setState({
-      hoveringID: indata.index
-    });
-    // hoveringID:inData.index
+  // What happens when you select something in the table
+  tableSelectCallback(e, indata) {
+    console.log(e.target.innerText);
+    console.log(indata);
+    //e.target.select();
+    //document.execCommand('copy');
+    //this.setState({
+    //  hoveringID: indata.index
+    //});
+    this.hoveringID = indata.index;
   }
 
-  /// Return Formated Table Data
-  /// Return the data to be placed into the Table
+  // Return the data to be placed into the Table
   returnFormatedTableData() {
     if (this.props.walletitems == undefined) {
       return [];
@@ -934,16 +955,6 @@ class Transactions extends Component {
       if (ele.confirmations <= 12) {
         isPending = "(Pending)";
       }
-      if (ele.category === "send") {
-        return (ele.category = this.props.messages[this.props.locale][
-          "transactions.Sent"
-        ]);
-      } else if (ele.category === "receive") {
-        return (ele.category = this.props.messages[this.props.locale][
-          "transactions.Received"
-        ]);
-      }
-
       return {
         transactionnumber: txCounter,
         time: ele.time,
@@ -955,21 +966,20 @@ class Transactions extends Component {
     });
   }
 
-  /// Return Table Columns
-  /// Returns the columns and their rules/formats for the Table
-  /// Output:
-  ///   Array || Table Column array
+  // Returns the columns and their rules/formats for the Table
+  // Output:
+  //   Array || Table Column array
   returnTableColumns() {
     let tempColumns = [];
 
     tempColumns.push({
-      Header: <FormattedMessage id="transactions.TX" defaultMessage="TX" />,
+      Header: "TX Number",
       accessor: "transactionnumber",
       maxWidth: 100
     });
 
     tempColumns.push({
-      Header: <FormattedMessage id="transactions.Time" defaultMessage="TIME" />,
+      Header: "time",
       id: "time",
       Cell: d => <div> {new Date(d.value * 1000).toUTCString()} </div>, // We want to display the time in  a readable format
       accessor: "time",
@@ -977,45 +987,33 @@ class Transactions extends Component {
     });
 
     tempColumns.push({
-      Header: (
-        <FormattedMessage
-          id="transactions.Category"
-          defaultMessage="CATEGORY"
-        />
-      ),
+      Header: "category",
       accessor: "category",
       maxWidth: 100
     });
 
     tempColumns.push({
-      Header: (
-        <FormattedMessage id="transactions.Amount" defaultMessage="AMOUNT" />
-      ),
+      Header: "amount",
       accessor: "amount",
       maxWidth: 100
     });
 
     tempColumns.push({
-      Header: (
-        <FormattedMessage id="transactions.Account" defaultMessage="ACCOUNT" />
-      ),
+      Header: "account",
       accessor: "account",
       maxWidth: 150
     });
 
     tempColumns.push({
-      Header: (
-        <FormattedMessage id="transactions.Address" defaultMessage="ADDRESS" />
-      ),
+      Header: "address",
       accessor: "address"
     });
     return tempColumns;
   }
 
-  /// Return Chart Data
-  /// Returns formated data for the Victory Chart
-  /// Output:
-  ///    Array || Data Array
+  // Returns formated data for the Victory Chart
+  // Output:
+  //    Array || Data Array
   returnChartData() {
     if (this.props.walletitems == undefined) {
       return [];
@@ -1031,6 +1029,7 @@ class Transactions extends Component {
     });
   }
 
+  // returns the correct fill color based on the category
   returnCorrectFillColor(inData) {
     if (inData.category == "receive") {
       return "#0ca4fb";
@@ -1041,20 +1040,7 @@ class Transactions extends Component {
     }
   }
 
-  /// Return Corrected Fill Color
-  /// returns the correct fill color based on the category
-  returnCorrectFillColor(inData) {
-    if (inData.category == "receive") {
-      return "#0ca4fb";
-    } else if (inData.category == "send") {
-      return "#035";
-    } else {
-      return "#fff";
-    }
-  }
-
-  /// Return Correct Stoke Color
-  /// Returns the Correct color based on the category
+  // Returns the Correct color based on the category
   returnCorrectStokeColor(inData) {
     if (inData.category == "receive") {
       return "#0ca4fb";
@@ -1064,22 +1050,14 @@ class Transactions extends Component {
       return "#fff";
     }
   }
-  /// Return Tooltip Lable
-  /// Returns the tooltip lable for the chart
+
+  // Returns the tooltip lable for the chart
   returnToolTipLable(inData) {
-    return (
-      inData.category +
-      `\n${this.props.messages[this.props.locale]["transactions.AMOUNT"]}: ` +
-      inData.b +
-      `\n${this.props.messages[this.props.locale]["transactions.TIME"]}: ` +
-      inData.a
-    );
+    return inData.category + "\nAmount: " + inData.b + "\nTime:" + inData.a;
   }
 
-  /// Handle Zoom
-  /// The event listener for when you zoom in and out
+  // The event listener for when you zoom in and out
   handleZoom(domain) {
-    //console.log(domain);
     domain.x[0] = new Date(domain.x[0]);
     domain.x[1] = new Date(domain.x[1]);
     let high = 0;
@@ -1103,23 +1081,19 @@ class Transactions extends Component {
     this.setState({ zoomDomain: domain });
   }
 
-  /// Mouse Over Callback
-  /// the callback for when you mouse over a transaction on the table.
+  // the callback for when you mouse over a transaction on the table.
   mouseOverCallback(e, inData) {
-    this.setState({
-      isHoveringOverTable: true
-    });
-  }
-  /// Mouse Out Callback
-  /// The call back for when the mouse moves out of the table div.
-  mouseOutCallback(e) {
-    this.setState({
-      isHoveringOverTable: false
-    });
+    
+    this.isHoveringOverTable = true;
   }
 
-  /// Get History Data Json
-  /// Either load in the file from local or start downloading more data and make a new one.
+  // The call back for when the mouse moves out of the table div.
+  mouseOutCallback(e) {
+  
+    this.isHoveringOverTable = false;
+  }
+
+  // Either load in the file from local or start downloading more data and make a new one.
   gethistorydatajson() {
     let fs = require("fs");
 
@@ -1141,221 +1115,104 @@ class Transactions extends Component {
       this.setState({
         historyData: newTempMap
       });
-    } catch (err) {
-      //File is not found or corrupted, make a new one.
-      //onsole.log(err);
-      this.getAllhourData();
-    }
+    } catch (err) {}
   }
 
-  /// Create Cryptocompare Url
-  /// Helper method to create URL's quickly
-  /// Input :
-  ///   coinsym         || String || The symbol for the coin/fiat we are looking for MUST BE IN CAPS
-  ///   timestamptolook || String || timestamp string ( in seconds) that will be the to var in looking up data
+  // Helper method to create URL's quickly
+  // Input :
+  //   coinsym         || String || The symbol for the coin/fiat we are looking for MUST BE IN CAPS
+  //   timestamptolook || String || timestamp string ( in seconds) that will be the to var in looking up data
   createcryptocompareurl(coinsym, timestamptolook) {
     let tempurl =
-      "https://min-api.cryptocompare.com/data/histohour?fsym=NXS&tsym=" +
+      "https://min-api.cryptocompare.com/data/pricehistorical?fsym=NXS&tsyms=" +
       coinsym +
-      "&limit=2000&toTs=" +
+      "&ts=" +
       timestamptolook;
     return tempurl;
   }
 
-  /// Get All Hour Data
-  /// Gather 2 years of data for a new history json file
-  getAllhourData() {
-    // We first have a download of data from may to the last known data that cryptocompare has data for.
-    // This is not great but we can only get data in 15 calls persecond so this is a good start.
-    let nowepoch = Math.ceil(new Date(2018, 5, 8, 10, 25, 25, 500) / 1000);
-    let cryptocompareurl1 = this.createcryptocompareurl("USD", nowepoch);
-    let cryptocompareurl8 = this.createcryptocompareurl("BTC", nowepoch);
-    let cryptocompareurl2 = this.createcryptocompareurl(
-      "USD",
-      Math.ceil(new Date(nowepoch - 7776000 * 1))
-    );
-    let cryptocompareurl5 = this.createcryptocompareurl(
-      "BTC",
-      Math.ceil(new Date(nowepoch - 7776000 * 1))
-    );
-    let cryptocompareurl3 = this.createcryptocompareurl(
-      "USD",
-      Math.ceil(new Date(nowepoch - 7776000 * 2))
-    );
-    let cryptocompareurl6 = this.createcryptocompareurl(
-      "BTC",
-      Math.ceil(new Date(nowepoch - 7776000 * 2))
-    );
-    let cryptocompareurl4 = this.createcryptocompareurl(
-      "USD",
-      Math.ceil(new Date(nowepoch - 7776000 * 3))
-    );
-    let cryptocompareurl7 = this.createcryptocompareurl(
-      "BTC",
-      Math.ceil(new Date(nowepoch - 7776000 * 3))
-    );
-    let cryptocompareurl9 = this.createcryptocompareurl(
-      "USD",
-      Math.ceil(new Date(nowepoch - 7776000 * 4))
-    );
-    let cryptocompareurl10 = this.createcryptocompareurl(
-      "BTC",
-      Math.ceil(new Date(nowepoch - 7776000 * 4))
-    );
-    let cryptocompareurl11 = this.createcryptocompareurl(
-      "USD",
-      Math.ceil(new Date(nowepoch - 7776000 * 5))
-    );
-    let cryptocompareurl12 = this.createcryptocompareurl(
-      "BTC",
-      Math.ceil(new Date(nowepoch - 7776000 * 5))
-    );
-    let cryptocompareurl13 = this.createcryptocompareurl(
-      "USD",
-      Math.ceil(new Date(nowepoch - 7776000 * 6))
-    );
-    let cryptocompareurl14 = this.createcryptocompareurl(
-      "BTC",
-      Math.ceil(new Date(nowepoch - 7776000 * 6))
-    );
-    let promsiewait = new Promise(function(resolve, reject) {
-      setTimeout(resolve, 1000);
-    });
-
-    //Call the promises and make a chain.
-    this.createhistoricaldatapullpromise(cryptocompareurl1, "USD")
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl2, "USD"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl3, "USD"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl4, "USD"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl5, "BTC"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl6, "BTC"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl7, "BTC"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl8, "BTC"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl9, "USD"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl10, "BTC"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl11, "USD"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl12, "BTC"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl13, "USD"))
-      .then(promsiewait)
-      .then(this.createhistoricaldatapullpromise(cryptocompareurl14, "BTC"))
-      .then(promsiewait);
+  // Build a object from incoming data then dispatch that to redux to populate that transaction
+  // Input:
+  //     timeID    || String || Timestamp
+  //     USDValue  || Float  || The value in USD
+  //     BTCValue  || Float  || The value in BTC
+  setHistoryValuesOnTransaction(timeID, USDvalue, BTCValue) {
+    let dataToChange = {
+      time: timeID,
+      value: {
+        [this.props.settings.fiatCurrency]: USDvalue,
+        BTC: BTCValue
+      }
+    };
+    this.props.UpdateCoinValueOnTransaction(dataToChange);
   }
 
-  /// Grab More History Data
-  /// If more data is need give this a timestamp and troubled transaction then added to the history file
-  /// Input :
-  ///   intimestamp       || String || String Timestamp
-  ///   trnsactionIndex   || Number || The index that needs more data
-  grabmorehistorydata(intimestamp, transactionIndex) {
-    //This locks from calling the api at the same time.
-    TRANSACTIONS.gettingmoredata = true;
-    console.log("NeededNewInfo");
-
-    //Create the URL's
-    let cryptocompareurlUSD = createcryptocompareurl("USD", intimestamp);
-    let cryptocompareurlBTC = createcryptocompareurl("BTC", intimestamp);
-
-    //Get Both new USD and BTC Data
-    this.createhistoricaldatapullpromise(cryptocompareurlUSD, "USD").then(
-      data => {
-        console.log(data);
-        this.createhistoricaldatapullpromise(cryptocompareurlBTC, "BTC").then(
-          data => {
-            setTimeout(() => {
-              console.log(this.state.historyData);
-              //TRANSACTIONS.gettingmoredata = false;
-              //TRANSACTIONS.getpriceattime(transactionIndex); //Now there is more data, process that transaction.
-            });
-          }
-        );
-      }
-    );
+  /// Set Fee Values On Transaction
+  /// Build a object from incoming data then dispatch that to redux to populate that transaction
+  /// Input:
+  ///     incomingChangeData    || Array || Data that needs to be changed.
+  setFeeValuesOnTransaction(incomingChangeData) {
+    this.props.UpdateFeeOnTransaction(incomingChangeData);
   }
 
-  setnewdatafunction(body, tokentocompare) {
-    let result = body;
-    console.log(result);
-    let previousDataFile = this.state.historyData;
-    //For each point returned at it to the historydatamap.
-    result["Data"].forEach(element => {
-      let tempdataobj = {};
-      let tempdataattribute = "price" + tokentocompare;
-      tempdataobj[tempdataattribute] = element["open"];
-      let incomingelement = tempdataobj;
-
-      Object.assign(incomingelement, previousDataFile.get(element["time"]));
-      previousDataFile.set(element["time"], incomingelement);
-    });
-    this.setState({
-      historyData: previousDataFile
-    });
-    console.log(this.state.historyData);
-  }
-
-  processHistoryReponse = function(error, response, body) {
-    if (!error && response.statusCode === 200) {
-      console.log(response["request"]["path"]);
-      let symbolToLook;
-      if (response["request"]["path"].includes("USD", 10) == true) {
-        console.log("99999999999999");
-        symbolToLook = "USD";
-      }
-      if (response["request"]["path"].includes("BTC", 10) == true) {
-        console.log("0000000000000000000");
-        symbolToLook = "BTC";
-      }
-      this.setnewdatafunction(body, symbolToLook);
+  // Download both USD and BTC history on the incoming transaction
+  // Input:
+  //     inEle   || String || the timestamp of the transaction
+  downloadHistoryOnTransaction(inEle) {
+    if (this._isMounted == false) {
+      return;
     }
   };
 
-  handleHistoryReQuest = function(resolve, reject, urltoask, tokentocomapre) {
-    this.processHistoryReponse.bind(this);
-
-    Request(
-      {
-        url: urltoask,
-        json: true
-      },
-      this.processHistoryReponse.bind(this)
-    ).on("response", () => resolve(true));
-  };
-
-  handleHistoryReQuest = function(resolve, reject, urltoask, tokentocomapre) {
-    this.historyProcessChain = this.historyProcessChain.bind(this);
-    setTimeout(() => {
-      this.historyProcessChain(resolve, reject, urltoask, tokentocomapre);
-    }, 250 + Math.floor(Math.random() * 2000));
-  };
-
-  /// Create History Data pull promise
-  /// This will create and return a promise based on the cryptocompare url, and needs which coin to get info from (the api only accepts one coin at a time)
-  /// Input :
-  ///   urltoask        || String || URL to attach to this promise to look up
-  ///   tokentocomapre  || String || Either 'USD' or 'BTC'
-  /// Output :
-  ///   Promise         || Promise to be executed
-  createhistoricaldatapullpromise(urltoask, tokentocompare) {
-    this.setnewdatafunction.bind(this);
-
-    let internalpromise = new Promise((resolve, reject) =>
-      this.gjggjgjgj(resolve, reject, urltoask, tokentocompare)
+    let USDurl = this.createcryptocompareurl(
+      [this.props.settings.fiatCurrency],
+      inEle
     );
+    let BTCurl = this.createcryptocompareurl("BTC", inEle);
 
-    return internalpromise;
+    rp(USDurl).then(payload => {
+      let incomingUSD = JSON.parse(payload);
+
+      setTimeout(() => {
+        if (this._isMounted == false) {
+          return;
+        }
+        rp(BTCurl).then(payload2 => {
+          if (this._isMounted == false) {
+            return;
+          }
+          let incomingBTC = JSON.parse(payload2);
+
+          this.setHistoryValuesOnTransaction(
+            inEle,
+            incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
+            incomingBTC["NXS"]["BTC"]
+          );
+          let tempHistory = this.state.historyData;
+          if (this.state.historyData.has(inEle)) {
+            tempHistory.set(inEle, {
+              ...this.state.historyData.get(inEle),
+              [this.props.settings.fiatCurrency]:
+                incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
+              BTC: incomingBTC["NXS"]["BTC"]
+            });
+          } else {
+            tempHistory.set(inEle, {
+              [this.props.settings.fiatCurrency]:
+                incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
+              BTC: incomingBTC["NXS"]["BTC"]
+            });
+          }
+          this.setState({
+            historyData: tempHistory,
+            needsHistorySave: true
+          });
+        });
+      }, 500);
+    });
   }
 
+  // Go through all the data points that need to download new data a execute that promise
   gothroughdatathatneedsit() {
     let historyPromiseList = [];
     for (
@@ -1363,139 +1220,41 @@ class Transactions extends Component {
       index < this.state.transactionsToCheck.length;
       index++
     ) {
+      let daylayaction = new Promise((resolve, reject) => {
+        if (this._isMounted == false) {
+          reject();
+        }
+        setTimeout(resolve, 500 * index);
+      });
       const element = this.state.transactionsToCheck[index];
-      historyPromiseList.push({ incomingIndex: element, this: this });
+      daylayaction.then(() => this.downloadHistoryOnTransaction(element));
     }
 
-    historyPromiseList
-      .reduce(
-        (p, v) =>
-          p.then(otp =>
-            this.generateHistoryPromise(v.this, v.incomingIndex, otp)
-          ),
-        Promise.resolve()
-      )
-      .then(() => {
-        setTimeout(() => {
-          this.afterHistoryPromiseProcessAndSave();
-        }, 3000);
-      });
-  }
-
-  generateHistoryPromise(incomingthis, incomingIndex, passthroughdata) {
-    return new Promise(function(resolve, reject) {
-      let founddata = incomingthis.findclosestdatapoint(
-        incomingthis.state.walletTransactions[incomingIndex].time.toString()
-      );
-      if (founddata == undefined) {
-        // console.log(incomingthis);
-        let cryptocompareurlUSD = incomingthis.createcryptocompareurl(
-          "USD",
-          incomingthis.state.walletTransactions[incomingIndex].time
-        );
-        let cryptocompareurlBTC = incomingthis.createcryptocompareurl(
-          "BTC",
-          incomingthis.state.walletTransactions[incomingIndex].time
-        );
-
-        let allpromise = [];
-        allpromise.push(
-          incomingthis.createhistoricaldatapullpromise(
-            cryptocompareurlUSD,
-            "USD"
-          )
-        );
-        allpromise.push(
-          incomingthis.createhistoricaldatapullpromise(
-            cryptocompareurlBTC,
-            "BTC"
-          )
-        );
-        Promise.all(allpromise).then(ttttt => {
-          setTimeout(() => {
-            console.log("********");
-            console.log(ttttt);
-            resolve(ttttt);
-          }, 1000);
-        });
-        console.log("$$$$$$$$$$$$$$$$$$$$$$");
-        setTimeout(() => {
-          let ggggg = "true" + passthroughdata;
-          console.log(ggggg);
-        }, 2000);
-      } else {
-        console.log("Didn;t need more");
-        let founddata = incomingthis.findclosestdatapoint(
-          incomingthis.state.walletTransactions[incomingIndex].time.toString()
-        );
-        let temp = incomingthis.state.walletTransactions;
-        temp[incomingIndex].value.USD = founddata.priceUSD;
-        temp[incomingIndex].value.BTC = founddata.priceBTC;
-        incomingthis.setState({
-          walletTransactions: temp
-        });
-        resolve(false);
-      }
-    });
-  }
-
-  returnIfFoundHistoryData(incomingIndex) {
-    let founddata = this.findclosestdatapoint(
-      this.props.walletitems[incomingIndex].time.toString()
-    );
-    if (founddata == undefined) {
-      return true;
-    } else {
-      return false;
+    if (this.state.transactionsToCheck.length != 0) {
+      setTimeout(() => {
+        this.SaveHistoryDataToJson();
+      }, this.state.transactionsToCheck.length * 1000 + 1000);
     }
   }
 
-  getDataorNewData(incomingIndex) {
-    let founddata = this.findclosestdatapoint(
-      this.props.walletitems[incomingIndex].time.toString()
-    );
-    if (founddata == undefined) {
-      let temp = this.state.transactionsToCheck;
-      temp.push(incomingIndex);
-      this.setState({
-        transactionsToCheck: temp
-      });
-    } else {
-      let tempwalletTrans = this.props.walletitems;
-      tempwalletTrans[incomingIndex].value.USD = founddata.priceUSD;
-      tempwalletTrans[incomingIndex].value.BTC = founddata.priceBTC;
-      this.props.SetWalletTransactionArray(tempwalletTrans);
-    }
-  }
-
-  afterHistoryPromiseProcessAndSave() {
-    this.addhistorydatatoprevious();
-    this.SaveHistoryDataToJson();
-  }
-
-  addhistorydatatoprevious() {
-    let tempdata = this.props.walletitems;
-    for (let index = 0; index < tempdata.length; index++) {
-      let founddata = this.findclosestdatapoint(
-        this.props.walletitems[index].time.toString()
-      );
-      if (founddata != undefined) {
-        tempdata[index].value.USD = founddata.priceUSD;
-        tempdata[index].value.BTC = founddata.priceBTC;
-      }
-    }
-
-    this.props.SetWalletTransactionArray(tempdata);
-  }
-
+  // Save the history data to a json file
   SaveHistoryDataToJson() {
+    if (
+      this.state.historyData.size == 0 ||
+      this.state.needsHistorySave == false
+    ) {
+      return;
+    }
+    this.setState({
+      needsHistorySave: false
+    });
     let appdataloc =
       process.env.APPDATA ||
       (process.platform == "darwin"
         ? process.env.HOME + "Library/Preferences"
         : process.env.HOME);
     appdataloc = appdataloc + "/.Nexus/";
-    console.log("Saving");
+
     let fs = require("fs");
 
     fs.writeFile(
@@ -1509,17 +1268,16 @@ class Transactions extends Component {
     );
   }
 
-  /// Map To Object
-  /// Used to transform a Map to a Object so that we can save it to a json file
-  /// http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
-  /// Based on code from http://2ality.com/2015/08/es6-map-json.html
-  /// Input :
-  ///   aMap    || Map || A map of the data
-  /// Output :
-  ///   Object  || A object that replaces the map but contains the same data.
+  // Used to transform a Map to a Object so that we can save it to a json file
+  // http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
+  // Based on code from http://2ality.com/2015/08/es6-map-json.html
+  // Input :
+  //   aMap    || Map || A map of the data
+  // Output :
+  //   Object  || A object that replaces the map but contains the same data.
   mapToObject(aMap) {
     let obj = Object.create(null);
-    console.log("Happen");
+
     for (let [k, v] of aMap) {
       // We don’t escape the key '__proto__' which can cause problems on older engines
       if (v instanceof Map) {
@@ -1531,48 +1289,32 @@ class Transactions extends Component {
     return obj;
   }
 
-  /// Find CLoses Data Point
-  /// If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC
-  /// Input :
-  ///   intimestamp || String || Timestamp to look up
-  /// Output :
-  ///     Object || A object that contains priceUSD and priceBTC
+  // If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC
+  // Input :
+  //   intimestamp || String || Timestamp to look up
+  // Output :
+  //     Object || A object that contains priceUSD and priceBTC
   findclosestdatapoint(intimestamp) {
-    console.log(intimestamp);
-    let modifiedtimestamp = intimestamp.substring(0, 8);
-    modifiedtimestamp += "00";
-    console.log(modifiedtimestamp);
-    let numberremainder = Number(modifiedtimestamp) % 3600;
-    let datatograb;
-
-    console.log(numberremainder);
-
-    datatograb = this.state.historyData.get(
-      Number(modifiedtimestamp) + numberremainder
-    );
-
+    let datatograb = this.state.historyData.get(Number(intimestamp));
     if (datatograb == undefined) {
-      datatograb = this.state.historyData.get(
-        Number(modifiedtimestamp) - numberremainder
-      );
+      return undefined;
+    } else {
+      if (datatograb[[this.props.settings.fiatCurrency]] == undefined) {
+        return undefined;
+      } else {
+        return datatograb;
+      }
     }
-    console.log(datatograb);
-    return datatograb;
   }
 
-  /// Compare Data
-  /// Compares a Data to a from Data and a To Data and returns a Bool
-  /// Input :
-  ///   indate    || Date || Date to check
-  ///   starttime || Date || Date from
-  ///   endtime   || Date || Date to
-  /// Output :
-  ///   Bool || Is this true or not
+  // Compares a Data to a from Data and a To Data and returns a Bool
+  // Input :
+  //   indate    || Date || Date to check
+  //   starttime || Date || Date from
+  //   endtime   || Date || Date to
+  // Output :
+  //   Bool || Is this true or not
   comparedate(indate, starttime, endtime) {
-    console.log(
-      "In Time: " + indate + " StartTime: " + starttime + " EndTime: " + endtime
-    );
-
     if (starttime <= indate && indate <= endtime) {
       return true;
     } else {
@@ -1580,25 +1322,28 @@ class Transactions extends Component {
     }
   }
 
-  /// On Open Modal
-  /// Fired when you attempt to open the modal
-  onOpenModal = () => {
+  // Fired when you attempt to open the modal
+  onOpenModal() {
     this.setState({ open: true });
-  };
+  }
 
-  /// On Close Modal
-  /// Fired when you attempt to open the modal
-  onCloseModal = () => {
+  // Fired when you attempt to open the modal
+  onCloseModal() {
     this.setState({ open: false });
-  };
+  }
 
   returnModalInternal() {
     let internalString = [];
     if (
-      this.state.hoveringID != 999999999999 &&
+      this.hoveringID != 999999999999 &&
       this.props.walletitems.length != 0
     ) {
-      const selectedTransaction = this.props.walletitems[this.state.hoveringID];
+      const selectedTransaction = this.props.walletitems[this.hoveringID];
+
+      if (selectedTransaction.confirmations <= 12) {
+        internalString.push(<a key="isPending">PENDING TRANSACTION</a>);
+        internalString.push(<br key="br10" />);
+      }
 
       if (selectedTransaction.confirmations <= 12) {
         internalString.push(<a key="isPending">PENDING TRANSACTION</a>);
@@ -1609,6 +1354,13 @@ class Transactions extends Component {
         <a key="modal_amount">{"Amount: " + selectedTransaction.amount}</a>
       );
       internalString.push(<br key="br2" />);
+      if (selectedTransaction.category == "send")
+      {
+        internalString.push(
+          <a key="modal_fee">{"Fee: " + selectedTransaction.fee}</a>
+        );
+        internalString.push(<br key="br11" />);
+      }
       internalString.push(
         <a key="modal_time">
           {"Time: " +
@@ -1652,6 +1404,7 @@ class Transactions extends Component {
     return defPagesize;
   }
 
+  // Mandatory React method
   render() {
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
@@ -1674,13 +1427,11 @@ class Transactions extends Component {
 
         <h2>
           <img src={transactionsimg} className="hdr-img" />
-          <FormattedMessage
-            id="transactions.Transactions"
-            defaultMessage="Transactions"
-          />
+          Transactions
         </h2>
-
         <div className="panel">
+        {this.props.connections === undefined ? (<h2>Please wait for the daemon to load</h2>) : (
+          <div>
           <div id="transactions-chart">
             <VictoryChart
               width={this.state.mainChartWidth}
@@ -1768,9 +1519,7 @@ class Transactions extends Component {
 
           <div id="transactions-filters">
             <div id="filter-address" className="filter-field">
-              <label htmlFor="address-filter">
-                <FormattedMessage id="transactions.SearchAddress" />
-              </label>
+              <label htmlFor="address-filter">Search Address</label>
               <input
                 id="address-filter"
                 type="search"
@@ -1780,56 +1529,21 @@ class Transactions extends Component {
             </div>
 
             <div id="filter-type" className="filter-field">
-              <label htmlFor="transactiontype-dropdown">
-                <FormattedMessage
-                  id="transactions.Type"
-                  defaultMessage="TYPE"
-                />
-              </label>
+              <label htmlFor="transactiontype-dropdown">Type</label>
               <select
                 id="transactiontype-dropdown"
                 onChange={this.transactiontypefiltercallback}
               >
-                <option value="all">
-                  <FormattedMessage
-                    id="transactions.All"
-                    defaultMessage="All"
-                  />
-                </option>
-                <option value="receive">
-                  <FormattedMessage
-                    id="transactions.Receive"
-                    defaultMessage="Receive"
-                  />
-                </option>
-                <option value="send">
-                  <FormattedMessage
-                    id="transactions.Sent"
-                    defaultMessage="Sent"
-                  />
-                </option>
-                <option value="genesis">
-                  <FormattedMessage
-                    id="transactions.Genesis"
-                    defaultMessage="Genesis"
-                  />
-                </option>
-                <option value="trust">
-                  <FormattedMessage
-                    id="transactions.Trust"
-                    defaultMessage="Trust"
-                  />
-                </option>
+                <option value="all">All</option>
+                <option value="receive">Receive</option>
+                <option value="send">Sent</option>
+                <option value="genesis">Genesis</option>
+                <option value="trust">Trust</option>
               </select>
             </div>
 
             <div id="filter-minimum" className="filter-field">
-              <label htmlFor="minimum-nxs">
-                <FormattedMessage
-                  id="transactions.MinimumAmount"
-                  defaultMessage="Min Amount"
-                />
-              </label>
+              <label htmlFor="minimum-nxs">Min Amount</label>
               <input
                 id="minimum-nxs"
                 type="number"
@@ -1840,40 +1554,15 @@ class Transactions extends Component {
             </div>
 
             <div id="filter-timeframe" className="filter-field">
-              <label htmlFor="transaction-timeframe">
-                <FormattedMessage
-                  id="transactions.TimeSpan"
-                  defaultMessage="Time Span"
-                />
-              </label>
+              <label htmlFor="transaction-timeframe">Time Span</label>
               <select
                 id="transaction-timeframe"
                 onChange={event => this.transactionTimeframeChange(event)}
               >
-                <option value="All">
-                  <FormattedMessage
-                    id="transactions.All"
-                    defaultMessage="All"
-                  />
-                </option>
-                <option value="Year">
-                  <FormattedMessage
-                    id="transactions.PastYear"
-                    defaultMessage="Past Year"
-                  />
-                </option>
-                <option value="Month">
-                  <FormattedMessage
-                    id="transactions.PastMonth"
-                    defaultMessage="Past Month"
-                  />
-                </option>
-                <option value="Week">
-                  <FormattedMessage
-                    id="transactions.PastWeek"
-                    defaultMessage="Past Week"
-                  />
-                </option>
+                <option value="All">All</option>
+                <option value="Year">Past Year</option>
+                <option value="Month">Past Month</option>
+                <option value="Week">Past Week</option>
               </select>
             </div>
 
@@ -1883,10 +1572,7 @@ class Transactions extends Component {
               value="Download"
               onClick={() => this.DownloadCSV()}
             >
-              <FormattedMessage
-                id="transactions.Download"
-                defaultMessage="Download"
-              />
+              Download
             </button>
           </div>
 
@@ -1896,12 +1582,14 @@ class Transactions extends Component {
               data={data}
               columns={columns}
               minRows={pageSize}
-              selectCallback={this.tryingsomething.bind(this)}
+              selectCallback={this.tableSelectCallback.bind(this)}
               defaultsortingid={1}
               onMouseOverCallback={this.mouseOverCallback.bind(this)}
               onMouseOutCallback={this.mouseOutCallback.bind(this)}
             />
+          </div> 
           </div>
+        )}
         </div>
       </div>
     );
@@ -1910,8 +1598,8 @@ class Transactions extends Component {
 
 //not being used save for later
 class CustomTooltip extends React.Component {
+  // Mandatory React method
   render() {
-    console.log(this.props);
     return (
       <g>
         <VictoryLabel {...this.props} />
@@ -1920,6 +1608,8 @@ class CustomTooltip extends React.Component {
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

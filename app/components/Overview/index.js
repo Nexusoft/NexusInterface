@@ -1,3 +1,9 @@
+/*
+  Title: Overview
+  Description: the landing page for the application.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styles from "./style.css";
@@ -5,11 +11,17 @@ import { connect } from "react-redux";
 import Modal from "react-responsive-modal";
 import * as TYPE from "../../actions/actiontypes";
 import { NavLink } from "react-router-dom";
+import { remote } from "electron";
+import Request from "request";
 import { FormattedMessage } from "react-intl";
-const store = require("../../store/configureStore.dev");
 
-import { updateIntl } from "react-intl-redux";
-// importing images here because of a weird webpack issue
+// Internal Dependencies
+import { GetSettings, SaveSettings } from "../../api/settings.js";
+import NetworkGlobe from "./NetworkGlobe";
+import ContextMenuBuilder from "../../contextmenu";
+import * as helpers from "../../script/helper.js";
+
+// Images
 import USD from "../../images/USD.svg";
 import transactionsArrows from "../../images/transactions-arrows.svg";
 import marketicon from "../../images/marketstats-white.svg";
@@ -51,14 +63,8 @@ import nxsblocks from "../../images/blockexplorer-invert-white.svg";
 import interesticon from "../../images/interest.svg";
 import stakeicon from "../../images/staking-white.svg";
 import maxmindLogo from "../../images/maxmind-header-logo-compact.svg";
-import { IntlProvider } from "react-intl";
-import { GetSettings, SaveSettings } from "../../api/settings.js";
-import NetworkGlobe from "./NetworkGlobe";
-import locale from "../../reducers/intl";
-import ContextMenuBuilder from "../../contextmenu";
-import { remote } from "electron";
-import Request from "request";
 
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.overview,
@@ -67,14 +73,9 @@ const mapStateToProps = state => {
     ...state.intl
   };
 };
-
 const mapDispatchToProps = dispatch => ({
   setExperimentalWarning: save =>
     dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
-  setUSD: rate => dispatch({ type: TYPE.USD_RATE, payload: rate }),
-  setSupply: rate => dispatch({ type: TYPE.SET_SUPPLY, payload: rate }),
-  set24hrChange: rate => dispatch({ type: TYPE.CHANGE_24, payload: rate }),
-  setBTC: rate => dispatch({ type: TYPE.BTC_RATE, payload: rate }),
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
   acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
   toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
@@ -83,6 +84,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Overview extends Component {
+  // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
     console.log(intlReducer);
@@ -90,26 +92,12 @@ class Overview extends Component {
     if (this.props.googleanalytics != null) {
       this.props.googleanalytics.SendScreen("Overview");
     }
-    Request(
-      {
-        url: "https://api.coinmarketcap.com/v2/ticker/789/?convert=BTC",
-        json: true
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          this.props.setBTC(body.data.quotes.BTC.price);
-          this.props.set24hrChange(body.data.quotes.USD.percent_change_24h);
-          this.props.setSupply(body.data.circulating_supply);
-          this.props.setUSD(body.data.quotes.USD.price);
-        }
-      }
-    );
   }
-
+  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
-
+  // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.blocks > previousprops.blocks) {
       let newDate = new Date();
@@ -117,8 +105,6 @@ class Overview extends Component {
     }
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
-        console.log("UPDATE BLOCKS");
-        console.log(this.props);
         this.redrawCurves();
       }
     }
@@ -129,29 +115,18 @@ class Overview extends Component {
 
     if (this.props.connections != previousprops.connections) {
       if (this.props.connections != 0 && previousprops.connections != 0) {
-        console.log("REMOVED OLD BLOCKS AND DID A NEW ONE");
         this.removeOldPoints();
       }
     }
   }
 
+  // Class methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
 
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
-  }
-
-  calculateUSDvalue() {
-    let USDvalue = this.props.balance * this.props.USD;
-
-    if (USDvalue === 0) {
-      USDvalue = `${USDvalue}.00`;
-    } else {
-      USDvalue = USDvalue.toFixed(2);
-    }
-    return `$${USDvalue}`;
   }
 
   closeLicenseModal() {
@@ -170,11 +145,15 @@ class Overview extends Component {
   }
 
   returnLicenseModalInternal() {
+    
+    let tempYear = new Date();
+   
+    
     return (
       <div>
         The MIT License (MIT)
         <br />
-        Copyright (c) 2015-present C. T. Lin
+        Copyright {tempYear.getFullYear()} Nexus
         <br />
         Permission is hereby granted, free of charge, to any person obtaining a
         copy of this software and associated documentation files (the
@@ -209,10 +188,21 @@ class Overview extends Component {
   returnExperimentalModalInternal() {
     return (
       <div>
-        <h3>
-          CONSIDER THIS SOFTWARE EXPERIMENTAL. <br />
-          PLEASE BACK UP WALLET FREQUENTLY.
-        </h3>
+        <h4>
+         THIS SOFTWARE IS EXPERIMENTAL AND IN BETA
+         TESTING. BY DEFAULT IT WILL NOT USE
+         ANY EXISTING NEXUS WALLET NOR ADDRESSES THAT
+         YOU MAY ALREADY HAVE.
+         <br />
+         <br />
+         AS SUCH, THIS WALLET SHOULD <b><u>NOT </u></b>
+         BE USED AS YOUR PRIMARY WALLET AND DOING SO
+         MAY AFFECT YOUR ABILITY TO ACCESS YOUR COINS
+         UP TO AND INCLUDING LOSING THEM PERMANENTLY.
+         <br />
+         <br />
+         USE THIS SOFTWARE AT YOUR OWN RISK.
+        </h4>
         <br key="br2" />
         <button
           key="experiment-button-accept"
@@ -346,21 +336,94 @@ class Overview extends Component {
           <NetworkGlobe
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+            pillarColor={this.props.settings.customStyling.globePillarColorRGB}
+            archColor={this.props.settings.customStyling.globeArchColorRGB}
+            globeColor = {this.props.settings.customStyling.globeMultiColorRGB}
+
           />
         ],
         [
           <div className="maxmindCopyright">
-            <img id="hhhhhhh" src={maxmindLogo} width="100px" height="100px" />
-            <FormattedMessage
-              id="overview.Globe"
-              defaultMessage="Globe includes GeoLite2"
+            <img
+              id="maxmindCopyLogo"
+              src={maxmindLogo}
+              width="100px"
+              height="100px"
             />
+            Globe includes GeoLite2
           </div>
         ]
       ];
     }
   }
 
+  numberWithCommas(x) {
+    if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  calculateUSDvalue() {
+    if (this.props.rawNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
+        if (ele.name === this.props.settings.fiatCurrency) {
+          return ele;
+        }
+      });
+
+      let currencyValue = this.props.balance * selectedCurrancyValue[0].price;
+      if (currencyValue === 0) {
+        currencyValue = `${currencyValue}.00`;
+      } else {
+        currencyValue = currencyValue.toFixed(2);
+      }
+      return `${helpers.ReturnCurrencySymbol(
+        selectedCurrancyValue[0].name,
+        this.props.displayNXSvalues
+      ) + currencyValue}`;
+    } else {
+      return "$0";
+    }
+  }
+
+  marketPriceFormatter() {
+    if (this.props.displayNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
+        if (ele.name === this.props.settings.fiatCurrency) {
+          return ele;
+        }
+      });
+      return selectedCurrancyValue[0].price;
+    } else {
+      return "$0";
+    }
+  }
+
+  marketCapFormatter() {
+    if (this.props.displayNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
+        if (ele.name === this.props.settings.fiatCurrency) {
+          return ele;
+        }
+      });
+      return selectedCurrancyValue[0].marketCap;
+    } else {
+      return "$0";
+    }
+  }
+
+  pctChange24hrFormatter() {
+    if (this.props.displayNXSvalues[0]) {
+      let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
+        if (ele.name === this.props.settings.fiatCurrency) {
+          return ele;
+        }
+      });
+      return selectedCurrancyValue[0].changePct24Hr;
+    } else {
+      return "0";
+    }
+  }
+
+  // Mandatory React method
   render() {
     return (
       <div id="overviewPage">
@@ -384,10 +447,11 @@ class Overview extends Component {
         <Modal
           key="experiment-modal"
           open={
-            this.props.settings.experimentalWarning &&
-            this.props.experimentalOpen
+            this.props.settings.acceptedagreement &&
+            (this.props.settings.experimentalWarning &&
+              this.props.experimentalOpen)
           }
-          onClose={this.closeExperimentalModal}
+          onClose={() => this.props.setExperimentalWarning(false)}
           center
           classNames={{ modal: "modal" }}
         >
@@ -396,7 +460,9 @@ class Overview extends Component {
         <Modal
           key="encrypted-modal"
           open={
-            !this.props.encrypted && !this.props.ignoreEncryptionWarningFlag
+            !this.props.experimentalOpen &&
+            this.props.settings.acceptedagreement &&
+            (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)
           }
           onClose={() => this.props.ignoreEncryptionWarning()}
           center
@@ -431,204 +497,186 @@ class Overview extends Component {
           </button>
         </Modal>
         <div className="left-stats">
-          {this.props.stake > 0 ? (
-            <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
-              <div className="h2">
-                <FormattedMessage
-                  id="overview.BalanceAndStake"
-                  defaultMessage="Balance And Stake"
-                />{" "}
-                <span className="h2-nospace">(NXS)</span>
+          {this.props.connections === undefined ? null : (
+            <div className="left-top-stats">
+              {this.props.stake > 0 ? (
+                <div
+                  id="nxs-balance-info"
+                  className="animated fadeInDown delay-1s"
+                >
+                  <div className="h2">
+                    Balance and Stake <span className="h2-nospace">(NXS)</span>
+                  </div>
+                  <img src={nxsStake} />
+                  <div className="overviewValue">
+                    {this.props.balance + this.props.stake}
+                  </div>
+                </div>
+              ) : (
+                <div
+                  id="nxs-balance-info"
+                  className="animated fadeInDown delay-1s"
+                >
+                  <div className="h2">
+                    Balance <span className="h2-nospace">(NXS)</span>
+                  </div>
+                  <img src={nxsStake} />
+                  <div className="overviewValue">{this.props.balance}</div>
+                </div>
+              )}
+
+              <div
+                id="nxs-currency-value-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">
+                  Balance{" "}
+                  <span className="h2-nospace">
+                    ({this.props.settings.fiatCurrency})
+                  </span>
+                </div>
+                <img src={USD} />
+                <div className="overviewValue">{this.calculateUSDvalue()}</div>
               </div>
-              <img src={nxsStake} />
-              <div className="overviewValue">
-                {this.props.balance + this.props.stake}
+              <div
+                id="nxs-transactions-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Transactions</div>
+                <img src={transactionsArrows} />
+                <div className="overviewValue">{this.props.txtotal}</div>
               </div>
-            </div>
-          ) : (
-            <div id="nxs-balance-info" className="animated fadeInDown delay-1s">
-              <div className="h2">
-                <FormattedMessage
-                  id="overview.Balance"
-                  defaultMessage="Balance"
-                />
-                <span className="h2-nospace">(NXS)</span>
-              </div>
-              <img src={nxsStake} />
-              <div className="overviewValue">{this.props.balance}</div>
             </div>
           )}
 
-          <div
-            id="nxs-currency-value-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              <FormattedMessage
-                id="overview.Balance"
-                defaultMessage="Balance"
-              />
-              <span className="h2-nospace">(USD)</span>
-            </div>
-            <img src={USD} />
-            <div className="overviewValue">{this.calculateUSDvalue()}</div>
-          </div>
+          {this.props.displayNXSvalues[0] === undefined ? null : (
+            <div className="left-bottom-stats">
+              <div
+                id="nxs-market-price-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">
+                  Market Price{" "}
+                  <span className="h2-nospace">
+                    ({this.props.settings.fiatCurrency})
+                  </span>
+                </div>
+                <img src={marketicon} />
+                <div className="overviewValue">
+                  {this.marketPriceFormatter()}
+                </div>
+              </div>
 
-          <div
-            id="nxs-transactions-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              <FormattedMessage
-                id="overview.Transactions"
-                defaultMessage="Transactions"
-              />
-            </div>
-            <img src={transactionsArrows} />
-            <div className="overviewValue">{this.props.txtotal}</div>
-          </div>
+              <div
+                id="nxs-market-price-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">
+                  Market Cap{" "}
+                  <span className="h2-nospace">
+                    ({this.props.settings.fiatCurrency})
+                  </span>
+                </div>
+                <img src={supplyicon} />
+                <div className="overviewValue">{this.marketCapFormatter()}</div>
+              </div>
 
-          <div
-            id="nxs-market-price-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              <FormattedMessage
-                id="overview.MarketPrice"
-                defaultMessage="MarketPrice"
-              />{" "}
-              <span className="h2-nospace">(BTC)</span>
+              <div
+                id="nxs-market-price-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">
+                  24hr Change{" "}
+                  <span className="h2-nospace">
+                    ({this.props.settings.fiatCurrency} %)
+                  </span>
+                </div>
+                <img src={hours24icon} />
+                <div className="overviewValue">
+                  {this.pctChange24hrFormatter()}%
+                </div>
+              </div>
             </div>
-            <img src={marketicon} />
-            <div className="overviewValue">{this.props.BTC.toFixed(8)}</div>
-          </div>
-
-          <div
-            id="nxs-market-price-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              <FormattedMessage
-                id="overview.CirculatingSupply"
-                defaultMessage="CirculatingSupply"
-              />{" "}
-              <span className="h2-nospace">(NXS)</span>
-            </div>
-            <img src={supplyicon} />
-            <div className="overviewValue">{this.props.circulatingSupply}</div>
-          </div>
-
-          <div
-            id="nxs-market-price-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              <FormattedMessage
-                id="overview.24hrChange"
-                defaultMessage="24hr Change"
-              />{" "}
-              <span className="h2-nospace">(USD %)</span>
-            </div>
-            <img src={hours24icon} />
-            <div className="overviewValue">{this.props.USDpercentChange}%</div>
-          </div>
+          )}
         </div>
-        {this.returnIfGlobeEnabled()}
+        {this.returnIfGlobeEnabled()}{" "}
         <div className="right-stats">
-          <div
-            id="nxs-connections-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              <FormattedMessage
-                id="overview.Connections"
-                defaultMessage="Connections"
-              />
-            </div>
-            <img
-              id="nxs-getinfo-connections-image"
-              src={this.connectionsImage()}
-            />
-            <div className="overviewValue">{this.props.connections}</div>
-          </div>
-          <div
-            id="nxs-blockweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              <FormattedMessage
-                id="overview.BlockWeightt"
-                defaultMessage="Block Weight"
-              />
-            </div>
-            <img
-              src={this.blockWeightImage()}
-              id="nxs-getinfo-blockweight-image"
-            />
-            <div className="overviewValue">{this.props.blockweight}</div>
-          </div>
-          <div id="nxs-blocks-info" className="animated fadeInDown delay-1s">
-            <div className="h2">
-              <FormattedMessage
-                id="overview.BlockCount"
-                defaultMessage="Block Count"
-              />
-            </div>
-            <img src={nxsblocks} />
+          {" "}
+          {this.props.connections === undefined ? null : (
+            <div>
+              <div
+                id="nxs-connections-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Connections</div>
+                <img
+                  id="nxs-getinfo-connections-image"
+                  src={this.connectionsImage()}
+                />
+                <div className="overviewValue">{this.props.connections}</div>
+              </div>
+              <div
+                id="nxs-interestweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Interest Rate</div>
+                <img src={interesticon} />
+                <div className="overviewValue">
+                  {this.props.interestweight + "%"}
+                </div>
+              </div>
+              <div
+                id="nxs-blocks-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Block Count</div>
+                <img src={nxsblocks} />
 
-            <div className="overviewValue">{this.props.blocks}</div>
-            <span className="tooltip left">
-              {this.BlockRapper(this.props.blockDate.toLocaleString())}
-            </span>
-          </div>
-          <div
-            id="nxs-trustweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              {" "}
-              <FormattedMessage
-                id="overview.TrustWeight"
-                defaultMessage="Trust Weight"
-              />
+                <div className="overviewValue">
+                  {this.numberWithCommas(this.props.blocks)}
+                </div>
+                <span className="tooltip left">
+                  {this.props.blockDate.toLocaleString()}
+                </span>
+              </div>
+              <div
+                id="nxs-blockweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Block Weight</div>
+                <img
+                  src={this.blockWeightImage()}
+                  id="nxs-getinfo-blockweight-image"
+                />
+                <div className="overviewValue">{this.props.blockweight}</div>
+              </div>
+
+              <div
+                id="nxs-trustweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Trust Weight</div>
+                <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
+                <div className="overviewValue">{this.props.trustweight}</div>
+              </div>
+
+              <div
+                id="nxs-stakeweight-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">Stake Weight</div>
+                <img src={stakeicon} />
+                <div className="overviewValue">{this.props.stakeweight}</div>
+              </div>
             </div>
-            <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
-            <div className="overviewValue">{this.props.trustweight}</div>
-          </div>
-          <div
-            id="nxs-interestweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              {" "}
-              <FormattedMessage
-                id="overview.InterestRate"
-                defaultMessage="Interest Rate"
-              />
-            </div>
-            <img src={interesticon} />
-            <div className="overviewValue">
-              {this.props.interestweight + "%"}
-            </div>
-          </div>
-          <div
-            id="nxs-stakeweight-info"
-            className="animated fadeInDown delay-1s"
-          >
-            <div className="h2">
-              <FormattedMessage
-                id="overview.StakeWeight"
-                defaultMessage="Stake Weight"
-              />
-            </div>
-            <img src={stakeicon} />
-            <div className="overviewValue">{this.props.stakeweight}</div>
-          </div>
-        </div>{" "}
+          )}
+        </div>
       </div>
     );
   }
 }
+
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

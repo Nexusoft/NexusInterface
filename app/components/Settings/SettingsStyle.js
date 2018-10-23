@@ -1,11 +1,20 @@
+/*
+  Title: Style Settings
+  Description: Settings specifically for style, background color pickers etc.
+  Last Modified by: Brian Smith
+*/
+// External Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import styles from "./style.css";
 import { connect } from "react-redux";
 import { ChromePicker } from "react-color";
 import { FormattedMessage } from "react-intl";
-import * as TYPE from "../../actions/actiontypes";
 
+// Internal Dependencies
+import * as TYPE from "../../actions/actiontypes";
+import styles from "./style.css";
+
+// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -54,11 +63,18 @@ const mapDispatchToProps = dispatch => ({
     }),
   ChangePanelColor: rgb =>
     dispatch({ type: TYPE.CHANGE_PANEL_COLOR, payload: rgb }),
+  ChangeGlobePillarColor: (setting, hex) =>
+    dispatch({ type: TYPE.CHANGE_GLOBE_PILLAR_COLOR, payload: { hex: hex } }),
+  ChangeGlobeArchColor: (setting, hex) =>
+    dispatch({ type: TYPE.CHANGE_GLOBE_ARCH_COLOR, payload: { hex: hex } }),
+  ChangeGlobeMultiColor: (setting, hex) =>
+    dispatch({ type: TYPE.CHANGE_GLOBE_MULTI_COLOR, payload: { hex: hex } }),
   ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
   ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER })
 });
 
 class SettingsStyle extends Component {
+  // Class Methods
   constructor() {
     super();
 
@@ -66,7 +82,6 @@ class SettingsStyle extends Component {
   }
 
   updateWallpaper(event) {
-    console.log(event);
     let el = event.target;
     let imagePath = el.files[0].path;
     if (process.platform === "win32") {
@@ -118,6 +133,15 @@ class SettingsStyle extends Component {
       case "footerActive":
         this.props.ChangeFooterActiveColor(filterSetting, color.hex);
         break;
+      case "globePillar":
+        this.props.ChangeGlobePillarColor(filterSetting, color.hex);
+        break;
+      case "globeArch":
+        this.props.ChangeGlobeArchColor(filterSetting, color.hex);
+        break;
+      case "globeMulti":
+        this.props.ChangeGlobeMultiColor(filterSetting, color.hex);
+        break;
       case "panel":
         let newPannelBack = `rgba(${color.rgb.r}, ${color.rgb.g}, ${
           color.rgb.b
@@ -162,6 +186,15 @@ class SettingsStyle extends Component {
       case "footerActive":
         return this.props.footerActiveRGB;
         break;
+      case "globePillar":
+        return this.props.settings.customStyling.globePillarColorRGB;
+        break;
+      case "globeArch":
+        return this.props.settings.customStyling.globeArchColorRGB;
+        break;
+      case "globeMulti":
+        return this.props.settings.customStyling.globeMultiColorRGB;
+        break;
       case "panel":
         return this.props.settings.customStyling.pannelBack;
         break;
@@ -177,9 +210,20 @@ class SettingsStyle extends Component {
   }
 
   SaveSettings() {
+    this.props.googleanalytics.SendEvent(
+      "Settings",
+      "Style",
+      "Saved",
+      1
+    );
     require("../../api/settings.js").SaveSettings(this.props.settings);
+    this.props.OpenModal("Style Settings Saved");
+    setTimeout(() => {
+      this.props.CloseModal();
+    }, 3000);
   }
 
+  // Mandatory React method
   render() {
     return (
       <div>
@@ -229,21 +273,23 @@ class SettingsStyle extends Component {
                   }}
                   id="select"
                   onChange={e => {
-                    console.log("selector");
                     this.props.setSelectedColorProp(e.target.value);
                   }}
                 >
-                  <option value="MC1">color 1 </option>
-                  <option value="MC2">color 2 </option>
-                  <option value="MC3">color 3 </option>
-                  <option value="MC4">color 4 </option>
-                  <option value="MC5">color 5 </option>
+                  <option value="MC2">Accent Color 1</option>
+                  <option value="MC4">Accent Color 2</option>
+                  <option value="MC3">Table Header Color)</option>
+                  <option value="MC1">Tool Tip Color </option>
+                  <option value="MC5">Text Color</option>
                   <option value="panel">Panel Background Color</option>
                   <option value="NXSlogo">Nexus Logo Color</option>
                   <option value="iconMenu">Status Icon Color</option>
                   <option value="footer">Footer Base Color</option>
                   <option value="footerHover">Footer Hover Color</option>
                   <option value="footerActive">Footer Active Color</option>
+                  <option value="globeMulti">Globe Color</option>
+                  <option value="globePillar">Globe Pillar Color</option>
+                  <option value="globeArch">Globe Arch Color</option>
                 </select>
               </label>
               <ChromePicker
@@ -286,6 +332,7 @@ class SettingsStyle extends Component {
   }
 }
 
+// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

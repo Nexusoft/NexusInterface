@@ -5,6 +5,7 @@ import {
   Tray,
   Menu,
   ipcMain,
+  dialog,
   globalShortcut
 } from "electron";
 import log from "electron-log";
@@ -13,12 +14,13 @@ import MenuBuilder from "./menu";
 import core from "./api/core";
 import configuration from "./api/configuration";
 import settings from "./api/settings";
+
 const path = require("path");
 
 let mainWindow;
 let tray;
 let resizeTimer;
-
+// let keepDaemon = false;
 // Global Objects
 global.core = core;
 
@@ -32,7 +34,7 @@ if (process.env.NODE_ENV === "production") {
   sourceMapSupport.install();
 }
 
-require("electron-debug")();
+require("electron-debug");
 const p = path.join(__dirname, "..", "app", "node_modules");
 require("module").globalPaths.push(p);
 
@@ -51,13 +53,68 @@ const installExtensions = async () => {
 //
 
 function createWindow() {
+  // App self-destruct timer
+  const expiration = 1541030401000;
+  var presentTime = new Date().getTime();
+  var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
+  if (presentTime >= expiration) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expired",
+      "The Tritium Beta testing period has ended. Please use your normal wallet."
+    );
+    app.exit();
+  } else if (Math.floor(timeLeft) <= 5) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expiring Soon",
+      "There are " +
+        Math.floor(timeLeft).toString() +
+        " days left in the Beta Testing period."
+    );
+  } else if (Math.floor(timeLeft) < 1) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expiring Soon",
+      "Beta test ending. This application will no longer work in " +
+        Math.floor(timeLeft * 24).toString() +
+        " hours."
+    );
+  } else if (Math.floor(timeLeft * 24) < 1) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expiring Soon",
+      "Beta test ending. This application will no longer work in " +
+        Math.floor(timeLeft * 24 * 60).toString() +
+        " minutes."
+    );
+  }
+
   let settings = require("./api/settings").GetSettings();
+  let iconPath = "";
+  if (process.env.NODE_ENV === "development") {
+    iconPath = path.join(
+      configuration.GetAppDataDirectory(),
+      "tray",
+      "Nexus_App_Icon_64.png"
+    );
+  } else if (process.platform == "darwin") {
+    iconPath = path.join(
+      configuration.GetAppResourceDir(),
+      "images",
+      "tray",
+      "nexuslogo.ico"
+    );
+  } else {
+    iconPath = path.join(
+      configuration.GetAppResourceDir(),
+      "images",
+      "tray",
+      "Nexus_App_Icon_64.png"
+    );
+  }
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
     width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
     height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
-    icon: configuration.GetAppDataDirectory() + "tray/Nexus_App_Icon_64.png",
+    icon: iconPath,
     backgroundColor: "#232c39",
     show: false
   });
@@ -128,12 +185,23 @@ app.on("ready", async () => {
 
   createWindow();
   core.start();
-  const ret = globalShortcut.register("Escape", function() {
-    mainWindow.setFullScreen(false);
-  });
+  // Removing because it captures all of the escape key.
+  // const ret = globalShortcut.register("Escape", function() {
+  //   mainWindow.setFullScreen(false);
+  // });
+  // function keyPress(e) {
+  //   if (e.key === "Escape") {
+  //     mainWindow.setFullScreen(false);
+  //   }
+  // }
 
   mainWindow.on("close", function(e) {
     const settings = require("./api/settings.js").GetSettings();
+    console.log("KEEP DAEMON SETTINGS:", settings);
+    if (settings.keepDaemon != true || settings.keepDaemon === undefined) {
+      log.info(settings.keepDaemon);
+      core.stop();
+    }
     if (settings) {
       if (settings.minimizeToTray) {
         e.preventDefault();
@@ -150,9 +218,7 @@ app.on("ready", async () => {
 // Application Shutdown
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    core.stop(function() {
-      app.quit();
-    });
+    app.quit();
   }
   globalShortcut.unregister("Escape");
 

@@ -161,7 +161,7 @@ fieldset.aligned .field,
 form div.field.aligned {
   float: none;
   margin: 1.625em 0; /* a field generally is 4 lines including label + field + top margin + bottom margin */
-  padding: 0 0 0 var(--field-align-label-width);
+  padding: 0 0 0 320px;
 }
 
 .aligned .field label,
@@ -247,4 +247,28 @@ form div.field.aligned label {
 
 .field.clear {
   clear: both;
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+  .field {
+    margin: 1.625em 0;
+  }
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
 }

@@ -40,52 +40,43 @@ export default class Table extends Component {
           id: columns[this.props.defaultsortingid].accessor,
           desc: true
         }
-      ];
-    }
-    return (
-      <ReactTable
-        key="table-child"
-        data={data}
-        columns={columns}
-        minRows={minRows}
-        defaultSorted={defaultsorting}
-        previousText={
-          <FormattedMessage
-            id="transactions.Previous"
-            defaultMessage="Previous"
-          />
-        }
-        nextText={
-          <FormattedMessage id="transactions.Next" defaultMessage="Next" />
-        }
-        defaultPageSize={10}
-        getTrProps={(state, rowInfo) => {
-          return {
-            onClick: e => {
-              this.props.onMouseOverCallback(e, rowInfo);
-              this.props.selectCallback(e, rowInfo);
-              this.setState({
-                selected: rowInfo.index
-              });
-            },
-            onMouseDown: e => {
-              this.props.selectCallback(e, rowInfo);
-            },
-            onMouseOver: e => {
-              this.props.onMouseOverCallback(e, rowInfo);
-            },
-            onMouseOut: e => {
-              this.props.onMouseOutCallback(e);
-            }
-            // style: {
-            //     background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
-            //     color: rowInfo.index === this.state.selected ? 'white' : 'black'
-            // }
-          };
-        }}
-        style={this.props.styles}
-      />
-    );
+        return(
+            <ReactTable key="table-child" data={data} columns={columns} minRows = {minRows} defaultSorted = {defaultsorting} defaultPageSize={10}
+            getTrProps={(state, rowInfo) => {
+                return {
+                    onClick: (e) => {
+                       
+                        this.props.onMouseOverCallback(e,rowInfo);
+                        this.props.selectCallback(e,rowInfo);
+                        this.setState({
+                            selected: rowInfo.index
+                        })
+                    },
+                    onContextMenu: (e) =>
+                    {
+                        this.props.selectCallback(e,rowInfo);
+                    },
+                    onMouseDown: (e) =>
+                    {
+                        this.props.onMouseOverCallback(e,rowInfo);
+                    },
+                    onMouseOver: (e) =>
+                    {
+                        this.props.onMouseOverCallback(e,rowInfo);
+                    },
+                    onMouseOut: (e) =>
+                    {
+                        this.props.onMouseOutCallback(e);
+                    },
+                    // style: {
+                    //     background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
+                    //     color: rowInfo.index === this.state.selected ? 'white' : 'black'
+                    // }
+                }
+            }}
+            style={this.props.styles}
+            />
+        );
 
     /*
         return(
