@@ -8,6 +8,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { timingSafeEqual } from "crypto";
 import { connect } from "react-redux";
+import { Tail } from "tail";
 
 // Internal Dependencies
 import styles from "./style.css";
@@ -18,7 +19,9 @@ import * as TYPE from "../../actions/actiontypes";
 const mapStateToProps = state => {
   return { ...state.terminal, ...state.common };
 };
-//const mapDispatchToProps = dispatch => {};
+const mapDispatchToProps = dispatch => ({
+  printCoreOutput: data => dispatch({ type: TYPE.PRINT_TO_CORE, payload: data })
+});
 
 class TerminalCore extends Component {
   constructor(props) {
@@ -28,10 +31,31 @@ class TerminalCore extends Component {
     };
   }
   // React Method (Life cycle hook)
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
     //if (this.props.rpcCallList.length != prevProps.rpcCallList.length) {
     // this.forceUpdate();
     //}
+    // this.processDeamonOutput();
+    let datadir;
+    if (process.platform === "win32") {
+      datadir = process.env.APPDATA + "\\Nexus_Tritium_Data";
+    } else if (process.platform === "darwin") {
+      datadir = process.env.HOME + "/Nexus_Tritium_Data";
+    } else {
+      datadir = process.env.HOME + "/.Nexus_Tritium_Data";
+    }
+
+    var debugfile;
+    if (process.platform === "win32") {
+      debugfile = datadir + "\\debug.log";
+    } else {
+      debugfile = datadir + "/debug.log";
+    }
+    this.processDeamonOutput(debugfile);
+  }
+  // todo finish
+  componentWillUnmount() {
+    this.tail.unwatch();
   }
 
   // React Method (Life cycle hook)
@@ -42,22 +66,33 @@ class TerminalCore extends Component {
   }
 
   // Class Methods
-  processDeamonOutput() {
-    let num = 0;
-    return this.props.rpcCallList.map(i => {
-      num++;
-      return <div key={"Deamonout_" + num}>{i}</div>;
+  processDeamonOutput(debugfile) {
+    this.tail = new Tail(debugfile);
+    this.tail.on("line", d => {
+      this.props.printCoreOutput(d);
     });
   }
 
   // Mandatory React method
   render() {
-    return <div id="terminal-core-output">{this.processDeamonOutput()}</div>;
+    return (
+      <div
+        id="terminal-core-output"
+        style={{ display: "flex", flexDirection: "column-reverse" }}
+        onScroll={e => {
+          e.preventDefault();
+        }}
+      >
+        {this.props.coreOutput.map((d, i) => {
+          return <div key={i}>{d}</div>;
+        })}
+      </div>
+    );
   }
 }
 
 // Mandatory React-Redux method
 export default connect(
-  mapStateToProps
-//  mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(TerminalCore);

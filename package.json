@@ -244,6 +244,7 @@
     "request-promise": "^4.2.2",
     "source-map-support": "^0.4.15",
     "systeminformation": "^3.45.7",
+    "tail": "^2.0.0",
     "three": "^0.97.0",
     "universal-analytics": "^0.4.17",
     "victory": "^30.5.1",
