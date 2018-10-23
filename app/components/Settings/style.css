@@ -205,3 +205,39 @@ form {
 #noPad {
   margin-left: 0;
 }
+.custom-modal5 {
+  background: #282828;
+  /* animation: mymove2 0.5s ease-in-out; */
+  height: 500px;
+
+  width: 420px;
+  max-width: 100%;
+}
+.LanguageTranslation {
+  border-bottom: 2px solid var(--color-4);
+  margin-left: -40px;
+}
+
+/* .LanguageTranslation:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+} */
+.langTag {
+  float: right;
+}
+.langsetter {
+  float: left;
+  margin-left: 5px;
+}
+.langList {
+  border: 3px solid var(--color-3);
+  display: block;
+  height: 400px;
+}
+
+.langRadio {
+  height: 15px;
+  width: 15px;
+
+  border-radius: 50%;
+}

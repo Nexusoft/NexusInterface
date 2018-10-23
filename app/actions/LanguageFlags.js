@@ -1,3 +1,5 @@
-import ad from "../images/Language/ad.png";
+import us from "../images/Language/us.png";
+import ru from "../images/Language/ru.png";
 
-export const America = ad;
+export const America = us;
+export const Russia = ru;

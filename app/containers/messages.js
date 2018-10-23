@@ -263,7 +263,11 @@ export default {
     "Header.Blocks": "Blocks",
 
     //TOOLTIPS//
-    "ToolTip.GettingNextBlock": "Getting Next Block"
+    "ToolTip.GettingNextBlock": "Getting Next Block",
+
+    //LANGUAGEOPTIONS//
+    "Lang.English": "English",
+    "Lang.Russian": "Russian"
   },
 
   //Russian
@@ -532,6 +536,10 @@ export default {
     "Header.Blocks": "Блоки",
 
     //TOOLTIPS//
-    "ToolTip.GettingNextBlock": "Получение следующего блока"
+    "ToolTip.GettingNextBlock": "Получение следующего блока",
+
+    //LANGUAGEOPTIONS//
+    "Lang.English": "английский",
+    "Lang.Russian": "Pусский"
   }
 };

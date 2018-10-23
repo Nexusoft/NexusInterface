@@ -7,6 +7,7 @@ import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
 import { connect } from "react-redux";
+import Modal from "react-responsive-modal";
 import { FormattedMessage } from "react-intl";
 import * as FlagFile from "../../actions/LanguageFlags";
 
@@ -22,6 +23,12 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.GET_SETTINGS, payload: settings }),
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+  },
+  OpenModal2: type => {
+    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
+  },
+  CloseModal2: type => {
+    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
   },
   localeChange: returnSelectedLocale => {
     dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
@@ -368,6 +375,62 @@ class SettingsCore extends Component {
     console.log(FlagFile.America);
     return (
       <section id="core">
+        <Modal
+          center
+          classNames={{ modal: "custom-modal5" }}
+          showCloseIcon={true}
+          open={this.props.openSecondModal}
+          onClose={this.props.CloseModal2}
+        >
+          <ul className="langList">
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                className="langRadio"
+                type="radio"
+                value="en"
+                checked={this.props.tempStorage === "en"}
+                onChange={e => this.props.localeChange(e.target.value)}
+              />
+              &emsp;
+              <FormattedMessage
+                id="Lang.English"
+                defaultMessage="English"
+              />{" "}
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.America} />
+                (English, US) &emsp;
+              </span>
+            </li>
+
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                type="radio"
+                value="ru"
+                checked={this.props.tempStorage === "ru"}
+                onChange={e => this.props.localeChange(e.target.value)}
+              />
+              &emsp;
+              <FormattedMessage id="Lang.Russian" defaultMessage="Russian" />
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.Russia} />
+                (Pусский) &emsp;
+              </span>
+            </li>
+          </ul>
+          <div className="langsetter">
+            <button
+              type="button"
+              className="feebutton"
+              onClick={() => this.props.SwitchLocale()}
+            >
+              <FormattedMessage id="Settings.Set" defaultMesage="Set" />
+            </button>
+          </div>
+        </Modal>
         <div className="note">
           <FormattedMessage
             id="Settings.ChangesNexTime"
@@ -582,7 +645,8 @@ class SettingsCore extends Component {
               <button
                 type="button"
                 className="feebutton"
-                onClick={() => this.props.SwitchLocale()}
+                // onClick={() => this.props.SwitchLocale()}
+                onClick={() => this.props.OpenModal2()}
               >
                 <FormattedMessage id="Settings.Set" defaultMesage="Set" />
               </button>
