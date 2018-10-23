@@ -665,8 +665,12 @@ class Transactions extends Component {
   }
 
   DownloadCSV() {
-    //Analytics.GANALYTICS.SendEvent("Transactions","CSV",this.state.displayTimeFrame,1);
-
+    this.props.googleanalytics.SendEvent(
+      "Transaction",
+      "Data",
+      "Download CSV",
+      1
+    );
     this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
   }
 
