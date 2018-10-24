@@ -45,32 +45,42 @@ const mapDispatchToProps = dispatch =>
 class Header extends Component {
   testDownload() {
     var remote = require("remote-file-size");
+    const fs = require("fs");
+    const download = require("download");
+
     let us = this;
     us.total = 0;
     us.requestTotal = remote(
       "https://nexusearth.com/bootstrap/LLD-Database/recent.zip",
-      function(err, o) {
-        us.total = o;
+      function(err, totalBytes) {
+        us.total = totalBytes;
       }
     );
-    const fs = require("fs");
-    const download = require("download");
+
     let recentDBDuplexStream = download(
-      "https://nexusearth.com/bootstrap/LLD-Database/recent.zip",
-      { extract: true }
+      "https://nexusearth.com/bootstrap/LLD-Database/recent.zip"
     );
-    let thing = 0;
+
+    let percentageDownloaded = 0;
     recentDBDuplexStream.on("data", data => {
-      console.log((otherthing.bytesWritten / us.total) * 100);
+      percentageDownloaded = (writeStream.bytesWritten / us.total) * 100;
     });
-    recentDBDuplexStream.pipe(
+
+    let writeStream = recentDBDuplexStream.pipe(
       fs.createWriteStream(configuration.GetAppDataDirectory() + "/recentDB")
     );
-    // setInterval(() => {
-    //   console.log(
-    //     "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-    //   );
-    // }, 1000);
+
+    let oneSecondCheckIn = setInterval(() => {
+      console.log("Percent Downloaded:", percentageDownloaded);
+    }, 1000);
+
+    writeStream.on("finish", () => {
+      clearInterval(oneSecondCheckIn);
+    });
+
+    writeStream.on("error", () => {
+      clearInterval(oneSecondCheckIn);
+    });
   }
 
   // React Method (Life cycle hook) https://nexusearth.com/bootstrap/LLD-Database/recent.zip
