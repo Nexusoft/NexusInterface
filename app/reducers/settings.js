@@ -25,7 +25,7 @@ const initialState = {
     windowHeight: 1388,
     devMode: false,
     wallpaper: defaultWallpaperPath,
-    renderGlobe: true,
+    renderGlobe: false,
     fiatCurrency: "USD",
     customStyling: {
       MC1: "#111111",
