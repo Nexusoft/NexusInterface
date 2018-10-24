@@ -1087,7 +1087,7 @@ class Addressbook extends Component {
               </div>
 
               <button
-                className="button ghost"
+                className="button primary"
                 onClick={() => {
                   this.props.clearSearch();
                   this.loadMyAccounts();
