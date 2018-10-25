@@ -26,6 +26,7 @@ import statGood from "images/status-good.svg";
 import statBad from "images/sync.svg";
 import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
+import { write } from "fs";
 
 var tray = tray || null;
 let mainWindow = electron.remote.getCurrentWindow();
@@ -47,40 +48,96 @@ class Header extends Component {
     var remote = require("remote-file-size");
     const fs = require("fs");
     const download = require("download");
+    const unzip = require("unzip-stream");
 
-    let us = this;
-    us.total = 0;
-    us.requestTotal = remote(
-      "https://nexusearth.com/bootstrap/LLD-Database/recent.zip",
-      function(err, totalBytes) {
-        us.total = totalBytes;
+    // let us = this;
+    // us.total = 0;
+    // us.requestTotal = remote(
+    //   "https://nexusearth.com/bootstrap/LLD-Database/recent.zip",
+    //   function(err, totalBytes) {
+    //     us.total = totalBytes;
+    //   }
+    // );
+
+    // let recentDBDuplexStream = download(
+    //   "https://nexusearth.com/bootstrap/LLD-Database/recent.zip"
+    // );
+    // // test image
+    // // https://news.nationalgeographic.com/content/dam/news/2018/05/17/you-can-train-your-cat/01-cat-training-IMG_3727.adapt.676.1.jpg
+
+    // let percentageDownloaded = 0;
+    // recentDBDuplexStream.on("data", data => {
+    //   percentageDownloaded = (writeStream.bytesWritten / us.total) * 100;
+    // });
+
+    // let writeStream = recentDBDuplexStream.pipe(
+    //   fs.createWriteStream(configuration.GetAppDataDirectory() + "/recentDB")
+    // );
+
+    // let oneSecondCheckIn = setInterval(() => {
+    //   console.log("Percent Downloaded:", percentageDownloaded);
+    // }, 1000);
+
+    // writeStream.on("finish", () => {
+    //   clearInterval(oneSecondCheckIn);
+
+    //   console.log("does this work?", this);
+    fs.createReadStream(configuration.GetAppDataDirectory() + "/recentDB")
+      .pipe(unzip.Parse())
+      .on("entry", function(entry) {
+        var filePath = entry.path;
+        var type = entry.type; // 'Directory' or 'File'
+        var size = entry.size; // might be undefined in some archives
+        // if (filePath === "this IS the file I'm looking for") {
+        entry.pipe(
+          fs.createWriteStream(
+            configuration.GetAppDataDirectory() + "/recentDB2"
+          )
+        );
+        // } else {
+        //   entry.autodrain();
+        // }
+      });
+
+    var yauzl = require("yauzl");
+
+    yauzl.open(
+      configuration.GetAppDataDirectory() + "/recentDB",
+      { lazyEntries: true },
+      function(err, zipfile) {
+        console.log(zipfile);
+        if (err) throw err;
+        zipfile.readEntry();
+        zipfile.on("entry", function(entry) {
+          console.log(entry);
+          if (/\/$/.test(entry.fileName)) {
+            // Directory file names end with '/'.
+            // Note that entires for directories themselves are optional.
+            // An entry's fileName implicitly requires its parent directories to exist.
+            zipfile.readEntry();
+          } else {
+            // file entry
+            zipfile.openReadStream(entry, function(err, readStream) {
+              if (err) throw err;
+              readStream.on("end", function() {
+                zipfile.readEntry();
+              });
+              readStream.pipe(
+                fs.createWriteStream(
+                  configuration.GetAppDataDirectory() + "/recentDB2"
+                )
+              );
+            });
+          }
+        });
       }
     );
 
-    let recentDBDuplexStream = download(
-      "https://nexusearth.com/bootstrap/LLD-Database/recent.zip"
-    );
+    // });
 
-    let percentageDownloaded = 0;
-    recentDBDuplexStream.on("data", data => {
-      percentageDownloaded = (writeStream.bytesWritten / us.total) * 100;
-    });
-
-    let writeStream = recentDBDuplexStream.pipe(
-      fs.createWriteStream(configuration.GetAppDataDirectory() + "/recentDB")
-    );
-
-    let oneSecondCheckIn = setInterval(() => {
-      console.log("Percent Downloaded:", percentageDownloaded);
-    }, 1000);
-
-    writeStream.on("finish", () => {
-      clearInterval(oneSecondCheckIn);
-    });
-
-    writeStream.on("error", () => {
-      clearInterval(oneSecondCheckIn);
-    });
+    // writeStream.on("error", () => {
+    //   clearInterval(oneSecondCheckIn);
+    // });
   }
 
   // React Method (Life cycle hook) https://nexusearth.com/bootstrap/LLD-Database/recent.zip
