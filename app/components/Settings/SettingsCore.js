@@ -478,8 +478,9 @@ class SettingsCore extends Component {
             <label htmlFor="verboseLevel">Verbose level</label>
             <input
               id="verboseLevel"
-              type="text"
-              size="3"
+              type="number"
+              size="1"
+              min="1"
               onChange={this.updateVerboseLevel}
               data-tooltip="Verbose level for logs"
             />
@@ -502,7 +503,7 @@ class SettingsCore extends Component {
               <input
                 id="manualDaemonUser"
                 type="text"
-                size="12"
+                size="16"
                 onChange={this.updateManualDaemonUser}
                 data-tooltip="Username configured for manual daemon"
               />
@@ -513,7 +514,7 @@ class SettingsCore extends Component {
               <input
                 id="manualDaemonPassword"
                 type="text"
-                size="12"
+                size="16"
                 onChange={this.updateManualDaemonPassword}
                 data-tooltip="Password configured for manual daemon"
               />
@@ -524,7 +525,7 @@ class SettingsCore extends Component {
               <input
                 id="manualDaemonIP"
                 type="text"
-                size="12"
+                size="16"
                 onChange={this.updateManualDaemonIP}
                 data-tooltip="IP address configured for manual daemon"
               />
@@ -535,7 +536,7 @@ class SettingsCore extends Component {
               <input
                 id="manualDaemonPort"
                 type="text"
-                size="5"
+                size="4"
                 onChange={this.updateManualDaemonPort}
                 data-tooltip="Port configured for manual daemon"
               />
@@ -546,7 +547,7 @@ class SettingsCore extends Component {
               <input
                 id="manualDaemonDataDir"
                 type="text"
-                size="12"
+                size="40"
                 onChange={this.updateManualDaemonDataDir}
                 data-tooltip="Data directory configured for manual daemon"
               />
@@ -581,7 +582,7 @@ class SettingsCore extends Component {
               <input
                 id="socks4ProxyIP"
                 type="text"
-                size="12"
+                size="16"
                 onChange={this.updateSocks4ProxyIP}
                 data-tooltip="IP Address of SOCKS4 proxy server"
               />
@@ -592,7 +593,7 @@ class SettingsCore extends Component {
               <input
                 id="socks4ProxyPort"
                 type="text"
-                size="3"
+                size="4"
                 onChange={this.updateSocks4ProxyPort}
                 data-tooltip="Port of SOCKS4 proxy server"
               />
