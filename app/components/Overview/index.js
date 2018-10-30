@@ -321,7 +321,7 @@ class Overview extends Component {
   }
 
   returnIfGlobeEnabled() {
-    if (this.props.settings.renderGlobe == false) {
+    if (this.props.settings.acceptedagreement == false || this.props.settings.renderGlobe == false) {
       return null;
     } else {
       return [
