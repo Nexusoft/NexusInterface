@@ -17,12 +17,14 @@ import * as RPC from "../../script/rpc";
 import configuration from "../../api/configuration";
 
 var glb;
+var initializedWithData = false;
 
 export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     this.props.handleOnLineRender(this.testRestartLines);
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
+    this.props.handleOnAddData(this.updatePointsOnGlobe);
     const path = require("path");
     const globeseries = [["peers", []]];
     let geoiplookup = "";
@@ -88,7 +90,7 @@ export default class NetworkGlobe extends Component {
             });
             glb.createPoints();
             //  Start the animations on the globe
-
+            initializedWithData = true;
             //glb.animate();
           });
         }
@@ -101,23 +103,32 @@ export default class NetworkGlobe extends Component {
   }
   // Class Methods
   updatePointsOnGlobe() {
+
+    if (initializedWithData == true)
+    {
+      return;
+    }
+
     const globeseries = [["peers", []]];
+    let geoiplookup = "";
+
+    const path = require("path");
     if (process.env.NODE_ENV === "development") {
-      const geoiplookup = maxmind.openSync(
+      geoiplookup = maxmind.openSync(
         path.join(
           __dirname,
           "GeoLite2-City",
           "GeoLite2-City.mmdb"
         )
-      )
+      );
     } else {
-      const geoiplookup = maxmind.openSync(
+      geoiplookup = maxmind.openSync(
         path.join(
-          configuration.GetAppDataDirectory(),
+          configuration.GetAppResourceDir(),
           "GeoLite2-City",
           "GeoLite2-City.mmdb"
         )
-      )
+      );
     }
     let myIP = "";
     Request(
@@ -147,7 +158,8 @@ export default class NetworkGlobe extends Component {
             globeseries[0][1].push(body["geoplugin_longitude"]);
             globeseries[0][1].push(0.1); //temporary magnitude.
 
-            glb = new DAT(this.threeRootElement);
+            //glb = new DAT(this.threeRootElement);
+            initializedWithData = true;
             glb.removePoints();
             glb.addData(globeseries[0][1], {
               format: "magnitude",
