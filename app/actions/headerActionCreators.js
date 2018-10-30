@@ -35,7 +35,6 @@ export const SetMarketAveData = () => {
         json: true
       },
       (error, response, body) => {
-        console.log(body);
         if (response.statusCode === 200) {
           let rawBTC = Object.values(body.RAW.BTC).map(ele => {
             return {
@@ -84,16 +83,6 @@ export const SetMarketAveData = () => {
               displayNXS: displayNXS
             }
           });
-          console.log(
-            "raw btc",
-            rawBTC,
-            "rawnxs",
-            rawNXS,
-            "dispalay btc",
-            displayBTC,
-            "display nxs",
-            displayNXS
-          );
         }
       }
     );

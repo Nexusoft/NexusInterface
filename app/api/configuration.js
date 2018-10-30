@@ -156,6 +156,20 @@ configuration.GetAppResourceDir = function() {
   }
 };
 
+configuration.GetBootstrapSize = async function() {
+  let remote = require("remote-file-size");
+  const url = "http://support.nexusearth.com:8081/recent.tar.gz";
+
+  let total = 0;
+  let promise = new Promise((resolve, reject) => {
+    remote(url, function(err, totalBytes) {
+      resolve(totalBytes);
+    });
+  });
+  await promise;
+  return promise;
+};
+
 //configuration.GetDaemonDataDir = function() {
 //  const electron = require("electron");
 //  const path = require("path");

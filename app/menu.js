@@ -107,6 +107,20 @@ export default class MenuBuilder {
           }
         },
         {
+          label: "Start Daemon",
+          click() {
+            let core = require("./api/core");
+            core.start();
+          }
+        },
+        {
+          label: "Stop Daemon",
+          click() {
+            let core = require("./api/core");
+            core.stop();
+          }
+        },
+        {
           label: "Close Window Keep Daemon",
           click() {
             const keepDaemon = true;
@@ -309,6 +323,20 @@ export default class MenuBuilder {
             label: "Send To Tray",
             click() {
               remote.getCurrentWindow().hide();
+            }
+          },
+          {
+            label: "Start Daemon",
+            click() {
+              let core = require("./api/core");
+              core.start();
+            }
+          },
+          {
+            label: "Stop Daemon",
+            click() {
+              let core = require("./api/core");
+              core.stop();
             }
           },
           {

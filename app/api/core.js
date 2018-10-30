@@ -12,7 +12,7 @@ var user = "rpcserver";
 //Generate automatic daemon password from machines hardware info
 var macaddress = require("macaddress");
 var secret = "secret";
-if (process.platform === 'darwin') {
+if (process.platform === "darwin") {
   const secret = process.env.USER + process.env.HOME + process.env.SHELL;
 } else {
   const secret = JSON.stringify(macaddress.networkInterfaces(), null, 2);
@@ -25,7 +25,7 @@ var password = crypto
 var port = "9336";
 var ip = "127.0.0.1";
 var host = "http://" + ip + ":" + port;
-var verbose = "2" // <--Lower to 0 after beta ends
+var verbose = "2"; // <--Lower to 0 after beta ends
 
 //Set data directory by OS for automatic daemon mode
 if (process.platform === "win32") {
@@ -69,10 +69,8 @@ function SetCoreParameters(settings) {
     password = password;
   }
 
-    verbose =
-      settings.verboseLevel === undefined
-        ? verbose
-        : settings.verboseLevel;
+  verbose =
+    settings.verboseLevel === undefined ? verbose : settings.verboseLevel;
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push("-rpcuser=" + user);
@@ -126,12 +124,9 @@ function GetCoreBinaryName() {
 function GetCoreBinaryPath() {
   const path = require("path");
   if (process.env.NODE_ENV === "development") {
-    var coreBinaryPath = path.normalize(path.join(
-      __dirname,
-      "..",
-      "cores",
-      GetCoreBinaryName()
-    ));
+    var coreBinaryPath = path.normalize(
+      path.join(__dirname, "..", "cores", GetCoreBinaryName())
+    );
   } else {
     var coreBinaryPath = path.join(
       configuration.GetAppResourceDir(),
@@ -262,6 +257,7 @@ class Core extends EventEmitter {
 
   // start: Start up the core with necessary parameters and return the spawned process
   start() {
+    console.log("Core Start Initiated");
     if (coreprocess != null) return;
     let settings = require("./settings").GetSettings();
     let parameters = SetCoreParameters(settings);
@@ -311,29 +307,30 @@ class Core extends EventEmitter {
   }
   // stop: Stop the core from running by sending SIGTERM to the process
   stop(callback) {
+    console.log("Core Stop Initiated");
     // if coreprocess is null we were in manual daemon mode, just exec the callback
     if (coreprocess == null) {
       if (callback) callback();
       return;
     }
-      log.info(
-        "Core Manager: Core is stopping (process id: " + coreprocess.pid + ")"
-      );
-      var _this = this;
-      coreprocess.once("error", err => {
-        log.info("Core Manager: Core has returned an error: " + err);
-      });
-      coreprocess.once("exit", (code, signal) => {
-        log.info("Core Manager: Core has exited");
-      });
-      coreprocess.once("close", (code, signal) => {
-        log.info("Core Manager: Core stdio streams have closed");
-        //_this.removeListener('close', _this.onClose);
-        coreprocess = null;
-        responding = false;
-        if (callback) callback();
-      });
-      coreprocess.kill();
+    log.info(
+      "Core Manager: Core is stopping (process id: " + coreprocess.pid + ")"
+    );
+    var _this = this;
+    coreprocess.once("error", err => {
+      log.info("Core Manager: Core has returned an error: " + err);
+    });
+    coreprocess.once("exit", (code, signal) => {
+      log.info("Core Manager: Core has exited");
+    });
+    coreprocess.once("close", (code, signal) => {
+      log.info("Core Manager: Core stdio streams have closed");
+      //_this.removeListener('close', _this.onClose);
+      coreprocess = null;
+      responding = false;
+      if (callback) callback();
+    });
+    coreprocess.kill();
     this.emit("stopping");
   }
 
