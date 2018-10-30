@@ -6,7 +6,6 @@ const log = require("electron-log");
 const statusdelay = 1000;
 const crypto = require("crypto");
 const settings = require("./settings");
-const utils = require("../utils/utils");
 
 var responding = false;
 var user = "rpcserver";

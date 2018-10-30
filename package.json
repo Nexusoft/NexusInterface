@@ -242,7 +242,6 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "request-promise": "^4.2.2",
-    "sleep": "^4.0.0",
     "source-map-support": "^0.5.9",
     "systeminformation": "^3.45.7",
     "three": "^0.97.0",
