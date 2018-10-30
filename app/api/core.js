@@ -340,7 +340,11 @@ class Core {
     let corePID = getCorePID();
     let coreParentPID = getCoreParentPID();
     //let daemonProcs = utils.findPID(coreBinaryName);
-    if (coreprocess == null && coreParentPID > '1') {
+    if (coreprocess) {
+      coreprocess.removeAllListeners();
+      coreprocess = null;
+    }
+    if (corePID > '1') {
       if (settings.keepDaemon != true) {
         if (corePID > '1') {
           log.info("Core Manager: Killing process " + corePID);
@@ -352,8 +356,6 @@ class Core {
       } else {
         log.info("Core Manager: Closing wallet and leaving daemon running.");
         responding = false;
-        coreprocess.removeAllListeners();
-        coreprocess = null
         if (callback) callback();
       }
     }
