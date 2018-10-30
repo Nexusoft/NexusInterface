@@ -50,11 +50,11 @@ class Unencrypted extends Component {
     }
   }
   coreRestart() {
-    core.start();
+    core.restart();
   }
 
   encryptCallback() {
-    alert("Wallet Encrypted");
+    alert("Wallet Encrypted. Restarting wallet...");
     this.coreRestart();
   }
 
