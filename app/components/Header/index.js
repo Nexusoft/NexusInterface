@@ -72,9 +72,8 @@ class Header extends Component {
     } else {
       datadir = process.env.HOME + "/.Nexus_Tritium_Data";
     }
-    let core = require("../../api/core");
-    console.log(core);
-    core.stop(() => console.log("fuck"));
+
+    electron.remote.getGlobal("core").stop();
 
     let url = "http://support.nexusearth.com:8081/recent.tar.gz";
     tarball.extractTarballDownload(
@@ -88,7 +87,7 @@ class Header extends Component {
           (stat, things) => console.log(stat, things)
         );
         console.log(err, result);
-        core.start();
+        electron.remote.getGlobal("core").start();
       }
     );
     let totalDownloadSize = await configuration.GetBootstrapSize();
