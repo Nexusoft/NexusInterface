@@ -20,6 +20,7 @@ if (process.env.NODE_ENV === "development") {
 const initialState = {
   settings: {
     manualDaemon: false,
+    verbose: "2",
     acceptedagreement: false,
     experimentalWarning: true,
     windowWidth: 1600,
@@ -46,18 +47,18 @@ const initialState = {
       globeArchColorRGB: "rgb(0,255,255)",
       globeMultiColorRGB: "rgb(0,151,228)",
       maxMindCopyright: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
-    }
-  },
-  NXSlogoRGB: "rgb(0,174,239)",
-  footerRGB: "rgb(0,174,239)",
-  footerActiveRGB: "rgb(0,174,239)",
-  footerHoverRGB: "rgb(0,174,239)",
-  iconMenuRGB: "rgb(0,174,239)",
-  ignoreEncryptionWarningFlag: false,
-  experimentalOpen: true,
-  saveSettings: false,
-  styleChangeFlag: false,
-  selectedColorProp: "MC1"
+    },
+    NXSlogoRGB: "rgb(0,174,239)",
+    footerRGB: "rgb(0,174,239)",
+    footerActiveRGB: "rgb(0,174,239)",
+    footerHoverRGB: "rgb(0,174,239)",
+    iconMenuRGB: "rgb(0,174,239)",
+    ignoreEncryptionWarningFlag: false,
+    experimentalOpen: true,
+    saveSettings: false,
+    styleChangeFlag: false,
+    selectedColorProp: "MC1"
+  }
 };
 
 export default (state = initialState, action) => {

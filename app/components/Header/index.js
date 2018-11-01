@@ -6,6 +6,7 @@ import { bindActionCreators } from "redux";
 import electron from "electron";
 import Modal from "react-responsive-modal";
 import CustomProperties from "react-custom-properties";
+import log from "electron-log";
 
 // Internal Dependencies
 import MenuBuilder from "../../menu";
@@ -13,7 +14,7 @@ import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import * as actionsCreators from "../../actions/headerActionCreators";
-import { GetSettings, SaveSettings } from "../../api/settings.js";
+import { GetSettings, SaveSettings } from "../../api/settings";
 import GOOGLE from "../../script/googleanalytics";
 import configuration from "../../api/configuration";
 
@@ -48,10 +49,8 @@ class Header extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     let settings = GetSettings();
-    if (settings.keepDaemon !== false) {
-      settings.keepDaemon = false;
-      SaveSettings(settings);
-    }
+    settings.keepDaemon = false;
+    SaveSettings(settings);
     this.props.setSettings(GetSettings());
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     var self = this;
@@ -274,26 +273,30 @@ class Header extends Component {
         }
       },
       {
-        label: "Quit Nexus and Keep Daemon",
+        label: "Close Wallet and Keep Daemon",
         click: function() {
-          var keepDaemon = true;
-          app.isQuiting = true;
+          log.info('header/index.js contextmenu: close and keep');
+          let settings = GetSettings();
+          settings.keepDaemon = true;
+          SaveSettings(settings);
           mainWindow.close();
         }
       },
       {
-        label: "Quit Nexus and Quit Daemon",
+        label: "Close Wallet and Daemon",
         click: function() {
-          let settings = require("../../api/settings").GetSettings();
-          // if (settings.manualDaemon == false) {
-          RPC.PROMISE("stop", []).then(payload => {
-            setTimeout(() => {
-              mainWindow.close();
-            }, 1000);
-          });
-          // } else {
-          // mainWindow.close();
-          // }
+          log.info('header/index.js contextmenu: close and kill');
+          let settings = GetSettings();
+          settings.keepDaemon = false;
+          SaveSettings(settings);
+          if (settings.manualDaemon != true) {
+            RPC.PROMISE("stop", []).then(payload => {
+              setTimeout(() => {
+                mainWindow.close();
+              }, 1000);
+            });
+          }
+          mainWindow.close();
         }
       }
     ]);
@@ -655,20 +658,6 @@ class Header extends Component {
     }
   }
   daemonStatus() {
-    // switch ("DAEMON_STATUS_FUNCTION_CALL_HERE") {
-    //   case "starting":
-    //     return <span>Daemon is starting...</span>;
-    //     break;
-    //   case "error":
-    //     return <span>Daemon error, please contact support.</span>;
-    //     break;
-    //   case "loaded":
-    //     return null;
-    //     break;
-    //   default:
-    //     return null;
-    //     break;
-    // }
     if (
       this.props.settings.manualDaemon === false &&
       this.props.connections === undefined

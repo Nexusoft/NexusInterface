@@ -19,7 +19,8 @@ import { FormattedMessage } from "react-intl";
 const mapStateToProps = state => {
   return {
     ...state.common,
-    ...state.login
+    ...state.login,
+    ...state.overview
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -51,11 +52,11 @@ class Unencrypted extends Component {
     }
   }
   coreRestart() {
-    core.start();
+    core.restart();
   }
 
   encryptCallback() {
-    alert("Wallet Encrypted");
+    alert("Wallet Encrypted. Restarting wallet...");
     this.coreRestart();
   }
 
@@ -149,6 +150,9 @@ class Unencrypted extends Component {
 
   // Mandatory React method
   render() {
+    if (this.props.connections === undefined) {
+      return <h2>Please wait for the daemon to load</h2>;
+    } else {
     return (
       <div id="securitylogin">
         <div className="securitySubContainer">
@@ -269,17 +273,43 @@ class Unencrypted extends Component {
                     )}
                   </FormattedMessage>
                   <button
+                    style={{ width: "100%", margin: "0" }}
                     disabled={this.props.busyFlag}
                     className="button primary"
-                    onClick={e => this.showPrivKey(e)}
+                    onClick={e => this.encrypt(e)}
                   >
                     <FormattedMessage
                       id="Settings.Submit"
                       defaultMessage="Submit"
                     />
                   </button>
+                </p>
+              </fieldset>
+            </form>
+          </div>
+          <div className="securitySubContainer privKey">
+            <form>
+              <fieldset>
+                <legend>View private key for address</legend>
+
+                <div className="field">
+                  <label>Address:</label>
+                  <div className="expander">
+                    <input
+                      type="text"
+                      id="privKeyAddress"
+                      placeholder="Enter Address Here"
+                      required
+                    />
+                    <button
+                      disabled={this.props.busyFlag}
+                      className="button primary"
+                      onClick={e => this.showPrivKey(e)}
+                    >
+                      Submit
+                    </button>
+                  </div>
                 </div>
-              </div>
 
               <div className="field">
                 <label>
@@ -293,18 +323,18 @@ class Unencrypted extends Component {
                   <input type="password" id="privKeyOutput" />
                   <button
                     disabled={this.props.busyFlag}
-                    className="button"
-                    onClick={e => this.copyPrivkey(e)}
+                    className="button primary"
+                    onClick={e => this.importPrivKey(e)}
                   >
                     <FormattedMessage
                       id="Settings.Copy"
                       defaultMessage="Copy"
                     />
                   </button>
-                </div>
-              </div>
-            </fieldset>
-          </form>
+                </p>
+              </fieldset>
+            </form>
+          </div>
         </div>
         <div className="securitySubContainer privKey">
           <form>

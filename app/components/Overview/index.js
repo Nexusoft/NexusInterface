@@ -99,6 +99,7 @@ class Overview extends Component {
   }
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
+    
     if (this.props.blocks > previousprops.blocks) {
       let newDate = new Date();
       this.props.BlockDate(newDate);
@@ -111,6 +112,11 @@ class Overview extends Component {
 
     if (this.props.saveSettingsFlag) {
       require("../../api/settings.js").SaveSettings(this.props.settings);
+    }
+
+    if ((previousprops.connections == undefined || previousprops.connections == 0) && this.props.connections != 0)
+    {//Daemon Starting Up
+      this.reDrawEverything();
     }
 
     if (this.props.connections != previousprops.connections) {
@@ -329,7 +335,7 @@ class Overview extends Component {
   }
 
   returnIfGlobeEnabled() {
-    if (this.props.settings.renderGlobe == false) {
+    if (this.props.settings.acceptedagreement == false || this.props.settings.renderGlobe == false) {
       return null;
     } else {
       return [
@@ -337,6 +343,7 @@ class Overview extends Component {
           <NetworkGlobe
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+            handleOnAddData={e => (this.reDrawEverything = e)}
             pillarColor={this.props.settings.customStyling.globePillarColorRGB}
             archColor={this.props.settings.customStyling.globeArchColorRGB}
             globeColor={this.props.settings.customStyling.globeMultiColorRGB}

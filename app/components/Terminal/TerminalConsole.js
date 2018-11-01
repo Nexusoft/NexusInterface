@@ -19,7 +19,7 @@ let currentHistoryIndex = -1;
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common };
+  return { ...state.terminal, ...state.common, ...state.overview };
 };
 const mapDispatchToProps = dispatch => ({
   setCommandList: commandList =>
@@ -223,6 +223,9 @@ class TerminalConsole extends Component {
 
   // Mandatory React method
   render() {
+    if (this.props.connections === undefined) {
+      return <h2>Please wait for the daemon to load</h2>;
+    } else {
     return (
       <div id="terminal-console">
         <div id="terminal-console-input">
@@ -245,25 +248,12 @@ class TerminalConsole extends Component {
             )}
           </FormattedMessage>
           <button
-            id="input-submit"
-            className="button primary"
-            value="Execute"
-            onClick={() => this.processInput()}
+            id="terminal-console-reset"
+            className="button"
+            onClick={() => this.props.resetMyConsole()}
           >
             <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
           </button>
-
-          <div
-            key="autocomplete"
-            style={{
-              position: "absolute",
-              top: "100%",
-              zIndex: 99,
-              background: "black"
-            }}
-          >
-            {this.autoComplete()}{" "}
-          </div>
         </div>
 
         <div id="terminal-console-output">{this.processOutput()}</div>

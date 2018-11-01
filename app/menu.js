@@ -1,8 +1,9 @@
 import { app, Menu, shell, BrowserWindow, remote } from "electron";
-
+import log from "electron-log";
 import * as RPC from "./script/rpc";
 import { callbackify } from "util";
-import { GetSettings, SaveSettings } from "../app/api/settings";
+import { GetSettings, SaveSettings } from "./api/settings";
+import core from "./api/core";
 
 export default class MenuBuilder {
   mainWindow: remote.BrowserWindow;
@@ -107,24 +108,35 @@ export default class MenuBuilder {
           }
         },
         {
-          label: "Close Window Keep Daemon",
+          label: "Close Wallet and Keep Daemon",
           click() {
-            const keepDaemon = true;
-            log.info(keepDaemon);
+            log.info('menu.js Darwin template: close and keep');
+            let settings = GetSettings();
+            settings.keepDaemon = true;
+            SaveSettings(settings);
+            core.stop();
             remote.getCurrentWindow().close();
           }
         },
         {
-          label: "Quit Nexus Wallet",
+          label: "Close Wallet and Daemon",
           click() {
-            RPC.PROMISE("stop", []).then(payload => {
-              setTimeout(() => {
-                remote.getCurrentWindow().close();
-              }, 1000);
-            });
-          }
+            log.info('menu.js darwin template: close and kill');
+            let settings = GetSettings();
+            if (settings.manualDaemon != true) {
+              RPC.PROMISE("stop", []).then(payload => {
+                setTimeout(() => {
+                  remote.getCurrentWindow().close();
+                }, 1000);
+              });
+            }
+            core.stop();
+            remote.getCurrentWindow().close();
+          },
         },
-        { type: "separator" },
+        {
+          type: "separator"
+        },
         {
           label: "Copy",
           accelerator: "CmdOrCtrl+C",
@@ -296,10 +308,7 @@ export default class MenuBuilder {
                 BackupDir = BackupDir.replace(/\\/g, "/");
               }
               let ifBackupDirExists = fs.existsSync(BackupDir);
-              if (
-                ifBackupDirExists == undefined ||
-                ifBackupDirExists == false
-              ) {
+              if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
                 fs.mkdirSync(BackupDir);
               }
               let didopen = shell.openItem(BackupDir);
@@ -312,24 +321,28 @@ export default class MenuBuilder {
             }
           },
           {
-            label: "Close Window Keep Daemon",
+            label: "Close Wallet and Keep Daemon",
             click() {
+              log.info('menu.js default template: close and keep');
               let settings = GetSettings();
-              if (settings.keepDaemon !== true) {
-                settings.keepDaemon = true;
-                SaveSettings(settings);
-              }
+              settings.keepDaemon = true;
+              SaveSettings(settings);
               remote.getCurrentWindow().close();
             }
           },
           {
-            label: "Quit Nexus Wallet",
+            label: "Close Wallet and Daemon",
             click() {
-              RPC.PROMISE("stop", []).then(payload => {
-                setTimeout(() => {
-                  remote.getCurrentWindow().close();
-                }, 1000);
-              });
+              log.info('menu.js default template: close and kill');
+              let settings = GetSettings();
+              if (settings.manualDaemon != true) {
+                RPC.PROMISE("stop", []).then(payload => {
+                  setTimeout(() => {
+                    remote.getCurrentWindow().close();
+                  }, 1000);
+                });
+              remote.getCurrentWindow().close();
+              }
             }
           }
         ]
