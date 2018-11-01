@@ -13,6 +13,7 @@ import { timingSafeEqual } from "crypto";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
+import { FormattedMessage } from "react-intl";
 
 let currentHistoryIndex = -1;
 
@@ -51,7 +52,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class TerminalConsole extends Component {
-
   constructor(props) {
     super(props);
     this.inputRef = null;
@@ -95,7 +95,6 @@ class TerminalConsole extends Component {
 
     for (let index = 1; index < splitInput.length; index++) {
       //splitInput[index] = splitInput[index].replace(/['"`]/g,"");
-      
     }
 
     //console.log(splitInput);
@@ -114,7 +113,11 @@ class TerminalConsole extends Component {
     }
 
     /// Execute the command with the given args
-    if (this.props.commandList.some(function(v){ return v.indexOf(splitInput[0])>=0 }) == true) {
+    if (
+      this.props.commandList.some(function(v) {
+        return v.indexOf(splitInput[0]) >= 0;
+      }) == true
+    ) {
       RPC.PROMISE(splitInput[0], RPCArguments)
         .then(payload => {
           if (typeof payload === "string" || typeof payload === "number") {
@@ -157,7 +160,9 @@ class TerminalConsole extends Component {
           this.props.printToConsole(tempConsoleOutput);
         });
     } else {
-      tempConsoleOutput.push([this.props.currentInput + " is a Command invalid"]);
+      tempConsoleOutput.push([
+        this.props.currentInput + " is a Command invalid"
+      ]);
       this.props.printToConsole(tempConsoleOutput);
     }
   }
@@ -199,13 +204,16 @@ class TerminalConsole extends Component {
   autoComplete() {
     return this.props.filteredCmdList.map((item, key) => {
       return (
-        <a key={key} onMouseDown={() => {
-          setTimeout(() => {
-            //I don't like this but the issue is that the click event fires on the output div which breaks the focus, so using a timer
-            this.inputRef.focus(); 
-          }, 100); 
-          this.props.onAutoCompleteClick(item);
-            }}>
+        <a
+          key={key}
+          onMouseDown={() => {
+            setTimeout(() => {
+              //I don't like this but the issue is that the click event fires on the output div which breaks the focus, so using a timer
+              this.inputRef.focus();
+            }, 100);
+            this.props.onAutoCompleteClick(item);
+          }}
+        >
           {item}
           <br />
         </a>
@@ -218,24 +226,31 @@ class TerminalConsole extends Component {
     return (
       <div id="terminal-console">
         <div id="terminal-console-input">
-          <input
-            id="input-text"
-            ref={element => this.inputRef = element}
-            autoFocus
-            type="text"
-            value={this.props.currentInput}
-            placeholder="Enter console commands here (ex: getinfo, help)"
-            onChange={e => this.props.onInputfieldChange(e.target.value)}
-            onKeyPress={e => this.handleKeyboardInput(e)}
-            onKeyDown={e => this.handleKeyboardArrows(e)}
-          />
+          <FormattedMessage
+            id="Console.CommandsHere"
+            defaultMessage="Enter console commands here (ex: getinfo, help)"
+          >
+            {cch => (
+              <input
+                id="input-text"
+                ref={element => (this.inputRef = element)}
+                autoFocus
+                type="text"
+                value={this.props.currentInput}
+                placeholder={cch}
+                onChange={e => this.props.onInputfieldChange(e.target.value)}
+                onKeyPress={e => this.handleKeyboardInput(e)}
+                onKeyDown={e => this.handleKeyboardArrows(e)}
+              />
+            )}
+          </FormattedMessage>
           <button
             id="input-submit"
             className="button primary"
             value="Execute"
             onClick={() => this.processInput()}
           >
-            Execute
+            <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
           </button>
 
           <div
@@ -258,7 +273,10 @@ class TerminalConsole extends Component {
           className="button"
           onClick={() => this.props.resetMyConsole()}
         >
-          Clear Console
+          <FormattedMessage
+            id="Console.ClearConsole"
+            defaultMessage="Clear Console"
+          />
         </button>
       </div>
     );

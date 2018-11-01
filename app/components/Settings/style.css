@@ -191,6 +191,16 @@ form {
   color: var(--color-5);
   margin-left: -10%;
 }
+.Languagebutton {
+  /* Just a little styling to make it pretty */
+  border: 1px solid var(--color-4);
+  background: var(--color-4);
+  color: var(--color-5);
+  margin-left: -10%;
+  padding: 5px;
+  width: 120px;
+  height: 30px;
+}
 #no-button {
   float: right;
 }
@@ -201,11 +211,19 @@ form {
 #noPad {
   margin-left: 0;
 }
+
+.custom-overlay {
+  position: absolute;
+  padding: 0px;
+  overflow: hidden;
+}
 .custom-modal5 {
   background: #282828;
   /* animation: mymove2 0.5s ease-in-out; */
   height: 500px;
-
+  width: 420px;
+  max-width: 100%;
+}
 /*------------------------------------------------------------------
 MEDIA QUERIES
 ------------------------------------------------------------------*/
@@ -226,18 +244,27 @@ MEDIA QUERIES
 }
 @media (min-width: 1600px) {
 }
-  width: 420px;
-  max-width: 100%;
-}
+
 .LanguageTranslation {
   border-bottom: 2px solid var(--color-4);
   margin-left: -40px;
 }
 
-/* .LanguageTranslation:hover {
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-    0 17px 50px 0 rgba(0, 0, 0, 0.19);
-} */
+.LanguageTranslation:hover {
+  /* animation: LanguageTranslation 0.5s; */
+}
+@keyframes LanguageTranslation {
+  /* 33% {
+    transform: translateX(-20px);
+  } */
+  66% {
+    transform: translateX(10px);
+  }
+  99% {
+    transform: translateX(10px);
+  }
+}
+
 .langTag {
   float: right;
 }
@@ -249,6 +276,7 @@ MEDIA QUERIES
   border: 3px solid var(--color-3);
   display: block;
   height: 400px;
+  border-radius: 10px;
 }
 
 .langRadio {
@@ -256,4 +284,59 @@ MEDIA QUERIES
   width: 15px;
 
   border-radius: 50%;
+}
+
+/* TEST */
+[type="radio"]:checked,
+[type="radio"]:not(:checked) {
+  position: absolute;
+  left: -9999px;
+}
+[type="radio"]:checked + label,
+[type="radio"]:not(:checked) + label {
+  position: relative;
+  padding-left: 28px;
+  cursor: pointer;
+  line-height: 20px;
+  display: inline-block;
+}
+[type="radio"]:checked + label:before,
+[type="radio"]:not(:checked) + label:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+
+  border-radius: 100%;
+  background: var(--color-4);
+}
+[type="radio"]:checked + label:after,
+[type="radio"]:not(:checked) + label:after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: var(--color-2);
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  border-radius: 100%;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+[type="radio"]:not(:checked) + label:after {
+  opacity: 0;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+[type="radio"]:checked + label:after {
+  opacity: 1;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+ul li:hover label {
+  color: var(--color-2);
+  transform: translateX(10px);
+  transition: all 0.5s ease-in-out;
 }

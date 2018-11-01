@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { remote } from "electron";
 import Request from "request";
-import { Promise } from "bluebird-lst";;
+import { Promise } from "bluebird-lst";
 import Modal from "react-responsive-modal";
 import {
   VictoryBar,
@@ -36,11 +36,12 @@ import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
 import config from "../../api/configuration";
 import styles from "./style.css";
+import { FormattedMessage } from "react-intl";
 
 // Images
 import transactionsimg from "../../images/transactions.svg";
 
-import copy from 'copy-to-clipboard';
+import copy from "copy-to-clipboard";
 
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
 // import "react-table/react-table.css"
@@ -90,7 +91,7 @@ class Transactions extends Component {
     super(props);
     this.copyRef = element => {
       this.textCopyArea = element;
-    }
+    };
     this.hoveringID = 999999999999;
     this.isHoveringOverTable = false;
     this.state = {
@@ -122,7 +123,11 @@ class Transactions extends Component {
           new Date(
             new Date().getFullYear() - 1,
             new Date().getMonth(),
-            new Date().getDate(),1,1,1,1
+            new Date().getDate(),
+            1,
+            1,
+            1,
+            1
           ),
           new Date()
         ],
@@ -176,7 +181,9 @@ class Transactions extends Component {
       for (let eachaddress in this.props.myAccounts[key].addresses) {
         tempaddpress.set(
           this.props.myAccounts[key].addresses[eachaddress],
-          "My Address-" + this.props.myAccounts[key].account
+          this.props.settings.messages[this.props.settings.locale][
+            "transactions.MyAddress"
+          ] + this.props.myAccounts[key].account
         );
       }
     }
@@ -306,20 +313,16 @@ class Transactions extends Component {
 
     this.props.SetWalletTransactionArray(incomingData);
     let tempZoomDomain = {
-      x: [
-        new Date(),
-        new Date(new Date().getFullYear() + 1,1,1,1,1,1,1)
-      ]
-    }
-    
-    if (incomingData != undefined && incomingData.length > 0)
-    {
+      x: [new Date(), new Date(new Date().getFullYear() + 1, 1, 1, 1, 1, 1, 1)]
+    };
+
+    if (incomingData != undefined && incomingData.length > 0) {
       tempZoomDomain = {
         x: [
           new Date(incomingData[0].time * 1000),
           new Date((incomingData[incomingData.length - 1].time + 1000) * 1000)
         ]
-      }
+      };
     }
     this.setState({
       tableColumns: tabelheaders,
@@ -349,18 +352,17 @@ class Transactions extends Component {
 
       let feePromises = [];
       incomingData.forEach(element => {
-        if (element.category == "send"){
-        feePromises.push( RPC.PROMISE("gettransaction",[element.txid]));
+        if (element.category == "send") {
+          feePromises.push(RPC.PROMISE("gettransaction", [element.txid]));
         }
       });
-      Promise.all(feePromises).then( payload => {
+      Promise.all(feePromises).then(payload => {
         let feeData = new Map();
         payload.map(element => {
-          feeData.set(element.time,element.fee);
+          feeData.set(element.time, element.fee);
         });
-        this.setFeeValuesOnTransaction(feeData)
-      }
-      );
+        this.setFeeValuesOnTransaction(feeData);
+      });
     }, 1000);
   }
 
@@ -459,8 +461,7 @@ class Transactions extends Component {
     );
 
     let tablecopyaddresscallback = function() {
-      if (this.hoveringID != 999999999999)
-      {
+      if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
           this.props.walletitems[this.hoveringID].address
         );
@@ -469,18 +470,16 @@ class Transactions extends Component {
     tablecopyaddresscallback = tablecopyaddresscallback.bind(this);
 
     let tablecopyamountcallback = function() {
-      if (this.hoveringID != 999999999999)
-      {
+      if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
           this.props.walletitems[this.hoveringID].amount
         );
-       }
+      }
     };
     tablecopyamountcallback = tablecopyamountcallback.bind(this);
 
     let tablecopyaccountcallback = function() {
-      if (this.hoveringID != 999999999999)
-      {
+      if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
           this.props.walletitems[this.hoveringID].account
         );
@@ -558,7 +557,7 @@ class Transactions extends Component {
       })
     );
     */
- 
+
     if (this.isHoveringOverTable) {
       transactiontablecontextmenu.popup(remote.getCurrentWindow());
     } else {
@@ -933,7 +932,7 @@ class Transactions extends Component {
   // What happens when you select something in the table
   tableSelectCallback(e, indata) {
     console.log(e.target.innerText);
-    console.log(indata);
+    console.log(indata.original.category);
     //e.target.select();
     //document.execCommand('copy');
     //this.setState({
@@ -955,6 +954,12 @@ class Transactions extends Component {
       if (ele.confirmations <= 12) {
         isPending = "(Pending)";
       }
+      // if (ele.category === "send") {
+      //   return (ele.category = this.props.messages[this.props.locale][
+      //     "transactions.Sent"
+      //   ]);
+      // }
+
       return {
         transactionnumber: txCounter,
         time: ele.time,
@@ -970,42 +975,91 @@ class Transactions extends Component {
   // Output:
   //   Array || Table Column array
   returnTableColumns() {
+    var options = {
+      month: "short",
+      weekday: "short",
+      year: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZoneName: "short"
+    };
     let tempColumns = [];
 
     tempColumns.push({
-      Header: "TX Number",
+      Header: (
+        <FormattedMessage id="transactions.TX" defaultMessage="TX Number" />
+      ),
       accessor: "transactionnumber",
       maxWidth: 100
     });
 
     tempColumns.push({
-      Header: "time",
+      Header: <FormattedMessage id="transactions.Time" defaultMessage="Time" />,
       id: "time",
-      Cell: d => <div> {new Date(d.value * 1000).toUTCString()} </div>, // We want to display the time in  a readable format
+      Cell: d => (
+        <div>
+          {" "}
+          {new Date(d.value * 1000).toLocaleString(
+            this.props.settings.locale,
+            options
+          )}{" "}
+        </div>
+      ), // We want to display the time in  a readable format
       accessor: "time",
       maxWidth: 200
     });
 
     tempColumns.push({
-      Header: "category",
+      id: "category",
+      Cell: q => {
+        if (q.value === "send") {
+          return (
+            <FormattedMessage id="transactions.Sent" defaultMessage="Sent" />
+          );
+        } else if (q.value === "receive") {
+          return (
+            <FormattedMessage
+              id="transactions.Receive"
+              defaultMessage="Received"
+            />
+          );
+        } else {
+          return "Error";
+        }
+      },
+      Header: (
+        <FormattedMessage
+          id="transactions.Category"
+          defaultMessage="Catagory"
+        />
+      ),
       accessor: "category",
+
       maxWidth: 100
     });
 
     tempColumns.push({
-      Header: "amount",
+      Header: (
+        <FormattedMessage id="transactions.Amount" defaultMessage="Amount" />
+      ),
       accessor: "amount",
       maxWidth: 100
     });
 
     tempColumns.push({
-      Header: "account",
+      Header: (
+        <FormattedMessage id="transactions.Account" defaultMessage="Account" />
+      ),
       accessor: "account",
       maxWidth: 150
     });
 
     tempColumns.push({
-      Header: "address",
+      Header: (
+        <FormattedMessage id="transactions.Address" defaultMessage="Address" />
+      ),
       accessor: "address"
     });
     return tempColumns;
@@ -1053,7 +1107,41 @@ class Transactions extends Component {
 
   // Returns the tooltip lable for the chart
   returnToolTipLable(inData) {
-    return inData.category + "\nAmount: " + inData.b + "\nTime:" + inData.a;
+    var options = {
+      month: "short",
+      weekday: "short",
+      year: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZoneName: "short"
+    };
+
+    if (inData.category == "receive") {
+      inData.category = this.props.settings.messages[
+        this.props.settings.locale
+      ]["transactions.Receive"];
+    } else if (inData.category == "send") {
+      inData.category = this.props.settings.messages[
+        this.props.settings.locale
+      ]["transactions.Sent"];
+    }
+    return (
+      inData.category +
+      `\n ${
+        this.props.settings.messages[this.props.settings.locale][
+          "transactions.AMOUNT"
+        ]
+      }` +
+      inData.b +
+      `\n ${
+        this.props.settings.messages[this.props.settings.locale][
+          "transactions.TIME"
+        ]
+      }` +
+      inData.a.toLocaleString(this.props.settings.locale, options)
+    );
   }
 
   // The event listener for when you zoom in and out
@@ -1083,13 +1171,11 @@ class Transactions extends Component {
 
   // the callback for when you mouse over a transaction on the table.
   mouseOverCallback(e, inData) {
-    
     this.isHoveringOverTable = true;
   }
 
   // The call back for when the mouse moves out of the table div.
   mouseOutCallback(e) {
-  
     this.isHoveringOverTable = false;
   }
 
@@ -1162,17 +1248,13 @@ class Transactions extends Component {
     if (this._isMounted == false) {
       return;
     }
-  };
-
     let USDurl = this.createcryptocompareurl(
       [this.props.settings.fiatCurrency],
       inEle
     );
     let BTCurl = this.createcryptocompareurl("BTC", inEle);
-
     rp(USDurl).then(payload => {
       let incomingUSD = JSON.parse(payload);
-
       setTimeout(() => {
         if (this._isMounted == false) {
           return;
@@ -1182,7 +1264,6 @@ class Transactions extends Component {
             return;
           }
           let incomingBTC = JSON.parse(payload2);
-
           this.setHistoryValuesOnTransaction(
             inEle,
             incomingUSD["NXS"][[this.props.settings.fiatCurrency]],
@@ -1334,10 +1415,7 @@ class Transactions extends Component {
 
   returnModalInternal() {
     let internalString = [];
-    if (
-      this.hoveringID != 999999999999 &&
-      this.props.walletitems.length != 0
-    ) {
+    if (this.hoveringID != 999999999999 && this.props.walletitems.length != 0) {
       const selectedTransaction = this.props.walletitems[this.hoveringID];
 
       if (selectedTransaction.confirmations <= 12) {
@@ -1354,8 +1432,7 @@ class Transactions extends Component {
         <a key="modal_amount">{"Amount: " + selectedTransaction.amount}</a>
       );
       internalString.push(<br key="br2" />);
-      if (selectedTransaction.category == "send")
-      {
+      if (selectedTransaction.category == "send") {
         internalString.push(
           <a key="modal_fee">{"Fee: " + selectedTransaction.fee}</a>
         );
@@ -1406,6 +1483,11 @@ class Transactions extends Component {
 
   // Mandatory React method
   render() {
+    console.log(
+      this.props.settings.messages[this.props.settings.locale][
+        "transactions.AMOUNT"
+      ]
+    );
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
     const VictoryZoomVoronoiContainer = createContainer("voronoi", "zoom");
@@ -1427,169 +1509,255 @@ class Transactions extends Component {
 
         <h2>
           <img src={transactionsimg} className="hdr-img" />
-          Transactions
+          <FormattedMessage
+            id="transactions.Transactions"
+            defaultMessage="Transactions"
+          />
         </h2>
         <div className="panel">
-        {this.props.connections === undefined ? (<h2>Please wait for the daemon to load</h2>) : (
-          <div>
-          <div id="transactions-chart">
-            <VictoryChart
-              width={this.state.mainChartWidth}
-              height={this.state.mainChartHeight}
-              scale={{ x: "time" }}
-              style={{ parent: { overflow: "visible" } }}
-              // theme={VictoryTheme.material}
-              domainPadding={{ x: 30 }}
-              // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
-              padding={{ top: 6, bottom: 6, left: 0, right: 0 }}
-              containerComponent={
-                <VictoryZoomVoronoiContainer
-                  zoomDimension="x"
-                  zoomDomain={this.state.zoomDomain}
-                  onZoomDomainChange={this.handleZoom.bind(this)}
-                />
-              }
-            >
-              <VictoryBar
-                style={{
-                  data: {
-                    fill: d => this.returnCorrectFillColor(d),
-                    stroke: d => this.returnCorrectStokeColor(d),
-                    fillOpacity: 0.85,
-                    strokeWidth: 1
+          {this.props.connections === undefined ? (
+            <h2>
+              {" "}
+              <FormattedMessage
+                id="transactions.Loading"
+                defaultMessage="Please wait for the daemon to load"
+              />
+            </h2>
+          ) : (
+            <div>
+              <div id="transactions-chart">
+                <VictoryChart
+                  width={this.state.mainChartWidth}
+                  height={this.state.mainChartHeight}
+                  scale={{ x: "time" }}
+                  style={{ parent: { overflow: "visible" } }}
+                  // theme={VictoryTheme.material}
+                  domainPadding={{ x: 30 }}
+                  // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
+                  padding={{ top: 6, bottom: 6, left: 0, right: 0 }}
+                  containerComponent={
+                    <VictoryZoomVoronoiContainer
+                      zoomDimension="x"
+                      zoomDomain={this.state.zoomDomain}
+                      onZoomDomainChange={this.handleZoom.bind(this)}
+                    />
                   }
-                }}
-                labelComponent={
-                  <VictoryTooltip
-                    orientation={incomingProp => {
-                      let internalDifference =
-                        this.state.zoomDomain.x[1].getTime() -
-                        this.state.zoomDomain.x[0].getTime();
-                      internalDifference = internalDifference / 2;
-                      internalDifference =
-                        this.state.zoomDomain.x[0].getTime() +
-                        internalDifference;
-                      if (incomingProp.a.getTime() <= internalDifference) {
-                        return "right";
-                      } else {
-                        return "left";
+                >
+                  <VictoryBar
+                    style={{
+                      data: {
+                        fill: d => this.returnCorrectFillColor(d),
+                        stroke: d => this.returnCorrectStokeColor(d),
+                        fillOpacity: 0.85,
+                        strokeWidth: 1
                       }
                     }}
+                    labelComponent={
+                      <VictoryTooltip
+                        orientation={incomingProp => {
+                          let internalDifference =
+                            this.state.zoomDomain.x[1].getTime() -
+                            this.state.zoomDomain.x[0].getTime();
+                          internalDifference = internalDifference / 2;
+                          internalDifference =
+                            this.state.zoomDomain.x[0].getTime() +
+                            internalDifference;
+                          if (incomingProp.a.getTime() <= internalDifference) {
+                            return "right";
+                          } else {
+                            return "left";
+                          }
+                        }}
+                      />
+                    }
+                    labels={d => this.returnToolTipLable(d)}
+                    data={this.returnChartData()}
+                    x="a"
+                    y="b"
                   />
-                }
-                labels={d => this.returnToolTipLable(d)}
-                data={this.returnChartData()}
-                x="a"
-                y="b"
-              />
 
-              <VictoryAxis
-                // label="Time"
-                independentAxis
-                style={{
-                  axis: { stroke: "var(--border-color)", strokeOpacity: 1 },
-                  axisLabel: { fontSize: 16 },
-                  grid: { stroke: "var(--border-color)", strokeOpacity: 0.25 },
-                  ticks: {
-                    stroke: "var(--border-color)",
-                    strokeOpacity: 0.75,
-                    size: 10
-                  },
-                  tickLabels: { fontSize: 11, padding: 5, fill: "#bbb" }
-                }}
-              />
+                  <VictoryAxis
+                    // label="Time"
+                    independentAxis
+                    style={{
+                      axis: { stroke: "var(--border-color)", strokeOpacity: 1 },
+                      axisLabel: { fontSize: 16 },
+                      grid: {
+                        stroke: "var(--border-color)",
+                        strokeOpacity: 0.25
+                      },
+                      ticks: {
+                        stroke: "var(--border-color)",
+                        strokeOpacity: 0.75,
+                        size: 10
+                      },
+                      tickLabels: { fontSize: 11, padding: 5, fill: "#bbb" }
+                    }}
+                  />
 
-              <VictoryAxis
-                // label="Amount"
-                dependentAxis
-                style={{
-                  axis: { stroke: "var(--border-color)", strokeOpacity: 1 },
-                  axisLabel: { fontSize: 16 },
-                  grid: { stroke: "var(--border-color)", strokeOpacity: 0.25 },
-                  ticks: {
-                    stroke: "var(--border-color)",
-                    strokeOpacity: 0.75,
-                    size: 10
-                  },
-                  tickLabels: { fontSize: 11, padding: 5, fill: "#bbb" }
-                }}
-              />
-            </VictoryChart>
-          </div>
+                  <VictoryAxis
+                    // label="Amount"
+                    dependentAxis
+                    style={{
+                      axis: { stroke: "var(--border-color)", strokeOpacity: 1 },
+                      axisLabel: { fontSize: 16 },
+                      grid: {
+                        stroke: "var(--border-color)",
+                        strokeOpacity: 0.25
+                      },
+                      ticks: {
+                        stroke: "var(--border-color)",
+                        strokeOpacity: 0.75,
+                        size: 10
+                      },
+                      tickLabels: { fontSize: 11, padding: 5, fill: "#bbb" }
+                    }}
+                  />
+                </VictoryChart>
+              </div>
 
-          <div id="transactions-filters">
-            <div id="filter-address" className="filter-field">
-              <label htmlFor="address-filter">Search Address</label>
-              <input
-                id="address-filter"
-                type="search"
-                name="addressfilter"
-                onChange={this.transactionaddressfiltercallback}
-              />
+              <div id="transactions-filters">
+                <div id="filter-address" className="filter-field">
+                  <label htmlFor="address-filter">
+                    {" "}
+                    <FormattedMessage
+                      id="transactions.SearchAddress"
+                      defaultMessage="Search Address"
+                    />
+                  </label>
+                  <input
+                    id="address-filter"
+                    type="search"
+                    name="addressfilter"
+                    onChange={this.transactionaddressfiltercallback}
+                  />
+                </div>
+
+                <div id="filter-type" className="filter-field">
+                  <label htmlFor="transactiontype-dropdown">
+                    <FormattedMessage
+                      id="transactions.Type"
+                      defaultMessage="TYPE"
+                    />
+                  </label>
+                  <select
+                    id="transactiontype-dropdown"
+                    onChange={this.transactiontypefiltercallback}
+                  >
+                    <option value="all">
+                      <FormattedMessage
+                        id="transactions.All"
+                        defaultMessage="All"
+                      />
+                    </option>
+                    <option value="receive">
+                      <FormattedMessage
+                        id="transactions.Receive"
+                        defaultMessage="Receive"
+                      />
+                    </option>
+                    <option value="send">
+                      <FormattedMessage
+                        id="transactions.Sent"
+                        defaultMessage="Sent"
+                      />
+                    </option>
+                    <option value="genesis">
+                      <FormattedMessage
+                        id="transactions.Genesis"
+                        defaultMessage="Genesis"
+                      />
+                    </option>
+                    <option value="trust">
+                      <FormattedMessage
+                        id="transactions.Trust"
+                        defaultMessage="Trust"
+                      />
+                    </option>
+                  </select>
+                </div>
+
+                <div id="filter-minimum" className="filter-field">
+                  <label htmlFor="minimum-nxs">
+                    <FormattedMessage
+                      id="transactions.MinimumAmount"
+                      defaultMessage="Min Amount"
+                    />
+                  </label>
+                  <input
+                    id="minimum-nxs"
+                    type="number"
+                    min="0"
+                    placeholder="0.00"
+                    onChange={this.transactionamountfiltercallback}
+                  />
+                </div>
+
+                <div id="filter-timeframe" className="filter-field">
+                  <label htmlFor="transaction-timeframe">
+                    <FormattedMessage
+                      id="transactions.Time"
+                      defaultMessage="TIME SPAN"
+                    />
+                  </label>
+                  <select
+                    id="transaction-timeframe"
+                    onChange={event => this.transactionTimeframeChange(event)}
+                  >
+                    <option value="All">
+                      <FormattedMessage
+                        id="transactions.All"
+                        defaultMessage="All"
+                      />
+                    </option>
+                    <option value="Year">
+                      <FormattedMessage
+                        id="transactions.PastYear"
+                        defaultMessage="All"
+                      />
+                    </option>
+                    <option value="Month">
+                      <FormattedMessage
+                        id="transactions.PastMonth"
+                        defaultMessage="Past Month"
+                      />
+                    </option>
+                    <option value="Week">
+                      <FormattedMessage
+                        id="transactions.PastWeek"
+                        defaultMessage="Past Week"
+                      />
+                    </option>
+                  </select>
+                </div>
+
+                <button
+                  id="download-cvs-button"
+                  className="button primary"
+                  value="Download"
+                  onClick={() => this.DownloadCSV()}
+                >
+                  <FormattedMessage
+                    id="transactions.Download"
+                    defaultMessage="Download"
+                  />
+                </button>
+              </div>
+
+              <div id="transactions-details">
+                <Table
+                  key="table-top"
+                  data={data}
+                  columns={columns}
+                  minRows={pageSize}
+                  selectCallback={this.tableSelectCallback.bind(this)}
+                  defaultsortingid={1}
+                  onMouseOverCallback={this.mouseOverCallback.bind(this)}
+                  onMouseOutCallback={this.mouseOutCallback.bind(this)}
+                />
+              </div>
             </div>
-
-            <div id="filter-type" className="filter-field">
-              <label htmlFor="transactiontype-dropdown">Type</label>
-              <select
-                id="transactiontype-dropdown"
-                onChange={this.transactiontypefiltercallback}
-              >
-                <option value="all">All</option>
-                <option value="receive">Receive</option>
-                <option value="send">Sent</option>
-                <option value="genesis">Genesis</option>
-                <option value="trust">Trust</option>
-              </select>
-            </div>
-
-            <div id="filter-minimum" className="filter-field">
-              <label htmlFor="minimum-nxs">Min Amount</label>
-              <input
-                id="minimum-nxs"
-                type="number"
-                min="0"
-                placeholder="0.00"
-                onChange={this.transactionamountfiltercallback}
-              />
-            </div>
-
-            <div id="filter-timeframe" className="filter-field">
-              <label htmlFor="transaction-timeframe">Time Span</label>
-              <select
-                id="transaction-timeframe"
-                onChange={event => this.transactionTimeframeChange(event)}
-              >
-                <option value="All">All</option>
-                <option value="Year">Past Year</option>
-                <option value="Month">Past Month</option>
-                <option value="Week">Past Week</option>
-              </select>
-            </div>
-
-            <button
-              id="download-cvs-button"
-              className="button primary"
-              value="Download"
-              onClick={() => this.DownloadCSV()}
-            >
-              Download
-            </button>
-          </div>
-
-          <div id="transactions-details">
-            <Table
-              key="table-top"
-              data={data}
-              columns={columns}
-              minRows={pageSize}
-              selectCallback={this.tableSelectCallback.bind(this)}
-              defaultsortingid={1}
-              onMouseOverCallback={this.mouseOverCallback.bind(this)}
-              onMouseOutCallback={this.mouseOutCallback.bind(this)}
-            />
-          </div> 
-          </div>
-        )}
+          )}
         </div>
       </div>
     );

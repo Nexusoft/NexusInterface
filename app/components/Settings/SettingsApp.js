@@ -23,9 +23,9 @@ const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.sendRecieve,
-    ...state.settings
-    ...state.intl
-    ...state.overview,
+    ...state.settings,
+    ...state.intl,
+    ...state.overview
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -335,7 +335,9 @@ class SettingsApp extends Component {
       .toString()
       .slice(0, 24)
       .split(" ")
-      .reduce((a, b) => {return a + "_" + b;})
+      .reduce((a, b) => {
+        return a + "_" + b;
+      })
       .replace(/:/g, "_");
 
     let BackupDir = process.env.HOME + "/NexusBackups";
@@ -372,7 +374,7 @@ class SettingsApp extends Component {
       <section id="application">
         <Modal
           center
-          classNames={{ modal: "custom-modal2" }}
+          classNames={{ modal: "custom-modal2", overlay: "custom-overlay" }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}
@@ -421,13 +423,20 @@ class SettingsApp extends Component {
                 defaultMessage="Start at system startup"
               />
             </label>
-            <input
-              id="autostart"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateAutoStart}
-              data-tooltip="Automatically start the wallet when you log into your system"
-            />
+            <FormattedMessage
+              id="ToolTip.SystemStartUP"
+              defaultMessage="Automatically start the wallet when you log into your system"
+            >
+              {tt => (
+                <input
+                  id="autostart"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateAutoStart}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
@@ -437,13 +446,20 @@ class SettingsApp extends Component {
                 defaultMessage="Minimize to tray"
               />
             </label>
-            <input
-              id="minimizeToTray"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateMinimizeToTray}
-              data-tooltip="Minimize the wallet to the system tray"
-            />
+            <FormattedMessage
+              id="ToolTip.MinimizeTheWallet"
+              defaultMessage="Minimize the wallet to the system tray"
+            >
+              {tt => (
+                <input
+                  id="minimizeToTray"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateMinimizeToTray}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
@@ -454,13 +470,20 @@ class SettingsApp extends Component {
                 defaultMessage="Minimize On Close"
               />
             </label>
-            <input
-              id="minimizeOnClose"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateMinimizeOnClose}
-              data-tooltip="Minimize the wallet when closing the window instead of closing it"
-            />
+            <FormattedMessage
+              id="ToolTip.MinimizeOnClose"
+              defaultMessage="Minimize the wallet when closing the window instead of closing it"
+            >
+              {MoC => (
+                <input
+                  id="minimizeOnClose"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateMinimizeOnClose}
+                  data-tooltip={MoC}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
@@ -471,13 +494,20 @@ class SettingsApp extends Component {
                 defaultMessage="Information Popups"
               />
             </label>
-            <input
-              id="infoPopUps"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateInfoPopUp}
-              data-tooltip="Show Informational Popups"
-            />
+            <FormattedMessage
+              id="ToolTip.ShowPopups"
+              defaultMessage="Show Informational Popups"
+            >
+              {tt => (
+                <input
+                  id="infoPopUps"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateInfoPopUp}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
@@ -487,17 +517,29 @@ class SettingsApp extends Component {
                 defaultMessage="Send anonymous usage data"
               />
             </label>
-            <input
-              id="googleAnalytics"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateGoogleAnalytics.bind(this)}
-              data-tooltip="Send anonymous usage data to allow the Nexus developers to improve the wallet"
-            />
+            <FormattedMessage
+              id="ToolTip.Usage"
+              defaultMessage="Send anonymous usage data to allow the Nexus developers to improve the wallet"
+            >
+              {tt => (
+                <input
+                  id="googleAnalytics"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateGoogleAnalytics.bind(this)}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
-            <label htmlFor="fiatDefualt"> Fiat Currency </label>
+            <label htmlFor="fiatDefualt">
+              <FormattedMessage
+                id="Settings.Fiat"
+                defaultMessage="Fiat Currency"
+              />
+            </label>
             <select
               ref="fiatSelector"
               value={this.props.settings.fiatCurrency}
@@ -587,14 +629,21 @@ class SettingsApp extends Component {
               />
             </label>
             <div className="fee">
-              <input
-                className="Txfee"
-                id="optionalTransactionFee"
-                type="number"
-                step="0.01"
-                min="0"
-                data-tooltip="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"
-              />
+              <FormattedMessage
+                id="ToolTip.OptionalFee"
+                defaultMessage="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"
+              >
+                {tt => (
+                  <input
+                    className="Txfee"
+                    id="optionalTransactionFee"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
               <button
                 className="feebutton"
                 onClick={e => {
@@ -626,13 +675,20 @@ class SettingsApp extends Component {
                 defaultMessage="Developer Mode"
               />
             </label>
-            <input
-              id="devmode"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateDeveloperMode}
-              data-tooltip="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
-            />
+            <FormattedMessage
+              id="ToolTip.DevMode"
+              defaultMessage="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
+            >
+              {tt => (
+                <input
+                  id="devmode"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateDeveloperMode}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           {/* <div className="field">

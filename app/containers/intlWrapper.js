@@ -8,16 +8,17 @@ import intl from "../reducers/intl";
 const mapStateToProps = state => {
   return {
     ...state.intl,
-    ...state.common
+    ...state.common,
+    ...state.settings
   };
 };
 
 export function IntlWrapper(props) {
-  console.log(props.locale);
+  console.log(props.settings.locale);
   return (
     <IntlProvider
-      locale={props.locale}
-      messages={props.messages[props.locale]}
+      locale={props.settings.locale}
+      messages={props.settings.messages[props.settings.locale]}
       {...props.intl}
     >
       {props.children}

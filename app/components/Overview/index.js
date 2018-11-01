@@ -141,14 +141,14 @@ class Overview extends Component {
           defaultMessage="Getting Next Block..."
         />
       );
+    } else {
+      return this.props.blockDate.toLocaleString(this.props.settings.locale);
     }
   }
 
   returnLicenseModalInternal() {
-    
     let tempYear = new Date();
-   
-    
+
     return (
       <div>
         The MIT License (MIT)
@@ -189,19 +189,20 @@ class Overview extends Component {
     return (
       <div>
         <h4>
-         THIS SOFTWARE IS EXPERIMENTAL AND IN BETA
-         TESTING. BY DEFAULT IT WILL NOT USE
-         ANY EXISTING NEXUS WALLET NOR ADDRESSES THAT
-         YOU MAY ALREADY HAVE.
-         <br />
-         <br />
-         AS SUCH, THIS WALLET SHOULD <b><u>NOT </u></b>
-         BE USED AS YOUR PRIMARY WALLET AND DOING SO
-         MAY AFFECT YOUR ABILITY TO ACCESS YOUR COINS
-         UP TO AND INCLUDING LOSING THEM PERMANENTLY.
-         <br />
-         <br />
-         USE THIS SOFTWARE AT YOUR OWN RISK.
+          THIS SOFTWARE IS EXPERIMENTAL AND IN BETA TESTING. BY DEFAULT IT WILL
+          NOT USE ANY EXISTING NEXUS WALLET NOR ADDRESSES THAT YOU MAY ALREADY
+          HAVE.
+          <br />
+          <br />
+          AS SUCH, THIS WALLET SHOULD{" "}
+          <b>
+            <u>NOT </u>
+          </b>
+          BE USED AS YOUR PRIMARY WALLET AND DOING SO MAY AFFECT YOUR ABILITY TO
+          ACCESS YOUR COINS UP TO AND INCLUDING LOSING THEM PERMANENTLY.
+          <br />
+          <br />
+          USE THIS SOFTWARE AT YOUR OWN RISK.
         </h4>
         <br key="br2" />
         <button
@@ -338,8 +339,7 @@ class Overview extends Component {
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
             pillarColor={this.props.settings.customStyling.globePillarColorRGB}
             archColor={this.props.settings.customStyling.globeArchColorRGB}
-            globeColor = {this.props.settings.customStyling.globeMultiColorRGB}
-
+            globeColor={this.props.settings.customStyling.globeMultiColorRGB}
           />
         ],
         [
@@ -425,6 +425,9 @@ class Overview extends Component {
 
   // Mandatory React method
   render() {
+    // console.log(
+    //   this.props.blockDate.toLocaleString(this.props.settings.locale)
+    // );
     return (
       <div id="overviewPage">
         <Modal
@@ -518,7 +521,11 @@ class Overview extends Component {
                   className="animated fadeInDown delay-1s"
                 >
                   <div className="h2">
-                    Balance <span className="h2-nospace">(NXS)</span>
+                    <FormattedMessage
+                      id="overview.Balance"
+                      defaultMessage="Balance"
+                    />
+                    <span className="h2-nospace">(NXS)</span>
                   </div>
                   <img src={nxsStake} />
                   <div className="overviewValue">{this.props.balance}</div>
@@ -530,7 +537,10 @@ class Overview extends Component {
                 className="animated fadeInDown delay-1s"
               >
                 <div className="h2">
-                  Balance{" "}
+                  <FormattedMessage
+                    id="overview.Balance"
+                    defaultMessage="Balance"
+                  />{" "}
                   <span className="h2-nospace">
                     ({this.props.settings.fiatCurrency})
                   </span>
@@ -542,7 +552,12 @@ class Overview extends Component {
                 id="nxs-transactions-info"
                 className="animated fadeInDown delay-1s"
               >
-                <div className="h2">Transactions</div>
+                <div className="h2">
+                  <FormattedMessage
+                    id="overview.Transactions"
+                    defaultMessage="Transactions"
+                  />
+                </div>
                 <img src={transactionsArrows} />
                 <div className="overviewValue">{this.props.txtotal}</div>
               </div>
@@ -556,7 +571,10 @@ class Overview extends Component {
                 className="animated fadeInDown delay-1s"
               >
                 <div className="h2">
-                  Market Price{" "}
+                  <FormattedMessage
+                    id="overview.MarketPrice"
+                    defaultMessage="Market Price"
+                  />
                   <span className="h2-nospace">
                     ({this.props.settings.fiatCurrency})
                   </span>
@@ -572,7 +590,10 @@ class Overview extends Component {
                 className="animated fadeInDown delay-1s"
               >
                 <div className="h2">
-                  Market Cap{" "}
+                  <FormattedMessage
+                    id="overview.MarketCap"
+                    defaultMessage="Market Cap"
+                  />{" "}
                   <span className="h2-nospace">
                     ({this.props.settings.fiatCurrency})
                   </span>
@@ -586,7 +607,10 @@ class Overview extends Component {
                 className="animated fadeInDown delay-1s"
               >
                 <div className="h2">
-                  24hr Change{" "}
+                  <FormattedMessage
+                    id="overview.24hrChange"
+                    defaultMessage="24hr Change"
+                  />{" "}
                   <span className="h2-nospace">
                     ({this.props.settings.fiatCurrency} %)
                   </span>
@@ -608,7 +632,12 @@ class Overview extends Component {
                 id="nxs-connections-info"
                 className="animated fadeInDown delay-1s"
               >
-                <div className="h2">Connections</div>
+                <div className="h2">
+                  <FormattedMessage
+                    id="overview.Connections"
+                    defaultMessage="Connections"
+                  />
+                </div>
                 <img
                   id="nxs-getinfo-connections-image"
                   src={this.connectionsImage()}
@@ -619,7 +648,12 @@ class Overview extends Component {
                 id="nxs-interestweight-info"
                 className="animated fadeInDown delay-1s"
               >
-                <div className="h2">Interest Rate</div>
+                <div className="h2">
+                  <FormattedMessage
+                    id="overview.InterestRate"
+                    defaultMessage="Interest Rate"
+                  />
+                </div>
                 <img src={interesticon} />
                 <div className="overviewValue">
                   {this.props.interestweight + "%"}
@@ -629,21 +663,29 @@ class Overview extends Component {
                 id="nxs-blocks-info"
                 className="animated fadeInDown delay-1s"
               >
-                <div className="h2">Block Count</div>
+                <div className="h2">
+                  <FormattedMessage
+                    id="overview.BlockCount"
+                    defaultMessage="Block Count"
+                  />
+                </div>
                 <img src={nxsblocks} />
 
                 <div className="overviewValue">
                   {this.numberWithCommas(this.props.blocks)}
                 </div>
-                <span className="tooltip left">
-                  {this.props.blockDate.toLocaleString()}
-                </span>
+                <span className="tooltip left">{this.BlockRapper()}</span>
               </div>
               <div
                 id="nxs-blockweight-info"
                 className="animated fadeInDown delay-1s"
               >
-                <div className="h2">Block Weight</div>
+                <div className="h2">
+                  <FormattedMessage
+                    id="overview.BlockWeightt"
+                    defaultMessage="Block Weight"
+                  />
+                </div>
                 <img
                   src={this.blockWeightImage()}
                   id="nxs-getinfo-blockweight-image"
@@ -655,7 +697,12 @@ class Overview extends Component {
                 id="nxs-trustweight-info"
                 className="animated fadeInDown delay-1s"
               >
-                <div className="h2">Trust Weight</div>
+                <div className="h2">
+                  <FormattedMessage
+                    id="overview.TrustWeight"
+                    defaultMessage="Trust Weight"
+                  />
+                </div>
                 <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
                 <div className="overviewValue">{this.props.trustweight}</div>
               </div>
@@ -664,7 +711,12 @@ class Overview extends Component {
                 id="nxs-stakeweight-info"
                 className="animated fadeInDown delay-1s"
               >
-                <div className="h2">Stake Weight</div>
+                <div className="h2">
+                  <FormattedMessage
+                    id="overview.StakeWeight"
+                    defaultMessage="Stake Weight"
+                  />
+                </div>
                 <img src={stakeicon} />
                 <div className="overviewValue">{this.props.stakeweight}</div>
               </div>

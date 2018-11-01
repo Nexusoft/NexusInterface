@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { FormattedMessage } from "react-intl";
+import messages from "../containers/messages";
 
 export default class Table extends Component {
   constructor(props) {
@@ -40,43 +41,64 @@ export default class Table extends Component {
           id: columns[this.props.defaultsortingid].accessor,
           desc: true
         }
-        return(
-            <ReactTable key="table-child" data={data} columns={columns} minRows = {minRows} defaultSorted = {defaultsorting} defaultPageSize={10}
+      ];
+    }
+
+    return (
+      <FormattedMessage id="transactions.Rows" defaultMessage="Rows">
+        {R => (
+          <ReactTable
+            key="table-child"
+            data={data}
+            pageText={
+              <FormattedMessage id="transactions.Page" defaultMessage="Page" />
+            }
+            columns={columns}
+            minRows={minRows}
+            defaultSorted={defaultsorting}
+            defaultPageSize={10}
+            rowsText={R}
+            previousText={
+              <FormattedMessage
+                id="transactions.Previous"
+                defaultMessage="Previous"
+              />
+            }
+            nextText={
+              <FormattedMessage id="transactions.Next" defaultMessage="Next" />
+            }
             getTrProps={(state, rowInfo) => {
-                return {
-                    onClick: (e) => {
-                       
-                        this.props.onMouseOverCallback(e,rowInfo);
-                        this.props.selectCallback(e,rowInfo);
-                        this.setState({
-                            selected: rowInfo.index
-                        })
-                    },
-                    onContextMenu: (e) =>
-                    {
-                        this.props.selectCallback(e,rowInfo);
-                    },
-                    onMouseDown: (e) =>
-                    {
-                        this.props.onMouseOverCallback(e,rowInfo);
-                    },
-                    onMouseOver: (e) =>
-                    {
-                        this.props.onMouseOverCallback(e,rowInfo);
-                    },
-                    onMouseOut: (e) =>
-                    {
-                        this.props.onMouseOutCallback(e);
-                    },
-                    // style: {
-                    //     background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
-                    //     color: rowInfo.index === this.state.selected ? 'white' : 'black'
-                    // }
+              return {
+                onClick: e => {
+                  this.props.onMouseOverCallback(e, rowInfo);
+                  this.props.selectCallback(e, rowInfo);
+                  this.setState({
+                    selected: rowInfo.index
+                  });
+                },
+                onContextMenu: e => {
+                  this.props.selectCallback(e, rowInfo);
+                },
+                onMouseDown: e => {
+                  this.props.onMouseOverCallback(e, rowInfo);
+                },
+                onMouseOver: e => {
+                  this.props.onMouseOverCallback(e, rowInfo);
+                },
+                onMouseOut: e => {
+                  this.props.onMouseOutCallback(e);
                 }
+                // style: {
+                //     background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
+                //     color: rowInfo.index === this.state.selected ? 'white' : 'black'
+                // }
+              };
             }}
             style={this.props.styles}
-            />
-        );
+          />
+        )}
+      </FormattedMessage>
+    );
 
     /*
         return(

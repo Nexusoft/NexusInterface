@@ -99,8 +99,8 @@ textarea {
 /* CONFIRM MODAL */
 .custom-overlay {
   position: absolute;
-  background: #282828;
   padding: 0px;
+  overflow: hidden;
 }
 .custom-modal2 {
   background: #282828;

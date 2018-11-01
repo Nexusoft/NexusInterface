@@ -1,32 +1,20 @@
-/*
-Title: SendRecieve
-Description: Should be renamed this is where you send 
-nexus from. You can send one, send many from a queue, 
-calculate based off of fiat pair etc.
-Last Modified by: Brian Smith
-*/
-
-// External Dependencies
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import styles from "./style.css";
+import { connect } from "react-redux";
+import * as RPC from "../../script/rpc";
+import Modal from "react-responsive-modal";
+import * as TYPE from "../../actions/actiontypes";
+import { FormattedMessage } from "react-intl";
+import ContextMenuBuilder from "../../contextmenu";
 import { remote } from "electron";
 import { access } from "fs";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import Modal from "react-responsive-modal";
 
-// Internal Dependencies
-import ContextMenuBuilder from "../../contextmenu";
-import styles from "./style.css";
-import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actions/actiontypes";
-import * as helpers from "../../script/helper.js";
-
-// Images
+// import images here
 import sendimg from "../../images/send.svg";
 import plusimg from "../../images/plus.svg";
 import addressbookimg from "../../images/addressbook.svg";
 
-// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -34,7 +22,8 @@ const mapStateToProps = state => {
     ...state.sendRecieve,
     ...state.overview,
     ...state.addressbook,
-    ...state.settings
+    ...state.settings,
+    ...state.intl
   };
 };
 
@@ -45,11 +34,6 @@ const mapDispatchToProps = dispatch => ({
   updateAddress: returnAddress => {
     dispatch({ type: TYPE.UPDATE_ADDRESS, payload: returnAddress });
   },
-
-  MyAccountsList: list => {
-    dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
-  },
-
   SearchName: returnSearch => {
     dispatch({ type: TYPE.SEARCH, payload: returnSearch });
   },
@@ -86,8 +70,8 @@ const mapDispatchToProps = dispatch => ({
   removeQueue: returnQueue => {
     dispatch({ type: TYPE.REMOVE_FROM_QUEUE, payload: returnQueue });
   },
-  busy: setting => {
-    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting });
+  busy: () => {
+    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
   },
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
@@ -119,7 +103,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SendRecieve extends Component {
-  // React Method (Life cycle hook)
   componentDidMount() {
     RPC.PROMISE("listaccounts").then(payload => {
       this.props.changeAccount(
@@ -134,89 +117,16 @@ class SendRecieve extends Component {
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
 
     this.props.googleanalytics.SendScreen("Send");
-    this.loadMyAccounts();
-  }
-  loadMyAccounts() {
-    RPC.PROMISE("listaccounts", [0]).then(payload => {
-      Promise.all(
-        Object.keys(payload).map(account =>
-          RPC.PROMISE("getaddressesbyaccount", [account])
-        )
-      ).then(payload => {
-        let validateAddressPromises = [];
-
-        payload.map(element => {
-          element.addresses.map(address => {
-            validateAddressPromises.push(
-              RPC.PROMISE("validateaddress", [address])
-            );
-          });
-        });
-
-        Promise.all(validateAddressPromises).then(payload => {
-          let accountsList = [];
-          let myaccts = payload.map(e => {
-            if (e.ismine && e.isvalid) {
-              let index = accountsList.findIndex(ele => {
-                if (ele.account === e.account) {
-                  return ele;
-                }
-              });
-
-              if (index === -1) {
-                accountsList.push({
-                  account: e.account,
-                  addresses: [e.address]
-                });
-              } else {
-                accountsList[index].addresses.push(e.address);
-              }
-            }
-          });
-          this.props.MyAccountsList(accountsList);
-        });
-      });
-    });
   }
 
-  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
-  copyaddress(event) {
-    event.preventDefault();
-    let target = event.currentTarget;
-    let address = event.target.innerText;
-
-    // create a temporary input element and add it to the list item (no one will see it)
-    let input = document.createElement("input");
-    input.type = "text";
-    target.appendChild(input);
-
-    // set the value of the input to the selected address, then focus and select it
-    input.value = address;
-    input.focus();
-    input.select();
-
-    // copy it to clipboard
-    document.execCommand("Copy", false, null);
-
-    // remove the temporary element from the DOM
-    input.remove();
-
-    this.props.OpenModal("Copied");
-    setTimeout(() => {
-      if (this.props.open) {
-        this.props.CloseModal();
-      }
-    }, 3000);
-  }
-
-  // Class methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
+    //build default
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
@@ -253,6 +163,7 @@ class SendRecieve extends Component {
   }
 
   nxsAmount(e, isNxs) {
+    console.log(this.props.USD);
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === "")) {
       if (isNxs) {
         let Usd = e.target.value * this.calculateUSDvalue();
@@ -314,7 +225,7 @@ class SendRecieve extends Component {
   }
 
   sendOne() {
-    this.props.busy(true);
+    this.props.busy();
     if (!(this.props.Address === "") && this.props.Amount > 0) {
       RPC.PROMISE("validateaddress", [this.props.Address])
         .then(payload => {
@@ -327,60 +238,62 @@ class SendRecieve extends Component {
                   this.props.Message
                 ]);
                 this.props.clearForm();
-                this.props.busy(false);
+                this.props.busy();
               } else {
                 RPC.PROMISE("sendtoaddress", [
                   this.props.Address,
                   parseFloat(this.props.Amount)
-                ]);
+                ]).then(payoad => console.log(payload));
                 this.props.clearForm();
-                this.props.busy(false);
+                this.props.busy();
               }
             } else {
-              this.props.busy(false);
+              this.props.busy();
               this.props.OpenModal(
                 "This is an address regiestered to this wallet"
               );
             }
           } else {
-            this.props.busy(false);
+            this.props.busy();
             this.props.OpenModal("Invalid Address");
           }
         })
         .catch(e => {
-          this.props.busy(false);
+          this.props.busy();
           this.props.OpenModal("Invalid Address");
         });
     } else {
-      this.props.busy(false);
+      this.props.busy();
     }
   }
 
   sendMany() {
-    this.props.busy(true);
+    this.props.busy();
     let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 1) {
+      console.log("tree");
       RPC.PROMISE("sendmany", [this.props.SelectedAccount, this.props.Queue])
         .then(payoad => {
-          this.props.busy(false);
+          this.props.busy();
           this.props.clearForm();
           this.props.clearQueue();
         })
         .catch(e => {
-          this.props.busy(false);
+          this.props.busy();
         });
     } else if (Object.values(this.props.Queue)[0] > 0) {
+      console.log("pee");
       RPC.PROMISE("sendtoaddress", [
         keyCheck[0],
         Object.values(this.props.Queue)[0]
       ])
         .then(payoad => {
-          this.props.busy(false);
+          this.props.busy();
           this.props.clearForm();
           this.props.clearQueue();
         })
         .catch(e => {
-          this.props.busy(false);
+          this.props.busy();
           this.props.OpenModal("No Addresses");
         });
     }
@@ -390,7 +303,6 @@ class SendRecieve extends Component {
     let values = Object.values(this.props.Queue);
     return values;
   }
-
   addAmount() {
     let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 0) {
@@ -418,11 +330,12 @@ class SendRecieve extends Component {
       );
     }
   }
-
   validateAddToQueue() {
     if (!(this.props.Address === "") && this.props.Amount > 0) {
+      console.log(this.props.Address);
       RPC.PROMISE("validateaddress", [this.props.Address])
         .then(payload => {
+          console.log(payload);
           if (payload.isvalid) {
             if (!payload.ismine) {
               this.props.addToQueue({
@@ -507,7 +420,6 @@ class SendRecieve extends Component {
           return ele;
         }
       });
-
       let currencyValue = selectedCurrancyValue[0].price;
       if (currencyValue === 0) {
         currencyValue = `${currencyValue}.00`;
@@ -524,6 +436,27 @@ class SendRecieve extends Component {
     }
   }
 
+  // calculateUSDvalue(e) {
+  //   let USDvalue = this.props.USDAmount * this.props.USD;
+
+  //   if (USDvalue === 0) {
+  //     USDvalue = USDvalue;
+  //   } else {
+  //     USDvalue = USDvalue;
+  //   }
+  //   return USDvalue;
+  // }
+  // calculateNexusVxalue(e) {
+  //   let USDvalue = this.props.Amount * this.props.USD;
+
+  //   if (USDvalue === 0) {
+  //     USDvalue = USDvalue;
+  //   } else {
+  //     USDvalue = USDvalue;
+  //   }
+  //   return USDvalue;
+  // }
+
   fillQueue() {
     let Keys = Object.keys(this.props.Queue);
     let values = Object.values(this.props.Queue);
@@ -532,10 +465,11 @@ class SendRecieve extends Component {
         key: e,
         val: values[i]
       };
-
+      console.log(newObj);
       return newObj;
     });
 
+    console.log(Keys, values, queueArray);
     return queueArray.map((e, i) => {
       return (
         <tr key={i}>
@@ -559,7 +493,7 @@ class SendRecieve extends Component {
             />
           </td>
           <Modal
-            classNames={{ modal: "custom-modal2", overlay: "custom-overlay3" }}
+            classNames={{ modal: "custom-modal2", overlay: "custom-overlay" }}
             showCloseIcon={false}
             open={this.props.openThirdModal}
             onClose={this.props.CloseModal3}
@@ -614,6 +548,7 @@ class SendRecieve extends Component {
       case "Address Lookup":
         return (
           <div className="Addresstable-wraper">
+            {" "}
             <h2 className="addressModalHeader">
               <FormattedMessage
                 id="sendReceive.Lookup"
@@ -657,75 +592,7 @@ class SendRecieve extends Component {
             </table>
           </div>
         );
-        break;
-      case "MINE":
-        return (
-          <div id="Addresstable-wraper">
-            <h2 className="m1">
-              <img src={addressbookimg} className="hdr-img" />
-              My Addresses
-            </h2>
-            <table className="myAddressTable">
-              <thead className="AddressThead">
-                <th className="short-column">
-                  Accounts
-                  <input
-                    className="searchaccount"
-                    type="text"
-                    placeholder="Search By Account"
-                    value={this.props.Search}
-                    onChange={e => this.props.SearchName(e.target.value)}
-                    required
-                  />
-                </th>
-              </thead>
-              {this.MyAddressesTable()}
-            </table>
-          </div>
-        );
     }
-  }
-
-  MyAddressesTable() {
-    let filteredAddress = this.props.myAccounts.filter(acct => {
-      if (acct.account === "") {
-        let dummie = "My Account";
-        return (
-          dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
-        );
-      } else {
-        return (
-          acct.account
-            .toLowerCase()
-            .indexOf(this.props.Search.toLowerCase()) !== -1
-        );
-      }
-    });
-    return (
-      <div id="Addresstable-wraper">
-        {filteredAddress.map((acct, i) => {
-          return (
-            <tr>
-              <td key={acct + i} className="tdAccounts">
-                {acct.account === "" ? <span>My Account</span> : acct.account}
-              </td>
-              {acct.addresses.map(address => {
-                return (
-                  <td className="tdd" key={address + i}>
-                    <span onClick={event => this.copyaddress(event)}>
-                      {address}
-                    </span>
-                    <span key={address + i} className="tooltip ">
-                      Click to copy
-                    </span>
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </div>
-    );
   }
 
   modalinternal2() {
@@ -787,7 +654,16 @@ class SendRecieve extends Component {
       case "Send Multiple?":
         return (
           <div>
-            <h2>Send All Transactions From: {this.accHud()}</h2>
+            <h2>
+              <FormattedMessage
+                id="sendReceive.SendAllFrom"
+                defaultMessage="Send All Transactions From: "
+              >
+                {/* Send All Transactions (Total: {this.areYouSure()}) From */}
+              </FormattedMessage>
+
+              {this.accHud()}
+            </h2>
             <div id="ok-button">
               <FormattedMessage id="sendReceive.Yes" defaultMessage="Yes">
                 {yes => (
@@ -897,31 +773,26 @@ class SendRecieve extends Component {
     }
   }
 
-  // Mandatory React method
   render() {
-    //THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
+    ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
+      console.log(this.props.sendagain);
+
       this.props.SetSendAgainData(null);
     }
     return (
       <div id="sendrecieve" className="animated fadeIn">
         <h2>
           <img src={sendimg} className="hdr-img" />
-          Send NXS
-          <label />
+          <FormattedMessage
+            id="sendReceive.SendNexus"
+            defaultMessage="Send Nexus"
+          />
         </h2>
-        <div className="impexpblock">
-          <label>
-            <a className="impexp" onClick={() => this.props.OpenModal4("MINE")}>
-              View My Addresses
-            </a>
-          </label>
-        </div>
-
         {/* ADDRESS MODAL */}
         <Modal
           center
-          classNames={{ modal: "custom-modal3", overlay: "custom-overlay3" }}
+          classNames={{ modal: "custom-modal3" }}
           showCloseIcon={true}
           open={this.props.openFourthModal}
           onClose={this.props.CloseModal4}
@@ -932,7 +803,7 @@ class SendRecieve extends Component {
         {/* CONFIRMATION MODAL */}
         <Modal
           center
-          classNames={{ modal: "custom-modal2", overlay: "custom-overlay3" }}
+          classNames={{ modal: "custom-modal2", overlay: "custom-overlay" }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}
@@ -954,176 +825,229 @@ class SendRecieve extends Component {
           </div>
         </Modal>
         <div className="panel">
-          {this.props.isInSync === false ||
-          this.props.connections === undefined ? (
-            <h2>Please let your wallet sync with the network.</h2>
-          ) : (
-            <div id="container">
-              <div className="box1">
-                <div className="field">
-                  <select
-                    id="select"
-                    onChange={e => this.props.AccountPicked(e.target.value)}
-                  >
-                    {this.accountChanger()}
-                  </select>{" "}
-                  <div>
-                    <label>NXS Address</label>{" "}
-                    <div className="Addresslookup" title="Lookup Address">
-                      <img
-                        src={plusimg}
-                        className="lookupButton"
-                        onClick={() => {
-                          this.props.clearSearch();
-                          this.props.OpenModal4("Address Lookup");
-                        }}
+          <div id="container">
+            <div className="box1">
+              <div className="field">
+                <select
+                  id="select"
+                  onChange={e => this.props.AccountPicked(e.target.value)}
+                >
+                  {this.accountChanger()}
+                </select>{" "}
+                <p>
+                  <label>
+                    <FormattedMessage
+                      id="sendReceive.Address"
+                      defaultMessage="Nexus Address"
+                    />
+                  </label>
+                  <div className="Addresslookup">
+                    <span className="tooltip top">
+                      <FormattedMessage
+                        id="sendReceive.Lookup"
+                        defaultMessage="Lookup Address"
                       />
-
-                      <span className="hint">Lookup&nbsp;Address</span>
-                    </div>
+                    </span>
+                    <img
+                      src={plusimg}
+                      className="lookupButton"
+                      onClick={() => {
+                        this.props.clearSearch();
+                        this.props.OpenModal4("Address Lookup");
+                      }}
+                    />
+                  </div>
+                  <FormattedMessage
+                    id="sendReceive.Address"
+                    defaultMessage="Nexus Address"
+                  >
+                    {placeholder => (
+                      <input
+                        size="35"
+                        type="text"
+                        placeholder={placeholder}
+                        value={this.props.Address}
+                        onChange={e => this.props.updateAddress(e.target.value)}
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
+                </p>
+                <p>
+                  {" "}
+                  <div className="convertor">
+                    <label>
+                      {" "}
+                      <FormattedMessage
+                        id="sendReceive.Amount"
+                        defaultMessage="Nexus Amount"
+                      />
+                    </label>{" "}
+                    <label className="UsdConvertorLabel">
+                      {this.props.settings.fiatCurrency}
+                    </label>
+                  </div>
+                  <div className="convertor">
+                    {" "}
                     <input
-                      size="35"
+                      className="input"
                       type="text"
-                      placeholder="Enter NXS Address"
-                      value={this.props.Address}
-                      onChange={e => this.props.updateAddress(e.target.value)}
+                      placeholder="0.00000"
+                      value={this.props.Amount}
+                      onChange={e => this.nxsAmount(e, true)}
+                      required
+                    />{" "}
+                    <label>=</label>
+                    <input
+                      className="input"
+                      type="text"
+                      placeholder="0.00"
+                      value={this.props.USDAmount}
+                      onChange={e => {
+                        this.nxsAmount(e);
+                      }}
                       required
                     />
                   </div>
-                  <div>
-                    {" "}
-                    <div className="convertor">
-                      <label>NXS Amount</label>{" "}
-                      <label className="UsdConvertorLabel">
-                        {"   "}
-                        {this.props.settings.fiatCurrency}
-                      </label>
-                    </div>
-                    <div className="convertor">
-                      {" "}
-                      <span className="hint">Amount Of NXS</span>
-                      <input
-                        className="input"
-                        type="text"
-                        placeholder="0.00000"
-                        value={this.props.Amount}
-                        onChange={e => this.nxsAmount(e, true)}
-                        required
-                      />{" "}
-                      <label>=</label>
-                      <input
-                        className="input"
-                        type="text"
-                        placeholder="0.00"
-                        value={this.props.USDAmount}
-                        onChange={e => {
-                          this.nxsAmount(e);
-                        }}
-                        required
+                </p>
+                <p>
+                  <label>
+                    <FormattedMessage
+                      id="sendReceive.Message"
+                      defaultMessage="Message"
+                    />
+                  </label>
+                  <FormattedMessage
+                    id="sendReceive.EnterYourMessage"
+                    defaultMessage="Enter Your Message"
+                  >
+                    {placeholder => (
+                      <textarea
+                        value={this.props.Message}
+                        onChange={e => this.props.updateMessage(e.target.value)}
+                        name="message"
+                        rows="5"
+                        cols="41"
+                        placeholder={placeholder}
                       />
-                    </div>
-                  </div>
-                  <div>
-                    <label>Message</label>
-
-                    <textarea
-                      value={this.props.Message}
-                      onChange={e => this.props.updateMessage(e.target.value)}
-                      name="message"
-                      rows="5"
-                      cols="41"
-                      placeholder="Enter Your Message"
-                    />
-                  </div>
-                  <div id="left-buttons">
-                    {this.editQueue()}
-                    <input
-                      type="reset"
-                      value="Send Now"
-                      className="button"
-                      onClick={() => {
+                    )}
+                  </FormattedMessage>
+                </p>
+                <div id="left-buttons">
+                  {this.editQueue()}
+                  <button
+                    className="button"
+                    onClick={() => {
+                      if (
+                        !(this.props.Address === "") &&
+                        this.props.Amount > 0
+                      ) {
                         if (
-                          !(this.props.Address === "") &&
-                          this.props.Amount > 0
+                          this.props.encrypted === false ||
+                          this.props.loggedIn === true
                         ) {
-                          if (
-                            this.props.encrypted === false ||
-                            this.props.loggedIn === true
-                          ) {
-                            this.props.OpenModal2("send transaction?");
-                          } else {
-                            this.props.OpenModal("Wallet Locked");
-                          }
+                          this.props.OpenModal2("send transaction?");
                         } else {
-                          this.props.OpenModal("Please Fill Out Field");
+                          this.props.OpenModal("Wallet Locked");
                         }
-                      }}
+                      } else {
+                        this.props.OpenModal("Invalid Address");
+                      }
+                    }}
+                  >
+                    <FormattedMessage
+                      id="sendReceive.SendNow"
+                      defaultMessage="Send Now"
                     />
-                  </div>
+                  </button>
                 </div>
               </div>
+            </div>
 
-              <div className="box2">
-                <div id="table-wraper">
-                  <p className="label">
-                    <label>Queue</label>
-                  </p>
-                  <table className="table">
-                    <thead className="thead">
-                      <tr>
-                        <th>Address</th>
-                        <th>Amount</th>
-                        <th>Remove</th>
-                      </tr>
-                    </thead>
-                    {this.fillQueue()}
-                  </table>
-                  <foot className="foot">
-                    <input
-                      type="reset"
-                      value="Send All"
-                      className="button primary"
-                      onClick={() => {
-                        if (
-                          !(this.props.Address === "") &&
-                          this.props.Amount > 0
-                        ) {
-                          if (
-                            this.props.encrypted === false ||
-                            this.props.loggedIn === false
-                          ) {
-                            this.props.OpenModal2("Send Multiple?");
-                          } else {
-                            this.props.OpenModal("Wallet Locked");
-                          }
+            <div className="box2">
+              <div id="table-wraper">
+                <p className="label">
+                  <label>
+                    <FormattedMessage
+                      id="sendReceive.Queue"
+                      defaultMessage="Queue"
+                    />
+                  </label>
+                </p>
+                <table className="table">
+                  <thead className="thead">
+                    <th>
+                      <FormattedMessage
+                        id="sendReceive.TableAddress"
+                        defaultMessage="Address"
+                      />
+                    </th>
+                    <th>
+                      <FormattedMessage
+                        id="sendReceive.TableAmount"
+                        defaultMessage="Amount"
+                      />
+                    </th>
+                    <th>
+                      <FormattedMessage
+                        id="sendReceive.Remove"
+                        defaultMessage="Remove"
+                      />
+                    </th>
+                  </thead>
+                  {this.fillQueue()}
+                </table>
+                <foot className="foot">
+                  <button
+                    type="reset"
+                    className="button primary"
+                    onClick={() => {
+                      if (
+                        this.props.encrypted === false ||
+                        this.props.loggedIn === false
+                      ) {
+                        if (Object.keys(this.props.Queue).length > 0) {
+                          this.props.OpenModal2("Send Multiple?");
                         } else {
                           this.props.OpenModal("Empty Queue!");
                         }
-                      }}
+                      } else {
+                        this.props.OpenModal("Wallet Locked");
+                      }
+                    }}
+                  >
+                    <FormattedMessage
+                      id="sendReceive.SendAll"
+                      defaultMessage="SendAll"
                     />
-                    <input
-                      type="button"
-                      value="Clear Queue"
-                      className="button primary"
-                      onClick={() => {
-                        this.props.OpenModal2("Clear Queue?");
-                      }}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.props.OpenModal2("Clear Queue?");
+                    }}
+                  >
+                    <FormattedMessage
+                      id="sendReceive.ClearQueue"
+                      defaultMessage="Clear Queue"
                     />
-                    <div>
-                      <div className="counter">{this.addAmount()} </div>
-                    </div>
-                  </foot>{" "}
-                </div>{" "}
-              </div>
+                  </button>
+
+                  <p>
+                    <div className="counter">{this.addAmount()} </div>
+                  </p>
+                </foot>{" "}
+              </div>{" "}
             </div>
-          )}
+          </div>
         </div>
       </div>
     );
   }
 }
 
-// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -237,7 +237,6 @@
     "react-hot-loader": "3.0.0-beta.6",
     "react-intl": "^2.6.0",
     "react-intl-redux": "^2.0.2",
-    "react-redux": "^5.0.5",
     "react-redux": "^4.4.9",
     "react-responsive-modal": "^3.1.0",
     "react-router": "^4.3.1",

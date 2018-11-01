@@ -86,6 +86,7 @@ export default class Footer extends Component {
               <FormattedMessage id="Footer.Console" defaultMessage="Console" />
             </div>
           </NavLink>
+
           {/* <NavLink to="/StyleGuide">
             <img src={styleImg} alt="Style Guide" />
             <div className="tooltip top">Style&nbsp;Guide</div>{" "}

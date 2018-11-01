@@ -154,34 +154,70 @@ class Unencrypted extends Component {
         <div className="securitySubContainer">
           <form>
             <fieldset>
-              <legend>Encrypt Wallet</legend>
-              <div style={{ "marginTop": "26px" }} className="note">
-                Password cannot contain these characters {`-$/&*|<>`}
+              <legend>
+                <FormattedMessage
+                  id="Settings.EncryptWallet"
+                  defaultMessage="Encrypt Wallet"
+                />
+              </legend>
+              <div style={{ marginTop: "26px" }} className="note">
+                <FormattedMessage
+                  id="Settings.CannotContain"
+                  defaultMessage="Encrypt Wallet"
+                />{" "}
+                {`-$/&*|<>`}
               </div>
               <div className="field">
-                <label>Password:</label>
-                <input
-                  type="password"
-                  placeholder="New Password"
-                  id="newPass"
-                  required
-                />
+                <label>
+                  <FormattedMessage
+                    id="Settings.Password"
+                    defaultMessage="Password:"
+                  />
+                </label>
+                <FormattedMessage
+                  id="Settings.NewPassword"
+                  defaultMessage="New Password:"
+                >
+                  {p => (
+                    <input
+                      type="password"
+                      placeholder={p}
+                      id="newPass"
+                      required
+                    />
+                  )}
+                </FormattedMessage>
                 {/* className="hint" */}
               </div>
               <div className="field">
-                <label>Re-Enter Password:</label>
-                <input
-                  type="password"
-                  placeholder="Re-Enter Password"
-                  id="passChk"
-                  onChange={e => this.reEnterValidator(e)}
-                />
+                <label>
+                  <FormattedMessage
+                    id="Settings.Re-Enter"
+                    defaultMessage="Re-Enter Password"
+                  />
+                </label>
+                <FormattedMessage
+                  id="Settings.Re-Enter"
+                  defaultMessage="Re-Enter Password"
+                >
+                  {rep => (
+                    <input
+                      type="password"
+                      placeholder={rep}
+                      id="passChk"
+                      onChange={e => this.reEnterValidator(e)}
+                    />
+                  )}
+                </FormattedMessage>
                 <span
                   id="passHint"
                   style={{ visibility: "hidden" }}
                   className="err invalid"
                 >
-                  Passwords do not match
+                  <FormattedMessage
+                    id="Settings.Re-Enter"
+                    defaultMessage="Re-Enter Password"
+                  />
                 </span>
               </div>
               <p>
@@ -191,7 +227,10 @@ class Unencrypted extends Component {
                   className="button primary"
                   onClick={e => this.encrypt(e)}
                 >
-                  Encrypt and Restart
+                  <FormattedMessage
+                    id="Settings.EncryptRestart"
+                    defaultMessage="Encrypt and Restart"
+                  />
                 </button>
               </p>
             </fieldset>

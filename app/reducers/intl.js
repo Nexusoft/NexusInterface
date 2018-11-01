@@ -6,9 +6,8 @@ import { FormattedMessage, addLocaleData } from "react-intl";
 import messages from "../containers/messages";
 // import { intlReducer } from "react-intl-redux";
 const initialState = {
-  tempStorage: "en",
-  defaultLocale: "en",
-  locale: "en",
+  defaultLocale: "ru",
+
   messages: messages
 };
 export default (state = initialState, action) => {

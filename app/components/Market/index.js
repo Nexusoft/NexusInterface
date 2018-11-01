@@ -33,7 +33,7 @@ import arrow from "../../images/arrow.svg";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.market, ...state.common, ...state.intl };
+  return { ...state.market, ...state.common, ...state.intl, ...state.settings };
 };
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
@@ -269,9 +269,9 @@ class Market extends Component {
             x: e.Price,
             y: newQuantity,
             label: `${
-              this.props.messages[this.props.locale]["Market.Price"]
+              this.props.messages[this.props.settings.locale]["Market.Price"]
             }: ${e.Price} \n ${
-              this.props.messages[this.props.locale]["Market.Volume"]
+              this.props.messages[this.props.settings.locale]["Market.Volume"]
             }: ${newQuantity}`
           };
         }

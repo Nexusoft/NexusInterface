@@ -382,105 +382,272 @@ class Header extends Component {
 
   returnSyncStatusTooltip() {
     if (this.props.connections === undefined) {
-      return "Daemon Not Loaded";
-    if (this.props.heighestPeerBlock > this.props.blocks) {
       return (
-        <div>
-          {" "}
-          <FormattedMessage
-            id="Header.Synching"
-            defaultMessage="Syncing..."
-          />{" "}
-          {(this.props.heighestPeerBlock - this.props.blocks).toString()}
-          {"  "}
-          <FormattedMessage id="Header.Blocks" defaultMessage="Blocks" />
-        </div>
+        <FormattedMessage
+          id="Header.DaemonNotLoaded"
+          defaultMessage="Daemon Not Loaded"
+        />
       );
     } else {
-      return <FormattedMessage id="Header.Synched" defaultMessage="Synched" />;
+      if (this.props.heighestPeerBlock > this.props.blocks) {
+        return (
+          this.props.messages[this.props.locale]["Header.Synching"] +
+          (this.props.heighestPeerBlock - this.props.blocks).toString() +
+          this.props.messages[this.props.locale]["Header.Blocks"]
+        );
+      } else {
+        return (
+          <FormattedMessage id="Header.Synched" defaultMessage="Synched" />
+        );
+      }
     }
   }
 
   modalinternal() {
     switch (this.props.modaltype) {
       case "receive":
-        return <h2>Transaction Received</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.Received"
+              defaultMessage="Transaction Received"
+            />
+          </h2>
+        );
         break;
       case "send":
-        return <h2>Transaction Sent</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.Sent"
+              defaultMessage="Transaction Sent"
+            />
+          </h2>
+        );
         break;
       case "genesis":
-        return <h2>Genesis Transaction</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.Genesis"
+              defaultMessage="Genesis Transaction"
+            />
+          </h2>
+        );
         break;
       case "trust":
-        return <h2>Trust Transaction</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.TrustTransaction"
+              defaultMessage="Trust Transaction"
+            />
+          </h2>
+        );
         break;
       case "This is an address regiestered to this wallet":
-        return <h2>This is an address regiestered to this wallet</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.regiesteredToThis"
+              defaultMessage="This is an address regiestered to this wallet"
+            />
+          </h2>
+        );
         break;
       case "Invalid Address":
-        return <h2>Invalid Address</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidAddress"
+              defaultMessage="Invalid Address"
+            />
+          </h2>
+        );
         break;
       case "Invalid":
-        return <h2>Invalid</h2>;
+        return (
+          <h2>
+            <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />
+          </h2>
+        );
         break;
       case "Address Added":
-        return <h2>Address Added</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.AddressAdded"
+              defaultMessage="Address Added"
+            />
+          </h2>
+        );
         break;
       case "No Addresses":
-        return <h2>No Addresses</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.NoAddresses"
+              defaultMessage="No Addresses"
+            />
+          </h2>
+        );
         break;
       case "Empty Queue!":
-        return <h2>Queue Empty</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.QueueEmpty"
+              defaultMessage="Queue Empty"
+            />
+          </h2>
+        );
         break;
       case "Password has been changed.":
-        return <h2>Password has been changed.</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.PasswordHasBeenChanged"
+              defaultMessage="Password has been changed"
+            />
+          </h2>
+        );
         break;
       case "Wallet has been encrypted":
-        return <h2>Wallet has been encrypted</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.WalletHasBeenEncrypted"
+              defaultMessage="Wallet has been encrypted"
+            />
+          </h2>
+        );
         break;
       case "Settings saved":
-        return <h2>Settings saved</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.SettingsSaved"
+              defaultMessage="Settings Saved"
+            />
+          </h2>
+        );
         break;
       case "Transaction Fee Set":
-        return <h2>Transaction Fee Set</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.TransactionFeeSet"
+              defaultMessage="Transaction Fee Set"
+            />
+          </h2>
+        );
         break;
       case "Wallet Locked":
-        return <h2>Wallet Locked</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.WalletLocked"
+              defaultMessage="Wallet Locked"
+            />
+          </h2>
+        );
         break;
       case "Wallet Backup":
-        return <h2>Wallet Backed Up</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.WalletBackedUp"
+              defaultMessage="Wallet Backed Up"
+            />
+          </h2>
+        );
         break;
       case "Invalid Transaction Fee":
-        return <h2>Invalid Transaction Fee</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidTransactionFee"
+              defaultMessage="Invalid Transaction Fee"
+            />
+          </h2>
+        );
         break;
       case "Copied":
-        return <h2>Copied</h2>;
+        return (
+          <h2>
+            <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />
+          </h2>
+        );
         break;
       case "Style Settings Saved":
-        return <h2>Style Settings Saved</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.StyleSettingsSaved"
+              defaultMessage="Style Settings Saved"
+            />
+          </h2>
+        );
         break;
       case "No ammount set":
-        return <h2>No Ammount Set</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.NoAmmountSet"
+              defaultMessage="No Ammount Set"
+            />
+          </h2>
+        );
         break;
       case "Please Fill Out Field":
-        return <h2>Please Fill Out Field</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.PleaseFillOutField"
+              defaultMessage="Please Fill Out Field"
+            />
+          </h2>
+        );
         break;
       case "FutureDate":
         return (
           <h2>
-            Unlock until date/time must be at least an hour in the future.
+            <FormattedMessage
+              id="Alert.FutureDate"
+              defaultMessage="Unlock until date/time must be at least an hour in the future"
+            />
           </h2>
         );
         break;
       case "Incorrect Passsword":
-        return <h2>Incorrect Passsword</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.IncorrectPasssword"
+              defaultMessage="Incorrect Passsword"
+            />
+          </h2>
+        );
         break;
       case "Core Settings Saved":
-        return <h2>Core Settings Saved</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.CoreSettingsSaved"
+              defaultMessage="Core Settings Saved"
+            />
+          </h2>
+        );
         break;
       case "Contacts Exported":
-        return <h2>Contacts Exported</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.ContactsExported"
+              defaultMessage="Contacts Exported"
+            />
+          </h2>
+        );
         break;
       default:
         "";
