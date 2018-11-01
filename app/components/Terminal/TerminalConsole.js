@@ -226,50 +226,51 @@ class TerminalConsole extends Component {
     if (this.props.connections === undefined) {
       return <h2>Please wait for the daemon to load</h2>;
     } else {
-    return (
-      <div id="terminal-console">
-        <div id="terminal-console-input">
-          <FormattedMessage
-            id="Console.CommandsHere"
-            defaultMessage="Enter console commands here (ex: getinfo, help)"
-          >
-            {cch => (
-              <input
-                id="input-text"
-                ref={element => (this.inputRef = element)}
-                autoFocus
-                type="text"
-                value={this.props.currentInput}
-                placeholder={cch}
-                onChange={e => this.props.onInputfieldChange(e.target.value)}
-                onKeyPress={e => this.handleKeyboardInput(e)}
-                onKeyDown={e => this.handleKeyboardArrows(e)}
-              />
-            )}
-          </FormattedMessage>
+      return (
+        <div id="terminal-console">
+          <div id="terminal-console-input">
+            <FormattedMessage
+              id="Console.CommandsHere"
+              defaultMessage="Enter console commands here (ex: getinfo, help)"
+            >
+              {cch => (
+                <input
+                  id="input-text"
+                  ref={element => (this.inputRef = element)}
+                  autoFocus
+                  type="text"
+                  value={this.props.currentInput}
+                  placeholder={cch}
+                  onChange={e => this.props.onInputfieldChange(e.target.value)}
+                  onKeyPress={e => this.handleKeyboardInput(e)}
+                  onKeyDown={e => this.handleKeyboardArrows(e)}
+                />
+              )}
+            </FormattedMessage>
+            <button
+              id="terminal-console-reset"
+              className="button"
+              onClick={() => this.props.resetMyConsole()}
+            >
+              <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
+            </button>
+          </div>
+
+          <div id="terminal-console-output">{this.processOutput()}</div>
+
           <button
             id="terminal-console-reset"
             className="button"
             onClick={() => this.props.resetMyConsole()}
           >
-            <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
+            <FormattedMessage
+              id="Console.ClearConsole"
+              defaultMessage="Clear Console"
+            />
           </button>
         </div>
-
-        <div id="terminal-console-output">{this.processOutput()}</div>
-
-        <button
-          id="terminal-console-reset"
-          className="button"
-          onClick={() => this.props.resetMyConsole()}
-        >
-          <FormattedMessage
-            id="Console.ClearConsole"
-            defaultMessage="Clear Console"
-          />
-        </button>
-      </div>
-    );
+      );
+    }
   }
 }
 

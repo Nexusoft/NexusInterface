@@ -275,7 +275,7 @@ class Header extends Component {
       {
         label: "Close Wallet and Keep Daemon",
         click: function() {
-          log.info('header/index.js contextmenu: close and keep');
+          log.info("header/index.js contextmenu: close and keep");
           let settings = GetSettings();
           settings.keepDaemon = true;
           SaveSettings(settings);
@@ -285,7 +285,7 @@ class Header extends Component {
       {
         label: "Close Wallet and Daemon",
         click: function() {
-          log.info('header/index.js contextmenu: close and kill');
+          log.info("header/index.js contextmenu: close and kill");
           let settings = GetSettings();
           settings.keepDaemon = false;
           SaveSettings(settings);
@@ -394,9 +394,13 @@ class Header extends Component {
     } else {
       if (this.props.heighestPeerBlock > this.props.blocks) {
         return (
-          this.props.messages[this.props.locale]["Header.Synching"] +
+          this.props.settings.messages[this.props.settings.locale][
+            "Header.Synching"
+          ] +
           (this.props.heighestPeerBlock - this.props.blocks).toString() +
-          this.props.messages[this.props.locale]["Header.Blocks"]
+          this.props.settings.messages[this.props.settings.locale][
+            "Header.Blocks"
+          ]
         );
       } else {
         return (
