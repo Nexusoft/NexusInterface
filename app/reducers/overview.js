@@ -5,7 +5,8 @@ const initialState = {
   BTC: 0,
   experimentalOpen: true,
   circulatingSupply: 0,
-  USDpercentChange: 0
+  USDpercentChange: 0,
+  percentDownloaded: 0
 };
 
 export default (state = initialState, action) => {
@@ -15,7 +16,17 @@ export default (state = initialState, action) => {
         ...state,
         ...action.payload
       };
-
+      break;
+    case TYPE.SET_PERCENT_DOWNLOADED:
+      return {
+        ...state,
+        percentDownloaded: action.payload
+      };
+    case TYPE.CLEAR_FOR_BOOTSTRAPING:
+      return {
+        ...initialState
+      };
+      break;
     case TYPE.SET_EXPERIMENTAL_WARNING:
       return {
         ...state,

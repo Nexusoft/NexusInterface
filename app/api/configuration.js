@@ -170,8 +170,69 @@ configuration.GetBootstrapSize = async function() {
   return promise;
 };
 
-//configuration.GetDaemonDataDir = function() {
-//  const electron = require("electron");
-//  const path = require("path");
-//  const app = electron.app || electron.remote.app;
-//  let rawPath =  path.dirname(app.getPath("appdata")) +
+configuration.BootstrapRecentDatabase = function(self) {
+  const RPC = require("../script/rpc");
+  const fs = require("fs");
+  const path = require("path");
+  const electron = require("electron");
+  const tarball = require("tarball-extract");
+
+  let now = new Date()
+    .toString()
+    .slice(0, 24)
+    .split(" ")
+    .reduce((a, b) => {
+      return a + "_" + b;
+    })
+    .replace(/:/g, "_");
+  let BackupDir = process.env.HOME + "/NexusBackups";
+  if (process.platform === "win32") {
+    BackupDir = process.env.USERPROFILE + "/NexusBackups";
+    BackupDir = BackupDir.replace(/\\/g, "/");
+  }
+
+  let ifBackupDirExists = fs.existsSync(BackupDir);
+  if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+    fs.mkdirSync(BackupDir);
+  }
+  RPC.PROMISE("backupwallet", [
+    BackupDir + "/NexusBackup_" + now + ".dat"
+  ]).then(() => {
+    // self.props.OpenModal("Wallet Backup");
+    electron.remote.getGlobal("core").stop();
+    // setTimeout(() => {
+    //   self.props.CloseModal();
+    // }, 3000);
+
+    let tarGzLocation = path.join(this.GetAppDataDirectory(), "recent.tar.gz");
+    if (fs.existsSync(tarGzLocation)) {
+      fs.unlink(tarGzLocation, err => {
+        if (err) throw err;
+        console.log("recent.tar.gz was deleted");
+      });
+    }
+
+    let datadir = "";
+
+    if (process.platform === "win32") {
+      datadir = process.env.APPDATA + "\\Nexus_Tritium_Data";
+    } else if (process.platform === "darwin") {
+      datadir = process.env.HOME + "/Nexus_Tritium_Data";
+    } else {
+      datadir = process.env.HOME + "/.Nexus_Tritium_Data";
+    }
+
+    const url = "http://support.nexusearth.com:8081/recent.tar.gz";
+    tarball.extractTarballDownload(url, tarGzLocation, datadir, {}, function(
+      err,
+      result
+    ) {
+      fs.stat(
+        configuration.GetAppDataDirectory() + "/recent/blk0001.dat",
+        (stat, things) => console.log(stat, things)
+      );
+      console.log(err, result);
+      electron.remote.getGlobal("core").start();
+    });
+  });
+};

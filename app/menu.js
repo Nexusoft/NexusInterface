@@ -300,6 +300,7 @@ export default class MenuBuilder {
               ]).then(self.props.OpenModal("Wallet Backup"));
             }
           },
+
           {
             label: "View Backups",
             click() {

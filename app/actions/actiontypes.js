@@ -4,6 +4,9 @@ export const USD_RATE = "USD_RATE";
 export const BTC_RATE = "BTC_RATE";
 export const CHANGE_24 = "CHANGE_24";
 export const SET_SUPPLY = "SET_SUPPLY";
+export const CLEAR_FOR_BOOTSTRAPING = "CLEAR_FOR_BOOTSTRAPING";
+export const CLOSE_BOOTSTRAP_MODAL = "CLOSE_BOOTSTRAP_MODAL";
+export const SET_PERCENT_DOWNLOADED = "SET_PERCENT_DOWNLOADED";
 
 // Trust
 export const GET_TRUST_LIST = "GET_TRUST_LIST";

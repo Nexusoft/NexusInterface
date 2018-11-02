@@ -44,61 +44,22 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
-  async testDownload() {
-    console.log(configuration.GetAppResourceDir());
+  async BootstrapDbAndReport() {
     const fs = require("fs");
-    const download = require("download");
-    var tarball = require("tarball-extract");
-    if (fs.existsSync(configuration.GetAppDataDirectory() + "/recent.tar.gz")) {
-      fs.unlink(configuration.GetAppDataDirectory() + "/recent.tar.gz", err => {
-        if (err) throw err;
-        console.log("path/file.txt was deleted");
-      });
-
-      // fs.unlink(configuration.GetAppDataDirectory() + "/recent", err => {
-      //   if (err) throw err;
-      //   console.log("path/file.txt was deleted");
-      // });
-    }
-    // fs.stat(configuration.GetAppDataDirectory() + "/recent/", (stat, things) =>
-    //   console.log(stat, things)
-    // );
-    var datadir = "";
-
-    if (process.platform === "win32") {
-      datadir = process.env.APPDATA + "\\Nexus_Tritium_Data";
-    } else if (process.platform === "darwin") {
-      datadir = process.env.HOME + "/Nexus_Tritium_Data";
-    } else {
-      datadir = process.env.HOME + "/.Nexus_Tritium_Data";
-    }
-
-    electron.remote.getGlobal("core").stop();
-
-    let url = "http://support.nexusearth.com:8081/recent.tar.gz";
-    tarball.extractTarballDownload(
-      url,
-      configuration.GetAppDataDirectory() + "/recent.tar.gz",
-      datadir,
-      {},
-      function(err, result) {
-        fs.stat(
-          configuration.GetAppDataDirectory() + "/recent/blk0001.dat",
-          (stat, things) => console.log(stat, things)
-        );
-        console.log(err, result);
-        electron.remote.getGlobal("core").start();
-      }
-    );
+    const path = require("path");
+    configuration.BootstrapRecentDatabase(this);
     let totalDownloadSize = await configuration.GetBootstrapSize();
     let currentSize = () =>
       fs.stat(
-        configuration.GetAppDataDirectory() + "/recent.tar.gz",
+        path.join(configuration.GetAppDataDirectory(), "recent.tar.gz"),
         (err, stats) => {
-          console.log(stats.size / totalDownloadSize);
+          console.log((stats.size / totalDownloadSize) * 100);
         }
       );
-    setInterval(currentSize, 5000);
+    let percentChecker = setInterval(currentSize, 5000);
+    electron.remote.getGlobal("core").on("starting", () => {
+      clearInterval(percentChecker);
+    });
   }
 
   // React Method (Life cycle hook) https://nexusearth.com/bootstrap/LLD-Database/recent.zip
@@ -123,13 +84,25 @@ class Header extends Component {
     menuBuilder.buildMenu(self);
     this.loadMyAccounts();
     if (tray === null) this.setupTray();
-
+    const core = electron.remote.getGlobal("core");
     this.props.GetInfoDump();
 
     self.set = setInterval(function() {
       self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
     }, 20000);
+
+    core.on("starting", () => {
+      self.set = setInterval(function() {
+        self.props.AddRPCCall("getInfo");
+        self.props.GetInfoDump();
+      }, 20000);
+    });
+
+    core.on("stopping", () => {
+      clearInterval(self.set);
+      this.props.clearOverviewVariables();
+    });
 
     self.mktData = setInterval(function() {
       self.props.SetMarketAveData();
@@ -535,7 +508,9 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
-        <button onClick={() => this.testDownload()}>test download</button>
+        <button onClick={() => this.BootstrapDbAndReport()}>
+          test download
+        </button>
         <CustomProperties
           global
           properties={{

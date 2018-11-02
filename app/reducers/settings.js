@@ -21,6 +21,7 @@ const initialState = {
     manualDaemon: false,
     acceptedagreement: false,
     experimentalWarning: true,
+    bootstrap: true,
     windowWidth: 1600,
     windowHeight: 1388,
     devMode: false,
@@ -110,6 +111,15 @@ export default (state = initialState, action) => {
         settings: {
           ...state.settings,
           wallpaper: action.payload
+        }
+      };
+      break;
+    case TYPE.CLOSE_BOOTSTRAP_MODAL:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          bootstrap: false
         }
       };
       break;
@@ -280,17 +290,16 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.CHANGE_GLOBE_MULTI_COLOR:
-      return{
+      return {
         ...state,
         settings: {
           ...state.settings,
-          customStyling:
-          {
+          customStyling: {
             ...state.settings.customStyling,
             globeMultiColorRGB: action.payload.hex
           }
         }
-      }
+      };
     case TYPE.RESET_CUSTOM_STYLING:
       return {
         ...state,

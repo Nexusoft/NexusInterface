@@ -22,7 +22,20 @@ export const GetInfoDump = () => {
       })
       .then(payload => {
         dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload });
-      });
+      })
+      .catch(err =>
+        console.log(
+          "caught",
+          err,
+          "-------------------------------------------------------------------------------------"
+        )
+      );
+  };
+};
+
+export const clearOverviewVariables = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.CLEAR_FOR_BOOTSTRAPING });
   };
 };
 
