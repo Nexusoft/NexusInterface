@@ -26,7 +26,7 @@ import * as actionsCreators from "../../actions/addressbookActionCreators";
 import TimeZoneSelector from "./timeZoneSelector";
 import ContextMenuBuilder from "../../contextmenu";
 import styles from "./style.css";
-import messages from "../../containers/messages";
+import messages from "../../Language/messages";
 
 // Images
 import profilePlaceholder from "images/Profile_Placeholder.png";

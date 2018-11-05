@@ -20,7 +20,7 @@ import List from "../components/List/index";
 import About from "../components/About/index";
 import Exchange from "../components/Exchange/index";
 import settings from "../../app/api/settings";
-import messages from "./messages";
+import messages from "../Language/messages";
 import locale from "../reducers/intl";
 import enLocaleData from "react-intl/locale-data/en";
 import { addLocaleData } from "react-intl";

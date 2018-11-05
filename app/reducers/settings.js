@@ -1,6 +1,6 @@
 import * as TYPE from "../actions/actiontypes";
 import configuration from "../api/configuration";
-import messages from "../containers/messages";
+import messages from "../Language/messages";
 const path = require("path");
 let defaultWallpaperPath = "";
 if (process.env.NODE_ENV === "development") {

@@ -29,14 +29,13 @@ import supplyicon from "../../images/supply.svg";
 import hours24icon from "../../images/24hr.svg";
 import nxsStake from "../../images/nxs-staking.svg";
 import interestRate from "../../images/nxs-chart.png";
-import messages from "../../containers/messages";
+import messages from "../../Language/messages";
 import Connections0 from "../../images/Connections0.svg";
 import Connections4 from "../../images/Connections4.svg";
 import Connections8 from "../../images/Connections8.svg";
 import Connections12 from "../../images/Connections12.svg";
 import Connections14 from "../../images/Connections14.svg";
 import Connections16 from "../../images/Connections16.svg";
-
 import blockweight0 from "../../images/BlockWeight-0.svg";
 import blockweight1 from "../../images/BlockWeight-1.svg";
 import blockweight2 from "../../images/BlockWeight-2.svg";
@@ -99,7 +98,6 @@ class Overview extends Component {
   }
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
-    
     if (this.props.blocks > previousprops.blocks) {
       let newDate = new Date();
       this.props.BlockDate(newDate);
@@ -114,8 +112,12 @@ class Overview extends Component {
       require("../../api/settings.js").SaveSettings(this.props.settings);
     }
 
-    if ((previousprops.connections == undefined || previousprops.connections == 0) && this.props.connections != 0)
-    {//Daemon Starting Up
+    if (
+      (previousprops.connections == undefined ||
+        previousprops.connections == 0) &&
+      this.props.connections != 0
+    ) {
+      //Daemon Starting Up
       this.reDrawEverything();
     }
 
@@ -335,7 +337,10 @@ class Overview extends Component {
   }
 
   returnIfGlobeEnabled() {
-    if (this.props.settings.acceptedagreement == false || this.props.settings.renderGlobe == false) {
+    if (
+      this.props.settings.acceptedagreement == false ||
+      this.props.settings.renderGlobe == false
+    ) {
       return null;
     } else {
       return [
@@ -681,7 +686,9 @@ class Overview extends Component {
                 <div className="overviewValue">
                   {this.numberWithCommas(this.props.blocks)}
                 </div>
-                <span className="tooltip left">{this.BlockRapper()}</span>
+                <span className="tooltip left" style={{ whiteSpace: "nowrap" }}>
+                  {this.BlockRapper()}
+                </span>
               </div>
               <div
                 id="nxs-blockweight-info"

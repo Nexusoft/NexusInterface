@@ -3,7 +3,7 @@ import * as TYPE from "./actiontypes";
 import { FormattedMessage } from "react-intl";
 import React from "react";
 import locale from "../reducers/settings";
-import messages from "../containers/messages";
+import messages from "../Language/messages";
 //action creator for loaded flag
 
 export const marketDataLoaded = () => {

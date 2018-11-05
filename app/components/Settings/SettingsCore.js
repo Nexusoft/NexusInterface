@@ -11,7 +11,7 @@ import { access } from "fs";
 import { connect } from "react-redux";
 import Modal from "react-responsive-modal";
 import { FormattedMessage } from "react-intl";
-import * as FlagFile from "../../actions/LanguageFlags";
+import * as FlagFile from "../../Language/LanguageFlags";
 
 // Internal Dependencies
 import styles from "./style.css";
@@ -476,8 +476,6 @@ class SettingsCore extends Component {
                 value="ru"
                 checked={this.props.settings.locale === "ru"}
                 onClick={() => this.changeLocale("ru")}
-                // checked={this.props.tempStorage === "ru"}
-                // onChange={e => this.changeLocale(e.target.value)}
               />
               &emsp;
               <label htmlFor="Russian">
@@ -489,6 +487,7 @@ class SettingsCore extends Component {
                 (Pусский) &emsp;
               </span>
             </li>
+
             {/* SPANISH */}
             <li className="LanguageTranslation">
               &emsp;
@@ -499,8 +498,6 @@ class SettingsCore extends Component {
                 value="es"
                 checked={this.props.settings.locale === "es"}
                 onClick={() => this.changeLocale("es")}
-                // checked={this.props.tempStorage === "ru"}
-                // onChange={e => this.changeLocale(e.target.value)}
               />
               &emsp;
               <label htmlFor="Spanish">
@@ -509,7 +506,76 @@ class SettingsCore extends Component {
               &emsp; &emsp; &emsp;
               <span className="langTag">
                 <img src={FlagFile.Spain} />
-                (español) &emsp;
+                (Español) &emsp;
+              </span>
+            </li>
+
+            {/* KOREAN */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="Korean"
+                name="radio-group"
+                type="radio"
+                value="ko"
+                checked={this.props.settings.locale === "ko"}
+                onClick={() => this.changeLocale("ko")}
+              />
+              &emsp;
+              <label htmlFor="Korean">
+                <FormattedMessage id="Lang.Korean" defaultMessage="Korean" />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.Korea} />
+                (한국어) &emsp;
+              </span>
+            </li>
+
+            {/* GERMAN */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="German"
+                name="radio-group"
+                type="radio"
+                value="de"
+                checked={this.props.settings.locale === "de"}
+                onClick={() => this.changeLocale("de")}
+              />
+              &emsp;
+              <label htmlFor="German">
+                <FormattedMessage id="Lang.German" defaultMessage="German" />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.Germany} />
+                (Deutsch) &emsp;
+              </span>
+            </li>
+
+            {/* JAPANESE */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="Japanese"
+                name="radio-group"
+                type="radio"
+                value="ja"
+                checked={this.props.settings.locale === "ja"}
+                onClick={() => this.changeLocale("ja")}
+              />
+              &emsp;
+              <label htmlFor="Japanese">
+                <FormattedMessage
+                  id="Lang.Japanese"
+                  defaultMessage="Japanese"
+                />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.Japan} />
+                (日本人) &emsp;
               </span>
             </li>
           </ul>

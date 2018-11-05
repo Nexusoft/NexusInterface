@@ -240,7 +240,7 @@ class Unencrypted extends Component {
               </fieldset>
             </form>
           </div>
-          <div className="securitySubContainer privKey">
+          {/* <div className="securitySubContainer privKey">
             <form>
               <fieldset>
                 <legend>
@@ -287,27 +287,48 @@ class Unencrypted extends Component {
                 </div>
               </fieldset>
             </form>
-          </div>
+          </div> */}
           <div className="securitySubContainer privKey">
             <form>
               <fieldset>
-                <legend>View private key for address</legend>
+                <legend>
+                  <FormattedMessage
+                    id="Settings.ViewPrivateKey"
+                    defaultMessage="View private key for address"
+                  />
+                </legend>
 
                 <div className="field">
-                  <label>Address:</label>
-                  <div className="expander">
-                    <input
-                      type="text"
-                      id="privKeyAddress"
-                      placeholder="Enter Address Here"
-                      required
+                  <label>
+                    <FormattedMessage
+                      id="Settings.Address"
+                      defaultMessage="Address"
                     />
+                    :
+                  </label>
+                  <div className="expander">
+                    <FormattedMessage
+                      id="Settings.EnterAddressHere"
+                      defaultMessage="Enter Address Here"
+                    >
+                      {eah => (
+                        <input
+                          type="text"
+                          id="privKeyAddress"
+                          placeholder={eah}
+                          required
+                        />
+                      )}
+                    </FormattedMessage>
                     <button
                       disabled={this.props.busyFlag}
                       className="button primary"
                       onClick={e => this.showPrivKey(e)}
                     >
-                      Submit
+                      <FormattedMessage
+                        id="Settings.Submit"
+                        defaultMessage="Submit"
+                      />
                     </button>
                   </div>
                 </div>

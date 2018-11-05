@@ -3,7 +3,6 @@ export default {
     "overview.TrustWeight": "Вес доверия",
     "overview.LicensceAgreement": "Лицензионное соглашение",
     "overview.BlockWeightt": "Вес блока",
-
     "overview.Balance": "Баланс",
     "overview.EncryptedModal": "Ваш кошелек не зашифрован!",
     "overview.Suggestion":
@@ -173,9 +172,7 @@ export default {
     "Settings.StartUp": "Начать при запуске системы",
     "Settings.ChangesNexTime":
       "Изменения в настройках ядра вступят в силу при следующем запуске ядра",
-
     "Settings.Username": "имя пользователя",
-
     "Settings.IpAddress": "Айпи адрес",
     "Settings.Port": "порт",
     "Settings.UPnp": "Порт карты с использованием UPnP",
@@ -186,9 +183,12 @@ export default {
     "Settings.RestartCore": "Перезапустить ядро",
     "Settings.Language": "язык",
     "Settings.English": "английскийzz",
+    "Settings.German": "Немецкий",
     "Settings.Russian": "русский",
+    "Settings.Japanese": "японский",
+    "Settings.Spanish": "испанский",
+    "Settings.Korean": "корейский",
     "Settings.LangButton": "русский",
-
     "Settings.EncryptWallet": "Шифровать кошелек",
     "Settings.Password": "пароль",
     "Settings.NewPassword": "новый пароль:",
@@ -201,17 +201,14 @@ export default {
     "Settings.Address": "Адрес",
     "Settings.EnterAddressHere": "Введите адрес здесь",
     "Settings.PrivateKey": "Закрытый ключ",
-
     "Settings.ImportPrivateKey": "Импорт частного ключа",
     "Settings.AccountName": "Имя пользователя",
-
     "Settings.Wallpaper": "Обои",
     "Settings.RenderGlobe": "Показать глобус",
     "Settings.SaveSettings": "Сохранить настройки",
     "Settings.ResetStyle": "Сбросить настройки стиля",
     "Settings.Color": "цвет",
     "Settings.Fiat": "Валюта Fiat",
-
     "Settings.EnableMining": "Включить добычу",
     "Settings.EnableStaking": "Включить размещение",
     "Settings.VerboseLevel": "Подробный уровень",
@@ -267,13 +264,11 @@ export default {
     "Footer.Overview": "обзор",
     "Footer.Send": "послать",
     "Footer.Nexus": "NXS",
-
     "Footer.Transactions": "операции",
     "Footer.Market": "рынок",
     "Footer.Data": "Данные",
     "Footer.Address": "Адрес",
     "Footer.Book": "Книга",
-
     "Footer.Settings": "настройки",
     "Footer.Console": "Консоль",
     "Footer.Exchange": "обмен",
@@ -285,7 +280,6 @@ export default {
     "Header.InterestRate": "Уровень интереса",
     "Header.BlockWeight": "Вес блока",
     "Header.TrustWeight": "Вес доверия",
-
     "Header.WalletUnencrypted": "Кошелек Незашифрованная",
     "Header.WalletLocked": "Кошелек заблокирован",
     "Header.UnlockedUntil": "Разблокировано до",
@@ -314,7 +308,6 @@ export default {
     "ToolTip.MDM":
       "Включите режим ручного демона, если вы запускаете демона вручную за пределами кошелька",
     "ToolTip.UserName": "Имя пользователя, настроенное для ручного демона",
-
     "ToolTip.Password": "Пароль, настроенный для ручного демона",
     "ToolTip.IP": "IP-адрес, настроенный для ручного демона",
     "ToolTip.PortConfig": "Порт настроен для ручного демона",
@@ -374,6 +367,10 @@ export default {
 
     //LANGUAGEOPTIONS//
     "Lang.English": "английский",
-    "Lang.Russian": "Pусский"
+    "Lang.Russian": "Pусский",
+    "Lang.Spanish": "испанский",
+    "Lang.Korean": "корейский",
+    "Lang.German": "Немецкий",
+    "Lang.Japanese": "японский"
   }
 };
