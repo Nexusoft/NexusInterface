@@ -176,11 +176,8 @@ configuration.BootstrapRecentDatabase = async function(self) {
   const path = require("path");
   const electron = require("electron");
   const tarball = require("tarball-extract");
-  /////////////////////////////////////////////////////////////////////////////
 
   let totalDownloadSize = await configuration.GetBootstrapSize();
-
-  //////////////////////////////////////////////////////////////////////////////////////
 
   let now = new Date()
     .toString()

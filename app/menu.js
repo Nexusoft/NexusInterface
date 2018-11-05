@@ -101,6 +101,21 @@ export default class MenuBuilder {
           }
         },
         {
+          label: "Download Recent Database",
+          click() {
+            if (self.props.connections !== undefined) {
+              let configuration = require("./api/configuration");
+              self.props.OpenBootstrapModal(true);
+              configuration.BootstrapRecentDatabase(self);
+            } else {
+              self.props.OpenModal("Please let the daemon start.");
+              setTimeout(() => {
+                self.props.CloseModal();
+              }, 3000);
+            }
+          }
+        },
+        {
           label: "Send To Tray",
           click() {
             remote.getCurrentWindow().hide();
