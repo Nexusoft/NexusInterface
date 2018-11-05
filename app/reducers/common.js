@@ -23,7 +23,8 @@ const initialState = {
   rawBTCvalues: [],
   rawNXSvalues: [],
   displayBTCvalues: [],
-  displayNXSvalues: []
+  displayNXSvalues: [],
+  BootstrapModal: false
 };
 
 export default (state = initialState, action) => {
@@ -38,6 +39,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         modalVisable: !state.modalVisable
+      };
+      break;
+    case TYPE.OPEN_BOOTSTRAP_MODAL:
+      return {
+        ...state,
+        BootstrapModal: action.payload
+      };
+      break;
+    case TYPE.CLOSE_BOOTSTRAP_MODAL:
+      return {
+        ...state,
+        BootstrapModal: false
       };
       break;
     case TYPE.SEARCH:

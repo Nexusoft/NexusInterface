@@ -24,7 +24,8 @@ export default (state = initialState, action) => {
       };
     case TYPE.CLEAR_FOR_BOOTSTRAPING:
       return {
-        ...initialState
+        ...initialState,
+        percentDownloaded: 0.001
       };
       break;
     case TYPE.SET_EXPERIMENTAL_WARNING:

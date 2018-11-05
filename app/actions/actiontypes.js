@@ -56,6 +56,7 @@ export const PORT_AVAILABLE = "PORT_AVAILABLE";
 export const CLEAR_SEARCHBAR = "CLEAR_SEARCHBAR";
 export const ADD_RPC_CALL = "ADD_RPC_CALL";
 export const SET_MKT_AVE_DATA = "SET_MKT_AVE_DATA";
+export const OPEN_BOOTSTRAP_MODAL = "OPEN_BOOTSTRAP_MODAL";
 
 // Send
 export const ADD_TO_QUEUE = "ADD_TO_QUEUE";

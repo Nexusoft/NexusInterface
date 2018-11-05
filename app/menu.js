@@ -300,7 +300,21 @@ export default class MenuBuilder {
               ]).then(self.props.OpenModal("Wallet Backup"));
             }
           },
-
+          {
+            label: "Download Recent Database",
+            click() {
+              if (self.props.connections !== undefined) {
+                let configuration = require("./api/configuration");
+                self.props.OpenBootstrapModal(true);
+                configuration.BootstrapRecentDatabase(self);
+              } else {
+                self.props.OpenModal("Please let the daemon start.");
+                setTimeout(() => {
+                  self.props.CloseModal();
+                }, 3000);
+              }
+            }
+          },
           {
             label: "View Backups",
             click() {

@@ -170,12 +170,17 @@ configuration.GetBootstrapSize = async function() {
   return promise;
 };
 
-configuration.BootstrapRecentDatabase = function(self) {
+configuration.BootstrapRecentDatabase = async function(self) {
   const RPC = require("../script/rpc");
   const fs = require("fs");
   const path = require("path");
   const electron = require("electron");
   const tarball = require("tarball-extract");
+  /////////////////////////////////////////////////////////////////////////////
+
+  let totalDownloadSize = await configuration.GetBootstrapSize();
+
+  //////////////////////////////////////////////////////////////////////////////////////
 
   let now = new Date()
     .toString()
@@ -233,6 +238,24 @@ configuration.BootstrapRecentDatabase = function(self) {
       );
       console.log(err, result);
       electron.remote.getGlobal("core").start();
+    });
+
+    let percentChecker = setInterval(() => {
+      fs.stat(
+        path.join(configuration.GetAppDataDirectory(), "recent.tar.gz"),
+        (err, stats) => {
+          console.log((stats.size / totalDownloadSize) * 100);
+          self.props.setPercentDownloaded(
+            (stats.size / totalDownloadSize) * 100
+          );
+        }
+      );
+    }, 5000);
+    electron.remote.getGlobal("core").on("starting", () => {
+      self.CloseBootstrapModalAndSaveSettings();
+      clearInterval(percentChecker);
+      self.props.setPercentDownloaded(0);
+      self.CloseBootstrapModalAndSaveSettings();
     });
   });
 };

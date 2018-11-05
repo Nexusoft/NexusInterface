@@ -44,25 +44,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
-  async BootstrapDbAndReport() {
-    const fs = require("fs");
-    const path = require("path");
-    configuration.BootstrapRecentDatabase(this);
-    let totalDownloadSize = await configuration.GetBootstrapSize();
-    let currentSize = () =>
-      fs.stat(
-        path.join(configuration.GetAppDataDirectory(), "recent.tar.gz"),
-        (err, stats) => {
-          console.log((stats.size / totalDownloadSize) * 100);
-        }
-      );
-    let percentChecker = setInterval(currentSize, 5000);
-    electron.remote.getGlobal("core").on("starting", () => {
-      clearInterval(percentChecker);
-    });
-  }
-
-  // React Method (Life cycle hook) https://nexusearth.com/bootstrap/LLD-Database/recent.zip
+  // React Method (Life cycle hook)
   componentDidMount() {
     let settings = GetSettings();
     if (settings.keepDaemon !== false) {
@@ -173,6 +155,20 @@ class Header extends Component {
     } else {
       return null;
     }
+  }
+
+  bootstrapModalController() {
+    console.log(
+      this.props.settings.bootstrap,
+      this.props.connections,
+      this.props.BootstrapModal
+    );
+    if (
+      (this.props.settings.bootstrap && this.props.connections !== undefined) ||
+      this.props.BootstrapModal
+    ) {
+      return true;
+    } else return false;
   }
 
   // Class methods
@@ -476,25 +472,11 @@ class Header extends Component {
         return <h2>Contacts Exported</h2>;
         break;
       default:
-        "";
+        return <h2>{this.props.modaltype}</h2>;
         break;
     }
   }
   daemonStatus() {
-    // switch ("DAEMON_STATUS_FUNCTION_CALL_HERE") {
-    //   case "starting":
-    //     return <span>Daemon is starting...</span>;
-    //     break;
-    //   case "error":
-    //     return <span>Daemon error, please contact support.</span>;
-    //     break;
-    //   case "loaded":
-    //     return null;
-    //     break;
-    //   default:
-    //     return null;
-    //     break;
-    // }
     if (
       this.props.settings.manualDaemon === false &&
       this.props.connections === undefined
@@ -504,13 +486,18 @@ class Header extends Component {
       return null;
     }
   }
+
+  CloseBootstrapModalAndSaveSettings() {
+    this.props.CloseBootstrapModal();
+    let settings = GetSettings();
+    settings.bootstrap = false;
+    SaveSettings(settings);
+  }
+
   // Mandatory React method
   render() {
     return (
       <div id="Header">
-        <button onClick={() => this.BootstrapDbAndReport()}>
-          test download
-        </button>
         <CustomProperties
           global
           properties={{
@@ -543,7 +530,52 @@ class Header extends Component {
         >
           {this.modalinternal()}
         </Modal>
-
+        <Modal
+          key="bootstrap-modal"
+          open={this.bootstrapModalController()}
+          onClose={() => true}
+          center
+          showCloseIcon={false}
+          classNames={{ modal: "modal" }}
+        >
+          {this.props.percentDownloaded === 0 ? (
+            <div>
+              <h3>
+                Would you like to reduce the time it takes to sync by
+                downloading a recent version of the database?
+              </h3>
+              <button
+                className="button"
+                onClick={() => {
+                  this.props.OpenBootstrapModal(true);
+                  configuration.BootstrapRecentDatabase(this);
+                  this.props.setPercentDownloaded(0.001);
+                }}
+              >
+                Yes, let's bootstrap it.
+              </button>
+              <button
+                className="button"
+                onClick={() => {
+                  this.CloseBootstrapModalAndSaveSettings();
+                }}
+              >
+                No, let it sync from scratch.
+              </button>
+            </div>
+          ) : (
+            <div>
+              <h3>Recent Database Downloading...</h3>
+              <div className="progress-bar">
+                <div
+                  className="filler"
+                  style={{ width: `${this.props.percentDownloaded}%` }}
+                />
+              </div>
+              <h3>Please Wait.</h3>
+            </div>
+          )}
+        </Modal>
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />

@@ -82,13 +82,7 @@ const mapDispatchToProps = dispatch => ({
   acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
   toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
   ignoreEncryptionWarning: () =>
-    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING }),
-  CloseBootstrapModal: () => {
-    dispatch({ type: TYPE.CLOSE_BOOTSTRAP_MODAL });
-  },
-  setPercentDownloaded: percent => {
-    dispatch({ type: TYPE.SET_PERCENT_DOWNLOADED, payload: percent });
-  }
+    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING })
 });
 
 class Overview extends Component {
@@ -138,27 +132,6 @@ class Overview extends Component {
 
   closeLicenseModal() {
     this.props.acceptMITAgreement();
-  }
-
-  async BootstrapDbAndReport() {
-    configuration.BootstrapRecentDatabase(this);
-    let totalDownloadSize = await configuration.GetBootstrapSize();
-    let currentSize = () =>
-      fs.stat(
-        path.join(configuration.GetAppDataDirectory(), "recent.tar.gz"),
-        (err, stats) => {
-          console.log((stats.size / totalDownloadSize) * 100);
-          this.props.setPercentDownloaded(
-            (stats.size / totalDownloadSize) * 100
-          );
-        }
-      );
-    let percentChecker = setInterval(currentSize, 5000);
-    remote.getGlobal("core").on("starting", () => {
-      clearInterval(percentChecker);
-      this.props.setPercentDownloaded(0);
-      this.CloseBootstrapModalAndSaveSettings();
-    });
   }
 
   returnLicenseModalInternal() {
@@ -437,12 +410,7 @@ class Overview extends Component {
       return "0";
     }
   }
-  CloseBootstrapModalAndSaveSettings() {
-    this.props.CloseBootstrapModal();
-    let settings = GetSettings();
-    settings.bootstrap = false;
-    SaveSettings(settings);
-  }
+
   // Mandatory React method
   render() {
     return (
@@ -493,51 +461,6 @@ class Overview extends Component {
           >
             Ignore
           </button>
-        </Modal>
-        <Modal
-          key="bootstrap-modal"
-          open={this.props.settings.bootstrap}
-          onClose={() => this.CloseBootstrapModalAndSaveSettings()}
-          center
-          showCloseIcon={false}
-          classNames={{ modal: "modal" }}
-        >
-          {this.props.percentDownloaded === 0 ? (
-            <div>
-              <h3>
-                Would you like to reduce the time it takes to sync by
-                downloading a recent version of the database?
-              </h3>
-              <button
-                className="button"
-                onClick={() => {
-                  this.BootstrapDbAndReport();
-                  this.props.setPercentDownloaded(0.001);
-                }}
-              >
-                Yes, let's bootstrap it.
-              </button>
-              <button
-                className="button"
-                onClick={() => {
-                  this.CloseBootstrapModalAndSaveSettings();
-                }}
-              >
-                No, let it sync from scratch.
-              </button>
-            </div>
-          ) : (
-            <div>
-              <h3>Recent Database Downloading...</h3>
-              <div className="progress-bar">
-                <div
-                  className="filler"
-                  style={{ width: `${this.props.percentDownloaded}%` }}
-                />
-              </div>
-              <h3>Please Wait.</h3>
-            </div>
-          )}
         </Modal>
         <div className="left-stats">
           {this.props.connections === undefined ? null : (

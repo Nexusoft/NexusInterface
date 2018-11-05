@@ -141,11 +141,30 @@ export const Confirm = Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
   };
 };
+
+export const setPercentDownloaded = percent => {
+  return dispatch =>
+    dispatch({ type: TYPE.SET_PERCENT_DOWNLOADED, payload: percent });
+};
+
+export const CloseBootstrapModal = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.CLOSE_BOOTSTRAP_MODAL });
+  };
+};
+
 export const MyAccountsList = list => {
   return dispatch => {
     dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
   };
 };
+
+export const OpenBootstrapModal = bool => {
+  return dispatch => {
+    dispatch({ type: TYPE.OPEN_BOOTSTRAP_MODAL, payload: bool });
+  };
+};
+
 export const CloseModal = () => {
   return dispatch => {
     dispatch({ type: TYPE.HIDE_MODAL });
