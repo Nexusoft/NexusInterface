@@ -431,7 +431,7 @@ class SettingsCore extends Component {
 
   // Mandatory React method
   render() {
-    console.log(this.props.settings.locale);
+    // console.log(this.props.settings.messages[this.props.settings.locale]);
     return (
       <section id="core">
         <Modal
@@ -576,6 +576,28 @@ class SettingsCore extends Component {
               <span className="langTag">
                 <img src={FlagFile.Japan} />
                 (日本人) &emsp;
+              </span>
+            </li>
+
+            {/* FRENCH */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="French"
+                name="radio-group"
+                type="radio"
+                value="fr"
+                checked={this.props.settings.locale === "fr"}
+                onClick={() => this.changeLocale("fr")}
+              />
+              &emsp;
+              <label htmlFor="French">
+                <FormattedMessage id="Lang.French" defaultMessage="French" />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.France} />
+                (Français) &emsp;
               </span>
             </li>
           </ul>
@@ -895,7 +917,7 @@ class SettingsCore extends Component {
               </label>
               <FormattedMessage
                 id="ToolTip.Socks4"
-                defaultMessage="Connect to Nexus through a SOCKS4 proxt (e.g. when connecting through Tor)"
+                defaultMessage="Connect to Nexus through a SOCKS4 proxy"
               >
                 {tt => (
                   <input

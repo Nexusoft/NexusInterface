@@ -666,7 +666,15 @@ class Header extends Component {
       this.props.settings.manualDaemon === false &&
       this.props.connections === undefined
     ) {
-      return <span>Loading Daemon. Please wait...</span>;
+      return (
+        <span>
+          <FormattedMessage
+            id="Alert.DaemonLoadingWait"
+            defaultMessage="Loading Daemon, Please wait..."
+          />
+          ...
+        </span>
+      );
     } else {
       return null;
     }

@@ -1,6 +1,7 @@
 export default {
   en: {
     //OVERVIEW//
+
     "overview.TrustWeight": "Trust Weight",
     "overview.LicensceAgreement": "License Agreement",
     "overview.BlockWeightt": "Block Weight",
@@ -53,6 +54,12 @@ export default {
     "sendReceive.ClickToEdit": "Click To Edit",
 
     //TRANSACTIONS//
+    "transactions.MoreDetails": "More Details",
+    "transactions.Details": "Transaction Details",
+    "transactions.fee": "Fee",
+    "transactions.confirmations": "Confirmations",
+    "transactions.blockhash": "Block Hash",
+    "transactions.blocknumber": "Block Number",
     "transactions.Transactions": "Transactions",
     "transactions.SearchAddress": "Search Address",
     "transactions.Type": "TYPE",
@@ -116,7 +123,14 @@ export default {
     "Market.Date": "Date",
 
     //ADDRESSLOOKUP//
+
+    "AddressBook.AreYouSureDelete": "Are You Sure You Want To Delete",
+    "AddressBook.ThisAddress": "Are You Sure You Want To Delete This Address",
+    "AddressBook.DeleteContact": "Delete Contact",
+    "AddressBook.DeleteAddress": "Delete Address",
+
     "AddressBook.AddressBook": "Address Book",
+    "AddressBook.searchC": "Search Account",
     "AddressBook.Export": "Export Contacts",
     "AddressBook.Import": "Import Contacts",
     "AddressBook.SearchContact": "Search Contact",
@@ -187,6 +201,7 @@ export default {
     "Settings.German": "German",
     "Settings.Japanese": "Japanese",
     "Settings.Korean": "Korean",
+    "Settings.French": "French",
     "Settings.LangButton": "English",
     "Settings.EncryptWallet": "Encrypt Wallet",
     "Settings.Password": "Password",
@@ -200,6 +215,7 @@ export default {
     "Settings.EnterAddressHere": "Enter Address Here",
     "Settings.PrivateKey": "Private Key",
     "Settings.Copy": "Copy",
+    "Settings.Paste": "Paste",
     "Settings.ImportPrivateKey": "Import Private Key",
     "Settings.AccountName": "Account Name",
     "Settings.Wallpaper": "Select Wallpaper",
@@ -251,24 +267,23 @@ export default {
     "Exchange.YouAreSending": "YOU ARE SENDING",
     "Exchange.YouWillReceive": "YOU WILL RECEIVE",
     "Exchange.Receive": "Receive",
-    "Exchange.BCAddress": "Blackcoin Address",
+    "Exchange.BCAddress": "Address",
     "Exchange.ExecuteTrade": "Execute Trade",
     "Exchange.QUOTE": "GET QUOTE",
     "Exchange.NotAvailible": "That pair is temporarily unavailable for trades",
     "Exchange.TradeExceed": "Trade Maximum Exceeded",
     "Exchange.TradeUnMet": "Trade Minimum Unmet",
+    "Exchange.Addresss": "Address",
 
     //FOOTER//
     "Footer.Overview": "Overview",
     "Footer.Send": "Send",
     "Footer.Nexus": "NXS",
-
     "Footer.Transactions": "Transactions",
     "Footer.Market": "Market",
     "Footer.Data": "Data",
     "Footer.Address": "Address",
     "Footer.Book": "Book",
-
     "Footer.Settings": "Settings",
     "Footer.Console": "Console",
     "Footer.Exchange": "Exchange",
@@ -316,8 +331,7 @@ export default {
     "ToolTip.DataDirectory": "Data directory configured for manual daemon",
     "ToolTip.UPnP":
       "Automatically open the Nexus client port on the router. This only works when your router supports UPnP and it is enabled",
-    "ToolTip.Socks4":
-      "Connect to Nexus through a SOCKS4 proxt (e.g. when connecting through Tor)",
+    "ToolTip.Socks4": "Connect to Nexus through a SOCKS4 proxy",
     "ToolTip.IPAddressofSOCKS4proxy": "IP Address of SOCKS4 proxy server",
     "ToolTip.PortOfSOCKS4proxyServer": "Port of SOCKS4 proxy server",
     "ToolTip.Detach": "Detach the database when shutting down the wallet",
@@ -350,6 +364,7 @@ export default {
     "Alert.IncorrectPasssword": "Incorrect Passsword",
     "Alert.CoreSettingsSaved": "Core Settings Saved",
     "Alert.ContactsExported": "Contacts Exported",
+    "Alert.DaemonLoadingWait": "Loading Daemon, Please Wait",
 
     //COLORPICKER//
     "Cp.AC1": "Accent Color 1",
@@ -373,6 +388,7 @@ export default {
     "Lang.Spanish": "Spanish",
     "Lang.Korean": "Korean",
     "Lang.German": "German",
-    "Lang.Japanese": "Japanese"
+    "Lang.Japanese": "Japanese",
+    "Lang.French": "French"
   }
 };

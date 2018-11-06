@@ -56,7 +56,8 @@ textarea {
   display: flex;
 }
 .UsdConvertorLabel {
-  padding-left: 80px;
+  padding-left: 150px;
+  position: absolute;
 }
 .label {
   font-size: 40px;

@@ -245,12 +245,7 @@ class Fast extends Component {
 
   executeTrade() {
     // if (this.props.loggedIn && this.props.from === "NXS") {
-      this.props.googleanalytics.SendEvent(
-        "Shapeshift",
-        "Fast",
-        "Sent",
-        1
-      );
+    this.props.googleanalytics.SendEvent("Shapeshift", "Fast", "Sent", 1);
     if (this.props.withinBounds) {
       let pair = this.props.from + "_" + this.props.to;
       if (this.props.toAddress !== "") {
@@ -395,8 +390,8 @@ class Fast extends Component {
                   <label>
                     {this.currencylabel()}{" "}
                     <FormattedMessage
-                      id="Exchange.BCAddress"
-                      defaultMessage="Blackcoin Address"
+                      id="Footer.Address"
+                      defaultMessage="Address"
                     />
                     :
                   </label>

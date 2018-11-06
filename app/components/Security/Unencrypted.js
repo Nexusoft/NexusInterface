@@ -151,7 +151,14 @@ class Unencrypted extends Component {
   // Mandatory React method
   render() {
     if (this.props.connections === undefined) {
-      return <h2>Please wait for the daemon to load</h2>;
+      return (
+        <h2>
+          <FormattedMessage
+            id="transactions.Loading"
+            defaultMessage="Please wait for the Daemon to load"
+          />
+        </h2>
+      );
     } else {
       return (
         <div id="securitylogin">

@@ -42,6 +42,7 @@ import { FormattedMessage } from "react-intl";
 import transactionsimg from "../../images/transactions.svg";
 
 import copy from "copy-to-clipboard";
+import { wrap } from "module";
 
 /* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
 // import "react-table/react-table.css"
@@ -172,7 +173,12 @@ class Transactions extends Component {
         for (let addressname in eachAddress["notMine"]) {
           tempaddpress.set(
             eachAddress["notMine"][addressname].address,
-            eachAddress.name + "-" + eachAddress["notMine"][addressname].label
+            eachAddress.name +
+              "'s" +
+              `${" "}` +
+              this.props.settings.messages[this.props.settings.locale][
+                "Footer.Address"
+              ]
           );
         }
       }
@@ -453,7 +459,9 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: "More Details",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "transactions.MoreDetails"
+        ],
         click() {
           moreDatailsCallback();
         }
@@ -489,22 +497,31 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: "Copy",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "Settings.Copy"
+        ],
         submenu: [
           {
-            label: "Address",
+            label: this.props.settings.messages[this.props.settings.locale][
+              "AddressBook.Address"
+            ],
             click() {
               tablecopyaddresscallback();
             }
           },
           {
-            label: "Account",
+            label: this.props.settings.messages[this.props.settings.locale][
+              "AddressBook.Account"
+            ],
+
             click() {
               tablecopyaccountcallback();
             }
           },
           {
-            label: "Amount",
+            label: this.props.settings.messages[this.props.settings.locale][
+              "sendReceive.TableAmount"
+            ],
             click() {
               tablecopyamountcallback();
             }
@@ -1429,42 +1446,71 @@ class Transactions extends Component {
       }
 
       internalString.push(
-        <a key="modal_amount">{"Amount: " + selectedTransaction.amount}</a>
+        <div key="modal_amount" className="detailCat">
+          <FormattedMessage id="transactions.AMOUNT" defaultMessage="Amount" />
+          <span className="TXdetails">{selectedTransaction.amount}</span>
+        </div>
       );
       internalString.push(<br key="br2" />);
       if (selectedTransaction.category == "send") {
         internalString.push(
-          <a key="modal_fee">{"Fee: " + selectedTransaction.fee}</a>
+          <div key="modal_fee" className="detailCat">
+            <FormattedMessage id="transactions.fee" defaultMessage="Fee" />:
+            <span className="TXdetails">{+selectedTransaction.fee}</span>
+          </div>
         );
         internalString.push(<br key="br11" />);
       }
       internalString.push(
-        <a key="modal_time">
-          {"Time: " +
-            new Date(selectedTransaction.time * 1000).toLocaleString()}
-        </a>
+        <div key="modal_time" className="detailCat">
+          <FormattedMessage id="transactions.TIME" defaultMessage="Time" />
+          <span className="TXdetails">
+            {new Date(selectedTransaction.time * 1000).toLocaleString(
+              this.props.settings.locale
+            )}
+          </span>
+        </div>
       );
       internalString.push(<br key="br3" />);
       internalString.push(
-        <a key="modal_Account">{"Account: " + selectedTransaction.account}</a>
+        <div key="modal_Account" className="detailCat">
+          <FormattedMessage id="AddressBook.Account" defaultMessage="Account" />
+          :<span className="TXdetails">{selectedTransaction.account}</span>
+        </div>
       );
       internalString.push(<br key="br4" />);
       internalString.push(
-        <a key="modal_Confirms">
-          {"Confirmations: " + selectedTransaction.confirmations}
-        </a>
-      );
-      internalString.push(<br key="br5" />);
-      internalString.push(
-        <a style={{ overflowWrap: "normal" }} key="modal_BlockHash">
-          {"Block Hash: " + this.state.highlightedBlockHash}
-        </a>
+        <div key="modal_Confirms" className="detailCat">
+          <FormattedMessage
+            id="transactions.confirmations"
+            defaultMessage="Confirmations"
+          />
+          :
+          <span className="TXdetails">{selectedTransaction.confirmations}</span>
+        </div>
       );
       internalString.push(<br key="br6" />);
       internalString.push(
-        <a key="modal_BlockNumber">
-          {"Block Number: " + this.state.highlightedBlockNum}
-        </a>
+        <div key="modal_BlockNumber" className="detailCat">
+          <FormattedMessage
+            id="transactions.blockhash"
+            defaultMessage="Block Hash"
+          />
+          :<span className="TXdetails">{this.state.highlightedBlockNum}</span>
+        </div>
+      );
+      internalString.push(<br key="br5" />);
+      internalString.push(
+        <div key="modal_BlockHash">
+          <FormattedMessage
+            id="transactions.blocknumber"
+            defaultMessage="Block Number"
+          />
+          :
+          <div className="blockHash" style={{ wordWrap: "break-word" }}>
+            <span>{this.state.highlightedBlockHash}</span>
+          </div>
+        </div>
       );
     }
 
@@ -1483,11 +1529,7 @@ class Transactions extends Component {
 
   // Mandatory React method
   render() {
-    console.log(
-      this.props.settings.messages[this.props.settings.locale][
-        "transactions.AMOUNT"
-      ]
-    );
+    console.log(this.props.settings.messages[this.props.settings.locale]);
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
     const VictoryZoomVoronoiContainer = createContainer("voronoi", "zoom");
@@ -1498,12 +1540,16 @@ class Transactions extends Component {
       <div id="transactions" className="animated fadeIn">
         <Modal
           open={open}
-          onClose={this.onCloseModal}
+          onClose={this.onCloseModal.bind(this)}
           center
           classNames={{ modal: "modal" }}
         >
-          <h2>Transaction Details</h2>
-
+          <h2 style={{ textAlign: "center" }}>
+            <FormattedMessage
+              id="transactions.Details"
+              defaultMessage="Transaction Details"
+            />
+          </h2>
           {this.returnModalInternal()}
         </Modal>
 
@@ -1517,7 +1563,6 @@ class Transactions extends Component {
         <div className="panel">
           {this.props.connections === undefined ? (
             <h2>
-              {" "}
               <FormattedMessage
                 id="transactions.Loading"
                 defaultMessage="Please wait for the daemon to load"
@@ -1549,7 +1594,8 @@ class Transactions extends Component {
                         fill: d => this.returnCorrectFillColor(d),
                         stroke: d => this.returnCorrectStokeColor(d),
                         fillOpacity: 0.85,
-                        strokeWidth: 1
+                        strokeWidth: 1,
+                        fontSize: 3000
                       }
                     }}
                     labelComponent={
@@ -1619,7 +1665,6 @@ class Transactions extends Component {
               <div id="transactions-filters">
                 <div id="filter-address" className="filter-field">
                   <label htmlFor="address-filter">
-                    {" "}
                     <FormattedMessage
                       id="transactions.SearchAddress"
                       defaultMessage="Search Address"

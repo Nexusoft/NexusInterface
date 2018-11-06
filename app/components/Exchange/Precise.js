@@ -148,12 +148,7 @@ class Precise extends Component {
   }
 
   executeTransaction() {
-    this.props.googleanalytics.SendEvent(
-      "Shapeshift",
-      "Precise",
-      "Sent",
-      1
-    );
+    this.props.googleanalytics.SendEvent("Shapeshift", "Precise", "Sent", 1);
     let pair = this.props.from + "_" + this.props.to;
     if (this.props.toAddress !== "") {
       if (this.props.refundAddress !== "") {
@@ -404,7 +399,7 @@ class Precise extends Component {
                   <label>
                     {this.currencylabel()}{" "}
                     <FormattedMessage
-                      id="Exchange.BCAddress"
+                      id="Footer.Address"
                       defaultMessage="Address"
                     />
                     :

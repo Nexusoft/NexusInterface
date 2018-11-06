@@ -91,7 +91,12 @@ class List extends Component {
         <div className="panel">
           {this.props.isInSync === false ||
           this.props.connections === undefined ? (
-            <h2>Please let your wallet sync with the network.</h2>
+            <h2>
+              <FormattedMessage
+                id="TrustList.SyncMsg"
+                defaultMessage="Please let your wallet sync with the network"
+              />
+            </h2>
           ) : (
             <div id="table-wrap">
               <table>

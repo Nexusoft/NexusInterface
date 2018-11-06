@@ -53,6 +53,8 @@ export default {
     "sendReceive.ClickToEdit": "Haz click para editar",
 
     //TRANSACTIONS//
+    "transactions.Details": "Detalles de la transacción",
+    "transactions.MoreDetails": "Más detalles",
     "transactions.Transactions": "Actas",
     "transactions.SearchAddress": "Dirección de búsqueda",
     "transactions.Type": "TIPO",
@@ -83,6 +85,10 @@ export default {
     "transactions.MyAddress": "Mi dirección",
     "transactions.Page": "Página",
     "transactions.Rows": "Filas",
+    "transactions.fee": "Cuoata",
+    "transactions.confirmations": "Confirmaciones",
+    "transactions.blockhash": "Número de hash",
+    "transactions.blocknumber": "Número de bloque",
 
     //Market//
     "Market.Information": "Información de mercado",
@@ -117,6 +123,12 @@ export default {
     "Market.Date": "Fecha",
 
     //ADDRESSLOOKUP//
+    "AddressBook.ThisAddress":
+      "¿Estás seguro de que quieres borrar esta dirección",
+    "AddressBook.DeleteContact": "Borrar contacto",
+    "AddressBook.DeleteAddress": "Eliminar direccion",
+    "AddressBook.AreYouSureDelete": "Estas seguro que quieres borrarlo",
+    "AddressBook.Copy": "Haga clic para copiar",
     "AddressBook.searchC": "Buscar por cuenta",
     "AddressBook.AddressBook": "Directorio",
     "AddressBook.Export": "Exportar contactos",
@@ -187,6 +199,7 @@ export default {
     "Settings.Korean": "Coreano",
     "Settings.Japanese": "Japonés",
     "Settings.German": "Alemán",
+    "Settings.French": "Francés",
     "Settings.LangButton": "Español",
     "Settings.EncryptWallet": "Encriptar billetera",
     "Settings.Password": "Contraseña",
@@ -201,6 +214,7 @@ export default {
     "Settings.EnterAddressHere": "Introduzca la dirección aquí",
     "Settings.PrivateKey": "Llave privada",
     "Settings.Copy": "Dupdo",
+    "Settings.Paste": "Pegar",
     "Settings.ImportPrivateKey": "Importar clave privada",
     "Settings.AccountName": "Nombre de la cuenta",
     "Settings.Wallpaper": "Seleccionar fondo de pantalla",
@@ -253,7 +267,8 @@ export default {
     "Exchange.YouAreSending": "USTED ESTA ENVIANDO",
     "Exchange.YouWillReceive": "USTED RECIBIRÁ",
     "Exchange.Receive": "Recibir",
-    "Exchange.BCAddress": "Dirección de Blackcoin",
+    "Exchange.Addresss": "Dirección de",
+
     "Exchange.ExecuteTrade": "Ejecutar Comercio",
     "Exchange.QUOTE": "Obtener cotización",
     "Exchange.NotAvailible":
@@ -318,8 +333,7 @@ export default {
       "Directorio de datos configurado para el Daemon manual ",
     "ToolTip.UPnP":
       "Abra automáticamente el puerto del cliente Nexus en el enrutador. Esto solo funciona cuando su enrutador admite UPnP y está habilitado",
-    "ToolTip.Socks4":
-      "Conéctese a Nexus a través de un proxt SOCKS4 (por ejemplo, cuando se conecta a través de Tor)",
+    "ToolTip.Socks4": "Conéctese a Nexus a través de un proxt SOCKS4",
     "ToolTip.IPAddressofSOCKS4proxy": "Dirección IP del servidor proxy SOCKS4",
     "ToolTip.PortOfSOCKS4proxyServer": "Oporto del servidor proxy SOCKS4",
     "ToolTip.Detach": "Desconecte la base de datos al cerrar la billetera",
@@ -353,6 +367,7 @@ export default {
     "Alert.IncorrectPasssword": "Contraseña incorrecta",
     "Alert.CoreSettingsSaved": "Configuraciones básicas guardadas",
     "Alert.ContactsExported": "Contactos exportados",
+    "Alert.DaemonLoadingWait": "Cargando Daemon, Por favor Espere",
 
     //COLORPICKER//
     "Cp.AC1": "Color de Acento 1",
@@ -376,6 +391,7 @@ export default {
     "Lang.Spanish": "Español",
     "Lang.Korean": "Coreano",
     "Lang.German": "Alemán",
-    "Lang.Japanese": "Japonés"
+    "Lang.Japanese": "Japonés",
+    "Lang.French": "Francés"
   }
 };

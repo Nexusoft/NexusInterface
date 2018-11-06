@@ -47,12 +47,18 @@ export default {
     "sendReceive.RemoveFromQueue": "Удалить запись?",
     "sendReceive.No": "нет",
     "sendReceive.Total": "Всего",
-    "sendReceive.Fee": "плата",
+    "sendReceive.FEE": "плата",
     "sendReceive.From": "Из",
     "sendReceive.CopyToFeild": "Копировать в поле",
     "sendReceive.ClickToEdit": "редактировать",
 
     //TRANSACTIONS//
+    "transactions.Details": "Детали транзакции",
+    "transactions.MoreDetails": "Подробнее",
+    "transactions.fee": "плата",
+    "transactions.confirmations": "Подтверждения",
+    "transactions.blockhash": "Блочный хэш",
+    "transactions.blocknumber": "Номер блока",
     "transactions.Transactions": "операции",
     "transactions.SearchAddress": "Адрес поиска",
     "transactions.Type": "Тип",
@@ -116,6 +122,11 @@ export default {
     "Market.Date": "Дата",
 
     //ADDRESSLOOKUP//
+    "AddressBook.ThisAddress": "Вы уверены, что хотите удалить этот адрес?",
+    "AddressBook.DeleteContact": "Удалить контакт",
+    "AddressBook.DeleteAddress": "Удалить адрес",
+    "AddressBook.AreYouSureDelete": "Вы уверены, что хотите удалить",
+    "AddressBook.Copy": "Нажмите, чтобы скопировать",
     "AddressBook.AddressBook": "Адресная книга",
     "AddressBook.Export": "Экспорт контактов",
     "AddressBook.Import": "Импортировать контакты",
@@ -188,6 +199,7 @@ export default {
     "Settings.Japanese": "японский",
     "Settings.Spanish": "испанский",
     "Settings.Korean": "корейский",
+    "Settings.French": "Французский",
     "Settings.LangButton": "русский",
     "Settings.EncryptWallet": "Шифровать кошелек",
     "Settings.Password": "пароль",
@@ -225,6 +237,7 @@ export default {
     "Settings.LockWallet": "Заблокировать кошелек",
     "Settings.ViewPrivateKeyForAddress": "Просмотр закрытого ключа для адреса",
     "Settings.Copy": "копия",
+    "Settings.Paste": "Вставить",
     "Settings.EncryptRestart": "Шифрование и перезапуск",
 
     //CONSOLE//
@@ -253,7 +266,8 @@ export default {
     "Exchange.YouAreSending": "Вы отправляете",
     "Exchange.YouWillReceive": "Выполнить торговлю",
     "Exchange.Receive": "Получать",
-    "Exchange.BCAddress": "Blackcoin Адрес",
+    "Exchange.Addresss": "Адрес",
+
     "Exchange.ExecuteTrade": "Выполнить торговлю",
     "Exchange.QUOTE": "Отправить запрос",
     "Exchange.NotAvailible": "Пара недоступна для торгов",
@@ -314,8 +328,7 @@ export default {
     "ToolTip.DataDirectory": "Каталог данных, настроенный для ручного демона",
     "ToolTip.UPnP":
       "Автоматически откройте клиентский порт Nexus на маршрутизаторе. Это работает только тогда, когда ваш маршрутизатор поддерживает UPnP и включен",
-    "ToolTip.Socks4":
-      "Подключитесь к Nexus через прокси-сервер SOCKS4 (например, при подключении через Tor)",
+    "ToolTip.Socks4": "Подключитесь к Nexus через прокси-сервер SOCKS4 ",
     "ToolTip.IPAddressofSOCKS4proxy": "IP-адрес прокси-сервера SOCKS4",
     "ToolTip.PortOfSOCKS4proxyServer": "Порт прокси-сервера SOCKS4",
     "ToolTip.Detach": "Отсоедините базу данных при выключении кошелька",
@@ -348,6 +361,7 @@ export default {
     "Alert.IncorrectPasssword": "Неверный пароль",
     "Alert.CoreSettingsSaved": "Сохраненные настройки ядра",
     "Alert.ContactsExported": "Контакты Экспортировано",
+    "Alert.DaemonLoadingWait": "Загрузка демонов, пожалуйста, подождите",
 
     //COLORPICKER//
     "Cp.AC1": "Цвет акцента 1",
@@ -371,6 +385,7 @@ export default {
     "Lang.Spanish": "испанский",
     "Lang.Korean": "корейский",
     "Lang.German": "Немецкий",
-    "Lang.Japanese": "японский"
+    "Lang.Japanese": "японский",
+    "Lang.French": "Французский"
   }
 };

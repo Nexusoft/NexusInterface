@@ -52,6 +52,12 @@ export default {
     "sendReceive.ClickToEdit": "수정하려면 클릭하십시오.",
 
     //TRANSACTIONS//
+    "transactions.Details": "상세 거래 내역",
+    "transactions.MoreDetails": "자세한 내용은",
+    "transactions.fee": "보수",
+    "transactions.confirmations": "확인",
+    "transactions.blockhash": "해시 차단",
+    "transactions.blocknumber": "블록 번호",
     "transactions.Transactions": "업무",
     "transactions.SearchAddress": "주소 검색",
     "transactions.Type": "유형",
@@ -82,6 +88,7 @@ export default {
     "transactions.MyAddress": "내 주소",
     "transactions.Page": "페이지",
     "transactions.Rows": "행",
+
     //Market//
     "Market.Information": "시장 정보",
     "Market.Refreash": "시장 데이터 새로 고침",
@@ -115,6 +122,11 @@ export default {
     "Market.Date": "날짜",
 
     //ADDRESSLOOKUP//
+    "AddressBook.ThisAddress": "このアドレスを削除してもよろしいですか？",
+    "AddressBook.DeleteContact": "연락처 삭제",
+    "AddressBook.DeleteAddress": "주소 삭제",
+    "AddressBook.AreYouSureDelete": "삭제 하시겠습니까",
+    "AddressBook.Copy": "클릭 복사",
     "AddressBook.searchC": "검색 계정",
     "AddressBook.AddressBook": "주소록",
     "AddressBook.Export": "연락처 내보내기",
@@ -148,7 +160,6 @@ export default {
     "AddressBook.Loading": "데몬이로드 될 때까지 기다려주십시오.",
     "AddressBook.NoContacts": "연락처 없음",
     "AddressBook.NXSAddress": "NXS 주소",
-
     //SETTINGS//
     "Settings.Settings": "설정",
     "Settings.Application": "신청",
@@ -184,6 +195,7 @@ export default {
     "Settings.Russian": "러시아인",
     "Settings.Spanish": "스페인 사람",
     "Settings.Japanese": "일본어",
+    "Settings.French": "프랑스 국민",
     "Settings.LangButton": "한국어",
     "Settings.EncryptWallet": "월렛 암호화",
     "Settings.Password": "암호",
@@ -197,6 +209,7 @@ export default {
     "Settings.EnterAddressHere": "여기에 주소 입력",
     "Settings.PrivateKey": "비공개 키",
     "Settings.Copy": "부",
+    "Settings.Paste": "풀",
     "Settings.ImportPrivateKey": "개인 키 가져 오기",
     "Settings.AccountName": "계정 이름",
     "Settings.Wallpaper": "바탕 화면을 선택하십시오",
@@ -221,7 +234,6 @@ export default {
     "Settings.LockWallet": "월렛 잠금",
     "Settings.ViewPrivateKeyForAddress": "주소의 비공개 키보기",
     "Settings.EncryptRestart": "암호화 및 재시작",
-
     //CONSOLE//
     "Console.CoreOutput": "코어 출력",
     "Console.Console": "콘솔",
@@ -230,13 +242,11 @@ export default {
     "Console.MdMode": "수동 데몬 모드에서 시작됨",
     "Console.CommandsHere":
       "여기에 콘솔 명령을 입력하십시오 (예 : getinfo, help)",
-
     //TRUSTLIST//
     "TrustList.TrustList": "신뢰 목록",
     "TrustList.Address": "주소",
     "TrustList.InterestRate": "이자율",
     "TrustList.SyncMsg": "지갑을 네트워크와 동기화하도록하십시오.",
-
     //Exchange//
     "Exchange.Exchange": "교환",
     "Exchange.ShoutOut": "에 의해 제공 ShapeShift",
@@ -249,7 +259,7 @@ export default {
     "Exchange.YouAreSending": "너는 보낸거야.",
     "Exchange.YouWillReceive": "너는받을 것이다",
     "Exchange.Receive": "받다",
-    "Exchange.BCAddress": "Blackcoin 주소",
+    "Exchange.Addresss": "주소",
     "Exchange.ExecuteTrade": "무역 거래",
     "Exchange.QUOTE": "따옴표를 얻으십시오",
     "Exchange.NotAvailible": "해당 거래 쌍을 일시적으로 거래 할 수 없습니다.",
@@ -312,8 +322,7 @@ export default {
     "ToolTip.DataDirectory": "수동 데몬 용으로 구성된 데이터 디렉토리",
     "ToolTip.UPnP":
       "라우터에서 Nexus 클라이언트 포트를 자동으로 엽니 다. 라우터가 UPnP를 지원하고 활성화 된 경우에만 작동합니다.",
-    "ToolTip.Socks4":
-      "SOCKS4 프록시를 통해 Nexus에 연결 (예 : Tor를 통해 연결할 때)",
+    "ToolTip.Socks4": "SOCKS4 프록시를 통해 Nexus에 연결 ",
     "ToolTip.IPAddressofSOCKS4proxy": "SOCKS4 프록시 서버의 IP 주소",
     "ToolTip.PortOfSOCKS4proxyServer": "SOCKS4 프록시 서버의 포트",
     "ToolTip.Detach": "지갑을 종료 할 때 데이터베이스 분리",
@@ -346,6 +355,7 @@ export default {
     "Alert.IncorrectPasssword": "잘못된 비밀번호",
     "Alert.CoreSettingsSaved": "저장된 핵심 설정",
     "Alert.ContactsExported": "내보낼 연락처",
+    "Alert.DaemonLoadingWait": "데몬로드 중, 잠시 기다려주십시오.",
 
     //COLORPICKER//
     "Cp.AC1": "악센트 색상 1",
@@ -369,6 +379,7 @@ export default {
     "Lang.Spanish": "스페인 사람",
     "Lang.Korean": "한국어",
     "Lang.German": "독일 사람",
-    "Lang.Japanese": "일본어"
+    "Lang.Japanese": "일본어",
+    "Lang.French": "프랑스 국민"
   }
 };

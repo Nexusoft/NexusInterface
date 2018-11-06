@@ -55,7 +55,7 @@ section {
 
 section {
   --column-width: 4;
-  --field-align-label-width: 75%;
+  --field-align-label-width: 70%;
   position: relative;
   padding-top: calc(var(--gutter));
   padding-bottom: calc(var(--gutter));

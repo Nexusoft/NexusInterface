@@ -223,8 +223,15 @@ class TerminalConsole extends Component {
 
   // Mandatory React method
   render() {
-    if (this.props.connections === undefined) {
-      return <h2>Please wait for the daemon to load</h2>;
+    if (this.props.connections === undefined || this.props.isInSync === false) {
+      return (
+        <h2>
+          <FormattedMessage
+            id="transactions.Loading"
+            defaultMessage="transactions.Loading"
+          />
+        </h2>
+      );
     } else {
       return (
         <div id="terminal-console">

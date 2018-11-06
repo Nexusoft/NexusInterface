@@ -72,12 +72,16 @@ class Addressbook extends Component {
   addressbookContextMenu() {
     const txtTemplate = [
       {
-        label: "Copy",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "Settings.Copy"
+        ],
         accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
-        label: "Paste",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "Settings.Paste"
+        ],
         accelerator: "CmdOrCtrl+V",
         role: "paste"
       }
@@ -85,17 +89,25 @@ class Addressbook extends Component {
 
     const acctTemplate = [
       {
-        label: "Copy",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "Settings.Copy"
+        ],
         accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
-        label: "Paste",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "Settings.Paste"
+        ],
+
         accelerator: "CmdOrCtrl+V",
         role: "paste"
       },
       {
-        label: "Delete Contact",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "AddressBook.DeleteContact"
+        ],
+
         click(item, focusedWindow) {
           deleteAccountCallback();
         }
@@ -105,9 +117,11 @@ class Addressbook extends Component {
     let deleteAccountCallback = () => {
       if (
         confirm(
-          `Are you sure you want to delete ${
-            this.props.addressbook[this.props.actionItem].name
-          }?`
+          `${
+            this.props.settings.messages[this.props.settings.locale][
+              "AddressBook.AreYouSureDelete"
+            ]
+          } ${this.props.addressbook[this.props.actionItem].name}?`
         )
       ) {
         this.props.DeleteContact(this.props.actionItem);
@@ -116,17 +130,23 @@ class Addressbook extends Component {
 
     const addTemplate = [
       {
-        label: "Copy",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "Settings.Copy"
+        ],
         accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
-        label: "Paste",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "Settings.Paste"
+        ],
         accelerator: "CmdOrCtrl+V",
         role: "paste"
       },
       {
-        label: "Delete Address",
+        label: this.props.settings.messages[this.props.settings.locale][
+          "AddressBook.DeleteAddress"
+        ],
         click(item, focusedWindow) {
           deleteAddressCallback();
         }
@@ -135,7 +155,11 @@ class Addressbook extends Component {
     let deleteAddressCallback = () => {
       if (
         confirm(
-          `Are you sure you want to delete this address? ${
+          `${
+            this.props.settings.messages[this.props.settings.locale][
+              "AddressBook.ThisAddress"
+            ]
+          }? ${
             this.props.addressbook[this.props.selected][
               this.props.actionItem.type
             ][this.props.actionItem.index].address
@@ -403,7 +427,7 @@ class Addressbook extends Component {
               </label>
               <FormattedMessage
                 id="AddressBook.NXSAddress"
-                defaultMessage="Nexus Address"
+                defaultMessage="NXS Address"
               >
                 {na => (
                   <input
@@ -840,8 +864,12 @@ class Addressbook extends Component {
                     }
                   >
                     {add.label === "'s Address"
-                      ? `${this.props.addressbook[this.props.selected].name}${
-                          add.label
+                      ? `${
+                          this.props.addressbook[this.props.selected].name
+                        }${"'s"}${"  "}${
+                          this.props.settings.messages[
+                            this.props.settings.locale
+                          ]["AddressBook.Address"]
                         }`
                       : add.label}
                     :

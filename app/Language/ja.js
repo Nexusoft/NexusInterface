@@ -53,6 +53,12 @@ export default {
     "sendReceive.ClickToEdit": "クリックして編集する",
 
     //TRANSACTIONS//
+    "transactions.Details": "取引の詳細",
+    "transactions.MoreDetails": "詳細",
+    "transactions.fee": "費用",
+    "transactions.confirmations": "確認",
+    "transactions.blockhash": "ブロックハッシュ",
+    "transactions.blocknumber": "ブロック番号",
     "transactions.Transactions": "トランザクション",
     "transactions.SearchAddress": "検索アドレス",
     "transactions.Type": "タイプ",
@@ -108,7 +114,7 @@ export default {
     "Market.Next": "次",
     "Market.MyAccount": "マイアカウント",
     "Market.Price": "価格",
-    "Market.Volume": "ボリューム",
+    "Market.Volume": "量",
     "Market.Open": "開いた",
     "Market.Close": "閉じる",
     "Market.High": "高い",
@@ -116,7 +122,12 @@ export default {
     "Market.Date": "日付",
 
     //ADDRESSLOOKUP//
+    "AddressBook.ThisAddress": "このアドレスを削除してもよろしいですか？",
+    "AddressBook.DeleteContact": "連絡先を削除",
+    "AddressBook.DeleteAddress": "アドレスの削除",
+    "AddressBook.AreYouSureDelete": "消去してもよろしいですか",
     "AddressBook.AddressBook": "住所録",
+    "AddressBook.searchC": "検索アカウント",
     "AddressBook.Export": "連絡先のエクスポート",
     "AddressBook.Import": "連絡先のインポート",
     "AddressBook.SearchContact": "検索連絡先",
@@ -138,7 +149,7 @@ export default {
     "AddressBook.Create": "作成する",
     "AddressBook.NameOption": "名前（オプション）",
     "AddressBook.AddAddressTO": "アドレスを追加する",
-    "AddressBook.Copy": "Click To Copy",
+    "AddressBook.Copy": "クリックしてコピーする",
     "AddressBook.Back": "バック",
     "AddressBook.TheirAddresses": "アドレス",
     "AddressBook.Address": "住所",
@@ -186,6 +197,7 @@ export default {
     "Settings.Spanish": "スペイン語",
     "Settings.German": "ドイツ人",
     "Settings.Japanese": "日本人",
+    "Settings.French": "フランス語",
     "Settings.Korean": "韓国語",
     "Settings.LangButton": "英語",
     "Settings.EncryptWallet": "ウォレットを暗号化する",
@@ -201,6 +213,7 @@ export default {
     "Settings.EnterAddressHere": "ここに住所を入力してください",
     "Settings.PrivateKey": "秘密鍵",
     "Settings.Copy": "コピー",
+    "Settings.Paste": "ペースト",
     "Settings.ImportPrivateKey": "秘密鍵をインポートする",
     "Settings.AccountName": "アカウント名",
     "Settings.Wallpaper": "壁紙を選択",
@@ -253,7 +266,8 @@ export default {
     "Exchange.YouAreSending": "あなたは送信しています",
     "Exchange.YouWillReceive": "あなたは受け取るでしょう",
     "Exchange.Receive": "受信",
-    "Exchange.BCAddress": "ブラックコイン住所",
+    "Exchange.Addresss": "住所",
+
     "Exchange.ExecuteTrade": "貿易を実行する",
     "Exchange.QUOTE": "見積もりを入手",
     "Exchange.NotAvailible": "そのペアは取引で一時的に利用できません",
@@ -353,6 +367,7 @@ export default {
     "Alert.IncorrectPasssword": "不正なパスワード",
     "Alert.CoreSettingsSaved": "コア設定の保存",
     "Alert.ContactsExported": "連絡先のエクスポート",
+    "Alert.DaemonLoadingWait": "デーモンをロード中、しばらくお待ちください",
 
     //COLORPICKER//
     "Cp.AC1": "Accent Color 1",
@@ -376,6 +391,7 @@ export default {
     "Lang.Spanish": "スペイン語",
     "Lang.Korean": "韓国語",
     "Lang.German": "ドイツ人",
-    "Lang.Japanese": "日本人"
+    "Lang.Japanese": "日本人",
+    "Lang.French": "フランス語"
   }
 };

@@ -13,6 +13,7 @@ import { access } from "fs";
 // import images here
 import sendimg from "../../images/send.svg";
 import plusimg from "../../images/plus.svg";
+import trashimg from "../../images/trash.svg";
 import addressbookimg from "../../images/addressbook.svg";
 
 const mapStateToProps = state => {
@@ -318,7 +319,7 @@ class SendRecieve extends Component {
           </p>
 
           <p>
-            <FormattedMessage id="sendReceive.Fee" defaultMessage="FEE" />:{" "}
+            <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{" "}
             {this.props.paytxfee.toFixed(5)} NXS
           </p>
 
@@ -490,7 +491,7 @@ class SendRecieve extends Component {
           <td className="td">
             <img
               id="Remove"
-              src="images/status-bad.svg"
+              src={trashimg}
               onClick={() => {
                 this.props.OpenModal3();
               }}
@@ -828,11 +829,12 @@ class SendRecieve extends Component {
             </FormattedMessage>
           </div>
         </Modal>
-        {this.props.connections === undefined ? (
+        {this.props.isInSync === true ||
+        this.props.connections === undefined ? (
           <div className="panel">
             <h2>
               <FormattedMessage
-                id="AddressBook.Loading"
+                id="TrustList.SyncMsg"
                 defaultMessage="Please wait for the daemon to load"
               />
             </h2>
@@ -854,23 +856,25 @@ class SendRecieve extends Component {
                         id="sendReceive.Address"
                         defaultMessage="Nexus Address"
                       />
-                    </label>
-                    <div className="Addresslookup">
-                      <span className="tooltip top">
-                        <FormattedMessage
-                          id="sendReceive.Lookup"
-                          defaultMessage="Lookup Address"
-                        />
-                      </span>
-                      <img
-                        src={plusimg}
-                        className="lookupButton"
-                        onClick={() => {
-                          this.props.clearSearch();
-                          this.props.OpenModal4("Address Lookup");
-                        }}
-                      />
-                    </div>
+                    </label>{" "}
+                    <FormattedMessage
+                      id="sendReceive.Lookup"
+                      defaultMessage="Lookup Address"
+                    >
+                      {Al => (
+                        <div className="Addresslookup" title={Al}>
+                          {/* <span className="tooltip top" /> */}
+                          <img
+                            src={plusimg}
+                            className="lookupButton"
+                            onClick={() => {
+                              this.props.clearSearch();
+                              this.props.OpenModal4("Address Lookup");
+                            }}
+                          />
+                        </div>
+                      )}
+                    </FormattedMessage>
                     <FormattedMessage
                       id="sendReceive.Address"
                       defaultMessage="Nexus Address"
@@ -890,21 +894,18 @@ class SendRecieve extends Component {
                     </FormattedMessage>
                   </p>
                   <p>
-                    {" "}
                     <div className="convertor">
                       <label>
-                        {" "}
                         <FormattedMessage
                           id="sendReceive.Amount"
                           defaultMessage="Nexus Amount"
                         />
-                      </label>{" "}
+                      </label>
                       <label className="UsdConvertorLabel">
                         {this.props.settings.fiatCurrency}
                       </label>
                     </div>
                     <div className="convertor">
-                      {" "}
                       <input
                         className="input"
                         type="text"

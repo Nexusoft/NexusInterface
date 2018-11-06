@@ -17,6 +17,7 @@ import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
+import plusimg from "../../images/plus.svg";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -651,7 +652,7 @@ class SettingsApp extends Component {
                   this.props.OpenModal2();
                 }}
               >
-                <FormattedMessage id="Settings.Set" defaultMessage="Set" />
+                Set
               </button>
             </div>
           </div>

@@ -22,6 +22,7 @@ export default {
     "overview.Globe": "Globus beinhaltet GeoLite2",
 
     //SENDRECEIVE//
+
     "sendReceive.SendNexus": "NXS senden",
     "sendReceive.Address": "NXS Adresse",
     "sendReceive.Amount": "NXS Betrag",
@@ -53,6 +54,12 @@ export default {
     "sendReceive.ClickToEdit": "Zum Bearbeiten anklicken",
 
     //TRANSACTIONS//
+    "transactions.MoreDetails": "Mehr Nähere",
+    "transactions.Details": "Nähere",
+    "transactions.fee": "Gebühr",
+    "transactions.confirmations": "Confirmaciones",
+    "transactions.blockhash": "Hash blockieren",
+    "transactions.blocknumber": "Blocknummer",
     "transactions.Transactions": "Transaktionen",
     "transactions.SearchAddress": "Adresse suchen",
     "transactions.Type": "ART",
@@ -116,7 +123,14 @@ export default {
     "Market.Date": "Datum",
 
     //ADDRESSLOOKUP//
+    "AddressBook.ThisAddress":
+      "Sind Sie sicher, dass Sie diese Adresse löschen möchten?",
+    "AddressBook.DeleteContact": "Kontakt löschen",
+    "AddressBook.DeleteAddress": "Adresse löschen",
+    "AddressBook.AreYouSureDelete": "Sind Sie sicher, dass Sie löschen möchten",
+    "AddressBook.Copy": "Klicken Sie auf Kopieren",
     "AddressBook.AddressBook": "Adressbuch",
+    "AddressBook.searchC": "Konto durchsuchen",
     "AddressBook.Export": "Kontakte exportieren",
     "AddressBook.Import": "Kontakte importieren",
     "AddressBook.SearchContact": "Kontakt suchen",
@@ -175,8 +189,7 @@ export default {
     "Settings.IpAddress": "IP Adresse",
     "Settings.Port": "Hafen",
     "Settings.UPnp": "Kartenport mit UPnP",
-    "Settings.Socks4proxy":
-      "Stellen Sie eine Verbindung über den SOCKS4-Proxy her",
+    "Settings.Socks4proxy": "Stellen Sie eine Verbindung über den SOCKS4-Proxy",
     "Settings.ProxyIP": "Proxy-IP-Adresse",
     "Settings.ProxyPort": "Proxy Port",
     "Settings.Detach": "Datenbank beim Herunterfahren trennen",
@@ -187,6 +200,7 @@ export default {
     "Settings.Spanish": "Spanisch",
     "Settings.Korean": "Koreanisch",
     "Settings.Japanese": "Japanisch",
+    "Settings.French": "Französisch",
     "Settings.German": "Deutsche",
     "Settings.LangButton": "Deutsche",
     "Settings.EncryptWallet": "Brieftasche verschlüsseln",
@@ -196,12 +210,15 @@ export default {
     "Settings.Re-Enter": "Kennwort erneut eingeben",
     "Settings.PasswordsMatch": "Passwörter stimmen nicht überein",
     "Settings.Submit": "einreichen",
+
     "Settings.ViewPrivateKey":
       "Den privaten Schlüssel für die Adresse anzeigen",
     "Settings.Address": "Adresse",
     "Settings.EnterAddressHere": "Adresse hier eingeben",
     "Settings.PrivateKey": "Privat Schlüssel",
     "Settings.Copy": "Kopieren",
+    "Settings.Paste": "Einfügen",
+
     "Settings.ImportPrivateKey": "Privaten Schlüssel importieren",
     "Settings.AccountName": "Kontobezeichnung",
 
@@ -259,9 +276,10 @@ export default {
     "Exchange.YouAreSending": "SIE SENDEN",
     "Exchange.YouWillReceive": "DU WIRST ERHALTEN",
     "Exchange.Receive": "Erhalten",
-    "Exchange.BCAddress": "Blackcoin Adresse",
+    "Exchange.Addresss": "Adresse",
     "Exchange.ExecuteTrade": "Handel ausführen",
     "Exchange.QUOTE": "ERHALTEN SIE ZITAT",
+
     "Exchange.NotAvailible":
       "Dieses Paar ist vorübergehend nicht für Trades verfügbar",
     "Exchange.TradeExceed": "Handelsmaximum überschritten",
@@ -329,8 +347,7 @@ export default {
       "Datenverzeichnis für den manuellen Daemon konfiguriert",
     "ToolTip.UPnP":
       "Öffnen Sie den Nexus-Client-Port am Router automatisch. Dies funktioniert nur, wenn Ihr Router UPnP unterstützt und aktiviert ist",
-    "ToolTip.Socks4":
-      "Verbindung zu Nexus über einen SOCKS4-Proxy (z. B. bei Verbindung über Tor)",
+    "ToolTip.Socks4": "Verbindung zu Nexus über einen SOCKS4-Proxy ",
     "ToolTip.IPAddressofSOCKS4proxy": "IP-Adresse des SOCKS4-Proxy-Servers",
     "ToolTip.PortOfSOCKS4proxyServer": "Port des SOCKS4-Proxyservers",
     "ToolTip.Detach":
@@ -365,6 +382,7 @@ export default {
     "Alert.IncorrectPasssword": "Falsches Passwort",
     "Alert.CoreSettingsSaved": "Core-Einstellungen gespeichert",
     "Alert.ContactsExported": "Kontakte exportiert",
+    "Alert.DaemonLoadingWait": "Daemon wird geladen, bitte warten",
 
     //COLORPICKER//
     "Cp.AC1": "Akzentfarbe 1",
@@ -388,6 +406,7 @@ export default {
     "Lang.Spanish": "Spanisch",
     "Lang.Korean": "Koreanisch",
     "Lang.German": "Deutsche",
-    "Lang.Japanese": "Japanisch"
+    "Lang.Japanese": "Japanisch",
+    "Lang.French": "Französisch"
   }
 };
