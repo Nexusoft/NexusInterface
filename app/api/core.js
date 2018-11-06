@@ -27,6 +27,9 @@ var ip = "127.0.0.1";
 var host = "http://" + ip + ":" + port;
 var verbose = "2" // <--Lower to 0 after beta ends
 
+var letParam;
+var coreprocess = null;
+
 //Set data directory by OS for automatic daemon mode
 if (process.platform === "win32") {
   var datadir = process.env.APPDATA + "\\Nexus_Tritium_Data";
@@ -66,7 +69,6 @@ function SetCoreParameters(settings) {
     user = user;
     password = password;
   }
-
     verbose =
       settings.verboseLevel === undefined
         ? verbose
@@ -267,6 +269,15 @@ class Core {
   get isresponding() {
     return responding;
   }
+  get ip()
+  {
+    return ip;
+  }
+
+  get port()
+  {
+    return port;
+  }
 
   // checkresponding: Check if the core is responding to incoming RPC requests
   checkresponding() {
@@ -294,7 +305,7 @@ class Core {
     let coreBinaryName = GetCoreBinaryName();
     let corePID = getCorePID();
    // let daemonProcs = utils.findPID("nexus-linux-x64");
-
+   letParam  = parameters;
     if (settings.manualDaemon == true) {
     log.info("Core Manager: Manual daemon mode, skipping starting core");
     } else if (corePID > "1") {
@@ -312,7 +323,7 @@ class Core {
         }
         log.info("Core Manager: Starting core");
         var spawn = require('cross-spawn');
-        var coreprocess = spawn(GetCoreBinaryPath(), parameters, {
+        coreprocess = spawn(GetCoreBinaryPath(), parameters, {
           shell: false,
           detached: true,
           stdio: ['ignore','ignore','ignore']
@@ -340,7 +351,7 @@ class Core {
     let corePID = getCorePID();
     let coreParentPID = getCoreParentPID();
     //let daemonProcs = utils.findPID(coreBinaryName);
-    if (coreprocess) {
+    if (coreprocess != null || coreprocess != undefined) {
       coreprocess.removeAllListeners();
       coreprocess = null;
     }
