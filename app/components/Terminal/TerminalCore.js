@@ -8,12 +8,13 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { timingSafeEqual } from "crypto";
 import { connect } from "react-redux";
-import { Tail } from "tail";
+// import { Tail } from "tail";
 
 // Internal Dependencies
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
+import { Tail } from "../../utils/tail";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {

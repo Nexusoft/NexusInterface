@@ -73,12 +73,12 @@ Tail = class Tail extends events.EventEmitter {
     ({
       separator: this.separator = /[\r]{0,1}\n/,
       fsWatchOptions: this.fsWatchOptions = {},
-      fromBeginning: fromBeginning = false,
       follow: this.follow = true,
       logger: this.logger,
       useWatchFile: this.useWatchFile = false,
       flushAtEOF: this.flushAtEOF = false,
-      encoding: this.encoding = "utf-8"
+      encoding: this.encoding = "utf-8",
+      fromBeginning: fromBeginning = false
     } = options);
     if (this.logger) {
       this.logger.info("Tail starting...");
