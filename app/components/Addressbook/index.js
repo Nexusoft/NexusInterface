@@ -787,6 +787,13 @@ class Addressbook extends Component {
   }
 
   exportAddressBook() {
+    this.props.googleanalytics.SendEvent(
+      "AddressBook",
+      "IOAddress",
+      "Export",
+      1
+    );
+
     const rows = []; //Set up a blank array for each row
     let csvContent = "data:text/csv;charset=utf-8,"; //Set formating
     //This is so we can have named columns in the export, this will be row 1
@@ -983,6 +990,12 @@ class Addressbook extends Component {
   }
 
   importAddressBook(path) {
+    this.props.googleanalytics.SendEvent(
+      "AddressBook",
+      "IOAddress",
+      "Import",
+      1
+    );
     console.log("you got it again: ", path);
     csv()
       .fromFile(path)
@@ -1074,7 +1087,7 @@ class Addressbook extends Component {
               </div>
 
               <button
-                className="button ghost"
+                className="button primary"
                 onClick={() => {
                   this.props.clearSearch();
                   this.loadMyAccounts();

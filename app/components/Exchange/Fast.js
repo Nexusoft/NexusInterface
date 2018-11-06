@@ -209,7 +209,12 @@ class Fast extends Component {
 
   executeTrade() {
     // if (this.props.loggedIn && this.props.from === "NXS") {
-
+      this.props.googleanalytics.SendEvent(
+        "Shapeshift",
+        "Fast",
+        "Sent",
+        1
+      );
     if (this.props.withinBounds) {
       let pair = this.props.from + "_" + this.props.to;
       if (this.props.toAddress !== "") {

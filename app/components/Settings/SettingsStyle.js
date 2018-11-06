@@ -12,6 +12,7 @@ import { ChromePicker } from "react-color";
 // Internal Dependencies
 import * as TYPE from "../../actions/actiontypes";
 import styles from "./style.css";
+import { GetSettings, SaveSettings } from "../../api/core";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -203,12 +204,18 @@ class SettingsStyle extends Component {
   }
 
   updateRenderGlobe() {
-    let settings = require("../../api/settings.js").GetSettings();
+    let settings = GetSettings();
     settings.renderGlobe = !this.props.settings.renderGlobe;
-    require("../../api/settings.js").SaveSettings(settings);
+    SaveSettings(settings);
   }
 
   SaveSettings() {
+    this.props.googleanalytics.SendEvent(
+      "Settings",
+      "Style",
+      "Saved",
+      1
+    );
     require("../../api/settings.js").SaveSettings(this.props.settings);
     this.props.OpenModal("Style Settings Saved");
     setTimeout(() => {

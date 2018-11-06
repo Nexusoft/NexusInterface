@@ -147,6 +147,12 @@ class Precise extends Component {
   }
 
   executeTransaction() {
+    this.props.googleanalytics.SendEvent(
+      "Shapeshift",
+      "Precise",
+      "Sent",
+      1
+    );
     let pair = this.props.from + "_" + this.props.to;
     if (this.props.toAddress !== "") {
       if (this.props.refundAddress !== "") {

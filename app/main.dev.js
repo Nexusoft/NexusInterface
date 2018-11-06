@@ -20,7 +20,6 @@ const path = require("path");
 let mainWindow;
 let tray;
 let resizeTimer;
-// let keepDaemon = false;
 // Global Objects
 global.core = core;
 
@@ -53,38 +52,39 @@ const installExtensions = async () => {
 //
 
 function createWindow() {
-  // // App self-destruct timer
-  // const expiration = 1541030401000;
-  // var presentTime = new Date().getTime();
-  // var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
-  // if (presentTime >= expiration) {
-  //   dialog.showErrorBox(
-  //     "Tritium Wallet Beta Expired",
-  //     "The Tritium Beta testing period has ended. Please use your normal wallet."
-  //   );
-  //   app.exit();
-  // } else if (Math.floor(timeLeft) <= 5) {
-  //   dialog.showErrorBox(
-  //     "Tritium Wallet Beta Expiring Soon",
-  //     "There are " +
-  //       Math.floor(timeLeft).toString() +
-  //       " days left in the Beta Testing period."
-  //   );
-  // } else if (Math.floor(timeLeft) < 1) {
-  //   dialog.showErrorBox(
-  //     "Tritium Wallet Beta Expiring Soon",
-  //     "Beta test ending. This application will no longer work in " +
-  //       Math.floor(timeLeft * 24).toString() +
-  //       " hours."
-  //   );
-  // } else if (Math.floor(timeLeft * 24) < 1) {
-  //   dialog.showErrorBox(
-  //     "Tritium Wallet Beta Expiring Soon",
-  //     "Beta test ending. This application will no longer work in " +
-  //       Math.floor(timeLeft * 24 * 60).toString() +
-  //       " minutes."
-  //   );
-  // }
+  // App self-destruct timer
+  const expiration = 1541635201000;
+  var presentTime = new Date().getTime();
+  var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
+  if (presentTime >= expiration) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expired",
+      "The Tritium Beta testing period has ended. Please use your normal wallet."
+    );
+    app.exit();
+    process.abort();
+  } else if (Math.floor(timeLeft) <= 5) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expiring Soon",
+      "There are " +
+        Math.floor(timeLeft).toString() +
+        " days left in the Beta Testing period."
+    );
+  } else if (Math.floor(timeLeft) < 1) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expiring Soon",
+      "Beta test ending. This application will no longer work in " +
+        Math.floor(timeLeft * 24).toString() +
+        " hours."
+    );
+  } else if (Math.floor(timeLeft * 24) < 1) {
+    dialog.showErrorBox(
+      "Tritium Wallet Beta Expiring Soon",
+      "Beta test ending. This application will no longer work in " +
+        Math.floor(timeLeft * 24 * 60).toString() +
+        " minutes."
+    );
+  }
 
   let settings = require("./api/settings").GetSettings();
   let iconPath = "";
@@ -140,22 +140,18 @@ function createWindow() {
 
     resizeTimer = setTimeout(function() {
       // Resize event has been completed
-      let settings = require("./api/settings");
-      var settingsObj = settings.GetSettings();
+      let settings = require("./api/settings.js").GetSettings();
 
-      settingsObj.windowWidth = mainWindow.getBounds().width;
-      settingsObj.windowHeight = mainWindow.getBounds().height;
+      settings.windowWidth = mainWindow.getBounds().width;
+      settings.windowHeight = mainWindow.getBounds().height;
 
-      settings.SaveSettings(settingsObj);
+      require("./api/settings").SaveSettings(settings);
     }, 250);
   });
 
-  // Emitted when the window has finished its close command.
-  mainWindow.on("closed", function(event) {});
-
   // Event when the window is minimized
   mainWindow.on("minimize", function(event) {
-    let settings = require("./api/settings").GetSettings();
+    let settings = require("./api/settings.js").GetSettings();
 
     if (settings.minimizeToTray) {
       event.preventDefault();
@@ -163,15 +159,6 @@ function createWindow() {
     }
   });
 
-  // Event when the window is requested to be closed
-  mainWindow.on("close", function(event) {
-    let settings = require("./api/settings").GetSettings();
-
-    if (!app.isQuiting && settings.minimizeOnClose) {
-      event.preventDefault();
-      mainWindow.hide();
-    }
-  });
 }
 
 // Application Startup
@@ -195,15 +182,11 @@ app.on("ready", async () => {
   //   }
   // }
 
-  mainWindow.on("close", function(e) {
-    const settings = require("./api/settings.js").GetSettings();
-    console.log("KEEP DAEMON SETTINGS:", settings);
-    if (settings.keepDaemon != true || settings.keepDaemon === undefined) {
-      log.info(settings.keepDaemon);
-      core.stop();
-    }
+  mainWindow.on("close", function() {
+    let settings = require("./api/settings.js").GetSettings();
+    core.stop();
     if (settings) {
-      if (settings.minimizeToTray) {
+      if (settings.minimizeToTray == true) {
         e.preventDefault();
         mainWindow.hide();
       } else {
@@ -216,17 +199,19 @@ app.on("ready", async () => {
 });
 
 // Application Shutdown
-app.on("window-all-closed", () => {
+app.on("window-all-closed", function() {
   if (process.platform !== "darwin") {
     app.quit();
   }
-  globalShortcut.unregister("Escape");
+//  globalShortcut.unregister("Escape");
 
-  globalShortcut.unregisterAll();
+//  globalShortcut.unregisterAll();
+  setTimeout(setTimeout(process.abort(),3000), 3000);
 });
 
 app.on("will-quit", function() {
-  globalShortcut.unregister("Escape");
+  app.exit();
+//  globalShortcut.unregister("Escape");
 
-  globalShortcut.unregisterAll();
+//  globalShortcut.unregisterAll();
 });

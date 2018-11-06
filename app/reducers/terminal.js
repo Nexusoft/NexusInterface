@@ -4,6 +4,7 @@ import * as TYPE from "../actions/actiontypes";
 const initialState = {
   //vars go here
   consoleOutput: [],
+  coreOutput: [],
   currentInput: "",
   commandList: [],
   autoComplete: [],
@@ -23,15 +24,34 @@ export default (state = initialState, action) => {
       break;
     case TYPE.PRINT_TO_CONSOLE:
       var payloadCopy = action.payload;
-      for (var i; i < state.consoleOutput.length; i++) {
+
+      for (var i = 0; i < state.consoleOutput.length; i++) {
         payloadCopy.push(state.consoleOutput[i]);
       }
-      payloadCopy.push("\n  ")
+      payloadCopy.push("\n  ");
       return {
         ...state,
         consoleOutput: payloadCopy
       };
       break;
+
+    case TYPE.PRINT_TO_CORE:
+      var payloadCopy = [];
+
+      if (state.coreOutput.length < 1000) {
+        payloadCopy = [...action.payload, ...state.coreOutput];
+      } else if (action.payload.length <= 1) {
+        payloadCopy = [...state.coreOutput];
+      } else {
+        payloadCopy = [...action.payload];
+      }
+
+      return {
+        ...state,
+        coreOutput: payloadCopy
+      };
+      break;
+
     case TYPE.RESET_MY_CONSOLE:
       return {
         ...state,
@@ -40,10 +60,10 @@ export default (state = initialState, action) => {
       break;
     case TYPE.ON_INPUT_FIELD_CHANGE:
       let filteredCmdListTmp = [];
-      for(var i = 0; i < state.commandList.length; i++) {
+      for (var i = 0; i < state.commandList.length; i++) {
         let element = state.commandList[i];
-        if(element.indexOf(action.payload) != -1) {
-          if (action.payload != "" && element.startsWith(action.payload)){
+        if (element.indexOf(action.payload) != -1) {
+          if (action.payload != "" && element.startsWith(action.payload)) {
             filteredCmdListTmp.push(element);
           }
         }
@@ -52,7 +72,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentInput: action.payload,
-        filteredCmdList : filteredCmdListTmp
+        filteredCmdList: filteredCmdListTmp
       };
       break;
     case TYPE.SET_INPUT_FEILD:
@@ -64,34 +84,33 @@ export default (state = initialState, action) => {
     case TYPE.ON_AUTO_COMPLETE_CLICK:
       return {
         ...state,
-        currentInput : action.payload,
-        autoComplete : [],
-        filteredCmdList : []
+        currentInput: action.payload,
+        autoComplete: [],
+        filteredCmdList: []
       };
       break;
     case TYPE.RETURN_AUTO_COMPLETE:
       // foreach commandlist starts with current input push into string aray
       // needs commandlist, a copy of the ones that go into it, and a returned array of commandlist that is less.
 
-
       //No longer using this as I combined this action with setting input
-      
+
       let filteredCmdListTmp2 = [];
-      for(var i = 0; i < commandList.length; i++) {
-        if(commandList[i].indexOf(action.payload) != -1) {
+      for (var i = 0; i < commandList.length; i++) {
+        if (commandList[i].indexOf(action.payload) != -1) {
           filteredCmdList2.push(commandList[i]);
         }
       }
       return {
         ...state,
-        filteredCmdList : filteredCmdListTmp2
+        filteredCmdList: filteredCmdListTmp2
       };
       break;
     case TYPE.REMOVE_AUTO_COMPLETE_DIV:
       return {
         ...state,
-        autoComplete : [],
-        filteredCmdList : []
+        autoComplete: [],
+        filteredCmdList: []
       };
       break;
     case TYPE.RECALL_PREVIOUS_COMMAND:
