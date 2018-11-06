@@ -501,11 +501,6 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
-        <button
-          onClick={() => console.log(configuration.GetAppDataDirectory())}
-        >
-          Test
-        </button>
         <CustomProperties
           global
           properties={{
