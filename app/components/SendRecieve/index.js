@@ -829,7 +829,7 @@ class SendRecieve extends Component {
             </FormattedMessage>
           </div>
         </Modal>
-        {this.props.isInSync === true ||
+        {this.props.isInSync === false ||
         this.props.connections === undefined ? (
           <div className="panel">
             <h2>
