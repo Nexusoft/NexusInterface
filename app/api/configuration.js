@@ -132,11 +132,24 @@ configuration.GetAppDataDirectory = function() {
   const electron = require("electron");
   const path = require("path");
   const app = electron.app || electron.remote.app;
+  let AppDataDirPath = "";
 
-  return path.join(
-    app.getPath("appData").replace("/Electron/", app.getName()),
-    app.getName()
-  );
+  if (process.platform === "darwin") {
+    AppDataDirPath = path.join(
+      app
+        .getPath("appData")
+        .replace(" ", `\ `)
+        .replace("/Electron/", app.getName()),
+      app.getName()
+    );
+  } else {
+    AppDataDirPath = path.join(
+      app.getPath("appData").replace("/Electron/", app.getName()),
+      app.getName()
+    );
+  }
+
+  return AppDataDirPath;
 };
 
 configuration.GetAppResourceDir = function() {
