@@ -162,14 +162,36 @@ class SendRecieve extends Component {
                   return ele;
                 }
               });
+              let indexDefault = accountsList.findIndex(ele => {
+                if ( ele.account == "" || ele.account == "default")
+                {
+                  return ele;
+                }
+              });
 
-              if (index === -1) {
-                accountsList.push({
-                  account: e.account,
-                  addresses: [e.address]
-                });
-              } else {
-                accountsList[index].addresses.push(e.address);
+              if (e.account === "" || e.account === "default")
+              {
+                if (index === -1 && indexDefault === -1) {
+                  accountsList.push({
+                    account: "default",
+                    addresses: [e.address]
+                  });
+                }
+                else
+                {
+                  accountsList[indexDefault].addresses.push(e.address);
+                }
+              }
+
+              else{
+                if (index === -1 ) {
+                  accountsList.push({
+                    account: e.account,
+                    addresses: [e.address]
+                    });
+                } else {
+                  accountsList[index].addresses.push(e.address);
+                }
               }
             }
           });
@@ -614,7 +636,7 @@ class SendRecieve extends Component {
 
   MyAddressesTable() {
     let filteredAddress = this.props.myAccounts.filter(acct => {
-      if (acct.account === "") {
+      if (acct.account === "default") {
         let dummie = "My Account";
         return (
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
@@ -633,7 +655,7 @@ class SendRecieve extends Component {
           return (
             <tr>
               <td key={acct + i} className="tdAccounts">
-                {acct.account === "" ? <span>My Account</span> : acct.account}
+                {acct.account === "default" ? <span>My Account</span> : acct.account}
               </td>
               {acct.addresses.map(address => {
                 return (
@@ -964,19 +986,16 @@ class SendRecieve extends Component {
                       className="button primary"
                       onClick={() => {
                         if (
-                          !(this.props.Address === "") &&
-                          this.props.Amount > 0
+                          this.props.encrypted === false ||
+                          this.props.loggedIn === false
                         ) {
-                          if (
-                            this.props.encrypted === false ||
-                            this.props.loggedIn === false
-                          ) {
+                          if (Object.keys(this.props.Queue).length > 0) {
                             this.props.OpenModal2("Send Multiple?");
                           } else {
-                            this.props.OpenModal("Wallet Locked");
+                            this.props.OpenModal("Empty Queue!");
                           }
                         } else {
-                          this.props.OpenModal("Empty Queue!");
+                          this.props.OpenModal("Wallet Locked");
                         }
                       }}
                     />

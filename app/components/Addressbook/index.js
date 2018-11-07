@@ -191,14 +191,36 @@ class Addressbook extends Component {
                   return ele;
                 }
               });
+              let indexDefault = accountsList.findIndex(ele => {
+                if ( ele.account == "" || ele.account == "default")
+                {
+                  return ele;
+                }
+              });
 
-              if (index === -1) {
-                accountsList.push({
-                  account: e.account,
-                  addresses: [e.address]
-                });
-              } else {
-                accountsList[index].addresses.push(e.address);
+              if (e.account === "" || e.account === "default")
+              {
+                if (index === -1 && indexDefault === -1) {
+                  accountsList.push({
+                    account: "default",
+                    addresses: [e.address]
+                  });
+                }
+                else
+                {
+                  accountsList[indexDefault].addresses.push(e.address);
+                }
+              }
+
+              else{
+                if (index === -1 ) {
+                  accountsList.push({
+                    account: e.account,
+                    addresses: [e.address]
+                    });
+                } else {
+                  accountsList[index].addresses.push(e.address);
+                }
               }
             }
           });
@@ -244,8 +266,8 @@ class Addressbook extends Component {
 
   MyAddressesTable() {
     let filteredAddress = this.props.myAccounts.filter(acct => {
-      if (acct.account === "") {
-        let dummie = "My Account";
+      if (acct.account === "default") {
+        let dummie = "My Account(default)";
         return (
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
         );
@@ -260,10 +282,12 @@ class Addressbook extends Component {
     return (
       <div id="Addresstable-wraper">
         {filteredAddress.map((acct, i) => {
+          console.log(acct);
+          
           return (
             <tr>
               <td key={acct + i} className="tdAccounts">
-                {acct.account === "" ? <span>My Account</span> : acct.account}
+                {acct.account === "default" ? <span>My Account</span> : acct.account}
               </td>
               {acct.addresses.map(address => {
                 return (

@@ -180,7 +180,6 @@ class Transactions extends Component {
         );
       }
     }
-
     this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
 
     let interval = setInterval(() => {
@@ -580,7 +579,7 @@ class Transactions extends Component {
     incomingMyAccounts.forEach(element => {
       listedaccounts.push(element.account);
       promisList.push(
-        RPC.PROMISE("listtransactions", [element.account, 9999, 0])
+        RPC.PROMISE("listtransactions", [element.account === "default" ? "" : element.account , 9999, 0])
       );
     });
     let tempWalletTransactions = [];
@@ -1409,7 +1408,7 @@ class Transactions extends Component {
       <div id="transactions" className="animated fadeIn">
         <Modal
           open={open}
-          onClose={this.onCloseModal}
+          onClose={this.onCloseModal.bind(this)}
           center
           classNames={{ modal: "modal" }}
         >

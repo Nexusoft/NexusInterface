@@ -27,6 +27,9 @@ var ip = "127.0.0.1";
 var host = "http://" + ip + ":" + port;
 var verbose = "2"; // <--Lower to 0 after beta ends
 
+var letParam;
+var coreprocess = null;
+
 //Set data directory by OS for automatic daemon mode
 if (process.platform === "win32") {
   var datadir = process.env.APPDATA + "\\Nexus_Tritium_Data";
@@ -68,9 +71,10 @@ function SetCoreParameters(settings) {
     user = user;
     password = password;
   }
-
-  verbose =
-    settings.verboseLevel === undefined ? verbose : settings.verboseLevel;
+    verbose =
+      settings.verboseLevel === undefined
+        ? verbose
+        : settings.verboseLevel;
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push("-rpcuser=" + user);
@@ -135,7 +139,7 @@ function GetCoreBinaryPath() {
     );
   }
   if (process.platform === "win32") {
-    coreBinaryPath += ".exe";
+    //coreBinaryPath += ".exe";
   }
   return coreBinaryPath;
 }
@@ -235,6 +239,15 @@ class Core extends EventEmitter {
   get isresponding() {
     return responding;
   }
+  get ip()
+  {
+    return ip;
+  }
+
+  get port()
+  {
+    return port;
+  }
 
   // checkresponding: Check if the core is responding to incoming RPC requests
   checkresponding() {
@@ -328,12 +341,15 @@ class Core extends EventEmitter {
       //_this.removeListener('close', _this.onClose);
       coreprocess = null;
       responding = false;
-      if (callback) callback();
+      if (callback != undefined) 
+      {
+        callback();
+      }
     });
     coreprocess.kill();
     this.emit("stopping");
   }
-
+ 
   // restart: Restart the core process
   restart() {
     var _this = this;
