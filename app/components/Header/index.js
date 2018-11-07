@@ -27,6 +27,7 @@ import statGood from "images/status-good.svg";
 import statBad from "images/sync.svg";
 import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
+import { write } from "fs";
 
 import { FormattedMessage } from "react-intl";
 var tray = tray || null;
@@ -66,13 +67,25 @@ class Header extends Component {
     menuBuilder.buildMenu(self);
     this.loadMyAccounts();
     if (tray === null) this.setupTray();
-
+    const core = electron.remote.getGlobal("core");
     this.props.GetInfoDump();
-
+    console.log(core);
     self.set = setInterval(function() {
       self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
     }, 20000);
+
+    core.on("starting", () => {
+      self.set = setInterval(function() {
+        self.props.AddRPCCall("getInfo");
+        self.props.GetInfoDump();
+      }, 20000);
+    });
+
+    core.on("stopping", () => {
+      clearInterval(self.set);
+      this.props.clearOverviewVariables();
+    });
 
     self.mktData = setInterval(function() {
       self.props.SetMarketAveData();
@@ -143,6 +156,20 @@ class Header extends Component {
     } else {
       return null;
     }
+  }
+
+  bootstrapModalController() {
+    console.log(
+      this.props.settings.bootstrap,
+      this.props.connections,
+      this.props.BootstrapModal
+    );
+    if (
+      (this.props.settings.bootstrap && this.props.connections !== undefined) ||
+      this.props.BootstrapModal
+    ) {
+      return true;
+    } else return false;
   }
 
   // Class methods
@@ -283,7 +310,7 @@ class Header extends Component {
         }
       },
       {
-        label: "Close Wallet and Daemon",
+        label: "Quit Nexus",
         click: function() {
           log.info("header/index.js contextmenu: close and kill");
           let settings = GetSettings();
@@ -657,7 +684,7 @@ class Header extends Component {
         );
         break;
       default:
-        "";
+        return <h2>{this.props.modaltype}</h2>;
         break;
     }
   }
@@ -679,6 +706,14 @@ class Header extends Component {
       return null;
     }
   }
+
+  CloseBootstrapModalAndSaveSettings() {
+    this.props.CloseBootstrapModal();
+    let settings = GetSettings();
+    settings.bootstrap = false;
+    SaveSettings(settings);
+  }
+
   // Mandatory React method
   render() {
     return (
@@ -714,7 +749,52 @@ class Header extends Component {
         >
           {this.modalinternal()}
         </Modal>
-
+        <Modal
+          key="bootstrap-modal"
+          open={this.bootstrapModalController()}
+          onClose={() => true}
+          center
+          showCloseIcon={false}
+          classNames={{ modal: "modal" }}
+        >
+          {this.props.percentDownloaded === 0 ? (
+            <div>
+              <h3>
+                Would you like to reduce the time it takes to sync by
+                downloading a recent version of the database?
+              </h3>
+              <button
+                className="button"
+                onClick={() => {
+                  this.props.OpenBootstrapModal(true);
+                  configuration.BootstrapRecentDatabase(this);
+                  this.props.setPercentDownloaded(0.001);
+                }}
+              >
+                Yes, let's bootstrap it.
+              </button>
+              <button
+                className="button"
+                onClick={() => {
+                  this.CloseBootstrapModalAndSaveSettings();
+                }}
+              >
+                No, let it sync from scratch.
+              </button>
+            </div>
+          ) : (
+            <div>
+              <h3>Recent Database Downloading...</h3>
+              <div className="progress-bar">
+                <div
+                  className="filler"
+                  style={{ width: `${this.props.percentDownloaded}%` }}
+                />
+              </div>
+              <h3>Please Wait.</h3>
+            </div>
+          )}
+        </Modal>
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">
             <img src={this.signInStatus()} />

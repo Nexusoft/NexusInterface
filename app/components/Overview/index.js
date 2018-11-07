@@ -14,12 +14,15 @@ import { NavLink } from "react-router-dom";
 import { remote } from "electron";
 import Request from "request";
 import { FormattedMessage } from "react-intl";
+import fs from "fs";
+import path from "path";
 
 // Internal Dependencies
 import { GetSettings, SaveSettings } from "../../api/settings.js";
 import NetworkGlobe from "./NetworkGlobe";
 import ContextMenuBuilder from "../../contextmenu";
 import * as helpers from "../../script/helper.js";
+import configuration from "../../api/configuration";
 
 // Images
 import USD from "../../images/USD.svg";

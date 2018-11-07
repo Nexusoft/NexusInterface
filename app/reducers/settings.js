@@ -23,6 +23,7 @@ const initialState = {
     verbose: "2",
     acceptedagreement: false,
     experimentalWarning: true,
+    bootstrap: true,
     windowWidth: 1600,
     windowHeight: 1388,
     locale: "en",
@@ -121,6 +122,15 @@ export default (state = initialState, action) => {
         settings: {
           ...state.settings,
           wallpaper: action.payload
+        }
+      };
+      break;
+    case TYPE.CLOSE_BOOTSTRAP_MODAL:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          bootstrap: false
         }
       };
       break;

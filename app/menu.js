@@ -102,13 +102,42 @@ export default class MenuBuilder {
           }
         },
         {
+          label: "Download Recent Database",
+          click() {
+            if (self.props.connections !== undefined) {
+              let configuration = require("./api/configuration");
+              self.props.OpenBootstrapModal(true);
+              configuration.BootstrapRecentDatabase(self);
+            } else {
+              self.props.OpenModal("Please let the daemon start.");
+              setTimeout(() => {
+                self.props.CloseModal();
+              }, 3000);
+            }
+          }
+        },
+        {
           label: "Send To Tray",
           click() {
             remote.getCurrentWindow().hide();
           }
         },
         {
-          label: "Close Wallet and Keep Daemon",
+          label: "Start Daemon",
+          click() {
+            let core = require("./api/core");
+            core.start();
+          }
+        },
+        {
+          label: "Stop Daemon",
+          click() {
+            let core = require("./api/core");
+            core.stop();
+          }
+        },
+        {
+          label: "Close Window Keep Daemon",
           click() {
             log.info('menu.js Darwin template: close and keep');
             let settings = GetSettings();
@@ -299,6 +328,21 @@ export default class MenuBuilder {
             }
           },
           {
+            label: "Download Recent Database",
+            click() {
+              if (self.props.connections !== undefined) {
+                let configuration = require("./api/configuration");
+                self.props.OpenBootstrapModal(true);
+                configuration.BootstrapRecentDatabase(self);
+              } else {
+                self.props.OpenModal("Please let the daemon start.");
+                setTimeout(() => {
+                  self.props.CloseModal();
+                }, 3000);
+              }
+            }
+          },
+          {
             label: "View Backups",
             click() {
               let fs = require("fs");
@@ -321,7 +365,21 @@ export default class MenuBuilder {
             }
           },
           {
-            label: "Close Wallet and Keep Daemon",
+            label: "Start Daemon",
+            click() {
+              let core = require("./api/core");
+              core.start();
+            }
+          },
+          {
+            label: "Stop Daemon",
+            click() {
+              let core = require("./api/core");
+              core.stop();
+            }
+          },
+          {
+            label: "Close Window Keep Daemon",
             click() {
               log.info('menu.js default template: close and keep');
               let settings = GetSettings();

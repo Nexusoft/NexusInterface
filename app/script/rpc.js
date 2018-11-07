@@ -112,7 +112,7 @@ export const PROMISE = (cmd, args) => {
     var ResponseObject;
 
     let store = require("../store/configureStore");
-    if (cmd != "help"){
+    if (cmd != "help") {
       ///Send the command to the dispatch so we can place it in the output log
       store.store.dispatch({ type: TYPE.ADD_RPC_CALL, payload: cmd });
     }
@@ -166,10 +166,6 @@ export const PROMISE = (cmd, args) => {
         payload = JSON.parse(ResponseObject.response).result;
       }
       resolve(payload);
-    };
-
-    ResponseObject.onerror = () => {
-      reject(ResponseObject.response);
     };
 
     /** Generate the AJAX Request. **/
