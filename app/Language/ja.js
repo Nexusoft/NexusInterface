@@ -340,6 +340,13 @@ export default {
       "ウォレットをシャットダウンするときにデータベースを切り離す",
     "ToolTip.RenderGlobe": "概要ページで地球儀をレンダリングする",
 
+    "ToolTip.DbOption":
+      "最近のバージョンのデータベースをダウンロードして同期にかかる時間を短縮したいですか？",
+    "ToolTip.BootStrapIt": "はい、それをブートストラップしましょう",
+    "ToolTip.SyncFromScratch": "いいえ、最初から同期させてください",
+    "ToolTip.RecentDatabaseDownloading": "最近のデータベースのダウンロード",
+    "ToolTip.PleaseWait": "お待ちください...",
+
     //ALERTS//
     "Alert.Received": "トランザクションの受領",
     "Alert.Sent": "トランザクション送信済み",

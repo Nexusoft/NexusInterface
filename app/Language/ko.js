@@ -328,6 +328,13 @@ export default {
     "ToolTip.Detach": "지갑을 종료 할 때 데이터베이스 분리",
     "ToolTip.RenderGlobe": "개요 페이지에서 지구본 렌더링",
 
+    "ToolTip.DbOption":
+      "최신 버전의 데이터베이스를 다운로드하여 동기화에 소요되는 시간을 단축 하시겠습니까?",
+    "ToolTip.BootStrapIt": "예, 부트 스트랩 해 보겠습니다.",
+    "ToolTip.SyncFromScratch": "아니요, 처음부터 동기화 해 보겠습니다.",
+    "ToolTip.RecentDatabaseDownloading": "최근 데이터베이스 다운로드",
+    "ToolTip.PleaseWait": "기다려주십시오 ...",
+
     //ALERTS//
     "Alert.Received": "거래 접수",
     "Alert.Sent": "거래 송부",

@@ -334,6 +334,13 @@ export default {
     "ToolTip.Detach": "Отсоедините базу данных при выключении кошелька",
     "ToolTip.RenderGlobe": "Отобразить глобус на странице обзора",
 
+    "ToolTip.DbOption":
+      "Вы хотите сократить время, затрачиваемое на синхронизацию, путем загрузки последней версии базы данных?",
+    "ToolTip.BootStrapIt": "Да, давайте загрузим его",
+    "ToolTip.SyncFromScratch": "Нет, пусть синхронизируется с нуля",
+    "ToolTip.RecentDatabaseDownloading": "Загрузка последней базы данных",
+    "ToolTip.PleaseWait": "Подождите пожалуйста...",
+
     //ALERTS//
     "Alert.Received": "Полученная транзакция",
     "Alert.Sent": "Отправленная транзакция",

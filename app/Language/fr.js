@@ -347,6 +347,15 @@ export default {
       "Détachez la base de données lors de la fermeture du portefeuille",
     "ToolTip.RenderGlobe": "Rendre le globe sur la page de vue d'ensemble",
 
+    "ToolTip.DbOption":
+      "Souhaitez-vous réduire le temps de synchronisation en téléchargeant une version récente de la base de données?",
+    "ToolTip.BootStrapIt": "Oui, allons-y",
+    "ToolTip.SyncFromScratch":
+      "Non, laissez-le se synchroniser à partir de zéro",
+    "ToolTip.RecentDatabaseDownloading":
+      "Téléchargement de la base de données récente",
+    "ToolTip.PleaseWait": "S'il vous plaît, attendez...",
+
     //ALERTS//
     "Alert.Received": "Transaction reçue",
     "Alert.Sent": "Transaction envoyée",

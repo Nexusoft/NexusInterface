@@ -421,13 +421,13 @@ class SettingsCore extends Component {
     core.restart();
   }
 
-  changeLocale(locale) {
-    let settings = require("../../api/settings.js").GetSettings();
-    settings.locale = locale;
-    this.props.setSettings(settings);
-    this.props.SwitchLocale(locale);
-    require("../../api/settings.js").SaveSettings(settings);
-  }
+  // changeLocale(locale) {
+  //   let settings = require("../../api/settings.js").GetSettings();
+  //   settings.locale = locale;
+  //   this.props.setSettings(settings);
+  //   this.props.SwitchLocale(locale);
+  //   require("../../api/settings.js").SaveSettings(settings);
+  // }
 
   // Mandatory React method
   render() {
@@ -999,7 +999,7 @@ class SettingsCore extends Component {
                 )}
               </FormattedMessage>
             </div>
-            <div className="field">
+            {/* <div className="field">
               <label htmlFor="optionalTransactionFee">
                 <FormattedMessage
                   id="Settings.Language"
@@ -1007,25 +1007,6 @@ class SettingsCore extends Component {
                 />
               </label>
               <div className="langSet">
-                {/* <select
-                  className="language"
-                  onChange={e => this.props.localeChange(e.target.value)}
-                  value={this.props.tempStorage}
-                >
-               
-                  <option value="en">
-                    <FormattedMessage
-                      id="Settings.English"
-                      defaultMesage="English"
-                    />
-                  </option>
-                  <option value="ru">
-                    <FormattedMessage
-                      id="Settings.Russian"
-                      defaultMesage="Russian"
-                    />
-                  </option>
-                </select> */}
                 <span className="flag-icon-background flag-icon-gr" />
                 <button
                   type="button"
@@ -1039,7 +1020,7 @@ class SettingsCore extends Component {
                   />
                 </button>
               </div>
-            </div>
+            </div> */}
             <button
               id="restart-core"
               className="button primary"

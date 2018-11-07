@@ -760,8 +760,10 @@ class Header extends Component {
           {this.props.percentDownloaded === 0 ? (
             <div>
               <h3>
-                Would you like to reduce the time it takes to sync by
-                downloading a recent version of the database?
+                <FormattedMessage
+                  id="ToolTip.DbOption"
+                  defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
+                />
               </h3>
               <button
                 className="button"
@@ -771,7 +773,10 @@ class Header extends Component {
                   this.props.setPercentDownloaded(0.001);
                 }}
               >
-                Yes, let's bootstrap it.
+                <FormattedMessage
+                  id="ToolTip.BootStrapIt"
+                  defaultMessage="Yes, let's bootstrap it"
+                />
               </button>
               <button
                 className="button"
@@ -779,19 +784,32 @@ class Header extends Component {
                   this.CloseBootstrapModalAndSaveSettings();
                 }}
               >
-                No, let it sync from scratch.
+                <FormattedMessage
+                  id="ToolTip.BootStrapIt"
+                  defaultMessage="Yes, let's bootstrap it"
+                />
               </button>
             </div>
           ) : (
             <div>
-              <h3>Recent Database Downloading...</h3>
+              <h3>
+                <FormattedMessage
+                  id="ToolTip.RecentDatabaseDownloading"
+                  defaultMessage="Recent Database Downloading"
+                />
+              </h3>
               <div className="progress-bar">
                 <div
                   className="filler"
                   style={{ width: `${this.props.percentDownloaded}%` }}
                 />
               </div>
-              <h3>Please Wait.</h3>
+              <h3>
+                <FormattedMessage
+                  id="ToolTip.PleaseWait"
+                  defaultMessage="Please Wait..."
+                />
+              </h3>
             </div>
           )}
         </Modal>

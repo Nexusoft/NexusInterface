@@ -337,6 +337,13 @@ export default {
     "ToolTip.Detach": "Detach the database when shutting down the wallet",
     "ToolTip.RenderGlobe": "Render the globe on the Overview page",
 
+    "ToolTip.DbOption":
+      "Would you like to reduce the time it takes to sync by downloading a recent version of the database?",
+    "ToolTip.BootStrapIt": "Yes, let's bootstrap it",
+    "ToolTip.SyncFromScratch": "No, let it sync from scratch",
+    "ToolTip.RecentDatabaseDownloading": "Recent Database Downloading",
+    "ToolTip.PleaseWait": "Please Wait...",
+
     //ALERTS//
     "Alert.Received": "Transaction Received",
     "Alert.Sent": "Transaction Sent",

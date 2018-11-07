@@ -243,10 +243,10 @@ configuration.BootstrapRecentDatabase = async function(self) {
       result
     ) {
       fs.stat(
-        configuration.GetAppDataDirectory() + "/recent/blk0001.dat",
+        configuration.GetAppDataDirectory() + "/recent.tar.gz",
         (stat, things) => console.log(stat, things)
       );
-      console.log(err, result);
+      console.log(err, result, electron.remote.getGlobal("core"));
       electron.remote.getGlobal("core").start();
     });
 

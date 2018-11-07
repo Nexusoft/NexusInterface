@@ -354,6 +354,14 @@ export default {
       "Trennen Sie die Datenbank, wenn Sie die Brieftasche herunterfahren",
     "ToolTip.RenderGlobe": "Rendern Sie den Globus auf der Übersichtsseite",
 
+    "ToolTip.DbOption":
+      "Möchten Sie die Zeit für die Synchronisierung reduzieren, indem Sie eine aktuelle Version der Datenbank herunterladen?",
+    "ToolTip.BootStrapIt": "Yes, let's bootstrap it",
+    "ToolTip.SyncFromScratch":
+      "Nein, lassen Sie es von Grund auf synchronisieren",
+    "ToolTip.RecentDatabaseDownloading": "Aktuelle Datenbank herunterladen",
+    "ToolTip.PleaseWait": "Warten Sie mal...",
+
     //ALERTS//
     "Alert.Received": "Transaktion erhalten",
     "Alert.Sent": "Transaktion gesendet",

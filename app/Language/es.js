@@ -339,6 +339,13 @@ export default {
     "ToolTip.Detach": "Desconecte la base de datos al cerrar la billetera",
     "ToolTip.RenderGlobe": "Renderiza el globo en la página de vista general",
 
+    "ToolTip.DbOption":
+      "¿Desea reducir el tiempo de sincronización al descargar una versión reciente de la base de datos?",
+    "ToolTip.BootStrapIt": "Sí, vamos a arrancarlo",
+    "ToolTip.SyncFromScratch": "No, déjalo sincronizar desde cero",
+    "ToolTip.RecentDatabaseDownloading": "Descarga de base de datos recientes",
+    "ToolTip.PleaseWait": "Por favor espera...",
+
     //ALERTS//
     "Alert.Received": "Transacción recibida",
     "Alert.Sent": "Transacción enviada",
