@@ -52,7 +52,13 @@ class Header extends Component {
     let settings = GetSettings();
     settings.keepDaemon = false;
     SaveSettings(settings);
-    this.props.setSettings(GetSettings());
+    if (settings.customStyling.globeMultiColorRGB === undefined) {
+      console.log(settings);
+      SaveSettings({ ...this.props.settings, ...settings });
+    } else {
+      console.log("other one ", settings);
+      this.props.setSettings(settings);
+    }
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     var self = this;
     this.props.SetGoogleAnalytics(GOOGLE);
@@ -284,7 +290,7 @@ class Header extends Component {
     }
 
     tray = new electron.remote.Tray(trayImage);
-    // tray.setToolTip("the nexus interface");
+
     if (process.env.NODE_ENV === "development") {
       if (process.platform == "darwin") {
         tray.setPressedImage(
@@ -727,6 +733,85 @@ class Header extends Component {
     settings.bootstrap = false;
     SaveSettings(settings);
   }
+  BootstrapModalInteriorBuilder() {
+    if (this.props.percentDownloaded === 0) {
+      return (
+        <div>
+          <h3>
+            <FormattedMessage
+              id="ToolTip.DbOption"
+              defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
+            />
+          </h3>
+          <button
+            className="button"
+            onClick={() => {
+              this.props.OpenBootstrapModal(true);
+              configuration.BootstrapRecentDatabase(this);
+              this.props.setPercentDownloaded(0.001);
+            }}
+          >
+            <FormattedMessage
+              id="ToolTip.BootStrapIt"
+              defaultMessage="Yes, let's bootstrap it"
+            />
+          </button>
+          <button
+            className="button"
+            onClick={() => {
+              this.CloseBootstrapModalAndSaveSettings();
+            }}
+          >
+            <FormattedMessage
+              id="ToolTip.SyncFromScratch"
+              defaultMessage="No, let it sync form scratch"
+            />
+          </button>
+        </div>
+      );
+    } else if (this.props.percentDownloaded < 100) {
+      return (
+        <div>
+          <h3>
+            <FormattedMessage
+              id="ToolTip.RecentDatabaseDownloading"
+              defaultMessage="Recent Database Downloading"
+            />
+          </h3>
+          <div className="progress-bar">
+            <div
+              className="filler"
+              style={{ width: `${this.props.percentDownloaded}%` }}
+            />
+          </div>
+          <h3>
+            <FormattedMessage
+              id="ToolTip.PleaseWait"
+              defaultMessage="Please Wait..."
+            />
+          </h3>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h3>
+            <FormattedMessage
+              id="ToolTip.RecentDatabaseExtracting"
+              defaultMessage="Recent Database Downloading"
+            />
+          </h3>
+
+          <h3>
+            <FormattedMessage
+              id="ToolTip.PleaseWait"
+              defaultMessage="Please Wait..."
+            />
+          </h3>
+        </div>
+      );
+    }
+  }
 
   // Mandatory React method
   render() {
@@ -771,61 +856,7 @@ class Header extends Component {
           showCloseIcon={false}
           classNames={{ modal: "modal" }}
         >
-          {this.props.percentDownloaded === 0 ? (
-            <div>
-              <h3>
-                <FormattedMessage
-                  id="ToolTip.DbOption"
-                  defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
-                />
-              </h3>
-              <button
-                className="button"
-                onClick={() => {
-                  this.props.OpenBootstrapModal(true);
-                  configuration.BootstrapRecentDatabase(this);
-                  this.props.setPercentDownloaded(0.001);
-                }}
-              >
-                <FormattedMessage
-                  id="ToolTip.BootStrapIt"
-                  defaultMessage="Yes, let's bootstrap it"
-                />
-              </button>
-              <button
-                className="button"
-                onClick={() => {
-                  this.CloseBootstrapModalAndSaveSettings();
-                }}
-              >
-                <FormattedMessage
-                  id="ToolTip.BootStrapIt"
-                  defaultMessage="Yes, let's bootstrap it"
-                />
-              </button>
-            </div>
-          ) : (
-            <div>
-              <h3>
-                <FormattedMessage
-                  id="ToolTip.RecentDatabaseDownloading"
-                  defaultMessage="Recent Database Downloading"
-                />
-              </h3>
-              <div className="progress-bar">
-                <div
-                  className="filler"
-                  style={{ width: `${this.props.percentDownloaded}%` }}
-                />
-              </div>
-              <h3>
-                <FormattedMessage
-                  id="ToolTip.PleaseWait"
-                  defaultMessage="Please Wait..."
-                />
-              </h3>
-            </div>
-          )}
+          {this.BootstrapModalInteriorBuilder()}
         </Modal>
         <div id="settings-menu" className="animated rotateInDownRight ">
           <div className="icon">

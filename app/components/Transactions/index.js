@@ -219,6 +219,11 @@ class Transactions extends Component {
       false
     );
   }
+  shouldComponentUpdate(nextprops) {
+    console.log("this.props: ", this.props);
+    console.log("nextProps: ", nextprops);
+    return true;
+  }
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.txtotal != previousprops.txtotal) {
@@ -374,46 +379,48 @@ class Transactions extends Component {
     let chart = document.getElementById("transactions-chart");
     let filters = document.getElementById("transactions-filters");
     let details = document.getElementById("transactions-details");
-    let parent = chart.parentNode;
+    if (chart !== null) {
+      let parent = chart.parentNode;
 
-    let parentHeight =
-      parseInt(parent.clientHeight) -
-      parseInt(
-        window.getComputedStyle(parent, "").getPropertyValue("padding-top")
-      ) -
-      parseInt(
-        window.getComputedStyle(parent, "").getPropertyValue("padding-bottom")
-      );
-    let filtersHeight =
-      parseInt(filters.offsetHeight) +
-      parseInt(
-        window.getComputedStyle(filters, "").getPropertyValue("margin-top")
-      ) +
-      parseInt(
-        window.getComputedStyle(filters, "").getPropertyValue("margin-bottom")
-      );
-    let chartHeight =
-      parseInt(chart.offsetHeight) +
-      parseInt(
-        window.getComputedStyle(chart, "").getPropertyValue("margin-top")
-      ) +
-      parseInt(
-        window.getComputedStyle(chart, "").getPropertyValue("margin-bottom")
-      );
-    let detailsHeight = parentHeight - filtersHeight - chartHeight;
+      let parentHeight =
+        parseInt(parent.clientHeight) -
+        parseInt(
+          window.getComputedStyle(parent, "").getPropertyValue("padding-top")
+        ) -
+        parseInt(
+          window.getComputedStyle(parent, "").getPropertyValue("padding-bottom")
+        );
+      let filtersHeight =
+        parseInt(filters.offsetHeight) +
+        parseInt(
+          window.getComputedStyle(filters, "").getPropertyValue("margin-top")
+        ) +
+        parseInt(
+          window.getComputedStyle(filters, "").getPropertyValue("margin-bottom")
+        );
+      let chartHeight =
+        parseInt(chart.offsetHeight) +
+        parseInt(
+          window.getComputedStyle(chart, "").getPropertyValue("margin-top")
+        ) +
+        parseInt(
+          window.getComputedStyle(chart, "").getPropertyValue("margin-bottom")
+        );
+      let detailsHeight = parentHeight - filtersHeight - chartHeight;
 
-    let mainHeight = 150; // fixed height, should match CSS
-    let miniHeight = 50 - 8; // right now this is disabled, if re-enabled this needs to be set properly
+      let mainHeight = 150; // fixed height, should match CSS
+      let miniHeight = 50 - 8; // right now this is disabled, if re-enabled this needs to be set properly
 
-    this.setState({
-      mainChartWidth: chart.clientWidth,
-      miniChartWidth: chart.clientWidth,
-      mainChartHeight: mainHeight,
-      miniChartHeight: miniHeight,
-      tableHeight: {
-        height: detailsHeight
-      }
-    });
+      this.setState({
+        mainChartWidth: chart.clientWidth,
+        miniChartWidth: chart.clientWidth,
+        mainChartHeight: mainHeight,
+        miniChartHeight: miniHeight,
+        tableHeight: {
+          height: detailsHeight
+        }
+      });
+    }
   }
 
   // This is the method that is called when the user pressed the right click
@@ -1527,7 +1534,7 @@ class Transactions extends Component {
     const VictoryZoomVoronoiContainer = createContainer("voronoi", "zoom");
     const open = this.state.open;
     const pageSize = this.returnDefaultPageSize();
-
+    console.log("rerender", this.props.connections);
     return (
       <div id="transactions" className="animated fadeIn">
         <Modal

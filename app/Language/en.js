@@ -344,6 +344,7 @@ export default {
     "ToolTip.SyncFromScratch": "No, let it sync from scratch",
     "ToolTip.RecentDatabaseDownloading": "Recent Database Downloading",
     "ToolTip.PleaseWait": "Please Wait...",
+    "ToolTip.RecentDatabaseExtracting": "Recent Database Extracting", // NEW
 
     //ALERTS//
     "Alert.Received": "Transaction Received",
