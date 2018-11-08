@@ -6,7 +6,8 @@ const initialState = {
   experimentalOpen: true,
   circulatingSupply: 0,
   USDpercentChange: 0,
-  percentDownloaded: 0
+  percentDownloaded: 0,
+  webGLEnabled: false
 };
 
 export default (state = initialState, action) => {
@@ -15,6 +16,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.payload
+      };
+      break;
+    case TYPE.SET_WEBGL_ENABLED:
+      return {
+        ...state,
+        webGLEnabled: action.payload
       };
       break;
     case TYPE.SET_PERCENT_DOWNLOADED:

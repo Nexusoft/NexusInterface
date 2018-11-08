@@ -82,12 +82,21 @@ const mapDispatchToProps = dispatch => ({
   acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
   toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
   ignoreEncryptionWarning: () =>
-    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING })
+    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING }),
+  setWebGLEnabled: isEnabled => dispatch({type: TYPE.SET_WEBGL_ENABLED, payload: isEnabled})
 });
 
 class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
+    let WEBGL = require("../../script/WebGLCheck.js");
+    if (WEBGL.isWebGLAvailable()) {
+      this.props.setWebGLEnabled(true);
+    } else {
+        this.props.setWebGLEnabled(true);
+        var warning = WEBGL.getWebGLErrorMessage();
+        console.error(warning);
+    }
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
 
     if (this.props.googleanalytics != null) {
@@ -105,16 +114,22 @@ class Overview extends Component {
       let newDate = new Date();
       this.props.BlockDate(newDate);
     }
-    if (this.props.blocks != previousprops.blocks) {
-      if (this.props.blocks != 0 && previousprops.blocks != 0) {
-        this.redrawCurves();
-      }
-    }
+    
 
     if (this.props.saveSettingsFlag) {
       require("../../api/settings.js").SaveSettings(this.props.settings);
     }
 
+    if (this.props.webGLEnabled == false)
+    {
+      return;
+    }
+
+    if (this.props.blocks != previousprops.blocks) {
+      if (this.props.blocks != 0 && previousprops.blocks != 0) {
+        this.redrawCurves();
+      }
+    }
     if ((previousprops.connections == undefined || previousprops.connections == 0) && this.props.connections != 0)
     {//Daemon Starting Up
       this.reDrawEverything();
@@ -323,7 +338,7 @@ class Overview extends Component {
   }
 
   returnIfGlobeEnabled() {
-    if (this.props.settings.acceptedagreement == false || this.props.settings.renderGlobe == false) {
+    if (this.props.settings.acceptedagreement == false || this.props.settings.renderGlobe == false || this.props.webGLEnabled == false) {
       return null;
     } else {
       return [
