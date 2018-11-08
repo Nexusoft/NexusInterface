@@ -284,7 +284,7 @@ class Header extends Component {
     }
 
     tray = new electron.remote.Tray(trayImage);
-    // tray.setToolTip("the nexus interface");
+
     if (process.env.NODE_ENV === "development") {
       if (process.platform == "darwin") {
         tray.setPressedImage(

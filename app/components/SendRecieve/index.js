@@ -371,21 +371,21 @@ class SendRecieve extends Component {
       });
       return (
         <div id="summary">
-          <p>
+          <div>
             <FormattedMessage id="sendReceive.Total" defaultMessage="TOTAL" />:{" "}
             {""}
             {sum.toFixed(5)} NXS
-          </p>
+          </div>
 
-          <p>
+          <div>
             <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{" "}
             {this.props.paytxfee.toFixed(5)} NXS
-          </p>
+          </div>
 
-          <p>
+          <div>
             <FormattedMessage id="sendReceive.From" defaultMessage="FROM" />:{" "}
             {this.accHud(this.props.SelectedAccount)}
-          </p>
+          </div>
         </div>
       );
     }
@@ -950,7 +950,7 @@ class SendRecieve extends Component {
                   >
                     {this.accountChanger()}
                   </select>{" "}
-                  <p>
+                  <div>
                     <label>
                       <FormattedMessage
                         id="sendReceive.Address"
@@ -992,8 +992,8 @@ class SendRecieve extends Component {
                         />
                       )}
                     </FormattedMessage>
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     <div className="convertor">
                       <label>
                         <FormattedMessage
@@ -1026,8 +1026,8 @@ class SendRecieve extends Component {
                         required
                       />
                     </div>
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     <label>
                       <FormattedMessage
                         id="sendReceive.Message"
@@ -1051,7 +1051,7 @@ class SendRecieve extends Component {
                         />
                       )}
                     </FormattedMessage>
-                  </p>
+                  </div>
                   <div id="left-buttons">
                     {this.editQueue()}
                     <button
@@ -1085,14 +1085,14 @@ class SendRecieve extends Component {
 
               <div className="box2">
                 <div id="table-wraper">
-                  <p className="label">
+                  <div className="label">
                     <label>
                       <FormattedMessage
                         id="sendReceive.Queue"
                         defaultMessage="Queue"
                       />
                     </label>
-                  </p>
+                  </div>
                   <table className="table">
                     <thead className="thead">
                       <th>
@@ -1154,9 +1154,9 @@ class SendRecieve extends Component {
                       />
                     </button>
 
-                    <p>
+                    <div>
                       <div className="counter">{this.addAmount()} </div>
-                    </p>
+                    </div>
                   </foot>{" "}
                 </div>{" "}
               </div>

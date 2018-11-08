@@ -257,8 +257,7 @@
     "universal-analytics": "^0.4.17",
     "victory": "^30.5.1",
     "wait-on": "^3.0.1",
-    "xmlhttprequest": "^1.8.0",
-    "yauzl": "^2.10.0"
+    "xmlhttprequest": "^1.8.0"
   },
   "devEngines": {
     "node": ">=7.x",
