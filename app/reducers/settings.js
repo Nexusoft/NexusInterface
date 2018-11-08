@@ -26,12 +26,11 @@ const initialState = {
     bootstrap: true,
     windowWidth: 1600,
     windowHeight: 1388,
-    locale: "en",
-    // messages: messages,
     devMode: false,
     wallpaper: defaultWallpaperPath,
     renderGlobe: true,
     fiatCurrency: "USD",
+    locale: "en",
     customStyling: {
       MC1: "#111111",
       MC2: "#0ca4fb",
@@ -49,7 +48,6 @@ const initialState = {
       globeMultiColorRGB: "rgb(0,151,228)",
       maxMindCopyright: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
     },
-
     NXSlogoRGB: "rgb(0,174,239)",
     footerRGB: "rgb(0,174,239)",
     footerActiveRGB: "rgb(0,174,239)",
