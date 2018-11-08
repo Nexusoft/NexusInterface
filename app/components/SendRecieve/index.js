@@ -120,6 +120,67 @@ class SendRecieve extends Component {
     this.props.googleanalytics.SendScreen("Send");
   }
 
+  loadMyAccounts() {
+    RPC.PROMISE("listaccounts", [0]).then(payload => {
+      Promise.all(
+        Object.keys(payload).map(account =>
+          RPC.PROMISE("getaddressesbyaccount", [account])
+        )
+      ).then(payload => {
+        let validateAddressPromises = [];
+
+        payload.map(element => {
+          element.addresses.map(address => {
+            validateAddressPromises.push(
+              RPC.PROMISE("validateaddress", [address])
+            );
+          });
+        });
+
+        Promise.all(validateAddressPromises).then(payload => {
+          let accountsList = [];
+          let myaccts = payload.map(e => {
+            if (e.ismine && e.isvalid) {
+              let index = accountsList.findIndex(ele => {
+                if (ele.account === e.account) {
+                  return ele;
+                }
+              });
+              let indexDefault = accountsList.findIndex(ele => {
+                if (ele.account == "" || ele.account == "default") {
+                  return ele;
+                }
+              });
+
+              if (e.account === "" || e.account === "default") {
+                if (index === -1 && indexDefault === -1) {
+                  accountsList.push({
+                    account: "default",
+                    addresses: [e.address]
+                  });
+                } else {
+                  accountsList[indexDefault].addresses.push(e.address);
+                }
+              } else {
+                if (index === -1) {
+                  accountsList.push({
+                    account: e.account,
+                    addresses: [e.address]
+                  });
+                } else {
+                  accountsList[index].addresses.push(e.address);
+                }
+              }
+            }
+          });
+          this.props.MyAccountsList(accountsList);
+        });
+      });
+    });
+  }
+
+  // React Method (Life cycle hook)
+
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
@@ -621,7 +682,11 @@ class SendRecieve extends Component {
           return (
             <tr>
               <td key={acct + i} className="tdAccounts">
-                {acct.account === "default" ? <span>My Account</span> : acct.account}
+                {acct.account === "default" ? (
+                  <span>My Account</span>
+                ) : (
+                  acct.account
+                )}
               </td>
               {acct.addresses.map(address => {
                 return (
