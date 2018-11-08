@@ -1,11 +1,22 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import { createHashHistory } from "history";
 import thunk from "redux-thunk";
+
 import { routerMiddleware, routerActions } from "react-router-redux";
 import { createLogger } from "redux-logger";
 import rootReducer from "../reducers";
+
+import { FormattedMessage, addLocaleData } from "react-intl";
+import { combineReducers } from "redux";
+import { Provider } from "react-intl-redux";
+import itLocaleData from "react-intl/locale-data/it";
+import enLocaleData from "react-intl/locale-data/en";
+import { updateIntl } from "react-intl-redux";
+import zhLocaleData from "react-intl/locale-data/zh";
+const UPDATE_LOCALES = "UPDATE_LOCALES";
 // import * as counterActions from "../actions/counter";
 // import type { counterStateType } from "../reducers/counter";
+addLocaleData([...itLocaleData, ...zhLocaleData]);
 
 const history = createHashHistory();
 

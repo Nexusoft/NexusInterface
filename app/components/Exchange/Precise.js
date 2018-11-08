@@ -19,6 +19,7 @@ import styles from "./style.css";
 
 import arrow from "../../images/arrow.svg";
 import * as actionsCreators from "../../actions/exchangeActionCreators";
+import { FormattedMessage } from "react-intl";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -147,12 +148,7 @@ class Precise extends Component {
   }
 
   executeTransaction() {
-    this.props.googleanalytics.SendEvent(
-      "Shapeshift",
-      "Precise",
-      "Sent",
-      1
-    );
+    this.props.googleanalytics.SendEvent("Shapeshift", "Precise", "Sent", 1);
     let pair = this.props.from + "_" + this.props.to;
     if (this.props.toAddress !== "") {
       if (this.props.refundAddress !== "") {
@@ -213,7 +209,10 @@ class Precise extends Component {
             disabled={this.props.acyncButtonFlag}
           >
             {this.props.acyncButtonFlag === false ? (
-              "EXECUTE TRANSACTION"
+              <FormattedMessage
+                id="Exchange.ExecuteTrade"
+                defaultMessage="EXECUTE TRADE"
+              />
             ) : (
               <Squares color="white" />
             )}
@@ -229,7 +228,10 @@ class Precise extends Component {
             disabled={this.props.acyncButtonFlag}
           >
             {this.props.acyncButtonFlag === false ? (
-              "GET QUOTE"
+              <FormattedMessage
+                id="Exchange.QUOTE"
+                defaultMessage="GET QUOTE"
+              />
             ) : (
               <Squares color="white" />
             )}
@@ -253,7 +255,12 @@ class Precise extends Component {
             <div id="confirmation">
               <div id="sendSideConfirm">
                 <div className="confirmationWords">
-                  <h3>YOU ARE SENDING</h3>
+                  <h3>
+                    <FormattedMessage
+                      id="Exchange.YouAreSending"
+                      defaultMessage="YOU ARE SENDING"
+                    />
+                  </h3>
                   <div>
                     {this.props.ammount} {this.props.from}
                   </div>
@@ -270,7 +277,12 @@ class Precise extends Component {
                   src={this.props.availableCoins[this.props.to].image}
                 />
                 <div className="confirmationWords">
-                  <h3>YOU WILL RECIEVE</h3>
+                  <h3>
+                    <FormattedMessage
+                      id="Exchange.YouWillReceive"
+                      defaultMessage="YOU WILL RECEIVE"
+                    />
+                  </h3>
 
                   {this.transferCalculator()}
                 </div>
@@ -280,7 +292,14 @@ class Precise extends Component {
           </div>
         );
       } else {
-        return <h1>That pair is temporarily unavailable for trades.</h1>;
+        return (
+          <h1>
+            <FormattedMessage
+              id="Exchange.NotAvailible"
+              defaultMessage="That pair is temporarily unavailable for trades"
+            />
+          </h1>
+        );
       }
     } else return null;
   }
@@ -293,7 +312,9 @@ class Precise extends Component {
           <div>
             <form>
               <fieldset>
-                <legend>Send</legend>
+                <legend>
+                  <FormattedMessage id="Exchange.Send" defaultMessage="Send" />
+                </legend>
 
                 <div className="field">
                   <select
@@ -305,23 +326,40 @@ class Precise extends Component {
                   </select>
                 </div>
                 <div className="field">
-                  <label>Trade Ammount:</label>
-                  <input
-                    type="text"
-                    placeholder={
-                      this.minAmmount() +
-                      " " +
-                      this.props.from +
-                      " Minimum Tade"
-                    }
-                    value={this.props.ammount}
-                    onChange={e => this.ammountHandler(e.target.value)}
-                    required
-                  />
+                  <label>
+                    {" "}
+                    <FormattedMessage
+                      id="Exchange.TradeAmount"
+                      defaultMessage="Trade Amount"
+                    />
+                    :
+                  </label>
+                  <FormattedMessage
+                    id="Exchange.MinTrade"
+                    defaultMessage="Minimum Trade"
+                  >
+                    {MT => (
+                      <input
+                        type="text"
+                        placeholder={
+                          this.minAmmount() + " " + this.props.from + MT
+                        }
+                        value={this.props.ammount}
+                        onChange={e => this.ammountHandler(e.target.value)}
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                 </div>
                 {this.props.from !== "NXS" ? (
                   <div className="field">
-                    <label>Refund Address:</label>
+                    <label>
+                      <FormattedMessage
+                        id="Exchange.RefundAddress"
+                        defaultMessage="Refund Address"
+                      />
+                      :
+                    </label>
                     <input
                       type="text"
                       value={this.props.refundAddress}
@@ -341,7 +379,12 @@ class Precise extends Component {
           <div>
             <form style={{ display: "flex", height: "100%" }}>
               <fieldset>
-                <legend>Recieve</legend>
+                <legend>
+                  <FormattedMessage
+                    id="Exchange.Receive"
+                    defaultMessage="Receive"
+                  />
+                </legend>
                 <div className="field">
                   <select
                     className="soflow-color"
@@ -353,7 +396,14 @@ class Precise extends Component {
                 </div>
 
                 <div className="field">
-                  <label>{this.currencylabel()} Address:</label>
+                  <label>
+                    {this.currencylabel()}{" "}
+                    <FormattedMessage
+                      id="Footer.Address"
+                      defaultMessage="Address"
+                    />
+                    :
+                  </label>
                   <input
                     type="text"
                     value={this.props.toAddress}

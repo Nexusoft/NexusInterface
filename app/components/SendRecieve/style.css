@@ -56,7 +56,8 @@ textarea {
   display: flex;
 }
 .UsdConvertorLabel {
-  padding-left: 80px;
+  padding-left: 150px;
+  position: absolute;
 }
 .label {
   font-size: 40px;
@@ -99,8 +100,8 @@ textarea {
 /* CONFIRM MODAL */
 .custom-overlay {
   position: absolute;
-  background: #282828;
   padding: 0px;
+  overflow: hidden;
 }
 .custom-modal2 {
   background: #282828;
@@ -146,6 +147,7 @@ textarea {
   flex-direction: column;
   color: var(--color-5);
   text-align: right;
+  margin-top: -10px;
 }
 
 /* TABLE ANIMATION */
@@ -306,6 +308,7 @@ a.impexp {
   color: #fff;
   cursor: pointer;
   margin-right: 20px;
+  display: block;
 }
 
 .impexpblock {

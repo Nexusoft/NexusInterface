@@ -22,7 +22,20 @@ export const GetInfoDump = () => {
       })
       .then(payload => {
         dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload });
-      });
+      })
+      .catch(err =>
+        console.log(
+          "caught",
+          err,
+          "-------------------------------------------------------------------------------------"
+        )
+      );
+  };
+};
+
+export const clearOverviewVariables = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.CLEAR_FOR_BOOTSTRAPING });
   };
 };
 
@@ -35,7 +48,6 @@ export const SetMarketAveData = () => {
         json: true
       },
       (error, response, body) => {
-        console.log(body);
         if (response.statusCode === 200) {
           let rawBTC = Object.values(body.RAW.BTC).map(ele => {
             return {
@@ -84,19 +96,15 @@ export const SetMarketAveData = () => {
               displayNXS: displayNXS
             }
           });
-          console.log(
-            "raw btc",
-            rawBTC,
-            "rawnxs",
-            rawNXS,
-            "dispalay btc",
-            displayBTC,
-            "display nxs",
-            displayNXS
-          );
         }
       }
     );
+  };
+};
+
+export const SwitchLocale = locale => {
+  return dispatch => {
+    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
   };
 };
 
@@ -139,11 +147,30 @@ export const Confirm = Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
   };
 };
+
+export const setPercentDownloaded = percent => {
+  return dispatch =>
+    dispatch({ type: TYPE.SET_PERCENT_DOWNLOADED, payload: percent });
+};
+
+export const CloseBootstrapModal = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.CLOSE_BOOTSTRAP_MODAL });
+  };
+};
+
 export const MyAccountsList = list => {
   return dispatch => {
     dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
   };
 };
+
+export const OpenBootstrapModal = bool => {
+  return dispatch => {
+    dispatch({ type: TYPE.OPEN_BOOTSTRAP_MODAL, payload: bool });
+  };
+};
+
 export const CloseModal = () => {
   return dispatch => {
     dispatch({ type: TYPE.HIDE_MODAL });

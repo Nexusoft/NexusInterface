@@ -1,5 +1,6 @@
 import * as TYPE from "../actions/actiontypes";
 import configuration from "../api/configuration";
+import messages from "../Language/messages";
 const path = require("path");
 let defaultWallpaperPath = "";
 if (process.env.NODE_ENV === "development") {
@@ -22,8 +23,11 @@ const initialState = {
     verbose: "2",
     acceptedagreement: false,
     experimentalWarning: true,
+    bootstrap: true,
     windowWidth: 1600,
     windowHeight: 1388,
+    locale: "en",
+    messages: messages,
     devMode: false,
     wallpaper: defaultWallpaperPath,
     renderGlobe: true,
@@ -66,6 +70,12 @@ export default (state = initialState, action) => {
         settings: { ...state.settings, ...action.payload }
       };
       break;
+    case TYPE.UPDATE_LOCALES:
+      return {
+        ...state,
+        settings: { ...state.settings, locale: action.payload }
+      };
+      break;
     case TYPE.SET_EXPERIMENTAL_WARNING:
       if (action.payload) {
         return {
@@ -89,6 +99,7 @@ export default (state = initialState, action) => {
         ignoreEncryptionWarningFlag: true
       };
       break;
+
     case TYPE.ACCEPT_MIT:
       return {
         ...state,
@@ -111,6 +122,15 @@ export default (state = initialState, action) => {
         settings: {
           ...state.settings,
           wallpaper: action.payload
+        }
+      };
+      break;
+    case TYPE.CLOSE_BOOTSTRAP_MODAL:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          bootstrap: false
         }
       };
       break;
@@ -281,17 +301,16 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.CHANGE_GLOBE_MULTI_COLOR:
-      return{
+      return {
         ...state,
         settings: {
           ...state.settings,
-          customStyling:
-          {
+          customStyling: {
             ...state.settings.customStyling,
             globeMultiColorRGB: action.payload.hex
           }
         }
-      }
+      };
     case TYPE.RESET_CUSTOM_STYLING:
       return {
         ...state,

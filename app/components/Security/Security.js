@@ -1,17 +1,11 @@
-/*
-  Title: Security
-  Description: Render the unlocked security page
-  Last Modified by: Brian Smith
-*/
-// External Dependencies
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 
-// Internal Dependencies
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
+import { FormattedMessage } from "react-intl";
 
 const mapStateToProps = state => {
   return {
@@ -22,23 +16,17 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
+  busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
   OpenModal: type => dispatch({ type: TYPE.SHOW_MODAL, payload: type }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload })
 });
 
 class Security extends Component {
-  // React Method (Life cycle hook)
-  componentWillUnmount() {
-    this.props.wipe();
-  }
-
-  // Class Methods
   lockWallet() {
-    this.props.busy(true);
+    this.props.busy();
     RPC.PROMISE("walletlock", []).then(payload => {
       this.props.wipe();
-      this.props.busy(false);
+      this.props.busy();
       RPC.PROMISE("getinfo", [])
         .then(payload => {
           delete payload.timestamp;
@@ -49,7 +37,6 @@ class Security extends Component {
         });
     });
   }
-
   showPrivKey(e) {
     e.preventDefault();
     let addressInput = document.getElementById("privKeyAddress");
@@ -147,7 +134,9 @@ class Security extends Component {
     }
   }
 
-  // Mandatory React method
+  componentWillUnmount() {
+    this.props.wipe();
+  }
   render() {
     if (!this.props.loggedIn) {
       return (
@@ -159,47 +148,104 @@ class Security extends Component {
         <div className="securitySubContainer">
           <form>
             <fieldset>
-              <legend>Change Password</legend>
-              <div className="field">
-                <label>Previous Password:</label>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  id="oldPass"
-                  required
+              <legend>
+                <FormattedMessage
+                  id="Settings.ChangePassword"
+                  defaultMessage="Change Password"
                 />
-                <span className="hint">Password is required</span>
+              </legend>
+              <div className="field">
+                <label>
+                  <FormattedMessage
+                    id="Settings.PreviousPassword"
+                    defaultMessage="Previous Password"
+                  />
+                </label>
+                <FormattedMessage
+                  id="Settings.Password"
+                  defaultMessage="Password"
+                >
+                  {p => (
+                    <input
+                      type="password"
+                      placeholder={p}
+                      id="oldPass"
+                      required
+                    />
+                  )}
+                </FormattedMessage>
+                <span className="hint">
+                  <FormattedMessage
+                    id="Settings.PasswordRequired"
+                    defaultMessage="Password Is Required"
+                  />
+                </span>
               </div>
               <div className="field">
-                <label>New Password:</label>
-                <input
-                  type="password"
-                  placeholder="New Password"
-                  id="newPass"
-                  required
-                />
-                <span className="hint">New password is required</span>
+                <label>
+                  <FormattedMessage
+                    id="Settings.NewPassword"
+                    defaultMessage="New Password"
+                  />
+                </label>
+                <FormattedMessage
+                  id="Settings.NewPassword"
+                  defaultMessage="New Password"
+                >
+                  {np => (
+                    <input
+                      type="password"
+                      placeholder={np}
+                      id="newPass"
+                      required
+                    />
+                  )}
+                </FormattedMessage>
+                <span className="hint">
+                  <FormattedMessage
+                    id="Settings.PasswordRequired"
+                    defaultMessage="Password Is Required"
+                  />
+                </span>
               </div>
               <div className="field">
-                <label>Re-Enter Password:</label>
-                <input
-                  type="password"
-                  placeholder="Re-Enter Password"
-                  id="passChk"
-                  onChange={e => this.reEnterValidator(e)}
-                />
+                <label>
+                  <FormattedMessage
+                    id="Settings.ReEnterPassword"
+                    defaultMessage="Re-Enter Password:"
+                  />
+                </label>
+                <FormattedMessage
+                  id="Settings.ReEnterPassword"
+                  defaultMessage="Re-Enter Password:"
+                >
+                  {rep => (
+                    <input
+                      type="password"
+                      placeholder={rep}
+                      id="passChk"
+                      onChange={e => this.reEnterValidator(e)}
+                    />
+                  )}
+                </FormattedMessage>
                 <span id="passHint" className="err invalid">
-                  Passwords do not match
+                  <FormattedMessage
+                    id="Settings.NoMatch"
+                    defaultMessage="Passwords do not match"
+                  />
                 </span>
               </div>
               <p>
                 <button
                   style={{ width: "100%", margin: "0" }}
-                  disabled={this.props.busyFlag}
+                  // disabled={this.props.busyFlag}
                   className="button primary"
                   onClick={() => this.changePassword(e)}
                 >
-                  Submit
+                  <FormattedMessage
+                    id="Settings.Submit"
+                    defaultMessage="Submit"
+                  />
                 </button>
               </p>
             </fieldset>
@@ -208,22 +254,36 @@ class Security extends Component {
             style={{ width: "100%", margin: "0" }}
             id="lockWallet"
             className="button primary"
-            disabled={this.props.busyFlag}
+            // disabled={this.props.busyFlag}
             onClick={e => {
               e.preventDefault();
               this.lockWallet();
             }}
           >
-            Lock Wallet
+            <FormattedMessage
+              id="Settings.LockWallet"
+              defaultMessage="Lock Wallet"
+            />
           </button>
         </div>
         <div className="securitySubContainer privKey">
           <form>
             <fieldset>
-              <legend>View private key for address</legend>
+              <legend>
+                {" "}
+                <FormattedMessage
+                  id="Settings.ViewPrivateKeyForAddress"
+                  defaultMessage="View private key for address"
+                />
+              </legend>
 
               <div className="field">
-                <label>Address:</label>
+                <label>
+                  <FormattedMessage
+                    id="Settings.Address"
+                    defaultMessage="Address"
+                  />
+                </label>
                 <div className="expander">
                   <input
                     type="text"
@@ -232,25 +292,36 @@ class Security extends Component {
                     required
                   />
                   <button
-                    disabled={this.props.busyFlag}
+                    // disabled={this.props.busyFlag}
                     className="button primary"
                     onClick={e => this.showPrivKey(e)}
                   >
-                    Submit
+                    <FormattedMessage
+                      id="Settings.Submit"
+                      defaultMessage="Submit"
+                    />
                   </button>
                 </div>
               </div>
 
               <div className="field">
-                <label>Private Key:</label>
+                <label>
+                  <FormattedMessage
+                    id="Settings.PrivateKey"
+                    defaultMessage="Private Key:"
+                  />
+                </label>
                 <div className="expander">
                   <input type="password" id="privKeyOutput" />
                   <button
-                    disabled={this.props.busyFlag}
+                    // disabled={this.props.busyFlag}
                     className="button"
                     onClick={e => this.copyPrivkey(e)}
                   >
-                    Copy
+                    <FormattedMessage
+                      id="Settings.Copy"
+                      defaultMessage="Copy"
+                    />
                   </button>
                 </div>
               </div>
@@ -260,27 +331,56 @@ class Security extends Component {
         <div className="securitySubContainer privKey">
           <form>
             <fieldset>
-              <legend>Import Private Key</legend>
+              <legend>
+                <FormattedMessage
+                  id="Settings.ImportPrivateKey"
+                  defaultMessage="Import Private Key"
+                />
+              </legend>
               <div className="field">
-                <label>Account Name:</label>
-                <div className="expander">
-                  <input
-                    type="Text"
-                    placeholder="Account Name"
-                    id="acctName"
-                    required
+                <label>
+                  <FormattedMessage
+                    id="Settings.AccountName"
+                    defaultMessage="Account Name:"
                   />
+                </label>
+                <div className="expander">
+                  <FormattedMessage
+                    id="Settings.AccountName"
+                    defaultMessage="Account Name"
+                  >
+                    {An => (
+                      <input
+                        type="Text"
+                        placeholder={An}
+                        id="acctName"
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                 </div>
               </div>
               <div className="field">
-                <label>Private Key:</label>
-                <div className="expander">
-                  <input
-                    type="password"
-                    placeholder="Private Key"
-                    id="privateKey"
-                    required
+                <label>
+                  <FormattedMessage
+                    id="Settings.PrivateKey"
+                    defaultMessage="Account Name:"
                   />
+                </label>
+                <div className="expander">
+                  <FormattedMessage
+                    id="Settings.PrivateKey"
+                    defaultMessage="Private Key"
+                  >
+                    {pk => (
+                      <input
+                        type="password"
+                        placeholder={pk}
+                        id="privateKey"
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                 </div>
               </div>
               <p>
@@ -289,7 +389,10 @@ class Security extends Component {
                   className="button primary"
                   onClick={e => this.importPrivKey(e)}
                 >
-                  Submit
+                  <FormattedMessage
+                    id="Settings.Submit"
+                    defaultMessage="Submit"
+                  />
                 </button>
               </p>
             </fieldset>
@@ -299,8 +402,6 @@ class Security extends Component {
     );
   }
 }
-
-// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

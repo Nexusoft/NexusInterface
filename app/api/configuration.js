@@ -132,11 +132,24 @@ configuration.GetAppDataDirectory = function() {
   const electron = require("electron");
   const path = require("path");
   const app = electron.app || electron.remote.app;
+  let AppDataDirPath = "";
 
-  return path.join(
-    app.getPath("appData").replace("/Electron/", app.getName()),
-    app.getName()
-  );
+  if (process.platform === "darwin") {
+    AppDataDirPath = path.join(
+      app
+        .getPath("appData")
+        .replace(" ", `\ `)
+        .replace("/Electron/", app.getName()),
+      app.getName()
+    );
+  } else {
+    AppDataDirPath = path.join(
+      app.getPath("appData").replace("/Electron/", app.getName()),
+      app.getName()
+    );
+  }
+
+  return AppDataDirPath;
 };
 
 configuration.GetAppResourceDir = function() {
@@ -156,8 +169,103 @@ configuration.GetAppResourceDir = function() {
   }
 };
 
-//configuration.GetDaemonDataDir = function() {
-//  const electron = require("electron");
-//  const path = require("path");
-//  const app = electron.app || electron.remote.app;
-//  let rawPath =  path.dirname(app.getPath("appdata")) +
+configuration.GetBootstrapSize = async function() {
+  let remote = require("remote-file-size");
+  const url = "http://support.nexusearth.com:8081/recent.tar.gz";
+
+  let total = 0;
+  let promise = new Promise((resolve, reject) => {
+    remote(url, function(err, totalBytes) {
+      resolve(totalBytes);
+    });
+  });
+  await promise;
+  return promise;
+};
+
+configuration.BootstrapRecentDatabase = async function(self) {
+  const RPC = require("../script/rpc");
+  const fs = require("fs");
+  const path = require("path");
+  const electron = require("electron");
+  const tarball = require("tarball-extract");
+
+  let totalDownloadSize = await configuration.GetBootstrapSize();
+
+  let now = new Date()
+    .toString()
+    .slice(0, 24)
+    .split(" ")
+    .reduce((a, b) => {
+      return a + "_" + b;
+    })
+    .replace(/:/g, "_");
+  let BackupDir = process.env.HOME + "/NexusBackups";
+  if (process.platform === "win32") {
+    BackupDir = process.env.USERPROFILE + "/NexusBackups";
+    BackupDir = BackupDir.replace(/\\/g, "/");
+  }
+
+  let ifBackupDirExists = fs.existsSync(BackupDir);
+  if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+    fs.mkdirSync(BackupDir);
+  }
+  RPC.PROMISE("backupwallet", [
+    BackupDir + "/NexusBackup_" + now + ".dat"
+  ]).then(() => {
+    // self.props.OpenModal("Wallet Backup");
+    electron.remote.getGlobal("core").stop();
+    // setTimeout(() => {
+    //   self.props.CloseModal();
+    // }, 3000);
+
+    let tarGzLocation = path.join(this.GetAppDataDirectory(), "recent.tar.gz");
+    if (fs.existsSync(tarGzLocation)) {
+      fs.unlink(tarGzLocation, err => {
+        if (err) throw err;
+        console.log("recent.tar.gz was deleted");
+      });
+    }
+
+    let datadir = "";
+
+    if (process.platform === "win32") {
+      datadir = process.env.APPDATA + "\\Nexus_Tritium_Data";
+    } else if (process.platform === "darwin") {
+      datadir = process.env.HOME + "/Nexus_Tritium_Data";
+    } else {
+      datadir = process.env.HOME + "/.Nexus_Tritium_Data";
+    }
+
+    const url = "http://support.nexusearth.com:8081/recent.tar.gz";
+    tarball.extractTarballDownload(url, tarGzLocation, datadir, {}, function(
+      err,
+      result
+    ) {
+      fs.stat(
+        configuration.GetAppDataDirectory() + "/recent.tar.gz",
+        (stat, things) => console.log(stat, things)
+      );
+      console.log(err, result, electron.remote.getGlobal("core"));
+      electron.remote.getGlobal("core").start();
+    });
+
+    let percentChecker = setInterval(() => {
+      fs.stat(
+        path.join(configuration.GetAppDataDirectory(), "recent.tar.gz"),
+        (err, stats) => {
+          console.log((stats.size / totalDownloadSize) * 100);
+          self.props.setPercentDownloaded(
+            (stats.size / totalDownloadSize) * 100
+          );
+        }
+      );
+    }, 5000);
+    electron.remote.getGlobal("core").on("starting", () => {
+      self.CloseBootstrapModalAndSaveSettings();
+      clearInterval(percentChecker);
+      self.props.setPercentDownloaded(0);
+      self.CloseBootstrapModalAndSaveSettings();
+    });
+  });
+};

@@ -72,19 +72,53 @@ import core from "../api/core";
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 export const GETHOST = () => {
   // let core = require("electron").remote.getGlobal("core");
-  return core.host;
+  let settings = require("../api/settings").GetSettings();
+  if (settings.manualDaemon == true) {
+    let savedport = core.port;
+    if (settings.manualDaemonPort != undefined){
+      savedport = settings.manualDaemonPort;
+    }
+    let savedIP = core.ip;
+    if (settings.manualDaemonIP != undefined){
+      savedIP = settings.manualDaemonIP;
+    }
+    return "http://" + savedIP + ":" + savedport;
+  }
+  else{
+    return core.host;
+  }
 };
 
 // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
 export const GETUSER = () => {
-  // let core = require("electron").remote.getGlobal("core");
-  return core.user;
+  let settings = require("../api/settings").GetSettings();
+  if (settings.manualDaemon == true) {
+    let saveduser =
+    settings.manualDaemonUser === undefined
+      ? core.user
+      : settings.manualDaemonUser;
+
+      return saveduser;
+  }
+  else{
+    return core.user;
+  }
 };
 
 // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
 export const GETPASSWORD = () => {
-  // let core = require("electron").remote.getGlobal("core");
-  return core.password;
+  let settings = require("../api/settings").GetSettings();
+  if (settings.manualDaemon == true) {
+    let savedpassword =
+    settings.manualDaemonPassword === undefined
+      ? core.password
+      : settings.manualDaemonPassword;
+
+      return savedpassword;
+  }
+  else{
+    return core.password;
+  }
 };
 
 export const GET = (cmd, args, Callback) => {
@@ -112,7 +146,7 @@ export const PROMISE = (cmd, args) => {
     var ResponseObject;
 
     let store = require("../store/configureStore");
-    if (cmd != "help"){
+    if (cmd != "help") {
       ///Send the command to the dispatch so we can place it in the output log
       store.store.dispatch({ type: TYPE.ADD_RPC_CALL, payload: cmd });
     }
@@ -166,10 +200,6 @@ export const PROMISE = (cmd, args) => {
         payload = JSON.parse(ResponseObject.response).result;
       }
       resolve(payload);
-    };
-
-    ResponseObject.onerror = () => {
-      reject(ResponseObject.response);
     };
 
     /** Generate the AJAX Request. **/

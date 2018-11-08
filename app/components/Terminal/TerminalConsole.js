@@ -13,6 +13,7 @@ import { timingSafeEqual } from "crypto";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
+import { FormattedMessage } from "react-intl";
 
 let currentHistoryIndex = -1;
 
@@ -155,12 +156,12 @@ class TerminalConsole extends Component {
           }
         })
         .catch(error => {
-          tempConsoleOutput.push([error]);
+          tempConsoleOutput.push("Error: " + [error.error.message] + "(errorcode " + error.error.code + ")");
           this.props.printToConsole(tempConsoleOutput);
         });
     } else {
       tempConsoleOutput.push([
-        this.props.currentInput + " is a Command invalid"
+        this.props.currentInput + " is a invalid Command"
       ]);
       this.props.printToConsole(tempConsoleOutput);
     }
@@ -222,43 +223,44 @@ class TerminalConsole extends Component {
 
   // Mandatory React method
   render() {
-    if (this.props.connections === undefined) {
-      return <h2>Please wait for the daemon to load</h2>;
+    if (this.props.connections === undefined || this.props.isInSync === false) {
+      return (
+        <h2>
+          <FormattedMessage
+            id="transactions.Loading"
+            defaultMessage="transactions.Loading"
+          />
+        </h2>
+      );
     } else {
       return (
         <div id="terminal-console">
           <div id="terminal-console-input">
-            <input
-              id="input-text"
-              ref={element => (this.inputRef = element)}
-              autoFocus
-              type="text"
-              value={this.props.currentInput}
-              placeholder="Enter console commands here (ex: getinfo, help)"
-              onChange={e => this.props.onInputfieldChange(e.target.value)}
-              onKeyPress={e => this.handleKeyboardInput(e)}
-              onKeyDown={e => this.handleKeyboardArrows(e)}
-            />
+            <FormattedMessage
+              id="Console.CommandsHere"
+              defaultMessage="Enter console commands here (ex: getinfo, help)"
+            >
+              {cch => (
+                <input
+                  id="input-text"
+                  ref={element => (this.inputRef = element)}
+                  autoFocus
+                  type="text"
+                  value={this.props.currentInput}
+                  placeholder={cch}
+                  onChange={e => this.props.onInputfieldChange(e.target.value)}
+                  onKeyPress={e => this.handleKeyboardInput(e)}
+                  onKeyDown={e => this.handleKeyboardArrows(e)}
+                />
+              )}
+            </FormattedMessage>
             <button
-              id="input-submit"
-              className="button primary"
-              value="Execute"
-              onClick={() => this.processInput()}
+              id="terminal-console-reset"
+              className="button"
+              onClick={() => this.props.resetMyConsole()}
             >
-              Execute
+              <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
             </button>
-
-            <div
-              key="autocomplete"
-              style={{
-                position: "absolute",
-                top: "100%",
-                zIndex: 99,
-                background: "black"
-              }}
-            >
-              {this.autoComplete()}{" "}
-            </div>
           </div>
 
           <div id="terminal-console-output">{this.processOutput()}</div>
@@ -268,7 +270,10 @@ class TerminalConsole extends Component {
             className="button"
             onClick={() => this.props.resetMyConsole()}
           >
-            Clear Console
+            <FormattedMessage
+              id="Console.ClearConsole"
+              defaultMessage="Clear Console"
+            />
           </button>
         </div>
       );

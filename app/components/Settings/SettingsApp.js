@@ -10,20 +10,24 @@ import { remote } from "electron";
 import { access } from "fs";
 import Modal from "react-responsive-modal";
 import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
 
 // Internal Dependencies
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
 import ContextMenuBuilder from "../../contextmenu";
+import plusimg from "../../images/plus.svg";
+import * as FlagFile from "../../Language/LanguageFlags";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.sendRecieve,
-    ...state.overview,
-    ...state.settings
+    ...state.settings,
+    ...state.intl,
+    ...state.overview
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -41,6 +45,18 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.GET_SETTINGS, payload: settings }),
   setFiatCurrency: inValue => {
     dispatch({ type: TYPE.SET_FIAT_CURRENCY, payload: inValue });
+  },
+  OpenModal3: type => {
+    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
+  },
+  CloseModal3: type => {
+    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
+  },
+  localeChange: returnSelectedLocale => {
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
+  },
+  SwitchLocale: locale => {
+    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
   }
 });
 
@@ -333,7 +349,9 @@ class SettingsApp extends Component {
       .toString()
       .slice(0, 24)
       .split(" ")
-      .reduce((a, b) => {return a + "_" + b;})
+      .reduce((a, b) => {
+        return a + "_" + b;
+      })
       .replace(/:/g, "_");
 
     let BackupDir = process.env.HOME + "/NexusBackups";
@@ -362,6 +380,14 @@ class SettingsApp extends Component {
     require("../../api/settings.js").SaveSettings(settings);
   }
 
+  changeLocale(locale) {
+    let settings = require("../../api/settings.js").GetSettings();
+    settings.locale = locale;
+    this.props.setSettings(settings);
+    this.props.SwitchLocale(locale);
+    require("../../api/settings.js").SaveSettings(settings);
+  }
+
   // Mandatory React method
   render() {
     var settings = require("../../api/settings.js");
@@ -370,93 +396,172 @@ class SettingsApp extends Component {
       <section id="application">
         <Modal
           center
-          classNames={{ modal: "custom-modal2" }}
+          classNames={{ modal: "custom-modal2", overlay: "custom-overlay" }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}
         >
           <div>
-            {" "}
-            <h2>Set (New) Transaction Fee?</h2>
-            <input
-              value="Yes"
-              type="button"
-              className="button primary"
-              onClick={() => {
-                this.setTxFee();
-                this.props.CloseModal2();
-              }}
-            />
-            <div id="no-button">
-              <input
-                value="No"
-                type="button"
-                className="button primary"
-                onClick={() => {
-                  this.props.CloseModal2();
-                }}
+            <h2>
+              <FormattedMessage
+                id="Settings.SetFee"
+                defaultMessage="Set Transaction Fee?"
               />
+            </h2>
+            <FormattedMessage id="Settings.Yes">
+              {yes => (
+                <input
+                  value={yes}
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    this.setTxFee();
+                    this.props.CloseModal2();
+                  }}
+                />
+              )}
+            </FormattedMessage>
+            <div id="no-button">
+              <FormattedMessage id="Settings.No">
+                {no => (
+                  <input
+                    value={no}
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.props.CloseModal2();
+                    }}
+                  />
+                )}
+              </FormattedMessage>
             </div>
           </div>
         </Modal>
         <form className="aligned">
           <div className="field">
-            <label htmlFor="autostart">Start at system startup</label>
-            <input
-              id="autostart"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateAutoStart}
-              data-tooltip="Automatically start the wallet when you log into your system"
-            />
+            <label htmlFor="autostart">
+              <FormattedMessage
+                id="Settings.StartUp"
+                defaultMessage="Start at system startup"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.SystemStartUP"
+              defaultMessage="Automatically start the wallet when you log into your system"
+            >
+              {tt => (
+                <input
+                  id="autostart"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateAutoStart}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
-            <label htmlFor="minimizeToTray">Minimize to tray</label>
-            <input
-              id="minimizeToTray"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateMinimizeToTray}
-              data-tooltip="Minimize the wallet to the system tray"
-            />
+            <label htmlFor="minimizeToTray">
+              <FormattedMessage
+                id="Settings.MinimizeTray"
+                defaultMessage="Minimize to tray"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.MinimizeTheWallet"
+              defaultMessage="Minimize the wallet to the system tray"
+            >
+              {tt => (
+                <input
+                  id="minimizeToTray"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateMinimizeToTray}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
-            <label htmlFor="minimizeOnClose">Minimize on close</label>
-            <input
-              id="minimizeOnClose"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateMinimizeOnClose}
-              data-tooltip="Minimize the wallet when closing the window instead of closing it"
-            />
+            <label htmlFor="minimizeOnClose">
+              {" "}
+              <FormattedMessage
+                id="Settings.MinimizeClose"
+                defaultMessage="Minimize On Close"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.MinimizeOnClose"
+              defaultMessage="Minimize the wallet when closing the window instead of closing it"
+            >
+              {MoC => (
+                <input
+                  id="minimizeOnClose"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateMinimizeOnClose}
+                  data-tooltip={MoC}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
-            <label htmlFor="infoPopUps">Information Popups</label>
-            <input
-              id="infoPopUps"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateInfoPopUp}
-              data-tooltip="Show Informational Popups"
-            />
+            <label htmlFor="infoPopUps">
+              {" "}
+              <FormattedMessage
+                id="Settings.InformationPop"
+                defaultMessage="Information Popups"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.ShowPopups"
+              defaultMessage="Show Informational Popups"
+            >
+              {tt => (
+                <input
+                  id="infoPopUps"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateInfoPopUp}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
-            <label htmlFor="googleAnalytics">Send anonymous usage data</label>
-            <input
-              id="googleAnalytics"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateGoogleAnalytics.bind(this)}
-              data-tooltip="Send anonymous usage data to allow the Nexus developers to improve the wallet"
-            />
+            <label htmlFor="googleAnalytics">
+              <FormattedMessage
+                id="Settings.UsageData"
+                defaultMessage="Send anonymous usage data"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.Usage"
+              defaultMessage="Send anonymous usage data to allow the Nexus developers to improve the wallet"
+            >
+              {tt => (
+                <input
+                  id="googleAnalytics"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateGoogleAnalytics.bind(this)}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
-            <label htmlFor="fiatDefualt"> Fiat Currency </label>
+            <label htmlFor="fiatDefualt">
+              <FormattedMessage
+                id="Settings.Fiat"
+                defaultMessage="Fiat Currency"
+              />
+            </label>
             <select
               ref="fiatSelector"
               value={this.props.settings.fiatCurrency}
@@ -540,17 +645,27 @@ class SettingsApp extends Component {
           {/* NEXUS FEE */}
           <div className="field">
             <label htmlFor="optionalTransactionFee">
-              Optional transaction fee (in NXS)
-            </label>{" "}
-            <div className="fee">
-              <input
-                className="Txfee"
-                id="optionalTransactionFee"
-                type="number"
-                step="0.01"
-                min="0"
-                data-tooltip="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"
+              <FormattedMessage
+                id="Settings.OptionalFee"
+                defaultMessage="Optional transaction fee (NXS)"
               />
+            </label>
+            <div className="fee">
+              <FormattedMessage
+                id="ToolTip.OptionalFee"
+                defaultMessage="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"
+              >
+                {tt => (
+                  <input
+                    className="Txfee"
+                    id="optionalTransactionFee"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
               <button
                 className="feebutton"
                 onClick={e => {
@@ -574,16 +689,236 @@ class SettingsApp extends Component {
               <option value="uNXS">uNXS</option>
             </select>
           </div> */}
+          <Modal
+            center
+            classNames={{ modal: "custom-modal5" }}
+            showCloseIcon={true}
+            open={this.props.openThirdModal}
+            onClose={this.props.CloseModal3}
+          >
+            <ul className="langList">
+              {/* ENGLISH */}
+              <li className="LanguageTranslation">
+                &emsp;
+                <input
+                  id="English"
+                  name="radio-group"
+                  type="radio"
+                  value="en"
+                  checked={this.props.settings.locale === "en"}
+                  onClick={() => this.changeLocale("en")}
+
+                  // onChange={e => this.changeLocale(e.target.value)}
+                />
+                &emsp;
+                <label htmlFor="English">
+                  <FormattedMessage
+                    id="Lang.English"
+                    defaultMessage="English"
+                  />
+                </label>
+                &emsp; &emsp; &emsp;
+                <span className="langTag">
+                  <img src={FlagFile.America} />
+                  (English, US) &emsp;
+                </span>
+              </li>
+
+              {/* RUSSIAN */}
+              <li className="LanguageTranslation">
+                &emsp;
+                <input
+                  id="Russian"
+                  name="radio-group"
+                  type="radio"
+                  value="ru"
+                  checked={this.props.settings.locale === "ru"}
+                  onClick={() => this.changeLocale("ru")}
+                />
+                &emsp;
+                <label htmlFor="Russian">
+                  <FormattedMessage
+                    id="Lang.Russian"
+                    defaultMessage="Russian"
+                  />
+                </label>
+                &emsp; &emsp; &emsp;
+                <span className="langTag">
+                  <img src={FlagFile.Russia} />
+                  (Pусский) &emsp;
+                </span>
+              </li>
+
+              {/* SPANISH */}
+              <li className="LanguageTranslation">
+                &emsp;
+                <input
+                  id="Spanish"
+                  name="radio-group"
+                  type="radio"
+                  value="es"
+                  checked={this.props.settings.locale === "es"}
+                  onClick={() => this.changeLocale("es")}
+                />
+                &emsp;
+                <label htmlFor="Spanish">
+                  <FormattedMessage
+                    id="Lang.Spanish"
+                    defaultMessage="Spanish"
+                  />
+                </label>
+                &emsp; &emsp; &emsp;
+                <span className="langTag">
+                  <img src={FlagFile.Spain} />
+                  (Español) &emsp;
+                </span>
+              </li>
+
+              {/* KOREAN */}
+              <li className="LanguageTranslation">
+                &emsp;
+                <input
+                  id="Korean"
+                  name="radio-group"
+                  type="radio"
+                  value="ko"
+                  checked={this.props.settings.locale === "ko"}
+                  onClick={() => this.changeLocale("ko")}
+                />
+                &emsp;
+                <label htmlFor="Korean">
+                  <FormattedMessage id="Lang.Korean" defaultMessage="Korean" />
+                </label>
+                &emsp; &emsp; &emsp;
+                <span className="langTag">
+                  <img src={FlagFile.Korea} />
+                  (한국어) &emsp;
+                </span>
+              </li>
+
+              {/* GERMAN */}
+              <li className="LanguageTranslation">
+                &emsp;
+                <input
+                  id="German"
+                  name="radio-group"
+                  type="radio"
+                  value="de"
+                  checked={this.props.settings.locale === "de"}
+                  onClick={() => this.changeLocale("de")}
+                />
+                &emsp;
+                <label htmlFor="German">
+                  <FormattedMessage id="Lang.German" defaultMessage="German" />
+                </label>
+                &emsp; &emsp; &emsp;
+                <span className="langTag">
+                  <img src={FlagFile.Germany} />
+                  (Deutsch) &emsp;
+                </span>
+              </li>
+
+              {/* JAPANESE */}
+              <li className="LanguageTranslation">
+                &emsp;
+                <input
+                  id="Japanese"
+                  name="radio-group"
+                  type="radio"
+                  value="ja"
+                  checked={this.props.settings.locale === "ja"}
+                  onClick={() => this.changeLocale("ja")}
+                />
+                &emsp;
+                <label htmlFor="Japanese">
+                  <FormattedMessage
+                    id="Lang.Japanese"
+                    defaultMessage="Japanese"
+                  />
+                </label>
+                &emsp; &emsp; &emsp;
+                <span className="langTag">
+                  <img src={FlagFile.Japan} />
+                  (日本人) &emsp;
+                </span>
+              </li>
+
+              {/* FRENCH */}
+              <li className="LanguageTranslation">
+                &emsp;
+                <input
+                  id="French"
+                  name="radio-group"
+                  type="radio"
+                  value="fr"
+                  checked={this.props.settings.locale === "fr"}
+                  onClick={() => this.changeLocale("fr")}
+                />
+                &emsp;
+                <label htmlFor="French">
+                  <FormattedMessage id="Lang.French" defaultMessage="French" />
+                </label>
+                &emsp; &emsp; &emsp;
+                <span className="langTag">
+                  <img src={FlagFile.France} />
+                  (Français) &emsp;
+                </span>
+              </li>
+            </ul>
+            <div className="langsetter">
+              {/* <button
+              type="button"
+              className="feebutton"
+              onClick={() => this.props.SwitchLocale()}
+            >
+              <FormattedMessage id="Settings.Set" defaultMesage="Set" />
+            </button> */}
+            </div>
+          </Modal>
+          <div className="field">
+            <label>
+              <FormattedMessage
+                id="Settings.Language"
+                defaultMesage="Language"
+              />
+            </label>
+            <div className="langSet">
+              <span className="flag-icon-background flag-icon-gr" />
+              <button
+                type="button"
+                className="Languagebutton"
+                // onClick={() => this.props.SwitchLocale()}
+                onClick={() => this.props.OpenModal3()}
+              >
+                <FormattedMessage
+                  id="Settings.LangButton"
+                  defaultMesage="English"
+                />
+              </button>
+            </div>
+          </div>
 
           <div className="field">
-            <label htmlFor="devmode">Developer Mode</label>
-            <input
-              id="devmode"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateDeveloperMode}
-              data-tooltip="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
-            />
+            <label htmlFor="devmode">
+              <FormattedMessage
+                id="Settings.DeveloperMode"
+                defaultMessage="Developer Mode"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.DevMode"
+              defaultMessage="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
+            >
+              {tt => (
+                <input
+                  id="devmode"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateDeveloperMode}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           {/* <div className="field">
@@ -607,7 +942,10 @@ class SettingsApp extends Component {
               className="button primary"
               onClick={e => this.backupWallet(e)}
             >
-              Backup wallet
+              <FormattedMessage
+                id="Settings.BackupWallet"
+                defaultMessage="Backup Wallet"
+              />
             </button>
           </div>
           <div className="clear-both" />

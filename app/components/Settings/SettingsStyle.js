@@ -8,6 +8,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { ChromePicker } from "react-color";
+import { FormattedMessage } from "react-intl";
 
 // Internal Dependencies
 import * as TYPE from "../../actions/actiontypes";
@@ -210,12 +211,7 @@ class SettingsStyle extends Component {
   }
 
   SaveSettings() {
-    this.props.googleanalytics.SendEvent(
-      "Settings",
-      "Style",
-      "Saved",
-      1
-    );
+    this.props.googleanalytics.SendEvent("Settings", "Style", "Saved", 1);
     require("../../api/settings.js").SaveSettings(this.props.settings);
     this.props.OpenModal("Style Settings Saved");
     setTimeout(() => {
@@ -229,8 +225,14 @@ class SettingsStyle extends Component {
       <div>
         <section id="SettingsStyle">
           <form id="styleForm" className="aligned">
-            <div className="field">
-              <label htmlFor="wallpaper">Wallpaper</label>
+            {" "}
+            <div className="wallpaperDiv">
+              <label htmlFor="wallpaper" className="button">
+                <FormattedMessage
+                  id="Settings.Wallpaper"
+                  defaultMessage="Wallpapar"
+                />
+              </label>
               <input
                 id="wallpaper"
                 accept="image/*"
@@ -239,20 +241,32 @@ class SettingsStyle extends Component {
                 onChange={this.updateWallpaper}
                 data-tooltip="The background wallpaper for your wallet"
               />
-            </div>
+            </div>{" "}
             <div className="field">
-              <label htmlFor="renderGlobe">Render Globe</label>
-              <input
-                id="renderGlobe"
-                type="checkbox"
-                className="switch"
-                checked={this.props.settings.renderGlobe}
-                onChange={() => {
-                  this.props.ToggleGlobeRender();
-                  this.updateRenderGlobe();
-                }}
-                data-tooltip="Render the globe on the overview page"
-              />
+              <label htmlFor="renderGlobe">
+                <FormattedMessage
+                  id="Settings.RenderGlobe"
+                  defaultMessage="Render Globe"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.RenderGlobe"
+                defaultMessage="Render the globe on the Overview page"
+              >
+                {tt => (
+                  <input
+                    id="renderGlobe"
+                    type="checkbox"
+                    className="switch"
+                    checked={this.props.settings.renderGlobe}
+                    onChange={() => {
+                      this.props.ToggleGlobeRender();
+                      this.updateRenderGlobe();
+                    }}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
             <div className="field">
               <label>
@@ -265,20 +279,84 @@ class SettingsStyle extends Component {
                     this.props.setSelectedColorProp(e.target.value);
                   }}
                 >
-                  <option value="MC2">Accent Color 1</option>
-                  <option value="MC4">Accent Color 2</option>
-                  <option value="MC3">Table Header Color)</option>
-                  <option value="MC1">Tool Tip Color </option>
-                  <option value="MC5">Text Color</option>
-                  <option value="panel">Panel Background Color</option>
-                  <option value="NXSlogo">Nexus Logo Color</option>
-                  <option value="iconMenu">Status Icon Color</option>
-                  <option value="footer">Footer Base Color</option>
-                  <option value="footerHover">Footer Hover Color</option>
-                  <option value="footerActive">Footer Active Color</option>
-                  <option value="globeMulti">Globe Color</option>
-                  <option value="globePillar">Globe Pillar Color</option>
-                  <option value="globeArch">Globe Arch Color</option>
+                  <option value="MC2">
+                    <FormattedMessage
+                      id="Cp.AC1"
+                      defaultMessage="Accent Color 1"
+                    />
+                  </option>
+                  <option value="MC4">
+                    <FormattedMessage
+                      id="Cp.AC2"
+                      defaultMessage="Accent Color 2"
+                    />
+                  </option>
+                  <option value="MC3">
+                    <FormattedMessage
+                      id="Cp.THC"
+                      defaultMessage="Table Head Color"
+                    />
+                  </option>
+                  <option value="MC1">
+                    <FormattedMessage
+                      id="Cp.TTC"
+                      defaultMessage="Tooltip Color"
+                    />
+                  </option>
+                  <option value="MC5">
+                    <FormattedMessage id="Cp.TC" defaultMessage="Text Color" />
+                  </option>
+                  <option value="panel">
+                    <FormattedMessage
+                      id="Cp.PBC"
+                      defaultMessage="Panel Background Color"
+                    />
+                  </option>
+                  <option value="NXSlogo">
+                    <FormattedMessage
+                      id="Cp.NLC"
+                      defaultMessage="Nexus Logo Color"
+                    />
+                  </option>
+                  <option value="iconMenu">
+                    <FormattedMessage
+                      id="Cp.SIC"
+                      defaultMessage="Status Icon Color"
+                    />
+                  </option>
+                  <option value="footer">
+                    <FormattedMessage
+                      id="Cp.FBC"
+                      defaultMessage="Footer Base Color"
+                    />
+                  </option>
+                  <option value="footerHover">
+                    <FormattedMessage
+                      id="Cp.FHC"
+                      defaultMessage="Footer Hover Color"
+                    />
+                  </option>
+                  <option value="footerActive">
+                    <FormattedMessage
+                      id="Cp.FAC"
+                      defaultMessage="Footer Active Color"
+                    />
+                  </option>
+                  <option value="globeMulti">
+                    <FormattedMessage id="Cp.GC" defaultMessage="Globe Color" />
+                  </option>
+                  <option value="globePillar">
+                    <FormattedMessage
+                      id="Cp.GPC"
+                      defaultMessage="Globe Pillar Color"
+                    />
+                  </option>
+                  <option value="globeArch">
+                    <FormattedMessage
+                      id="Cp.GAC"
+                      defaultMessage="Globe Arch Color"
+                    />
+                  </option>
                 </select>
               </label>
               <ChromePicker
@@ -296,7 +374,10 @@ class SettingsStyle extends Component {
                 this.SaveSettings();
               }}
             >
-              Save Settings
+              <FormattedMessage
+                id="Settings.SaveSettings"
+                defaultMessage="Save Settings"
+              />
             </button>
             <button
               className="button"
@@ -305,7 +386,10 @@ class SettingsStyle extends Component {
                 this.props.ResetStyle();
               }}
             >
-              Reset Style Settings
+              <FormattedMessage
+                id="Settings.ResetStyle"
+                defaultMessage="Reset Style Settings"
+              />
             </button>
             <div className="clear-both" />
           </form>
