@@ -19,7 +19,8 @@ import { GetSettings, SaveSettings } from "../../api/core";
 const mapStateToProps = state => {
   return {
     ...state.common,
-    ...state.settings
+    ...state.settings,
+    ...state.overview
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -158,7 +159,7 @@ class SettingsStyle extends Component {
     this.props.settings.customStyling[this.props.selectedColorProp];
     switch (this.props.selectedColorProp) {
       case "MC1":
-        return this.props.settings.customStyling.MC1;
+        return this.props.settings.customSrenderGlobetyling.MC1;
         break;
       case "MC2":
         return this.props.settings.customStyling.MC2;
@@ -250,15 +251,17 @@ class SettingsStyle extends Component {
                   defaultMessage="Render Globe"
                 />
               </label>
+              
               <FormattedMessage
-                id="ToolTip.RenderGlobe"
-                defaultMessage="Render the globe on the Overview page"
+                id= {(this.props.webGLEnabled)? "ToolTip.RenderGlobe": "ToolTip.RenderGlobeOpenGLFail"}
+                defaultMessage={(this.props.webGLEnabled)? "Render the globe on the Overview page": "Your Computer does not support OPENGL 2.0"}
               >
                 {tt => (
                   <input
                     id="renderGlobe"
                     type="checkbox"
                     className="switch"
+                    disabled = {(false)?  "": "disabled"}
                     checked={this.props.settings.renderGlobe}
                     onChange={() => {
                       this.props.ToggleGlobeRender();
