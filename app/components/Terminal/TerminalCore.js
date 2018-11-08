@@ -18,7 +18,7 @@ import { Tail } from "../../utils/tail";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common };
+  return { ...state.terminal, ...state.common, ...state.settings };
 };
 const mapDispatchToProps = dispatch => ({
   printCoreOutput: data => dispatch({ type: TYPE.PRINT_TO_CORE, payload: data })
@@ -27,16 +27,13 @@ const mapDispatchToProps = dispatch => ({
 class TerminalCore extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      deamonoutput: ["Started in Manual Deamon Mode"]
-    };
   }
   // React Method (Life cycle hook)
   componentDidMount() {
-    //if (this.props.rpcCallList.length != prevProps.rpcCallList.length) {
-    // this.forceUpdate();
-    //}
-    // this.processDeamonOutput();
+    if (this.props.settings.manualDaemon == true)
+    {
+      return;
+    }
     let datadir;
     if (process.platform === "win32") {
       datadir = process.env.APPDATA + "\\Nexus_Tritium_Data";
@@ -57,7 +54,10 @@ class TerminalCore extends Component {
 
   // todo finish
   componentWillUnmount() {
-    this.tail.unwatch();
+    if (this.tail != undefined)
+    {
+      this.tail.unwatch();
+    }
     clearInterval(this.printCoreOutputTimer);
   }
 
@@ -87,12 +87,16 @@ class TerminalCore extends Component {
     return (
       <div
         id="terminal-core-output"
-        style={{ display: "flex", flexDirection: "column-reverse" }}
+        style={{ display: "flex", flexDirection: (this.props.settings.manualDaemon) ? "column" : "column-reverse" }}
         onScroll={e => {
           e.preventDefault();
         }}
       >
-        {this.props.coreOutput.map((d, i) => {
+        {
+          (this.props.settings.manualDaemon) ?
+          <div>Core in Manual Mode</div>
+          :
+          this.props.coreOutput.map((d, i) => {
           return <div key={i}>{d}</div>;
         })}
       </div>
