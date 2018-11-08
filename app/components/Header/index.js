@@ -437,13 +437,9 @@ class Header extends Component {
     } else {
       if (this.props.heighestPeerBlock > this.props.blocks) {
         return (
-          this.props.settings.messages[this.props.settings.locale][
-            "Header.Synching"
-          ] +
+          this.props.messages[this.props.settings.locale]["Header.Synching"] +
           (this.props.heighestPeerBlock - this.props.blocks).toString() +
-          this.props.settings.messages[this.props.settings.locale][
-            "Header.Blocks"
-          ]
+          this.props.messages[this.props.settings.locale]["Header.Blocks"]
         );
       } else {
         return (

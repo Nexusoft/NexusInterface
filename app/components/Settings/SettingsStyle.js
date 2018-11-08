@@ -221,6 +221,7 @@ class SettingsStyle extends Component {
 
   // Mandatory React method
   render() {
+    console.log(this.props.messages);
     return (
       <div>
         <section id="SettingsStyle">
