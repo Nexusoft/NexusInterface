@@ -198,32 +198,26 @@ class Header extends Component {
                 }
               });
               let indexDefault = accountsList.findIndex(ele => {
-                if ( ele.account == "" || ele.account == "default")
-                {
+                if (ele.account == "" || ele.account == "default") {
                   return ele;
                 }
               });
 
-              if (e.account === "" || e.account === "default")
-              {
+              if (e.account === "" || e.account === "default") {
                 if (index === -1 && indexDefault === -1) {
                   accountsList.push({
                     account: "default",
                     addresses: [e.address]
                   });
-                }
-                else
-                {
+                } else {
                   accountsList[indexDefault].addresses.push(e.address);
                 }
-              }
-
-              else{
-                if (index === -1 ) {
+              } else {
+                if (index === -1) {
                   accountsList.push({
                     account: e.account,
                     addresses: [e.address]
-                    });
+                  });
                 } else {
                   accountsList[index].addresses.push(e.address);
                 }

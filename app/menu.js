@@ -104,7 +104,10 @@ export default class MenuBuilder {
         {
           label: "Download Recent Database",
           click() {
-            if (self.props.connections !== undefined) {
+            if (
+              self.props.connections !== undefined &&
+              !GetSettings().manualDaemon
+            ) {
               let configuration = require("./api/configuration");
               self.props.OpenBootstrapModal(true);
               configuration.BootstrapRecentDatabase(self);
@@ -139,7 +142,7 @@ export default class MenuBuilder {
         {
           label: "Close Window Keep Daemon",
           click() {
-            log.info('menu.js Darwin template: close and keep');
+            log.info("menu.js Darwin template: close and keep");
             let settings = GetSettings();
             settings.keepDaemon = true;
             SaveSettings(settings);
@@ -150,7 +153,7 @@ export default class MenuBuilder {
         {
           label: "Close Wallet and Daemon",
           click() {
-            log.info('menu.js darwin template: close and kill');
+            log.info("menu.js darwin template: close and kill");
             let settings = GetSettings();
             if (settings.manualDaemon != true) {
               RPC.PROMISE("stop", []).then(payload => {
@@ -161,7 +164,7 @@ export default class MenuBuilder {
             }
             core.stop();
             remote.getCurrentWindow().close();
-          },
+          }
         },
         {
           type: "separator"
@@ -330,7 +333,10 @@ export default class MenuBuilder {
           {
             label: "Download Recent Database",
             click() {
-              if (self.props.connections !== undefined) {
+              if (
+                self.props.connections !== undefined &&
+                !GetSettings().manualDaemon
+              ) {
                 let configuration = require("./api/configuration");
                 self.props.OpenBootstrapModal(true);
                 configuration.BootstrapRecentDatabase(self);
@@ -352,7 +358,10 @@ export default class MenuBuilder {
                 BackupDir = BackupDir.replace(/\\/g, "/");
               }
               let ifBackupDirExists = fs.existsSync(BackupDir);
-              if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+              if (
+                ifBackupDirExists == undefined ||
+                ifBackupDirExists == false
+              ) {
                 fs.mkdirSync(BackupDir);
               }
               let didopen = shell.openItem(BackupDir);
@@ -381,7 +390,7 @@ export default class MenuBuilder {
           {
             label: "Close Window Keep Daemon",
             click() {
-              log.info('menu.js default template: close and keep');
+              log.info("menu.js default template: close and keep");
               let settings = GetSettings();
               settings.keepDaemon = true;
               SaveSettings(settings);
@@ -391,7 +400,7 @@ export default class MenuBuilder {
           {
             label: "Close Wallet and Daemon",
             click() {
-              log.info('menu.js default template: close and kill');
+              log.info("menu.js default template: close and kill");
               let settings = GetSettings();
               if (settings.manualDaemon != true) {
                 RPC.PROMISE("stop", []).then(payload => {
@@ -399,7 +408,7 @@ export default class MenuBuilder {
                     remote.getCurrentWindow().close();
                   }, 1000);
                 });
-              remote.getCurrentWindow().close();
+                remote.getCurrentWindow().close();
               }
             }
           }
