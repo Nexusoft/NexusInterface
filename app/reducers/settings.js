@@ -27,7 +27,7 @@ const initialState = {
     windowWidth: 1600,
     windowHeight: 1388,
     locale: "en",
-    messages: messages,
+    // messages: messages,
     devMode: false,
     wallpaper: defaultWallpaperPath,
     renderGlobe: true,
@@ -49,6 +49,7 @@ const initialState = {
       globeMultiColorRGB: "rgb(0,151,228)",
       maxMindCopyright: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
     },
+
     NXSlogoRGB: "rgb(0,174,239)",
     footerRGB: "rgb(0,174,239)",
     footerActiveRGB: "rgb(0,174,239)",
@@ -59,7 +60,9 @@ const initialState = {
     saveSettings: false,
     styleChangeFlag: false,
     selectedColorProp: "MC1"
-  }
+  },
+
+  messages: messages
 };
 
 export default (state = initialState, action) => {

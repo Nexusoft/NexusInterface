@@ -176,9 +176,7 @@ class Transactions extends Component {
             eachAddress.name +
               "'s" +
               `${" "}` +
-              this.props.settings.messages[this.props.settings.locale][
-                "Footer.Address"
-              ]
+              this.props.messages[this.props.settings.locale]["Footer.Address"]
           );
         }
       }
@@ -187,7 +185,7 @@ class Transactions extends Component {
       for (let eachaddress in this.props.myAccounts[key].addresses) {
         tempaddpress.set(
           this.props.myAccounts[key].addresses[eachaddress],
-          this.props.settings.messages[this.props.settings.locale][
+          this.props.messages[this.props.settings.locale][
             "transactions.MyAddress"
           ] + this.props.myAccounts[key].account
         );
@@ -458,7 +456,7 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: this.props.settings.messages[this.props.settings.locale][
+        label: this.props.messages[this.props.settings.locale][
           "transactions.MoreDetails"
         ],
         click() {
@@ -496,12 +494,10 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: this.props.settings.messages[this.props.settings.locale][
-          "Settings.Copy"
-        ],
+        label: this.props.messages[this.props.settings.locale]["Settings.Copy"],
         submenu: [
           {
-            label: this.props.settings.messages[this.props.settings.locale][
+            label: this.props.messages[this.props.settings.locale][
               "AddressBook.Address"
             ],
             click() {
@@ -509,7 +505,7 @@ class Transactions extends Component {
             }
           },
           {
-            label: this.props.settings.messages[this.props.settings.locale][
+            label: this.props.messages[this.props.settings.locale][
               "AddressBook.Account"
             ],
 
@@ -518,7 +514,7 @@ class Transactions extends Component {
             }
           },
           {
-            label: this.props.settings.messages[this.props.settings.locale][
+            label: this.props.messages[this.props.settings.locale][
               "sendReceive.TableAmount"
             ],
             click() {
@@ -1137,26 +1133,22 @@ class Transactions extends Component {
     };
 
     if (inData.category == "receive") {
-      inData.category = this.props.settings.messages[
-        this.props.settings.locale
-      ]["transactions.Receive"];
+      inData.category = this.props.messages[this.props.settings.locale][
+        "transactions.Receive"
+      ];
     } else if (inData.category == "send") {
-      inData.category = this.props.settings.messages[
-        this.props.settings.locale
-      ]["transactions.Sent"];
+      inData.category = this.props.messages[this.props.settings.locale][
+        "transactions.Sent"
+      ];
     }
     return (
       inData.category +
       `\n ${
-        this.props.settings.messages[this.props.settings.locale][
-          "transactions.AMOUNT"
-        ]
+        this.props.messages[this.props.settings.locale]["transactions.AMOUNT"]
       }` +
       inData.b +
       `\n ${
-        this.props.settings.messages[this.props.settings.locale][
-          "transactions.TIME"
-        ]
+        this.props.messages[this.props.settings.locale]["transactions.TIME"]
       }` +
       inData.a.toLocaleString(this.props.settings.locale, options)
     );

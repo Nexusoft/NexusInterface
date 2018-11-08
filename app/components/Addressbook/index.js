@@ -72,14 +72,12 @@ class Addressbook extends Component {
   addressbookContextMenu() {
     const txtTemplate = [
       {
-        label: this.props.settings.messages[this.props.settings.locale][
-          "Settings.Copy"
-        ],
+        label: this.props.messages[this.props.settings.locale]["Settings.Copy"],
         accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
-        label: this.props.settings.messages[this.props.settings.locale][
+        label: this.props.messages[this.props.settings.locale][
           "Settings.Paste"
         ],
         accelerator: "CmdOrCtrl+V",
@@ -89,14 +87,12 @@ class Addressbook extends Component {
 
     const acctTemplate = [
       {
-        label: this.props.settings.messages[this.props.settings.locale][
-          "Settings.Copy"
-        ],
+        label: this.props.messages[this.props.settings.locale]["Settings.Copy"],
         accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
-        label: this.props.settings.messages[this.props.settings.locale][
+        label: this.props.messages[this.props.settings.locale][
           "Settings.Paste"
         ],
 
@@ -104,7 +100,7 @@ class Addressbook extends Component {
         role: "paste"
       },
       {
-        label: this.props.settings.messages[this.props.settings.locale][
+        label: this.props.messages[this.props.settings.locale][
           "AddressBook.DeleteContact"
         ],
 
@@ -118,7 +114,7 @@ class Addressbook extends Component {
       if (
         confirm(
           `${
-            this.props.settings.messages[this.props.settings.locale][
+            this.props.messages[this.props.settings.locale][
               "AddressBook.AreYouSureDelete"
             ]
           } ${this.props.addressbook[this.props.actionItem].name}?`
@@ -130,21 +126,19 @@ class Addressbook extends Component {
 
     const addTemplate = [
       {
-        label: this.props.settings.messages[this.props.settings.locale][
-          "Settings.Copy"
-        ],
+        label: this.props.messages[this.props.settings.locale]["Settings.Copy"],
         accelerator: "CmdOrCtrl+C",
         role: "copy"
       },
       {
-        label: this.props.settings.messages[this.props.settings.locale][
+        label: this.props.messages[this.props.settings.locale][
           "Settings.Paste"
         ],
         accelerator: "CmdOrCtrl+V",
         role: "paste"
       },
       {
-        label: this.props.settings.messages[this.props.settings.locale][
+        label: this.props.messages[this.props.settings.locale][
           "AddressBook.DeleteAddress"
         ],
         click(item, focusedWindow) {
@@ -156,7 +150,7 @@ class Addressbook extends Component {
       if (
         confirm(
           `${
-            this.props.settings.messages[this.props.settings.locale][
+            this.props.messages[this.props.settings.locale][
               "AddressBook.ThisAddress"
             ]
           }? ${
@@ -288,7 +282,7 @@ class Addressbook extends Component {
   MyAddressesTable() {
     let filteredAddress = this.props.myAccounts.filter(acct => {
       if (acct.account === "") {
-        let dummie = this.props.settings.messages[this.props.settings.locale][
+        let dummie = this.props.messages[this.props.settings.locale][
           "AddressBook.MyAccount"
         ];
         return (
@@ -311,7 +305,7 @@ class Addressbook extends Component {
                 {acct.account === "" ? (
                   <span>
                     {
-                      this.props.settings.messages[this.props.settings.locale][
+                      this.props.messages[this.props.settings.locale][
                         "AddressBook.MyAccount"
                       ]
                     }
@@ -328,9 +322,9 @@ class Addressbook extends Component {
                     </span>
                     <span key={address + i} className="tooltip">
                       {
-                        this.props.settings.messages[
-                          this.props.settings.locale
-                        ]["AddressBook.Copy"]
+                        this.props.messages[this.props.settings.locale][
+                          "AddressBook.Copy"
+                        ]
                       }
                     </span>
                   </td>
@@ -734,12 +728,12 @@ class Addressbook extends Component {
                   <span className="contactAddresses">
                     {addTotal}{" "}
                     {addTotal > 1
-                      ? this.props.settings.messages[
-                          this.props.settings.locale
-                        ]["AddressBook.Addresses"]
-                      : this.props.settings.messages[
-                          this.props.settings.locale
-                        ]["AddressBook.Address"]}
+                      ? this.props.messages[this.props.settings.locale][
+                          "AddressBook.Addresses"
+                        ]
+                      : this.props.messages[this.props.settings.locale][
+                          "AddressBook.Address"
+                        ]}
                   </span>
                 </div>
               );
@@ -883,9 +877,9 @@ class Addressbook extends Component {
                       ? `${
                           this.props.addressbook[this.props.selected].name
                         }${"'s"}${"  "}${
-                          this.props.settings.messages[
-                            this.props.settings.locale
-                          ]["AddressBook.Address"]
+                          this.props.messages[this.props.settings.locale][
+                            "AddressBook.Address"
+                          ]
                         }`
                       : add.label}
                     :
