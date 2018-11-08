@@ -219,32 +219,26 @@ class Addressbook extends Component {
                 }
               });
               let indexDefault = accountsList.findIndex(ele => {
-                if ( ele.account == "" || ele.account == "default")
-                {
+                if (ele.account == "" || ele.account == "default") {
                   return ele;
                 }
               });
 
-              if (e.account === "" || e.account === "default")
-              {
+              if (e.account === "" || e.account === "default") {
                 if (index === -1 && indexDefault === -1) {
                   accountsList.push({
                     account: "default",
                     addresses: [e.address]
                   });
-                }
-                else
-                {
+                } else {
                   accountsList[indexDefault].addresses.push(e.address);
                 }
-              }
-
-              else{
-                if (index === -1 ) {
+              } else {
+                if (index === -1) {
                   accountsList.push({
                     account: e.account,
                     addresses: [e.address]
-                    });
+                  });
                 } else {
                   accountsList[index].addresses.push(e.address);
                 }
@@ -266,7 +260,7 @@ class Addressbook extends Component {
     event.preventDefault();
     let target = event.currentTarget;
     let address = event.target.innerText;
-    console.log(target, address);
+
     // create a temporary input element and add it to the list item (no one will see it)
     let input = document.createElement("input");
     input.type = "text";
@@ -311,8 +305,6 @@ class Addressbook extends Component {
     return (
       <div id="Addresstable-wraper">
         {filteredAddress.map((acct, i) => {
-          console.log(acct);
-          
           return (
             <tr>
               <td key={acct + i} className="tdAccounts">
@@ -778,7 +770,7 @@ class Addressbook extends Component {
   localTimeFormater() {
     let d = new Date();
     let utc = new Date().getTimezoneOffset();
-    console.log(parseInt(this.props.addressbook[this.props.selected].timezone));
+
     d.setMinutes(d.getMinutes() + utc);
     d.setMinutes(
       d.getMinutes() +
@@ -1214,13 +1206,11 @@ class Addressbook extends Component {
       "Import",
       1
     );
-    console.log("you got it again: ", path);
+
     csv()
       .fromFile(path)
       .then(jsonObj => {
-        // console.log(jsonObj);
         for (var i = 0; i < jsonObj.length; i++) {
-          console.log(jsonObj[i]);
           // dispatch a new account... (map it )
           var name = jsonObj[i].AccountName;
           var phone = jsonObj[i].PhoneNumber;

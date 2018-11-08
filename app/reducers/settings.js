@@ -275,7 +275,6 @@ export default (state = initialState, action) => {
         iconMenuRGB: action.payload.hex
       };
     case TYPE.CHANGE_GLOBE_PILLAR_COLOR:
-      console.log(action.payload);
       return {
         ...state,
         settings: {
@@ -288,7 +287,6 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.CHANGE_GLOBE_ARCH_COLOR:
-      console.log("arch" + action.payload);
       return {
         ...state,
         settings: {

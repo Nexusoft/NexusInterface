@@ -196,7 +196,6 @@ export const bittrexDepthLoader = () => {
 // actions creators for candlestick data
 
 export const binanceCandlestickLoader = any => {
-  console.log(any);
   return dispatch => {
     Request(
       {

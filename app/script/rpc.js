@@ -75,16 +75,15 @@ export const GETHOST = () => {
   let settings = require("../api/settings").GetSettings();
   if (settings.manualDaemon == true) {
     let savedport = core.port;
-    if (settings.manualDaemonPort != undefined){
+    if (settings.manualDaemonPort != undefined) {
       savedport = settings.manualDaemonPort;
     }
     let savedIP = core.ip;
-    if (settings.manualDaemonIP != undefined){
+    if (settings.manualDaemonIP != undefined) {
       savedIP = settings.manualDaemonIP;
     }
     return "http://" + savedIP + ":" + savedport;
-  }
-  else{
+  } else {
     return core.host;
   }
 };
@@ -94,13 +93,12 @@ export const GETUSER = () => {
   let settings = require("../api/settings").GetSettings();
   if (settings.manualDaemon == true) {
     let saveduser =
-    settings.manualDaemonUser === undefined
-      ? core.user
-      : settings.manualDaemonUser;
+      settings.manualDaemonUser === undefined
+        ? core.user
+        : settings.manualDaemonUser;
 
-      return saveduser;
-  }
-  else{
+    return saveduser;
+  } else {
     return core.user;
   }
 };
@@ -110,13 +108,12 @@ export const GETPASSWORD = () => {
   let settings = require("../api/settings").GetSettings();
   if (settings.manualDaemon == true) {
     let savedpassword =
-    settings.manualDaemonPassword === undefined
-      ? core.password
-      : settings.manualDaemonPassword;
+      settings.manualDaemonPassword === undefined
+        ? core.password
+        : settings.manualDaemonPassword;
 
-      return savedpassword;
-  }
-  else{
+    return savedpassword;
+  } else {
     return core.password;
   }
 };
@@ -173,8 +170,6 @@ export const PROMISE = (cmd, args) => {
 
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
-      //console.log(args);
-      //console.log(PostData);
       if (ResponseObject.status == 404) {
         reject("RPC Command {" + cmd + "} Not Found");
       }

@@ -14,7 +14,6 @@ const mapStateToProps = state => {
 };
 
 export function IntlWrapper(props) {
-  console.log(props.settings.locale);
   return (
     <IntlProvider
       locale={props.settings.locale}

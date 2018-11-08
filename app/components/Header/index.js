@@ -60,16 +60,16 @@ class Header extends Component {
     if (this.props.unlocked_until !== undefined) {
       encryptionStatus = true;
     }
-    console.log(configuration.GetAppResourceDir());
+
     this.props.SetMarketAveData();
     this.props.LoadAddressBook();
 
     menuBuilder.buildMenu(self);
-    this.loadMyAccounts();
+
     if (tray === null) this.setupTray();
     const core = electron.remote.getGlobal("core");
     this.props.GetInfoDump();
-    console.log(core);
+
     self.set = setInterval(function() {
       self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
@@ -104,6 +104,13 @@ class Header extends Component {
     } else if (nextProps.unlocked_until >= 0) {
       this.props.Unlock();
       this.props.Encrypted();
+    }
+
+    if (
+      this.props.connections === undefined &&
+      nextProps.connections !== undefined
+    ) {
+      this.loadMyAccounts();
     }
 
     if (nextProps.blocks !== this.props.blocks) {
@@ -159,11 +166,6 @@ class Header extends Component {
   }
 
   bootstrapModalController() {
-    console.log(
-      this.props.settings.bootstrap,
-      this.props.connections,
-      this.props.BootstrapModal
-    );
     if (
       (this.props.settings.bootstrap && this.props.connections !== undefined) ||
       this.props.BootstrapModal
@@ -243,7 +245,7 @@ class Header extends Component {
   setupTray() {
     let trayImage = "";
     let mainWindow = electron.remote.getCurrentWindow();
-    console.log(electron.remote.getCurrentWindow());
+
     const path = require("path");
     const app = electron.app || electron.remote.app;
 

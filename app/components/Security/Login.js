@@ -62,7 +62,7 @@ class Login extends Component {
     let unlockUntill = Math.round(
       (unlockDate.getTime() - today.getTime()) / 1000
     );
-    console.log(unlockUntill);
+
     // this.props.busy(true);
 
     // if (this.props.stakingFlag) {
@@ -94,7 +94,6 @@ class Login extends Component {
     // } else {
 
     if (unlockUntill !== NaN && unlockUntill > 3600) {
-      console.log("unlocked");
       RPC.PROMISE("walletpassphrase", [pass.value, unlockUntill, false])
         .then(payload => {
           this.props.wipe();
@@ -140,7 +139,6 @@ class Login extends Component {
 
   // Mandatory React method
   render() {
-    console.log(this.props);
     if (this.props.loggedIn) {
       return (
         <Redirect to={this.props.match.path.replace("/Login", "/Security")} />

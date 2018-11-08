@@ -596,7 +596,11 @@ class Transactions extends Component {
     incomingMyAccounts.forEach(element => {
       listedaccounts.push(element.account);
       promisList.push(
-        RPC.PROMISE("listtransactions", [element.account === "default" ? "" : element.account , 9999, 0])
+        RPC.PROMISE("listtransactions", [
+          element.account === "default" ? "" : element.account,
+          9999,
+          0
+        ])
       );
     });
     let tempWalletTransactions = [];
@@ -947,8 +951,6 @@ class Transactions extends Component {
 
   // What happens when you select something in the table
   tableSelectCallback(e, indata) {
-    console.log(e.target.innerText);
-    console.log(indata.original.category);
     //e.target.select();
     //document.execCommand('copy');
     //this.setState({
@@ -1528,7 +1530,6 @@ class Transactions extends Component {
 
   // Mandatory React method
   render() {
-    console.log(this.props.settings.messages[this.props.settings.locale]);
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();
     const VictoryZoomVoronoiContainer = createContainer("voronoi", "zoom");

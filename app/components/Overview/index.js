@@ -83,7 +83,8 @@ const mapDispatchToProps = dispatch => ({
   toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
   ignoreEncryptionWarning: () =>
     dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING }),
-  setWebGLEnabled: isEnabled => dispatch({type: TYPE.SET_WEBGL_ENABLED, payload: isEnabled})
+  setWebGLEnabled: isEnabled =>
+    dispatch({ type: TYPE.SET_WEBGL_ENABLED, payload: isEnabled })
 });
 
 class Overview extends Component {
@@ -93,12 +94,11 @@ class Overview extends Component {
     if (WEBGL.isWebGLAvailable()) {
       this.props.setWebGLEnabled(true);
     } else {
-        this.props.setWebGLEnabled(true);
-        var warning = WEBGL.getWebGLErrorMessage();
-        console.error(warning);
+      this.props.setWebGLEnabled(true);
+      var warning = WEBGL.getWebGLErrorMessage();
+      console.error(warning);
     }
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
-    console.log(intlReducer);
 
     if (this.props.googleanalytics != null) {
       this.props.googleanalytics.SendScreen("Overview");
@@ -114,14 +114,12 @@ class Overview extends Component {
       let newDate = new Date();
       this.props.BlockDate(newDate);
     }
-    
 
     if (this.props.saveSettingsFlag) {
       require("../../api/settings.js").SaveSettings(this.props.settings);
     }
 
-    if (this.props.webGLEnabled == false)
-    {
+    if (this.props.webGLEnabled == false) {
       return;
     }
 
@@ -360,7 +358,11 @@ class Overview extends Component {
   }
 
   returnIfGlobeEnabled() {
-    if (this.props.settings.acceptedagreement == false || this.props.settings.renderGlobe == false || this.props.webGLEnabled == false) {
+    if (
+      this.props.settings.acceptedagreement == false ||
+      this.props.settings.renderGlobe == false ||
+      this.props.webGLEnabled == false
+    ) {
       return null;
     } else {
       return [
@@ -457,9 +459,6 @@ class Overview extends Component {
 
   // Mandatory React method
   render() {
-    // console.log(
-    //   this.props.blockDate.toLocaleString(this.props.settings.locale)
-    // );
     return (
       <div id="overviewPage">
         <Modal

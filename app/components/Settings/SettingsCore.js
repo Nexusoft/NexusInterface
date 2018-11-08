@@ -431,7 +431,6 @@ class SettingsCore extends Component {
 
   // Mandatory React method
   render() {
-    // console.log(this.props.settings.messages[this.props.settings.locale]);
     return (
       <section id="core">
         <Modal

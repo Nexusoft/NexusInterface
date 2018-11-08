@@ -89,7 +89,7 @@ export default class MenuBuilder {
           click() {
             let fs = require("fs");
             let BackupDir = process.env.HOME + "/NexusBackups";
-            console.log(process.env);
+
             if (process.platform === "win32") {
               BackupDir = process.env.USERPROFILE + "/NexusBackups";
               BackupDir = BackupDir.replace(/\\/g, "/");

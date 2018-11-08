@@ -71,10 +71,8 @@ function SetCoreParameters(settings) {
     user = user;
     password = password;
   }
-    verbose =
-      settings.verboseLevel === undefined
-        ? verbose
-        : settings.verboseLevel;
+  verbose =
+    settings.verboseLevel === undefined ? verbose : settings.verboseLevel;
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push("-rpcuser=" + user);
@@ -239,13 +237,11 @@ class Core extends EventEmitter {
   get isresponding() {
     return responding;
   }
-  get ip()
-  {
+  get ip() {
     return ip;
   }
 
-  get port()
-  {
+  get port() {
     return port;
   }
 
@@ -271,7 +267,7 @@ class Core extends EventEmitter {
   // start: Start up the core with necessary parameters and return the spawned process
   start() {
     console.log("Core Start Initiated");
-    console.log(coreprocess);
+
     if (coreprocess != null) return;
     let settings = require("./settings").GetSettings();
     let parameters = SetCoreParameters(settings);
@@ -342,15 +338,14 @@ class Core extends EventEmitter {
       //_this.removeListener('close', _this.onClose);
       coreprocess = null;
       responding = false;
-      if (callback != undefined) 
-      {
+      if (callback != undefined) {
         callback();
       }
     });
     coreprocess.kill();
     this.emit("stopping");
   }
- 
+
   // restart: Restart the core process
   restart() {
     var _this = this;

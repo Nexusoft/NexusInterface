@@ -30,7 +30,6 @@ configuration.Read = function(filename) {
   var fs = require("fs");
   const path = require("path");
   try {
-    // console.log(this.GetAppDataDirectory() + filename);
     return fs.readFileSync(path.join(this.GetAppDataDirectory(), filename));
   } catch (err) {
     console.log("Error reading file: " + filename + " => " + err);

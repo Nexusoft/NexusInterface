@@ -97,7 +97,6 @@ class TerminalConsole extends Component {
       //splitInput[index] = splitInput[index].replace(/['"`]/g,"");
     }
 
-    //console.log(splitInput);
     /// this is the argument array
     let RPCArguments = [];
     this.props.addToHistory(splitInput[0]);
@@ -156,7 +155,13 @@ class TerminalConsole extends Component {
           }
         })
         .catch(error => {
-          tempConsoleOutput.push("Error: " + [error.error.message] + "(errorcode " + error.error.code + ")");
+          tempConsoleOutput.push(
+            "Error: " +
+              [error.error.message] +
+              "(errorcode " +
+              error.error.code +
+              ")"
+          );
           this.props.printToConsole(tempConsoleOutput);
         });
     } else {

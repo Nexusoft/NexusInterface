@@ -225,7 +225,6 @@ class SendRecieve extends Component {
   }
 
   nxsAmount(e, isNxs) {
-    console.log(this.props.USD);
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === "")) {
       if (isNxs) {
         let Usd = e.target.value * this.calculateUSDvalue();
@@ -305,9 +304,10 @@ class SendRecieve extends Component {
                 RPC.PROMISE("sendtoaddress", [
                   this.props.Address,
                   parseFloat(this.props.Amount)
-                ]).then(payoad => console.log(payload));
-                this.props.clearForm();
-                this.props.busy();
+                ]).then(payoad => {
+                  this.props.clearForm();
+                  this.props.busy();
+                });
               }
             } else {
               this.props.busy();
@@ -333,7 +333,6 @@ class SendRecieve extends Component {
     this.props.busy();
     let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 1) {
-      console.log("tree");
       RPC.PROMISE("sendmany", [this.props.SelectedAccount, this.props.Queue])
         .then(payoad => {
           this.props.busy();
@@ -344,7 +343,6 @@ class SendRecieve extends Component {
           this.props.busy();
         });
     } else if (Object.values(this.props.Queue)[0] > 0) {
-      console.log("pee");
       RPC.PROMISE("sendtoaddress", [
         keyCheck[0],
         Object.values(this.props.Queue)[0]
@@ -394,10 +392,8 @@ class SendRecieve extends Component {
   }
   validateAddToQueue() {
     if (!(this.props.Address === "") && this.props.Amount > 0) {
-      console.log(this.props.Address);
       RPC.PROMISE("validateaddress", [this.props.Address])
         .then(payload => {
-          console.log(payload);
           if (payload.isvalid) {
             if (!payload.ismine) {
               this.props.addToQueue({
@@ -531,11 +527,10 @@ class SendRecieve extends Component {
         key: e,
         val: values[i]
       };
-      console.log(newObj);
+
       return newObj;
     });
 
-    console.log(Keys, values, queueArray);
     return queueArray.map((e, i) => {
       return (
         <tr key={i}>
@@ -888,8 +883,6 @@ class SendRecieve extends Component {
   render() {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
-      console.log(this.props.sendagain);
-
       this.props.SetSendAgainData(null);
     }
     return (

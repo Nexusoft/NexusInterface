@@ -118,7 +118,7 @@ export default (DAT.Globe = function(container, opts) {
     scene = new THREE.Scene();
 
     var geometry = new THREE.SphereGeometry(200, 40, 30);
-    
+
     shader = Shaders["earth"];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
     let colormoddd = new THREE.Color(colorGlobe);
@@ -127,14 +127,20 @@ export default (DAT.Globe = function(container, opts) {
     let globeB = colormoddd.b / 1;
 
     //uniforms["texture"].value = new THREE.TextureLoader().load(world);
-    uniforms["_texture"] = {type: "t",value: new THREE.TextureLoader().load(world) };
-    uniforms["colorMod"] = { type: "v4", value: new THREE.Vector4( globeR, globeG, globeB, 1.0 ) };
+    uniforms["_texture"] = {
+      type: "t",
+      value: new THREE.TextureLoader().load(world)
+    };
+    uniforms["colorMod"] = {
+      type: "v4",
+      value: new THREE.Vector4(globeR, globeG, globeB, 1.0)
+    };
 
     // imgDir + "world.jpg"
     material = new THREE.ShaderMaterial({
       uniforms: uniforms,
       vertexShader: shader.vertexShader,
-      fragmentShader: shader.fragmentShader,
+      fragmentShader: shader.fragmentShader
     });
 
     mesh = new THREE.Mesh(geometry, material);
@@ -460,17 +466,15 @@ export default (DAT.Globe = function(container, opts) {
     //   prevH = event.target.innerHeight;
     //   prevW = event.target.innerWidth;
     // }
-    // console.log(scene);
+
     // var glb = scene.getObjectByName("globeObj");
     // glb.scale(.5,.5);
-    // console.log(event);
+
     // glb.scale.x = scale;
     // glb.scale.y = scale;
     // glb.scale.z = scale;
-    // console.log(glb);
-    // console.log(scene);
+
     // scene.scale = new Vector3(.9,.9,.9); // vector3 undefined might revisit.
-    // console.log(container);
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();

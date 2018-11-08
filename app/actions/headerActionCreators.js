@@ -23,13 +23,7 @@ export const GetInfoDump = () => {
       .then(payload => {
         dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload });
       })
-      .catch(err =>
-        console.log(
-          "caught",
-          err,
-          "-------------------------------------------------------------------------------------"
-        )
-      );
+      .catch(err => console.log(err));
   };
 };
 
