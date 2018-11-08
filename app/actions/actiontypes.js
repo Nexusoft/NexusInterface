@@ -58,6 +58,8 @@ export const CLEAR_SEARCHBAR = "CLEAR_SEARCHBAR";
 export const ADD_RPC_CALL = "ADD_RPC_CALL";
 export const SET_MKT_AVE_DATA = "SET_MKT_AVE_DATA";
 export const OPEN_BOOTSTRAP_MODAL = "OPEN_BOOTSTRAP_MODAL";
+export const UPDATE_LOCALES = "UPDATE_LOCALES";
+export const SWITCH_LOCALES = "SWITCH_LOCALES";
 
 // Send
 export const ADD_TO_QUEUE = "ADD_TO_QUEUE";

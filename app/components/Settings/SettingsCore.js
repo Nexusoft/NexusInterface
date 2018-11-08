@@ -10,6 +10,8 @@ import { remote } from "electron";
 import { access } from "fs";
 import { connect } from "react-redux";
 import Modal from "react-responsive-modal";
+import { FormattedMessage } from "react-intl";
+import * as FlagFile from "../../Language/LanguageFlags";
 
 // Internal Dependencies
 import styles from "./style.css";
@@ -22,7 +24,8 @@ import ContextMenuBuilder from "../../contextmenu";
 const mapStateToProps = state => {
   return {
     ...state.common,
-    ...state.settings
+    ...state.settings,
+    ...state.intl
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -31,13 +34,26 @@ const mapDispatchToProps = dispatch => ({
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
-  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   OpenModal2: type => {
     dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
   },
+  OpenModal3: type => {
+    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
+  },
   CloseModal2: type => {
     dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
-  }
+  },
+  CloseModal3: type => {
+    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
+  },
+  localeChange: returnSelectedLocale => {
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
+  },
+  SwitchLocale: locale => {
+    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
+  },
+
+  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL })
 });
 
 class SettingsCore extends Component {
@@ -405,212 +421,606 @@ class SettingsCore extends Component {
     core.restart();
   }
 
+  // changeLocale(locale) {
+  //   let settings = require("../../api/settings.js").GetSettings();
+  //   settings.locale = locale;
+  //   this.props.setSettings(settings);
+  //   this.props.SwitchLocale(locale);
+  //   require("../../api/settings.js").SaveSettings(settings);
+  // }
+
   // Mandatory React method
   render() {
+    // console.log(this.props.settings.messages[this.props.settings.locale]);
     return (
       <section id="core">
         <Modal
           center
-          classNames={{ modal: "custom-modal2" }}
+          classNames={{ modal: "custom-modal5" }}
+          showCloseIcon={true}
+          open={this.props.openThirdModal}
+          onClose={this.props.CloseModal3}
+        >
+          <ul className="langList">
+            {/* ENGLISH */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="English"
+                name="radio-group"
+                type="radio"
+                value="en"
+                checked={this.props.settings.locale === "en"}
+                onClick={() => this.changeLocale("en")}
+
+                // onChange={e => this.changeLocale(e.target.value)}
+              />
+              &emsp;
+              <label htmlFor="English">
+                <FormattedMessage id="Lang.English" defaultMessage="English" />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.America} />
+                (English, US) &emsp;
+              </span>
+            </li>
+
+            {/* RUSSIAN */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="Russian"
+                name="radio-group"
+                type="radio"
+                value="ru"
+                checked={this.props.settings.locale === "ru"}
+                onClick={() => this.changeLocale("ru")}
+              />
+              &emsp;
+              <label htmlFor="Russian">
+                <FormattedMessage id="Lang.Russian" defaultMessage="Russian" />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.Russia} />
+                (Pусский) &emsp;
+              </span>
+            </li>
+
+            {/* SPANISH */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="Spanish"
+                name="radio-group"
+                type="radio"
+                value="es"
+                checked={this.props.settings.locale === "es"}
+                onClick={() => this.changeLocale("es")}
+              />
+              &emsp;
+              <label htmlFor="Spanish">
+                <FormattedMessage id="Lang.Spanish" defaultMessage="Spanish" />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.Spain} />
+                (Español) &emsp;
+              </span>
+            </li>
+
+            {/* KOREAN */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="Korean"
+                name="radio-group"
+                type="radio"
+                value="ko"
+                checked={this.props.settings.locale === "ko"}
+                onClick={() => this.changeLocale("ko")}
+              />
+              &emsp;
+              <label htmlFor="Korean">
+                <FormattedMessage id="Lang.Korean" defaultMessage="Korean" />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.Korea} />
+                (한국어) &emsp;
+              </span>
+            </li>
+
+            {/* GERMAN */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="German"
+                name="radio-group"
+                type="radio"
+                value="de"
+                checked={this.props.settings.locale === "de"}
+                onClick={() => this.changeLocale("de")}
+              />
+              &emsp;
+              <label htmlFor="German">
+                <FormattedMessage id="Lang.German" defaultMessage="German" />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.Germany} />
+                (Deutsch) &emsp;
+              </span>
+            </li>
+
+            {/* JAPANESE */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="Japanese"
+                name="radio-group"
+                type="radio"
+                value="ja"
+                checked={this.props.settings.locale === "ja"}
+                onClick={() => this.changeLocale("ja")}
+              />
+              &emsp;
+              <label htmlFor="Japanese">
+                <FormattedMessage
+                  id="Lang.Japanese"
+                  defaultMessage="Japanese"
+                />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.Japan} />
+                (日本人) &emsp;
+              </span>
+            </li>
+
+            {/* FRENCH */}
+            <li className="LanguageTranslation">
+              &emsp;
+              <input
+                id="French"
+                name="radio-group"
+                type="radio"
+                value="fr"
+                checked={this.props.settings.locale === "fr"}
+                onClick={() => this.changeLocale("fr")}
+              />
+              &emsp;
+              <label htmlFor="French">
+                <FormattedMessage id="Lang.French" defaultMessage="French" />
+              </label>
+              &emsp; &emsp; &emsp;
+              <span className="langTag">
+                <img src={FlagFile.France} />
+                (Français) &emsp;
+              </span>
+            </li>
+          </ul>
+          <div className="langsetter">
+            {/* <button
+              type="button"
+              className="feebutton"
+              onClick={() => this.props.SwitchLocale()}
+            >
+              <FormattedMessage id="Settings.Set" defaultMesage="Set" />
+            </button> */}
+          </div>
+        </Modal>
+        <div className="note">
+          <FormattedMessage
+            id="Settings.ChangesNexTime"
+            defaultMesage="Changes to core settings will take effect the next time the core is restarted"
+          />
+        </div>
+        <Modal
+          center
+          classNames={{ modal: "custom-modal2", overlay: "custom-overlay" }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}
         >
           <div>
-            <h2>Save Settings?</h2>
-            <div className="note">
-              Changes to core settings will take effect the next time the core
-              is restarted.
-            </div>
-
-            <input
-              value="Yes"
-              type="button"
-              className="button primary"
-              onClick={() => {
-                this.props.setSettings(
-                  require("../../api/settings.js").GetSettings()
-                );
-                this.props.CloseModal2();
-                this.props.OpenModal("Core Settings Saved");
-                setTimeout(() => {
-                  this.props.CloseModal();
-                }, 2000);
-              }}
-            />
-            <div id="no-button">
-              <input
-                value="No"
-                type="button"
-                className="button primary"
-                onClick={() => {
-                  this.props.CloseModal2();
-                }}
+            <h2>
+              <FormattedMessage
+                id="Settings.SaveSettings"
+                defaultMessage="Save Settings"
               />
+              ?
+            </h2>
+            <div className="note">
+              <FormattedMessage
+                id="Settings.ChangesNexTime"
+                defaultMessage="Changes to core settings will take effect the next time the core is restarted"
+              />
+            </div>{" "}
+            <FormattedMessage id="Settings.Yes" defaultMessage="Yes">
+              {y => (
+                <input
+                  value={y}
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    this.props.setSettings(
+                      require("../../api/settings.js").GetSettings()
+                    );
+                    this.props.CloseModal2();
+                    this.props.OpenModal("Core Settings Saved");
+                    setTimeout(() => {
+                      this.props.CloseModal();
+                    }, 2000);
+                  }}
+                />
+              )}
+            </FormattedMessage>
+            <div id="no-button">
+              <FormattedMessage id="Settings.No">
+                {n => (
+                  <input
+                    value={n}
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.props.CloseModal2();
+                    }}
+                  />
+                )}
+              </FormattedMessage>
             </div>
           </div>
         </Modal>
 
         <form className="aligned">
           <div className="field">
-            <label htmlFor="enableMining">Enable Mining</label>
-            <input
-              id="enableMining"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateEnableMining}
-              data-tooltip="Enable/Disable mining to the wallet"
-            />
+            <label htmlFor="enableMining">
+              <FormattedMessage
+                id="Settings.EnableMining"
+                defaultMessage="Enable Mining"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.EnableMining"
+              defaultMessage="Enable/Disable mining to the wallet"
+            >
+              {tt => (
+                <input
+                  id="enableMining"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateEnableMining}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
-            <label htmlFor="enableStaking">Enable Staking</label>
-            <input
-              id="enableStaking"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateEnableStaking}
-              data-tooltip="Enable/Disable staking on the wallet"
-            />
+            <label htmlFor="enableStaking">
+              <FormattedMessage
+                id="Settings.EnableStaking"
+                defaultMessage="Enable Staking"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.EnableStaking"
+              defaultMessage="Enable/Disable Staking to the wallet"
+            >
+              {tt => (
+                <input
+                  id="enableStaking"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateEnableStaking}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
-            <label htmlFor="verboseLevel">Verbose level</label>
-            <input
-              id="verboseLevel"
-              type="number"
-              size="1"
-              min="1"
-              onChange={this.updateVerboseLevel}
-              data-tooltip="Verbose level for logs"
-            />
+            <label htmlFor="verboseLevel">
+              <FormattedMessage
+                id="Settings.VerboseLevel"
+                defaultMessage="Verbose Level"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.Verbose"
+              defaultMessage="Verbose level for logs"
+            >
+              {TT => (
+                <input
+                  id="verboseLevel"
+                  type="text"
+                  size="3"
+                  onChange={this.updateVerboseLevel}
+                  data-tooltip={TT}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div className="field">
-            <label htmlFor="manualDaemon">Manual Daemon Mode</label>
-            <input
-              id="manualDaemon"
-              type="checkbox"
-              className="switch"
-              onChange={this.updateManualDaemon}
-              data-tooltip="Enable manual daemon mode if you are running the daemon manually outside of the wallet"
-            />
+            <label htmlFor="manualDaemon">
+              <FormattedMessage
+                id="Settings.ManualDaemonMode"
+                defaultMessage="Manual Daemon Mode"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.MDM"
+              defaultMessage="Enable manual daemon mode if you are running the daemon manually outside of the wallet"
+            >
+              {tt => (
+                <input
+                  id="manualDaemon"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateManualDaemon}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           <div id="manual-daemon-settings">
             <div className="field">
-              <label htmlFor="manualDaemonUser">Username</label>
-              <input
-                id="manualDaemonUser"
-                type="text"
-                size="16"
-                onChange={this.updateManualDaemonUser}
-                data-tooltip="Username configured for manual daemon"
-              />
+              <label htmlFor="manualDaemonUser">
+                <FormattedMessage
+                  id="Settings.Username"
+                  defaultMesage="Username"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.UserName"
+                defaultMessage="Username configured for manual daemon"
+              >
+                {tt => (
+                  <input
+                    id="manualDaemonUser"
+                    type="text"
+                    size="12"
+                    onChange={this.updateManualDaemonUser}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonPassword">Password</label>
-              <input
-                id="manualDaemonPassword"
-                type="text"
-                size="16"
-                onChange={this.updateManualDaemonPassword}
-                data-tooltip="Password configured for manual daemon"
-              />
+              <label htmlFor="manualDaemonPassword">
+                {" "}
+                <FormattedMessage
+                  id="Settings.Password"
+                  defaultMesage="Password"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.Password"
+                defaultMessage="Password configured for manual daemon"
+              >
+                {tt => (
+                  <input
+                    id="manualDaemonPassword"
+                    type="text"
+                    size="12"
+                    onChange={this.updateManualDaemonPassword}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonIP">IP Address</label>
-              <input
-                id="manualDaemonIP"
-                type="text"
-                size="16"
-                onChange={this.updateManualDaemonIP}
-                data-tooltip="IP address configured for manual daemon"
-              />
+              <label htmlFor="manualDaemonIP">
+                {" "}
+                <FormattedMessage
+                  id="Settings.IpAddress"
+                  defaultMesage="Ip Address"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.IP"
+                defaultMessage="IP address configured for manual daemon"
+              >
+                {tt => (
+                  <input
+                    id="manualDaemonIP"
+                    type="text"
+                    size="12"
+                    onChange={this.updateManualDaemonIP}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonPort">Port</label>
-              <input
-                id="manualDaemonPort"
-                type="text"
-                size="4"
-                onChange={this.updateManualDaemonPort}
-                data-tooltip="Port configured for manual daemon"
-              />
+              <label htmlFor="manualDaemonPort">
+                <FormattedMessage id="Settings.Port" defaultMesage="Port" />
+              </label>
+              <FormattedMessage
+                id="ToolTip.PortConfig"
+                defaultMessage="Port configured for manual daemon"
+              >
+                {tt => (
+                  <input
+                    id="manualDaemonPort"
+                    type="text"
+                    size="5"
+                    onChange={this.updateManualDaemonPort}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <div className="field">
-              <label htmlFor="manualDaemonDataDir">Data Directory Name</label>
-              <input
-                id="manualDaemonDataDir"
-                type="text"
-                size="40"
-                onChange={this.updateManualDaemonDataDir}
-                data-tooltip="Data directory configured for manual daemon"
-              />
+              <label htmlFor="manualDaemonDataDir">
+                <FormattedMessage
+                  id="Settings.DDN"
+                  defaultMessage="Data Directory Name"
+                />{" "}
+              </label>
+              <FormattedMessage
+                id="ToolTip.DataDirectory"
+                defaultMessage="Data directory configured for manual daemon"
+              >
+                {tt => (
+                  <input
+                    id="manualDaemonDataDir"
+                    type="text"
+                    size="12"
+                    onChange={this.updateManualDaemonDataDir}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
           </div>
 
           <div id="automatic-daemon-settings">
             <div className="field">
-              <label htmlFor="mapPortUsingUpnp">Map port using UPnP</label>
-              <input
-                id="mapPortUsingUpnp"
-                type="checkbox"
-                className="switch"
-                onChange={this.updateMapPortUsingUpnp}
-                data-tooltip="Automatically open the Nexus client port on the router. This only works when your router supports UPnP and it is enabled."
-              />
+              <label htmlFor="mapPortUsingUpnp">
+                {" "}
+                <FormattedMessage
+                  id="Settings.UPnp"
+                  defaultMesage="Map port using UPnP"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.UPnP"
+                defaultMessage="Automatically open the Nexus client port on the router. This only works when your router supports UPnP and it is enabled."
+              >
+                {tt => (
+                  <input
+                    id="mapPortUsingUpnp"
+                    type="checkbox"
+                    className="switch"
+                    onChange={this.updateMapPortUsingUpnp}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <div className="field">
-              <label htmlFor="socks4Proxy">Connect through SOCKS4 proxy</label>
-              <input
-                id="socks4Proxy"
-                type="checkbox"
-                className="switch"
-                onChange={this.updateSocks4Proxy}
-                data-tooltip="Connect to Nexus through a SOCKS4 proxt (e.g. when connecting through Tor"
-              />
+              <label htmlFor="socks4Proxy">
+                <FormattedMessage
+                  id="Settings.Socks4proxy"
+                  defaultMesage="Connect through SOCKS4 proxy"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.Socks4"
+                defaultMessage="Connect to Nexus through a SOCKS4 proxy"
+              >
+                {tt => (
+                  <input
+                    id="socks4Proxy"
+                    type="checkbox"
+                    className="switch"
+                    onChange={this.updateSocks4Proxy}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <div className="field">
-              <label htmlFor="socks4ProxyIP">Proxy IP Address</label>
-              <input
-                id="socks4ProxyIP"
-                type="text"
-                size="16"
-                onChange={this.updateSocks4ProxyIP}
-                data-tooltip="IP Address of SOCKS4 proxy server"
-              />
+              <label htmlFor="socks4ProxyIP">
+                <FormattedMessage
+                  id="Settings.ProxyIP"
+                  defaultMesage="Proxy IP Address"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.IPAddressofSOCKS4proxy"
+                defaultMessage="IP Address of SOCKS4 proxy server"
+              >
+                {tt => (
+                  <input
+                    id="socks4ProxyIP"
+                    type="text"
+                    size="12"
+                    onChange={this.updateSocks4ProxyIP}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <div className="field">
-              <label htmlFor="socks4ProxyPort">Proxy Port</label>
-              <input
-                id="socks4ProxyPort"
-                type="text"
-                size="4"
-                onChange={this.updateSocks4ProxyPort}
-                data-tooltip="Port of SOCKS4 proxy server"
-              />
+              <label htmlFor="socks4ProxyPort">
+                <FormattedMessage
+                  id="Settings.ProxyPort"
+                  defaultMesage="Proxy Port"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.PortOfSOCKS4proxyServer"
+                defaultMessage="Port of SOCKS4 proxy server"
+              >
+                {tt => (
+                  <input
+                    id="socks4ProxyPort"
+                    type="text"
+                    size="3"
+                    onChange={this.updateSocks4ProxyPort}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
 
             <div className="field">
               <label htmlFor="detatchDatabaseOnShutdown">
-                Detach database on shutdown
+                <FormattedMessage
+                  id="Settings.Detach"
+                  defaultMesage="Detach database on shutdown"
+                />
               </label>
-              <input
-                id="detatchDatabaseOnShutdown"
-                type="checkbox"
-                className="switch"
-                onChange={this.updateDetatchDatabaseOnShutdown}
-                data-tooltip="Detatch the database when shutting down the wallet"
-              />
+              <FormattedMessage
+                id="ToolTip.Detach"
+                defaultMessage="Detach the database when shutting down the wallet"
+              >
+                {tt => (
+                  <input
+                    id="detatchDatabaseOnShutdown"
+                    type="checkbox"
+                    className="switch"
+                    onChange={this.updateDetatchDatabaseOnShutdown}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
+            {/* <div className="field">
+              <label htmlFor="optionalTransactionFee">
+                <FormattedMessage
+                  id="Settings.Language"
+                  defaultMesage="Language"
+                />
+              </label>
+              <div className="langSet">
+                <span className="flag-icon-background flag-icon-gr" />
+                <button
+                  type="button"
+                  className="Languagebutton"
+                  // onClick={() => this.props.SwitchLocale()}
+                  onClick={() => this.props.OpenModal3()}
+                >
+                  <FormattedMessage
+                    id="Settings.LangButton"
+                    defaultMesage="English"
+                  />
+                </button>
+              </div>
+            </div> */}
             <button
               id="restart-core"
               className="button primary"
@@ -619,7 +1029,10 @@ class SettingsCore extends Component {
                 core.restart();
               }}
             >
-              Restart Core
+              <FormattedMessage
+                id="Settings.RestartCore"
+                defaultMesage="Restart Core"
+              />
             </button>
             <button
               // id="restart-core"
@@ -629,10 +1042,27 @@ class SettingsCore extends Component {
                 this.props.OpenModal2();
               }}
             >
-              Save Settings
+              <FormattedMessage
+                id="Settings.SaveSettings"
+                defaultMessage="Save Settings"
+              />
             </button>
           </div>
 
+          {/* <select
+            onChange={e => this.props.localeChange(e.target.value)}
+             value={this.props.tempStorage}
+          >
+            <option value="en">English</option>
+            <option value="ru">Russian</option>
+          </select>
+          <button
+            type="button"
+            className="medium button"
+            onClick={() => this.props.SwitchLocale()}
+          >
+            Asshole
+          </button> */}
           <div className="clear-both" />
         </form>
 

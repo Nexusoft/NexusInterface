@@ -13,6 +13,7 @@ import core from "../../api/core";
 import styles from "./style.css";
 import * as RPC from "../../script/rpc";
 import * as TYPE from "../../actions/actiontypes";
+import { FormattedMessage } from "react-intl";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -150,41 +151,84 @@ class Unencrypted extends Component {
   // Mandatory React method
   render() {
     if (this.props.connections === undefined) {
-      return <h2>Please wait for the daemon to load</h2>;
+      return (
+        <h2>
+          <FormattedMessage
+            id="transactions.Loading"
+            defaultMessage="Please wait for the Daemon to load"
+          />
+        </h2>
+      );
     } else {
       return (
         <div id="securitylogin">
           <div className="securitySubContainer">
             <form>
               <fieldset>
-                <legend>Encrypt Wallet</legend>
+                <legend>
+                  <FormattedMessage
+                    id="Settings.EncryptWallet"
+                    defaultMessage="Encrypt Wallet"
+                  />
+                </legend>
                 <div style={{ marginTop: "26px" }} className="note">
-                  Password cannot contain these characters {`-$/&*|<>`}
+                  <FormattedMessage
+                    id="Settings.CannotContain"
+                    defaultMessage="Encrypt Wallet"
+                  />{" "}
+                  {`-$/&*|<>`}
                 </div>
                 <div className="field">
-                  <label>Password:</label>
-                  <input
-                    type="password"
-                    placeholder="New Password"
-                    id="newPass"
-                    required
-                  />
+                  <label>
+                    <FormattedMessage
+                      id="Settings.Password"
+                      defaultMessage="Password:"
+                    />
+                  </label>
+                  <FormattedMessage
+                    id="Settings.NewPassword"
+                    defaultMessage="New Password:"
+                  >
+                    {p => (
+                      <input
+                        type="password"
+                        placeholder={p}
+                        id="newPass"
+                        required
+                      />
+                    )}
+                  </FormattedMessage>
                   {/* className="hint" */}
                 </div>
                 <div className="field">
-                  <label>Re-Enter Password:</label>
-                  <input
-                    type="password"
-                    placeholder="Re-Enter Password"
-                    id="passChk"
-                    onChange={e => this.reEnterValidator(e)}
-                  />
+                  <label>
+                    <FormattedMessage
+                      id="Settings.Re-Enter"
+                      defaultMessage="Re-Enter Password"
+                    />
+                  </label>
+                  <FormattedMessage
+                    id="Settings.Re-Enter"
+                    defaultMessage="Re-Enter Password"
+                  >
+                    {rep => (
+                      <input
+                        type="password"
+                        placeholder={rep}
+                        id="passChk"
+                        onChange={e => this.reEnterValidator(e)}
+                      />
+                    )}
+                  </FormattedMessage>
                   <span
                     id="passHint"
                     style={{ visibility: "hidden" }}
                     className="err invalid"
                   >
-                    Passwords do not match
+                    <FormattedMessage
+                      id="Settings.Re-Enter"
+                      defaultMessage="Re-Enter Password"
+                    />
                   </span>
                 </div>
                 <p>
@@ -194,76 +238,189 @@ class Unencrypted extends Component {
                     className="button primary"
                     onClick={e => this.encrypt(e)}
                   >
-                    Encrypt and Restart
+                    <FormattedMessage
+                      id="Settings.EncryptRestart"
+                      defaultMessage="Encrypt and Restart"
+                    />
                   </button>
                 </p>
               </fieldset>
             </form>
           </div>
+          {/* <div className="securitySubContainer privKey">
+            <form>
+              <fieldset>
+                <legend>
+                  <FormattedMessage
+                    id="Settings.ViewPrivateKey"
+                    defaultMessage="View private key for address"
+                  />
+                </legend>
+
+                <div className="field">
+                  <label>
+                    <FormattedMessage
+                      id="Settings.Address"
+                      defaultMessage="Address"
+                    />
+                    :
+                  </label>
+                  <div className="expander">
+                    <FormattedMessage
+                      id="Settings.EnterAddressHere"
+                      defaultMessage="Enter Address Here"
+                    >
+                      {eah => (
+                        <input
+                          type="text"
+                          id="privKeyAddress"
+                          placeholder={eah}
+                          required
+                        />
+                      )}
+                    </FormattedMessage>
+                    <button
+                      style={{ width: "100%", margin: "0" }}
+                      disabled={this.props.busyFlag}
+                      className="button primary"
+                      onClick={e => this.encrypt(e)}
+                    >
+                      <FormattedMessage
+                        id="Settings.Submit"
+                        defaultMessage="Submit"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div> */}
           <div className="securitySubContainer privKey">
             <form>
               <fieldset>
-                <legend>View private key for address</legend>
+                <legend>
+                  <FormattedMessage
+                    id="Settings.ViewPrivateKey"
+                    defaultMessage="View private key for address"
+                  />
+                </legend>
 
                 <div className="field">
-                  <label>Address:</label>
-                  <div className="expander">
-                    <input
-                      type="text"
-                      id="privKeyAddress"
-                      placeholder="Enter Address Here"
-                      required
+                  <label>
+                    <FormattedMessage
+                      id="Settings.Address"
+                      defaultMessage="Address"
                     />
+                    :
+                  </label>
+                  <div className="expander">
+                    <FormattedMessage
+                      id="Settings.EnterAddressHere"
+                      defaultMessage="Enter Address Here"
+                    >
+                      {eah => (
+                        <input
+                          type="text"
+                          id="privKeyAddress"
+                          placeholder={eah}
+                          required
+                        />
+                      )}
+                    </FormattedMessage>
                     <button
                       disabled={this.props.busyFlag}
                       className="button primary"
                       onClick={e => this.showPrivKey(e)}
                     >
-                      Submit
+                      <FormattedMessage
+                        id="Settings.Submit"
+                        defaultMessage="Submit"
+                      />
                     </button>
                   </div>
                 </div>
 
                 <div className="field">
-                  <label>Private Key:</label>
+                  <label>
+                    <FormattedMessage
+                      id="Settings.PrivateKey"
+                      defaultMessage="Private Key"
+                    />
+                    :
+                  </label>
                   <div className="expander">
                     <input type="password" id="privKeyOutput" />
                     <button
                       disabled={this.props.busyFlag}
-                      className="button"
-                      onClick={e => this.copyPrivkey(e)}
+                      className="button primary"
+                      onClick={e => this.importPrivKey(e)}
                     >
-                      Copy
+                      <FormattedMessage
+                        id="Settings.Copy"
+                        defaultMessage="Copy"
+                      />
                     </button>
                   </div>
                 </div>
               </fieldset>
             </form>
           </div>
+
           <div className="securitySubContainer privKey">
             <form>
               <fieldset>
-                <legend>Import Private Key</legend>
+                <legend>
+                  <FormattedMessage
+                    id="Settings.ImportPrivateKey"
+                    defaultMessage="Import Private Key"
+                  />
+                </legend>
                 <div className="field">
-                  <label>Account Name:</label>
-                  <div className="expander">
-                    <input
-                      type="Text"
-                      placeholder="Account Name"
-                      id="acctName"
-                      required
+                  <label>
+                    <FormattedMessage
+                      id="Settings.AccountName"
+                      defaultMessage="Account Name"
                     />
+                    :
+                  </label>
+                  <div className="expander">
+                    <FormattedMessage
+                      id="Settings.AccountName"
+                      defaultMessage="Account"
+                    >
+                      {an => (
+                        <input
+                          type="Text"
+                          placeholder={an}
+                          id="acctName"
+                          required
+                        />
+                      )}
+                    </FormattedMessage>
                   </div>
                 </div>
                 <div className="field">
-                  <label>Private Key:</label>
-                  <div className="expander">
-                    <input
-                      type="password"
-                      placeholder="Private Key"
-                      id="privateKey"
-                      required
+                  <label>
+                    <FormattedMessage
+                      id="Settings.PrivateKey"
+                      defaultMessage="Private Key"
                     />
+                    :
+                  </label>
+                  <div className="expander">
+                    <FormattedMessage
+                      id="Settings.PrivateKey"
+                      defaultMessage="Private Key"
+                    >
+                      {pk => (
+                        <input
+                          type="password"
+                          placeholder={pk}
+                          id="privateKey"
+                          required
+                        />
+                      )}
+                    </FormattedMessage>
                   </div>
                 </div>
                 <p>
@@ -272,7 +429,10 @@ class Unencrypted extends Component {
                     className="button primary"
                     onClick={e => this.importPrivKey(e)}
                   >
-                    Submit
+                    <FormattedMessage
+                      id="Settings.AccountName"
+                      defaultMessage="Account"
+                    />
                   </button>
                 </p>
               </fieldset>

@@ -271,6 +271,7 @@ class Core extends EventEmitter {
   // start: Start up the core with necessary parameters and return the spawned process
   start() {
     console.log("Core Start Initiated");
+    console.log(coreprocess);
     if (coreprocess != null) return;
     let settings = require("./settings").GetSettings();
     let parameters = SetCoreParameters(settings);

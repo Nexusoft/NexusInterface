@@ -29,6 +29,7 @@ import stakeImg from "images/staking.svg";
 import logoFull from "images/logo-full-beta.svg";
 import { write } from "fs";
 
+import { FormattedMessage } from "react-intl";
 var tray = tray || null;
 let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
@@ -38,7 +39,8 @@ const mapStateToProps = state => {
   return {
     ...state.overview,
     ...state.common,
-    ...state.settings
+    ...state.settings,
+    ...state.intl
   };
 };
 const mapDispatchToProps = dispatch =>
@@ -364,19 +366,47 @@ class Header extends Component {
       "en",
       { weekday: "long", year: "numeric", month: "long", day: "numeric" }
     );
-    if (this.props.connections === undefined) {
-      return "Daemon Not Loaded";
-    } else {
-      if (this.props.unlocked_until === undefined) {
-        return "Wallet Unencrypted";
-      } else if (this.props.unlocked_until === 0) {
-        return "Wallet Locked";
-      } else if (this.props.unlocked_until >= 0) {
-        if (this.props.minting_only) {
-          return "Unlocked until: " + unlockDate + " STAKING ONLY";
-        } else {
-          return "Unlocked until: " + unlockDate;
-        }
+
+    if (this.props.unlocked_until === undefined) {
+      return (
+        <FormattedMessage
+          id="Header.WalletUnencrypted"
+          defaultMessage="Wallet Unencrypted"
+        />
+      );
+    } else if (this.props.unlocked_until === 0) {
+      return (
+        <FormattedMessage
+          id="Header.UnlockedUntil"
+          defaultMessage="Unlocked Until"
+        />
+      );
+    } else if (this.props.unlocked_until >= 0) {
+      if (this.props.minting_only) {
+        return (
+          (
+            <FormattedMessage
+              id="Header.UnlockedUntil"
+              defaultMessage="Unlocked Until"
+            />
+          ) +
+          unlockDate +
+          (
+            <FormattedMessage
+              id="Header.StakingOnly"
+              defaultMessage="Staking Only"
+            />
+          )
+        );
+      } else {
+        return (
+          (
+            <FormattedMessage
+              id="Header.UnlockedUntil"
+              defaultMessage="Unlocked Until"
+            />
+          ) + unlockDate
+        );
       }
     }
   }
@@ -398,16 +428,27 @@ class Header extends Component {
 
   returnSyncStatusTooltip() {
     if (this.props.connections === undefined) {
-      return "Daemon Not Loaded";
+      return (
+        <FormattedMessage
+          id="Header.DaemonNotLoaded"
+          defaultMessage="Daemon Not Loaded"
+        />
+      );
     } else {
       if (this.props.heighestPeerBlock > this.props.blocks) {
         return (
-          "Syncing...\nBehind\n" +
+          this.props.settings.messages[this.props.settings.locale][
+            "Header.Synching"
+          ] +
           (this.props.heighestPeerBlock - this.props.blocks).toString() +
-          "\nBlocks"
+          this.props.settings.messages[this.props.settings.locale][
+            "Header.Blocks"
+          ]
         );
       } else {
-        return "Synced";
+        return (
+          <FormattedMessage id="Header.Synched" defaultMessage="Synched" />
+        );
       }
     }
   }
@@ -415,80 +456,248 @@ class Header extends Component {
   modalinternal() {
     switch (this.props.modaltype) {
       case "receive":
-        return <h2>Transaction Received</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.Received"
+              defaultMessage="Transaction Received"
+            />
+          </h2>
+        );
         break;
       case "send":
-        return <h2>Transaction Sent</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.Sent"
+              defaultMessage="Transaction Sent"
+            />
+          </h2>
+        );
         break;
       case "genesis":
-        return <h2>Genesis Transaction</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.Genesis"
+              defaultMessage="Genesis Transaction"
+            />
+          </h2>
+        );
         break;
       case "trust":
-        return <h2>Trust Transaction</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.TrustTransaction"
+              defaultMessage="Trust Transaction"
+            />
+          </h2>
+        );
         break;
       case "This is an address regiestered to this wallet":
-        return <h2>This is an address regiestered to this wallet</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.regiesteredToThis"
+              defaultMessage="This is an address regiestered to this wallet"
+            />
+          </h2>
+        );
         break;
       case "Invalid Address":
-        return <h2>Invalid Address</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidAddress"
+              defaultMessage="Invalid Address"
+            />
+          </h2>
+        );
+        break;
+      case "Invalid":
+        return (
+          <h2>
+            <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />
+          </h2>
+        );
         break;
       case "Address Added":
-        return <h2>Address Added</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.AddressAdded"
+              defaultMessage="Address Added"
+            />
+          </h2>
+        );
         break;
       case "No Addresses":
-        return <h2>No Addresses</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.NoAddresses"
+              defaultMessage="No Addresses"
+            />
+          </h2>
+        );
         break;
       case "Empty Queue!":
-        return <h2>Queue Empty</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.QueueEmpty"
+              defaultMessage="Queue Empty"
+            />
+          </h2>
+        );
         break;
       case "Password has been changed.":
-        return <h2>Password has been changed.</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.PasswordHasBeenChanged"
+              defaultMessage="Password has been changed"
+            />
+          </h2>
+        );
         break;
       case "Wallet has been encrypted":
-        return <h2>Wallet has been encrypted</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.WalletHasBeenEncrypted"
+              defaultMessage="Wallet has been encrypted"
+            />
+          </h2>
+        );
         break;
       case "Settings saved":
-        return <h2>Settings saved</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.SettingsSaved"
+              defaultMessage="Settings Saved"
+            />
+          </h2>
+        );
         break;
       case "Transaction Fee Set":
-        return <h2>Transaction Fee Set</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.TransactionFeeSet"
+              defaultMessage="Transaction Fee Set"
+            />
+          </h2>
+        );
         break;
       case "Wallet Locked":
-        return <h2>Wallet Locked</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.WalletLocked"
+              defaultMessage="Wallet Locked"
+            />
+          </h2>
+        );
         break;
       case "Wallet Backup":
-        return <h2>Wallet Backed Up</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.WalletBackedUp"
+              defaultMessage="Wallet Backed Up"
+            />
+          </h2>
+        );
         break;
       case "Invalid Transaction Fee":
-        return <h2>Invalid Transaction Fee</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidTransactionFee"
+              defaultMessage="Invalid Transaction Fee"
+            />
+          </h2>
+        );
         break;
       case "Copied":
-        return <h2>Copied</h2>;
+        return (
+          <h2>
+            <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />
+          </h2>
+        );
         break;
       case "Style Settings Saved":
-        return <h2>Style Settings Saved</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.StyleSettingsSaved"
+              defaultMessage="Style Settings Saved"
+            />
+          </h2>
+        );
         break;
       case "No ammount set":
-        return <h2>No Ammount Set</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.NoAmmountSet"
+              defaultMessage="No Ammount Set"
+            />
+          </h2>
+        );
         break;
       case "Please Fill Out Field":
-        return <h2>Please Fill Out Field</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.PleaseFillOutField"
+              defaultMessage="Please Fill Out Field"
+            />
+          </h2>
+        );
         break;
       case "FutureDate":
         return (
           <h2>
-            Unlock until date/time must be at least an hour in the future.
+            <FormattedMessage
+              id="Alert.FutureDate"
+              defaultMessage="Unlock until date/time must be at least an hour in the future"
+            />
           </h2>
         );
         break;
       case "Incorrect Passsword":
-        return <h2>Incorrect Passsword</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.IncorrectPasssword"
+              defaultMessage="Incorrect Passsword"
+            />
+          </h2>
+        );
         break;
       case "Core Settings Saved":
-        return <h2>Core Settings Saved</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.CoreSettingsSaved"
+              defaultMessage="Core Settings Saved"
+            />
+          </h2>
+        );
         break;
       case "Contacts Exported":
-        return <h2>Contacts Exported</h2>;
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.ContactsExported"
+              defaultMessage="Contacts Exported"
+            />
+          </h2>
+        );
         break;
       default:
         return <h2>{this.props.modaltype}</h2>;
@@ -500,7 +709,15 @@ class Header extends Component {
       this.props.settings.manualDaemon === false &&
       this.props.connections === undefined
     ) {
-      return <span>Loading Daemon. Please wait...</span>;
+      return (
+        <span>
+          <FormattedMessage
+            id="Alert.DaemonLoadingWait"
+            defaultMessage="Loading Daemon, Please wait..."
+          />
+          ...
+        </span>
+      );
     } else {
       return null;
     }
@@ -539,7 +756,6 @@ class Header extends Component {
               .maxMindCopyright
           }}
         />
-
         <Modal
           showCloseIcon={false}
           center={true}
@@ -560,8 +776,10 @@ class Header extends Component {
           {this.props.percentDownloaded === 0 ? (
             <div>
               <h3>
-                Would you like to reduce the time it takes to sync by
-                downloading a recent version of the database?
+                <FormattedMessage
+                  id="ToolTip.DbOption"
+                  defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
+                />
               </h3>
               <button
                 className="button"
@@ -571,7 +789,10 @@ class Header extends Component {
                   this.props.setPercentDownloaded(0.001);
                 }}
               >
-                Yes, let's bootstrap it.
+                <FormattedMessage
+                  id="ToolTip.BootStrapIt"
+                  defaultMessage="Yes, let's bootstrap it"
+                />
               </button>
               <button
                 className="button"
@@ -579,19 +800,32 @@ class Header extends Component {
                   this.CloseBootstrapModalAndSaveSettings();
                 }}
               >
-                No, let it sync from scratch.
+                <FormattedMessage
+                  id="ToolTip.BootStrapIt"
+                  defaultMessage="Yes, let's bootstrap it"
+                />
               </button>
             </div>
           ) : (
             <div>
-              <h3>Recent Database Downloading...</h3>
+              <h3>
+                <FormattedMessage
+                  id="ToolTip.RecentDatabaseDownloading"
+                  defaultMessage="Recent Database Downloading"
+                />
+              </h3>
               <div className="progress-bar">
                 <div
                   className="filler"
                   style={{ width: `${this.props.percentDownloaded}%` }}
                 />
               </div>
-              <h3>Please Wait.</h3>
+              <h3>
+                <FormattedMessage
+                  id="ToolTip.PleaseWait"
+                  defaultMessage="Please Wait..."
+                />
+              </h3>
             </div>
           )}
         </Modal>
@@ -605,11 +839,36 @@ class Header extends Component {
           {/* wrap this in a check too... */}
           <div className="icon">
             <img src={stakeImg} />
+
             <div className="tooltip bottom">
-              <div>Stake Weight: {this.props.stakeweight}%</div>
-              <div>Interest Rate: {this.props.interestweight}%</div>
-              <div>Trust Weight: {this.props.trustweight}%</div>
-              <div>Block Weight: {this.props.blockweight}</div>
+              <div>
+                <FormattedMessage
+                  id="Header.StakeWeight"
+                  defaultMessage="Stake Weight"
+                />
+                : {this.props.stakeweight}%
+              </div>
+              <div>
+                <FormattedMessage
+                  id="Header.InterestRate"
+                  defaultMessage="Interest Rate"
+                />
+                : {this.props.interestweight}%
+              </div>
+              <div>
+                <FormattedMessage
+                  id="Header.TrustWeight"
+                  defaultMessage="Trust Weight"
+                />
+                : {this.props.trustweight}%
+              </div>
+              <div>
+                <FormattedMessage
+                  id="Header.BlockWeight"
+                  defaultMessage="Block Weight"
+                />
+                : {this.props.blockweight}
+              </div>
             </div>
           </div>
           <div className="icon">
@@ -623,10 +882,11 @@ class Header extends Component {
             </div>
           </div>
         </div>
+
         <Link to="/">
           <img
             id="logo"
-            className="animated zoomIn "
+            className="animated zoomIn"
             src={logoFull}
             alt="Nexus Logo"
           />

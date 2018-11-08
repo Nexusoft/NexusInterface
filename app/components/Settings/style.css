@@ -55,7 +55,7 @@ section {
 
 section {
   --column-width: 4;
-  --field-align-label-width: 75%;
+  --field-align-label-width: 70%;
   position: relative;
   padding-top: calc(var(--gutter));
   padding-bottom: calc(var(--gutter));
@@ -103,8 +103,12 @@ form {
 #settings input[type="file"]::-webkit-file-upload-button {
   visibility: hidden;
 }
+
+.wallpaperDiv {
+  margin-left: -10px;
+}
 #settings input[type="file"]::before {
-  content: "Select a wallpaper";
+  /* content: "Select a wallpaper"; */
 
   display: inline-block;
   position: relative;
@@ -151,11 +155,26 @@ form {
 }
 
 .fee {
-  /* This bit sets up the horizontal layout */
   display: flex;
   width: 100px;
   flex-direction: row;
   flex-wrap: wrap;
+}
+.langSet {
+  display: flex;
+  width: 125px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.language {
+  /* background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0; */
+
+  width: 300px;
+
+  /* background-color: var(--color-3); */
+
+  color: var(--color-4);
 }
 
 .Txfee {
@@ -172,6 +191,16 @@ form {
   color: var(--color-5);
   margin-left: -10%;
 }
+.Languagebutton {
+  /* Just a little styling to make it pretty */
+  border: 1px solid var(--color-4);
+  background: var(--color-4);
+  color: var(--color-5);
+  margin-left: -10%;
+  padding: 5px;
+  width: 120px;
+  height: 30px;
+}
 #no-button {
   float: right;
 }
@@ -183,6 +212,18 @@ form {
   margin-left: 0;
 }
 
+.custom-overlay {
+  position: absolute;
+  padding: 0px;
+  overflow: hidden;
+}
+.custom-modal5 {
+  background: #282828;
+  /* animation: mymove2 0.5s ease-in-out; */
+  height: 500px;
+  width: 420px;
+  max-width: 100%;
+}
 /*------------------------------------------------------------------
 MEDIA QUERIES
 ------------------------------------------------------------------*/
@@ -202,4 +243,100 @@ MEDIA QUERIES
 @media (min-width: 1200px) {
 }
 @media (min-width: 1600px) {
+}
+
+.LanguageTranslation {
+  border-bottom: 2px solid var(--color-4);
+  margin-left: -40px;
+}
+
+.LanguageTranslation:hover {
+  /* animation: LanguageTranslation 0.5s; */
+}
+@keyframes LanguageTranslation {
+  /* 33% {
+    transform: translateX(-20px);
+  } */
+  66% {
+    transform: translateX(10px);
+  }
+  99% {
+    transform: translateX(10px);
+  }
+}
+
+.langTag {
+  float: right;
+}
+.langsetter {
+  float: left;
+  margin-left: 5px;
+}
+.langList {
+  border: 3px solid var(--color-3);
+  display: block;
+  height: 400px;
+  border-radius: 10px;
+}
+
+.langRadio {
+  height: 15px;
+  width: 15px;
+
+  border-radius: 50%;
+}
+
+/* TEST */
+[type="radio"]:checked,
+[type="radio"]:not(:checked) {
+  position: absolute;
+  left: -9999px;
+}
+[type="radio"]:checked + label,
+[type="radio"]:not(:checked) + label {
+  position: relative;
+  padding-left: 28px;
+  cursor: pointer;
+  line-height: 20px;
+  display: inline-block;
+}
+[type="radio"]:checked + label:before,
+[type="radio"]:not(:checked) + label:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+
+  border-radius: 100%;
+  background: var(--color-4);
+}
+[type="radio"]:checked + label:after,
+[type="radio"]:not(:checked) + label:after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: var(--color-2);
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  border-radius: 100%;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+[type="radio"]:not(:checked) + label:after {
+  opacity: 0;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+[type="radio"]:checked + label:after {
+  opacity: 1;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+ul li:hover label {
+  color: var(--color-2);
+  transform: translateX(10px);
+  transition: all 0.5s ease-in-out;
 }

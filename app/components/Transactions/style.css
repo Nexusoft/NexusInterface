@@ -12,7 +12,7 @@
 #transactions > .panel {
   flex: 1;
   overflow-y: auto;
-  
+
   display: flex;
   flex-direction: column;
 }
@@ -22,20 +22,20 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 1em;
-  margin-top: -.5em;
+  margin-top: -0.5em;
   min-height: min-content;
 }
 
 #transactions-filters .filter-field {
   flex: 1 1 auto;
-  margin-right: .75em;
+  margin-right: 0.75em;
 }
 
 #transactions-filters .filter-field label {
   display: block;
-  font-size: .75em;
+  font-size: 0.75em;
   text-transform: uppercase;
-  opacity: .75;
+  opacity: 0.75;
   letter-spacing: 1px;
 }
 
@@ -69,7 +69,7 @@
   flex: 0;
   height: 150px;
   margin-bottom: 1em;
-	border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color);
   order: 2;
 }
 
@@ -77,11 +77,33 @@
   order: 3;
   flex: 1;
   flex-basis: auto;
-  font-size: .875em;
+  font-size: 0.875em;
+}
+
+.TXdetails {
+  float: right;
+  border-bottom: 1px solid var(--color-2);
+}
+
+.blockHash {
+  border: 2px solid var(--color-2);
+  border-radius: 2px;
+}
+.blockHash:hover {
+  color: var(--color-2);
+}
+
+.detailCat {
+  border-bottom: 2px solid var(--color-2);
+}
+.detailCat:hover {
+  color: var(--color-2);
 }
 
 @media (min-height: 800px) {
-	#transactions-chart {display: block;}
+  #transactions-chart {
+    display: block;
+  }
 }
 
 /*------------------------------------------------------------------
