@@ -52,9 +52,11 @@ class Header extends Component {
     let settings = GetSettings();
     settings.keepDaemon = false;
     SaveSettings(settings);
-    if (settings.globeMultiColorRGB === undefined) {
+    if (settings.customStyling.globeMultiColorRGB === undefined) {
+      console.log(settings);
       SaveSettings({ ...this.props.settings, ...settings });
     } else {
+      console.log("other one ", settings);
       this.props.setSettings(settings);
     }
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
