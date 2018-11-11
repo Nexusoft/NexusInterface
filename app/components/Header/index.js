@@ -52,11 +52,11 @@ class Header extends Component {
     var self = this;
 
     let settings = GetSettings();
-    // settings.keepDaemon = false;
-    // SaveSettings(settings);
+    settings.keepDaemon = false;
+    SaveSettings(settings);
     if (settings === undefined) {
       console.log(settings);
-      SaveSettings({ ...this.props.settings });
+      SaveSettings({ ...this.props.settings, ...settings });
     } else {
       console.log("other one ", settings);
       this.props.setSettings(settings);
@@ -65,14 +65,10 @@ class Header extends Component {
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     menuBuilder.buildMenu(self);
 
-    // this.props.SetGoogleAnalytics(GOOGLE);
-    // let encryptionStatus = false;
-    // if (this.props.unlocked_until !== undefined) {
-    //   encryptionStatus = true;
-    // }
+    this.props.SetGoogleAnalytics(GOOGLE);
 
-    // this.props.SetMarketAveData();
-    // this.props.LoadAddressBook();
+    this.props.SetMarketAveData();
+    this.props.LoadAddressBook();
 
     if (tray === null) this.setupTray();
 
@@ -82,18 +78,18 @@ class Header extends Component {
       self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
     }, 20000);
-    // const core = electron.remote.getGlobal("core");
-    //     core.on("starting", () => {
-    //       self.set = setInterval(function() {
-    //         self.props.AddRPCCall("getInfo");
-    //         self.props.GetInfoDump();
-    //       }, 20000);
-    //     });
+    const core = electron.remote.getGlobal("core");
+    core.on("starting", () => {
+      self.set = setInterval(function() {
+        self.props.AddRPCCall("getInfo");
+        self.props.GetInfoDump();
+      }, 20000);
+    });
 
-    //     core.on("stopping", () => {
-    //       clearInterval(self.set);
-    //       this.props.clearOverviewVariables();
-    //     });
+    core.on("stopping", () => {
+      clearInterval(self.set);
+      this.props.clearOverviewVariables();
+    });
     this.props.SetMarketAveData();
     self.mktData = setInterval(function() {
       console.log("MARKET");
