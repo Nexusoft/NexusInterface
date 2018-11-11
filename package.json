@@ -240,7 +240,7 @@
     "react-intl": "^2.7.2",
     "react-intl-redux": "^2.0.2",
     "react-redux": "^5.0.7",
-    "react-responsive-modal": "^3.5.0",
+    "react-responsive-modal": "^3.1.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-router-redux": "^5.0.0-alpha.6",
@@ -257,7 +257,8 @@
     "universal-analytics": "^0.4.17",
     "victory": "^30.5.1",
     "wait-on": "^3.0.1",
-    "xmlhttprequest": "^1.8.0"
+    "xmlhttprequest": "^1.8.0",
+    "yauzl": "^2.10.0"
   },
   "devEngines": {
     "node": ">=7.x",
