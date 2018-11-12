@@ -29,9 +29,9 @@ import IntlWrapper from "../containers/intlWrapper";
 // };
 
 class App extends Component {
-  // props: {
-  //   children: Children
-  // };
+  props: {
+    children: Children
+  };
 
   render() {
     return (

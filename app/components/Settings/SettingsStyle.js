@@ -159,7 +159,7 @@ class SettingsStyle extends Component {
     this.props.settings.customStyling[this.props.selectedColorProp];
     switch (this.props.selectedColorProp) {
       case "MC1":
-        return this.props.settings.customSrenderGlobetyling.MC1;
+        return this.props.settings.customStyling.MC1;
         break;
       case "MC2":
         return this.props.settings.customStyling.MC2;
@@ -212,12 +212,12 @@ class SettingsStyle extends Component {
   }
 
   SaveSettings() {
-    this.props.googleanalytics.SendEvent("Settings", "Style", "Saved", 1);
     require("../../api/settings.js").SaveSettings(this.props.settings);
     this.props.OpenModal("Style Settings Saved");
     setTimeout(() => {
       this.props.CloseModal();
     }, 3000);
+    this.props.googleanalytics.SendEvent("Settings", "Style", "Saved", 1);
   }
 
   // Mandatory React method
@@ -251,17 +251,25 @@ class SettingsStyle extends Component {
                   defaultMessage="Render Globe"
                 />
               </label>
-              
+
               <FormattedMessage
-                id= {(this.props.webGLEnabled)? "ToolTip.RenderGlobe": "ToolTip.RenderGlobeOpenGLFail"}
-                defaultMessage={(this.props.webGLEnabled)? "Render the globe on the Overview page": "Your Computer does not support OPENGL 2.0"}
+                id={
+                  this.props.webGLEnabled
+                    ? "ToolTip.RenderGlobe"
+                    : "ToolTip.RenderGlobeOpenGLFail"
+                }
+                defaultMessage={
+                  this.props.webGLEnabled
+                    ? "Render the globe on the Overview page"
+                    : "Your Computer does not support OPENGL 2.0"
+                }
               >
                 {tt => (
                   <input
                     id="renderGlobe"
                     type="checkbox"
                     className="switch"
-                    disabled = {(false)?  "": "disabled"}
+                    disabled={false ? "" : "disabled"}
                     checked={this.props.settings.renderGlobe}
                     onChange={() => {
                       this.props.ToggleGlobeRender();

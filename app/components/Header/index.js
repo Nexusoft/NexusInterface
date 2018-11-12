@@ -49,38 +49,37 @@ const mapDispatchToProps = dispatch =>
 class Header extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
+    var self = this;
+
     let settings = GetSettings();
-    settings.keepDaemon = false;
-    SaveSettings(settings);
-    if (settings.customStyling.globeMultiColorRGB === undefined) {
+    // settings.keepDaemon = false;
+    // SaveSettings(settings);
+    if (settings === undefined) {
       console.log(settings);
-      SaveSettings({ ...this.props.settings, ...settings });
+      SaveSettings({ ...this.props.settings });
     } else {
       console.log("other one ", settings);
       this.props.setSettings(settings);
     }
+    console.log(electron);
+
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
-    var self = this;
+    menuBuilder.buildMenu(self);
+
     this.props.SetGoogleAnalytics(GOOGLE);
-    let encryptionStatus = false;
-    if (this.props.unlocked_until !== undefined) {
-      encryptionStatus = true;
-    }
 
     this.props.SetMarketAveData();
     this.props.LoadAddressBook();
 
-    menuBuilder.buildMenu(self);
-
     if (tray === null) this.setupTray();
-    const core = electron.remote.getGlobal("core");
+
     this.props.GetInfoDump();
 
     self.set = setInterval(function() {
       self.props.AddRPCCall("getInfo");
       self.props.GetInfoDump();
     }, 20000);
-
+    const core = electron.remote.getGlobal("core");
     core.on("starting", () => {
       self.set = setInterval(function() {
         self.props.AddRPCCall("getInfo");
@@ -92,8 +91,9 @@ class Header extends Component {
       clearInterval(self.set);
       this.props.clearOverviewVariables();
     });
-
+    this.props.SetMarketAveData();
     self.mktData = setInterval(function() {
+      console.log("MARKET");
       self.props.SetMarketAveData();
     }, 900000);
 
@@ -733,6 +733,7 @@ class Header extends Component {
     settings.bootstrap = false;
     SaveSettings(settings);
   }
+
   BootstrapModalInteriorBuilder() {
     if (this.props.percentDownloaded === 0) {
       return (
@@ -798,7 +799,7 @@ class Header extends Component {
           <h3>
             <FormattedMessage
               id="ToolTip.RecentDatabaseExtracting"
-              defaultMessage="Recent Database Downloading"
+              defaultMessage="Recent Database Extracting"
             />
           </h3>
 
@@ -845,6 +846,9 @@ class Header extends Component {
           open={this.props.open}
           onClose={this.props.CloseModal}
           classNames={{ modal: "custom-modal" }}
+          onOpen={() => {
+            console.log(this);
+          }}
         >
           {this.modalinternal()}
         </Modal>
@@ -853,6 +857,7 @@ class Header extends Component {
           open={this.bootstrapModalController()}
           onClose={() => true}
           center
+          focusTrapped={true}
           showCloseIcon={false}
           classNames={{ modal: "modal" }}
         >

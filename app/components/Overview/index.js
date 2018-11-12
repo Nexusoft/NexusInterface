@@ -104,6 +104,7 @@ class Overview extends Component {
       this.props.googleanalytics.SendScreen("Overview");
     }
   }
+  reDrawEverything() {}
   // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
@@ -134,14 +135,21 @@ class Overview extends Component {
     }
 
     if (
-      (previousprops.connections == undefined ||
-        previousprops.connections == 0) &&
-      this.props.connections != 0
+      this.props.settings.acceptedagreement !== false ||
+      this.props.settings.renderGlobe !== false ||
+      this.props.webGLEnabled !== false
     ) {
-      //Daemon Starting Up
-      this.reDrawEverything();
+      if (
+        (previousprops.connections == undefined ||
+          previousprops.connections == 0) &&
+        this.props.connections != 0 &&
+        this.props.webGLEnabled !== false &&
+        this.props.settings.renderGlobe === true
+      ) {
+        //Daemon Starting Up
+        this.reDrawEverything();
+      }
     }
-
     if (this.props.connections != previousprops.connections) {
       if (this.props.connections != 0 && previousprops.connections != 0) {
         this.removeOldPoints();
@@ -465,21 +473,25 @@ class Overview extends Component {
           key="agreement-modal"
           open={!this.props.settings.acceptedagreement}
           onClose={() => true}
+          focusTrapped={true}
           center
           showCloseIcon={false}
           classNames={{ modal: "modal" }}
         >
-          <h2>
-            {" "}
-            <FormattedMessage
-              id="overview.LicensceAgreement"
-              defaultMessage="License Agreement"
-            />
-          </h2>
-          {this.returnLicenseModalInternal()}
+          <div>
+            <h2>
+              {" "}
+              <FormattedMessage
+                id="overview.LicensceAgreement"
+                defaultMessage="License Agreement"
+              />
+            </h2>
+            {this.returnLicenseModalInternal()}
+          </div>
         </Modal>
         <Modal
           key="experiment-modal"
+          focusTrapped={true}
           open={
             this.props.settings.acceptedagreement &&
             (this.props.settings.experimentalWarning &&
