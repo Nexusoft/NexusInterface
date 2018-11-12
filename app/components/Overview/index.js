@@ -470,7 +470,7 @@ class Overview extends Component {
     return (
       <div id="overviewPage">
         <Modal
-          key="agreement-modal2"
+          key="agreement-modal"
           open={!this.props.settings.acceptedagreement}
           onClose={() => true}
           focusTrapped={true}
@@ -488,15 +488,6 @@ class Overview extends Component {
             </h2>
             {this.returnLicenseModalInternal()}
           </div>
-        </Modal>
-        <Modal
-          open={this.props.settings.experimentalWarning}
-          onClose={() => this.props.setExperimentalWarning(false)}
-          focusTrapped={true}
-          center
-          classNames={{ modal: "modal" }}
-        >
-          <div>{this.returnLicenseModalInternal()}</div>
         </Modal>
         <Modal
           key="experiment-modal"

@@ -214,9 +214,9 @@ class SettingsStyle extends Component {
   SaveSettings() {
     require("../../api/settings.js").SaveSettings(this.props.settings);
     this.props.OpenModal("Style Settings Saved");
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 3000);
+    // setTimeout(() => {
+    //   this.props.CloseModal();
+    // }, 3000);
     this.props.googleanalytics.SendEvent("Settings", "Style", "Saved", 1);
   }
 

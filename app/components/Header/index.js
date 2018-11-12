@@ -52,15 +52,16 @@ class Header extends Component {
     var self = this;
 
     let settings = GetSettings();
-    settings.keepDaemon = false;
-    SaveSettings(settings);
+    // settings.keepDaemon = false;
+    // SaveSettings(settings);
     if (settings === undefined) {
       console.log(settings);
-      SaveSettings({ ...this.props.settings, ...settings });
+      SaveSettings({ ...this.props.settings });
     } else {
       console.log("other one ", settings);
       this.props.setSettings(settings);
     }
+    console.log(electron);
 
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     menuBuilder.buildMenu(self);
@@ -732,6 +733,7 @@ class Header extends Component {
     settings.bootstrap = false;
     SaveSettings(settings);
   }
+
   BootstrapModalInteriorBuilder() {
     if (this.props.percentDownloaded === 0) {
       return (
@@ -797,7 +799,7 @@ class Header extends Component {
           <h3>
             <FormattedMessage
               id="ToolTip.RecentDatabaseExtracting"
-              defaultMessage="Recent Database Downloading"
+              defaultMessage="Recent Database Extracting"
             />
           </h3>
 
@@ -812,10 +814,23 @@ class Header extends Component {
     }
   }
 
+  testStuff() {
+    let myNotification = new Notification("Title", {
+      body: "Lorem Ipsum Dolor Sit Amet"
+    });
+  }
+
   // Mandatory React method
   render() {
     return (
       <div id="Header">
+        <button
+          onClick={() => {
+            this.testStuff();
+          }}
+        >
+          test
+        </button>
         <CustomProperties
           global
           properties={{
@@ -838,16 +853,19 @@ class Header extends Component {
               .maxMindCopyright
           }}
         />
-        <Modal
+        {/* <Modal
           showCloseIcon={false}
           center={true}
           open={this.props.open}
           onClose={this.props.CloseModal}
           focusTrapped={true}
           classNames={{ modal: "custom-modal" }}
+          onOpen={() => {
+            console.log(this);
+          }}
         >
           {this.modalinternal()}
-        </Modal>
+        </Modal> */}
         <Modal
           key="bootstrap-modal"
           open={this.bootstrapModalController()}
