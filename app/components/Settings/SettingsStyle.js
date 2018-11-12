@@ -159,7 +159,7 @@ class SettingsStyle extends Component {
     this.props.settings.customStyling[this.props.selectedColorProp];
     switch (this.props.selectedColorProp) {
       case "MC1":
-        return this.props.settings.customSrenderGlobetyling.MC1;
+        return this.props.settings.customStyling.MC1;
         break;
       case "MC2":
         return this.props.settings.customStyling.MC2;
