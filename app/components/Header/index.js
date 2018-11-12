@@ -52,16 +52,12 @@ class Header extends Component {
     var self = this;
 
     let settings = GetSettings();
-    // settings.keepDaemon = false;
-    // SaveSettings(settings);
+
     if (settings === undefined) {
-      console.log(settings);
-      SaveSettings({ ...this.props.settings });
+      SaveSettings({ ...this.props.settings, keepDaemon: false });
     } else {
-      console.log("other one ", settings);
       this.props.setSettings(settings);
     }
-    console.log(electron);
 
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     menuBuilder.buildMenu(self);
@@ -378,8 +374,8 @@ class Header extends Component {
     if (this.props.unlocked_until === undefined) {
       return (
         <FormattedMessage
-          id="Header.WalletUnencrypted"
-          defaultMessage="Wallet Unencrypted"
+          id="Header.DaemonNotLoaded"
+          defaultMessage="Daemon Not Loaded"
         />
       );
     } else if (this.props.unlocked_until === 0) {

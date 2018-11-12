@@ -610,12 +610,7 @@ class SettingsCore extends Component {
             </button> */}
           </div>
         </Modal>
-        <div className="note">
-          <FormattedMessage
-            id="Settings.ChangesNexTime"
-            defaultMesage="Changes to core settings will take effect the next time the core is restarted"
-          />
-        </div>
+
         <Modal
           center
           classNames={{ modal: "custom-modal2", overlay: "custom-overlay" }}
