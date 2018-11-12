@@ -814,23 +814,10 @@ class Header extends Component {
     }
   }
 
-  testStuff() {
-    let myNotification = new Notification("Title", {
-      body: "Lorem Ipsum Dolor Sit Amet"
-    });
-  }
-
   // Mandatory React method
   render() {
     return (
       <div id="Header">
-        <button
-          onClick={() => {
-            this.testStuff();
-          }}
-        >
-          test
-        </button>
         <CustomProperties
           global
           properties={{
@@ -853,19 +840,18 @@ class Header extends Component {
               .maxMindCopyright
           }}
         />
-        {/* <Modal
+        <Modal
           showCloseIcon={false}
           center={true}
           open={this.props.open}
           onClose={this.props.CloseModal}
-          focusTrapped={true}
           classNames={{ modal: "custom-modal" }}
           onOpen={() => {
             console.log(this);
           }}
         >
           {this.modalinternal()}
-        </Modal> */}
+        </Modal>
         <Modal
           key="bootstrap-modal"
           open={this.bootstrapModalController()}
