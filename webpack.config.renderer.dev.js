@@ -13,7 +13,7 @@ import webpack from "webpack";
 import chalk from "chalk";
 import merge from "webpack-merge";
 import { spawn, execSync } from "child_process";
-import ExtractTextPlugin from "extract-text-webpack-plugin";
+//import ExtractTextPlugin from "extract-text-webpack-plugin";
 import baseConfig from "./webpack.config.base";
 import CheckNodeEnv from "./internals/scripts/CheckNodeEnv";
 
@@ -236,10 +236,10 @@ export default merge.smart(baseConfig, {
 
     new webpack.LoaderOptionsPlugin({
       debug: true
-    }),
+//    }),
 
-    new ExtractTextPlugin({
-      filename: "[name].css"
+//    new ExtractTextPlugin({
+//      filename: "[name].css"
     })
   ],
 

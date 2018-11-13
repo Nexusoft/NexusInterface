@@ -27,8 +27,8 @@ var ip = "127.0.0.1";
 var host = "http://" + ip + ":" + port;
 var verbose = "2"; // <--Lower to 0 after beta ends
 
-var letParam;
-var coreprocess = null;
+//var letParam;
+//var coreprocess = null;
 
 //Set data directory by OS for automatic daemon mode
 if (process.platform === "win32") {
@@ -79,6 +79,7 @@ function SetCoreParameters(settings) {
   parameters.push("-rpcpassword=" + password);
   parameters.push("-rpcport=" + port);
   parameters.push("-datadir=" + datadir);
+  parameters.push("-daemon");
   //  parameters.push("-printtoconsole"); // Enable console functionality via stdout
   parameters.push("-server");
   parameters.push("-verbose=" + verbose); // <-- Make a setting for this
@@ -114,6 +115,7 @@ function GetResourcesDirectory() {
   return "app/";
 }
 
+// GetCoreBinaryName: Gets the name of the executable.
 function GetCoreBinaryName() {
   var coreBinaryName = "nexus" + "-" + process.platform + "-" + process.arch;
   if (process.platform === "win32") {
@@ -126,9 +128,12 @@ function GetCoreBinaryName() {
 function GetCoreBinaryPath() {
   const path = require("path");
   if (process.env.NODE_ENV === "development") {
-    var coreBinaryPath = path.normalize(
-      path.join(__dirname, "..", "cores", GetCoreBinaryName())
-    );
+    var coreBinaryPath = path.normalize(path.join(
+      __dirname,
+      "..",
+      "cores",
+      GetCoreBinaryName()
+    ));
   } else {
     var coreBinaryPath = path.join(
       configuration.GetAppResourceDir(),
@@ -136,11 +141,39 @@ function GetCoreBinaryPath() {
       GetCoreBinaryName()
     );
   }
-  if (process.platform === "win32") {
-    //coreBinaryPath += ".exe";
-  }
   return coreBinaryPath;
 }
+
+function getCorePID() {
+  const util = require('util');
+  var execSync = require('child_process').execSync;
+  var modEnv = process.env;
+  modEnv.Nexus_Daemon = GetCoreBinaryName();
+  var tempPID = (execSync("ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}", [], {env: modEnv}) + '').split('\n')[1].replace(/^\s*/gm,'').split(' ')[0];
+  var PID = tempPID.toString().replace(/^\s+|\s+$/gm,'');
+  //var ppid = (require('child_process').execSync(ps -p ${process.pid} -o ppid=) + '').split('\n')[0];
+  if (Number(PID) == "NaN" || Number(PID) < "2") {
+    return 1;
+  } else {
+    return Number(PID);
+  }
+}
+
+function getCoreParentPID() {
+  const util = require('util');
+  var execSync = require('child_process').execSync;
+  var modEnv = process.env;
+  modEnv.Nexus_Daemon = GetCoreBinaryName();
+  var tempPPID = (execSync("ps -o ppid --no-headers -p 1 -C ${Nexus_Daemon}", [], {env: modEnv}) + '').split('\n')[1].replace(/^\s*/gm,'').split(' ')[0];
+  var PPID = tempPPID.toString().replace(/^\s+|\s+$/gm,'');
+  //var ppid = (require('child_process').execSync(ps -p ${process.pid} -o ppid=) + '').split('\n')[0];
+  if (Number(PPID) == "NaN" || Number(PPID) < "2") {
+    return null;
+  } else {
+    return Number(PPID);
+  }
+}
+
 
 // CoreBinaryExists: Check if the core binary for the user's system exists or not
 function CoreBinaryExists() {
@@ -156,35 +189,40 @@ function CoreBinaryExists() {
   }
 }
 
-//function isCoreRunning() {
-//  const exec = require('child_process').exec;
+/*// isCoreRunning: Determine if core is running and return it's PID.
+function isCoreRunning() {
+  var ps = require('ps-node');
+  var runningPID = ps.lookup({
+    command: 'nexus-linux-x64',
+  }, function(err, resultList ) {
+    if (err) {
+      log.info( 'findPID error: ' + (err) );
+    }
 
-//  const isRunning = (query, cb) => {
-//    let platform = process.platform;
-//    let cmd = '';
-//    switch (platform) {
-//      case 'win32' : cmd = `tasklist`; break;
-//      case 'darwin' : cmd = `ps -ax | grep ${query}`; break;
-//     case 'linux' : cmd = `ps -A`; break;
-//      default: break;
-//    }
-//    log.info("query: " + query
-//    exec(cmd, (err, stdout, stderr) => {
-//      cb(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);
-//    });
-//  }
+//    resultList.forEach(function( process ){
+//      if(process) {
+//        log.info( 'PID: %s, COMMAND: %s, ARGUMENTS: %s, process.pid, process.command, process.arguments );
+//      }
 
-//  isRunning(GetCoreBinaryName(), (status) => {
-//    return status;
-//  });
-//}
-
+    if (resultList.length > 0) {
+      var output = resultList[ 0 ];
+    } else {
+      var output = null;
+    }
+    log.info('ps.node output: ' + output);
+    return output;
+  });
+  log.info('runningPID inside function: ' + runningPID);
+  return runningPID;
+}
+*/
 // rpcGet: Send a message to the RPC
 function rpcGet(command, args, callback) {
   var postdata = JSON.stringify({
     method: command,
     params: args
-  });
+  
+});
   rpcPost(host, postdata, "TAG-ID-deprecate", callback, user, password);
 }
 
@@ -240,7 +278,6 @@ class Core extends EventEmitter {
   get ip() {
     return ip;
   }
-
   get port() {
     return port;
   }
@@ -266,17 +303,21 @@ class Core extends EventEmitter {
 
   // start: Start up the core with necessary parameters and return the spawned process
   start() {
-    console.log("Core Start Initiated");
-
-    if (coreprocess != null) return;
     let settings = require("./settings").GetSettings();
     let parameters = SetCoreParameters(settings);
+    let coreBinaryPath = GetCoreBinaryPath();
     let coreBinaryName = GetCoreBinaryName();
+    let corePID = getCorePID();
+   // let daemonProcs = utils.findPID("nexus-linux-x64");
+
     if (settings.manualDaemon == true) {
-      log.info("Core Manager: Manual daemon mode, skipping starting core");
+    log.info("Core Manager: Manual daemon mode, skipping starting core");
+    } else if (corePID > "1") {
+      log.info("Core Manager: Daemon Process already running. Skipping starting core");
     } else {
+      log.info("isCoreRunning() output: " + corePID)
       if (CoreBinaryExists()) {
-        const fs = require("fs");
+        var fs = require("fs");
         if (!fs.existsSync(datadir)) {
           log.info(
             "Core Manager: Data Directory path not found. Creating folder: " +
@@ -284,22 +325,12 @@ class Core extends EventEmitter {
           );
           fs.mkdirSync(datadir);
         }
-
         log.info("Core Manager: Starting core");
-        var spawn = require("child_process").spawn;
-        coreprocess = spawn(GetCoreBinaryPath(), parameters, {
+        var spawn = require('cross-spawn');
+        var coreprocess = spawn(GetCoreBinaryPath(), parameters, {
           shell: false,
-          detached: true
-        });
-        coreprocess.on("error", err => {
-          log.info("Core Manager: Core has returned an error: " + err);
-        });
-        coreprocess.once("exit", (code, signal) => {
-          log.info(code, signal);
-          log.info("Core Manager: Core has exited unexpectedly");
-        });
-        coreprocess.once("close", (code, signal) => {
-          log.info("Core Manager: Core stdio streams have closed unexpectedly");
+          detached: true,
+          stdio: ['ignore','ignore','ignore']
         });
         if (coreprocess != null)
           log.info(
@@ -313,42 +344,44 @@ class Core extends EventEmitter {
         );
       }
     }
-    this.emit("starting");
   }
+
   // stop: Stop the core from running by sending SIGTERM to the process
-  stop(callback) {
-    console.log("Core Stop Initiated");
-    // if coreprocess is null we were in manual daemon mode, just exec the callback
-    if (coreprocess == null) {
-      if (callback) callback();
-      return;
-    }
-    log.info(
-      "Core Manager: Core is stopping (process id: " + coreprocess.pid + ")"
-    );
-    var _this = this;
-    coreprocess.once("error", err => {
-      log.info("Core Manager: Core has returned an error: " + err);
-    });
-    coreprocess.once("exit", (code, signal) => {
-      log.info("Core Manager: Core has exited");
-    });
-    coreprocess.once("close", (code, signal) => {
-      log.info("Core Manager: Core stdio streams have closed");
-      //_this.removeListener('close', _this.onClose);
-      coreprocess = null;
-      responding = false;
-      if (callback != undefined) {
-        callback();
+  stop() {
+    log.info('Core Manager: Stop function called');
+    let settings = require("./settings").GetSettings();
+    let coreBinaryName = GetCoreBinaryName();
+    let corePID = getCorePID();
+    let coreParentPID = getCoreParentPID();
+    //let daemonProcs = utils.findPID(coreBinaryName);
+
+    if (coreprocess == null && coreParentPID > '1') {
+      if (settings.keepDaemon != true) {
+        if (corePID > '1') {
+          log.info("Core Manager: Killing process " + corePID);
+          cp.spawn('kill', '-9 ' + corePID);
+          var _this = this;
+          process.kill(corePID);
+          if (callback) callback();
+        }
+      } else {
+        log.info("Core Manager: Closing wallet and leaving daemon running.");
+        responding = false;
+        coreprocess.removeAllListeners();
+        coreprpcess.abort();
+        coreprocess.unref();
+        coreprocess = "abort";
+        if (callback) callback();
       }
-    });
-    coreprocess.kill();
-    this.emit("stopping");
+    }
   }
 
   // restart: Restart the core process
   restart() {
     var _this = this;
+    let settings = require("./settings").GetSettings();
+    settings.keepDaemon = false;
+    SaveSettings(settings);
     this.stop(function() {
       _this.start();
     });

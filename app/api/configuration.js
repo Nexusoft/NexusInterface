@@ -161,6 +161,9 @@ configuration.GetAppResourceDir = function() {
   } else {
     rawPath = path.dirname(app.getPath("exe")) + "/resources/app/";
   }
+  if (process.env.NODE_ENV_RUN == "production-test") {
+    rawPath = path.join(rawPath, '..', '..', '..', '..', '..', 'app');
+  }
   if (process.platform == "win32") {
     return path.win32.normalize(rawPath);
   } else {
@@ -170,7 +173,7 @@ configuration.GetAppResourceDir = function() {
 
 configuration.GetBootstrapSize = async function() {
   let remote = require("remote-file-size");
-  const url = "http://support.nexusearth.com:8081/recent.tar.gz";
+  const url = "https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz";
 
   let total = 0;
   let promise = new Promise((resolve, reject) => {
@@ -236,7 +239,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
       datadir = process.env.HOME + "/.Nexus_Tritium_Data";
     }
 
-    const url = "http://support.nexusearth.com:8081/recent.tar.gz";
+    const url = "https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz";
     tarball.extractTarballDownload(url, tarGzLocation, datadir, {}, function(
       err,
       result
