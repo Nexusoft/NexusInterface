@@ -16,16 +16,21 @@ import settings from "./settings";
 import intl from "./intl";
 import { addLocaleData } from "react-intl";
 import ru from "react-intl/locale-data/ru";
+import ja from "react-intl/locale-data/ja";
+import de from "react-intl/locale-data/de";
 import en from "react-intl/locale-data/en";
+import ko from "react-intl/locale-data/ko";
+import fr from "react-intl/locale-data/fr";
+import es from "react-intl/locale-data/es";
 import { FormattedMessage } from "react-intl";
-// import { intlReducer } from "react-intl-redux";
-import itLocaleData from "react-intl/locale-data/it";
-import enLocaleData from "react-intl/locale-data/en";
-import ruLocaleData from "react-intl/locale-data/ru";
 
-addLocaleData([...itLocaleData, ...ruLocaleData]);
 addLocaleData(ru);
 addLocaleData(en);
+addLocaleData(ja);
+addLocaleData(de);
+addLocaleData(ko);
+addLocaleData(fr);
+addLocaleData(es);
 
 export default function createRootReducer(history: {}) {
   const routerReducer = connectRouter(history)(() => {});
