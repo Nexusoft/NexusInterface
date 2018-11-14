@@ -1,13 +1,11 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import { createHashHistory } from "history";
 import thunk from "redux-thunk";
-
-import { routerMiddleware, routerActions } from "react-router-redux";
+import { routerMiddleware, routerActions } from "connected-react-router";
 import { createLogger } from "redux-logger";
 import rootReducer from "../reducers";
 
 import { FormattedMessage, addLocaleData } from "react-intl";
-import { combineReducers } from "redux";
 import { Provider } from "react-intl-redux";
 import itLocaleData from "react-intl/locale-data/it";
 import enLocaleData from "react-intl/locale-data/en";
@@ -57,18 +55,16 @@ const configureStore = () => {
   const enhancer = composeEnhancers(...enhancers);
 
   // Create Store
-  const STORE = createStore(rootReducer, enhancer);
+  const store = createStore(rootReducer, enhancer);
 
   if (module.hot) {
     module.hot.accept(
       "../reducers",
-      () => store.replaceReducer(require("../reducers")) // eslint-disable-line global-require
+      () => store.replaceReducer(require("../reducers").default) // eslint-disable-line global-require
     );
   }
 
-  return STORE;
+  return store;
 };
 
-const store = configureStore();
-
-export default { store, history };
+export default { configureStore, history };

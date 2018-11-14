@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Component } from "react";
 // import { Provider } from "react-redux";
-import { ConnectedRouter } from "react-router-redux";
+import { ConnectedRouter } from "connected-react-router";
 import { Route } from "react-router";
 // import { FormattedMessage, IntlProvider } from "react-intl-redux";
 import App from "./App";
@@ -24,43 +24,51 @@ import messages from "../Language/messages";
 import locale from "../reducers/intl";
 import enLocaleData from "react-intl/locale-data/en";
 import { addLocaleData } from "react-intl";
-import { updateIntl } from "react-intl-redux";
+//import { updateIntl } from "react-intl-redux";
 import localesReducer from "../reducers/intl";
 import { connect, Provider } from "react-redux";
 import IntlWrapper from "../containers/intlWrapper";
-export default function Root({ store, history }) {
-  return (
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <App>
-          <div id="app-header">
-            <Route path="/" component={Header} />
-          </div>
-          <div id="app-content">
-            <div id="app-content-container">
-              <div id="app-loader">
-                <Loader />
-              </div>
-              <Route exact path="/" component={Overview} />
-              <Route exact path="/SendRecieve" component={SendRecieve} />
-              <Route exact path="/Transactions" component={Transactions} />
-              <Route exact path="/Market" component={Market} />
-              <Route exact path="/Addressbook" component={Addressbook} />
-              <Route exact path="/BlockExplorer" component={BlockExplorer} />
-              <Route path="/Settings" component={Settings} />
-              <Route path="/Terminal" component={Terminal} />
-              <Route exact path="/StyleGuide" component={StyleGuide} />
-              <Route path="/Exchange" component={Exchange} />
-              <Route exact path="/List" component={List} />
-              <Route exact path="/About" component={About} />
-            </div>
-          </div>
+import type { Store } from "../reducers/types";
+type Props = {
+  store: Store,
+  history: {}
+};
 
-          <div id="app-navigation">
-            <Route path="/" component={Footer} />
-          </div>
-        </App>
-      </ConnectedRouter>
-    </Provider>
-  );
+export default class Root extends Component<Props> {
+  render() {
+    const { store, history } = this.props;
+    return (
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          <App>
+            <div id="app-header">
+              <Route path="/" component={Header} />
+            </div>
+            <div id="app-content">
+              <div id="app-content-container">
+                <div id="app-loader">
+                  <Loader />
+                </div>
+                <Route exact path="/" component={Overview} />
+                <Route exact path="/SendRecieve" component={SendRecieve} />
+                <Route exact path="/Transactions" component={Transactions} />
+                <Route exact path="/Market" component={Market} />
+                <Route exact path="/Addressbook" component={Addressbook} />
+                <Route exact path="/BlockExplorer" component={BlockExplorer} />
+                <Route path="/Settings" component={Settings} />
+                <Route path="/Terminal" component={Terminal} />
+                <Route exact path="/StyleGuide" component={StyleGuide} />
+                <Route path="/Exchange" component={Exchange} />
+                <Route exact path="/List" component={List} />
+                <Route exact path="/About" component={About} />
+              </div>
+            </div>
+            <div id="app-navigation">
+              <Route path="/" component={Footer} />
+            </div>
+          </App>
+        </ConnectedRouter>
+      </Provider>
+    );
+  }
 }

@@ -61,11 +61,11 @@ configuration.ReadJson = function(filename) {
 configuration.Write = function(filename, content) {
   var fs = require("fs");
   const path = require("path");
-  if (!this.Exists("settings.json")) {
-    console.log("Creating settings.json in " + this.GetAppDataDirectory());
-    fs.closeSync(fs.openSync(path.join(this.GetAppDataDirectory(), "settings.json"), 'w'));
-    fs.writeFileSync(path.join(this.GetAppDataDirectory(), "settings.json"), '{}');
-  }
+//  if (!this.Exists("settings.json")) {
+//    console.log("Creating settings.json in " + this.GetAppDataDirectory());
+//    fs.closeSync(fs.openSync(path.join(this.GetAppDataDirectory(), "settings.json"), 'w'));
+//    fs.writeFileSync(path.join(this.GetAppDataDirectory(), "settings.json"), '{}');
+//  }
   try {
     fs.writeFileSync(path.join(this.GetAppDataDirectory(), filename), content);
 

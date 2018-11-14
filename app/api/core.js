@@ -379,11 +379,13 @@ class Core extends EventEmitter {
       if (settings.keepDaemon != true) {
         if (corePID > '1') {
           log.info("Core Manager: Killing process " + corePID);
-          if (process.platform == "win32") {
-            execSync('taskkill /F /PID %KILL_PID%', [], {env: modEnv});
-          } else {
-            execSync('kill -9 $KILL_PID', [], {env: modEnv});
-          var _this = this;
+          if (require('is-running')(corePID)) {
+            if (process.platform == "win32") {
+              execSync('taskkill /F /PID %KILL_PID%', [], {env: modEnv});
+            } else {
+              execSync('kill -9 $KILL_PID', [], {env: modEnv});
+            var _this = this;
+            }
           }
         }
       } else {

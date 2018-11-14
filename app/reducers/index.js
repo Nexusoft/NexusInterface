@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { routerReducer } from "react-router-redux";
+import { connectRouter } from "connected-react-router";
 
 import overview from "./overview";
 import list from "./list";
@@ -27,20 +27,24 @@ addLocaleData([...itLocaleData, ...ruLocaleData]);
 addLocaleData(ru);
 addLocaleData(en);
 
-const rootReducer = combineReducers({
-  intl,
-  overview,
-  routerReducer,
-  list,
-  login,
-  market,
-  sendRecieve,
-  transactions,
-  exchange,
-  common,
-  addressbook,
-  terminal,
-  settings
-});
+export default function createRootReducer(history: {}) {
+  const routerReducer = connectRouter(history)(() => {});
 
-export default rootReducer;
+  return connectRouter(history)(
+    combineReducers({
+      intl,
+      overview,
+      routerReducer,
+      list,
+      login,
+      market,
+      sendRecieve,
+      transactions,
+      exchange,
+      common,
+      addressbook,
+      terminal,
+      settings
+    })
+  );
+}

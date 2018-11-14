@@ -18,7 +18,7 @@ export default merge.smart(baseConfig, {
 
   entry: "./app/main.dev",
 
-  // mode: "production",
+  mode: "production",
 
   // 'main.js' in root
   output: {
@@ -48,12 +48,9 @@ export default merge.smart(baseConfig, {
      * development checks
      */
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(
-        process.env.NODE_ENV || "production"
-      ),
-      "process.env.DEBUG_PROD": JSON.stringify(
-        process.env.DEBUG_PROD || "false"
-      )
+      NODE_ENV: "production",
+      DEBUG_PROD: false,
+      START_MINIMIZED: false
     })
   ],
 

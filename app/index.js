@@ -2,8 +2,10 @@ import React from "react";
 import { render } from "react-dom";
 import { AppContainer } from "react-hot-loader";
 import Root from "./containers/Root";
-import { store, history } from "./store/configureStore";
+import { configureStore, history } from "./store/configureStore";
 import "./CSS/app.global.css";
+
+const store = configureStore();
 
 render(
   <AppContainer>

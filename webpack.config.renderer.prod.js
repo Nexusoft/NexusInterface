@@ -4,7 +4,6 @@
 
 import path from "path";
 import webpack from "webpack";
-//import ExtractTextPlugin from "extract-text-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import OptimizeCSSAssetsPlugin from "optimize-css-assets-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
@@ -12,7 +11,6 @@ import merge from "webpack-merge";
 // import BabiliPlugin from "babili-webpack-plBabiliPluginugin";
 import baseConfig from "./webpack.config.base";
 import CheckNodeEnv from "./internals/scripts/CheckNodeEnv";
-import CopyWebpackPlugin from "copy-webpack-plugin";
 
 CheckNodeEnv("production");
 
@@ -23,7 +21,7 @@ export default merge.smart(baseConfig, {
 
   entry: "./app/index",
 
-  // mode: "production",
+  mode: "production",
 
   output: {
     path: path.join(__dirname, "app/dist"),
@@ -59,7 +57,6 @@ export default merge.smart(baseConfig, {
             loader: "css-loader",
             options: {
               modules: true,
-              importLoaders: 1,
               localIdentName: "[name]__[local]__[hash:base64:5]"
             }
           }
@@ -67,13 +64,16 @@ export default merge.smart(baseConfig, {
       },
       // Add SASS support  - compile all .global.scss files and pipe it to style.css
       {
-        test: /\.global\.scss$/,
+        test: /\.global\.(scss|sass)$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader
           },
           {
-            loader: "css-loader"
+            loader: "css-loader",
+            options: {
+              importLoaders: 1
+            }
           },
           {
             loader: "sass-loader"
@@ -82,7 +82,7 @@ export default merge.smart(baseConfig, {
       },
       // Add SASS support  - compile all other .scss files and pipe it to style.css
       {
-        test: /^((?!\.global).)*\.scss$/,
+        test: /^((?!\.global).)*\.(scss|sass)$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader
@@ -158,9 +158,9 @@ export default merge.smart(baseConfig, {
     ]
   },
 
-  optimization: {
-    minimizer: [new OptimizeCSSAssetsPlugin()]
-  },
+//  optimization: {
+//    minimizer: [new OptimizeCSSAssetsPlugin()]
+//  },
 
   plugins: [
     /**
@@ -178,7 +178,10 @@ export default merge.smart(baseConfig, {
     //     to: path.join(__dirname, "app/dist")
     //   }
     // ]),
-
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'production'
+    }),
+    
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(
         process.env.NODE_ENV || "production"
