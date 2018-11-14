@@ -1,9 +1,11 @@
 import configuration from "./configuration";
 import MenuBuilder from "../menu.js";
-
+const cp = require('child_process');
+const spawn = require('cross-spawn');
 const log = require("electron-log");
 const statusdelay = 1000;
 const crypto = require("crypto");
+var prevCoreProcess = 0;
 
 var coreprocess = null;
 var settings = require("./settings");
@@ -26,9 +28,6 @@ var port = "9336";
 var ip = "127.0.0.1";
 var host = "http://" + ip + ":" + port;
 var verbose = "2"; // <--Lower to 0 after beta ends
-
-//var letParam;
-//var coreprocess = null;
 
 //Set data directory by OS for automatic daemon mode
 if (process.platform === "win32") {
@@ -144,14 +143,21 @@ function GetCoreBinaryPath() {
   return coreBinaryPath;
 }
 
+// Determine if daemon running and if so, get PID
 function getCorePID() {
-  const util = require('util');
   var execSync = require('child_process').execSync;
   var modEnv = process.env;
   modEnv.Nexus_Daemon = GetCoreBinaryName();
-  var tempPID = (execSync("ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}", [], {env: modEnv}) + '').split('\n')[1].replace(/^\s*/gm,'').split(' ')[0];
-  var PID = tempPID.toString().replace(/^\s+|\s+$/gm,'');
-  //var ppid = (require('child_process').execSync(ps -p ${process.pid} -o ppid=) + '').split('\n')[0];
+  if (process.platform == "win32") {
+    var PID = (execSync('tasklist /NH /v /fi "IMAGENAME eq %Nexus_Daemon%" /fo CSV', [], {env: modEnv}) + '').split(',')[1];
+    if (PID) {
+      PID = PID.replace(/"/gm, '');
+    }
+  } else {
+    var tempPID = (execSync("ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}", [], {env: modEnv}) + '').split('\n')[1].replace(/^\s*/gm,'').split(' ')[0];
+    var PID = tempPID.toString().replace(/^\s+|\s+$/gm,'');
+  }
+  log.info('PID: ' + PID);
   if (Number(PID) == "NaN" || Number(PID) < "2") {
     return 1;
   } else {
@@ -159,21 +165,26 @@ function getCorePID() {
   }
 }
 
+// If daemon is running, get it's parent PID
 function getCoreParentPID() {
   const util = require('util');
   var execSync = require('child_process').execSync;
   var modEnv = process.env;
   modEnv.Nexus_Daemon = GetCoreBinaryName();
-  var tempPPID = (execSync("ps -o ppid --no-headers -p 1 -C ${Nexus_Daemon}", [], {env: modEnv}) + '').split('\n')[1].replace(/^\s*/gm,'').split(' ')[0];
-  var PPID = tempPPID.toString().replace(/^\s+|\s+$/gm,'');
-  //var ppid = (require('child_process').execSync(ps -p ${process.pid} -o ppid=) + '').split('\n')[0];
+  modEnv.Daemon_PID = getCorePID();
+  if (process.platform == "win32") {
+    var PPID = (execSync('wmic process where (processid=%DAEMON_PID%) get parentprocessid', [], {env: modEnv}) + '').split('\n')[1];
+  } else {
+    var tempPPID = (execSync("ps -o ppid --no-headers -p 1 -C ${Nexus_Daemon}", [], {env: modEnv}) + '').split('\n')[1].replace(/^\s*/gm,'').split(' ')[0];
+    var PPID = tempPPID.toString().replace(/^\s+|\s+$/gm,'');
+  }
+  log.info('PPID = ' + PPID);
   if (Number(PPID) == "NaN" || Number(PPID) < "2") {
     return null;
   } else {
     return Number(PPID);
   }
 }
-
 
 // CoreBinaryExists: Check if the core binary for the user's system exists or not
 function CoreBinaryExists() {
@@ -314,6 +325,7 @@ class Core extends EventEmitter {
     log.info("Core Manager: Manual daemon mode, skipping starting core");
     } else if (corePID > "1") {
       log.info("Core Manager: Daemon Process already running. Skipping starting core");
+      var prevCoreProcess = corePID;
     } else {
       log.info("isCoreRunning() output: " + corePID)
       if (CoreBinaryExists()) {
@@ -326,7 +338,6 @@ class Core extends EventEmitter {
           fs.mkdirSync(datadir);
         }
         log.info("Core Manager: Starting core");
-        var spawn = require('cross-spawn');
         var coreprocess = spawn(GetCoreBinaryPath(), parameters, {
           shell: false,
           detached: true,
@@ -344,6 +355,7 @@ class Core extends EventEmitter {
         );
       }
     }
+    this.emit("starting");
   }
 
   // stop: Stop the core from running by sending SIGTERM to the process
@@ -353,27 +365,31 @@ class Core extends EventEmitter {
     let coreBinaryName = GetCoreBinaryName();
     let corePID = getCorePID();
     let coreParentPID = getCoreParentPID();
+    var cp = require("child_process");
+    var execSync = require('child_process').execSync;
+    var modEnv = process.env;
+    modEnv.KILL_PID = corePID;
     //let daemonProcs = utils.findPID(coreBinaryName);
-
-    if (coreprocess == null && coreParentPID > '1') {
+    
+//    if (prevCoreProcess == 0) {
+//      coreprocess.kill();
+//      responding = false;
+//      coreprocess = null;
+//    } else {
       if (settings.keepDaemon != true) {
         if (corePID > '1') {
           log.info("Core Manager: Killing process " + corePID);
-          cp.spawn('kill', '-9 ' + corePID);
+          if (process.platform == "win32") {
+            execSync('taskkill /F /PID %KILL_PID%', [], {env: modEnv});
+          } else {
+            execSync('kill -9 $KILL_PID', [], {env: modEnv});
           var _this = this;
-          process.kill(corePID);
-          if (callback) callback();
+          }
         }
       } else {
         log.info("Core Manager: Closing wallet and leaving daemon running.");
-        responding = false;
-        coreprocess.removeAllListeners();
-        coreprpcess.abort();
-        coreprocess.unref();
-        coreprocess = "abort";
-        if (callback) callback();
       }
-    }
+    this.emit("stopping");
   }
 
   // restart: Restart the core process
