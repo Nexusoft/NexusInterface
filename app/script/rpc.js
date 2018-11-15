@@ -142,12 +142,6 @@ export const PROMISE = (cmd, args) => {
     });
     var ResponseObject;
 
-    let store = require("../store/configureStore");
-    if (cmd != "help") {
-      ///Send the command to the dispatch so we can place it in the output log
-      store.store.dispatch({ type: TYPE.ADD_RPC_CALL, payload: cmd });
-    }
-
     /** Opera 8.0+, Firefox, Safari **/
     try {
       ResponseObject = new XMLHttpRequest();

@@ -172,6 +172,9 @@ function getCoreParentPID() {
   var modEnv = process.env;
   modEnv.Nexus_Daemon = GetCoreBinaryName();
   modEnv.Daemon_PID = getCorePID();
+  if (modEnv.Daemon_PID == null || modEnv.Daemon_PID == undefined || modEnv.Daemon_PID === "NaN") {
+    modEnv.Daemon_PID = 0;
+   }
   if (process.platform == "win32") {
     var PPID = (execSync('wmic process where (processid=%DAEMON_PID%) get parentprocessid', [], {env: modEnv}) + '').split('\n')[1];
   } else {
