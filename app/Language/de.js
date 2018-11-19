@@ -90,6 +90,7 @@ export default {
     "transactions.MyAddress": "Meine Adresse",
     "transactions.Page": "Seite",
     "transactions.Rows": "Reihen",
+    "transactions.Pending": "(Steht aus)",
     //Market//
     "Market.Information": "Marktinformationen",
     "Market.Refreash": "Marktdaten aktualisieren",

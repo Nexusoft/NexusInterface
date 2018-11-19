@@ -89,6 +89,7 @@ export default {
     "transactions.MyAddress": "私の住所",
     "transactions.Page": "ページ",
     "transactions.Rows": "行",
+    "transactions.Pending": "（保留中)",
     //Market//
     "Market.Information": "市場情報",
     "Market.Refreash": "マーケットデータをリフレッシュする",

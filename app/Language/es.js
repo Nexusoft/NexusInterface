@@ -89,6 +89,7 @@ export default {
     "transactions.confirmations": "Confirmaciones",
     "transactions.blockhash": "Número de hash",
     "transactions.blocknumber": "Número de bloque",
+    "transactions.Pending": "(Pendiente)",
 
     //Market//
     "Market.Information": "Información de mercado",

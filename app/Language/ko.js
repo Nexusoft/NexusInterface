@@ -88,6 +88,7 @@ export default {
     "transactions.MyAddress": "내 주소",
     "transactions.Page": "페이지",
     "transactions.Rows": "행",
+    "transactions.Pending": "(대기 중)",
 
     //Market//
     "Market.Information": "시장 정보",

@@ -89,6 +89,7 @@ export default {
     "transactions.Page": "страница",
     "transactions.Rows": "Ряды",
     "transactions.MyAddress": "Мой адрес",
+    "transactions.Pending": "(В ожидании)",
 
     //Market//
     "Market.Information": "Информация о рынке",

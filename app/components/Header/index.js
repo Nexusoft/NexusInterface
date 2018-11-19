@@ -434,8 +434,8 @@ class Header extends Component {
     if (this.props.connections === undefined) {
       return (
         <FormattedMessage
-          id="Header.DaemonNotLoaded"
-          defaultMessage="Daemon Not Loaded"
+          id="Header.WalletUnencrypted"
+          defaultMessage="Wallet Unencrypted"
         />
       );
     } else {
