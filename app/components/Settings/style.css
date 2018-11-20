@@ -105,7 +105,10 @@ form {
 }
 
 .wallpaperDiv {
-  margin-left: -10px;
+  width: 5px;
+}
+#wallpaper {
+  width: 10px;
 }
 #settings input[type="file"]::before {
   /* content: "Select a wallpaper"; */
