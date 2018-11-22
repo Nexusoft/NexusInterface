@@ -454,6 +454,7 @@ class Addressbook extends Component {
 
             <button
               className="button primary"
+              id="modalAddOrEditContact"
               onClick={() =>
                 this.props.AddContact(
                   this.props.prototypeName,

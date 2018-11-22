@@ -228,7 +228,7 @@ class TerminalConsole extends Component {
 
   // Mandatory React method
   render() {
-    if (this.props.connections === undefined || this.props.isInSync === false) {
+    if (false) {
       return (
         <h2>
           <FormattedMessage
@@ -260,9 +260,9 @@ class TerminalConsole extends Component {
               )}
             </FormattedMessage>
             <button
-              id="terminal-console-reset"
+              id="terminal-console-input-button"
               className="button"
-              onClick={() => this.props.resetMyConsole()}
+              onClick={() => this.processInput()}
             >
               <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
             </button>
