@@ -228,7 +228,7 @@ class TerminalConsole extends Component {
 
   // Mandatory React method
   render() {
-    if (this.props.connections === undefined || this.props.isInSync === false) {
+    if (this.props.connections === undefined) {
       return (
         <h2>
           <FormattedMessage
