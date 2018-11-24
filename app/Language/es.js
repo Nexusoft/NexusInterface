@@ -90,6 +90,7 @@ export default {
     "transactions.blockhash": "Número de hash",
     "transactions.blocknumber": "Número de bloque",
     "transactions.Pending": "(Pendiente)",
+    "transactions.NoRowsFound": "No se encontraron filas",
 
     //Market//
     "Market.Information": "Información de mercado",

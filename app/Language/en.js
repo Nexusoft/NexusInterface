@@ -91,6 +91,7 @@ export default {
     "transactions.Page": "Page",
     "transactions.Rows": "Rows",
     "transactions.Pending": "(Pending)",
+    "transactions.NoRowsFound": "No Rows Found",
     //Market//
     "Market.Information": "Market Information",
     "Market.Refreash": "Refresh Market Data",

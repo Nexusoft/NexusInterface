@@ -91,6 +91,7 @@ export default {
     "transactions.Page": "Seite",
     "transactions.Rows": "Reihen",
     "transactions.Pending": "(Steht aus)",
+    "transactions.NoRowsFound": "Keine Zeilen gefunden",
     //Market//
     "Market.Information": "Marktinformationen",
     "Market.Refreash": "Marktdaten aktualisieren",

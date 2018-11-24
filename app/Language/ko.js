@@ -89,6 +89,7 @@ export default {
     "transactions.Page": "페이지",
     "transactions.Rows": "행",
     "transactions.Pending": "(대기 중)",
+    "transactions.NoRowsFound": "행이 없습니다.",
 
     //Market//
     "Market.Information": "시장 정보",

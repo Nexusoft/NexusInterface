@@ -90,6 +90,8 @@ export default {
     "transactions.Page": "ページ",
     "transactions.Rows": "行",
     "transactions.Pending": "（保留中)",
+    "transactions.NoRowsFound": "行が見つかりません",
+
     //Market//
     "Market.Information": "市場情報",
     "Market.Refreash": "マーケットデータをリフレッシュする",

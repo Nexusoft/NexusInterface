@@ -90,6 +90,7 @@ export default {
     "transactions.Rows": "Ряды",
     "transactions.MyAddress": "Мой адрес",
     "transactions.Pending": "(В ожидании)",
+    "transactions.NoRowsFound": "Нет строк найдено",
 
     //Market//
     "Market.Information": "Информация о рынке",
