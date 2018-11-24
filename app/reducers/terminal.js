@@ -24,10 +24,6 @@ export default (state = initialState, action) => {
       break;
     case TYPE.PRINT_TO_CONSOLE:
       var payloadCopy = action.payload;
-
-      for (var i = 0; i < state.consoleOutput.length; i++) {
-        payloadCopy.push(state.consoleOutput[i]);
-      }
       payloadCopy.push("\n  ");
       return {
         ...state,

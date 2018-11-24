@@ -262,10 +262,21 @@ class TerminalConsole extends Component {
             <button
               id="terminal-console-reset"
               className="button"
-              onClick={() => this.props.resetMyConsole()}
+              onClick={() => this.processInput()}
             >
               <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
             </button>
+            <div
+              key="autocomplete"
+              style={{
+                position: "absolute",
+                top: "100%",
+                zIndex: 99,
+                background: "black"
+              }}
+            >
+              {this.autoComplete()}{" "}
+            </div>
           </div>
 
           <div id="terminal-console-output">{this.processOutput()}</div>
