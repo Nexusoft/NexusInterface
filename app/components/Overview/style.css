@@ -140,9 +140,7 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
 .right-stats > div img {
   float: left;
 }
-#nxs-getinfo-connections-image {
-  filter: hue-rotate(0deg) grayscale(0%) brightness(100%);
-}
+
 
 /*------------------------------------------------------------------
 MEDIA QUERIES
