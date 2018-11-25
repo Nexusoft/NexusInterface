@@ -160,7 +160,7 @@ class TerminalConsole extends Component {
         })
         .catch(error => {
           tempConsoleOutput.push("Error: " + error);
-          tempConsoleOutput.push(["\n  "]);
+          tempConsoleOutput.push("\n  ");
           this.props.printToConsole(tempConsoleOutput);
         });
     } else {
