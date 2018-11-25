@@ -29,6 +29,11 @@ export default (state = initialState, action) => {
         ...state,
         percentDownloaded: action.payload
       };
+    case TYPE.CLEAR_FOR_RESTART:
+      return {
+        ...initialState
+      };
+      break;
     case TYPE.CLEAR_FOR_BOOTSTRAPING:
       return {
         ...initialState,

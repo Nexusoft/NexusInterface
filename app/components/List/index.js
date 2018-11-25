@@ -32,6 +32,9 @@ const mapDispatchToProps = dispatch => ({
 class List extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
+    RPC.PROMISE("getnetworktrustkeys", []).then(payload => {
+      this.props.GetListDump(payload.keys);
+    });
     this.props.googleanalytics.SendScreen("TrustList");
     window.addEventListener("contextmenu", this.setupcontextmenu, false);
   }

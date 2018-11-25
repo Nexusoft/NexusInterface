@@ -29,8 +29,9 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = dispatch => ({
-  setSettings: settings =>
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings }),
+  setSettings: settings => {
+    dispatch({ type: TYPE.GET_SETTINGS, payload: settings });
+  },
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
@@ -52,8 +53,12 @@ const mapDispatchToProps = dispatch => ({
   SwitchLocale: locale => {
     dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
   },
-
-  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL })
+  clearForRestart: () => {
+    dispatch({ type: TYPE.CLEAR_FOR_RESTART });
+  },
+  CloseModal: () => {
+    dispatch({ type: TYPE.HIDE_MODAL });
+  }
 });
 
 class SettingsCore extends Component {
@@ -644,9 +649,6 @@ class SettingsCore extends Component {
                     );
                     this.props.CloseModal2();
                     this.props.OpenModal("Core Settings Saved");
-                    setTimeout(() => {
-                      this.props.CloseModal();
-                    }, 2000);
                   }}
                 />
               )}
@@ -1020,7 +1022,10 @@ class SettingsCore extends Component {
               className="button primary"
               onClick={e => {
                 e.preventDefault();
+                this.props.clearForRestart();
+
                 core.restart();
+                this.props.OpenModal("Core Restarting");
               }}
             >
               <FormattedMessage

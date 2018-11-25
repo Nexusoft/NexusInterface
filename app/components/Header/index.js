@@ -168,6 +168,7 @@ class Header extends Component {
   }
 
   bootstrapModalController() {
+    // if (this.props.manualDaemon=)
     if (
       (this.props.settings.bootstrap && this.props.connections !== undefined) ||
       this.props.BootstrapModal
@@ -699,6 +700,16 @@ class Header extends Component {
           </h2>
         );
         break;
+      case "Core Restarting":
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.CoreRestarting"
+              defaultMessage="Core Restarting"
+            />
+          </h2>
+        );
+        break;
       default:
         return <h2>{this.props.modaltype}</h2>;
         break;
@@ -843,7 +854,9 @@ class Header extends Component {
           onClose={this.props.CloseModal}
           classNames={{ modal: "custom-modal" }}
           onOpen={() => {
-            console.log(this);
+            setTimeout(() => {
+              this.props.CloseModal();
+            }, 3000);
           }}
         >
           {this.modalinternal()}
