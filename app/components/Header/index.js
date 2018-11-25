@@ -168,12 +168,14 @@ class Header extends Component {
   }
 
   bootstrapModalController() {
-    // if (this.props.manualDaemon=)
-    if (
-      (this.props.settings.bootstrap && this.props.connections !== undefined) ||
-      this.props.BootstrapModal
-    ) {
-      return true;
+    if (this.props.manualDaemon !== true) {
+      if (
+        (this.props.settings.bootstrap &&
+          this.props.connections !== undefined) ||
+        this.props.BootstrapModal
+      ) {
+        return true;
+      } else return false;
     } else return false;
   }
 
