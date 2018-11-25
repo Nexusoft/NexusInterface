@@ -87,8 +87,8 @@ class TerminalConsole extends Component {
       "UseCommand",
       1
     );
-
-    let tempConsoleOutput = [...this.props.consoleOutput];
+    // ...this.props.consoleOutput
+    let tempConsoleOutput = [];
     let splitInput = this.props.currentInput.split(" ");
     let preSanatized = splitInput[0].replace(/[^a-zA-Z0-9]/g, "");
     splitInput[0] = preSanatized;
@@ -110,12 +110,16 @@ class TerminalConsole extends Component {
       }
       RPCArguments.push(element);
     }
-
+    console.log(
+      this.props.commandList.some(function(v) {
+        return v.indexOf(splitInput[0]) >= 0;
+      })
+    );
     /// Execute the command with the given args
     if (
       this.props.commandList.some(function(v) {
         return v.indexOf(splitInput[0]) >= 0;
-      }) == true
+      })
     ) {
       RPC.PROMISE(splitInput[0], RPCArguments)
         .then(payload => {
@@ -155,19 +159,15 @@ class TerminalConsole extends Component {
           }
         })
         .catch(error => {
-          tempConsoleOutput.push(
-            "Error: " +
-              [error.error.message] +
-              "(errorcode " +
-              error.error.code +
-              ")"
-          );
+          tempConsoleOutput.push("Error: " + error);
+          tempConsoleOutput.push(["\n  "]);
           this.props.printToConsole(tempConsoleOutput);
         });
     } else {
       tempConsoleOutput.push([
         this.props.currentInput + " is a invalid Command"
       ]);
+      tempConsoleOutput.push(["\n  "]);
       this.props.printToConsole(tempConsoleOutput);
     }
   }
@@ -262,7 +262,7 @@ class TerminalConsole extends Component {
             <button
               id="terminal-console-reset"
               className="button"
-              onClick={() => this.props.resetMyConsole()}
+              onClick={() => this.processInput()}
             >
               <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
             </button>
