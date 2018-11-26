@@ -155,13 +155,20 @@ class TerminalConsole extends Component {
           }
         })
         .catch(error => {
-          tempConsoleOutput.push(
-            "Error: " +
-              [error.error.message] +
-              "(errorcode " +
-              error.error.code +
-              ")"
-          );
+          if (error.message !== undefined){
+            tempConsoleOutput.push(
+              "Error: " +
+                [error.error.message] +
+                "(errorcode " +
+                error.error.code +
+                ")"
+            );
+          }
+          else
+          {
+            //This is the error if the rpc is unavailable
+            tempConsoleOutput.push(error);
+          }
           this.props.printToConsole(tempConsoleOutput);
         });
     } else {

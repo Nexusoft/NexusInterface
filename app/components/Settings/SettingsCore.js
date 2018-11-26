@@ -288,8 +288,7 @@ class SettingsCore extends Component {
     var settings = require("../../api/settings.js");
     var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemon = el.checked;
-    settings.SaveSettings(settingsObj);
+ 
 
     var manualDaemonSettings = document.getElementById(
       "manual-daemon-settings"
@@ -304,7 +303,23 @@ class SettingsCore extends Component {
     } else {
       manualDaemonSettings.style.display = "none";
       automaticDaemonSettings.style.display = "block";
-    }
+    }  
+    
+    let manualDeamonUserValue = document.getElementById("manualDaemonUser").value;
+    let manualDeamonPasswordValue = document.getElementById("manualDaemonPassword").value;
+    let manualDeamonIPValue = document.getElementById("manualDaemonIP").value;
+    let manualDeamonPortValue = document.getElementById("manualDaemonPort").value;
+    let manualDeamonDataDirValue = document.getElementById("manualDaemonDataDir").value;
+
+    settingsObj.manualDaemon = el.checked;
+    settingsObj.manualDaemonUser = manualDeamonUserValue;
+    settingsObj.manualDaemonPassword = manualDeamonPasswordValue;
+    settingsObj.manualDaemonIP = manualDeamonIPValue;
+    settingsObj.manualDaemonPort = manualDeamonPortValue;
+    settingsObj.manualDaemonDataDir = manualDeamonDataDirValue;
+    console.log(manualDeamonUserValue);
+    console.log(settingsObj);
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonUser(event) {
@@ -1028,6 +1043,7 @@ class SettingsCore extends Component {
                 defaultMesage="Restart Core"
               />
             </button>
+            mmm
             <button
               // id="restart-core"
               className="button primary"

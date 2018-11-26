@@ -1,7 +1,7 @@
 {
   "name": "nexus-tritium-beta",
   "productName": "Nexus_Tritium_Wallet_Beta",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "buildDate": "October 19th 2018",
   "description": "Nexus_Tritium_Wallet_Beta",
   "scripts": {
