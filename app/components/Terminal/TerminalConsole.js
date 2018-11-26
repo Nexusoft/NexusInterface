@@ -267,7 +267,7 @@ class TerminalConsole extends Component {
               )}
             </FormattedMessage>
             <button
-              id="terminal-console-reset"
+              id="terminal-console-input-button"
               className="button"
               onClick={() => this.processInput()}
             >
