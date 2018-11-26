@@ -155,13 +155,20 @@ class TerminalConsole extends Component {
           }
         })
         .catch(error => {
-          tempConsoleOutput.push(
-            "Error: " +
-              [error.error.message] +
-              "(errorcode " +
-              error.error.code +
-              ")"
-          );
+          if (error.message !== undefined){
+            tempConsoleOutput.push(
+              "Error: " +
+                [error.error.message] +
+                "(errorcode " +
+                error.error.code +
+                ")"
+            );
+          }
+          else
+          {
+            //This is the error if the rpc is unavailable
+            tempConsoleOutput.push(error);
+          }
           this.props.printToConsole(tempConsoleOutput);
         });
     } else {
@@ -228,7 +235,7 @@ class TerminalConsole extends Component {
 
   // Mandatory React method
   render() {
-    if (this.props.connections === undefined || this.props.isInSync === false) {
+    if (this.props.connections === undefined) {
       return (
         <h2>
           <FormattedMessage
@@ -260,12 +267,23 @@ class TerminalConsole extends Component {
               )}
             </FormattedMessage>
             <button
-              id="terminal-console-reset"
+              id="terminal-console-input-button"
               className="button"
-              onClick={() => this.props.resetMyConsole()}
+              onClick={() => this.processInput()}
             >
               <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
             </button>
+            <div
+              key="autocomplete"
+              style={{
+                position: "absolute",
+                top: "100%",
+                zIndex: 99,
+                background: "black"
+              }}
+            >
+              {this.autoComplete()}{" "}
+            </div>
           </div>
 
           <div id="terminal-console-output">{this.processOutput()}</div>

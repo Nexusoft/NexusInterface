@@ -8,7 +8,7 @@ sudo apt-get purge -y nexus-tritium-beta
 rm -r ~/.config/Nexus_Tritium_Wallet_Beta
 rm -r dll
 npm run package-linux
-sudo apt-get install -y ./release/nexus-tritium-beta_0.8.1_amd64.deb
+sudo apt-get install -y ./release/nexus-tritium-beta_0.8.2_amd64.deb
 echo ""
 echo "Cleared for next attempt!"
 echo ""
