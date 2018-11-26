@@ -347,7 +347,7 @@ export default {
     "ToolTip.SyncFromScratch": "No, let it sync from scratch",
     "ToolTip.RecentDatabaseDownloading": "Recent Database Downloading",
     "ToolTip.PleaseWait": "Please Wait...",
-    "ToolTip.RecentDatabaseExtracting": "Recent Database Extracting", // NEW
+    "ToolTip.RecentDatabaseExtracting": "Recent Database Extracting",
 
     //ALERTS//
     "Alert.Received": "Transaction Received",
@@ -356,6 +356,7 @@ export default {
     "Alert.TrustTransaction": "Trust Transaction",
     "Alert.regiesteredToThis": "This is an address regiestered to this wallet",
     "Alert.InvalidAddress": "Invalid Address",
+    "Alert.InvalidAmount": "Invalid Amount",
     "Alert.Invalid": "Invalid",
     "Alert.AddressAdded": "Address Added",
     "Alert.NoAddresses": "No Addresses",

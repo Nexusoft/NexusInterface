@@ -336,6 +336,7 @@ export default {
     "ToolTip.SyncFromScratch": "아니요, 처음부터 동기화 해 보겠습니다.",
     "ToolTip.RecentDatabaseDownloading": "최근 데이터베이스 다운로드",
     "ToolTip.PleaseWait": "기다려주십시오 ...",
+    "ToolTip.RecentDatabaseExtracting": "최근 데이터베이스 추출 중",
 
     //ALERTS//
     "Alert.Received": "거래 접수",
@@ -365,6 +366,7 @@ export default {
     "Alert.CoreSettingsSaved": "저장된 핵심 설정",
     "Alert.ContactsExported": "내보낼 연락처",
     "Alert.DaemonLoadingWait": "데몬로드 중, 잠시 기다려주십시오.",
+    "Alert.InvalidAmount": "유효하지 않은 금액",
 
     //COLORPICKER//
     "Cp.AC1": "악센트 색상 1",

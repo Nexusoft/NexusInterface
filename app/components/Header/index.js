@@ -523,6 +523,16 @@ class Header extends Component {
           </h2>
         );
         break;
+      case "Invalid Amount":
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidAddress"
+              defaultMessage="Invalid Amount"
+            />
+          </h2>
+        );
+        break;
       case "Invalid":
         return (
           <h2>

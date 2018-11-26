@@ -358,6 +358,8 @@ export default {
     "ToolTip.RecentDatabaseDownloading":
       "Téléchargement de la base de données récente",
     "ToolTip.PleaseWait": "S'il vous plaît, attendez...",
+    "ToolTip.RecentDatabaseExtracting":
+      "Extraction récente de bases de données",
 
     //ALERTS//
     "Alert.Received": "Transaction reçue",
@@ -388,6 +390,7 @@ export default {
     "Alert.CoreSettingsSaved": "Paramètres de base enregistrés",
     "Alert.ContactsExported": "Contacts exportés",
     "Alert.DaemonLoadingWait": "Chargement du démon, veuillez patienter",
+    "Alert.InvalidAmount": "Montant invalide",
 
     //COLORPICKER//
     "Cp.AC1": "Couleur d'accent 1",

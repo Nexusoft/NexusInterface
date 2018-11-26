@@ -342,6 +342,7 @@ export default {
     "ToolTip.SyncFromScratch": "Нет, пусть синхронизируется с нуля",
     "ToolTip.RecentDatabaseDownloading": "Загрузка последней базы данных",
     "ToolTip.PleaseWait": "Подождите пожалуйста...",
+    "ToolTip.RecentDatabaseExtracting": "Извлечение последней базы данных",
 
     //ALERTS//
     "Alert.Received": "Полученная транзакция",
@@ -371,6 +372,7 @@ export default {
     "Alert.CoreSettingsSaved": "Сохраненные настройки ядра",
     "Alert.ContactsExported": "Контакты Экспортировано",
     "Alert.DaemonLoadingWait": "Загрузка демонов, пожалуйста, подождите",
+    "Alert.InvalidAmount": "Недопустимая сумма",
 
     //COLORPICKER//
     "Cp.AC1": "Цвет акцента 1",

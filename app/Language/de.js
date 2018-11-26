@@ -363,6 +363,7 @@ export default {
       "Nein, lassen Sie es von Grund auf synchronisieren",
     "ToolTip.RecentDatabaseDownloading": "Aktuelle Datenbank herunterladen",
     "ToolTip.PleaseWait": "Warten Sie mal...",
+    "ToolTip.RecentDatabaseExtracting": "Letzte Datenbankextraktion",
 
     //ALERTS//
     "Alert.Received": "Transaktion erhalten",
@@ -393,6 +394,7 @@ export default {
     "Alert.CoreSettingsSaved": "Core-Einstellungen gespeichert",
     "Alert.ContactsExported": "Kontakte exportiert",
     "Alert.DaemonLoadingWait": "Daemon wird geladen, bitte warten",
+    "Alert.InvalidAmount": "Ungültige Menge",
 
     //COLORPICKER//
     "Cp.AC1": "Akzentfarbe 1",
