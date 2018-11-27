@@ -7,7 +7,8 @@ const initialState = {
   circulatingSupply: 0,
   USDpercentChange: 0,
   percentDownloaded: 0,
-  webGLEnabled: false
+  webGLEnabled: false,
+  daemonAvailable: false
 };
 
 export default (state = initialState, action) => {
@@ -18,6 +19,12 @@ export default (state = initialState, action) => {
         ...action.payload
       };
       break;
+    case TYPE.DAEMON_UNAVAILABLE:
+      return {
+        ...state,
+        daemonAvailable: action.payload
+      };
+    break;
     case TYPE.SET_WEBGL_ENABLED:
       return {
         ...state,

@@ -1,5 +1,6 @@
 // Overview
 export const GET_INFO_DUMP = "GET_INFO_DUMP";
+export const DAEMON_UNAVAILABLE = "DAEMON_UNAVAILABLE";
 export const USD_RATE = "USD_RATE";
 export const BTC_RATE = "BTC_RATE";
 export const CHANGE_24 = "CHANGE_24";

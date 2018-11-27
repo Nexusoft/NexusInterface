@@ -198,6 +198,12 @@ export const PROMISE = (cmd, args) => {
 
     /** Send off the Post Data. **/
 
+    ResponseObject.onerror = function(e){
+      console.log("Unknown Error Occured. Server response not received.");
+      console.log(e);
+      reject("XMLHttp error");
+    };
+
     ResponseObject.send(PostData);
   });
 };
