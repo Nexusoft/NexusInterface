@@ -235,6 +235,7 @@
     "is-running": "^2.1.0",
     "macaddress": "^0.2.9",
     "maxmind": "^2.6.0",
+    "move-file": "^1.0.0",
     "node-stream-zip": "^1.7.0",
     "process-exists": "^3.1.0",
     "ps-node": "^0.1.6",

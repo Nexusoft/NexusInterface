@@ -61,11 +61,11 @@ configuration.ReadJson = function(filename) {
 configuration.Write = function(filename, content) {
   var fs = require("fs");
   const path = require("path");
-//  if (!this.Exists("settings.json")) {
-//    console.log("Creating settings.json in " + this.GetAppDataDirectory());
-//    fs.closeSync(fs.openSync(path.join(this.GetAppDataDirectory(), "settings.json"), 'w'));
-//    fs.writeFileSync(path.join(this.GetAppDataDirectory(), "settings.json"), '{}');
-//  }
+  //  if (!this.Exists("settings.json")) {
+  //    console.log("Creating settings.json in " + this.GetAppDataDirectory());
+  //    fs.closeSync(fs.openSync(path.join(this.GetAppDataDirectory(), "settings.json"), 'w'));
+  //    fs.writeFileSync(path.join(this.GetAppDataDirectory(), "settings.json"), '{}');
+  //  }
   try {
     fs.writeFileSync(path.join(this.GetAppDataDirectory(), filename), content);
 
@@ -167,7 +167,7 @@ configuration.GetAppResourceDir = function() {
     rawPath = path.dirname(app.getPath("exe")) + "/resources/app/";
   }
   if (process.env.NODE_ENV_RUN == "production-test") {
-    rawPath = path.join(rawPath, '..', '..', '..', '..', '..', 'app');
+    rawPath = path.join(rawPath, "..", "..", "..", "..", "..", "app");
   }
   if (process.platform == "win32") {
     return path.win32.normalize(rawPath);
@@ -196,6 +196,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
   const path = require("path");
   const electron = require("electron");
   const tarball = require("tarball-extract");
+  const moveFile = require("move-file");
 
   let totalDownloadSize = await configuration.GetBootstrapSize();
 
@@ -250,10 +251,34 @@ configuration.BootstrapRecentDatabase = async function(self) {
       result
     ) {
       fs.stat(
-        configuration.GetAppDataDirectory() + "/recent.tar.gz",
+        path.join(configuration.GetAppDataDirectory(), "recent.tar.gz"),
         (stat, things) => console.log(stat, things)
       );
-      console.log(err, result, electron.remote.getGlobal("core"));
+      let recentContents = fs.readdirSync(path.join(datadir, "recent"));
+
+      for (let i = 0; i < recentContents.length; i++) {
+        const element = recentContents[i];
+        if (fs.statSync(path.join(datadir, "recent", element)).isDirectory()) {
+          let newcontents = fs.readdirSync(
+            path.join(datadir, "recent", element)
+          );
+
+          for (let i = 0; i < newcontents.length; i++) {
+            const deeperEle = newcontents[i];
+            moveFile.sync(
+              path.join(datadir, "recent", element, deeperEle),
+              path.join(datadir, element, deeperEle)
+            );
+          }
+        } else {
+          moveFile.sync(
+            path.join(datadir, "recent", element),
+            path.join(datadir, element)
+          );
+        }
+      }
+
+      console.log(err, result);
       electron.remote.getGlobal("core").start();
     });
 

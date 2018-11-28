@@ -387,7 +387,7 @@ class Core extends EventEmitter {
         );
       }
     }
-    console.log(refToThis);
+
     if (refToThis) {
       refToThis.emit("starting");
     } else {
