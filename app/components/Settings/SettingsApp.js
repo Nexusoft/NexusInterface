@@ -49,6 +49,13 @@ const mapDispatchToProps = dispatch => ({
   OpenModal3: type => {
     dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
   },
+  OpenModal4: type => {
+    dispatch({ type: TYPE.SHOW_MODAL4, payload: type });
+  },
+  CloseModal4: type => {
+    dispatch({ type: TYPE.HIDE_MODAL4, payload: type });
+  },
+
   CloseModal3: type => {
     dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
   },
@@ -367,6 +374,7 @@ class SettingsApp extends Component {
     RPC.PROMISE("backupwallet", [
       BackupDir + "/NexusBackup_" + now + ".dat"
     ]).then(payload => {
+      this.props.CloseModal4();
       this.props.OpenModal("Wallet Backup");
       setTimeout(() => this.props.CloseModal(), 3000);
     });
@@ -430,6 +438,48 @@ class SettingsApp extends Component {
                     className="button primary"
                     onClick={() => {
                       this.props.CloseModal2();
+                    }}
+                  />
+                )}
+              </FormattedMessage>
+            </div>
+          </div>
+        </Modal>
+        <Modal
+          center
+          classNames={{ modal: "custom-modal2", overlay: "custom-overlay" }}
+          showCloseIcon={false}
+          open={this.props.openFourthModal}
+          onClose={this.props.CloseModal4}
+        >
+          <div>
+            <h2>
+              <FormattedMessage
+                id="Settings.BackupWallet"
+                defaultMessage="Backup Wallet?"
+              />
+            </h2>
+            <FormattedMessage id="Settings.Yes">
+              {yes => (
+                <input
+                  value={yes}
+                  type="button"
+                  className="button primary"
+                  onClick={e => {
+                    this.backupWallet(e);
+                  }}
+                />
+              )}
+            </FormattedMessage>
+            <div id="no-button">
+              <FormattedMessage id="Settings.No">
+                {no => (
+                  <input
+                    value={no}
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.props.CloseModal4();
                     }}
                   />
                 )}
@@ -941,7 +991,11 @@ class SettingsApp extends Component {
           <div>
             <button
               className="button primary"
-              onClick={e => this.backupWallet(e)}
+              disabled={!this.props.connections}
+              onClick={e => {
+                e.preventDefault();
+                this.props.OpenModal4();
+              }}
             >
               <FormattedMessage
                 id="Settings.BackupWallet"

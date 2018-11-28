@@ -89,6 +89,9 @@ export default {
     "transactions.MyAddress": "私の住所",
     "transactions.Page": "ページ",
     "transactions.Rows": "行",
+    "transactions.Pending": "（保留中)",
+    "transactions.NoRowsFound": "行が見つかりません",
+
     //Market//
     "Market.Information": "市場情報",
     "Market.Refreash": "マーケットデータをリフレッシュする",
@@ -346,6 +349,7 @@ export default {
     "ToolTip.SyncFromScratch": "いいえ、最初から同期させてください",
     "ToolTip.RecentDatabaseDownloading": "最近のデータベースのダウンロード",
     "ToolTip.PleaseWait": "お待ちください...",
+    "ToolTip.RecentDatabaseExtracting": "最近のデータベース抽出",
 
     //ALERTS//
     "Alert.Received": "トランザクションの受領",
@@ -375,6 +379,7 @@ export default {
     "Alert.CoreSettingsSaved": "コア設定の保存",
     "Alert.ContactsExported": "連絡先のエクスポート",
     "Alert.DaemonLoadingWait": "デーモンをロード中、しばらくお待ちください",
+    "Alert.InvalidAmount": "無効な金額",
 
     //COLORPICKER//
     "Cp.AC1": "Accent Color 1",

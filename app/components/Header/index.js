@@ -373,12 +373,20 @@ class Header extends Component {
       "en",
       { weekday: "long", year: "numeric", month: "long", day: "numeric" }
     );
-
-    if (this.props.unlocked_until === undefined) {
+    if (this.props.connections === undefined) {
       return (
         <FormattedMessage
           id="Header.DaemonNotLoaded"
           defaultMessage="Daemon Not Loaded"
+        />
+      );
+    }
+
+    if (this.props.unlocked_until === undefined) {
+      return (
+        <FormattedMessage
+          id="Header.WalletUnencrypted"
+          defaultMessage="Wallet Unencrypted"
         />
       );
     } else if (this.props.unlocked_until === 0) {
@@ -514,6 +522,16 @@ class Header extends Component {
             <FormattedMessage
               id="Alert.InvalidAddress"
               defaultMessage="Invalid Address"
+            />
+          </h2>
+        );
+        break;
+      case "Invalid Amount":
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidAddress"
+              defaultMessage="Invalid Amount"
             />
           </h2>
         );

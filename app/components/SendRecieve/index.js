@@ -649,7 +649,16 @@ class SendRecieve extends Component {
                   </FormattedMessage>
                 </th>
               </thead>
-              {this.addressBookToQueue()}
+              {this.props.addressbook.length == 0 ? (
+                <h1 style={{ alignSelf: "center" }}>
+                  <FormattedMessage
+                    id="AddressBook.NoContacts"
+                    defaultMessage="No Contacts"
+                  />
+                </h1>
+              ) : (
+                this.addressBookToQueue()
+              )}
             </table>
           </div>
         );
@@ -1069,6 +1078,8 @@ class SendRecieve extends Component {
                           } else {
                             this.props.OpenModal("Wallet Locked");
                           }
+                        } else if (this.props.Amount >= 0) {
+                          this.props.OpenModal("Invalid Amount");
                         } else {
                           this.props.OpenModal("Invalid Address");
                         }
