@@ -168,10 +168,12 @@ class Header extends Component {
   }
 
   bootstrapModalController() {
+    console.log();
     if (this.props.manualDaemon !== true) {
       if (
         (this.props.settings.bootstrap &&
-          this.props.connections !== undefined) ||
+          this.props.connections !== undefined &&
+          !this.props.isInSync) ||
         this.props.BootstrapModal
       ) {
         return true;
