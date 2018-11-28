@@ -336,7 +336,8 @@ export default {
     "ToolTip.PortOfSOCKS4proxyServer": "Port of SOCKS4 proxy server",
     "ToolTip.Detach": "Detach the database when shutting down the wallet",
     "ToolTip.RenderGlobe": "Render the globe on the Overview page",
-    "Tooltip.RenderGlobeOpenGLFail" : "Your computer does not support OPENGL 2.0" ,
+    "Tooltip.RenderGlobeOpenGLFail":
+      "Your computer does not support OPENGL 2.0",
 
     "ToolTip.DbOption":
       "Would you like to reduce the time it takes to sync by downloading a recent version of the database?",
@@ -374,6 +375,7 @@ export default {
     "Alert.CoreSettingsSaved": "Core Settings Saved",
     "Alert.ContactsExported": "Contacts Exported",
     "Alert.DaemonLoadingWait": "Loading Daemon, Please Wait",
+    "Alert.CoreRestarting": "Core Restarting",
 
     //COLORPICKER//
     "Cp.AC1": "Accent Color 1",

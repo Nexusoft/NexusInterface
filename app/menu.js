@@ -178,6 +178,11 @@ export default class MenuBuilder {
           label: "Paste",
           accelerator: "CmdOrCtrl+V",
           role: "paste"
+        },
+        {
+          label: "Cut",
+          accelerator: "CmdOrCtrl+X",
+          role: "cut"
         }
       ]
     };

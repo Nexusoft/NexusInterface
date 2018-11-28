@@ -1,52 +1,64 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Nexus Tritium Wallet</title>
+    <script>
+      (function() {
+        if (!process.env.HOT) {
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = "./dist/style.css";
+          // HACK: Writing the script path should be done with webpack
+          document.getElementsByTagName("head")[0].appendChild(link);
+        }
+      })();
+    </script>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <title>Nexus Tritium Wallet</title>
-  <script>
-    (function () {
-      if (!process.env.HOT) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = './dist/style.css';
-        // HACK: Writing the script path should be done with webpack
-        document.getElementsByTagName('head')[0].appendChild(link);
+  <body>
+    <div style="overflow: hidden;" id="root"></div>
+    <script>
+      {
+        const scripts = [];
+
+        // Dynamically insert the DLL script in development env in the
+        // renderer process
+        if (process.env.NODE_ENV === "development") {
+          scripts.push("../dll/renderer.dev.dll.js");
+        }
+
+        // Dynamically insert the bundled app script in the renderer process
+        const port = process.env.PORT || 1212;
+        scripts.push(
+          process.env.HOT
+            ? "http://localhost:" + port + "/dist/renderer.dev.js"
+            : "./dist/renderer.prod.js"
+        );
+
+        document.write(
+          scripts
+            .map(script => '<script defer src="' + script + '"><\/script>')
+            .join("")
+        );
+
+        const { shell } = require("electron");
+
+        function handleNonLeftClick(e) {
+          if (e.button === 1 || e.ctrlKey) {
+            e.preventDefault();
+          }
+        }
+
+        window.onload = () => {
+          document.addEventListener("auxclick", handleNonLeftClick);
+          document.addEventListener("click", handleNonLeftClick);
+        };
       }
-    }());
-  </script>
-
-</head>
-
-<body>
-  <div style="overflow: hidden;" id="root"></div>
-  <script>
-    {
-      const scripts = [];
-
-      // Dynamically insert the DLL script in development env in the
-      // renderer process
-      if (process.env.NODE_ENV === 'development') {
-        scripts.push('../dll/renderer.dev.dll.js');
-      }
-
-      // Dynamically insert the bundled app script in the renderer process
-      const port = process.env.PORT || 1212;
-      scripts.push(
-        (process.env.HOT)
-          ? 'http://localhost:' + port + '/dist/renderer.dev.js'
-          : './dist/renderer.prod.js'
-      );
-
-      document.write(
-        scripts
-          .map(script => '<script defer src="' + script + '"><\/script>')
-          .join('')
-      );
-
-    }
-  </script>
-  <script type="text/javascript" src="https://nexusearth.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-dpikij/b/16/a44af77267a987a660377e5c46e0fb64/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=c9a595bb"></script>
-</body>
-
+    </script>
+    <script
+      type="text/javascript"
+      src="https://nexusearth.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-dpikij/b/16/a44af77267a987a660377e5c46e0fb64/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=c9a595bb"
+    ></script>
+  </body>
 </html>
