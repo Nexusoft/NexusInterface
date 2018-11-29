@@ -506,6 +506,7 @@ class Overview extends Component {
         <Modal
           key="encrypted-modal"
           open={
+            !this.props.connections &&
             !this.props.experimentalOpen &&
             this.props.settings.acceptedagreement &&
             (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)

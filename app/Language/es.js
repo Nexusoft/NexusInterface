@@ -89,6 +89,8 @@ export default {
     "transactions.confirmations": "Confirmaciones",
     "transactions.blockhash": "Número de hash",
     "transactions.blocknumber": "Número de bloque",
+    "transactions.Pending": "(Pendiente)",
+    "transactions.NoRowsFound": "No se encontraron filas",
 
     //Market//
     "Market.Information": "Información de mercado",
@@ -345,6 +347,8 @@ export default {
     "ToolTip.SyncFromScratch": "No, déjalo sincronizar desde cero",
     "ToolTip.RecentDatabaseDownloading": "Descarga de base de datos recientes",
     "ToolTip.PleaseWait": "Por favor espera...",
+    "ToolTip.RecentDatabaseExtracting":
+      "Extracción reciente de la base de datos", // NEW
 
     //ALERTS//
     "Alert.Received": "Transacción recibida",
@@ -375,6 +379,7 @@ export default {
     "Alert.CoreSettingsSaved": "Configuraciones básicas guardadas",
     "Alert.ContactsExported": "Contactos exportados",
     "Alert.DaemonLoadingWait": "Cargando Daemon, Por favor Espere",
+    "Alert.InvalidAmount": "Monto invalido",
 
     //COLORPICKER//
     "Cp.AC1": "Color de Acento 1",

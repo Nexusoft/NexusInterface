@@ -168,11 +168,16 @@ class Header extends Component {
   }
 
   bootstrapModalController() {
-    if (
-      (this.props.settings.bootstrap && this.props.connections !== undefined) ||
-      this.props.BootstrapModal
-    ) {
-      return true;
+    console.log();
+    if (this.props.manualDaemon !== true) {
+      if (
+        (this.props.settings.bootstrap &&
+          this.props.connections !== undefined &&
+          !this.props.isInSync) ||
+        this.props.BootstrapModal
+      ) {
+        return true;
+      } else return false;
     } else return false;
   }
 
@@ -370,12 +375,20 @@ class Header extends Component {
       "en",
       { weekday: "long", year: "numeric", month: "long", day: "numeric" }
     );
-
-    if (this.props.unlocked_until === undefined) {
+    if (this.props.connections === undefined) {
       return (
         <FormattedMessage
           id="Header.DaemonNotLoaded"
           defaultMessage="Daemon Not Loaded"
+        />
+      );
+    }
+
+    if (this.props.unlocked_until === undefined) {
+      return (
+        <FormattedMessage
+          id="Header.WalletUnencrypted"
+          defaultMessage="Wallet Unencrypted"
         />
       );
     } else if (this.props.unlocked_until === 0) {
@@ -511,6 +524,16 @@ class Header extends Component {
             <FormattedMessage
               id="Alert.InvalidAddress"
               defaultMessage="Invalid Address"
+            />
+          </h2>
+        );
+        break;
+      case "Invalid Amount":
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidAddress"
+              defaultMessage="Invalid Amount"
             />
           </h2>
         );
@@ -699,6 +722,16 @@ class Header extends Component {
           </h2>
         );
         break;
+      case "Core Restarting":
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.CoreRestarting"
+              defaultMessage="Core Restarting"
+            />
+          </h2>
+        );
+        break;
       default:
         return <h2>{this.props.modaltype}</h2>;
         break;
@@ -843,7 +876,9 @@ class Header extends Component {
           onClose={this.props.CloseModal}
           classNames={{ modal: "custom-modal" }}
           onOpen={() => {
-            console.log(this);
+            setTimeout(() => {
+              this.props.CloseModal();
+            }, 3000);
           }}
         >
           {this.modalinternal()}

@@ -1,7 +1,8 @@
 import configuration from "./configuration";
 import MenuBuilder from "../menu.js";
-const cp = require('child_process');
-const spawn = require('cross-spawn');
+import { GetSettings, SaveSettings } from "./settings";
+const cp = require("child_process");
+const spawn = require("cross-spawn");
 const log = require("electron-log");
 const statusdelay = 1000;
 const crypto = require("crypto");
@@ -127,12 +128,9 @@ function GetCoreBinaryName() {
 function GetCoreBinaryPath() {
   const path = require("path");
   if (process.env.NODE_ENV === "development") {
-    var coreBinaryPath = path.normalize(path.join(
-      __dirname,
-      "..",
-      "cores",
-      GetCoreBinaryName()
-    ));
+    var coreBinaryPath = path.normalize(
+      path.join(__dirname, "..", "cores", GetCoreBinaryName())
+    );
   } else {
     var coreBinaryPath = path.join(
       configuration.GetAppResourceDir(),
@@ -145,19 +143,32 @@ function GetCoreBinaryPath() {
 
 // Determine if daemon running and if so, get PID
 function getCorePID() {
-  var execSync = require('child_process').execSync;
+  var execSync = require("child_process").execSync;
   var modEnv = process.env;
   modEnv.Nexus_Daemon = GetCoreBinaryName();
   if (process.platform == "win32") {
-    var PID = (execSync('tasklist /NH /v /fi "IMAGENAME eq %Nexus_Daemon%" /fo CSV', [], {env: modEnv}) + '').split(',')[1];
+    var PID = (
+      execSync(
+        'tasklist /NH /v /fi "IMAGENAME eq %Nexus_Daemon%" /fo CSV',
+        [],
+        { env: modEnv }
+      ) + ""
+    ).split(",")[1];
     if (PID) {
-      PID = PID.replace(/"/gm, '');
+      PID = PID.replace(/"/gm, "");
     }
   } else {
-    var tempPID = (execSync("ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}", [], {env: modEnv}) + '').split('\n')[1].replace(/^\s*/gm,'').split(' ')[0];
-    var PID = tempPID.toString().replace(/^\s+|\s+$/gm,'');
+    var tempPID = (
+      execSync("ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}", [], {
+        env: modEnv
+      }) + ""
+    )
+      .split("\n")[1]
+      .replace(/^\s*/gm, "")
+      .split(" ")[0];
+    var PID = tempPID.toString().replace(/^\s+|\s+$/gm, "");
   }
-  log.info('PID: ' + PID);
+  log.info("PID: " + PID);
   if (Number(PID) == "NaN" || Number(PID) < "2") {
     return 1;
   } else {
@@ -167,21 +178,38 @@ function getCorePID() {
 
 // If daemon is running, get it's parent PID
 function getCoreParentPID() {
-  const util = require('util');
-  var execSync = require('child_process').execSync;
+  const util = require("util");
+  var execSync = require("child_process").execSync;
   var modEnv = process.env;
   modEnv.Nexus_Daemon = GetCoreBinaryName();
   modEnv.Daemon_PID = getCorePID();
-  if (modEnv.Daemon_PID == null || modEnv.Daemon_PID == undefined || modEnv.Daemon_PID === "NaN") {
+  if (
+    modEnv.Daemon_PID == null ||
+    modEnv.Daemon_PID == undefined ||
+    modEnv.Daemon_PID === "NaN"
+  ) {
     modEnv.Daemon_PID = 0;
-   }
-  if (process.platform == "win32") {
-    var PPID = (execSync('wmic process where (processid=%DAEMON_PID%) get parentprocessid', [], {env: modEnv}) + '').split('\n')[1];
-  } else {
-    var tempPPID = (execSync("ps -o ppid --no-headers -p 1 -C ${Nexus_Daemon}", [], {env: modEnv}) + '').split('\n')[1].replace(/^\s*/gm,'').split(' ')[0];
-    var PPID = tempPPID.toString().replace(/^\s+|\s+$/gm,'');
   }
-  log.info('PPID = ' + PPID);
+  if (process.platform == "win32") {
+    var PPID = (
+      execSync(
+        "wmic process where (processid=%DAEMON_PID%) get parentprocessid",
+        [],
+        { env: modEnv }
+      ) + ""
+    ).split("\n")[1];
+  } else {
+    var tempPPID = (
+      execSync("ps -o ppid --no-headers -p 1 -C ${Nexus_Daemon}", [], {
+        env: modEnv
+      }) + ""
+    )
+      .split("\n")[1]
+      .replace(/^\s*/gm, "")
+      .split(" ")[0];
+    var PPID = tempPPID.toString().replace(/^\s+|\s+$/gm, "");
+  }
+  log.info("PPID = " + PPID);
   if (Number(PPID) == "NaN" || Number(PPID) < "2") {
     return null;
   } else {
@@ -235,8 +263,7 @@ function rpcGet(command, args, callback) {
   var postdata = JSON.stringify({
     method: command,
     params: args
-  
-});
+  });
   rpcPost(host, postdata, "TAG-ID-deprecate", callback, user, password);
 }
 
@@ -316,21 +343,23 @@ class Core extends EventEmitter {
   }
 
   // start: Start up the core with necessary parameters and return the spawned process
-  start() {
-    let settings = require("./settings").GetSettings();
+  start(refToThis) {
+    let settings = GetSettings();
     let parameters = SetCoreParameters(settings);
     let coreBinaryPath = GetCoreBinaryPath();
     let coreBinaryName = GetCoreBinaryName();
     let corePID = getCorePID();
-   // let daemonProcs = utils.findPID("nexus-linux-x64");
+    // let daemonProcs = utils.findPID("nexus-linux-x64");
 
     if (settings.manualDaemon == true) {
-    log.info("Core Manager: Manual daemon mode, skipping starting core");
+      log.info("Core Manager: Manual daemon mode, skipping starting core");
     } else if (corePID > "1") {
-      log.info("Core Manager: Daemon Process already running. Skipping starting core");
+      log.info(
+        "Core Manager: Daemon Process already running. Skipping starting core"
+      );
       var prevCoreProcess = corePID;
     } else {
-      log.info("isCoreRunning() output: " + corePID)
+      log.info("isCoreRunning() output: " + corePID);
       if (CoreBinaryExists()) {
         var fs = require("fs");
         if (!fs.existsSync(datadir)) {
@@ -344,7 +373,7 @@ class Core extends EventEmitter {
         var coreprocess = spawn(GetCoreBinaryPath(), parameters, {
           shell: false,
           detached: true,
-          stdio: ['ignore','ignore','ignore']
+          stdio: ["ignore", "ignore", "ignore"]
         });
         if (coreprocess != null)
           log.info(
@@ -358,54 +387,62 @@ class Core extends EventEmitter {
         );
       }
     }
-    this.emit("starting");
+
+    if (refToThis) {
+      refToThis.emit("starting");
+    } else {
+      this.emit("starting");
+    }
   }
 
   // stop: Stop the core from running by sending SIGTERM to the process
-  stop() {
-    log.info('Core Manager: Stop function called');
-    let settings = require("./settings").GetSettings();
+  stop(callback, refToThis) {
+    log.info("Core Manager: Stop function called");
+    let settings = GetSettings();
     let coreBinaryName = GetCoreBinaryName();
     let corePID = getCorePID();
     let coreParentPID = getCoreParentPID();
     var cp = require("child_process");
-    var execSync = require('child_process').execSync;
+    var execSync = require("child_process").execSync;
     var modEnv = process.env;
     modEnv.KILL_PID = corePID;
+    var _this = this;
     //let daemonProcs = utils.findPID(coreBinaryName);
-    
-//    if (prevCoreProcess == 0) {
-//      coreprocess.kill();
-//      responding = false;
-//      coreprocess = null;
-//    } else {
-      if (settings.keepDaemon != true) {
-        if (corePID > '1') {
-          log.info("Core Manager: Killing process " + corePID);
-          if (require('is-running')(corePID)) {
-            if (process.platform == "win32") {
-              execSync('taskkill /F /PID %KILL_PID%', [], {env: modEnv});
-            } else {
-              execSync('kill -9 $KILL_PID', [], {env: modEnv});
-            var _this = this;
-            }
+
+    //    if (prevCoreProcess == 0) {
+    //      coreprocess.kill();
+    //      responding = false;
+    //      coreprocess = null;
+    //    } else {
+    if (settings.keepDaemon != true) {
+      if (corePID > "1") {
+        log.info("Core Manager: Killing process " + corePID);
+        if (require("is-running")(corePID)) {
+          if (process.platform == "win32") {
+            execSync("taskkill /F /PID %KILL_PID%", [], { env: modEnv });
+          } else {
+            execSync("kill -9 $KILL_PID", [], { env: modEnv });
           }
         }
-      } else {
-        log.info("Core Manager: Closing wallet and leaving daemon running.");
       }
+    } else {
+      log.info("Core Manager: Closing wallet and leaving daemon running.");
+    }
     this.emit("stopping");
+    if (callback) {
+      setTimeout(() => {
+        callback(refToThis);
+      }, 3000);
+    }
   }
 
   // restart: Restart the core process
   restart() {
-    var _this = this;
-    let settings = require("./settings").GetSettings();
+    let settings = GetSettings();
     settings.keepDaemon = false;
     SaveSettings(settings);
-    this.stop(function() {
-      _this.start();
-    });
+    var _this = this;
+    this.stop(this.start, _this);
   }
 }
 

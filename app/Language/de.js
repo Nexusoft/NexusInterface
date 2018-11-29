@@ -90,6 +90,8 @@ export default {
     "transactions.MyAddress": "Meine Adresse",
     "transactions.Page": "Seite",
     "transactions.Rows": "Reihen",
+    "transactions.Pending": "(Steht aus)",
+    "transactions.NoRowsFound": "Keine Zeilen gefunden",
     //Market//
     "Market.Information": "Marktinformationen",
     "Market.Refreash": "Marktdaten aktualisieren",
@@ -361,6 +363,7 @@ export default {
       "Nein, lassen Sie es von Grund auf synchronisieren",
     "ToolTip.RecentDatabaseDownloading": "Aktuelle Datenbank herunterladen",
     "ToolTip.PleaseWait": "Warten Sie mal...",
+    "ToolTip.RecentDatabaseExtracting": "Letzte Datenbankextraktion",
 
     //ALERTS//
     "Alert.Received": "Transaktion erhalten",
@@ -391,6 +394,7 @@ export default {
     "Alert.CoreSettingsSaved": "Core-Einstellungen gespeichert",
     "Alert.ContactsExported": "Kontakte exportiert",
     "Alert.DaemonLoadingWait": "Daemon wird geladen, bitte warten",
+    "Alert.InvalidAmount": "Ungültige Menge",
 
     //COLORPICKER//
     "Cp.AC1": "Akzentfarbe 1",

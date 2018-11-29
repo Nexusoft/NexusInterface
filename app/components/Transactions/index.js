@@ -185,9 +185,7 @@ class Transactions extends Component {
       for (let eachaddress in this.props.myAccounts[key].addresses) {
         tempaddpress.set(
           this.props.myAccounts[key].addresses[eachaddress],
-          this.props.messages[this.props.settings.locale][
-            "transactions.MyAddress"
-          ] + this.props.myAccounts[key].account
+          this.props.myAccounts[key].account
         );
       }
     }
@@ -1047,7 +1045,12 @@ class Transactions extends Component {
             />
           );
         } else {
-          return "Error";
+          return (
+            <FormattedMessage
+              id="transactions.Pending"
+              defaultMessage="(Pending)"
+            />
+          );
         }
       },
       Header: (

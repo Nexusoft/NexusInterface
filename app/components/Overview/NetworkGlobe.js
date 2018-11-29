@@ -30,11 +30,7 @@ export default class NetworkGlobe extends Component {
     let geoiplookup = "";
     if (process.env.NODE_ENV === "development") {
       geoiplookup = maxmind.openSync(
-        path.join(
-          __dirname,
-          "GeoLite2-City",
-          "GeoLite2-City.mmdb"
-        )
+        path.join(__dirname, "GeoLite2-City", "GeoLite2-City.mmdb")
       );
     } else {
       geoiplookup = maxmind.openSync(
@@ -48,13 +44,14 @@ export default class NetworkGlobe extends Component {
     let myIP = "";
     let incomingPillarColor = this.props.pillarColor;
     let incomingArchColor = this.props.archColor;
-    let globeOptions = 
-    {
-      colorFn: function(x) { return new THREE.Color(incomingPillarColor);},
+    let globeOptions = {
+      colorFn: function(x) {
+        return new THREE.Color(incomingPillarColor);
+      },
       colorArch: incomingArchColor,
       colorGlobe: this.props.globeColor
-    }
-    glb = new DAT(this.threeRootElement,globeOptions);
+    };
+    glb = new DAT(this.threeRootElement, globeOptions);
     glb.animate();
     Request(
       {
@@ -62,37 +59,41 @@ export default class NetworkGlobe extends Component {
         json: true
       },
       (error, response, body) => {
-        if (response.statusCode === 200) {
-          RPC.PROMISE("getpeerinfo", []).then(payload => {
-            var tmp = {};
-            var ip = {};
-            let maxnodestoadd = payload.length;
-            if (maxnodestoadd > 20) {
-              maxnodestoadd = 20;
-            }
-            for (var i = 0; i < maxnodestoadd; i++) {
-              ip = payload[i].addr;
-              ip = ip.split(":")[0];
-              var tmp = geoiplookup.get(ip);
-              globeseries[0][1].push(tmp.location.latitude);
-              globeseries[0][1].push(tmp.location.longitude);
+        if (error) {
+          console.log(error);
+        } else {
+          if (response.statusCode === 200) {
+            RPC.PROMISE("getpeerinfo", []).then(payload => {
+              var tmp = {};
+              var ip = {};
+              let maxnodestoadd = payload.length;
+              if (maxnodestoadd > 20) {
+                maxnodestoadd = 20;
+              }
+              for (var i = 0; i < maxnodestoadd; i++) {
+                ip = payload[i].addr;
+                ip = ip.split(":")[0];
+                var tmp = geoiplookup.get(ip);
+                globeseries[0][1].push(tmp.location.latitude);
+                globeseries[0][1].push(tmp.location.longitude);
+                globeseries[0][1].push(0.1); //temporary magnitude.
+              }
+
+              globeseries[0][1].push(body["geoplugin_latitude"]);
+              globeseries[0][1].push(body["geoplugin_longitude"]);
               globeseries[0][1].push(0.1); //temporary magnitude.
-            }
 
-            globeseries[0][1].push(body["geoplugin_latitude"]);
-            globeseries[0][1].push(body["geoplugin_longitude"]);
-            globeseries[0][1].push(0.1); //temporary magnitude.
-
-            //glb = new DAT(this.threeRootElement);
-            glb.addData(globeseries[0][1], {
-              format: "magnitude",
-              name: globeseries[0][0]
+              //glb = new DAT(this.threeRootElement);
+              glb.addData(globeseries[0][1], {
+                format: "magnitude",
+                name: globeseries[0][0]
+              });
+              glb.createPoints();
+              //  Start the animations on the globe
+              initializedWithData = true;
+              //glb.animate();
             });
-            glb.createPoints();
-            //  Start the animations on the globe
-            initializedWithData = true;
-            //glb.animate();
-          });
+          }
         }
       }
     );
@@ -103,9 +104,7 @@ export default class NetworkGlobe extends Component {
   }
   // Class Methods
   updatePointsOnGlobe() {
-
-    if (initializedWithData == true)
-    {
+    if (initializedWithData == true) {
       return;
     }
 
@@ -115,11 +114,7 @@ export default class NetworkGlobe extends Component {
     const path = require("path");
     if (process.env.NODE_ENV === "development") {
       geoiplookup = maxmind.openSync(
-        path.join(
-          __dirname,
-          "GeoLite2-City",
-          "GeoLite2-City.mmdb"
-        )
+        path.join(__dirname, "GeoLite2-City", "GeoLite2-City.mmdb")
       );
     } else {
       geoiplookup = maxmind.openSync(

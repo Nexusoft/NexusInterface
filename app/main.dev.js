@@ -158,7 +158,6 @@ function createWindow() {
       mainWindow.hide();
     }
   });
-
 }
 
 // Application Startup
@@ -172,15 +171,6 @@ app.on("ready", async () => {
 
   createWindow();
   core.start();
-  // Removing because it captures all of the escape key.
-  // const ret = globalShortcut.register("Escape", function() {
-  //   mainWindow.setFullScreen(false);
-  // });
-  // function keyPress(e) {
-  //   if (e.key === "Escape") {
-  //     mainWindow.setFullScreen(false);
-  //   }
-  // }
 
   mainWindow.on("close", function() {
     let settings = require("./api/settings.js").GetSettings();
@@ -203,15 +193,10 @@ app.on("window-all-closed", function() {
   if (process.platform !== "darwin") {
     app.quit();
   }
-//  globalShortcut.unregister("Escape");
 
-//  globalShortcut.unregisterAll();
-  setTimeout(setTimeout(process.abort(),3000), 3000);
+  setTimeout(setTimeout(process.abort(), 3000), 3000);
 });
 
 app.on("will-quit", function() {
   app.exit();
-//  globalShortcut.unregister("Escape");
-
-//  globalShortcut.unregisterAll();
 });

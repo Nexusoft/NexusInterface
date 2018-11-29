@@ -47,6 +47,7 @@
 #navigation a {
   display: block;
   position: relative;
+  outline-style: none;
   filter: var(--footer);
 }
 

@@ -48,6 +48,12 @@ export default class Table extends Component {
       <FormattedMessage id="transactions.Rows" defaultMessage="Rows">
         {R => (
           <ReactTable
+            noDataText={
+              <FormattedMessage
+                id="transactions.NoRowsFound"
+                defaultMessage="No Rows Found"
+              />
+            }
             key="table-child"
             data={data}
             pageText={
@@ -94,7 +100,9 @@ export default class Table extends Component {
                 // }
               };
             }}
-            style={this.props.styles}
+            style={{
+              height: "400px"
+            }}
           />
         )}
       </FormattedMessage>

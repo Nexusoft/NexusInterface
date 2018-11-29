@@ -90,6 +90,8 @@ export default {
     "transactions.MyAddress": "My Address",
     "transactions.Page": "Page",
     "transactions.Rows": "Rows",
+    "transactions.Pending": "(Pending)",
+    "transactions.NoRowsFound": "No Rows Found",
     //Market//
     "Market.Information": "Market Information",
     "Market.Refreash": "Refresh Market Data",
@@ -336,7 +338,8 @@ export default {
     "ToolTip.PortOfSOCKS4proxyServer": "Port of SOCKS4 proxy server",
     "ToolTip.Detach": "Detach the database when shutting down the wallet",
     "ToolTip.RenderGlobe": "Render the globe on the Overview page",
-    "Tooltip.RenderGlobeOpenGLFail" : "Your computer does not support OPENGL 2.0" ,
+    "Tooltip.RenderGlobeOpenGLFail":
+      "Your computer does not support OPENGL 2.0",
 
     "ToolTip.DbOption":
       "Would you like to reduce the time it takes to sync by downloading a recent version of the database?",
@@ -344,7 +347,7 @@ export default {
     "ToolTip.SyncFromScratch": "No, let it sync from scratch",
     "ToolTip.RecentDatabaseDownloading": "Recent Database Downloading",
     "ToolTip.PleaseWait": "Please Wait...",
-    "ToolTip.RecentDatabaseExtracting": "Recent Database Extracting", // NEW
+    "ToolTip.RecentDatabaseExtracting": "Recent Database Extracting",
 
     //ALERTS//
     "Alert.Received": "Transaction Received",
@@ -353,6 +356,7 @@ export default {
     "Alert.TrustTransaction": "Trust Transaction",
     "Alert.regiesteredToThis": "This is an address regiestered to this wallet",
     "Alert.InvalidAddress": "Invalid Address",
+    "Alert.InvalidAmount": "Invalid Amount",
     "Alert.Invalid": "Invalid",
     "Alert.AddressAdded": "Address Added",
     "Alert.NoAddresses": "No Addresses",
@@ -374,6 +378,7 @@ export default {
     "Alert.CoreSettingsSaved": "Core Settings Saved",
     "Alert.ContactsExported": "Contacts Exported",
     "Alert.DaemonLoadingWait": "Loading Daemon, Please Wait",
+    "Alert.CoreRestarting": "Core Restarting",
 
     //COLORPICKER//
     "Cp.AC1": "Accent Color 1",

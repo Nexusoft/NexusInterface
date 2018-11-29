@@ -43,6 +43,17 @@ class List extends Component {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.connections === undefined &&
+      this.props.connections !== undefined
+    ) {
+      RPC.PROMISE("getnetworktrustkeys", []).then(payload => {
+        this.props.GetListDump(payload.keys);
+      });
+    }
+  }
+
   // Class methods
   setupcontextmenu(e) {
     e.preventDefault();
@@ -58,11 +69,11 @@ class List extends Component {
 
       if (this.props.acc) {
         sortableList = sortableList.sort(
-          (a, b) => b["interest rate"] - a["interest rate"]
+          (a, b) => b.interestrate - a.interestrate
         );
       } else {
         sortableList = sortableList.sort(
-          (a, b) => a["interest rate"] - b["interest rate"]
+          (a, b) => a.interestrate - b.interestrate
         );
       }
 
@@ -70,7 +81,7 @@ class List extends Component {
         <tr key={ele.address.slice(0, 8)}>
           <td key={ele.address.slice(0, 9)}>{ele.address}</td>
 
-          <td key={ele.address.slice(0, 10)}>{ele["interest rate"]}</td>
+          <td key={ele.address.slice(0, 10)}>{ele.interestrate}</td>
         </tr>
       ));
     }
