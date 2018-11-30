@@ -1,25 +1,25 @@
-import { app, Menu, shell, BrowserWindow, remote } from "electron";
+import { app, Menu, shell, BrowserWindow, remote } from 'electron'
 
-import * as RPC from "./script/rpc";
+import * as RPC from './scripts/rpc'
 
 export default class ContextMenuBuilder {
-  defaultContext: [];
+  defaultContext: []
 
   constructor(defaultContext: []) {
-    this.defaultContext = this.ReturnDefaultContextMenu();
+    this.defaultContext = this.ReturnDefaultContextMenu()
   }
 
   ReturnDefaultContextMenu() {
     return [
       {
-        label: "Copy",
-        accelerator: "CmdOrCtrl+C",
-        role: "copy"
+        label: 'Copy',
+        accelerator: 'CmdOrCtrl+C',
+        role: 'copy'
       },
       {
-        label: "Paste",
-        accelerator: "CmdOrCtrl+V",
-        role: "paste"
+        label: 'Paste',
+        accelerator: 'CmdOrCtrl+V',
+        role: 'paste'
       }
       // ,
       // { type: "separator" },
@@ -39,6 +39,6 @@ export default class ContextMenuBuilder {
       //     //history.push('/About');
       //   }
       // }
-    ];
+    ]
   }
 }

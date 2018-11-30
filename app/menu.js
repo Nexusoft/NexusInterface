@@ -1,531 +1,531 @@
-import { app, Menu, shell, BrowserWindow, remote } from "electron";
-import log from "electron-log";
-import * as RPC from "./script/rpc";
-import { callbackify } from "util";
-import { GetSettings, SaveSettings } from "./api/settings";
-import core from "./api/core";
+import { app, Menu, shell, BrowserWindow, remote } from 'electron'
+import log from 'electron-log'
+import * as RPC from './scripts/rpc'
+import { callbackify } from 'util'
+import { GetSettings, SaveSettings } from './api/settings'
+import core from './api/core'
 
 export default class MenuBuilder {
-  mainWindow: remote.BrowserWindow;
+  mainWindow: remote.BrowserWindow
 
   constructor(mainWindow: remote.BrowserWindow) {
-    this.mainWindow = remote.getCurrentWindow();
+    this.mainWindow = remote.getCurrentWindow()
   }
 
   buildMenu(self) {
-    let template;
+    let template
 
-    if (process.platform === "darwin") {
-      template = this.buildDarwinTemplate(self);
+    if (process.platform === 'darwin') {
+      template = this.buildDarwinTemplate(self)
     } else {
-      template = this.buildDefaultTemplate(self);
+      template = this.buildDefaultTemplate(self)
     }
 
-    const menu = remote.Menu.buildFromTemplate(template);
-    remote.Menu.setApplicationMenu(menu);
+    const menu = remote.Menu.buildFromTemplate(template)
+    remote.Menu.setApplicationMenu(menu)
 
-    return menu;
+    return menu
   }
 
   setupDevelopmentEnvironment() {
-    remote.getCurrentWindow().openDevTools();
+    remote.getCurrentWindow().openDevTools()
 
-    this.mainWindow.webContents.on("context-menu", (e, props) => {
-      const { x, y } = props;
+    this.mainWindow.webContents.on('context-menu', (e, props) => {
+      const { x, y } = props
 
       Menu.buildFromTemplate([
         {
-          label: "Inspect element",
+          label: 'Inspect element',
           click: () => {
-            this.mainWindow.inspectElement(x, y);
-          }
-        }
-      ]).popup(this.mainWindow);
-    });
+            this.mainWindow.inspectElement(x, y)
+          },
+        },
+      ]).popup(this.mainWindow)
+    })
   }
 
   buildDarwinTemplate(self) {
     const subMenuAbout = {
-      label: "File",
+      label: 'File',
       submenu: [
         {
-          label: "Key Management",
+          label: 'Key Management',
           click: () => {
             if (self.props.unlocked_until !== undefined) {
-              self.props.history.push("/Settings/Security");
+              self.props.history.push('/Settings/Security')
             } else {
-              self.props.history.push("/Settings/Unencrypted");
+              self.props.history.push('/Settings/Unencrypted')
             }
-          }
+          },
         },
         {
-          label: "Back-up Wallet",
+          label: 'Back-up Wallet',
           click: () => {
             let now = new Date()
               .toString()
               .slice(0, 24)
-              .split(" ")
+              .split(' ')
               .reduce((a, b) => {
-                return a + "_" + b;
+                return a + '_' + b
               })
-              .replace(/:/g, "_");
-            let BackupDir = process.env.HOME + "/NexusBackups";
-            if (process.platform === "win32") {
-              BackupDir = app.getPath("documents") + "/NexusBackups";
-              BackupDir = BackupDir.replace(/\\/g, "/");
+              .replace(/:/g, '_')
+            let BackupDir = process.env.HOME + '/NexusBackups'
+            if (process.platform === 'win32') {
+              BackupDir = app.getPath('documents') + '/NexusBackups'
+              BackupDir = BackupDir.replace(/\\/g, '/')
             }
-            let fs = require("fs");
-            let ifBackupDirExists = fs.existsSync(BackupDir);
+            let fs = require('fs')
+            let ifBackupDirExists = fs.existsSync(BackupDir)
             if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
-              fs.mkdirSync(BackupDir);
+              fs.mkdirSync(BackupDir)
             }
-            RPC.PROMISE("backupwallet", [
-              BackupDir + "/NexusBackup_" + now + ".dat"
-            ]);
-          }
+            RPC.PROMISE('backupwallet', [
+              BackupDir + '/NexusBackup_' + now + '.dat',
+            ])
+          },
         },
         {
-          label: "View Backups",
+          label: 'View Backups',
           click() {
-            let fs = require("fs");
-            let BackupDir = process.env.HOME + "/NexusBackups";
+            let fs = require('fs')
+            let BackupDir = process.env.HOME + '/NexusBackups'
 
-            if (process.platform === "win32") {
-              BackupDir = process.env.USERPROFILE + "/NexusBackups";
-              BackupDir = BackupDir.replace(/\\/g, "/");
+            if (process.platform === 'win32') {
+              BackupDir = process.env.USERPROFILE + '/NexusBackups'
+              BackupDir = BackupDir.replace(/\\/g, '/')
             }
-            let ifBackupDirExists = fs.existsSync(BackupDir);
+            let ifBackupDirExists = fs.existsSync(BackupDir)
             if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
-              fs.mkdirSync(BackupDir);
+              fs.mkdirSync(BackupDir)
             }
-            let didopen = shell.openItem(BackupDir);
-          }
+            let didopen = shell.openItem(BackupDir)
+          },
         },
         {
-          label: "Download Recent Database",
+          label: 'Download Recent Database',
           click() {
             if (
               self.props.connections !== undefined &&
               !GetSettings().manualDaemon
             ) {
-              let configuration = require("./api/configuration");
-              self.props.OpenBootstrapModal(true);
-              configuration.BootstrapRecentDatabase(self);
+              let configuration = require('./api/configuration')
+              self.props.OpenBootstrapModal(true)
+              configuration.BootstrapRecentDatabase(self)
             } else {
-              self.props.OpenModal("Please let the daemon start.");
+              self.props.OpenModal('Please let the daemon start.')
               setTimeout(() => {
-                self.props.CloseModal();
-              }, 3000);
+                self.props.CloseModal()
+              }, 3000)
             }
-          }
+          },
         },
         {
-          label: "Send To Tray",
+          label: 'Send To Tray',
           click() {
-            remote.getCurrentWindow().hide();
-          }
+            remote.getCurrentWindow().hide()
+          },
         },
         {
-          label: "Start Daemon",
+          label: 'Start Daemon',
           click() {
-            let core = require("./api/core");
-            core.start();
-          }
+            let core = require('./api/core')
+            core.start()
+          },
         },
         {
-          label: "Stop Daemon",
+          label: 'Stop Daemon',
           click() {
-            let core = require("./api/core");
-            core.stop();
-          }
+            let core = require('./api/core')
+            core.stop()
+          },
         },
         {
-          label: "Close Window Keep Daemon",
+          label: 'Close Window Keep Daemon',
           click() {
-            log.info("menu.js Darwin template: close and keep");
-            let settings = GetSettings();
-            settings.keepDaemon = true;
-            SaveSettings(settings);
-            core.stop();
-            remote.getCurrentWindow().close();
-          }
+            log.info('menu.js Darwin template: close and keep')
+            let settings = GetSettings()
+            settings.keepDaemon = true
+            SaveSettings(settings)
+            core.stop()
+            remote.getCurrentWindow().close()
+          },
         },
         {
-          label: "Close Wallet and Daemon",
+          label: 'Close Wallet and Daemon',
           click() {
-            log.info("menu.js darwin template: close and kill");
-            let settings = GetSettings();
+            log.info('menu.js darwin template: close and kill')
+            let settings = GetSettings()
             if (settings.manualDaemon != true) {
-              RPC.PROMISE("stop", []).then(payload => {
+              RPC.PROMISE('stop', []).then(payload => {
                 setTimeout(() => {
-                  remote.getCurrentWindow().close();
-                }, 1000);
-              });
+                  remote.getCurrentWindow().close()
+                }, 1000)
+              })
             }
-            core.stop();
-            remote.getCurrentWindow().close();
-          }
+            core.stop()
+            remote.getCurrentWindow().close()
+          },
         },
         {
-          type: "separator"
+          type: 'separator',
         },
         {
-          label: "Copy",
-          accelerator: "CmdOrCtrl+C",
-          role: "copy"
+          label: 'Copy',
+          accelerator: 'CmdOrCtrl+C',
+          role: 'copy',
         },
         {
-          label: "Paste",
-          accelerator: "CmdOrCtrl+V",
-          role: "paste"
+          label: 'Paste',
+          accelerator: 'CmdOrCtrl+V',
+          role: 'paste',
         },
         {
-          label: "Cut",
-          accelerator: "CmdOrCtrl+X",
-          role: "cut"
-        }
-      ]
-    };
+          label: 'Cut',
+          accelerator: 'CmdOrCtrl+X',
+          role: 'cut',
+        },
+      ],
+    }
     const subMenuView = {
-      label: "Settings",
+      label: 'Settings',
       submenu: [
         {
-          label: "Core Settings",
+          label: 'Core Settings',
           click() {
-            self.props.history.push("/Settings/Core");
-          }
+            self.props.history.push('/Settings/Core')
+          },
         },
         {
-          label: "Application Settings",
+          label: 'Application Settings',
           click() {
-            self.props.history.push("/Settings/App");
-          }
+            self.props.history.push('/Settings/App')
+          },
         },
         {
-          label: "Key Management Settings",
+          label: 'Key Management Settings',
           click() {
             if (self.props.unlocked_until !== undefined) {
-              self.props.history.push("/Settings/Security");
+              self.props.history.push('/Settings/Security')
             } else {
-              self.props.history.push("/Settings/Unencrypted");
+              self.props.history.push('/Settings/Unencrypted')
             }
-          }
+          },
         },
         {
-          label: "Style Settings",
+          label: 'Style Settings',
           click() {
-            self.props.history.push("/Settings/Style");
-          }
+            self.props.history.push('/Settings/Style')
+          },
         },
 
         //TODO: take this out before 1.0
         {
-          label: "Toggle Developer Tools",
-          accelerator: "Alt+Command+I",
+          label: 'Toggle Developer Tools',
+          accelerator: 'Alt+Command+I',
           click: () => {
-            this.mainWindow.toggleDevTools();
-          }
-        }
-      ]
-    };
+            this.mainWindow.toggleDevTools()
+          },
+        },
+      ],
+    }
 
     const subMenuWindow = {
-      label: "View",
+      label: 'View',
       submenu:
-        process.env.NODE_ENV === "development"
+        process.env.NODE_ENV === 'development'
           ? [
               {
-                label: "Reload",
-                accelerator: "Command+R",
+                label: 'Reload',
+                accelerator: 'Command+R',
                 click: () => {
-                  this.mainWindow.webContents.reload();
-                }
+                  this.mainWindow.webContents.reload()
+                },
               },
 
               {
-                label: "Toggle Full Screen",
-                accelerator: "F11",
+                label: 'Toggle Full Screen',
+                accelerator: 'F11',
                 click: () => {
                   remote
                     .getCurrentWindow()
-                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
-                }
-              }
+                    .setFullScreen(!remote.getCurrentWindow().isFullScreen())
+                },
+              },
             ]
           : [
               {
-                label: "Toggle Full Screen",
-                accelerator: "F11",
+                label: 'Toggle Full Screen',
+                accelerator: 'F11',
                 click: () => {
                   remote
                     .getCurrentWindow()
-                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
-                }
-              }
-            ]
-    };
+                    .setFullScreen(!remote.getCurrentWindow().isFullScreen())
+                },
+              },
+            ],
+    }
     const subMenuHelp = {
-      label: "Help",
+      label: 'Help',
       submenu: [
         {
-          label: "About Nexus",
+          label: 'About Nexus',
           click() {
-            self.props.history.push("/About");
-          }
+            self.props.history.push('/About')
+          },
         },
         {
-          label: "NexusEarth",
+          label: 'NexusEarth',
           click() {
-            shell.openExternal("http://nexusearth.com");
-          }
+            shell.openExternal('http://nexusearth.com')
+          },
         },
         {
-          label: "Nexusoft Github",
+          label: 'Nexusoft Github',
           click() {
-            shell.openExternal("http://github.com/Nexusoft");
-          }
-        }
-      ]
-    };
+            shell.openExternal('http://github.com/Nexusoft')
+          },
+        },
+      ],
+    }
 
-    return [subMenuAbout, subMenuView, subMenuWindow, subMenuHelp];
+    return [subMenuAbout, subMenuView, subMenuWindow, subMenuHelp]
   }
 
   buildDefaultTemplate(self) {
     const templateDefault = [
       {
-        label: "&File",
+        label: '&File',
         submenu: [
           {
-            label: "Key Management",
+            label: 'Key Management',
             click: () => {
               if (self.props.unlocked_until !== undefined) {
-                self.props.history.push("/Settings/Security");
+                self.props.history.push('/Settings/Security')
               } else {
-                self.props.history.push("/Settings/Unencrypted");
+                self.props.history.push('/Settings/Unencrypted')
               }
-            }
+            },
           },
           {
-            label: "Back-up Wallet",
+            label: 'Back-up Wallet',
             click: () => {
               let now = new Date()
                 .toString()
                 .slice(0, 24)
-                .split(" ")
+                .split(' ')
                 .reduce((a, b) => {
-                  return a + "_" + b;
+                  return a + '_' + b
                 })
-                .replace(/:/g, "_");
-              let BackupDir = process.env.HOME + "/NexusBackups";
-              if (process.platform === "win32") {
-                BackupDir = process.env.USERPROFILE + "/NexusBackups";
-                BackupDir = BackupDir.replace(/\\/g, "/");
+                .replace(/:/g, '_')
+              let BackupDir = process.env.HOME + '/NexusBackups'
+              if (process.platform === 'win32') {
+                BackupDir = process.env.USERPROFILE + '/NexusBackups'
+                BackupDir = BackupDir.replace(/\\/g, '/')
               }
-              let fs = require("fs");
-              let ifBackupDirExists = fs.existsSync(BackupDir);
+              let fs = require('fs')
+              let ifBackupDirExists = fs.existsSync(BackupDir)
               if (
                 ifBackupDirExists == undefined ||
                 ifBackupDirExists == false
               ) {
-                fs.mkdirSync(BackupDir);
+                fs.mkdirSync(BackupDir)
               }
-              RPC.PROMISE("backupwallet", [
-                BackupDir + "/NexusBackup_" + now + ".dat"
-              ]).then(self.props.OpenModal("Wallet Backup"));
-            }
+              RPC.PROMISE('backupwallet', [
+                BackupDir + '/NexusBackup_' + now + '.dat',
+              ]).then(self.props.OpenModal('Wallet Backup'))
+            },
           },
           {
-            label: "Download Recent Database",
+            label: 'Download Recent Database',
             click() {
               if (
                 self.props.connections !== undefined &&
                 !GetSettings().manualDaemon
               ) {
-                let configuration = require("./api/configuration");
-                self.props.OpenBootstrapModal(true);
-                configuration.BootstrapRecentDatabase(self);
+                let configuration = require('./api/configuration')
+                self.props.OpenBootstrapModal(true)
+                configuration.BootstrapRecentDatabase(self)
               } else {
-                self.props.OpenModal("Please let the daemon start.");
+                self.props.OpenModal('Please let the daemon start.')
                 setTimeout(() => {
-                  self.props.CloseModal();
-                }, 3000);
+                  self.props.CloseModal()
+                }, 3000)
               }
-            }
+            },
           },
           {
-            label: "View Backups",
+            label: 'View Backups',
             click() {
-              let fs = require("fs");
-              let BackupDir = process.env.HOME + "/NexusBackups";
-              if (process.platform === "win32") {
-                BackupDir = process.env.USERPROFILE + "/NexusBackups";
-                BackupDir = BackupDir.replace(/\\/g, "/");
+              let fs = require('fs')
+              let BackupDir = process.env.HOME + '/NexusBackups'
+              if (process.platform === 'win32') {
+                BackupDir = process.env.USERPROFILE + '/NexusBackups'
+                BackupDir = BackupDir.replace(/\\/g, '/')
               }
-              let ifBackupDirExists = fs.existsSync(BackupDir);
+              let ifBackupDirExists = fs.existsSync(BackupDir)
               if (
                 ifBackupDirExists == undefined ||
                 ifBackupDirExists == false
               ) {
-                fs.mkdirSync(BackupDir);
+                fs.mkdirSync(BackupDir)
               }
-              let didopen = shell.openItem(BackupDir);
-            }
+              let didopen = shell.openItem(BackupDir)
+            },
           },
           {
-            label: "Send To Tray",
+            label: 'Send To Tray',
             click() {
-              remote.getCurrentWindow().hide();
-            }
+              remote.getCurrentWindow().hide()
+            },
           },
           {
-            label: "Start Daemon",
+            label: 'Start Daemon',
             click() {
-              let core = require("./api/core");
-              core.start();
-            }
+              let core = require('./api/core')
+              core.start()
+            },
           },
           {
-            label: "Stop Daemon",
+            label: 'Stop Daemon',
             click() {
-              let core = require("./api/core");
-              core.stop();
-            }
+              let core = require('./api/core')
+              core.stop()
+            },
           },
           {
-            label: "Close Window Keep Daemon",
+            label: 'Close Window Keep Daemon',
             click() {
-              log.info("menu.js default template: close and keep");
-              let settings = GetSettings();
-              settings.keepDaemon = true;
-              SaveSettings(settings);
-              remote.getCurrentWindow().close();
-            }
+              log.info('menu.js default template: close and keep')
+              let settings = GetSettings()
+              settings.keepDaemon = true
+              SaveSettings(settings)
+              remote.getCurrentWindow().close()
+            },
           },
           {
-            label: "Close Wallet and Daemon",
+            label: 'Close Wallet and Daemon',
             click() {
-              log.info("menu.js default template: close and kill");
-              let settings = GetSettings();
+              log.info('menu.js default template: close and kill')
+              let settings = GetSettings()
               if (settings.manualDaemon != true) {
-                RPC.PROMISE("stop", []).then(payload => {
+                RPC.PROMISE('stop', []).then(payload => {
                   setTimeout(() => {
-                    remote.getCurrentWindow().close();
-                  }, 1000);
-                });
-                remote.getCurrentWindow().close();
+                    remote.getCurrentWindow().close()
+                  }, 1000)
+                })
+                remote.getCurrentWindow().close()
               }
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       {
-        label: "Settings",
+        label: 'Settings',
         submenu: [
           {
-            label: "Core Settings",
+            label: 'Core Settings',
             click() {
-              self.props.history.push("/Settings/Core");
-            }
+              self.props.history.push('/Settings/Core')
+            },
           },
           {
-            label: "Application Settings",
+            label: 'Application Settings',
             click() {
-              self.props.history.push("/Settings/App");
-            }
+              self.props.history.push('/Settings/App')
+            },
           },
           {
-            label: "Key Management Settings",
+            label: 'Key Management Settings',
             click() {
               if (self.props.unlocked_until !== undefined) {
-                self.props.history.push("/Settings/Security");
+                self.props.history.push('/Settings/Security')
               } else {
-                self.props.history.push("/Settings/Unencrypted");
+                self.props.history.push('/Settings/Unencrypted')
               }
-            }
+            },
           },
           {
-            label: "Style Settings",
+            label: 'Style Settings',
             click() {
-              self.props.history.push("/Settings/Style");
-            }
+              self.props.history.push('/Settings/Style')
+            },
           },
           {
-            label: "Toggle &Developer Tools",
-            accelerator: "Alt+Ctrl+I",
+            label: 'Toggle &Developer Tools',
+            accelerator: 'Alt+Ctrl+I',
             click: () => {
-              this.mainWindow.toggleDevTools();
-            }
-          }
-        ]
+              this.mainWindow.toggleDevTools()
+            },
+          },
+        ],
       },
       {
-        label: "&View",
+        label: '&View',
         submenu:
-          process.env.NODE_ENV === "development"
+          process.env.NODE_ENV === 'development'
             ? [
                 {
-                  label: "Reload",
-                  accelerator: "Ctrl+R",
+                  label: 'Reload',
+                  accelerator: 'Ctrl+R',
                   click: () => {
-                    this.mainWindow.webContents.reload();
-                  }
+                    this.mainWindow.webContents.reload()
+                  },
                 },
 
                 {
-                  label: "Toggle Full Screen",
-                  accelerator: "F11",
+                  label: 'Toggle Full Screen',
+                  accelerator: 'F11',
                   click: () => {
                     remote
                       .getCurrentWindow()
-                      .setFullScreen(!remote.getCurrentWindow().isFullScreen());
-                  }
+                      .setFullScreen(!remote.getCurrentWindow().isFullScreen())
+                  },
                 },
                 {
-                  label: "Toggle &Developer Tools",
-                  accelerator: "Alt+Ctrl+I",
+                  label: 'Toggle &Developer Tools',
+                  accelerator: 'Alt+Ctrl+I',
                   click: () => {
-                    this.mainWindow.toggleDevTools();
-                  }
-                }
+                    this.mainWindow.toggleDevTools()
+                  },
+                },
               ]
             : [
                 {
-                  label: "Toggle Full Screen",
-                  accelerator: "F11",
+                  label: 'Toggle Full Screen',
+                  accelerator: 'F11',
                   click: () => {
                     remote
                       .getCurrentWindow()
-                      .setFullScreen(!remote.getCurrentWindow().isFullScreen());
-                  }
-                }
-              ]
+                      .setFullScreen(!remote.getCurrentWindow().isFullScreen())
+                  },
+                },
+              ],
       },
       {
-        label: "Help",
+        label: 'Help',
         submenu: [
           {
-            label: "About Nexus",
+            label: 'About Nexus',
             click() {
-              self.props.history.push("/About");
-            }
+              self.props.history.push('/About')
+            },
           },
           {
-            label: "NexusEarth",
+            label: 'NexusEarth',
             click() {
-              shell.openExternal("http://nexusearth.com");
-            }
+              shell.openExternal('http://nexusearth.com')
+            },
           },
           {
-            label: "Nexusoft Github",
+            label: 'Nexusoft Github',
             click() {
-              shell.openExternal("http://github.com/Nexusoft");
-            }
-          }
-        ]
-      }
-    ];
+              shell.openExternal('http://github.com/Nexusoft')
+            },
+          },
+        ],
+      },
+    ]
 
-    return templateDefault;
+    return templateDefault
   }
 }

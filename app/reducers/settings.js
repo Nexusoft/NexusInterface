@@ -1,26 +1,26 @@
-import * as TYPE from "../actions/actiontypes";
-import configuration from "../api/configuration";
-import messages from "../Language/messages";
-const path = require("path");
-let defaultWallpaperPath = "";
-if (process.env.NODE_ENV === "development") {
-  defaultWallpaperPath = "./images/background/starrynight.jpg";
+import * as TYPE from 'actions/actiontypes'
+import configuration from 'api/configuration'
+import messages from 'languages/messages'
+const path = require('path')
+let defaultWallpaperPath = ''
+if (process.env.NODE_ENV === 'development') {
+  defaultWallpaperPath = './images/background/starrynight.jpg'
 } else {
   defaultWallpaperPath = path.join(
     configuration.GetAppResourceDir(),
-    "images",
-    "background",
-    "starrynight.jpg"
-  );
-  if (process.platform === "win32") {
-    defaultWallpaperPath = defaultWallpaperPath.replace(/\\/g, "/");
+    'images',
+    'background',
+    'starrynight.jpg'
+  )
+  if (process.platform === 'win32') {
+    defaultWallpaperPath = defaultWallpaperPath.replace(/\\/g, '/')
   }
 }
 
 const initialState = {
   settings: {
     manualDaemon: false,
-    verbose: "2",
+    verbose: '2',
     acceptedagreement: false,
     experimentalWarning: true,
     bootstrap: true,
@@ -29,39 +29,39 @@ const initialState = {
     devMode: false,
     wallpaper: defaultWallpaperPath,
     renderGlobe: true,
-    fiatCurrency: "USD",
-    locale: "en",
+    fiatCurrency: 'USD',
+    locale: 'en',
     customStyling: {
-      MC1: "#111111",
-      MC2: "#0ca4fb",
-      MC3: "#556070",
-      MC4: "#34495e",
-      MC5: "#ffffff",
-      NXSlogo: "hue-rotate(0deg) brightness(100%) grayscale(0%) saturate(100%)",
-      iconMenu: "hue-rotate(0deg) brightness(100%) grayscale(0%)",
-      footer: "hue-rotate(0deg) grayscale(100%) brightness(200%)",
-      footerHover: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
-      footerActive: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
-      pannelBack: "rgba(47, 50, 65, 0.7)",
-      globePillarColorRGB: "rgb(0,255,255)",
-      globeArchColorRGB: "rgb(0,255,255)",
-      globeMultiColorRGB: "rgb(0,151,228)",
-      maxMindCopyright: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
+      MC1: '#111111',
+      MC2: '#0ca4fb',
+      MC3: '#556070',
+      MC4: '#34495e',
+      MC5: '#ffffff',
+      NXSlogo: 'hue-rotate(0deg) brightness(100%) grayscale(0%) saturate(100%)',
+      iconMenu: 'hue-rotate(0deg) brightness(100%) grayscale(0%)',
+      footer: 'hue-rotate(0deg) grayscale(100%) brightness(200%)',
+      footerHover: 'hue-rotate(0deg) grayscale(0%) brightness(100%)',
+      footerActive: 'hue-rotate(0deg) grayscale(0%) brightness(100%)',
+      pannelBack: 'rgba(47, 50, 65, 0.7)',
+      globePillarColorRGB: 'rgb(0,255,255)',
+      globeArchColorRGB: 'rgb(0,255,255)',
+      globeMultiColorRGB: 'rgb(0,151,228)',
+      maxMindCopyright: 'hue-rotate(0deg) grayscale(0%) brightness(100%)'
     },
-    NXSlogoRGB: "rgb(0,174,239)",
-    footerRGB: "rgb(0,174,239)",
-    footerActiveRGB: "rgb(0,174,239)",
-    footerHoverRGB: "rgb(0,174,239)",
-    iconMenuRGB: "rgb(0,174,239)",
+    NXSlogoRGB: 'rgb(0,174,239)',
+    footerRGB: 'rgb(0,174,239)',
+    footerActiveRGB: 'rgb(0,174,239)',
+    footerHoverRGB: 'rgb(0,174,239)',
+    iconMenuRGB: 'rgb(0,174,239)',
     ignoreEncryptionWarningFlag: false,
     experimentalOpen: true,
     saveSettings: false,
     styleChangeFlag: false,
-    selectedColorProp: "MC1"
+    selectedColorProp: 'MC1'
   },
 
   messages: messages
-};
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -69,14 +69,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         settings: { ...state.settings, ...action.payload }
-      };
-      break;
+      }
+      break
     case TYPE.UPDATE_LOCALES:
       return {
         ...state,
         settings: { ...state.settings, locale: action.payload }
-      };
-      break;
+      }
+      break
     case TYPE.SET_EXPERIMENTAL_WARNING:
       if (action.payload) {
         return {
@@ -86,20 +86,20 @@ export default (state = initialState, action) => {
             experimentalWarning: false
           },
           saveSettingsFlag: true
-        };
+        }
       } else {
         return {
           ...state,
           experimentalOpen: false
-        };
+        }
       }
-      break;
+      break
     case TYPE.IGNORE_ENCRYPTION_WARNING:
       return {
         ...state,
         ignoreEncryptionWarningFlag: true
-      };
-      break;
+      }
+      break
 
     case TYPE.ACCEPT_MIT:
       return {
@@ -109,14 +109,14 @@ export default (state = initialState, action) => {
           acceptedagreement: true
         },
         saveSettingsFlag: true
-      };
-      break;
+      }
+      break
     case TYPE.TOGGLE_SAVE_SETTINGS_FLAG:
       return {
         ...state,
         saveSettingsFlag: false
-      };
-      break;
+      }
+      break
     case TYPE.SET_WALLPAPER:
       return {
         ...state,
@@ -124,8 +124,8 @@ export default (state = initialState, action) => {
           ...state.settings,
           wallpaper: action.payload
         }
-      };
-      break;
+      }
+      break
     case TYPE.CLOSE_BOOTSTRAP_MODAL:
       return {
         ...state,
@@ -133,8 +133,8 @@ export default (state = initialState, action) => {
           ...state.settings,
           bootstrap: false
         }
-      };
-      break;
+      }
+      break
     case TYPE.CHANGE_COLOR_1:
       return {
         ...state,
@@ -145,8 +145,8 @@ export default (state = initialState, action) => {
             MC1: action.payload
           }
         }
-      };
-      break;
+      }
+      break
     case TYPE.CHANGE_COLOR_2:
       return {
         ...state,
@@ -157,8 +157,8 @@ export default (state = initialState, action) => {
             MC2: action.payload
           }
         }
-      };
-      break;
+      }
+      break
     case TYPE.CHANGE_COLOR_3:
       return {
         ...state,
@@ -169,8 +169,8 @@ export default (state = initialState, action) => {
             MC3: action.payload
           }
         }
-      };
-      break;
+      }
+      break
     case TYPE.CHANGE_COLOR_4:
       return {
         ...state,
@@ -181,8 +181,8 @@ export default (state = initialState, action) => {
             MC4: action.payload
           }
         }
-      };
-      break;
+      }
+      break
     case TYPE.CHANGE_COLOR_5:
       return {
         ...state,
@@ -193,14 +193,14 @@ export default (state = initialState, action) => {
             MC5: action.payload
           }
         }
-      };
-      break;
+      }
+      break
     case TYPE.SET_SELECTED_COLOR_PROP:
       return {
         ...state,
         selectedColorProp: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.SET_NEXUS_LOGO_COLOR:
       return {
         ...state,
@@ -212,7 +212,7 @@ export default (state = initialState, action) => {
           }
         },
         NXSlogoRGB: action.payload.hex
-      };
+      }
     case TYPE.SET_FOOTER_COLOR:
       return {
         ...state,
@@ -224,7 +224,7 @@ export default (state = initialState, action) => {
           }
         },
         footerRGB: action.payload.hex
-      };
+      }
     case TYPE.SET_FOOTER_ACTIVE_COLOR:
       return {
         ...state,
@@ -236,7 +236,7 @@ export default (state = initialState, action) => {
           }
         },
         footerActiveRGB: action.payload.hex
-      };
+      }
     case TYPE.SET_FOOTER_HOVER_COLOR:
       return {
         ...state,
@@ -248,7 +248,7 @@ export default (state = initialState, action) => {
           }
         },
         footerHoverRGB: action.payload.hex
-      };
+      }
 
     case TYPE.CHANGE_PANEL_COLOR:
       return {
@@ -261,7 +261,7 @@ export default (state = initialState, action) => {
           }
         },
         footerHoverRGB: action.payload.hex
-      };
+      }
 
     case TYPE.SET_ICON_MENU_COLOR:
       return {
@@ -274,7 +274,7 @@ export default (state = initialState, action) => {
           }
         },
         iconMenuRGB: action.payload.hex
-      };
+      }
     case TYPE.CHANGE_GLOBE_PILLAR_COLOR:
       return {
         ...state,
@@ -285,8 +285,8 @@ export default (state = initialState, action) => {
             globePillarColorRGB: action.payload.hex
           }
         }
-      };
-      break;
+      }
+      break
     case TYPE.CHANGE_GLOBE_ARCH_COLOR:
       return {
         ...state,
@@ -297,8 +297,8 @@ export default (state = initialState, action) => {
             globeArchColorRGB: action.payload.hex
           }
         }
-      };
-      break;
+      }
+      break
     case TYPE.CHANGE_GLOBE_MULTI_COLOR:
       return {
         ...state,
@@ -309,7 +309,7 @@ export default (state = initialState, action) => {
             globeMultiColorRGB: action.payload.hex
           }
         }
-      };
+      }
     case TYPE.RESET_CUSTOM_STYLING:
       return {
         ...state,
@@ -326,8 +326,8 @@ export default (state = initialState, action) => {
         globeArchColorRGB: initialState.globeArchColorRGB,
         globePillarColorRGB: initialState.globePillarColorRGB,
         globeMultiColorRGB: initialState.globeMultiColorRGB
-      };
-      break;
+      }
+      break
     case TYPE.TOGGLE_GLOBE_RENDER:
       return {
         ...state,
@@ -335,14 +335,14 @@ export default (state = initialState, action) => {
           ...state.settings,
           renderGlobe: !state.settings.renderGlobe
         }
-      };
-      break;
+      }
+      break
     case TYPE.UNSET_STYLE_FLAG:
       return {
         ...state,
         styleChangeFlag: false
-      };
-      break;
+      }
+      break
     case TYPE.SET_FIAT_CURRENCY:
       return {
         ...state,
@@ -350,9 +350,9 @@ export default (state = initialState, action) => {
           ...state.settings,
           fiatCurrency: action.payload
         }
-      };
-      break;
+      }
+      break
     default:
-      return state;
+      return state
   }
-};
+}

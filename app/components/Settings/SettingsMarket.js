@@ -8,8 +8,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 // Internal Dependencies
-import * as TYPE from "../../actions/actiontypes";
-import * as RPC from "../../script/rpc";
+import * as TYPE from "actions/actiontypes";
+import * as RPC from "scripts/rpc";
 import styles from "./style.css";
 
 // React-Redux mandatory methods

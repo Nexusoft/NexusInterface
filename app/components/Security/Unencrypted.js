@@ -4,16 +4,16 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Redirect } from "react-router";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router'
 
 // Internal Dependencies
-import core from "../../api/core";
-import styles from "./style.css";
-import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actions/actiontypes";
-import { FormattedMessage } from "react-intl";
+import core from 'api/core'
+import styles from './style.css'
+import * as RPC from 'scripts/rpc'
+import * as TYPE from 'actions/actiontypes'
+import { FormattedMessage } from 'react-intl'
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -21,134 +21,134 @@ const mapStateToProps = state => {
     ...state.common,
     ...state.login,
     ...state.overview
-  };
-};
+  }
+}
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
   busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type })
   }
-});
+})
 
 class Unencrypted extends Component {
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    this.props.wipe();
+    this.props.wipe()
   }
 
   // Class Methods
   showPrivKey(e) {
-    e.preventDefault();
-    let addressInput = document.getElementById("privKeyAddress");
-    let address = addressInput.value;
-    let output = document.getElementById("privKeyOutput");
+    e.preventDefault()
+    let addressInput = document.getElementById('privKeyAddress')
+    let address = addressInput.value
+    let output = document.getElementById('privKeyOutput')
     if (address) {
-      RPC.PROMISE("dumpprivkey", [address]).then(payload => {
-        output.value = payload;
-      });
+      RPC.PROMISE('dumpprivkey', [address]).then(payload => {
+        output.value = payload
+      })
     } else {
-      addressInput.focus();
+      addressInput.focus()
     }
   }
   coreRestart() {
-    core.restart();
+    core.restart()
   }
 
   encryptCallback() {
-    alert("Wallet Encrypted. Restarting wallet...");
-    this.coreRestart();
+    alert('Wallet Encrypted. Restarting wallet...')
+    this.coreRestart()
   }
 
   importPrivKey(e) {
-    e.preventDefault();
-    let acctname = document.getElementById("acctName");
-    let label = acctname.value.trim();
-    let privateKeyInput = document.getElementById("privateKey");
-    let pk = privateKeyInput.value.trim();
+    e.preventDefault()
+    let acctname = document.getElementById('acctName')
+    let label = acctname.value.trim()
+    let privateKeyInput = document.getElementById('privateKey')
+    let pk = privateKeyInput.value.trim()
 
     if (label && pk) {
-      RPC.PROMISE("importprivkey", [pk], [label]).then(payload => {
-        RPC.GET("rescan");
-      });
+      RPC.PROMISE('importprivkey', [pk], [label]).then(payload => {
+        RPC.GET('rescan')
+      })
     } else if (!label) {
-      acctname.focus();
+      acctname.focus()
     } else if (!pk) {
-      privateKeyInput.focus();
+      privateKeyInput.focus()
     }
   }
 
   copyPrivkey(e) {
-    e.preventDefault();
-    let output = document.getElementById("privKeyOutput");
-    output.type = "text";
-    output.focus();
-    output.select();
-    document.execCommand("Copy", false, null);
-    output.type = "password";
+    e.preventDefault()
+    let output = document.getElementById('privKeyOutput')
+    output.type = 'text'
+    output.focus()
+    output.select()
+    document.execCommand('Copy', false, null)
+    output.type = 'password'
   }
 
   reEnterValidator(e) {
-    let newPass = document.getElementById("newPass");
-    let passHint = document.getElementById("passHint");
+    let newPass = document.getElementById('newPass')
+    let passHint = document.getElementById('passHint')
 
     if (e.target.value === newPass.value) {
-      e.preventDefault();
-      passHint.style.visibility = "hidden";
+      e.preventDefault()
+      passHint.style.visibility = 'hidden'
     } else if (e.target.value.length === newPass.value.length) {
-      if (passHint.innerText !== "Passwords do not match") {
-        passHint.innerText = "Passwords do not match";
+      if (passHint.innerText !== 'Passwords do not match') {
+        passHint.innerText = 'Passwords do not match'
       }
-      passHint.style.visibility = "visible";
+      passHint.style.visibility = 'visible'
     } else {
-      passHint.style.visibility = "hidden";
+      passHint.style.visibility = 'hidden'
     }
   }
 
   encrypt(e) {
-    e.preventDefault();
-    let newPass = document.getElementById("newPass");
-    let passChk = document.getElementById("passChk");
-    let passHint = document.getElementById("passHint");
+    e.preventDefault()
+    let newPass = document.getElementById('newPass')
+    let passChk = document.getElementById('passChk')
+    let passHint = document.getElementById('passHint')
 
-    passHint.innerText = "Passwords do not match";
+    passHint.innerText = 'Passwords do not match'
     if (newPass.value.trim()) {
       if (!/[-$/&*|<>]/.test(newPass.value)) {
         if (newPass.value === passChk.value) {
-          if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
-            RPC.PROMISE("encryptwallet", [newPass.value]).then(payload => {
+          if (!(newPass.value.endsWith(' ') || newPass.value.startsWith(' '))) {
+            RPC.PROMISE('encryptwallet', [newPass.value]).then(payload => {
               if (payload === null) {
-                pass.value = "";
-                newPass.value = "";
-                passChk.value = "";
-                this.props.busy(false);
-                this.props.OpenModal("Wallet has been encrypted");
-                this.props.history.push();
+                pass.value = ''
+                newPass.value = ''
+                passChk.value = ''
+                this.props.busy(false)
+                this.props.OpenModal('Wallet has been encrypted')
+                this.props.history.push()
                 // Start the daemon again... give it maybe 5 seconds.
                 setTimeout(() => {
-                  const core = electron.remote.getGlobal("core");
-                  core.start();
-                }, 5000);
+                  const core = electron.remote.getGlobal('core')
+                  core.start()
+                }, 5000)
               }
-            });
+            })
           } else {
-            passChk.value = "";
-            passHint.innerText = "Password cannot start or end with spaces";
-            passChk.focus();
+            passChk.value = ''
+            passHint.innerText = 'Password cannot start or end with spaces'
+            passChk.focus()
           }
         } else {
-          passChk.value = "";
-          passHint.innerText = "Passwords do not match";
-          passChk.focus();
+          passChk.value = ''
+          passHint.innerText = 'Passwords do not match'
+          passChk.focus()
         }
       } else {
-        passChk.value = "";
-        passHint.style.visibility = "visible";
-        passHint.innerText = "Passwords cannot contain -$/&*|<>";
-        passChk.focus();
+        passChk.value = ''
+        passHint.style.visibility = 'visible'
+        passHint.innerText = 'Passwords cannot contain -$/&*|<>'
+        passChk.focus()
       }
     } else {
-      pass.focus();
+      pass.focus()
     }
   }
 
@@ -162,7 +162,7 @@ class Unencrypted extends Component {
             defaultMessage="Please wait for the Daemon to load"
           />
         </h2>
-      );
+      )
     } else {
       return (
         <div id="securitylogin">
@@ -175,11 +175,11 @@ class Unencrypted extends Component {
                     defaultMessage="Encrypt Wallet"
                   />
                 </legend>
-                <div style={{ marginTop: "26px" }} className="note">
+                <div style={{ marginTop: '26px' }} className="note">
                   <FormattedMessage
                     id="Settings.CannotContain"
                     defaultMessage="Encrypt Wallet"
-                  />{" "}
+                  />{' '}
                   {`-$/&*|<>`}
                 </div>
                 <div className="field">
@@ -226,7 +226,7 @@ class Unencrypted extends Component {
                   </FormattedMessage>
                   <span
                     id="passHint"
-                    style={{ visibility: "hidden" }}
+                    style={{ visibility: 'hidden' }}
                     className="err invalid"
                   >
                     <FormattedMessage
@@ -237,7 +237,7 @@ class Unencrypted extends Component {
                 </div>
                 <p>
                   <button
-                    style={{ width: "100%", margin: "0" }}
+                    style={{ width: '100%', margin: '0' }}
                     disabled={this.props.busyFlag}
                     className="button primary"
                     onClick={e => this.encrypt(e)}
@@ -443,7 +443,7 @@ class Unencrypted extends Component {
             </form>
           </div>
         </div>
-      );
+      )
     }
   }
 }
@@ -452,4 +452,4 @@ class Unencrypted extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Unencrypted);
+)(Unencrypted)

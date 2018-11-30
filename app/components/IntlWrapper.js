@@ -1,16 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { IntlProvider } from "react-intl";
-import { connect } from "react-redux";
-import intl from "../reducers/intl";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { IntlProvider } from 'react-intl'
+import { connect } from 'react-redux'
+import intl from 'reducers/intl'
 
 const mapStateToProps = state => {
   return {
     ...state.intl,
     ...state.common,
-    ...state.settings
-  };
-};
+    ...state.settings,
+  }
+}
 
 export function IntlWrapper(props) {
   return (
@@ -21,7 +21,7 @@ export function IntlWrapper(props) {
     >
       {props.children}
     </IntlProvider>
-  );
+  )
 }
 
-export default connect(mapStateToProps)(IntlWrapper);
+export default connect(mapStateToProps)(IntlWrapper)

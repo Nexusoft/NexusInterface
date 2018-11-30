@@ -1,4 +1,4 @@
-import * as TYPE from "../actions/actiontypes";
+import * as TYPE from 'actions/actiontypes'
 
 const initialState = {
   USD: 0,
@@ -9,7 +9,7 @@ const initialState = {
   percentDownloaded: 0,
   webGLEnabled: false,
   daemonAvailable: false
-};
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -17,67 +17,67 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.payload
-      };
-      break;
+      }
+      break
     case TYPE.DAEMON_UNAVAILABLE:
       return {
         ...state,
         daemonAvailable: action.payload
-      };
-    break;
+      }
+      break
     case TYPE.SET_WEBGL_ENABLED:
       return {
         ...state,
         webGLEnabled: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.SET_PERCENT_DOWNLOADED:
       return {
         ...state,
         percentDownloaded: action.payload
-      };
+      }
     case TYPE.CLEAR_FOR_RESTART:
       return {
         ...initialState
-      };
-      break;
+      }
+      break
     case TYPE.CLEAR_FOR_BOOTSTRAPING:
       return {
         ...initialState,
         percentDownloaded: 0.001
-      };
-      break;
+      }
+      break
     case TYPE.SET_EXPERIMENTAL_WARNING:
       return {
         ...state,
         experimentalOpen: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.USD_RATE:
       return {
         ...state,
         USD: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.BTC_RATE:
       return {
         ...state,
         BTC: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.CHANGE_24:
       return {
         ...state,
         USDpercentChange: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.SET_SUPPLY:
       return {
         ...state,
         circulatingSupply: action.payload
-      };
-      break;
+      }
+      break
     default:
-      return state;
+      return state
   }
-};
+}

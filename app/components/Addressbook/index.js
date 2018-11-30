@@ -9,29 +9,29 @@
 */
 
 // External Dependencies
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { remote } from "electron";
-import { Link } from "react-router-dom";
-import Modal from "react-responsive-modal";
-import csv from "csvtojson";
-import { callbackify } from "util";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { remote } from 'electron'
+import { Link } from 'react-router-dom'
+import Modal from 'react-responsive-modal'
+import csv from 'csvtojson'
+import { callbackify } from 'util'
 
 // Internal Dependencies
-import config from "../../api/configuration";
-import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actions/actiontypes";
-import * as actionsCreators from "../../actions/addressbookActionCreators";
-import TimeZoneSelector from "./timeZoneSelector";
-import ContextMenuBuilder from "../../contextmenu";
-import styles from "./style.css";
-import messages from "../../Language/messages";
+import config from 'api/configuration'
+import * as RPC from 'scripts/rpc'
+import * as TYPE from 'actions/actiontypes'
+import * as actionsCreators from 'actions/addressbookActionCreators'
+import TimeZoneSelector from './timeZoneSelector'
+import ContextMenuBuilder from 'contextmenu'
+import styles from './style.css'
+import messages from 'languages/messages'
 
 // Images
-import profilePlaceholder from "images/Profile_Placeholder.png";
-import addressbookimg from "../../images/addressbook.svg";
-import { FormattedMessage } from "react-intl";
+import profilePlaceholder from 'images/Profile_Placeholder.png'
+import addressbookimg from 'images/addressbook.svg'
+import { FormattedMessage } from 'react-intl'
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -40,31 +40,31 @@ const mapStateToProps = state => {
     ...state.addressbook,
     ...state.overview,
     ...state.sendReceive,
-    ...state.settings
-  };
-};
+    ...state.settings,
+  }
+}
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch);
+  bindActionCreators(actionsCreators, dispatch)
 
 class Addressbook extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    this.loadMyAccounts();
-    this.addressbookContextMenu = this.addressbookContextMenu.bind(this);
-    window.addEventListener("contextmenu", this.addressbookContextMenu, false);
-    this.props.googleanalytics.SendScreen("AddressBook");
+    this.loadMyAccounts()
+    this.addressbookContextMenu = this.addressbookContextMenu.bind(this)
+    window.addEventListener('contextmenu', this.addressbookContextMenu, false)
+    this.props.googleanalytics.SendScreen('AddressBook')
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    window.removeEventListener("contextmenu", this.addressbookContextMenu);
+    window.removeEventListener('contextmenu', this.addressbookContextMenu)
   }
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.save) {
-      config.WriteJson("addressbook.json", {
-        addressbook: this.props.addressbook
-      });
-      this.props.ToggleSaveFlag();
+      config.WriteJson('addressbook.json', {
+        addressbook: this.props.addressbook,
+      })
+      this.props.ToggleSaveFlag()
     }
   }
 
@@ -72,86 +72,86 @@ class Addressbook extends Component {
   addressbookContextMenu() {
     const txtTemplate = [
       {
-        label: this.props.messages[this.props.settings.locale]["Settings.Copy"],
-        accelerator: "CmdOrCtrl+C",
-        role: "copy"
+        label: this.props.messages[this.props.settings.locale]['Settings.Copy'],
+        accelerator: 'CmdOrCtrl+C',
+        role: 'copy',
       },
       {
         label: this.props.messages[this.props.settings.locale][
-          "Settings.Paste"
+          'Settings.Paste'
         ],
-        accelerator: "CmdOrCtrl+V",
-        role: "paste"
-      }
-    ];
+        accelerator: 'CmdOrCtrl+V',
+        role: 'paste',
+      },
+    ]
 
     const acctTemplate = [
       {
-        label: this.props.messages[this.props.settings.locale]["Settings.Copy"],
-        accelerator: "CmdOrCtrl+C",
-        role: "copy"
+        label: this.props.messages[this.props.settings.locale]['Settings.Copy'],
+        accelerator: 'CmdOrCtrl+C',
+        role: 'copy',
       },
       {
         label: this.props.messages[this.props.settings.locale][
-          "Settings.Paste"
+          'Settings.Paste'
         ],
 
-        accelerator: "CmdOrCtrl+V",
-        role: "paste"
+        accelerator: 'CmdOrCtrl+V',
+        role: 'paste',
       },
       {
         label: this.props.messages[this.props.settings.locale][
-          "AddressBook.DeleteContact"
+          'AddressBook.DeleteContact'
         ],
 
         click(item, focusedWindow) {
-          deleteAccountCallback();
-        }
-      }
-    ];
+          deleteAccountCallback()
+        },
+      },
+    ]
 
     let deleteAccountCallback = () => {
       if (
         confirm(
           `${
             this.props.messages[this.props.settings.locale][
-              "AddressBook.AreYouSureDelete"
+              'AddressBook.AreYouSureDelete'
             ]
           } ${this.props.addressbook[this.props.actionItem].name}?`
         )
       ) {
-        this.props.DeleteContact(this.props.actionItem);
+        this.props.DeleteContact(this.props.actionItem)
       }
-    };
+    }
 
     const addTemplate = [
       {
-        label: this.props.messages[this.props.settings.locale]["Settings.Copy"],
-        accelerator: "CmdOrCtrl+C",
-        role: "copy"
+        label: this.props.messages[this.props.settings.locale]['Settings.Copy'],
+        accelerator: 'CmdOrCtrl+C',
+        role: 'copy',
       },
       {
         label: this.props.messages[this.props.settings.locale][
-          "Settings.Paste"
+          'Settings.Paste'
         ],
-        accelerator: "CmdOrCtrl+V",
-        role: "paste"
+        accelerator: 'CmdOrCtrl+V',
+        role: 'paste',
       },
       {
         label: this.props.messages[this.props.settings.locale][
-          "AddressBook.DeleteAddress"
+          'AddressBook.DeleteAddress'
         ],
         click(item, focusedWindow) {
-          deleteAddressCallback();
-        }
-      }
-    ];
+          deleteAddressCallback()
+        },
+      },
+    ]
     let deleteAddressCallback = () => {
       if (
         confirm(
           `${
             this.props.messages[this.props.settings.locale][
-              "AddressBook.ThisAddress"
+              'AddressBook.ThisAddress'
             ]
           }? ${
             this.props.addressbook[this.props.selected][
@@ -160,153 +160,153 @@ class Addressbook extends Component {
           }`
         )
       ) {
-        this.props.DeleteAddress(this.props.actionItem, this.props.selected);
+        this.props.DeleteAddress(this.props.actionItem, this.props.selected)
       }
-    };
-    let addresscontextmenu = new remote.Menu();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    let acctMenu = remote.Menu.buildFromTemplate(acctTemplate);
-    let txtMenu = remote.Menu.buildFromTemplate(txtTemplate);
-    let addMenu = remote.Menu.buildFromTemplate(addTemplate);
+    }
+    let addresscontextmenu = new remote.Menu()
+    const contextmenu = new ContextMenuBuilder().defaultContext
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
+    let acctMenu = remote.Menu.buildFromTemplate(acctTemplate)
+    let txtMenu = remote.Menu.buildFromTemplate(txtTemplate)
+    let addMenu = remote.Menu.buildFromTemplate(addTemplate)
 
     switch (this.props.hoveredOver) {
-      case "account":
-        acctMenu.popup(remote.getCurrentWindow());
-        break;
-      case "address":
-        addMenu.popup(remote.getCurrentWindow());
-        break;
-      case "text":
-        txtMenu.popup(remote.getCurrentWindow());
-        break;
+      case 'account':
+        acctMenu.popup(remote.getCurrentWindow())
+        break
+      case 'address':
+        addMenu.popup(remote.getCurrentWindow())
+        break
+      case 'text':
+        txtMenu.popup(remote.getCurrentWindow())
+        break
       default:
-        defaultcontextmenu.popup(remote.getCurrentWindow());
-        break;
+        defaultcontextmenu.popup(remote.getCurrentWindow())
+        break
     }
   }
 
   loadMyAccounts() {
-    RPC.PROMISE("listaccounts", [0]).then(payload => {
+    RPC.PROMISE('listaccounts', [0]).then(payload => {
       Promise.all(
         Object.keys(payload).map(account =>
-          RPC.PROMISE("getaddressesbyaccount", [account])
+          RPC.PROMISE('getaddressesbyaccount', [account])
         )
       ).then(payload => {
-        let validateAddressPromises = [];
+        let validateAddressPromises = []
 
         payload.map(element => {
           element.addresses.map(address => {
             validateAddressPromises.push(
-              RPC.PROMISE("validateaddress", [address])
-            );
-          });
-        });
+              RPC.PROMISE('validateaddress', [address])
+            )
+          })
+        })
 
         Promise.all(validateAddressPromises).then(payload => {
-          let accountsList = [];
+          let accountsList = []
           let myaccts = payload.map(e => {
             if (e.ismine && e.isvalid) {
               let index = accountsList.findIndex(ele => {
                 if (ele.account === e.account) {
-                  return ele;
+                  return ele
                 }
-              });
+              })
               let indexDefault = accountsList.findIndex(ele => {
-                if (ele.account == "" || ele.account == "default") {
-                  return ele;
+                if (ele.account == '' || ele.account == 'default') {
+                  return ele
                 }
-              });
+              })
 
-              if (e.account === "" || e.account === "default") {
+              if (e.account === '' || e.account === 'default') {
                 if (index === -1 && indexDefault === -1) {
                   accountsList.push({
-                    account: "default",
-                    addresses: [e.address]
-                  });
+                    account: 'default',
+                    addresses: [e.address],
+                  })
                 } else {
-                  accountsList[indexDefault].addresses.push(e.address);
+                  accountsList[indexDefault].addresses.push(e.address)
                 }
               } else {
                 if (index === -1) {
                   accountsList.push({
                     account: e.account,
-                    addresses: [e.address]
-                  });
+                    addresses: [e.address],
+                  })
                 } else {
-                  accountsList[index].addresses.push(e.address);
+                  accountsList[index].addresses.push(e.address)
                 }
               }
             }
-          });
-          this.props.MyAccountsList(accountsList);
-        });
-      });
-    });
+          })
+          this.props.MyAccountsList(accountsList)
+        })
+      })
+    })
   }
 
   getinitial(name) {
-    if (name && name.length >= 1) return name.charAt(0);
-    return "M";
+    if (name && name.length >= 1) return name.charAt(0)
+    return 'M'
   }
 
   copyaddress(event) {
-    event.preventDefault();
-    let target = event.currentTarget;
-    let address = event.target.innerText;
+    event.preventDefault()
+    let target = event.currentTarget
+    let address = event.target.innerText
 
     // create a temporary input element and add it to the list item (no one will see it)
-    let input = document.createElement("input");
-    input.type = "text";
-    target.appendChild(input);
+    let input = document.createElement('input')
+    input.type = 'text'
+    target.appendChild(input)
 
     // set the value of the input to the selected address, then focus and select it
-    input.value = address;
-    input.focus();
-    input.select();
+    input.value = address
+    input.focus()
+    input.select()
 
     // copy it to clipboard
-    document.execCommand("Copy", false, null);
+    document.execCommand('Copy', false, null)
 
     // remove the temporary element from the DOM
-    input.remove();
+    input.remove()
 
-    this.props.OpenModal("Copied");
+    this.props.OpenModal('Copied')
     setTimeout(() => {
       if (this.props.open) {
-        this.props.CloseModal();
+        this.props.CloseModal()
       }
-    }, 3000);
+    }, 3000)
   }
 
   MyAddressesTable() {
     let filteredAddress = this.props.myAccounts.filter(acct => {
-      if (acct.account === "") {
+      if (acct.account === '') {
         let dummie = this.props.messages[this.props.settings.locale][
-          "AddressBook.MyAccount"
-        ];
+          'AddressBook.MyAccount'
+        ]
         return (
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
-        );
+        )
       } else {
         return (
           acct.account
             .toLowerCase()
             .indexOf(this.props.Search.toLowerCase()) !== -1
-        );
+        )
       }
-    });
+    })
     return (
       <div id="Addresstable-wraper">
         {filteredAddress.map((acct, i) => {
           return (
             <tr>
               <td key={acct + i} className="tdAccounts">
-                {acct.account === "" ? (
+                {acct.account === '' ? (
                   <span>
                     {
                       this.props.messages[this.props.settings.locale][
-                        "AddressBook.MyAccount"
+                        'AddressBook.MyAccount'
                       ]
                     }
                   </span>
@@ -323,29 +323,29 @@ class Addressbook extends Component {
                     <span key={address + i} className="tooltip">
                       {
                         this.props.messages[this.props.settings.locale][
-                          "AddressBook.Copy"
+                          'AddressBook.Copy'
                         ]
                       }
                     </span>
                   </td>
-                );
+                )
               })}
             </tr>
-          );
+          )
         })}
       </div>
-    );
+    )
   }
 
   modalInternalBuilder() {
     let index = this.props.addressbook.findIndex(ele => {
       if (ele.name === this.props.prototypeName) {
-        return ele;
+        return ele
       }
-    });
+    })
 
     switch (this.props.modalType) {
-      case "ADD_CONTACT":
+      case 'ADD_CONTACT':
         return (
           <div id="modalInternal">
             {index === -1 ? (
@@ -484,9 +484,9 @@ class Addressbook extends Component {
               />
             </button>
           </div>
-        );
-        break;
-      case "MY_ADDRESSES":
+        )
+        break
+      case 'MY_ADDRESSES':
         if (this.props.myAccounts.length > 0) {
           return (
             <div id="Addresstable-wraper">
@@ -525,7 +525,7 @@ class Addressbook extends Component {
               </table>
               <button
                 className="button primary"
-                onClick={() => this.props.SetModalType("NEW_MY_ADDRESS")}
+                onClick={() => this.props.SetModalType('NEW_MY_ADDRESS')}
               >
                 <FormattedMessage
                   id="AddressBook.CreateAddress"
@@ -533,7 +533,7 @@ class Addressbook extends Component {
                 />
               </button>
             </div>
-          );
+          )
         } else
           return (
             <h2>
@@ -542,9 +542,9 @@ class Addressbook extends Component {
                 defaultMessage="Please wait for the daemon to load"
               />
             </h2>
-          );
-        break;
-      case "ADD_ADDRESS":
+          )
+        break
+      case 'ADD_ADDRESS':
         return (
           <div>
             <h2 className="m1">
@@ -589,7 +589,7 @@ class Addressbook extends Component {
                   this.props.addressbook[this.props.selected].name,
                   this.props.prototypeAddress,
                   this.props.selected
-                );
+                )
               }}
             >
               <FormattedMessage
@@ -608,9 +608,9 @@ class Addressbook extends Component {
               />
             </button>
           </div>
-        );
-        break;
-      case "NEW_MY_ADDRESS":
+        )
+        break
+      case 'NEW_MY_ADDRESS':
         return (
           <div>
             <h2 className="m1">
@@ -640,7 +640,7 @@ class Addressbook extends Component {
                   />
                 )}
               </FormattedMessage>
-            </div>{" "}
+            </div>{' '}
             <button
               id="Add"
               className="ghost button"
@@ -654,37 +654,37 @@ class Addressbook extends Component {
             <button
               id="back"
               className="button ghost"
-              onClick={() => this.props.SetModalType("MY_ADDRESSES")}
+              onClick={() => this.props.SetModalType('MY_ADDRESSES')}
             >
               <FormattedMessage id="AddressBook.Back" defaultMessage="Back" />
             </button>
           </div>
-        );
-        break;
+        )
+        break
       default:
-        break;
+        break
     }
   }
 
   createAddress() {
     if (this.props.prototypeName) {
-      RPC.PROMISE("getnewaddress", [this.props.prototypeName])
+      RPC.PROMISE('getnewaddress', [this.props.prototypeName])
         .then(success => {
-          this.props.ToggleModal();
-          this.loadMyAccounts();
+          this.props.ToggleModal()
+          this.loadMyAccounts()
         })
         .catch(e => {
-          alert(e);
-        });
+          alert(e)
+        })
     } else {
-      RPC.PROMISE("getnewaddress", [""])
+      RPC.PROMISE('getnewaddress', [''])
         .then(success => {
-          this.props.ToggleModal();
-          this.loadMyAccounts();
+          this.props.ToggleModal()
+          this.loadMyAccounts()
         })
         .catch(e => {
-          alert(e);
-        });
+          alert(e)
+        })
     }
   }
 
@@ -695,18 +695,18 @@ class Addressbook extends Component {
           .toLowerCase()
           .indexOf(this.props.contactSearch.toLowerCase()) !== -1
       ) {
-        return `${contact.name}`;
+        return `${contact.name}`
       }
-    });
+    })
 
     if (this.props.addressbook[0]) {
       return (
         <div
           id="contactList"
-          onMouseOverCapture={() => this.props.SetMousePosition("", "")}
+          onMouseOverCapture={() => this.props.SetMousePosition('', '')}
         >
           {this.props.addressbook.map((contact, i) => {
-            let addTotal = contact.mine.length + contact.notMine.length;
+            let addTotal = contact.mine.length + contact.notMine.length
             if (filteredAddress.includes(contact.name)) {
               return (
                 <div
@@ -714,7 +714,7 @@ class Addressbook extends Component {
                   id={i}
                   onClick={() => this.props.SelectedContact(i)}
                   onMouseOverCapture={e => {
-                    this.props.SetMousePosition("account", i);
+                    this.props.SetMousePosition('account', i)
                   }}
                   className="contact"
                 >
@@ -727,63 +727,63 @@ class Addressbook extends Component {
                   </span>
                   <span className="contact-name">{contact.name}</span>
                   <span className="contactAddresses">
-                    {addTotal}{" "}
+                    {addTotal}{' '}
                     {addTotal > 1
                       ? this.props.messages[this.props.settings.locale][
-                          "AddressBook.Addresses"
+                          'AddressBook.Addresses'
                         ]
                       : this.props.messages[this.props.settings.locale][
-                          "AddressBook.Address"
+                          'AddressBook.Address'
                         ]}
                   </span>
                 </div>
-              );
+              )
             } else {
-              return null;
+              return null
             }
           })}
         </div>
-      );
+      )
     }
   }
 
   phoneFormatter() {
-    let num = this.props.addressbook[this.props.selected].phoneNumber;
+    let num = this.props.addressbook[this.props.selected].phoneNumber
     if (num.length === 12) {
       return `+ ${num.substring(0, 2)} ${num.substring(2, 4)} ${num.substring(
         4,
         8
-      )} ${num.substring(8, 12)}`;
+      )} ${num.substring(8, 12)}`
     } else if (num.length === 10) {
       return `(${num.substring(0, 3)}) ${num.substring(3, 6)}-${num.substring(
         6,
         10
-      )}`;
-    } else return num;
+      )}`
+    } else return num
   }
 
   localTimeFormater() {
-    let d = new Date();
-    let utc = new Date().getTimezoneOffset();
+    let d = new Date()
+    let utc = new Date().getTimezoneOffset()
 
-    d.setMinutes(d.getMinutes() + utc);
+    d.setMinutes(d.getMinutes() + utc)
     d.setMinutes(
       d.getMinutes() +
         parseInt(this.props.addressbook[this.props.selected].timezone)
-    );
+    )
 
-    let h = d.getHours();
-    let m = d.getMinutes();
-    let i = "AM";
+    let h = d.getHours()
+    let m = d.getMinutes()
+    let i = 'AM'
     if (h >= 12) {
-      i = "PM";
-      h = h - 12;
+      i = 'PM'
+      h = h - 12
     }
     if (h === 0) {
-      h = "12";
+      h = '12'
     }
     if (m <= 9) {
-      m = `0${m}`;
+      m = `0${m}`
     }
 
     return (
@@ -794,11 +794,11 @@ class Addressbook extends Component {
               this.props.SaveTz(
                 this.props.selected,
                 this.props.prototypeTimezone
-              );
+              )
             } else {
               this.props.TzToggler(
                 this.props.addressbook[this.props.selected].timezone
-              );
+              )
             }
           }}
           onKeyDown={e => {
@@ -806,17 +806,17 @@ class Addressbook extends Component {
               this.props.SaveTz(
                 this.props.selected,
                 this.props.prototypeTimezone
-              );
+              )
             }
           }}
         >
-          {" "}
+          {' '}
           <FormattedMessage
             id="AddressBook.LocalTime"
             defaultMessage="Local Time"
           />
           :
-        </span>{" "}
+        </span>{' '}
         {this.props.editTZ === true ? (
           <TimeZoneSelector />
         ) : (
@@ -831,7 +831,7 @@ class Addressbook extends Component {
           </span>
         )}
       </div>
-    );
+    )
   }
 
   theirAddressLister() {
@@ -848,10 +848,10 @@ class Addressbook extends Component {
             return (
               <div
                 onContextMenu={e => {
-                  this.props.SetMousePosition("address", {
+                  this.props.SetMousePosition('address', {
                     index: i,
-                    type: "notMine"
-                  });
+                    type: 'notMine',
+                  })
                 }}
                 key={i + add.address}
               >
@@ -877,9 +877,9 @@ class Addressbook extends Component {
                     {add.label === "'s Address"
                       ? `${
                           this.props.addressbook[this.props.selected].name
-                        }${"'s"}${"  "}${
+                        }${"'s"}${'  '}${
                           this.props.messages[this.props.settings.locale][
-                            "AddressBook.Address"
+                            'AddressBook.Address'
                           ]
                         }`
                       : add.label}
@@ -896,11 +896,11 @@ class Addressbook extends Component {
                   />
                 </span>
               </div>
-            );
+            )
           })}
         </div>
       </div>
-    );
+    )
   }
 
   myAddressLister() {
@@ -917,10 +917,10 @@ class Addressbook extends Component {
             return (
               <div
                 onContextMenu={e => {
-                  this.props.SetMousePosition("address", {
+                  this.props.SetMousePosition('address', {
                     index: i,
-                    type: "mine"
-                  });
+                    type: 'mine',
+                  })
                 }}
                 key={i + add.address}
               >
@@ -943,7 +943,7 @@ class Addressbook extends Component {
                       this.props.LabelToggler(add.label, add.address)
                     }
                   >
-                    {add.label === "My Address for "
+                    {add.label === 'My Address for '
                       ? `${add.label}${
                           this.props.addressbook[this.props.selected].name
                         }`
@@ -952,11 +952,11 @@ class Addressbook extends Component {
                   </span>
                 )}
                 <div onClick={event => this.copyaddress(event)}>
-                  {add.address}{" "}
+                  {add.address}{' '}
                 </div>
               </div>
-            );
-          })}{" "}
+            )
+          })}{' '}
           <span className="tooltip">
             <FormattedMessage
               id="AddressBook.Copy"
@@ -965,54 +965,54 @@ class Addressbook extends Component {
           </span>
         </div>
       </div>
-    );
+    )
   }
 
   addAddressHandler() {
-    this.props.SetModalType("ADD_ADDRESS");
-    this.props.ToggleModal();
+    this.props.SetModalType('ADD_ADDRESS')
+    this.props.ToggleModal()
   }
 
   showAddContactModal() {
-    this.props.SetModalType("ADD_CONTACT");
-    this.props.ToggleModal();
+    this.props.SetModalType('ADD_CONTACT')
+    this.props.ToggleModal()
   }
 
   showMyAddresses() {
-    this.props.SetModalType("MY_ADDRESSES");
-    this.props.ToggleModal();
+    this.props.SetModalType('MY_ADDRESSES')
+    this.props.ToggleModal()
   }
 
   phoneNumberHandler(value) {
-    if (/^[0-9.]+$/.test(value) | (value === "")) {
-      this.props.EditProtoPhone(value);
+    if (/^[0-9.]+$/.test(value) | (value === '')) {
+      this.props.EditProtoPhone(value)
     } else {
-      return null;
+      return null
     }
   }
 
   exportAddressBook() {
     this.props.googleanalytics.SendEvent(
-      "AddressBook",
-      "IOAddress",
-      "Export",
+      'AddressBook',
+      'IOAddress',
+      'Export',
       1
-    );
+    )
 
-    const rows = []; //Set up a blank array for each row
-    let csvContent = "data:text/csv;charset=utf-8,"; //Set formating
+    const rows = [] //Set up a blank array for each row
+    let csvContent = 'data:text/csv;charset=utf-8,' //Set formating
     //This is so we can have named columns in the export, this will be row 1
     let NameEntry = [
-      "AccountName", //a
-      "PhoneNumber", //b
-      "TimeZone", //c
-      "Notes" //d
-    ];
-    rows.push(NameEntry); //how we get our header line
+      'AccountName', //a
+      'PhoneNumber', //b
+      'TimeZone', //c
+      'Notes', //d
+    ]
+    rows.push(NameEntry) //how we get our header line
     this.props.addressbook.map(e => {
-      let tempentry = [];
-      tempentry.push(e.name);
-      tempentry.push(e.phoneNumber);
+      let tempentry = []
+      tempentry.push(e.name)
+      tempentry.push(e.phoneNumber)
 
       // let timezone = "";
       // switch (e.timezone) {
@@ -1138,102 +1138,102 @@ class Addressbook extends Component {
       //     timezone = "blank";
       //     break;
       // }
-      tempentry.push(e.timezone);
-      tempentry.push(e.notes);
+      tempentry.push(e.timezone)
+      tempentry.push(e.notes)
       // rows.push(tempentry); // moving down.
-      let tempMine = [];
+      let tempMine = []
 
-      let tempNotMine = [];
+      let tempNotMine = []
       if (e.mine.length > 0) {
         e.mine.map(add => {
-          let label = "";
-          if (add.label === "My Address for ") {
-            label = add.label + e.name;
+          let label = ''
+          if (add.label === 'My Address for ') {
+            label = add.label + e.name
           } else {
-            label = add.label;
+            label = add.label
           }
-          tempMine.push([label, add.address]);
-        });
+          tempMine.push([label, add.address])
+        })
         // rows.push(["", `My addresses for ${e.name}`, "", "", ""]);
         // rows.push(tempMine);
-        tempentry.push(tempMine);
+        tempentry.push(tempMine)
       }
       if (e.notMine.length > 0) {
         e.notMine.map(add => {
-          let label = "";
+          let label = ''
 
           if (add.label === "'s Address") {
-            label = e.name + add.label;
+            label = e.name + add.label
           } else {
-            label = add.label;
+            label = add.label
           }
-          tempNotMine.push([label, add.address]);
-        });
+          tempNotMine.push([label, add.address])
+        })
         // rows.push(["", `${e.name}'s addresses`, "", "", ""]);
         // rows.push(tempNotMine);
-        tempentry.push(tempNotMine);
+        tempentry.push(tempNotMine)
       }
-      rows.push(tempentry);
-    });
+      rows.push(tempentry)
+    })
 
     rows.forEach(function(rowArray) {
-      let row = rowArray.join(",");
-      csvContent += row + "\r\n";
-    }); //format each row
-    let encodedUri = encodeURI(csvContent); //Set up a uri, in Javascript we are basically making a Link to this file
-    let link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "nexus-addressbook.csv"); //give link an action and a default name for the file. MUST BE .csv
+      let row = rowArray.join(',')
+      csvContent += row + '\r\n'
+    }) //format each row
+    let encodedUri = encodeURI(csvContent) //Set up a uri, in Javascript we are basically making a Link to this file
+    let link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', 'nexus-addressbook.csv') //give link an action and a default name for the file. MUST BE .csv
 
-    document.body.appendChild(link); // Required for FF
-    this.props.OpenModal("Contacts Exported");
+    document.body.appendChild(link) // Required for FF
+    this.props.OpenModal('Contacts Exported')
     setTimeout(() => {
-      this.props.CloseModal();
-    }, 3000);
-    link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
-    document.body.removeChild(link);
+      this.props.CloseModal()
+    }, 3000)
+    link.click() //Finish by "Clicking" this link that will execute the download action we listed above
+    document.body.removeChild(link)
   }
 
   importAddressBook(path) {
     this.props.googleanalytics.SendEvent(
-      "AddressBook",
-      "IOAddress",
-      "Import",
+      'AddressBook',
+      'IOAddress',
+      'Import',
       1
-    );
+    )
 
     csv()
       .fromFile(path)
       .then(jsonObj => {
         for (var i = 0; i < jsonObj.length; i++) {
           // dispatch a new account... (map it )
-          var name = jsonObj[i].AccountName;
-          var phone = jsonObj[i].PhoneNumber;
-          var notes = jsonObj[i].Notes;
-          var tz = jsonObj[i].TimeZone;
-          var label;
-          var address;
+          var name = jsonObj[i].AccountName
+          var phone = jsonObj[i].PhoneNumber
+          var notes = jsonObj[i].Notes
+          var tz = jsonObj[i].TimeZone
+          var label
+          var address
           for (var k in jsonObj[i]) {
-            var key = k;
-            var val = jsonObj[i][k];
+            var key = k
+            var val = jsonObj[i][k]
 
-            if (key.includes("field")) {
-              var num = key.slice(5, key.length);
+            if (key.includes('field')) {
+              var num = key.slice(5, key.length)
               if (num % 2 == 1) {
-                label = val;
+                label = val
               } else {
-                address = val;
+                address = val
                 // (name, address, num, notes, TZ)
-                this.props.AddContact(name, address, phone, notes, tz);
+                this.props.AddContact(name, address, phone, notes, tz)
                 // so here is where we have unique address label pairs, we should add this now.
                 // also we don't really know how they had things labeled so we should check to see if they are ours or not.
-                label = "";
-                address = "";
+                label = ''
+                address = ''
               }
             }
           }
         }
-      });
+      })
   }
 
   // Mandatory React method
@@ -1244,7 +1244,7 @@ class Addressbook extends Component {
           open={this.props.modalVisable}
           center
           onClose={this.props.ToggleModal}
-          classNames={{ modal: "custom-modal4" }}
+          classNames={{ modal: 'custom-modal4' }}
           onExited={this.props.clearPrototype}
         >
           {this.modalInternalBuilder()}
@@ -1314,9 +1314,9 @@ class Addressbook extends Component {
               <button
                 className="button primary"
                 onClick={() => {
-                  this.props.clearSearch();
-                  this.loadMyAccounts();
-                  this.showMyAddresses();
+                  this.props.clearSearch()
+                  this.loadMyAccounts()
+                  this.showMyAddresses()
                 }}
               >
                 <FormattedMessage
@@ -1360,7 +1360,7 @@ class Addressbook extends Component {
                                     this.props.SaveName(
                                       this.props.selected,
                                       this.props.prototypeName
-                                    );
+                                    )
                                   }
                                 }}
                                 placeholder={n}
@@ -1383,7 +1383,7 @@ class Addressbook extends Component {
                           >
                             {this.props.addressbook[this.props.selected].name}
                           </span>
-                        )}{" "}
+                        )}{' '}
                         <div className="tooltip">
                           <FormattedMessage
                             id="AddressBook.ClickToEdit"
@@ -1394,7 +1394,7 @@ class Addressbook extends Component {
                       <div id="contactInformation">
                         <div>
                           <div>
-                            {" "}
+                            {' '}
                             <label
                               onDoubleClick={() =>
                                 this.props.PhoneToggler(
@@ -1427,7 +1427,7 @@ class Addressbook extends Component {
                                         this.props.SavePhone(
                                           this.props.selected,
                                           this.props.prototypePhoneNumber
-                                        );
+                                        )
                                       }
                                     }}
                                     value={this.props.prototypePhoneNumber}
@@ -1451,7 +1451,7 @@ class Addressbook extends Component {
                                 }
                                 id="phoneNumber"
                               >
-                                {" "}
+                                {' '}
                                 {this.phoneFormatter()}
                               </span>
                             )}
@@ -1495,7 +1495,7 @@ class Addressbook extends Component {
                                       this.props.SaveNotes(
                                         this.props.selected,
                                         this.props.prototypeNotes
-                                      );
+                                      )
                                     }
                                   }}
                                   onChange={e =>
@@ -1562,7 +1562,7 @@ class Addressbook extends Component {
                     <div
                       id="addressDisplay"
                       onMouseOverCapture={() =>
-                        this.props.SetMousePosition("", "")
+                        this.props.SetMousePosition('', '')
                       }
                     >
                       {this.props.addressbook[this.props.selected].notMine
@@ -1589,7 +1589,7 @@ class Addressbook extends Component {
                 )}
               </div>
             ) : (
-              <h1 style={{ alignSelf: "center" }}>
+              <h1 style={{ alignSelf: 'center' }}>
                 <FormattedMessage
                   id="AddressBook.NoContacts"
                   defaultMessage="No Contacts"
@@ -1599,7 +1599,7 @@ class Addressbook extends Component {
           </div>
         )}
       </div>
-    );
+    )
   }
 }
 
@@ -1607,4 +1607,4 @@ class Addressbook extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Addressbook);
+)(Addressbook)

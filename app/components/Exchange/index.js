@@ -5,69 +5,69 @@ Last Modified by: Brian Smith
 */
 
 // External Dependencies
-import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
-import { Route, Redirect } from "react-router";
-import { connect } from "react-redux";
-import Modal from "react-responsive-modal";
-import { Link } from "react-router-dom";
-import Request from "request";
-import { remote } from "electron";
-import Countdown from "react-countdown-now";
+import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
+import { Route, Redirect } from 'react-router'
+import { connect } from 'react-redux'
+import Modal from 'react-responsive-modal'
+import { Link } from 'react-router-dom'
+import Request from 'request'
+import { remote } from 'electron'
+import Countdown from 'react-countdown-now'
 
 // Internal Dependencies
-import styles from "./style.css";
-import Fast from "./Fast";
-import Precise from "./Precise";
-import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actions/actiontypes";
-import { FormattedMessage } from "react-intl";
-import ContextMenuBuilder from "../../contextmenu";
+import styles from './style.css'
+import Fast from './Fast'
+import Precise from './Precise'
+import * as RPC from 'scripts/rpc'
+import * as TYPE from 'actions/actiontypes'
+import { FormattedMessage } from 'react-intl'
+import ContextMenuBuilder from 'contextmenu'
 
 // Images
-import shapeshiftimg from "../../images/shapeshift.svg";
-import bullseye from "../../images/bullseye.svg";
-import fastImg from "../../images/fast.svg";
+import shapeshiftimg from 'images/shapeshift.svg'
+import bullseye from 'images/bullseye.svg'
+import fastImg from 'images/fast.svg'
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
-    ...state.exchange
-  };
-};
+    ...state.exchange,
+  }
+}
 const mapDispatchToProps = dispatch => ({
   clearTransaction: () => {
-    dispatch({ type: TYPE.CLEAR_TRANSACTION });
+    dispatch({ type: TYPE.CLEAR_TRANSACTION })
   },
   emailForRecipt: email => {
-    dispatch({ type: TYPE.SET_EMAIL, payload: email });
-  }
-});
+    dispatch({ type: TYPE.SET_EMAIL, payload: email })
+  },
+})
 
 class Exchange extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    this.props.googleanalytics.SendScreen("Exchange");
-    window.addEventListener("contextmenu", this.setupcontextmenu, false);
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    this.props.googleanalytics.SendScreen('Exchange')
+    window.addEventListener('contextmenu', this.setupcontextmenu, false)
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
     if (settingsObj.email) {
-      this.props.emailForRecipt(settingsObj.email);
+      this.props.emailForRecipt(settingsObj.email)
     }
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    window.removeEventListener("contextmenu", this.setupcontextmenu);
+    window.removeEventListener('contextmenu', this.setupcontextmenu)
   }
 
   // Class methods
   setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
+    e.preventDefault()
+    const contextmenu = new ContextMenuBuilder().defaultContext
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
+    defaultcontextmenu.popup(remote.getCurrentWindow())
   }
 
   modalContents() {
@@ -77,7 +77,7 @@ class Exchange extends Component {
           <h2>All right, let's get to it!</h2>
           Now all you have to do is send {
             this.props.transaction.depositAmount
-          }{" "}
+          }{' '}
           {this.props.from} to:
           <br />
           {this.props.transaction.depositAddress}
@@ -96,14 +96,14 @@ class Exchange extends Component {
             onComplete={() => this.props.clearTransaction()}
             renderer={({ hours, minutes, seconds, completed }) => {
               if (completed) {
-                alert("Transaction Expired");
-                return null;
+                alert('Transaction Expired')
+                return null
               } else {
                 return (
                   <span>
                     {minutes}:{seconds}
                   </span>
-                );
+                )
               }
             }}
           />
@@ -115,14 +115,14 @@ class Exchange extends Component {
             Cancel Transaction
           </button> */}
         </div>
-      );
+      )
     } else {
       return (
         <div>
           <h2>
             Awesome, <br /> Transaction initiated!
           </h2>
-          Now all you have to do is send {this.props.ammount}{" "}
+          Now all you have to do is send {this.props.ammount}{' '}
           {this.props.transaction.depositType} to:
           <br />
           {this.props.transaction.depositAddress}
@@ -157,7 +157,7 @@ class Exchange extends Component {
             Cancel Transaction
           </button> */}
         </div>
-      );
+      )
     }
   }
 
@@ -165,7 +165,7 @@ class Exchange extends Component {
   render() {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
-      return <Redirect to={`${this.props.match.url}/Precise`} />;
+      return <Redirect to={`${this.props.match.url}/Precise`} />
     }
 
     return (
@@ -174,7 +174,7 @@ class Exchange extends Component {
           open={this.props.transactionModalFlag}
           onClose={this.props.clearTransaction}
           center
-          classNames={{ modal: "modal" }}
+          classNames={{ modal: 'modal' }}
         >
           {this.modalContents()}
         </Modal>
@@ -232,7 +232,7 @@ class Exchange extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -240,4 +240,4 @@ class Exchange extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Exchange);
+)(Exchange)

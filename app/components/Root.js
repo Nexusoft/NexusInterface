@@ -1,42 +1,41 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 // import { Provider } from "react-redux";
-import { ConnectedRouter } from "connected-react-router";
-import { Route } from "react-router";
+import { ConnectedRouter } from 'connected-react-router'
+import { Route } from 'react-router'
 // import { FormattedMessage, IntlProvider } from "react-intl-redux";
-import App from "./App";
-import Loader from "../components/Loader/index";
-import Overview from "../components/Overview/index";
-import Header from "../components/Header/index";
-import Footer from "../components/Footer/index";
-import SendRecieve from "../components/SendRecieve/index";
-import Transactions from "../components/Transactions/index";
-import Market from "../components/Market/index";
-import Addressbook from "../components/Addressbook/index";
-import BlockExplorer from "../components/BlockExplorer/index";
-import Settings from "../components/Settings/index";
-import Terminal from "../components/Terminal/index";
-import StyleGuide from "../components/StyleGuide/index";
-import List from "../components/List/index";
-import About from "../components/About/index";
-import Exchange from "../components/Exchange/index";
-import settings from "../../app/api/settings";
-import messages from "../Language/messages";
-import locale from "../reducers/intl";
-import enLocaleData from "react-intl/locale-data/en";
-import { addLocaleData } from "react-intl";
+import App from './App'
+import Loader from './Loader'
+import Overview from './Overview'
+import Header from './Header'
+import Footer from './Footer'
+import SendRecieve from './SendRecieve'
+import Transactions from './Transactions'
+import Market from './Market'
+import Addressbook from './Addressbook'
+import BlockExplorer from './BlockExplorer'
+import Settings from './Settings'
+import Terminal from './Terminal'
+import StyleGuide from './StyleGuide'
+import List from './List'
+import About from './About'
+import Exchange from './Exchange'
+import settings from 'api/settings'
+import messages from 'languages/messages'
+import locale from 'reducers/intl'
+import enLocaleData from 'react-intl/locale-data/en'
+import { addLocaleData } from 'react-intl'
 //import { updateIntl } from "react-intl-redux";
-import localesReducer from "../reducers/intl";
-import { connect, Provider } from "react-redux";
-import IntlWrapper from "../containers/intlWrapper";
-import type { Store } from "../reducers/types";
+import localesReducer from 'reducers/intl'
+import { connect, Provider } from 'react-redux'
+import type { Store } from 'reducers/types'
 type Props = {
   store: Store,
-  history: {}
-};
+  history: {},
+}
 
 export default class Root extends Component<Props> {
   render() {
-    const { store, history } = this.props;
+    const { store, history } = this.props
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
@@ -69,6 +68,6 @@ export default class Root extends Component<Props> {
           </App>
         </ConnectedRouter>
       </Provider>
-    );
+    )
   }
 }

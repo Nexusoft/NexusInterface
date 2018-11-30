@@ -1,18 +1,18 @@
-import * as TYPE from "../actions/actiontypes";
+import * as TYPE from 'actions/actiontypes'
 
 // These be props! On with the show.
 const initialState = {
   //vars go here
   consoleOutput: [],
   coreOutput: [],
-  currentInput: "",
+  currentInput: '',
   commandList: [],
   autoComplete: [],
   testnum: 99999,
   commandHistory: [],
   currentHistoryIndex: 0,
   filteredCmdList: []
-};
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -20,47 +20,47 @@ export default (state = initialState, action) => {
       return {
         ...state,
         commandList: [...action.payload]
-      };
-      break;
+      }
+      break
     case TYPE.PRINT_TO_CONSOLE:
-      var payloadCopy = action.payload;
-      payloadCopy.push("\n  ");
+      var payloadCopy = action.payload
+      payloadCopy.push('\n  ')
       return {
         ...state,
         consoleOutput: payloadCopy
-      };
-      break;
+      }
+      break
 
     case TYPE.PRINT_TO_CORE:
-      var payloadCopy = [];
+      var payloadCopy = []
 
       if (state.coreOutput.length < 1000) {
-        payloadCopy = [...action.payload, ...state.coreOutput];
+        payloadCopy = [...action.payload, ...state.coreOutput]
       } else if (action.payload.length <= 1) {
-        payloadCopy = [...state.coreOutput];
+        payloadCopy = [...state.coreOutput]
       } else {
-        payloadCopy = [...action.payload];
+        payloadCopy = [...action.payload]
       }
 
       return {
         ...state,
         coreOutput: payloadCopy
-      };
-      break;
+      }
+      break
 
     case TYPE.RESET_MY_CONSOLE:
       return {
         ...state,
         consoleOutput: []
-      };
-      break;
+      }
+      break
     case TYPE.ON_INPUT_FIELD_CHANGE:
-      let filteredCmdListTmp = [];
+      let filteredCmdListTmp = []
       for (var i = 0; i < state.commandList.length; i++) {
-        let element = state.commandList[i];
+        let element = state.commandList[i]
         if (element.indexOf(action.payload) != -1) {
-          if (action.payload != "" && element.startsWith(action.payload)) {
-            filteredCmdListTmp.push(element);
+          if (action.payload != '' && element.startsWith(action.payload)) {
+            filteredCmdListTmp.push(element)
           }
         }
       }
@@ -69,69 +69,69 @@ export default (state = initialState, action) => {
         ...state,
         currentInput: action.payload,
         filteredCmdList: filteredCmdListTmp
-      };
-      break;
+      }
+      break
     case TYPE.SET_INPUT_FEILD:
       return {
         ...state,
         currentInput: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.ON_AUTO_COMPLETE_CLICK:
       return {
         ...state,
         currentInput: action.payload,
         autoComplete: [],
         filteredCmdList: []
-      };
-      break;
+      }
+      break
     case TYPE.RETURN_AUTO_COMPLETE:
       // foreach commandlist starts with current input push into string aray
       // needs commandlist, a copy of the ones that go into it, and a returned array of commandlist that is less.
 
       //No longer using this as I combined this action with setting input
 
-      let filteredCmdListTmp2 = [];
+      let filteredCmdListTmp2 = []
       for (var i = 0; i < commandList.length; i++) {
         if (commandList[i].indexOf(action.payload) != -1) {
-          filteredCmdList2.push(commandList[i]);
+          filteredCmdList2.push(commandList[i])
         }
       }
       return {
         ...state,
         filteredCmdList: filteredCmdListTmp2
-      };
-      break;
+      }
+      break
     case TYPE.REMOVE_AUTO_COMPLETE_DIV:
       return {
         ...state,
         autoComplete: [],
         filteredCmdList: []
-      };
-      break;
+      }
+      break
     case TYPE.RECALL_PREVIOUS_COMMAND:
       return {
         ...state,
         commandHistory: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.RECALL_NEXT_COMMAND_OR_CLEAR:
       return {
         ...state,
         currentInput: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.ADD_TO_HISTORY:
       return {
         ...state,
         commandHistory: [...state.commandHistory, action.payload]
-      };
-      break;
+      }
+      break
 
     default:
-      return state;
+      return state
   }
-};
+}
 
 // export const SET_COMMAND_LIST = "SET_COMMAND_LIST";
 // export const PRINT_TO_CONSOLE = "PRINT_TO_CONSOLE";

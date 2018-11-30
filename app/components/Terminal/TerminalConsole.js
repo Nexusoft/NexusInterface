@@ -11,8 +11,8 @@ import { timingSafeEqual } from "crypto";
 
 // Internal Dependencies
 import styles from "./style.css";
-import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actions/actiontypes";
+import * as RPC from "scripts/rpc";
+import * as TYPE from "actions/actiontypes";
 import { FormattedMessage } from "react-intl";
 
 let currentHistoryIndex = -1;

@@ -1,4 +1,4 @@
-import * as TYPE from "../actions/actiontypes";
+import * as TYPE from 'actions/actiontypes'
 
 const initialState = {
   binance: {
@@ -38,7 +38,7 @@ const initialState = {
   arbAlertList: [],
   threshold: 0.0002,
   tradeVolume: 5
-};
+}
 // TODO: deprecate when we move to a new alert system
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -49,8 +49,8 @@ export default (state = initialState, action) => {
           ...state.cryptopia,
           info24hr: { ...action.payload }
         }
-      };
-      break;
+      }
+      break
     case TYPE.BITTREX_24:
       return {
         ...state,
@@ -58,8 +58,8 @@ export default (state = initialState, action) => {
           ...state.bittrex,
           info24hr: { ...action.payload }
         }
-      };
-      break;
+      }
+      break
     case TYPE.BINANCE_24:
       return {
         ...state,
@@ -67,8 +67,8 @@ export default (state = initialState, action) => {
           ...state.binance,
           info24hr: { ...action.payload }
         }
-      };
-      break;
+      }
+      break
     case TYPE.CRYPTOPIA_ORDERBOOK:
       return {
         ...state,
@@ -77,8 +77,8 @@ export default (state = initialState, action) => {
           buy: [...action.payload.buy],
           sell: [...action.payload.sell]
         }
-      };
-      break;
+      }
+      break
     case TYPE.BINANCE_ORDERBOOK:
       return {
         ...state,
@@ -87,8 +87,8 @@ export default (state = initialState, action) => {
           buy: [...action.payload.buy],
           sell: [...action.payload.sell]
         }
-      };
-      break;
+      }
+      break
     case TYPE.BITTREX_ORDERBOOK:
       return {
         ...state,
@@ -97,14 +97,14 @@ export default (state = initialState, action) => {
           buy: [...action.payload.buy],
           sell: [...action.payload.sell]
         }
-      };
-      break;
+      }
+      break
     case TYPE.MARKET_DATA_LOADED:
       return {
         ...state,
         loaded: true
-      };
-      break;
+      }
+      break
     case TYPE.BINANCE_CANDLESTICK:
       return {
         ...state,
@@ -112,8 +112,8 @@ export default (state = initialState, action) => {
           ...state.binance,
           candlesticks: [...action.payload]
         }
-      };
-      break;
+      }
+      break
     case TYPE.BITTREX_CANDLESTICK:
       return {
         ...state,
@@ -121,8 +121,8 @@ export default (state = initialState, action) => {
           ...state.bittrex,
           candlesticks: [...action.payload]
         }
-      };
-      break;
+      }
+      break
     case TYPE.CRYPTOPIA_CANDLESTICK:
       return {
         ...state,
@@ -130,27 +130,27 @@ export default (state = initialState, action) => {
           ...state.cryptopia,
           candlesticks: [...action.payload]
         }
-      };
-      break;
+      }
+      break
     case TYPE.SET_TRADEVOL:
       return {
         ...state,
         tradeVolume: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.SET_THRESHOLD:
       return {
         ...state,
         threshold: action.payload
-      };
-      break;
+      }
+      break
     //  TODO: deprecate when we move to a new alert system
     case TYPE.SET_ALERTS:
       return {
         ...state,
         arbAlertList: action.payload
-      };
-      break;
+      }
+      break
     case TYPE.REMOVE_ALERT:
       return {
         ...state,
@@ -158,10 +158,10 @@ export default (state = initialState, action) => {
           ...state.arbAlertList.slice(0, action.payload),
           ...state.arbAlertList.slice(action.payload + 1)
         ]
-      };
-      break;
+      }
+      break
 
     default:
-      return state;
+      return state
   }
-};
+}

@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router";
 
 import styles from "./style.css";
-import * as RPC from "../../script/rpc";
-import * as TYPE from "../../actions/actiontypes";
+import * as RPC from "scripts/rpc";
+import * as TYPE from "actions/actiontypes";
 import { FormattedMessage } from "react-intl";
 
 const mapStateToProps = state => {

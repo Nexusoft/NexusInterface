@@ -10,8 +10,8 @@ import { Redirect } from "react-router";
 
 // Internal Dependencies
 import styles from "./style.css";
-import * as TYPE from "../../actions/actiontypes";
-import * as RPC from "../../script/rpc";
+import * as TYPE from "actions/actiontypes";
+import * as RPC from "scripts/rpc";
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
