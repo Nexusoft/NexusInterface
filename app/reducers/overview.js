@@ -22,6 +22,7 @@ export default (state = initialState, action) => {
     case TYPE.DAEMON_UNAVAILABLE:
       return {
         ...state,
+        connections: 0,
         daemonAvailable: action.payload
       };
     break;

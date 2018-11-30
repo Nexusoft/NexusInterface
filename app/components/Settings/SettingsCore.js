@@ -288,6 +288,17 @@ class SettingsCore extends Component {
     settings.SaveSettings(settingsObj);
   }
 
+  updateForkBlockAmout(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.forkblock = el.value;
+
+    settings.SaveSettings(settingsObj);
+    console.log(settings);
+  }
+
   updateManualDaemon(event) {
     var el = event.target;
     var settings = require("../../api/settings.js");
@@ -749,6 +760,29 @@ class SettingsCore extends Component {
                   type="text"
                   size="3"
                   onChange={this.updateVerboseLevel}
+                  data-tooltip={TT}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+
+          <div className="field">
+            <label htmlFor="forkblock">
+              <FormattedMessage
+                id="Settings.Forkblock"
+                defaultMessage="Restart Daemon and go back"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.Verbose"
+              defaultMessage="Step Back A Amount of Blocks"
+            >
+              {TT => (
+                <input
+                  id="forkblockNumber"
+                  type="number"
+                  size="3"
+                  onChange={this.updateForkBlockAmout}
                   data-tooltip={TT}
                 />
               )}

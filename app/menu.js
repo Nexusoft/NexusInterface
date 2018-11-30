@@ -146,7 +146,6 @@ export default class MenuBuilder {
             let settings = GetSettings();
             settings.keepDaemon = true;
             SaveSettings(settings);
-            core.stop();
             remote.getCurrentWindow().close();
           }
         },
@@ -400,6 +399,7 @@ export default class MenuBuilder {
               settings.keepDaemon = true;
               SaveSettings(settings);
               remote.getCurrentWindow().close();
+
             }
           },
           {
