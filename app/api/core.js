@@ -1,6 +1,7 @@
 import configuration from "./configuration";
 import MenuBuilder from "../menu.js";
 import { GetSettings, SaveSettings } from "./settings";
+import { resolve } from "path";
 const cp = require("child_process");
 const spawn = require("cross-spawn");
 const log = require("electron-log");
@@ -157,6 +158,34 @@ function getCorePID() {
     if (PID) {
       PID = PID.replace(/"/gm, "");
     }
+    log.info("PID: " + PID);
+    if (Number(PID) == "NaN" || Number(PID) < "2") {
+      return 1;
+    } else {
+      return Number(PID);
+    }
+  } else if (process.platform == "darwin") {
+    var tempPID = (
+      execSync("ps -A", [], {
+        env: modEnv
+      }) + ""
+    )
+      .split("\n")
+      .filter(process => {
+        if (process.includes(GetCoreBinaryPath())) {
+          return process;
+        }
+      });
+    if (tempPID[0]) {
+      tempPID = tempPID[0].split(" ")[0];
+    }
+    var PID = tempPID.toString().replace(/^\s+|\s+$/gm, "");
+    log.info("PID: " + PID);
+    if (Number(PID) == "NaN" || Number(PID) < "2") {
+      return 1;
+    } else {
+      return Number(PID);
+    }
   } else {
     var tempPID = (
       execSync("ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}", [], {
@@ -167,12 +196,12 @@ function getCorePID() {
       .replace(/^\s*/gm, "")
       .split(" ")[0];
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, "");
-  }
-  log.info("PID: " + PID);
-  if (Number(PID) == "NaN" || Number(PID) < "2") {
-    return 1;
-  } else {
-    return Number(PID);
+    log.info("PID: " + PID);
+    if (Number(PID) == "NaN" || Number(PID) < "2") {
+      return 1;
+    } else {
+      return Number(PID);
+    }
   }
 }
 
@@ -401,19 +430,13 @@ class Core extends EventEmitter {
     let settings = GetSettings();
     let coreBinaryName = GetCoreBinaryName();
     let corePID = getCorePID();
-    let coreParentPID = getCoreParentPID();
+    // let coreParentPID = getCoreParentPID();
     var cp = require("child_process");
     var execSync = require("child_process").execSync;
     var modEnv = process.env;
     modEnv.KILL_PID = corePID;
     var _this = this;
-    //let daemonProcs = utils.findPID(coreBinaryName);
 
-    //    if (prevCoreProcess == 0) {
-    //      coreprocess.kill();
-    //      responding = false;
-    //      coreprocess = null;
-    //    } else {
     if (settings.keepDaemon != true) {
       if (corePID > "1") {
         log.info("Core Manager: Killing process " + corePID);

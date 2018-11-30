@@ -466,7 +466,11 @@ class SettingsApp extends Component {
                   type="button"
                   className="button primary"
                   onClick={e => {
-                    this.backupWallet(e);
+                    if (this.props.connections !== undefined) {
+                      this.backupWallet(e);
+                    } else {
+                      this.props.OpenModal("Please wait for Daemon to load");
+                    }
                   }}
                 />
               )}
