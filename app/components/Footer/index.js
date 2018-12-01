@@ -63,7 +63,7 @@ export default class Footer extends Component {
               <FormattedMessage id="Footer.Data" defaultMessage="Data" />
             </div>
           </NavLink>
-          <NavLink to="/Addressbook">
+          <NavLink to="/AddressBook">
             <img src={addressImg} alt="Address Book" />
             <div className="tooltip top">
               <FormattedMessage id="Footer.Address" defaultMessage="Address" />
@@ -142,7 +142,7 @@ export default class Footer extends Component {
               <FormattedMessage id="Footer.Data" defaultMessage="Data" />
             </div>
           </NavLink>
-          <NavLink to="/Addressbook">
+          <NavLink to="/AddressBook">
             <img src={addressImg} alt="Address Book" />
             <div className="tooltip top" style={{ whiteSpace: 'nowrap' }}>
               <FormattedMessage id="Footer.Address" defaultMessage="Address" />

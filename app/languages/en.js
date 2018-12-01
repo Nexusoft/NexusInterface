@@ -144,7 +144,7 @@ export default {
     'AddressBook.Phone': 'Phone #',
     'AddressBook.Notes': 'Notes',
     'AddressBook.AddAddress': 'Add Address',
-    'AddressBook.BookEmpty': 'Your Addressbook Is Empty',
+    'AddressBook.BookEmpty': 'Your AddressBook Is Empty',
     'AddressBook.EditContact': 'Edit Contact',
     'AddressBook.LocalTime': 'Local Time',
     'AddressBook.Cancel': 'Cancel',

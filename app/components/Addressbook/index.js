@@ -1,5 +1,5 @@
 /* 
-  Title: Addressbook
+  Title: AddressBook
   Description: This is where you manage your Nexus addresses 
   for your own wallet and the outside world. You can import 
   and export your addressbook here, add labels to addresses 
@@ -23,7 +23,7 @@ import config from 'api/configuration'
 import * as RPC from 'scripts/rpc'
 import * as TYPE from 'actions/actiontypes'
 import * as actionsCreators from 'actions/addressbookActionCreators'
-import TimeZoneSelector from './timeZoneSelector'
+import TimeZoneSelector from './TimeZoneSelector'
 import ContextMenuBuilder from 'contextmenu'
 import styles from './style.css'
 import messages from 'languages/messages'
@@ -46,7 +46,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch)
 
-class Addressbook extends Component {
+class AddressBook extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     this.loadMyAccounts()
@@ -1264,7 +1264,7 @@ class Addressbook extends Component {
                 defaultMessage="Export"
               />
             </a>
-            <label htmlFor="importAddressbook">
+            <label htmlFor="importAddressBook">
               <a className="impexp">
                 <FormattedMessage
                   id="AddressBook.Import"
@@ -1273,8 +1273,8 @@ class Addressbook extends Component {
               </a>
             </label>
             <input
-              name="importAddressbook"
-              id="importAddressbook"
+              name="importAddressBook"
+              id="importAddressBook"
               type="file"
               onChange={e => this.importAddressBook(e.target.files[0].path)}
             />
@@ -1607,4 +1607,4 @@ class Addressbook extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Addressbook)
+)(AddressBook)

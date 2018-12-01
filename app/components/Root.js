@@ -11,7 +11,7 @@ import Footer from './Footer'
 import SendRecieve from './SendRecieve'
 import Transactions from './Transactions'
 import Market from './Market'
-import Addressbook from './Addressbook'
+import AddressBook from './AddressBook'
 import BlockExplorer from './BlockExplorer'
 import Settings from './Settings'
 import Terminal from './Terminal'
@@ -52,7 +52,7 @@ export default class Root extends Component<Props> {
                 <Route exact path="/SendRecieve" component={SendRecieve} />
                 <Route exact path="/Transactions" component={Transactions} />
                 <Route exact path="/Market" component={Market} />
-                <Route exact path="/Addressbook" component={Addressbook} />
+                <Route exact path="/AddressBook" component={AddressBook} />
                 <Route exact path="/BlockExplorer" component={BlockExplorer} />
                 <Route path="/Settings" component={Settings} />
                 <Route path="/Terminal" component={Terminal} />

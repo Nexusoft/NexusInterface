@@ -104,7 +104,7 @@ export const SET_EMAIL = 'SET_EMAIL'
 export const CLEAR_QUOTE = 'CLEAR_QUOTE'
 export const TOGGLE_ACYNC_BUTTONS = 'TOGGLE_ACYNC_BUTTONS'
 
-// Addressbook
+// AddressBook
 export const ADD_NEW_ADDRESS = 'ADD_NEW_ADDRESS'
 export const EDIT_ADDRESS = 'EDIT_ADDRESS'
 export const EDIT_PHONE = 'EDIT_PHONE'

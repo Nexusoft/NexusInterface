@@ -157,7 +157,7 @@ describe('Run Page Tests', function() {
       .waitUntilWindowLoaded()
       .pause(5000)
       .element('#navigation')
-      .element('a[href^="#/Addressbook"]')
+      .element('a[href^="#/AddressBook"]')
       .click()
       .pause(1000)
       .waitUntilTextExists('span', 'Address Book', 50000)
