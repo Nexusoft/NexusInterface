@@ -7,7 +7,7 @@ const initialState = {
   privKey: '',
   address: '',
   errorMessage: 'Password is required',
-  stakingFlag: false
+  stakingFlag: false,
 }
 
 export default (state = initialState, action) => {
@@ -15,31 +15,31 @@ export default (state = initialState, action) => {
     case TYPE.SET_DATE:
       return {
         ...state,
-        unlockUntillDate: action.payload
+        unlockUntillDate: action.payload,
       }
       break
     case TYPE.SET_TIME:
       return {
         ...state,
-        unlockUntillTime: action.payload
+        unlockUntillTime: action.payload,
       }
       break
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
         ...state,
-        busyFlag: action.payload
+        busyFlag: action.payload,
       }
       break
     case TYPE.TOGGLE_STAKING_FLAG:
       return {
         ...state,
-        stakingFlag: !state.stakingFlag
+        stakingFlag: !state.stakingFlag,
       }
       break
     case TYPE.SET_ERROR_MESSAGE:
       return {
         ...state,
-        errorMessage: action.payload
+        errorMessage: action.payload,
       }
       break
     case TYPE.WIPE_LOGIN_INFO:

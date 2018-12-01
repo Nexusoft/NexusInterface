@@ -13,7 +13,7 @@ export default class Table extends Component {
       selected: null,
       selectedcallback: this.props.selectCallback,
       onMouseOverCallback: this.props.onMouseOverCallback,
-      onMouseOutCallback: this.props.onMouseOutCallback
+      onMouseOutCallback: this.props.onMouseOutCallback,
     }
   }
 
@@ -39,8 +39,8 @@ export default class Table extends Component {
       defaultsorting = [
         {
           id: columns[this.props.defaultsortingid].accessor,
-          desc: true
-        }
+          desc: true,
+        },
       ]
     }
 
@@ -79,7 +79,7 @@ export default class Table extends Component {
                   this.props.onMouseOverCallback(e, rowInfo)
                   this.props.selectCallback(e, rowInfo)
                   this.setState({
-                    selected: rowInfo.index
+                    selected: rowInfo.index,
                   })
                 },
                 onContextMenu: e => {
@@ -93,7 +93,7 @@ export default class Table extends Component {
                 },
                 onMouseOut: e => {
                   this.props.onMouseOutCallback(e)
-                }
+                },
                 // style: {
                 //     background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
                 //     color: rowInfo.index === this.state.selected ? 'white' : 'black'
@@ -101,7 +101,7 @@ export default class Table extends Component {
               }
             }}
             style={{
-              height: '400px'
+              height: '400px',
             }}
           />
         )}

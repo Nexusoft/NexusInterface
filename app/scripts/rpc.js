@@ -121,7 +121,7 @@ export const GETPASSWORD = () => {
 export const GET = (cmd, args, Callback) => {
   var PostData = JSON.stringify({
     method: cmd,
-    params: args
+    params: args,
   })
 
   POST(
@@ -138,7 +138,7 @@ export const PROMISE = (cmd, args) => {
   return new Promise((resolve, reject) => {
     var PostData = JSON.stringify({
       method: cmd,
-      params: args
+      params: args,
     })
     var ResponseObject
 
@@ -183,7 +183,7 @@ export const PROMISE = (cmd, args) => {
       if (cmd === 'getaddressesbyaccount') {
         payload = {
           name: args[0],
-          addresses: JSON.parse(ResponseObject.response).result
+          addresses: JSON.parse(ResponseObject.response).result,
         }
       } else {
         payload = JSON.parse(ResponseObject.response).result

@@ -31,7 +31,7 @@ export const binance24hrInfo = () => {
     Request(
       {
         url: 'https://api.binance.com/api/v1/ticker/24hr?symbol=NXSBTC',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -40,7 +40,7 @@ export const binance24hrInfo = () => {
             change: body.priceChange,
             high: body.highPrice,
             low: body.lowPrice,
-            volume: body.volume
+            volume: body.volume,
           }
           dispatch({ type: TYPE.BINANCE_24, payload: res })
         }
@@ -55,7 +55,7 @@ export const bittrex24hrInfo = () => {
       {
         url:
           'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-nxs',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -64,7 +64,7 @@ export const bittrex24hrInfo = () => {
             change: (data.Last - data.PrevDay) / data.Last,
             high: data.High,
             low: data.Low,
-            volume: data.Volume
+            volume: data.Volume,
           }
           dispatch({ type: TYPE.BITTREX_24, payload: res })
         }
@@ -78,7 +78,7 @@ export const cryptopia24hrInfo = () => {
     Request(
       {
         url: 'https://www.cryptopia.co.nz/api/GetMarket/NXS_BTC',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -88,7 +88,7 @@ export const cryptopia24hrInfo = () => {
               change: data.Change,
               high: data.High,
               low: data.Low,
-              volume: data.Volume
+              volume: data.Volume,
             }
             dispatch({ type: TYPE.CRYPTOPIA_24, payload: res })
           }
@@ -105,7 +105,7 @@ export const binanceDepthLoader = () => {
     Request(
       {
         url: 'https://api.binance.com/api/v1/depth?symbol=NXSBTC',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -114,7 +114,7 @@ export const binanceDepthLoader = () => {
               .map(ele => {
                 return {
                   Volume: parseFloat(ele[1]),
-                  Price: parseFloat(ele[0])
+                  Price: parseFloat(ele[0]),
                 }
               })
               .sort((a, b) => b.Price - a.Price)
@@ -123,10 +123,10 @@ export const binanceDepthLoader = () => {
               .map(ele => {
                 return {
                   Volume: parseFloat(ele[1]),
-                  Price: parseFloat(ele[0])
+                  Price: parseFloat(ele[0]),
                 }
               })
-              .sort((a, b) => b.Price - a.Price)
+              .sort((a, b) => b.Price - a.Price),
           }
 
           dispatch({ type: TYPE.BINANCE_ORDERBOOK, payload: res })
@@ -142,7 +142,7 @@ export const cryptopiaDepthLoader = () => {
     Request(
       {
         url: 'https://www.cryptopia.co.nz/api/GetMarketOrders/NXS_BTC',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -154,7 +154,7 @@ export const cryptopiaDepthLoader = () => {
               .map(e => {
                 return { Volume: e.Volume, Price: e.Price }
               })
-              .reverse()
+              .reverse(),
           }
           dispatch({ type: TYPE.CRYPTOPIA_ORDERBOOK, payload: res })
           dispatch(marketDataLoaded())
@@ -170,7 +170,7 @@ export const bittrexDepthLoader = () => {
       {
         url:
           'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-NXS&type=both',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -185,7 +185,7 @@ export const bittrexDepthLoader = () => {
               .map(e => {
                 return { Volume: e.Quantity, Price: e.Rate }
               })
-              .reverse()
+              .reverse(),
           }
           dispatch({ type: TYPE.BITTREX_ORDERBOOK, payload: res })
           dispatch(marketDataLoaded())
@@ -202,7 +202,7 @@ export const binanceCandlestickLoader = any => {
     Request(
       {
         url: 'https://api.binance.com/api/v1/klines?symbol=NXSBTC&interval=1d',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -231,7 +231,7 @@ export const binanceCandlestickLoader = any => {
              }: ${parseFloat(e[2])}
              ${messages[any.props.settings.locale]['Market.Low']}: ${parseFloat(
                   e[3]
-                )}`
+                )}`,
               }
             })
             .slice(0, 30)
@@ -249,7 +249,7 @@ export const bittrexCandlestickLoader = any => {
       {
         url:
           'https://bittrex.com/api/v2.0/pub/market/GetTicks?marketName=BTC-NXS&tickInterval=day',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -270,7 +270,7 @@ export const bittrexCandlestickLoader = any => {
                 ${messages[any.props.settings.locale]['Market.Open']}: ${e.O}
                 ${messages[any.props.settings.locale]['Market.Close']}: ${e.C}
                 ${messages[any.props.settings.locale]['Market.High']}: ${e.H}
-                ${messages[any.props.settings.locale]['Market.Low']}: ${e.L}`
+                ${messages[any.props.settings.locale]['Market.Low']}: ${e.L}`,
               }
             })
             .slice(0, 30)
@@ -288,7 +288,7 @@ export const cryptopiaCandlestickLoader = any => {
       {
         url:
           'https://www.cryptopia.co.nz/Exchange/GetTradePairChart?tradePairId=3983&dataRange=1&dataGroup=1440',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -311,7 +311,9 @@ export const cryptopiaCandlestickLoader = any => {
                     e[4]
                   }
                   ${messages[any.props.settings.locale]['Market.High']}: ${e[2]}
-                  ${messages[any.props.settings.locale]['Market.Low']}: ${e[3]}`
+                  ${messages[any.props.settings.locale]['Market.Low']}: ${
+                    e[3]
+                  }`,
                 }
               })
               .slice(0, 30)

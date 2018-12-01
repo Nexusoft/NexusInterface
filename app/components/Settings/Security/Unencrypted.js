@@ -20,7 +20,7 @@ const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.login,
-    ...state.overview
+    ...state.overview,
   }
 }
 const mapDispatchToProps = dispatch => ({
@@ -28,7 +28,7 @@ const mapDispatchToProps = dispatch => ({
   busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type })
-  }
+  },
 })
 
 class Unencrypted extends Component {

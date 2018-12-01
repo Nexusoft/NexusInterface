@@ -10,14 +10,14 @@ const initialState = {
   AccountChanger: [],
   SelectedAccount: '',
   SendReceiveModalType: '',
-  LookUpModalType: ''
+  LookUpModalType: '',
 }
 export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.UPDATE_ADDRESS:
       return {
         ...state,
-        Address: action.payload
+        Address: action.payload,
       }
       break
     case TYPE.REMOVE_FROM_QUEUE:
@@ -25,56 +25,56 @@ export default (state = initialState, action) => {
       delete newQ[action.payload]
       return {
         ...state,
-        Queue: newQ
+        Queue: newQ,
       }
     case TYPE.SHOW_MODAL2:
       return {
         ...state,
         open: true,
-        SendReceiveModalType: action.payload
+        SendReceiveModalType: action.payload,
       }
     case TYPE.SHOW_MODAL4:
       return {
         ...state,
         open: true,
-        LookUpModalType: action.payload
+        LookUpModalType: action.payload,
       }
       break
     case TYPE.UPDATE_AMOUNT:
       return {
         ...state,
         Amount: action.payload.Amount,
-        USDAmount: action.payload.USDAmount
+        USDAmount: action.payload.USDAmount,
       }
       break
     case TYPE.UPDATE_MESSAGE:
       return {
         ...state,
-        Message: action.payload
+        Message: action.payload,
       }
       break
     case TYPE.UPDATE_ACCOUNT_NAME:
       return {
         ...state,
-        Account: action.payload
+        Account: action.payload,
       }
       break
     case TYPE.SELECTED_ACCOUNT:
       return {
         ...state,
-        SelectedAccount: action.payload
+        SelectedAccount: action.payload,
       }
       break
     case TYPE.CLEAR_QUEUE:
       return {
         ...state,
-        Queue: {}
+        Queue: {},
       }
       break
     case TYPE.CHANGE_ACCOUNT:
       return {
         ...state,
-        AccountChanger: action.payload
+        AccountChanger: action.payload,
       }
       break
     case TYPE.ADD_TO_QUEUE:
@@ -82,13 +82,13 @@ export default (state = initialState, action) => {
         ...state,
         Queue: {
           ...state.Queue,
-          [action.payload.address]: action.payload.amount
+          [action.payload.address]: action.payload.amount,
         },
         Address: '',
         Amount: '',
         Account: '',
         Message: '',
-        USDAmount: ''
+        USDAmount: '',
       }
       break
     case TYPE.CLEAR_FORM:
@@ -98,7 +98,7 @@ export default (state = initialState, action) => {
         Amount: '',
         Account: '',
         Message: '',
-        USDAmount: ''
+        USDAmount: '',
       }
     default:
       return state

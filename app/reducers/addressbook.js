@@ -20,7 +20,7 @@ const initialState = {
   editTZ: false,
   actionItem: '',
   hoveredOver: '',
-  createAddress: false
+  createAddress: false,
 }
 
 export default (state = initialState, action) => {
@@ -43,8 +43,8 @@ export default (state = initialState, action) => {
               notMine: action.payload.notMine,
               notes: action.payload.notes,
               timezone: action.payload.timezone,
-              phoneNumber: action.payload.phoneNumber
-            }
+              phoneNumber: action.payload.phoneNumber,
+            },
           ].sort((a, b) => {
             let nameA = a.name.toUpperCase()
             let nameB = b.name.toUpperCase()
@@ -56,7 +56,7 @@ export default (state = initialState, action) => {
             }
             return 0
           }),
-          save: true
+          save: true,
         }
       } else if (action.payload.mine[0]) {
         if (
@@ -74,17 +74,17 @@ export default (state = initialState, action) => {
                   ...state.addressbook[index],
                   mine: [
                     ...state.addressbook[index].mine,
-                    action.payload.mine[0]
+                    action.payload.mine[0],
                   ],
                   notes: action.payload.notes,
                   timezone: action.payload.timezone,
-                  phoneNumber: action.payload.phoneNumber
+                  phoneNumber: action.payload.phoneNumber,
                 }
               } else {
                 return ele
               }
             }),
-            save: true
+            save: true,
           }
         } else {
           return {
@@ -95,13 +95,13 @@ export default (state = initialState, action) => {
                   ...state.addressbook[index],
                   notes: action.payload.notes,
                   timezone: action.payload.timezone,
-                  phoneNumber: action.payload.phoneNumber
+                  phoneNumber: action.payload.phoneNumber,
                 }
               } else {
                 return ele
               }
             }),
-            save: true
+            save: true,
           }
         }
       } else if (
@@ -119,17 +119,17 @@ export default (state = initialState, action) => {
                 ...state.addressbook[index],
                 notMine: [
                   ...state.addressbook[index].notMine,
-                  action.payload.notMine[0]
+                  action.payload.notMine[0],
                 ],
                 notes: action.payload.notes,
                 timezone: action.payload.timezone,
-                phoneNumber: action.payload.phoneNumber
+                phoneNumber: action.payload.phoneNumber,
               }
             } else {
               return ele
             }
           }),
-          save: true
+          save: true,
         }
       } else {
         return {
@@ -140,13 +140,13 @@ export default (state = initialState, action) => {
                 ...state.addressbook[index],
                 notes: action.payload.notes,
                 timezone: action.payload.timezone,
-                phoneNumber: action.payload.phoneNumber
+                phoneNumber: action.payload.phoneNumber,
               }
             } else {
               return ele
             }
           }),
-          save: true
+          save: true,
         }
       }
       break
@@ -158,25 +158,25 @@ export default (state = initialState, action) => {
           if (i === action.payload.contact) {
             return {
               ...state.addressbook[action.payload.contact],
-              imgSrc: action.payload.path
+              imgSrc: action.payload.path,
             }
           } else {
             return ele
           }
         }),
-        save: true
+        save: true,
       }
       break
     case TYPE.MY_ACCOUNTS_LIST:
       return {
         ...state,
-        myAccounts: action.payload
+        myAccounts: action.payload,
       }
       break
     case TYPE.SET_MODAL_TYPE:
       return {
         ...state,
-        modalType: action.payload
+        modalType: action.payload,
       }
       break
     case TYPE.CLEAR_PROTOTYPE:
@@ -186,14 +186,14 @@ export default (state = initialState, action) => {
         prototypeAddress: '',
         prototypeNotes: '',
         prototypeTimezone: 0,
-        prototypePhoneNumber: ''
+        prototypePhoneNumber: '',
       }
       break
     // dispatch 2
     case TYPE.EDIT_ADDRESS:
       return {
         ...state,
-        prototypeAddress: action.payload
+        prototypeAddress: action.payload,
       }
       break
     case TYPE.ADD_NEW_ADDRESS:
@@ -213,14 +213,14 @@ export default (state = initialState, action) => {
                   ...state.addressbook[action.payload.index],
                   mine: [
                     ...state.addressbook[action.payload.index].mine,
-                    { ...action.payload.newAddress }
-                  ]
+                    { ...action.payload.newAddress },
+                  ],
                 }
               } else {
                 return ele
               }
             }),
-            save: true
+            save: true,
           }
         } else return state
       } else {
@@ -239,14 +239,14 @@ export default (state = initialState, action) => {
                   ...state.addressbook[action.payload.index],
                   notMine: [
                     ...state.addressbook[action.payload.index].notMine,
-                    { ...action.payload.newAddress }
-                  ]
+                    { ...action.payload.newAddress },
+                  ],
                 }
               } else {
                 return ele
               }
             }),
-            save: true
+            save: true,
           }
         } else return state
       }
@@ -254,21 +254,21 @@ export default (state = initialState, action) => {
     case TYPE.EDIT_PHONE:
       return {
         ...state,
-        prototypePhoneNumber: action.payload
+        prototypePhoneNumber: action.payload,
       }
       break
 
     case TYPE.EDIT_NOTES:
       return {
         ...state,
-        prototypeNotes: action.payload
+        prototypeNotes: action.payload,
       }
       break
 
     case TYPE.EDIT_NAME:
       return {
         ...state,
-        prototypeName: action.payload
+        prototypeName: action.payload,
       }
       break
 
@@ -276,7 +276,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         prototypeAddressLabel: action.payload.label,
-        editAddressLabel: action.payload.address
+        editAddressLabel: action.payload.address,
       }
       break
     case TYPE.SAVE_ADDRESS_LABEL:
@@ -303,14 +303,14 @@ export default (state = initialState, action) => {
                         return ele
                       }
                     }
-                  )
+                  ),
                 }
               } else {
                 return ele
               }
             }),
             editAddressLabel: '',
-            save: true
+            save: true,
           }
         }
       } else {
@@ -337,14 +337,14 @@ export default (state = initialState, action) => {
                         return ele
                       }
                     }
-                  )
+                  ),
                 }
               } else {
                 return ele
               }
             }),
             editAddressLabel: '',
-            save: true
+            save: true,
           }
         } else {
           return { ...state }
@@ -356,7 +356,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         prototypeNotes: action.payload,
-        editNotes: true
+        editNotes: true,
       }
       break
     case TYPE.SAVE_NOTES:
@@ -366,14 +366,14 @@ export default (state = initialState, action) => {
           if (i === action.payload.index) {
             return {
               ...state.addressbook[action.payload.index],
-              notes: action.payload.notes
+              notes: action.payload.notes,
             }
           } else {
             return ele
           }
         }),
         editNotes: false,
-        save: true
+        save: true,
       }
       break
 
@@ -381,7 +381,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         prototypeName: action.payload,
-        editName: true
+        editName: true,
       }
       break
     case TYPE.SAVE_NAME:
@@ -392,7 +392,7 @@ export default (state = initialState, action) => {
             if (i === action.payload.index) {
               return {
                 ...state.addressbook[action.payload.index],
-                name: action.payload.name
+                name: action.payload.name,
               }
             } else {
               return ele
@@ -411,14 +411,14 @@ export default (state = initialState, action) => {
           }),
 
         editName: false,
-        save: true
+        save: true,
       }
       break
     case TYPE.TOGGLE_TIMEZONE_EDIT:
       return {
         ...state,
         prototypeTimezone: action.payload,
-        editTZ: true
+        editTZ: true,
       }
       break
     case TYPE.SAVE_TIMEZONE:
@@ -428,21 +428,21 @@ export default (state = initialState, action) => {
           if (i === action.payload.index) {
             return {
               ...state.addressbook[action.payload.index],
-              timezone: action.payload.TZ
+              timezone: action.payload.TZ,
             }
           } else {
             return ele
           }
         }),
         editTZ: false,
-        save: true
+        save: true,
       }
       break
     case TYPE.TOGGLE_PHONE_EDIT:
       return {
         ...state,
         prototypePhoneNumber: action.payload,
-        editPhone: true
+        editPhone: true,
       }
       break
     case TYPE.SAVE_PHONE:
@@ -452,32 +452,32 @@ export default (state = initialState, action) => {
           if (i === action.payload.index) {
             return {
               ...state.addressbook[action.payload.index],
-              phoneNumber: action.payload.Phone
+              phoneNumber: action.payload.Phone,
             }
           } else {
             return ele
           }
         }),
         editPhone: false,
-        save: true
+        save: true,
       }
       break
     case TYPE.EDIT_ADDRESS_LABEL:
       return {
         ...state,
-        prototypeAddressLabel: action.payload
+        prototypeAddressLabel: action.payload,
       }
       break
     case TYPE.EDIT_TIMEZONE:
       return {
         ...state,
-        prototypeTimezone: action.payload
+        prototypeTimezone: action.payload,
       }
       break
     case TYPE.SET_SAVE_FLAG_FALSE:
       return {
         ...state,
-        save: false
+        save: false,
       }
       break
     //   dispatch 8
@@ -485,7 +485,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         addressbook: state.addressbook.filter((ele, i) => i !== action.payload),
-        save: true
+        save: true,
       }
       break
     //   dispatch 9
@@ -500,39 +500,39 @@ export default (state = initialState, action) => {
                 action.payload.selectedContactIndex
               ][action.payload.type].filter(
                 (ele, i) => i !== action.payload.index
-              )
+              ),
             }
           } else {
             return ele
           }
         }),
-        save: true
+        save: true,
       }
       break
     //   dispatch 10
     case TYPE.LOAD_ADDRESS_BOOK:
       return {
         ...state,
-        addressbook: [...action.payload]
+        addressbook: [...action.payload],
       }
       break
     case TYPE.SELECTED_CONTACT:
       return {
         ...state,
-        selected: action.payload
+        selected: action.payload,
       }
       break
     case TYPE.TOGGLE_CREATE_ADDRESS:
       return {
         ...state,
-        createAddress: !state.createAddress
+        createAddress: !state.createAddress,
       }
       break
     case TYPE.SET_MOUSE_POSITION:
       return {
         ...state,
         actionItem: action.payload.actionItem,
-        hoveredOver: action.payload.type
+        hoveredOver: action.payload.type,
       }
       break
     case TYPE.IMPORT_CONTACT:

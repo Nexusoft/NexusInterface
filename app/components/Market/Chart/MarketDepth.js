@@ -4,7 +4,7 @@ Description: Handle how to draw graph for market depth
 Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from "react";
+import React, { Component } from 'react'
 import {
   VictoryArea,
   VictoryChart,
@@ -13,8 +13,8 @@ import {
   VictoryAxis,
   VictoryPortal,
   VictoryLabel,
-  VictoryVoronoiContainer
-} from "victory";
+  VictoryVoronoiContainer,
+} from 'victory'
 
 export default class MarketDepth extends Component {
   // Mandatory React method
@@ -26,31 +26,31 @@ export default class MarketDepth extends Component {
             axis: {
               style: {
                 axis: {
-                  fill: "transparent",
-                  stroke: "white",
-                  strokeWidth: 1
+                  fill: 'transparent',
+                  stroke: 'white',
+                  strokeWidth: 1,
                 },
                 axisLabel: {
-                  textAnchor: "right",
-                  padding: 25
+                  textAnchor: 'right',
+                  padding: 25,
                 },
                 grid: {
-                  fill: "none",
-                  stroke: "none",
-                  pointerEvents: "painted"
+                  fill: 'none',
+                  stroke: 'none',
+                  pointerEvents: 'painted',
                 },
                 ticks: {
-                  fill: "white",
+                  fill: 'white',
                   size: 5,
-                  stroke: "white"
+                  stroke: 'white',
                 },
                 tickLabels: {
                   padding: 1,
-                  fill: "white",
-                  stroke: "transparent"
-                }
-              }
-            }
+                  fill: 'white',
+                  stroke: 'transparent',
+                },
+              },
+            },
           }}
           containerComponent={<VictoryVoronoiContainer />}
         >
@@ -58,11 +58,11 @@ export default class MarketDepth extends Component {
             dependentAxis
             tickFormat={tick => {
               if (tick % 1000000 === 0) {
-                return `${tick / 1000}M`;
+                return `${tick / 1000}M`
               } else if (tick % 1000 === 0) {
-                return `${tick / 1000}K`;
+                return `${tick / 1000}K`
               } else {
-                return tick;
+                return tick
               }
             }}
           />
@@ -70,8 +70,8 @@ export default class MarketDepth extends Component {
           <VictoryArea
             style={{
               data: {
-                fill: "url(#green)"
-              }
+                fill: 'url(#green)',
+              },
             }}
             labelComponent={<VictoryTooltip />}
             data={[...this.props.chartData]}
@@ -79,8 +79,8 @@ export default class MarketDepth extends Component {
           <VictoryArea
             style={{
               data: {
-                fill: "url(#red)"
-              }
+                fill: 'url(#red)',
+              },
             }}
             labelComponent={<VictoryTooltip />}
             data={[...this.props.chartSellData]}
@@ -112,6 +112,6 @@ export default class MarketDepth extends Component {
           </defs>
         </svg>
       </div>
-    );
+    )
   }
 }

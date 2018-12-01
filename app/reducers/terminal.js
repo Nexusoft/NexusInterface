@@ -11,7 +11,7 @@ const initialState = {
   testnum: 99999,
   commandHistory: [],
   currentHistoryIndex: 0,
-  filteredCmdList: []
+  filteredCmdList: [],
 }
 
 export default (state = initialState, action) => {
@@ -19,7 +19,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_COMMAND_LIST:
       return {
         ...state,
-        commandList: [...action.payload]
+        commandList: [...action.payload],
       }
       break
     case TYPE.PRINT_TO_CONSOLE:
@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
       payloadCopy.push('\n  ')
       return {
         ...state,
-        consoleOutput: payloadCopy
+        consoleOutput: payloadCopy,
       }
       break
 
@@ -44,14 +44,14 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        coreOutput: payloadCopy
+        coreOutput: payloadCopy,
       }
       break
 
     case TYPE.RESET_MY_CONSOLE:
       return {
         ...state,
-        consoleOutput: []
+        consoleOutput: [],
       }
       break
     case TYPE.ON_INPUT_FIELD_CHANGE:
@@ -68,13 +68,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentInput: action.payload,
-        filteredCmdList: filteredCmdListTmp
+        filteredCmdList: filteredCmdListTmp,
       }
       break
     case TYPE.SET_INPUT_FEILD:
       return {
         ...state,
-        currentInput: action.payload
+        currentInput: action.payload,
       }
       break
     case TYPE.ON_AUTO_COMPLETE_CLICK:
@@ -82,7 +82,7 @@ export default (state = initialState, action) => {
         ...state,
         currentInput: action.payload,
         autoComplete: [],
-        filteredCmdList: []
+        filteredCmdList: [],
       }
       break
     case TYPE.RETURN_AUTO_COMPLETE:
@@ -99,32 +99,32 @@ export default (state = initialState, action) => {
       }
       return {
         ...state,
-        filteredCmdList: filteredCmdListTmp2
+        filteredCmdList: filteredCmdListTmp2,
       }
       break
     case TYPE.REMOVE_AUTO_COMPLETE_DIV:
       return {
         ...state,
         autoComplete: [],
-        filteredCmdList: []
+        filteredCmdList: [],
       }
       break
     case TYPE.RECALL_PREVIOUS_COMMAND:
       return {
         ...state,
-        commandHistory: action.payload
+        commandHistory: action.payload,
       }
       break
     case TYPE.RECALL_NEXT_COMMAND_OR_CLEAR:
       return {
         ...state,
-        currentInput: action.payload
+        currentInput: action.payload,
       }
       break
     case TYPE.ADD_TO_HISTORY:
       return {
         ...state,
-        commandHistory: [...state.commandHistory, action.payload]
+        commandHistory: [...state.commandHistory, action.payload],
       }
       break
 

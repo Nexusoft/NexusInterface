@@ -106,7 +106,7 @@ export const LabelToggler = (label, address) => {
   return dispatch => {
     dispatch({
       type: TYPE.TOGGLE_ADDRESS_LABEL_EDIT,
-      payload: { label: label, address: address }
+      payload: { label: label, address: address },
     })
   }
 }
@@ -122,8 +122,8 @@ export const SaveLabel = (selected, address, label, mine) => {
         address: address,
         newLabel: label,
         index: selected,
-        ismine: mine
-      }
+        ismine: mine,
+      },
     })
   }
 }
@@ -132,7 +132,7 @@ export const NotesToggler = notes => {
   return dispatch => {
     dispatch({
       type: TYPE.TOGGLE_NOTES_EDIT,
-      payload: notes
+      payload: notes,
     })
   }
 }
@@ -141,7 +141,7 @@ export const SaveNotes = (selected, notes) => {
   return dispatch => {
     dispatch({
       type: TYPE.SAVE_NOTES,
-      payload: { notes: notes, index: selected }
+      payload: { notes: notes, index: selected },
     })
   }
 }
@@ -150,7 +150,7 @@ export const TzToggler = TZ => {
   return dispatch => {
     dispatch({
       type: TYPE.TOGGLE_TIMEZONE_EDIT,
-      payload: TZ
+      payload: TZ,
     })
   }
 }
@@ -159,7 +159,7 @@ export const SaveTz = (selected, TZ) => {
   return dispatch => {
     dispatch({
       type: TYPE.SAVE_TIMEZONE,
-      payload: { TZ: TZ, index: selected }
+      payload: { TZ: TZ, index: selected },
     })
   }
 }
@@ -168,7 +168,7 @@ export const NameToggler = name => {
   return dispatch => {
     dispatch({
       type: TYPE.TOGGLE_NAME_EDIT,
-      payload: name
+      payload: name,
     })
   }
 }
@@ -177,7 +177,7 @@ export const SaveName = (selected, name) => {
   return dispatch => {
     dispatch({
       type: TYPE.SAVE_NAME,
-      payload: { name: name, index: selected }
+      payload: { name: name, index: selected },
     })
   }
 }
@@ -186,7 +186,7 @@ export const PhoneToggler = phone => {
   return dispatch => {
     dispatch({
       type: TYPE.TOGGLE_PHONE_EDIT,
-      payload: phone
+      payload: phone,
     })
   }
 }
@@ -195,7 +195,7 @@ export const SavePhone = (selected, Phone) => {
   return dispatch => {
     dispatch({
       type: TYPE.SAVE_PHONE,
-      payload: { Phone: Phone, index: selected }
+      payload: { Phone: Phone, index: selected },
     })
   }
 }
@@ -204,7 +204,7 @@ export const ChangeContactImage = (path, contact) => {
   return dispatch => {
     dispatch({
       type: TYPE.CONTACT_IMAGE,
-      payload: { path: path, contact: contact }
+      payload: { path: path, contact: contact },
     })
   }
 }
@@ -222,8 +222,8 @@ export const SetMousePosition = (type, actionItem) => {
       type: TYPE.SET_MOUSE_POSITION,
       payload: {
         type: type,
-        actionItem: actionItem
-      }
+        actionItem: actionItem,
+      },
     })
   }
 }
@@ -239,13 +239,13 @@ export const AddContact = (name, address, num, notes, TZ) => {
             mine.push({
               label: `My Address for `,
               ismine: true,
-              address: address
+              address: address,
             })
           } else {
             notMine.push({
               label: `'s Address`,
               ismine: false,
-              address: address
+              address: address,
             })
           }
         } else alert('Invalid address: ', address)
@@ -260,8 +260,8 @@ export const AddContact = (name, address, num, notes, TZ) => {
             notMine: result.notMine,
             notes: notes,
             timezone: TZ,
-            phoneNumber: num
-          }
+            phoneNumber: num,
+          },
         })
 
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE })
@@ -284,13 +284,13 @@ export const AddAddress = (name, address, index) => {
             return {
               label: `My Address for `,
               ismine: true,
-              address: address
+              address: address,
             }
           } else {
             return {
               label: `'s Address`,
               ismine: false,
-              address: address
+              address: address,
             }
           }
         } else alert('Invalid address: ', address)
@@ -298,7 +298,7 @@ export const AddAddress = (name, address, index) => {
       .then(result => {
         dispatch({
           type: TYPE.ADD_NEW_ADDRESS,
-          payload: { newAddress: result, index: index }
+          payload: { newAddress: result, index: index },
         })
         dispatch({ type: TYPE.CLEAR_PROTOTYPE })
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE })
@@ -322,7 +322,7 @@ export const DeleteContact = actionItem => {
   return dispatch => {
     dispatch({
       type: TYPE.DELETE_CONTACT,
-      payload: actionItem
+      payload: actionItem,
     })
   }
 }
@@ -331,7 +331,7 @@ export const DeleteAddress = (actionItem, selectedIndex) => {
   return dispatch => {
     dispatch({
       type: TYPE.DELETE_ADDRESS_FROM_CONTACT,
-      payload: { ...actionItem, selectedContactIndex: selectedIndex }
+      payload: { ...actionItem, selectedContactIndex: selectedIndex },
     })
   }
 }
@@ -339,7 +339,7 @@ export const DeleteAddress = (actionItem, selectedIndex) => {
 export const ToggleCreateModal = () => {
   return dispatch => {
     dispatch({
-      type: TYPE.TOGGLE_CREATE_ADDRESS
+      type: TYPE.TOGGLE_CREATE_ADDRESS,
     })
   }
 }

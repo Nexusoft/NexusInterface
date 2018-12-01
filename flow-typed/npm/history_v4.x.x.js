@@ -1,10 +1,10 @@
 // flow-typed signature: eb8bd974b677b08dfca89de9ac05b60b
 // flow-typed version: 43b30482ac/history_v4.x.x/flow_>=v0.25.x
 
-declare module "history/createBrowserHistory" {
-  declare function Unblock(): void;
+declare module 'history/createBrowserHistory' {
+  declare function Unblock(): void
 
-  declare export type Action = "PUSH" | "REPLACE" | "POP";
+  declare export type Action = 'PUSH' | 'REPLACE' | 'POP'
 
   declare export type BrowserLocation = {
     pathname: string,
@@ -13,7 +13,7 @@ declare module "history/createBrowserHistory" {
     // Browser and Memory specific
     state: string,
     key: string,
-  };
+  }
 
   declare export type BrowserHistory = {
     length: number,
@@ -29,24 +29,24 @@ declare module "history/createBrowserHistory" {
     block: ((location: BrowserLocation, action: Action) => string) => Unblock,
     push: (path: string) => void,
     replace: (path: string) => void,
-  };
+  }
 
   declare type HistoryOpts = {
     basename?: string,
     forceRefresh?: boolean,
     getUserConfirmation?: (
       message: string,
-      callback: (willContinue: boolean) => void,
+      callback: (willContinue: boolean) => void
     ) => void,
-  };
+  }
 
-  declare export default (opts?: HistoryOpts) => BrowserHistory;
+  declare export default (opts?: HistoryOpts) => BrowserHistory
 }
 
-declare module "history/createMemoryHistory" {
-  declare function Unblock(): void;
+declare module 'history/createMemoryHistory' {
+  declare function Unblock(): void
 
-  declare export type Action = "PUSH" | "REPLACE" | "POP";
+  declare export type Action = 'PUSH' | 'REPLACE' | 'POP'
 
   declare export type MemoryLocation = {
     pathname: string,
@@ -55,7 +55,7 @@ declare module "history/createMemoryHistory" {
     // Browser and Memory specific
     state: string,
     key: string,
-  };
+  }
 
   declare export type MemoryHistory = {
     length: number,
@@ -74,7 +74,7 @@ declare module "history/createMemoryHistory" {
     block: (message: string) => Unblock,
     block: ((location: MemoryLocation, action: Action) => string) => Unblock,
     push: (path: string) => void,
-  };
+  }
 
   declare type HistoryOpts = {
     initialEntries?: Array<string>,
@@ -82,23 +82,23 @@ declare module "history/createMemoryHistory" {
     keyLength?: number,
     getUserConfirmation?: (
       message: string,
-      callback: (willContinue: boolean) => void,
+      callback: (willContinue: boolean) => void
     ) => void,
-  };
+  }
 
-  declare export default (opts?: HistoryOpts) => MemoryHistory;
+  declare export default (opts?: HistoryOpts) => MemoryHistory
 }
 
-declare module "history/createHashHistory" {
-  declare function Unblock(): void;
+declare module 'history/createHashHistory' {
+  declare function Unblock(): void
 
-  declare export type Action = "PUSH" | "REPLACE" | "POP";
+  declare export type Action = 'PUSH' | 'REPLACE' | 'POP'
 
   declare export type HashLocation = {
     pathname: string,
     search: string,
     hash: string,
-  };
+  }
 
   declare export type HashHistory = {
     length: number,
@@ -113,16 +113,16 @@ declare module "history/createHashHistory" {
     block: (message: string) => Unblock,
     block: ((location: HashLocation, action: Action) => string) => Unblock,
     push: (path: string) => void,
-  };
+  }
 
   declare type HistoryOpts = {
     basename?: string,
-    hashType: "slash" | "noslash" | "hashbang",
+    hashType: 'slash' | 'noslash' | 'hashbang',
     getUserConfirmation?: (
       message: string,
-      callback: (willContinue: boolean) => void,
+      callback: (willContinue: boolean) => void
     ) => void,
-  };
+  }
 
-  declare export default (opts?: HistoryOpts) => HashHistory;
+  declare export default (opts?: HistoryOpts) => HashHistory
 }

@@ -21,7 +21,8 @@ const mapStateToProps = state => {
   return { ...state.terminal, ...state.common, ...state.settings }
 }
 const mapDispatchToProps = dispatch => ({
-  printCoreOutput: data => dispatch({ type: TYPE.PRINT_TO_CORE, payload: data })
+  printCoreOutput: data =>
+    dispatch({ type: TYPE.PRINT_TO_CORE, payload: data }),
 })
 
 class TerminalCore extends Component {
@@ -89,7 +90,7 @@ class TerminalCore extends Component {
           display: 'flex',
           flexDirection: this.props.settings.manualDaemon
             ? 'column'
-            : 'column-reverse'
+            : 'column-reverse',
         }}
         onScroll={e => {
           e.preventDefault()

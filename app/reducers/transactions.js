@@ -7,19 +7,19 @@ export default (state = initialState, action) => {
     case TYPE.SET_WALL_TRANS:
       return {
         ...state,
-        walletitems: action.payload
+        walletitems: action.payload,
       }
       break
     case TYPE.SET_TRANSACTION_SENDAGAIN:
       return {
         ...state,
-        sendagain: action.payload
+        sendagain: action.payload,
       }
       break
     case TYPE.SET_TRANSACTION_EXPLOREINFO:
       return {
         ...state,
-        exploreinfo: action.payload
+        exploreinfo: action.payload,
       }
       break
     case TYPE.UPDATE_CONFIRMATIONS:
@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
         if (replaceElement != undefined && e.txid == replaceElement.txid) {
           return {
             ...e,
-            confirmations: replaceElement.confirmations
+            confirmations: replaceElement.confirmations,
           }
         } else {
           return e
@@ -40,7 +40,7 @@ export default (state = initialState, action) => {
       }
       return {
         ...state,
-        walletitems: tempNewItems
+        walletitems: tempNewItems,
       }
       break
 
@@ -52,12 +52,12 @@ export default (state = initialState, action) => {
           if (replaceElement != undefined && e.time == replaceElement.time) {
             return {
               ...e,
-              value: replaceElement.value
+              value: replaceElement.value,
             }
           } else {
             return e
           }
-        })
+        }),
       }
       break
     case TYPE.UPDATE_FEEVALUE:
@@ -66,7 +66,7 @@ export default (state = initialState, action) => {
         if (replaceElement != undefined) {
           return {
             ...e,
-            fee: replaceElement
+            fee: replaceElement,
           }
         } else {
           return e
@@ -74,7 +74,7 @@ export default (state = initialState, action) => {
       })
       return {
         ...state,
-        walletitems: tempTransactionsWithfeeValues
+        walletitems: tempTransactionsWithfeeValues,
       }
       break
 

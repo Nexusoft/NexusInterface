@@ -5,15 +5,15 @@ Last Modified by: Brian Smith
 */
 
 // External Dependencies
-import React, { Component } from "react";
+import React, { Component } from 'react'
 import {
   VictoryChart,
   VictoryAxis,
   VictoryCandlestick,
   VictoryPortal,
   VictoryLabel,
-  VictoryTooltip
-} from "victory";
+  VictoryTooltip,
+} from 'victory'
 
 export default class Candlestick extends Component {
   // Mandatory React method
@@ -26,31 +26,31 @@ export default class Candlestick extends Component {
             axis: {
               style: {
                 axis: {
-                  fill: "transparent",
-                  stroke: "white",
-                  strokeWidth: 1
+                  fill: 'transparent',
+                  stroke: 'white',
+                  strokeWidth: 1,
                 },
                 axisLabel: {
-                  textAnchor: "right",
-                  padding: 25
+                  textAnchor: 'right',
+                  padding: 25,
                 },
                 grid: {
-                  fill: "none",
-                  stroke: "none",
-                  pointerEvents: "painted"
+                  fill: 'none',
+                  stroke: 'none',
+                  pointerEvents: 'painted',
                 },
                 ticks: {
-                  fill: "white",
+                  fill: 'white',
                   size: 5,
-                  stroke: "white"
+                  stroke: 'white',
                 },
                 tickLabels: {
                   padding: 1,
-                  fill: "white",
-                  stroke: "transparent"
-                }
-              }
-            }
+                  fill: 'white',
+                  stroke: 'transparent',
+                },
+              },
+            },
           }}
         >
           <VictoryAxis
@@ -66,16 +66,16 @@ export default class Candlestick extends Component {
 
           <VictoryAxis dependentAxis style={{ tickLabels: { angle: -45 } }} />
           <VictoryCandlestick
-            style={{ data: { stroke: "white" } }}
+            style={{ data: { stroke: 'white' } }}
             candleColors={{
-              positive: "rgba(38, 230, 0, 1)",
-              negative: "rgba(255, 15, 15, 1)"
+              positive: 'rgba(38, 230, 0, 1)',
+              negative: 'rgba(255, 15, 15, 1)',
             }}
             data={this.props.data}
             labelComponent={<VictoryTooltip />}
           />
         </VictoryChart>
       </div>
-    );
+    )
   }
 }

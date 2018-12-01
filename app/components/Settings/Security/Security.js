@@ -1,147 +1,147 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Redirect } from "react-router";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router'
 
-import styles from "./style.css";
-import * as RPC from "scripts/rpc";
-import * as TYPE from "actions/actiontypes";
-import { FormattedMessage } from "react-intl";
+import styles from './style.css'
+import * as RPC from 'scripts/rpc'
+import * as TYPE from 'actions/actiontypes'
+import { FormattedMessage } from 'react-intl'
 
 const mapStateToProps = state => {
   return {
     ...state.common,
-    ...state.login
-  };
-};
+    ...state.login,
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
   busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
   OpenModal: type => dispatch({ type: TYPE.SHOW_MODAL, payload: type }),
-  getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload })
-});
+  getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
+})
 
 class Security extends Component {
   lockWallet() {
-    this.props.busy();
-    RPC.PROMISE("walletlock", []).then(payload => {
-      this.props.wipe();
-      this.props.busy();
-      RPC.PROMISE("getinfo", [])
+    this.props.busy()
+    RPC.PROMISE('walletlock', []).then(payload => {
+      this.props.wipe()
+      this.props.busy()
+      RPC.PROMISE('getinfo', [])
         .then(payload => {
-          delete payload.timestamp;
-          return payload;
+          delete payload.timestamp
+          return payload
         })
         .then(payload => {
-          this.props.getInfo(payload);
-        });
-    });
+          this.props.getInfo(payload)
+        })
+    })
   }
   showPrivKey(e) {
-    e.preventDefault();
-    let addressInput = document.getElementById("privKeyAddress");
-    let address = addressInput.value;
-    let output = document.getElementById("privKeyOutput");
+    e.preventDefault()
+    let addressInput = document.getElementById('privKeyAddress')
+    let address = addressInput.value
+    let output = document.getElementById('privKeyOutput')
     if (address) {
-      RPC.PROMISE("dumpprivkey", [address]).then(payload => {
-        output.value = payload;
-      });
+      RPC.PROMISE('dumpprivkey', [address]).then(payload => {
+        output.value = payload
+      })
     } else {
-      addressInput.focus();
+      addressInput.focus()
     }
   }
 
   importPrivKey(e) {
-    e.preventDefault();
-    let acctname = document.getElementById("acctName");
-    let label = acctname.value.trim();
-    let privateKeyInput = document.getElementById("privateKey");
-    let pk = privateKeyInput.value.trim();
+    e.preventDefault()
+    let acctname = document.getElementById('acctName')
+    let label = acctname.value.trim()
+    let privateKeyInput = document.getElementById('privateKey')
+    let pk = privateKeyInput.value.trim()
 
     if (label && pk) {
-      RPC.PROMISE("importprivkey", [pk], [label]).then(payload => {
-        RPC.GET("rescan");
-      });
+      RPC.PROMISE('importprivkey', [pk], [label]).then(payload => {
+        RPC.GET('rescan')
+      })
     } else if (!label) {
-      acctname.focus();
+      acctname.focus()
     } else if (!pk) {
-      privateKeyInput.focus();
+      privateKeyInput.focus()
     }
   }
 
   copyPrivkey(e) {
-    e.preventDefault();
-    let output = document.getElementById("privKeyOutput");
-    output.type = "text";
-    output.focus();
-    output.select();
-    document.execCommand("Copy", false, null);
-    output.type = "password";
+    e.preventDefault()
+    let output = document.getElementById('privKeyOutput')
+    output.type = 'text'
+    output.focus()
+    output.select()
+    document.execCommand('Copy', false, null)
+    output.type = 'password'
   }
 
   changePassword(e) {
-    e.preventDefault();
-    let pass, newPass, passChk, passHint;
-    pass = document.getElementById("oldPass");
-    newPass = document.getElementById("newPass");
-    passChk = document.getElementById("passChk");
-    passHint = document.getElementById("passHint");
+    e.preventDefault()
+    let pass, newPass, passChk, passHint
+    pass = document.getElementById('oldPass')
+    newPass = document.getElementById('newPass')
+    passChk = document.getElementById('passChk')
+    passHint = document.getElementById('passHint')
     if (pass.value.trim()) {
       if (/[-$&/*|<>]/.test(newPass.value)) {
         if (newPass.value === passChk.value) {
-          if (!(newPass.value.endsWith(" ") || newPass.value.startsWith(" "))) {
-            RPC.PROMISE("walletpassphrasechange", [
+          if (!(newPass.value.endsWith(' ') || newPass.value.startsWith(' '))) {
+            RPC.PROMISE('walletpassphrasechange', [
               pass.value,
-              newPass.value
+              newPass.value,
             ]).then(payload => {
               if (payload === null) {
-                pass.value = "";
-                newPass.value = "";
-                passChk.value = "";
-                this.props.OpenModal("Password has been changed.");
+                pass.value = ''
+                newPass.value = ''
+                passChk.value = ''
+                this.props.OpenModal('Password has been changed.')
               }
-            });
+            })
           } else {
-            passChk.value = "";
-            passHint.innerText = "Password cannot start or end with spaces";
-            passChk.focus();
+            passChk.value = ''
+            passHint.innerText = 'Password cannot start or end with spaces'
+            passChk.focus()
           }
         } else {
-          passChk.value = "";
-          passHint.innerText = "Passwords do not match";
-          passChk.focus();
+          passChk.value = ''
+          passHint.innerText = 'Passwords do not match'
+          passChk.focus()
         }
       } else {
-        passChk.value = "";
-        passHint.style.visibility = "visible";
-        passHint.innerText = "Passwords cannot contain -$&/*|<>";
-        passChk.focus();
+        passChk.value = ''
+        passHint.style.visibility = 'visible'
+        passHint.innerText = 'Passwords cannot contain -$&/*|<>'
+        passChk.focus()
       }
     } else {
-      passHint.innerText = "Passwords do not match";
-      pass.focus();
+      passHint.innerText = 'Passwords do not match'
+      pass.focus()
     }
   }
 
   reEnterValidator(e) {
-    let newPass = document.getElementById("newPass");
-    let passHint = document.getElementById("passHint");
+    let newPass = document.getElementById('newPass')
+    let passHint = document.getElementById('passHint')
     if (e.target.value === newPass.value) {
-      e.preventDefault();
-      passHint.style.visibility = "hidden";
+      e.preventDefault()
+      passHint.style.visibility = 'hidden'
     } else {
-      passHint.style.visibility = "visible";
+      passHint.style.visibility = 'visible'
     }
   }
 
   componentWillUnmount() {
-    this.props.wipe();
+    this.props.wipe()
   }
   render() {
     if (!this.props.loggedIn) {
       return (
-        <Redirect to={this.props.match.path.replace("/Content", "/Security")} />
-      );
+        <Redirect to={this.props.match.path.replace('/Content', '/Security')} />
+      )
     }
     return (
       <div id="securitylogin">
@@ -237,7 +237,7 @@ class Security extends Component {
               </div>
               <p>
                 <button
-                  style={{ width: "100%", margin: "0" }}
+                  style={{ width: '100%', margin: '0' }}
                   // disabled={this.props.busyFlag}
                   className="button primary"
                   onClick={() => this.changePassword(e)}
@@ -251,13 +251,13 @@ class Security extends Component {
             </fieldset>
           </form>
           <button
-            style={{ width: "100%", margin: "0" }}
+            style={{ width: '100%', margin: '0' }}
             id="lockWallet"
             className="button primary"
             // disabled={this.props.busyFlag}
             onClick={e => {
-              e.preventDefault();
-              this.lockWallet();
+              e.preventDefault()
+              this.lockWallet()
             }}
           >
             <FormattedMessage
@@ -270,7 +270,7 @@ class Security extends Component {
           <form>
             <fieldset>
               <legend>
-                {" "}
+                {' '}
                 <FormattedMessage
                   id="Settings.ViewPrivateKeyForAddress"
                   defaultMessage="View private key for address"
@@ -399,10 +399,10 @@ class Security extends Component {
           </form>
         </div>
       </div>
-    );
+    )
   }
 }
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Security);
+)(Security)

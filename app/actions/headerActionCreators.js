@@ -55,7 +55,7 @@ export const SetMarketAveData = () => {
       {
         url:
           'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=NXS,BTC&tsyms=BTC,USD,EUR,AUD,BRL,GBP,CAD,CLP,CNY,CZK,HKD,INR,JPY,KRW,MYR,MXN,NZD,PKR,RUB,SAR,SGD,ZAR,CHF,TWD,AED',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -64,7 +64,7 @@ export const SetMarketAveData = () => {
               changePct24Hr: ele.CHANGEPCT24HOUR,
               marketCap: ele.MKTCAP,
               price: ele.PRICE,
-              name: ele.TOSYMBOL
+              name: ele.TOSYMBOL,
             }
           })
           let rawNXS = Object.values(body.RAW.NXS).map(ele => {
@@ -72,7 +72,7 @@ export const SetMarketAveData = () => {
               changePct24Hr: ele.CHANGEPCT24HOUR,
               marketCap: ele.MKTCAP,
               price: ele.PRICE,
-              name: ele.TOSYMBOL
+              name: ele.TOSYMBOL,
             }
           })
           let displayBTC = Object.values(body.RAW.BTC).map(ele => {
@@ -83,7 +83,7 @@ export const SetMarketAveData = () => {
               marketCap: displayEle.MKTCAP,
               price: displayEle.PRICE,
               name: curCode,
-              symbol: displayEle.TOSYMBOL
+              symbol: displayEle.TOSYMBOL,
             }
           })
           let displayNXS = Object.values(body.RAW.NXS).map(ele => {
@@ -94,7 +94,7 @@ export const SetMarketAveData = () => {
               marketCap: displayEle.MKTCAP,
               price: displayEle.PRICE,
               name: curCode,
-              symbol: displayEle.TOSYMBOL
+              symbol: displayEle.TOSYMBOL,
             }
           })
           dispatch({
@@ -103,8 +103,8 @@ export const SetMarketAveData = () => {
               rawBTC: rawBTC,
               rawNXS: rawNXS,
               displayBTC: displayBTC,
-              displayNXS: displayNXS
-            }
+              displayNXS: displayNXS,
+            },
           })
         }
       }
@@ -256,7 +256,7 @@ export const LoadAddressBook = () => {
     json = config.ReadJson('addressbook.json')
   } else {
     json = {
-      addressbook: []
+      addressbook: [],
     }
     config.WriteJson('addressbook.json', json)
   }

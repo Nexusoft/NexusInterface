@@ -14,7 +14,7 @@
  */
 
 declare module 'electron' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,23 +23,23 @@ declare module 'electron' {
  * needed.
  */
 declare module 'electron/cli' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron/install' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'electron/cli.js' {
-  declare module.exports: $Exports<'electron/cli'>;
+  declare module.exports: $Exports<'electron/cli'>
 }
 declare module 'electron/index' {
-  declare module.exports: $Exports<'electron'>;
+  declare module.exports: $Exports<'electron'>
 }
 declare module 'electron/index.js' {
-  declare module.exports: $Exports<'electron'>;
+  declare module.exports: $Exports<'electron'>
 }
 declare module 'electron/install.js' {
-  declare module.exports: $Exports<'electron/install'>;
+  declare module.exports: $Exports<'electron/install'>
 }

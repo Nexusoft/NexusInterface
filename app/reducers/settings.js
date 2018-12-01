@@ -46,7 +46,7 @@ const initialState = {
       globePillarColorRGB: 'rgb(0,255,255)',
       globeArchColorRGB: 'rgb(0,255,255)',
       globeMultiColorRGB: 'rgb(0,151,228)',
-      maxMindCopyright: 'hue-rotate(0deg) grayscale(0%) brightness(100%)'
+      maxMindCopyright: 'hue-rotate(0deg) grayscale(0%) brightness(100%)',
     },
     NXSlogoRGB: 'rgb(0,174,239)',
     footerRGB: 'rgb(0,174,239)',
@@ -57,10 +57,10 @@ const initialState = {
     experimentalOpen: true,
     saveSettings: false,
     styleChangeFlag: false,
-    selectedColorProp: 'MC1'
+    selectedColorProp: 'MC1',
   },
 
-  messages: messages
+  messages: messages,
 }
 
 export default (state = initialState, action) => {
@@ -68,13 +68,13 @@ export default (state = initialState, action) => {
     case TYPE.GET_SETTINGS:
       return {
         ...state,
-        settings: { ...state.settings, ...action.payload }
+        settings: { ...state.settings, ...action.payload },
       }
       break
     case TYPE.UPDATE_LOCALES:
       return {
         ...state,
-        settings: { ...state.settings, locale: action.payload }
+        settings: { ...state.settings, locale: action.payload },
       }
       break
     case TYPE.SET_EXPERIMENTAL_WARNING:
@@ -83,21 +83,21 @@ export default (state = initialState, action) => {
           ...state,
           settings: {
             ...state.settings,
-            experimentalWarning: false
+            experimentalWarning: false,
           },
-          saveSettingsFlag: true
+          saveSettingsFlag: true,
         }
       } else {
         return {
           ...state,
-          experimentalOpen: false
+          experimentalOpen: false,
         }
       }
       break
     case TYPE.IGNORE_ENCRYPTION_WARNING:
       return {
         ...state,
-        ignoreEncryptionWarningFlag: true
+        ignoreEncryptionWarningFlag: true,
       }
       break
 
@@ -106,15 +106,15 @@ export default (state = initialState, action) => {
         ...state,
         settings: {
           ...state.settings,
-          acceptedagreement: true
+          acceptedagreement: true,
         },
-        saveSettingsFlag: true
+        saveSettingsFlag: true,
       }
       break
     case TYPE.TOGGLE_SAVE_SETTINGS_FLAG:
       return {
         ...state,
-        saveSettingsFlag: false
+        saveSettingsFlag: false,
       }
       break
     case TYPE.SET_WALLPAPER:
@@ -122,8 +122,8 @@ export default (state = initialState, action) => {
         ...state,
         settings: {
           ...state.settings,
-          wallpaper: action.payload
-        }
+          wallpaper: action.payload,
+        },
       }
       break
     case TYPE.CLOSE_BOOTSTRAP_MODAL:
@@ -131,8 +131,8 @@ export default (state = initialState, action) => {
         ...state,
         settings: {
           ...state.settings,
-          bootstrap: false
-        }
+          bootstrap: false,
+        },
       }
       break
     case TYPE.CHANGE_COLOR_1:
@@ -142,9 +142,9 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC1: action.payload
-          }
-        }
+            MC1: action.payload,
+          },
+        },
       }
       break
     case TYPE.CHANGE_COLOR_2:
@@ -154,9 +154,9 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC2: action.payload
-          }
-        }
+            MC2: action.payload,
+          },
+        },
       }
       break
     case TYPE.CHANGE_COLOR_3:
@@ -166,9 +166,9 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC3: action.payload
-          }
-        }
+            MC3: action.payload,
+          },
+        },
       }
       break
     case TYPE.CHANGE_COLOR_4:
@@ -178,9 +178,9 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC4: action.payload
-          }
-        }
+            MC4: action.payload,
+          },
+        },
       }
       break
     case TYPE.CHANGE_COLOR_5:
@@ -190,15 +190,15 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC5: action.payload
-          }
-        }
+            MC5: action.payload,
+          },
+        },
       }
       break
     case TYPE.SET_SELECTED_COLOR_PROP:
       return {
         ...state,
-        selectedColorProp: action.payload
+        selectedColorProp: action.payload,
       }
       break
     case TYPE.SET_NEXUS_LOGO_COLOR:
@@ -208,10 +208,10 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            NXSlogo: action.payload.setting
-          }
+            NXSlogo: action.payload.setting,
+          },
         },
-        NXSlogoRGB: action.payload.hex
+        NXSlogoRGB: action.payload.hex,
       }
     case TYPE.SET_FOOTER_COLOR:
       return {
@@ -220,10 +220,10 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            footer: action.payload.setting
-          }
+            footer: action.payload.setting,
+          },
         },
-        footerRGB: action.payload.hex
+        footerRGB: action.payload.hex,
       }
     case TYPE.SET_FOOTER_ACTIVE_COLOR:
       return {
@@ -232,10 +232,10 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            footerActive: action.payload.setting
-          }
+            footerActive: action.payload.setting,
+          },
         },
-        footerActiveRGB: action.payload.hex
+        footerActiveRGB: action.payload.hex,
       }
     case TYPE.SET_FOOTER_HOVER_COLOR:
       return {
@@ -244,10 +244,10 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            footerHover: action.payload.setting
-          }
+            footerHover: action.payload.setting,
+          },
         },
-        footerHoverRGB: action.payload.hex
+        footerHoverRGB: action.payload.hex,
       }
 
     case TYPE.CHANGE_PANEL_COLOR:
@@ -257,10 +257,10 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            pannelBack: action.payload
-          }
+            pannelBack: action.payload,
+          },
         },
-        footerHoverRGB: action.payload.hex
+        footerHoverRGB: action.payload.hex,
       }
 
     case TYPE.SET_ICON_MENU_COLOR:
@@ -270,10 +270,10 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            iconMenu: action.payload.setting
-          }
+            iconMenu: action.payload.setting,
+          },
         },
-        iconMenuRGB: action.payload.hex
+        iconMenuRGB: action.payload.hex,
       }
     case TYPE.CHANGE_GLOBE_PILLAR_COLOR:
       return {
@@ -282,9 +282,9 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            globePillarColorRGB: action.payload.hex
-          }
-        }
+            globePillarColorRGB: action.payload.hex,
+          },
+        },
       }
       break
     case TYPE.CHANGE_GLOBE_ARCH_COLOR:
@@ -294,9 +294,9 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            globeArchColorRGB: action.payload.hex
-          }
-        }
+            globeArchColorRGB: action.payload.hex,
+          },
+        },
       }
       break
     case TYPE.CHANGE_GLOBE_MULTI_COLOR:
@@ -306,9 +306,9 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            globeMultiColorRGB: action.payload.hex
-          }
-        }
+            globeMultiColorRGB: action.payload.hex,
+          },
+        },
       }
     case TYPE.RESET_CUSTOM_STYLING:
       return {
@@ -316,7 +316,7 @@ export default (state = initialState, action) => {
         settings: {
           ...state.settings,
           wallpaper: initialState.settings.wallpaper,
-          customStyling: initialState.settings.customStyling
+          customStyling: initialState.settings.customStyling,
         },
         NXSlogoRGB: initialState.NXSlogoRGB,
         footerRGB: initialState.footerRGB,
@@ -325,7 +325,7 @@ export default (state = initialState, action) => {
         iconMenuRGB: initialState.iconMenuRGB,
         globeArchColorRGB: initialState.globeArchColorRGB,
         globePillarColorRGB: initialState.globePillarColorRGB,
-        globeMultiColorRGB: initialState.globeMultiColorRGB
+        globeMultiColorRGB: initialState.globeMultiColorRGB,
       }
       break
     case TYPE.TOGGLE_GLOBE_RENDER:
@@ -333,14 +333,14 @@ export default (state = initialState, action) => {
         ...state,
         settings: {
           ...state.settings,
-          renderGlobe: !state.settings.renderGlobe
-        }
+          renderGlobe: !state.settings.renderGlobe,
+        },
       }
       break
     case TYPE.UNSET_STYLE_FLAG:
       return {
         ...state,
-        styleChangeFlag: false
+        styleChangeFlag: false,
       }
       break
     case TYPE.SET_FIAT_CURRENCY:
@@ -348,8 +348,8 @@ export default (state = initialState, action) => {
         ...state,
         settings: {
           ...state.settings,
-          fiatCurrency: action.payload
-        }
+          fiatCurrency: action.payload,
+        },
       }
       break
     default:

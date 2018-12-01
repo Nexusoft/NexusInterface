@@ -49,14 +49,14 @@ export default class NetworkGlobe extends Component {
         return new THREE.Color(incomingPillarColor)
       },
       colorArch: incomingArchColor,
-      colorGlobe: this.props.globeColor
+      colorGlobe: this.props.globeColor,
     }
     glb = new DAT(this.threeRootElement, globeOptions)
     glb.animate()
     Request(
       {
         url: 'http://www.geoplugin.net/json.gp',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (error) {
@@ -86,7 +86,7 @@ export default class NetworkGlobe extends Component {
               //glb = new DAT(this.threeRootElement);
               glb.addData(globeseries[0][1], {
                 format: 'magnitude',
-                name: globeseries[0][0]
+                name: globeseries[0][0],
               })
               glb.createPoints()
               //  Start the animations on the globe
@@ -129,7 +129,7 @@ export default class NetworkGlobe extends Component {
     Request(
       {
         url: 'http://www.geoplugin.net/json.gp',
-        json: true
+        json: true,
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
@@ -158,7 +158,7 @@ export default class NetworkGlobe extends Component {
             glb.removePoints()
             glb.addData(globeseries[0][1], {
               format: 'magnitude',
-              name: globeseries[0][0]
+              name: globeseries[0][0],
             })
             glb.createPoints()
           })

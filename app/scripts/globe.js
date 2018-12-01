@@ -37,7 +37,7 @@ export default (DAT.Globe = function(container, opts) {
   var Shaders = {
     earth: {
       uniforms: {
-        texture: { type: 't', value: null }
+        texture: { type: 't', value: null },
       },
       vertexShader: [
         'varying vec3 vNormal;',
@@ -46,7 +46,7 @@ export default (DAT.Globe = function(container, opts) {
         'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
         'vNormal = normalize( normalMatrix * normal );',
         'vUv = uv;',
-        '}'
+        '}',
       ].join('\n'),
       fragmentShader: [
         'uniform sampler2D _texture;',
@@ -58,8 +58,8 @@ export default (DAT.Globe = function(container, opts) {
         'float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );',
         'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
         'gl_FragColor = vec4( (diffuse*colorMod.xyz) + atmosphere, 1.0 );',
-        '}'
-      ].join('\n')
+        '}',
+      ].join('\n'),
     },
     atmosphere: {
       uniforms: {},
@@ -68,16 +68,16 @@ export default (DAT.Globe = function(container, opts) {
         'void main() {',
         'vNormal = normalize( normalMatrix * normal );',
         'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-        '}'
+        '}',
       ].join('\n'),
       fragmentShader: [
         'varying vec3 vNormal;',
         'void main() {',
         'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 20.0 );',
         'gl_FragColor = vec4( 1.0, 1.0, 1.0, 0.5 ) * intensity;',
-        '}'
-      ].join('\n')
-    }
+        '}',
+      ].join('\n'),
+    },
   }
 
   var camera, scene, renderer, w, h
@@ -129,18 +129,18 @@ export default (DAT.Globe = function(container, opts) {
     //uniforms["texture"].value = new THREE.TextureLoader().load(world);
     uniforms['_texture'] = {
       type: 't',
-      value: new THREE.TextureLoader().load(world)
+      value: new THREE.TextureLoader().load(world),
     }
     uniforms['colorMod'] = {
       type: 'v4',
-      value: new THREE.Vector4(globeR, globeG, globeB, 1.0)
+      value: new THREE.Vector4(globeR, globeG, globeB, 1.0),
     }
 
     // imgDir + "world.jpg"
     material = new THREE.ShaderMaterial({
       uniforms: uniforms,
       vertexShader: shader.vertexShader,
-      fragmentShader: shader.fragmentShader
+      fragmentShader: shader.fragmentShader,
     })
 
     mesh = new THREE.Mesh(geometry, material)
@@ -157,12 +157,12 @@ export default (DAT.Globe = function(container, opts) {
       fragmentShader: shader.fragmentShader,
       side: THREE.BackSide,
       blending: THREE.AdditiveBlending,
-      transparent: true
+      transparent: true,
     })
 
     var curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(99, 99, 99)
+      new THREE.Vector3(99, 99, 99),
     ])
 
     var points = curve.getPoints(50)
@@ -171,7 +171,7 @@ export default (DAT.Globe = function(container, opts) {
     var material = new THREE.LineBasicMaterial({
       color: 0xff0000,
       linewidth: 60,
-      fog: true
+      fog: true,
     })
 
     // Create the final object to add to the scene
@@ -280,7 +280,7 @@ export default (DAT.Globe = function(container, opts) {
     if (opts.animated) {
       this._baseGeometry.morphTargets.push({
         name: opts.name,
-        vertices: subgeo.vertices
+        vertices: subgeo.vertices,
       })
     } else {
       this._baseGeometry = subgeo
@@ -295,7 +295,7 @@ export default (DAT.Globe = function(container, opts) {
           new THREE.MeshBasicMaterial({
             color: 0xffffff,
             vertexColors: THREE.FaceColors,
-            morphTargets: false
+            morphTargets: false,
           })
         )
       } else {
@@ -305,7 +305,7 @@ export default (DAT.Globe = function(container, opts) {
           for (var i = 0; i <= padding; i++) {
             this._baseGeometry.morphTargets.push({
               name: 'morphPadding' + i,
-              vertices: this._baseGeometry.vertices
+              vertices: this._baseGeometry.vertices,
             })
           }
         }
@@ -314,7 +314,7 @@ export default (DAT.Globe = function(container, opts) {
           new THREE.MeshBasicMaterial({
             color: 0x00ffff,
             vertexColors: THREE.FaceColors,
-            morphTargets: true
+            morphTargets: true,
           })
         )
       }
@@ -337,7 +337,7 @@ export default (DAT.Globe = function(container, opts) {
         new THREE.MeshBasicMaterial({
           color: 0xffffff,
           vertexColors: THREE.FaceColors,
-          morphTargets: true
+          morphTargets: true,
         })
       )
 
@@ -539,7 +539,7 @@ export default (DAT.Globe = function(container, opts) {
       blending: THREE.AdditiveBlending,
       opacity: 0.6,
       transparent: true,
-      color: colorArch
+      color: colorArch,
     })
     const curveMesh = new THREE.Mesh()
 
@@ -633,7 +633,7 @@ export default (DAT.Globe = function(container, opts) {
     return {
       start,
       end,
-      spline: new THREE.CubicBezierCurve3(start, mid1, mid2, end)
+      spline: new THREE.CubicBezierCurve3(start, mid1, mid2, end),
     }
   }
   function clamp(num, min, max) {

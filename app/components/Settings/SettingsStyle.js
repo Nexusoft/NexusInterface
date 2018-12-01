@@ -20,7 +20,7 @@ const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.settings,
-    ...state.overview
+    ...state.overview,
   }
 }
 const mapDispatchToProps = dispatch => ({
@@ -41,27 +41,27 @@ const mapDispatchToProps = dispatch => ({
   ChangeNexusLogoColor: (setting, hex) =>
     dispatch({
       type: TYPE.SET_NEXUS_LOGO_COLOR,
-      payload: { setting: setting, hex: hex }
+      payload: { setting: setting, hex: hex },
     }),
   ChangeIconMenuColor: (setting, hex) =>
     dispatch({
       type: TYPE.SET_ICON_MENU_COLOR,
-      payload: { setting: setting, hex: hex }
+      payload: { setting: setting, hex: hex },
     }),
   ChangeFooterColor: (setting, hex) =>
     dispatch({
       type: TYPE.SET_FOOTER_COLOR,
-      payload: { setting: setting, hex: hex }
+      payload: { setting: setting, hex: hex },
     }),
   ChangeFooterHoverColor: (setting, hex) =>
     dispatch({
       type: TYPE.SET_FOOTER_HOVER_COLOR,
-      payload: { setting: setting, hex: hex }
+      payload: { setting: setting, hex: hex },
     }),
   ChangeFooterActiveColor: (setting, hex) =>
     dispatch({
       type: TYPE.SET_FOOTER_ACTIVE_COLOR,
-      payload: { setting: setting, hex: hex }
+      payload: { setting: setting, hex: hex },
     }),
   ChangePanelColor: rgb =>
     dispatch({ type: TYPE.CHANGE_PANEL_COLOR, payload: rgb }),
@@ -72,7 +72,7 @@ const mapDispatchToProps = dispatch => ({
   ChangeGlobeMultiColor: (setting, hex) =>
     dispatch({ type: TYPE.CHANGE_GLOBE_MULTI_COLOR, payload: { hex: hex } }),
   ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
-  ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER })
+  ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER }),
 })
 
 class SettingsStyle extends Component {
@@ -284,7 +284,7 @@ class SettingsStyle extends Component {
               <label>
                 <select
                   style={{
-                    maxWidth: '80%'
+                    maxWidth: '80%',
                   }}
                   id="select"
                   onChange={e => {

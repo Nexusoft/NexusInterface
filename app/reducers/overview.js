@@ -8,7 +8,7 @@ const initialState = {
   USDpercentChange: 0,
   percentDownloaded: 0,
   webGLEnabled: false,
-  daemonAvailable: false
+  daemonAvailable: false,
 }
 
 export default (state = initialState, action) => {
@@ -16,65 +16,65 @@ export default (state = initialState, action) => {
     case TYPE.GET_INFO_DUMP:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       }
       break
     case TYPE.DAEMON_UNAVAILABLE:
       return {
         ...state,
-        daemonAvailable: action.payload
+        daemonAvailable: action.payload,
       }
       break
     case TYPE.SET_WEBGL_ENABLED:
       return {
         ...state,
-        webGLEnabled: action.payload
+        webGLEnabled: action.payload,
       }
       break
     case TYPE.SET_PERCENT_DOWNLOADED:
       return {
         ...state,
-        percentDownloaded: action.payload
+        percentDownloaded: action.payload,
       }
     case TYPE.CLEAR_FOR_RESTART:
       return {
-        ...initialState
+        ...initialState,
       }
       break
     case TYPE.CLEAR_FOR_BOOTSTRAPING:
       return {
         ...initialState,
-        percentDownloaded: 0.001
+        percentDownloaded: 0.001,
       }
       break
     case TYPE.SET_EXPERIMENTAL_WARNING:
       return {
         ...state,
-        experimentalOpen: action.payload
+        experimentalOpen: action.payload,
       }
       break
     case TYPE.USD_RATE:
       return {
         ...state,
-        USD: action.payload
+        USD: action.payload,
       }
       break
     case TYPE.BTC_RATE:
       return {
         ...state,
-        BTC: action.payload
+        BTC: action.payload,
       }
       break
     case TYPE.CHANGE_24:
       return {
         ...state,
-        USDpercentChange: action.payload
+        USDpercentChange: action.payload,
       }
       break
     case TYPE.SET_SUPPLY:
       return {
         ...state,
-        circulatingSupply: action.payload
+        circulatingSupply: action.payload,
       }
       break
     default:

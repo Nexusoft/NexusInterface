@@ -6,13 +6,13 @@
 // Output:
 //     String     || The Display Value for Each Nexus
 export function ReturnDisplayCurrencyNexusValue(inCurrency, inArray) {
-  let returnPrice = 0;
+  let returnPrice = 0
   inArray.forEach(element => {
     if (element.name == inCurrency) {
-      returnPrice = element.price;
+      returnPrice = element.price
     }
-  });
-  return returnPrice;
+  })
+  return returnPrice
 }
 
 // Return Currency Symbol
@@ -23,12 +23,12 @@ export function ReturnDisplayCurrencyNexusValue(inCurrency, inArray) {
 // Output:
 //     String     || The Display  Symbol for the currency
 export function ReturnCurrencySymbol(inCurrency, inArray) {
-  let returnSymbol = "$"; //default
+  let returnSymbol = '$' //default
 
   inArray.forEach(element => {
     if (element.name === inCurrency) {
-      returnSymbol = element.symbol;
+      returnSymbol = element.symbol
     }
-  });
-  return returnSymbol;
+  })
+  return returnSymbol
 }
