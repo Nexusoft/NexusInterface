@@ -20,9 +20,15 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.DAEMON_UNAVAILABLE:
+    var temp = undefined;
+    if (state.connections !== undefined)
+    {
+      temp = 0;
+    }
+      
       return {
         ...state,
-        connections: 0,
+        connections: temp,
         daemonAvailable: action.payload
       };
     break;

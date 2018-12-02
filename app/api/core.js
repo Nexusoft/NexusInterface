@@ -77,7 +77,7 @@ function SetCoreParameters(settings) {
   console.log(settings);
 
   var forkblockCount = 
-    settings.forkblock === undefined ? 0 : settings.forkblock;
+    settings.forkblocks === undefined ? 0 : settings.forkblocks;
   
     console.log(settings);
 
@@ -119,7 +119,7 @@ function SetCoreParameters(settings) {
   if (forkblockCount !== 0)
   {
     parameters.push("-forkblocks=" + forkblockCount)
-    settings.forkblock = 0;
+    settings.forkblocks = 0;
     SaveSettings(settings);
     console.log("Saved New Settings");
   }
