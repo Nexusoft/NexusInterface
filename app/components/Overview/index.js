@@ -66,7 +66,6 @@ import interesticon from "../../images/interest.svg";
 import stakeicon from "../../images/staking-white.svg";
 import maxmindLogo from "../../images/maxmind-header-logo-compact.svg";
 
-var awsdadasdsa = false;
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -138,13 +137,10 @@ class Overview extends Component {
       require("../../api/settings.js").SaveSettings(this.props.settings);
     }
 
-    if (this.props.connections == 0 )
+    if (this.props.connections == 0 && this.props.daemonAvailable == false )
     {
-      awsdadasdsa = true;
-      //console.log("REMOVE OLD POINTS")
       this.removeAllPoints();
       this.reDrawEverything();
-
       return;
     }
 
@@ -156,19 +152,23 @@ class Overview extends Component {
       if (
         (previousprops.connections == undefined ||
           previousprops.connections == 0) &&
+          (this.props.connections != 0 || this.props.connections != undefined) &&
         this.props.webGLEnabled !== false &&
         this.props.settings.renderGlobe === true
       ) {
         //Daemon Starting Up
-        awsdadasdsa = false;
         this.reDrawEverything();
       }
-    }
-    if (this.props.connections != previousprops.connections) {
-      if (this.props.connections != 0 && previousprops.connections != 0) {
-        this.removeOldPoints();
+      else
+      {
+        if (this.props.connections != previousprops.connections && this.props.connections !== undefined && previousprops.connections !== undefined) {
+          if (this.props.connections != 0 && previousprops.connections != 0) {
+            this.reDrawEverything();
+          }
+        }
       }
     }
+    
   }
 
   // Class methods

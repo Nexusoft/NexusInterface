@@ -26,22 +26,21 @@ export const GetInfoDump = () => {
       })
       .catch(err => {
         console.log(err);
-        dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: true});
+        dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: false});
         DaemonUnavailable(); 
       });
   };
 };
 
 export const DaemonUnavailable = () => {
-  console.log("Assasasa");
   return dispatch => {
-    dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: true});
+    dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: false});
   };
 };
 
 export const DaemonAvailable = () => {
   return dispatch => {
-    dispatch({ type: TYPE.DAEMON_UNAVALIBLE, payload: false});
+    dispatch({ type: TYPE.DAEMON_UNAVALIBLE, payload: true});
   };
 };
 
