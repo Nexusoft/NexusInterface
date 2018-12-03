@@ -75,12 +75,8 @@ function SetCoreParameters(settings) {
   verbose =
     settings.verboseLevel === undefined ? verbose : settings.verboseLevel;
 
-  console.log(settings);
-
   var forkblockCount = 
     settings.forkblocks === undefined ? 0 : settings.forkblocks;
-  
-    console.log(settings);
 
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
