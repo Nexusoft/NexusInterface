@@ -17,8 +17,8 @@ import world from "../images/world-light-white.jpg";
 import { geoInterpolate } from "d3-geo";
 var DAT = DAT || {};
 
-var CurveMeshs;
-var PillarMeshs;
+var CurveMeshs = null;
+var PillarMeshs = null;
 
 export default (DAT.Globe = function(container, opts) {
   opts = opts || {};
@@ -345,11 +345,24 @@ export default (DAT.Globe = function(container, opts) {
 
       playCurve();
 
+
+      if (CurveMeshs != null)
+      {
+        scene.remove(CurveMeshs);
+      }
+      if (PillarMeshs != null)
+      {
+        scene.remove(PillarMeshs);
+      }
+
       CurveMeshs = newCurveMesh;
       PillarMeshs = this.points;
 
-      scene.add(this.points);
-      scene.add(newCurveMesh);
+      PillarMeshs.name = "PillarMesh";
+      CurveMeshs.name = "CurveMesh";
+
+      scene.add(PillarMeshs);
+      scene.add(CurveMeshs);
     }
   }
 
@@ -515,6 +528,16 @@ export default (DAT.Globe = function(container, opts) {
       PillarMeshs.material.dispose();
       PillarMeshs = null;
     }
+    
+    //scene.remove(scene.getObjectByName(""));
+    //tempoints.length = 0;
+    //cureves.length = 0;
+    //console.log(scene);
+    //console.log(PillarMeshs);
+    //console.log(CurveMeshs);
+    //console.log(tempoints);
+    //console.log(cureves);
+    //console.log("globe:removePoints");
   }
 
   function render() {

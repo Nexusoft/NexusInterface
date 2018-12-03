@@ -24,11 +24,16 @@ export const GetInfoDump = () => {
         DaemonAvailable();
         dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload });
       })
-      .catch(err => {console.log(err); DaemonUnavailable(); });
+      .catch(err => {
+        console.log(err);
+        dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: true});
+        DaemonUnavailable(); 
+      });
   };
 };
 
 export const DaemonUnavailable = () => {
+  console.log("Assasasa");
   return dispatch => {
     dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: true});
   };

@@ -25,6 +25,7 @@ export default class NetworkGlobe extends Component {
     this.props.handleOnLineRender(this.testRestartLines);
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
     this.props.handleOnAddData(this.updatePointsOnGlobe);
+    this.props.handleRemoveAllPoints(this.removeAllPoints);
     const path = require("path");
     const globeseries = [["peers", []]];
     let geoiplookup = "";
@@ -172,15 +173,24 @@ export default class NetworkGlobe extends Component {
       glb.playCurve();
     }
   }
+  removeAllPoints(){
+    if (glb == null || glb == undefined) {
+      return;
+    }
+    glb.removePoints();
+  }
 
   RemoveOldPointsAndReDraw() {
     if (glb == null || glb == undefined) {
       return;
     }
-    glb.removePoints();
 
+
+    glb.removePoints();
+    //console.log("RemovedPoints");
     setTimeout(() => {
       glb.createPoints();
+      //console.log("CreatedNewOnes");
     }, 1000);
   }
 

@@ -76,6 +76,7 @@ class SettingsCore extends Component {
     this.setEnableMining(settings);
     this.setEnableStaking(settings);
     this.setVerboseLevel(settings);
+    this.setForkblocks(settings);
     this.setMapPortUsingUpnp(settings);
     this.setSocks4Proxy(settings);
     this.setSocks4ProxyIP(settings);
@@ -112,6 +113,16 @@ class SettingsCore extends Component {
       verboseLevel.value = "2";
     } else {
       verboseLevel.value = settings.verboseLevel;
+    }
+  }
+
+  setForkblocks(settings) {
+    var numForkblocks = document.getElementById("forkblockNumber");
+
+    if (settings.forkblocks === undefined) {
+      numForkblocks.value = "0";
+    } else {
+      numForkblocks.value = settings.forkblocks;
     }
   }
 
@@ -284,6 +295,16 @@ class SettingsCore extends Component {
     var settingsObj = settings.GetSettings();
 
     settingsObj.verboseLevel = el.value;
+
+    settings.SaveSettings(settingsObj);
+  }
+
+  updateForkBlockAmout(event) {
+    var el = event.target;
+    var settings = require("../../api/settings.js");
+    var settingsObj = settings.GetSettings();
+
+    settingsObj.forkblocks = el.value;
 
     settings.SaveSettings(settingsObj);
   }
@@ -756,6 +777,29 @@ class SettingsCore extends Component {
           </div>
 
           <div className="field">
+            <label htmlFor="forkblock">
+              <FormattedMessage
+                id="Settings.Forkblock"
+                defaultMessage="ForkBlocks"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.ForkBlock"
+              defaultMessage="Step Back A Amount of Blocks"
+            >
+              {TT => (
+                <input
+                  id="forkblockNumber"
+                  type="number"
+                  size="3"
+                  onChange={this.updateForkBlockAmout}
+                  data-tooltip={TT}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+
+          <div className="field">
             <label htmlFor="manualDaemon">
               <FormattedMessage
                 id="Settings.ManualDaemonMode"
@@ -1048,7 +1092,6 @@ class SettingsCore extends Component {
                 defaultMesage="Restart Core"
               />
             </button>
-            mmm
             <button
               // id="restart-core"
               className="button primary"

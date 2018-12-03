@@ -229,6 +229,7 @@ export default {
     "Settings.EnableMining": "Enable Mining",
     "Settings.EnableStaking": "Enable Staking",
     "Settings.VerboseLevel": "Verbose Level",
+    "Settings.Forkblock": "ForkBlocks",
     "Settings.SaveSettings": "Save Settings",
     "Settings.ManualDaemonMode": "Manual Daemon Mode",
     "Settings.DDN": "Data Directory Name",
@@ -323,6 +324,7 @@ export default {
     "ToolTip.EnableMining": "Enable/Disable mining to the wallet",
     "ToolTip.EnableStaking": "Enable/Disable staking on the wallet",
     "ToolTip.Verbose": "Verbose level for logs",
+    "ToolTip.ForkBlocks" : "Step Back A Amount of Blocks",
     "ToolTip.MDM":
       "Enable manual daemon mode if you are running the daemon manually outside of the wallet",
     "ToolTip.UserName": "Username configured for manual daemon",

@@ -74,6 +74,14 @@ function SetCoreParameters(settings) {
   verbose =
     settings.verboseLevel === undefined ? verbose : settings.verboseLevel;
 
+  console.log(settings);
+
+  var forkblockCount = 
+    settings.forkblocks === undefined ? 0 : settings.forkblocks;
+  
+    console.log(settings);
+
+
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push("-rpcuser=" + user);
   parameters.push("-rpcpassword=" + password);
@@ -105,6 +113,16 @@ function SetCoreParameters(settings) {
   // Enable detach database on shutdown (default is 0)
   if (settings.detatchDatabaseOnShutdown == true)
     parameters.push("-detachdb=1");
+
+
+  console.log(settings);
+  if (forkblockCount !== 0)
+  {
+    parameters.push("-forkblocks=" + forkblockCount)
+    settings.forkblocks = 0;
+    SaveSettings(settings);
+    console.log("Saved New Settings");
+  }
 
   log.info("Core Parameters: " + parameters.toString());
   return parameters;

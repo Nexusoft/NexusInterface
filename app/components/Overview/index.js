@@ -66,6 +66,8 @@ import interesticon from "../../images/interest.svg";
 import stakeicon from "../../images/staking-white.svg";
 import maxmindLogo from "../../images/maxmind-header-logo-compact.svg";
 
+var awsdadasdsa = false;
+
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
@@ -94,7 +96,7 @@ class Overview extends Component {
     if (WEBGL.isWebGLAvailable()) {
       this.props.setWebGLEnabled(true);
     } else {
-      this.props.setWebGLEnabled(true);
+      this.props.setWebGLEnabled(false);
       var warning = WEBGL.getWebGLErrorMessage();
       console.error(warning);
     }
@@ -109,6 +111,8 @@ class Overview extends Component {
   componentWillUnmount() {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
+
+  
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.blocks > previousprops.blocks) {
@@ -134,6 +138,16 @@ class Overview extends Component {
       require("../../api/settings.js").SaveSettings(this.props.settings);
     }
 
+    if (this.props.connections == 0 )
+    {
+      awsdadasdsa = true;
+      //console.log("REMOVE OLD POINTS")
+      this.removeAllPoints();
+      this.reDrawEverything();
+
+      return;
+    }
+
     if (
       this.props.settings.acceptedagreement !== false ||
       this.props.settings.renderGlobe !== false ||
@@ -142,11 +156,11 @@ class Overview extends Component {
       if (
         (previousprops.connections == undefined ||
           previousprops.connections == 0) &&
-        this.props.connections != 0 &&
         this.props.webGLEnabled !== false &&
         this.props.settings.renderGlobe === true
       ) {
         //Daemon Starting Up
+        awsdadasdsa = false;
         this.reDrawEverything();
       }
     }
@@ -363,6 +377,7 @@ class Overview extends Component {
 
   returnIfDrawLines() {
     //if (testinglines == true)
+
   }
 
   returnIfGlobeEnabled() {
@@ -379,6 +394,7 @@ class Overview extends Component {
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
             handleOnAddData={e => (this.reDrawEverything = e)}
+            handleRemoveAllPoints = {e => (this.removeAllPoints = e)}
             pillarColor={this.props.settings.customStyling.globePillarColorRGB}
             archColor={this.props.settings.customStyling.globeArchColorRGB}
             globeColor={this.props.settings.customStyling.globeMultiColorRGB}
