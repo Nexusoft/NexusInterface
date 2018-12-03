@@ -16,7 +16,8 @@ export default (state = initialState, action) => {
     case TYPE.GET_INFO_DUMP:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
+        daemonAvailable:true
       };
       break;
     case TYPE.DAEMON_UNAVAILABLE:

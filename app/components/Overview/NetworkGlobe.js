@@ -105,9 +105,6 @@ export default class NetworkGlobe extends Component {
   }
   // Class Methods
   updatePointsOnGlobe() {
-    if (initializedWithData == true) {
-      return;
-    }
 
     const globeseries = [["peers", []]];
     let geoiplookup = "";
@@ -154,8 +151,6 @@ export default class NetworkGlobe extends Component {
             globeseries[0][1].push(body["geoplugin_longitude"]);
             globeseries[0][1].push(0.1); //temporary magnitude.
 
-            //glb = new DAT(this.threeRootElement);
-            initializedWithData = true;
             glb.removePoints();
             glb.addData(globeseries[0][1], {
               format: "magnitude",
