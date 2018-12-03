@@ -1,4 +1,4 @@
-@import "~components/Security/style.css";
+@import "./Security/style.css";
 
 #settings {
   position: relative;
