@@ -11,6 +11,7 @@
     "react"
   ],
   "plugins": [
+    "emotion",
     "add-module-exports",
     "dynamic-import-webpack",
     [
@@ -23,10 +24,14 @@
   "env": {
     "production": {
       "presets": ["react-optimize"],
-      "plugins": ["babel-plugin-dev-expression"]
+      "plugins": ["emotion", "babel-plugin-dev-expression"]
     },
     "development": {
-      "plugins": ["transform-class-properties", "transform-es2015-classes"]
+      "plugins": [
+        ["emotion", { "sourceMap": true }],
+        "transform-class-properties",
+        "transform-es2015-classes"
+      ]
     }
   }
 }
