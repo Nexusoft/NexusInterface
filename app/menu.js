@@ -120,12 +120,6 @@ export default class MenuBuilder {
           }
         },
         {
-          label: "Send To Tray",
-          click() {
-            remote.getCurrentWindow().hide();
-          }
-        },
-        {
           label: "Start Daemon",
           click() {
             let core = require("./api/core");
@@ -135,22 +129,18 @@ export default class MenuBuilder {
         {
           label: "Stop Daemon",
           click() {
-            let core = require("./api/core");
-            core.stop();
-          }
-        },
-        {
-          label: "Close Window Keep Daemon",
-          click() {
-            log.info("menu.js Darwin template: close and keep");
             let settings = GetSettings();
-            settings.keepDaemon = true;
-            SaveSettings(settings);
-            remote.getCurrentWindow().close();
+            if (settings.manualDaemon != true) {
+              let core = require("./api/core");
+              core.stop();
+            } else {
+              self.props.OpenModal("Manual Daemon Mode active invalid command");
+            }
           }
         },
         {
-          label: "Close Wallet and Daemon",
+          label: "Quit Nexus",
+          accelerator: "CmdOrCtrl+Q",
           click() {
             log.info("menu.js darwin template: close and kill");
             let settings = GetSettings();
@@ -160,14 +150,17 @@ export default class MenuBuilder {
                   remote.getCurrentWindow().close();
                 }, 1000);
               });
+            } else {
+              core.stop();
+              remote.getCurrentWindow().close();
             }
-            core.stop();
-            remote.getCurrentWindow().close();
           }
-        },
-        {
-          type: "separator"
-        },
+        }
+      ]
+    };
+    const subMenuEdit = {
+      label: "Edit",
+      submenu: [
         {
           label: "Copy",
           accelerator: "CmdOrCtrl+C",
@@ -287,7 +280,7 @@ export default class MenuBuilder {
       ]
     };
 
-    return [subMenuAbout, subMenuView, subMenuWindow, subMenuHelp];
+    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
   buildDefaultTemplate(self) {
@@ -371,12 +364,7 @@ export default class MenuBuilder {
               let didopen = shell.openItem(BackupDir);
             }
           },
-          {
-            label: "Send To Tray",
-            click() {
-              remote.getCurrentWindow().hide();
-            }
-          },
+
           {
             label: "Start Daemon",
             click() {
@@ -391,19 +379,9 @@ export default class MenuBuilder {
               core.stop();
             }
           },
-          {
-            label: "Close Window Keep Daemon",
-            click() {
-              log.info("menu.js default template: close and keep");
-              let settings = GetSettings();
-              settings.keepDaemon = true;
-              SaveSettings(settings);
-              remote.getCurrentWindow().close();
 
-            }
-          },
           {
-            label: "Close Wallet and Daemon",
+            label: "Quit Nexus",
             click() {
               log.info("menu.js default template: close and kill");
               let settings = GetSettings();
@@ -419,6 +397,7 @@ export default class MenuBuilder {
           }
         ]
       },
+
       {
         label: "Settings",
         submenu: [
