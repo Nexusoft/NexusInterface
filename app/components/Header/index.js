@@ -532,7 +532,7 @@ class Header extends Component {
         return (
           <h2>
             <FormattedMessage
-              id="Alert.InvalidAddress"
+              id="Alert.InvalidAmount"
               defaultMessage="Invalid Amount"
             />
           </h2>
@@ -561,6 +561,16 @@ class Header extends Component {
             <FormattedMessage
               id="Alert.NoAddresses"
               defaultMessage="No Addresses"
+            />
+          </h2>
+        );
+        break;
+      case "Insufficient Funds":
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InsufficientFunds"
+              defaultMessage="Insufficient Funds"
             />
           </h2>
         );

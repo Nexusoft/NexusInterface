@@ -293,20 +293,33 @@ class SendRecieve extends Component {
           if (payload.isvalid) {
             if (!payload.ismine) {
               if (this.props.Message) {
-                RPC.PROMISE("sendtoaddress", [
+                RPC.PROMISE("sendfrom", [
+                  this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount),
                   this.props.Message
                 ]);
-                this.props.clearForm();
-                this.props.busy();
-              } else {
-                RPC.PROMISE("sendtoaddress", [
-                  this.props.Address,
-                  parseFloat(this.props.Amount)
-                ]).then(payoad => {
+                .then(payload => {
                   this.props.clearForm();
                   this.props.busy();
+                })
+                .catch(e => {
+                  this.props.busy();
+                  this.props.OpenModal("Insufficient Funds");
+                });
+              } else {
+                RPC.PROMISE("sendfrom", [
+                  this.props.SelectedAccount,
+                  this.props.Address,
+                  parseFloat(this.props.Amount)
+                ]);
+                .then(payoad => {
+                  this.props.clearForm();
+                  this.props.busy();
+                })
+                .catch(e => {
+                  this.props.busy();
+                  this.props.OpenModal("Insufficient Funds");
                 });
               }
             } else {
@@ -894,6 +907,7 @@ class SendRecieve extends Component {
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
       this.props.SetSendAgainData(null);
     }
+    console.log(this.props.SelectedAccount);
     return (
       <div id="sendrecieve" className="animated fadeIn">
         <h2>
@@ -939,7 +953,7 @@ class SendRecieve extends Component {
           </div>
         </Modal>
         {this.props.isInSync === false ||
-        this.props.connections === undefined ? (
+        this.props.connections === !undefined ? (
           <div className="panel">
             <h2>
               <FormattedMessage
@@ -1078,7 +1092,7 @@ class SendRecieve extends Component {
                           } else {
                             this.props.OpenModal("Wallet Locked");
                           }
-                        } else if (this.props.Amount >= 0) {
+                        } else if (this.props.Amount <= 0) {
                           this.props.OpenModal("Invalid Amount");
                         } else {
                           this.props.OpenModal("Invalid Address");

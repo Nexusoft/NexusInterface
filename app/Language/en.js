@@ -356,6 +356,7 @@ export default {
     "Alert.TrustTransaction": "Trust Transaction",
     "Alert.regiesteredToThis": "This is an address regiestered to this wallet",
     "Alert.InvalidAddress": "Invalid Address",
+    "Alert.InsufficientFunds": "Insufficient Funds", //New
     "Alert.InvalidAmount": "Invalid Amount",
     "Alert.Invalid": "Invalid",
     "Alert.AddressAdded": "Address Added",

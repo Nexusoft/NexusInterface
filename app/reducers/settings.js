@@ -351,6 +351,14 @@ export default (state = initialState, action) => {
           fiatCurrency: action.payload
         }
       };
+    case TYPE.CHANGE_MESSAGES:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          fiatCurrency: action.payload
+        }
+      };
       break;
     default:
       return state;
