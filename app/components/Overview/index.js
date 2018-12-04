@@ -66,7 +66,6 @@ import interesticon from "../../images/interest.svg";
 import stakeicon from "../../images/staking-white.svg";
 import maxmindLogo from "../../images/maxmind-header-logo-compact.svg";
 
-
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
@@ -111,7 +110,6 @@ class Overview extends Component {
     window.removeEventListener("contextmenu", this.setupcontextmenu);
   }
 
-  
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.blocks > previousprops.blocks) {
@@ -137,8 +135,7 @@ class Overview extends Component {
       require("../../api/settings.js").SaveSettings(this.props.settings);
     }
 
-    if (this.props.connections == 0 && this.props.daemonAvailable == false )
-    {
+    if (this.props.connections == 0 && this.props.daemonAvailable == false) {
       this.removeAllPoints();
       this.reDrawEverything();
       return;
@@ -152,23 +149,24 @@ class Overview extends Component {
       if (
         (previousprops.connections == undefined ||
           previousprops.connections == 0) &&
-          (this.props.connections != 0 || this.props.connections != undefined) &&
+        (this.props.connections != 0 || this.props.connections != undefined) &&
         this.props.webGLEnabled !== false &&
         this.props.settings.renderGlobe === true
       ) {
         //Daemon Starting Up
         this.reDrawEverything();
-      }
-      else
-      {
-        if (this.props.connections != previousprops.connections && this.props.connections !== undefined && previousprops.connections !== undefined) {
+      } else {
+        if (
+          this.props.connections != previousprops.connections &&
+          this.props.connections !== undefined &&
+          previousprops.connections !== undefined
+        ) {
           if (this.props.connections != 0 && previousprops.connections != 0) {
             this.reDrawEverything();
           }
         }
       }
     }
-    
   }
 
   // Class methods
@@ -377,7 +375,6 @@ class Overview extends Component {
 
   returnIfDrawLines() {
     //if (testinglines == true)
-
   }
 
   returnIfGlobeEnabled() {
@@ -394,7 +391,7 @@ class Overview extends Component {
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
             handleOnAddData={e => (this.reDrawEverything = e)}
-            handleRemoveAllPoints = {e => (this.removeAllPoints = e)}
+            handleRemoveAllPoints={e => (this.removeAllPoints = e)}
             pillarColor={this.props.settings.customStyling.globePillarColorRGB}
             archColor={this.props.settings.customStyling.globeArchColorRGB}
             globeColor={this.props.settings.customStyling.globeMultiColorRGB}
@@ -522,7 +519,7 @@ class Overview extends Component {
         <Modal
           key="encrypted-modal"
           open={
-            !this.props.connections &&
+            this.daemonAvailable &&
             !this.props.experimentalOpen &&
             this.props.settings.acceptedagreement &&
             (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)
