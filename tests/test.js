@@ -9,19 +9,28 @@ chai.use(chaiAsPromised);
 this.app = null;
 var appRef = null;
 var errorOutput = [];
+var appPath = "";
 
 describe("Application launch and Daemon Load", function() {
   this.timeout(1000000);
 
   before(function() {
+    if (process.platform === "win32") {
+      appPath = "release/win-unpacked/Nexus_Tritium_Wallet_Beta.exe";
+    } else if (process.platform === "darwin") {
+      appPath = "release/mac-unpacked/nexus-tritium-beta";
+    } else {
+      appPath = "release/linux-unpacked/nexus-tritium-beta";
+    }
+
     this.app = new Application({
       path: path.join(
         __dirname,
         "..",
-        "release/linux-unpacked/nexus-tritium-beta"
+        appPath
       ),
       args: [
-        path.join(__dirname, "..", "release/linux-unpacked/nexus-tritium-beta")
+        path.join(__dirname, "..", appPath)
       ]
     });
     appRef = this.app;
