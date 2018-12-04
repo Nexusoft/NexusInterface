@@ -49,16 +49,6 @@ export default class MenuBuilder {
       label: 'File',
       submenu: [
         {
-          label: 'Key Management',
-          click: () => {
-            if (self.props.unlocked_until !== undefined) {
-              self.props.history.push('/Settings/Security')
-            } else {
-              self.props.history.push('/Settings/Unencrypted')
-            }
-          },
-        },
-        {
           label: 'Back-up Wallet',
           click: () => {
             let now = new Date()
@@ -102,28 +92,7 @@ export default class MenuBuilder {
           },
         },
         {
-          label: 'Download Recent Database',
-          click() {
-            if (
-              self.props.connections !== undefined &&
-              !GetSettings().manualDaemon
-            ) {
-              let configuration = require('./api/configuration')
-              self.props.OpenBootstrapModal(true)
-              configuration.BootstrapRecentDatabase(self)
-            } else {
-              self.props.OpenModal('Please let the daemon start.')
-              setTimeout(() => {
-                self.props.CloseModal()
-              }, 3000)
-            }
-          },
-        },
-        {
-          label: 'Send To Tray',
-          click() {
-            remote.getCurrentWindow().hide()
-          },
+          type: 'separator',
         },
         {
           label: 'Start Daemon',
@@ -135,23 +104,22 @@ export default class MenuBuilder {
         {
           label: 'Stop Daemon',
           click() {
-            let core = require('./api/core')
-            core.stop()
-          },
-        },
-        {
-          label: 'Close Window Keep Daemon',
-          click() {
-            log.info('menu.js Darwin template: close and keep')
             let settings = GetSettings()
-            settings.keepDaemon = true
-            SaveSettings(settings)
-            core.stop()
-            remote.getCurrentWindow().close()
+            if (settings.manualDaemon != true) {
+              let core = require('./api/core')
+
+              core.stop()
+            } else {
+              self.props.OpenModal('Manual Daemon Mode active invalid command')
+            }
           },
         },
         {
-          label: 'Close Wallet and Daemon',
+          type: 'separator',
+        },
+        {
+          label: 'Quit Nexus',
+          accelerator: 'CmdOrCtrl+Q',
           click() {
             log.info('menu.js darwin template: close and kill')
             let settings = GetSettings()
@@ -161,14 +129,19 @@ export default class MenuBuilder {
                   remote.getCurrentWindow().close()
                 }, 1000)
               })
+            } else {
+              RPC.PROMISE('stop', []).then(payload => {
+                core.stop()
+                remote.getCurrentWindow().close()
+              })
             }
-            core.stop()
-            remote.getCurrentWindow().close()
           },
         },
-        {
-          type: 'separator',
-        },
+      ],
+    }
+    const subMenuEdit = {
+      label: 'Edit',
+      submenu: [
         {
           label: 'Copy',
           accelerator: 'CmdOrCtrl+C',
@@ -190,19 +163,19 @@ export default class MenuBuilder {
       label: 'Settings',
       submenu: [
         {
-          label: 'Core Settings',
+          label: 'Core',
           click() {
             self.props.history.push('/Settings/Core')
           },
         },
         {
-          label: 'Application Settings',
+          label: 'Application',
           click() {
             self.props.history.push('/Settings/App')
           },
         },
         {
-          label: 'Key Management Settings',
+          label: 'Key Management',
           click() {
             if (self.props.unlocked_until !== undefined) {
               self.props.history.push('/Settings/Security')
@@ -212,20 +185,33 @@ export default class MenuBuilder {
           },
         },
         {
-          label: 'Style Settings',
+          label: 'Style',
           click() {
             self.props.history.push('/Settings/Style')
           },
         },
-
-        //TODO: take this out before 1.0
         {
-          label: 'Toggle Developer Tools',
-          accelerator: 'Alt+Command+I',
-          click: () => {
-            this.mainWindow.toggleDevTools()
+          type: 'separator',
+        },
+        {
+          label: 'Download Recent Database',
+          click() {
+            if (
+              self.props.connections !== undefined &&
+              !GetSettings().manualDaemon
+            ) {
+              let configuration = require('./api/configuration')
+              self.props.OpenBootstrapModal(true)
+              configuration.BootstrapRecentDatabase(self)
+            } else {
+              self.props.OpenModal('Please let the daemon start.')
+              setTimeout(() => {
+                self.props.CloseModal()
+              }, 3000)
+            }
           },
         },
+        //TODO: take this out before 1.0
       ],
     }
 
@@ -262,25 +248,32 @@ export default class MenuBuilder {
                     .setFullScreen(!remote.getCurrentWindow().isFullScreen())
                 },
               },
+              {
+                label: 'Toggle Developer Tools',
+                accelerator: 'Alt+Command+I',
+                click: () => {
+                  this.mainWindow.toggleDevTools()
+                },
+              },
             ],
     }
     const subMenuHelp = {
       label: 'Help',
       submenu: [
         {
-          label: 'About Nexus',
+          label: 'About',
           click() {
             self.props.history.push('/About')
           },
         },
         {
-          label: 'NexusEarth',
+          label: 'Website',
           click() {
             shell.openExternal('http://nexusearth.com')
           },
         },
         {
-          label: 'Nexusoft Github',
+          label: 'Github',
           click() {
             shell.openExternal('http://github.com/Nexusoft')
           },
@@ -288,7 +281,7 @@ export default class MenuBuilder {
       ],
     }
 
-    return [subMenuAbout, subMenuView, subMenuWindow, subMenuHelp]
+    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp]
   }
 
   buildDefaultTemplate(self) {
@@ -296,16 +289,6 @@ export default class MenuBuilder {
       {
         label: '&File',
         submenu: [
-          {
-            label: 'Key Management',
-            click: () => {
-              if (self.props.unlocked_until !== undefined) {
-                self.props.history.push('/Settings/Security')
-              } else {
-                self.props.history.push('/Settings/Unencrypted')
-              }
-            },
-          },
           {
             label: 'Back-up Wallet',
             click: () => {
@@ -335,24 +318,7 @@ export default class MenuBuilder {
               ]).then(self.props.OpenModal('Wallet Backup'))
             },
           },
-          {
-            label: 'Download Recent Database',
-            click() {
-              if (
-                self.props.connections !== undefined &&
-                !GetSettings().manualDaemon
-              ) {
-                let configuration = require('./api/configuration')
-                self.props.OpenBootstrapModal(true)
-                configuration.BootstrapRecentDatabase(self)
-              } else {
-                self.props.OpenModal('Please let the daemon start.')
-                setTimeout(() => {
-                  self.props.CloseModal()
-                }, 3000)
-              }
-            },
-          },
+
           {
             label: 'View Backups',
             click() {
@@ -373,10 +339,7 @@ export default class MenuBuilder {
             },
           },
           {
-            label: 'Send To Tray',
-            click() {
-              remote.getCurrentWindow().hide()
-            },
+            type: 'separator',
           },
           {
             label: 'Start Daemon',
@@ -393,17 +356,10 @@ export default class MenuBuilder {
             },
           },
           {
-            label: 'Close Window Keep Daemon',
-            click() {
-              log.info('menu.js default template: close and keep')
-              let settings = GetSettings()
-              settings.keepDaemon = true
-              SaveSettings(settings)
-              remote.getCurrentWindow().close()
-            },
+            type: 'separator',
           },
           {
-            label: 'Close Wallet and Daemon',
+            label: 'Quit Nexus',
             click() {
               log.info('menu.js default template: close and kill')
               let settings = GetSettings()
@@ -419,23 +375,24 @@ export default class MenuBuilder {
           },
         ],
       },
+
       {
         label: 'Settings',
         submenu: [
           {
-            label: 'Core Settings',
+            label: 'Core',
             click() {
               self.props.history.push('/Settings/Core')
             },
           },
           {
-            label: 'Application Settings',
+            label: 'Application',
             click() {
               self.props.history.push('/Settings/App')
             },
           },
           {
-            label: 'Key Management Settings',
+            label: 'Key Management',
             click() {
               if (self.props.unlocked_until !== undefined) {
                 self.props.history.push('/Settings/Security')
@@ -445,10 +402,48 @@ export default class MenuBuilder {
             },
           },
           {
-            label: 'Style Settings',
+            label: 'Style',
             click() {
               self.props.history.push('/Settings/Style')
             },
+          },
+          {
+            type: 'separator',
+          },
+          {
+            label: 'Download Recent Database',
+            click() {
+              if (
+                self.props.connections !== undefined &&
+                !GetSettings().manualDaemon
+              ) {
+                let configuration = require('./api/configuration')
+                self.props.OpenBootstrapModal(true)
+                configuration.BootstrapRecentDatabase(self)
+              } else {
+                self.props.OpenModal('Please let the daemon start.')
+                setTimeout(() => {
+                  self.props.CloseModal()
+                }, 3000)
+              }
+            },
+          },
+        ],
+      },
+      {
+        label: '&View',
+        submenu: [
+          {
+            label: 'Toggle Full Screen',
+            accelerator: 'F11',
+            click: () => {
+              remote
+                .getCurrentWindow()
+                .setFullScreen(!remote.getCurrentWindow().isFullScreen())
+            },
+          },
+          {
+            type: 'separator',
           },
           {
             label: 'Toggle &Developer Tools',
@@ -460,64 +455,22 @@ export default class MenuBuilder {
         ],
       },
       {
-        label: '&View',
-        submenu:
-          process.env.NODE_ENV === 'development'
-            ? [
-                {
-                  label: 'Reload',
-                  accelerator: 'Ctrl+R',
-                  click: () => {
-                    this.mainWindow.webContents.reload()
-                  },
-                },
-
-                {
-                  label: 'Toggle Full Screen',
-                  accelerator: 'F11',
-                  click: () => {
-                    remote
-                      .getCurrentWindow()
-                      .setFullScreen(!remote.getCurrentWindow().isFullScreen())
-                  },
-                },
-                {
-                  label: 'Toggle &Developer Tools',
-                  accelerator: 'Alt+Ctrl+I',
-                  click: () => {
-                    this.mainWindow.toggleDevTools()
-                  },
-                },
-              ]
-            : [
-                {
-                  label: 'Toggle Full Screen',
-                  accelerator: 'F11',
-                  click: () => {
-                    remote
-                      .getCurrentWindow()
-                      .setFullScreen(!remote.getCurrentWindow().isFullScreen())
-                  },
-                },
-              ],
-      },
-      {
         label: 'Help',
         submenu: [
           {
-            label: 'About Nexus',
+            label: 'About',
             click() {
               self.props.history.push('/About')
             },
           },
           {
-            label: 'NexusEarth',
+            label: 'Website',
             click() {
               shell.openExternal('http://nexusearth.com')
             },
           },
           {
-            label: 'Nexusoft Github',
+            label: 'Github',
             click() {
               shell.openExternal('http://github.com/Nexusoft')
             },

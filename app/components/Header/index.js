@@ -325,16 +325,6 @@ class Header extends Component {
         },
       },
       {
-        label: 'Close Wallet and Keep Daemon',
-        click: function() {
-          log.info('header/index.js contextmenu: close and keep')
-          let settings = GetSettings()
-          settings.keepDaemon = true
-          SaveSettings(settings)
-          mainWindow.close()
-        },
-      },
-      {
         label: 'Quit Nexus',
         click: function() {
           log.info('header/index.js contextmenu: close and kill')

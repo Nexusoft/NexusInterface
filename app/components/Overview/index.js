@@ -18,7 +18,7 @@ import fs from 'fs'
 import path from 'path'
 
 // Internal Dependencies
-import { GetSettings, SaveSettings } from 'api/settings.js'
+import { GetSettings, SaveSettings } from 'api/settings'
 import NetworkGlobe from './NetworkGlobe'
 import ContextMenuBuilder from 'contextmenu'
 import * as helpers from 'scripts/helper.js'
@@ -94,7 +94,7 @@ class Overview extends Component {
     if (WEBGL.isWebGLAvailable()) {
       this.props.setWebGLEnabled(true)
     } else {
-      this.props.setWebGLEnabled(true)
+      this.props.setWebGLEnabled(false)
       var warning = WEBGL.getWebGLErrorMessage()
       console.error(warning)
     }
@@ -109,6 +109,7 @@ class Overview extends Component {
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu)
   }
+
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.blocks > previousprops.blocks) {
@@ -117,7 +118,7 @@ class Overview extends Component {
     }
 
     if (this.props.saveSettingsFlag) {
-      require('api/settings.js').SaveSettings(this.props.settings)
+      require('../../api/settings.js').SaveSettings(this.props.settings)
     }
 
     if (this.props.webGLEnabled == false) {
@@ -131,7 +132,13 @@ class Overview extends Component {
     }
 
     if (this.props.saveSettingsFlag) {
-      require('api/settings.js').SaveSettings(this.props.settings)
+      require('../../api/settings.js').SaveSettings(this.props.settings)
+    }
+
+    if (this.props.connections == 0 && this.props.daemonAvailable == false) {
+      this.removeAllPoints()
+      this.reDrawEverything()
+      return
     }
 
     if (
@@ -142,17 +149,22 @@ class Overview extends Component {
       if (
         (previousprops.connections == undefined ||
           previousprops.connections == 0) &&
-        this.props.connections != 0 &&
+        (this.props.connections != 0 || this.props.connections != undefined) &&
         this.props.webGLEnabled !== false &&
         this.props.settings.renderGlobe === true
       ) {
         //Daemon Starting Up
         this.reDrawEverything()
-      }
-    }
-    if (this.props.connections != previousprops.connections) {
-      if (this.props.connections != 0 && previousprops.connections != 0) {
-        this.removeOldPoints()
+      } else {
+        if (
+          this.props.connections != previousprops.connections &&
+          this.props.connections !== undefined &&
+          previousprops.connections !== undefined
+        ) {
+          if (this.props.connections != 0 && previousprops.connections != 0) {
+            this.reDrawEverything()
+          }
+        }
       }
     }
   }
@@ -379,6 +391,7 @@ class Overview extends Component {
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
             handleOnAddData={e => (this.reDrawEverything = e)}
+            handleRemoveAllPoints={e => (this.removeAllPoints = e)}
             pillarColor={this.props.settings.customStyling.globePillarColorRGB}
             archColor={this.props.settings.customStyling.globeArchColorRGB}
             globeColor={this.props.settings.customStyling.globeMultiColorRGB}
@@ -506,7 +519,7 @@ class Overview extends Component {
         <Modal
           key="encrypted-modal"
           open={
-            !this.props.connections &&
+            this.daemonAvailable &&
             !this.props.experimentalOpen &&
             this.props.settings.acceptedagreement &&
             (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)

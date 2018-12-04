@@ -1,6 +1,7 @@
 import configuration from './configuration'
 import MenuBuilder from 'menu.js'
 import { GetSettings, SaveSettings } from './settings'
+import { resolve } from 'path'
 const cp = require('child_process')
 const spawn = require('cross-spawn')
 const log = require('electron-log')
@@ -72,6 +73,9 @@ function SetCoreParameters(settings) {
   verbose =
     settings.verboseLevel === undefined ? verbose : settings.verboseLevel
 
+  var forkblockCount =
+    settings.forkblocks === undefined ? 0 : settings.forkblocks
+
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push('-rpcuser=' + user)
   parameters.push('-rpcpassword=' + password)
@@ -102,6 +106,14 @@ function SetCoreParameters(settings) {
 
   // Enable detach database on shutdown (default is 0)
   if (settings.detatchDatabaseOnShutdown == true) parameters.push('-detachdb=1')
+
+  console.log(settings)
+  if (forkblockCount !== 0) {
+    parameters.push('-forkblocks=' + forkblockCount)
+    settings.forkblocks = 0
+    SaveSettings(settings)
+    console.log('Saved New Settings')
+  }
 
   log.info('Core Parameters: ' + parameters.toString())
   return parameters
@@ -154,6 +166,34 @@ function getCorePID() {
     if (PID) {
       PID = PID.replace(/"/gm, '')
     }
+    log.info('PID: ' + PID)
+    if (Number(PID) == 'NaN' || Number(PID) < '2') {
+      return 1
+    } else {
+      return Number(PID)
+    }
+  } else if (process.platform == 'darwin') {
+    var tempPID = (
+      execSync('ps -A', [], {
+        env: modEnv,
+      }) + ''
+    )
+      .split('\n')
+      .filter(process => {
+        if (process.includes(GetCoreBinaryPath())) {
+          return process
+        }
+      })
+    if (tempPID[0]) {
+      tempPID = tempPID[0].split(' ')[0]
+    }
+    var PID = tempPID.toString().replace(/^\s+|\s+$/gm, '')
+    log.info('PID: ' + PID)
+    if (Number(PID) == 'NaN' || Number(PID) < '2') {
+      return 1
+    } else {
+      return Number(PID)
+    }
   } else {
     var tempPID = (
       execSync('ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}', [], {
@@ -164,12 +204,12 @@ function getCorePID() {
       .replace(/^\s*/gm, '')
       .split(' ')[0]
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, '')
-  }
-  log.info('PID: ' + PID)
-  if (Number(PID) == 'NaN' || Number(PID) < '2') {
-    return 1
-  } else {
-    return Number(PID)
+    log.info('PID: ' + PID)
+    if (Number(PID) == 'NaN' || Number(PID) < '2') {
+      return 1
+    } else {
+      return Number(PID)
+    }
   }
 }
 
@@ -398,19 +438,13 @@ class Core extends EventEmitter {
     let settings = GetSettings()
     let coreBinaryName = GetCoreBinaryName()
     let corePID = getCorePID()
-    let coreParentPID = getCoreParentPID()
+    // let coreParentPID = getCoreParentPID();
     var cp = require('child_process')
     var execSync = require('child_process').execSync
     var modEnv = process.env
     modEnv.KILL_PID = corePID
     var _this = this
-    //let daemonProcs = utils.findPID(coreBinaryName);
 
-    //    if (prevCoreProcess == 0) {
-    //      coreprocess.kill();
-    //      responding = false;
-    //      coreprocess = null;
-    //    } else {
     if (settings.keepDaemon != true) {
       if (corePID > '1') {
         log.info('Core Manager: Killing process ' + corePID)
