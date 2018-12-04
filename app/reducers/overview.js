@@ -46,12 +46,14 @@ export default (state = initialState, action) => {
       };
     case TYPE.CLEAR_FOR_RESTART:
       return {
-        ...initialState
+        ...initialState,
+        webGLEnabled: state.webGLEnabled
       };
       break;
     case TYPE.CLEAR_FOR_BOOTSTRAPING:
       return {
         ...initialState,
+        webGLEnabled: state.webGLEnabled,
         percentDownloaded: 0.001
       };
       break;
