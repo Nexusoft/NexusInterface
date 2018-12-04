@@ -369,13 +369,11 @@ class Header extends Component {
   }
 
   signInStatus() {
-<<<<<<< HEAD
-    if (this.props.connections === undefined) {
+    if (
+      this.props.connections === undefined ||
+      this.props.daemonAvailable === false
+    ) {
       return questionmark
-=======
-    if (this.props.connections === undefined || this.props.daemonAvailable === false) {
-      return questionmark;
->>>>>>> origin/NB_2
     } else {
       if (this.props.unlocked_until === undefined) {
         return unencryptedImg
@@ -389,17 +387,13 @@ class Header extends Component {
 
   signInStatusMessage() {
     let unlockDate = new Date(this.props.unlocked_until * 1000).toLocaleString(
-<<<<<<< HEAD
       'en',
       { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
     )
-    if (this.props.connections === undefined) {
-=======
-      "en",
-      { weekday: "long", year: "numeric", month: "long", day: "numeric" }
-    );
-    if (this.props.connections === undefined || this.props.daemonAvailable === false) {
->>>>>>> origin/NB_2
+    if (
+      this.props.connections === undefined ||
+      this.props.daemonAvailable === false
+    ) {
       return (
         <FormattedMessage
           id="Header.DaemonNotLoaded"
@@ -456,7 +450,8 @@ class Header extends Component {
     let syncStatus = document.getElementById('syncStatus')
     if (
       this.props.connections === undefined ||
-      this.props.heighestPeerBlock > this.props.blocks || this.props.daemonAvailable === false
+      this.props.heighestPeerBlock > this.props.blocks ||
+      this.props.daemonAvailable === false
     ) {
       // rotates
       syncStatus.classList.remove('sync-img')
@@ -468,7 +463,10 @@ class Header extends Component {
   }
 
   returnSyncStatusTooltip() {
-    if (this.props.connections === undefined || this.props.daemonAvailable === false) {
+    if (
+      this.props.connections === undefined ||
+      this.props.daemonAvailable === false
+    ) {
       return (
         <FormattedMessage
           id="Header.DaemonNotLoaded"
@@ -772,27 +770,21 @@ class Header extends Component {
           />
           ...
         </span>
-<<<<<<< HEAD
+      )
+    } else if (
+      this.props.settings.manualDaemon === true &&
+      this.props.daemonAvailable === false
+    ) {
+      return (
+        <span>
+          <FormattedMessage
+            id="Alert.ManualDaemonDown"
+            defaultMessage="Daemon Process Not Found"
+          />
+        </span>
       )
     } else {
       return null
-=======
-      );
-    } 
-    else if (this.props.settings.manualDaemon === true && this.props.daemonAvailable === false)
-    {
-      return(
-        <span>
-        <FormattedMessage
-          id="Alert.ManualDaemonDown"
-          defaultMessage="Daemon Process Not Found"
-        />
-        </span>
-      )
-    }
-    else {
-      return null;
->>>>>>> origin/NB_2
     }
   }
 
