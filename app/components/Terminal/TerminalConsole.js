@@ -82,8 +82,8 @@ class TerminalConsole extends Component {
     }
 
     this.props.googleanalytics.SendEvent('Terminal', 'Console', 'UseCommand', 1)
-    // ...this.props.consoleOutput
-    let tempConsoleOutput = []
+    //
+    let tempConsoleOutput = [...this.props.consoleOutput]
     let splitInput = this.props.currentInput.split(' ')
     let preSanatized = splitInput[0].replace(/[^a-zA-Z0-9]/g, '')
     splitInput[0] = preSanatized

@@ -8,20 +8,24 @@ chai.should()
 chai.use(chaiAsPromised)
 this.app = null
 var appRef = null
+var errorOutput = []
+var appPath = ''
 
 describe('Application launch and Daemon Load', function() {
   this.timeout(1000000)
 
   before(function() {
+    if (process.platform === 'win32') {
+      appPath = 'release/win-unpacked/Nexus_Tritium_Wallet_Beta.exe'
+    } else if (process.platform === 'darwin') {
+      appPath = 'release/mac-unpacked/nexus-tritium-beta'
+    } else {
+      appPath = 'release/linux-unpacked/nexus-tritium-beta'
+    }
+
     this.app = new Application({
-      path: path.join(
-        __dirname,
-        '..',
-        'release/linux-unpacked/nexus-tritium-beta'
-      ),
-      args: [
-        path.join(__dirname, '..', 'release/linux-unpacked/nexus-tritium-beta'),
-      ],
+      path: path.join(__dirname, '..', appPath),
+      args: [path.join(__dirname, '..', appPath)],
     })
     appRef = this.app
     return this.app.start()
@@ -35,9 +39,27 @@ describe('Application launch and Daemon Load', function() {
     if (this.app && this.app.isRunning()) {
       //return this.app.stop()
     }
+    if (this.currentTest.state == 'failed') {
+      var testTitle = this.currentTest.title
+      console.log(this.currentTest)
+      errorOutput.push(this.currentTest.title)
+      errorOutput.push('\n')
+      errorOutput.push(this.currentTest.err)
+      errorOutput.push('\n \n \n')
+      this.app.browserWindow.capturePage().then(function(imageBuffer) {
+        let fs = require('fs')
+        fs.writeFile(
+          'Nexus_Fail_Test_' + testTitle + '.png',
+          imageBuffer,
+          function() {}
+        )
+      })
+    }
   })
 
   after(function() {
+    let fs = require('fs')
+    fs.writeFile('Nexus_Fail_Test_Stats.txt', errorOutput, function() {})
     if (this.app && this.app.isRunning()) {
       // return this.app.stop()
     }
@@ -194,6 +216,15 @@ describe('Run Page Tests', function() {
       .waitUntilTextExists('span', 'Settings', 50000)
   })
 
+  it('Test Backup wallet', function() {
+    return appRef.client
+      .waitUntilWindowLoaded()
+      .pause(1000)
+      .click('button*=Backup Wallet')
+      .waitUntilTextExists('span', 'Wallet Backed Up')
+      .pause(1000)
+  })
+
   it('Change Fiat Settings', function() {
     return appRef.client
       .waitUntilWindowLoaded()
@@ -205,12 +236,15 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/"]')
       .click()
       .waitUntilTextExists('span', '(JPY)')
+      .element('#navigation')
+      .element('a[href^="#/Settings"]')
+      .click()
+      .pause(500)
+      .element('#fiatSelector')
+      .selectByValue('USD')
   })
 
   it('Test Go Terminal', function() {
-    //console.log(this.app.client.waitUntilWindowLoaded().getWindowCount().should.eventually.equal(1).element("overviewPage"));
-
-    // .waitUntilTextExists('span',"Please wait for the daemon to load")
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
@@ -246,4 +280,28 @@ describe('Run Page Tests', function() {
       .pause(1000)
       .waitUntilTextExists('span', 'Trust List', 50000)
   })
+
+  /*
+
+  it ("Test Encryption", function () {
+    return appRef.client.waitUntilWindowLoaded().pause(5000).element("settings-container").element('a[href^="#/Settings/Unencrypted"]')
+    .click().pause(500)
+    .setValue('input[id="newPass"]',"Password")
+    .setValue('input[id="passChk"]', "Password")
+    .click('button*=Encrypt and Restart')
+    ;
+  });
+
+  it ("Test Login", function () {
+    return appRef.client.waitUntilWindowLoaded().pause(5000).element("settings-container").element('a[href^="#/Settings/Security"]')
+    .click().pause(500)
+    .setValue('input[type="date"]',"2019-1-1")
+    .setValue('input[type="time"]',"01:01")
+    .setValue('input[id="pass"]', "Password")
+    .click('button*=Submit')
+    .waitUntilTextExists('span',"Change Password",50000)
+    ;
+  });
+
+  */
 })

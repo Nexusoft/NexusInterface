@@ -17,11 +17,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
+        daemonAvailable: true,
       }
       break
     case TYPE.DAEMON_UNAVAILABLE:
+      var temp = undefined
+      if (state.connections !== undefined) {
+        temp = 0
+      }
+
       return {
         ...state,
+        connections: temp,
         daemonAvailable: action.payload,
       }
       break
@@ -39,11 +46,13 @@ export default (state = initialState, action) => {
     case TYPE.CLEAR_FOR_RESTART:
       return {
         ...initialState,
+        webGLEnabled: state.webGLEnabled,
       }
       break
     case TYPE.CLEAR_FOR_BOOTSTRAPING:
       return {
         ...initialState,
+        webGLEnabled: state.webGLEnabled,
         percentDownloaded: 0.001,
       }
       break

@@ -25,6 +25,7 @@ export default class NetworkGlobe extends Component {
     this.props.handleOnLineRender(this.testRestartLines)
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw)
     this.props.handleOnAddData(this.updatePointsOnGlobe)
+    this.props.handleRemoveAllPoints(this.removeAllPoints)
     const path = require('path')
     const globeseries = [['peers', []]]
     let geoiplookup = ''
@@ -104,10 +105,6 @@ export default class NetworkGlobe extends Component {
   }
   // Class Methods
   updatePointsOnGlobe() {
-    if (initializedWithData == true) {
-      return
-    }
-
     const globeseries = [['peers', []]]
     let geoiplookup = ''
 
@@ -153,8 +150,6 @@ export default class NetworkGlobe extends Component {
             globeseries[0][1].push(body['geoplugin_longitude'])
             globeseries[0][1].push(0.1) //temporary magnitude.
 
-            //glb = new DAT(this.threeRootElement);
-            initializedWithData = true
             glb.removePoints()
             glb.addData(globeseries[0][1], {
               format: 'magnitude',
@@ -172,15 +167,23 @@ export default class NetworkGlobe extends Component {
       glb.playCurve()
     }
   }
+  removeAllPoints() {
+    if (glb == null || glb == undefined) {
+      return
+    }
+    glb.removePoints()
+  }
 
   RemoveOldPointsAndReDraw() {
     if (glb == null || glb == undefined) {
       return
     }
-    glb.removePoints()
 
+    glb.removePoints()
+    //console.log("RemovedPoints");
     setTimeout(() => {
       glb.createPoints()
+      //console.log("CreatedNewOnes");
     }, 1000)
   }
 
