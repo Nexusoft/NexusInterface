@@ -5,6 +5,7 @@
 */
 // External Dependencies
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { remote } from 'electron'
@@ -86,7 +87,7 @@ const mapDispatchToProps = dispatch => ({
 
 class Transactions extends Component {
   static contextTypes = {
-    router: React.PropTypes.object,
+    router: PropTypes.object,
   }
   constructor(props) {
     super(props)
