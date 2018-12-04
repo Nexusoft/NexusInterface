@@ -21,6 +21,8 @@ import { GetSettings, SaveSettings } from 'api/settings'
 import GOOGLE from 'scripts/googleanalytics'
 import configuration from 'api/configuration'
 import Icon from 'components/common/Icon'
+import { colors } from 'style/consts'
+import { relative } from 'style/utils'
 
 // Images
 import questionmark from 'images/questionmark.svg'
@@ -37,6 +39,17 @@ const Logo = styled(Icon)({
   display: 'block',
   height: 49,
   filter: 'var(--nxs-logo)',
+  fill: colors.primary,
+})
+
+const Beta = styled.div({
+  color: 'white',
+  fontSize: 12,
+  position: 'absolute',
+  bottom: 18,
+  right: -26,
+  letterSpacing: 1,
+  textTransform: 'uppercase',
 })
 
 var tray = tray || null
@@ -945,8 +958,9 @@ class Header extends Component {
           </div>
         </div>
 
-        <Link to="/">
-          <Logo icon={logoFull} className="animated zoomIn" />
+        <Link to="/" className="animated zoomIn relative">
+          <Logo icon={logoFull} />
+          <Beta>BETA</Beta>
         </Link>
         <div id="hdr-line" className="animated fadeIn " />
         {this.daemonStatus()}

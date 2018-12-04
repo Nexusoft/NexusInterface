@@ -173,6 +173,15 @@ input[type="text"]::placeholder {
   filter: var(--icon-menu);
 }
 
+/* Utility classes */
+.relative {
+  position: relative;
+}
+
+.v-align {
+  vertical-align: middle;
+}
+
 /*------------------------------------------------------------------
 MEDIA QUERIES
 ------------------------------------------------------------------*/
