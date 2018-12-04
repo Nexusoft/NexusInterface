@@ -87,8 +87,8 @@ class TerminalConsole extends Component {
       "UseCommand",
       1
     );
-    // ...this.props.consoleOutput
-    let tempConsoleOutput = [];
+    //
+    let tempConsoleOutput = [...this.props.consoleOutput];
     let splitInput = this.props.currentInput.split(" ");
     let preSanatized = splitInput[0].replace(/[^a-zA-Z0-9]/g, "");
     splitInput[0] = preSanatized;
@@ -159,7 +159,7 @@ class TerminalConsole extends Component {
           }
         })
         .catch(error => {
-          if (error.message !== undefined){
+          if (error.message !== undefined) {
             tempConsoleOutput.push(
               "Error: " +
                 [error.error.message] +
@@ -167,9 +167,7 @@ class TerminalConsole extends Component {
                 error.error.code +
                 ")"
             );
-          }
-          else
-          {
+          } else {
             //This is the error if the rpc is unavailable
             tempConsoleOutput.push(error);
           }
