@@ -11,18 +11,20 @@ import { FormattedMessage } from 'react-intl'
 import { write } from 'fs'
 import styled from '@emotion/styled'
 
-// Internal Dependencies
+// Internal Global Dependencies
 import MenuBuilder from 'menu'
-import styles from './style.css'
-import * as RPC from 'scripts/rpc'
 import * as TYPE from 'actions/actiontypes'
+import * as RPC from 'scripts/rpc'
 import * as actionsCreators from 'actions/headerActionCreators'
 import { GetSettings, SaveSettings } from 'api/settings'
 import GOOGLE from 'scripts/googleanalytics'
 import configuration from 'api/configuration'
 import Icon from 'components/common/Icon'
-import { colors } from 'style/consts'
-import { relative } from 'style/utils'
+import HorizontalLine from 'components/common/HorizontalLine'
+import { colors, consts, timing, animations } from 'styles'
+
+// Internal Local Dependencies
+import './style.css'
 
 // Images
 import questionmark from 'images/questionmark.svg'
@@ -34,10 +36,17 @@ import statBad from 'images/sync.svg'
 import stakeImg from 'images/staking.svg'
 import logoFull from 'images/logo-full-beta.sprite.svg'
 
+const LogoLink = styled(Link)({
+  position: 'relative',
+  animationName: animations.expand,
+  animationDuration: timing.slow,
+  animationTimingFunction: consts.enhancedEaseOut,
+})
+
 const Logo = styled(Icon)({
   margin: '1em 0',
   display: 'block',
-  height: 49,
+  height: 50,
   filter: 'var(--nxs-logo)',
   fill: colors.primary,
 })
@@ -50,6 +59,12 @@ const Beta = styled.div({
   right: -26,
   letterSpacing: 1,
   textTransform: 'uppercase',
+})
+
+const HeaderLine = styled(HorizontalLine)({
+  '@media (min-width: 300px)': {
+    marginTop: -10,
+  },
 })
 
 var tray = tray || null
@@ -980,11 +995,11 @@ class Header extends Component {
           </div>
         </div>
 
-        <Link to="/" className="animated zoomIn relative">
+        <LogoLink to="/">
           <Logo icon={logoFull} />
           <Beta>BETA</Beta>
-        </Link>
-        <div id="hdr-line" className="animated fadeIn " />
+        </LogoLink>
+        <HeaderLine width="80%" />
         {this.daemonStatus()}
       </div>
     )

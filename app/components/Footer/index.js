@@ -7,8 +7,11 @@ Last Modified by: Brian Smith
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 
-// Internal Dependencies
-import styles from './style.css'
+// Internal Global Depnedencies
+import HorizontalLine from 'components/common/HorizontalLine'
+
+// Internal Local Dependencies
+import './style.css'
 
 // Images
 import mainlogo from 'images/logo.svg'
@@ -28,7 +31,7 @@ export default class Footer extends Component {
   render() {
     return (
       <div id="Footer">
-        <div id="ftr-line" className="animated fadeIn " />
+        <HorizontalLine width="60%" />
         <div id="navigation-mobile" className="animated bounceInUp hidden">
           <NavLink exact to="/">
             <img src={mainlogo} alt="Overview" />

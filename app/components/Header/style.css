@@ -10,18 +10,6 @@
   overflow: initial !important; /* override #App > div style to make modules have scrollbars if larger than viewport */
 }
 
-#hdr-line {
-  width: 80%;
-  height: 4px;
-  margin: 0 auto;
-  background: -webkit-linear-gradient(
-    left,
-    transparent 0%,
-    var(--color-2) 50%,
-    transparent 100%
-  );
-}
-
 #settings-menu {
   display: inline-block;
   position: absolute;
@@ -109,9 +97,6 @@ MEDIA QUERIES
 ------------------------------------------------------------------*/
 
 @media (min-width: 300px) {
-  #hdr-line {
-    margin-top: -10px;
-  }
   .noDaemonPort {
     top: 70px;
   }

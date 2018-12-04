@@ -17,19 +17,6 @@
   );
 }
 
-#ftr-line {
-  width: 60%;
-  height: 2px;
-  margin: 0 auto 5px;
-  background: -webkit-linear-gradient(
-    left,
-    transparent 0%,
-    var(--color-2) 50%,
-    transparent 100%
-  );
-  z-index: 1;
-}
-
 /* RESPONSIVE MENU */
 
 #navigation-mobile {
