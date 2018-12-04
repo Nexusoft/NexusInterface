@@ -136,16 +136,27 @@ export default merge.smart(baseConfig, {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         use: 'file-loader',
       },
-      // SVG Font
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'image/svg+xml',
+        oneOf: [
+          // SVG Sprite icons
+          {
+            test: /\.sprite.svg$/,
+            use: {
+              loader: 'svg-sprite-loader',
+            },
           },
-        },
+          // SVG Font
+          {
+            use: {
+              loader: 'url-loader',
+              options: {
+                limit: 10000,
+                mimetype: 'image/svg+xml',
+              },
+            },
+          },
+        ],
       },
       // Common Image Formats
       {

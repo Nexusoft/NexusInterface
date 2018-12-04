@@ -7,6 +7,9 @@ import electron from 'electron'
 import Modal from 'react-responsive-modal'
 import CustomProperties from 'react-custom-properties'
 import log from 'electron-log'
+import { FormattedMessage } from 'react-intl'
+import { write } from 'fs'
+import styled from '@emotion/styled'
 
 // Internal Dependencies
 import MenuBuilder from 'menu'
@@ -17,6 +20,7 @@ import * as actionsCreators from 'actions/headerActionCreators'
 import { GetSettings, SaveSettings } from 'api/settings'
 import GOOGLE from 'scripts/googleanalytics'
 import configuration from 'api/configuration'
+import Icon from 'components/common/Icon'
 
 // Images
 import questionmark from 'images/questionmark.svg'
@@ -26,10 +30,15 @@ import unlockImg from 'images/lock-minting.svg'
 import statGood from 'images/status-good.svg'
 import statBad from 'images/sync.svg'
 import stakeImg from 'images/staking.svg'
-import logoFull from 'images/logo-full-beta.svg'
-import { write } from 'fs'
+import logoFull from 'images/logo-full-beta.sprite.svg'
 
-import { FormattedMessage } from 'react-intl'
+const Logo = styled(Icon)({
+  margin: '1em 0',
+  display: 'block',
+  height: 49,
+  filter: 'var(--nxs-logo)',
+})
+
 var tray = tray || null
 let mainWindow = electron.remote.getCurrentWindow()
 var checkportinterval // shouldbemoved
@@ -937,12 +946,7 @@ class Header extends Component {
         </div>
 
         <Link to="/">
-          <img
-            id="logo"
-            className="animated zoomIn"
-            src={logoFull}
-            alt="Nexus Logo"
-          />
+          <Logo icon={logoFull} className="animated zoomIn" />
         </Link>
         <div id="hdr-line" className="animated fadeIn " />
         {this.daemonStatus()}
