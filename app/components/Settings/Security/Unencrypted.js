@@ -7,7 +7,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
-
+import { remote } from 'electron'
 // Internal Dependencies
 import core from 'api/core'
 import styles from './style.css'
@@ -29,6 +29,8 @@ const mapDispatchToProps = dispatch => ({
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type })
   },
+  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
+  ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
 })
 
 class Unencrypted extends Component {
@@ -116,21 +118,26 @@ class Unencrypted extends Component {
       if (!/[-$/&*|<>]/.test(newPass.value)) {
         if (newPass.value === passChk.value) {
           if (!(newPass.value.endsWith(' ') || newPass.value.startsWith(' '))) {
-            RPC.PROMISE('encryptwallet', [newPass.value]).then(payload => {
-              if (payload === null) {
-                pass.value = ''
+            RPC.PROMISE('encryptwallet', [newPass.value])
+              .then(payload => {
+                console.log(payload)
                 newPass.value = ''
                 passChk.value = ''
                 this.props.busy(false)
                 this.props.OpenModal('Wallet has been encrypted')
-                this.props.history.push()
+                this.props.ResetForEncryptionRestart()
+                console.log(this.props.history)
+
                 // Start the daemon again... give it maybe 5 seconds.
                 setTimeout(() => {
-                  const core = electron.remote.getGlobal('core')
-                  core.start()
+                  this.props.CloseModal()
+                  remote.getGlobal('core').start()
+                  this.props.history.replace('/')
                 }, 5000)
-              }
-            })
+              })
+              .catch(e => {
+                this.props.OpenModal(e)
+              })
           } else {
             passChk.value = ''
             passHint.innerText = 'Password cannot start or end with spaces'
@@ -148,7 +155,7 @@ class Unencrypted extends Component {
         passChk.focus()
       }
     } else {
-      pass.focus()
+      passChk.focus()
     }
   }
 
