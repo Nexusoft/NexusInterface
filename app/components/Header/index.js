@@ -7,7 +7,6 @@ import electron from 'electron'
 import Modal from 'react-responsive-modal'
 import CustomProperties from 'react-custom-properties'
 import log from 'electron-log'
-import { write } from 'fs'
 import styled from 'react-emotion'
 import { FormattedMessage } from 'react-intl'
 
