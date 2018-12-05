@@ -14,7 +14,7 @@
  */
 
 declare module 'fbjs-scripts' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,73 +23,73 @@ declare module 'fbjs-scripts' {
  * needed.
  */
 declare module 'fbjs-scripts/babel/default-options' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'fbjs-scripts/gulp/check-dependencies' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'fbjs-scripts/gulp/module-map' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'fbjs-scripts/gulp/shared/provides-module' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'fbjs-scripts/gulp/strip-provides-module' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'fbjs-scripts/jest/createCacheKeyFunction' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'fbjs-scripts/jest/environment' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'fbjs-scripts/jest/preprocessor' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'fbjs-scripts/node/check-dev-engines' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'fbjs-scripts/node/check-lib-requires' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'fbjs-scripts/babel/default-options.js' {
-  declare module.exports: $Exports<'fbjs-scripts/babel/default-options'>;
+  declare module.exports: $Exports<'fbjs-scripts/babel/default-options'>
 }
 declare module 'fbjs-scripts/gulp/check-dependencies.js' {
-  declare module.exports: $Exports<'fbjs-scripts/gulp/check-dependencies'>;
+  declare module.exports: $Exports<'fbjs-scripts/gulp/check-dependencies'>
 }
 declare module 'fbjs-scripts/gulp/module-map.js' {
-  declare module.exports: $Exports<'fbjs-scripts/gulp/module-map'>;
+  declare module.exports: $Exports<'fbjs-scripts/gulp/module-map'>
 }
 declare module 'fbjs-scripts/gulp/shared/provides-module.js' {
-  declare module.exports: $Exports<'fbjs-scripts/gulp/shared/provides-module'>;
+  declare module.exports: $Exports<'fbjs-scripts/gulp/shared/provides-module'>
 }
 declare module 'fbjs-scripts/gulp/strip-provides-module.js' {
-  declare module.exports: $Exports<'fbjs-scripts/gulp/strip-provides-module'>;
+  declare module.exports: $Exports<'fbjs-scripts/gulp/strip-provides-module'>
 }
 declare module 'fbjs-scripts/jest/createCacheKeyFunction.js' {
-  declare module.exports: $Exports<'fbjs-scripts/jest/createCacheKeyFunction'>;
+  declare module.exports: $Exports<'fbjs-scripts/jest/createCacheKeyFunction'>
 }
 declare module 'fbjs-scripts/jest/environment.js' {
-  declare module.exports: $Exports<'fbjs-scripts/jest/environment'>;
+  declare module.exports: $Exports<'fbjs-scripts/jest/environment'>
 }
 declare module 'fbjs-scripts/jest/preprocessor.js' {
-  declare module.exports: $Exports<'fbjs-scripts/jest/preprocessor'>;
+  declare module.exports: $Exports<'fbjs-scripts/jest/preprocessor'>
 }
 declare module 'fbjs-scripts/node/check-dev-engines.js' {
-  declare module.exports: $Exports<'fbjs-scripts/node/check-dev-engines'>;
+  declare module.exports: $Exports<'fbjs-scripts/node/check-dev-engines'>
 }
 declare module 'fbjs-scripts/node/check-lib-requires.js' {
-  declare module.exports: $Exports<'fbjs-scripts/node/check-lib-requires'>;
+  declare module.exports: $Exports<'fbjs-scripts/node/check-lib-requires'>
 }

@@ -14,7 +14,7 @@
  */
 
 declare module 'babel-plugin-dynamic-import-webpack' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,10 +23,12 @@ declare module 'babel-plugin-dynamic-import-webpack' {
  * needed.
  */
 declare module 'babel-plugin-dynamic-import-webpack/lib/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'babel-plugin-dynamic-import-webpack/lib/index.js' {
-  declare module.exports: $Exports<'babel-plugin-dynamic-import-webpack/lib/index'>;
+  declare module.exports: $Exports<
+    'babel-plugin-dynamic-import-webpack/lib/index'
+  >
 }

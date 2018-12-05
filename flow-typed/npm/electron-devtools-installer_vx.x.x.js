@@ -14,7 +14,7 @@
  */
 
 declare module 'electron-devtools-installer' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,45 +23,49 @@ declare module 'electron-devtools-installer' {
  * needed.
  */
 declare module 'electron-devtools-installer/dist/downloadChromeExtension' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-devtools-installer/dist/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-devtools-installer/dist/utils' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-devtools-installer/src/downloadChromeExtension' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-devtools-installer/src/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-devtools-installer/src/utils' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'electron-devtools-installer/dist/downloadChromeExtension.js' {
-  declare module.exports: $Exports<'electron-devtools-installer/dist/downloadChromeExtension'>;
+  declare module.exports: $Exports<
+    'electron-devtools-installer/dist/downloadChromeExtension'
+  >
 }
 declare module 'electron-devtools-installer/dist/index.js' {
-  declare module.exports: $Exports<'electron-devtools-installer/dist/index'>;
+  declare module.exports: $Exports<'electron-devtools-installer/dist/index'>
 }
 declare module 'electron-devtools-installer/dist/utils.js' {
-  declare module.exports: $Exports<'electron-devtools-installer/dist/utils'>;
+  declare module.exports: $Exports<'electron-devtools-installer/dist/utils'>
 }
 declare module 'electron-devtools-installer/src/downloadChromeExtension.js' {
-  declare module.exports: $Exports<'electron-devtools-installer/src/downloadChromeExtension'>;
+  declare module.exports: $Exports<
+    'electron-devtools-installer/src/downloadChromeExtension'
+  >
 }
 declare module 'electron-devtools-installer/src/index.js' {
-  declare module.exports: $Exports<'electron-devtools-installer/src/index'>;
+  declare module.exports: $Exports<'electron-devtools-installer/src/index'>
 }
 declare module 'electron-devtools-installer/src/utils.js' {
-  declare module.exports: $Exports<'electron-devtools-installer/src/utils'>;
+  declare module.exports: $Exports<'electron-devtools-installer/src/utils'>
 }

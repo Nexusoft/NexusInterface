@@ -14,7 +14,7 @@
  */
 
 declare module 'babel-preset-react-hmre' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,16 +23,16 @@ declare module 'babel-preset-react-hmre' {
  * needed.
  */
 declare module 'babel-preset-react-hmre/test/Test' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'babel-preset-react-hmre/index' {
-  declare module.exports: $Exports<'babel-preset-react-hmre'>;
+  declare module.exports: $Exports<'babel-preset-react-hmre'>
 }
 declare module 'babel-preset-react-hmre/index.js' {
-  declare module.exports: $Exports<'babel-preset-react-hmre'>;
+  declare module.exports: $Exports<'babel-preset-react-hmre'>
 }
 declare module 'babel-preset-react-hmre/test/Test.js' {
-  declare module.exports: $Exports<'babel-preset-react-hmre/test/Test'>;
+  declare module.exports: $Exports<'babel-preset-react-hmre/test/Test'>
 }

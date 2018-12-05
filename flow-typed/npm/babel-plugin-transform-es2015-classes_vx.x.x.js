@@ -14,7 +14,7 @@
  */
 
 declare module 'babel-plugin-transform-es2015-classes' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,31 +23,39 @@ declare module 'babel-plugin-transform-es2015-classes' {
  * needed.
  */
 declare module 'babel-plugin-transform-es2015-classes/lib/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'babel-plugin-transform-es2015-classes/lib/lib/memoise-decorators' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'babel-plugin-transform-es2015-classes/lib/loose' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'babel-plugin-transform-es2015-classes/lib/vanilla' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'babel-plugin-transform-es2015-classes/lib/index.js' {
-  declare module.exports: $Exports<'babel-plugin-transform-es2015-classes/lib/index'>;
+  declare module.exports: $Exports<
+    'babel-plugin-transform-es2015-classes/lib/index'
+  >
 }
 declare module 'babel-plugin-transform-es2015-classes/lib/lib/memoise-decorators.js' {
-  declare module.exports: $Exports<'babel-plugin-transform-es2015-classes/lib/lib/memoise-decorators'>;
+  declare module.exports: $Exports<
+    'babel-plugin-transform-es2015-classes/lib/lib/memoise-decorators'
+  >
 }
 declare module 'babel-plugin-transform-es2015-classes/lib/loose.js' {
-  declare module.exports: $Exports<'babel-plugin-transform-es2015-classes/lib/loose'>;
+  declare module.exports: $Exports<
+    'babel-plugin-transform-es2015-classes/lib/loose'
+  >
 }
 declare module 'babel-plugin-transform-es2015-classes/lib/vanilla.js' {
-  declare module.exports: $Exports<'babel-plugin-transform-es2015-classes/lib/vanilla'>;
+  declare module.exports: $Exports<
+    'babel-plugin-transform-es2015-classes/lib/vanilla'
+  >
 }

@@ -14,7 +14,7 @@
  */
 
 declare module 'extract-text-webpack-plugin' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,30 +23,34 @@ declare module 'extract-text-webpack-plugin' {
  * needed.
  */
 declare module 'extract-text-webpack-plugin/ExtractedModule' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'extract-text-webpack-plugin/loader' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'extract-text-webpack-plugin/OrderUndefinedError' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'extract-text-webpack-plugin/ExtractedModule.js' {
-  declare module.exports: $Exports<'extract-text-webpack-plugin/ExtractedModule'>;
+  declare module.exports: $Exports<
+    'extract-text-webpack-plugin/ExtractedModule'
+  >
 }
 declare module 'extract-text-webpack-plugin/index' {
-  declare module.exports: $Exports<'extract-text-webpack-plugin'>;
+  declare module.exports: $Exports<'extract-text-webpack-plugin'>
 }
 declare module 'extract-text-webpack-plugin/index.js' {
-  declare module.exports: $Exports<'extract-text-webpack-plugin'>;
+  declare module.exports: $Exports<'extract-text-webpack-plugin'>
 }
 declare module 'extract-text-webpack-plugin/loader.js' {
-  declare module.exports: $Exports<'extract-text-webpack-plugin/loader'>;
+  declare module.exports: $Exports<'extract-text-webpack-plugin/loader'>
 }
 declare module 'extract-text-webpack-plugin/OrderUndefinedError.js' {
-  declare module.exports: $Exports<'extract-text-webpack-plugin/OrderUndefinedError'>;
+  declare module.exports: $Exports<
+    'extract-text-webpack-plugin/OrderUndefinedError'
+  >
 }

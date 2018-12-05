@@ -10,7 +10,16 @@
     "stage-0",
     "react"
   ],
-  "plugins": ["add-module-exports", "dynamic-import-webpack"],
+  "plugins": [
+    "add-module-exports",
+    "dynamic-import-webpack",
+    [
+      "module-resolver",
+      {
+        "root": ["./app"]
+      }
+    ]
+  ],
   "env": {
     "production": {
       "presets": ["react-optimize"],

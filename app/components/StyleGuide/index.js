@@ -4,34 +4,34 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { remote } from "electron";
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { remote } from 'electron'
 
 // Internal Dependencies
-import styles from "./style.css";
-import ContextMenuBuilder from "../../contextmenu";
+import styles from './style.css'
+import ContextMenuBuilder from 'contextmenu'
 
 // Images
-import styleimg from "../../images/developer.svg";
+import styleimg from 'images/developer.svg'
 
 export default class StyleGuide extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    window.addEventListener("contextmenu", this.setupcontextmenu, false);
+    window.addEventListener('contextmenu', this.setupcontextmenu, false)
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    window.removeEventListener("contextmenu", this.setupcontextmenu);
+    window.removeEventListener('contextmenu', this.setupcontextmenu)
   }
 
   // Class Methods
   setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
+    e.preventDefault()
+    const contextmenu = new ContextMenuBuilder().defaultContext
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
+    defaultcontextmenu.popup(remote.getCurrentWindow())
   }
 
   // Mandatory React method
@@ -128,7 +128,7 @@ export default class StyleGuide extends Component {
 					&lt;h2&gt;Aa&lt;/h2&gt;
 				&lt;h3&gt;Aa&lt;/h3&gt;
 				&lt;h4&gt;Aa&lt;/h4&gt;
-				`}{" "}
+				`}{' '}
                 </code>
               </pre>
             </section>
@@ -237,7 +237,7 @@ export default class StyleGuide extends Component {
                   &lt;p&gt; &lt;a href="#"&gt;anchor link&lt;/a&gt;&lt;br&gt;
                   &lt;abbr title="abbreviation title"&gt; abbreviation
                   &lt;/abbr&gt;&lt;br&gt; &lt;b&gt;bold text&lt;/b&gt;&lt;br&gt;
-                  &lt;cite&gt;citation&lt;/cite&gt;&lt;br&gt; &lt;code&gt;.code{" "}
+                  &lt;cite&gt;citation&lt;/cite&gt;&lt;br&gt; &lt;code&gt;.code{' '}
                   {`{color: red;}`}
                   &lt;/code&gt;&lt;br&gt; &lt;del&gt;deleted
                   text&lt;/del&gt;&lt;br&gt; &lt;dfn title="definition term
@@ -294,7 +294,7 @@ export default class StyleGuide extends Component {
               <pre className="code-example">
                 <code>
                   &lt;pre&gt;Lorem ipsum dolor sit amet consectetuer adipiscing
-                  elit &lt;/pre&gt; &lt;pre&gt;&lt;code&gt;code{" "}
+                  elit &lt;/pre&gt; &lt;pre&gt;&lt;code&gt;code{' '}
                   {`{
 					text-align: left;
 					background: #eee;
@@ -568,7 +568,7 @@ export default class StyleGuide extends Component {
                     </fieldset>
 
                     <p>
-                      <input type="submit" className="button primary" />{" "}
+                      <input type="submit" className="button primary" />{' '}
                       <input type="reset" value="Reset" className="button" />
                     </p>
                   </form>
@@ -632,7 +632,7 @@ export default class StyleGuide extends Component {
                     </fieldset>
 
                     <p>
-                      <input type="submit" className="button primary" />{" "}
+                      <input type="submit" className="button primary" />{' '}
                       <input type="reset" value="Reset" className="button" />
                     </p>
                   </form>
@@ -696,7 +696,7 @@ export default class StyleGuide extends Component {
                     </fieldset>
 
                     <p>
-                      <input type="submit" className="button primary" />{" "}
+                      <input type="submit" className="button primary" />{' '}
                       <input type="reset" value="Reset" className="button" />
                     </p>
                   </form>
@@ -831,6 +831,6 @@ export default class StyleGuide extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

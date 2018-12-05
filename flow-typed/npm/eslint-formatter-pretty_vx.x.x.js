@@ -14,7 +14,7 @@
  */
 
 declare module 'eslint-formatter-pretty' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,11 +23,10 @@ declare module 'eslint-formatter-pretty' {
  * needed.
  */
 
-
 // Filename aliases
 declare module 'eslint-formatter-pretty/index' {
-  declare module.exports: $Exports<'eslint-formatter-pretty'>;
+  declare module.exports: $Exports<'eslint-formatter-pretty'>
 }
 declare module 'eslint-formatter-pretty/index.js' {
-  declare module.exports: $Exports<'eslint-formatter-pretty'>;
+  declare module.exports: $Exports<'eslint-formatter-pretty'>
 }

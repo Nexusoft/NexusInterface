@@ -14,7 +14,7 @@
  */
 
 declare module 'babel-plugin-dev-expression' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,10 +23,10 @@ declare module 'babel-plugin-dev-expression' {
  * needed.
  */
 declare module 'babel-plugin-dev-expression/dev-expression' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'babel-plugin-dev-expression/dev-expression.js' {
-  declare module.exports: $Exports<'babel-plugin-dev-expression/dev-expression'>;
+  declare module.exports: $Exports<'babel-plugin-dev-expression/dev-expression'>
 }
