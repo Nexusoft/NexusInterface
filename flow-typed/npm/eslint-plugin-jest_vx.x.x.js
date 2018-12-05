@@ -14,7 +14,7 @@
  */
 
 declare module 'eslint-plugin-jest' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,45 +23,53 @@ declare module 'eslint-plugin-jest' {
  * needed.
  */
 declare module 'eslint-plugin-jest/build/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'eslint-plugin-jest/build/rules/no-disabled-tests' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'eslint-plugin-jest/build/rules/no-focused-tests' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'eslint-plugin-jest/build/rules/no-identical-title' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'eslint-plugin-jest/build/rules/types' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'eslint-plugin-jest/build/rules/valid-expect' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'eslint-plugin-jest/build/index.js' {
-  declare module.exports: $Exports<'eslint-plugin-jest/build/index'>;
+  declare module.exports: $Exports<'eslint-plugin-jest/build/index'>
 }
 declare module 'eslint-plugin-jest/build/rules/no-disabled-tests.js' {
-  declare module.exports: $Exports<'eslint-plugin-jest/build/rules/no-disabled-tests'>;
+  declare module.exports: $Exports<
+    'eslint-plugin-jest/build/rules/no-disabled-tests'
+  >
 }
 declare module 'eslint-plugin-jest/build/rules/no-focused-tests.js' {
-  declare module.exports: $Exports<'eslint-plugin-jest/build/rules/no-focused-tests'>;
+  declare module.exports: $Exports<
+    'eslint-plugin-jest/build/rules/no-focused-tests'
+  >
 }
 declare module 'eslint-plugin-jest/build/rules/no-identical-title.js' {
-  declare module.exports: $Exports<'eslint-plugin-jest/build/rules/no-identical-title'>;
+  declare module.exports: $Exports<
+    'eslint-plugin-jest/build/rules/no-identical-title'
+  >
 }
 declare module 'eslint-plugin-jest/build/rules/types.js' {
-  declare module.exports: $Exports<'eslint-plugin-jest/build/rules/types'>;
+  declare module.exports: $Exports<'eslint-plugin-jest/build/rules/types'>
 }
 declare module 'eslint-plugin-jest/build/rules/valid-expect.js' {
-  declare module.exports: $Exports<'eslint-plugin-jest/build/rules/valid-expect'>;
+  declare module.exports: $Exports<
+    'eslint-plugin-jest/build/rules/valid-expect'
+  >
 }

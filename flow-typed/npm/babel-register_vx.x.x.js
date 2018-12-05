@@ -14,7 +14,7 @@
  */
 
 declare module 'babel-register' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,24 +23,24 @@ declare module 'babel-register' {
  * needed.
  */
 declare module 'babel-register/lib/browser' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'babel-register/lib/cache' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'babel-register/lib/node' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'babel-register/lib/browser.js' {
-  declare module.exports: $Exports<'babel-register/lib/browser'>;
+  declare module.exports: $Exports<'babel-register/lib/browser'>
 }
 declare module 'babel-register/lib/cache.js' {
-  declare module.exports: $Exports<'babel-register/lib/cache'>;
+  declare module.exports: $Exports<'babel-register/lib/cache'>
 }
 declare module 'babel-register/lib/node.js' {
-  declare module.exports: $Exports<'babel-register/lib/node'>;
+  declare module.exports: $Exports<'babel-register/lib/node'>
 }

@@ -1,4 +1,4 @@
-import * as TYPE from "../actions/actiontypes";
+import * as TYPE from 'actions/actiontypes'
 
 const initialState = {
   USD: 0,
@@ -8,8 +8,8 @@ const initialState = {
   USDpercentChange: 0,
   percentDownloaded: 0,
   webGLEnabled: false,
-  daemonAvailable: false
-};
+  daemonAvailable: false,
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -17,77 +17,76 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
-        daemonAvailable:true
-      };
-      break;
+        daemonAvailable: true,
+      }
+      break
     case TYPE.DAEMON_UNAVAILABLE:
-    var temp = undefined;
-    if (state.connections !== undefined)
-    {
-      temp = 0;
-    }
-      
+      var temp = undefined
+      if (state.connections !== undefined) {
+        temp = 0
+      }
+
       return {
         ...state,
         connections: temp,
-        daemonAvailable: action.payload
-      };
-    break;
+        daemonAvailable: action.payload,
+      }
+      break
     case TYPE.SET_WEBGL_ENABLED:
       return {
         ...state,
-        webGLEnabled: action.payload
-      };
-      break;
+        webGLEnabled: action.payload,
+      }
+      break
     case TYPE.SET_PERCENT_DOWNLOADED:
       return {
         ...state,
-        percentDownloaded: action.payload
-      };
+        percentDownloaded: action.payload,
+      }
     case TYPE.CLEAR_FOR_RESTART:
       return {
         ...initialState,
-        webGLEnabled: state.webGLEnabled
-      };
-      break;
+        webGLEnabled: state.webGLEnabled,
+      }
+      break
     case TYPE.CLEAR_FOR_BOOTSTRAPING:
       return {
         ...initialState,
         webGLEnabled: state.webGLEnabled,
-        percentDownloaded: 0.001
-      };
-      break;
+        percentDownloaded: 0.001,
+      }
+      break
     case TYPE.SET_EXPERIMENTAL_WARNING:
       return {
         ...state,
-        experimentalOpen: action.payload
-      };
-      break;
+        experimentalOpen: action.payload,
+      }
+      break
     case TYPE.USD_RATE:
       return {
         ...state,
-        USD: action.payload
-      };
-      break;
+        USD: action.payload,
+      }
+      break
     case TYPE.BTC_RATE:
       return {
         ...state,
-        BTC: action.payload
-      };
-      break;
+        BTC: action.payload,
+      }
+      break
     case TYPE.CHANGE_24:
       return {
         ...state,
-        USDpercentChange: action.payload
-      };
-      break;
+        USDpercentChange: action.payload,
+      }
+      break
     case TYPE.SET_SUPPLY:
       return {
         ...state,
-        circulatingSupply: action.payload
-      };
-      break;
+        circulatingSupply: action.payload,
+      }
+      break
     default:
-      return state;
+      return state
   }
-};
+}

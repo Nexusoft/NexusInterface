@@ -4,30 +4,30 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 // Internal Dependencies
-import styles from "./style.css";
+import styles from './style.css'
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.common };
-};
+  return { ...state.common }
+}
 //const mapDispatchToProps = dispatch => {};
 
 class Loader extends Component {
   state = {
-    loading: true
-  };
+    loading: true,
+  }
   // React Method (Life cycle hook)
   componentDidMount() {
-    setTimeout(() => this.setState({ loading: false }), 5000);
+    setTimeout(() => this.setState({ loading: false }), 5000)
   }
   // Mandatory React method
   render() {
-    const { loading } = this.state;
+    const { loading } = this.state
 
     if (loading) {
       return (
@@ -44,15 +44,15 @@ class Loader extends Component {
           </div>
           <div id="version">Nexus Tritium Wallet</div>
         </div>
-      );
+      )
     }
 
-    return null; // render null when app is ready
+    return null // render null when app is ready
   }
 }
 
 // Mandatory React-Redux method
 export default connect(
   mapStateToProps
-//  mapDispatchToProps
-)(Loader);
+  //  mapDispatchToProps
+)(Loader)

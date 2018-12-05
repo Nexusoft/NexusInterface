@@ -14,7 +14,7 @@
  */
 
 declare module 'file-loader' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,11 +23,10 @@ declare module 'file-loader' {
  * needed.
  */
 
-
 // Filename aliases
 declare module 'file-loader/index' {
-  declare module.exports: $Exports<'file-loader'>;
+  declare module.exports: $Exports<'file-loader'>
 }
 declare module 'file-loader/index.js' {
-  declare module.exports: $Exports<'file-loader'>;
+  declare module.exports: $Exports<'file-loader'>
 }
