@@ -135,7 +135,12 @@ class Overview extends Component {
       require('../../api/settings.js').SaveSettings(this.props.settings)
     }
 
-    if (this.props.connections == 0 && this.props.daemonAvailable == false) {
+    if (
+      (this.props.connections == 0 ||
+        (this.props.connections == undefined &&
+          this.props.percentDownloaded == 0.001)) &&
+      this.props.daemonAvailable == false
+    ) {
       this.removeAllPoints()
       this.reDrawEverything()
       return
