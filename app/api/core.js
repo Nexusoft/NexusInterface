@@ -75,9 +75,8 @@ function SetCoreParameters(settings) {
   verbose =
     settings.verboseLevel === undefined ? verbose : settings.verboseLevel;
 
-  var forkblockCount = 
+  var forkblockCount =
     settings.forkblocks === undefined ? 0 : settings.forkblocks;
-
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
   parameters.push("-rpcuser=" + user);
@@ -111,11 +110,9 @@ function SetCoreParameters(settings) {
   if (settings.detatchDatabaseOnShutdown == true)
     parameters.push("-detachdb=1");
 
-
   console.log(settings);
-  if (forkblockCount !== 0)
-  {
-    parameters.push("-forkblocks=" + forkblockCount)
+  if (forkblockCount !== 0) {
+    parameters.push("-forkblocks=" + forkblockCount);
     settings.forkblocks = 0;
     SaveSettings(settings);
     console.log("Saved New Settings");
@@ -190,9 +187,12 @@ function getCorePID() {
           return process;
         }
       });
+    console.log(tempPID);
+
     if (tempPID[0]) {
-      tempPID = tempPID[0].split(" ")[0];
+      tempPID = tempPID[0].trim().split(" ")[0];
     }
+    console.log(tempPID);
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, "");
     log.info("PID: " + PID);
     if (Number(PID) == "NaN" || Number(PID) < "2") {

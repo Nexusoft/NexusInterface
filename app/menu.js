@@ -124,14 +124,21 @@ export default class MenuBuilder {
             log.info("menu.js darwin template: close and kill");
             let settings = GetSettings();
             if (settings.manualDaemon != true) {
-              RPC.PROMISE("stop", []).then(payload => {
-                setTimeout(() => {
-                  remote.getCurrentWindow().close();
-                }, 1000);
-              });
+              RPC.PROMISE("stop", [])
+                .then(payload => {
+                  setTimeout(() => {
+                    core.stop();
+                    remote.getCurrentWindow().close();
+                  }, 1000);
+                })
+                .catch(e => {
+                  setTimeout(() => {
+                    remote.getGlobal("core").stop();
+                    remote.getCurrentWindow().close();
+                  }, 1000);
+                });
             } else {
               RPC.PROMISE("stop", []).then(payload => {
-                core.stop();
                 remote.getCurrentWindow().close();
               });
             }
@@ -363,8 +370,11 @@ export default class MenuBuilder {
             click() {
               log.info("menu.js default template: close and kill");
               let settings = GetSettings();
+              console.log(settings);
               if (settings.manualDaemon != true) {
                 RPC.PROMISE("stop", []).then(payload => {
+                  console.log("poststop");
+                  core.stop();
                   setTimeout(() => {
                     remote.getCurrentWindow().close();
                   }, 1000);

@@ -347,7 +347,10 @@ class Header extends Component {
   }
 
   signInStatus() {
-    if (this.props.connections === undefined || this.props.daemonAvailable === false) {
+    if (
+      this.props.connections === undefined ||
+      this.props.daemonAvailable === false
+    ) {
       return questionmark;
     } else {
       if (this.props.unlocked_until === undefined) {
@@ -365,7 +368,10 @@ class Header extends Component {
       "en",
       { weekday: "long", year: "numeric", month: "long", day: "numeric" }
     );
-    if (this.props.connections === undefined || this.props.daemonAvailable === false) {
+    if (
+      this.props.connections === undefined ||
+      this.props.daemonAvailable === false
+    ) {
       return (
         <FormattedMessage
           id="Header.DaemonNotLoaded"
@@ -422,7 +428,8 @@ class Header extends Component {
     let syncStatus = document.getElementById("syncStatus");
     if (
       this.props.connections === undefined ||
-      this.props.heighestPeerBlock > this.props.blocks || this.props.daemonAvailable === false
+      this.props.heighestPeerBlock > this.props.blocks ||
+      this.props.daemonAvailable === false
     ) {
       // rotates
       syncStatus.classList.remove("sync-img");
@@ -434,7 +441,10 @@ class Header extends Component {
   }
 
   returnSyncStatusTooltip() {
-    if (this.props.connections === undefined || this.props.daemonAvailable === false) {
+    if (
+      this.props.connections === undefined ||
+      this.props.daemonAvailable === false
+    ) {
       return (
         <FormattedMessage
           id="Header.DaemonNotLoaded"
@@ -741,19 +751,19 @@ class Header extends Component {
           ...
         </span>
       );
-    } 
-    else if (this.props.settings.manualDaemon === true && this.props.daemonAvailable === false)
-    {
-      return(
+    } else if (
+      this.props.settings.manualDaemon === true &&
+      this.props.daemonAvailable === false
+    ) {
+      return (
         <span>
-        <FormattedMessage
-          id="Alert.ManualDaemonDown"
-          defaultMessage="Daemon Process Not Found"
-        />
+          <FormattedMessage
+            id="Alert.ManualDaemonDown"
+            defaultMessage="Daemon Process Not Found"
+          />
         </span>
-      )
-    }
-    else {
+      );
+    } else {
       return null;
     }
   }
