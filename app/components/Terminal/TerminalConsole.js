@@ -146,12 +146,22 @@ class TerminalConsole extends Component {
 
               if (typeof payload[outputObject] === "object") {
                 for (let interalres in payload[outputObject]) {
-                  tempConsoleOutput.push(
-                    "       " +
-                      interalres +
-                      ":" +
-                      payload[outputObject][interalres]
-                  );
+
+                  if (typeof payload[outputObject][interalres] === "object") {
+                    for (let internalmicro in payload[outputObject][interalres]) {
+                      tempConsoleOutput.push(
+                        "       " +
+                        internalmicro +
+                          ":" +payload[outputObject][interalres][internalmicro]
+                      );
+                    }
+                  }else{
+                    tempConsoleOutput.push(
+                      "       " +
+                        interalres +
+                        ":" +payload[outputObject][interalres]
+                    );
+                  }
                 }
               }
             }
@@ -272,7 +282,10 @@ class TerminalConsole extends Component {
             <button
               id="terminal-console-input-button"
               className="button"
-              onClick={() => this.processInput()}
+              onClick={() => {
+                this.props.removeAutoCompleteDiv();
+                this.processInput();
+              }}
             >
               <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
             </button>
