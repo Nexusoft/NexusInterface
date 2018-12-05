@@ -390,35 +390,34 @@ class Header extends Component {
     } else if (this.props.unlocked_until === 0) {
       return (
         <FormattedMessage
-          id="Header.UnlockedUntil"
-          defaultMessage="Unlocked Until"
+          id="Header.WalletLocked"
+          defaultMessage="Wallet Locked"
         />
       )
     } else if (this.props.unlocked_until >= 0) {
-      if (this.props.minting_only) {
+      if (this.props.staking_only) {
         return (
-          (
+          <div>
             <FormattedMessage
               id="Header.UnlockedUntil"
               defaultMessage="Unlocked Until"
-            />
-          ) +
-          unlockDate +
-          (
+            />{' '}
+            {unlockDate}{' '}
             <FormattedMessage
               id="Header.StakingOnly"
               defaultMessage="Staking Only"
             />
-          )
+          </div>
         )
       } else {
         return (
-          (
+          <div>
             <FormattedMessage
               id="Header.UnlockedUntil"
               defaultMessage="Unlocked Until"
-            />
-          ) + unlockDate
+            />{' '}
+            {unlockDate}
+          </div>
         )
       }
     }

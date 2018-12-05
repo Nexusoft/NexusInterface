@@ -120,13 +120,11 @@ class Unencrypted extends Component {
           if (!(newPass.value.endsWith(' ') || newPass.value.startsWith(' '))) {
             RPC.PROMISE('encryptwallet', [newPass.value])
               .then(payload => {
-                console.log(payload)
                 newPass.value = ''
                 passChk.value = ''
                 this.props.busy(false)
                 this.props.OpenModal('Wallet has been encrypted')
                 this.props.ResetForEncryptionRestart()
-                console.log(this.props.history)
 
                 // Start the daemon again... give it maybe 5 seconds.
                 setTimeout(() => {
