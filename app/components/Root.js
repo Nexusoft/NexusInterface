@@ -9,7 +9,6 @@ import { addLocaleData } from 'react-intl'
 //import { updateIntl } from "react-intl-redux";
 import localesReducer from 'reducers/intl'
 import { connect, Provider } from 'react-redux'
-import styled from 'react-emotion'
 
 // Internal Global Dependencies
 import settings from 'api/settings'
@@ -33,21 +32,8 @@ import StyleGuide from './StyleGuide'
 import List from './List'
 import About from './About'
 import Exchange from './Exchange'
-import IntlWrapper from './IntlWrapper'
+import App from './App'
 import StarrySky from './StarrySky'
-
-const App = styled('div')({
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  display: 'grid',
-  height: '100%',
-  gridTemplateColumns: '1fr',
-  gridTemplateRows: '74px auto 75px',
-  gridTemplateAreas: '"header" "content" "navigation"',
-})
 
 export default class Root extends Component {
   render() {
@@ -55,44 +41,38 @@ export default class Root extends Component {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <IntlWrapper>
-            <div>
-              <StarrySky />
-              <App>
-                <Route path="/" component={Header} />
-                <div id="app-content">
-                  <div id="app-content-container">
-                    <div id="app-loader">
-                      <Loader />
-                    </div>
-                    <Route exact path="/" component={Overview} />
-                    <Route exact path="/SendRecieve" component={SendRecieve} />
-                    <Route
-                      exact
-                      path="/Transactions"
-                      component={Transactions}
-                    />
-                    <Route exact path="/Market" component={Market} />
-                    <Route exact path="/AddressBook" component={AddressBook} />
-                    <Route
-                      exact
-                      path="/BlockExplorer"
-                      component={BlockExplorer}
-                    />
-                    <Route path="/Settings" component={Settings} />
-                    <Route path="/Terminal" component={Terminal} />
-                    <Route exact path="/StyleGuide" component={StyleGuide} />
-                    <Route path="/Exchange" component={Exchange} />
-                    <Route exact path="/List" component={List} />
-                    <Route exact path="/About" component={About} />
+          <div>
+            <StarrySky />
+            <App>
+              <Route path="/" component={Header} />
+              <div id="app-content">
+                <div id="app-content-container">
+                  <div id="app-loader">
+                    <Loader />
                   </div>
+                  <Route exact path="/" component={Overview} />
+                  <Route exact path="/SendRecieve" component={SendRecieve} />
+                  <Route exact path="/Transactions" component={Transactions} />
+                  <Route exact path="/Market" component={Market} />
+                  <Route exact path="/AddressBook" component={AddressBook} />
+                  <Route
+                    exact
+                    path="/BlockExplorer"
+                    component={BlockExplorer}
+                  />
+                  <Route path="/Settings" component={Settings} />
+                  <Route path="/Terminal" component={Terminal} />
+                  <Route exact path="/StyleGuide" component={StyleGuide} />
+                  <Route path="/Exchange" component={Exchange} />
+                  <Route exact path="/List" component={List} />
+                  <Route exact path="/About" component={About} />
                 </div>
-                <div id="app-navigation">
-                  <Route path="/" component={Footer} />
-                </div>
-              </App>
-            </div>
-          </IntlWrapper>
+              </div>
+              <div id="app-navigation">
+                <Route path="/" component={Footer} />
+              </div>
+            </App>
+          </div>
         </ConnectedRouter>
       </Provider>
     )

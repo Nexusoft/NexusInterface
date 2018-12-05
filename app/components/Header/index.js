@@ -668,15 +668,6 @@ class Header extends Component {
     }
   }
   daemonStatus() {
-    return (
-      <span>
-        <FormattedMessage
-          id="Alert.DaemonLoadingWait"
-          defaultMessage="Loading Daemon, Please wait"
-        />
-        ...
-      </span>
-    )
     if (
       this.props.settings.manualDaemon === false &&
       this.props.connections === undefined
@@ -685,7 +676,7 @@ class Header extends Component {
         <span>
           <FormattedMessage
             id="Alert.DaemonLoadingWait"
-            defaultMessage="Loading Daemon, Please wait..."
+            defaultMessage="Loading Daemon, Please wait"
           />
           ...
         </span>
