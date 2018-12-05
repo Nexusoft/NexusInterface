@@ -109,7 +109,7 @@ function createWindow() {
       'Nexus_App_Icon_64.png'
     )
   }
-  console.log(iconPath)
+
   // Create the main browser window
   mainWindow = new BrowserWindow({
     width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,

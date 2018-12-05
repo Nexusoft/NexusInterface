@@ -483,6 +483,26 @@ class Overview extends Component {
     }
   }
 
+  experimentalModalController() {
+    if (
+      this.props.settings.acceptedagreement &&
+      (this.props.settings.experimentalWarning && this.props.experimentalOpen)
+    ) {
+      return true
+    } else return false
+  }
+
+  encryptedModalController() {
+    if (
+      this.daemonAvailable &&
+      !this.props.experimentalOpen &&
+      this.props.settings.acceptedagreement &&
+      (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)
+    ) {
+      return true
+    } else return false
+  }
+
   // Mandatory React method
   render() {
     return (
@@ -510,11 +530,7 @@ class Overview extends Component {
         <Modal
           key="experiment-modal"
           focusTrapped={true}
-          open={
-            this.props.settings.acceptedagreement &&
-            (this.props.settings.experimentalWarning &&
-              this.props.experimentalOpen)
-          }
+          open={this.experimentalModalController()}
           onClose={() => this.props.setExperimentalWarning(false)}
           center
           classNames={{ modal: 'modal' }}
@@ -523,12 +539,7 @@ class Overview extends Component {
         </Modal>
         <Modal
           key="encrypted-modal"
-          open={
-            this.daemonAvailable &&
-            !this.props.experimentalOpen &&
-            this.props.settings.acceptedagreement &&
-            (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)
-          }
+          open={this.encryptedModalController()}
           onClose={() => this.props.ignoreEncryptionWarning()}
           center
           classNames={{ modal: 'modal' }}

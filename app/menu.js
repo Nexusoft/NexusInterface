@@ -370,7 +370,7 @@ export default class MenuBuilder {
             click() {
               log.info('menu.js default template: close and kill')
               let settings = GetSettings()
-              console.log(settings)
+
               if (settings.manualDaemon != true) {
                 RPC.PROMISE('stop', []).then(payload => {
                   console.log('poststop')

@@ -199,9 +199,8 @@ export const PROMISE = (cmd, args) => {
     /** Send off the Post Data. **/
 
     ResponseObject.onerror = function(e) {
-      //console.log("Unknown Error Occured. Server response not received.");
-      //console.log(e);
-      reject('RPC Server unreachable, Check Daemon')
+      e.preventDefault()
+      reject(ResponseObject.responseText)
     }
 
     ResponseObject.send(PostData)
