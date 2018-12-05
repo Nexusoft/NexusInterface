@@ -63,6 +63,7 @@ export default class NetworkGlobe extends Component {
         if (error) {
           console.log(error)
         } else {
+          console.log(response)
           if (response.statusCode === 200) {
             RPC.PROMISE('getpeerinfo', []).then(payload => {
               var tmp = {}
