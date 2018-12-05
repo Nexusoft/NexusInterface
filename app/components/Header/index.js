@@ -25,6 +25,7 @@ import { colors, consts, timing, animations } from 'styles'
 
 // Internal Local Dependencies
 import './style.css'
+import logoFull from './logo-full-beta.sprite.svg'
 
 // Images
 import questionmark from 'images/questionmark.svg'
@@ -34,7 +35,6 @@ import unlockImg from 'images/lock-minting.svg'
 import statGood from 'images/status-good.svg'
 import statBad from 'images/sync.svg'
 import stakeImg from 'images/staking.svg'
-import logoFull from 'images/logo-full-beta.sprite.svg'
 
 const LogoLink = styled(Link)({
   position: 'relative',
