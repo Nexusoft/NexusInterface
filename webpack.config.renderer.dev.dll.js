@@ -142,9 +142,17 @@ export default merge.smart(baseConfig, {
           // SVG Sprite icons
           {
             test: /\.sprite.svg$/,
-            use: {
-              loader: 'svg-sprite-loader',
-            },
+            use: [
+              {
+                loader: 'svg-sprite-loader',
+              },
+              {
+                loader: 'svgo-loader',
+                options: {
+                  externalConfig: 'svgo-config.json',
+                },
+              },
+            ],
           },
           // SVG Font
           {

@@ -206,6 +206,8 @@
     "stylelint": "^7.12.0",
     "stylelint-config-standard": "^16.0.0",
     "svg-sprite-loader": "^4.1.3",
+    "svgo": "^1.1.1",
+    "svgo-loader": "^2.2.0",
     "url-loader": "^1.1.2",
     "webpack": "^4.25.1",
     "webpack-bundle-analyzer": "^3.0.3",
