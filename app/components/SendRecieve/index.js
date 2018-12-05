@@ -298,29 +298,29 @@ class SendRecieve extends Component {
                   this.props.Address,
                   parseFloat(this.props.Amount),
                   this.props.Message
-                ]);
-                .then(payload => {
-                  this.props.clearForm();
-                  this.props.busy();
-                })
-                .catch(e => {
-                  this.props.busy();
-                  this.props.OpenModal("Insufficient Funds");
-                });
+                ])
+                  .then(payload => {
+                    this.props.clearForm();
+                    this.props.busy();
+                  })
+                  .catch(e => {
+                    this.props.busy();
+                    this.props.OpenModal("Insufficient Funds");
+                  });
               } else {
                 RPC.PROMISE("sendfrom", [
                   this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount)
-                ]);
-                .then(payoad => {
-                  this.props.clearForm();
-                  this.props.busy();
-                })
-                .catch(e => {
-                  this.props.busy();
-                  this.props.OpenModal("Insufficient Funds");
-                });
+                ])
+                  .then(payoad => {
+                    this.props.clearForm();
+                    this.props.busy();
+                  })
+                  .catch(e => {
+                    this.props.busy();
+                    this.props.OpenModal("Insufficient Funds");
+                  });
               }
             } else {
               this.props.busy();
@@ -953,7 +953,7 @@ class SendRecieve extends Component {
           </div>
         </Modal>
         {this.props.isInSync === false ||
-        this.props.connections === !undefined ? (
+        this.props.connections === undefined ? (
           <div className="panel">
             <h2>
               <FormattedMessage
