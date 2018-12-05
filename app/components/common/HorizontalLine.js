@@ -1,7 +1,7 @@
-import styled from '@emotion/styled'
+import styled from 'react-emotion'
 import { colors, consts, timing, animations } from 'styles'
 
-const HorizontalLine = styled.div(
+const HorizontalLine = styled('div')(
   {
     height: 2,
     margin: '0 auto',

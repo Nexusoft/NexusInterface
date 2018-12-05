@@ -7,9 +7,9 @@ import electron from 'electron'
 import Modal from 'react-responsive-modal'
 import CustomProperties from 'react-custom-properties'
 import log from 'electron-log'
-import { FormattedMessage } from 'react-intl'
 import { write } from 'fs'
-import styled from '@emotion/styled'
+import styled from 'react-emotion'
+import { FormattedMessage } from 'react-intl'
 
 // Internal Global Dependencies
 import MenuBuilder from 'menu'
@@ -24,17 +24,23 @@ import HorizontalLine from 'components/common/HorizontalLine'
 import { colors, consts, timing, animations } from 'styles'
 
 // Internal Local Dependencies
-import './style.css'
+import SignInStatus from './StatusIcons/SignInStatus'
+import StakingStatus from './StatusIcons/StakingStatus'
+import SyncStatus from './StatusIcons/SyncStatus'
 import logoFull from './logo-full-beta.sprite.svg'
+import './style.css'
 
-// Images
-import questionmark from 'images/questionmark.svg'
-import lockedImg from 'images/lock-encrypted.svg'
-import unencryptedImg from 'images/lock-unencrypted.svg'
-import unlockImg from 'images/lock-minting.svg'
-import statGood from 'images/status-good.svg'
-import statBad from 'images/sync.svg'
-import stakeImg from 'images/staking.svg'
+const HeaderWrapper = styled('header')({
+  gridArea: 'header',
+  position: 'relative',
+  top: 0,
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: colors.primary,
+  zIndex: 999,
+})
 
 const LogoLink = styled(Link)({
   position: 'relative',
@@ -44,27 +50,35 @@ const LogoLink = styled(Link)({
 })
 
 const Logo = styled(Icon)({
-  margin: '1em 0',
   display: 'block',
   height: 50,
   filter: 'var(--nxs-logo)',
   fill: colors.primary,
 })
 
-const Beta = styled.div({
+const Beta = styled('div')({
   color: 'white',
   fontSize: 12,
   position: 'absolute',
-  bottom: 18,
+  bottom: 3,
   right: -26,
   letterSpacing: 1,
   textTransform: 'uppercase',
 })
 
-const HeaderLine = styled(HorizontalLine)({
-  '@media (min-width: 300px)': {
-    marginTop: -10,
-  },
+const StatusIcons = styled('div')({
+  position: 'absolute',
+  top: 24,
+  right: 40,
+})
+
+const UnderHeader = styled('div')({
+  position: 'absolute',
+  top: '100%',
+  left: 0,
+  right: 0,
+  textAlign: 'center',
+  color: colors.light,
 })
 
 var tray = tray || null
@@ -383,124 +397,6 @@ class Header extends Component {
     tray.setContextMenu(contextMenu)
   }
 
-  signInStatus() {
-    if (
-      this.props.connections === undefined ||
-      this.props.daemonAvailable === false
-    ) {
-      return questionmark
-    } else {
-      if (this.props.unlocked_until === undefined) {
-        return unencryptedImg
-      } else if (this.props.unlocked_until === 0) {
-        return lockedImg
-      } else if (this.props.unlocked_until >= 0) {
-        return unlockImg
-      }
-    }
-  }
-
-  signInStatusMessage() {
-    let unlockDate = new Date(this.props.unlocked_until * 1000).toLocaleString(
-      'en',
-      { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-    )
-    if (
-      this.props.connections === undefined ||
-      this.props.daemonAvailable === false
-    ) {
-      return (
-        <FormattedMessage
-          id="Header.DaemonNotLoaded"
-          defaultMessage="Daemon Not Loaded"
-        />
-      )
-    }
-
-    if (this.props.unlocked_until === undefined) {
-      return (
-        <FormattedMessage
-          id="Header.WalletUnencrypted"
-          defaultMessage="Wallet Unencrypted"
-        />
-      )
-    } else if (this.props.unlocked_until === 0) {
-      return (
-        <FormattedMessage
-          id="Header.UnlockedUntil"
-          defaultMessage="Unlocked Until"
-        />
-      )
-    } else if (this.props.unlocked_until >= 0) {
-      if (this.props.minting_only) {
-        return (
-          (
-            <FormattedMessage
-              id="Header.UnlockedUntil"
-              defaultMessage="Unlocked Until"
-            />
-          ) +
-          unlockDate +
-          (
-            <FormattedMessage
-              id="Header.StakingOnly"
-              defaultMessage="Staking Only"
-            />
-          )
-        )
-      } else {
-        return (
-          (
-            <FormattedMessage
-              id="Header.UnlockedUntil"
-              defaultMessage="Unlocked Until"
-            />
-          ) + unlockDate
-        )
-      }
-    }
-  }
-
-  syncStatus() {
-    let syncStatus = document.getElementById('syncStatus')
-    if (
-      this.props.connections === undefined ||
-      this.props.heighestPeerBlock > this.props.blocks ||
-      this.props.daemonAvailable === false
-    ) {
-      // rotates
-      syncStatus.classList.remove('sync-img')
-      return statBad
-    } else {
-      // doesn't
-      return statGood
-    }
-  }
-
-  returnSyncStatusTooltip() {
-    if (
-      this.props.connections === undefined ||
-      this.props.daemonAvailable === false
-    ) {
-      return (
-        <FormattedMessage
-          id="Header.DaemonNotLoaded"
-          defaultMessage="Daemon Not Loaded"
-        />
-      )
-    } else {
-      if (this.props.heighestPeerBlock > this.props.blocks) {
-        return (
-          this.props.messages[this.props.settings.locale]['Header.Synching'] +
-          (this.props.heighestPeerBlock - this.props.blocks).toString() +
-          this.props.messages[this.props.settings.locale]['Header.Blocks']
-        )
-      } else {
-        return <FormattedMessage id="Header.Synched" defaultMessage="Synched" />
-      }
-    }
-  }
-
   modalinternal() {
     switch (this.props.modaltype) {
       case 'receive':
@@ -773,6 +669,15 @@ class Header extends Component {
     }
   }
   daemonStatus() {
+    return (
+      <span>
+        <FormattedMessage
+          id="Alert.DaemonLoadingWait"
+          defaultMessage="Loading Daemon, Please wait"
+        />
+        ...
+      </span>
+    )
     if (
       this.props.settings.manualDaemon === false &&
       this.props.connections === undefined
@@ -892,28 +797,26 @@ class Header extends Component {
 
   // Mandatory React method
   render() {
+    const { settings } = this.props
+
     return (
-      <div id="Header">
+      <HeaderWrapper>
         <CustomProperties
           global
           properties={{
-            '--color-1': this.props.settings.customStyling.MC1,
-            '--color-2': this.props.settings.customStyling.MC2,
-            '--color-3': this.props.settings.customStyling.MC3,
-            '--color-4': this.props.settings.customStyling.MC4,
-            '--color-5': this.props.settings.customStyling.MC5,
-            '--nxs-logo': this.props.settings.customStyling.NXSlogo,
-            '--icon-menu': this.props.settings.customStyling.iconMenu,
-            '--footer': this.props.settings.customStyling.footer,
-            '--footer-hover': this.props.settings.customStyling.footerHover,
-            '--footer-active': this.props.settings.customStyling.footerActive,
-            '--background-main-image': `url('${
-              this.props.settings.wallpaper
-            }')`,
-            '--panel-background-color': this.props.settings.customStyling
-              .pannelBack,
-            '--maxMind-copyright': this.props.settings.customStyling
-              .maxMindCopyright,
+            '--color-1': settings.customStyling.MC1,
+            '--color-2': settings.customStyling.MC2,
+            '--color-3': settings.customStyling.MC3,
+            '--color-4': settings.customStyling.MC4,
+            '--color-5': settings.customStyling.MC5,
+            '--nxs-logo': settings.customStyling.NXSlogo,
+            '--icon-menu': settings.customStyling.iconMenu,
+            '--footer': settings.customStyling.footer,
+            '--footer-hover': settings.customStyling.footerHover,
+            '--footer-active': settings.customStyling.footerActive,
+            '--background-main-image': `url('${settings.wallpaper}')`,
+            '--panel-background-color': settings.customStyling.pannelBack,
+            '--maxMind-copyright': settings.customStyling.maxMindCopyright,
           }}
         />
         <Modal
@@ -941,67 +844,24 @@ class Header extends Component {
         >
           {this.BootstrapModalInteriorBuilder()}
         </Modal>
-        <div id="settings-menu" className="animated rotateInDownRight ">
-          <div className="icon">
-            <img src={this.signInStatus()} />
-            <div className="tooltip bottom">
-              <div>{this.signInStatusMessage()}</div>
-            </div>
-          </div>
-          {/* wrap this in a check too... */}
-          <div className="icon">
-            <img src={stakeImg} />
-
-            <div className="tooltip bottom">
-              <div>
-                <FormattedMessage
-                  id="Header.StakeWeight"
-                  defaultMessage="Stake Weight"
-                />
-                : {this.props.stakeweight}%
-              </div>
-              <div>
-                <FormattedMessage
-                  id="Header.InterestRate"
-                  defaultMessage="Interest Rate"
-                />
-                : {this.props.interestweight}%
-              </div>
-              <div>
-                <FormattedMessage
-                  id="Header.TrustWeight"
-                  defaultMessage="Trust Weight"
-                />
-                : {this.props.trustweight}%
-              </div>
-              <div>
-                <FormattedMessage
-                  id="Header.BlockWeight"
-                  defaultMessage="Block Weight"
-                />
-                : {this.props.blockweight}
-              </div>
-            </div>
-          </div>
-          <div className="icon">
-            {this.props.heighestPeerBlock > this.props.blocks ? (
-              <img id="syncing" className="sync-img" src={statBad} />
-            ) : (
-              <img id="synced" src={statGood} />
-            )}
-            <div className="tooltip bottom" style={{ right: '100%' }}>
-              <div>{this.returnSyncStatusTooltip()}</div>
-            </div>
-          </div>
-        </div>
 
         <LogoLink to="/">
           <Logo icon={logoFull} />
           <Beta>BETA</Beta>
         </LogoLink>
-        <HeaderLine width="80%" />
-        {this.daemonStatus()}
-      </div>
+
+        <UnderHeader>
+          <HorizontalLine />
+          {this.daemonStatus()}
+        </UnderHeader>
+
+        <StatusIcons>
+          <SignInStatus {...this.props} />
+          {/* wrap this in a check too... */}
+          <StakingStatus {...this.props} />
+          <SyncStatus {...this.props} />
+        </StatusIcons>
+      </HeaderWrapper>
     )
   }
 }

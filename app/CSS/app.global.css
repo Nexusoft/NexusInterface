@@ -75,8 +75,6 @@ body {
   color: var(--color-5);
   height: 100vh;
   background-color: #232c39;
-  background-image: var(--background-main-gradient),
-    var(--background-main-image);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -87,21 +85,6 @@ body {
 
 #root {
   height: 100%;
-}
-
-#app {
-  display: grid;
-  height: 100%;
-  grid-template-columns: 1fr;
-  grid-template-rows: 85px auto 75px;
-  grid-template-areas:
-    "header"
-    "content"
-    "navigation";
-}
-
-#app-header {
-  grid-area: header;
 }
 
 #app-content {

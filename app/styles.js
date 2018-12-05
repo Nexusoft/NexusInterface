@@ -1,4 +1,4 @@
-import { css, keyframes } from '@emotion/core'
+import { css, keyframes } from 'react-emotion'
 
 export const colors = {}
 colors.primary = '#0ca4fb'
@@ -28,6 +28,11 @@ export const animations = {
     to { 
       transform: scale(1);
       opacity: 1
+    }
+  `,
+  spin: keyframes`
+    100% {
+      transform: rotate(360deg);
     }
   `,
 }

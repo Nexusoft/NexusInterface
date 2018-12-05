@@ -1,7 +1,7 @@
 import React from 'react'
-import styled from '@emotion/styled'
+import styled from 'react-emotion'
 
-const Svg = styled.svg({
+const Svg = styled('svg')({
   fill: 'currentColor',
   stroke: 'currentColor',
   verticalAlign: 'middle',

@@ -31,7 +31,7 @@ export default class Footer extends Component {
   render() {
     return (
       <div id="Footer">
-        <HorizontalLine width="60%" />
+        <HorizontalLine />
         <div id="navigation-mobile" className="animated bounceInUp hidden">
           <NavLink exact to="/">
             <img src={mainlogo} alt="Overview" />

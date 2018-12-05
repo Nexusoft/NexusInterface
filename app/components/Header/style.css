@@ -30,16 +30,6 @@
   width: 140px;
 }
 
-.sync-img {
-  -webkit-animation: spinner 2s linear infinite;
-}
-
-@-webkit-keyframes spinner {
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
-
 /*.noDaemonPort {
   position: absolute;
   padding: 0px;

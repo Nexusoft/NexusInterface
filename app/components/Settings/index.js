@@ -27,7 +27,7 @@ import ContextMenuBuilder from 'contextmenu'
 import settingsimg from 'images/settings.svg'
 import coreImg from 'images/core.svg'
 import logoImg from 'images/logo.svg'
-import lockImg from 'images/lock-minting.svg'
+import lockImg from 'images/lock-minting.sprite.svg'
 import marketImg from 'images/marketstats.svg'
 import styleImg from 'images/developer.svg'
 
