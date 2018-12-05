@@ -184,9 +184,12 @@ function getCorePID() {
           return process
         }
       })
+    console.log(tempPID)
+
     if (tempPID[0]) {
-      tempPID = tempPID[0].split(' ')[0]
+      tempPID = tempPID[0].trim().split(' ')[0]
     }
+    console.log(tempPID)
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, '')
     log.info('PID: ' + PID)
     if (Number(PID) == 'NaN' || Number(PID) < '2') {
