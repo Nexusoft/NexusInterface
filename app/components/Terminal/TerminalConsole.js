@@ -118,6 +118,7 @@ class TerminalConsole extends Component {
     ) {
       RPC.PROMISE(splitInput[0], RPCArguments)
         .then(payload => {
+          console.log(payload)
           if (typeof payload === 'string' || typeof payload === 'number') {
             if (typeof payload === 'string') {
               let temppayload = payload
@@ -164,6 +165,7 @@ class TerminalConsole extends Component {
           }
         })
         .catch(error => {
+          console.log(error)
           if (error.message !== undefined) {
             tempConsoleOutput.push(
               'Error: ' +
@@ -174,7 +176,11 @@ class TerminalConsole extends Component {
             )
           } else {
             //This is the error if the rpc is unavailable
-            tempConsoleOutput.push(error)
+            try {
+              tempConsoleOutput.push(error.error.message)
+            } catch (e) {
+              tempConsoleOutput.push(error)
+            }
           }
           this.props.printToConsole(tempConsoleOutput)
         })
@@ -182,7 +188,7 @@ class TerminalConsole extends Component {
       tempConsoleOutput.push([
         this.props.currentInput + ' is a invalid Command',
       ])
-      tempConsoleOutput.push(['\n  '])
+      // tempConsoleOutput.push(['\n  '])
       this.props.printToConsole(tempConsoleOutput)
     }
   }
