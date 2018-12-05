@@ -14,7 +14,7 @@
  */
 
 declare module 'spectron' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,51 +23,51 @@ declare module 'spectron' {
  * needed.
  */
 declare module 'spectron/lib/accessibility' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'spectron/lib/api' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'spectron/lib/application' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'spectron/lib/chrome-driver' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'spectron/lib/launcher' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'spectron/vendor/axs_testing' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'spectron/index' {
-  declare module.exports: $Exports<'spectron'>;
+  declare module.exports: $Exports<'spectron'>
 }
 declare module 'spectron/index.js' {
-  declare module.exports: $Exports<'spectron'>;
+  declare module.exports: $Exports<'spectron'>
 }
 declare module 'spectron/lib/accessibility.js' {
-  declare module.exports: $Exports<'spectron/lib/accessibility'>;
+  declare module.exports: $Exports<'spectron/lib/accessibility'>
 }
 declare module 'spectron/lib/api.js' {
-  declare module.exports: $Exports<'spectron/lib/api'>;
+  declare module.exports: $Exports<'spectron/lib/api'>
 }
 declare module 'spectron/lib/application.js' {
-  declare module.exports: $Exports<'spectron/lib/application'>;
+  declare module.exports: $Exports<'spectron/lib/application'>
 }
 declare module 'spectron/lib/chrome-driver.js' {
-  declare module.exports: $Exports<'spectron/lib/chrome-driver'>;
+  declare module.exports: $Exports<'spectron/lib/chrome-driver'>
 }
 declare module 'spectron/lib/launcher.js' {
-  declare module.exports: $Exports<'spectron/lib/launcher'>;
+  declare module.exports: $Exports<'spectron/lib/launcher'>
 }
 declare module 'spectron/vendor/axs_testing.js' {
-  declare module.exports: $Exports<'spectron/vendor/axs_testing'>;
+  declare module.exports: $Exports<'spectron/vendor/axs_testing'>
 }

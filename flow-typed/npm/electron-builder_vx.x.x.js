@@ -14,7 +14,7 @@
  */
 
 declare module 'electron-builder' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,52 +23,54 @@ declare module 'electron-builder' {
  * needed.
  */
 declare module 'electron-builder/out/builder' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-builder/out/cli/cli' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-builder/out/cli/create-self-signed-cert' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-builder/out/cli/install-app-deps' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-builder/out/cli/start' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-builder/out/forge/forge-maker' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'electron-builder/out/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'electron-builder/out/builder.js' {
-  declare module.exports: $Exports<'electron-builder/out/builder'>;
+  declare module.exports: $Exports<'electron-builder/out/builder'>
 }
 declare module 'electron-builder/out/cli/cli.js' {
-  declare module.exports: $Exports<'electron-builder/out/cli/cli'>;
+  declare module.exports: $Exports<'electron-builder/out/cli/cli'>
 }
 declare module 'electron-builder/out/cli/create-self-signed-cert.js' {
-  declare module.exports: $Exports<'electron-builder/out/cli/create-self-signed-cert'>;
+  declare module.exports: $Exports<
+    'electron-builder/out/cli/create-self-signed-cert'
+  >
 }
 declare module 'electron-builder/out/cli/install-app-deps.js' {
-  declare module.exports: $Exports<'electron-builder/out/cli/install-app-deps'>;
+  declare module.exports: $Exports<'electron-builder/out/cli/install-app-deps'>
 }
 declare module 'electron-builder/out/cli/start.js' {
-  declare module.exports: $Exports<'electron-builder/out/cli/start'>;
+  declare module.exports: $Exports<'electron-builder/out/cli/start'>
 }
 declare module 'electron-builder/out/forge/forge-maker.js' {
-  declare module.exports: $Exports<'electron-builder/out/forge/forge-maker'>;
+  declare module.exports: $Exports<'electron-builder/out/forge/forge-maker'>
 }
 declare module 'electron-builder/out/index.js' {
-  declare module.exports: $Exports<'electron-builder/out/index'>;
+  declare module.exports: $Exports<'electron-builder/out/index'>
 }

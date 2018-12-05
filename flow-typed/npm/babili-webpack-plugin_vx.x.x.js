@@ -14,7 +14,7 @@
  */
 
 declare module 'babili-webpack-plugin' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,10 +23,10 @@ declare module 'babili-webpack-plugin' {
  * needed.
  */
 declare module 'babili-webpack-plugin/lib/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'babili-webpack-plugin/lib/index.js' {
-  declare module.exports: $Exports<'babili-webpack-plugin/lib/index'>;
+  declare module.exports: $Exports<'babili-webpack-plugin/lib/index'>
 }

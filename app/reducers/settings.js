@@ -1,26 +1,26 @@
-import * as TYPE from "../actions/actiontypes";
-import configuration from "../api/configuration";
-import messages from "../Language/messages";
-const path = require("path");
-let defaultWallpaperPath = "";
-if (process.env.NODE_ENV === "development") {
-  defaultWallpaperPath = "./images/background/starrynight.jpg";
+import * as TYPE from 'actions/actiontypes'
+import configuration from 'api/configuration'
+import messages from 'languages/messages'
+const path = require('path')
+let defaultWallpaperPath = ''
+if (process.env.NODE_ENV === 'development') {
+  defaultWallpaperPath = './images/background/starrynight.jpg'
 } else {
   defaultWallpaperPath = path.join(
     configuration.GetAppResourceDir(),
-    "images",
-    "background",
-    "starrynight.jpg"
-  );
-  if (process.platform === "win32") {
-    defaultWallpaperPath = defaultWallpaperPath.replace(/\\/g, "/");
+    'images',
+    'background',
+    'starrynight.jpg'
+  )
+  if (process.platform === 'win32') {
+    defaultWallpaperPath = defaultWallpaperPath.replace(/\\/g, '/')
   }
 }
 
 const initialState = {
   settings: {
     manualDaemon: false,
-    verbose: "2",
+    verbose: '2',
     acceptedagreement: false,
     experimentalWarning: true,
     bootstrap: true,
@@ -29,112 +29,112 @@ const initialState = {
     devMode: false,
     wallpaper: defaultWallpaperPath,
     renderGlobe: true,
-    fiatCurrency: "USD",
-    locale: "en",
+    fiatCurrency: 'USD',
+    locale: 'en',
     customStyling: {
-      MC1: "#111111",
-      MC2: "#0ca4fb",
-      MC3: "#556070",
-      MC4: "#34495e",
-      MC5: "#ffffff",
-      NXSlogo: "hue-rotate(0deg) brightness(100%) grayscale(0%) saturate(100%)",
-      iconMenu: "hue-rotate(0deg) brightness(100%) grayscale(0%)",
-      footer: "hue-rotate(0deg) grayscale(100%) brightness(200%)",
-      footerHover: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
-      footerActive: "hue-rotate(0deg) grayscale(0%) brightness(100%)",
-      pannelBack: "rgba(47, 50, 65, 0.7)",
-      globePillarColorRGB: "rgb(0,255,255)",
-      globeArchColorRGB: "rgb(0,255,255)",
-      globeMultiColorRGB: "rgb(0,151,228)",
-      maxMindCopyright: "hue-rotate(0deg) grayscale(0%) brightness(100%)"
+      MC1: '#111111',
+      MC2: '#0ca4fb',
+      MC3: '#556070',
+      MC4: '#34495e',
+      MC5: '#ffffff',
+      NXSlogo: 'hue-rotate(0deg) brightness(100%) grayscale(0%) saturate(100%)',
+      iconMenu: 'hue-rotate(0deg) brightness(100%) grayscale(0%)',
+      footer: 'hue-rotate(0deg) grayscale(100%) brightness(200%)',
+      footerHover: 'hue-rotate(0deg) grayscale(0%) brightness(100%)',
+      footerActive: 'hue-rotate(0deg) grayscale(0%) brightness(100%)',
+      pannelBack: 'rgba(47, 50, 65, 0.7)',
+      globePillarColorRGB: 'rgb(0,255,255)',
+      globeArchColorRGB: 'rgb(0,255,255)',
+      globeMultiColorRGB: 'rgb(0,151,228)',
+      maxMindCopyright: 'hue-rotate(0deg) grayscale(0%) brightness(100%)',
     },
-    NXSlogoRGB: "rgb(0,174,239)",
-    footerRGB: "rgb(0,174,239)",
-    footerActiveRGB: "rgb(0,174,239)",
-    footerHoverRGB: "rgb(0,174,239)",
-    iconMenuRGB: "rgb(0,174,239)",
+    NXSlogoRGB: 'rgb(0,174,239)',
+    footerRGB: 'rgb(0,174,239)',
+    footerActiveRGB: 'rgb(0,174,239)',
+    footerHoverRGB: 'rgb(0,174,239)',
+    iconMenuRGB: 'rgb(0,174,239)',
     ignoreEncryptionWarningFlag: false,
     experimentalOpen: true,
     saveSettings: false,
     styleChangeFlag: false,
-    selectedColorProp: "MC1"
+    selectedColorProp: 'MC1',
   },
 
-  messages: messages
-};
+  messages: messages,
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.GET_SETTINGS:
       return {
         ...state,
-        settings: { ...state.settings, ...action.payload }
-      };
-      break;
+        settings: { ...state.settings, ...action.payload },
+      }
+      break
     case TYPE.UPDATE_LOCALES:
       return {
         ...state,
-        settings: { ...state.settings, locale: action.payload }
-      };
-      break;
+        settings: { ...state.settings, locale: action.payload },
+      }
+      break
     case TYPE.SET_EXPERIMENTAL_WARNING:
       if (action.payload) {
         return {
           ...state,
           settings: {
             ...state.settings,
-            experimentalWarning: false
+            experimentalWarning: false,
           },
-          saveSettingsFlag: true
-        };
+          saveSettingsFlag: true,
+        }
       } else {
         return {
           ...state,
-          experimentalOpen: false
-        };
+          experimentalOpen: false,
+        }
       }
-      break;
+      break
     case TYPE.IGNORE_ENCRYPTION_WARNING:
       return {
         ...state,
-        ignoreEncryptionWarningFlag: true
-      };
-      break;
+        ignoreEncryptionWarningFlag: true,
+      }
+      break
 
     case TYPE.ACCEPT_MIT:
       return {
         ...state,
         settings: {
           ...state.settings,
-          acceptedagreement: true
+          acceptedagreement: true,
         },
-        saveSettingsFlag: true
-      };
-      break;
+        saveSettingsFlag: true,
+      }
+      break
     case TYPE.TOGGLE_SAVE_SETTINGS_FLAG:
       return {
         ...state,
-        saveSettingsFlag: false
-      };
-      break;
+        saveSettingsFlag: false,
+      }
+      break
     case TYPE.SET_WALLPAPER:
       return {
         ...state,
         settings: {
           ...state.settings,
-          wallpaper: action.payload
-        }
-      };
-      break;
+          wallpaper: action.payload,
+        },
+      }
+      break
     case TYPE.CLOSE_BOOTSTRAP_MODAL:
       return {
         ...state,
         settings: {
           ...state.settings,
-          bootstrap: false
-        }
-      };
-      break;
+          bootstrap: false,
+        },
+      }
+      break
     case TYPE.CHANGE_COLOR_1:
       return {
         ...state,
@@ -142,11 +142,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC1: action.payload
-          }
-        }
-      };
-      break;
+            MC1: action.payload,
+          },
+        },
+      }
+      break
     case TYPE.CHANGE_COLOR_2:
       return {
         ...state,
@@ -154,11 +154,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC2: action.payload
-          }
-        }
-      };
-      break;
+            MC2: action.payload,
+          },
+        },
+      }
+      break
     case TYPE.CHANGE_COLOR_3:
       return {
         ...state,
@@ -166,11 +166,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC3: action.payload
-          }
-        }
-      };
-      break;
+            MC3: action.payload,
+          },
+        },
+      }
+      break
     case TYPE.CHANGE_COLOR_4:
       return {
         ...state,
@@ -178,11 +178,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC4: action.payload
-          }
-        }
-      };
-      break;
+            MC4: action.payload,
+          },
+        },
+      }
+      break
     case TYPE.CHANGE_COLOR_5:
       return {
         ...state,
@@ -190,17 +190,17 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            MC5: action.payload
-          }
-        }
-      };
-      break;
+            MC5: action.payload,
+          },
+        },
+      }
+      break
     case TYPE.SET_SELECTED_COLOR_PROP:
       return {
         ...state,
-        selectedColorProp: action.payload
-      };
-      break;
+        selectedColorProp: action.payload,
+      }
+      break
     case TYPE.SET_NEXUS_LOGO_COLOR:
       return {
         ...state,
@@ -208,11 +208,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            NXSlogo: action.payload.setting
-          }
+            NXSlogo: action.payload.setting,
+          },
         },
-        NXSlogoRGB: action.payload.hex
-      };
+        NXSlogoRGB: action.payload.hex,
+      }
     case TYPE.SET_FOOTER_COLOR:
       return {
         ...state,
@@ -220,11 +220,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            footer: action.payload.setting
-          }
+            footer: action.payload.setting,
+          },
         },
-        footerRGB: action.payload.hex
-      };
+        footerRGB: action.payload.hex,
+      }
     case TYPE.SET_FOOTER_ACTIVE_COLOR:
       return {
         ...state,
@@ -232,11 +232,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            footerActive: action.payload.setting
-          }
+            footerActive: action.payload.setting,
+          },
         },
-        footerActiveRGB: action.payload.hex
-      };
+        footerActiveRGB: action.payload.hex,
+      }
     case TYPE.SET_FOOTER_HOVER_COLOR:
       return {
         ...state,
@@ -244,11 +244,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            footerHover: action.payload.setting
-          }
+            footerHover: action.payload.setting,
+          },
         },
-        footerHoverRGB: action.payload.hex
-      };
+        footerHoverRGB: action.payload.hex,
+      }
 
     case TYPE.CHANGE_PANEL_COLOR:
       return {
@@ -257,11 +257,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            pannelBack: action.payload
-          }
+            pannelBack: action.payload,
+          },
         },
-        footerHoverRGB: action.payload.hex
-      };
+        footerHoverRGB: action.payload.hex,
+      }
 
     case TYPE.SET_ICON_MENU_COLOR:
       return {
@@ -270,11 +270,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            iconMenu: action.payload.setting
-          }
+            iconMenu: action.payload.setting,
+          },
         },
-        iconMenuRGB: action.payload.hex
-      };
+        iconMenuRGB: action.payload.hex,
+      }
     case TYPE.CHANGE_GLOBE_PILLAR_COLOR:
       return {
         ...state,
@@ -282,11 +282,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            globePillarColorRGB: action.payload.hex
-          }
-        }
-      };
-      break;
+            globePillarColorRGB: action.payload.hex,
+          },
+        },
+      }
+      break
     case TYPE.CHANGE_GLOBE_ARCH_COLOR:
       return {
         ...state,
@@ -294,11 +294,11 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            globeArchColorRGB: action.payload.hex
-          }
-        }
-      };
-      break;
+            globeArchColorRGB: action.payload.hex,
+          },
+        },
+      }
+      break
     case TYPE.CHANGE_GLOBE_MULTI_COLOR:
       return {
         ...state,
@@ -306,17 +306,17 @@ export default (state = initialState, action) => {
           ...state.settings,
           customStyling: {
             ...state.settings.customStyling,
-            globeMultiColorRGB: action.payload.hex
-          }
-        }
-      };
+            globeMultiColorRGB: action.payload.hex,
+          },
+        },
+      }
     case TYPE.RESET_CUSTOM_STYLING:
       return {
         ...state,
         settings: {
           ...state.settings,
           wallpaper: initialState.settings.wallpaper,
-          customStyling: initialState.settings.customStyling
+          customStyling: initialState.settings.customStyling,
         },
         NXSlogoRGB: initialState.NXSlogoRGB,
         footerRGB: initialState.footerRGB,
@@ -325,42 +325,34 @@ export default (state = initialState, action) => {
         iconMenuRGB: initialState.iconMenuRGB,
         globeArchColorRGB: initialState.globeArchColorRGB,
         globePillarColorRGB: initialState.globePillarColorRGB,
-        globeMultiColorRGB: initialState.globeMultiColorRGB
-      };
-      break;
+        globeMultiColorRGB: initialState.globeMultiColorRGB,
+      }
+      break
     case TYPE.TOGGLE_GLOBE_RENDER:
       return {
         ...state,
         settings: {
           ...state.settings,
-          renderGlobe: !state.settings.renderGlobe
-        }
-      };
-      break;
+          renderGlobe: !state.settings.renderGlobe,
+        },
+      }
+      break
     case TYPE.UNSET_STYLE_FLAG:
       return {
         ...state,
-        styleChangeFlag: false
-      };
-      break;
+        styleChangeFlag: false,
+      }
+      break
     case TYPE.SET_FIAT_CURRENCY:
       return {
         ...state,
         settings: {
           ...state.settings,
-          fiatCurrency: action.payload
-        }
-      };
-    case TYPE.CHANGE_MESSAGES:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          fiatCurrency: action.payload
-        }
-      };
-      break;
+          fiatCurrency: action.payload,
+        },
+      }
+      break
     default:
-      return state;
+      return state
   }
-};
+}

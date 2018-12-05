@@ -14,5 +14,5 @@
  */
 
 declare module 'font-awesome' {
-  declare module.exports: any;
+  declare module.exports: any
 }

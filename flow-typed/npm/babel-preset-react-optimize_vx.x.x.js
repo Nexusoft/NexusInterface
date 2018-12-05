@@ -14,7 +14,7 @@
  */
 
 declare module 'babel-preset-react-optimize' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,10 +23,10 @@ declare module 'babel-preset-react-optimize' {
  * needed.
  */
 declare module 'babel-preset-react-optimize/lib/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'babel-preset-react-optimize/lib/index.js' {
-  declare module.exports: $Exports<'babel-preset-react-optimize/lib/index'>;
+  declare module.exports: $Exports<'babel-preset-react-optimize/lib/index'>
 }

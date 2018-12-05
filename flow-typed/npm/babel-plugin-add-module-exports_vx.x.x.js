@@ -14,7 +14,7 @@
  */
 
 declare module 'babel-plugin-add-module-exports' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,17 +23,17 @@ declare module 'babel-plugin-add-module-exports' {
  * needed.
  */
 declare module 'babel-plugin-add-module-exports/changelog' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'babel-plugin-add-module-exports/lib/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'babel-plugin-add-module-exports/changelog.js' {
-  declare module.exports: $Exports<'babel-plugin-add-module-exports/changelog'>;
+  declare module.exports: $Exports<'babel-plugin-add-module-exports/changelog'>
 }
 declare module 'babel-plugin-add-module-exports/lib/index.js' {
-  declare module.exports: $Exports<'babel-plugin-add-module-exports/lib/index'>;
+  declare module.exports: $Exports<'babel-plugin-add-module-exports/lib/index'>
 }

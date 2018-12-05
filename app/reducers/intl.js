@@ -1,9 +1,9 @@
-import * as TYPE from "../actions/actiontypes";
-import itLocaleData from "react-intl/locale-data/it";
-import enLocaleData from "react-intl/locale-data/en";
-import zhLocaleData from "react-intl/locale-data/zh";
-import { FormattedMessage, addLocaleData } from "react-intl";
-import messages from "../Language/messages";
+import * as TYPE from 'actions/actiontypes'
+import itLocaleData from 'react-intl/locale-data/it'
+import enLocaleData from 'react-intl/locale-data/en'
+import zhLocaleData from 'react-intl/locale-data/zh'
+import { FormattedMessage, addLocaleData } from 'react-intl'
+import messages from 'languages/messages'
 // import { intlReducer } from "react-intl-redux";
 const initialState = {
   defaultLocale: "en"
@@ -15,16 +15,16 @@ export default (state = initialState, action) => {
     case TYPE.UPDATE_LOCALES:
       return {
         ...state,
-        locale: state.tempStorage
-      };
-      break;
+        locale: state.tempStorage,
+      }
+      break
     case TYPE.SWITCH_LOCALES:
       return {
         ...state,
-        tempStorage: action.payload
-      };
-      break;
+        tempStorage: action.payload,
+      }
+      break
     default:
-      return state;
+      return state
   }
-};
+}

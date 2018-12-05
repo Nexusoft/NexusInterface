@@ -14,7 +14,7 @@
  */
 
 declare module 'electron-debug' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,11 +23,10 @@ declare module 'electron-debug' {
  * needed.
  */
 
-
 // Filename aliases
 declare module 'electron-debug/index' {
-  declare module.exports: $Exports<'electron-debug'>;
+  declare module.exports: $Exports<'electron-debug'>
 }
 declare module 'electron-debug/index.js' {
-  declare module.exports: $Exports<'electron-debug'>;
+  declare module.exports: $Exports<'electron-debug'>
 }

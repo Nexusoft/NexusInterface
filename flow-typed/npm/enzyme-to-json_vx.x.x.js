@@ -14,7 +14,7 @@
  */
 
 declare module 'enzyme-to-json' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 /**
@@ -23,52 +23,52 @@ declare module 'enzyme-to-json' {
  * needed.
  */
 declare module 'enzyme-to-json/build/index' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'enzyme-to-json/build/mount' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'enzyme-to-json/build/render' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'enzyme-to-json/build/serializer' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'enzyme-to-json/build/shallow' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'enzyme-to-json/build/utils' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 declare module 'enzyme-to-json/serializer' {
-  declare module.exports: any;
+  declare module.exports: any
 }
 
 // Filename aliases
 declare module 'enzyme-to-json/build/index.js' {
-  declare module.exports: $Exports<'enzyme-to-json/build/index'>;
+  declare module.exports: $Exports<'enzyme-to-json/build/index'>
 }
 declare module 'enzyme-to-json/build/mount.js' {
-  declare module.exports: $Exports<'enzyme-to-json/build/mount'>;
+  declare module.exports: $Exports<'enzyme-to-json/build/mount'>
 }
 declare module 'enzyme-to-json/build/render.js' {
-  declare module.exports: $Exports<'enzyme-to-json/build/render'>;
+  declare module.exports: $Exports<'enzyme-to-json/build/render'>
 }
 declare module 'enzyme-to-json/build/serializer.js' {
-  declare module.exports: $Exports<'enzyme-to-json/build/serializer'>;
+  declare module.exports: $Exports<'enzyme-to-json/build/serializer'>
 }
 declare module 'enzyme-to-json/build/shallow.js' {
-  declare module.exports: $Exports<'enzyme-to-json/build/shallow'>;
+  declare module.exports: $Exports<'enzyme-to-json/build/shallow'>
 }
 declare module 'enzyme-to-json/build/utils.js' {
-  declare module.exports: $Exports<'enzyme-to-json/build/utils'>;
+  declare module.exports: $Exports<'enzyme-to-json/build/utils'>
 }
 declare module 'enzyme-to-json/serializer.js' {
-  declare module.exports: $Exports<'enzyme-to-json/serializer'>;
+  declare module.exports: $Exports<'enzyme-to-json/serializer'>
 }

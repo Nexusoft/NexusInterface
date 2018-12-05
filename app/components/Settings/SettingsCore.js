@@ -4,449 +4,470 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { remote } from "electron";
-import { access } from "fs";
-import { connect } from "react-redux";
-import Modal from "react-responsive-modal";
-import { FormattedMessage } from "react-intl";
-import * as FlagFile from "../../Language/LanguageFlags";
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { remote } from 'electron'
+import { access } from 'fs'
+import { connect } from 'react-redux'
+import Modal from 'react-responsive-modal'
+import { FormattedMessage } from 'react-intl'
+import * as FlagFile from 'languages/LanguageFlags'
 
 // Internal Dependencies
-import styles from "./style.css";
-import core from "../../api/core";
-import * as TYPE from "../../actions/actiontypes";
-import * as RPC from "../../script/rpc";
-import ContextMenuBuilder from "../../contextmenu";
+import styles from './style.css'
+import core from 'api/core'
+import * as TYPE from 'actions/actiontypes'
+import * as RPC from 'scripts/rpc'
+import ContextMenuBuilder from 'contextmenu'
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.settings,
-    ...state.intl
-  };
-};
+    ...state.intl,
+  }
+}
 const mapDispatchToProps = dispatch => ({
   setSettings: settings => {
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings });
+    dispatch({ type: TYPE.GET_SETTINGS, payload: settings })
   },
   OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type })
   },
   OpenModal2: type => {
-    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
+    dispatch({ type: TYPE.SHOW_MODAL2, payload: type })
   },
   OpenModal3: type => {
-    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
+    dispatch({ type: TYPE.SHOW_MODAL3, payload: type })
   },
   CloseModal2: type => {
-    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
+    dispatch({ type: TYPE.HIDE_MODAL2, payload: type })
   },
   CloseModal3: type => {
-    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
+    dispatch({ type: TYPE.HIDE_MODAL3, payload: type })
   },
   localeChange: returnSelectedLocale => {
-    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale })
   },
   SwitchLocale: locale => {
-    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
+    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale })
   },
   clearForRestart: () => {
-    dispatch({ type: TYPE.CLEAR_FOR_RESTART });
+    dispatch({ type: TYPE.CLEAR_FOR_RESTART })
   },
   CloseModal: () => {
-    dispatch({ type: TYPE.HIDE_MODAL });
-  }
-});
+    dispatch({ type: TYPE.HIDE_MODAL })
+  },
+})
 
 class SettingsCore extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    var settings = require("../../api/settings.js").GetSettings();
+    var settings = require('api/settings.js').GetSettings()
 
     //Core settings
-    this.setManualDaemon(settings);
-    this.setManualDaemonUser(settings);
-    this.setManualDaemonPassword(settings);
-    this.setManualDaemonIP(settings);
-    this.setManualDaemonPort(settings);
-    this.setManualDaemonDataDir(settings);
-    this.setEnableMining(settings);
-    this.setEnableStaking(settings);
-    this.setVerboseLevel(settings);
-    this.setMapPortUsingUpnp(settings);
-    this.setSocks4Proxy(settings);
-    this.setSocks4ProxyIP(settings);
-    this.setSocks4ProxyPort(settings);
-    this.setDetatchDatabaseOnShutdown(settings);
+    this.setManualDaemon(settings)
+    this.setManualDaemonUser(settings)
+    this.setManualDaemonPassword(settings)
+    this.setManualDaemonIP(settings)
+    this.setManualDaemonPort(settings)
+    this.setManualDaemonDataDir(settings)
+    this.setEnableMining(settings)
+    this.setEnableStaking(settings)
+    this.setVerboseLevel(settings)
+    this.setForkblocks(settings)
+    this.setMapPortUsingUpnp(settings)
+    this.setSocks4Proxy(settings)
+    this.setSocks4ProxyIP(settings)
+    this.setSocks4ProxyPort(settings)
+    this.setDetatchDatabaseOnShutdown(settings)
     // this.setOptionalTransactionFee(settings);
   }
 
   // Class Methods
   setEnableMining(settings) {
-    var enableMining = document.getElementById("enableMining");
+    var enableMining = document.getElementById('enableMining')
 
     if (settings.enableMining == true) {
-      enableMining.checked = true;
+      enableMining.checked = true
     } else {
-      enableMining.checked = false;
+      enableMining.checked = false
     }
   }
 
   setEnableStaking(settings) {
-    var enableStaking = document.getElementById("enableStaking");
+    var enableStaking = document.getElementById('enableStaking')
 
     if (settings.enableStaking == true) {
-      enableStaking.checked = true;
+      enableStaking.checked = true
     } else {
-      enableStaking.checked = false;
+      enableStaking.checked = false
     }
   }
 
   setVerboseLevel(settings) {
-    var verboseLevel = document.getElementById("verboseLevel");
+    var verboseLevel = document.getElementById('verboseLevel')
 
     if (settings.verboseLevel === undefined) {
-      verboseLevel.value = "2";
+      verboseLevel.value = '2'
     } else {
-      verboseLevel.value = settings.verboseLevel;
+      verboseLevel.value = settings.verboseLevel
+    }
+  }
+
+  setForkblocks(settings) {
+    var numForkblocks = document.getElementById('forkblockNumber')
+
+    if (settings.forkblocks === undefined) {
+      numForkblocks.value = '0'
+    } else {
+      numForkblocks.value = settings.forkblocks
     }
   }
 
   setManualDaemon(settings) {
-    var manualDaemon = document.getElementById("manualDaemon");
-    var manualDaemonSettings = document.getElementById(
-      "manual-daemon-settings"
-    );
+    var manualDaemon = document.getElementById('manualDaemon')
+    var manualDaemonSettings = document.getElementById('manual-daemon-settings')
     var automaticDaemonSettings = document.getElementById(
-      "automatic-daemon-settings"
-    );
+      'automatic-daemon-settings'
+    )
 
     if (settings.manualDaemon == true) {
-      manualDaemon.checked = true;
+      manualDaemon.checked = true
     }
 
     if (manualDaemon.checked) {
-      manualDaemonSettings.style.display = "block";
-      automaticDaemonSettings.style.display = "none";
+      manualDaemonSettings.style.display = 'block'
+      automaticDaemonSettings.style.display = 'none'
     } else {
-      manualDaemonSettings.style.display = "none";
-      automaticDaemonSettings.style.display = "block";
+      manualDaemonSettings.style.display = 'none'
+      automaticDaemonSettings.style.display = 'block'
     }
   }
 
   setManualDaemonUser(settings) {
-    var manualDaemonUser = document.getElementById("manualDaemonUser");
+    var manualDaemonUser = document.getElementById('manualDaemonUser')
 
     if (settings.manualDaemonUser === undefined) {
-      manualDaemonUser.value = "rpcserver";
+      manualDaemonUser.value = 'rpcserver'
     } else {
-      manualDaemonUser.value = settings.manualDaemonUser;
+      manualDaemonUser.value = settings.manualDaemonUser
     }
   }
 
   setManualDaemonPassword(settings) {
-    var manualDaemonPassword = document.getElementById("manualDaemonPassword");
+    var manualDaemonPassword = document.getElementById('manualDaemonPassword')
 
     if (settings.manualDaemonPassword === undefined) {
-      manualDaemonPassword.value = "password";
+      manualDaemonPassword.value = 'password'
     } else {
-      manualDaemonPassword.value = settings.manualDaemonPassword;
+      manualDaemonPassword.value = settings.manualDaemonPassword
     }
   }
 
   setManualDaemonIP(settings) {
-    var manualDaemonIP = document.getElementById("manualDaemonIP");
+    var manualDaemonIP = document.getElementById('manualDaemonIP')
 
     if (settings.manualDaemonIP === undefined) {
-      manualDaemonIP.value = "127.0.0.1";
+      manualDaemonIP.value = '127.0.0.1'
     } else {
-      manualDaemonIP.value = settings.manualDaemonIP;
+      manualDaemonIP.value = settings.manualDaemonIP
     }
   }
 
   setManualDaemonPort(settings) {
-    var manualDaemonPort = document.getElementById("manualDaemonPort");
+    var manualDaemonPort = document.getElementById('manualDaemonPort')
 
     if (settings.manualDaemonPort === undefined) {
-      manualDaemonPort.value = "9336";
+      manualDaemonPort.value = '9336'
     } else {
-      manualDaemonPort.value = settings.manualDaemonPort;
+      manualDaemonPort.value = settings.manualDaemonPort
     }
   }
 
   setManualDaemonDataDir(settings) {
-    var manualDaemonDataDir = document.getElementById("manualDaemonDataDir");
+    var manualDaemonDataDir = document.getElementById('manualDaemonDataDir')
 
     if (settings.manualDaemonDataDir === undefined) {
-      manualDaemonDataDir.value = "Nexus_trit";
+      manualDaemonDataDir.value = 'Nexus_trit'
     } else {
-      manualDaemonDataDir.value = settings.manualDaemonDataDir;
+      manualDaemonDataDir.value = settings.manualDaemonDataDir
     }
   }
 
   setMapPortUsingUpnp(settings) {
-    var mapPortUsingUpnp = document.getElementById("mapPortUsingUpnp");
+    var mapPortUsingUpnp = document.getElementById('mapPortUsingUpnp')
 
     if (settings.mapPortUsingUpnp === undefined) {
-      mapPortUsingUpnp.checked = true;
+      mapPortUsingUpnp.checked = true
     }
     if (settings.mapPortUsingUpnp == true) {
-      mapPortUsingUpnp.checked = true;
+      mapPortUsingUpnp.checked = true
     }
     if (settings.mapPortUsingUpnp == false) {
-      mapPortUsingUpnp.checked = false;
+      mapPortUsingUpnp.checked = false
     }
   }
 
   setSocks4Proxy(settings) {
-    var socks4Proxy = document.getElementById("socks4Proxy");
-    var socks4ProxyIP = document.getElementById("socks4ProxyIP");
-    var socks4ProxyPort = document.getElementById("socks4ProxyPort");
+    var socks4Proxy = document.getElementById('socks4Proxy')
+    var socks4ProxyIP = document.getElementById('socks4ProxyIP')
+    var socks4ProxyPort = document.getElementById('socks4ProxyPort')
 
     if (settings.socks4Proxy === undefined) {
-      socks4Proxy.checked = false;
+      socks4Proxy.checked = false
     }
     if (settings.socks4Proxy == true) {
-      socks4Proxy.checked = true;
+      socks4Proxy.checked = true
     }
     if (settings.socks4Proxy == false) {
-      socks4Proxy.checked = false;
+      socks4Proxy.checked = false
     }
 
     if (!socks4Proxy.checked) {
-      socks4ProxyIP.disabled = true;
-      socks4ProxyPort.disabled = true;
+      socks4ProxyIP.disabled = true
+      socks4ProxyPort.disabled = true
     }
   }
 
   setSocks4ProxyIP(settings) {
-    var socks4ProxyIP = document.getElementById("socks4ProxyIP");
+    var socks4ProxyIP = document.getElementById('socks4ProxyIP')
 
     if (settings.socks4ProxyIP === undefined) {
-      socks4ProxyIP.value = "127.0.0.1";
+      socks4ProxyIP.value = '127.0.0.1'
     } else {
-      socks4ProxyIP.value = settings.socks4ProxyIP;
+      socks4ProxyIP.value = settings.socks4ProxyIP
     }
   }
 
   setSocks4ProxyPort(settings) {
-    var socks4ProxyPort = document.getElementById("socks4ProxyPort");
+    var socks4ProxyPort = document.getElementById('socks4ProxyPort')
 
     if (settings.socks4ProxyPort === undefined) {
-      socks4ProxyPort.value = "9050";
+      socks4ProxyPort.value = '9050'
     } else {
-      socks4ProxyPort.value = settings.socks4ProxyPort;
+      socks4ProxyPort.value = settings.socks4ProxyPort
     }
   }
 
   setDetatchDatabaseOnShutdown(settings) {
     var detatchDatabaseOnShutdown = document.getElementById(
-      "detatchDatabaseOnShutdown"
-    );
+      'detatchDatabaseOnShutdown'
+    )
 
     if (settings.detatchDatabaseOnShutdown === undefined) {
-      detatchDatabaseOnShutdown.checked = false;
+      detatchDatabaseOnShutdown.checked = false
     }
     if (settings.detatchDatabaseOnShutdown == true) {
-      detatchDatabaseOnShutdown.checked = true;
+      detatchDatabaseOnShutdown.checked = true
     }
     if (settings.detatchDatabaseOnShutdown == false) {
-      detatchDatabaseOnShutdown.checked = false;
+      detatchDatabaseOnShutdown.checked = false
     }
   }
 
   updateEnableMining(event) {
-    var el = even.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = even.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.enableMining = el.checked;
+    settingsObj.enableMining = el.checked
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateEnableStaking(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.enableStaking = el.checked;
+    settingsObj.enableStaking = el.checked
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateVerboseLevel(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.verboseLevel = el.value;
+    settingsObj.verboseLevel = el.value
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
+  }
+
+  updateForkBlockAmout(event) {
+    var el = event.target
+    var settings = require('../../api/settings.js')
+    var settingsObj = settings.GetSettings()
+
+    settingsObj.forkblocks = el.value
+
+    settings.SaveSettings(settingsObj)
   }
 
   updateManualDaemon(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
- 
-
-    var manualDaemonSettings = document.getElementById(
-      "manual-daemon-settings"
-    );
+    var manualDaemonSettings = document.getElementById('manual-daemon-settings')
     var automaticDaemonSettings = document.getElementById(
-      "automatic-daemon-settings"
-    );
+      'automatic-daemon-settings'
+    )
 
     if (el.checked) {
-      manualDaemonSettings.style.display = "block";
-      automaticDaemonSettings.style.display = "none";
+      manualDaemonSettings.style.display = 'block'
+      automaticDaemonSettings.style.display = 'none'
     } else {
-      manualDaemonSettings.style.display = "none";
-      automaticDaemonSettings.style.display = "block";
-    }  
-    
-    let manualDeamonUserValue = document.getElementById("manualDaemonUser").value;
-    let manualDeamonPasswordValue = document.getElementById("manualDaemonPassword").value;
-    let manualDeamonIPValue = document.getElementById("manualDaemonIP").value;
-    let manualDeamonPortValue = document.getElementById("manualDaemonPort").value;
-    let manualDeamonDataDirValue = document.getElementById("manualDaemonDataDir").value;
+      manualDaemonSettings.style.display = 'none'
+      automaticDaemonSettings.style.display = 'block'
+    }
 
-    settingsObj.manualDaemon = el.checked;
-    settingsObj.manualDaemonUser = manualDeamonUserValue;
-    settingsObj.manualDaemonPassword = manualDeamonPasswordValue;
-    settingsObj.manualDaemonIP = manualDeamonIPValue;
-    settingsObj.manualDaemonPort = manualDeamonPortValue;
-    settingsObj.manualDaemonDataDir = manualDeamonDataDirValue;
-    console.log(manualDeamonUserValue);
-    console.log(settingsObj);
-    settings.SaveSettings(settingsObj);
+    let manualDeamonUserValue = document.getElementById('manualDaemonUser')
+      .value
+    let manualDeamonPasswordValue = document.getElementById(
+      'manualDaemonPassword'
+    ).value
+    let manualDeamonIPValue = document.getElementById('manualDaemonIP').value
+    let manualDeamonPortValue = document.getElementById('manualDaemonPort')
+      .value
+    let manualDeamonDataDirValue = document.getElementById(
+      'manualDaemonDataDir'
+    ).value
+
+    settingsObj.manualDaemon = el.checked
+    settingsObj.manualDaemonUser = manualDeamonUserValue
+    settingsObj.manualDaemonPassword = manualDeamonPasswordValue
+    settingsObj.manualDaemonIP = manualDeamonIPValue
+    settingsObj.manualDaemonPort = manualDeamonPortValue
+    settingsObj.manualDaemonDataDir = manualDeamonDataDirValue
+    console.log(manualDeamonUserValue)
+    console.log(settingsObj)
+    settings.SaveSettings(settingsObj)
   }
 
   updateManualDaemonUser(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.manualDaemonUser = el.value;
+    settingsObj.manualDaemonUser = el.value
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateManualDaemonPassword(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.manualDaemonPassword = el.value;
+    settingsObj.manualDaemonPassword = el.value
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateManualDaemonIP(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.manualDaemonIP = el.value;
+    settingsObj.manualDaemonIP = el.value
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateManualDaemonPort(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.manualDaemonPort = el.value;
+    settingsObj.manualDaemonPort = el.value
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateManualDaemonDataDir(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.manualDaemonDataDir = el.value;
+    settingsObj.manualDaemonDataDir = el.value
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateMapPortUsingUpnp(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.mapPortUsingUpnp = el.checked;
+    settingsObj.mapPortUsingUpnp = el.checked
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateSocks4Proxy(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.socks4Proxy = el.checked;
+    settingsObj.socks4Proxy = el.checked
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
 
-    var socks4ProxyIP = document.getElementById("socks4ProxyIP");
-    var socks4ProxyPort = document.getElementById("socks4ProxyPort");
+    var socks4ProxyIP = document.getElementById('socks4ProxyIP')
+    var socks4ProxyPort = document.getElementById('socks4ProxyPort')
 
     if (el.checked) {
-      socks4ProxyIP.disabled = false;
-      socks4ProxyPort.disabled = false;
+      socks4ProxyIP.disabled = false
+      socks4ProxyPort.disabled = false
     } else {
-      socks4ProxyIP.disabled = true;
-      socks4ProxyPort.disabled = true;
+      socks4ProxyIP.disabled = true
+      socks4ProxyPort.disabled = true
     }
   }
 
   updateSocks4ProxyIP(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.socks4ProxyIP = el.value;
+    settingsObj.socks4ProxyIP = el.value
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateSocks4ProxyPort(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    settingsObj.socks4ProxyPort = el.value;
+    settingsObj.socks4ProxyPort = el.value
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   updateDetatchDatabaseOnShutdown(event) {
-    var el = event.target;
-    var settings = require("../../api/settings.js");
-    var settingsObj = settings.GetSettings();
-    settingsObj.detatchDatabaseOnShutdown = el.checked;
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
+    settingsObj.detatchDatabaseOnShutdown = el.checked
 
-    settings.SaveSettings(settingsObj);
+    settings.SaveSettings(settingsObj)
   }
 
   coreRestart() {
-    core.restart();
+    core.restart()
   }
 
   // changeLocale(locale) {
-  //   let settings = require("../../api/settings.js").GetSettings();
+  //   let settings = require("api/settings.js").GetSettings();
   //   settings.locale = locale;
   //   this.props.setSettings(settings);
   //   this.props.SwitchLocale(locale);
-  //   require("../../api/settings.js").SaveSettings(settings);
+  //   require("api/settings.js").SaveSettings(settings);
   // }
 
   // Mandatory React method
@@ -455,7 +476,7 @@ class SettingsCore extends Component {
       <section id="core">
         <Modal
           center
-          classNames={{ modal: "custom-modal5" }}
+          classNames={{ modal: 'custom-modal5' }}
           showCloseIcon={true}
           open={this.props.openThirdModal}
           onClose={this.props.CloseModal3}
@@ -469,8 +490,8 @@ class SettingsCore extends Component {
                 name="radio-group"
                 type="radio"
                 value="en"
-                checked={this.props.settings.locale === "en"}
-                onClick={() => this.changeLocale("en")}
+                checked={this.props.settings.locale === 'en'}
+                onClick={() => this.changeLocale('en')}
 
                 // onChange={e => this.changeLocale(e.target.value)}
               />
@@ -493,8 +514,8 @@ class SettingsCore extends Component {
                 name="radio-group"
                 type="radio"
                 value="ru"
-                checked={this.props.settings.locale === "ru"}
-                onClick={() => this.changeLocale("ru")}
+                checked={this.props.settings.locale === 'ru'}
+                onClick={() => this.changeLocale('ru')}
               />
               &emsp;
               <label htmlFor="Russian">
@@ -515,8 +536,8 @@ class SettingsCore extends Component {
                 name="radio-group"
                 type="radio"
                 value="es"
-                checked={this.props.settings.locale === "es"}
-                onClick={() => this.changeLocale("es")}
+                checked={this.props.settings.locale === 'es'}
+                onClick={() => this.changeLocale('es')}
               />
               &emsp;
               <label htmlFor="Spanish">
@@ -537,8 +558,8 @@ class SettingsCore extends Component {
                 name="radio-group"
                 type="radio"
                 value="ko"
-                checked={this.props.settings.locale === "ko"}
-                onClick={() => this.changeLocale("ko")}
+                checked={this.props.settings.locale === 'ko'}
+                onClick={() => this.changeLocale('ko')}
               />
               &emsp;
               <label htmlFor="Korean">
@@ -559,8 +580,8 @@ class SettingsCore extends Component {
                 name="radio-group"
                 type="radio"
                 value="de"
-                checked={this.props.settings.locale === "de"}
-                onClick={() => this.changeLocale("de")}
+                checked={this.props.settings.locale === 'de'}
+                onClick={() => this.changeLocale('de')}
               />
               &emsp;
               <label htmlFor="German">
@@ -581,8 +602,8 @@ class SettingsCore extends Component {
                 name="radio-group"
                 type="radio"
                 value="ja"
-                checked={this.props.settings.locale === "ja"}
-                onClick={() => this.changeLocale("ja")}
+                checked={this.props.settings.locale === 'ja'}
+                onClick={() => this.changeLocale('ja')}
               />
               &emsp;
               <label htmlFor="Japanese">
@@ -606,8 +627,8 @@ class SettingsCore extends Component {
                 name="radio-group"
                 type="radio"
                 value="fr"
-                checked={this.props.settings.locale === "fr"}
-                onClick={() => this.changeLocale("fr")}
+                checked={this.props.settings.locale === 'fr'}
+                onClick={() => this.changeLocale('fr')}
               />
               &emsp;
               <label htmlFor="French">
@@ -633,7 +654,7 @@ class SettingsCore extends Component {
 
         <Modal
           center
-          classNames={{ modal: "custom-modal2", overlay: "custom-overlay" }}
+          classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={this.props.CloseModal2}
@@ -651,7 +672,7 @@ class SettingsCore extends Component {
                 id="Settings.ChangesNexTime"
                 defaultMessage="Changes to core settings will take effect the next time the core is restarted"
               />
-            </div>{" "}
+            </div>{' '}
             <FormattedMessage id="Settings.Yes" defaultMessage="Yes">
               {y => (
                 <input
@@ -660,10 +681,10 @@ class SettingsCore extends Component {
                   className="button primary"
                   onClick={() => {
                     this.props.setSettings(
-                      require("../../api/settings.js").GetSettings()
-                    );
-                    this.props.CloseModal2();
-                    this.props.OpenModal("Core Settings Saved");
+                      require('api/settings.js').GetSettings()
+                    )
+                    this.props.CloseModal2()
+                    this.props.OpenModal('Core Settings Saved')
                   }}
                 />
               )}
@@ -676,7 +697,7 @@ class SettingsCore extends Component {
                     type="button"
                     className="button primary"
                     onClick={() => {
-                      this.props.CloseModal2();
+                      this.props.CloseModal2()
                     }}
                   />
                 )}
@@ -756,6 +777,29 @@ class SettingsCore extends Component {
           </div>
 
           <div className="field">
+            <label htmlFor="forkblock">
+              <FormattedMessage
+                id="Settings.Forkblock"
+                defaultMessage="ForkBlocks"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.ForkBlock"
+              defaultMessage="Step Back A Amount of Blocks"
+            >
+              {TT => (
+                <input
+                  id="forkblockNumber"
+                  type="number"
+                  size="3"
+                  onChange={this.updateForkBlockAmout}
+                  data-tooltip={TT}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+
+          <div className="field">
             <label htmlFor="manualDaemon">
               <FormattedMessage
                 id="Settings.ManualDaemonMode"
@@ -804,7 +848,7 @@ class SettingsCore extends Component {
 
             <div className="field">
               <label htmlFor="manualDaemonPassword">
-                {" "}
+                {' '}
                 <FormattedMessage
                   id="Settings.Password"
                   defaultMesage="Password"
@@ -828,7 +872,7 @@ class SettingsCore extends Component {
 
             <div className="field">
               <label htmlFor="manualDaemonIP">
-                {" "}
+                {' '}
                 <FormattedMessage
                   id="Settings.IpAddress"
                   defaultMesage="Ip Address"
@@ -875,7 +919,7 @@ class SettingsCore extends Component {
                 <FormattedMessage
                   id="Settings.DDN"
                   defaultMessage="Data Directory Name"
-                />{" "}
+                />{' '}
               </label>
               <FormattedMessage
                 id="ToolTip.DataDirectory"
@@ -897,7 +941,7 @@ class SettingsCore extends Component {
           <div id="automatic-daemon-settings">
             <div className="field">
               <label htmlFor="mapPortUsingUpnp">
-                {" "}
+                {' '}
                 <FormattedMessage
                   id="Settings.UPnp"
                   defaultMesage="Map port using UPnP"
@@ -918,7 +962,6 @@ class SettingsCore extends Component {
                 )}
               </FormattedMessage>
             </div>
-
             <div className="field">
               <label htmlFor="socks4Proxy">
                 <FormattedMessage
@@ -941,7 +984,6 @@ class SettingsCore extends Component {
                 )}
               </FormattedMessage>
             </div>
-
             <div className="field">
               <label htmlFor="socks4ProxyIP">
                 <FormattedMessage
@@ -964,7 +1006,6 @@ class SettingsCore extends Component {
                 )}
               </FormattedMessage>
             </div>
-
             <div className="field">
               <label htmlFor="socks4ProxyPort">
                 <FormattedMessage
@@ -987,7 +1028,6 @@ class SettingsCore extends Component {
                 )}
               </FormattedMessage>
             </div>
-
             <div className="field">
               <label htmlFor="detatchDatabaseOnShutdown">
                 <FormattedMessage
@@ -1036,11 +1076,11 @@ class SettingsCore extends Component {
               id="restart-core"
               className="button primary"
               onClick={e => {
-                e.preventDefault();
-                this.props.clearForRestart();
+                e.preventDefault()
+                this.props.clearForRestart()
 
-                core.restart();
-                this.props.OpenModal("Core Restarting");
+                core.restart()
+                this.props.OpenModal('Core Restarting')
               }}
             >
               <FormattedMessage
@@ -1048,13 +1088,12 @@ class SettingsCore extends Component {
                 defaultMesage="Restart Core"
               />
             </button>
-            mmm
             <button
               // id="restart-core"
               className="button primary"
               onClick={e => {
-                e.preventDefault();
-                this.props.OpenModal2();
+                e.preventDefault()
+                this.props.OpenModal2()
               }}
             >
               <FormattedMessage
@@ -1083,7 +1122,7 @@ class SettingsCore extends Component {
 
         {/* <button className="button primary" onClick={application.restart()}>Restart Core</button> */}
       </section>
-    );
+    )
   }
 }
 
@@ -1091,4 +1130,4 @@ class SettingsCore extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SettingsCore);
+)(SettingsCore)

@@ -5,38 +5,37 @@ Last Modified by: Brian Smith
 */
 
 // External Dependencies
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { shell } from "electron";
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { shell } from 'electron'
 // Internal Dependencies
-import styles from "./style.css";
-import * as TYPE from "../../actions/actiontypes";
-import packageJson from "../../../package.json";
+import styles from './style.css'
+import * as TYPE from 'actions/actiontypes'
 
 // Images
-import nexusLogo from "../../images/logo-full.svg";
-import updateicon from "../../images/unlock.png";
+import nexusLogo from 'images/logo-full.svg'
+import updateicon from 'images/unlock.png'
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.overview };
-};
+  return { ...state.overview }
+}
 //const mapDispatchToProps = dispatch => {};
 
 class About extends Component {
   // Class Methods
   getCurrentYear() {
-    let temp = new Date();
-    return temp.getFullYear();
+    let temp = new Date()
+    return temp.getFullYear()
   }
 
   getInterfaceVersionNumber() {
-    return packageJson.version;
+    return APP_VERSION
   }
 
   getDeamonVersionNumber() {
-    return this.props.version;
+    return this.props.version
   }
 
   // Mandatory React method
@@ -50,19 +49,19 @@ class About extends Component {
             <br />
             <row>
               <column>
-                <b>Interface Version:</b> {this.getInterfaceVersionNumber()}{" "}
+                <b>Interface Version:</b> {this.getInterfaceVersionNumber()}{' '}
                 <br />
-                <b>Build Date: </b> July 19th 2018 <br />
+                <b>Build Date: </b> December 3rd 2018 <br />
               </column>
               <column>
                 <b>Deamon Version:</b> {this.getDeamonVersionNumber()} <br />
-                <b>Build Date: </b> July 19th 2018 <br />
+                <b>Build Date: </b> November 15th 2018 <br />
               </column>
             </row>
             <br />
             <br />
             <b>
-              Copyright {this.getCurrentYear()}{" "}
+              Copyright {this.getCurrentYear()}{' '}
             </b> Nexus,Videlicet,Peercoin <br />
             <br />
             <b>
@@ -98,101 +97,101 @@ class About extends Component {
             <br />
           </column>
         </row>
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: 'center' }}>
           <h2>Open Source Credits</h2>
           <dl>
             <dt>Electron</dt>
             <dd>
-              {" "}
-              <a onClick={() => shell.openExternal("https://electronjs.org/")}>
-                electronjs.org{" "}
-              </a>{" "}
+              {' '}
+              <a onClick={() => shell.openExternal('https://electronjs.org/')}>
+                electronjs.org{' '}
+              </a>{' '}
               MIT License
             </dd>
             <dt>React</dt>
             <dd>
-              <a onClick={() => shell.openExternal("https://reactjs.org/")}>
-                {" "}
-                Reactjs.org{" "}
-              </a>{" "}
+              <a onClick={() => shell.openExternal('https://reactjs.org/')}>
+                {' '}
+                Reactjs.org{' '}
+              </a>{' '}
               MIT License
             </dd>
             <dt>Redux</dt>
             <dd>
-              {" "}
-              <a onClick={() => shell.openExternal("https://redux.js.org/")}>
-                {" "}
-                Redux.js.org{" "}
-              </a>{" "}
-              MIT License{" "}
+              {' '}
+              <a onClick={() => shell.openExternal('https://redux.js.org/')}>
+                {' '}
+                Redux.js.org{' '}
+              </a>{' '}
+              MIT License{' '}
             </dd>
             <dt>Babel</dt>
             <dd>
-              {" "}
-              <a onClick={() => shell.openExternal("https://babeljs.io/")}>
-                {" "}
-                Babeljs.io{" "}
-              </a>{" "}
-              MIT License{" "}
+              {' '}
+              <a onClick={() => shell.openExternal('https://babeljs.io/')}>
+                {' '}
+                Babeljs.io{' '}
+              </a>{' '}
+              MIT License{' '}
             </dd>
 
             <dt>Victory Chart</dt>
             <dd>
-              {" "}
+              {' '}
               <a
                 onClick={() =>
                   shell.openExternal(
-                    "https://formidable.com/open-source/victory/"
+                    'https://formidable.com/open-source/victory/'
                   )
                 }
               >
-                {" "}
-                Formidable Labs{" "}
-              </a>{" "}
+                {' '}
+                Formidable Labs{' '}
+              </a>{' '}
               MIT License
             </dd>
             <dt>MaxMind</dt>
             <dd>
               Copyright &copy; 2018 MaxMind, Inc. This work is licensed under
               the Creative Commons Attribution-ShareAlike 4.0 International
-              License. To view a copy of this license, visit{" "}
+              License. To view a copy of this license, visit{' '}
               <a
                 onClick={() =>
                   shell.openExternal(
-                    "http://creativecommons.org/licenses/by-sa/4.0/"
+                    'http://creativecommons.org/licenses/by-sa/4.0/'
                   )
                 }
               >
-                {" "}
-                creativecommons.org{" "}
+                {' '}
+                creativecommons.org{' '}
               </a>
-              . This database incorporates{" "}
-              <a onClick={() => shell.openExternal("http://www.geonames.org")}>
+              . This database incorporates{' '}
+              <a onClick={() => shell.openExternal('http://www.geonames.org')}>
                 GeoNames
-              </a>{" "}
+              </a>{' '}
               geographical data, which is made available under the Creative
               Commons Attribution 3.0 License. To view a copy of this license,
-              visit{" "}
+              visit{' '}
               <a
                 onClick={() =>
                   shell.openExternal(
-                    "http://www.creativecommons.org/licenses/by/3.0/us/"
+                    'http://www.creativecommons.org/licenses/by/3.0/us/'
                   )
                 }
               >
                 creativecommons.org
-              </a>{" "}
+              </a>{' '}
               .
             </dd>
           </dl>
         </div>
       </div>
-    );
+    )
   }
 }
 
 // Mandatory React-Redux method
 export default connect(
   mapStateToProps
-//  mapDispatchToProps
-)(About);
+  //  mapDispatchToProps
+)(About)

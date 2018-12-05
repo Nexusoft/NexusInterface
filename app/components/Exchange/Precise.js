@@ -5,66 +5,66 @@ Last Modified by: Brian Smith
 */
 
 // External Dependencies
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { remote } from "electron";
-import Request from "request";
-import { bindActionCreators } from "redux";
-import { Squares } from "react-activity";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { remote } from 'electron'
+import Request from 'request'
+import { bindActionCreators } from 'redux'
+import { Squares } from 'react-activity'
 
 // Internal Dependencies
-import * as TYPE from "../../actions/actiontypes";
-import ContextMenuBuilder from "../../contextmenu";
-import styles from "./style.css";
+import * as TYPE from 'actions/actiontypes'
+import ContextMenuBuilder from 'contextmenu'
+import styles from './style.css'
 
-import arrow from "../../images/arrow.svg";
-import * as actionsCreators from "../../actions/exchangeActionCreators";
-import { FormattedMessage } from "react-intl";
+import arrow from 'images/arrow.svg'
+import * as actionsCreators from 'actions/exchangeActionCreators'
+import { FormattedMessage } from 'react-intl'
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.common, ...state.exchange };
-};
+  return { ...state.common, ...state.exchange }
+}
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch);
+  bindActionCreators(actionsCreators, dispatch)
 
 class Precise extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    this.props.GetAvailaleCoins();
+    this.props.GetAvailaleCoins()
   }
   // React Method (Life cycle hook)
   componentDidUpdate(prevProps) {
-    let pair = this.props.from + "_" + this.props.to;
+    let pair = this.props.from + '_' + this.props.to
     if (
       (this.props.to !== prevProps.to || this.props.from !== prevProps.from) &&
       this.props.from !== this.props.to
     ) {
-      this.props.GetPairMarketInfo(pair);
+      this.props.GetPairMarketInfo(pair)
     }
 
     if (this.props.ammount !== prevProps.ammount) {
-      let tradeAmmt = parseFloat(this.props.ammount);
+      let tradeAmmt = parseFloat(this.props.ammount)
       if (tradeAmmt > this.props.marketPairData.minimum) {
         if (tradeAmmt < this.props.marketPairData.maxLimit) {
           if (!this.props.withinBounds) {
-            this.props.toggleWithinBounds();
+            this.props.toggleWithinBounds()
           }
         } else if (this.props.withinBounds) {
-          this.props.toggleWithinBounds();
+          this.props.toggleWithinBounds()
         }
       } else if (this.props.withinBounds) {
-        this.props.toggleWithinBounds();
+        this.props.toggleWithinBounds()
       }
     }
   }
 
   // Class methods
   transferCalculator() {
-    let tradeAmmt = parseFloat(this.props.ammount);
+    let tradeAmmt = parseFloat(this.props.ammount)
     if (this.props.quote) {
-      let grossTrade = tradeAmmt * this.props.quote.quotedRate;
-      let finalTrade = grossTrade - this.props.quote.minerFee;
+      let grossTrade = tradeAmmt * this.props.quote.quotedRate
+      let finalTrade = grossTrade - this.props.quote.minerFee
 
       return (
         <div>
@@ -75,126 +75,126 @@ class Precise extends Component {
             Deposit: {this.props.quote.depositAmount} {this.props.from}
           </div>
         </div>
-      );
-      return <div>hello</div>;
-    } else return null;
+      )
+      return <div>hello</div>
+    } else return null
   }
 
   optionbuilder() {
     return Object.values(this.props.availableCoins).map(e => {
-      if (e.status === "available") {
+      if (e.status === 'available') {
         return (
           <option key={e.symbol} value={e.symbol}>
             {e.name}
           </option>
-        );
-      } else return null;
-    });
+        )
+      } else return null
+    })
   }
 
   minAmmount() {
     if (this.props.marketPairData.minimum) {
-      return this.props.marketPairData.minimum;
-    } else return 0;
+      return this.props.marketPairData.minimum
+    } else return 0
   }
 
   maxAmmount() {
     if (this.props.marketPairData.maxLimit) {
-      return this.props.marketPairData.maxLimit;
-    } else return 1;
+      return this.props.marketPairData.maxLimit
+    } else return 1
   }
 
   currencylabel() {
     if (this.props.to) {
-      return this.props.availableCoins[this.props.to].name;
-    } else return null;
+      return this.props.availableCoins[this.props.to].name
+    } else return null
   }
 
   ammountHandler(value) {
-    if (/^[0-9.]+$/.test(value) | (value === "")) {
-      this.props.ammountUpdater(value);
+    if (/^[0-9.]+$/.test(value) | (value === '')) {
+      this.props.ammountUpdater(value)
       if (this.props.greenLight) {
-        this.props.clearQuote();
+        this.props.clearQuote()
       }
     } else {
-      return null;
+      return null
     }
   }
 
   toFromHandler(e, switcher) {
-    if (switcher === "to") {
+    if (switcher === 'to') {
       if (e.target.value !== this.props.from) {
-        this.props.setBusyFlag();
-        this.props.ToSetter(e.target.value);
+        this.props.setBusyFlag()
+        this.props.ToSetter(e.target.value)
       } else {
-        this.props.ToSetter(e.target.value);
+        this.props.ToSetter(e.target.value)
       }
     } else {
       if (e.target.value !== this.props.to) {
-        this.props.setBusyFlag();
-        this.props.FromSetter(e.target.value);
+        this.props.setBusyFlag()
+        this.props.FromSetter(e.target.value)
       } else {
-        this.props.FromSetter(e.target.value);
+        this.props.FromSetter(e.target.value)
       }
     }
   }
 
   getQuote() {
     if (this.props.withinBounds) {
-      this.props.ToggleAcyncButtons();
-      let pair = this.props.from + "_" + this.props.to;
-      this.props.GetQuote(pair, this.props.ammount);
-    } else alert("Outside trade-able ammounts");
+      this.props.ToggleAcyncButtons()
+      let pair = this.props.from + '_' + this.props.to
+      this.props.GetQuote(pair, this.props.ammount)
+    } else alert('Outside trade-able ammounts')
   }
 
   executeTransaction() {
-    this.props.googleanalytics.SendEvent("Shapeshift", "Precise", "Sent", 1);
-    let pair = this.props.from + "_" + this.props.to;
-    if (this.props.toAddress !== "") {
-      if (this.props.refundAddress !== "") {
-        this.props.ToggleAcyncButtons();
+    this.props.googleanalytics.SendEvent('Shapeshift', 'Precise', 'Sent', 1)
+    let pair = this.props.from + '_' + this.props.to
+    if (this.props.toAddress !== '') {
+      if (this.props.refundAddress !== '') {
+        this.props.ToggleAcyncButtons()
         Request(
           {
-            method: "GET",
+            method: 'GET',
             url: `https://shapeshift.io/validateAddress/${
               this.props.toAddress
-            }/${this.props.to}`
+            }/${this.props.to}`,
           },
           (error, response, body) => {
             if (response.statusCode === 200) {
-              let res = JSON.parse(response.body);
+              let res = JSON.parse(response.body)
               if (!res.isvalid) {
-                alert(`${res.error}\n ${this.props.to} Address.`);
+                alert(`${res.error}\n ${this.props.to} Address.`)
               } else {
                 Request(
                   {
-                    method: "GET",
+                    method: 'GET',
                     url: `https://shapeshift.io/validateAddress/${
                       this.props.refundAddress
-                    }/${this.props.from}`
+                    }/${this.props.from}`,
                   },
                   (error, response, body) => {
                     if (response.statusCode === 200) {
-                      let res = JSON.parse(response.body);
+                      let res = JSON.parse(response.body)
                       if (!res.isvalid) {
-                        alert(`${res.error}\n ${this.props.from} Address.`);
+                        alert(`${res.error}\n ${this.props.from} Address.`)
                       } else {
                         this.props.InitiateQuotedTransaction(
                           pair,
                           this.props.ammount,
                           this.props.toAddress,
                           this.props.refundAddress
-                        );
+                        )
                       }
                     }
                   }
-                );
+                )
               }
             }
           }
-        );
-      } else alert("Refund Address is required");
-    } else alert(`${this.currencylabel()} Address is required`);
+        )
+      } else alert('Refund Address is required')
+    } else alert(`${this.currencylabel()} Address is required`)
   }
 
   buttonSwitcher() {
@@ -204,7 +204,7 @@ class Precise extends Component {
           <button
             className="button primary hero"
             onClick={() => {
-              this.executeTransaction();
+              this.executeTransaction()
             }}
             disabled={this.props.acyncButtonFlag}
           >
@@ -217,13 +217,13 @@ class Precise extends Component {
               <Squares color="white" />
             )}
           </button>
-        );
+        )
       } else {
         return (
           <button
             className="button primary hero"
             onClick={() => {
-              this.getQuote();
+              this.getQuote()
             }}
             disabled={this.props.acyncButtonFlag}
           >
@@ -236,7 +236,7 @@ class Precise extends Component {
               <Squares color="white" />
             )}
           </button>
-        );
+        )
       }
     }
   }
@@ -266,14 +266,14 @@ class Precise extends Component {
                   </div>
                 </div>
                 <img
-                  style={{ height: "100px", margin: "10px" }}
+                  style={{ height: '100px', margin: '10px' }}
                   src={this.props.availableCoins[this.props.from].image}
                 />
               </div>
-              <img src={arrow} style={{ height: "100px" }} />
+              <img src={arrow} style={{ height: '100px' }} />
               <div id="recieveSideConfirm">
                 <img
-                  style={{ height: "100px", margin: "10px" }}
+                  style={{ height: '100px', margin: '10px' }}
                   src={this.props.availableCoins[this.props.to].image}
                 />
                 <div className="confirmationWords">
@@ -290,7 +290,7 @@ class Precise extends Component {
             </div>
             {this.buttonSwitcher()}
           </div>
-        );
+        )
       } else {
         return (
           <h1>
@@ -299,9 +299,9 @@ class Precise extends Component {
               defaultMessage="That pair is temporarily unavailable for trades"
             />
           </h1>
-        );
+        )
       }
-    } else return null;
+    } else return null
   }
 
   // Mandatory React method
@@ -320,14 +320,14 @@ class Precise extends Component {
                   <select
                     className="soflow-color"
                     value={this.props.from}
-                    onChange={e => this.toFromHandler(e, "from")}
+                    onChange={e => this.toFromHandler(e, 'from')}
                   >
                     {this.optionbuilder()}
                   </select>
                 </div>
                 <div className="field">
                   <label>
-                    {" "}
+                    {' '}
                     <FormattedMessage
                       id="Exchange.TradeAmount"
                       defaultMessage="Trade Amount"
@@ -342,7 +342,7 @@ class Precise extends Component {
                       <input
                         type="text"
                         placeholder={
-                          this.minAmmount() + " " + this.props.from + MT
+                          this.minAmmount() + ' ' + this.props.from + MT
                         }
                         value={this.props.ammount}
                         onChange={e => this.ammountHandler(e.target.value)}
@@ -351,7 +351,7 @@ class Precise extends Component {
                     )}
                   </FormattedMessage>
                 </div>
-                {this.props.from !== "NXS" ? (
+                {this.props.from !== 'NXS' ? (
                   <div className="field">
                     <label>
                       <FormattedMessage
@@ -377,7 +377,7 @@ class Precise extends Component {
             <div id="line" />
           </div>
           <div>
-            <form style={{ display: "flex", height: "100%" }}>
+            <form style={{ display: 'flex', height: '100%' }}>
               <fieldset>
                 <legend>
                   <FormattedMessage
@@ -388,7 +388,7 @@ class Precise extends Component {
                 <div className="field">
                   <select
                     className="soflow-color"
-                    onChange={e => this.toFromHandler(e, "to")}
+                    onChange={e => this.toFromHandler(e, 'to')}
                     value={this.props.to}
                   >
                     {this.optionbuilder()}
@@ -397,7 +397,7 @@ class Precise extends Component {
 
                 <div className="field">
                   <label>
-                    {this.currencylabel()}{" "}
+                    {this.currencylabel()}{' '}
                     <FormattedMessage
                       id="Footer.Address"
                       defaultMessage="Address"
@@ -417,11 +417,11 @@ class Precise extends Component {
         </div>
         <div>{this.buildConfermation()}</div>
       </div>
-    );
+    )
   }
 }
 // Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Precise);
+)(Precise)
