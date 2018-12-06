@@ -212,11 +212,7 @@ class Transactions extends Component {
       false
     )
   }
-  shouldComponentUpdate(nextprops) {
-    console.log('this.props: ', this.props)
-    console.log('nextProps: ', nextprops)
-    return true
-  }
+
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.txtotal != previousprops.txtotal) {
@@ -1532,7 +1528,7 @@ class Transactions extends Component {
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom')
     const open = this.state.open
     const pageSize = this.returnDefaultPageSize()
-    console.log('rerender', this.props.connections)
+
     return (
       <div id="transactions" className="animated fadeIn">
         <Modal

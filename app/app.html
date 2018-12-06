@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Nexus Tritium Wallet</title>
+    <title>Nexus Tritium Wallet Beta</title>
     <script>
-      (function() {
+      ;(function() {
         if (!process.env.HOT) {
-          const link = document.createElement("link");
-          link.rel = "stylesheet";
-          link.href = "./dist/style.css";
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = './dist/style.css'
           // HACK: Writing the script path should be done with webpack
-          document.getElementsByTagName("head")[0].appendChild(link);
+          document.getElementsByTagName('head')[0].appendChild(link)
         }
-      })();
+      })()
     </script>
   </head>
 
@@ -20,40 +20,40 @@
     <div style="overflow: hidden;" id="root"></div>
     <script>
       {
-        const scripts = [];
+        const scripts = []
 
         // Dynamically insert the DLL script in development env in the
         // renderer process
-        if (process.env.NODE_ENV === "development") {
-          scripts.push("../dll/renderer.dev.dll.js");
+        if (process.env.NODE_ENV === 'development') {
+          scripts.push('../dll/renderer.dev.dll.js')
         }
 
         // Dynamically insert the bundled app script in the renderer process
-        const port = process.env.PORT || 1212;
+        const port = process.env.PORT || 1212
         scripts.push(
           process.env.HOT
-            ? "http://localhost:" + port + "/dist/renderer.dev.js"
-            : "./dist/renderer.prod.js"
-        );
+            ? 'http://localhost:' + port + '/dist/renderer.dev.js'
+            : './dist/renderer.prod.js'
+        )
 
         document.write(
           scripts
             .map(script => '<script defer src="' + script + '"><\/script>')
-            .join("")
-        );
+            .join('')
+        )
 
-        const { shell } = require("electron");
+        const { shell } = require('electron')
 
         function handleNonLeftClick(e) {
           if (e.button === 1 || e.ctrlKey) {
-            e.preventDefault();
+            e.preventDefault()
           }
         }
 
         window.onload = () => {
-          document.addEventListener("auxclick", handleNonLeftClick);
-          document.addEventListener("click", handleNonLeftClick);
-        };
+          document.addEventListener('auxclick', handleNonLeftClick)
+          document.addEventListener('click', handleNonLeftClick)
+        }
       }
     </script>
     <script

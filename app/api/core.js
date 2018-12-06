@@ -107,7 +107,6 @@ function SetCoreParameters(settings) {
   // Enable detach database on shutdown (default is 0)
   if (settings.detatchDatabaseOnShutdown == true) parameters.push('-detachdb=1')
 
-  console.log(settings)
   if (forkblockCount !== 0) {
     parameters.push('-forkblocks=' + forkblockCount)
     settings.forkblocks = 0

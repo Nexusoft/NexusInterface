@@ -65,36 +65,8 @@ class Login extends Component {
 
     // this.props.busy(true);
 
-    // if (this.props.stakingFlag) {
-    //
-    //   RPC.PROMISE("walletpassphrase", [pass.value, unSET_TIMElockUntill, true])
-    //     .then(payload => {SET_TIME
-    //       this.props.wipe();SET_TIME
-    //       RPC.PROMISE("getinfo", [])
-    //         .then(payload => {
-    //           delete payload.timestamp;
-    //           return payload;
-    //         })
-    //         .then(payload => {
-    //           // this.props.busy();
-    //           this.props.getInfo(payload);
-    //         });
-    //     })
-    //     .catch(e => {
-    //       if (
-    //         e.error.message ===
-    //         "Error: The wallet passphrase entered was incorrect."
-    //       ) {
-    //         let message = e.error.message.replace("Error: ", "");
-    //         this.props.setErrorMessage(message);
-    //         pass.value = "";
-    //         pass.focus();
-    //       }
-    //     });
-    // } else {
-
-    if (unlockUntill !== NaN && unlockUntill > 3600) {
-      RPC.PROMISE('walletpassphrase', [pass.value, unlockUntill, false])
+    if (this.props.stakingFlag) {
+      RPC.PROMISE('walletpassphrase', [pass.value, unlockUntill, true])
         .then(payload => {
           this.props.wipe()
           RPC.PROMISE('getinfo', [])
@@ -108,27 +80,54 @@ class Login extends Component {
             })
         })
         .catch(e => {
-          pass.value = ''
           if (
             e.error.message ===
             'Error: The wallet passphrase entered was incorrect.'
           ) {
+            let message = e.error.message.replace('Error: ', '')
+            this.props.setErrorMessage(message)
             this.props.busy(false)
-            this.props.OpenModal('Incorrect Passsword')
-            pass.focus()
-          } else if (e.error.message === 'value is type null, expected int') {
-            this.props.busy(false)
-            this.props.OpenModal('FutureDate')
+            pass.value = ''
             pass.focus()
           }
         })
     } else {
-      this.props.OpenModal('FutureDate')
-      setTimeout(() => {
-        this.props.CloseModal()
-      }, 3000)
+      if (unlockUntill !== NaN && unlockUntill > 3600) {
+        RPC.PROMISE('walletpassphrase', [pass.value, unlockUntill, false])
+          .then(payload => {
+            this.props.wipe()
+            RPC.PROMISE('getinfo', [])
+              .then(payload => {
+                delete payload.timestamp
+                return payload
+              })
+              .then(payload => {
+                this.props.busy(false)
+                this.props.getInfo(payload)
+              })
+          })
+          .catch(e => {
+            pass.value = ''
+            if (
+              e.error.message ===
+              'Error: The wallet passphrase entered was incorrect.'
+            ) {
+              this.props.busy(false)
+              this.props.OpenModal('Incorrect Passsword')
+              pass.focus()
+            } else if (e.error.message === 'value is type null, expected int') {
+              this.props.busy(false)
+              this.props.OpenModal('FutureDate')
+              pass.focus()
+            }
+          })
+      } else {
+        this.props.OpenModal('FutureDate')
+        setTimeout(() => {
+          this.props.CloseModal()
+        }, 3000)
+      }
     }
-    // }
   }
   setUnlockDate(input) {
     let today = new Date()
@@ -182,7 +181,7 @@ class Login extends Component {
             </div>
 
             {/* STAKING FLAG STUFF  TURNED OFF UNTILL WE HAVE A FLAG COMING BACK FROM THE DAEMON TELLING US THAT ITS UNLOCKED FOR STAKING ONLY */}
-            {/* <div className="field" id="checkFeild">
+            <div className="field" id="checkFeild">
               <label>Staking Only:</label>
               <input
                 type="checkbox"
@@ -190,7 +189,7 @@ class Login extends Component {
                 value={this.props.stakingFlag}
                 onChange={() => this.props.stake()}
               />
-            </div> */}
+            </div>
           </fieldset>
 
           <p>
