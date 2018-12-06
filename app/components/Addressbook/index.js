@@ -373,7 +373,6 @@ class AddressBook extends Component {
               <FormattedMessage id="AddressBook.Name" defaultMessage="Name">
                 {n => (
                   <input
-                    ref="addContactName"
                     id="new-account-name"
                     type="text"
                     value={this.props.prototypeName}
@@ -441,7 +440,6 @@ class AddressBook extends Component {
               >
                 {na => (
                   <input
-                    ref="addContactAddress"
                     id="nxsaddress"
                     type="text"
                     onChange={e => this.props.EditProtoAddress(e.target.value)}
@@ -570,7 +568,6 @@ class AddressBook extends Component {
               >
                 {na => (
                   <input
-                    ref="addContactAddress"
                     id="new-account-name"
                     type="text"
                     onChange={e => this.props.EditProtoAddress(e.target.value)}
@@ -630,7 +627,6 @@ class AddressBook extends Component {
               <FormattedMessage id="AddressBook.Name" defaultMessage="Name">
                 {ean => (
                   <input
-                    ref="addContactName"
                     id="new-account-name"
                     type="text"
                     value={this.props.prototypeName}
@@ -1348,7 +1344,6 @@ class AddressBook extends Component {
                           >
                             {n => (
                               <input
-                                ref="addContactName"
                                 id="new-account-name"
                                 type="text"
                                 value={this.props.prototypeName}

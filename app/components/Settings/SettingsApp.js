@@ -617,7 +617,6 @@ class SettingsApp extends Component {
               />
             </label>
             <select
-              ref="fiatSelector"
               id="fiatSelector"
               value={this.props.settings.fiatCurrency}
               onChange={e => this.OnFiatCurrencyChange(e)}
