@@ -1,5 +1,5 @@
 // External Dependencies
-import React, { Component } from 'react'
+import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
 const DaemonStatus = ({ settings, connections, daemonAvailable }) => {

@@ -1,5 +1,5 @@
 // External Dependencies
-import React, { Component } from 'react'
+import React from 'react'
 import Modal from 'react-responsive-modal'
 import { FormattedMessage } from 'react-intl'
 
