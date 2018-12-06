@@ -58,6 +58,7 @@ const initialState = {
     saveSettings: false,
     styleChangeFlag: false,
     selectedColorProp: 'MC1',
+    minimumconfirmations: 20
   },
 
   messages: messages,
@@ -350,6 +351,15 @@ export default (state = initialState, action) => {
           ...state.settings,
           fiatCurrency: action.payload,
         },
+      }
+      break
+    case TYPE.SET_MIN_CONFIRMATIONS:
+      return {
+        ...state,
+        settings:{
+          ...state.settings,
+          minimumconfirmations: action.payload
+        }
       }
       break
     default:

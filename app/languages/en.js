@@ -58,6 +58,7 @@ export default {
     'transactions.Details': 'Transaction Details',
     'transactions.fee': 'Fee',
     'transactions.confirmations': 'Confirmations',
+    'transactions.modalTxID': 'Transaction ID',
     'transactions.blockhash': 'Block Hash',
     'transactions.blocknumber': 'Block Number',
     'transactions.Transactions': 'Transactions',
@@ -92,6 +93,7 @@ export default {
     'transactions.Rows': 'Rows',
     'transactions.Pending': '(Pending)',
     'transactions.NoRowsFound': 'No Rows Found',
+    'transactions.PendingTransaction': 'PENDING TRANSACTION',
     //Market//
     'Market.Information': 'Market Information',
     'Market.Refreash': 'Refresh Market Data',
@@ -179,6 +181,7 @@ export default {
     'Settings.InformationPop': 'Information Popups',
     'Settings.UsageData': 'Send anonymous usage data',
     'Settings.OptionalFee': 'Optional transaction fee (NXS)',
+    'Settings.MinimumConfirmations': 'Minimum Confirmations',
     'Settings.Set': 'Set',
     'Settings.DeveloperMode': 'Developer Mode',
     'Settings.BackupWallet': 'Backup Wallet',
@@ -321,6 +324,7 @@ export default {
       'Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing',
     'ToolTip.DevMode':
       'Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features',
+    'ToolTip.MinimumConfirmations': 'Minimum amount of confirmations before a block is accepted. Local Only.',
     'ToolTip.EnableMining': 'Enable/Disable mining to the wallet',
     'ToolTip.EnableStaking': 'Enable/Disable staking on the wallet',
     'ToolTip.Verbose': 'Verbose level for logs',

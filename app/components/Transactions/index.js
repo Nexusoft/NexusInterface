@@ -961,7 +961,7 @@ class Transactions extends Component {
     return formatedData.map(ele => {
       txCounter++
       let isPending = ''
-      if (ele.confirmations <= 12) {
+      if (ele.confirmations <= this.props.settings.minimumconfirmations) {
         isPending = '(Pending)'
       }
       // if (ele.category === "send") {
@@ -1429,14 +1429,11 @@ class Transactions extends Component {
     if (this.hoveringID != 999999999999 && this.props.walletitems.length != 0) {
       const selectedTransaction = this.props.walletitems[this.hoveringID]
 
-      if (selectedTransaction.confirmations <= 12) {
-        internalString.push(<a key="isPending">PENDING TRANSACTION</a>)
+      if (selectedTransaction.confirmations <= this.props.settings.minimumconfirmations) {
+        internalString.push(<a key="isPending">
+          <FormattedMessage id="transactions.PendingTransaction" defaultMessage="PENDING TRANSACTION" />
+        </a>)
         internalString.push(<br key="br10" />)
-      }
-
-      if (selectedTransaction.confirmations <= 12) {
-        internalString.push(<a key="isPending">PENDING TRANSACTION</a>)
-        internalString.push(<br key="br6" />)
       }
 
       internalString.push(
@@ -1483,12 +1480,25 @@ class Transactions extends Component {
           <span className="TXdetails">{selectedTransaction.confirmations}</span>
         </div>
       )
+      internalString.push(<br key="br15" />)
+      internalString.push(
+        <div key="modal_TXID">
+          <FormattedMessage
+            id="transactions.modalTxID"
+            defaultMessage="Transaction ID"
+          />
+          :
+          <div className="blockHash" style={{ wordWrap: 'break-word' }}>
+            <span>{selectedTransaction.txid}</span>
+          </div>
+        </div>
+      )
       internalString.push(<br key="br6" />)
       internalString.push(
         <div key="modal_BlockNumber" className="detailCat">
           <FormattedMessage
-            id="transactions.blockhash"
-            defaultMessage="Block Hash"
+            id="transactions.blocknumber"
+            defaultMessage="Block Number"
           />
           :<span className="TXdetails">{this.state.highlightedBlockNum}</span>
         </div>
@@ -1497,8 +1507,8 @@ class Transactions extends Component {
       internalString.push(
         <div key="modal_BlockHash">
           <FormattedMessage
-            id="transactions.blocknumber"
-            defaultMessage="Block Number"
+            id="transactions.blockhash"
+            defaultMessage="Block Hash"
           />
           :
           <div className="blockHash" style={{ wordWrap: 'break-word' }}>
