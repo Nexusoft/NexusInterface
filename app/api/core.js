@@ -82,7 +82,7 @@ function SetCoreParameters(settings) {
   parameters.push('-rpcport=' + port)
   parameters.push('-datadir=' + datadir)
   parameters.push('-daemon')
-  //  parameters.push("-printtoconsole"); // Enable console functionality via stdout
+  parameters.push('-avatar')
   parameters.push('-server')
   parameters.push('-verbose=' + verbose) // <-- Make a setting for this
   parameters.push('-rpcallowip=' + ip)

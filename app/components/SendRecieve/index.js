@@ -56,6 +56,12 @@ const mapDispatchToProps = dispatch => ({
       payload: { USDAmount: USD, Amount: NxsVal },
     })
   },
+  updateMoveAmount: (NxsVal, USD) => {
+    dispatch({
+      type: TYPE.UPDATE_MOVE_AMOUNT,
+      payload: { USDAmount: USD, Amount: NxsVal },
+    })
+  },
   AccountPicked: returnSelectedAccount => {
     dispatch({ type: TYPE.SELECTED_ACCOUNT, payload: returnSelectedAccount })
   },
@@ -101,25 +107,39 @@ const mapDispatchToProps = dispatch => ({
   Confirm: Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer })
   },
+  OpenMoveModal: () => {
+    dispatch({ type: TYPE.OPEN_MOVE_MODAL })
+  },
+  CloseMoveModal: () => {
+    dispatch({ type: TYPE.CLOSE_MOVE_MODAL })
+  },
+  updateMoveToAccount: toAccount => {
+    dispatch({ type: TYPE.MOVE_TO_ACCOUNT, payload: toAccount })
+  },
+  updateMoveFromAccount: fromAccount => {
+    dispatch({ type: TYPE.MOVE_FROM_ACCOUNT, payload: fromAccount })
+  },
 })
 
 class SendRecieve extends Component {
   componentDidMount() {
-    RPC.PROMISE('listaccounts').then(payload => {
-      this.props.changeAccount(
-        Object.entries(payload).map(e => {
-          return {
-            name: e[0],
-            val: e[1],
-          }
-        })
-      )
-    })
     window.addEventListener('contextmenu', this.setupcontextmenu, false)
-
+    this.getAccountData()
     this.props.googleanalytics.SendScreen('Send')
   }
-
+  getAccountData() {
+    RPC.PROMISE('listaccounts').then(payload => {
+      let listOfAccts = Object.entries(payload).map(e => {
+        return {
+          name: e[0],
+          val: e[1],
+        }
+      })
+      this.props.updateMoveFromAccount(listOfAccts[0].name)
+      this.props.updateAccount(listOfAccts[0].name)
+      this.props.changeAccount(listOfAccts)
+    })
+  }
   loadMyAccounts() {
     RPC.PROMISE('listaccounts', [0]).then(payload => {
       Promise.all(
@@ -173,10 +193,20 @@ class SendRecieve extends Component {
               }
             }
           })
+
           this.props.MyAccountsList(accountsList)
         })
       })
     })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.connections === undefined &&
+      this.props.connections !== undefined
+    ) {
+      this.getAccountData()
+    }
   }
 
   // React Method (Life cycle hook)
@@ -297,6 +327,7 @@ class SendRecieve extends Component {
                   this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount),
+                  // mincomf goes here
                   this.props.Message,
                 ])
                   .then(payload => {
@@ -312,6 +343,7 @@ class SendRecieve extends Component {
                   this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount),
+                  // mincomf goes here
                 ])
                   .then(payoad => {
                     this.props.clearForm()
@@ -346,7 +378,12 @@ class SendRecieve extends Component {
     this.props.busy()
     let keyCheck = Object.keys(this.props.Queue)
     if (keyCheck.length > 1) {
-      RPC.PROMISE('sendmany', [this.props.SelectedAccount, this.props.Queue])
+      RPC.PROMISE(
+        'sendmany',
+        [this.props.SelectedAccount, this.props.Queue],
+        // mincomf goes here
+        this.props.Message
+      )
         .then(payoad => {
           this.props.busy()
           this.props.clearForm()
@@ -471,18 +508,6 @@ class SendRecieve extends Component {
               </td>
             )
           })}
-          {/* {e.notMine.map((ele, i) => {
-            return (
-              <td className="tdPop">
-                <img
-                  id="InnerPopulate"
-                  src={plusimg}
-                  onClick={() => this.props.updateAddress(ele.address)}
-                />
-                <span className="tooltip left">Click To Populate Field</span>
-              </td>
-            );
-          })} */}
         </tr>
       )
     })
@@ -501,36 +526,12 @@ class SendRecieve extends Component {
       } else {
         currencyValue = currencyValue.toFixed(2)
       }
-      // return `${helpers.ReturnCurrencySymbol(
-      //   selectedCurrancyValue[0].name,
-      //   this.props.displayNXSvalues
-      // ) + currencyValue}`;
+
       return currencyValue
     } else {
       return 0
     }
   }
-
-  // calculateUSDvalue(e) {
-  //   let USDvalue = this.props.USDAmount * this.props.USD;
-
-  //   if (USDvalue === 0) {
-  //     USDvalue = USDvalue;
-  //   } else {
-  //     USDvalue = USDvalue;
-  //   }
-  //   return USDvalue;
-  // }
-  // calculateNexusVxalue(e) {
-  //   let USDvalue = this.props.Amount * this.props.USD;
-
-  //   if (USDvalue === 0) {
-  //     USDvalue = USDvalue;
-  //   } else {
-  //     USDvalue = USDvalue;
-  //   }
-  //   return USDvalue;
-  // }
 
   fillQueue() {
     let Keys = Object.keys(this.props.Queue)
@@ -845,12 +846,122 @@ class SendRecieve extends Component {
     }
   }
 
+  moveModalInternals() {
+    return (
+      <div className="MoveModal">
+        <div>
+          <div>
+            <div className="moveSelectors">
+              <span> From Account:</span>
+              <select
+                id="select"
+                onChange={e => this.props.updateMoveFromAccount(e.target.value)}
+              >
+                {this.accountChanger()}
+              </select>
+
+              <span> To Account:</span>
+              <select
+                id="select"
+                onChange={e => this.props.updateMoveToAccount(e.target.value)}
+              >
+                {this.accountChanger()}
+              </select>
+            </div>
+          </div>
+          <div>
+            <div className="convertor">
+              <label>
+                <FormattedMessage
+                  id="sendReceive.Amount"
+                  defaultMessage="Nexus Amount"
+                />
+              </label>
+              <label className="UsdConvertorLabel">
+                {this.props.settings.fiatCurrency}
+              </label>
+            </div>
+            <div className="convertor">
+              <input
+                className="input"
+                type="text"
+                placeholder="0.00000"
+                value={this.props.moveAmount}
+                onChange={e => this.moveAmmountConverter(e, true)}
+                required
+              />{' '}
+              <label>=</label>
+              <input
+                className="input"
+                type="text"
+                placeholder="0.00"
+                value={this.props.moveUSDAmount}
+                onChange={e => {
+                  this.moveAmmountConverter(e)
+                }}
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <button
+            className="button primary"
+            style={{ marginLeft: '0px' }}
+            onClick={() => this.moveNXSbetweenAccounts()}
+          >
+            Move NXS
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  moveAmmountConverter(e, isNxs) {
+    if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === '')) {
+      if (isNxs) {
+        let Usd = e.target.value * this.calculateUSDvalue()
+        this.props.updateMoveAmount(e.target.value, Usd.toFixed(2))
+      } else {
+        let NxsValue = e.target.value / this.calculateUSDvalue()
+        this.props.updateMoveAmount(NxsValue.toFixed(5), e.target.value)
+      }
+    } else {
+      return null
+    }
+  }
+
+  moveNXSbetweenAccounts() {
+    let from = this.props.AccountChanger.filter(acct => {
+      if (acct.name === this.props.MoveFromAccount) {
+        return acct
+      }
+    })
+    if (this.props.MoveFromAccount !== '') {
+      if (parseFloat(from[0].val) > parseFloat(this.props.moveAmount)) {
+        console.log(
+          'MOVE ' +
+            this.props.moveAmount +
+            ' NXS ' +
+            'from ' +
+            this.props.MoveFromAccount +
+            ' to ' +
+            this.props.MoveToAccount
+        )
+      } else {
+        this.props.OpenModal('Insufficient funds')
+      }
+    } else {
+      this.props.OpenModal('No second account chosen')
+    }
+  }
+
   render() {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
       this.props.SetSendAgainData(null)
     }
-    console.log(this.props.SelectedAccount)
+
     return (
       <div id="sendrecieve" className="animated fadeIn">
         <h2>
@@ -860,6 +971,13 @@ class SendRecieve extends Component {
             defaultMessage="Send Nexus"
           />
         </h2>
+        <div className="impexpblock">
+          {this.props.connections !== undefined && (
+            <a className="impexp" onClick={() => this.props.OpenMoveModal()}>
+              MOVE NXS BETWEEN ACCOUNTS
+            </a>
+          )}
+        </div>
         {/* ADDRESS MODAL */}
         <Modal
           center
@@ -894,6 +1012,15 @@ class SendRecieve extends Component {
               )}
             </FormattedMessage>
           </div>
+        </Modal>
+        <Modal
+          center
+          classNames={{ modal: 'modal' }}
+          showCloseIcon={true}
+          open={this.props.moveModal}
+          onClose={() => this.props.CloseMoveModal()}
+        >
+          {this.moveModalInternals()}
         </Modal>
         {this.props.isInSync === false ||
         this.props.connections === undefined ? (
