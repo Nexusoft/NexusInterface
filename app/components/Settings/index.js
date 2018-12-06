@@ -9,9 +9,14 @@ import { NavLink } from 'react-router-dom'
 import { Route, Redirect } from 'react-router'
 import { connect } from 'react-redux'
 import { remote } from 'electron'
-
-// Internal Dependencies
 import { FormattedMessage } from 'react-intl'
+
+// Internal Global Dependencies
+import * as RPC from 'scripts/rpc'
+import ContextMenuBuilder from 'contextmenu'
+import Icon from 'components/common/Icon'
+
+// Internal Local Dependencies
 import styles from './style.css'
 import SettingsApp from './SettingsApp'
 import SettingsCore from './SettingsCore'
@@ -20,14 +25,12 @@ import SettingsStyle from './SettingsStyle'
 import Security from './Security/Security'
 import Login from './Security/Login'
 import Unencrypted from './Security/Unencrypted'
-import * as RPC from 'scripts/rpc'
-import ContextMenuBuilder from 'contextmenu'
 
 // Images
 import settingsimg from 'images/settings.svg'
 import coreImg from 'images/core.svg'
 import logoImg from 'images/logo.svg'
-import lockImg from 'images/lock-minting.sprite.svg'
+import lockIcon from 'images/lock-minting.sprite.svg'
 import marketImg from 'images/marketstats.svg'
 import styleImg from 'images/developer.svg'
 
@@ -100,7 +103,7 @@ class Settings extends Component {
               <li>
                 {this.props.encrypted !== true ? (
                   <NavLink to={`${this.props.match.url}/Unencrypted`}>
-                    <img src={lockImg} alt="Security" />
+                    <Icon icon={lockIcon} />
                     <FormattedMessage
                       id="Settings.Security"
                       defaultMessage="Security"
@@ -108,7 +111,7 @@ class Settings extends Component {
                   </NavLink>
                 ) : (
                   <NavLink to={`${this.props.match.url}/Security`}>
-                    <img src={lockImg} alt="Security" />
+                    <Icon icon={lockIcon} />
                     <FormattedMessage
                       id="Settings.Security"
                       defaultMessage="Security"
