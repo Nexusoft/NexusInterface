@@ -667,36 +667,6 @@ class Header extends Component {
         break
     }
   }
-  daemonStatus() {
-    if (
-      this.props.settings.manualDaemon === false &&
-      this.props.connections === undefined
-    ) {
-      return (
-        <span>
-          <FormattedMessage
-            id="Alert.DaemonLoadingWait"
-            defaultMessage="Loading Daemon, Please wait"
-          />
-          ...
-        </span>
-      )
-    } else if (
-      this.props.settings.manualDaemon === true &&
-      this.props.daemonAvailable === false
-    ) {
-      return (
-        <span>
-          <FormattedMessage
-            id="Alert.ManualDaemonDown"
-            defaultMessage="Daemon Process Not Found"
-          />
-        </span>
-      )
-    } else {
-      return null
-    }
-  }
 
   CloseBootstrapModalAndSaveSettings() {
     this.props.CloseBootstrapModal()
@@ -842,7 +812,7 @@ class Header extends Component {
 
         <UnderHeader>
           <HorizontalLine />
-          {this.daemonStatus()}
+          <DaemonStatus {...this.props} />
         </UnderHeader>
 
         <StatusIcons>
