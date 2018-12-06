@@ -23,9 +23,11 @@ import HorizontalLine from 'components/common/HorizontalLine'
 import { colors, consts, timing, animations } from 'styles'
 
 // Internal Local Dependencies
+import BootstrapModal from './BootstrapModal'
 import SignInStatus from './StatusIcons/SignInStatus'
 import StakingStatus from './StatusIcons/StakingStatus'
 import SyncStatus from './StatusIcons/SyncStatus'
+import DaemonStatus from './DaemonStatus'
 import logoFull from './logo-full-beta.sprite.svg'
 import './style.css'
 
@@ -215,20 +217,6 @@ class Header extends Component {
     } else {
       return null
     }
-  }
-
-  bootstrapModalController() {
-    console.log()
-    if (this.props.manualDaemon !== true) {
-      if (
-        (this.props.settings.bootstrap &&
-          this.props.connections !== undefined &&
-          !this.props.isInSync) ||
-        this.props.BootstrapModal
-      ) {
-        return true
-      } else return false
-    } else return false
   }
 
   // Class methods
@@ -668,93 +656,6 @@ class Header extends Component {
     }
   }
 
-  CloseBootstrapModalAndSaveSettings() {
-    this.props.CloseBootstrapModal()
-    let settings = GetSettings()
-    settings.bootstrap = false
-    SaveSettings(settings)
-  }
-
-  BootstrapModalInteriorBuilder() {
-    if (this.props.percentDownloaded === 0) {
-      return (
-        <div>
-          <h3>
-            <FormattedMessage
-              id="ToolTip.DbOption"
-              defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
-            />
-          </h3>
-          <button
-            className="button"
-            onClick={() => {
-              this.props.OpenBootstrapModal(true)
-              configuration.BootstrapRecentDatabase(this)
-              this.props.setPercentDownloaded(0.001)
-            }}
-          >
-            <FormattedMessage
-              id="ToolTip.BootStrapIt"
-              defaultMessage="Yes, let's bootstrap it"
-            />
-          </button>
-          <button
-            className="button"
-            onClick={() => {
-              this.CloseBootstrapModalAndSaveSettings()
-            }}
-          >
-            <FormattedMessage
-              id="ToolTip.SyncFromScratch"
-              defaultMessage="No, let it sync form scratch"
-            />
-          </button>
-        </div>
-      )
-    } else if (this.props.percentDownloaded < 100) {
-      return (
-        <div>
-          <h3>
-            <FormattedMessage
-              id="ToolTip.RecentDatabaseDownloading"
-              defaultMessage="Recent Database Downloading"
-            />
-          </h3>
-          <div className="progress-bar">
-            <div
-              className="filler"
-              style={{ width: `${this.props.percentDownloaded}%` }}
-            />
-          </div>
-          <h3>
-            <FormattedMessage
-              id="ToolTip.PleaseWait"
-              defaultMessage="Please Wait..."
-            />
-          </h3>
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          <h3>
-            <FormattedMessage
-              id="ToolTip.RecentDatabaseExtracting"
-              defaultMessage="Recent Database Extracting"
-            />
-          </h3>
-
-          <h3>
-            <FormattedMessage
-              id="ToolTip.PleaseWait"
-              defaultMessage="Please Wait..."
-            />
-          </h3>
-        </div>
-      )
-    }
-  }
-
   // Mandatory React method
   render() {
     const { settings } = this.props
@@ -793,17 +694,7 @@ class Header extends Component {
         >
           {this.modalinternal()}
         </Modal>
-        <Modal
-          key="bootstrap-modal"
-          open={this.bootstrapModalController()}
-          onClose={() => true}
-          center
-          focusTrapped={true}
-          showCloseIcon={false}
-          classNames={{ modal: 'modal' }}
-        >
-          {this.BootstrapModalInteriorBuilder()}
-        </Modal>
+        <BootstrapModal {...this.props} />
 
         <LogoLink to="/">
           <Logo icon={logoFull} />
