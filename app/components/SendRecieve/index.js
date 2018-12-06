@@ -135,8 +135,7 @@ class SendRecieve extends Component {
           val: e[1],
         }
       })
-      this.props.updateMoveFromAccount(listOfAccts[0].name)
-      this.props.updateAccount(listOfAccts[0].name)
+
       this.props.changeAccount(listOfAccts)
     })
   }
@@ -212,6 +211,7 @@ class SendRecieve extends Component {
   // React Method (Life cycle hook)
 
   componentWillUnmount() {
+    this.props.AccountPicked('')
     window.removeEventListener('contextmenu', this.setupcontextmenu)
   }
 
@@ -857,6 +857,10 @@ class SendRecieve extends Component {
                 id="select"
                 onChange={e => this.props.updateMoveFromAccount(e.target.value)}
               >
+                {' '}
+                <option selected disabled>
+                  Select an Account
+                </option>
                 {this.accountChanger()}
               </select>
 
@@ -865,6 +869,10 @@ class SendRecieve extends Component {
                 id="select"
                 onChange={e => this.props.updateMoveToAccount(e.target.value)}
               >
+                {' '}
+                <option selected disabled>
+                  Select an Account
+                </option>
                 {this.accountChanger()}
               </select>
             </div>
@@ -901,6 +909,10 @@ class SendRecieve extends Component {
                 }}
                 required
               />
+            </div>
+            <div>
+              <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{' '}
+              {this.props.paytxfee.toFixed(5)} NXS
             </div>
           </div>
         </div>
@@ -939,6 +951,28 @@ class SendRecieve extends Component {
     })
     if (this.props.MoveFromAccount !== '') {
       if (parseFloat(from[0].val) > parseFloat(this.props.moveAmount)) {
+        RPC.PROMISE(
+          'move',
+          [
+            this.props.MoveFromAccount,
+            this.props.MoveToAccount,
+            parseFloat(this.props.moveAmount),
+          ]
+          // Mincomf here
+          // this.props.Message
+        )
+          .then(payload => {
+            this.getAccountData()
+            console.log(payload)
+            // this.props.OpenModal()
+          })
+          .catch(e => {
+            if (typeof e === 'object') {
+              this.props.OpenModal(e.Message)
+            } else {
+              this.props.OpenModal(e)
+            }
+          })
         console.log(
           'MOVE ' +
             this.props.moveAmount +
@@ -1018,7 +1052,9 @@ class SendRecieve extends Component {
           classNames={{ modal: 'modal' }}
           showCloseIcon={true}
           open={this.props.moveModal}
-          onClose={() => this.props.CloseMoveModal()}
+          onClose={() => {
+            this.props.CloseMoveModal()
+          }}
         >
           {this.moveModalInternals()}
         </Modal>
@@ -1041,6 +1077,9 @@ class SendRecieve extends Component {
                     id="select"
                     onChange={e => this.props.AccountPicked(e.target.value)}
                   >
+                    <option selected disabled>
+                      Select an Account
+                    </option>
                     {this.accountChanger()}
                   </select>{' '}
                   <div>
@@ -1189,29 +1228,31 @@ class SendRecieve extends Component {
                     </label>
                   </div>
                   <table className="table">
-                    <thead className="thead">
-                      <th>
-                        <FormattedMessage
-                          id="sendReceive.TableAddress"
-                          defaultMessage="Address"
-                        />
-                      </th>
-                      <th>
-                        <FormattedMessage
-                          id="sendReceive.TableAmount"
-                          defaultMessage="Amount"
-                        />
-                      </th>
-                      <th style={{ whiteSpace: 'nowrap' }}>
-                        <FormattedMessage
-                          id="sendReceive.Remove"
-                          defaultMessage="Remove"
-                        />
-                      </th>
+                    <thead>
+                      <tr className="thead">
+                        <th>
+                          <FormattedMessage
+                            id="sendReceive.TableAddress"
+                            defaultMessage="Address"
+                          />
+                        </th>
+                        <th>
+                          <FormattedMessage
+                            id="sendReceive.TableAmount"
+                            defaultMessage="Amount"
+                          />
+                        </th>
+                        <th style={{ whiteSpace: 'nowrap' }}>
+                          <FormattedMessage
+                            id="sendReceive.Remove"
+                            defaultMessage="Remove"
+                          />
+                        </th>
+                      </tr>
                     </thead>
                     {this.fillQueue()}
                   </table>
-                  <foot className="foot">
+                  <div className="foot">
                     <button
                       type="reset"
                       className="button primary"
@@ -1252,7 +1293,7 @@ class SendRecieve extends Component {
                     <div>
                       <div className="counter">{this.addAmount()} </div>
                     </div>
-                  </foot>{' '}
+                  </div>{' '}
                 </div>{' '}
               </div>
             </div>

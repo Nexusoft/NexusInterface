@@ -126,7 +126,7 @@ class List extends Component {
                       {' '}
                       <FormattedMessage
                         id="TrustList.InterestRate"
-                        defaultMessage="Interest Rate"
+                        defaultMessage="Stake Reward"
                       />
                     </div>
                   </th>

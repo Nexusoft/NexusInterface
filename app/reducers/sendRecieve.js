@@ -42,6 +42,10 @@ export default (state = initialState, action) => {
       return {
         ...state,
         moveModal: false,
+        moveAmount: '',
+        MoveFromAccount: '',
+        MoveToAccount: '',
+        moveUSDAmount: '',
       }
       break
     case TYPE.UPDATE_ADDRESS:

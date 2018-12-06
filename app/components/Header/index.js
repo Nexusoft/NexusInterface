@@ -560,9 +560,9 @@ class Header extends Component {
               defaultMessage="No Addresses"
             />
           </h2>
-        );
-        break;
-      case "Insufficient Funds":
+        )
+        break
+      case 'Insufficient Funds':
         return (
           <h2>
             <FormattedMessage
@@ -570,9 +570,9 @@ class Header extends Component {
               defaultMessage="Insufficient Funds"
             />
           </h2>
-        );
-        break;
-      case "Empty Queue!":
+        )
+        break
+      case 'Empty Queue!':
         return (
           <h2>
             <FormattedMessage
@@ -935,7 +935,7 @@ class Header extends Component {
               <div>
                 <FormattedMessage
                   id="Header.InterestRate"
-                  defaultMessage="Interest Rate"
+                  defaultMessage="Stake Reward"
                 />
                 : {this.props.interestweight}%
               </div>
