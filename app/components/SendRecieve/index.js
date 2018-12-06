@@ -293,21 +293,34 @@ class SendRecieve extends Component {
           if (payload.isvalid) {
             if (!payload.ismine) {
               if (this.props.Message) {
-                RPC.PROMISE('sendtoaddress', [
+                RPC.PROMISE('sendfrom', [
+                  this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount),
                   this.props.Message,
                 ])
-                this.props.clearForm()
-                this.props.busy()
+                  .then(payload => {
+                    this.props.clearForm()
+                    this.props.busy()
+                  })
+                  .catch(e => {
+                    this.props.busy()
+                    this.props.OpenModal('Insufficient Funds')
+                  })
               } else {
-                RPC.PROMISE('sendtoaddress', [
+                RPC.PROMISE('sendfrom', [
+                  this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount),
-                ]).then(payoad => {
-                  this.props.clearForm()
-                  this.props.busy()
-                })
+                ])
+                  .then(payoad => {
+                    this.props.clearForm()
+                    this.props.busy()
+                  })
+                  .catch(e => {
+                    this.props.busy()
+                    this.props.OpenModal('Insufficient Funds')
+                  })
               }
             } else {
               this.props.busy()
@@ -825,63 +838,6 @@ class SendRecieve extends Component {
           </div>
         )
         break
-      // case "Delete Entry?":
-      //   return (
-      //     <div>
-      //       <h2>
-      //         <FormattedMessage
-      //           id="sendReceive.DeleteEntry"
-      //           defaultMessage="Delete Entry?"
-      //         />
-      //       </h2>
-      //       <div id="ok-button">
-      //         <FormattedMessage id="sendReceive.Yes">
-      //           {yes => (
-      //             <input
-      //               value={yes}
-      //               type="button"
-      //               className="button primary"
-      //               onClick={() => {
-      //                 this.props.CloseModal2();
-      //               }}
-      //             />
-      //           )}
-      //         </FormattedMessage>
-      //       </div>
-      //     </div>
-      //   );
-      //   break;
-      // case "Address Lookup":
-      //   return (
-      //     <div className="Addresstable-wraper">
-      //       {" "}
-      //       <h2 className="addressModalHeader">
-      //         <FormattedMessage
-      //           id="sendReceive.Lookup"
-      //           defaultMessage="Lookup Address"
-      //         />{" "}
-      //         <img src={addressbookimg} className="hdr-img" />
-      //       </h2>
-      //       <table id="AddressTable">
-      //         <thead className="AddressThead">
-      //           <th className="short-column">Name</th>
-      //           <th className="long-column">Address</th>
-      //           <th className="short-column">
-      //             <input
-      //               className="searchBar"
-      //               type="text"
-      //               placeholder="Search Address"
-      //               value={this.props.Search}
-      //               onChange={e => this.props.SearchName(e.target.value)}
-      //               required
-      //             />
-      //           </th>
-      //         </thead>
-      //         {this.addressBookToQueue()}
-      //       </table>
-      //     </div>
-      //   );
-      //   break;
 
       default:
         'Error'
@@ -894,6 +850,7 @@ class SendRecieve extends Component {
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
       this.props.SetSendAgainData(null)
     }
+    console.log(this.props.SelectedAccount)
     return (
       <div id="sendrecieve" className="animated fadeIn">
         <h2>
@@ -1078,7 +1035,7 @@ class SendRecieve extends Component {
                           } else {
                             this.props.OpenModal('Wallet Locked')
                           }
-                        } else if (this.props.Amount >= 0) {
+                        } else if (this.props.Amount <= 0) {
                           this.props.OpenModal('Invalid Amount')
                         } else {
                           this.props.OpenModal('Invalid Address')

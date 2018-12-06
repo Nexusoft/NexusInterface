@@ -529,7 +529,7 @@ class Header extends Component {
         return (
           <h2>
             <FormattedMessage
-              id="Alert.InvalidAddress"
+              id="Alert.InvalidAmount"
               defaultMessage="Invalid Amount"
             />
           </h2>
@@ -560,9 +560,19 @@ class Header extends Component {
               defaultMessage="No Addresses"
             />
           </h2>
-        )
-        break
-      case 'Empty Queue!':
+        );
+        break;
+      case "Insufficient Funds":
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InsufficientFunds"
+              defaultMessage="Insufficient Funds"
+            />
+          </h2>
+        );
+        break;
+      case "Empty Queue!":
         return (
           <h2>
             <FormattedMessage
