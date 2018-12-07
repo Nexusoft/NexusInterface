@@ -406,4 +406,4 @@ export default {
     'Lang.Japanese': '日本人',
     'Lang.French': 'フランス語',
   },
-}
+};

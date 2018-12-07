@@ -1,10 +1,10 @@
 // External Dependencies
-import React from 'react'
-import { FormattedMessage } from 'react-intl'
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 // Internal Global Dependencies
-import Icon from 'components/common/Icon'
-import stakingIcon from 'images/staking.sprite.svg'
+import Icon from 'components/common/Icon';
+import stakingIcon from 'images/staking.sprite.svg';
 
 const StakingStatus = ({
   stakeweight,
@@ -46,6 +46,6 @@ const StakingStatus = ({
       </div>
     </div>
   </div>
-)
+);
 
-export default StakingStatus
+export default StakingStatus;

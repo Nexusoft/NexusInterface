@@ -393,4 +393,4 @@ export default {
     'Lang.Japanese': '일본어',
     'Lang.French': '프랑스 국민',
   },
-}
+};

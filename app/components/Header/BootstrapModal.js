@@ -1,11 +1,11 @@
 // External Dependencies
-import React from 'react'
-import Modal from 'react-responsive-modal'
-import { FormattedMessage } from 'react-intl'
+import React from 'react';
+import Modal from 'react-responsive-modal';
+import { FormattedMessage } from 'react-intl';
 
 // Internal Global Dependencies
-import { GetSettings, SaveSettings } from 'api/settings'
-import configuration from 'api/configuration'
+import { GetSettings, SaveSettings } from 'api/settings';
+import configuration from 'api/configuration';
 
 const modalOpen = ({
   manualDaemon,
@@ -16,7 +16,7 @@ const modalOpen = ({
 }) =>
   !manualDaemon &&
   ((settings.bootstrap && connections !== undefined && !isInSync) ||
-    BootstrapModal)
+    BootstrapModal);
 
 const Prompting = props => (
   <>
@@ -29,9 +29,9 @@ const Prompting = props => (
     <button
       className="button"
       onClick={() => {
-        props.OpenBootstrapModal(true)
-        configuration.BootstrapRecentDatabase(this)
-        props.setPercentDownloaded(0.001)
+        props.OpenBootstrapModal(true);
+        configuration.BootstrapRecentDatabase(this);
+        props.setPercentDownloaded(0.001);
       }}
     >
       <FormattedMessage
@@ -42,10 +42,10 @@ const Prompting = props => (
     <button
       className="button"
       onClick={() => {
-        props.CloseBootstrapModal()
-        const settings = GetSettings()
-        settings.bootstrap = false
-        SaveSettings(settings)
+        props.CloseBootstrapModal();
+        const settings = GetSettings();
+        settings.bootstrap = false;
+        SaveSettings(settings);
       }}
     >
       <FormattedMessage
@@ -54,7 +54,7 @@ const Prompting = props => (
       />
     </button>
   </>
-)
+);
 
 const Downloading = props => (
   <>
@@ -77,7 +77,7 @@ const Downloading = props => (
       />
     </h3>
   </>
-)
+);
 
 const Extracting = () => (
   <>
@@ -95,19 +95,19 @@ const Extracting = () => (
       />
     </h3>
   </>
-)
+);
 
 const modalContent = props => {
   if (props.percentDownloaded === 0) {
-    return <Prompting {...props} />
+    return <Prompting {...props} />;
   }
 
   if (props.percentDownloaded < 100) {
-    return <Downloading {...props} />
+    return <Downloading {...props} />;
   }
 
-  return <Extracting />
-}
+  return <Extracting />;
+};
 
 const BootstrapModal = props => (
   <Modal
@@ -121,6 +121,6 @@ const BootstrapModal = props => (
   >
     {modalContent(props)}
   </Modal>
-)
+);
 
-export default BootstrapModal
+export default BootstrapModal;

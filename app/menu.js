@@ -1,47 +1,47 @@
-import { app, Menu, shell, BrowserWindow, remote } from 'electron'
-import log from 'electron-log'
-import fs from 'fs'
-import * as RPC from './scripts/rpc'
-import { callbackify } from 'util'
-import { GetSettings, SaveSettings } from './api/settings'
-import core from './api/core'
-import configuration from './api/configuration'
+import { app, Menu, shell, BrowserWindow, remote } from 'electron';
+import log from 'electron-log';
+import fs from 'fs';
+import * as RPC from './scripts/rpc';
+import { callbackify } from 'util';
+import { GetSettings, SaveSettings } from './api/settings';
+import core from './api/core';
+import configuration from './api/configuration';
 
 export default class MenuBuilder {
   constructor() {
-    this.mainWindow = remote.getCurrentWindow()
+    this.mainWindow = remote.getCurrentWindow();
   }
 
   buildMenu(self) {
-    let template
+    let template;
 
     if (process.platform === 'darwin') {
-      template = this.buildDarwinTemplate(self)
+      template = this.buildDarwinTemplate(self);
     } else {
-      template = this.buildDefaultTemplate(self)
+      template = this.buildDefaultTemplate(self);
     }
 
-    const menu = remote.Menu.buildFromTemplate(template)
-    remote.Menu.setApplicationMenu(menu)
+    const menu = remote.Menu.buildFromTemplate(template);
+    remote.Menu.setApplicationMenu(menu);
 
-    return menu
+    return menu;
   }
 
   setupDevelopmentEnvironment() {
-    remote.getCurrentWindow().openDevTools()
+    remote.getCurrentWindow().openDevTools();
 
     this.mainWindow.webContents.on('context-menu', (e, props) => {
-      const { x, y } = props
+      const { x, y } = props;
 
       Menu.buildFromTemplate([
         {
           label: 'Inspect element',
           click: () => {
-            this.mainWindow.inspectElement(x, y)
+            this.mainWindow.inspectElement(x, y);
           },
         },
-      ]).popup(this.mainWindow)
-    })
+      ]).popup(this.mainWindow);
+    });
   }
 
   buildDarwinTemplate(self) {
@@ -56,38 +56,38 @@ export default class MenuBuilder {
               .slice(0, 24)
               .split(' ')
               .reduce((a, b) => {
-                return a + '_' + b
+                return a + '_' + b;
               })
-              .replace(/:/g, '_')
-            let BackupDir = process.env.HOME + '/NexusBackups'
+              .replace(/:/g, '_');
+            let BackupDir = process.env.HOME + '/NexusBackups';
             if (process.platform === 'win32') {
-              BackupDir = app.getPath('documents') + '/NexusBackups'
-              BackupDir = BackupDir.replace(/\\/g, '/')
+              BackupDir = app.getPath('documents') + '/NexusBackups';
+              BackupDir = BackupDir.replace(/\\/g, '/');
             }
 
-            let ifBackupDirExists = fs.existsSync(BackupDir)
+            let ifBackupDirExists = fs.existsSync(BackupDir);
             if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
-              fs.mkdirSync(BackupDir)
+              fs.mkdirSync(BackupDir);
             }
             RPC.PROMISE('backupwallet', [
               BackupDir + '/NexusBackup_' + now + '.dat',
-            ])
+            ]);
           },
         },
         {
           label: 'View Backups',
           click() {
-            let BackupDir = process.env.HOME + '/NexusBackups'
+            let BackupDir = process.env.HOME + '/NexusBackups';
 
             if (process.platform === 'win32') {
-              BackupDir = process.env.USERPROFILE + '/NexusBackups'
-              BackupDir = BackupDir.replace(/\\/g, '/')
+              BackupDir = process.env.USERPROFILE + '/NexusBackups';
+              BackupDir = BackupDir.replace(/\\/g, '/');
             }
-            let ifBackupDirExists = fs.existsSync(BackupDir)
+            let ifBackupDirExists = fs.existsSync(BackupDir);
             if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
-              fs.mkdirSync(BackupDir)
+              fs.mkdirSync(BackupDir);
             }
-            let didopen = shell.openItem(BackupDir)
+            let didopen = shell.openItem(BackupDir);
           },
         },
         {
@@ -96,17 +96,17 @@ export default class MenuBuilder {
         {
           label: 'Start Daemon',
           click() {
-            core.start()
+            core.start();
           },
         },
         {
           label: 'Stop Daemon',
           click() {
-            let settings = GetSettings()
+            let settings = GetSettings();
             if (settings.manualDaemon != true) {
-              core.stop()
+              core.stop();
             } else {
-              self.props.OpenModal('Manual Daemon Mode active invalid command')
+              self.props.OpenModal('Manual Daemon Mode active invalid command');
             }
           },
         },
@@ -117,31 +117,31 @@ export default class MenuBuilder {
           label: 'Quit Nexus',
           accelerator: 'CmdOrCtrl+Q',
           click() {
-            log.info('menu.js darwin template: close and kill')
-            let settings = GetSettings()
+            log.info('menu.js darwin template: close and kill');
+            let settings = GetSettings();
             if (settings.manualDaemon != true) {
               RPC.PROMISE('stop', [])
                 .then(payload => {
                   setTimeout(() => {
-                    core.stop()
-                    remote.getCurrentWindow().close()
-                  }, 1000)
+                    core.stop();
+                    remote.getCurrentWindow().close();
+                  }, 1000);
                 })
                 .catch(e => {
                   setTimeout(() => {
-                    remote.getGlobal('core').stop()
-                    remote.getCurrentWindow().close()
-                  }, 1000)
-                })
+                    remote.getGlobal('core').stop();
+                    remote.getCurrentWindow().close();
+                  }, 1000);
+                });
             } else {
               RPC.PROMISE('stop', []).then(payload => {
-                remote.getCurrentWindow().close()
-              })
+                remote.getCurrentWindow().close();
+              });
             }
           },
         },
       ],
-    }
+    };
     const subMenuEdit = {
       label: 'Edit',
       submenu: [
@@ -161,36 +161,36 @@ export default class MenuBuilder {
           role: 'cut',
         },
       ],
-    }
+    };
     const subMenuView = {
       label: 'Settings',
       submenu: [
         {
           label: 'Core',
           click() {
-            self.props.history.push('/Settings/Core')
+            self.props.history.push('/Settings/Core');
           },
         },
         {
           label: 'Application',
           click() {
-            self.props.history.push('/Settings/App')
+            self.props.history.push('/Settings/App');
           },
         },
         {
           label: 'Key Management',
           click() {
             if (self.props.unlocked_until !== undefined) {
-              self.props.history.push('/Settings/Security')
+              self.props.history.push('/Settings/Security');
             } else {
-              self.props.history.push('/Settings/Unencrypted')
+              self.props.history.push('/Settings/Unencrypted');
             }
           },
         },
         {
           label: 'Style',
           click() {
-            self.props.history.push('/Settings/Style')
+            self.props.history.push('/Settings/Style');
           },
         },
         {
@@ -203,19 +203,19 @@ export default class MenuBuilder {
               self.props.connections !== undefined &&
               !GetSettings().manualDaemon
             ) {
-              self.props.OpenBootstrapModal(true)
-              configuration.BootstrapRecentDatabase(self)
+              self.props.OpenBootstrapModal(true);
+              configuration.BootstrapRecentDatabase(self);
             } else {
-              self.props.OpenModal('Please let the daemon start.')
+              self.props.OpenModal('Please let the daemon start.');
               setTimeout(() => {
-                self.props.CloseModal()
-              }, 3000)
+                self.props.CloseModal();
+              }, 3000);
             }
           },
         },
         //TODO: take this out before 1.0
       ],
-    }
+    };
 
     const subMenuWindow = {
       label: 'View',
@@ -226,7 +226,7 @@ export default class MenuBuilder {
                 label: 'Reload',
                 accelerator: 'Command+R',
                 click: () => {
-                  this.mainWindow.webContents.reload()
+                  this.mainWindow.webContents.reload();
                 },
               },
 
@@ -236,7 +236,7 @@ export default class MenuBuilder {
                 click: () => {
                   remote
                     .getCurrentWindow()
-                    .setFullScreen(!remote.getCurrentWindow().isFullScreen())
+                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
                 },
               },
             ]
@@ -247,43 +247,43 @@ export default class MenuBuilder {
                 click: () => {
                   remote
                     .getCurrentWindow()
-                    .setFullScreen(!remote.getCurrentWindow().isFullScreen())
+                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
                 },
               },
               {
                 label: 'Toggle Developer Tools',
                 accelerator: 'Alt+Command+I',
                 click: () => {
-                  this.mainWindow.toggleDevTools()
+                  this.mainWindow.toggleDevTools();
                 },
               },
             ],
-    }
+    };
     const subMenuHelp = {
       label: 'Help',
       submenu: [
         {
           label: 'About',
           click() {
-            self.props.history.push('/About')
+            self.props.history.push('/About');
           },
         },
         {
           label: 'Website',
           click() {
-            shell.openExternal('http://nexusearth.com')
+            shell.openExternal('http://nexusearth.com');
           },
         },
         {
           label: 'Github',
           click() {
-            shell.openExternal('http://github.com/Nexusoft')
+            shell.openExternal('http://github.com/Nexusoft');
           },
         },
       ],
-    }
+    };
 
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp]
+    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
   buildDefaultTemplate(self) {
@@ -299,44 +299,44 @@ export default class MenuBuilder {
                 .slice(0, 24)
                 .split(' ')
                 .reduce((a, b) => {
-                  return a + '_' + b
+                  return a + '_' + b;
                 })
-                .replace(/:/g, '_')
-              let BackupDir = process.env.HOME + '/NexusBackups'
+                .replace(/:/g, '_');
+              let BackupDir = process.env.HOME + '/NexusBackups';
               if (process.platform === 'win32') {
-                BackupDir = process.env.USERPROFILE + '/NexusBackups'
-                BackupDir = BackupDir.replace(/\\/g, '/')
+                BackupDir = process.env.USERPROFILE + '/NexusBackups';
+                BackupDir = BackupDir.replace(/\\/g, '/');
               }
 
-              let ifBackupDirExists = fs.existsSync(BackupDir)
+              let ifBackupDirExists = fs.existsSync(BackupDir);
               if (
                 ifBackupDirExists == undefined ||
                 ifBackupDirExists == false
               ) {
-                fs.mkdirSync(BackupDir)
+                fs.mkdirSync(BackupDir);
               }
               RPC.PROMISE('backupwallet', [
                 BackupDir + '/NexusBackup_' + now + '.dat',
-              ]).then(self.props.OpenModal('Wallet Backup'))
+              ]).then(self.props.OpenModal('Wallet Backup'));
             },
           },
 
           {
             label: 'View Backups',
             click() {
-              let BackupDir = process.env.HOME + '/NexusBackups'
+              let BackupDir = process.env.HOME + '/NexusBackups';
               if (process.platform === 'win32') {
-                BackupDir = process.env.USERPROFILE + '/NexusBackups'
-                BackupDir = BackupDir.replace(/\\/g, '/')
+                BackupDir = process.env.USERPROFILE + '/NexusBackups';
+                BackupDir = BackupDir.replace(/\\/g, '/');
               }
-              let ifBackupDirExists = fs.existsSync(BackupDir)
+              let ifBackupDirExists = fs.existsSync(BackupDir);
               if (
                 ifBackupDirExists == undefined ||
                 ifBackupDirExists == false
               ) {
-                fs.mkdirSync(BackupDir)
+                fs.mkdirSync(BackupDir);
               }
-              let didopen = shell.openItem(BackupDir)
+              let didopen = shell.openItem(BackupDir);
             },
           },
           {
@@ -345,13 +345,13 @@ export default class MenuBuilder {
           {
             label: 'Start Daemon',
             click() {
-              core.start()
+              core.start();
             },
           },
           {
             label: 'Stop Daemon',
             click() {
-              core.stop()
+              core.stop();
             },
           },
           {
@@ -360,18 +360,18 @@ export default class MenuBuilder {
           {
             label: 'Quit Nexus',
             click() {
-              log.info('menu.js default template: close and kill')
-              let settings = GetSettings()
+              log.info('menu.js default template: close and kill');
+              let settings = GetSettings();
 
               if (settings.manualDaemon != true) {
                 RPC.PROMISE('stop', []).then(payload => {
-                  console.log('poststop')
-                  core.stop()
+                  console.log('poststop');
+                  core.stop();
                   setTimeout(() => {
-                    remote.getCurrentWindow().close()
-                  }, 1000)
-                })
-                remote.getCurrentWindow().close()
+                    remote.getCurrentWindow().close();
+                  }, 1000);
+                });
+                remote.getCurrentWindow().close();
               }
             },
           },
@@ -384,29 +384,29 @@ export default class MenuBuilder {
           {
             label: 'Core',
             click() {
-              self.props.history.push('/Settings/Core')
+              self.props.history.push('/Settings/Core');
             },
           },
           {
             label: 'Application',
             click() {
-              self.props.history.push('/Settings/App')
+              self.props.history.push('/Settings/App');
             },
           },
           {
             label: 'Key Management',
             click() {
               if (self.props.unlocked_until !== undefined) {
-                self.props.history.push('/Settings/Security')
+                self.props.history.push('/Settings/Security');
               } else {
-                self.props.history.push('/Settings/Unencrypted')
+                self.props.history.push('/Settings/Unencrypted');
               }
             },
           },
           {
             label: 'Style',
             click() {
-              self.props.history.push('/Settings/Style')
+              self.props.history.push('/Settings/Style');
             },
           },
           {
@@ -419,13 +419,13 @@ export default class MenuBuilder {
                 self.props.connections !== undefined &&
                 !GetSettings().manualDaemon
               ) {
-                self.props.OpenBootstrapModal(true)
-                configuration.BootstrapRecentDatabase(self)
+                self.props.OpenBootstrapModal(true);
+                configuration.BootstrapRecentDatabase(self);
               } else {
-                self.props.OpenModal('Please let the daemon start.')
+                self.props.OpenModal('Please let the daemon start.');
                 setTimeout(() => {
-                  self.props.CloseModal()
-                }, 3000)
+                  self.props.CloseModal();
+                }, 3000);
               }
             },
           },
@@ -440,7 +440,7 @@ export default class MenuBuilder {
             click: () => {
               remote
                 .getCurrentWindow()
-                .setFullScreen(!remote.getCurrentWindow().isFullScreen())
+                .setFullScreen(!remote.getCurrentWindow().isFullScreen());
             },
           },
           {
@@ -450,7 +450,7 @@ export default class MenuBuilder {
             label: 'Toggle &Developer Tools',
             accelerator: 'Alt+Ctrl+I',
             click: () => {
-              this.mainWindow.toggleDevTools()
+              this.mainWindow.toggleDevTools();
             },
           },
         ],
@@ -461,25 +461,25 @@ export default class MenuBuilder {
           {
             label: 'About',
             click() {
-              self.props.history.push('/About')
+              self.props.history.push('/About');
             },
           },
           {
             label: 'Website',
             click() {
-              shell.openExternal('http://nexusearth.com')
+              shell.openExternal('http://nexusearth.com');
             },
           },
           {
             label: 'Github',
             click() {
-              shell.openExternal('http://github.com/Nexusoft')
+              shell.openExternal('http://github.com/Nexusoft');
             },
           },
         ],
       },
-    ]
+    ];
 
-    return templateDefault
+    return templateDefault;
   }
 }

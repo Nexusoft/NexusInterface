@@ -4,24 +4,24 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { remote } from 'electron'
-import { access } from 'fs'
-import Modal from 'react-responsive-modal'
-import AutoLaunch from 'auto-launch'
-import fs from 'fs'
-import { connect } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { remote } from 'electron';
+import { access } from 'fs';
+import Modal from 'react-responsive-modal';
+import AutoLaunch from 'auto-launch';
+import fs from 'fs';
+import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 
 // Internal Dependencies
-import { GetSettings, SaveSettings } from 'api/settings.js'
-import styles from './style.css'
-import * as RPC from 'scripts/rpc'
-import * as TYPE from 'actions/actiontypes'
-import ContextMenuBuilder from 'contextmenu'
-import plusimg from 'images/plus.svg'
-import * as FlagFile from 'languages/LanguageFlags'
+import { GetSettings, SaveSettings } from 'api/settings.js';
+import styles from './style.css';
+import * as RPC from 'scripts/rpc';
+import * as TYPE from 'actions/actiontypes';
+import ContextMenuBuilder from 'contextmenu';
+import plusimg from 'images/plus.svg';
+import * as FlagFile from 'languages/LanguageFlags';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -31,126 +31,126 @@ const mapStateToProps = state => {
     ...state.settings,
     ...state.intl,
     ...state.overview,
-  }
-}
+  };
+};
 const mapDispatchToProps = dispatch => ({
   OpenModal2: type => {
-    dispatch({ type: TYPE.SHOW_MODAL2, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
   },
   CloseModal2: type => {
-    dispatch({ type: TYPE.HIDE_MODAL2, payload: type })
+    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
   },
   OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   setSettings: settings =>
     dispatch({ type: TYPE.GET_SETTINGS, payload: settings }),
   setFiatCurrency: inValue => {
-    dispatch({ type: TYPE.SET_FIAT_CURRENCY, payload: inValue })
+    dispatch({ type: TYPE.SET_FIAT_CURRENCY, payload: inValue });
   },
   OpenModal3: type => {
-    dispatch({ type: TYPE.SHOW_MODAL3, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
   },
   OpenModal4: type => {
-    dispatch({ type: TYPE.SHOW_MODAL4, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL4, payload: type });
   },
   CloseModal4: type => {
-    dispatch({ type: TYPE.HIDE_MODAL4, payload: type })
+    dispatch({ type: TYPE.HIDE_MODAL4, payload: type });
   },
 
   CloseModal3: type => {
-    dispatch({ type: TYPE.HIDE_MODAL3, payload: type })
+    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
   },
   localeChange: returnSelectedLocale => {
-    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale })
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
   },
   SwitchLocale: locale => {
-    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale })
+    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
   },
-})
+});
 
-var currentBackupLocation = '' //Might redo to use redux but this is only used to replace using json reader every render;
+var currentBackupLocation = ''; //Might redo to use redux but this is only used to replace using json reader every render;
 
 class SettingsApp extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    var settings = GetSettings()
+    var settings = GetSettings();
     // this.setDefaultUnitAmount(settings);
     //Application settings
-    this.setAutostart(settings)
-    this.setMinimizeToTray(settings)
-    this.setMinimizeOnClose(settings)
-    this.setGoogleAnalytics(settings)
-    this.setDeveloperMode(settings)
-    this.setInfoPopup(settings)
-    this.setSavedTxFee(settings)
+    this.setAutostart(settings);
+    this.setMinimizeToTray(settings);
+    this.setMinimizeOnClose(settings);
+    this.setGoogleAnalytics(settings);
+    this.setDeveloperMode(settings);
+    this.setInfoPopup(settings);
+    this.setSavedTxFee(settings);
 
     if (this.refs.backupInputField) {
-      this.refs.backupInputField.webkitdirectory = true
-      this.refs.backupInputField.directory = true
+      this.refs.backupInputField.webkitdirectory = true;
+      this.refs.backupInputField.directory = true;
     }
     //this.OnFiatCurrencyChange = this.OnFiatCurrencyChange.bind(this);
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    this.props.setSettings(GetSettings())
+    this.props.setSettings(GetSettings());
   }
 
   // Class Methods
   setAutostart(settings) {
-    var autostart = document.getElementById('autostart')
+    var autostart = document.getElementById('autostart');
 
     if (settings.autostart === undefined) {
-      autostart.checked = false
+      autostart.checked = false;
     }
     if (settings.autostart == true) {
-      autostart.checked = true
+      autostart.checked = true;
     }
     if (settings.autostart == false) {
-      autostart.checked = false
+      autostart.checked = false;
     }
   }
 
   setMinimizeToTray(settings) {
-    var minimizeToTray = document.getElementById('minimizeToTray')
+    var minimizeToTray = document.getElementById('minimizeToTray');
 
     if (settings.minimizeToTray === undefined) {
-      minimizeToTray.checked = false
+      minimizeToTray.checked = false;
     }
     if (settings.minimizeToTray == true) {
-      minimizeToTray.checked = true
+      minimizeToTray.checked = true;
     }
     if (settings.minimizeToTray == false) {
-      minimizeToTray.checked = false
+      minimizeToTray.checked = false;
     }
   }
 
   setMinimizeOnClose(settings) {
-    var minimizeOnClose = document.getElementById('minimizeOnClose')
+    var minimizeOnClose = document.getElementById('minimizeOnClose');
 
     if (settings.minimizeOnClose === undefined) {
-      minimizeOnClose.checked = false
+      minimizeOnClose.checked = false;
     }
     if (settings.minimizeOnClose == true) {
-      minimizeOnClose.checked = true
+      minimizeOnClose.checked = true;
     }
     if (settings.minimizeOnClose == false) {
-      minimizeOnClose.checked = false
+      minimizeOnClose.checked = false;
     }
   }
 
   setGoogleAnalytics(settings) {
-    var googlesetting = document.getElementById('googleAnalytics')
+    var googlesetting = document.getElementById('googleAnalytics');
 
     if (settings.googleAnalytics === undefined) {
-      googlesetting.checked = true
+      googlesetting.checked = true;
     }
     if (settings.googleAnalytics == true) {
-      googlesetting.checked = true
+      googlesetting.checked = true;
     }
     if (settings.googleAnalytics == false) {
-      googlesetting.checked = false
+      googlesetting.checked = false;
     }
   }
   // TODO: Finish this method.
@@ -165,231 +165,231 @@ class SettingsApp extends Component {
   // }
 
   setDeveloperMode(settings) {
-    var devmode = document.getElementById('devmode')
+    var devmode = document.getElementById('devmode');
 
     if (settings.devMode == true) {
-      devmode.checked = true
+      devmode.checked = true;
     }
   }
 
   setInfoPopup(settings) {
-    var infopop = document.getElementById('infoPopUps')
+    var infopop = document.getElementById('infoPopUps');
 
     if (settings.infopopups == true || settings.infopopups) {
-      infopop.checked = true
+      infopop.checked = true;
     }
   }
 
   setSavedTxFee(settings) {
-    let settxobj = document.getElementById('optionalTransactionFee')
-    settxobj.value = this.props.paytxfee
+    let settxobj = document.getElementById('optionalTransactionFee');
+    settxobj.value = this.props.paytxfee;
   }
 
   updateBackupLocation(event) {
-    var el = event.target
-    var settingsObj = GetSettings()
+    var el = event.target;
+    var settingsObj = GetSettings();
 
-    let incomingPath = el.files[0].path
+    let incomingPath = el.files[0].path;
 
-    settingsObj.backupLocation = incomingPath
+    settingsObj.backupLocation = incomingPath;
 
-    SaveSettings(settingsObj)
+    SaveSettings(settingsObj);
   }
 
   updateInfoPopUp(event) {
-    var el = event.target
-    var settingsObj = GetSettings()
+    var el = event.target;
+    var settingsObj = GetSettings();
 
-    settingsObj.infopopups = el.checked
+    settingsObj.infopopups = el.checked;
 
-    SaveSettings(settingsObj)
+    SaveSettings(settingsObj);
   }
 
   updateAutoStart(event) {
-    var el = event.target
-    var settingsObj = GetSettings()
+    var el = event.target;
+    var settingsObj = GetSettings();
 
-    settingsObj.autostart = el.checked
+    settingsObj.autostart = el.checked;
 
-    SaveSettings(settingsObj)
+    SaveSettings(settingsObj);
 
     //This is the code that will create a reg to have the OS auto start the app
     // Change Name when we need to
     var autolaunchsettings = new AutoLaunch({
       name: 'nexus-tritium-beta',
       path: path.dirname(app.getPath('exe')),
-    })
+    });
     //No need for a path as it will be set automaticly
 
     //Check selector
     if (el.checked == true) {
-      autolaunchsettings.enable()
+      autolaunchsettings.enable();
       autolaunchsettings
         .isEnabled()
         .then(function(isEnabled) {
           if (isEnabled) {
-            return
+            return;
           }
-          autolaunchsettings.enable()
+          autolaunchsettings.enable();
         })
         .catch(function(err) {
           // handle error
-        })
+        });
     } else {
       // Will Remove the property that makes it auto play
-      autolaunchsettings.disable()
+      autolaunchsettings.disable();
     }
   }
 
   updateMinimizeToTray(event) {
-    var el = event.target
-    var settingsObj = GetSettings()
+    var el = event.target;
+    var settingsObj = GetSettings();
 
-    settingsObj.minimizeToTray = el.checked
+    settingsObj.minimizeToTray = el.checked;
 
-    SaveSettings(settingsObj)
+    SaveSettings(settingsObj);
   }
 
   updateMinimizeOnClose(event) {
-    var el = event.target
-    var settingsObj = GetSettings()
+    var el = event.target;
+    var settingsObj = GetSettings();
 
-    settingsObj.minimizeOnClose = el.checked
+    settingsObj.minimizeOnClose = el.checked;
 
-    SaveSettings(settingsObj)
+    SaveSettings(settingsObj);
   }
 
   updateGoogleAnalytics(event) {
-    var el = event.target
-    var settingsObj = GetSettings()
+    var el = event.target;
+    var settingsObj = GetSettings();
 
-    settingsObj.googleAnalytics = el.checked
+    settingsObj.googleAnalytics = el.checked;
 
     if (el.checked == true) {
-      this.props.googleanalytics.EnableAnalytics()
+      this.props.googleanalytics.EnableAnalytics();
 
       this.props.googleanalytics.SendEvent(
         'Settings',
         'Analytics',
         'Enabled',
         1
-      )
+      );
     } else {
       this.props.googleanalytics.SendEvent(
         'Settings',
         'Analytics',
         'Disabled',
         1
-      )
-      this.props.googleanalytics.DisableAnalytics()
+      );
+      this.props.googleanalytics.DisableAnalytics();
     }
 
-    SaveSettings(settingsObj)
+    SaveSettings(settingsObj);
   }
 
   updateOptionalTransactionFee(event) {
-    var el = event.target
-    var settingsObj = GetSettings()
-    settingsObj.optionalTransactionFee = el.value
+    var el = event.target;
+    var settingsObj = GetSettings();
+    settingsObj.optionalTransactionFee = el.value;
 
-    SaveSettings(settingsObj)
+    SaveSettings(settingsObj);
   }
 
   setTxFee() {
-    let TxFee = document.getElementById('optionalTransactionFee').value
+    let TxFee = document.getElementById('optionalTransactionFee').value;
     if (parseFloat(TxFee) > 0) {
-      RPC.PROMISE('settxfee', [parseFloat(TxFee)])
-      this.props.OpenModal('Transaction Fee Set')
-      setTimeout(() => this.props.CloseModal(), 3000)
+      RPC.PROMISE('settxfee', [parseFloat(TxFee)]);
+      this.props.OpenModal('Transaction Fee Set');
+      setTimeout(() => this.props.CloseModal(), 3000);
     } else {
-      this.props.OpenModal('Invalid Transaction Fee')
-      setTimeout(() => this.props.CloseModal(), 3000)
+      this.props.OpenModal('Invalid Transaction Fee');
+      setTimeout(() => this.props.CloseModal(), 3000);
     }
   }
 
   updateDefaultUnitAmount(event) {
-    var el = event.target
-    var settingsObj = GetSettings()
+    var el = event.target;
+    var settingsObj = GetSettings();
 
-    settingsObj.defaultUnitAmount = el.options[el.selectedIndex].value
+    settingsObj.defaultUnitAmount = el.options[el.selectedIndex].value;
 
-    SaveSettings(settingsObj)
+    SaveSettings(settingsObj);
   }
 
   updateDeveloperMode(event) {
-    var el = event.target
-    var settingsObj = GetSettings()
+    var el = event.target;
+    var settingsObj = GetSettings();
 
-    settingsObj.devMode = el.checked
+    settingsObj.devMode = el.checked;
 
-    SaveSettings(settingsObj)
+    SaveSettings(settingsObj);
   }
 
   returnCurrentBackupLocation() {
-    let currentLocation = GetSettings()
+    let currentLocation = GetSettings();
     //set state for currentlocation and return it
 
-    return 'Current Location: ' + currentLocation.backupLocation
+    return 'Current Location: ' + currentLocation.backupLocation;
   }
 
   saveEmail() {
-    var settingsObj = GetSettings()
-    let emailFeild = document.getElementById('emailAddress')
-    let emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    var settingsObj = GetSettings();
+    let emailFeild = document.getElementById('emailAddress');
+    let emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (emailregex.test(emailFeild.value)) {
-      settingsObj.email = emailFeild.value
-      SaveSettings(settingsObj)
-    } else alert('Invalid Email')
+      settingsObj.email = emailFeild.value;
+      SaveSettings(settingsObj);
+    } else alert('Invalid Email');
   }
 
   backupWallet(e) {
-    e.preventDefault()
+    e.preventDefault();
     let now = new Date()
       .toString()
       .slice(0, 24)
       .split(' ')
       .reduce((a, b) => {
-        return a + '_' + b
+        return a + '_' + b;
       })
-      .replace(/:/g, '_')
+      .replace(/:/g, '_');
 
-    let BackupDir = process.env.HOME + '/NexusBackups'
+    let BackupDir = process.env.HOME + '/NexusBackups';
     if (process.platform === 'win32') {
-      BackupDir = BackupDir.replace(/\\/g, '/')
+      BackupDir = BackupDir.replace(/\\/g, '/');
     }
-    let ifBackupDirExists = fs.existsSync(BackupDir)
+    let ifBackupDirExists = fs.existsSync(BackupDir);
     if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
-      fs.mkdirSync(BackupDir)
+      fs.mkdirSync(BackupDir);
     }
 
     RPC.PROMISE('backupwallet', [
       BackupDir + '/NexusBackup_' + now + '.dat',
     ]).then(payload => {
-      this.props.CloseModal4()
-      this.props.OpenModal('Wallet Backup')
-      setTimeout(() => this.props.CloseModal(), 3000)
-    })
+      this.props.CloseModal4();
+      this.props.OpenModal('Wallet Backup');
+      setTimeout(() => this.props.CloseModal(), 3000);
+    });
   }
 
   OnFiatCurrencyChange(e) {
-    this.props.setFiatCurrency(e.target.value)
-    let settings = GetSettings()
-    settings.fiatCurrency = e.target.value
-    this.props.setSettings(settings)
-    SaveSettings(settings)
+    this.props.setFiatCurrency(e.target.value);
+    let settings = GetSettings();
+    settings.fiatCurrency = e.target.value;
+    this.props.setSettings(settings);
+    SaveSettings(settings);
   }
 
   changeLocale(locale) {
-    let settings = GetSettings()
-    settings.locale = locale
-    this.props.setSettings(settings)
-    this.props.SwitchLocale(locale)
-    SaveSettings(settings)
+    let settings = GetSettings();
+    settings.locale = locale;
+    this.props.setSettings(settings);
+    this.props.SwitchLocale(locale);
+    SaveSettings(settings);
   }
 
   // Mandatory React method
   render() {
-    var settingsObj = GetSettings()
+    var settingsObj = GetSettings();
     return (
       <section id="application">
         <Modal
@@ -413,8 +413,8 @@ class SettingsApp extends Component {
                   type="button"
                   className="button primary"
                   onClick={() => {
-                    this.setTxFee()
-                    this.props.CloseModal2()
+                    this.setTxFee();
+                    this.props.CloseModal2();
                   }}
                 />
               )}
@@ -427,7 +427,7 @@ class SettingsApp extends Component {
                     type="button"
                     className="button primary"
                     onClick={() => {
-                      this.props.CloseModal2()
+                      this.props.CloseModal2();
                     }}
                   />
                 )}
@@ -457,9 +457,9 @@ class SettingsApp extends Component {
                   className="button primary"
                   onClick={e => {
                     if (this.props.connections !== undefined) {
-                      this.backupWallet(e)
+                      this.backupWallet(e);
                     } else {
-                      this.props.OpenModal('Please wait for Daemon to load')
+                      this.props.OpenModal('Please wait for Daemon to load');
                     }
                   }}
                 />
@@ -473,7 +473,7 @@ class SettingsApp extends Component {
                     type="button"
                     className="button primary"
                     onClick={() => {
-                      this.props.CloseModal4()
+                      this.props.CloseModal4();
                     }}
                   />
                 )}
@@ -713,8 +713,8 @@ class SettingsApp extends Component {
               <button
                 className="feebutton"
                 onClick={e => {
-                  e.preventDefault()
-                  this.props.OpenModal2()
+                  e.preventDefault();
+                  this.props.OpenModal2();
                 }}
               >
                 Set
@@ -986,8 +986,8 @@ class SettingsApp extends Component {
               className="button primary"
               disabled={!this.props.connections}
               onClick={e => {
-                e.preventDefault()
-                this.props.OpenModal4()
+                e.preventDefault();
+                this.props.OpenModal4();
               }}
             >
               <FormattedMessage
@@ -999,7 +999,7 @@ class SettingsApp extends Component {
           <div className="clear-both" />
         </form>
       </section>
-    )
+    );
   }
 }
 
@@ -1007,4 +1007,4 @@ class SettingsApp extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SettingsApp)
+)(SettingsApp);

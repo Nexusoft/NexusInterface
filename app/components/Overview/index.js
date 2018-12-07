@@ -4,68 +4,68 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import styles from './style.css'
-import { connect } from 'react-redux'
-import Modal from 'react-responsive-modal'
-import * as TYPE from 'actions/actiontypes'
-import { NavLink } from 'react-router-dom'
-import { remote } from 'electron'
-import Request from 'request'
-import { FormattedMessage } from 'react-intl'
-import fs from 'fs'
-import path from 'path'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import styles from './style.css';
+import { connect } from 'react-redux';
+import Modal from 'react-responsive-modal';
+import * as TYPE from 'actions/actiontypes';
+import { NavLink } from 'react-router-dom';
+import { remote } from 'electron';
+import Request from 'request';
+import { FormattedMessage } from 'react-intl';
+import fs from 'fs';
+import path from 'path';
 
 // Internal Dependencies
-import WEBGL from 'scripts/WebGLCheck.js'
-import { GetSettings, SaveSettings } from 'api/settings'
-import NetworkGlobe from './NetworkGlobe'
-import ContextMenuBuilder from 'contextmenu'
-import * as helpers from 'scripts/helper.js'
-import configuration from 'api/configuration'
+import WEBGL from 'scripts/WebGLCheck.js';
+import { GetSettings, SaveSettings } from 'api/settings';
+import NetworkGlobe from './NetworkGlobe';
+import ContextMenuBuilder from 'contextmenu';
+import * as helpers from 'scripts/helper.js';
+import configuration from 'api/configuration';
 
 // Images
-import USD from 'images/USD.svg'
-import transactionsArrows from 'images/transactions-arrows.svg'
-import marketicon from 'images/marketstats-white.svg'
-import supplyicon from 'images/supply.svg'
-import hours24icon from 'images/24hr.svg'
-import nxsStake from 'images/nxs-staking.svg'
-import interestRate from 'images/nxs-chart.png'
-import messages from 'languages/messages'
-import Connections0 from 'images/Connections0.svg'
-import Connections4 from 'images/Connections4.svg'
-import Connections8 from 'images/Connections8.svg'
-import Connections12 from 'images/Connections12.svg'
-import Connections14 from 'images/Connections14.svg'
-import Connections16 from 'images/Connections16.svg'
-import blockweight0 from 'images/BlockWeight-0.svg'
-import blockweight1 from 'images/BlockWeight-1.svg'
-import blockweight2 from 'images/BlockWeight-2.svg'
-import blockweight3 from 'images/BlockWeight-3.svg'
-import blockweight4 from 'images/BlockWeight-4.svg'
-import blockweight5 from 'images/BlockWeight-5.svg'
-import blockweight6 from 'images/BlockWeight-6.svg'
-import blockweight7 from 'images/BlockWeight-7.svg'
-import blockweight8 from 'images/BlockWeight-8.svg'
-import blockweight9 from 'images/BlockWeight-9.svg'
-import trust00 from 'images/trust00.svg'
-import trust10 from 'images/trust00.svg'
-import trust20 from 'images/trust00.svg'
-import trust30 from 'images/trust00.svg'
-import trust40 from 'images/trust00.svg'
-import trust50 from 'images/trust00.svg'
-import trust60 from 'images/trust00.svg'
-import trust70 from 'images/trust00.svg'
-import trust80 from 'images/trust00.svg'
-import trust90 from 'images/trust00.svg'
-import trust100 from 'images/trust00.svg'
-import { intlReducer } from 'react-intl-redux'
-import nxsblocks from 'images/blockexplorer-invert-white.svg'
-import interesticon from 'images/interest.svg'
-import stakeicon from 'images/staking-white.svg'
-import maxmindLogo from 'images/maxmind-header-logo-compact.svg'
+import USD from 'images/USD.svg';
+import transactionsArrows from 'images/transactions-arrows.svg';
+import marketicon from 'images/marketstats-white.svg';
+import supplyicon from 'images/supply.svg';
+import hours24icon from 'images/24hr.svg';
+import nxsStake from 'images/nxs-staking.svg';
+import interestRate from 'images/nxs-chart.png';
+import messages from 'languages/messages';
+import Connections0 from 'images/Connections0.svg';
+import Connections4 from 'images/Connections4.svg';
+import Connections8 from 'images/Connections8.svg';
+import Connections12 from 'images/Connections12.svg';
+import Connections14 from 'images/Connections14.svg';
+import Connections16 from 'images/Connections16.svg';
+import blockweight0 from 'images/BlockWeight-0.svg';
+import blockweight1 from 'images/BlockWeight-1.svg';
+import blockweight2 from 'images/BlockWeight-2.svg';
+import blockweight3 from 'images/BlockWeight-3.svg';
+import blockweight4 from 'images/BlockWeight-4.svg';
+import blockweight5 from 'images/BlockWeight-5.svg';
+import blockweight6 from 'images/BlockWeight-6.svg';
+import blockweight7 from 'images/BlockWeight-7.svg';
+import blockweight8 from 'images/BlockWeight-8.svg';
+import blockweight9 from 'images/BlockWeight-9.svg';
+import trust00 from 'images/trust00.svg';
+import trust10 from 'images/trust00.svg';
+import trust20 from 'images/trust00.svg';
+import trust30 from 'images/trust00.svg';
+import trust40 from 'images/trust00.svg';
+import trust50 from 'images/trust00.svg';
+import trust60 from 'images/trust00.svg';
+import trust70 from 'images/trust00.svg';
+import trust80 from 'images/trust00.svg';
+import trust90 from 'images/trust00.svg';
+import trust100 from 'images/trust00.svg';
+import { intlReducer } from 'react-intl-redux';
+import nxsblocks from 'images/blockexplorer-invert-white.svg';
+import interesticon from 'images/interest.svg';
+import stakeicon from 'images/staking-white.svg';
+import maxmindLogo from 'images/maxmind-header-logo-compact.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -74,8 +74,8 @@ const mapStateToProps = state => {
     ...state.common,
     ...state.settings,
     ...state.intl,
-  }
-}
+  };
+};
 const mapDispatchToProps = dispatch => ({
   setExperimentalWarning: save =>
     dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
@@ -86,53 +86,53 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING }),
   setWebGLEnabled: isEnabled =>
     dispatch({ type: TYPE.SET_WEBGL_ENABLED, payload: isEnabled }),
-})
+});
 
 class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     if (WEBGL.isWebGLAvailable()) {
-      this.props.setWebGLEnabled(true)
+      this.props.setWebGLEnabled(true);
     } else {
-      this.props.setWebGLEnabled(false)
-      var warning = WEBGL.getWebGLErrorMessage()
-      console.error(warning)
+      this.props.setWebGLEnabled(false);
+      var warning = WEBGL.getWebGLErrorMessage();
+      console.error(warning);
     }
-    window.addEventListener('contextmenu', this.setupcontextmenu, false)
+    window.addEventListener('contextmenu', this.setupcontextmenu, false);
 
     if (this.props.googleanalytics != null) {
-      this.props.googleanalytics.SendScreen('Overview')
+      this.props.googleanalytics.SendScreen('Overview');
     }
   }
   reDrawEverything() {}
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu)
+    window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.blocks > previousprops.blocks) {
-      let newDate = new Date()
-      this.props.BlockDate(newDate)
+      let newDate = new Date();
+      this.props.BlockDate(newDate);
     }
 
     if (this.props.saveSettingsFlag) {
-      SaveSettings(this.props.settings)
+      SaveSettings(this.props.settings);
     }
 
     if (this.props.webGLEnabled == false) {
-      return
+      return;
     }
 
     if (this.props.blocks != previousprops.blocks) {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
-        this.redrawCurves()
+        this.redrawCurves();
       }
     }
 
     if (this.props.saveSettingsFlag) {
-      SaveSettings(this.props.settings)
+      SaveSettings(this.props.settings);
     }
 
     if (
@@ -141,9 +141,9 @@ class Overview extends Component {
           this.props.percentDownloaded == 0.001)) &&
       this.props.daemonAvailable == false
     ) {
-      this.removeAllPoints()
-      this.reDrawEverything()
-      return
+      this.removeAllPoints();
+      this.reDrawEverything();
+      return;
     }
 
     if (
@@ -159,7 +159,7 @@ class Overview extends Component {
         this.props.settings.renderGlobe === true
       ) {
         //Daemon Starting Up
-        this.reDrawEverything()
+        this.reDrawEverything();
       } else {
         if (
           this.props.connections != previousprops.connections &&
@@ -167,7 +167,7 @@ class Overview extends Component {
           previousprops.connections !== undefined
         ) {
           if (this.props.connections != 0 && previousprops.connections != 0) {
-            this.reDrawEverything()
+            this.reDrawEverything();
           }
         }
       }
@@ -176,15 +176,15 @@ class Overview extends Component {
 
   // Class methods
   setupcontextmenu(e) {
-    e.preventDefault()
-    const contextmenu = new ContextMenuBuilder().defaultContext
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
 
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
-    defaultcontextmenu.popup(remote.getCurrentWindow())
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   closeLicenseModal() {
-    this.props.acceptMITAgreement()
+    this.props.acceptMITAgreement();
   }
 
   BlockRapper() {
@@ -194,14 +194,14 @@ class Overview extends Component {
           id="ToolTip.GettingNextBlock"
           defaultMessage="Getting Next Block..."
         />
-      )
+      );
     } else {
-      return this.props.blockDate.toLocaleString(this.props.settings.locale)
+      return this.props.blockDate.toLocaleString(this.props.settings.locale);
     }
   }
 
   returnLicenseModalInternal() {
-    let tempYear = new Date()
+    let tempYear = new Date();
 
     return (
       <div>
@@ -236,7 +236,7 @@ class Overview extends Component {
           ACCEPT
         </button>
       </div>
-    )
+    );
   }
 
   returnExperimentalModalInternal() {
@@ -274,107 +274,107 @@ class Overview extends Component {
           Don't show this again
         </button>
       </div>
-    )
+    );
   }
 
   connectionsImage() {
-    const con = this.props.connections
+    const con = this.props.connections;
 
     if (con <= 4) {
-      return Connections0
+      return Connections0;
     } else if (con > 4 && con <= 6) {
-      return Connections4
+      return Connections4;
     } else if (con > 6 && con <= 12) {
-      return Connections8
+      return Connections8;
     } else if (con > 12 && con <= 14) {
-      return Connections12
+      return Connections12;
     } else if (con > 14 && con <= 15) {
-      return Connections14
+      return Connections14;
     } else if (con > 15) {
-      return Connections16
+      return Connections16;
     } else {
-      return Connections0
+      return Connections0;
     }
   }
 
   trustImg() {
-    const TW = parseInt(this.props.trustweight / 10)
+    const TW = parseInt(this.props.trustweight / 10);
     switch (TW) {
       case 0:
-        return trust00
-        break
+        return trust00;
+        break;
       case 1:
-        return trust10
-        break
+        return trust10;
+        break;
       case 2:
-        return trust20
-        break
+        return trust20;
+        break;
       case 3:
-        return trust30
-        break
+        return trust30;
+        break;
       case 4:
-        return trust40
-        break
+        return trust40;
+        break;
       case 5:
-        return trust50
-        break
+        return trust50;
+        break;
       case 6:
-        return trust60
-        break
+        return trust60;
+        break;
       case 7:
-        return trust70
-        break
+        return trust70;
+        break;
       case 8:
-        return trust80
-        break
+        return trust80;
+        break;
       case 9:
-        return trust90
-        break
+        return trust90;
+        break;
       case 10:
-        return trust100
-        break
+        return trust100;
+        break;
       default:
-        return trust00
-        break
+        return trust00;
+        break;
     }
   }
 
   blockWeightImage() {
-    const BW = parseInt(this.props.blockweight / 10)
+    const BW = parseInt(this.props.blockweight / 10);
     switch (BW) {
       case 0:
-        return blockweight0
-        break
+        return blockweight0;
+        break;
       case 1:
-        return blockweight1
-        break
+        return blockweight1;
+        break;
       case 2:
-        return blockweight2
-        break
+        return blockweight2;
+        break;
       case 3:
-        return blockweight3
-        break
+        return blockweight3;
+        break;
       case 4:
-        return blockweight4
-        break
+        return blockweight4;
+        break;
       case 5:
-        return blockweight5
-        break
+        return blockweight5;
+        break;
       case 6:
-        return blockweight6
-        break
+        return blockweight6;
+        break;
       case 7:
-        return blockweight7
-        break
+        return blockweight7;
+        break;
       case 8:
-        return blockweight8
-        break
+        return blockweight8;
+        break;
       case 9:
-        return blockweight9
-        break
+        return blockweight9;
+        break;
       default:
-        return blockweight0
-        break
+        return blockweight0;
+        break;
     }
   }
 
@@ -388,7 +388,7 @@ class Overview extends Component {
       this.props.settings.renderGlobe == false ||
       this.props.webGLEnabled == false
     ) {
-      return null
+      return null;
     } else {
       return (
         <>
@@ -411,34 +411,34 @@ class Overview extends Component {
             Globe includes GeoLite2
           </div>
         </>
-      )
+      );
     }
   }
 
   numberWithCommas(x) {
-    if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   calculateUSDvalue() {
     if (this.props.rawNXSvalues[0]) {
       let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
         if (ele.name === this.props.settings.fiatCurrency) {
-          return ele
+          return ele;
         }
-      })
+      });
 
-      let currencyValue = this.props.balance * selectedCurrancyValue[0].price
+      let currencyValue = this.props.balance * selectedCurrancyValue[0].price;
       if (currencyValue === 0) {
-        currencyValue = `${currencyValue}.00`
+        currencyValue = `${currencyValue}.00`;
       } else {
-        currencyValue = currencyValue.toFixed(2)
+        currencyValue = currencyValue.toFixed(2);
       }
       return `${helpers.ReturnCurrencySymbol(
         selectedCurrancyValue[0].name,
         this.props.displayNXSvalues
-      ) + currencyValue}`
+      ) + currencyValue}`;
     } else {
-      return '$0'
+      return '$0';
     }
   }
 
@@ -446,12 +446,12 @@ class Overview extends Component {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
         if (ele.name === this.props.settings.fiatCurrency) {
-          return ele
+          return ele;
         }
-      })
-      return selectedCurrancyValue[0].price
+      });
+      return selectedCurrancyValue[0].price;
     } else {
-      return '$0'
+      return '$0';
     }
   }
 
@@ -459,12 +459,12 @@ class Overview extends Component {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
         if (ele.name === this.props.settings.fiatCurrency) {
-          return ele
+          return ele;
         }
-      })
-      return selectedCurrancyValue[0].marketCap
+      });
+      return selectedCurrancyValue[0].marketCap;
     } else {
-      return '$0'
+      return '$0';
     }
   }
 
@@ -472,12 +472,12 @@ class Overview extends Component {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
         if (ele.name === this.props.settings.fiatCurrency) {
-          return ele
+          return ele;
         }
-      })
-      return selectedCurrancyValue[0].changePct24Hr
+      });
+      return selectedCurrancyValue[0].changePct24Hr;
     } else {
-      return '0'
+      return '0';
     }
   }
 
@@ -486,8 +486,8 @@ class Overview extends Component {
       this.props.settings.acceptedagreement &&
       (this.props.settings.experimentalWarning && this.props.experimentalOpen)
     ) {
-      return true
-    } else return false
+      return true;
+    } else return false;
   }
 
   encryptedModalController() {
@@ -497,8 +497,8 @@ class Overview extends Component {
       this.props.settings.acceptedagreement &&
       (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)
     ) {
-      return true
-    } else return false
+      return true;
+    } else return false;
   }
 
   // Mandatory React method
@@ -797,7 +797,7 @@ class Overview extends Component {
           )}
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -805,4 +805,4 @@ class Overview extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Overview)
+)(Overview);

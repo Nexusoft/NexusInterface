@@ -1,5 +1,5 @@
-import styled from 'react-emotion'
-import { colors, consts, timing, animations } from 'styles'
+import styled from 'react-emotion';
+import { colors, consts, timing, animations } from 'styles';
 
 const HorizontalLine = styled('div')(
   {
@@ -15,6 +15,6 @@ const HorizontalLine = styled('div')(
   ({ width = '60%' }) => ({
     width,
   })
-)
+);
 
-export default HorizontalLine
+export default HorizontalLine;

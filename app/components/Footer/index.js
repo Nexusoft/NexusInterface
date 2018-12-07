@@ -4,27 +4,27 @@ Description: Bottom Menu
 Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 // Internal Global Depnedencies
-import HorizontalLine from 'components/common/HorizontalLine'
+import HorizontalLine from 'components/common/HorizontalLine';
 
 // Internal Local Dependencies
-import './style.css'
+import './style.css';
 
 // Images
-import mainlogo from 'images/logo.svg'
-import sendImg from 'images/send.svg'
-import marketImg from 'images/market.svg'
-import transactionsImg from 'images/transactions.svg'
-import addressImg from 'images/addressbook.svg'
-import settingsImg from 'images/settings.svg'
-import consoleImg from 'images/console.svg'
-import styleImg from 'images/developer.svg'
-import shapeshift from 'images/shapeshift.svg'
-import listImg from 'images/trust-list.svg'
-import { FormattedMessage } from 'react-intl'
+import mainlogo from 'images/logo.svg';
+import sendImg from 'images/send.svg';
+import marketImg from 'images/market.svg';
+import transactionsImg from 'images/transactions.svg';
+import addressImg from 'images/addressbook.svg';
+import settingsImg from 'images/settings.svg';
+import consoleImg from 'images/console.svg';
+import styleImg from 'images/developer.svg';
+import shapeshift from 'images/shapeshift.svg';
+import listImg from 'images/trust-list.svg';
+import { FormattedMessage } from 'react-intl';
 
 export default class Footer extends Component {
   // Mandatory React method
@@ -191,6 +191,6 @@ export default class Footer extends Component {
           </NavLink>
         </div>
       </div>
-    )
+    );
   }
 }

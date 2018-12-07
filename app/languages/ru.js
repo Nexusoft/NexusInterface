@@ -399,4 +399,4 @@ export default {
     'Lang.Japanese': 'японский',
     'Lang.French': 'Французский',
   },
-}
+};

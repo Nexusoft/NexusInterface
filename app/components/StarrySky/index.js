@@ -2,18 +2,18 @@
  * Inspired by https://www.script-tutorials.com/night-sky-with-twinkling-stars/
  */
 // External Dependencies
-import React from 'react'
-import styled from 'react-emotion'
-import { keyframes } from 'react-emotion'
+import React from 'react';
+import styled from 'react-emotion';
+import { keyframes } from 'react-emotion';
 
 // Internal Local Dependencies
-import starImg from './stars.jpg'
-import twinklingMask from './twinkling-mask.png'
+import starImg from './stars.jpg';
+import twinklingMask from './twinkling-mask.png';
 
 const twinkling = keyframes`
   from { transform: translate(0, 0) }
   to { transform: translate(1000px, 0) }
-`
+`;
 
 const Stars = styled('div')({
   position: 'fixed',
@@ -22,7 +22,7 @@ const Stars = styled('div')({
   right: 0,
   bottom: 0,
   background: `transparent url(${starImg}) repeat top center`,
-})
+});
 
 const Twinkling = styled('div')({
   position: 'absolute',
@@ -32,12 +32,12 @@ const Twinkling = styled('div')({
   bottom: 0,
   background: `transparent url(${twinklingMask}) repeat top center`,
   animation: `${twinkling} 35s linear infinite`,
-})
+});
 
 const StarrySky = () => (
   <Stars>
     <Twinkling />
   </Stars>
-)
+);
 
-export default StarrySky
+export default StarrySky;

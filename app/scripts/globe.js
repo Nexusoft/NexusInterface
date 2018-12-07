@@ -11,28 +11,28 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import * as THREE from 'three'
-import world from 'images/world-light-white.jpg'
+import * as THREE from 'three';
+import world from 'images/world-light-white.jpg';
 
-import { geoInterpolate } from 'd3-geo'
-var DAT = DAT || {}
+import { geoInterpolate } from 'd3-geo';
+var DAT = DAT || {};
 
-var CurveMeshs = null
-var PillarMeshs = null
+var CurveMeshs = null;
+var PillarMeshs = null;
 
 export default (DAT.Globe = function(container, opts) {
-  opts = opts || {}
+  opts = opts || {};
 
   var colorFn =
     opts.colorFn ||
     function(x) {
-      var c = new THREE.Color()
-      c.setHSL(0.6 - x * 0.5, 1.0, 0.5) // Controls the vertical line colors
-      return c
-    }
-  var colorArch = opts.colorArch || 0x00ffff
-  var colorGlobe = opts.colorGlobe || 0xffffff
-  var imgDir = opts.imgDir || 'images/'
+      var c = new THREE.Color();
+      c.setHSL(0.6 - x * 0.5, 1.0, 0.5); // Controls the vertical line colors
+      return c;
+    };
+  var colorArch = opts.colorArch || 0x00ffff;
+  var colorGlobe = opts.colorGlobe || 0xffffff;
+  var imgDir = opts.imgDir || 'images/';
 
   var Shaders = {
     earth: {
@@ -78,78 +78,78 @@ export default (DAT.Globe = function(container, opts) {
         '}',
       ].join('\n'),
     },
-  }
+  };
 
-  var camera, scene, renderer, w, h
-  var mesh, atmosphere, point
+  var camera, scene, renderer, w, h;
+  var mesh, atmosphere, point;
 
-  var overRenderer
+  var overRenderer;
 
-  var curZoomSpeed = 0
-  var zoomSpeed = 50
+  var curZoomSpeed = 0;
+  var zoomSpeed = 50;
 
-  var cureves = []
+  var cureves = [];
 
   var mouse = { x: 0, y: 0 },
-    mouseOnDown = { x: 0, y: 0 }
+    mouseOnDown = { x: 0, y: 0 };
   var rotation = { x: 0, y: 0 },
     incr_rotation = { x: -0.001, y: 0 }, //incr rotataional speed
     target = { x: (Math.PI * 3) / 2, y: Math.PI / 6.0 },
-    targetOnDown = { x: 0, y: 0 }
+    targetOnDown = { x: 0, y: 0 };
 
   var distance = 100000,
-    distanceTarget = 100000
-  var padding = 40
-  var PI_HALF = Math.PI / 2
+    distanceTarget = 100000;
+  var padding = 40;
+  var PI_HALF = Math.PI / 2;
 
-  var tempoints = []
+  var tempoints = [];
 
   function init() {
     // container.style.color = '#fff';
-    container.style.font = '13px/20px Arial, sans-serif'
+    container.style.font = '13px/20px Arial, sans-serif';
 
-    var shader, uniforms, material
-    w = window.innerWidth
-    h = window.innerHeight
+    var shader, uniforms, material;
+    w = window.innerWidth;
+    h = window.innerHeight;
 
-    camera = new THREE.PerspectiveCamera(30, w / h, 0.1, 1500)
+    camera = new THREE.PerspectiveCamera(30, w / h, 0.1, 1500);
     // camera.position.z = distance;
 
-    scene = new THREE.Scene()
+    scene = new THREE.Scene();
 
-    var geometry = new THREE.SphereGeometry(200, 40, 30)
+    var geometry = new THREE.SphereGeometry(200, 40, 30);
 
-    shader = Shaders['earth']
-    uniforms = THREE.UniformsUtils.clone(shader.uniforms)
-    let colormoddd = new THREE.Color(colorGlobe)
-    let globeR = colormoddd.r / 1
-    let globeG = colormoddd.g / 1
-    let globeB = colormoddd.b / 1
+    shader = Shaders['earth'];
+    uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+    let colormoddd = new THREE.Color(colorGlobe);
+    let globeR = colormoddd.r / 1;
+    let globeG = colormoddd.g / 1;
+    let globeB = colormoddd.b / 1;
 
     //uniforms["texture"].value = new THREE.TextureLoader().load(world);
     uniforms['_texture'] = {
       type: 't',
       value: new THREE.TextureLoader().load(world),
-    }
+    };
     uniforms['colorMod'] = {
       type: 'v4',
       value: new THREE.Vector4(globeR, globeG, globeB, 1.0),
-    }
+    };
 
     // imgDir + "world.jpg"
     material = new THREE.ShaderMaterial({
       uniforms: uniforms,
       vertexShader: shader.vertexShader,
       fragmentShader: shader.fragmentShader,
-    })
+    });
 
-    mesh = new THREE.Mesh(geometry, material)
-    mesh.rotation.y = Math.PI
-    mesh.name = 'globeObj'
-    scene.add(mesh)
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.rotation.y = Math.PI;
+    mesh.name = 'globeObj';
+    scene.add(mesh);
 
-    shader = Shaders['atmosphere']
-    uniforms = THREE.UniformsUtils.clone(shader.uniforms)
+    shader = Shaders['atmosphere'];
+    uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
     material = new THREE.ShaderMaterial({
       uniforms: uniforms,
@@ -158,132 +158,132 @@ export default (DAT.Globe = function(container, opts) {
       side: THREE.BackSide,
       blending: THREE.AdditiveBlending,
       transparent: true,
-    })
+    });
 
     var curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(0, 0, 0),
       new THREE.Vector3(99, 99, 99),
-    ])
+    ]);
 
-    var points = curve.getPoints(50)
-    var geometry = new THREE.BufferGeometry().setFromPoints(points)
+    var points = curve.getPoints(50);
+    var geometry = new THREE.BufferGeometry().setFromPoints(points);
 
     var material = new THREE.LineBasicMaterial({
       color: 0xff0000,
       linewidth: 60,
       fog: true,
-    })
+    });
 
     // Create the final object to add to the scene
-    var curveObject = new THREE.Line(geometry, material)
+    var curveObject = new THREE.Line(geometry, material);
 
     //scene.add(curveObject);
 
-    mesh = new THREE.Mesh(geometry, material)
-    mesh.scale.set(1.1, 1.1, 1.1)
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.scale.set(1.1, 1.1, 1.1);
 
-    scene.add(mesh)
+    scene.add(mesh);
 
-    geometry = new THREE.BoxGeometry(0.75, 0.75, 1)
-    geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -0.5))
+    geometry = new THREE.BoxGeometry(0.75, 0.75, 1);
+    geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -0.5));
 
-    point = new THREE.Mesh(geometry)
+    point = new THREE.Mesh(geometry);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true })
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    alpha: true
-    renderer.setSize(w, h)
-    renderer.setClearColor(0x000000, 0) // set background color to transparent
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    alpha: true;
+    renderer.setSize(w, h);
+    renderer.setClearColor(0x000000, 0); // set background color to transparent
 
     // renderer.domElement.style.position = "absolute";
 
-    container.appendChild(renderer.domElement)
+    container.appendChild(renderer.domElement);
 
-    container.addEventListener('mousedown', onMouseDown, false)
+    container.addEventListener('mousedown', onMouseDown, false);
 
-    container.addEventListener('mousewheel', onMouseWheel, false)
+    container.addEventListener('mousewheel', onMouseWheel, false);
 
-    document.addEventListener('keydown', onDocumentKeyDown, false)
+    document.addEventListener('keydown', onDocumentKeyDown, false);
 
-    window.addEventListener('resize', onWindowResize, false)
+    window.addEventListener('resize', onWindowResize, false);
 
     container.addEventListener(
       'mouseover',
       function() {
-        overRenderer = true
+        overRenderer = true;
       },
       false
-    )
+    );
 
     container.addEventListener(
       'mouseout',
       function() {
-        overRenderer = false
+        overRenderer = false;
       },
       false
-    )
+    );
   }
 
   function addData(data, opts) {
-    var lat, lng, size, color, i, step, colorFnWrapper
+    var lat, lng, size, color, i, step, colorFnWrapper;
 
-    opts.animated = opts.animated || false
-    this.is_animated = opts.animated
-    opts.format = opts.format || 'magnitude' // other option is 'legend'
+    opts.animated = opts.animated || false;
+    this.is_animated = opts.animated;
+    opts.format = opts.format || 'magnitude'; // other option is 'legend'
     if (opts.format === 'magnitude') {
-      step = 3
+      step = 3;
       colorFnWrapper = function(data, i) {
-        return colorFn(data[i + 2])
-      }
+        return colorFn(data[i + 2]);
+      };
     } else if (opts.format === 'legend') {
-      step = 4
+      step = 4;
       colorFnWrapper = function(data, i) {
-        return colorFn(data[i + 3])
-      }
+        return colorFn(data[i + 3]);
+      };
     } else {
-      throw 'error: format not supported: ' + opts.format
+      throw 'error: format not supported: ' + opts.format;
     }
 
     if (opts.animated) {
       if (this._baseGeometry === undefined) {
-        this._baseGeometry = new THREE.Geometry()
+        this._baseGeometry = new THREE.Geometry();
         for (i = 0; i < data.length; i += step) {
-          lat = data[i]
-          lng = data[i + 1]
+          lat = data[i];
+          lng = data[i + 1];
           //        size = data[i + 2];
-          color = colorFnWrapper(data, i)
-          size = 0
-          addPoint(lat, lng, size, color, this._baseGeometry)
+          color = colorFnWrapper(data, i);
+          size = 0;
+          addPoint(lat, lng, size, color, this._baseGeometry);
         }
       }
       if (this._morphTargetId === undefined) {
-        this._morphTargetId = 0
+        this._morphTargetId = 0;
       } else {
-        this._morphTargetId += 1
+        this._morphTargetId += 1;
       }
-      opts.name = opts.name || 'morphTarget' + this._morphTargetId
+      opts.name = opts.name || 'morphTarget' + this._morphTargetId;
     }
-    var subgeo = new THREE.Geometry()
+    var subgeo = new THREE.Geometry();
     for (i = 0; i < data.length; i += step) {
-      lat = data[i]
-      lng = data[i + 1]
-      color = colorFnWrapper(data, i)
-      size = data[i + 2]
-      size = size * 200
+      lat = data[i];
+      lng = data[i + 1];
+      color = colorFnWrapper(data, i);
+      size = data[i + 2];
+      size = size * 200;
 
       if (i + step == data.length) {
-        color = { r: 0, g: 1, b: 0 }
+        color = { r: 0, g: 1, b: 0 };
       }
 
-      addPoint(lat, lng, size, color, subgeo)
+      addPoint(lat, lng, size, color, subgeo);
     }
     if (opts.animated) {
       this._baseGeometry.morphTargets.push({
         name: opts.name,
         vertices: subgeo.vertices,
-      })
+      });
     } else {
-      this._baseGeometry = subgeo
+      this._baseGeometry = subgeo;
     }
   }
 
@@ -297,16 +297,16 @@ export default (DAT.Globe = function(container, opts) {
             vertexColors: THREE.FaceColors,
             morphTargets: false,
           })
-        )
+        );
       } else {
         if (this._baseGeometry.morphTargets.length < 8) {
-          var padding = 8 - this._baseGeometry.morphTargets.length
+          var padding = 8 - this._baseGeometry.morphTargets.length;
 
           for (var i = 0; i <= padding; i++) {
             this._baseGeometry.morphTargets.push({
               name: 'morphPadding' + i,
               vertices: this._baseGeometry.vertices,
-            })
+            });
           }
         }
         this.points = new THREE.Mesh(
@@ -316,20 +316,20 @@ export default (DAT.Globe = function(container, opts) {
             vertexColors: THREE.FaceColors,
             morphTargets: true,
           })
-        )
+        );
       }
 
-      let tempPoints = []
+      let tempPoints = [];
 
-      const lastpoint = tempoints[tempoints.length - 1]
+      const lastpoint = tempoints[tempoints.length - 1];
       for (let index = 0; index < tempoints.length - 1; index++) {
-        const element = tempoints[index]
-        let temparray = []
-        temparray.push(element.lat)
-        temparray.push(element.lng)
-        temparray.push(parseFloat(lastpoint.lat))
-        temparray.push(parseFloat(lastpoint.lng))
-        tempPoints.push(temparray)
+        const element = tempoints[index];
+        let temparray = [];
+        temparray.push(element.lat);
+        temparray.push(element.lng);
+        temparray.push(parseFloat(lastpoint.lat));
+        temparray.push(parseFloat(lastpoint.lng));
+        tempPoints.push(temparray);
       }
 
       let newCurveMesh = new THREE.Mesh(
@@ -339,132 +339,132 @@ export default (DAT.Globe = function(container, opts) {
           vertexColors: THREE.FaceColors,
           morphTargets: true,
         })
-      )
+      );
 
-      initCurves(tempPoints, newCurveMesh)
+      initCurves(tempPoints, newCurveMesh);
 
-      playCurve()
+      playCurve();
 
       if (CurveMeshs != null) {
-        scene.remove(CurveMeshs)
+        scene.remove(CurveMeshs);
       }
       if (PillarMeshs != null) {
-        scene.remove(PillarMeshs)
+        scene.remove(PillarMeshs);
       }
 
-      CurveMeshs = newCurveMesh
-      PillarMeshs = this.points
+      CurveMeshs = newCurveMesh;
+      PillarMeshs = this.points;
 
-      PillarMeshs.name = 'PillarMesh'
-      CurveMeshs.name = 'CurveMesh'
+      PillarMeshs.name = 'PillarMesh';
+      CurveMeshs.name = 'CurveMesh';
 
-      scene.add(PillarMeshs)
-      scene.add(CurveMeshs)
+      scene.add(PillarMeshs);
+      scene.add(CurveMeshs);
     }
   }
 
   function returnPointVector3(lat, lng) {
-    let vector3 = new THREE.Vector3(0, 0, 0)
-    var phi = ((90 - lat) * Math.PI) / 180
-    var theta = ((180 - lng) * Math.PI) / 180
+    let vector3 = new THREE.Vector3(0, 0, 0);
+    var phi = ((90 - lat) * Math.PI) / 180;
+    var theta = ((180 - lng) * Math.PI) / 180;
 
-    vector3.x = 200 * Math.sin(phi) * Math.cos(theta)
-    vector3.y = 200 * Math.cos(phi)
-    vector3.z = 200 * Math.sin(phi) * Math.sin(theta)
+    vector3.x = 200 * Math.sin(phi) * Math.cos(theta);
+    vector3.y = 200 * Math.cos(phi);
+    vector3.z = 200 * Math.sin(phi) * Math.sin(theta);
 
-    return vector3
+    return vector3;
   }
 
   function addPoint(lat, lng, size, color, subgeo) {
-    var phi = ((90 - lat) * Math.PI) / 180
-    var theta = ((180 - lng) * Math.PI) / 180
+    var phi = ((90 - lat) * Math.PI) / 180;
+    var theta = ((180 - lng) * Math.PI) / 180;
 
-    point.position.x = 200 * Math.sin(phi) * Math.cos(theta)
-    point.position.y = 200 * Math.cos(phi)
-    point.position.z = 200 * Math.sin(phi) * Math.sin(theta)
+    point.position.x = 200 * Math.sin(phi) * Math.cos(theta);
+    point.position.y = 200 * Math.cos(phi);
+    point.position.z = 200 * Math.sin(phi) * Math.sin(theta);
 
-    point.lookAt(mesh.position)
+    point.lookAt(mesh.position);
 
-    point.scale.z = Math.max(size, 0.1) // avoid non-invertible matrix
-    point.updateMatrix()
+    point.scale.z = Math.max(size, 0.1); // avoid non-invertible matrix
+    point.updateMatrix();
 
-    tempoints.push({ lat: lat, lng: lng })
+    tempoints.push({ lat: lat, lng: lng });
 
     for (var i = 0; i < point.geometry.faces.length; i++) {
-      point.geometry.faces[i].color = color
+      point.geometry.faces[i].color = color;
     }
     if (point.matrixAutoUpdate) {
-      point.updateMatrix()
+      point.updateMatrix();
     }
-    subgeo.merge(point.geometry, point.matrix)
+    subgeo.merge(point.geometry, point.matrix);
   }
 
   function onMouseDown(event) {
-    event.preventDefault()
+    event.preventDefault();
 
-    container.addEventListener('mousemove', onMouseMove, false)
-    container.addEventListener('mouseup', onMouseUp, false)
-    container.addEventListener('mouseout', onMouseOut, false)
+    container.addEventListener('mousemove', onMouseMove, false);
+    container.addEventListener('mouseup', onMouseUp, false);
+    container.addEventListener('mouseout', onMouseOut, false);
 
-    mouseOnDown.x = -event.clientX
-    mouseOnDown.y = event.clientY
+    mouseOnDown.x = -event.clientX;
+    mouseOnDown.y = event.clientY;
 
-    targetOnDown.x = target.x
-    targetOnDown.y = target.y
+    targetOnDown.x = target.x;
+    targetOnDown.y = target.y;
 
-    container.style.cursor = 'move'
+    container.style.cursor = 'move';
   }
 
   function onMouseMove(event) {
-    mouse.x = -event.clientX
-    mouse.y = event.clientY
+    mouse.x = -event.clientX;
+    mouse.y = event.clientY;
 
-    var zoomDamp = distance / 1000
+    var zoomDamp = distance / 1000;
 
-    target.x = targetOnDown.x + (mouse.x - mouseOnDown.x) * 0.005 * zoomDamp
-    target.y = targetOnDown.y + (mouse.y - mouseOnDown.y) * 0.005 * zoomDamp
+    target.x = targetOnDown.x + (mouse.x - mouseOnDown.x) * 0.005 * zoomDamp;
+    target.y = targetOnDown.y + (mouse.y - mouseOnDown.y) * 0.005 * zoomDamp;
 
-    target.y = target.y > PI_HALF ? PI_HALF : target.y
-    target.y = target.y < -PI_HALF ? -PI_HALF : target.y
+    target.y = target.y > PI_HALF ? PI_HALF : target.y;
+    target.y = target.y < -PI_HALF ? -PI_HALF : target.y;
   }
 
   function onMouseUp(event) {
-    container.removeEventListener('mousemove', onMouseMove, false)
-    container.removeEventListener('mouseup', onMouseUp, false)
-    container.removeEventListener('mouseout', onMouseOut, false)
-    container.style.cursor = 'auto'
+    container.removeEventListener('mousemove', onMouseMove, false);
+    container.removeEventListener('mouseup', onMouseUp, false);
+    container.removeEventListener('mouseout', onMouseOut, false);
+    container.style.cursor = 'auto';
   }
 
   function onMouseOut(event) {
-    container.removeEventListener('mousemove', onMouseMove, false)
-    container.removeEventListener('mouseup', onMouseUp, false)
-    container.removeEventListener('mouseout', onMouseOut, false)
+    container.removeEventListener('mousemove', onMouseMove, false);
+    container.removeEventListener('mouseup', onMouseUp, false);
+    container.removeEventListener('mouseout', onMouseOut, false);
   }
 
   function onMouseWheel(event) {
-    event.preventDefault()
+    event.preventDefault();
     if (overRenderer) {
-      zoom(event.wheelDeltaY * 0.3)
+      zoom(event.wheelDeltaY * 0.3);
     }
-    return false
+    return false;
   }
 
   function onDocumentKeyDown(event) {
     switch (event.keyCode) {
       case 38:
-        zoom(100)
-        event.preventDefault()
-        break
+        zoom(100);
+        event.preventDefault();
+        break;
       case 40:
-        zoom(-100)
-        event.preventDefault()
-        break
+        zoom(-100);
+        event.preventDefault();
+        break;
     }
   }
 
-  var prevW = 0
-  var prevH = 0
-  var scale = 1
+  var prevW = 0;
+  var prevH = 0;
+  var scale = 1;
   function onWindowResize(event) {
     // if(prevH == 0 || prevW == 0)
     // {
@@ -486,44 +486,44 @@ export default (DAT.Globe = function(container, opts) {
 
     // scene.scale = new Vector3(.9,.9,.9); // vector3 undefined might revisit.
 
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   function zoom(delta) {
-    distanceTarget -= delta
-    distanceTarget = distanceTarget > 1200 ? 1200 : distanceTarget
-    distanceTarget = distanceTarget < 350 ? 350 : distanceTarget
+    distanceTarget -= delta;
+    distanceTarget = distanceTarget > 1200 ? 1200 : distanceTarget;
+    distanceTarget = distanceTarget < 350 ? 350 : distanceTarget;
   }
 
   function animate() {
-    requestAnimationFrame(animate)
-    render()
+    requestAnimationFrame(animate);
+    render();
   }
 
   function playCurve() {
     cureves.forEach(element => {
-      element.restart()
-      element.play()
-    })
+      element.restart();
+      element.play();
+    });
   }
 
   function removePoints() {
     cureves.forEach(element => {
-      element.stop()
-    })
+      element.stop();
+    });
     if (CurveMeshs != null) {
-      scene.remove(CurveMeshs)
-      CurveMeshs.geometry.dispose()
-      CurveMeshs.material.dispose()
-      CurveMeshs = null
+      scene.remove(CurveMeshs);
+      CurveMeshs.geometry.dispose();
+      CurveMeshs.material.dispose();
+      CurveMeshs = null;
     }
     if (PillarMeshs != null) {
-      scene.remove(PillarMeshs)
-      PillarMeshs.geometry.dispose()
-      PillarMeshs.material.dispose()
-      PillarMeshs = null
+      scene.remove(PillarMeshs);
+      PillarMeshs.geometry.dispose();
+      PillarMeshs.material.dispose();
+      PillarMeshs = null;
     }
 
     //scene.remove(scene.getObjectByName(""));
@@ -538,20 +538,20 @@ export default (DAT.Globe = function(container, opts) {
   }
 
   function render() {
-    zoom(curZoomSpeed)
+    zoom(curZoomSpeed);
     //playCurve();
-    target.x += incr_rotation.x
-    rotation.x += (target.x - rotation.x) * 0.1
-    rotation.y += (target.y - rotation.y) * 0.1
-    distance += (distanceTarget - distance) * 0.3
+    target.x += incr_rotation.x;
+    rotation.x += (target.x - rotation.x) * 0.1;
+    rotation.y += (target.y - rotation.y) * 0.1;
+    distance += (distanceTarget - distance) * 0.3;
 
-    camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y)
-    camera.position.y = distance * Math.sin(rotation.y)
-    camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y)
+    camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y);
+    camera.position.y = distance * Math.sin(rotation.y);
+    camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y);
 
-    camera.lookAt(mesh.position)
+    camera.lookAt(mesh.position);
 
-    renderer.render(scene, camera)
+    renderer.render(scene, camera);
   }
   // TODO: Figure out where to set the color of the arcs. The following currerntly does it.
   function initCurves(allCoords, incomingmesh) {
@@ -560,155 +560,158 @@ export default (DAT.Globe = function(container, opts) {
       opacity: 0.6,
       transparent: true,
       color: colorArch,
-    })
-    const curveMesh = new THREE.Mesh()
+    });
+    const curveMesh = new THREE.Mesh();
 
-    cureves.length = 0
+    cureves.length = 0;
     allCoords.forEach((coords, index) => {
-      const curve = new Curve(coords, material)
-      cureves.push(curve)
-      curveMesh.add(curve.mesh)
-    })
+      const curve = new Curve(coords, material);
+      cureves.push(curve);
+      curveMesh.add(curve.mesh);
+    });
 
-    incomingmesh.add(curveMesh)
+    incomingmesh.add(curveMesh);
   }
 
   function Curve(coords, material) {
-    const { spline } = getSplineFromCoords(coords)
+    const { spline } = getSplineFromCoords(coords);
 
-    const curveSegments = 32
-    let index = 0
+    const curveSegments = 32;
+    let index = 0;
     // add curve geometry
-    const curveGeometry = new THREE.BufferGeometry()
-    const points = new Float32Array(curveSegments * 3)
-    const vertices = spline.getPoints(curveSegments - 1)
+    const curveGeometry = new THREE.BufferGeometry();
+    const points = new Float32Array(curveSegments * 3);
+    const vertices = spline.getPoints(curveSegments - 1);
 
     for (let i = 0, j = 0; i < vertices.length; i++) {
-      const vertex = vertices[i]
-      points[j++] = vertex.x
-      points[j++] = vertex.y
-      points[j++] = vertex.z
+      const vertex = vertices[i];
+      points[j++] = vertex.x;
+      points[j++] = vertex.y;
+      points[j++] = vertex.z;
     }
 
     // !!!
     // You can use setDrawRange to animate the curve
-    curveGeometry.addAttribute('position', new THREE.BufferAttribute(points, 3))
-    curveGeometry.setDrawRange(0, 32)
+    curveGeometry.addAttribute(
+      'position',
+      new THREE.BufferAttribute(points, 3)
+    );
+    curveGeometry.setDrawRange(0, 32);
 
-    this.mesh = new THREE.Line(curveGeometry, material)
+    this.mesh = new THREE.Line(curveGeometry, material);
     //  this.mesh =  new THREE.MeshLine(curveGeometry, material);
     //  this.mesh.setGeometry(curveGeometry, function(p) {return 3;});
 
-    this.hasStopped = () => index > curveSegments
+    this.hasStopped = () => index > curveSegments;
 
     this.play = () => {
-      if (this.hasStopped()) return
-      index += 1
-      curveGeometry.setDrawRange(0, index)
-      curveGeometry.attributes.position.needsUpdate = true
+      if (this.hasStopped()) return;
+      index += 1;
+      curveGeometry.setDrawRange(0, index);
+      curveGeometry.attributes.position.needsUpdate = true;
       setTimeout(() => {
-        this.play()
-      }, 50)
-    }
+        this.play();
+      }, 50);
+    };
 
     this.stop = () => {
-      curveGeometry.setDrawRange(0, curveSegments)
-      this.index = curveSegments + 1
-    }
+      curveGeometry.setDrawRange(0, curveSegments);
+      this.index = curveSegments + 1;
+    };
 
     this.restart = () => {
-      index = 1
-      curveGeometry.setDrawRange(0, 1)
-    }
+      index = 1;
+      curveGeometry.setDrawRange(0, 1);
+    };
 
     //isPlaying ? this.restart() : this.stop();
   }
 
   function getSplineFromCoords(coords) {
-    const startLat = coords[0]
-    const startLng = coords[1]
-    const endLat = coords[2]
-    const endLng = coords[3]
+    const startLat = coords[0];
+    const startLng = coords[1];
+    const endLat = coords[2];
+    const endLng = coords[3];
 
-    const globeradius = 200
+    const globeradius = 200;
 
     // spline vertices
-    const start = coordinateToPosition(startLat, startLng, globeradius)
-    const end = coordinateToPosition(endLat, endLng, globeradius)
-    const altitude = clamp(start.distanceTo(end) * 0.75, 10, globeradius)
-    const interpolate = geoInterpolate([startLng, startLat], [endLng, endLat])
-    const midCoord1 = interpolate(0.25)
-    const midCoord2 = interpolate(0.75)
+    const start = coordinateToPosition(startLat, startLng, globeradius);
+    const end = coordinateToPosition(endLat, endLng, globeradius);
+    const altitude = clamp(start.distanceTo(end) * 0.75, 10, globeradius);
+    const interpolate = geoInterpolate([startLng, startLat], [endLng, endLat]);
+    const midCoord1 = interpolate(0.25);
+    const midCoord2 = interpolate(0.75);
     const mid1 = coordinateToPosition(
       midCoord1[1],
       midCoord1[0],
       globeradius + altitude
-    )
+    );
     const mid2 = coordinateToPosition(
       midCoord2[1],
       midCoord2[0],
       globeradius + altitude
-    )
+    );
 
     return {
       start,
       end,
       spline: new THREE.CubicBezierCurve3(start, mid1, mid2, end),
-    }
+    };
   }
   function clamp(num, min, max) {
-    return num <= min ? min : num >= max ? max : num
+    return num <= min ? min : num >= max ? max : num;
   }
 
   function coordinateToPosition(lat, lng, radius) {
-    const DEGREE_TO_RADIAN = Math.PI / 180
-    const phi = (90 - lat) * DEGREE_TO_RADIAN
-    const theta = lng * DEGREE_TO_RADIAN
+    const DEGREE_TO_RADIAN = Math.PI / 180;
+    const phi = (90 - lat) * DEGREE_TO_RADIAN;
+    const theta = lng * DEGREE_TO_RADIAN;
 
     return new THREE.Vector3(
       -radius * Math.sin(phi) * Math.cos(theta),
       radius * Math.cos(phi),
       radius * Math.sin(phi) * Math.sin(theta)
-    )
+    );
   }
 
-  init()
-  this.animate = animate
+  init();
+  this.animate = animate;
 
   this.__defineGetter__('time', function() {
-    return this._time || 0
-  })
+    return this._time || 0;
+  });
 
   this.__defineSetter__('time', function(t) {
-    var validMorphs = []
-    var morphDict = this.points.morphTargetDictionary
+    var validMorphs = [];
+    var morphDict = this.points.morphTargetDictionary;
     for (var k in morphDict) {
       if (k.indexOf('morphPadding') < 0) {
-        validMorphs.push(morphDict[k])
+        validMorphs.push(morphDict[k]);
       }
     }
-    validMorphs.sort()
-    var l = validMorphs.length - 1
-    var scaledt = t * l + 1
-    var index = Math.floor(scaledt)
+    validMorphs.sort();
+    var l = validMorphs.length - 1;
+    var scaledt = t * l + 1;
+    var index = Math.floor(scaledt);
     for (i = 0; i < validMorphs.length; i++) {
-      this.points.morphTargetInfluences[validMorphs[i]] = 0
+      this.points.morphTargetInfluences[validMorphs[i]] = 0;
     }
-    var lastIndex = index - 1
-    var leftover = scaledt - index
+    var lastIndex = index - 1;
+    var leftover = scaledt - index;
     if (lastIndex >= 0) {
-      this.points.morphTargetInfluences[lastIndex] = 1 - leftover
+      this.points.morphTargetInfluences[lastIndex] = 1 - leftover;
     }
-    this.points.morphTargetInfluences[index] = leftover
-    this._time = t
-  })
+    this.points.morphTargetInfluences[index] = leftover;
+    this._time = t;
+  });
 
-  this.addData = addData
-  this.createPoints = createPoints
-  this.renderer = renderer
-  this.scene = scene
-  this.removePoints = removePoints
-  this.playCurve = playCurve
+  this.addData = addData;
+  this.createPoints = createPoints;
+  this.renderer = renderer;
+  this.scene = scene;
+  this.removePoints = removePoints;
+  this.playCurve = playCurve;
 
-  return this
-})
+  return this;
+});

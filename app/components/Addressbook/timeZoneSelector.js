@@ -5,19 +5,19 @@ Last Modified by: Brian Smith
 */
 
 // External Dependencies
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 // Internal Dependencies
-import * as actionsCreators from 'actions/addressbookActionCreators'
+import * as actionsCreators from 'actions/addressbookActionCreators';
 
 // React-Redux mandatory methods
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch)
+  bindActionCreators(actionsCreators, dispatch);
 const mapStateToProps = state => {
-  return { ...state.common, ...state.addressbook }
-}
+  return { ...state.common, ...state.addressbook };
+};
 
 class TimeZoneSelector extends Component {
   // Mandatory React method
@@ -28,9 +28,9 @@ class TimeZoneSelector extends Component {
           id="addContactTimeZoneSelect"
           onChange={e => {
             if (this.props.editTZ) {
-              this.props.SaveTz(this.props.selected, parseInt(e.target.value))
+              this.props.SaveTz(this.props.selected, parseInt(e.target.value));
             } else {
-              this.props.EditProtoTZ(parseInt(e.target.value))
+              this.props.EditProtoTZ(parseInt(e.target.value));
             }
           }}
           value={this.props.prototypeTimezone}
@@ -108,7 +108,7 @@ class TimeZoneSelector extends Component {
           <option value="60">(UTC + 1.00 hr) Berlin, Lagos, Madrid</option>
         </select>
       </span>
-    )
+    );
   }
 }
 
@@ -116,4 +116,4 @@ class TimeZoneSelector extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TimeZoneSelector)
+)(TimeZoneSelector);

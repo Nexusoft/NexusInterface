@@ -4,34 +4,34 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { remote } from 'electron'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { remote } from 'electron';
 
 // Internal Dependencies
-import styles from './style.css'
-import ContextMenuBuilder from 'contextmenu'
+import styles from './style.css';
+import ContextMenuBuilder from 'contextmenu';
 
 // Images
-import styleimg from 'images/developer.svg'
+import styleimg from 'images/developer.svg';
 
 export default class StyleGuide extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    window.addEventListener('contextmenu', this.setupcontextmenu, false)
+    window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu)
+    window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
   // Class Methods
   setupcontextmenu(e) {
-    e.preventDefault()
-    const contextmenu = new ContextMenuBuilder().defaultContext
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
-    defaultcontextmenu.popup(remote.getCurrentWindow())
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   // Mandatory React method
@@ -831,6 +831,6 @@ export default class StyleGuide extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

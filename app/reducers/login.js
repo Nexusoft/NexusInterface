@@ -1,4 +1,4 @@
-import * as TYPE from 'actions/actiontypes'
+import * as TYPE from 'actions/actiontypes';
 
 const initialState = {
   unlockUntillDate: '',
@@ -8,7 +8,7 @@ const initialState = {
   address: '',
   errorMessage: 'Password is required',
   stakingFlag: false,
-}
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -16,36 +16,36 @@ export default (state = initialState, action) => {
       return {
         ...state,
         unlockUntillDate: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.SET_TIME:
       return {
         ...state,
         unlockUntillTime: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
         ...state,
         busyFlag: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.TOGGLE_STAKING_FLAG:
       return {
         ...state,
         stakingFlag: !state.stakingFlag,
-      }
-      break
+      };
+      break;
     case TYPE.SET_ERROR_MESSAGE:
       return {
         ...state,
         errorMessage: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.WIPE_LOGIN_INFO:
-      return initialState
-      break
+      return initialState;
+      break;
     default:
-      return state
+      return state;
   }
-}
+};

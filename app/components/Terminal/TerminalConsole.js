@@ -4,23 +4,23 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import { connect } from 'react-redux'
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { timingSafeEqual } from 'crypto'
+import { connect } from 'react-redux';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { timingSafeEqual } from 'crypto';
 
 // Internal Dependencies
-import styles from './style.css'
-import * as RPC from 'scripts/rpc'
-import * as TYPE from 'actions/actiontypes'
-import { FormattedMessage } from 'react-intl'
+import styles from './style.css';
+import * as RPC from 'scripts/rpc';
+import * as TYPE from 'actions/actiontypes';
+import { FormattedMessage } from 'react-intl';
 
-let currentHistoryIndex = -1
+let currentHistoryIndex = -1;
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common, ...state.overview }
-}
+  return { ...state.terminal, ...state.common, ...state.overview };
+};
 const mapDispatchToProps = dispatch => ({
   setCommandList: commandList =>
     dispatch({ type: TYPE.SET_COMMAND_LIST, payload: commandList }),
@@ -49,123 +49,131 @@ const mapDispatchToProps = dispatch => ({
   addToHistory: currentCommandItem =>
     dispatch({ type: TYPE.ADD_TO_HISTORY, payload: currentCommandItem }),
   // handleKeyboardInput: (key) => dispatch({type:TYPE.HANDLE_KEYBOARD_INPUT, payload: key})
-})
+});
 
 class TerminalConsole extends Component {
   constructor(props) {
-    super(props)
-    this.inputRef = null
+    super(props);
+    this.inputRef = null;
   }
   // React Method (Life cycle hook)
   componentDidMount() {
     RPC.PROMISE('help', []).then(payload => {
-      let CommandList = payload.split('\n')
-      this.props.setCommandList(CommandList)
-    })
+      let CommandList = payload.split('\n');
+      this.props.setCommandList(CommandList);
+    });
   }
 
   // Class Methods
   processOutput() {
     return this.props.consoleOutput.map((item, key) => {
-      return <div key={key}>{item}</div>
-    })
+      return <div key={key}>{item}</div>;
+    });
   }
 
   processInput() {
     if (this.props.currentInput == '') {
-      return
+      return;
     }
     if (this.props.currentInput.toLowerCase() == 'clear') {
-      this.props.resetMyConsole()
-      this.props.setInputFeild('')
-      return
+      this.props.resetMyConsole();
+      this.props.setInputFeild('');
+      return;
     }
 
-    this.props.googleanalytics.SendEvent('Terminal', 'Console', 'UseCommand', 1)
+    this.props.googleanalytics.SendEvent(
+      'Terminal',
+      'Console',
+      'UseCommand',
+      1
+    );
     //
-    let tempConsoleOutput = [...this.props.consoleOutput]
-    let splitInput = this.props.currentInput.split(' ')
-    let preSanatized = splitInput[0].replace(/[^a-zA-Z0-9]/g, '')
-    splitInput[0] = preSanatized
+    let tempConsoleOutput = [...this.props.consoleOutput];
+    let splitInput = this.props.currentInput.split(' ');
+    let preSanatized = splitInput[0].replace(/[^a-zA-Z0-9]/g, '');
+    splitInput[0] = preSanatized;
 
     for (let index = 1; index < splitInput.length; index++) {
       //splitInput[index] = splitInput[index].replace(/['"`]/g,"");
     }
 
     /// this is the argument array
-    let RPCArguments = []
-    this.props.addToHistory(splitInput[0])
-    this.props.setInputFeild('')
+    let RPCArguments = [];
+    this.props.addToHistory(splitInput[0]);
+    this.props.setInputFeild('');
 
     for (let tempindex = 1; tempindex < splitInput.length; tempindex++) {
-      let element = splitInput[tempindex]
+      let element = splitInput[tempindex];
       /// If this is a number we need to format it an int
       if (element != '' && isNaN(Number(element)) === false) {
-        element = parseFloat(element)
+        element = parseFloat(element);
       }
-      RPCArguments.push(element)
+      RPCArguments.push(element);
     }
     console.log(
       this.props.commandList.some(function(v) {
-        return v.indexOf(splitInput[0]) >= 0
+        return v.indexOf(splitInput[0]) >= 0;
       })
-    )
+    );
     /// Execute the command with the given args
     if (
       this.props.commandList.some(function(v) {
-        return v.indexOf(splitInput[0]) >= 0
+        return v.indexOf(splitInput[0]) >= 0;
       })
     ) {
       RPC.PROMISE(splitInput[0], RPCArguments)
         .then(payload => {
-          console.log(payload)
+          console.log(payload);
           if (typeof payload === 'string' || typeof payload === 'number') {
             if (typeof payload === 'string') {
-              let temppayload = payload
+              let temppayload = payload;
               temppayload.split('\n').map((item, key) => {
-                return tempConsoleOutput.push(item)
-              })
-              this.props.printToConsole(tempConsoleOutput)
+                return tempConsoleOutput.push(item);
+              });
+              this.props.printToConsole(tempConsoleOutput);
             } else {
-              tempConsoleOutput.push(payload)
-              this.props.printToConsole(tempConsoleOutput)
+              tempConsoleOutput.push(payload);
+              this.props.printToConsole(tempConsoleOutput);
             }
           } else {
             for (let outputObject in payload) {
               if (typeof payload[outputObject] === 'object') {
-                tempConsoleOutput.push(outputObject + ': ')
+                tempConsoleOutput.push(outputObject + ': ');
               } else {
                 tempConsoleOutput.push(
                   outputObject + ': ' + payload[outputObject]
-                )
+                );
               }
 
               if (typeof payload[outputObject] === 'object') {
                 for (let interalres in payload[outputObject]) {
-
-                  if (typeof payload[outputObject][interalres] === "object") {
-                    for (let internalmicro in payload[outputObject][interalres]) {
+                  if (typeof payload[outputObject][interalres] === 'object') {
+                    for (let internalmicro in payload[outputObject][
+                      interalres
+                    ]) {
                       tempConsoleOutput.push(
-                        "       " +
-                        internalmicro +
-                          ":" +payload[outputObject][interalres][internalmicro]
+                        '       ' +
+                          internalmicro +
+                          ':' +
+                          payload[outputObject][interalres][internalmicro]
                       );
                     }
-                  }else{
+                  } else {
                     tempConsoleOutput.push(
-                      "       " +
+                      '       ' +
                         interalres +
-                        ":" +payload[outputObject][interalres]
+                        ':' +
+                        payload[outputObject][interalres]
                     );
                   }
                 }
               }
             }
-            this.props.printToConsole(tempConsoleOutput)
+            this.props.printToConsole(tempConsoleOutput);
           }
         })
         .catch(error => {
-          console.log(error)
+          console.log(error);
           if (error.message !== undefined) {
             tempConsoleOutput.push(
               'Error: ' +
@@ -173,55 +181,59 @@ class TerminalConsole extends Component {
                 '(errorcode ' +
                 error.error.code +
                 ')'
-            )
+            );
           } else {
             //This is the error if the rpc is unavailable
             try {
-              tempConsoleOutput.push(error.error.message)
+              tempConsoleOutput.push(error.error.message);
             } catch (e) {
-              tempConsoleOutput.push(error)
+              tempConsoleOutput.push(error);
             }
           }
-          this.props.printToConsole(tempConsoleOutput)
-        })
+          this.props.printToConsole(tempConsoleOutput);
+        });
     } else {
       tempConsoleOutput.push([
         this.props.currentInput + ' is a invalid Command',
-      ])
+      ]);
       // tempConsoleOutput.push(['\n  '])
-      this.props.printToConsole(tempConsoleOutput)
+      this.props.printToConsole(tempConsoleOutput);
     }
   }
 
   handleKeyboardInput = e => {
     if (e.key === 'Enter') {
-      this.props.removeAutoCompleteDiv()
-      this.processInput()
-      currentHistoryIndex = -1
+      this.props.removeAutoCompleteDiv();
+      this.processInput();
+      currentHistoryIndex = -1;
     }
-  }
+  };
 
   handleKeyboardArrows = e => {
     if (e.key === 'ArrowUp') {
-      currentHistoryIndex++
+      currentHistoryIndex++;
 
       if (this.props.commandHistory[currentHistoryIndex]) {
-        this.props.setInputFeild(this.props.commandHistory[currentHistoryIndex])
+        this.props.setInputFeild(
+          this.props.commandHistory[currentHistoryIndex]
+        );
       } else {
-        this.props.setInputFeild('')
-        currentHistoryIndex = -1
+        this.props.setInputFeild('');
+        currentHistoryIndex = -1;
       }
     } else if (e.key === 'ArrowDown') {
-      currentHistoryIndex--
+      currentHistoryIndex--;
       if (currentHistoryIndex <= -1) {
-        currentHistoryIndex = -1
-        this.props.setInputFeild('')
+        currentHistoryIndex = -1;
+        this.props.setInputFeild('');
       } else {
-        this.props.setInputFeild(this.props.commandHistory[currentHistoryIndex])
+        this.props.setInputFeild(
+          this.props.commandHistory[currentHistoryIndex]
+        );
       }
     } else if (e.key === 'ArrowRight') {
     }
-  }
+  };
 
   autoComplete() {
     return this.props.filteredCmdList.map((item, key) => {
@@ -231,16 +243,16 @@ class TerminalConsole extends Component {
           onMouseDown={() => {
             setTimeout(() => {
               //I don't like this but the issue is that the click event fires on the output div which breaks the focus, so using a timer
-              this.inputRef.focus()
-            }, 100)
-            this.props.onAutoCompleteClick(item)
+              this.inputRef.focus();
+            }, 100);
+            this.props.onAutoCompleteClick(item);
           }}
         >
           {item}
           <br />
         </a>
-      )
-    })
+      );
+    });
   }
 
   // Mandatory React method
@@ -253,7 +265,7 @@ class TerminalConsole extends Component {
             defaultMessage="transactions.Loading"
           />
         </h2>
-      )
+      );
     } else {
       return (
         <div id="terminal-console">
@@ -312,7 +324,7 @@ class TerminalConsole extends Component {
             />
           </button>
         </div>
-      )
+      );
     }
   }
 }
@@ -321,4 +333,4 @@ class TerminalConsole extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TerminalConsole)
+)(TerminalConsole);

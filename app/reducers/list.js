@@ -1,8 +1,8 @@
-import * as TYPE from 'actions/actiontypes'
+import * as TYPE from 'actions/actiontypes';
 
 const initialState = {
   acc: true,
-}
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -10,15 +10,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         trustlist: [...action.payload],
-      }
-      break
+      };
+      break;
     case TYPE.TOGGLE_SORT_DIRECTION:
       return {
         ...state,
         acc: !state.acc,
-      }
-      break
+      };
+      break;
     default:
-      return state
+      return state;
   }
-}
+};

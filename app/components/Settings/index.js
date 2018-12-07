@@ -4,72 +4,72 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
-import { Route, Redirect } from 'react-router'
-import { connect } from 'react-redux'
-import { remote } from 'electron'
-import { FormattedMessage } from 'react-intl'
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
+import { Route, Redirect } from 'react-router';
+import { connect } from 'react-redux';
+import { remote } from 'electron';
+import { FormattedMessage } from 'react-intl';
 
 // Internal Global Dependencies
-import * as RPC from 'scripts/rpc'
-import ContextMenuBuilder from 'contextmenu'
-import Icon from 'components/common/Icon'
+import * as RPC from 'scripts/rpc';
+import ContextMenuBuilder from 'contextmenu';
+import Icon from 'components/common/Icon';
 
 // Internal Local Dependencies
-import styles from './style.css'
-import SettingsApp from './SettingsApp'
-import SettingsCore from './SettingsCore'
-import SettingsMarket from './SettingsMarket'
-import SettingsStyle from './SettingsStyle'
-import Security from './Security/Security'
-import Login from './Security/Login'
-import Unencrypted from './Security/Unencrypted'
+import styles from './style.css';
+import SettingsApp from './SettingsApp';
+import SettingsCore from './SettingsCore';
+import SettingsMarket from './SettingsMarket';
+import SettingsStyle from './SettingsStyle';
+import Security from './Security/Security';
+import Login from './Security/Login';
+import Unencrypted from './Security/Unencrypted';
 
 // Images
-import settingsimg from 'images/settings.svg'
-import coreImg from 'images/core.svg'
-import logoImg from 'images/logo.svg'
-import lockIcon from 'images/lock-minting.sprite.svg'
-import marketImg from 'images/marketstats.svg'
-import styleImg from 'images/developer.svg'
+import settingsimg from 'images/settings.svg';
+import coreImg from 'images/core.svg';
+import logoImg from 'images/logo.svg';
+import lockIcon from 'images/lock-minting.sprite.svg';
+import marketImg from 'images/marketstats.svg';
+import styleImg from 'images/developer.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.intl,
-  }
-}
+  };
+};
 //const mapDispatchToProps = dispatch => {};
 
 class Settings extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    this.props.googleanalytics.SendScreen('Settings')
-    window.addEventListener('contextmenu', this.setupcontextmenu, false)
+    this.props.googleanalytics.SendScreen('Settings');
+    window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu)
+    window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
   // Class Methods
   setupcontextmenu(e) {
-    e.preventDefault()
-    const contextmenu = new ContextMenuBuilder().defaultContext
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
-    defaultcontextmenu.popup(remote.getCurrentWindow())
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   // Mandatory React method
   render() {
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
-      console.log('Redirecting to Application Settings')
+      console.log('Redirecting to Application Settings');
 
-      return <Redirect to={`${this.props.match.url}/App`} />
+      return <Redirect to={`${this.props.match.url}/App`} />;
     }
 
     return (
@@ -180,7 +180,7 @@ class Settings extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -188,4 +188,4 @@ class Settings extends Component {
 export default connect(
   mapStateToProps
   //  mapDispatchToProps
-)(Settings)
+)(Settings);

@@ -19,22 +19,22 @@ const stage0Preset = [
   '@babel/plugin-syntax-import-meta',
   ['@babel/plugin-proposal-class-properties', { loose: false }],
   '@babel/plugin-proposal-json-strings',
-]
+];
 
 const reactOptimizePreset = [
   '@babel/plugin-transform-react-constant-elements',
   // Leaves out transform-react-inline-elements plugin due to incompatibility with Emotion
   'babel-plugin-transform-react-remove-prop-types',
   'babel-plugin-transform-react-pure-class-to-function',
-]
+];
 
-const devPlugins = []
+const devPlugins = [];
 
-const prodPlugins = ['babel-plugin-dev-expression', ...reactOptimizePreset]
+const prodPlugins = ['babel-plugin-dev-expression', ...reactOptimizePreset];
 
 module.exports = function(api) {
-  const development = process.env.NODE_ENV !== 'production'
-  api.cache(true)
+  const development = process.env.NODE_ENV !== 'production';
+  api.cache(true);
 
   return {
     presets: [
@@ -58,5 +58,5 @@ module.exports = function(api) {
         },
       ],
     ],
-  }
-}
+  };
+};

@@ -1,32 +1,32 @@
-const Application = require('spectron').Application
-const chai = require('chai')
-const chaiAsPromised = require('chai-as-promised')
-const electronPath = require('electron')
-const path = require('path')
+const Application = require('spectron').Application;
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const electronPath = require('electron');
+const path = require('path');
 
-chai.should()
-chai.use(chaiAsPromised)
+chai.should();
+chai.use(chaiAsPromised);
 
 describe('Application launch', function() {
-  this.timeout(10000)
+  this.timeout(10000);
 
   beforeEach(function() {
     this.app = new Application({
       path: electronPath,
       args: [path.join(__dirname, '..')],
-    })
-    return this.app.start()
-  })
+    });
+    return this.app.start();
+  });
 
   beforeEach(function() {
-    chaiAsPromised.transferPromiseness = this.app.transferPromiseness
-  })
+    chaiAsPromised.transferPromiseness = this.app.transferPromiseness;
+  });
 
   afterEach(function() {
     if (this.app && this.app.isRunning()) {
-      return this.app.stop()
+      return this.app.stop();
     }
-  })
+  });
 
   it('opens a window', function() {
     return this.app.client
@@ -41,6 +41,6 @@ describe('Application launch', function() {
       .and.be.above(0)
       .browserWindow.getBounds()
       .should.eventually.have.property('height')
-      .and.be.above(0)
-  })
-})
+      .and.be.above(0);
+  });
+});

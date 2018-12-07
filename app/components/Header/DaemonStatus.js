@@ -1,6 +1,6 @@
 // External Dependencies
-import React from 'react'
-import { FormattedMessage } from 'react-intl'
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 const DaemonStatus = ({ settings, connections, daemonAvailable }) => {
   if (settings.manualDaemon === false && connections === undefined) {
@@ -12,7 +12,7 @@ const DaemonStatus = ({ settings, connections, daemonAvailable }) => {
         />
         ...
       </>
-    )
+    );
   }
   if (settings.manualDaemon === true && daemonAvailable === false) {
     return (
@@ -20,10 +20,10 @@ const DaemonStatus = ({ settings, connections, daemonAvailable }) => {
         id="Alert.ManualDaemonDown"
         defaultMessage="Daemon Process Not Found"
       />
-    )
+    );
   }
 
-  return null
-}
+  return null;
+};
 
-export default DaemonStatus
+export default DaemonStatus;
