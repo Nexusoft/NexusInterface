@@ -50,25 +50,23 @@ class Header extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     var self = this
-
-    let settings = GetSettings()
-
-    if (settings === undefined) {
-      SaveSettings({ ...this.props.settings, keepDaemon: false })
-    } else {
-      this.props.setSettings(settings)
-    }
-    this.props.SwitchMessages(this.props.settings.locale)
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id)
     menuBuilder.buildMenu(self)
-
     this.props.SetGoogleAnalytics(GOOGLE)
+
+    if (tray === null) this.setupTray()
+    let settings = GetSettings()
+
+    if (Object.keys(settings).length < 1) {
+      SaveSettings({ ...this.props.settings, keepDaemon: false })
+      this.props.SwitchMessages(this.props.settings.locale)
+    } else {
+      this.props.SwitchMessages(settings.locale)
+      this.props.setSettings(settings)
+    }
 
     this.props.SetMarketAveData()
     this.props.LoadAddressBook()
-
-    if (tray === null) this.setupTray()
-
     this.props.GetInfoDump()
 
     self.set = setInterval(function() {
