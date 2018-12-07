@@ -866,14 +866,6 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
-        <button
-          className="button"
-          onClick={() =>
-            console.log(this.props.SwitchMessages(this.props.settings.locale))
-          }
-        >
-          Farts
-        </button>
         <CustomProperties
           global
           properties={{

@@ -12,7 +12,7 @@ import fs from 'fs'
 import * as TYPE from './actiontypes'
 import * as RPC from 'scripts/rpc'
 import config from 'api/configuration'
-import messages from '../languages/messages'
+// import messages from '../languages/messages'
 
 // Header Action Creators
 export const GetInfoDump = () => {
@@ -185,11 +185,12 @@ export const OpenBootstrapModal = bool => {
 }
 
 export const SwitchMessages = locale => {
+  let messages = {}
   if (process.env.NODE_ENV === 'development') {
-    let messages = JSON.parse(fs.readFileSync(`app/languages/${locale}.json`))
+    messages = JSON.parse(fs.readFileSync(`app/languages/${locale}.json`))
     console.log(messages)
   } else {
-    let messages = JSON.parse(
+    messages = JSON.parse(
       fs.readFileSync(
         path.join(config.GetAppResourceDir(), 'languages', `${locale}.json`)
       )
