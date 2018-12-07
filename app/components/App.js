@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import IntlWrapper from './IntlWrapper';
-import styled from 'react-emotion';
+import React, { Component } from 'react'
+import IntlWrapper from './IntlWrapper'
+import styled from '@emotion/styled'
 
-const AppWrapper = styled('div')({
+const AppWrapper = styled.div({
   position: 'fixed',
   top: 0,
   left: 0,
@@ -13,7 +13,7 @@ const AppWrapper = styled('div')({
   gridTemplateColumns: '1fr',
   gridTemplateRows: '74px auto 75px',
   gridTemplateAreas: '"header" "content" "navigation"',
-});
+})
 
 class App extends Component {
   render() {
@@ -21,7 +21,7 @@ class App extends Component {
       <IntlWrapper>
         <AppWrapper>{this.props.children}</AppWrapper>
       </IntlWrapper>
-    );
+    )
   }
 }
-export default App;
+export default App
