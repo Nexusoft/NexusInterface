@@ -4,18 +4,20 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
+
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { remote } from 'electron';
+import config from 'api/configuration';
 import { access } from 'fs';
+import path from 'path';
 import Modal from 'react-responsive-modal';
-import AutoLaunch from 'auto-launch';
-import fs from 'fs';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import fs from 'fs';
 
 // Internal Dependencies
-import { GetSettings, SaveSettings } from 'api/settings.js';
+import { GetSettings, SaveSettings } from 'api/settings';
 import styles from './style.css';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
@@ -58,7 +60,6 @@ const mapDispatchToProps = dispatch => ({
   CloseModal4: type => {
     dispatch({ type: TYPE.HIDE_MODAL4, payload: type });
   },
-
   CloseModal3: type => {
     dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
   },
@@ -67,6 +68,12 @@ const mapDispatchToProps = dispatch => ({
   },
   SwitchLocale: locale => {
     dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
+  },
+  SwitchMessages: messages => {
+    dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages });
+  },
+  SetMinimumConfirmationsNumber: inValue => {
+    dispatch({ type: TYPE.SET_MIN_CONFIRMATIONS, payload: inValue });
   },
 });
 
@@ -84,6 +91,7 @@ class SettingsApp extends Component {
     this.setGoogleAnalytics(settings);
     this.setDeveloperMode(settings);
     this.setInfoPopup(settings);
+    this.setMinimumConfirmations(settings);
     this.setSavedTxFee(settings);
 
     if (this.refs.backupInputField) {
@@ -169,6 +177,16 @@ class SettingsApp extends Component {
 
     if (settings.devMode == true) {
       devmode.checked = true;
+    }
+  }
+
+  setMinimumConfirmations(settings) {
+    var minConf = document.getElementById('minimumConfirmations');
+
+    if (settings.minimumconfirmations !== undefined) {
+      minConf.value = settings.minimumconfirmations;
+    } else {
+      minConf.value = 20; //Default
     }
   }
 
@@ -325,6 +343,22 @@ class SettingsApp extends Component {
     SaveSettings(settingsObj);
   }
 
+  updateMinimumConfirmations(event) {
+    var el = event.target;
+    var settingsObj = GetSettings();
+
+    if (el.value <= 0) {
+      el.value = 1;
+    }
+    if (Number.isInteger(el.value) == false) {
+      el.value = parseInt(el.value);
+    }
+
+    settingsObj.minimumconfirmations = el.value;
+    settings.SaveSettings(settingsObj);
+    this.props.SetMinimumConfirmationsNumber(el.value);
+  }
+
   returnCurrentBackupLocation() {
     let currentLocation = GetSettings();
     //set state for currentlocation and return it
@@ -384,6 +418,18 @@ class SettingsApp extends Component {
     settings.locale = locale;
     this.props.setSettings(settings);
     this.props.SwitchLocale(locale);
+    let messages = {};
+    if (process.env.NODE_ENV === 'development') {
+      messages = JSON.parse(fs.readFileSync(`app/languages/${locale}.json`));
+    } else {
+      messages = JSON.parse(
+        fs.readFileSync(
+          path.join(config.GetAppResourceDir(), 'languages', `${locale}.json`)
+        )
+      );
+    }
+
+    this.props.SwitchMessages(messages);
     SaveSettings(settings);
   }
 
@@ -686,6 +732,31 @@ class SettingsApp extends Component {
             </select>
           </div>
 
+          <div className="field">
+            <label htmlFor="minimumConfirmationsLable">
+              <FormattedMessage
+                id="Settings.MinimumConfirmations"
+                defaultMessage="Minimum Confirmations"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.MinimumConfirmations"
+              defaultMessage="Minimum amount of confirmations before a block is accepted. Local Only."
+            >
+              {tt => (
+                <input
+                  id="minimumConfirmations"
+                  type="number"
+                  size="3"
+                  step="1"
+                  min="1"
+                  onChange={this.updateMinimumConfirmations.bind(this)}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+
           {/* NEXUS FEE */}
           <div className="field">
             <label htmlFor="optionalTransactionFee">
@@ -738,7 +809,10 @@ class SettingsApp extends Component {
             classNames={{ modal: 'custom-modal5' }}
             showCloseIcon={true}
             open={this.props.openThirdModal}
-            onClose={this.props.CloseModal3}
+            onClose={e => {
+              e.preventDefault();
+              this.props.CloseModal3();
+            }}
           >
             <ul className="langList">
               {/* ENGLISH */}
@@ -750,9 +824,9 @@ class SettingsApp extends Component {
                   type="radio"
                   value="en"
                   checked={this.props.settings.locale === 'en'}
-                  onClick={() => this.changeLocale('en')}
+                  // onClick={() => this.changeLocale('en')}
 
-                  // onChange={e => this.changeLocale(e.target.value)}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="English">
@@ -777,7 +851,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="ru"
                   checked={this.props.settings.locale === 'ru'}
-                  onClick={() => this.changeLocale('ru')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="Russian">
@@ -802,7 +876,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="es"
                   checked={this.props.settings.locale === 'es'}
-                  onClick={() => this.changeLocale('es')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="Spanish">
@@ -827,7 +901,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="ko"
                   checked={this.props.settings.locale === 'ko'}
-                  onClick={() => this.changeLocale('ko')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="Korean">
@@ -849,7 +923,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="de"
                   checked={this.props.settings.locale === 'de'}
-                  onClick={() => this.changeLocale('de')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="German">
@@ -871,7 +945,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="ja"
                   checked={this.props.settings.locale === 'ja'}
-                  onClick={() => this.changeLocale('ja')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="Japanese">
@@ -896,7 +970,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="fr"
                   checked={this.props.settings.locale === 'fr'}
-                  onClick={() => this.changeLocale('fr')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="French">

@@ -12,7 +12,6 @@ import { connect, Provider } from 'react-redux';
 
 // Internal Global Dependencies
 import settings from 'api/settings';
-import messages from 'languages/messages';
 import locale from 'reducers/intl';
 
 // Internal Local Dependencies

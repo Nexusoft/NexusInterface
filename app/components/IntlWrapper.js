@@ -16,7 +16,7 @@ export function IntlWrapper(props) {
   return (
     <IntlProvider
       locale={props.settings.locale}
-      messages={props.messages[props.settings.locale]}
+      messages={props.messages}
       {...props.intl}
     >
       {props.children}

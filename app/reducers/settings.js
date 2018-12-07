@@ -1,7 +1,8 @@
 import * as TYPE from 'actions/actiontypes';
+// import messages from '../languages/messages'
 import configuration from 'api/configuration';
-import messages from 'languages/messages';
-import path from 'path';
+import initLanguage from './initLanguage';
+const path = require('path');
 let defaultWallpaperPath = '';
 if (process.env.NODE_ENV === 'development') {
   defaultWallpaperPath = './images/background/starrynight.jpg';
@@ -58,9 +59,10 @@ const initialState = {
     saveSettings: false,
     styleChangeFlag: false,
     selectedColorProp: 'MC1',
+    minimumconfirmations: 20,
   },
 
-  messages: messages,
+  messages: initLanguage,
 };
 
 export default (state = initialState, action) => {
@@ -75,6 +77,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         settings: { ...state.settings, locale: action.payload },
+      };
+      break;
+    case TYPE.SWITCH_MESSAGES:
+      return {
+        ...state,
+        messages: action.payload,
       };
       break;
     case TYPE.SET_EXPERIMENTAL_WARNING:
@@ -350,6 +358,15 @@ export default (state = initialState, action) => {
         settings: {
           ...state.settings,
           fiatCurrency: action.payload,
+        },
+      };
+      break;
+    case TYPE.SET_MIN_CONFIRMATIONS:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          minimumconfirmations: action.payload,
         },
       };
       break;

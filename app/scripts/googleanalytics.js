@@ -37,6 +37,7 @@ GA.SendScreen = function(ScreenTitle) {
 //     value    || NonNegative Int || Event Value, must be NonNegative
 
 GA.SendEvent = function(category, action, lable, value) {
+  if (GA.active == false) return;
   GA.visitor.event(category, action, lable, value).send();
 };
 

@@ -31,9 +31,9 @@ function syncStatusTooltip({
   } else {
     if (heighestPeerBlock > blocks) {
       return (
-        messages[settings.locale]['Header.Synching'] +
+        messages['Header.Synching'] +
         (heighestPeerBlock - blocks).toString() +
-        messages[settings.locale]['Header.Blocks']
+        messages['Header.Blocks']
       );
     } else {
       return <FormattedMessage id="Header.Synched" defaultMessage="Synched" />;

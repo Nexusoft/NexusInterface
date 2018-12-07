@@ -1,7 +1,7 @@
 /*
   Title: Transactions Module
   Description:
-  Last Modified by: Brian Smith
+  Last Modified by: Kendal Cormany
 */
 // External Dependencies
 import React, { Component } from 'react';
@@ -75,6 +75,9 @@ const mapDispatchToProps = dispatch => ({
   },
   SetExploreInfo: returnData => {
     dispatch({ type: TYPE.SET_TRANSACTION_EXPLOREINFO, payload: returnData });
+  },
+  SetSelectedMyAccount: returnData => {
+    dispatch({ type: TYPE.SET_SELECTED_MYACCOUNT, payload: returnData });
   },
   UpdateConfirmationsOnTransactions: returnData => {
     dispatch({ type: TYPE.UPDATE_CONFIRMATIONS, payload: returnData });
@@ -160,6 +163,7 @@ class Transactions extends Component {
 
   // React Method (Life cycle hook)
   componentDidMount() {
+    console.log(this.props.messages);
     this._isMounted = true;
     this.updateChartAndTableDimensions();
     this.props.googleanalytics.SendScreen('Transactions');
@@ -179,7 +183,7 @@ class Transactions extends Component {
             eachAddress.name +
               "'s" +
               `${' '}` +
-              this.props.messages[this.props.settings.locale]['Footer.Address']
+              this.props.messages['Footer.Address']
           );
         }
       }
@@ -226,6 +230,9 @@ class Transactions extends Component {
     if (this.props.txtotal != previousprops.txtotal) {
       this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
     }
+    if (this.props.selectedAccount != previousprops.selectedAccount) {
+      this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
+    }
   }
 
   // React Method (Life cycle hook)
@@ -238,66 +245,6 @@ class Transactions extends Component {
     });
     window.removeEventListener('resize', this.updateChartAndTableDimensions);
     window.removeEventListener('contextmenu', this.transactioncontextfunction);
-  }
-
-  // Class Methods
-  loadMyAccounts() {
-    RPC.PROMISE('listaccounts', [0]).then(payload => {
-      Promise.all(
-        Object.keys(payload).map(account =>
-          RPC.PROMISE('getaddressesbyaccount', [account])
-        )
-      ).then(payload => {
-        let validateAddressPromises = [];
-
-        payload.map(element => {
-          element.addresses.map(address => {
-            validateAddressPromises.push(
-              RPC.PROMISE('validateaddress', [address])
-            );
-          });
-        });
-
-        Promise.all(validateAddressPromises).then(payload => {
-          let accountsList = [];
-          let myaccts = payload.map(e => {
-            if (e.ismine && e.isvalid) {
-              let index = accountsList.findIndex(ele => {
-                if (ele.account === e.account) {
-                  return ele;
-                }
-              });
-
-              if (index === -1) {
-                accountsList.push({
-                  account: e.account,
-                  addresses: [e.address],
-                });
-              } else {
-                accountsList[index].addresses.push(e.address);
-              }
-            }
-          });
-          for (let key in accountsList) {
-            for (let eachaddress in accountsList[key].addresses) {
-              tempaddpress.set(
-                accountsList[key].addresses[eachaddress],
-                'My Account-' + accountsList[key].account
-              );
-            }
-          }
-
-          this.setState(
-            {
-              addressLabels: tempaddpress,
-            },
-            () => {
-              this.getTransactionData(true);
-            }
-          );
-        });
-      });
-    });
   }
 
   // The callback for when we want to update just the confirmations
@@ -357,7 +304,7 @@ class Transactions extends Component {
 
       let feePromises = [];
       incomingData.forEach(element => {
-        if (element.category == 'send') {
+        if (element.category == 'debit') {
           feePromises.push(RPC.PROMISE('gettransaction', [element.txid]));
         }
       });
@@ -460,9 +407,7 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: this.props.messages[this.props.settings.locale][
-          'transactions.MoreDetails'
-        ],
+        label: this.props.messages['transactions.MoreDetails'],
         click() {
           moreDatailsCallback();
         },
@@ -498,29 +443,23 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: this.props.messages[this.props.settings.locale]['Settings.Copy'],
+        label: this.props.messages['Settings.Copy'],
         submenu: [
           {
-            label: this.props.messages[this.props.settings.locale][
-              'AddressBook.Address'
-            ],
+            label: this.props.messages['AddressBook.Address'],
             click() {
               tablecopyaddresscallback();
             },
           },
           {
-            label: this.props.messages[this.props.settings.locale][
-              'AddressBook.Account'
-            ],
+            label: this.props.messages['AddressBook.Account'],
 
             click() {
               tablecopyaccountcallback();
             },
           },
           {
-            label: this.props.messages[this.props.settings.locale][
-              'sendReceive.TableAmount'
-            ],
+            label: this.props.messages['sendReceive.TableAmount'],
             click() {
               tablecopyamountcallback();
             },
@@ -589,20 +528,42 @@ class Transactions extends Component {
 
   // Gets all the data from each account held by the wallet
   getTransactionData(finishingCallback) {
-    const incomingMyAccounts = this.props.myAccounts;
+    let incomingMyAccounts;
     let listedaccounts = [];
     let promisList = [];
+    if (
+      this.props.selectedAccount == 0 ||
+      this.props.selectedAccount === undefined
+    ) {
+      incomingMyAccounts = this.props
+        .myAccounts; /*
+      incomingMyAccounts.forEach(element => {
+        listedaccounts.push(element.account)
+        promisList.push(
+          RPC.PROMISE('listtransactions', [
+            element.account === 'default' ? '' : element.account,
+            9999,
+            0,
+          ])
+        )
+      }) */
 
-    incomingMyAccounts.forEach(element => {
-      listedaccounts.push(element.account);
+      promisList.push(RPC.PROMISE('listtransactions', ['*', 9999, 0]));
+    } else {
+      incomingMyAccounts = this.props.myAccounts[
+        this.props.selectedAccount - 1
+      ];
+      listedaccounts.push(incomingMyAccounts.account);
       promisList.push(
         RPC.PROMISE('listtransactions', [
-          element.account === 'default' ? '' : element.account,
+          incomingMyAccounts.account === 'default'
+            ? ''
+            : incomingMyAccounts.account,
           9999,
           0,
         ])
       );
-    });
+    }
     let tempWalletTransactions = [];
 
     let settingsCheckDev = GetSettings();
@@ -919,9 +880,9 @@ class Transactions extends Component {
     let tempTransactionRandomCategory = function() {
       let temp = Math.ceil(Math.random() * 4);
       if (temp == 4) {
-        return 'send';
+        return 'debit';
       } else if (temp == 1) {
-        return 'receive';
+        return 'credit';
       } else if (temp == 2) {
         return 'trust';
       } else {
@@ -942,7 +903,7 @@ class Transactions extends Component {
     faketrans.time = tempTransactionRandomTime();
     faketrans.time = Math.round(faketrans.time);
 
-    if (faketrans.category == 'send') {
+    if (faketrans.category == 'debit') {
       faketrans.amount = faketrans.amount * -1;
     }
 
@@ -969,11 +930,11 @@ class Transactions extends Component {
     return formatedData.map(ele => {
       txCounter++;
       let isPending = '';
-      if (ele.confirmations <= 12) {
+      if (ele.confirmations <= this.props.settings.minimumconfirmations) {
         isPending = '(Pending)';
       }
       // if (ele.category === "send") {
-      //   return (ele.category = this.props.messages[this.props.locale][
+      //   return (ele.category = this.props.messages[
       //     "transactions.Sent"
       //   ]);
       // }
@@ -1032,11 +993,11 @@ class Transactions extends Component {
     tempColumns.push({
       id: 'category',
       Cell: q => {
-        if (q.value === 'send') {
+        if (q.value === 'debit') {
           return (
             <FormattedMessage id="transactions.Sent" defaultMessage="Sent" />
           );
-        } else if (q.value === 'receive') {
+        } else if (q.value === 'credit') {
           return (
             <FormattedMessage
               id="transactions.Receive"
@@ -1108,9 +1069,9 @@ class Transactions extends Component {
 
   // returns the correct fill color based on the category
   returnCorrectFillColor(inData) {
-    if (inData.category == 'receive') {
+    if (inData.category == 'credit') {
       return '#0ca4fb';
-    } else if (inData.category == 'send') {
+    } else if (inData.category == 'debit') {
       return '#035';
     } else {
       return '#fff';
@@ -1119,9 +1080,9 @@ class Transactions extends Component {
 
   // Returns the Correct color based on the category
   returnCorrectStokeColor(inData) {
-    if (inData.category == 'receive') {
+    if (inData.category == 'credit') {
       return '#0ca4fb';
-    } else if (inData.category == 'send') {
+    } else if (inData.category == 'debit') {
       return '#035';
     } else {
       return '#fff';
@@ -1141,24 +1102,16 @@ class Transactions extends Component {
       timeZoneName: 'short',
     };
 
-    if (inData.category == 'receive') {
-      inData.category = this.props.messages[this.props.settings.locale][
-        'transactions.Receive'
-      ];
-    } else if (inData.category == 'send') {
-      inData.category = this.props.messages[this.props.settings.locale][
-        'transactions.Sent'
-      ];
+    if (inData.category == 'credit') {
+      inData.category = this.props.messages['transactions.Receive'];
+    } else if (inData.category == 'debit') {
+      inData.category = this.props.messages['transactions.Sent'];
     }
     return (
       inData.category +
-      `\n ${
-        this.props.messages[this.props.settings.locale]['transactions.AMOUNT']
-      }` +
+      `\n ${this.props.messages['transactions.AMOUNT']}` +
       inData.b +
-      `\n ${
-        this.props.messages[this.props.settings.locale]['transactions.TIME']
-      }` +
+      `\n ${this.props.messages['transactions.TIME']}` +
       inData.a.toLocaleString(this.props.settings.locale, options)
     );
   }
@@ -1432,15 +1385,22 @@ class Transactions extends Component {
     let internalString = [];
     if (this.hoveringID != 999999999999 && this.props.walletitems.length != 0) {
       const selectedTransaction = this.props.walletitems[this.hoveringID];
-
-      if (selectedTransaction.confirmations <= 12) {
-        internalString.push(<a key="isPending">PENDING TRANSACTION</a>);
-        internalString.push(<br key="br10" />);
+      if (selectedTransaction === undefined) {
+        return;
       }
-
-      if (selectedTransaction.confirmations <= 12) {
-        internalString.push(<a key="isPending">PENDING TRANSACTION</a>);
-        internalString.push(<br key="br6" />);
+      if (
+        selectedTransaction.confirmations <=
+        this.props.settings.minimumconfirmations
+      ) {
+        internalString.push(
+          <a key="isPending">
+            <FormattedMessage
+              id="transactions.PendingTransaction"
+              defaultMessage="PENDING TRANSACTION"
+            />
+          </a>
+        );
+        internalString.push(<br key="br10" />);
       }
 
       internalString.push(
@@ -1450,7 +1410,7 @@ class Transactions extends Component {
         </div>
       );
       internalString.push(<br key="br2" />);
-      if (selectedTransaction.category == 'send') {
+      if (selectedTransaction.category == 'debit') {
         internalString.push(
           <div key="modal_fee" className="detailCat">
             <FormattedMessage id="transactions.fee" defaultMessage="Fee" />:
@@ -1487,12 +1447,25 @@ class Transactions extends Component {
           <span className="TXdetails">{selectedTransaction.confirmations}</span>
         </div>
       );
+      internalString.push(<br key="br15" />);
+      internalString.push(
+        <div key="modal_TXID">
+          <FormattedMessage
+            id="transactions.modalTxID"
+            defaultMessage="Transaction ID"
+          />
+          :
+          <div className="blockHash" style={{ wordWrap: 'break-word' }}>
+            <span>{selectedTransaction.txid}</span>
+          </div>
+        </div>
+      );
       internalString.push(<br key="br6" />);
       internalString.push(
         <div key="modal_BlockNumber" className="detailCat">
           <FormattedMessage
-            id="transactions.blockhash"
-            defaultMessage="Block Hash"
+            id="transactions.blocknumber"
+            defaultMessage="Block Number"
           />
           :<span className="TXdetails">{this.state.highlightedBlockNum}</span>
         </div>
@@ -1501,8 +1474,8 @@ class Transactions extends Component {
       internalString.push(
         <div key="modal_BlockHash">
           <FormattedMessage
-            id="transactions.blocknumber"
-            defaultMessage="Block Number"
+            id="transactions.blockhash"
+            defaultMessage="Block Hash"
           />
           :
           <div className="blockHash" style={{ wordWrap: 'break-word' }}>
@@ -1523,6 +1496,28 @@ class Transactions extends Component {
       defPagesize = 10;
     }
     return defPagesize;
+  }
+
+  accountChanger() {
+    if (this.props)
+      if (this.props.myAccounts[0]) {
+        let tempMyAccounts = this.props.myAccounts.slice();
+        tempMyAccounts.unshift({ account: 'All' });
+        //console.log(tempAAAA);
+        return tempMyAccounts.map((e, i) => {
+          return (
+            <option key={'account_select_' + e.account} value={i}>
+              {e.account}
+            </option>
+          );
+        });
+      } else {
+        return null;
+      }
+  }
+
+  selectAccount(inAccount) {
+    this.props.SetSelectedMyAccount(inAccount);
   }
 
   // Mandatory React method
@@ -1557,6 +1552,7 @@ class Transactions extends Component {
             defaultMessage="Transactions"
           />
         </h2>
+
         <div className="panel">
           {this.props.connections === undefined ? (
             <h2>
@@ -1567,6 +1563,14 @@ class Transactions extends Component {
             </h2>
           ) : (
             <div>
+              Account Select:
+              <select
+                id="select"
+                value={this.props.selectedAccount}
+                onChange={e => this.selectAccount(e.target.value)}
+              >
+                {this.accountChanger()}
+              </select>{' '}
               <div id="transactions-chart">
                 <VictoryChart
                   width={this.state.mainChartWidth}
@@ -1658,7 +1662,6 @@ class Transactions extends Component {
                   />
                 </VictoryChart>
               </div>
-
               <div id="transactions-filters">
                 <div id="filter-address" className="filter-field">
                   <label htmlFor="address-filter">
@@ -1692,13 +1695,13 @@ class Transactions extends Component {
                         defaultMessage="All"
                       />
                     </option>
-                    <option value="receive">
+                    <option value="credit">
                       <FormattedMessage
                         id="transactions.Receive"
                         defaultMessage="Receive"
                       />
                     </option>
-                    <option value="send">
+                    <option value="debit">
                       <FormattedMessage
                         id="transactions.Sent"
                         defaultMessage="Sent"
@@ -1785,7 +1788,6 @@ class Transactions extends Component {
                   />
                 </button>
               </div>
-
               <div id="transactions-details">
                 <Table
                   key="table-top"

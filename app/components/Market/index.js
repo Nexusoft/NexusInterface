@@ -268,10 +268,8 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${
-              this.props.messages[this.props.settings.locale]['Market.Price']
-            }: ${e.Price} \n ${
-              this.props.messages[this.props.settings.locale]['Market.Volume']
+            label: `${this.props.messages['Market.Price']}: ${e.Price} \n ${
+              this.props.messages['Market.Volume']
             }: ${newQuantity}`,
           };
         }
@@ -353,7 +351,7 @@ class Market extends Component {
           </div>
         )}
         <div>
-          Highsss: {this.props[failedExchange].info24hr.high}
+          High: {this.props[failedExchange].info24hr.high}
           {' BTC'}
         </div>
         <div>
