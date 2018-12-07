@@ -72,8 +72,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages })
   },
   SetMinimumConfirmationsNumber: inValue => {
-    dispatch({ type: TYPE.SET_MIN_CONFIRMATIONS, payload: inValue})
-  }
+    dispatch({ type: TYPE.SET_MIN_CONFIRMATIONS, payload: inValue })
+  },
 })
 
 var currentBackupLocation = '' //Might redo to use redux but this is only used to replace using json reader every render;
@@ -90,7 +90,7 @@ class SettingsApp extends Component {
     this.setGoogleAnalytics(settings)
     this.setDeveloperMode(settings)
     this.setInfoPopup(settings)
-    this.setMinimumConfirmations(settings);
+    this.setMinimumConfirmations(settings)
     this.setSavedTxFee(settings)
 
     if (this.refs.backupInputField) {
@@ -179,17 +179,13 @@ class SettingsApp extends Component {
     }
   }
 
-  setMinimumConfirmations(settings)
-  {
-    var minConf = document.getElementById("minimumConfirmations");
+  setMinimumConfirmations(settings) {
+    var minConf = document.getElementById('minimumConfirmations')
 
-    if ( settings.minimumconfirmations !== undefined)
-    {
-      minConf.value = settings.minimumconfirmations;
-    }
-    else
-    {
-      minConf.value = 20; //Default
+    if (settings.minimumconfirmations !== undefined) {
+      minConf.value = settings.minimumconfirmations
+    } else {
+      minConf.value = 20 //Default
     }
   }
 
@@ -241,7 +237,7 @@ class SettingsApp extends Component {
     var AutoLaunch = require('auto-launch')
     // Change Name when we need to
     var autolaunchsettings = new AutoLaunch({
-      name: 'nexus-tritium-beta',
+      name: 'Nexus',
       path: path.dirname(app.getPath('exe')),
     })
     //No need for a path as it will be set automaticly
@@ -356,24 +352,21 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj)
   }
 
-  updateMinimumConfirmations(event)
-  {
-    var el = event.target;
-    var settings = require('api/settings.js');
-    var settingsObj = settings.GetSettings();
+  updateMinimumConfirmations(event) {
+    var el = event.target
+    var settings = require('api/settings.js')
+    var settingsObj = settings.GetSettings()
 
-    if (el.value <= 0)
-    {
-      el.value = 1;
+    if (el.value <= 0) {
+      el.value = 1
     }
-    if (Number.isInteger(el.value) == false)
-    {
-      el.value = parseInt(el.value);
+    if (Number.isInteger(el.value) == false) {
+      el.value = parseInt(el.value)
     }
 
-    settingsObj.minimumconfirmations = el.value;
-    settings.SaveSettings(settingsObj);
-    this.props.SetMinimumConfirmationsNumber(el.value);
+    settingsObj.minimumconfirmations = el.value
+    settings.SaveSettings(settingsObj)
+    this.props.SetMinimumConfirmationsNumber(el.value)
   }
 
   returnCurrentBackupLocation() {
@@ -754,17 +747,16 @@ class SettingsApp extends Component {
           </div>
 
           <div className="field">
-              <label htmlFor="minimumConfirmationsLable">
-                <FormattedMessage
-                  id="Settings.MinimumConfirmations"
-                  defaultMessage="Minimum Confirmations"
-                />
-              </label>
+            <label htmlFor="minimumConfirmationsLable">
               <FormattedMessage
+                id="Settings.MinimumConfirmations"
+                defaultMessage="Minimum Confirmations"
+              />
+            </label>
+            <FormattedMessage
               id="ToolTip.MinimumConfirmations"
               defaultMessage="Minimum amount of confirmations before a block is accepted. Local Only."
             >
-            
               {tt => (
                 <input
                   id="minimumConfirmations"
@@ -774,7 +766,6 @@ class SettingsApp extends Component {
                   min="1"
                   onChange={this.updateMinimumConfirmations.bind(this)}
                   data-tooltip={tt}
-                  
                 />
               )}
             </FormattedMessage>
