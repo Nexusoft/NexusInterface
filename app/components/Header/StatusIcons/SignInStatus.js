@@ -1,25 +1,25 @@
 // External Dependencies
-import React from 'react'
-import styled from '@emotion/styled'
-import { FormattedMessage } from 'react-intl'
+import React from 'react';
+import styled from '@emotion/styled';
+import { FormattedMessage } from 'react-intl';
 
 // Internal Global Dependencies
-import Icon from 'components/common/Icon'
-import questionMarkIcon from 'images/question-mark.sprite.svg'
-import unencryptedIcon from 'images/lock-unencrypted.sprite.svg'
-import lockedIcon from 'images/lock-encrypted.sprite.svg'
-import unlockedIcon from 'images/lock-minting.sprite.svg'
+import Icon from 'components/common/Icon';
+import questionMarkIcon from 'images/question-mark.sprite.svg';
+import unencryptedIcon from 'images/lock-unencrypted.sprite.svg';
+import lockedIcon from 'images/lock-encrypted.sprite.svg';
+import unlockedIcon from 'images/lock-minting.sprite.svg';
 
 function statusIcon({ connections, daemonAvailable, unlocked_until }) {
   if (connections === undefined || daemonAvailable === false) {
-    return questionMarkIcon
+    return questionMarkIcon;
   } else {
     if (unlocked_until === undefined) {
-      return unencryptedIcon
+      return unencryptedIcon;
     } else if (unlocked_until === 0) {
-      return lockedIcon
+      return lockedIcon;
     } else if (unlocked_until >= 0) {
-      return unlockedIcon
+      return unlockedIcon;
     }
   }
 }
@@ -35,14 +35,14 @@ function signInStatusMessage({
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  })
+  });
   if (connections === undefined || daemonAvailable === false) {
     return (
       <FormattedMessage
         id="Header.DaemonNotLoaded"
         defaultMessage="Daemon Not Loaded"
       />
-    )
+    );
   }
 
   if (unlocked_until === undefined) {
@@ -51,14 +51,14 @@ function signInStatusMessage({
         id="Header.WalletUnencrypted"
         defaultMessage="Wallet Unencrypted"
       />
-    )
+    );
   } else if (unlocked_until === 0) {
     return (
       <FormattedMessage
         id="Header.WalletLocked"
         defaultMessage="Wallet Locked"
       />
-    )
+    );
   } else if (unlocked_until >= 0) {
     if (staking_only) {
       return (
@@ -73,7 +73,7 @@ function signInStatusMessage({
             defaultMessage="Staking Only"
           />
         </>
-      )
+      );
     } else {
       return (
         <>
@@ -83,7 +83,7 @@ function signInStatusMessage({
           />{' '}
           {unlockDate}
         </>
-      )
+      );
     }
   }
 }
@@ -95,6 +95,6 @@ const SignInStatus = props => (
       <div>{signInStatusMessage(props)}</div>
     </div>
   </div>
-)
+);
 
-export default SignInStatus
+export default SignInStatus;
