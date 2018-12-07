@@ -1,8 +1,8 @@
 {
   "name": "nexus-tritium-beta",
   "productName": "Nexus",
-  "version": "0.8.2",
-  "buildDate": "December 3rd 2018",
+  "version": "0.8.3",
+  "buildDate": "December 7th 2018",
   "description": "Nexus",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
