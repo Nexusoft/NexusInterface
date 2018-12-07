@@ -19,7 +19,7 @@ const modalOpen = ({
     BootstrapModal)
 
 const Prompting = props => (
-  <div>
+  <>
     <h3>
       <FormattedMessage
         id="ToolTip.DbOption"
@@ -53,11 +53,11 @@ const Prompting = props => (
         defaultMessage="No, let it sync form scratch"
       />
     </button>
-  </div>
+  </>
 )
 
 const Downloading = props => (
-  <div>
+  <>
     <h3>
       <FormattedMessage
         id="ToolTip.RecentDatabaseDownloading"
@@ -76,11 +76,11 @@ const Downloading = props => (
         defaultMessage="Please Wait..."
       />
     </h3>
-  </div>
+  </>
 )
 
 const Extracting = () => (
-  <div>
+  <>
     <h3>
       <FormattedMessage
         id="ToolTip.RecentDatabaseExtracting"
@@ -94,7 +94,7 @@ const Extracting = () => (
         defaultMessage="Please Wait..."
       />
     </h3>
-  </div>
+  </>
 )
 
 const modalContent = props => {

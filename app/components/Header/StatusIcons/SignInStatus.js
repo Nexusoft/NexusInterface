@@ -62,7 +62,7 @@ function signInStatusMessage({
   } else if (unlocked_until >= 0) {
     if (staking_only) {
       return (
-        <div>
+        <>
           <FormattedMessage
             id="Header.UnlockedUntil"
             defaultMessage="Unlocked Until"
@@ -72,17 +72,17 @@ function signInStatusMessage({
             id="Header.StakingOnly"
             defaultMessage="Staking Only"
           />
-        </div>
+        </>
       )
     } else {
       return (
-        <div>
+        <>
           <FormattedMessage
             id="Header.UnlockedUntil"
             defaultMessage="Unlocked Until"
           />{' '}
           {unlockDate}
-        </div>
+        </>
       )
     }
   }
