@@ -317,7 +317,11 @@ class SendRecieve extends Component {
 
   sendOne() {
     this.props.busy()
-    if (!(this.props.Address === '') && this.props.Amount > 0) {
+    if (
+      this.props.Address !== '' &&
+      this.props.Amount > 0 &&
+      this.props.SelectedAccount !== ''
+    ) {
       RPC.PROMISE('validateaddress', [this.props.Address])
         .then(payload => {
           if (payload.isvalid) {
@@ -327,7 +331,7 @@ class SendRecieve extends Component {
                   this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount),
-                  // mincomf goes here
+                  1, // mincomf goes here
                   this.props.Message,
                 ])
                   .then(payload => {
@@ -335,6 +339,7 @@ class SendRecieve extends Component {
                     this.props.busy()
                   })
                   .catch(e => {
+                    console.log(e)
                     this.props.busy()
                     this.props.OpenModal('Insufficient Funds')
                   })
@@ -343,13 +348,14 @@ class SendRecieve extends Component {
                   this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount),
-                  // mincomf goes here
+                  1, // mincomf goes here
                 ])
                   .then(payoad => {
                     this.props.clearForm()
                     this.props.busy()
                   })
                   .catch(e => {
+                    console.log(e)
                     this.props.busy()
                     this.props.OpenModal('Insufficient Funds')
                   })
@@ -860,7 +866,7 @@ class SendRecieve extends Component {
                 onChange={e => this.props.updateMoveFromAccount(e.target.value)}
               >
                 {' '}
-                <option selected disabled>
+                <option defaultValue value="">
                   Select an Account
                 </option>
                 {this.accountChanger()}
@@ -872,7 +878,7 @@ class SendRecieve extends Component {
                 onChange={e => this.props.updateMoveToAccount(e.target.value)}
               >
                 {' '}
-                <option selected disabled>
+                <option defaultValue value="">
                   Select an Account
                 </option>
                 {this.accountChanger()}
@@ -953,44 +959,48 @@ class SendRecieve extends Component {
         return acct
       }
     })
-    if (this.props.MoveFromAccount !== '') {
-      if (parseFloat(from[0].val) > parseFloat(this.props.moveAmount)) {
-        RPC.PROMISE(
-          'move',
-          [
-            this.props.MoveFromAccount,
-            this.props.MoveToAccount,
-            parseFloat(this.props.moveAmount),
-          ]
-          // Mincomf here
-          // this.props.Message
-        )
-          .then(payload => {
-            this.getAccountData()
-            console.log(payload)
-            // this.props.OpenModal()
-          })
-          .catch(e => {
-            if (typeof e === 'object') {
-              this.props.OpenModal(e.Message)
-            } else {
-              this.props.OpenModal(e)
-            }
-          })
-        console.log(
-          'MOVE ' +
-            this.props.moveAmount +
-            ' NXS ' +
-            'from ' +
-            this.props.MoveFromAccount +
-            ' to ' +
-            this.props.MoveToAccount
-        )
+    if (this.props.MoveFromAccount !== this.props.MoveToAccount) {
+      if (this.props.MoveFromAccount !== '') {
+        if (parseFloat(from[0].val) > parseFloat(this.props.moveAmount)) {
+          RPC.PROMISE(
+            'move',
+            [
+              this.props.MoveFromAccount,
+              this.props.MoveToAccount,
+              parseFloat(this.props.moveAmount),
+            ]
+            // Mincomf here
+            // this.props.Message
+          )
+            .then(payload => {
+              this.getAccountData()
+              console.log(payload)
+              // this.props.OpenModal()
+            })
+            .catch(e => {
+              if (typeof e === 'object') {
+                this.props.OpenModal(e.Message)
+              } else {
+                this.props.OpenModal(e)
+              }
+            })
+          console.log(
+            'MOVE ' +
+              this.props.moveAmount +
+              ' NXS ' +
+              'from ' +
+              this.props.MoveFromAccount +
+              ' to ' +
+              this.props.MoveToAccount
+          )
+        } else {
+          this.props.OpenModal('Insufficient funds')
+        }
       } else {
-        this.props.OpenModal('Insufficient funds')
+        this.props.OpenModal('No second account chosen')
       }
     } else {
-      this.props.OpenModal('No second account chosen')
+      this.props.OpenModal('Accounts are the same')
     }
   }
 
@@ -1081,7 +1091,7 @@ class SendRecieve extends Component {
                     id="select"
                     onChange={e => this.props.AccountPicked(e.target.value)}
                   >
-                    <option selected disabled>
+                    <option defaultValue value="">
                       Select an Account
                     </option>
                     {this.accountChanger()}

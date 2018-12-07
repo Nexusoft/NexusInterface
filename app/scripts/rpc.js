@@ -201,7 +201,6 @@ export const PROMISE = (cmd, args) => {
     /** Send off the Post Data. **/
 
     ResponseObject.onerror = function(e) {
-      console.log(e, ResponseObject)
       e.preventDefault()
       reject(ResponseObject.responseText)
     }
