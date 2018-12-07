@@ -33,13 +33,13 @@ addLocaleData(fr);
 addLocaleData(es);
 
 export default function createRootReducer(history) {
-  const routerReducer = connectRouter(history)(() => {});
+  const routerReducer = connectRouter(history);
 
   return connectRouter(history)(
     combineReducers({
       intl,
       overview,
-      routerReducer,
+      router: routerReducer,
       list,
       login,
       market,
