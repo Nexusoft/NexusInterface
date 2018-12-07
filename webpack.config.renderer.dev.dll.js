@@ -8,6 +8,7 @@ import merge from 'webpack-merge';
 import baseConfig from './webpack.config.base';
 import { dependencies } from './package.json';
 import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
+import devConfig from './webpack.config.renderer.dev';
 
 CheckNodeEnv('development');
 
@@ -28,114 +29,7 @@ export default merge.smart(baseConfig, {
    * @HACK: Copy and pasted from renderer dev config. Consider merging these
    *        rules into the base config. May cause breaking changes.
    */
-  module: {
-    rules: [
-      {
-        test: /\.global\.css$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-        ],
-      },
-      {
-        test: /^((?!\.global).)*\.css$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              sourceMap: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-            },
-          },
-        ],
-      },
-      // WOFF Font
-      {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/font-woff',
-          },
-        },
-      },
-      // WOFF2 Font
-      {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/font-woff',
-          },
-        },
-      },
-      // TTF Font
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/octet-stream',
-          },
-        },
-      },
-      // EOT Font
-      {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        use: 'file-loader',
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        oneOf: [
-          // SVG Sprite icons
-          {
-            test: /\.sprite.svg$/,
-            use: [
-              {
-                loader: 'svg-sprite-loader',
-              },
-              {
-                loader: 'svgo-loader',
-                options: {
-                  externalConfig: 'svgo-config.json',
-                },
-              },
-            ],
-          },
-          // SVG Font
-          {
-            use: {
-              loader: 'url-loader',
-              options: {
-                limit: 10000,
-                mimetype: 'image/svg+xml',
-              },
-            },
-          },
-        ],
-      },
-      // Common Image Formats
-      {
-        test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-        use: 'url-loader',
-      },
-    ],
-  },
+  module: devConfig.module,
 
   resolve: {
     modules: ['app'],
