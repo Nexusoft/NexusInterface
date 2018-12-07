@@ -112,24 +112,26 @@ class List extends Component {
             <div id="table-wrap">
               <table>
                 <thead>
-                  <th>
-                    <div>
-                      <FormattedMessage
-                        id="TrustList.Address"
-                        defaultMessage="Address"
-                      />
-                    </div>
-                  </th>
+                  <tr>
+                    <th>
+                      <div>
+                        <FormattedMessage
+                          id="TrustList.Address"
+                          defaultMessage="Address"
+                        />
+                      </div>
+                    </th>
 
-                  <th onClick={() => this.props.ToggleSortDir()}>
-                    <div>
-                      {' '}
-                      <FormattedMessage
-                        id="TrustList.InterestRate"
-                        defaultMessage="Stake Reward"
-                      />
-                    </div>
-                  </th>
+                    <th onClick={() => this.props.ToggleSortDir()}>
+                      <div>
+                        {' '}
+                        <FormattedMessage
+                          id="TrustList.InterestRate"
+                          defaultMessage="Stake Reward"
+                        />
+                      </div>
+                    </th>
+                  </tr>
                 </thead>
 
                 <tbody>{this.buildList()}</tbody>

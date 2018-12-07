@@ -427,10 +427,12 @@ class SendRecieve extends Component {
             {sum.toFixed(5)} NXS
           </div>
 
-          <div>
-            <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{' '}
-            {this.props.paytxfee.toFixed(5)} NXS
-          </div>
+          {this.props.paytxfee && (
+            <div>
+              <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{' '}
+              {this.props.paytxfee.toFixed(5)} NXS
+            </div>
+          )}
 
           <div>
             <FormattedMessage id="sendReceive.From" defaultMessage="FROM" />:{' '}
@@ -910,10 +912,12 @@ class SendRecieve extends Component {
                 required
               />
             </div>
-            <div>
-              <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{' '}
-              {this.props.paytxfee.toFixed(5)} NXS
-            </div>
+            {this.props.paytxfee && (
+              <div>
+                <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{' '}
+                {this.props.paytxfee.toFixed(5)} NXS
+              </div>
+            )}
           </div>
         </div>
         <div>
