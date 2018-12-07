@@ -56,6 +56,12 @@ const mapDispatchToProps = dispatch => ({
       payload: { USDAmount: USD, Amount: NxsVal },
     })
   },
+  updateMoveAmount: (NxsVal, USD) => {
+    dispatch({
+      type: TYPE.UPDATE_MOVE_AMOUNT,
+      payload: { USDAmount: USD, Amount: NxsVal },
+    })
+  },
   AccountPicked: returnSelectedAccount => {
     dispatch({ type: TYPE.SELECTED_ACCOUNT, payload: returnSelectedAccount })
   },
@@ -101,25 +107,38 @@ const mapDispatchToProps = dispatch => ({
   Confirm: Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer })
   },
+  OpenMoveModal: () => {
+    dispatch({ type: TYPE.OPEN_MOVE_MODAL })
+  },
+  CloseMoveModal: () => {
+    dispatch({ type: TYPE.CLOSE_MOVE_MODAL })
+  },
+  updateMoveToAccount: toAccount => {
+    dispatch({ type: TYPE.MOVE_TO_ACCOUNT, payload: toAccount })
+  },
+  updateMoveFromAccount: fromAccount => {
+    dispatch({ type: TYPE.MOVE_FROM_ACCOUNT, payload: fromAccount })
+  },
 })
 
 class SendRecieve extends Component {
   componentDidMount() {
-    RPC.PROMISE('listaccounts').then(payload => {
-      this.props.changeAccount(
-        Object.entries(payload).map(e => {
-          return {
-            name: e[0],
-            val: e[1],
-          }
-        })
-      )
-    })
     window.addEventListener('contextmenu', this.setupcontextmenu, false)
-
+    this.getAccountData()
     this.props.googleanalytics.SendScreen('Send')
   }
+  getAccountData() {
+    RPC.PROMISE('listaccounts').then(payload => {
+      let listOfAccts = Object.entries(payload).map(e => {
+        return {
+          name: e[0],
+          val: e[1],
+        }
+      })
 
+      this.props.changeAccount(listOfAccts)
+    })
+  }
   loadMyAccounts() {
     RPC.PROMISE('listaccounts', [0]).then(payload => {
       Promise.all(
@@ -173,15 +192,26 @@ class SendRecieve extends Component {
               }
             }
           })
+
           this.props.MyAccountsList(accountsList)
         })
       })
     })
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.connections === undefined &&
+      this.props.connections !== undefined
+    ) {
+      this.getAccountData()
+    }
+  }
+
   // React Method (Life cycle hook)
 
   componentWillUnmount() {
+    this.props.AccountPicked('')
     window.removeEventListener('contextmenu', this.setupcontextmenu)
   }
 
@@ -287,7 +317,11 @@ class SendRecieve extends Component {
 
   sendOne() {
     this.props.busy()
-    if (!(this.props.Address === '') && this.props.Amount > 0) {
+    if (
+      this.props.Address !== '' &&
+      this.props.Amount > 0 &&
+      this.props.SelectedAccount !== ''
+    ) {
       RPC.PROMISE('validateaddress', [this.props.Address])
         .then(payload => {
           if (payload.isvalid) {
@@ -297,6 +331,7 @@ class SendRecieve extends Component {
                   this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount),
+                  1, // mincomf goes here
                   this.props.Message,
                 ])
                   .then(payload => {
@@ -304,6 +339,7 @@ class SendRecieve extends Component {
                     this.props.busy()
                   })
                   .catch(e => {
+                    console.log(e)
                     this.props.busy()
                     this.props.OpenModal('Insufficient Funds')
                   })
@@ -312,12 +348,14 @@ class SendRecieve extends Component {
                   this.props.SelectedAccount,
                   this.props.Address,
                   parseFloat(this.props.Amount),
+                  1, // mincomf goes here
                 ])
                   .then(payoad => {
                     this.props.clearForm()
                     this.props.busy()
                   })
                   .catch(e => {
+                    console.log(e)
                     this.props.busy()
                     this.props.OpenModal('Insufficient Funds')
                   })
@@ -346,7 +384,12 @@ class SendRecieve extends Component {
     this.props.busy()
     let keyCheck = Object.keys(this.props.Queue)
     if (keyCheck.length > 1) {
-      RPC.PROMISE('sendmany', [this.props.SelectedAccount, this.props.Queue])
+      RPC.PROMISE(
+        'sendmany',
+        [this.props.SelectedAccount, this.props.Queue],
+        // mincomf goes here
+        this.props.Message
+      )
         .then(payoad => {
           this.props.busy()
           this.props.clearForm()
@@ -390,10 +433,12 @@ class SendRecieve extends Component {
             {sum.toFixed(5)} NXS
           </div>
 
-          <div>
-            <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{' '}
-            {this.props.paytxfee.toFixed(5)} NXS
-          </div>
+          {this.props.paytxfee && (
+            <div>
+              <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{' '}
+              {this.props.paytxfee.toFixed(5)} NXS
+            </div>
+          )}
 
           <div>
             <FormattedMessage id="sendReceive.From" defaultMessage="FROM" />:{' '}
@@ -471,18 +516,6 @@ class SendRecieve extends Component {
               </td>
             )
           })}
-          {/* {e.notMine.map((ele, i) => {
-            return (
-              <td className="tdPop">
-                <img
-                  id="InnerPopulate"
-                  src={plusimg}
-                  onClick={() => this.props.updateAddress(ele.address)}
-                />
-                <span className="tooltip left">Click To Populate Field</span>
-              </td>
-            );
-          })} */}
         </tr>
       )
     })
@@ -501,36 +534,12 @@ class SendRecieve extends Component {
       } else {
         currencyValue = currencyValue.toFixed(2)
       }
-      // return `${helpers.ReturnCurrencySymbol(
-      //   selectedCurrancyValue[0].name,
-      //   this.props.displayNXSvalues
-      // ) + currencyValue}`;
+
       return currencyValue
     } else {
       return 0
     }
   }
-
-  // calculateUSDvalue(e) {
-  //   let USDvalue = this.props.USDAmount * this.props.USD;
-
-  //   if (USDvalue === 0) {
-  //     USDvalue = USDvalue;
-  //   } else {
-  //     USDvalue = USDvalue;
-  //   }
-  //   return USDvalue;
-  // }
-  // calculateNexusVxalue(e) {
-  //   let USDvalue = this.props.Amount * this.props.USD;
-
-  //   if (USDvalue === 0) {
-  //     USDvalue = USDvalue;
-  //   } else {
-  //     USDvalue = USDvalue;
-  //   }
-  //   return USDvalue;
-  // }
 
   fillQueue() {
     let Keys = Object.keys(this.props.Queue)
@@ -845,12 +854,162 @@ class SendRecieve extends Component {
     }
   }
 
+  moveModalInternals() {
+    return (
+      <div className="MoveModal">
+        <div>
+          <div>
+            <div className="moveSelectors">
+              <span> From Account:</span>
+              <select
+                id="select"
+                onChange={e => this.props.updateMoveFromAccount(e.target.value)}
+              >
+                {' '}
+                <option defaultValue value="">
+                  Select an Account
+                </option>
+                {this.accountChanger()}
+              </select>
+
+              <span> To Account:</span>
+              <select
+                id="select"
+                onChange={e => this.props.updateMoveToAccount(e.target.value)}
+              >
+                {' '}
+                <option defaultValue value="">
+                  Select an Account
+                </option>
+                {this.accountChanger()}
+              </select>
+            </div>
+          </div>
+          <div>
+            <div className="convertor">
+              <label>
+                <FormattedMessage
+                  id="sendReceive.Amount"
+                  defaultMessage="Nexus Amount"
+                />
+              </label>
+              <label className="UsdConvertorLabel">
+                {this.props.settings.fiatCurrency}
+              </label>
+            </div>
+            <div className="convertor">
+              <input
+                className="input"
+                type="text"
+                placeholder="0.00000"
+                value={this.props.moveAmount}
+                onChange={e => this.moveAmmountConverter(e, true)}
+                required
+              />{' '}
+              <label>=</label>
+              <input
+                className="input"
+                type="text"
+                placeholder="0.00"
+                value={this.props.moveUSDAmount}
+                onChange={e => {
+                  this.moveAmmountConverter(e)
+                }}
+                required
+              />
+            </div>
+            {this.props.paytxfee && (
+              <div>
+                <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{' '}
+                {this.props.paytxfee.toFixed(5)} NXS
+              </div>
+            )}
+          </div>
+        </div>
+        <div>
+          <button
+            className="button primary"
+            style={{ marginLeft: '0px' }}
+            onClick={() => this.moveNXSbetweenAccounts()}
+          >
+            Move NXS
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  moveAmmountConverter(e, isNxs) {
+    if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === '')) {
+      if (isNxs) {
+        let Usd = e.target.value * this.calculateUSDvalue()
+        this.props.updateMoveAmount(e.target.value, Usd.toFixed(2))
+      } else {
+        let NxsValue = e.target.value / this.calculateUSDvalue()
+        this.props.updateMoveAmount(NxsValue.toFixed(5), e.target.value)
+      }
+    } else {
+      return null
+    }
+  }
+
+  moveNXSbetweenAccounts() {
+    let from = this.props.AccountChanger.filter(acct => {
+      if (acct.name === this.props.MoveFromAccount) {
+        return acct
+      }
+    })
+    if (this.props.MoveFromAccount !== this.props.MoveToAccount) {
+      if (this.props.MoveFromAccount !== '') {
+        if (parseFloat(from[0].val) > parseFloat(this.props.moveAmount)) {
+          RPC.PROMISE(
+            'move',
+            [
+              this.props.MoveFromAccount,
+              this.props.MoveToAccount,
+              parseFloat(this.props.moveAmount),
+            ]
+            // Mincomf here
+            // this.props.Message
+          )
+            .then(payload => {
+              this.getAccountData()
+              console.log(payload)
+              // this.props.OpenModal()
+            })
+            .catch(e => {
+              if (typeof e === 'object') {
+                this.props.OpenModal(e.Message)
+              } else {
+                this.props.OpenModal(e)
+              }
+            })
+          console.log(
+            'MOVE ' +
+              this.props.moveAmount +
+              ' NXS ' +
+              'from ' +
+              this.props.MoveFromAccount +
+              ' to ' +
+              this.props.MoveToAccount
+          )
+        } else {
+          this.props.OpenModal('Insufficient funds')
+        }
+      } else {
+        this.props.OpenModal('No second account chosen')
+      }
+    } else {
+      this.props.OpenModal('Accounts are the same')
+    }
+  }
+
   render() {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
       this.props.SetSendAgainData(null)
     }
-    console.log(this.props.SelectedAccount)
+
     return (
       <div id="sendrecieve" className="animated fadeIn">
         <h2>
@@ -860,6 +1019,13 @@ class SendRecieve extends Component {
             defaultMessage="Send Nexus"
           />
         </h2>
+        <div className="impexpblock">
+          {this.props.connections !== undefined && (
+            <a className="impexp" onClick={() => this.props.OpenMoveModal()}>
+              MOVE NXS BETWEEN ACCOUNTS
+            </a>
+          )}
+        </div>
         {/* ADDRESS MODAL */}
         <Modal
           center
@@ -895,6 +1061,17 @@ class SendRecieve extends Component {
             </FormattedMessage>
           </div>
         </Modal>
+        <Modal
+          center
+          classNames={{ modal: 'modal' }}
+          showCloseIcon={true}
+          open={this.props.moveModal}
+          onClose={() => {
+            this.props.CloseMoveModal()
+          }}
+        >
+          {this.moveModalInternals()}
+        </Modal>
         {this.props.isInSync === false ||
         this.props.connections === undefined ? (
           <div className="panel">
@@ -914,6 +1091,9 @@ class SendRecieve extends Component {
                     id="select"
                     onChange={e => this.props.AccountPicked(e.target.value)}
                   >
+                    <option defaultValue value="">
+                      Select an Account
+                    </option>
                     {this.accountChanger()}
                   </select>{' '}
                   <div>
@@ -1062,29 +1242,31 @@ class SendRecieve extends Component {
                     </label>
                   </div>
                   <table className="table">
-                    <thead className="thead">
-                      <th>
-                        <FormattedMessage
-                          id="sendReceive.TableAddress"
-                          defaultMessage="Address"
-                        />
-                      </th>
-                      <th>
-                        <FormattedMessage
-                          id="sendReceive.TableAmount"
-                          defaultMessage="Amount"
-                        />
-                      </th>
-                      <th style={{ whiteSpace: 'nowrap' }}>
-                        <FormattedMessage
-                          id="sendReceive.Remove"
-                          defaultMessage="Remove"
-                        />
-                      </th>
+                    <thead>
+                      <tr className="thead">
+                        <th>
+                          <FormattedMessage
+                            id="sendReceive.TableAddress"
+                            defaultMessage="Address"
+                          />
+                        </th>
+                        <th>
+                          <FormattedMessage
+                            id="sendReceive.TableAmount"
+                            defaultMessage="Amount"
+                          />
+                        </th>
+                        <th style={{ whiteSpace: 'nowrap' }}>
+                          <FormattedMessage
+                            id="sendReceive.Remove"
+                            defaultMessage="Remove"
+                          />
+                        </th>
+                      </tr>
                     </thead>
                     {this.fillQueue()}
                   </table>
-                  <foot className="foot">
+                  <div className="foot">
                     <button
                       type="reset"
                       className="button primary"
@@ -1125,7 +1307,7 @@ class SendRecieve extends Component {
                     <div>
                       <div className="counter">{this.addAmount()} </div>
                     </div>
-                  </foot>{' '}
+                  </div>{' '}
                 </div>{' '}
               </div>
             </div>

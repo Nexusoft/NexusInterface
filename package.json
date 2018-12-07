@@ -244,6 +244,7 @@
     "move-file": "^1.0.0",
     "node-stream-zip": "^1.7.0",
     "process-exists": "^3.1.0",
+    "prop-types": "^15.6.2",
     "ps-node": "^0.1.6",
     "react": "^15.6.2",
     "react-activity": "^1.2.2",

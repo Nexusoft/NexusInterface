@@ -56,7 +56,7 @@ textarea {
   display: flex;
 }
 .UsdConvertorLabel {
-  padding-left: 150px;
+  padding-left: 185px;
   position: absolute;
 }
 .label {
@@ -321,6 +321,19 @@ a.impexp {
   opacity: 0.75;
   color: #fff;
   cursor: pointer;
+}
+
+.MoveModal {
+  display: flex;
+  flex-direction: column;
+}
+
+.moveSelectors {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  grid-gap: 5px;
+  margin-bottom: 20px;
 }
 
 /*------------------------------------------------------------------

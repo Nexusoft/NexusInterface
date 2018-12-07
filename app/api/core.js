@@ -82,7 +82,7 @@ function SetCoreParameters(settings) {
   parameters.push('-rpcport=' + port)
   parameters.push('-datadir=' + datadir)
   parameters.push('-daemon')
-  //  parameters.push("-printtoconsole"); // Enable console functionality via stdout
+  parameters.push('-avatar')
   parameters.push('-server')
   parameters.push('-verbose=' + verbose) // <-- Make a setting for this
   parameters.push('-rpcallowip=' + ip)
@@ -107,7 +107,6 @@ function SetCoreParameters(settings) {
   // Enable detach database on shutdown (default is 0)
   if (settings.detatchDatabaseOnShutdown == true) parameters.push('-detachdb=1')
 
-  console.log(settings)
   if (forkblockCount !== 0) {
     parameters.push('-forkblocks=' + forkblockCount)
     settings.forkblocks = 0

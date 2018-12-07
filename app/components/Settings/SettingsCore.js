@@ -1103,20 +1103,6 @@ class SettingsCore extends Component {
             </button>
           </div>
 
-          {/* <select
-            onChange={e => this.props.localeChange(e.target.value)}
-             value={this.props.tempStorage}
-          >
-            <option value="en">English</option>
-            <option value="ru">Russian</option>
-          </select>
-          <button
-            type="button"
-            className="medium button"
-            onClick={() => this.props.SwitchLocale()}
-          >
-            Asshole
-          </button> */}
           <div className="clear-both" />
         </form>
 
