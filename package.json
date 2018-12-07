@@ -1,9 +1,9 @@
 {
   "name": "nexus-tritium-beta",
-  "productName": "Nexus_Tritium_Wallet_Beta",
+  "productName": "Nexus",
   "version": "0.8.2",
   "buildDate": "December 3rd 2018",
-  "description": "Nexus_Tritium_Wallet_Beta",
+  "description": "Nexus",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --mode=development --config webpack.config.renderer.dev.dll.js --color",
@@ -34,7 +34,7 @@
   },
   "browserslist": "electron 1.8",
   "build": {
-    "productName": "Nexus_Tritium_Wallet_Beta",
+    "productName": "Nexus",
     "appId": "com.nexusearth.NexusTritiumBeta",
     "files": [
       "dist/",

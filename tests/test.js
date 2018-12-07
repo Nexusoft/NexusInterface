@@ -16,7 +16,7 @@ describe('Application launch and Daemon Load', function() {
 
   before(function() {
     if (process.platform === 'win32') {
-      appPath = 'release/win-unpacked/Nexus_Tritium_Wallet_Beta.exe'
+      appPath = 'release/win-unpacked/Nexus.exe'
     } else if (process.platform === 'darwin') {
       appPath = 'release/mac-unpacked/nexus-tritium-beta'
     } else {
