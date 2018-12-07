@@ -4,15 +4,19 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
+
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { remote } from 'electron'
+import config from 'api/configuration'
 import { access } from 'fs'
+import path from 'path'
 import Modal from 'react-responsive-modal'
+import messages from '../../languages/messages'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-
 // Internal Dependencies
+import fs from 'fs'
 import styles from './style.css'
 import * as RPC from 'scripts/rpc'
 import * as TYPE from 'actions/actiontypes'
@@ -55,7 +59,6 @@ const mapDispatchToProps = dispatch => ({
   CloseModal4: type => {
     dispatch({ type: TYPE.HIDE_MODAL4, payload: type })
   },
-
   CloseModal3: type => {
     dispatch({ type: TYPE.HIDE_MODAL3, payload: type })
   },
@@ -64,6 +67,9 @@ const mapDispatchToProps = dispatch => ({
   },
   SwitchLocale: locale => {
     dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale })
+  },
+  SwitchMessages: messages => {
+    dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages })
   },
 })
 
@@ -393,6 +399,18 @@ class SettingsApp extends Component {
     settings.locale = locale
     this.props.setSettings(settings)
     this.props.SwitchLocale(locale)
+    let messages = {}
+    if (process.env.NODE_ENV === 'development') {
+      messages = JSON.parse(fs.readFileSync(`app/languages/${locale}.json`))
+    } else {
+      messages = JSON.parse(
+        fs.readFileSync(
+          path.join(config.GetAppResourceDir(), 'languages', `${locale}.json`)
+        )
+      )
+    }
+
+    this.props.SwitchMessages(messages)
     require('api/settings.js').SaveSettings(settings)
   }
 
@@ -749,7 +767,10 @@ class SettingsApp extends Component {
             classNames={{ modal: 'custom-modal5' }}
             showCloseIcon={true}
             open={this.props.openThirdModal}
-            onClose={this.props.CloseModal3}
+            onClose={e => {
+              e.preventDefault()
+              this.props.CloseModal3()
+            }}
           >
             <ul className="langList">
               {/* ENGLISH */}
@@ -761,9 +782,9 @@ class SettingsApp extends Component {
                   type="radio"
                   value="en"
                   checked={this.props.settings.locale === 'en'}
-                  onClick={() => this.changeLocale('en')}
+                  // onClick={() => this.changeLocale('en')}
 
-                  // onChange={e => this.changeLocale(e.target.value)}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="English">
@@ -788,7 +809,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="ru"
                   checked={this.props.settings.locale === 'ru'}
-                  onClick={() => this.changeLocale('ru')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="Russian">
@@ -813,7 +834,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="es"
                   checked={this.props.settings.locale === 'es'}
-                  onClick={() => this.changeLocale('es')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="Spanish">
@@ -838,7 +859,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="ko"
                   checked={this.props.settings.locale === 'ko'}
-                  onClick={() => this.changeLocale('ko')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="Korean">
@@ -860,7 +881,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="de"
                   checked={this.props.settings.locale === 'de'}
-                  onClick={() => this.changeLocale('de')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="German">
@@ -882,7 +903,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="ja"
                   checked={this.props.settings.locale === 'ja'}
-                  onClick={() => this.changeLocale('ja')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="Japanese">
@@ -907,7 +928,7 @@ class SettingsApp extends Component {
                   type="radio"
                   value="fr"
                   checked={this.props.settings.locale === 'fr'}
-                  onClick={() => this.changeLocale('fr')}
+                  onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
                 <label htmlFor="French">
