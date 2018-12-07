@@ -3,7 +3,7 @@ import * as TYPE from './actiontypes'
 import { FormattedMessage } from 'react-intl'
 import React from 'react'
 import locale from 'reducers/settings'
-// import messages from 'languages/messages'
+
 //action creator for loaded flag
 
 export const marketDataLoaded = () => {
@@ -215,23 +215,15 @@ export const binanceCandlestickLoader = any => {
                 close: parseFloat(e[4]),
                 high: parseFloat(e[2]),
                 low: parseFloat(e[3]),
-                label: `${
-                  messages[any.props.settings.locale]['Market.Date']
-                }: ${new Date(e[0]).getMonth() + 1}/${new Date(
+                label: `${any.props.messages['Market.Date']}: ${new Date(
                   e[0]
-                ).getDate()}/${new Date(e[0]).getFullYear()}
-             ${
-               messages[any.props.settings.locale]['Market.Open']
-             }: ${parseFloat(e[1])}
-             ${
-               messages[any.props.settings.locale]['Market.Close']
-             }: ${parseFloat(e[4])}
-             ${
-               messages[any.props.settings.locale]['Market.High']
-             }: ${parseFloat(e[2])}
-             ${messages[any.props.settings.locale]['Market.Low']}: ${parseFloat(
-                  e[3]
-                )}`,
+                ).getMonth() + 1}/${new Date(e[0]).getDate()}/${new Date(
+                  e[0]
+                ).getFullYear()}
+             ${any.props.messages['Market.Open']}: ${parseFloat(e[1])}
+             ${any.props.messages['Market.Close']}: ${parseFloat(e[4])}
+             ${any.props.messages['Market.High']}: ${parseFloat(e[2])}
+             ${any.props.messages['Market.Low']}: ${parseFloat(e[3])}`,
               }
             })
             .slice(0, 30)
@@ -262,15 +254,15 @@ export const bittrexCandlestickLoader = any => {
                 close: e.C,
                 high: e.H,
                 low: e.L,
-                label: `${
-                  messages[any.props.settings.locale]['Market.Date']
-                }: ${new Date(e.T).getMonth() + 1}/${new Date(
+                label: `${any.props.messages['Market.Date']}: ${new Date(
                   e.T
-                ).getDate()}/${new Date(e.T).getFullYear()}
-                ${messages[any.props.settings.locale]['Market.Open']}: ${e.O}
-                ${messages[any.props.settings.locale]['Market.Close']}: ${e.C}
-                ${messages[any.props.settings.locale]['Market.High']}: ${e.H}
-                ${messages[any.props.settings.locale]['Market.Low']}: ${e.L}`,
+                ).getMonth() + 1}/${new Date(e.T).getDate()}/${new Date(
+                  e.T
+                ).getFullYear()}
+                ${any.props.messages['Market.Open']}: ${e.O}
+                ${any.props.messages['Market.Close']}: ${e.C}
+                ${any.props.messages['Market.High']}: ${e.H}
+                ${any.props.messages['Market.Low']}: ${e.L}`,
               }
             })
             .slice(0, 30)
@@ -282,7 +274,7 @@ export const bittrexCandlestickLoader = any => {
   }
 }
 
-export const cryptopiaCandlestickLoader = any => {
+export const cryptopiaCandlestickLoader = (any, mes) => {
   return dispatch => {
     Request(
       {
@@ -301,19 +293,15 @@ export const cryptopiaCandlestickLoader = any => {
                   close: e[4],
                   high: e[2],
                   low: e[3],
-                  label: `${
-                    messages[any.props.settings.locale]['Market.Date']
-                  }: ${new Date(e[0]).getMonth() + 1}/${new Date(
+                  label: `${any.props.messages['Market.Date']}: ${new Date(
                     e[0]
-                  ).getDate()}/${new Date(e[0]).getFullYear()}
-                  ${messages[any.props.settings.locale]['Market.Open']}: ${e[1]}
-                  ${messages[any.props.settings.locale]['Market.Close']}: ${
-                    e[4]
-                  }
-                  ${messages[any.props.settings.locale]['Market.High']}: ${e[2]}
-                  ${messages[any.props.settings.locale]['Market.Low']}: ${
-                    e[3]
-                  }`,
+                  ).getMonth() + 1}/${new Date(e[0]).getDate()}/${new Date(
+                    e[0]
+                  ).getFullYear()}
+                  ${any.props.messages['Market.Open']}: ${e[1]}
+                  ${any.props.messages['Market.Close']}: ${e[4]}
+                  ${any.props.messages['Market.High']}: ${e[2]}
+                  ${any.props.messages['Market.Low']}: ${e[3]}`,
                 }
               })
               .slice(0, 30)

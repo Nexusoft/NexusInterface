@@ -351,7 +351,7 @@ class Market extends Component {
           </div>
         )}
         <div>
-          Highsss: {this.props[failedExchange].info24hr.high}
+          High: {this.props[failedExchange].info24hr.high}
           {' BTC'}
         </div>
         <div>

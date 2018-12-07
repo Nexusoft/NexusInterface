@@ -54,7 +54,6 @@ import { wrap } from 'module'
 // Global variables
 let tempaddpress = new Map()
 
-
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
@@ -76,7 +75,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SET_TRANSACTION_EXPLOREINFO, payload: returnData })
   },
   SetSelectedMyAccount: returnData => {
-    dispatch({type: TYPE.SET_SELECTED_MYACCOUNT, payload: returnData})
+    dispatch({ type: TYPE.SET_SELECTED_MYACCOUNT, payload: returnData })
   },
   UpdateConfirmationsOnTransactions: returnData => {
     dispatch({ type: TYPE.UPDATE_CONFIRMATIONS, payload: returnData })
@@ -162,6 +161,7 @@ class Transactions extends Component {
 
   // React Method (Life cycle hook)
   componentDidMount() {
+    console.log(this.props.messages)
     this._isMounted = true
     this.updateChartAndTableDimensions()
     this.props.googleanalytics.SendScreen('Transactions')
@@ -222,8 +222,8 @@ class Transactions extends Component {
     if (this.props.txtotal != previousprops.txtotal) {
       this.getTransactionData(this.setOnmountTransactionsCallback.bind(this))
     }
-    if (this.props.selectedAccount != previousprops.selectedAccount){
-      this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
+    if (this.props.selectedAccount != previousprops.selectedAccount) {
+      this.getTransactionData(this.setOnmountTransactionsCallback.bind(this))
     }
   }
 
@@ -520,11 +520,15 @@ class Transactions extends Component {
 
   // Gets all the data from each account held by the wallet
   getTransactionData(finishingCallback) {
-    let incomingMyAccounts;
+    let incomingMyAccounts
     let listedaccounts = []
     let promisList = []
-    if (this.props.selectedAccount == 0 || this.props.selectedAccount === undefined ) {
-      incomingMyAccounts = this.props.myAccounts; /*
+    if (
+      this.props.selectedAccount == 0 ||
+      this.props.selectedAccount === undefined
+    ) {
+      incomingMyAccounts = this.props
+        .myAccounts /*
       incomingMyAccounts.forEach(element => {
         listedaccounts.push(element.account)
         promisList.push(
@@ -536,20 +540,15 @@ class Transactions extends Component {
         )
       }) */
 
-      promisList.push(
-        RPC.PROMISE('listtransactions', ["*",
-          9999,
-          0,
-        ])
-      )
-
-    }
-    else 
-    {
-     incomingMyAccounts = this.props.myAccounts[this.props.selectedAccount - 1];
+      promisList.push(RPC.PROMISE('listtransactions', ['*', 9999, 0]))
+    } else {
+      incomingMyAccounts = this.props.myAccounts[this.props.selectedAccount - 1]
       listedaccounts.push(incomingMyAccounts.account)
       promisList.push(
-        RPC.PROMISE('listtransactions', [incomingMyAccounts.account === 'default' ? '' : incomingMyAccounts.account,
+        RPC.PROMISE('listtransactions', [
+          incomingMyAccounts.account === 'default'
+            ? ''
+            : incomingMyAccounts.account,
           9999,
           0,
         ])
@@ -925,7 +924,7 @@ class Transactions extends Component {
         isPending = '(Pending)'
       }
       // if (ele.category === "send") {
-      //   return (ele.category = this.props.messages[this.props.locale][
+      //   return (ele.category = this.props.messages[
       //     "transactions.Sent"
       //   ]);
       // }
@@ -1094,13 +1093,9 @@ class Transactions extends Component {
     }
 
     if (inData.category == 'credit') {
-      inData.category = this.props.messages[this.props.settings.locale][
-        'transactions.Receive'
-      ]
+      inData.category = this.props.messages['transactions.Receive']
     } else if (inData.category == 'debit') {
-      inData.category = this.props.messages[this.props.settings.locale][
-        'transactions.Sent'
-      ]
+      inData.category = this.props.messages['transactions.Sent']
     }
     return (
       inData.category +
@@ -1384,14 +1379,21 @@ class Transactions extends Component {
     let internalString = []
     if (this.hoveringID != 999999999999 && this.props.walletitems.length != 0) {
       const selectedTransaction = this.props.walletitems[this.hoveringID]
-      if (selectedTransaction === undefined)
-      {
-        return;
+      if (selectedTransaction === undefined) {
+        return
       }
-      if (selectedTransaction.confirmations <= this.props.settings.minimumconfirmations) {
-        internalString.push(<a key="isPending">
-          <FormattedMessage id="transactions.PendingTransaction" defaultMessage="PENDING TRANSACTION" />
-        </a>)
+      if (
+        selectedTransaction.confirmations <=
+        this.props.settings.minimumconfirmations
+      ) {
+        internalString.push(
+          <a key="isPending">
+            <FormattedMessage
+              id="transactions.PendingTransaction"
+              defaultMessage="PENDING TRANSACTION"
+            />
+          </a>
+        )
         internalString.push(<br key="br10" />)
       }
 
@@ -1493,12 +1495,12 @@ class Transactions extends Component {
   accountChanger() {
     if (this.props)
       if (this.props.myAccounts[0]) {
-        let tempMyAccounts = this.props.myAccounts.slice();
-        tempMyAccounts.unshift({account:"All" });
+        let tempMyAccounts = this.props.myAccounts.slice()
+        tempMyAccounts.unshift({ account: 'All' })
         //console.log(tempAAAA);
-        return tempMyAccounts.map((e,i) => {
+        return tempMyAccounts.map((e, i) => {
           return (
-            <option key={"account_select_" + e.account} value={i}>
+            <option key={'account_select_' + e.account} value={i}>
               {e.account}
             </option>
           )
@@ -1508,9 +1510,8 @@ class Transactions extends Component {
       }
   }
 
-  selectAccount(inAccount)
-  {
-    this.props.SetSelectedMyAccount(inAccount);
+  selectAccount(inAccount) {
+    this.props.SetSelectedMyAccount(inAccount)
   }
 
   // Mandatory React method
@@ -1545,7 +1546,7 @@ class Transactions extends Component {
             defaultMessage="Transactions"
           />
         </h2>
-        
+
         <div className="panel">
           {this.props.connections === undefined ? (
             <h2>
@@ -1556,11 +1557,11 @@ class Transactions extends Component {
             </h2>
           ) : (
             <div>
-              Account Select: 
+              Account Select:
               <select
-              id="select"
-              value={this.props.selectedAccount}
-              onChange={e => this.selectAccount(e.target.value)}
+                id="select"
+                value={this.props.selectedAccount}
+                onChange={e => this.selectAccount(e.target.value)}
               >
                 {this.accountChanger()}
               </select>{' '}
@@ -1655,7 +1656,6 @@ class Transactions extends Component {
                   />
                 </VictoryChart>
               </div>
-
               <div id="transactions-filters">
                 <div id="filter-address" className="filter-field">
                   <label htmlFor="address-filter">
@@ -1782,7 +1782,6 @@ class Transactions extends Component {
                   />
                 </button>
               </div>
-
               <div id="transactions-details">
                 <Table
                   key="table-top"
