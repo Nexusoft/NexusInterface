@@ -1,7 +1,5 @@
 export default {
   en: {
-    //OVERVIEW//
-
     'overview.TrustWeight': 'Trust Weight',
     'overview.LicensceAgreement': 'License Agreement',
     'overview.BlockWeightt': 'Block Weight',
@@ -22,7 +20,6 @@ export default {
     'overview.StakeWeight': 'Stake Weight',
     'overview.Globe': 'Globe includes GeoLite2',
 
-    //SENDRECEIVE//
     'sendReceive.SendNexus': 'Send NXS',
     'sendReceive.Address': 'NXS Address',
     'sendReceive.Amount': 'NXS Amount',
@@ -53,7 +50,6 @@ export default {
     'sendReceive.CopyToFeild': 'Copy To Field',
     'sendReceive.ClickToEdit': 'Click To Edit',
 
-    //TRANSACTIONS//
     'transactions.MoreDetails': 'More Details',
     'transactions.Details': 'Transaction Details',
     'transactions.fee': 'Fee',
@@ -92,10 +88,10 @@ export default {
     'transactions.Rows': 'Rows',
     'transactions.Pending': '(Pending)',
     'transactions.NoRowsFound': 'No Rows Found',
-    //Market//
+
     'Market.Information': 'Market Information',
     'Market.Refreash': 'Refresh Market Data',
-    'Market.Volume': 'Volume',
+
     'Market.All': 'All',
     'Market.Receive': 'Receive',
     'Market.Sent': 'Sent',
@@ -123,8 +119,6 @@ export default {
     'Market.High': 'High',
     'Market.Low': 'Low',
     'Market.Date': 'Date',
-
-    //ADDRESSLOOKUP//
 
     'AddressBook.AreYouSureDelete': 'Are You Sure You Want To Delete',
     'AddressBook.ThisAddress': 'Are You Sure You Want To Delete This Address',
@@ -165,7 +159,6 @@ export default {
     'AddressBook.NoContacts': 'No Contacts',
     'AddressBook.NXSAddress': 'NXS Address',
 
-    //SETTINGS//
     'Settings.Settings': 'Settings',
     'Settings.Application': 'Application',
     'Settings.Core': 'Core',
@@ -211,7 +204,7 @@ export default {
     'Settings.CannotContain': 'Password cannot contain these characters',
     'Settings.Re-Enter': 'Re-Enter Password',
     'Settings.PasswordsMatch': 'Passwords do not match',
-    'Settings.Submit': 'Submit',
+
     'Settings.ViewPrivateKey': 'View private key for address',
     'Settings.Address': 'Address',
     'Settings.EnterAddressHere': 'Enter Address Here',
@@ -222,7 +215,7 @@ export default {
     'Settings.AccountName': 'Account Name',
     'Settings.Wallpaper': 'Select Wallpaper',
     'Settings.RenderGlobe': 'Render Globe',
-    'Settings.SaveSettings': 'Save Settings',
+
     'Settings.ResetStyle': 'Reset Style Settings',
     'Settings.Color': 'Color',
     'Settings.Fiat': 'Fiat Currency',
@@ -244,7 +237,6 @@ export default {
     'Settings.ViewPrivateKeyForAddress': 'View private key for address',
     'Settings.EncryptRestart': 'Encrypt and Restart',
 
-    //CONSOLE//
     'Console.CoreOutput': 'Core Output',
     'Console.Console': 'Console',
     'Console.ClearConsole': 'ClearConsole',
@@ -252,13 +244,11 @@ export default {
     'Console.MdMode': 'Started In Manual Deamon Mode',
     'Console.CommandsHere': 'Enter Console Commands Here (ex: getinfo, help)',
 
-    //TRUSTLIST//
     'TrustList.TrustList': 'Trust List',
     'TrustList.Address': 'Address',
     'TrustList.InterestRate': 'Interest Rate',
     'TrustList.SyncMsg': 'Please let your wallet sync with the network',
 
-    //Exchange//
     'Exchange.Exchange': 'Exchange',
     'Exchange.ShoutOut': 'powered by ShapeShift',
     'Exchange.Precise': 'Precise',
@@ -278,7 +268,6 @@ export default {
     'Exchange.TradeUnMet': 'Trade Minimum Unmet',
     'Exchange.Addresss': 'Address',
 
-    //FOOTER//
     'Footer.Overview': 'Overview',
     'Footer.Send': 'Send',
     'Footer.Nexus': 'NXS',
@@ -293,7 +282,6 @@ export default {
     'Footer.Trust': 'Trust',
     'Footer.List': 'List',
 
-    //HEADER//
     'Header.StakeWeight': 'Stake Weight',
     'Header.InterestRate': 'Interest Rate',
     'Header.BlockWeight': 'Block Weight',
@@ -307,7 +295,6 @@ export default {
     'Header.Blocks': 'Blocks',
     'Header.DaemonNotLoaded': 'Daemon Not Loaded',
 
-    //TOOLTIPS//
     'ToolTip.GettingNextBlock': 'Getting Next Block...',
     'ToolTip.SystemStartUP':
       'Automatically start the wallet when you log into your system',
@@ -345,13 +332,12 @@ export default {
 
     'ToolTip.DbOption':
       'Would you like to reduce the time it takes to sync by downloading a recent version of the database?',
-    'ToolTip.BootStrapIt': "Yes, let's bootstrap it",
+    'ToolTip.BootStrapIt': 'Yes, lets bootstrap it',
     'ToolTip.SyncFromScratch': 'No, let it sync from scratch',
     'ToolTip.RecentDatabaseDownloading': 'Recent Database Downloading',
     'ToolTip.PleaseWait': 'Please Wait...',
     'ToolTip.RecentDatabaseExtracting': 'Recent Database Extracting',
 
-    //ALERTS//
     'Alert.Received': 'Transaction Received',
     'Alert.Sent': 'Transaction Sent',
     'Alert.Genesis': 'Genesis Transaction',
@@ -382,7 +368,6 @@ export default {
     'Alert.DaemonLoadingWait': 'Loading Daemon, Please Wait',
     'Alert.CoreRestarting': 'Core Restarting',
 
-    //COLORPICKER//
     'Cp.AC1': 'Accent Color 1',
     'Cp.AC2': 'Accent Color 2',
     'Cp.THC': 'Table Header Color',
@@ -398,7 +383,6 @@ export default {
     'Cp.GPC': 'Globe Pillar Color',
     'Cp.GAC': 'Globe Arch Color',
 
-    //LANGUAGEOPTIONS//
     'Lang.English': 'English',
     'Lang.Russian': 'Russian',
     'Lang.Spanish': 'Spanish',

@@ -1,6 +1,7 @@
 import * as TYPE from 'actions/actiontypes'
+// import messages from '../languages/messages'
 import configuration from 'api/configuration'
-import messages from 'languages/messages'
+import initLanguage from './initLanguage'
 const path = require('path')
 let defaultWallpaperPath = ''
 if (process.env.NODE_ENV === 'development') {
@@ -60,7 +61,7 @@ const initialState = {
     selectedColorProp: 'MC1',
   },
 
-  messages: messages,
+  messages: initLanguage,
 }
 
 export default (state = initialState, action) => {
@@ -75,6 +76,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         settings: { ...state.settings, locale: action.payload },
+      }
+      break
+    case TYPE.SWITCH_MESSAGES:
+      return {
+        ...state,
+        messages: action.payload,
       }
       break
     case TYPE.SET_EXPERIMENTAL_WARNING:

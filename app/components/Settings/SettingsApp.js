@@ -4,15 +4,19 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
+
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { remote } from 'electron'
+import config from 'api/configuration'
 import { access } from 'fs'
+import path from 'path'
 import Modal from 'react-responsive-modal'
+import messages from '../../languages/messages'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-
 // Internal Dependencies
+import fs from 'fs'
 import styles from './style.css'
 import * as RPC from 'scripts/rpc'
 import * as TYPE from 'actions/actiontypes'
@@ -64,6 +68,22 @@ const mapDispatchToProps = dispatch => ({
   },
   SwitchLocale: locale => {
     dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale })
+  },
+  SwitchMessages: locale => {
+    if (process.env.NODE_ENV === 'development') {
+      let messages = JSON.parse(fs.readFileSync(`app/languages/${locale}.json`))
+    } else {
+      let messages = JSON.parse(
+        fs.readFileSync(
+          path.join(config.GetAppResourceDir(), 'languages', `${locale}.json`)
+        )
+      )
+      console.log(messages)
+    }
+
+    return dispatch => {
+      dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages })
+    }
   },
 })
 
@@ -394,6 +414,7 @@ class SettingsApp extends Component {
     this.props.setSettings(settings)
     this.props.SwitchLocale(locale)
     require('api/settings.js').SaveSettings(settings)
+    this.props.SwitchMessages(locale)
   }
 
   // Mandatory React method
@@ -788,7 +809,9 @@ class SettingsApp extends Component {
                   type="radio"
                   value="ru"
                   checked={this.props.settings.locale === 'ru'}
-                  onClick={() => this.changeLocale('ru')}
+                  onClick={() => {
+                    this.changeLocale('ru')
+                  }}
                 />
                 &emsp;
                 <label htmlFor="Russian">

@@ -6,11 +6,13 @@ Last Modified by: Brian Smith
 
 // External Dependencies
 import Request from 'request'
-
+import path from 'path'
+import fs from 'fs'
 // Internal Dependencies
 import * as TYPE from './actiontypes'
 import * as RPC from 'scripts/rpc'
 import config from 'api/configuration'
+import messages from '../languages/messages'
 
 // Header Action Creators
 export const GetInfoDump = () => {
@@ -179,6 +181,22 @@ export const MyAccountsList = list => {
 export const OpenBootstrapModal = bool => {
   return dispatch => {
     dispatch({ type: TYPE.OPEN_BOOTSTRAP_MODAL, payload: bool })
+  }
+}
+
+export const SwitchMessages = locale => {
+  if (process.env.NODE_ENV === 'development') {
+    let messages = JSON.parse(fs.readFileSync(`app/languages/${locale}.json`))
+    console.log(messages)
+  } else {
+    let messages = JSON.parse(
+      fs.readFileSync(
+        path.join(config.GetAppResourceDir(), 'languages', `${locale}.json`)
+      )
+    )
+  }
+  return dispatch => {
+    dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages })
   }
 }
 

@@ -58,7 +58,7 @@ class Header extends Component {
     } else {
       this.props.setSettings(settings)
     }
-
+    this.props.SwitchMessages(this.props.settings.locale)
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id)
     menuBuilder.buildMenu(self)
 
@@ -454,9 +454,9 @@ class Header extends Component {
     } else {
       if (this.props.heighestPeerBlock > this.props.blocks) {
         return (
-          this.props.messages[this.props.settings.locale]['Header.Synching'] +
+          this.props.messages['Header.Synching'] +
           (this.props.heighestPeerBlock - this.props.blocks).toString() +
-          this.props.messages[this.props.settings.locale]['Header.Blocks']
+          this.props.messages['Header.Blocks']
         )
       } else {
         return <FormattedMessage id="Header.Synched" defaultMessage="Synched" />
@@ -561,9 +561,9 @@ class Header extends Component {
               defaultMessage="No Addresses"
             />
           </h2>
-        );
-        break;
-      case "Insufficient Funds":
+        )
+        break
+      case 'Insufficient Funds':
         return (
           <h2>
             <FormattedMessage
@@ -571,9 +571,9 @@ class Header extends Component {
               defaultMessage="Insufficient Funds"
             />
           </h2>
-        );
-        break;
-      case "Empty Queue!":
+        )
+        break
+      case 'Empty Queue!':
         return (
           <h2>
             <FormattedMessage
@@ -867,6 +867,14 @@ class Header extends Component {
   render() {
     return (
       <div id="Header">
+        <button
+          className="button"
+          onClick={() =>
+            console.log(this.props.SwitchMessages(this.props.settings.locale))
+          }
+        >
+          Farts
+        </button>
         <CustomProperties
           global
           properties={{

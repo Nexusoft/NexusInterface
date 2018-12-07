@@ -176,7 +176,7 @@ class Transactions extends Component {
             eachAddress.name +
               "'s" +
               `${' '}` +
-              this.props.messages[this.props.settings.locale]['Footer.Address']
+              this.props.messages['Footer.Address']
           )
         }
       }
@@ -455,9 +455,7 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: this.props.messages[this.props.settings.locale][
-          'transactions.MoreDetails'
-        ],
+        label: this.props.messages['transactions.MoreDetails'],
         click() {
           moreDatailsCallback()
         },
@@ -493,29 +491,23 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: this.props.messages[this.props.settings.locale]['Settings.Copy'],
+        label: this.props.messages['Settings.Copy'],
         submenu: [
           {
-            label: this.props.messages[this.props.settings.locale][
-              'AddressBook.Address'
-            ],
+            label: this.props.messages['AddressBook.Address'],
             click() {
               tablecopyaddresscallback()
             },
           },
           {
-            label: this.props.messages[this.props.settings.locale][
-              'AddressBook.Account'
-            ],
+            label: this.props.messages['AddressBook.Account'],
 
             click() {
               tablecopyaccountcallback()
             },
           },
           {
-            label: this.props.messages[this.props.settings.locale][
-              'sendReceive.TableAmount'
-            ],
+            label: this.props.messages['sendReceive.TableAmount'],
             click() {
               tablecopyamountcallback()
             },
@@ -1137,23 +1129,15 @@ class Transactions extends Component {
     }
 
     if (inData.category == 'receive') {
-      inData.category = this.props.messages[this.props.settings.locale][
-        'transactions.Receive'
-      ]
+      inData.category = this.props.messages['transactions.Receive']
     } else if (inData.category == 'send') {
-      inData.category = this.props.messages[this.props.settings.locale][
-        'transactions.Sent'
-      ]
+      inData.category = this.props.messages['transactions.Sent']
     }
     return (
       inData.category +
-      `\n ${
-        this.props.messages[this.props.settings.locale]['transactions.AMOUNT']
-      }` +
+      `\n ${this.props.messages['transactions.AMOUNT']}` +
       inData.b +
-      `\n ${
-        this.props.messages[this.props.settings.locale]['transactions.TIME']
-      }` +
+      `\n ${this.props.messages['transactions.TIME']}` +
       inData.a.toLocaleString(this.props.settings.locale, options)
     )
   }

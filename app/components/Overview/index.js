@@ -32,7 +32,7 @@ import supplyicon from 'images/supply.svg'
 import hours24icon from 'images/24hr.svg'
 import nxsStake from 'images/nxs-staking.svg'
 import interestRate from 'images/nxs-chart.png'
-import messages from 'languages/messages'
+
 import Connections0 from 'images/Connections0.svg'
 import Connections4 from 'images/Connections4.svg'
 import Connections8 from 'images/Connections8.svg'

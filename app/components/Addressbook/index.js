@@ -26,7 +26,7 @@ import * as actionsCreators from 'actions/addressbookActionCreators'
 import TimeZoneSelector from './timeZoneSelector'
 import ContextMenuBuilder from 'contextmenu'
 import styles from './style.css'
-import messages from 'languages/messages'
+// import messages from 'languages/messages'
 
 // Images
 import profilePlaceholder from 'images/Profile_Placeholder.png'
@@ -72,14 +72,12 @@ class AddressBook extends Component {
   addressbookContextMenu() {
     const txtTemplate = [
       {
-        label: this.props.messages[this.props.settings.locale]['Settings.Copy'],
+        label: this.props.messages['Settings.Copy'],
         accelerator: 'CmdOrCtrl+C',
         role: 'copy',
       },
       {
-        label: this.props.messages[this.props.settings.locale][
-          'Settings.Paste'
-        ],
+        label: this.props.messages['Settings.Paste'],
         accelerator: 'CmdOrCtrl+V',
         role: 'paste',
       },
@@ -87,22 +85,18 @@ class AddressBook extends Component {
 
     const acctTemplate = [
       {
-        label: this.props.messages[this.props.settings.locale]['Settings.Copy'],
+        label: this.props.messages['Settings.Copy'],
         accelerator: 'CmdOrCtrl+C',
         role: 'copy',
       },
       {
-        label: this.props.messages[this.props.settings.locale][
-          'Settings.Paste'
-        ],
+        label: this.props.messages['Settings.Paste'],
 
         accelerator: 'CmdOrCtrl+V',
         role: 'paste',
       },
       {
-        label: this.props.messages[this.props.settings.locale][
-          'AddressBook.DeleteContact'
-        ],
+        label: this.props.messages['AddressBook.DeleteContact'],
 
         click(item, focusedWindow) {
           deleteAccountCallback()
@@ -113,11 +107,9 @@ class AddressBook extends Component {
     let deleteAccountCallback = () => {
       if (
         confirm(
-          `${
-            this.props.messages[this.props.settings.locale][
-              'AddressBook.AreYouSureDelete'
-            ]
-          } ${this.props.addressbook[this.props.actionItem].name}?`
+          `${this.props.messages['AddressBook.AreYouSureDelete']} ${
+            this.props.addressbook[this.props.actionItem].name
+          }?`
         )
       ) {
         this.props.DeleteContact(this.props.actionItem)
@@ -126,21 +118,17 @@ class AddressBook extends Component {
 
     const addTemplate = [
       {
-        label: this.props.messages[this.props.settings.locale]['Settings.Copy'],
+        label: this.props.messages['Settings.Copy'],
         accelerator: 'CmdOrCtrl+C',
         role: 'copy',
       },
       {
-        label: this.props.messages[this.props.settings.locale][
-          'Settings.Paste'
-        ],
+        label: this.props.messages['Settings.Paste'],
         accelerator: 'CmdOrCtrl+V',
         role: 'paste',
       },
       {
-        label: this.props.messages[this.props.settings.locale][
-          'AddressBook.DeleteAddress'
-        ],
+        label: this.props.messages['AddressBook.DeleteAddress'],
         click(item, focusedWindow) {
           deleteAddressCallback()
         },
@@ -149,11 +137,7 @@ class AddressBook extends Component {
     let deleteAddressCallback = () => {
       if (
         confirm(
-          `${
-            this.props.messages[this.props.settings.locale][
-              'AddressBook.ThisAddress'
-            ]
-          }? ${
+          `${this.props.messages['AddressBook.ThisAddress']}? ${
             this.props.addressbook[this.props.selected][
               this.props.actionItem.type
             ][this.props.actionItem.index].address
@@ -282,9 +266,7 @@ class AddressBook extends Component {
   MyAddressesTable() {
     let filteredAddress = this.props.myAccounts.filter(acct => {
       if (acct.account === '') {
-        let dummie = this.props.messages[this.props.settings.locale][
-          'AddressBook.MyAccount'
-        ]
+        let dummie = this.props.messages['AddressBook.MyAccount']
         return (
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
         )
@@ -303,13 +285,7 @@ class AddressBook extends Component {
             <tr>
               <td key={acct + i} className="tdAccounts">
                 {acct.account === '' ? (
-                  <span>
-                    {
-                      this.props.messages[this.props.settings.locale][
-                        'AddressBook.MyAccount'
-                      ]
-                    }
-                  </span>
+                  <span>{this.props.messages['AddressBook.MyAccount']}</span>
                 ) : (
                   acct.account
                 )}
@@ -321,11 +297,7 @@ class AddressBook extends Component {
                       {address}
                     </span>
                     <span key={address + i} className="tooltip">
-                      {
-                        this.props.messages[this.props.settings.locale][
-                          'AddressBook.Copy'
-                        ]
-                      }
+                      {this.props.messages['AddressBook.Copy']}
                     </span>
                   </td>
                 )
@@ -729,12 +701,8 @@ class AddressBook extends Component {
                   <span className="contactAddresses">
                     {addTotal}{' '}
                     {addTotal > 1
-                      ? this.props.messages[this.props.settings.locale][
-                          'AddressBook.Addresses'
-                        ]
-                      : this.props.messages[this.props.settings.locale][
-                          'AddressBook.Address'
-                        ]}
+                      ? this.props.messages['AddressBook.Addresses']
+                      : this.props.messages['AddressBook.Address']}
                   </span>
                 </div>
               )
@@ -878,9 +846,7 @@ class AddressBook extends Component {
                       ? `${
                           this.props.addressbook[this.props.selected].name
                         }${"'s"}${'  '}${
-                          this.props.messages[this.props.settings.locale][
-                            'AddressBook.Address'
-                          ]
+                          this.props.messages['AddressBook.Address']
                         }`
                       : add.label}
                     :
