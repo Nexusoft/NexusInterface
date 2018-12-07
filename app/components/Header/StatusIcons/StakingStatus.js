@@ -26,7 +26,7 @@ const StakingStatus = ({
       <div>
         <FormattedMessage
           id="Header.InterestRate"
-          defaultMessage="Interest Rate"
+          defaultMessage="Stake Reward"
         />
         : {interestweight}%
       </div>

@@ -11,9 +11,43 @@ const initialState = {
   SelectedAccount: '',
   SendReceiveModalType: '',
   LookUpModalType: '',
+  moveModal: false,
+  MoveToAccount: '',
+  MoveFromAccount: '',
+  moveUSDAmount: '',
+  moveAmount: '',
 }
+
 export default (state = initialState, action) => {
   switch (action.type) {
+    case TYPE.MOVE_TO_ACCOUNT:
+      return {
+        ...state,
+        MoveToAccount: action.payload,
+      }
+      break
+    case TYPE.MOVE_FROM_ACCOUNT:
+      return {
+        ...state,
+        MoveFromAccount: action.payload,
+      }
+      break
+    case TYPE.OPEN_MOVE_MODAL:
+      return {
+        ...state,
+        moveModal: true,
+      }
+      break
+    case TYPE.CLOSE_MOVE_MODAL:
+      return {
+        ...state,
+        moveModal: false,
+        moveAmount: '',
+        MoveFromAccount: '',
+        MoveToAccount: '',
+        moveUSDAmount: '',
+      }
+      break
     case TYPE.UPDATE_ADDRESS:
       return {
         ...state,
@@ -38,6 +72,13 @@ export default (state = initialState, action) => {
         ...state,
         open: true,
         LookUpModalType: action.payload,
+      }
+      break
+    case TYPE.UPDATE_MOVE_AMOUNT:
+      return {
+        ...state,
+        moveAmount: action.payload.Amount,
+        moveUSDAmount: action.payload.USDAmount,
       }
       break
     case TYPE.UPDATE_AMOUNT:

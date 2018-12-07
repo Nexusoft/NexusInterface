@@ -58,11 +58,11 @@ function createWindow() {
   var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24
   if (presentTime >= expiration) {
     dialog.showErrorBox(
-      'Tritium Wallet Beta Expired',
-      'The Tritium Beta testing period has ended. Please use your normal wallet.'
-    )
-    app.exit()
-    process.abort()
+      "Tritium Wallet Beta Expired",
+      "The Tritium Beta testing period has ended. Please use your normal wallet."
+    );
+    // app.exit();
+    // process.abort();
   } else if (Math.floor(timeLeft) <= 5) {
     dialog.showErrorBox(
       'Tritium Wallet Beta Expiring Soon',

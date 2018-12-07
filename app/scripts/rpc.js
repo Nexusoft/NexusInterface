@@ -69,7 +69,7 @@ export const COMMANDS = {}
 export const CALLBACK = {}
 import * as TYPE from 'actions/actiontypes'
 import core from 'api/core'
-import { GetSettings } from 'api/settings.js'
+import { GetSettings } from 'api/settings'
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 export const GETHOST = () => {
   // let core = require("electron").remote.getGlobal("core");
@@ -169,10 +169,11 @@ export const PROMISE = (cmd, args) => {
         reject('RPC Command {' + cmd + '} Not Found')
       }
       if (ResponseObject.status == 401) {
-        console.error(ResponseObject.response)
+        // console.error(ResponseObject.response)
       }
       if (ResponseObject.status == 500) {
-        reject(JSON.parse(ResponseObject.responseText))
+        console.log(JSON.parse(ResponseObject.responseText))
+        reject(JSON.parse(ResponseObject.responseText).error.message)
       }
       if (cmd === 'validateaddress') {
         if (JSON.parse(ResponseObject.response).result.isvalid === false) {

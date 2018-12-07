@@ -6,10 +6,10 @@ import { FormattedMessage, addLocaleData } from 'react-intl'
 import messages from 'languages/messages'
 // import { intlReducer } from "react-intl-redux";
 const initialState = {
-  defaultLocale: 'en',
+  defaultLocale: "en"
 
-  messages: messages,
-}
+  // messages: messages
+};
 export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.UPDATE_LOCALES:

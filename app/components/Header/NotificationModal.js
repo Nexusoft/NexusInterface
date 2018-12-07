@@ -45,8 +45,8 @@ function modalContent(modaltype) {
     case 'Invalid Address':
       return (
         <FormattedMessage
-          id="Alert.InvalidAddress"
-          defaultMessage="Invalid Address"
+          id="Alert.InvalidAmount"
+          defaultMessage="Invalid Amount"
         />
       )
       break
@@ -75,6 +75,16 @@ function modalContent(modaltype) {
           id="Alert.NoAddresses"
           defaultMessage="No Addresses"
         />
+      )
+      break
+    case 'Insufficient Funds':
+      return (
+        <h2>
+          <FormattedMessage
+            id="Alert.InsufficientFunds"
+            defaultMessage="Insufficient Funds"
+          />
+        </h2>
       )
       break
     case 'Empty Queue!':

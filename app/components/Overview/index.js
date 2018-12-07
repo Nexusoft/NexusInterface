@@ -722,7 +722,7 @@ class Overview extends Component {
                 <div className="h2">
                   <FormattedMessage
                     id="overview.InterestRate"
-                    defaultMessage="Interest Rate"
+                    defaultMessage="Stake Reward"
                   />
                 </div>
                 <img src={interesticon} />

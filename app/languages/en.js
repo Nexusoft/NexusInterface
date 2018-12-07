@@ -18,7 +18,7 @@ export default {
     'overview.24hrChange': '24hr Change',
     'overview.Connections': 'Connections',
     'overview.BlockCount': 'Block Count',
-    'overview.InterestRate': 'Interest Rate',
+    'overview.InterestRate': 'Stake Reward',
     'overview.StakeWeight': 'Stake Weight',
     'overview.Globe': 'Globe includes GeoLite2',
 
@@ -255,7 +255,7 @@ export default {
     //TRUSTLIST//
     'TrustList.TrustList': 'Trust List',
     'TrustList.Address': 'Address',
-    'TrustList.InterestRate': 'Interest Rate',
+    'TrustList.InterestRate': 'Stake Reward',
     'TrustList.SyncMsg': 'Please let your wallet sync with the network',
 
     //Exchange//
@@ -295,7 +295,7 @@ export default {
 
     //HEADER//
     'Header.StakeWeight': 'Stake Weight',
-    'Header.InterestRate': 'Interest Rate',
+    'Header.InterestRate': 'Stake Reward',
     'Header.BlockWeight': 'Block Weight',
     'Header.TrustWeight': 'Trust Weight',
     'Header.WalletUnencrypted': 'Wallet Unencrypted',
