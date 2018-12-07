@@ -58,9 +58,8 @@ const configureStore = () => {
   const store = createStore(createRootReducer(history), enhancer);
 
   if (module.hot) {
-    module.hot.accept(
-      'reducers',
-      () => store.replaceReducer(require('reducers').default) // eslint-disable-line global-require
+    module.hot.accept('reducers', () =>
+      store.replaceReducer(createRootReducer(history))
     );
   }
 
