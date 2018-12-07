@@ -71,6 +71,9 @@ const mapDispatchToProps = dispatch => ({
   SwitchMessages: messages => {
     dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages })
   },
+  SetMinimumConfirmationsNumber: inValue => {
+    dispatch({ type: TYPE.SET_MIN_CONFIRMATIONS, payload: inValue})
+  }
 })
 
 var currentBackupLocation = '' //Might redo to use redux but this is only used to replace using json reader every render;
@@ -87,6 +90,7 @@ class SettingsApp extends Component {
     this.setGoogleAnalytics(settings)
     this.setDeveloperMode(settings)
     this.setInfoPopup(settings)
+    this.setMinimumConfirmations(settings);
     this.setSavedTxFee(settings)
 
     if (this.refs.backupInputField) {
@@ -172,6 +176,20 @@ class SettingsApp extends Component {
 
     if (settings.devMode == true) {
       devmode.checked = true
+    }
+  }
+
+  setMinimumConfirmations(settings)
+  {
+    var minConf = document.getElementById("minimumConfirmations");
+
+    if ( settings.minimumconfirmations !== undefined)
+    {
+      minConf.value = settings.minimumconfirmations;
+    }
+    else
+    {
+      minConf.value = 20; //Default
     }
   }
 
@@ -336,6 +354,26 @@ class SettingsApp extends Component {
     settingsObj.devMode = el.checked
 
     settings.SaveSettings(settingsObj)
+  }
+
+  updateMinimumConfirmations(event)
+  {
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
+
+    if (el.value <= 0)
+    {
+      el.value = 1;
+    }
+    if (Number.isInteger(el.value) == false)
+    {
+      el.value = parseInt(el.value);
+    }
+
+    settingsObj.minimumconfirmations = el.value;
+    settings.SaveSettings(settingsObj);
+    this.props.SetMinimumConfirmationsNumber(el.value);
   }
 
   returnCurrentBackupLocation() {
@@ -713,6 +751,33 @@ class SettingsApp extends Component {
                 United States Dollar
               </option>
             </select>
+          </div>
+
+          <div className="field">
+              <label htmlFor="minimumConfirmationsLable">
+                <FormattedMessage
+                  id="Settings.MinimumConfirmations"
+                  defaultMessage="Minimum Confirmations"
+                />
+              </label>
+              <FormattedMessage
+              id="ToolTip.MinimumConfirmations"
+              defaultMessage="Minimum amount of confirmations before a block is accepted. Local Only."
+            >
+            
+              {tt => (
+                <input
+                  id="minimumConfirmations"
+                  type="number"
+                  size="3"
+                  step="1"
+                  min="1"
+                  onChange={this.updateMinimumConfirmations.bind(this)}
+                  data-tooltip={tt}
+                  
+                />
+              )}
+            </FormattedMessage>
           </div>
 
           {/* NEXUS FEE */}

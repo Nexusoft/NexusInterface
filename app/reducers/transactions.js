@@ -1,6 +1,8 @@
 import * as TYPE from 'actions/actiontypes'
 
-const initialState = {}
+const initialState = {
+  selectedAccount: 0
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -20,6 +22,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         exploreinfo: action.payload,
+      }
+      break
+    case TYPE.SET_SELECTED_MYACCOUNT:
+      return {
+        ...state,
+        selectedAccount: action.payload,
       }
       break
     case TYPE.UPDATE_CONFIRMATIONS:
