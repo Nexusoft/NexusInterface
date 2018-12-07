@@ -8,20 +8,19 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import merge from 'webpack-merge'
-// import BabiliPlugin from "babili-webpack-plBabiliPluginugin";
 import baseConfig from './webpack.config.base'
 import CheckNodeEnv from './internals/scripts/CheckNodeEnv'
 
 CheckNodeEnv('production')
 
 export default merge.smart(baseConfig, {
+  mode: 'production',
+
   devtool: 'source-map',
 
   target: 'electron-renderer',
 
   entry: './app/index',
-
-  mode: 'production',
 
   output: {
     path: path.join(__dirname, 'app/dist'),
@@ -59,44 +58,6 @@ export default merge.smart(baseConfig, {
               modules: true,
               localIdentName: '[name]__[local]__[hash:base64:5]',
             },
-          },
-        ],
-      },
-      // Add SASS support  - compile all .global.scss files and pipe it to style.css
-      {
-        test: /\.global\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-      // Add SASS support  - compile all other .scss files and pipe it to style.css
-      {
-        test: /^((?!\.global).)*\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-            },
-          },
-          {
-            loader: 'sass-loader',
           },
         ],
       },
@@ -206,11 +167,6 @@ export default merge.smart(baseConfig, {
         process.env.NODE_ENV || 'production'
       ),
     }),
-
-    /**
-     * Babli is an ES6+ aware minifier based on the Babel toolchain (beta)
-     */
-    // new BabiliPlugin(),
 
     new MiniCssExtractPlugin({
       filename: 'style.css',

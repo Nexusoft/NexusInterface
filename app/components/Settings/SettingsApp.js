@@ -9,10 +9,13 @@ import { Link } from 'react-router-dom'
 import { remote } from 'electron'
 import { access } from 'fs'
 import Modal from 'react-responsive-modal'
+import AutoLaunch from 'auto-launch'
+import fs from 'fs'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
 // Internal Dependencies
+import { GetSettings, SaveSettings } from 'api/settings.js'
 import styles from './style.css'
 import * as RPC from 'scripts/rpc'
 import * as TYPE from 'actions/actiontypes'
@@ -72,7 +75,7 @@ var currentBackupLocation = '' //Might redo to use redux but this is only used t
 class SettingsApp extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    var settings = require('api/settings.js').GetSettings()
+    var settings = GetSettings()
     // this.setDefaultUnitAmount(settings);
     //Application settings
     this.setAutostart(settings)
@@ -91,7 +94,7 @@ class SettingsApp extends Component {
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    this.props.setSettings(require('api/settings.js').GetSettings())
+    this.props.setSettings(GetSettings())
   }
 
   // Class Methods
@@ -184,37 +187,33 @@ class SettingsApp extends Component {
 
   updateBackupLocation(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     let incomingPath = el.files[0].path
 
     settingsObj.backupLocation = incomingPath
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateInfoPopUp(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.infopopups = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateAutoStart(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.autostart = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
 
     //This is the code that will create a reg to have the OS auto start the app
-    var AutoLaunch = require('auto-launch')
     // Change Name when we need to
     var autolaunchsettings = new AutoLaunch({
       name: 'nexus-tritium-beta',
@@ -244,28 +243,25 @@ class SettingsApp extends Component {
 
   updateMinimizeToTray(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.minimizeToTray = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateMinimizeOnClose(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.minimizeOnClose = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateGoogleAnalytics(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.googleAnalytics = el.checked
 
@@ -288,16 +284,15 @@ class SettingsApp extends Component {
       this.props.googleanalytics.DisableAnalytics()
     }
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateOptionalTransactionFee(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
     settingsObj.optionalTransactionFee = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   setTxFee() {
@@ -314,39 +309,36 @@ class SettingsApp extends Component {
 
   updateDefaultUnitAmount(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.defaultUnitAmount = el.options[el.selectedIndex].value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateDeveloperMode(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.devMode = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   returnCurrentBackupLocation() {
-    let currentLocation = require('api/settings.js').GetSettings()
+    let currentLocation = GetSettings()
     //set state for currentlocation and return it
 
     return 'Current Location: ' + currentLocation.backupLocation
   }
 
   saveEmail() {
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
     let emailFeild = document.getElementById('emailAddress')
     let emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     if (emailregex.test(emailFeild.value)) {
       settingsObj.email = emailFeild.value
-      settings.SaveSettings(settingsObj)
+      SaveSettings(settingsObj)
     } else alert('Invalid Email')
   }
 
@@ -365,7 +357,6 @@ class SettingsApp extends Component {
     if (process.platform === 'win32') {
       BackupDir = BackupDir.replace(/\\/g, '/')
     }
-    let fs = require('fs')
     let ifBackupDirExists = fs.existsSync(BackupDir)
     if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
       fs.mkdirSync(BackupDir)
@@ -382,24 +373,23 @@ class SettingsApp extends Component {
 
   OnFiatCurrencyChange(e) {
     this.props.setFiatCurrency(e.target.value)
-    let settings = require('api/settings.js').GetSettings()
+    let settings = GetSettings()
     settings.fiatCurrency = e.target.value
     this.props.setSettings(settings)
-    require('api/settings.js').SaveSettings(settings)
+    SaveSettings(settings)
   }
 
   changeLocale(locale) {
-    let settings = require('api/settings.js').GetSettings()
+    let settings = GetSettings()
     settings.locale = locale
     this.props.setSettings(settings)
     this.props.SwitchLocale(locale)
-    require('api/settings.js').SaveSettings(settings)
+    SaveSettings(settings)
   }
 
   // Mandatory React method
   render() {
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
     return (
       <section id="application">
         <Modal

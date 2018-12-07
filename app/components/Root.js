@@ -14,7 +14,6 @@ import { connect, Provider } from 'react-redux'
 import settings from 'api/settings'
 import messages from 'languages/messages'
 import locale from 'reducers/intl'
-import type { Store } from 'reducers/types'
 
 // Internal Local Dependencies
 import Loader from './Loader'

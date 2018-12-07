@@ -479,4 +479,4 @@ class Core extends EventEmitter {
   }
 }
 
-module.exports = new Core()
+export default new Core()

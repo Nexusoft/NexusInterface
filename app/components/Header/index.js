@@ -7,6 +7,7 @@ import electron from 'electron'
 import Modal from 'react-responsive-modal'
 import CustomProperties from 'react-custom-properties'
 import log from 'electron-log'
+import path from 'path'
 import styled from 'react-emotion'
 import { FormattedMessage } from 'react-intl'
 
@@ -292,7 +293,6 @@ class Header extends Component {
     let trayImage = ''
     let mainWindow = electron.remote.getCurrentWindow()
 
-    const path = require('path')
     const app = electron.app || electron.remote.app
 
     if (process.env.NODE_ENV === 'development') {

@@ -5,6 +5,8 @@
 */
 // External Dependencies
 import React, { Component } from 'react'
+import { remote } from 'electron'
+import path from 'path'
 
 import maxmind from 'maxmind'
 import Request from 'request'
@@ -26,7 +28,6 @@ export default class NetworkGlobe extends Component {
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw)
     this.props.handleOnAddData(this.updatePointsOnGlobe)
     this.props.handleRemoveAllPoints(this.removeAllPoints)
-    const path = require('path')
     const globeseries = [['peers', []]]
     let geoiplookup = ''
     if (process.env.NODE_ENV === 'development') {
@@ -108,7 +109,6 @@ export default class NetworkGlobe extends Component {
     const globeseries = [['peers', []]]
     let geoiplookup = ''
 
-    const path = require('path')
     if (process.env.NODE_ENV === 'development') {
       geoiplookup = maxmind.openSync(
         path.join(__dirname, 'GeoLite2-City', 'GeoLite2-City.mmdb')
@@ -188,7 +188,7 @@ export default class NetworkGlobe extends Component {
   }
 
   getResourcesDirectory() {
-    let appPath = require('electron').remote.app.getAppPath()
+    let appPath = remote.app.getAppPath()
 
     if (process.cwd() === appPath) return './'
     else return process.resourcesPath + '/'

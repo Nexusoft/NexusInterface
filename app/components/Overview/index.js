@@ -18,6 +18,7 @@ import fs from 'fs'
 import path from 'path'
 
 // Internal Dependencies
+import WEBGL from 'scripts/WebGLCheck.js'
 import { GetSettings, SaveSettings } from 'api/settings'
 import NetworkGlobe from './NetworkGlobe'
 import ContextMenuBuilder from 'contextmenu'
@@ -90,7 +91,6 @@ const mapDispatchToProps = dispatch => ({
 class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    let WEBGL = require('scripts/WebGLCheck.js')
     if (WEBGL.isWebGLAvailable()) {
       this.props.setWebGLEnabled(true)
     } else {
@@ -118,7 +118,7 @@ class Overview extends Component {
     }
 
     if (this.props.saveSettingsFlag) {
-      require('../../api/settings.js').SaveSettings(this.props.settings)
+      SaveSettings(this.props.settings)
     }
 
     if (this.props.webGLEnabled == false) {
@@ -132,7 +132,7 @@ class Overview extends Component {
     }
 
     if (this.props.saveSettingsFlag) {
-      require('../../api/settings.js').SaveSettings(this.props.settings)
+      SaveSettings(this.props.settings)
     }
 
     if (
@@ -390,8 +390,8 @@ class Overview extends Component {
     ) {
       return null
     } else {
-      return [
-        [
+      return (
+        <>
           <NetworkGlobe
             handleOnLineRender={e => (this.redrawCurves = e)}
             handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
@@ -400,9 +400,7 @@ class Overview extends Component {
             pillarColor={this.props.settings.customStyling.globePillarColorRGB}
             archColor={this.props.settings.customStyling.globeArchColorRGB}
             globeColor={this.props.settings.customStyling.globeMultiColorRGB}
-          />,
-        ],
-        [
+          />
           <div className="maxmindCopyright">
             <img
               id="maxmindCopyLogo"
@@ -411,9 +409,9 @@ class Overview extends Component {
               height="100px"
             />
             Globe includes GeoLite2
-          </div>,
-        ],
-      ]
+          </div>
+        </>
+      )
     }
   }
 

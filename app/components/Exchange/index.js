@@ -16,6 +16,7 @@ import { remote } from 'electron'
 import Countdown from 'react-countdown-now'
 
 // Internal Dependencies
+import { GetSettings } from 'api/settings.js'
 import styles from './style.css'
 import Fast from './Fast'
 import Precise from './Precise'
@@ -50,8 +51,7 @@ class Exchange extends Component {
   componentDidMount() {
     this.props.googleanalytics.SendScreen('Exchange')
     window.addEventListener('contextmenu', this.setupcontextmenu, false)
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
     if (settingsObj.email) {
       this.props.emailForRecipt(settingsObj.email)
     }

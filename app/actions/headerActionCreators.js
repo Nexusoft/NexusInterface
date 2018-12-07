@@ -40,7 +40,7 @@ export const DaemonUnavailable = () => {
 
 export const DaemonAvailable = () => {
   return dispatch => {
-    dispatch({ type: TYPE.DAEMON_UNAVALIBLE, payload: true })
+    dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: true })
   }
 }
 
@@ -212,7 +212,7 @@ export const setSettings = settings => {
 
 export const OpenModal3 = () => {
   return dispatch => {
-    dispatch({ type: TYPE.OPEN_MODAL3 })
+    dispatch({ type: TYPE.SHOW_MODAL3 })
   }
 }
 export const CloseModal4 = () => {
@@ -223,7 +223,7 @@ export const CloseModal4 = () => {
 
 export const OpenModal4 = () => {
   return dispatch => {
-    dispatch({ type: TYPE.OPEN_MODAL4 })
+    dispatch({ type: TYPE.SHOW_MODAL4 })
   }
 }
 

@@ -14,6 +14,7 @@ import { FormattedMessage } from 'react-intl'
 import * as FlagFile from 'languages/LanguageFlags'
 
 // Internal Dependencies
+import { GetSettings, SaveSettings } from 'api/settings.js'
 import styles from './style.css'
 import core from 'api/core'
 import * as TYPE from 'actions/actiontypes'
@@ -64,7 +65,7 @@ const mapDispatchToProps = dispatch => ({
 class SettingsCore extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    var settings = require('api/settings.js').GetSettings()
+    var settings = GetSettings()
 
     //Core settings
     this.setManualDaemon(settings)
@@ -269,48 +270,43 @@ class SettingsCore extends Component {
 
   updateEnableMining(event) {
     var el = even.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.enableMining = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateEnableStaking(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.enableStaking = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateVerboseLevel(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.verboseLevel = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateForkBlockAmout(event) {
     var el = event.target
-    var settings = require('../../api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.forkblocks = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateManualDaemon(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     var manualDaemonSettings = document.getElementById('manual-daemon-settings')
     var automaticDaemonSettings = document.getElementById(
@@ -345,77 +341,70 @@ class SettingsCore extends Component {
     settingsObj.manualDaemonDataDir = manualDeamonDataDirValue
     console.log(manualDeamonUserValue)
     console.log(settingsObj)
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateManualDaemonUser(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.manualDaemonUser = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateManualDaemonPassword(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.manualDaemonPassword = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateManualDaemonIP(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.manualDaemonIP = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateManualDaemonPort(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.manualDaemonPort = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateManualDaemonDataDir(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.manualDaemonDataDir = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateMapPortUsingUpnp(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.mapPortUsingUpnp = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateSocks4Proxy(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.socks4Proxy = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
 
     var socks4ProxyIP = document.getElementById('socks4ProxyIP')
     var socks4ProxyPort = document.getElementById('socks4ProxyPort')
@@ -431,31 +420,28 @@ class SettingsCore extends Component {
 
   updateSocks4ProxyIP(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.socks4ProxyIP = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateSocks4ProxyPort(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
 
     settingsObj.socks4ProxyPort = el.value
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   updateDetatchDatabaseOnShutdown(event) {
     var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var settingsObj = GetSettings()
     settingsObj.detatchDatabaseOnShutdown = el.checked
 
-    settings.SaveSettings(settingsObj)
+    SaveSettings(settingsObj)
   }
 
   coreRestart() {
@@ -662,7 +648,7 @@ class SettingsCore extends Component {
           <div>
             <h2>
               <FormattedMessage
-                id="Settings.SaveSettings"
+                id="SaveSettings"
                 defaultMessage="Save Settings"
               />
               ?
@@ -680,9 +666,7 @@ class SettingsCore extends Component {
                   type="button"
                   className="button primary"
                   onClick={() => {
-                    this.props.setSettings(
-                      require('api/settings.js').GetSettings()
-                    )
+                    this.props.setSettings(GetSettings())
                     this.props.CloseModal2()
                     this.props.OpenModal('Core Settings Saved')
                   }}
@@ -1097,7 +1081,7 @@ class SettingsCore extends Component {
               }}
             >
               <FormattedMessage
-                id="Settings.SaveSettings"
+                id="SaveSettings"
                 defaultMessage="Save Settings"
               />
             </button>

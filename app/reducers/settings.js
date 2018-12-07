@@ -1,7 +1,7 @@
 import * as TYPE from 'actions/actiontypes'
 import configuration from 'api/configuration'
 import messages from 'languages/messages'
-const path = require('path')
+import path from 'path'
 let defaultWallpaperPath = ''
 if (process.env.NODE_ENV === 'development') {
   defaultWallpaperPath = './images/background/starrynight.jpg'
@@ -337,6 +337,7 @@ export default (state = initialState, action) => {
         },
       }
       break
+    // dead code?
     case TYPE.UNSET_STYLE_FLAG:
       return {
         ...state,

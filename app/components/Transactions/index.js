@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import { remote } from 'electron'
 import Request from 'request'
 import { Promise } from 'bluebird-lst'
+import fs from 'fs'
 import Modal from 'react-responsive-modal'
 import {
   VictoryBar,
@@ -28,9 +29,10 @@ import {
   createContainer,
   Flyout,
 } from 'victory'
-var rp = require('request-promise')
+import rp from 'request-promise'
 
 // Internal Dependencies
+import { GetSettings } from 'api/settings.js'
 import Table from 'scripts/utilities-react'
 import * as RPC from 'scripts/rpc'
 import * as TYPE from 'actions/actiontypes'
@@ -597,7 +599,7 @@ class Transactions extends Component {
     })
     let tempWalletTransactions = []
 
-    let settingsCheckDev = require('api/settings.js').GetSettings()
+    let settingsCheckDev = GetSettings()
 
     // If in Dev Mode add some random transactions
     if (settingsCheckDev.devMode == true) {
@@ -1192,8 +1194,6 @@ class Transactions extends Component {
 
   // Either load in the file from local or start downloading more data and make a new one.
   gethistorydatajson() {
-    let fs = require('fs')
-
     try {
       let appdataloc =
         process.env.APPDATA ||
@@ -1346,8 +1346,6 @@ class Transactions extends Component {
         ? process.env.HOME + 'Library/Preferences'
         : process.env.HOME)
     appdataloc = appdataloc + '/.Nexus/'
-
-    let fs = require('fs')
 
     fs.writeFile(
       appdataloc + 'historydata.json',

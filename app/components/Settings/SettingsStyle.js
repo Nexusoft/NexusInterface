@@ -13,7 +13,7 @@ import { FormattedMessage } from 'react-intl'
 // Internal Dependencies
 import * as TYPE from 'actions/actiontypes'
 import styles from './style.css'
-import { GetSettings, SaveSettings } from 'api/core'
+import { GetSettings, SaveSettings } from 'api/settings'
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -212,7 +212,7 @@ class SettingsStyle extends Component {
   }
 
   SaveSettings() {
-    require('api/settings.js').SaveSettings(this.props.settings)
+    SaveSettings(this.props.settings)
     this.props.OpenModal('Style Settings Saved')
     setTimeout(() => {
       this.props.CloseModal()

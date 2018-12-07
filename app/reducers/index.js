@@ -32,7 +32,7 @@ addLocaleData(ko)
 addLocaleData(fr)
 addLocaleData(es)
 
-export default function createRootReducer(history: {}) {
+export default function createRootReducer(history) {
   const routerReducer = connectRouter(history)(() => {})
 
   return connectRouter(history)(
