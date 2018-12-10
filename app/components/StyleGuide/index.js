@@ -9,11 +9,12 @@ import { Link } from 'react-router-dom';
 import { remote } from 'electron';
 
 // Internal Dependencies
+import Icon from 'components/common/Icon';
 import styles from './style.css';
 import ContextMenuBuilder from 'contextmenu';
 
 // Images
-import styleimg from 'images/developer.svg';
+import developerIcon from 'images/developer.sprite.svg';
 
 export default class StyleGuide extends Component {
   // React Method (Life cycle hook)
@@ -39,7 +40,7 @@ export default class StyleGuide extends Component {
     return (
       <div id="styleguide" className="animated fadeIn">
         <h2>
-          <img src={styleimg} className="hdr-img" />
+          <Icon icon={developerIcon} className="hdr-img" />
           Style Guide
         </h2>
 

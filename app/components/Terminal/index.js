@@ -21,7 +21,7 @@ import styles from './style.css';
 // Images
 import consoleIcon from 'images/console.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
-import coreImg from 'images/core.svg';
+import coreIcon from 'images/core.sprite.svg';
 import { FormattedMessage } from 'react-intl';
 
 export default class Terminal extends Component {
@@ -72,7 +72,7 @@ export default class Terminal extends Component {
             </li>
             <li>
               <NavLink to={`${this.props.match.url}/Core`}>
-                <img src={coreImg} alt="Core Output" />
+                <Icon icon={coreIcon} />
                 <FormattedMessage
                   id="Console.CoreOutput"
                   defaultMessage="Console"

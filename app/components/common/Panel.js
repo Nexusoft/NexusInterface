@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
-import { fade } from 'utils/colors';
+import { darken, fade } from 'utils/colors';
 
 // Internal Global Dependencies
 import Icon from 'components/common/Icon';
@@ -44,7 +44,7 @@ const PanelHeader = styled.div({
 });
 
 const PanelBody = styled.div({
-  backgroundColor: fade(colors.dark, 0.3),
+  backgroundColor: fade(darken(colors.dark, 0.2), 0.2),
   borderBottomLeftRadius: borderRadius,
   borderBottomRightRadius: borderRadius,
   flexGrow: 1,

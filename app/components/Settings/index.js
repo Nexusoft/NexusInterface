@@ -5,8 +5,7 @@
 */
 // External Dependencies
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
-import { Route, Redirect } from 'react-router';
+import { Route, Redirect, Switch } from 'react-router';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
 import { FormattedMessage } from 'react-intl';
@@ -14,7 +13,9 @@ import { FormattedMessage } from 'react-intl';
 // Internal Global Dependencies
 import * as RPC from 'scripts/rpc';
 import ContextMenuBuilder from 'contextmenu';
+import Panel from 'components/common/Panel';
 import Icon from 'components/common/Icon';
+import { Tabs, TabItem } from 'components/common/Tabs';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -28,11 +29,11 @@ import Unencrypted from './Security/Unencrypted';
 
 // Images
 import settingsIcon from 'images/settings.sprite.svg';
-import coreImg from 'images/core.svg';
+import coreIcon from 'images/core.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
 import lockIcon from 'images/lock-minting.sprite.svg';
 import marketImg from 'images/marketstats.svg';
-import styleImg from 'images/developer.svg';
+import developerIcon from 'images/developer.sprite.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -65,6 +66,7 @@ class Settings extends Component {
 
   // Mandatory React method
   render() {
+    const { encrypted, match, loggedIn } = this.props;
     // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
     if (this.props.location.pathname === this.props.match.url) {
       console.log('Redirecting to Application Settings');
@@ -73,113 +75,78 @@ class Settings extends Component {
     }
 
     return (
-      <div id="settings" className="animated fadeIn">
-        <div id="settings-container">
-          <h2>
-            <Icon icon={settingsIcon} className="hdr-img" />
-            <FormattedMessage
-              id="Settings.Settings"
-              defaultMessage="Settings"
+      <Panel
+        icon={settingsIcon}
+        title={
+          <FormattedMessage id="Settings.Settings" defaultMessage="Settings" />
+        }
+      >
+        <Tabs>
+          <TabItem
+            link={`${match.url}/App`}
+            icon={logoIcon}
+            text={
+              <FormattedMessage
+                id="Settings.Application"
+                defaultMessage="Application"
+              />
+            }
+          />
+          <TabItem
+            link={`${match.url}/Core`}
+            icon={coreIcon}
+            text={<FormattedMessage id="Settings.Core" defaultMessage="Core" />}
+          />
+          <TabItem
+            link={`${match.url}/${
+              encrypted !== true ? 'Unencrypted' : 'Security'
+            }`}
+            icon={lockIcon}
+            text={
+              <FormattedMessage
+                id="Settings.Security"
+                defaultMessage="Security"
+              />
+            }
+          />
+          <TabItem
+            link={`${match.url}/Style`}
+            icon={developerIcon}
+            text={
+              <FormattedMessage id="Settings.Style" defaultMessage="Style" />
+            }
+          />
+        </Tabs>
+
+        <div className="grid-container">
+          <Switch>
+            <Route
+              exact
+              path={`${match.path}/`}
+              render={props => <SettingsApp {...this.props} />}
             />
-          </h2>
-
-          <div className="panel">
-            <ul className="tabs">
-              <li>
-                <NavLink to={`${this.props.match.url}/App`}>
-                  <Icon icon={logoIcon} />
-                  <FormattedMessage
-                    id="Settings.Application"
-                    defaultMessage="Application"
-                  />
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to={`${this.props.match.url}/Core`}>
-                  <img src={coreImg} alt="Core" />
-                  <FormattedMessage id="Settings.Core" defaultMessage="Core" />
-                </NavLink>
-              </li>
-              <li>
-                {this.props.encrypted !== true ? (
-                  <NavLink to={`${this.props.match.url}/Unencrypted`}>
-                    <Icon icon={lockIcon} />
-                    <FormattedMessage
-                      id="Settings.Security"
-                      defaultMessage="Security"
-                    />
-                  </NavLink>
+            <Route
+              path={`${match.path}/App`}
+              render={props => <SettingsApp {...this.props} />}
+            />
+            <Route path={`${match.path}/Core`} component={SettingsCore} />
+            <Route path={`${match.path}/Market`} component={SettingsMarket} />
+            <Route path={`${match.path}/Style`} component={SettingsStyle} />
+            <Route
+              path={`${match.path}/Security`}
+              render={props =>
+                loggedIn === true ? (
+                  <Security {...props} />
                 ) : (
-                  <NavLink to={`${this.props.match.url}/Security`}>
-                    <Icon icon={lockIcon} />
-                    <FormattedMessage
-                      id="Settings.Security"
-                      defaultMessage="Security"
-                    />
-                  </NavLink>
-                )}
-              </li>
-              {/* <li>
-                <NavLink to={`${this.props.match.url}/Market`}>
-                  <img src={marketImg} alt="Market" />
-                  Market
-                </NavLink>
-              </li> */}
-              <li>
-                <NavLink to={`${this.props.match.url}/Style`}>
-                  <img src={styleImg} alt="Style" />
-                  <FormattedMessage
-                    id="Settings.Style"
-                    defaultMessage="Style"
-                  />
-                </NavLink>
-              </li>
-            </ul>
-
-            <div className="grid-container">
-              <Route
-                exact
-                path={`${this.props.match.path}/`}
-                render={props => <SettingsApp {...this.props} />}
-              />
-              <Route
-                path={`${this.props.match.path}/App`}
-                render={props => <SettingsApp {...this.props} />}
-              />
-              <Route
-                path={`${this.props.match.path}/Core`}
-                component={SettingsCore}
-              />
-              <Route
-                path={`${this.props.match.path}/Market`}
-                component={SettingsMarket}
-              />
-              <Route
-                path={`${this.props.match.path}/Style`}
-                component={SettingsStyle}
-              />
-              <Route
-                path={`${this.props.match.path}/Security`}
-                render={props =>
-                  this.props.loggedIn === true ? (
-                    <Security {...props} />
-                  ) : (
-                    <Redirect to={`${this.props.match.path}/Login`} />
-                  )
-                }
-              />
-              <Route
-                path={`${this.props.match.path}/Unencrypted`}
-                component={Unencrypted}
-              />
-              <Route
-                path={`${this.props.match.path}/Login`}
-                component={Login}
-              />
-            </div>
-          </div>
+                  <Redirect to={`${match.path}/Login`} />
+                )
+              }
+            />
+            <Route path={`${match.path}/Unencrypted`} component={Unencrypted} />
+            <Route path={`${match.path}/Login`} component={Login} />
+          </Switch>
         </div>
-      </div>
+      </Panel>
     );
   }
 }
