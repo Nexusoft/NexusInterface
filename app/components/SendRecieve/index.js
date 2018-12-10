@@ -316,102 +316,141 @@ class SendRecieve extends Component {
   }
 
   sendOne() {
+    console.log('Send');
     this.props.busy();
-    if (
-      this.props.Address !== '' &&
-      this.props.Amount > 0 &&
-      this.props.SelectedAccount !== ''
-    ) {
-      RPC.PROMISE('validateaddress', [this.props.Address])
-        .then(payload => {
-          if (payload.isvalid) {
-            if (!payload.ismine) {
-              if (this.props.Message) {
-                RPC.PROMISE('sendfrom', [
-                  this.props.SelectedAccount,
-                  this.props.Address,
-                  parseFloat(this.props.Amount),
-                  1, // mincomf goes here
-                  this.props.Message,
-                ])
-                  .then(payload => {
-                    this.props.clearForm();
-                    this.props.busy();
-                  })
-                  .catch(e => {
-                    console.log(e);
-                    this.props.busy();
-                    this.props.OpenModal('Insufficient Funds');
-                  });
+    if (this.props.SelectedAccount !== '') {
+      if (this.props.Address !== '' && this.props.Amount > 0) {
+        RPC.PROMISE('validateaddress', [this.props.Address])
+          .then(payload => {
+            if (payload.isvalid) {
+              if (!payload.ismine) {
+                if (this.props.Message) {
+                  RPC.PROMISE('sendfrom', [
+                    this.props.SelectedAccount,
+                    this.props.Address,
+                    parseFloat(this.props.Amount),
+                    parseInt(this.props.settings.minimumconfirmations),
+                    this.props.Message,
+                  ])
+                    .then(payload => {
+                      this.getAccountData();
+                      this.props.OpenModal('send');
+                      this.props.clearForm();
+                      this.props.busy();
+                    })
+                    .catch(e => {
+                      console.log(e);
+                      this.props.busy();
+                      this.props.OpenModal(e);
+                    });
+                } else {
+                  RPC.PROMISE('sendfrom', [
+                    this.props.SelectedAccount,
+                    this.props.Address,
+                    parseFloat(this.props.Amount),
+                    parseInt(this.props.settings.minimumconfirmations),
+                  ])
+                    .then(payoad => {
+                      this.getAccountData();
+                      this.props.OpenModal('send');
+                      this.props.clearForm();
+                      this.props.busy();
+                    })
+                    .catch(e => {
+                      console.log(e);
+                      this.props.busy();
+                      this.props.OpenModal(e);
+                    });
+                }
               } else {
-                RPC.PROMISE('sendfrom', [
-                  this.props.SelectedAccount,
-                  this.props.Address,
-                  parseFloat(this.props.Amount),
-                  1, // mincomf goes here
-                ])
-                  .then(payoad => {
-                    this.props.clearForm();
-                    this.props.busy();
-                  })
-                  .catch(e => {
-                    console.log(e);
-                    this.props.busy();
-                    this.props.OpenModal('Insufficient Funds');
-                  });
+                this.props.busy();
+                this.props.OpenModal(
+                  'This is an address regiestered to this wallet'
+                );
               }
             } else {
               this.props.busy();
-              this.props.OpenModal(
-                'This is an address regiestered to this wallet'
-              );
+              this.props.OpenModal('Invalid Address');
             }
-          } else {
+          })
+          .catch(e => {
             this.props.busy();
             this.props.OpenModal('Invalid Address');
-          }
-        })
-        .catch(e => {
-          this.props.busy();
-          this.props.OpenModal('Invalid Address');
-        });
+          });
+      } else {
+        this.props.busy();
+      }
     } else {
-      this.props.busy();
+      this.props.OpenModal('No Account Selected');
     }
   }
 
   sendMany() {
     this.props.busy();
     let keyCheck = Object.keys(this.props.Queue);
-    if (keyCheck.length > 1) {
-      RPC.PROMISE(
-        'sendmany',
-        [this.props.SelectedAccount, this.props.Queue],
-        // mincomf goes here
-        this.props.Message
-      )
-        .then(payoad => {
-          this.props.busy();
-          this.props.clearForm();
-          this.props.clearQueue();
-        })
-        .catch(e => {
-          this.props.busy();
-        });
-    } else if (Object.values(this.props.Queue)[0] > 0) {
-      RPC.PROMISE('sendtoaddress', [
-        keyCheck[0],
-        Object.values(this.props.Queue)[0],
-      ])
-        .then(payoad => {
-          this.props.busy();
-          this.props.clearForm();
-          this.props.clearQueue();
-        })
-        .catch(e => {
-          this.props.busy();
-          this.props.OpenModal('No Addresses');
-        });
+    if (this.props.SelectedAccount !== '') {
+      if (keyCheck.length > 1) {
+        RPC.PROMISE(
+          'sendmany',
+          [this.props.SelectedAccount, this.props.Queue],
+          parseInt(this.props.settings.minimumconfirmations),
+          this.props.Message
+        )
+          .then(payoad => {
+            this.props.OpenModal('send');
+            this.getAccountData();
+            this.props.busy();
+            this.props.clearForm();
+            this.props.clearQueue();
+          })
+          .catch(e => {
+            this.props.busy();
+            this.props.OpenModal(e);
+          });
+      } else if (Object.values(this.props.Queue)[0] > 0) {
+        if (this.props.Message) {
+          RPC.PROMISE('sendfrom', [
+            this.props.SelectedAccount,
+            keyCheck[0],
+            parseFloat(Object.values(this.props.Queue)[0]),
+            parseInt(this.props.settings.minimumconfirmations),
+            this.props.Message,
+          ])
+            .then(payload => {
+              this.getAccountData();
+              this.props.OpenModal('send');
+              this.props.clearForm();
+              this.props.clearQueue();
+              this.props.busy();
+            })
+            .catch(e => {
+              console.log(e);
+              this.props.busy();
+              this.props.OpenModal(e);
+            });
+        } else {
+          RPC.PROMISE('sendfrom', [
+            this.props.SelectedAccount,
+            keyCheck[0],
+            parseFloat(Object.values(this.props.Queue)[0]),
+            parseInt(this.props.settings.minimumconfirmations),
+          ])
+            .then(payoad => {
+              this.getAccountData();
+              this.props.OpenModal('send');
+              this.props.clearForm();
+              this.props.clearQueue();
+              this.props.busy();
+            })
+            .catch(e => {
+              console.log(e);
+              this.props.busy();
+              this.props.OpenModal(e);
+            });
+        }
+      }
+    } else {
+      this.props.OpenModal('No Account Selected');
     }
   }
 
@@ -579,7 +618,10 @@ class SendRecieve extends Component {
             classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
             showCloseIcon={false}
             open={this.props.openThirdModal}
-            onClose={this.props.CloseModal3}
+            onClose={e => {
+              e.preventDefault();
+              this.props.CloseModal3();
+            }}
             center
           >
             <div>
@@ -968,14 +1010,14 @@ class SendRecieve extends Component {
               this.props.MoveFromAccount,
               this.props.MoveToAccount,
               parseFloat(this.props.moveAmount),
-            ]
-            // Mincomf here
-            // this.props.Message
+            ],
+            parseInt(this.props.settings.minimumconfirmations),
+            this.props.Message
           )
             .then(payload => {
               this.getAccountData();
               console.log(payload);
-              // this.props.OpenModal()
+              this.props.OpenModal('NXS Moved');
             })
             .catch(e => {
               if (typeof e === 'object') {
@@ -1032,7 +1074,10 @@ class SendRecieve extends Component {
           classNames={{ modal: 'custom-modal3' }}
           showCloseIcon={true}
           open={this.props.openFourthModal}
-          onClose={this.props.CloseModal4}
+          onClose={e => {
+            e.preventDefault();
+            this.props.CloseModal4();
+          }}
         >
           {this.modalinternal3()}
         </Modal>
@@ -1043,7 +1088,10 @@ class SendRecieve extends Component {
           classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
           showCloseIcon={false}
           open={this.props.openSecondModal}
-          onClose={this.props.CloseModal2}
+          onClose={e => {
+            e.preventDefault();
+            this.props.CloseModal2();
+          }}
         >
           {this.modalinternal2()}
           <div id="no-button">
@@ -1066,7 +1114,8 @@ class SendRecieve extends Component {
           classNames={{ modal: 'modal' }}
           showCloseIcon={true}
           open={this.props.moveModal}
-          onClose={() => {
+          onClose={e => {
+            e.preventDefault();
             this.props.CloseMoveModal();
           }}
         >
@@ -1203,6 +1252,7 @@ class SendRecieve extends Component {
                     <button
                       className="button"
                       onClick={() => {
+                        console.log(this.props.encrypted, this.props.loggedIn);
                         if (
                           !(this.props.Address === '') &&
                           this.props.Amount > 0
@@ -1271,9 +1321,10 @@ class SendRecieve extends Component {
                       type="reset"
                       className="button primary"
                       onClick={() => {
+                        console.log(this.props.encrypted, this.props.loggedIn);
                         if (
                           this.props.encrypted === false ||
-                          this.props.loggedIn === false
+                          this.props.loggedIn === true
                         ) {
                           if (Object.keys(this.props.Queue).length > 0) {
                             this.props.OpenModal2('Send Multiple?');

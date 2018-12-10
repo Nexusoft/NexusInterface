@@ -1,8 +1,8 @@
 {
-  "name": "nexus-tritium-beta",
-  "productName": "Nexus_Tritium_Wallet_Beta",
-  "version": "0.8.2",
-  "description": "Nexus_Tritium_Wallet_Beta",
+  "name": "Nexus",
+  "productName": "Nexus",
+  "version": "0.8.3",
+  "description": "Nexus",
   "main": "./main.prod.js",
   "author": {
     "name": "The Nexus Embassy",

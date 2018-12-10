@@ -234,7 +234,7 @@ class SettingsApp extends Component {
     //This is the code that will create a reg to have the OS auto start the app
     // Change Name when we need to
     var autolaunchsettings = new AutoLaunch({
-      name: 'nexus-tritium-beta',
+      name: 'Nexus',
       path: path.dirname(app.getPath('exe')),
     });
     //No need for a path as it will be set automaticly
@@ -345,7 +345,8 @@ class SettingsApp extends Component {
 
   updateMinimumConfirmations(event) {
     var el = event.target;
-    var settingsObj = GetSettings();
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
     if (el.value <= 0) {
       el.value = 1;

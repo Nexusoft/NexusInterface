@@ -535,19 +535,7 @@ class Transactions extends Component {
       this.props.selectedAccount == 0 ||
       this.props.selectedAccount === undefined
     ) {
-      incomingMyAccounts = this.props
-        .myAccounts; /*
-      incomingMyAccounts.forEach(element => {
-        listedaccounts.push(element.account)
-        promisList.push(
-          RPC.PROMISE('listtransactions', [
-            element.account === 'default' ? '' : element.account,
-            9999,
-            0,
-          ])
-        )
-      }) */
-
+      incomingMyAccounts = this.props.myAccounts;
       promisList.push(RPC.PROMISE('listtransactions', ['*', 9999, 0]));
     } else {
       incomingMyAccounts = this.props.myAccounts[
@@ -555,18 +543,12 @@ class Transactions extends Component {
       ];
       listedaccounts.push(incomingMyAccounts.account);
       promisList.push(
-        RPC.PROMISE('listtransactions', [
-          incomingMyAccounts.account === 'default'
-            ? ''
-            : incomingMyAccounts.account,
-          9999,
-          0,
-        ])
+        RPC.PROMISE('listtransactions', [incomingMyAccounts.account, 9999, 0])
       );
     }
     let tempWalletTransactions = [];
 
-    let settingsCheckDev = GetSettings();
+    let settingsCheckDev = require('api/settings.js').GetSettings();
 
     // If in Dev Mode add some random transactions
     if (settingsCheckDev.devMode == true) {
@@ -590,6 +572,7 @@ class Transactions extends Component {
     }
 
     Promise.all(promisList).then(payload => {
+      console.log(payload);
       payload.forEach(element => {
         for (let index = 0; index < element.length; index++) {
           const element2 = element[index];
