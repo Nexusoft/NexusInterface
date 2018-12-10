@@ -226,45 +226,24 @@ export default class MenuBuilder {
 
     const subMenuWindow = {
       label: 'View',
-      submenu:
-        process.env.NODE_ENV === 'development'
-          ? [
-              {
-                label: 'Reload',
-                accelerator: 'Command+R',
-                click: () => {
-                  this.mainWindow.webContents.reload();
-                },
-              },
-
-              {
-                label: 'Toggle Full Screen',
-                accelerator: 'F11',
-                click: () => {
-                  remote
-                    .getCurrentWindow()
-                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
-                },
-              },
-            ]
-          : [
-              {
-                label: 'Toggle Full Screen',
-                accelerator: 'F11',
-                click: () => {
-                  remote
-                    .getCurrentWindow()
-                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
-                },
-              },
-              {
-                label: 'Toggle Developer Tools',
-                accelerator: 'Alt+Command+I',
-                click: () => {
-                  this.mainWindow.toggleDevTools();
-                },
-              },
-            ],
+      submenu: [
+        {
+          label: 'Toggle Full Screen',
+          accelerator: 'F11',
+          click: () => {
+            remote
+              .getCurrentWindow()
+              .setFullScreen(!remote.getCurrentWindow().isFullScreen());
+          },
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: 'Alt+Command+I',
+          click: () => {
+            this.mainWindow.toggleDevTools();
+          },
+        },
+      ],
     };
     const subMenuHelp = {
       label: 'Help',
