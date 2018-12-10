@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 
 // Internal Dependencies
+import Icon from 'components/common/Icon';
 import styles from './style.css';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
@@ -17,7 +18,7 @@ import { FormattedMessage } from 'react-intl';
 import ContextMenuBuilder from 'contextmenu';
 
 // Images
-import trustimg from 'images/trust-list.svg';
+import trustIcon from 'images/trust-list.sprite.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -92,7 +93,7 @@ class List extends Component {
     return (
       <div id="trustlist" className="animated fadeIn">
         <h2>
-          <img src={trustimg} className="hdr-img" />
+          <Icon icon={trustIcon} className="hdr-img" />
           <FormattedMessage
             id="TrustList.TrustList"
             defaultMessage="Trust List"

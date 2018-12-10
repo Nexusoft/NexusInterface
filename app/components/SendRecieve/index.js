@@ -9,12 +9,13 @@ import { FormattedMessage } from 'react-intl';
 import ContextMenuBuilder from 'contextmenu';
 import { remote } from 'electron';
 import { access } from 'fs';
+import Icon from 'components/common/Icon';
 
 // import images here
-import sendimg from 'images/send.svg';
+import sendIcon from 'images/send.sprite.svg';
 import plusimg from 'images/plus.svg';
 import trashimg from 'images/trash.svg';
-import addressbookimg from 'images/addressbook.svg';
+import addressBookIcon from 'images/address-book.sprite.svg';
 
 const mapStateToProps = state => {
   return {
@@ -679,7 +680,7 @@ class SendRecieve extends Component {
                 id="sendReceive.Lookup"
                 defaultMessage="Lookup Address"
               />{' '}
-              <img src={addressbookimg} className="hdr-img" />
+              <Icon icon={addressBookIcon} className="hdr-img" />
             </h2>
             <table id="AddressTable">
               <thead className="AddressThead">
@@ -1055,7 +1056,7 @@ class SendRecieve extends Component {
     return (
       <div id="sendrecieve" className="animated fadeIn">
         <h2>
-          <img src={sendimg} className="hdr-img" />
+          <Icon icon={sendIcon} className="hdr-img" />
           <FormattedMessage
             id="sendReceive.SendNexus"
             defaultMessage="Send Nexus"

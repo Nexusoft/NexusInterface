@@ -23,6 +23,7 @@ import config from 'api/configuration';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import * as actionsCreators from 'actions/addressbookActionCreators';
+import Icon from 'components/common/Icon';
 import TimeZoneSelector from './timeZoneSelector';
 import ContextMenuBuilder from 'contextmenu';
 import styles from './style.css';
@@ -30,7 +31,7 @@ import styles from './style.css';
 
 // Images
 import profilePlaceholder from 'images/Profile_Placeholder.png';
-import addressbookimg from 'images/addressbook.svg';
+import addressBookIcon from 'images/address-book.sprite.svg';
 import { FormattedMessage } from 'react-intl';
 
 // React-Redux mandatory methods
@@ -322,7 +323,7 @@ class AddressBook extends Component {
           <div id="modalInternal">
             {index === -1 ? (
               <h2 className="m1">
-                <img src={addressbookimg} className="hdr-img" />
+                <Icon icon={addressBookIcon} className="hdr-img" />
                 <FormattedMessage
                   id="AddressBook.addContact"
                   defaultMessage="Add Contact"
@@ -330,7 +331,7 @@ class AddressBook extends Component {
               </h2>
             ) : (
               <h2 className="m1">
-                <img src={addressbookimg} className="hdr-img" />
+                <Icon icon={addressBookIcon} className="hdr-img" />
                 <FormattedMessage
                   id="AddressBook.EditContact"
                   defaultMessage="Edit Contact"
@@ -461,7 +462,7 @@ class AddressBook extends Component {
           return (
             <div id="Addresstable-wraper">
               <h2 className="m1">
-                <img src={addressbookimg} className="hdr-img" />
+                <Icon icon={addressBookIcon} className="hdr-img" />
                 <FormattedMessage
                   id="AddressBook.MyAddresses"
                   defaultMessage="My Addresses"
@@ -518,7 +519,7 @@ class AddressBook extends Component {
         return (
           <div>
             <h2 className="m1">
-              <img src={addressbookimg} className="hdr-img" />
+              <Icon icon={addressBookIcon} className="hdr-img" />
               <FormattedMessage
                 id="AddressBook.AddAddressTO"
                 defaultMessage="Add Address To"
@@ -583,7 +584,7 @@ class AddressBook extends Component {
         return (
           <div>
             <h2 className="m1">
-              <img src={addressbookimg} className="hdr-img" />
+              <Icon icon={addressBookIcon} className="hdr-img" />
               <FormattedMessage
                 id="AddressBook.Create"
                 defaultMessage="Create"
@@ -1212,7 +1213,7 @@ class AddressBook extends Component {
           {this.modalInternalBuilder()}
         </Modal>
         <h2>
-          <img src={addressbookimg} className="hdr-img" />
+          <Icon icon={addressBookIcon} className="hdr-img" />
           <FormattedMessage
             id="AddressBook.AddressBook"
             defaultMessage="Address Book"

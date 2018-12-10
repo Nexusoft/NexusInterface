@@ -29,6 +29,7 @@ import {
   createContainer,
   Flyout,
 } from 'victory';
+import Icon from 'components/common/Icon';
 import rp from 'request-promise';
 
 // Internal Dependencies
@@ -42,7 +43,7 @@ import styles from './style.css';
 import { FormattedMessage } from 'react-intl';
 
 // Images
-import transactionsimg from 'images/transactions.svg';
+import transactionsIcon from 'images/transaction.sprite.svg';
 
 import copy from 'copy-to-clipboard';
 import { wrap } from 'module';
@@ -1529,7 +1530,7 @@ class Transactions extends Component {
         </Modal>
 
         <h2>
-          <img src={transactionsimg} className="hdr-img" />
+          <Icon icon={transactionsIcon} className="hdr-img" />
           <FormattedMessage
             id="transactions.Transactions"
             defaultMessage="Transactions"

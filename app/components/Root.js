@@ -1,14 +1,12 @@
 // External Dependencies
 import React, { Component } from 'react';
-// import { Provider } from "react-redux";
 import { ConnectedRouter } from 'connected-react-router';
-import { Route } from 'react-router';
-// import { FormattedMessage, IntlProvider } from "react-intl-redux";
+import { Route, Switch } from 'react-router';
 import enLocaleData from 'react-intl/locale-data/en';
 import { addLocaleData } from 'react-intl';
-//import { updateIntl } from "react-intl-redux";
 import localesReducer from 'reducers/intl';
 import { connect, Provider } from 'react-redux';
+import styled from '@emotion/styled';
 
 // Internal Global Dependencies
 import settings from 'api/settings';
@@ -18,7 +16,7 @@ import locale from 'reducers/intl';
 import Loader from './Loader';
 import Overview from './Overview';
 import Header from './Header';
-import Footer from './Footer';
+import Navigation from './Navigation';
 import SendRecieve from './SendRecieve';
 import Transactions from './Transactions';
 import Market from './Market';
@@ -33,6 +31,21 @@ import Exchange from './Exchange';
 import App from './App';
 import StarrySky from './StarrySky';
 
+const Main = styled.main({
+  gridArea: 'content',
+  overflow: 'hidden',
+  margin: '25px 10%',
+});
+
+const AppLoader = styled.div({
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  width: 300,
+  height: 300,
+  transform: 'translate(-50%,-50%)',
+});
+
 export default class Root extends Component {
   render() {
     const { store, history } = this.props;
@@ -41,13 +54,13 @@ export default class Root extends Component {
         <ConnectedRouter history={history}>
           <div>
             <StarrySky />
+            <AppLoader>
+              <Loader />
+            </AppLoader>
             <App>
-              <Route path="/" component={Header} />
-              <div id="app-content">
-                <div id="app-content-container">
-                  <div id="app-loader">
-                    <Loader />
-                  </div>
+              <Header />
+              <Main>
+                <Switch>
                   <Route exact path="/" component={Overview} />
                   <Route exact path="/SendRecieve" component={SendRecieve} />
                   <Route exact path="/Transactions" component={Transactions} />
@@ -64,11 +77,9 @@ export default class Root extends Component {
                   <Route path="/Exchange" component={Exchange} />
                   <Route exact path="/List" component={List} />
                   <Route exact path="/About" component={About} />
-                </div>
-              </div>
-              <div id="app-navigation">
-                <Route path="/" component={Footer} />
-              </div>
+                </Switch>
+              </Main>
+              <Navigation />
             </App>
           </div>
         </ConnectedRouter>

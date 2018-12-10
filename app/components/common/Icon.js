@@ -9,7 +9,7 @@ const Svg = styled.svg({
   transitionDuration: '.2s',
 });
 
-const Icon = ({ icon, ...rest }) => (
+const Icon = ({ icon = {}, ...rest }) => (
   <Svg viewBox={icon.viewBox} {...rest}>
     <use xlinkHref={`#${icon.id}`} />
   </Svg>

@@ -20,13 +20,14 @@ import { GetSettings } from 'api/settings.js';
 import styles from './style.css';
 import Fast from './Fast';
 import Precise from './Precise';
+import Icon from 'components/common/Icon';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { FormattedMessage } from 'react-intl';
 import ContextMenuBuilder from 'contextmenu';
 
 // Images
-import shapeshiftimg from 'images/shapeshift.svg';
+import shapeshiftIcon from 'images/shapeshift.sprite.svg';
 import bullseye from 'images/bullseye.svg';
 import fastImg from 'images/fast.svg';
 
@@ -182,7 +183,7 @@ class Exchange extends Component {
         <div id="Exchange-container">
           <div>
             <h2>
-              <img src={shapeshiftimg} className="hdr-img" />
+              <Icon icon={shapeshiftIcon} className="hdr-img" />
               <FormattedMessage
                 id="Exchange.Exchange"
                 defaultMessage="Exchange"

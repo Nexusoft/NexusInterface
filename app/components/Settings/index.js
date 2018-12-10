@@ -27,9 +27,9 @@ import Login from './Security/Login';
 import Unencrypted from './Security/Unencrypted';
 
 // Images
-import settingsimg from 'images/settings.svg';
+import settingsIcon from 'images/settings.sprite.svg';
 import coreImg from 'images/core.svg';
-import logoImg from 'images/logo.svg';
+import logoIcon from 'images/logo.sprite.svg';
 import lockIcon from 'images/lock-minting.sprite.svg';
 import marketImg from 'images/marketstats.svg';
 import styleImg from 'images/developer.svg';
@@ -76,7 +76,7 @@ class Settings extends Component {
       <div id="settings" className="animated fadeIn">
         <div id="settings-container">
           <h2>
-            <img src={settingsimg} className="hdr-img" />
+            <Icon icon={settingsIcon} className="hdr-img" />
             <FormattedMessage
               id="Settings.Settings"
               defaultMessage="Settings"
@@ -87,7 +87,7 @@ class Settings extends Component {
             <ul className="tabs">
               <li>
                 <NavLink to={`${this.props.match.url}/App`}>
-                  <img src={logoImg} alt="Application" />
+                  <Icon icon={logoIcon} />
                   <FormattedMessage
                     id="Settings.Application"
                     defaultMessage="Application"

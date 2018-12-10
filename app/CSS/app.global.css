@@ -19,7 +19,6 @@
 @import "./controls/tooltip.css";
 
 @import "~font-awesome/css/font-awesome.css";
-@import "~components/Footer/style.css";
 @import "~components/Header/style.css";
 @import "~components/AddressBook/style.css";
 @import "~components/BlockExplorer/style.css";
@@ -80,36 +79,8 @@ body {
   background-repeat: no-repeat;
   /* font-family: Arial, Helvetica, Helvetica Neue, serif; */
   font-family: "Lato", sans-serif;
+  font-size: 16px;
   overflow-y: hidden;
-}
-
-#root {
-  height: 100%;
-}
-
-#app-content {
-  grid-area: content;
-  overflow: auto;
-}
-
-#app-content-container {
-  height: 100%;
-  max-width: 80%;
-  margin: 0 auto;
-  /* position: relative; */
-}
-
-#app-navigation {
-  grid-area: navigation;
-}
-
-#app-loader {
-  grid-area: content;
-  position: absolute;
-  top: calc(50% - 190px);
-  left: calc(50% - 150px);
-  width: 300px;
-  height: 300px;
 }
 
 /* Scrollbar */
@@ -169,11 +140,6 @@ input[type="text"]::placeholder {
 MEDIA QUERIES
 ------------------------------------------------------------------*/
 
-@media (min-width: 300px) {
-  #app-content-container {
-    max-width: 100%;
-  }
-}
 @media (min-width: 375px) {
 }
 @media (min-width: 480px) {
@@ -181,11 +147,6 @@ MEDIA QUERIES
 @media (min-width: 600px) {
 }
 @media (min-width: 800px) {
-}
-@media (min-width: 1024px) {
-  #app-content-container {
-    max-width: 80%;
-  }
 }
 @media (min-width: 1200px) {
 }

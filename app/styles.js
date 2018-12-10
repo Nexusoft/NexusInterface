@@ -11,7 +11,7 @@ export const consts = {
 };
 
 export const timing = {
-  regular: '.2s',
+  normal: '.2s',
   slow: '1s',
 };
 

@@ -17,12 +17,13 @@ import styles from './style.css';
 import * as TYPE from 'actions/actiontypes';
 import MarketDepth from './Chart/MarketDepth';
 import Candlestick from './Chart/Candlestick';
+import Icon from 'components/common/Icon';
 import { FormattedMessage } from 'react-intl';
 import ContextMenuBuilder from 'contextmenu';
 import * as actionsCreators from 'actions/marketActionCreators';
 
 // Images
-import marketimg from 'images/market.svg';
+import chartIcon from 'images/chart.sprite.svg';
 import bittrexLogo from 'images/BittrexLogo.png';
 import binanceLogo from 'images/BINANCE.png';
 import cryptopiaLogo from 'images/CryptopiaLogo.png';
@@ -371,7 +372,7 @@ class Market extends Component {
     return (
       <div id="market" className="animated fadeIn">
         <h2>
-          <img src={marketimg} className="hdr-img" />
+          <Icon icon={chartIcon} className="hdr-img" />
           <FormattedMessage
             id="Market.Information"
             defaultMessage="Market Information"
