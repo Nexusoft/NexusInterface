@@ -2,7 +2,7 @@ import { css, keyframes } from '@emotion/core';
 
 export const colors = {};
 colors.primary = '#00b7fa';
-colors.dark = '#132126';
+colors.dark = '#0f1b1f';
 colors.light = '#e6e9eb';
 colors.oppositePrimary = colors.light;
 

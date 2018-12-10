@@ -68,6 +68,6 @@ export function rotate(color, value) {
 
 export function mix(color1, color2, value) {
   return Color(color1)
-    .mix(color2, value)
+    .mix(Color(color2), value)
     .string();
 }

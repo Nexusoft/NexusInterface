@@ -11,6 +11,7 @@ import styled from '@emotion/styled';
 // Internal Global Dependencies
 import settings from 'api/settings';
 import locale from 'reducers/intl';
+import globalStyles from 'css/global-styles';
 
 // Internal Local Dependencies
 import Loader from './Loader';
@@ -33,8 +34,8 @@ import StarrySky from './StarrySky';
 
 const Main = styled.main({
   gridArea: 'content',
-  overflow: 'visible',
-  margin: '25px 10%',
+  overflow: 'hidden',
+  margin: '30px 10%',
   display: 'flex',
   alignItems: 'stretch',
 });
@@ -55,6 +56,7 @@ export default class Root extends Component {
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <div>
+            {globalStyles}
             <StarrySky />
             <AppLoader>
               <Loader />

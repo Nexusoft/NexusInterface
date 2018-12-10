@@ -35,11 +35,6 @@
 @import "../../node_modules/react-activity/lib/Squares/Squares.css";
 :root {
   /* COLOR PALETTE VARIABLES */
-  --color-1: #111111; /* <-- Dark Grey */
-  --color-2: #0ca4fb; /* <-- Nexus Blue */
-  --color-3: #556070; /* <-- Light Grey */
-  --color-4: #34495e; /* <-- Medium Grey */
-  --color-5: #ffffff; /* <-- White */
   --color-6: #ffffff; /* <-- White */
   --nxs-logo: hue-rotate(0deg) brightness(100%) grayscale(0%);
   --icon-menu: hue-rotate(0deg) brightness(100%) grayscale(0%);
@@ -65,51 +60,6 @@
   --font-2: "Franklin Gothic"; /* <-- Sourced Above in Second @font-face */
 }
 
-li {
-  list-style: none;
-}
-
-body {
-  position: relative;
-  color: var(--color-5);
-  height: 100vh;
-  background-color: #232c39;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  /* font-family: Arial, Helvetica, Helvetica Neue, serif; */
-  font-family: "Lato", sans-serif;
-  font-size: 16px;
-  overflow-y: hidden;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 10000000;
-}
-
-/* Track */
-/* ::-webkit-scrollbar-track {
-} */
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: var(--color-2);
-}
-
-::-webkit-scrollbar-thumb:window-inactive {
-  background: var(--color-2);
-}
-
-::-webkit-scrollbar-corner {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-svg {
-  fill: currentColor;
-}
 /* Under Construction */
 /* input[type="text"] {
   background-color: var(--color-6) !important;
