@@ -18,14 +18,18 @@ import Modal from 'react-responsive-modal';
 import csv from 'csvtojson';
 import { callbackify } from 'util';
 
-// Internal Dependencies
+// Internal Global Dependencies
 import config from 'api/configuration';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import * as actionsCreators from 'actions/addressbookActionCreators';
 import Icon from 'components/common/Icon';
-import TimeZoneSelector from './timeZoneSelector';
+import Panel from 'components/common/Panel';
+import WaitingText from 'components/common/WaitingText';
 import ContextMenuBuilder from 'contextmenu';
+
+// Internal Local Dependencies
+import TimeZoneSelector from './timeZoneSelector';
 import styles from './style.css';
 // import messages from 'languages/messages'
 
@@ -1202,7 +1206,15 @@ class AddressBook extends Component {
   // Mandatory React method
   render() {
     return (
-      <div id="addressbook" className="animated fadeIn">
+      <Panel
+        icon={addressBookIcon}
+        title={
+          <FormattedMessage
+            id="AddressBook.AddressBook"
+            defaultMessage="Address Book"
+          />
+        }
+      >
         <Modal
           open={this.props.modalVisable}
           center
@@ -1212,13 +1224,6 @@ class AddressBook extends Component {
         >
           {this.modalInternalBuilder()}
         </Modal>
-        <h2>
-          <Icon icon={addressBookIcon} className="hdr-img" />
-          <FormattedMessage
-            id="AddressBook.AddressBook"
-            defaultMessage="Address Book"
-          />
-        </h2>
         {this.props.connections === undefined ? null : (
           <div className="impexpblock">
             <a className="impexp" onClick={() => this.exportAddressBook()}>
@@ -1245,16 +1250,15 @@ class AddressBook extends Component {
         )}
 
         {this.props.connections === undefined ? (
-          <div className="panel">
-            <h2>
-              <FormattedMessage
-                id="AddressBook.Loading"
-                defaultMessage="Please wait for the daemon to load"
-              />
-            </h2>
-          </div>
+          <WaitingText>
+            <FormattedMessage
+              id="AddressBook.Loading"
+              defaultMessage="Please wait for the daemon to load"
+            />
+            ...
+          </WaitingText>
         ) : (
-          <div className="panel">
+          <div>
             <div id="addressbook-controls">
               <div id="addressbook-search">
                 <FormattedMessage
@@ -1560,7 +1564,7 @@ class AddressBook extends Component {
             )}
           </div>
         )}
-      </div>
+      </Panel>
     );
   }
 }

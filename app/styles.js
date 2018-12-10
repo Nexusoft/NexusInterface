@@ -1,8 +1,8 @@
 import { css, keyframes } from '@emotion/core';
 
 export const colors = {};
-colors.primary = '#0ca4fb';
-colors.dark = '#0b1517';
+colors.primary = '#00b7fa';
+colors.dark = '#132126';
 colors.light = '#e6e9eb';
 colors.oppositePrimary = colors.light;
 

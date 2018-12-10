@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
+import { fade } from 'utils/colors';
 
 // Internal Global Dependencies
 import Icon from 'components/common/Icon';
@@ -24,7 +25,7 @@ const PanelWrapper = styled.div({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'stretch',
-  color: lightColor,
+  color: colors.light,
   width: '100%',
   animation: `${intro} .2s ease-out`,
 });
@@ -43,10 +44,9 @@ const PanelHeader = styled.div({
 });
 
 const PanelBody = styled.div({
-  backgroundColor: colors.dark,
+  backgroundColor: fade(colors.dark, 0.3),
   borderBottomLeftRadius: borderRadius,
   borderBottomRightRadius: borderRadius,
-  opacity: 0.7,
   flexGrow: 1,
   padding: '10px 20px',
   overflowY: 'overlay',
@@ -58,10 +58,11 @@ const Panel = ({ icon, title, controls, children }) => (
       <div>
         {!!icon && (
           <>
-            <Icon icon={icon} width={28} height={28} />' '
+            <Icon icon={icon} width={28} height={28} />
+            &nbsp;
           </>
         )}
-        <span className={vAlign}>{title}</span>
+        <span className="v-align">{title}</span>
       </div>
       {controls}
     </PanelHeader>
