@@ -1,17 +1,24 @@
+// External Dependencies
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './style.css';
 import { connect } from 'react-redux';
-import * as RPC from 'scripts/rpc';
 import Modal from 'react-responsive-modal';
-import * as TYPE from 'actions/actiontypes';
 import { FormattedMessage } from 'react-intl';
-import ContextMenuBuilder from 'contextmenu';
 import { remote } from 'electron';
 import { access } from 'fs';
-import Icon from 'components/common/Icon';
 
-// import images here
+// Internal Global Dependencies
+import * as RPC from 'scripts/rpc';
+import * as TYPE from 'actions/actiontypes';
+import ContextMenuBuilder from 'contextmenu';
+import Icon from 'components/common/Icon';
+import Panel from 'components/common/Panel';
+import WaitingText from 'components/common/WaitingText';
+
+// Internal Local Dependencies
+import styles from './style.css';
+
+// Resources
 import sendIcon from 'images/send.sprite.svg';
 import plusimg from 'images/plus.svg';
 import trashimg from 'images/trash.svg';
@@ -1054,15 +1061,15 @@ class SendRecieve extends Component {
     }
 
     return (
-      <div id="sendrecieve" className="animated fadeIn">
-        <h2>
-          <Icon icon={sendIcon} className="hdr-img" />
+      <Panel
+        icon={sendIcon}
+        title={
           <FormattedMessage
             id="sendReceive.SendNexus"
             defaultMessage="Send Nexus"
           />
-        </h2>
-
+        }
+      >
         {/* ADDRESS MODAL */}
         <Modal
           center
@@ -1118,257 +1125,250 @@ class SendRecieve extends Component {
         </Modal>
         {this.props.isInSync === false ||
         this.props.connections === undefined ? (
-          <div className="panel">
-            <h2>
-              <FormattedMessage
-                id="TrustList.SyncMsg"
-                defaultMessage="Please wait for the daemon to load"
-              />
-            </h2>
-          </div>
+          <WaitingText>
+            <FormattedMessage
+              id="TrustList.SyncMsg"
+              defaultMessage="Please wait for the daemon to load"
+            />
+            ...
+          </WaitingText>
         ) : (
-          <div className="panel">
-            <div id="container">
-              <div className="box1">
-                <div className="field">
-                  <select
-                    id="select"
-                    onChange={e => this.props.AccountPicked(e.target.value)}
-                  >
-                    <option defaultValue value="">
-                      Select an Account
-                    </option>
-                    {this.accountChanger()}
-                  </select>{' '}
-                  <div>
-                    <label>
-                      <FormattedMessage
-                        id="sendReceive.Address"
-                        defaultMessage="Nexus Address"
-                      />
-                    </label>{' '}
-                    <FormattedMessage
-                      id="sendReceive.Lookup"
-                      defaultMessage="Lookup Address"
-                    >
-                      {Al => (
-                        <div className="Addresslookup" title={Al}>
-                          {/* <span className="tooltip top" /> */}
-                          <img
-                            src={plusimg}
-                            className="lookupButton"
-                            onClick={() => {
-                              this.props.clearSearch();
-                              this.props.OpenModal4('Address Lookup');
-                            }}
-                          />
-                        </div>
-                      )}
-                    </FormattedMessage>
+          <div id="container">
+            <div className="box1">
+              <div className="field">
+                <select
+                  id="select"
+                  onChange={e => this.props.AccountPicked(e.target.value)}
+                >
+                  <option defaultValue value="">
+                    Select an Account
+                  </option>
+                  {this.accountChanger()}
+                </select>{' '}
+                <div>
+                  <label>
                     <FormattedMessage
                       id="sendReceive.Address"
                       defaultMessage="Nexus Address"
-                    >
-                      {placeholder => (
-                        <input
-                          size="35"
-                          type="text"
-                          placeholder={placeholder}
-                          value={this.props.Address}
-                          onChange={e =>
-                            this.props.updateAddress(e.target.value)
-                          }
-                          required
+                    />
+                  </label>{' '}
+                  <FormattedMessage
+                    id="sendReceive.Lookup"
+                    defaultMessage="Lookup Address"
+                  >
+                    {Al => (
+                      <div className="Addresslookup" title={Al}>
+                        {/* <span className="tooltip top" /> */}
+                        <img
+                          src={plusimg}
+                          className="lookupButton"
+                          onClick={() => {
+                            this.props.clearSearch();
+                            this.props.OpenModal4('Address Lookup');
+                          }}
                         />
-                      )}
-                    </FormattedMessage>
-                  </div>
-                  <div>
-                    <div className="convertor">
-                      <label>
-                        <FormattedMessage
-                          id="sendReceive.Amount"
-                          defaultMessage="Nexus Amount"
-                        />
-                      </label>
-                      <label className="UsdConvertorLabel">
-                        {this.props.settings.fiatCurrency}
-                      </label>
-                    </div>
-                    <div className="convertor">
+                      </div>
+                    )}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="sendReceive.Address"
+                    defaultMessage="Nexus Address"
+                  >
+                    {placeholder => (
                       <input
-                        className="input"
+                        size="35"
                         type="text"
-                        placeholder="0.00000"
-                        value={this.props.Amount}
-                        onChange={e => this.nxsAmount(e, true)}
-                        required
-                      />{' '}
-                      <label>=</label>
-                      <input
-                        className="input"
-                        type="text"
-                        placeholder="0.00"
-                        value={this.props.USDAmount}
-                        onChange={e => {
-                          this.nxsAmount(e);
-                        }}
+                        placeholder={placeholder}
+                        value={this.props.Address}
+                        onChange={e => this.props.updateAddress(e.target.value)}
                         required
                       />
-                    </div>
-                  </div>
-                  <div>
+                    )}
+                  </FormattedMessage>
+                </div>
+                <div>
+                  <div className="convertor">
                     <label>
                       <FormattedMessage
-                        id="sendReceive.Message"
-                        defaultMessage="Message"
+                        id="sendReceive.Amount"
+                        defaultMessage="Nexus Amount"
                       />
                     </label>
-                    <FormattedMessage
-                      id="sendReceive.EnterYourMessage"
-                      defaultMessage="Enter Your Message"
-                    >
-                      {placeholder => (
-                        <textarea
-                          value={this.props.Message}
-                          onChange={e =>
-                            this.props.updateMessage(e.target.value)
-                          }
-                          name="message"
-                          rows="5"
-                          cols="41"
-                          placeholder={placeholder}
-                        />
-                      )}
-                    </FormattedMessage>
+                    <label className="UsdConvertorLabel">
+                      {this.props.settings.fiatCurrency}
+                    </label>
                   </div>
-                  <div id="left-buttons">
-                    {this.editQueue()}
-                    <button
-                      className="button"
-                      onClick={() => {
-                        console.log(this.props.encrypted, this.props.loggedIn);
-                        if (
-                          !(this.props.Address === '') &&
-                          this.props.Amount > 0
-                        ) {
-                          if (
-                            this.props.encrypted === false ||
-                            this.props.loggedIn === true
-                          ) {
-                            this.props.OpenModal2('send transaction?');
-                          } else {
-                            this.props.OpenModal('Wallet Locked');
-                          }
-                        } else if (this.props.Amount <= 0) {
-                          this.props.OpenModal('Invalid Amount');
-                        } else {
-                          this.props.OpenModal('Invalid Address');
-                        }
+                  <div className="convertor">
+                    <input
+                      className="input"
+                      type="text"
+                      placeholder="0.00000"
+                      value={this.props.Amount}
+                      onChange={e => this.nxsAmount(e, true)}
+                      required
+                    />{' '}
+                    <label>=</label>
+                    <input
+                      className="input"
+                      type="text"
+                      placeholder="0.00"
+                      value={this.props.USDAmount}
+                      onChange={e => {
+                        this.nxsAmount(e);
                       }}
-                    >
-                      <FormattedMessage
-                        id="sendReceive.SendNow"
-                        defaultMessage="Send Now"
-                      />
-                    </button>
+                      required
+                    />
                   </div>
                 </div>
-              </div>
-              <div className="box2">
-                <div id="table-wraper">
-                  <div className="label">
-                    <label>
-                      <FormattedMessage
-                        id="sendReceive.Queue"
-                        defaultMessage="Queue"
+                <div>
+                  <label>
+                    <FormattedMessage
+                      id="sendReceive.Message"
+                      defaultMessage="Message"
+                    />
+                  </label>
+                  <FormattedMessage
+                    id="sendReceive.EnterYourMessage"
+                    defaultMessage="Enter Your Message"
+                  >
+                    {placeholder => (
+                      <textarea
+                        value={this.props.Message}
+                        onChange={e => this.props.updateMessage(e.target.value)}
+                        name="message"
+                        rows="5"
+                        cols="41"
+                        placeholder={placeholder}
                       />
-                    </label>
-                  </div>{' '}
-                  <div id="moveButton">
-                    {this.props.connections !== undefined && (
-                      <button
-                        className="button"
-                        onClick={() => this.props.OpenMoveModal()}
-                      >
-                        Move Between Accounts
-                      </button>
                     )}
-                  </div>
-                  <table className="table">
-                    <thead>
-                      <tr className="thead">
-                        <th>
-                          <FormattedMessage
-                            id="sendReceive.TableAddress"
-                            defaultMessage="Address"
-                          />
-                        </th>
-                        <th>
-                          <FormattedMessage
-                            id="sendReceive.TableAmount"
-                            defaultMessage="Amount"
-                          />
-                        </th>
-                        <th style={{ whiteSpace: 'nowrap' }}>
-                          <FormattedMessage
-                            id="sendReceive.Remove"
-                            defaultMessage="Remove"
-                          />
-                        </th>
-                      </tr>
-                    </thead>
-                    {this.fillQueue()}
-                  </table>
-                  <div className="foot">
-                    <button
-                      type="reset"
-                      className="button primary"
-                      onClick={() => {
-                        console.log(this.props.encrypted, this.props.loggedIn);
+                  </FormattedMessage>
+                </div>
+                <div id="left-buttons">
+                  {this.editQueue()}
+                  <button
+                    className="button"
+                    onClick={() => {
+                      console.log(this.props.encrypted, this.props.loggedIn);
+                      if (
+                        !(this.props.Address === '') &&
+                        this.props.Amount > 0
+                      ) {
                         if (
                           this.props.encrypted === false ||
                           this.props.loggedIn === true
                         ) {
-                          if (Object.keys(this.props.Queue).length > 0) {
-                            this.props.OpenModal2('Send Multiple?');
-                          } else {
-                            this.props.OpenModal('Empty Queue!');
-                          }
+                          this.props.OpenModal2('send transaction?');
                         } else {
                           this.props.OpenModal('Wallet Locked');
                         }
-                      }}
-                    >
-                      <FormattedMessage
-                        id="sendReceive.SendAll"
-                        defaultMessage="SendAll"
-                      />
-                    </button>
-
+                      } else if (this.props.Amount <= 0) {
+                        this.props.OpenModal('Invalid Amount');
+                      } else {
+                        this.props.OpenModal('Invalid Address');
+                      }
+                    }}
+                  >
+                    <FormattedMessage
+                      id="sendReceive.SendNow"
+                      defaultMessage="Send Now"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="box2">
+              <div id="table-wraper">
+                <div className="label">
+                  <label>
+                    <FormattedMessage
+                      id="sendReceive.Queue"
+                      defaultMessage="Queue"
+                    />
+                  </label>
+                </div>{' '}
+                <div id="moveButton">
+                  {this.props.connections !== undefined && (
                     <button
-                      type="button"
-                      className="button primary"
-                      onClick={() => {
-                        this.props.OpenModal2('Clear Queue?');
-                      }}
+                      className="button"
+                      onClick={() => this.props.OpenMoveModal()}
                     >
-                      <FormattedMessage
-                        id="sendReceive.ClearQueue"
-                        defaultMessage="Clear Queue"
-                      />
+                      Move Between Accounts
                     </button>
+                  )}
+                </div>
+                <table className="table">
+                  <thead>
+                    <tr className="thead">
+                      <th>
+                        <FormattedMessage
+                          id="sendReceive.TableAddress"
+                          defaultMessage="Address"
+                        />
+                      </th>
+                      <th>
+                        <FormattedMessage
+                          id="sendReceive.TableAmount"
+                          defaultMessage="Amount"
+                        />
+                      </th>
+                      <th style={{ whiteSpace: 'nowrap' }}>
+                        <FormattedMessage
+                          id="sendReceive.Remove"
+                          defaultMessage="Remove"
+                        />
+                      </th>
+                    </tr>
+                  </thead>
+                  {this.fillQueue()}
+                </table>
+                <div className="foot">
+                  <button
+                    type="reset"
+                    className="button primary"
+                    onClick={() => {
+                      console.log(this.props.encrypted, this.props.loggedIn);
+                      if (
+                        this.props.encrypted === false ||
+                        this.props.loggedIn === true
+                      ) {
+                        if (Object.keys(this.props.Queue).length > 0) {
+                          this.props.OpenModal2('Send Multiple?');
+                        } else {
+                          this.props.OpenModal('Empty Queue!');
+                        }
+                      } else {
+                        this.props.OpenModal('Wallet Locked');
+                      }
+                    }}
+                  >
+                    <FormattedMessage
+                      id="sendReceive.SendAll"
+                      defaultMessage="SendAll"
+                    />
+                  </button>
 
-                    <div>
-                      <div className="counter">{this.addAmount()} </div>
-                    </div>
-                  </div>{' '}
+                  <button
+                    type="button"
+                    className="button primary"
+                    onClick={() => {
+                      this.props.OpenModal2('Clear Queue?');
+                    }}
+                  >
+                    <FormattedMessage
+                      id="sendReceive.ClearQueue"
+                      defaultMessage="Clear Queue"
+                    />
+                  </button>
+
+                  <div>
+                    <div className="counter">{this.addAmount()} </div>
+                  </div>
                 </div>{' '}
               </div>{' '}
-            </div>
+            </div>{' '}
           </div>
         )}
-      </div>
+      </Panel>
     );
   }
 }
