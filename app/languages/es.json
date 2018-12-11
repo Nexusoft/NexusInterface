@@ -47,6 +47,11 @@
   "sendReceive.FEE": "CUOTA",
   "sendReceive.CopyToFeild": "Copiar al campo",
   "sendReceive.ClickToEdit": "Haz click para editar",
+  "sendReceive.SelectAnAccount": "Seleccione una cuenta",
+  "sendReceive.FromAccount": "De la cuenta",
+  "sendReceive.ToAccount": "A la cuenta",
+  "sendReceive.MoveNXS": "Mover nxs",
+  "sendReceive.MoveNxsBetweenAccount": "Mover NXS Entre Cuentas",
 
   "transactions.Details": "Detalles de la transacción",
   "transactions.MoreDetails": "Más detalles",
@@ -199,6 +204,7 @@
   "Settings.CannotContain": "La contraseña no puede contener estos caracteres",
   "Settings.Re-Enter": "Escriba la contraseña otra vez",
   "Settings.PasswordsMatch": "Las contraseñas no coinciden",
+  "Settings.MinimumConfirmations": "Confirmaciones mínimas",
 
   "Settings.ViewPrivateKey": "Ver clave privada para la dirección",
   "Settings.Address": "Dirección",
@@ -229,6 +235,7 @@
   "Settings.LockWallet": "Cartera de bloqueo",
   "Settings.ViewPrivateKeyForAddress": "Ver clave privada para la dirección",
   "Settings.EncryptRestart": "Encriptar y reiniciar",
+  "Settings.Forkblock": "Bloques de horquilla",
 
   "Console.CoreOutput": "Salida del núcleo",
   "Console.Console": "Consola",
@@ -299,6 +306,7 @@
   "ToolTip.EnableMining": "Habilitar / deshabilitar la minería en la cartera",
   "ToolTip.EnableStaking": "Habilitar / deshabilitar replanteo en la cartera",
   "ToolTip.Verbose": "Nivel detallado para registros",
+  "ToolTip.ForkBlock": "Retroceder una cantidad de bloques",
   "ToolTip.MDM": "Habilite el modo de daemon manual si está ejecutando el daemon manualmente fuera de la cartera",
   "ToolTip.UserName": "Nombre de usuario configurado para el daemon manual",
   "ToolTip.Password": "Contraseña configurada para el daemon manual",
@@ -311,6 +319,7 @@
   "ToolTip.PortOfSOCKS4proxyServer": "Oporto del servidor proxy SOCKS4",
   "ToolTip.Detach": "Desconecte la base de datos al cerrar la billetera",
   "ToolTip.RenderGlobe": "Renderiza el globo en la página de vista general",
+  "ToolTip.MinimumConfirmations": "Blank",
 
   "ToolTip.DbOption": "¿Desea reducir el tiempo de sincronización al descargar una versión reciente de la base de datos?",
   "ToolTip.BootStrapIt": "Sí, vamos a arrancarlo",
@@ -346,6 +355,10 @@
   "Alert.ContactsExported": "Contactos exportados",
   "Alert.DaemonLoadingWait": "Cargando Daemon, Por favor Espere",
   "Alert.InvalidAmount": "Monto invalido",
+  "Alert.AccountsAreTheSame": "Las cuentas son las mismas",
+  "Alert.NoSecondAccountChosen": "Ninguna segunda cuenta elegida",
+  "Alert.InsufficientFunds": "Fondos insuficientes",
+  "Alert.CoreRestarting": "Reinicio del núcleo",
 
   "Cp.AC1": "Color de Acento 1",
   "Cp.AC2": "Color de acento 2",

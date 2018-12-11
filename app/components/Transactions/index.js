@@ -527,22 +527,18 @@ class Transactions extends Component {
       this.props.selectedAccount == 0 ||
       this.props.selectedAccount === undefined
     ) {
-      incomingMyAccounts = this.props.myAccounts;
+      incomingMyAccounts = this.props.myAccounts
       promisList.push(RPC.PROMISE('listtransactions', ['*', 9999, 0]))
     } else {
       incomingMyAccounts = this.props.myAccounts[this.props.selectedAccount - 1]
       listedaccounts.push(incomingMyAccounts.account)
       promisList.push(
-          RPC.PROMISE('listtransactions', [
-            incomingMyAccounts.account,
-            9999,
-            0,
-          ])
+        RPC.PROMISE('listtransactions', [incomingMyAccounts.account, 9999, 0])
       )
     }
-    let tempWalletTransactions = [];
+    let tempWalletTransactions = []
 
-    let settingsCheckDev = require('api/settings.js').GetSettings();
+    let settingsCheckDev = require('api/settings.js').GetSettings()
 
     // If in Dev Mode add some random transactions
     if (settingsCheckDev.devMode == true) {
@@ -566,7 +562,7 @@ class Transactions extends Component {
     }
 
     Promise.all(promisList).then(payload => {
-      console.log(payload);
+      console.log(payload)
       payload.forEach(element => {
         for (let index = 0; index < element.length; index++) {
           const element2 = element[index]
@@ -1483,7 +1479,9 @@ class Transactions extends Component {
     if (this.props)
       if (this.props.myAccounts[0]) {
         let tempMyAccounts = this.props.myAccounts.slice()
-        tempMyAccounts.unshift({ account: 'All' })
+        tempMyAccounts.unshift({
+          account: this.props.messages['transactions.All'],
+        })
         //console.log(tempAAAA);
         return tempMyAccounts.map((e, i) => {
           return (
@@ -1544,7 +1542,11 @@ class Transactions extends Component {
             </h2>
           ) : (
             <div>
-              Account Select:
+              <FormattedMessage
+                id="sendReceive.SelectAnAccount"
+                defaultMessage="Select an Account"
+              />
+              :
               <select
                 id="select"
                 value={this.props.selectedAccount}

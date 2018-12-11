@@ -47,6 +47,11 @@
   "sendReceive.FEE": "費用",
   "sendReceive.CopyToFeild": "フィールドにコピー",
   "sendReceive.ClickToEdit": "クリックして編集する",
+  "sendReceive.SelectAnAccount": "アカウントを選択",
+  "sendReceive.FromAccount": "アカウントから",
+  "sendReceive.ToAccount": "アカウントへ",
+  "sendReceive.MoveNXS": "NXS を動かす",
+  "sendReceive.MoveNxsBetweenAccount": "アカウント間の移動",
 
   "transactions.Details": "取引の詳細",
   "transactions.MoreDetails": "詳細",
@@ -202,7 +207,7 @@
   "Settings.PasswordsMatch": "パスワードが一致していません",
 
   "Settings.ViewPrivateKey": "アドレスの秘密鍵を表示する",
-  "Settings.Address": "Address",
+  "Settings.Address": "住所",
   "Settings.EnterAddressHere": "ここに住所を入力してください",
   "Settings.PrivateKey": "秘密鍵",
   "Settings.Copy": "コピー",
@@ -231,6 +236,8 @@
   "Settings.LockWallet": "ウォレットをロックする",
   "Settings.ViewPrivateKeyForAddress": "アドレスの秘密鍵を表示する",
   "Settings.EncryptRestart": "暗号化と再起動",
+  "Settings.MinimumConfirmations": "最低限の確認",
+  "Settings.Forkblock": "フォークブロック",
 
   "Console.CoreOutput": "コア出力",
   "Console.Console": "コンソール",
@@ -323,6 +330,8 @@
   "ToolTip.RecentDatabaseDownloading": "最近のデータベースのダウンロード",
   "ToolTip.PleaseWait": "お待ちください...",
   "ToolTip.RecentDatabaseExtracting": "最近のデータベース抽出",
+  "ToolTip.ForkBlock": "ステップバックブロック量",
+  "ToolTip.MinimumConfirmations": "Blank",
 
   "Alert.Received": "トランザクションの受領",
   "Alert.Sent": "トランザクション送信済み",
@@ -351,8 +360,12 @@
   "Alert.ContactsExported": "連絡先のエクスポート",
   "Alert.DaemonLoadingWait": "デーモンをロード中、しばらくお待ちください",
   "Alert.InvalidAmount": "無効な金額",
+  "Alert.CoreRestarting": "コア再起動",
+  "Alert.AccountsAreTheSame": "アカウントは同じです",
+  "Alert.NoSecondAccountChosen": "選択された第2のアカウント",
+  "Alert.InsufficientFunds": "残高不足",
 
-  "Cp.AC1": "Accent Color 1",
+  "Cp.AC1": "アクセントカラー1",
   "Cp.AC2": "アクセントカラー2",
   "Cp.THC": "表ヘッダーの色",
   "Cp.TTC": "ツールチップの色",

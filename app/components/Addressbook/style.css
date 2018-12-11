@@ -210,7 +210,7 @@ select {
 .myAddressTable {
   max-width: 100%;
   /* min-width: 50%; */
-
+  border-left: 0px;
   overflow-x: hidden;
   overflow-y: scroll;
   height: 280px;

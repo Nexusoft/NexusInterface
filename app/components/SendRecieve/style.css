@@ -51,6 +51,7 @@ textarea {
 
 .input {
   width: 175px;
+  border-radius: 5px;
 }
 .convertor {
   display: flex;
@@ -110,9 +111,11 @@ textarea {
 
 #no-button {
   float: right;
+  border-radius: 5px;
 }
 #ok-button {
   float: left;
+  border-radius: 5px;
 }
 
 .thead {
@@ -226,12 +229,12 @@ textarea {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
-#addressPopulateButton {
+/* #addressPopulateButton {
   padding-right: 0px;
 
   border-radius: 10px;
   height: 20px;
-}
+} */
 
 #AddressBookSelect:hover {
   color: var(--color-2);
@@ -256,7 +259,7 @@ textarea {
 #AddressTable {
   max-width: 100%;
   /* min-width: 50%; */
-
+  border-left: 0px;
   overflow-x: hidden;
   overflow-y: scroll;
   height: 325px;
