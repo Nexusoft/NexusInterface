@@ -12,15 +12,18 @@ import ReactTable from 'react-table';
 import { remote } from 'electron';
 import { VictoryArea, VictoryChart, VictoryAnimation } from 'victory';
 
-// Internal Dependencies
-import styles from './style.css';
+// Internal Global Dependencies
 import * as TYPE from 'actions/actiontypes';
-import MarketDepth from './Chart/MarketDepth';
-import Candlestick from './Chart/Candlestick';
 import Icon from 'components/common/Icon';
+import Panel from 'components/common/Panel';
 import { FormattedMessage } from 'react-intl';
 import ContextMenuBuilder from 'contextmenu';
 import * as actionsCreators from 'actions/marketActionCreators';
+
+// Internal Local Dependencies
+import MarketDepth from './Chart/MarketDepth';
+import Candlestick from './Chart/Candlestick';
+import styles from './style.css';
 
 // Images
 import chartIcon from 'images/chart.sprite.svg';
@@ -370,14 +373,15 @@ class Market extends Component {
   // Mandatory React method
   render() {
     return (
-      <div id="market" className="animated fadeIn">
-        <h2>
-          <Icon icon={chartIcon} className="hdr-img" />
+      <Panel
+        icon={chartIcon}
+        title={
           <FormattedMessage
             id="Market.Information"
             defaultMessage="Market Information"
           />
-        </h2>
+        }
+      >
         <a className="refresh" onClick={() => this.refresher()}>
           <FormattedMessage
             id="Market.Refreash"
@@ -385,58 +389,57 @@ class Market extends Component {
           />
         </a>
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
-        <div className="panel">
-          {this.props.loaded && this.props.binance.buy[0] && (
-            <div className="exchangeUnitContainer">
-              <img className="exchangeLogo" src={binanceLogo} />
-              <div className="marketInfoContainer">
-                <MarketDepth
-                  chartData={this.formatChartData('binanceBuy')}
-                  chartSellData={this.formatChartData('binanceSell')}
-                />
-                {this.props.binance.candlesticks[0] !== undefined ? (
-                  <Candlestick data={this.props.binance.candlesticks} />
-                ) : (
-                  this.oneDayinfo('binance')
-                )}
-              </div>
-            </div>
-          )}
-          {this.props.loaded && this.props.bittrex.buy[0] && (
-            <div className="exchangeUnitContainer">
-              <img className="exchangeLogo" src={bittrexLogo} />
-              <div className="marketInfoContainer">
-                <MarketDepth
-                  chartData={this.formatChartData('bittrexBuy')}
-                  chartSellData={this.formatChartData('bittrexSell')}
-                />
-                {this.props.bittrex.candlesticks[0] !== undefined ? (
-                  <Candlestick data={this.props.bittrex.candlesticks} />
-                ) : (
-                  this.oneDayinfo('bittrex')
-                )}
-              </div>
-            </div>
-          )}
-          {this.props.loaded && this.props.cryptopia.buy[0] && (
-            <div className="exchangeUnitContainer">
-              <img className="exchangeLogo" src={cryptopiaLogo} />
-              <div className="marketInfoContainer">
-                <MarketDepth
-                  chartData={this.formatChartData('cryptopiaBuy')}
-                  chartSellData={this.formatChartData('cryptopiaSell')}
-                />
 
-                {this.props.cryptopia.candlesticks[0] !== undefined ? (
-                  <Candlestick data={this.props.cryptopia.candlesticks} />
-                ) : (
-                  this.oneDayinfo('cryptopia')
-                )}
-              </div>
+        {this.props.loaded && this.props.binance.buy[0] && (
+          <div className="exchangeUnitContainer">
+            <img className="exchangeLogo" src={binanceLogo} />
+            <div className="marketInfoContainer">
+              <MarketDepth
+                chartData={this.formatChartData('binanceBuy')}
+                chartSellData={this.formatChartData('binanceSell')}
+              />
+              {this.props.binance.candlesticks[0] !== undefined ? (
+                <Candlestick data={this.props.binance.candlesticks} />
+              ) : (
+                this.oneDayinfo('binance')
+              )}
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+        )}
+        {this.props.loaded && this.props.bittrex.buy[0] && (
+          <div className="exchangeUnitContainer">
+            <img className="exchangeLogo" src={bittrexLogo} />
+            <div className="marketInfoContainer">
+              <MarketDepth
+                chartData={this.formatChartData('bittrexBuy')}
+                chartSellData={this.formatChartData('bittrexSell')}
+              />
+              {this.props.bittrex.candlesticks[0] !== undefined ? (
+                <Candlestick data={this.props.bittrex.candlesticks} />
+              ) : (
+                this.oneDayinfo('bittrex')
+              )}
+            </div>
+          </div>
+        )}
+        {this.props.loaded && this.props.cryptopia.buy[0] && (
+          <div className="exchangeUnitContainer">
+            <img className="exchangeLogo" src={cryptopiaLogo} />
+            <div className="marketInfoContainer">
+              <MarketDepth
+                chartData={this.formatChartData('cryptopiaBuy')}
+                chartSellData={this.formatChartData('cryptopiaSell')}
+              />
+
+              {this.props.cryptopia.candlesticks[0] !== undefined ? (
+                <Candlestick data={this.props.cryptopia.candlesticks} />
+              ) : (
+                this.oneDayinfo('cryptopia')
+              )}
+            </div>
+          </div>
+        )}
+      </Panel>
     );
   }
 }

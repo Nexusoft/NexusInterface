@@ -12,6 +12,8 @@ import { Route, Redirect } from 'react-router';
 // Internal Global Dependencies
 import ContextMenuBuilder from 'contextmenu';
 import Icon from 'components/common/Icon';
+import Panel from 'components/common/Panel';
+import { Tabs, TabItem } from 'components/common/Tabs';
 
 // Internal Local Dependencies
 import TerminalConsole from './TerminalConsole';
@@ -53,51 +55,48 @@ export default class Terminal extends Component {
     }
 
     return (
-      <div id="terminal" className="animated fadeIn">
-        <h2>
-          <Icon icon={consoleIcon} className="hdr-img" />
+      <Panel
+        icon={consoleIcon}
+        title={
           <FormattedMessage id="Console.Console" defaultMessage="Console" />
-        </h2>
+        }
+      >
+        <Tabs>
+          <TabItem
+            link={`${this.props.match.url}/Console`}
+            icon={logoIcon}
+            text={
+              <FormattedMessage id="Console.Console" defaultMessage="Console" />
+            }
+          />
+          <TabItem
+            link={`${this.props.match.url}/Core`}
+            icon={coreIcon}
+            text={
+              <FormattedMessage
+                id="Console.CoreOutput"
+                defaultMessage="Console"
+              />
+            }
+          />
+        </Tabs>
 
-        <div className="panel">
-          <ul className="tabs">
-            <li>
-              <NavLink to={`${this.props.match.url}/Console`}>
-                <Icon icon={logoIcon} />
-                <FormattedMessage
-                  id="Console.Console"
-                  defaultMessage="Console"
-                />
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to={`${this.props.match.url}/Core`}>
-                <Icon icon={coreIcon} />
-                <FormattedMessage
-                  id="Console.CoreOutput"
-                  defaultMessage="Console"
-                />
-              </NavLink>
-            </li>
-          </ul>
-
-          <div id="terminal-content">
-            <Route
-              exact
-              path={`${this.props.match.path}/`}
-              component={TerminalConsole}
-            />
-            <Route
-              path={`${this.props.match.path}/Console`}
-              component={TerminalConsole}
-            />
-            <Route
-              path={`${this.props.match.path}/Core`}
-              component={TerminalCore}
-            />
-          </div>
+        <div id="terminal-content">
+          <Route
+            exact
+            path={`${this.props.match.path}/`}
+            component={TerminalConsole}
+          />
+          <Route
+            path={`${this.props.match.path}/Console`}
+            component={TerminalConsole}
+          />
+          <Route
+            path={`${this.props.match.path}/Core`}
+            component={TerminalCore}
+          />
         </div>
-      </div>
+      </Panel>
     );
   }
 }

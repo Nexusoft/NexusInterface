@@ -8,8 +8,10 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { timingSafeEqual } from 'crypto';
+import { css } from '@emotion/core';
 
 // Internal Dependencies
+import WaitingText from 'components/common/WaitingText';
 import styles from './style.css';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
@@ -259,12 +261,13 @@ class TerminalConsole extends Component {
   render() {
     if (this.props.connections === undefined) {
       return (
-        <h2>
+        <WaitingText>
           <FormattedMessage
             id="transactions.Loading"
             defaultMessage="transactions.Loading"
           />
-        </h2>
+          ...
+        </WaitingText>
       );
     } else {
       return (

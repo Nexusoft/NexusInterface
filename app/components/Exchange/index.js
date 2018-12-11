@@ -15,21 +15,25 @@ import Request from 'request';
 import { remote } from 'electron';
 import Countdown from 'react-countdown-now';
 
-// Internal Dependencies
+// Internal Global Dependencies
+import Panel from 'components/common/Panel';
+import { Tabs, TabItem } from 'components/common/Tabs';
 import { GetSettings } from 'api/settings.js';
-import styles from './style.css';
-import Fast from './Fast';
-import Precise from './Precise';
 import Icon from 'components/common/Icon';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { FormattedMessage } from 'react-intl';
 import ContextMenuBuilder from 'contextmenu';
 
+// Internal Local Dependencies
+import styles from './style.css';
+import Fast from './Fast';
+import Precise from './Precise';
+
 // Images
 import shapeshiftIcon from 'images/shapeshift.sprite.svg';
-import bullseye from 'images/bullseye.svg';
-import fastImg from 'images/fast.svg';
+import bullseyeIcon from 'images/bullseye.sprite.svg';
+import fastIcon from 'images/fast.sprite.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -170,7 +174,12 @@ class Exchange extends Component {
     }
 
     return (
-      <div id="Exchange" className="animated fadeIn">
+      <Panel
+        icon={shapeshiftIcon}
+        title={
+          <FormattedMessage id="Exchange.Exchange" defaultMessage="Exchange" />
+        }
+      >
         <Modal
           open={this.props.transactionModalFlag}
           onClose={this.props.clearTransaction}
@@ -180,59 +189,40 @@ class Exchange extends Component {
           {this.modalContents()}
         </Modal>
 
-        <div id="Exchange-container">
-          <div>
-            <h2>
-              <Icon icon={shapeshiftIcon} className="hdr-img" />
+        <Tabs>
+          <TabItem
+            link={`${this.props.match.url}/Precise`}
+            icon={bullseyeIcon}
+            text={
               <FormattedMessage
-                id="Exchange.Exchange"
-                defaultMessage="Exchange"
+                id="Exchange.Precise"
+                defaultMessage="Precise"
               />
-            </h2>
-            <p>
-              <FormattedMessage
-                id="Exchange.ShoutOut"
-                defaultMessage="powered by ShapeShift"
-              />
-            </p>
-          </div>
-          <div className="panel">
-            <ul className="tabs">
-              <li>
-                <NavLink to={`${this.props.match.url}/Precise`}>
-                  <img src={bullseye} alt="Precise" />
-                  <FormattedMessage
-                    id="Exchange.Precise"
-                    defaultMessage="Precise"
-                  />
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to={`${this.props.match.url}/Fast`}>
-                  <img src={fastImg} alt="Fast" />
-                  <FormattedMessage id="Exchange.Fast" defaultMessage="Fast" />
-                </NavLink>
-              </li>
-            </ul>
+            }
+          />
+          <TabItem
+            link={`${this.props.match.url}/Fast`}
+            icon={fastIcon}
+            text={<FormattedMessage id="Exchange.Fast" defaultMessage="Fast" />}
+          />
+        </Tabs>
 
-            <div className="grid-container">
-              <Route
-                exact
-                path={`${this.props.match.path}/`}
-                render={() => <Precise />}
-              />
-              <Route
-                path={`${this.props.match.path}/Precise`}
-                render={props => <Precise />}
-              />
-              <Route
-                path={`${this.props.match.path}/Fast`}
-                render={() => <Fast />}
-              />
-            </div>
-          </div>
+        <div className="grid-container">
+          <Route
+            exact
+            path={`${this.props.match.path}/`}
+            render={() => <Precise />}
+          />
+          <Route
+            path={`${this.props.match.path}/Precise`}
+            render={props => <Precise />}
+          />
+          <Route
+            path={`${this.props.match.path}/Fast`}
+            render={() => <Fast />}
+          />
         </div>
-      </div>
+      </Panel>
     );
   }
 }

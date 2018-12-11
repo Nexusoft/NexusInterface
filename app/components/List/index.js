@@ -9,13 +9,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
 
-// Internal Dependencies
+// Internal Global Dependencies
 import Icon from 'components/common/Icon';
-import styles from './style.css';
+import Panel from 'components/common/Panel';
+import WaitingText from 'components/common/WaitingText';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { FormattedMessage } from 'react-intl';
 import ContextMenuBuilder from 'contextmenu';
+
+// Internal Local Dependencies
+import styles from './style.css';
 
 // Images
 import trustIcon from 'images/trust-list.sprite.svg';
@@ -91,56 +95,55 @@ class List extends Component {
   // Mandatory React method
   render() {
     return (
-      <div id="trustlist" className="animated fadeIn">
-        <h2>
-          <Icon icon={trustIcon} className="hdr-img" />
+      <Panel
+        icon={trustIcon}
+        title={
           <FormattedMessage
             id="TrustList.TrustList"
             defaultMessage="Trust List"
           />
-        </h2>
+        }
+      >
+        {this.props.isInSync === false ||
+        this.props.connections === undefined ? (
+          <WaitingText>
+            <FormattedMessage
+              id="TrustList.SyncMsg"
+              defaultMessage="Please let your wallet sync with the network"
+            />
+            ...
+          </WaitingText>
+        ) : (
+          <div id="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    <div>
+                      <FormattedMessage
+                        id="TrustList.Address"
+                        defaultMessage="Address"
+                      />
+                    </div>
+                  </th>
 
-        <div className="panel">
-          {this.props.isInSync === false ||
-          this.props.connections === undefined ? (
-            <h2>
-              <FormattedMessage
-                id="TrustList.SyncMsg"
-                defaultMessage="Please let your wallet sync with the network"
-              />
-            </h2>
-          ) : (
-            <div id="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>
-                      <div>
-                        <FormattedMessage
-                          id="TrustList.Address"
-                          defaultMessage="Address"
-                        />
-                      </div>
-                    </th>
+                  <th onClick={() => this.props.ToggleSortDir()}>
+                    <div>
+                      {' '}
+                      <FormattedMessage
+                        id="TrustList.InterestRate"
+                        defaultMessage="Stake Reward"
+                      />
+                    </div>
+                  </th>
+                </tr>
+              </thead>
 
-                    <th onClick={() => this.props.ToggleSortDir()}>
-                      <div>
-                        {' '}
-                        <FormattedMessage
-                          id="TrustList.InterestRate"
-                          defaultMessage="Stake Reward"
-                        />
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>{this.buildList()}</tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
+              <tbody>{this.buildList()}</tbody>
+            </table>
+          </div>
+        )}
+      </Panel>
     );
   }
 }
