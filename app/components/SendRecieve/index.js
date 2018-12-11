@@ -1062,13 +1062,7 @@ class SendRecieve extends Component {
             defaultMessage="Send Nexus"
           />
         </h2>
-        <div className="impexpblock">
-          {this.props.connections !== undefined && (
-            <a className="impexp" onClick={() => this.props.OpenMoveModal()}>
-              MOVE NXS BETWEEN ACCOUNTS
-            </a>
-          )}
-        </div>
+
         {/* ADDRESS MODAL */}
         <Modal
           center
@@ -1281,7 +1275,6 @@ class SendRecieve extends Component {
                   </div>
                 </div>
               </div>
-
               <div className="box2">
                 <div id="table-wraper">
                   <div className="label">
@@ -1291,6 +1284,16 @@ class SendRecieve extends Component {
                         defaultMessage="Queue"
                       />
                     </label>
+                  </div>{' '}
+                  <div id="moveButton">
+                    {this.props.connections !== undefined && (
+                      <button
+                        className="button"
+                        onClick={() => this.props.OpenMoveModal()}
+                      >
+                        Move Between Accounts
+                      </button>
+                    )}
                   </div>
                   <table className="table">
                     <thead>
@@ -1361,7 +1364,7 @@ class SendRecieve extends Component {
                     </div>
                   </div>{' '}
                 </div>{' '}
-              </div>
+              </div>{' '}
             </div>
           </div>
         )}

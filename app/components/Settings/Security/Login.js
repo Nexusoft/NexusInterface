@@ -80,15 +80,17 @@ class Login extends Component {
             });
         })
         .catch(e => {
-          if (
-            e.error.message ===
-            'Error: The wallet passphrase entered was incorrect.'
-          ) {
-            let message = e.error.message.replace('Error: ', '');
-            this.props.setErrorMessage(message);
+          pass.value = '';
+          if (e === 'Error: The wallet passphrase entered was incorrect.') {
             this.props.busy(false);
-            pass.value = '';
+            this.props.OpenModal('Incorrect Passsword');
             pass.focus();
+          } else if (e === 'value is type null, expected int') {
+            this.props.busy(false);
+            this.props.OpenModal('FutureDate');
+            pass.focus();
+          } else {
+            this.props.OpenModal(e);
           }
         });
     } else {
@@ -108,17 +110,16 @@ class Login extends Component {
           })
           .catch(e => {
             pass.value = '';
-            if (
-              e.error.message ===
-              'Error: The wallet passphrase entered was incorrect.'
-            ) {
+            if (e === 'Error: The wallet passphrase entered was incorrect.') {
               this.props.busy(false);
               this.props.OpenModal('Incorrect Passsword');
               pass.focus();
-            } else if (e.error.message === 'value is type null, expected int') {
+            } else if (e === 'value is type null, expected int') {
               this.props.busy(false);
               this.props.OpenModal('FutureDate');
               pass.focus();
+            } else {
+              this.props.OpenModal(e);
             }
           });
       } else {
