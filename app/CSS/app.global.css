@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css?family=Lato");
-
 @import "./animations/animate.css";
 
 @import "./base/normalize.css";
@@ -10,6 +8,8 @@
 @import "./base/tables.css";
 @import "./base/text.css";
 
+@import "./fonts/stylesheet.css";
+
 @import "./controls/modal.css";
 @import "./controls/panel.css";
 @import "./controls/progress.css";
@@ -18,7 +18,6 @@
 @import "./controls/tabs.css";
 @import "./controls/tooltip.css";
 
-@import "~font-awesome/css/font-awesome.css";
 @import "~components/Header/style.css";
 @import "~components/Addressbook/style.css";
 @import "~components/BlockExplorer/style.css";
@@ -56,7 +55,7 @@
   --background-main-image: url("~images/background/starrynight.jpg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
 
   /* FONTS */
-  --font-1: "Lato"; /* <-- Sourced Above in First @font-face*/
+  --font-1: "Noto Sans"; /* <-- Sourced Above in First @font-face*/
   --font-2: "Franklin Gothic"; /* <-- Sourced Above in Second @font-face */
 }
 

@@ -6,207 +6,205 @@ Text
 /* Default Settings */
 
 :root {
-	--base-font-size: 1;
-	--line-height:  1.625;
+  --base-font-size: 1;
+  --line-height: 1.625;
 
-	--border-color: var(--color-3);
+  --border-color: var(--color-3);
 
-	--body-font-size: 1;
-	--body-font-color: var(--color-5);
-	--body-font-family: 'Lato', sans-serif;;
-	--body-font-weight: normal;
-	
-	--header-font-color: inherit;
-	--header-font-family: 'Lato', sans-serif;;
-	--header-font-weight: bold;
-	
-	--h1-font-size: 3; /*3.4375;*/
-	--h1-font-color: var(--color-5);
-	--h1-font-family: 'Lato', sans-serif;;
-	--h1-font-weight: 600;
-	
-	--h2-font-size: 2.25;
-	--h2-font-color: var(--color-5);
-	--h2-font-family: 'Lato', sans-serif;;
-	--h2-font-weight: 600;
-	
-	--h3-font-size: 1.75;
-	--h3-font-color: var(--color-5);
-	--h3-font-family: 'Lato', sans-serif;;
-	--h3-font-weight: 600;
-	
-	--h4-font-size: 1.125;
-	--h4-font-color: var(--color-5);
-	--h4-font-family: 'Lato', sans-serif;;
-	--h4-font-weight: 400;
-	
-	--h5-font-size: 1;
-	--h5-font-color: var(--color-5);
-	--h5-font-family: 'Lato', sans-serif;;
-	--h5-font-weight: 400;
-	
-	--h6-font-size: 1;
-	--h6-font-color: var(--color-5);
-	--h6-font-family: 'Lato', sans-serif;;
-	--h6-font-weight: 400;
-	
-	--mono-font-size: 1;
-	--mono-font-color: inherit;
-	--mono-font-family: monospace, sans-serif;
-	--mono-font-weight: normal;
-	
-	--pre-border-width: 1px;
-	--pre-border-style: solid;
-	--pre-border-color: var(--border-color);
-	--pre-border-radius: 0;
-	--pre-background-color: var(--color-3);
-	
-	--code-border-width: 1px;
-	--code-border-style: solid;
-	--code-border-color: var(--border-color);
-	--code-border-radius: 0;
-	--code-background-color: var(--color-3);
+  --body-font-size: 1;
+  --body-font-color: var(--color-5);
+  --body-font-family: "Noto Sans", sans-serif;
+  --body-font-weight: normal;
 
-	--link-color: var(--color-4);
-	--link-text-decoration: none;
-	--link-transition: all 0.1s linear;
-	--link-hover-color: var(--color-5);
+  --header-font-color: inherit;
+  --header-font-family: "Noto Sans", sans-serif;
+  --header-font-weight: bold;
 
-	--quote-border-width: .25em;
-	--quote-border-style: solid;
-	--quote-border-color: var(--color-5);
-	--quote-border-radius: 0;
+  --h1-font-size: 3; /*3.4375;*/
+  --h1-font-color: var(--color-5);
+  --h1-font-family: "Noto Sans", sans-serif;
+  --h1-font-weight: 600;
 
-	--img-border-color: var(--color-5);
-	--hr-border-color: var(--color-5);
+  --h2-font-size: 2.25;
+  --h2-font-color: var(--color-5);
+  --h2-font-family: "Noto Sans", sans-serif;
+  --h2-font-weight: 600;
+
+  --h3-font-size: 1.75;
+  --h3-font-color: var(--color-5);
+  --h3-font-family: "Noto Sans", sans-serif;
+  --h3-font-weight: 600;
+
+  --h4-font-size: 1.125;
+  --h4-font-color: var(--color-5);
+  --h4-font-family: "Noto Sans", sans-serif;
+  --h4-font-weight: 400;
+
+  --h5-font-size: 1;
+  --h5-font-color: var(--color-5);
+  --h5-font-family: "Noto Sans", sans-serif;
+  --h5-font-weight: 400;
+
+  --h6-font-size: 1;
+  --h6-font-color: var(--color-5);
+  --h6-font-family: "Noto Sans", sans-serif;
+  --h6-font-weight: 400;
+
+  --mono-font-size: 1;
+  --mono-font-color: inherit;
+  --mono-font-family: monospace, sans-serif;
+  --mono-font-weight: normal;
+
+  --pre-border-width: 1px;
+  --pre-border-style: solid;
+  --pre-border-color: var(--border-color);
+  --pre-border-radius: 0;
+  --pre-background-color: var(--color-3);
+
+  --code-border-width: 1px;
+  --code-border-style: solid;
+  --code-border-color: var(--border-color);
+  --code-border-radius: 0;
+  --code-background-color: var(--color-3);
+
+  --link-color: var(--color-4);
+  --link-text-decoration: none;
+  --link-transition: all 0.1s linear;
+  --link-hover-color: var(--color-5);
+
+  --quote-border-width: 0.25em;
+  --quote-border-style: solid;
+  --quote-border-color: var(--color-5);
+  --quote-border-radius: 0;
+
+  --img-border-color: var(--color-5);
+  --hr-border-color: var(--color-5);
 }
 
 /* Element Styles */
 
 body {
-	line-height: var(--line-height);
-	font-size: calc(var(--body-font-size) * 1em);
-	font-family: var(--body-font-family);
-	font-weight: var(--body-font-weight);
-	color: var(--body-font-color);
+  line-height: var(--line-height);
+  font-size: calc(var(--body-font-size) * 1em);
+  font-family: var(--body-font-family);
+  font-weight: var(--body-font-weight);
+  color: var(--body-font-color);
 }
 
 p {
-	margin-top: calc(var(--line-height) * 1em);
-	margin-bottom: calc(var(--line-height) * 1em);
-	color: var(--body-font-color);
+  margin-top: calc(var(--line-height) * 1em);
+  margin-bottom: calc(var(--line-height) * 1em);
+  color: var(--body-font-color);
 }
 
 h1 {
-	font-size: calc(var(--h1-font-size) * 1em);
-	/*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
-	line-height: var(--line-height);
-	margin-top: calc(var(--line-height) / var(--h1-font-size) * 1em);
-	margin-bottom: calc(var(--line-height) / var(--h1-font-size) * 1em);
+  font-size: calc(var(--h1-font-size) * 1em);
+  /*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
+  line-height: var(--line-height);
+  margin-top: calc(var(--line-height) / var(--h1-font-size) * 1em);
+  margin-bottom: calc(var(--line-height) / var(--h1-font-size) * 1em);
 
-	font-family: var(--h1-font-family);
-	font-weight: var(--h1-font-weight);
-	color: var(--h1-font-color);
+  font-family: var(--h1-font-family);
+  font-weight: var(--h1-font-weight);
+  color: var(--h1-font-color);
 }
 
 h2 {
-	font-size: calc(var(--h2-font-size) * 1em);
-	/*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
-	line-height: var(--line-height);
-	margin-top: calc(var(--line-height) / var(--h2-font-size) * 1em);
-	margin-bottom: calc(var(--line-height) / var(--h2-font-size) * 1em);
+  font-size: calc(var(--h2-font-size) * 1em);
+  /*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
+  line-height: var(--line-height);
+  margin-top: calc(var(--line-height) / var(--h2-font-size) * 1em);
+  margin-bottom: calc(var(--line-height) / var(--h2-font-size) * 1em);
 
-	font-family: var(--h2-font-family);
-	font-weight: var(--h2-font-weight);
-	color: var(--h2-font-color);
+  font-family: var(--h2-font-family);
+  font-weight: var(--h2-font-weight);
+  color: var(--h2-font-color);
 }
 
 h3 {
-	font-size: calc(var(--h3-font-size) * 1em);
-	/*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
-	line-height: var(--line-height);
-	margin-top: calc(var(--line-height) / var(--h3-font-size) * 1em);
-	margin-bottom: calc(var(--line-height) / var(--h3-font-size) * 1em);
-	
+  font-size: calc(var(--h3-font-size) * 1em);
+  /*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
+  line-height: var(--line-height);
+  margin-top: calc(var(--line-height) / var(--h3-font-size) * 1em);
+  margin-bottom: calc(var(--line-height) / var(--h3-font-size) * 1em);
 
-	font-family: var(--h3-font-family);
-	font-weight: var(--h3-font-weight);
-	color: var(--h3-font-color);
+  font-family: var(--h3-font-family);
+  font-weight: var(--h3-font-weight);
+  color: var(--h3-font-color);
 }
 
 h4 {
-	font-size: calc(var(--h4-font-size) * 1em);
-	/*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
-	line-height: var(--line-height);
-	margin-top: calc(var(--line-height) / var(--h4-font-size) * 1em);
-	margin-bottom: calc(var(--line-height) / var(--h4-font-size) * 1em);
-	
+  font-size: calc(var(--h4-font-size) * 1em);
+  /*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
+  line-height: var(--line-height);
+  margin-top: calc(var(--line-height) / var(--h4-font-size) * 1em);
+  margin-bottom: calc(var(--line-height) / var(--h4-font-size) * 1em);
 
-	font-family: var(--h4-font-family);
-	font-weight: var(--h4-font-weight);
-	color: var(--h4-font-color);
+  font-family: var(--h4-font-family);
+  font-weight: var(--h4-font-weight);
+  color: var(--h4-font-color);
 }
 
 h5 {
-	font-size: calc(var(--h5-font-size) * 1em);
-	/*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
-	line-height: var(--line-height);
-	margin-top: calc(var(--line-height) / var(--h5-font-size) * 1em);
-	margin-bottom: calc(var(--line-height) / var(--h5-font-size) * 1em);
-	
-	font-family: var(--h5-font-family);
-	font-weight: var(--h5-font-weight);
-	color: var(--h5-font-color);
+  font-size: calc(var(--h5-font-size) * 1em);
+  /*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
+  line-height: var(--line-height);
+  margin-top: calc(var(--line-height) / var(--h5-font-size) * 1em);
+  margin-bottom: calc(var(--line-height) / var(--h5-font-size) * 1em);
+
+  font-family: var(--h5-font-family);
+  font-weight: var(--h5-font-weight);
+  color: var(--h5-font-color);
 }
 
 h6 {
-	font-size: calc(var(--h6-font-size) * 1em);
-	/*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
-	line-height: var(--line-height);
-	margin-top: calc(var(--line-height) / var(--h6-font-size) * 1em);
-	margin-bottom: calc(var(--line-height) / var(--h6-font-size) * 1em);
-	
-	font-family: var(--h6-font-family);
-	font-weight: var(--h6-font-weight);
-	color: var(--h6-font-color);
+  font-size: calc(var(--h6-font-size) * 1em);
+  /*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
+  line-height: var(--line-height);
+  margin-top: calc(var(--line-height) / var(--h6-font-size) * 1em);
+  margin-bottom: calc(var(--line-height) / var(--h6-font-size) * 1em);
+
+  font-family: var(--h6-font-family);
+  font-weight: var(--h6-font-weight);
+  color: var(--h6-font-color);
 }
 
 a {
-	color: var(--link-color);
-	text-decoration: var(--link-text-decoration);
-	transition: var(--link-transition);
+  color: var(--link-color);
+  text-decoration: var(--link-text-decoration);
+  transition: var(--link-transition);
 }
 
 a:hover {
-	color: var(--link-hover-color);
+  color: var(--link-hover-color);
 }
 
 ul,
 ol,
 dl {
-	font-size: 1em;
-	/*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
-	line-height: var(--line-height);
-	margin-top: calc(var(--line-height) * 1em);
-	margin-bottom: calc(var(--line-height) * 1em);
+  font-size: 1em;
+  /*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
+  line-height: var(--line-height);
+  margin-top: calc(var(--line-height) * 1em);
+  margin-bottom: calc(var(--line-height) * 1em);
 }
 
 dt {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 dd + dt {
-	margin-top: calc(var(--line-height) * 1em);
+  margin-top: calc(var(--line-height) * 1em);
 }
 
 blockquote {
-	margin-top: calc(var(--line-height) * 1em);
-	margin-bottom: calc(var(--line-height) * 1em);
-	padding-left: 1em;
-	border-left-width: var(--quote-border-width);
-	border-left-style: var(--quote-border-style);
-	border-left-color: var(--quote-border-color);
-	border-radius: var(--quote-border-radius);
+  margin-top: calc(var(--line-height) * 1em);
+  margin-bottom: calc(var(--line-height) * 1em);
+  padding-left: 1em;
+  border-left-width: var(--quote-border-width);
+  border-left-style: var(--quote-border-style);
+  border-left-color: var(--quote-border-color);
+  border-radius: var(--quote-border-radius);
 }
 
 pre,
@@ -214,56 +212,60 @@ code,
 kbd,
 samp,
 tt {
-	font-size: calc(var(--mono-font-size) * 1em);
-	font-family: var(--mono-font-family);
-	font-weight: var(--mono-font-weight);
-	color: var(--mono-font-color);
-	direction: ltr;
-	text-align: left;
-	word-spacing: normal;
-	tab-size: 4;
-	hyphens: none;
-	vertical-align: top; /* if size is less than 1 then use middle due to a bug */
+  font-size: calc(var(--mono-font-size) * 1em);
+  font-family: var(--mono-font-family);
+  font-weight: var(--mono-font-weight);
+  color: var(--mono-font-color);
+  direction: ltr;
+  text-align: left;
+  word-spacing: normal;
+  tab-size: 4;
+  hyphens: none;
+  vertical-align: top; /* if size is less than 1 then use middle due to a bug */
 }
 
 pre {
-	position: relative;
-	overflow: auto;
-	margin-top: calc((var(--line-height) / var(--mono-font-size) * 1em) - 1px); /* subtract 1px border */
-	margin-bottom: calc((var(--line-height) / var(--mono-font-size) * 1em) - 1px); /* subtract 1px border */
-	padding: 0 .5em;
-	/*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
-	line-height: var(--line-height);
-	border-width: var(--pre-border-width);
-	border-style: var(--pre-border-style);
-	border-color: var(--pre-border-color);
-	border-radius: var(--pre-border-radius);
-	background: var(--pre-background-color);
-	white-space: pre;
+  position: relative;
+  overflow: auto;
+  margin-top: calc(
+    (var(--line-height) / var(--mono-font-size) * 1em) - 1px
+  ); /* subtract 1px border */
+  margin-bottom: calc(
+    (var(--line-height) / var(--mono-font-size) * 1em) - 1px
+  ); /* subtract 1px border */
+  padding: 0 0.5em;
+  /*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/
+  line-height: var(--line-height);
+  border-width: var(--pre-border-width);
+  border-style: var(--pre-border-style);
+  border-color: var(--pre-border-color);
+  border-radius: var(--pre-border-radius);
+  background: var(--pre-background-color);
+  white-space: pre;
 }
 
 pre code {
-	padding: 0;
-	border: 0;
-	background: transparent;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 code {
-	padding: .1666em .3333em;
-	border-width: var(--code-border-width);
-	border-style: var(--code-border-style);
-	border-color: var(--code-border-color);
-	border-radius: var(--code-border-radius);
-	background: var(--code-background-color);
+  padding: 0.1666em 0.3333em;
+  border-width: var(--code-border-width);
+  border-style: var(--code-border-style);
+  border-color: var(--code-border-color);
+  border-radius: var(--code-border-radius);
+  background: var(--code-background-color);
 }
 
 img {
-	max-width: 100%;
-	border-color: var(--img-border-color);
+  max-width: 100%;
+  border-color: var(--img-border-color);
 }
 
 hr {
-	border-color: var(--hr-border-color);
+  border-color: var(--hr-border-color);
 }
 
 /*------------------------------------------------------------------
@@ -271,9 +273,9 @@ MEDIA QUERIES
 ------------------------------------------------------------------*/
 
 @media (min-width: 300px) {
-	h2 {
-		text-align: center;
-	}
+  h2 {
+    text-align: center;
+  }
 }
 @media (min-width: 375px) {
 }
@@ -284,9 +286,9 @@ MEDIA QUERIES
 @media (min-width: 800px) {
 }
 @media (min-width: 1024px) {
-	h2 {
-		text-align: left;
-	}
+  h2 {
+    text-align: left;
+  }
 }
 @media (min-width: 1200px) {
 }

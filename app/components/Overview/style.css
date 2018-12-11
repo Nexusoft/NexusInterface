@@ -16,7 +16,7 @@ Table of Contents
   letter-spacing: 1px;
   margin-right: -3px;
   text-shadow: 2px 2px #111111;
-  font-weight: 800;
+  font-weight: bold;
 }
 .h2-nospace {
   font-size: 0.8em;
@@ -62,7 +62,7 @@ II. BALANCE
 ------------------------------------------------------------------*/
 .overviewValue {
   font-size: 1.8em;
-  font-weight: 800;
+  font-weight: bold;
   letter-spacing: 1px;
   margin-right: -1px;
   margin-top: 2px;
@@ -140,7 +140,6 @@ V. RIGHT CONTENT - Trust Weight, Interest Weight, Stake Weight
 .right-stats > div img {
   float: left;
 }
-
 
 /*------------------------------------------------------------------
 MEDIA QUERIES

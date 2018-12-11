@@ -8,7 +8,7 @@ const styles = css`
     color: ${colors.light};
     height: 100vh;
     background-color: #232c39;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Noto Sans', sans-serif;
     font-size: 16px;
     overflow: hidden;
   }
