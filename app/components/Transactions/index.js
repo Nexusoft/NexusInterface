@@ -258,20 +258,25 @@ class Transactions extends Component {
     this.props.SetWalletTransactionArray(incomingData)
     let tempZoomDomain = {
       x: [new Date(), new Date(new Date().getFullYear() + 1, 1, 1, 1, 1, 1, 1)],
+      y: [0,1],
     }
-
     if (incomingData != undefined && incomingData.length > 0) {
       tempZoomDomain = {
         x: [
-          new Date(incomingData[0].time * 1000),
-          new Date((incomingData[incomingData.length - 1].time + 1000) * 1000),
+          new Date ((new Date(incomingData[0].time * 1000).getTime() - 43200000)),
+          new Date ((new Date((incomingData[incomingData.length - 1].time + 1000) * 1000).getTime() + 43200000)),
         ],
+        y:[
+          -1,
+          1,
+        ]
       }
     }
+    //console.log(tempZoomDomain);
     this.setState({
       tableColumns: tabelheaders,
       zoomDomain: tempZoomDomain,
-    })
+    }, () => (this.handleZoom(this.state.zoomDomain)))
     // Just trying to give some space on this not important call
     setTimeout(() => {
       let promisnew = new Promise((resolve, reject) => {
@@ -315,9 +320,8 @@ class Transactions extends Component {
     let chart = document.getElementById('transactions-chart')
     let filters = document.getElementById('transactions-filters')
     let details = document.getElementById('transactions-details')
+    let parent = chart.parentNode;
     if (chart !== null) {
-      let parent = chart.parentNode
-
       let parentHeight =
         parseInt(parent.clientHeight) -
         parseInt(
@@ -346,7 +350,6 @@ class Transactions extends Component {
 
       let mainHeight = 150 // fixed height, should match CSS
       let miniHeight = 50 - 8 // right now this is disabled, if re-enabled this needs to be set properly
-
       this.setState({
         mainChartWidth: chart.clientWidth,
         miniChartWidth: chart.clientWidth,
@@ -1091,8 +1094,15 @@ class Transactions extends Component {
 
   // The event listener for when you zoom in and out
   handleZoom(domain) {
+    //console.log(domain);
     domain.x[0] = new Date(domain.x[0])
     domain.x[1] = new Date(domain.x[1])
+
+    if (domain.x[1].getTime() > this.props.walletitems[this.props.walletitems.length - 1])
+    {
+      //console.log("IM OUT");
+
+    }
     let high = 0
     let low = 0
     this.props.walletitems.forEach(element => {
@@ -1101,7 +1111,7 @@ class Transactions extends Component {
         element.time * 1000 <= domain.x[1]
       ) {
         if (element.amount > high) {
-          high = element.amount + 1
+          high = element.amount + (element.amount * 0.30);
         }
 
         if (element.amount < low) {
@@ -1109,8 +1119,12 @@ class Transactions extends Component {
         }
       }
     })
-    domain.y[0] = low
-    domain.y[1] = high
+    domain.y[0] = low === 0? -0.001:low;
+    
+    domain.y[0] = -high;
+    domain.y[1] = high === 0? 0.00001:high;
+    //console.log(this.state);
+    //console.log(domain);
     this.setState({ zoomDomain: domain })
   }
 
@@ -1499,14 +1513,111 @@ class Transactions extends Component {
     this.props.SetSelectedMyAccount(inAccount)
   }
 
+  returnVictoryChart()
+  {
+    
+    const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
+    return( 
+        <VictoryChart
+        width={this.state.mainChartWidth}
+        height={this.state.mainChartHeight}
+        scale={{ x: 'time' }}
+        style={{ parent: { overflow: 'visible' } }}
+        // theme={VictoryTheme.material}
+        domainPadding={{ x: 90 , y: 30}}
+        // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
+        padding={{ top: 6, bottom: 6, left: 0, right: 0 }}
+        domain = {this.state.zoomDomain}
+        containerComponent={
+          <VictoryZoomVoronoiContainer
+            voronoiPadding = {10}
+            zoomDimension="x"
+            zoomDomain={this.state.zoomDomain}
+            onZoomDomainChange={this.handleZoom.bind(this)}
+          />
+        }
+      >
+        <VictoryBar
+          style={{
+            data: {
+              fill: d => this.returnCorrectFillColor(d),
+              stroke: d => this.returnCorrectStokeColor(d),
+              fillOpacity: 0.85,
+              strokeWidth: 1,
+              fontSize: 3000,
+            },
+          }}
+          labelComponent={
+            <VictoryTooltip
+              orientation={incomingProp => {
+                let internalDifference =
+                  this.state.zoomDomain.x[1].getTime() -
+                  this.state.zoomDomain.x[0].getTime()
+                internalDifference = internalDifference / 2
+                internalDifference =
+                  this.state.zoomDomain.x[0].getTime() +
+                  internalDifference
+                if (incomingProp.a.getTime() <= internalDifference) {
+                  return 'right'
+                } else {
+                  return 'left'
+                }
+              }}
+            />
+          }
+          labels={d => this.returnToolTipLable(d)}
+          data={this.returnChartData()}
+          x="a"
+          y="b"
+        />
+
+        <VictoryAxis
+          // label="Time"
+          independentAxis
+          style={{
+            axis: { stroke: 'var(--border-color)', strokeOpacity: 1 },
+            axisLabel: { fontSize: 16 },
+            grid: {
+              stroke: 'var(--border-color)',
+              strokeOpacity: 0.25,
+            },
+            ticks: {
+              stroke: 'var(--border-color)',
+              strokeOpacity: 0.75,
+              size: 10,
+            },
+            tickLabels: { fontSize: 11, padding: 5, fill: '#bbb' },
+          }}
+        />
+
+        <VictoryAxis
+          // label="Amount"
+          dependentAxis
+          style={{
+            axis: { stroke: 'var(--border-color)', strokeOpacity: 1 },
+            axisLabel: { fontSize: 16 },
+            grid: {
+              stroke: 'var(--border-color)',
+              strokeOpacity: 0.25,
+            },
+            ticks: {
+              stroke: 'var(--border-color)',
+              strokeOpacity: 0.75,
+              size: 10,
+            },
+            tickLabels: { fontSize: 11, padding: 5, fill: '#bbb' },
+          }}
+        />
+      </VictoryChart>
+    )
+  }
+
   // Mandatory React method
   render() {
     const data = this.returnFormatedTableData()
     const columns = this.returnTableColumns()
-    const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom')
     const open = this.state.open
     const pageSize = this.returnDefaultPageSize()
-
     return (
       <div id="transactions" className="animated fadeIn">
         <Modal
@@ -1554,96 +1665,8 @@ class Transactions extends Component {
               >
                 {this.accountChanger()}
               </select>{' '}
-              <div id="transactions-chart">
-                <VictoryChart
-                  width={this.state.mainChartWidth}
-                  height={this.state.mainChartHeight}
-                  scale={{ x: 'time' }}
-                  style={{ parent: { overflow: 'visible' } }}
-                  // theme={VictoryTheme.material}
-                  domainPadding={{ x: 30 }}
-                  // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
-                  padding={{ top: 6, bottom: 6, left: 0, right: 0 }}
-                  containerComponent={
-                    <VictoryZoomVoronoiContainer
-                      zoomDimension="x"
-                      zoomDomain={this.state.zoomDomain}
-                      onZoomDomainChange={this.handleZoom.bind(this)}
-                    />
-                  }
-                >
-                  <VictoryBar
-                    style={{
-                      data: {
-                        fill: d => this.returnCorrectFillColor(d),
-                        stroke: d => this.returnCorrectStokeColor(d),
-                        fillOpacity: 0.85,
-                        strokeWidth: 1,
-                        fontSize: 3000,
-                      },
-                    }}
-                    labelComponent={
-                      <VictoryTooltip
-                        orientation={incomingProp => {
-                          let internalDifference =
-                            this.state.zoomDomain.x[1].getTime() -
-                            this.state.zoomDomain.x[0].getTime()
-                          internalDifference = internalDifference / 2
-                          internalDifference =
-                            this.state.zoomDomain.x[0].getTime() +
-                            internalDifference
-                          if (incomingProp.a.getTime() <= internalDifference) {
-                            return 'right'
-                          } else {
-                            return 'left'
-                          }
-                        }}
-                      />
-                    }
-                    labels={d => this.returnToolTipLable(d)}
-                    data={this.returnChartData()}
-                    x="a"
-                    y="b"
-                  />
-
-                  <VictoryAxis
-                    // label="Time"
-                    independentAxis
-                    style={{
-                      axis: { stroke: 'var(--border-color)', strokeOpacity: 1 },
-                      axisLabel: { fontSize: 16 },
-                      grid: {
-                        stroke: 'var(--border-color)',
-                        strokeOpacity: 0.25,
-                      },
-                      ticks: {
-                        stroke: 'var(--border-color)',
-                        strokeOpacity: 0.75,
-                        size: 10,
-                      },
-                      tickLabels: { fontSize: 11, padding: 5, fill: '#bbb' },
-                    }}
-                  />
-
-                  <VictoryAxis
-                    // label="Amount"
-                    dependentAxis
-                    style={{
-                      axis: { stroke: 'var(--border-color)', strokeOpacity: 1 },
-                      axisLabel: { fontSize: 16 },
-                      grid: {
-                        stroke: 'var(--border-color)',
-                        strokeOpacity: 0.25,
-                      },
-                      ticks: {
-                        stroke: 'var(--border-color)',
-                        strokeOpacity: 0.75,
-                        size: 10,
-                      },
-                      tickLabels: { fontSize: 11, padding: 5, fill: '#bbb' },
-                    }}
-                  />
-                </VictoryChart>
+              <div id="transactions-chart" style = {{display: data.length === 0? "none" : "block" }}>
+               {data.length === 0? null :this.returnVictoryChart()}
               </div>
               <div id="transactions-filters">
                 <div id="filter-address" className="filter-field">

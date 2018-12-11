@@ -2,6 +2,13 @@ textarea {
   resize: vertical;
 }
 
+#moveButton {
+  position: absolute;
+  left: inherit;
+  right: 0;
+  top: 0;
+}
+
 #sendrecieve {
   position: relative;
   height: 100%;

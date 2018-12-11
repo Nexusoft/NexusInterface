@@ -835,12 +835,30 @@ class AddressBook extends Component {
                         false
                       )
                     }
+                    onKeyDown={e => {
+                      if (e.which === 13 || e.which === 9) {
+                        this.props.SaveLabel(
+                          this.props.selected,
+                          add.address,
+                          this.props.prototypeAddressLabel,
+                          false
+                        )
+                      }
+                    }}
                   />
                 ) : (
                   <span
-                    onDoubleClick={() =>
-                      this.props.LabelToggler(add.label, add.address)
-                    }
+                    onDoubleClick={() => {
+                      if (add.label === "'s Address") {
+                        this.props.LabelToggler(
+                          this.props.addressbook[this.props.selected].name +
+                            add.label,
+                          add.address
+                        )
+                      } else {
+                        this.props.LabelToggler(add.label, add.address)
+                      }
+                    }}
                   >
                     {add.label === "'s Address"
                       ? `${
@@ -902,12 +920,30 @@ class AddressBook extends Component {
                         true
                       )
                     }
+                    onKeyDown={e => {
+                      if (e.which === 13 || e.which === 9) {
+                        this.props.SaveLabel(
+                          this.props.selected,
+                          add.address,
+                          this.props.prototypeAddressLabel,
+                          true
+                        )
+                      }
+                    }}
                   />
                 ) : (
                   <span
-                    onDoubleClick={() =>
-                      this.props.LabelToggler(add.label, add.address)
-                    }
+                    onDoubleClick={() => {
+                      if (add.label === 'My Address for ') {
+                        this.props.LabelToggler(
+                          add.label +
+                            this.props.addressbook[this.props.selected].name,
+                          add.address
+                        )
+                      } else {
+                        this.props.LabelToggler(add.label, add.address)
+                      }
+                    }}
                   >
                     {add.label === 'My Address for '
                       ? `${add.label}${
@@ -1167,39 +1203,39 @@ class AddressBook extends Component {
       'Import',
       1
     )
+    console.log(csv().fromFile(path))
+    // csv()
+    //   .fromFile(path)
+    //   .then(jsonObj => {
+    //     for (var i = 0; i < jsonObj.length; i++) {
+    //       // dispatch a new account... (map it )
+    //       var name = jsonObj[i].AccountName
+    //       var phone = jsonObj[i].PhoneNumber
+    //       var notes = jsonObj[i].Notes
+    //       var tz = jsonObj[i].TimeZone
+    //       var label
+    //       var address
+    //       for (var k in jsonObj[i]) {
+    //         var key = k
+    //         var val = jsonObj[i][k]
 
-    csv()
-      .fromFile(path)
-      .then(jsonObj => {
-        for (var i = 0; i < jsonObj.length; i++) {
-          // dispatch a new account... (map it )
-          var name = jsonObj[i].AccountName
-          var phone = jsonObj[i].PhoneNumber
-          var notes = jsonObj[i].Notes
-          var tz = jsonObj[i].TimeZone
-          var label
-          var address
-          for (var k in jsonObj[i]) {
-            var key = k
-            var val = jsonObj[i][k]
-
-            if (key.includes('field')) {
-              var num = key.slice(5, key.length)
-              if (num % 2 == 1) {
-                label = val
-              } else {
-                address = val
-                // (name, address, num, notes, TZ)
-                this.props.AddContact(name, address, phone, notes, tz)
-                // so here is where we have unique address label pairs, we should add this now.
-                // also we don't really know how they had things labeled so we should check to see if they are ours or not.
-                label = ''
-                address = ''
-              }
-            }
-          }
-        }
-      })
+    //         if (key.includes('field')) {
+    //           var num = key.slice(5, key.length)
+    //           if (num % 2 == 1) {
+    //             label = val
+    //           } else {
+    //             address = val
+    //             // (name, address, num, notes, TZ)
+    //             this.props.AddContact(name, address, phone, notes, tz)
+    //             // so here is where we have unique address label pairs, we should add this now.
+    //             // also we don't really know how they had things labeled so we should check to see if they are ours or not.
+    //             label = ''
+    //             address = ''
+    //           }
+    //         }
+    //       }
+    //     }
+    //   })
   }
 
   // Mandatory React method
@@ -1230,7 +1266,7 @@ class AddressBook extends Component {
                 defaultMessage="Export"
               />
             </a>
-            <label htmlFor="importAddressBook">
+            {/* <label htmlFor="importAddressBook">
               <a className="impexp">
                 <FormattedMessage
                   id="AddressBook.Import"
@@ -1242,8 +1278,11 @@ class AddressBook extends Component {
               name="importAddressBook"
               id="importAddressBook"
               type="file"
-              onChange={e => this.importAddressBook(e.target.files[0].path)}
-            />
+              onChange={e => {
+                console.log(e.target.files[0].path)
+                this.importAddressBook(e.target.files[0].path)
+              }}
+            /> */}
           </div>
         )}
 
