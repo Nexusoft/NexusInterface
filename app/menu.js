@@ -46,53 +46,8 @@ export default class MenuBuilder {
 
   buildDarwinTemplate(self) {
     const subMenuAbout = {
-      label: 'File',
+      label: 'Nexus',
       submenu: [
-        {
-          label: 'Back-up Wallet',
-          click: () => {
-            let now = new Date()
-              .toString()
-              .slice(0, 24)
-              .split(' ')
-              .reduce((a, b) => {
-                return a + '_' + b;
-              })
-              .replace(/:/g, '_');
-            let BackupDir = process.env.HOME + '/NexusBackups';
-            if (process.platform === 'win32') {
-              BackupDir = app.getPath('documents') + '/NexusBackups';
-              BackupDir = BackupDir.replace(/\\/g, '/');
-            }
-
-            let ifBackupDirExists = fs.existsSync(BackupDir);
-            if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
-              fs.mkdirSync(BackupDir);
-            }
-            RPC.PROMISE('backupwallet', [
-              BackupDir + '/NexusBackup_' + now + '.dat',
-            ]);
-          },
-        },
-        {
-          label: 'View Backups',
-          click() {
-            let BackupDir = process.env.HOME + '/NexusBackups';
-
-            if (process.platform === 'win32') {
-              BackupDir = process.env.USERPROFILE + '/NexusBackups';
-              BackupDir = BackupDir.replace(/\\/g, '/');
-            }
-            let ifBackupDirExists = fs.existsSync(BackupDir);
-            if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
-              fs.mkdirSync(BackupDir);
-            }
-            let didopen = shell.openItem(BackupDir);
-          },
-        },
-        {
-          type: 'separator',
-        },
         {
           label: 'Start Daemon',
           click() {
@@ -138,6 +93,52 @@ export default class MenuBuilder {
                 remote.getCurrentWindow().close();
               });
             }
+          },
+        },
+      ],
+    };
+    const subMenuFile = {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Back-up Wallet',
+          click: () => {
+            let now = new Date()
+              .toString()
+              .slice(0, 24)
+              .split(' ')
+              .reduce((a, b) => {
+                return a + '_' + b;
+              })
+              .replace(/:/g, '_');
+            let BackupDir = process.env.HOME + '/NexusBackups';
+            if (process.platform === 'win32') {
+              BackupDir = app.getPath('documents') + '/NexusBackups';
+              BackupDir = BackupDir.replace(/\\/g, '/');
+            }
+            let ifBackupDirExists = fs.existsSync(BackupDir);
+            if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+              fs.mkdirSync(BackupDir);
+            }
+            RPC.PROMISE('backupwallet', [
+              BackupDir + '/NexusBackup_' + now + '.dat',
+            ]);
+          },
+        },
+        {
+          label: 'View Backups',
+          click() {
+            let BackupDir = process.env.HOME + '/NexusBackups';
+
+            if (process.platform === 'win32') {
+              BackupDir = process.env.USERPROFILE + '/NexusBackups';
+              BackupDir = BackupDir.replace(/\\/g, '/');
+            }
+            let ifBackupDirExists = fs.existsSync(BackupDir);
+            if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+              fs.mkdirSync(BackupDir);
+            }
+            let didopen = shell.openItem(BackupDir);
           },
         },
       ],
@@ -219,45 +220,24 @@ export default class MenuBuilder {
 
     const subMenuWindow = {
       label: 'View',
-      submenu:
-        process.env.NODE_ENV === 'development'
-          ? [
-              {
-                label: 'Reload',
-                accelerator: 'Command+R',
-                click: () => {
-                  this.mainWindow.webContents.reload();
-                },
-              },
-
-              {
-                label: 'Toggle Full Screen',
-                accelerator: 'F11',
-                click: () => {
-                  remote
-                    .getCurrentWindow()
-                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
-                },
-              },
-            ]
-          : [
-              {
-                label: 'Toggle Full Screen',
-                accelerator: 'F11',
-                click: () => {
-                  remote
-                    .getCurrentWindow()
-                    .setFullScreen(!remote.getCurrentWindow().isFullScreen());
-                },
-              },
-              {
-                label: 'Toggle Developer Tools',
-                accelerator: 'Alt+Command+I',
-                click: () => {
-                  this.mainWindow.toggleDevTools();
-                },
-              },
-            ],
+      submenu: [
+        {
+          label: 'Toggle Full Screen',
+          accelerator: 'F11',
+          click: () => {
+            remote
+              .getCurrentWindow()
+              .setFullScreen(!remote.getCurrentWindow().isFullScreen());
+          },
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: 'Alt+Command+I',
+          click: () => {
+            this.mainWindow.toggleDevTools();
+          },
+        },
+      ],
     };
     const subMenuHelp = {
       label: 'Help',
@@ -283,7 +263,14 @@ export default class MenuBuilder {
       ],
     };
 
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+    return [
+      subMenuAbout,
+      subMenuFile,
+      subMenuEdit,
+      subMenuView,
+      subMenuWindow,
+      subMenuHelp,
+    ];
   }
 
   buildDefaultTemplate(self) {
@@ -307,7 +294,6 @@ export default class MenuBuilder {
                 BackupDir = process.env.USERPROFILE + '/NexusBackups';
                 BackupDir = BackupDir.replace(/\\/g, '/');
               }
-
               let ifBackupDirExists = fs.existsSync(BackupDir);
               if (
                 ifBackupDirExists == undefined ||

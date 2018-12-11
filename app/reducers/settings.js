@@ -59,7 +59,7 @@ const initialState = {
     saveSettings: false,
     styleChangeFlag: false,
     selectedColorProp: 'MC1',
-    minimumconfirmations: 20,
+    minimumconfirmations: 3,
   },
 
   messages: initLanguage,

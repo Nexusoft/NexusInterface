@@ -186,7 +186,7 @@ class SettingsApp extends Component {
     if (settings.minimumconfirmations !== undefined) {
       minConf.value = settings.minimumconfirmations;
     } else {
-      minConf.value = 20; //Default
+      minConf.value = 3; //Default
     }
   }
 

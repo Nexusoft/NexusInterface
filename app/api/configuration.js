@@ -258,32 +258,41 @@ configuration.BootstrapRecentDatabase = async function(self) {
           path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
           (stat, things) => console.log(stat, things)
         );
-        let recentContents = fs.readdirSync(path.join(datadir, 'recent'));
+        try {
+          let recentContents = fs.readdirSync(path.join(datadir, 'recent'));
 
-        for (let i = 0; i < recentContents.length; i++) {
-          const element = recentContents[i];
-          if (
-            fs.statSync(path.join(datadir, 'recent', element)).isDirectory()
-          ) {
-            let newcontents = fs.readdirSync(
-              path.join(datadir, 'recent', element)
-            );
+          for (let i = 0; i < recentContents.length; i++) {
+            const element = recentContents[i];
+            if (
+              fs.statSync(path.join(datadir, 'recent', element)).isDirectory()
+            ) {
+              let newcontents = fs.readdirSync(
+                path.join(datadir, 'recent', element)
+              );
 
-            for (let i = 0; i < newcontents.length; i++) {
-              const deeperEle = newcontents[i];
+              for (let i = 0; i < newcontents.length; i++) {
+                const deeperEle = newcontents[i];
+                moveFile.sync(
+                  path.join(datadir, 'recent', element, deeperEle),
+                  path.join(datadir, element, deeperEle)
+                );
+              }
+            } else {
               moveFile.sync(
-                path.join(datadir, 'recent', element, deeperEle),
-                path.join(datadir, element, deeperEle)
+                path.join(datadir, 'recent', element),
+                path.join(datadir, element)
               );
             }
-          } else {
-            moveFile.sync(
-              path.join(datadir, 'recent', element),
-              path.join(datadir, element)
-            );
           }
+        } catch (error) {
+          console.log('Direct bootstrap');
         }
-
+        if (err) {
+          self.props.OpenModal(result.error);
+          setTimeout(() => {
+            self.props.CloseModal();
+          }, 3000);
+        }
         console.log(err, result);
         electron.remote.getGlobal('core').start();
       });
