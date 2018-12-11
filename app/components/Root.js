@@ -26,7 +26,7 @@ import BlockExplorer from './BlockExplorer';
 import Settings from './Settings';
 import Terminal from './Terminal';
 import StyleGuide from './StyleGuide';
-import List from './List';
+import TrustList from './TrustList';
 import About from './About';
 import Exchange from './Exchange';
 import App from './App';
@@ -79,7 +79,7 @@ export default class Root extends Component {
                   <Route path="/Terminal" component={Terminal} />
                   <Route exact path="/StyleGuide" component={StyleGuide} />
                   <Route path="/Exchange" component={Exchange} />
-                  <Route exact path="/List" component={List} />
+                  <Route exact path="/List" component={TrustList} />
                   <Route exact path="/About" component={About} />
                 </Switch>
               </Main>
