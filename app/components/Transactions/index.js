@@ -332,8 +332,8 @@ class Transactions extends Component {
     let chart = document.getElementById('transactions-chart');
     let filters = document.getElementById('transactions-filters');
     let details = document.getElementById('transactions-details');
-    let parent = chart.parentNode;
-    if (chart !== null) {
+    if (chart) {
+      let parent = chart.parentNode;
       let parentHeight =
         parseInt(parent.clientHeight) -
         parseInt(
