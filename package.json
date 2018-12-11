@@ -240,6 +240,7 @@
     "color": "^3.1.0",
     "connected-react-router": "^5.0.1",
     "copy-to-clipboard": "^3.0.8",
+    "core-js": "^2.6.0",
     "csvtojson": "^2.0.8",
     "devtron": "^1.4.0",
     "download": "^7.1.0",

@@ -77,11 +77,11 @@ const mapDispatchToProps = dispatch => ({
 
 class SettingsStyle extends Component {
   // Class Methods
-  constructor() {
-    super();
+  // constructor() {
+  //   super();
 
-    this.updateWallpaper = this.updateWallpaper.bind(this);
-  }
+  //   this.updateWallpaper = this.updateWallpaper.bind(this);
+  // }
 
   updateWallpaper(event) {
     let el = event.target;

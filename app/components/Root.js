@@ -21,7 +21,7 @@ import Navigation from './Navigation';
 import SendRecieve from './SendRecieve';
 import Transactions from './Transactions';
 import Market from './Market';
-import AddressBook from './AddressBook';
+import AddressBook from './Addressbook';
 import BlockExplorer from './BlockExplorer';
 import Settings from './Settings';
 import Terminal from './Terminal';
