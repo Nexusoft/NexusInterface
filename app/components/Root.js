@@ -22,7 +22,7 @@ import Footer from './Footer';
 import SendRecieve from './SendRecieve';
 import Transactions from './Transactions';
 import Market from './Market';
-import AddressBook from './Addressbook';
+import AddressBook from './AddressBook';
 import BlockExplorer from './BlockExplorer';
 import Settings from './Settings';
 import Terminal from './Terminal';
