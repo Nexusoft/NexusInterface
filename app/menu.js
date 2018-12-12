@@ -205,7 +205,7 @@ export default class MenuBuilder {
               !GetSettings().manualDaemon
             ) {
               self.props.OpenBootstrapModal(true);
-              configuration.BootstrapRecentDatabase(self);
+              configuration.BootstrapRecentDatabase(self.props);
             } else {
               self.props.OpenModal('Please let the daemon start.');
               setTimeout(() => {
@@ -406,7 +406,7 @@ export default class MenuBuilder {
                 !GetSettings().manualDaemon
               ) {
                 self.props.OpenBootstrapModal(true);
-                configuration.BootstrapRecentDatabase(self);
+                configuration.BootstrapRecentDatabase(self.props);
               } else {
                 self.props.OpenModal('Please let the daemon start.');
                 setTimeout(() => {

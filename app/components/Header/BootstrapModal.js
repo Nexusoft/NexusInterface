@@ -30,7 +30,7 @@ const Prompting = props => (
       className="button"
       onClick={() => {
         props.OpenBootstrapModal(true);
-        configuration.BootstrapRecentDatabase(this);
+        configuration.BootstrapRecentDatabase(props);
         props.setPercentDownloaded(0.001);
       }}
     >
