@@ -6,7 +6,6 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './style.css';
 import { connect } from 'react-redux';
 import Modal from 'react-responsive-modal';
 import * as TYPE from 'actions/actiontypes';
@@ -16,55 +15,60 @@ import Request from 'request';
 import { FormattedMessage } from 'react-intl';
 import fs from 'fs';
 import path from 'path';
+import styled from '@emotion/styled';
+import { keyframes } from '@emotion/core';
+import { intlReducer } from 'react-intl-redux';
 
-// Internal Dependencies
+// Internal Global Dependencies
+import Icon from 'components/common/Icon';
 import WEBGL from 'scripts/WebGLCheck.js';
 import { GetSettings, SaveSettings } from 'api/settings';
-import NetworkGlobe from './NetworkGlobe';
 import ContextMenuBuilder from 'contextmenu';
 import * as helpers from 'scripts/helper.js';
 import configuration from 'api/configuration';
+import { colors, timing, consts } from 'styles';
+
+// Internal Local Dependencies
+import NetworkGlobe from './NetworkGlobe';
 
 // Images
-import USD from 'images/USD.svg';
-import transactionsArrows from 'images/transactions-arrows.svg';
-import marketicon from 'images/marketstats-white.svg';
-import supplyicon from 'images/supply.svg';
-import hours24icon from 'images/24hr.svg';
-import nxsStake from 'images/nxs-staking.svg';
-import interestRate from 'images/nxs-chart.png';
+import usdIcon from 'images/USD.sprite.svg';
+import transactionsArrowsIcon from 'images/transactions-arrows.sprite.svg';
+import marketIcon from 'images/marketstats-white.sprite.svg';
+import supplyIcon from 'images/supply.sprite.svg';
+import hours24Icon from 'images/24hr.sprite.svg';
+import nxsStakeIcon from 'images/nxs-staking.sprite.svg';
 
-import Connections0 from 'images/Connections0.svg';
-import Connections4 from 'images/Connections4.svg';
-import Connections8 from 'images/Connections8.svg';
-import Connections12 from 'images/Connections12.svg';
-import Connections14 from 'images/Connections14.svg';
-import Connections16 from 'images/Connections16.svg';
-import blockweight0 from 'images/BlockWeight-0.svg';
-import blockweight1 from 'images/BlockWeight-1.svg';
-import blockweight2 from 'images/BlockWeight-2.svg';
-import blockweight3 from 'images/BlockWeight-3.svg';
-import blockweight4 from 'images/BlockWeight-4.svg';
-import blockweight5 from 'images/BlockWeight-5.svg';
-import blockweight6 from 'images/BlockWeight-6.svg';
-import blockweight7 from 'images/BlockWeight-7.svg';
-import blockweight8 from 'images/BlockWeight-8.svg';
-import blockweight9 from 'images/BlockWeight-9.svg';
-import trust00 from 'images/trust00.svg';
-import trust10 from 'images/trust00.svg';
-import trust20 from 'images/trust00.svg';
-import trust30 from 'images/trust00.svg';
-import trust40 from 'images/trust00.svg';
-import trust50 from 'images/trust00.svg';
-import trust60 from 'images/trust00.svg';
-import trust70 from 'images/trust00.svg';
-import trust80 from 'images/trust00.svg';
-import trust90 from 'images/trust00.svg';
-import trust100 from 'images/trust00.svg';
-import { intlReducer } from 'react-intl-redux';
-import nxsblocks from 'images/blockexplorer-invert-white.svg';
-import interesticon from 'images/interest.svg';
-import stakeicon from 'images/staking-white.svg';
+import Connections0 from 'images/Connections0.sprite.svg';
+import Connections4 from 'images/Connections4.sprite.svg';
+import Connections8 from 'images/Connections8.sprite.svg';
+import Connections12 from 'images/Connections12.sprite.svg';
+import Connections14 from 'images/Connections14.sprite.svg';
+import Connections16 from 'images/Connections16.sprite.svg';
+import blockweight0 from 'images/BlockWeight-0.sprite.svg';
+import blockweight1 from 'images/BlockWeight-1.sprite.svg';
+import blockweight2 from 'images/BlockWeight-2.sprite.svg';
+import blockweight3 from 'images/BlockWeight-3.sprite.svg';
+import blockweight4 from 'images/BlockWeight-4.sprite.svg';
+import blockweight5 from 'images/BlockWeight-5.sprite.svg';
+import blockweight6 from 'images/BlockWeight-6.sprite.svg';
+import blockweight7 from 'images/BlockWeight-7.sprite.svg';
+import blockweight8 from 'images/BlockWeight-8.sprite.svg';
+import blockweight9 from 'images/BlockWeight-9.sprite.svg';
+import trust00 from 'images/trust00.sprite.svg';
+import trust10 from 'images/trust00.sprite.svg';
+import trust20 from 'images/trust00.sprite.svg';
+import trust30 from 'images/trust00.sprite.svg';
+import trust40 from 'images/trust00.sprite.svg';
+import trust50 from 'images/trust00.sprite.svg';
+import trust60 from 'images/trust00.sprite.svg';
+import trust70 from 'images/trust00.sprite.svg';
+import trust80 from 'images/trust00.sprite.svg';
+import trust90 from 'images/trust00.sprite.svg';
+import trust100 from 'images/trust00.sprite.svg';
+import nxsblocksIcon from 'images/blockexplorer-invert-white.sprite.svg';
+import interestIcon from 'images/interest.sprite.svg';
+import stakeIcon from 'images/staking-white.sprite.svg';
 import maxmindLogo from 'images/maxmind-header-logo-compact.svg';
 
 // React-Redux mandatory methods
@@ -86,6 +90,103 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING }),
   setWebGLEnabled: isEnabled =>
     dispatch({ type: TYPE.SET_WEBGL_ENABLED, payload: isEnabled }),
+});
+
+const OverviewPage = styled.div({
+  width: '100%',
+  position: 'relative',
+});
+
+const slideRight = keyframes`
+  0% {
+    opacity: 0;
+    transform: translate(-100px,-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0,-50%);
+  }
+`;
+
+const slideLeft = keyframes`
+  0% {
+    opacity: 0;
+    transform: translate(100px,-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0,-50%);
+  }
+`;
+
+const Stats = styled.div(
+  {
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    whiteSpace: 'nowrap',
+  },
+  ({ left }) =>
+    left && {
+      textAlign: 'right',
+      right: 'calc(66% + 120px)',
+      animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideRight}`,
+      [Stat]: {
+        justifyContent: 'flex-end',
+      },
+      [StatIcon]: {
+        marginLeft: 13,
+      },
+    },
+  ({ right }) =>
+    right && {
+      textAlign: 'left',
+      left: 'calc(66% + 120px)',
+      animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideLeft}`,
+      [Stat]: {
+        justifyContent: 'flex-start',
+      },
+      [StatIcon]: {
+        marginRight: 15,
+      },
+    }
+);
+
+const Stat = styled.div({
+  margin: '1.7em 0',
+  display: 'flex',
+  alignItems: 'center',
+  textShadow: `0 0 8px rgba(0,0,0,.7)`,
+  color: colors.light,
+});
+
+const StatLabel = styled.div({
+  fontWeight: 'bold',
+  letterSpacing: 1,
+  color: colors.primary,
+});
+
+const StatValue = styled.div({
+  fontSize: '1.8em',
+});
+
+const StatIcon = styled(Icon)({
+  width: 38,
+  height: 38,
+  color: colors.primary,
+});
+
+const MaxmindCopyright = styled.div({
+  position: 'fixed',
+  left: 6,
+  bottom: 3,
+  opacity: 0.4,
+  color: colors.primary,
+});
+
+const MaxmindLogo = styled.img({
+  display: 'block',
+  width: 181,
 });
 
 class Overview extends Component {
@@ -382,37 +483,12 @@ class Overview extends Component {
     //if (testinglines == true)
   }
 
-  returnIfGlobeEnabled() {
-    if (
-      this.props.settings.acceptedagreement == false ||
-      this.props.settings.renderGlobe == false ||
-      this.props.webGLEnabled == false
-    ) {
-      return null;
-    } else {
-      return (
-        <>
-          <NetworkGlobe
-            handleOnLineRender={e => (this.redrawCurves = e)}
-            handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
-            handleOnAddData={e => (this.reDrawEverything = e)}
-            handleRemoveAllPoints={e => (this.removeAllPoints = e)}
-            pillarColor={this.props.settings.customStyling.globePillarColorRGB}
-            archColor={this.props.settings.customStyling.globeArchColorRGB}
-            globeColor={this.props.settings.customStyling.globeMultiColorRGB}
-          />
-          <div className="maxmindCopyright">
-            <img
-              id="maxmindCopyLogo"
-              src={maxmindLogo}
-              width="100px"
-              height="100px"
-            />
-            Globe includes GeoLite2
-          </div>
-        </>
-      );
-    }
+  isGlobeEnabled() {
+    return (
+      this.props.settings.acceptedagreement &&
+      this.props.settings.renderGlobe &&
+      this.props.webGLEnabled
+    );
   }
 
   numberWithCommas(x) {
@@ -503,8 +579,9 @@ class Overview extends Component {
 
   // Mandatory React method
   render() {
+    const { connections, balance, stake, displayNXSvalues } = this.props;
     return (
-      <div id="overviewPage">
+      <OverviewPage>
         <Modal
           key="agreement-modal"
           open={!this.props.settings.acceptedagreement}
@@ -570,233 +647,224 @@ class Overview extends Component {
             <FormattedMessage id="overview.Ignore" defaultMessage="Ignore" />{' '}
           </button>
         </Modal>
-        <div className="left-stats">
-          {this.props.connections === undefined ? null : (
-            <div className="left-top-stats">
-              {this.props.stake > 0 ? (
-                <div
-                  id="nxs-balance-info"
-                  className="animated fadeInDown delay-1s"
-                >
-                  <div className="h2">
-                    Balance and Stake <span className="h2-nospace">(NXS)</span>
-                  </div>
-                  <img src={nxsStake} />
-                  <div className="overviewValue">
-                    {this.props.balance + this.props.stake}
-                  </div>
-                </div>
-              ) : (
-                <div
-                  id="nxs-balance-info"
-                  className="animated fadeInDown delay-1s"
-                >
-                  <div className="h2">
-                    <FormattedMessage
-                      id="overview.Balance"
-                      defaultMessage="Balance"
-                    />
-                    <span className="h2-nospace">(NXS)</span>
-                  </div>
-                  <img src={nxsStake} />
-                  <div className="overviewValue">{this.props.balance}</div>
-                </div>
-              )}
 
-              <div
-                id="nxs-currency-value-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
+        {!!this.isGlobeEnabled() && (
+          <>
+            <NetworkGlobe
+              handleOnLineRender={e => (this.redrawCurves = e)}
+              handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+              handleOnAddData={e => (this.reDrawEverything = e)}
+              handleRemoveAllPoints={e => (this.removeAllPoints = e)}
+              pillarColor={
+                this.props.settings.customStyling.globePillarColorRGB
+              }
+              archColor={this.props.settings.customStyling.globeArchColorRGB}
+              globeColor={this.props.settings.customStyling.globeMultiColorRGB}
+            />
+            <MaxmindCopyright>
+              <MaxmindLogo src={maxmindLogo} />
+              Globe includes GeoLite2
+            </MaxmindCopyright>
+          </>
+        )}
+
+        <Stats left>
+          <Stat>
+            <div>
+              <StatLabel>
+                {stake > 0 ? (
+                  <span>Balance and Stake</span>
+                ) : (
                   <FormattedMessage
                     id="overview.Balance"
                     defaultMessage="Balance"
-                  />{' '}
-                  <span className="h2-nospace">
-                    ({this.props.settings.fiatCurrency})
-                  </span>
-                </div>
-                <img src={USD} />
-                <div className="overviewValue">{this.calculateUSDvalue()}</div>
-              </div>
-              <div
-                id="nxs-transactions-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.Transactions"
-                    defaultMessage="Transactions"
                   />
-                </div>
-                <img src={transactionsArrows} />
-                <div className="overviewValue">{this.props.txtotal}</div>
-              </div>
+                )}{' '}
+                (NXS)
+              </StatLabel>
+              <StatValue>
+                {!!connections ? balance + (stake || 0) : '?'}
+              </StatValue>
             </div>
-          )}
+            <StatIcon icon={nxsStakeIcon} />
+          </Stat>
 
-          {this.props.displayNXSvalues[0] === undefined ? null : (
-            <div className="left-bottom-stats">
-              <div
-                id="nxs-market-price-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.MarketPrice"
-                    defaultMessage="Market Price"
-                  />
-                  <span className="h2-nospace">
-                    ({this.props.settings.fiatCurrency})
-                  </span>
-                </div>
-                <img src={marketicon} />
-                <div className="overviewValue">
-                  {this.marketPriceFormatter()}
-                </div>
-              </div>
-
-              <div
-                id="nxs-market-price-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.MarketCap"
-                    defaultMessage="Market Cap"
-                  />{' '}
-                  <span className="h2-nospace">
-                    ({this.props.settings.fiatCurrency})
-                  </span>
-                </div>
-                <img src={supplyicon} />
-                <div className="overviewValue">{this.marketCapFormatter()}</div>
-              </div>
-
-              <div
-                id="nxs-market-price-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.24hrChange"
-                    defaultMessage="24hr Change"
-                  />{' '}
-                  <span className="h2-nospace">
-                    ({this.props.settings.fiatCurrency} %)
-                  </span>
-                </div>
-                <img src={hours24icon} />
-                <div className="overviewValue">
-                  {this.pctChange24hrFormatter()}%
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        {this.returnIfGlobeEnabled()}{' '}
-        <div className="right-stats">
-          {' '}
-          {this.props.connections === undefined ? null : (
+          <Stat>
             <div>
-              <div
-                id="nxs-connections-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.Connections"
-                    defaultMessage="Connections"
-                  />
-                </div>
-                <img
-                  id="nxs-getinfo-connections-image"
-                  src={this.connectionsImage()}
-                />
-                <div className="overviewValue">{this.props.connections}</div>
-              </div>
-              <div
-                id="nxs-interestweight-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.InterestRate"
-                    defaultMessage="Stake Reward"
-                  />
-                </div>
-                <img src={interesticon} />
-                <div className="overviewValue">
-                  {this.props.interestweight + '%'}
-                </div>
-              </div>
-              <div
-                id="nxs-blocks-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.BlockCount"
-                    defaultMessage="Block Count"
-                  />
-                </div>
-                <img src={nxsblocks} />
-
-                <div className="overviewValue">
-                  {this.numberWithCommas(this.props.blocks)}
-                </div>
-                <span className="tooltip left" style={{ whiteSpace: 'nowrap' }}>
-                  {this.BlockRapper()}
-                </span>
-              </div>
-              <div
-                id="nxs-blockweight-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.BlockWeightt"
-                    defaultMessage="Block Weight"
-                  />
-                </div>
-                <img
-                  src={this.blockWeightImage()}
-                  id="nxs-getinfo-blockweight-image"
-                />
-                <div className="overviewValue">{this.props.blockweight}</div>
-              </div>
-
-              <div
-                id="nxs-trustweight-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.TrustWeight"
-                    defaultMessage="Trust Weight"
-                  />
-                </div>
-                <img id="nxs-getinfo-trustweight-image" src={this.trustImg()} />
-                <div className="overviewValue">{this.props.trustweight}</div>
-              </div>
-
-              <div
-                id="nxs-stakeweight-info"
-                className="animated fadeInDown delay-1s"
-              >
-                <div className="h2">
-                  <FormattedMessage
-                    id="overview.StakeWeight"
-                    defaultMessage="Stake Weight"
-                  />
-                </div>
-                <img src={stakeicon} />
-                <div className="overviewValue">{this.props.stakeweight}</div>
-              </div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.Balance"
+                  defaultMessage="Balance"
+                />{' '}
+                ({this.props.settings.fiatCurrency})
+              </StatLabel>
+              <StatValue>
+                {!!connections ? this.calculateUSDvalue() : '?'}
+              </StatValue>
             </div>
-          )}
-        </div>
-      </div>
+            <StatIcon icon={usdIcon} />
+          </Stat>
+
+          <Stat>
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.Transactions"
+                  defaultMessage="Transactions"
+                />
+              </StatLabel>
+              <StatValue>{!!connections ? this.props.txtotal : '?'}</StatValue>
+            </div>
+            <StatIcon icon={transactionsArrowsIcon} />
+          </Stat>
+
+          <Stat>
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.MarketPrice"
+                  defaultMessage="Market Price"
+                />{' '}
+                ({this.props.settings.fiatCurrency})
+              </StatLabel>
+              <StatValue>
+                {!!displayNXSvalues[0] ? this.marketPriceFormatter() : '?'}
+              </StatValue>
+            </div>
+            <StatIcon icon={marketIcon} />
+          </Stat>
+
+          <Stat>
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.MarketCap"
+                  defaultMessage="Market Cap"
+                />{' '}
+                ({this.props.settings.fiatCurrency})
+              </StatLabel>
+              <StatValue>
+                {!!displayNXSvalues[0] ? this.marketCapFormatter() : '?'}
+              </StatValue>
+            </div>
+            <StatIcon icon={supplyIcon} />
+          </Stat>
+
+          <Stat>
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.24hrChange"
+                  defaultMessage="24hr Change"
+                />{' '}
+                ({this.props.settings.fiatCurrency} %)
+              </StatLabel>
+              <StatValue>
+                {!!displayNXSvalues[0]
+                  ? this.pctChange24hrFormatter() + '%'
+                  : '?'}
+              </StatValue>
+            </div>
+            <StatIcon icon={hours24Icon} />
+          </Stat>
+        </Stats>
+
+        <Stats right>
+          <Stat>
+            <StatIcon icon={this.connectionsImage()} />
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.Connections"
+                  defaultMessage="Connections"
+                />
+              </StatLabel>
+              <StatValue>
+                {!!connections ? this.props.connections : '?'}
+              </StatValue>
+            </div>
+          </Stat>
+
+          <Stat>
+            <StatIcon icon={interestIcon} />
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.InterestRate"
+                  defaultMessage="Stake Reward"
+                />
+              </StatLabel>
+              <StatValue>
+                {!!connections ? this.props.interestweight + '%' : '?'}
+              </StatValue>
+            </div>
+          </Stat>
+
+          <Stat className="relative">
+            <StatIcon icon={nxsblocksIcon} />
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.BlockCount"
+                  defaultMessage="Block Count"
+                />
+              </StatLabel>
+
+              <StatValue>
+                {!!connections ? this.numberWithCommas(this.props.blocks) : '?'}
+              </StatValue>
+            </div>
+            <span className="tooltip left" style={{ whiteSpace: 'nowrap' }}>
+              {this.BlockRapper()}
+            </span>
+          </Stat>
+
+          <Stat>
+            <StatIcon icon={this.blockWeightImage()} />
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.BlockWeightt"
+                  defaultMessage="Block Weight"
+                />
+              </StatLabel>
+              <StatValue>
+                {!!connections ? this.props.blockweight : '?'}
+              </StatValue>
+            </div>
+          </Stat>
+
+          <Stat>
+            <StatIcon icon={this.trustImg()} />
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.TrustWeight"
+                  defaultMessage="Trust Weight"
+                />
+              </StatLabel>
+              <StatValue>
+                {!!connections ? this.props.trustweight : '?'}
+              </StatValue>
+            </div>
+          </Stat>
+
+          <Stat>
+            <StatIcon icon={stakeIcon} />
+            <div>
+              <StatLabel>
+                <FormattedMessage
+                  id="overview.StakeWeight"
+                  defaultMessage="Stake Weight"
+                />
+              </StatLabel>
+              <StatValue>
+                {!!connections ? this.props.stakeweight : '?'}
+              </StatValue>
+            </div>
+          </Stat>
+        </Stats>
+      </OverviewPage>
     );
   }
 }

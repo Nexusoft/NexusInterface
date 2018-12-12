@@ -7,19 +7,28 @@
 import React, { Component } from 'react';
 import { remote } from 'electron';
 import path from 'path';
+import styled from '@emotion/styled';
 
 import maxmind from 'maxmind';
 import Request from 'request';
 import * as THREE from 'three';
 
 // Internal Dependencies
-import styles from './style.css';
 import DAT from 'scripts/globe';
 import * as RPC from 'scripts/rpc';
 import configuration from 'api/configuration';
 
 var glb;
 var initializedWithData = false;
+
+const GlobeWrapper = styled.div({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  overflow: 'hidden',
+});
 
 export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
@@ -197,9 +206,9 @@ export default class NetworkGlobe extends Component {
   // Mandatory React method
   render() {
     return (
-      <div id="nxs-earth" className="earth">
+      <GlobeWrapper>
         <div ref={element => (this.threeRootElement = element)} />
-      </div>
+      </GlobeWrapper>
     );
   }
 }

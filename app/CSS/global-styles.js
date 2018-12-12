@@ -21,6 +21,10 @@ const styles = css`
     list-style: none;
   }
 
+  canvas {
+    overflow: hidden;
+  }
+
   /* Customize Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
