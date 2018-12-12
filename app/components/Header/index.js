@@ -503,12 +503,12 @@ class Header extends Component {
           </h2>
         )
         break
-      case 'This is an address regiestered to this wallet':
+      case 'This is an address registered to this wallet':
         return (
           <h2>
             <FormattedMessage
-              id="Alert.regiesteredToThis"
-              defaultMessage="This is an address regiestered to this wallet"
+              id="Alert.registeredToThis"
+              defaultMessage="This is an address registered to this wallet"
             />
           </h2>
         )

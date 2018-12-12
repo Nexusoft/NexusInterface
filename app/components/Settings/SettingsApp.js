@@ -541,7 +541,7 @@ class SettingsApp extends Component {
           </div>
         </Modal>
         <form className="aligned">
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="autostart">
               <FormattedMessage
                 id="Settings.StartUp"
@@ -562,18 +562,18 @@ class SettingsApp extends Component {
                 />
               )}
             </FormattedMessage>
-          </div>
+          </div> */}
 
           <div className="field">
             <label htmlFor="minimizeToTray">
               <FormattedMessage
-                id="Settings.MinimizeTray"
-                defaultMessage="Minimize to tray"
+                id="Settings.MinimizeClose"
+                defaultMessage="Minimize On Close"
               />
             </label>
             <FormattedMessage
-              id="ToolTip.MinimizeTheWallet"
-              defaultMessage="Minimize the wallet to the system tray"
+              id="ToolTip.MinimizeOnClose"
+              defaultMessage="Minimize the wallet when closing the window instead of closing it"
             >
               {tt => (
                 <input
@@ -587,7 +587,7 @@ class SettingsApp extends Component {
             </FormattedMessage>
           </div>
 
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="minimizeOnClose">
               {' '}
               <FormattedMessage
@@ -609,9 +609,9 @@ class SettingsApp extends Component {
                 />
               )}
             </FormattedMessage>
-          </div>
+          </div> */}
 
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="infoPopUps">
               {' '}
               <FormattedMessage
@@ -633,7 +633,7 @@ class SettingsApp extends Component {
                 />
               )}
             </FormattedMessage>
-          </div>
+          </div> */}
 
           <div className="field">
             <label htmlFor="googleAnalytics">

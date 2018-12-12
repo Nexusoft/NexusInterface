@@ -58,9 +58,9 @@ function createWindow() {
   var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24
   if (presentTime >= expiration) {
     dialog.showErrorBox(
-      "Tritium Wallet Beta Expired",
-      "The Tritium Beta testing period has ended. Please use your normal wallet."
-    );
+      'Tritium Wallet Beta Expired',
+      'The Tritium Beta testing period has ended. Please use your normal wallet.'
+    )
     // app.exit();
     // process.abort();
   } else if (Math.floor(timeLeft) <= 5) {
@@ -172,17 +172,19 @@ app.on('ready', async () => {
   createWindow()
   core.start()
 
-  mainWindow.on('close', function() {
+  mainWindow.on('close', function(e) {
     let settings = require('./api/settings.js').GetSettings()
-    core.stop()
+
     if (settings) {
       if (settings.minimizeToTray == true) {
         e.preventDefault()
         mainWindow.hide()
       } else {
+        core.stop()
         app.quit()
       }
     } else {
+      core.stop()
       app.quit()
     }
   })
