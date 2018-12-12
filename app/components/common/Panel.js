@@ -43,6 +43,12 @@ const PanelHeader = styled.div({
   alignItems: 'center',
 });
 
+const TitleIcon = styled(Icon)({
+  width: 28,
+  height: 28,
+  marginRight: '.3em',
+});
+
 const PanelBody = styled.div({
   backgroundColor: fade(darken(colors.dark, 0.2), 0.2),
   borderBottomLeftRadius: borderRadius,
@@ -56,12 +62,7 @@ const Panel = ({ icon, title, controls, children }) => (
   <PanelWrapper>
     <PanelHeader>
       <div>
-        {!!icon && (
-          <>
-            <Icon icon={icon} width={28} height={28} />
-            &nbsp;
-          </>
-        )}
+        {!!icon && <TitleIcon icon={icon} width={28} height={28} />}
         <span className="v-align">{title}</span>
       </div>
       {controls}
