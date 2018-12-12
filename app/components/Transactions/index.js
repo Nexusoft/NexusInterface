@@ -86,6 +86,9 @@ const mapDispatchToProps = dispatch => ({
   UpdateFeeOnTransaction: returnData => {
     dispatch({ type: TYPE.UPDATE_FEEVALUE, payload: returnData })
   },
+  UpdateFilteredTransaction: returnData => {
+    dispatch({type: TYPE.UPDATE_FILTERED_TRANSACTIONS, payload:returnData})
+  },
 })
 
 class Transactions extends Component {
@@ -351,7 +354,7 @@ class Transactions extends Component {
       let mainHeight = 150 // fixed height, should match CSS
       let miniHeight = 50 - 8 // right now this is disabled, if re-enabled this needs to be set properly
       this.setState({
-        mainChartWidth: chart.clientWidth,
+        mainChartWidth: parent.clientWidth,
         miniChartWidth: chart.clientWidth,
         mainChartHeight: mainHeight,
         miniChartHeight: miniHeight,
@@ -1034,7 +1037,7 @@ class Transactions extends Component {
   //    Array || Data Array
   returnChartData() {
     if (this.props.walletitems == undefined) {
-      return []
+      return [];
     }
     const filteredData = this.returnAllFilters([...this.props.walletitems])
     return filteredData.map(ele => {
@@ -1102,11 +1105,6 @@ class Transactions extends Component {
     domain.x[0] = new Date(domain.x[0])
     domain.x[1] = new Date(domain.x[1])
 
-    if (domain.x[1].getTime() > this.props.walletitems[this.props.walletitems.length - 1])
-    {
-      //console.log("IM OUT");
-
-    }
     let high = 0
     let low = 0
     this.props.walletitems.forEach(element => {
@@ -1125,10 +1123,9 @@ class Transactions extends Component {
     })
     domain.y[0] = low === 0? -0.001:low;
     
+    high = high == 0 ? 1 : high;
     domain.y[0] = -high;
-    domain.y[1] = high === 0? 0.00001:high;
-    //console.log(this.state);
-    //console.log(domain);
+    domain.y[1] = high;
     this.setState({ zoomDomain: domain })
   }
 
@@ -1517,7 +1514,8 @@ class Transactions extends Component {
 
   returnVictoryChart()
   {
-    
+    const chartData = this.returnChartData();
+    //console.log(this.state.zoomDomain);
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
     return( 
         <VictoryChart
@@ -1568,7 +1566,7 @@ class Transactions extends Component {
             />
           }
           labels={d => this.returnToolTipLable(d)}
-          data={this.returnChartData()}
+          data={chartData}
           x="a"
           y="b"
         />
