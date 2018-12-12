@@ -84,9 +84,8 @@ class SettingsApp extends Component {
     var settings = require('api/settings.js').GetSettings()
     // this.setDefaultUnitAmount(settings);
     //Application settings
-    this.setAutostart(settings)
+    // this.setAutostart(settings)
     this.setMinimizeToTray(settings)
-    this.setMinimizeOnClose(settings)
     this.setGoogleAnalytics(settings)
     this.setDeveloperMode(settings)
     this.setInfoPopup(settings)
@@ -130,20 +129,6 @@ class SettingsApp extends Component {
     }
     if (settings.minimizeToTray == false) {
       minimizeToTray.checked = false
-    }
-  }
-
-  setMinimizeOnClose(settings) {
-    var minimizeOnClose = document.getElementById('minimizeOnClose')
-
-    if (settings.minimizeOnClose === undefined) {
-      minimizeOnClose.checked = false
-    }
-    if (settings.minimizeOnClose == true) {
-      minimizeOnClose.checked = true
-    }
-    if (settings.minimizeOnClose == false) {
-      minimizeOnClose.checked = false
     }
   }
 
