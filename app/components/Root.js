@@ -35,7 +35,7 @@ import StarrySky from './StarrySky';
 const Main = styled.main({
   gridArea: 'content',
   overflow: 'hidden',
-  margin: '30px 10%',
+  padding: '30px 10%',
   display: 'flex',
   alignItems: 'stretch',
 });
