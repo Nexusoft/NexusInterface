@@ -65,7 +65,6 @@
 }
 
 #transactions-chart {
-  display: none;
   flex: 0;
   height: 150px;
   margin-bottom: 1em;

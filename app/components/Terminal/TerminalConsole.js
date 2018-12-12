@@ -90,16 +90,20 @@ class TerminalConsole extends Component {
     //
     let tempConsoleOutput = [...this.props.consoleOutput];
     let splitInput = this.props.currentInput.split(' ');
-    let preSanatized = splitInput[0].replace(/[^a-zA-Z0-9]/g, '');
-    splitInput[0] = preSanatized;
 
-    for (let index = 1; index < splitInput.length; index++) {
-      //splitInput[index] = splitInput[index].replace(/['"`]/g,"");
-    }
+    let daemonInputMessage = (
+      <span>
+        <span style={{ color: '#0ca4fb' }}>{'Nexus-Core'}</span>
+        <span style={{ color: '#00d850' }}>{'$ '}</span>
+        {this.props.currentInput}
+        <span style={{ color: '#0ca4fb' }}>{' >'}</span>
+      </span>
+    );
+    tempConsoleOutput.push(daemonInputMessage);
 
     /// this is the argument array
     let RPCArguments = [];
-    this.props.addToHistory(splitInput[0]);
+    this.props.addToHistory(this.props.currentInput);
     this.props.setInputFeild('');
 
     for (let tempindex = 1; tempindex < splitInput.length; tempindex++) {
@@ -123,7 +127,6 @@ class TerminalConsole extends Component {
     ) {
       RPC.PROMISE(splitInput[0], RPCArguments)
         .then(payload => {
-          console.log(payload);
           if (typeof payload === 'string' || typeof payload === 'number') {
             if (typeof payload === 'string') {
               let temppayload = payload;
