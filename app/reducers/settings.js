@@ -32,6 +32,8 @@ const initialState = {
     renderGlobe: true,
     fiatCurrency: 'USD',
     locale: 'en',
+    verboseLevel: '2',
+    mapPortUsingUpnp: true,
     customStyling: {
       MC1: '#111111',
       MC2: '#0ca4fb',
@@ -59,7 +61,7 @@ const initialState = {
     saveSettings: false,
     styleChangeFlag: false,
     selectedColorProp: 'MC1',
-    minimumconfirmations: 3
+    minimumconfirmations: 3,
   },
 
   messages: initLanguage,
@@ -363,10 +365,10 @@ export default (state = initialState, action) => {
     case TYPE.SET_MIN_CONFIRMATIONS:
       return {
         ...state,
-        settings:{
+        settings: {
           ...state.settings,
-          minimumconfirmations: action.payload
-        }
+          minimumconfirmations: action.payload,
+        },
       }
       break
     default:

@@ -48,6 +48,11 @@
   "sendReceive.From": "Из",
   "sendReceive.CopyToFeild": "Копировать в поле",
   "sendReceive.ClickToEdit": "редактировать",
+  "sendReceive.SelectAnAccount": "Выберите аккаунт",
+  "sendReceive.FromAccount": "Со счета",
+  "sendReceive.ToAccount": "На счет",
+  "sendReceive.MoveNXS": "Переместить NXS",
+  "sendReceive.MoveNxsBetweenAccount": "Переместить NXS между счетами",
 
   "transactions.Details": "Детали транзакции",
   "transactions.MoreDetails": "Подробнее",
@@ -87,6 +92,7 @@
   "transactions.MyAddress": "Мой адрес",
   "transactions.Pending": "(В ожидании)",
   "transactions.NoRowsFound": "Нет строк найдено",
+  "transactions.AllAccounts": "Все аккаунты",
 
   "Market.Information": "Информация о рынке",
   "Market.Refreash": "обновление",
@@ -232,6 +238,8 @@
   "Settings.Copy": "копия",
   "Settings.Paste": "Вставить",
   "Settings.EncryptRestart": "Шифрование и перезапуск",
+  "Settings.MinimumConfirmations": "Минимальные подтверждения",
+  "Settings.Forkblock": "Вилочные блоки",
 
   "Console.CoreOutput": "Основной выход",
   "Console.Console": "Консоль",
@@ -321,6 +329,8 @@
   "ToolTip.RecentDatabaseDownloading": "Загрузка последней базы данных",
   "ToolTip.PleaseWait": "Подождите пожалуйста...",
   "ToolTip.RecentDatabaseExtracting": "Извлечение последней базы данных",
+  "ToolTip.ForkBlock": "Шаг назад Количество блоков",
+  "ToolTip.MinimumConfirmations": "Blank",
 
   "Alert.Received": "Полученная транзакция",
   "Alert.Sent": "Отправленная транзакция",
@@ -349,6 +359,10 @@
   "Alert.ContactsExported": "Контакты Экспортировано",
   "Alert.DaemonLoadingWait": "Загрузка демонов, пожалуйста, подождите",
   "Alert.InvalidAmount": "Недопустимая сумма",
+  "Alert.CoreRestarting": "Перезапуск ядра",
+  "Alert.AccountsAreTheSame": "Счета одинаковые",
+  "Alert.NoSecondAccountChosen": "Второй аккаунт не выбран",
+  "Alert.InsufficientFunds": "Недостаточно средств",
 
   "Cp.AC1": "Цвет акцента 1",
   "Cp.AC2": "Цвет акцента 2",

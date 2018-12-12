@@ -19,6 +19,7 @@ export default {
     'overview.InterestRate': 'Stake Reward',
     'overview.StakeWeight': 'Stake Weight',
     'overview.Globe': 'Globe includes GeoLite2',
+    'overview.StakeBalance': 'Stake Balance',
 
     'sendReceive.SendNexus': 'Send NXS',
     'sendReceive.Address': 'NXS Address',
@@ -342,7 +343,7 @@ export default {
     'Alert.Sent': 'Transaction Sent',
     'Alert.Genesis': 'Genesis Transaction',
     'Alert.TrustTransaction': 'Trust Transaction',
-    'Alert.regiesteredToThis': 'This is an address regiestered to this wallet',
+    'Alert.registeredToThis': 'This is an address registered to this wallet',
     'Alert.InvalidAddress': 'Invalid Address',
     'Alert.InvalidAmount': 'Invalid Amount',
     'Alert.Invalid': 'Invalid',

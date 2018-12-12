@@ -84,9 +84,8 @@ class SettingsApp extends Component {
     var settings = require('api/settings.js').GetSettings()
     // this.setDefaultUnitAmount(settings);
     //Application settings
-    this.setAutostart(settings)
+    // this.setAutostart(settings)
     this.setMinimizeToTray(settings)
-    this.setMinimizeOnClose(settings)
     this.setGoogleAnalytics(settings)
     this.setDeveloperMode(settings)
     this.setInfoPopup(settings)
@@ -130,20 +129,6 @@ class SettingsApp extends Component {
     }
     if (settings.minimizeToTray == false) {
       minimizeToTray.checked = false
-    }
-  }
-
-  setMinimizeOnClose(settings) {
-    var minimizeOnClose = document.getElementById('minimizeOnClose')
-
-    if (settings.minimizeOnClose === undefined) {
-      minimizeOnClose.checked = false
-    }
-    if (settings.minimizeOnClose == true) {
-      minimizeOnClose.checked = true
-    }
-    if (settings.minimizeOnClose == false) {
-      minimizeOnClose.checked = false
     }
   }
 
@@ -214,16 +199,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj)
   }
 
-  updateInfoPopUp(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
-
-    settingsObj.infopopups = el.checked
-
-    settings.SaveSettings(settingsObj)
-  }
-
   updateAutoStart(event) {
     var el = event.target
     var settings = require('api/settings.js')
@@ -268,16 +243,6 @@ class SettingsApp extends Component {
     var settingsObj = settings.GetSettings()
 
     settingsObj.minimizeToTray = el.checked
-
-    settings.SaveSettings(settingsObj)
-  }
-
-  updateMinimizeOnClose(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
-
-    settingsObj.minimizeOnClose = el.checked
 
     settings.SaveSettings(settingsObj)
   }
@@ -541,7 +506,7 @@ class SettingsApp extends Component {
           </div>
         </Modal>
         <form className="aligned">
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="autostart">
               <FormattedMessage
                 id="Settings.StartUp"
@@ -562,34 +527,10 @@ class SettingsApp extends Component {
                 />
               )}
             </FormattedMessage>
-          </div>
+          </div> */}
 
           <div className="field">
             <label htmlFor="minimizeToTray">
-              <FormattedMessage
-                id="Settings.MinimizeTray"
-                defaultMessage="Minimize to tray"
-              />
-            </label>
-            <FormattedMessage
-              id="ToolTip.MinimizeTheWallet"
-              defaultMessage="Minimize the wallet to the system tray"
-            >
-              {tt => (
-                <input
-                  id="minimizeToTray"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateMinimizeToTray}
-                  data-tooltip={tt}
-                />
-              )}
-            </FormattedMessage>
-          </div>
-
-          <div className="field">
-            <label htmlFor="minimizeOnClose">
-              {' '}
               <FormattedMessage
                 id="Settings.MinimizeClose"
                 defaultMessage="Minimize On Close"
@@ -599,36 +540,12 @@ class SettingsApp extends Component {
               id="ToolTip.MinimizeOnClose"
               defaultMessage="Minimize the wallet when closing the window instead of closing it"
             >
-              {MoC => (
-                <input
-                  id="minimizeOnClose"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateMinimizeOnClose}
-                  data-tooltip={MoC}
-                />
-              )}
-            </FormattedMessage>
-          </div>
-
-          <div className="field">
-            <label htmlFor="infoPopUps">
-              {' '}
-              <FormattedMessage
-                id="Settings.InformationPop"
-                defaultMessage="Information Popups"
-              />
-            </label>
-            <FormattedMessage
-              id="ToolTip.ShowPopups"
-              defaultMessage="Show Informational Popups"
-            >
               {tt => (
                 <input
-                  id="infoPopUps"
+                  id="minimizeToTray"
                   type="checkbox"
                   className="switch"
-                  onChange={this.updateInfoPopUp}
+                  onChange={this.updateMinimizeToTray}
                   data-tooltip={tt}
                 />
               )}
