@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom'
 import Modal from 'react-responsive-modal'
 import csv from 'csvtojson'
 import { callbackify } from 'util'
+import fs from 'fs'
 
 // Internal Dependencies
 import config from 'api/configuration'
@@ -254,7 +255,7 @@ class AddressBook extends Component {
 
     // remove the temporary element from the DOM
     input.remove()
-
+    this.props.ToggleModal()
     this.props.OpenModal('Copied')
     setTimeout(() => {
       if (this.props.open) {
@@ -825,6 +826,7 @@ class AddressBook extends Component {
               >
                 {this.props.editAddressLabel === add.address ? (
                   <input
+                    className="editFeildDoNotClose"
                     onChange={e => this.props.EditProtoLabel(e.target.value)}
                     value={this.props.prototypeAddressLabel}
                     onDoubleClick={() =>
@@ -910,6 +912,7 @@ class AddressBook extends Component {
               >
                 {this.props.editAddressLabel === add.address ? (
                   <input
+                    className="editFeildDoNotClose"
                     onChange={e => this.props.EditProtoLabel(e.target.value)}
                     value={this.props.prototypeAddressLabel}
                     onDoubleClick={() =>
@@ -1016,130 +1019,6 @@ class AddressBook extends Component {
       tempentry.push(e.name)
       tempentry.push(e.phoneNumber)
 
-      // let timezone = "";
-      // switch (e.timezone) {
-      //   case 840:
-      //     timezone = "Line Islands";
-      //     break;
-      //   case 780:
-      //     timezone = "Apia";
-      //     break;
-      //   case 765:
-      //     timezone = "Chatham Islands";
-      //     break;
-      //   case 720:
-      //     timezone = "Auckland";
-      //     break;
-      //   case 660:
-      //     timezone = "Noumea";
-      //     break;
-      //   case 630:
-      //     timezone = "Lord Howe Island";
-      //     break;
-      //   case 600:
-      //     timezone = "Port Moresby";
-      //     break;
-      //   case 570:
-      //     timezone = "Adelaide";
-      //     break;
-      //   case 540:
-      //     timezone = "Tokyo";
-      //     break;
-      //   case 525:
-      //     timezone = "Eucla";
-      //     break;
-      //   case 510:
-      //     timezone = "Pyongyang";
-      //     break;
-      //   case 480:
-      //     timezone = "Beijing";
-      //     break;
-      //   case 420:
-      //     timezone = "Bangkok";
-      //     break;
-      //   case 390:
-      //     timezone = "Yangon";
-      //     break;
-      //   case 360:
-      //     timezone = "Almaty";
-      //     break;
-      //   case 345:
-      //     timezone = "Kathmandu";
-      //     break;
-      //   case 330:
-      //     timezone = "Delhi";
-      //     break;
-      //   case 300:
-      //     timezone = "Karachi";
-      //     break;
-      //   case 270:
-      //     timezone = "Kabul";
-      //     break;
-      //   case 240:
-      //     timezone = "Dubai";
-      //     break;
-      //   case 210:
-      //     timezone = "Tehran";
-      //     break;
-      //   case 180:
-      //     timezone = "Moscow";
-      //     break;
-      //   case 120:
-      //     timezone = "Athens";
-      //     break;
-      //   case 60:
-      //     timezone = "Berlin";
-      //     break;
-      //   case 0:
-      //     timezone = "London";
-      //     break;
-      //   case -60:
-      //     timezone = "Cabo Verde";
-      //     break;
-      //   case -120:
-      //     timezone = "Fernando de Noronha";
-      //     break;
-      //   case -180:
-      //     timezone = "Buenos Aires";
-      //     break;
-      //   case -210:
-      //     timezone = "Newfoundland";
-      //     break;
-      //   case -240:
-      //     timezone = "Santiago";
-      //     break;
-      //   case -300:
-      //     timezone = "New York";
-      //     break;
-      //   case -360:
-      //     timezone = "Chicago";
-      //     break;
-      //   case -420:
-      //     timezone = "Phoenix";
-      //     break;
-      //   case -480:
-      //     timezone = "Los Angeles";
-      //     break;
-      //   case -540:
-      //     timezone = "Anchorage";
-      //     break;
-      //   case -570:
-      //     timezone = "Marquesas Islands";
-      //     break;
-      //   case -600:
-      //     timezone = "Papeete";
-      //     break;
-      //   case -660:
-      //     timezone = "Niue";
-      //     break;
-      //   case -720:
-      //     timezone = "Baker Island";
-      //     break;
-
-      //   default:
-      //     timezone = "blank";
-      //     break;
-      // }
       tempentry.push(e.timezone)
       tempentry.push(e.notes)
       // rows.push(tempentry); // moving down.
@@ -1204,38 +1083,68 @@ class AddressBook extends Component {
       1
     )
     console.log(csv().fromFile(path))
-    // csv()
-    //   .fromFile(path)
-    //   .then(jsonObj => {
-    //     for (var i = 0; i < jsonObj.length; i++) {
-    //       // dispatch a new account... (map it )
-    //       var name = jsonObj[i].AccountName
-    //       var phone = jsonObj[i].PhoneNumber
-    //       var notes = jsonObj[i].Notes
-    //       var tz = jsonObj[i].TimeZone
-    //       var label
-    //       var address
-    //       for (var k in jsonObj[i]) {
-    //         var key = k
-    //         var val = jsonObj[i][k]
+    csv()
+      .fromFile(path)
+      .then(jsonObj => {
+        for (var i = 0; i < jsonObj.length; i++) {
+          // dispatch a new account... (map it )
+          var name = jsonObj[i].AccountName
+          var phone = jsonObj[i].PhoneNumber
+          var notes = jsonObj[i].Notes
+          var tz = jsonObj[i].TimeZone
+          var label
+          var address
+          for (var k in jsonObj[i]) {
+            var key = k
+            var val = jsonObj[i][k]
 
-    //         if (key.includes('field')) {
-    //           var num = key.slice(5, key.length)
-    //           if (num % 2 == 1) {
-    //             label = val
-    //           } else {
-    //             address = val
-    //             // (name, address, num, notes, TZ)
-    //             this.props.AddContact(name, address, phone, notes, tz)
-    //             // so here is where we have unique address label pairs, we should add this now.
-    //             // also we don't really know how they had things labeled so we should check to see if they are ours or not.
-    //             label = ''
-    //             address = ''
-    //           }
-    //         }
-    //       }
-    //     }
-    //   })
+            if (key.includes('field')) {
+              var num = key.slice(5, key.length)
+              if (num % 2 == 1) {
+                label = val
+              } else {
+                address = val
+                // (name, address, num, notes, TZ)
+                this.props.AddContact(name, address, phone, notes, tz)
+                // so here is where we have unique address label pairs, we should add this now.
+                // also we don't really know how they had things labeled so we should check to see if they are ours or not.
+                label = ''
+                address = ''
+              }
+            }
+          }
+        }
+      })
+  }
+
+  closeEdit(e) {
+    if (e.target.className !== 'editFeildDoNotClose') {
+      if (this.props.prototypeName !== '') {
+        if (this.props.prototypeName !== '') {
+          this.props.SaveName(this.props.selected, this.props.prototypeName)
+        }
+      } else if (this.props.prototypePhoneNumber !== '') {
+        this.props.SavePhone(
+          this.props.selected,
+          this.props.prototypePhoneNumber
+        )
+      } else if (this.props.prototypeNotes !== '') {
+        this.props.SaveNotes(this.props.selected, this.props.prototypeNotes)
+      } else if (this.props.prototypeTimezone !== 0) {
+        this.props.SaveTz(this.props.selected, this.props.prototypeTimezone)
+      } else if (this.props.prototypeAddressLabel !== '') {
+        RPC.PROMISE('validateaddress', [this.props.editAddressLabel]).then(
+          payload => {
+            this.props.SaveLabel(
+              this.props.selected,
+              this.props.editAddressLabel,
+              this.props.prototypeAddressLabel,
+              payload.ismine
+            )
+          }
+        )
+      }
+    }
   }
 
   // Mandatory React method
@@ -1296,7 +1205,12 @@ class AddressBook extends Component {
             </h2>
           </div>
         ) : (
-          <div className="panel">
+          <div
+            className="panel"
+            onClick={e => {
+              this.closeEdit(e)
+            }}
+          >
             <div id="addressbook-controls">
               <div id="addressbook-search">
                 <FormattedMessage
@@ -1355,6 +1269,7 @@ class AddressBook extends Component {
                               <input
                                 ref="addContactName"
                                 id="new-account-name"
+                                className="editFeildDoNotClose"
                                 type="text"
                                 value={this.props.prototypeName}
                                 onChange={e =>
@@ -1362,19 +1277,23 @@ class AddressBook extends Component {
                                 }
                                 onKeyDown={e => {
                                   if (e.which === 13 || e.which === 9) {
+                                    if (this.props.prototypeName !== '') {
+                                      this.props.SaveName(
+                                        this.props.selected,
+                                        this.props.prototypeName
+                                      )
+                                    }
+                                  }
+                                }}
+                                placeholder={n}
+                                onDoubleClick={e => {
+                                  if (this.props.prototypeName !== '') {
                                     this.props.SaveName(
                                       this.props.selected,
                                       this.props.prototypeName
                                     )
                                   }
                                 }}
-                                placeholder={n}
-                                onDoubleClick={() =>
-                                  this.props.SaveName(
-                                    this.props.selected,
-                                    this.props.prototypeName
-                                  )
-                                }
                               />
                             )}
                           </FormattedMessage>
@@ -1423,6 +1342,7 @@ class AddressBook extends Component {
                                   <input
                                     id="phoneNumber"
                                     name="phoneNumber"
+                                    className="editFeildDoNotClose"
                                     type="tel"
                                     onChange={e =>
                                       this.phoneNumberHandler(e.target.value)
@@ -1489,6 +1409,7 @@ class AddressBook extends Component {
                                 <textarea
                                   id="notes"
                                   name="notes"
+                                  className="editFeildDoNotClose"
                                   onDoubleClick={() =>
                                     this.props.SaveNotes(
                                       this.props.selected,
@@ -1536,7 +1457,10 @@ class AddressBook extends Component {
                           </div>
                         </div>
                         {this.props.addressbook[this.props.selected].imgSrc !==
-                        undefined ? (
+                          undefined &&
+                        fs.existsSync(
+                          this.props.addressbook[this.props.selected].imgSrc
+                        ) ? (
                           <label htmlFor="picUploader">
                             <img
                               src={
@@ -1554,12 +1478,14 @@ class AddressBook extends Component {
                           type="file"
                           accept="image/*"
                           name="picUploader"
-                          onChange={e =>
-                            this.props.ChangeContactImage(
-                              e.target.files[0].path,
-                              this.props.selected
-                            )
-                          }
+                          onChange={e => {
+                            if (e.target.files[0]) {
+                              this.props.ChangeContactImage(
+                                e.target.files[0].path,
+                                this.props.selected
+                              )
+                            }
+                          }}
                           id="picUploader"
                         />
                       </div>

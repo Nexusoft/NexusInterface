@@ -190,7 +190,7 @@ class SettingsCore extends Component {
     var manualDaemonDataDir = document.getElementById('manualDaemonDataDir')
 
     if (settings.manualDaemonDataDir === undefined) {
-      manualDaemonDataDir.value = 'Nexus_trit'
+      manualDaemonDataDir.value = 'Nexus_Tritium_Data'
     } else {
       manualDaemonDataDir.value = settings.manualDaemonDataDir
     }
