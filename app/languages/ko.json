@@ -91,6 +91,7 @@
   "transactions.Rows": "행",
   "transactions.Pending": "(대기 중)",
   "transactions.NoRowsFound": "행이 없습니다.",
+  "transactions.AllAccounts": "모든 계정",
 
   "Market.Information": "시장 정보",
   "Market.Refreash": "시장 데이터 새로 고침",

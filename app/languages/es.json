@@ -91,6 +91,7 @@
   "transactions.blocknumber": "Número de bloque",
   "transactions.Pending": "(Pendiente)",
   "transactions.NoRowsFound": "No se encontraron filas",
+  "transactions.AllAccounts": "Todas las cuentas",
 
   "Market.Information": "Información de mercado",
   "Market.Refreash": "Actualizar datos de mercado",

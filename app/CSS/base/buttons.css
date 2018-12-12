@@ -6,7 +6,7 @@ Button
 /* Default Settings */
 
 :root {
-  --button-border-radius: 5px;
+  --button-border-radius: 3px;
   --button-box-shadow: none;
   --button-color: var(--color-5);
   --button-text-shadow: none;

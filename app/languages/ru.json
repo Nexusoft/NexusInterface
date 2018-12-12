@@ -92,6 +92,7 @@
   "transactions.MyAddress": "Мой адрес",
   "transactions.Pending": "(В ожидании)",
   "transactions.NoRowsFound": "Нет строк найдено",
+  "transactions.AllAccounts": "Все аккаунты",
 
   "Market.Information": "Информация о рынке",
   "Market.Refreash": "обновление",

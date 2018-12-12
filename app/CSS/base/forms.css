@@ -9,7 +9,7 @@ Forms
   --input-border-width: 0;
   --input-border-style: solid;
   --input-border-color: var(--color-5);
-  --input-border-radius: 5px;
+  --input-border-radius: 3px;
   --input-background-color: var(--color-5);
   --input-color: var(--color-4);
   --input-focus-color: var(--color-1);

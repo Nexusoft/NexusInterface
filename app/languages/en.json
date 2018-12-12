@@ -91,6 +91,7 @@
   "transactions.Rows": "Rows",
   "transactions.Pending": "(Pending)",
   "transactions.NoRowsFound": "No Rows Found",
+  "transactions.AllAccounts": "All Accounts",
 
   "Market.Information": "Market Information",
   "Market.Refreash": "Refresh Market Data",

@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import styles from './style.css';
-import { connect } from 'react-redux';
-import * as RPC from 'scripts/rpc';
-import Modal from 'react-responsive-modal';
-import * as TYPE from 'actions/actiontypes';
-import { FormattedMessage } from 'react-intl';
-import ContextMenuBuilder from 'contextmenu';
-import { remote } from 'electron';
-import { access } from 'fs';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import styles from './style.css'
+import { connect } from 'react-redux'
+import * as RPC from 'scripts/rpc'
+import Modal from 'react-responsive-modal'
+import * as TYPE from 'actions/actiontypes'
+import { FormattedMessage } from 'react-intl'
+import ContextMenuBuilder from 'contextmenu'
+import { remote } from 'electron'
+import { access } from 'fs'
 
 // import images here
-import sendimg from 'images/send.svg';
-import plusimg from 'images/plus.svg';
-import trashimg from 'images/trash.svg';
-import addressbookimg from 'images/addressbook.svg';
+import sendimg from 'images/send.svg'
+import plusimg from 'images/plus.svg'
+import trashimg from 'images/trash.svg'
+import addressbookimg from 'images/addressbook.svg'
 
 const mapStateToProps = state => {
   return {
@@ -25,107 +25,107 @@ const mapStateToProps = state => {
     ...state.addressbook,
     ...state.settings,
     ...state.intl,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   SetSendAgainData: returnData => {
-    dispatch({ type: TYPE.SET_TRANSACTION_SENDAGAIN, payload: returnData });
+    dispatch({ type: TYPE.SET_TRANSACTION_SENDAGAIN, payload: returnData })
   },
   updateAddress: returnAddress => {
-    dispatch({ type: TYPE.UPDATE_ADDRESS, payload: returnAddress });
+    dispatch({ type: TYPE.UPDATE_ADDRESS, payload: returnAddress })
   },
   SearchName: returnSearch => {
-    dispatch({ type: TYPE.SEARCH, payload: returnSearch });
+    dispatch({ type: TYPE.SEARCH, payload: returnSearch })
   },
   clearQueue: () => {
-    dispatch({ type: TYPE.CLEAR_QUEUE });
+    dispatch({ type: TYPE.CLEAR_QUEUE })
   },
   clearForm: () => {
-    dispatch({ type: TYPE.CLEAR_FORM });
+    dispatch({ type: TYPE.CLEAR_FORM })
   },
   clearSearch: () => {
-    dispatch({ type: TYPE.CLEAR_SEARCHBAR });
+    dispatch({ type: TYPE.CLEAR_SEARCHBAR })
   },
   addToQueue: returnQueue => {
-    dispatch({ type: TYPE.ADD_TO_QUEUE, payload: returnQueue });
+    dispatch({ type: TYPE.ADD_TO_QUEUE, payload: returnQueue })
   },
   updateAmount: (NxsVal, USD) => {
     dispatch({
       type: TYPE.UPDATE_AMOUNT,
       payload: { USDAmount: USD, Amount: NxsVal },
-    });
+    })
   },
   updateMoveAmount: (NxsVal, USD) => {
     dispatch({
       type: TYPE.UPDATE_MOVE_AMOUNT,
       payload: { USDAmount: USD, Amount: NxsVal },
-    });
+    })
   },
   AccountPicked: returnSelectedAccount => {
-    dispatch({ type: TYPE.SELECTED_ACCOUNT, payload: returnSelectedAccount });
+    dispatch({ type: TYPE.SELECTED_ACCOUNT, payload: returnSelectedAccount })
   },
   changeAccount: returnAccountChanger => {
-    dispatch({ type: TYPE.CHANGE_ACCOUNT, payload: returnAccountChanger });
+    dispatch({ type: TYPE.CHANGE_ACCOUNT, payload: returnAccountChanger })
   },
   updateMessage: returnMessage => {
-    dispatch({ type: TYPE.UPDATE_MESSAGE, payload: returnMessage });
+    dispatch({ type: TYPE.UPDATE_MESSAGE, payload: returnMessage })
   },
   updateAccount: returnAccount => {
-    dispatch({ type: TYPE.UPDATE_ACCOUNT_NAME, payload: returnAccount });
+    dispatch({ type: TYPE.UPDATE_ACCOUNT_NAME, payload: returnAccount })
   },
   removeQueue: returnQueue => {
-    dispatch({ type: TYPE.REMOVE_FROM_QUEUE, payload: returnQueue });
+    dispatch({ type: TYPE.REMOVE_FROM_QUEUE, payload: returnQueue })
   },
   busy: () => {
-    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG });
+    dispatch({ type: TYPE.TOGGLE_BUSY_FLAG })
   },
   OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type })
   },
   CloseModal: type => {
-    dispatch({ type: TYPE.HIDE_MODAL, payload: type });
+    dispatch({ type: TYPE.HIDE_MODAL, payload: type })
   },
   OpenModal2: type => {
-    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
+    dispatch({ type: TYPE.SHOW_MODAL2, payload: type })
   },
   CloseModal2: type => {
-    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
+    dispatch({ type: TYPE.HIDE_MODAL2, payload: type })
   },
   OpenModal3: type => {
-    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
+    dispatch({ type: TYPE.SHOW_MODAL3, payload: type })
   },
   CloseModal3: type => {
-    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
+    dispatch({ type: TYPE.HIDE_MODAL3, payload: type })
   },
   OpenModal4: type => {
-    dispatch({ type: TYPE.SHOW_MODAL4, payload: type });
+    dispatch({ type: TYPE.SHOW_MODAL4, payload: type })
   },
   CloseModal4: type => {
-    dispatch({ type: TYPE.HIDE_MODAL4, payload: type });
+    dispatch({ type: TYPE.HIDE_MODAL4, payload: type })
   },
   Confirm: Answer => {
-    dispatch({ type: TYPE.CONFIRM, payload: Answer });
+    dispatch({ type: TYPE.CONFIRM, payload: Answer })
   },
   OpenMoveModal: () => {
-    dispatch({ type: TYPE.OPEN_MOVE_MODAL });
+    dispatch({ type: TYPE.OPEN_MOVE_MODAL })
   },
   CloseMoveModal: () => {
-    dispatch({ type: TYPE.CLOSE_MOVE_MODAL });
+    dispatch({ type: TYPE.CLOSE_MOVE_MODAL })
   },
   updateMoveToAccount: toAccount => {
-    dispatch({ type: TYPE.MOVE_TO_ACCOUNT, payload: toAccount });
+    dispatch({ type: TYPE.MOVE_TO_ACCOUNT, payload: toAccount })
   },
   updateMoveFromAccount: fromAccount => {
-    dispatch({ type: TYPE.MOVE_FROM_ACCOUNT, payload: fromAccount });
+    dispatch({ type: TYPE.MOVE_FROM_ACCOUNT, payload: fromAccount })
   },
-});
+})
 
 class SendRecieve extends Component {
   componentDidMount() {
-    window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    this.getAccountData();
-    this.props.googleanalytics.SendScreen('Send');
+    window.addEventListener('contextmenu', this.setupcontextmenu, false)
+    this.getAccountData()
+    this.props.googleanalytics.SendScreen('Send')
   }
   getAccountData() {
     RPC.PROMISE('listaccounts').then(payload => {
@@ -133,11 +133,11 @@ class SendRecieve extends Component {
         return {
           name: e[0],
           val: e[1],
-        };
-      });
+        }
+      })
 
-      this.props.changeAccount(listOfAccts);
-    });
+      this.props.changeAccount(listOfAccts)
+    })
   }
   loadMyAccounts() {
     RPC.PROMISE('listaccounts', [0]).then(payload => {
@@ -146,57 +146,57 @@ class SendRecieve extends Component {
           RPC.PROMISE('getaddressesbyaccount', [account])
         )
       ).then(payload => {
-        let validateAddressPromises = [];
+        let validateAddressPromises = []
 
         payload.map(element => {
           element.addresses.map(address => {
             validateAddressPromises.push(
               RPC.PROMISE('validateaddress', [address])
-            );
-          });
-        });
+            )
+          })
+        })
 
         Promise.all(validateAddressPromises).then(payload => {
-          let accountsList = [];
+          let accountsList = []
           let myaccts = payload.map(e => {
             if (e.ismine && e.isvalid) {
               let index = accountsList.findIndex(ele => {
                 if (ele.account === e.account) {
-                  return ele;
+                  return ele
                 }
-              });
+              })
               let indexDefault = accountsList.findIndex(ele => {
                 if (ele.account == '' || ele.account == 'default') {
-                  return ele;
+                  return ele
                 }
-              });
+              })
 
               if (e.account === '' || e.account === 'default') {
                 if (index === -1 && indexDefault === -1) {
                   accountsList.push({
                     account: 'default',
                     addresses: [e.address],
-                  });
+                  })
                 } else {
-                  accountsList[indexDefault].addresses.push(e.address);
+                  accountsList[indexDefault].addresses.push(e.address)
                 }
               } else {
                 if (index === -1) {
                   accountsList.push({
                     account: e.account,
                     addresses: [e.address],
-                  });
+                  })
                 } else {
-                  accountsList[index].addresses.push(e.address);
+                  accountsList[index].addresses.push(e.address)
                 }
               }
             }
-          });
+          })
 
-          this.props.MyAccountsList(accountsList);
-        });
-      });
-    });
+          this.props.MyAccountsList(accountsList)
+        })
+      })
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -204,23 +204,23 @@ class SendRecieve extends Component {
       prevProps.connections === undefined &&
       this.props.connections !== undefined
     ) {
-      this.getAccountData();
+      this.getAccountData()
     }
   }
 
   // React Method (Life cycle hook)
 
   componentWillUnmount() {
-    this.props.AccountPicked('');
-    window.removeEventListener('contextmenu', this.setupcontextmenu);
+    this.props.AccountPicked('')
+    window.removeEventListener('contextmenu', this.setupcontextmenu)
   }
 
   setupcontextmenu(e) {
-    e.preventDefault();
-    const contextmenu = new ContextMenuBuilder().defaultContext;
+    e.preventDefault()
+    const contextmenu = new ContextMenuBuilder().defaultContext
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
-    defaultcontextmenu.popup(remote.getCurrentWindow());
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
+    defaultcontextmenu.popup(remote.getCurrentWindow())
   }
 
   editQueue() {
@@ -229,7 +229,7 @@ class SendRecieve extends Component {
         <button
           className="button large"
           onClick={() => {
-            this.props.OpenModal2('Edit Entry?');
+            this.props.OpenModal2('Edit Entry?')
           }}
         >
           <FormattedMessage
@@ -237,7 +237,7 @@ class SendRecieve extends Component {
             defaultMessage="Edit Entry"
           />
         </button>
-      );
+      )
     } else {
       return (
         <button
@@ -250,21 +250,21 @@ class SendRecieve extends Component {
             defaultMessage="Add To Queue"
           />
         </button>
-      );
+      )
     }
   }
 
   nxsAmount(e, isNxs) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === '')) {
       if (isNxs) {
-        let Usd = e.target.value * this.calculateUSDvalue();
-        this.props.updateAmount(e.target.value, Usd.toFixed(2));
+        let Usd = e.target.value * this.calculateUSDvalue()
+        this.props.updateAmount(e.target.value, Usd.toFixed(2))
       } else {
-        let NxsValue = e.target.value / this.calculateUSDvalue();
-        this.props.updateAmount(NxsValue.toFixed(5), e.target.value);
+        let NxsValue = e.target.value / this.calculateUSDvalue()
+        this.props.updateAmount(NxsValue.toFixed(5), e.target.value)
       }
     } else {
-      return null;
+      return null
     }
   }
 
@@ -275,9 +275,9 @@ class SendRecieve extends Component {
           id="sendReceive.MyAccount"
           defaultMessage="My Account"
         />
-      );
+      )
     } else {
-      return this.props.SelectedAccount;
+      return this.props.SelectedAccount
     }
   }
 
@@ -300,24 +300,24 @@ class SendRecieve extends Component {
                   </option>
                 )}
               </FormattedMessage>
-            );
+            )
           } else {
             return (
               <option key={e.name} value={e.name}>
                 {e.name}: {e.val}
                 NXS
               </option>
-            );
+            )
           }
-        });
+        })
       } else {
-        return null;
+        return null
       }
   }
 
   sendOne() {
-    console.log('Send');
-    this.props.busy();
+    console.log('Send')
+    this.props.busy()
     if (this.props.SelectedAccount !== '') {
       if (this.props.Address !== '' && this.props.Amount > 0) {
         RPC.PROMISE('validateaddress', [this.props.Address])
@@ -333,16 +333,16 @@ class SendRecieve extends Component {
                     this.props.Message,
                   ])
                     .then(payload => {
-                      this.getAccountData();
-                      this.props.OpenModal('send');
-                      this.props.clearForm();
-                      this.props.busy();
+                      this.getAccountData()
+                      this.props.OpenModal('send')
+                      this.props.clearForm()
+                      this.props.busy()
                     })
                     .catch(e => {
-                      console.log(e);
-                      this.props.busy();
-                      this.props.OpenModal(e);
-                    });
+                      console.log(e)
+                      this.props.busy()
+                      this.props.OpenModal(e)
+                    })
                 } else {
                   RPC.PROMISE('sendfrom', [
                     this.props.SelectedAccount,
@@ -351,43 +351,43 @@ class SendRecieve extends Component {
                     parseInt(this.props.settings.minimumconfirmations),
                   ])
                     .then(payoad => {
-                      this.getAccountData();
-                      this.props.OpenModal('send');
-                      this.props.clearForm();
-                      this.props.busy();
+                      this.getAccountData()
+                      this.props.OpenModal('send')
+                      this.props.clearForm()
+                      this.props.busy()
                     })
                     .catch(e => {
-                      console.log(e);
-                      this.props.busy();
-                      this.props.OpenModal(e);
-                    });
+                      console.log(e)
+                      this.props.busy()
+                      this.props.OpenModal(e)
+                    })
                 }
               } else {
-                this.props.busy();
+                this.props.busy()
                 this.props.OpenModal(
                   'This is an address regiestered to this wallet'
-                );
+                )
               }
             } else {
-              this.props.busy();
-              this.props.OpenModal('Invalid Address');
+              this.props.busy()
+              this.props.OpenModal('Invalid Address')
             }
           })
           .catch(e => {
-            this.props.busy();
-            this.props.OpenModal('Invalid Address');
-          });
+            this.props.busy()
+            this.props.OpenModal('Invalid Address')
+          })
       } else {
-        this.props.busy();
+        this.props.busy()
       }
     } else {
-      this.props.OpenModal('No Account Selected');
+      this.props.OpenModal('No Account Selected')
     }
   }
 
   sendMany() {
-    this.props.busy();
-    let keyCheck = Object.keys(this.props.Queue);
+    this.props.busy()
+    let keyCheck = Object.keys(this.props.Queue)
     if (this.props.SelectedAccount !== '') {
       if (keyCheck.length > 1) {
         RPC.PROMISE(
@@ -397,16 +397,16 @@ class SendRecieve extends Component {
           this.props.Message
         )
           .then(payoad => {
-            this.props.OpenModal('send');
-            this.getAccountData();
-            this.props.busy();
-            this.props.clearForm();
-            this.props.clearQueue();
+            this.props.OpenModal('send')
+            this.getAccountData()
+            this.props.busy()
+            this.props.clearForm()
+            this.props.clearQueue()
           })
           .catch(e => {
-            this.props.busy();
-            this.props.OpenModal(e);
-          });
+            this.props.busy()
+            this.props.OpenModal(e)
+          })
       } else if (Object.values(this.props.Queue)[0] > 0) {
         if (this.props.Message) {
           RPC.PROMISE('sendfrom', [
@@ -417,17 +417,17 @@ class SendRecieve extends Component {
             this.props.Message,
           ])
             .then(payload => {
-              this.getAccountData();
-              this.props.OpenModal('send');
-              this.props.clearForm();
-              this.props.clearQueue();
-              this.props.busy();
+              this.getAccountData()
+              this.props.OpenModal('send')
+              this.props.clearForm()
+              this.props.clearQueue()
+              this.props.busy()
             })
             .catch(e => {
-              console.log(e);
-              this.props.busy();
-              this.props.OpenModal(e);
-            });
+              console.log(e)
+              this.props.busy()
+              this.props.OpenModal(e)
+            })
         } else {
           RPC.PROMISE('sendfrom', [
             this.props.SelectedAccount,
@@ -436,34 +436,34 @@ class SendRecieve extends Component {
             parseInt(this.props.settings.minimumconfirmations),
           ])
             .then(payoad => {
-              this.getAccountData();
-              this.props.OpenModal('send');
-              this.props.clearForm();
-              this.props.clearQueue();
-              this.props.busy();
+              this.getAccountData()
+              this.props.OpenModal('send')
+              this.props.clearForm()
+              this.props.clearQueue()
+              this.props.busy()
             })
             .catch(e => {
-              console.log(e);
-              this.props.busy();
-              this.props.OpenModal(e);
-            });
+              console.log(e)
+              this.props.busy()
+              this.props.OpenModal(e)
+            })
         }
       }
     } else {
-      this.props.OpenModal('No Account Selected');
+      this.props.OpenModal('No Account Selected')
     }
   }
 
   areYouSure() {
-    let values = Object.values(this.props.Queue);
-    return values;
+    let values = Object.values(this.props.Queue)
+    return values
   }
   addAmount() {
-    let keyCheck = Object.keys(this.props.Queue);
+    let keyCheck = Object.keys(this.props.Queue)
     if (keyCheck.length > 0) {
       let sum = Object.values(this.props.Queue).reduce((acc, val) => {
-        return acc + val;
-      });
+        return acc + val
+      })
       return (
         <div id="summary">
           <div>
@@ -484,7 +484,7 @@ class SendRecieve extends Component {
             {this.accHud(this.props.SelectedAccount)}
           </div>
         </div>
-      );
+      )
     }
   }
   validateAddToQueue() {
@@ -496,19 +496,19 @@ class SendRecieve extends Component {
               this.props.addToQueue({
                 address: this.props.Address,
                 amount: parseFloat(this.props.Amount),
-              });
+              })
             } else {
               this.props.OpenModal(
                 'This is an address regiestered to this wallet'
-              );
+              )
             }
           } else {
-            this.props.OpenModal('Invalid Address');
+            this.props.OpenModal('Invalid Address')
           }
         })
         .catch(e => {
-          this.props.OpenModal('Invalid Address');
-        });
+          this.props.OpenModal('Invalid Address')
+        })
     }
   }
 
@@ -516,8 +516,8 @@ class SendRecieve extends Component {
     let filteredAddress = this.props.addressbook.filter(e => {
       return (
         e.name.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
-      );
-    });
+      )
+    })
     return filteredAddress.map((e, i) => {
       return (
         <tr>
@@ -534,9 +534,9 @@ class SendRecieve extends Component {
                   this.props.OpenModal('Copied')
                   setTimeout(() => {
                     if (this.props.open) {
-                      this.props.CloseModal();
+                      this.props.CloseModal()
                     }
-                  }, 3000);
+                  }, 3000)
                 }}
                 className="dt"
                 key={ele.address + i}
@@ -554,44 +554,44 @@ class SendRecieve extends Component {
                   />
                 </span>
               </td>
-            );
+            )
           })}
         </tr>
-      );
-    });
+      )
+    })
   }
 
   calculateUSDvalue() {
     if (this.props.rawNXSvalues[0]) {
       let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
         if (ele.name === this.props.settings.fiatCurrency) {
-          return ele;
+          return ele
         }
-      });
-      let currencyValue = selectedCurrancyValue[0].price;
+      })
+      let currencyValue = selectedCurrancyValue[0].price
       if (currencyValue === 0) {
-        currencyValue = `${currencyValue}.00`;
+        currencyValue = `${currencyValue}.00`
       } else {
-        currencyValue = currencyValue.toFixed(2);
+        currencyValue = currencyValue.toFixed(2)
       }
 
-      return currencyValue;
+      return currencyValue
     } else {
-      return 0;
+      return 0
     }
   }
 
   fillQueue() {
-    let Keys = Object.keys(this.props.Queue);
-    let values = Object.values(this.props.Queue);
+    let Keys = Object.keys(this.props.Queue)
+    let values = Object.values(this.props.Queue)
     let queueArray = Keys.map((e, i) => {
       let newObj = {
         key: e,
         val: values[i],
-      };
+      }
 
-      return newObj;
-    });
+      return newObj
+    })
 
     return queueArray.map((e, i) => {
       return (
@@ -611,7 +611,7 @@ class SendRecieve extends Component {
               id="Remove"
               src={trashimg}
               onClick={() => {
-                this.props.OpenModal3();
+                this.props.OpenModal3()
               }}
             />
           </td>
@@ -620,8 +620,8 @@ class SendRecieve extends Component {
             showCloseIcon={false}
             open={this.props.openThirdModal}
             onClose={e => {
-              e.preventDefault();
-              this.props.CloseModal3();
+              e.preventDefault()
+              this.props.CloseModal3()
             }}
             center
           >
@@ -641,8 +641,8 @@ class SendRecieve extends Component {
                       type="button"
                       className="button primary"
                       onClick={() => {
-                        this.props.removeQueue(e.key);
-                        this.props.CloseModal3();
+                        this.props.removeQueue(e.key)
+                        this.props.CloseModal3()
                       }}
                     />
                   )}
@@ -656,7 +656,7 @@ class SendRecieve extends Component {
                       type="button"
                       className="button"
                       onClick={() => {
-                        this.props.CloseModal3();
+                        this.props.CloseModal3()
                       }}
                     />
                   )}
@@ -665,8 +665,8 @@ class SendRecieve extends Component {
             </div>
           </Modal>
         </tr>
-      );
-    });
+      )
+    })
   }
 
   modalinternal3() {
@@ -726,25 +726,25 @@ class SendRecieve extends Component {
               )}
             </table>
           </div>
-        );
+        )
     }
   }
 
   MyAddressesTable() {
     let filteredAddress = this.props.myAccounts.filter(acct => {
       if (acct.account === 'default') {
-        let dummie = 'My Account';
+        let dummie = 'My Account'
         return (
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
-        );
+        )
       } else {
         return (
           acct.account
             .toLowerCase()
             .indexOf(this.props.Search.toLowerCase()) !== -1
-        );
+        )
       }
-    });
+    })
     return (
       <div id="Addresstable-wraper">
         {filteredAddress.map((acct, i) => {
@@ -767,13 +767,13 @@ class SendRecieve extends Component {
                       Click to copy
                     </span>
                   </td>
-                );
+                )
               })}
             </tr>
-          );
+          )
         })}
       </div>
-    );
+    )
   }
 
   modalinternal2() {
@@ -795,16 +795,16 @@ class SendRecieve extends Component {
                     type="button"
                     className="button primary"
                     onClick={() => {
-                      this.sendOne();
-                      this.props.CloseModal2();
+                      this.sendOne()
+                      this.props.CloseModal2()
                     }}
                   />
                 )}
               </FormattedMessage>
             </div>
           </div>
-        );
-        break;
+        )
+        break
       case 'Clear Queue?':
         return (
           <div>
@@ -822,16 +822,16 @@ class SendRecieve extends Component {
                     type="button"
                     className="button primary"
                     onClick={() => {
-                      this.props.clearQueue();
-                      this.props.CloseModal2();
+                      this.props.clearQueue()
+                      this.props.CloseModal2()
                     }}
                   />
                 )}
               </FormattedMessage>
             </div>
           </div>
-        );
-        break;
+        )
+        break
       case 'Send Multiple?':
         return (
           <div>
@@ -853,16 +853,16 @@ class SendRecieve extends Component {
                     type="button"
                     className="button primary"
                     onClick={() => {
-                      this.sendMany();
-                      this.props.CloseModal2();
+                      this.sendMany()
+                      this.props.CloseModal2()
                     }}
                   />
                 )}
               </FormattedMessage>
             </div>
           </div>
-        );
-        break;
+        )
+        break
       case 'Edit Entry?':
         return (
           <div>
@@ -880,20 +880,20 @@ class SendRecieve extends Component {
                     type="button"
                     className="button primary"
                     onClick={() => {
-                      this.validateAddToQueue();
-                      this.props.CloseModal2();
+                      this.validateAddToQueue()
+                      this.props.CloseModal2()
                     }}
                   />
                 )}
               </FormattedMessage>
             </div>
           </div>
-        );
-        break;
+        )
+        break
 
       default:
-        'Error';
-        break;
+        'Error'
+        break
     }
   }
 
@@ -976,7 +976,7 @@ class SendRecieve extends Component {
                 placeholder="0.00"
                 value={this.props.moveUSDAmount}
                 onChange={e => {
-                  this.moveAmmountConverter(e);
+                  this.moveAmmountConverter(e)
                 }}
                 required
               />
@@ -1002,29 +1002,29 @@ class SendRecieve extends Component {
           </button>
         </div>
       </div>
-    );
+    )
   }
 
   moveAmmountConverter(e, isNxs) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === '')) {
       if (isNxs) {
-        let Usd = e.target.value * this.calculateUSDvalue();
-        this.props.updateMoveAmount(e.target.value, Usd.toFixed(2));
+        let Usd = e.target.value * this.calculateUSDvalue()
+        this.props.updateMoveAmount(e.target.value, Usd.toFixed(2))
       } else {
-        let NxsValue = e.target.value / this.calculateUSDvalue();
-        this.props.updateMoveAmount(NxsValue.toFixed(5), e.target.value);
+        let NxsValue = e.target.value / this.calculateUSDvalue()
+        this.props.updateMoveAmount(NxsValue.toFixed(5), e.target.value)
       }
     } else {
-      return null;
+      return null
     }
   }
 
   moveNXSbetweenAccounts() {
     let from = this.props.AccountChanger.filter(acct => {
       if (acct.name === this.props.MoveFromAccount) {
-        return acct;
+        return acct
       }
-    });
+    })
     if (this.props.MoveFromAccount !== this.props.MoveToAccount) {
       if (this.props.MoveFromAccount !== '') {
         if (parseFloat(from[0].val) > parseFloat(this.props.moveAmount)) {
@@ -1039,17 +1039,17 @@ class SendRecieve extends Component {
             this.props.Message
           )
             .then(payload => {
-              this.getAccountData();
-              console.log(payload);
-              this.props.OpenModal('NXS Moved');
+              this.getAccountData()
+              console.log(payload)
+              this.props.OpenModal('NXS Moved')
             })
             .catch(e => {
               if (typeof e === 'object') {
-                this.props.OpenModal(e.Message);
+                this.props.OpenModal(e.Message)
               } else {
-                this.props.OpenModal(e);
+                this.props.OpenModal(e)
               }
-            });
+            })
           console.log(
             'MOVE ' +
               this.props.moveAmount +
@@ -1058,22 +1058,22 @@ class SendRecieve extends Component {
               this.props.MoveFromAccount +
               ' to ' +
               this.props.MoveToAccount
-          );
+          )
         } else {
-          this.props.OpenModal('Insufficient funds');
+          this.props.OpenModal('Insufficient funds')
         }
       } else {
-        this.props.OpenModal('No second account chosen');
+        this.props.OpenModal('No second account chosen')
       }
     } else {
-      this.props.OpenModal('Accounts are the same');
+      this.props.OpenModal('Accounts are the same')
     }
   }
 
   render() {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
-      this.props.SetSendAgainData(null);
+      this.props.SetSendAgainData(null)
     }
 
     return (
@@ -1085,7 +1085,7 @@ class SendRecieve extends Component {
             defaultMessage="Send Nexus"
           />
         </h2>
-        <div className="impexpblock">
+        {/* <div className="impexpblock">
           {this.props.connections !== undefined && (
             <a className="impexp" onClick={() => this.props.OpenMoveModal()}>
               <FormattedMessage
@@ -1094,7 +1094,7 @@ class SendRecieve extends Component {
               />
             </a>
           )}
-        </div>
+        </div> */}
         {/* ADDRESS MODAL */}
         <Modal
           center
@@ -1102,8 +1102,8 @@ class SendRecieve extends Component {
           showCloseIcon={true}
           open={this.props.openFourthModal}
           onClose={e => {
-            e.preventDefault();
-            this.props.CloseModal4();
+            e.preventDefault()
+            this.props.CloseModal4()
           }}
         >
           {this.modalinternal3()}
@@ -1116,8 +1116,8 @@ class SendRecieve extends Component {
           showCloseIcon={false}
           open={this.props.openSecondModal}
           onClose={e => {
-            e.preventDefault();
-            this.props.CloseModal2();
+            e.preventDefault()
+            this.props.CloseModal2()
           }}
         >
           {this.modalinternal2()}
@@ -1129,7 +1129,7 @@ class SendRecieve extends Component {
                   className="button"
                   type="button"
                   onClick={() => {
-                    this.props.CloseModal2();
+                    this.props.CloseModal2()
                   }}
                 />
               )}
@@ -1142,8 +1142,8 @@ class SendRecieve extends Component {
           showCloseIcon={true}
           open={this.props.moveModal}
           onClose={e => {
-            e.preventDefault();
-            this.props.CloseMoveModal();
+            e.preventDefault()
+            this.props.CloseMoveModal()
           }}
         >
           {this.moveModalInternals()}
@@ -1193,8 +1193,8 @@ class SendRecieve extends Component {
                             src={plusimg}
                             className="lookupButton"
                             onClick={() => {
-                              this.props.clearSearch();
-                              this.props.OpenModal4('Address Lookup');
+                              this.props.clearSearch()
+                              this.props.OpenModal4('Address Lookup')
                             }}
                           />
                         </div>
@@ -1246,7 +1246,7 @@ class SendRecieve extends Component {
                         placeholder="0.00"
                         value={this.props.USDAmount}
                         onChange={e => {
-                          this.nxsAmount(e);
+                          this.nxsAmount(e)
                         }}
                         required
                       />
@@ -1282,7 +1282,7 @@ class SendRecieve extends Component {
                     <button
                       className="button"
                       onClick={() => {
-                        console.log(this.props.encrypted, this.props.loggedIn);
+                        console.log(this.props.encrypted, this.props.loggedIn)
                         if (
                           !(this.props.Address === '') &&
                           this.props.Amount > 0
@@ -1291,14 +1291,14 @@ class SendRecieve extends Component {
                             this.props.encrypted === false ||
                             this.props.loggedIn === true
                           ) {
-                            this.props.OpenModal2('send transaction?');
+                            this.props.OpenModal2('send transaction?')
                           } else {
-                            this.props.OpenModal('Wallet Locked');
+                            this.props.OpenModal('Wallet Locked')
                           }
                         } else if (this.props.Amount <= 0) {
-                          this.props.OpenModal('Invalid Amount');
+                          this.props.OpenModal('Invalid Amount')
                         } else {
-                          this.props.OpenModal('Invalid Address');
+                          this.props.OpenModal('Invalid Address')
                         }
                       }}
                     >
@@ -1326,7 +1326,10 @@ class SendRecieve extends Component {
                         className="button"
                         onClick={() => this.props.OpenMoveModal()}
                       >
-                        Move Between Accounts
+                        <FormattedMessage
+                          id="sendReceive.MoveNxsBetweenAccount"
+                          defaultMessage="MOVE NXS BETWEEN ACCOUNTS"
+                        />
                       </button>
                     )}
                   </div>
@@ -1360,18 +1363,18 @@ class SendRecieve extends Component {
                       type="reset"
                       className="button primary"
                       onClick={() => {
-                        console.log(this.props.encrypted, this.props.loggedIn);
+                        console.log(this.props.encrypted, this.props.loggedIn)
                         if (
                           this.props.encrypted === false ||
                           this.props.loggedIn === true
                         ) {
                           if (Object.keys(this.props.Queue).length > 0) {
-                            this.props.OpenModal2('Send Multiple?');
+                            this.props.OpenModal2('Send Multiple?')
                           } else {
-                            this.props.OpenModal('Empty Queue!');
+                            this.props.OpenModal('Empty Queue!')
                           }
                         } else {
-                          this.props.OpenModal('Wallet Locked');
+                          this.props.OpenModal('Wallet Locked')
                         }
                       }}
                     >
@@ -1385,7 +1388,7 @@ class SendRecieve extends Component {
                       type="button"
                       className="button primary"
                       onClick={() => {
-                        this.props.OpenModal2('Clear Queue?');
+                        this.props.OpenModal2('Clear Queue?')
                       }}
                     >
                       <FormattedMessage
@@ -1404,11 +1407,11 @@ class SendRecieve extends Component {
           </div>
         )}
       </div>
-    );
+    )
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SendRecieve);
+)(SendRecieve)

@@ -91,6 +91,7 @@
   "transactions.Rows": "Rangées",
   "transactions.Pending": "(En attendant)",
   "transactions.NoRowsFound": "Aucune rangée trouvée",
+  "transactions.AllAccounts": "Tous les comptes",
 
   "Market.Information": "Information du marché",
   "Market.Refreash": "Actualiser les données du marché",

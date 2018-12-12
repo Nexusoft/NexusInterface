@@ -91,6 +91,7 @@
   "transactions.Rows": "行",
   "transactions.Pending": "（保留中)",
   "transactions.NoRowsFound": "行が見つかりません",
+  "transactions.AllAccounts": "すべてのアカウント",
 
   "Market.Information": "市場情報",
   "Market.Refreash": "マーケットデータをリフレッシュする",

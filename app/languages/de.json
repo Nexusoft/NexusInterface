@@ -92,6 +92,7 @@
   "transactions.Rows": "Reihen",
   "transactions.Pending": "(Steht aus)",
   "transactions.NoRowsFound": "Keine Zeilen gefunden",
+  "transactions.AllAccounts": "Alle Konten",
 
   "Market.Information": "Marktinformationen",
   "Market.Refreash": "Marktdaten aktualisieren",
