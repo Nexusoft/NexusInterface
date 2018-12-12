@@ -19,6 +19,7 @@ export default {
     'overview.InterestRate': 'Stake Reward',
     'overview.StakeWeight': 'Stake Weight',
     'overview.Globe': 'Globe includes GeoLite2',
+    'overview.StakeBalance': 'Stake Balance',
 
     'sendReceive.SendNexus': 'Send NXS',
     'sendReceive.Address': 'NXS Address',
