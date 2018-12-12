@@ -190,7 +190,11 @@ configuration.GetBootstrapSize = async function() {
   return promise;
 };
 
-configuration.BootstrapRecentDatabase = async function(self) {
+configuration.BootstrapRecentDatabase = async function({
+  OpenModal,
+  CloseModal,
+  setPercentDownloaded,
+}) {
   const RPC = require('scripts/rpc');
   const fs = require('fs');
   const path = require('path');
@@ -222,10 +226,10 @@ configuration.BootstrapRecentDatabase = async function(self) {
     BackupDir + '/NexusBackup_' + now + '.dat',
   ]).then(() => {
     RPC.PROMISE('stop', []).then(payload => {
-      self.props.OpenModal('Wallet Backup');
+      OpenModal('Wallet Backup');
       electron.remote.getGlobal('core').stop();
       setTimeout(() => {
-        self.props.CloseModal();
+        CloseModal();
       }, 3000);
 
       let tarGzLocation = path.join(
@@ -288,9 +292,9 @@ configuration.BootstrapRecentDatabase = async function(self) {
           console.log('Direct bootstrap');
         }
         if (err) {
-          self.props.OpenModal(result.error);
+          OpenModal(result.error);
           setTimeout(() => {
-            self.props.CloseModal();
+            CloseModal();
           }, 3000);
         }
         console.log(err, result);
@@ -303,16 +307,14 @@ configuration.BootstrapRecentDatabase = async function(self) {
         path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
         (err, stats) => {
           console.log((stats.size / totalDownloadSize) * 100);
-          self.props.setPercentDownloaded(
-            (stats.size / totalDownloadSize) * 100
-          );
+          setPercentDownloaded((stats.size / totalDownloadSize) * 100);
         }
       );
     }, 5000);
     electron.remote.getGlobal('core').on('starting', () => {
       self.CloseBootstrapModalAndSaveSettings();
       clearInterval(percentChecker);
-      self.props.setPercentDownloaded(0);
+      setPercentDownloaded(0);
       self.CloseBootstrapModalAndSaveSettings();
     });
   });
