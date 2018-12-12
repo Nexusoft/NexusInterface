@@ -214,16 +214,6 @@ class SettingsApp extends Component {
     settings.SaveSettings(settingsObj)
   }
 
-  updateInfoPopUp(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
-
-    settingsObj.infopopups = el.checked
-
-    settings.SaveSettings(settingsObj)
-  }
-
   updateAutoStart(event) {
     var el = event.target
     var settings = require('api/settings.js')
@@ -268,16 +258,6 @@ class SettingsApp extends Component {
     var settingsObj = settings.GetSettings()
 
     settingsObj.minimizeToTray = el.checked
-
-    settings.SaveSettings(settingsObj)
-  }
-
-  updateMinimizeOnClose(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
-
-    settingsObj.minimizeOnClose = el.checked
 
     settings.SaveSettings(settingsObj)
   }
@@ -586,54 +566,6 @@ class SettingsApp extends Component {
               )}
             </FormattedMessage>
           </div>
-
-          {/* <div className="field">
-            <label htmlFor="minimizeOnClose">
-              {' '}
-              <FormattedMessage
-                id="Settings.MinimizeClose"
-                defaultMessage="Minimize On Close"
-              />
-            </label>
-            <FormattedMessage
-              id="ToolTip.MinimizeOnClose"
-              defaultMessage="Minimize the wallet when closing the window instead of closing it"
-            >
-              {MoC => (
-                <input
-                  id="minimizeOnClose"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateMinimizeOnClose}
-                  data-tooltip={MoC}
-                />
-              )}
-            </FormattedMessage>
-          </div> */}
-
-          {/* <div className="field">
-            <label htmlFor="infoPopUps">
-              {' '}
-              <FormattedMessage
-                id="Settings.InformationPop"
-                defaultMessage="Information Popups"
-              />
-            </label>
-            <FormattedMessage
-              id="ToolTip.ShowPopups"
-              defaultMessage="Show Informational Popups"
-            >
-              {tt => (
-                <input
-                  id="infoPopUps"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateInfoPopUp}
-                  data-tooltip={tt}
-                />
-              )}
-            </FormattedMessage>
-          </div> */}
 
           <div className="field">
             <label htmlFor="googleAnalytics">
