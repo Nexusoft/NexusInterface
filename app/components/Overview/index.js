@@ -33,8 +33,8 @@ import NetworkGlobe from './NetworkGlobe';
 
 // Images
 import usdIcon from 'images/USD.sprite.svg';
-import transactionsArrowsIcon from 'images/transactions-arrows.sprite.svg';
-import marketIcon from 'images/marketstats-white.sprite.svg';
+import transactionIcon from 'images/transaction.sprite.svg';
+import chartIcon from 'images/chart.sprite.svg';
 import supplyIcon from 'images/supply.sprite.svg';
 import hours24Icon from 'images/24hr.sprite.svg';
 import nxsStakeIcon from 'images/nxs-staking.sprite.svg';
@@ -135,7 +135,7 @@ const Stats = styled.div(
         justifyContent: 'flex-end',
       },
       [StatIcon]: {
-        marginLeft: 13,
+        marginLeft: 15,
       },
     },
   ({ right }) =>
@@ -715,7 +715,7 @@ class Overview extends Component {
               </StatLabel>
               <StatValue>{!!connections ? this.props.txtotal : '?'}</StatValue>
             </div>
-            <StatIcon icon={transactionsArrowsIcon} />
+            <StatIcon icon={transactionIcon} />
           </Stat>
 
           <Stat>
@@ -731,7 +731,7 @@ class Overview extends Component {
                 {!!displayNXSvalues[0] ? this.marketPriceFormatter() : '?'}
               </StatValue>
             </div>
-            <StatIcon icon={marketIcon} />
+            <StatIcon icon={chartIcon} />
           </Stat>
 
           <Stat>
