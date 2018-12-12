@@ -27,7 +27,8 @@
 }
 
 .icon .tooltip {
-  width: 140px;
+  max-width: 240px;
+  white-space: pre;
 }
 
 /*.noDaemonPort {

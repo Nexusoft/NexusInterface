@@ -33,10 +33,13 @@ function syncStatusTooltip({
       return (
         messages['Header.Synching'] +
         (heighestPeerBlock - blocks).toString() +
+        ' ' +
         messages['Header.Blocks']
       );
     } else {
-      return <FormattedMessage id="Header.Synched" defaultMessage="Synched" />;
+      return (
+        <FormattedMessage id="Header.Synched" defaultMessage="Synchronized" />
+      );
     }
   }
 }
@@ -48,7 +51,7 @@ const SyncStatus = props => (
     ) : (
       <Icon icon={checkIcon} />
     )}
-    <div className="tooltip bottom" style={{ right: '100%' }}>
+    <div className="tooltip bottom">
       <div>{syncStatusTooltip(props)}</div>
     </div>
   </div>
