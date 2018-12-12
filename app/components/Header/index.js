@@ -560,7 +560,7 @@ class Header extends Component {
           </h2>
         )
         break
-      case 'Insufficient Funds':
+      case 'Insufficient funds':
         return (
           <h2>
             <FormattedMessage
@@ -733,6 +733,26 @@ class Header extends Component {
             <FormattedMessage
               id="Alert.CoreRestarting"
               defaultMessage="Core Restarting"
+            />
+          </h2>
+        )
+        break
+      case 'Accounts are the same':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.AccountsAreTheSame"
+              defaultMessage="Accounts are the same"
+            />
+          </h2>
+        )
+        break
+      case 'No second account chosen':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.NoSecondAccountChosen"
+              defaultMessage="No second account chosen"
             />
           </h2>
         )

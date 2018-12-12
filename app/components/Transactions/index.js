@@ -258,25 +258,29 @@ class Transactions extends Component {
     this.props.SetWalletTransactionArray(incomingData)
     let tempZoomDomain = {
       x: [new Date(), new Date(new Date().getFullYear() + 1, 1, 1, 1, 1, 1, 1)],
-      y: [0,1],
+      y: [0, 1],
     }
     if (incomingData != undefined && incomingData.length > 0) {
       tempZoomDomain = {
         x: [
-          new Date ((new Date(incomingData[0].time * 1000).getTime() - 43200000)),
-          new Date ((new Date((incomingData[incomingData.length - 1].time + 1000) * 1000).getTime() + 43200000)),
+          new Date(new Date(incomingData[0].time * 1000).getTime() - 43200000),
+          new Date(
+            new Date(
+              (incomingData[incomingData.length - 1].time + 1000) * 1000
+            ).getTime() + 43200000
+          ),
         ],
-        y:[
-          -1,
-          1,
-        ]
+        y: [-1, 1],
       }
     }
     //console.log(tempZoomDomain);
-    this.setState({
-      tableColumns: tabelheaders,
-      zoomDomain: tempZoomDomain,
-    }, () => (this.handleZoom(this.state.zoomDomain)))
+    this.setState(
+      {
+        tableColumns: tabelheaders,
+        zoomDomain: tempZoomDomain,
+      },
+      () => this.handleZoom(this.state.zoomDomain)
+    )
     // Just trying to give some space on this not important call
     setTimeout(() => {
       let promisnew = new Promise((resolve, reject) => {
@@ -320,7 +324,7 @@ class Transactions extends Component {
     let chart = document.getElementById('transactions-chart')
     let filters = document.getElementById('transactions-filters')
     let details = document.getElementById('transactions-details')
-    let parent = chart.parentNode;
+    let parent = chart.parentNode
     if (chart !== null) {
       let parentHeight =
         parseInt(parent.clientHeight) -
@@ -530,22 +534,18 @@ class Transactions extends Component {
       this.props.selectedAccount == 0 ||
       this.props.selectedAccount === undefined
     ) {
-      incomingMyAccounts = this.props.myAccounts;
+      incomingMyAccounts = this.props.myAccounts
       promisList.push(RPC.PROMISE('listtransactions', ['*', 9999, 0]))
     } else {
       incomingMyAccounts = this.props.myAccounts[this.props.selectedAccount - 1]
       listedaccounts.push(incomingMyAccounts.account)
       promisList.push(
-          RPC.PROMISE('listtransactions', [
-            incomingMyAccounts.account,
-            9999,
-            0,
-          ])
+        RPC.PROMISE('listtransactions', [incomingMyAccounts.account, 9999, 0])
       )
     }
-    let tempWalletTransactions = [];
+    let tempWalletTransactions = []
 
-    let settingsCheckDev = require('api/settings.js').GetSettings();
+    let settingsCheckDev = require('api/settings.js').GetSettings()
 
     // If in Dev Mode add some random transactions
     if (settingsCheckDev.devMode == true) {
@@ -569,7 +569,7 @@ class Transactions extends Component {
     }
 
     Promise.all(promisList).then(payload => {
-      console.log(payload);
+      console.log(payload)
       payload.forEach(element => {
         for (let index = 0; index < element.length; index++) {
           const element2 = element[index]
@@ -1102,10 +1102,11 @@ class Transactions extends Component {
     domain.x[0] = new Date(domain.x[0])
     domain.x[1] = new Date(domain.x[1])
 
-    if (domain.x[1].getTime() > this.props.walletitems[this.props.walletitems.length - 1])
-    {
+    if (
+      domain.x[1].getTime() >
+      this.props.walletitems[this.props.walletitems.length - 1]
+    ) {
       //console.log("IM OUT");
-
     }
     let high = 0
     let low = 0
@@ -1115,7 +1116,7 @@ class Transactions extends Component {
         element.time * 1000 <= domain.x[1]
       ) {
         if (element.amount > high) {
-          high = element.amount + (element.amount * 0.30);
+          high = element.amount + element.amount * 0.3
         }
 
         if (element.amount < low) {
@@ -1123,10 +1124,10 @@ class Transactions extends Component {
         }
       }
     })
-    domain.y[0] = low === 0? -0.001:low;
-    
-    domain.y[0] = -high;
-    domain.y[1] = high === 0? 0.00001:high;
+    domain.y[0] = low === 0 ? -0.001 : low
+
+    domain.y[0] = -high
+    domain.y[1] = high === 0 ? 0.00001 : high
     //console.log(this.state);
     //console.log(domain);
     this.setState({ zoomDomain: domain })
@@ -1497,8 +1498,10 @@ class Transactions extends Component {
     if (this.props)
       if (this.props.myAccounts[0]) {
         let tempMyAccounts = this.props.myAccounts.slice()
-        tempMyAccounts.unshift({ account: 'All' })
-        //console.log(tempAAAA);
+        tempMyAccounts.unshift({
+          account: this.props.messages['transactions.AllAccounts'],
+        })
+        // console.log(tempAAAA)
         return tempMyAccounts.map((e, i) => {
           return (
             <option key={'account_select_' + e.account} value={i}>
@@ -1515,24 +1518,22 @@ class Transactions extends Component {
     this.props.SetSelectedMyAccount(inAccount)
   }
 
-  returnVictoryChart()
-  {
-    
-    const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
-    return( 
-        <VictoryChart
+  returnVictoryChart() {
+    const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom')
+    return (
+      <VictoryChart
         width={this.state.mainChartWidth}
         height={this.state.mainChartHeight}
         scale={{ x: 'time' }}
         style={{ parent: { overflow: 'visible' } }}
         // theme={VictoryTheme.material}
-        domainPadding={{ x: 90 , y: 30}}
+        domainPadding={{ x: 90, y: 30 }}
         // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
         padding={{ top: 6, bottom: 6, left: 0, right: 0 }}
-        domain = {this.state.zoomDomain}
+        domain={this.state.zoomDomain}
         containerComponent={
           <VictoryZoomVoronoiContainer
-            voronoiPadding = {10}
+            voronoiPadding={10}
             zoomDimension="x"
             zoomDomain={this.state.zoomDomain}
             onZoomDomainChange={this.handleZoom.bind(this)}
@@ -1557,8 +1558,7 @@ class Transactions extends Component {
                   this.state.zoomDomain.x[0].getTime()
                 internalDifference = internalDifference / 2
                 internalDifference =
-                  this.state.zoomDomain.x[0].getTime() +
-                  internalDifference
+                  this.state.zoomDomain.x[0].getTime() + internalDifference
                 if (incomingProp.a.getTime() <= internalDifference) {
                   return 'right'
                 } else {
@@ -1655,7 +1655,6 @@ class Transactions extends Component {
             </h2>
           ) : (
             <div>
-              Account Select:
               <select
                 id="select"
                 value={this.props.selectedAccount}
@@ -1663,8 +1662,11 @@ class Transactions extends Component {
               >
                 {this.accountChanger()}
               </select>{' '}
-              <div id="transactions-chart" style = {{display: data.length === 0? "none" : "block" }}>
-               {data.length === 0? null :this.returnVictoryChart()}
+              <div
+                id="transactions-chart"
+                style={{ display: data.length === 0 ? 'none' : 'block' }}
+              >
+                {data.length === 0 ? null : this.returnVictoryChart()}
               </div>
               <div id="transactions-filters">
                 <div id="filter-address" className="filter-field">

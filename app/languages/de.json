@@ -48,6 +48,12 @@
   "sendReceive.CopyToFeild": "In Feld kopieren",
   "sendReceive.ClickToEdit": "Zum Bearbeiten anklicken",
 
+  "sendReceive.SelectAnAccount": "Wählen Sie ein Konto aus",
+  "sendReceive.FromAccount": "Vom Konto",
+  "sendReceive.ToAccount": "Zum Konto",
+  "sendReceive.MoveNXS": "Bewegung NXS",
+  "sendReceive.MoveNxsBetweenAccount": "BEWEGEN SIE NXS ZWISCHEN KONTEN",
+
   "transactions.MoreDetails": "Mehr Nähere",
   "transactions.Details": "Nähere",
   "transactions.fee": "Gebühr",
@@ -86,6 +92,7 @@
   "transactions.Rows": "Reihen",
   "transactions.Pending": "(Steht aus)",
   "transactions.NoRowsFound": "Keine Zeilen gefunden",
+  "transactions.AllAccounts": "Alle Konten",
 
   "Market.Information": "Marktinformationen",
   "Market.Refreash": "Marktdaten aktualisieren",
@@ -235,6 +242,8 @@
   "Settings.LockWallet": "Brieftasche sperren",
   "Settings.ViewPrivateKeyForAddress": "Den privaten Schlüssel für die Adresse anzeigen",
   "Settings.EncryptRestart": "Verschlüsseln und neu starten",
+  "Settings.MinimumConfirmations": "Mindestbestätigungen",
+  "Settings.Forkblock": "Gabel Blöcke",
 
   "Console.CoreOutput": "Kernausgabe",
   "Console.Console": "Konsole",
@@ -327,7 +336,7 @@
   "ToolTip.RecentDatabaseDownloading": "Aktuelle Datenbank herunterladen",
   "ToolTip.PleaseWait": "Warten Sie mal...",
   "ToolTip.RecentDatabaseExtracting": "Letzte Datenbankextraktion",
-
+  "ToolTip.MinimumConfirmations": "Blank",
   "Alert.Received": "Transaktion erhalten",
   "Alert.Sent": "Transaktion gesendet",
   "Alert.Genesis": "Genesis Transaktion",
@@ -355,6 +364,11 @@
   "Alert.ContactsExported": "Kontakte exportiert",
   "Alert.DaemonLoadingWait": "Daemon wird geladen, bitte warten",
   "Alert.InvalidAmount": "Ungültige Menge",
+
+  "Alert.CoreRestarting": "Kern Neustart",
+  "Alert.AccountsAreTheSame": "Konten sind die gleichen",
+  "Alert.NoSecondAccountChosen": "Kein zweites Konto ausgewählt",
+  "Alert.InsufficientFunds": "Unzureichende Mittel",
 
   "Cp.AC1": "Akzentfarbe 1",
   "Cp.AC2": "Akzentfarbe 2",
