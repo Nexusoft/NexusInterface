@@ -150,7 +150,6 @@ textarea {
   background-color: var(--color-3);
   width: 280px;
   color: var(--color-5);
-  margin-bottom: -15px;
 }
 #summary {
   display: flex;

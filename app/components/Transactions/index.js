@@ -1659,10 +1659,10 @@ class Transactions extends Component {
                 id="select"
                 value={this.props.selectedAccount}
                 onChange={e => this.selectAccount(e.target.value)}
+                style={{marginBottom:"5"}}
               >
                 {this.accountChanger()}
               </select>{' '}
-              <br id="AccountChangeSpacer"/>
               <div
                 id="transactions-chart"
                 style={{ display: data.length === 0 ? 'none' : 'block' }}
