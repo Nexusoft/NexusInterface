@@ -1,12 +1,12 @@
-import { app, Menu, shell, BrowserWindow, remote } from 'electron'
+import { app, Menu, shell, BrowserWindow, remote } from 'electron';
 
-import * as RPC from './scripts/rpc'
+import * as RPC from './scripts/rpc';
 
 export default class ContextMenuBuilder {
-  defaultContext: []
+  defaultContext: [];
 
   constructor(defaultContext: []) {
-    this.defaultContext = this.ReturnDefaultContextMenu()
+    this.defaultContext = this.ReturnDefaultContextMenu();
   }
 
   ReturnDefaultContextMenu() {
@@ -39,6 +39,6 @@ export default class ContextMenuBuilder {
       //     //history.push('/About');
       //   }
       // }
-    ]
+    ];
   }
 }

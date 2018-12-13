@@ -5,42 +5,42 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { remote } from 'electron'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { remote } from 'electron';
 
 // Internal Dependencies
-import styles from './style.css'
-import * as RPC from 'scripts/rpc'
-import * as TYPE from 'actions/actiontypes'
-import { FormattedMessage } from 'react-intl'
-import ContextMenuBuilder from 'contextmenu'
+import styles from './style.css';
+import * as RPC from 'scripts/rpc';
+import * as TYPE from 'actions/actiontypes';
+import { FormattedMessage } from 'react-intl';
+import ContextMenuBuilder from 'contextmenu';
 
 // Images
-import trustimg from 'images/trust-list.svg'
+import trustimg from 'images/trust-list.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.list, ...state.common, ...state.overview }
-}
+  return { ...state.list, ...state.common, ...state.overview };
+};
 const mapDispatchToProps = dispatch => ({
   GetListDump: returnedData =>
     dispatch({ type: TYPE.GET_TRUST_LIST, payload: returnedData }),
   ToggleSortDir: () => dispatch({ type: TYPE.TOGGLE_SORT_DIRECTION }),
-})
+});
 
 class List extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     RPC.PROMISE('getnetworktrustkeys', []).then(payload => {
-      this.props.GetListDump(payload.keys)
-    })
-    this.props.googleanalytics.SendScreen('TrustList')
-    window.addEventListener('contextmenu', this.setupcontextmenu, false)
+      this.props.GetListDump(payload.keys);
+    });
+    this.props.googleanalytics.SendScreen('TrustList');
+    window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu)
+    window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
   componentDidUpdate(prevProps) {
@@ -49,32 +49,32 @@ class List extends Component {
       this.props.connections !== undefined
     ) {
       RPC.PROMISE('getnetworktrustkeys', []).then(payload => {
-        this.props.GetListDump(payload.keys)
-      })
+        this.props.GetListDump(payload.keys);
+      });
     }
   }
 
   // Class methods
   setupcontextmenu(e) {
-    e.preventDefault()
-    const contextmenu = new ContextMenuBuilder().defaultContext
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
-    defaultcontextmenu.popup(remote.getCurrentWindow())
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   buildList() {
     if (this.props.trustlist) {
-      let sortableList = [...this.props.trustlist]
+      let sortableList = [...this.props.trustlist];
 
       if (this.props.acc) {
         sortableList = sortableList.sort(
           (a, b) => b.interestrate - a.interestrate
-        )
+        );
       } else {
         sortableList = sortableList.sort(
           (a, b) => a.interestrate - b.interestrate
-        )
+        );
       }
 
       return sortableList.map(ele => (
@@ -83,7 +83,7 @@ class List extends Component {
 
           <td key={ele.address.slice(0, 10)}>{ele.interestrate}</td>
         </tr>
-      ))
+      ));
     }
   }
 
@@ -140,7 +140,7 @@ class List extends Component {
           )}
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -148,4 +148,4 @@ class List extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(List)
+)(List);

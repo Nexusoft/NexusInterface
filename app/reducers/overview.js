@@ -1,4 +1,4 @@
-import * as TYPE from 'actions/actiontypes'
+import * as TYPE from 'actions/actiontypes';
 
 const initialState = {
   USD: 0,
@@ -9,7 +9,7 @@ const initialState = {
   percentDownloaded: 0,
   webGLEnabled: false,
   daemonAvailable: false,
-}
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -18,75 +18,75 @@ export default (state = initialState, action) => {
         ...state,
         ...action.payload,
         daemonAvailable: true,
-      }
-      break
+      };
+      break;
     case TYPE.DAEMON_UNAVAILABLE:
-      var temp = undefined
+      var temp = undefined;
       if (state.connections !== undefined) {
-        temp = 0
+        temp = 0;
       }
 
       return {
         ...state,
         connections: temp,
         daemonAvailable: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.SET_WEBGL_ENABLED:
       return {
         ...state,
         webGLEnabled: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.SET_PERCENT_DOWNLOADED:
       return {
         ...state,
         percentDownloaded: action.payload,
-      }
+      };
     case TYPE.CLEAR_FOR_RESTART:
       return {
         ...initialState,
         webGLEnabled: state.webGLEnabled,
-      }
-      break
+      };
+      break;
     case TYPE.CLEAR_FOR_BOOTSTRAPING:
       return {
         ...initialState,
         webGLEnabled: state.webGLEnabled,
         percentDownloaded: 0.001,
-      }
-      break
+      };
+      break;
     case TYPE.SET_EXPERIMENTAL_WARNING:
       return {
         ...state,
         experimentalOpen: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.USD_RATE:
       return {
         ...state,
         USD: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.BTC_RATE:
       return {
         ...state,
         BTC: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.CHANGE_24:
       return {
         ...state,
         USDpercentChange: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.SET_SUPPLY:
       return {
         ...state,
         circulatingSupply: action.payload,
-      }
-      break
+      };
+      break;
     default:
-      return state
+      return state;
   }
-}
+};

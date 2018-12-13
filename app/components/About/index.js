@@ -5,37 +5,37 @@ Last Modified by: Brian Smith
 */
 
 // External Dependencies
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { shell } from 'electron'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { shell } from 'electron';
 // Internal Dependencies
-import styles from './style.css'
-import * as TYPE from 'actions/actiontypes'
+import styles from './style.css';
+import * as TYPE from 'actions/actiontypes';
 
 // Images
-import nexusLogo from 'images/logo-full.svg'
-import updateicon from 'images/unlock.png'
+import nexusLogo from 'images/logo-full.svg';
+import updateicon from 'images/unlock.png';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.overview }
-}
+  return { ...state.overview };
+};
 //const mapDispatchToProps = dispatch => {};
 
 class About extends Component {
   // Class Methods
   getCurrentYear() {
-    let temp = new Date()
-    return temp.getFullYear()
+    let temp = new Date();
+    return temp.getFullYear();
   }
 
   getInterfaceVersionNumber() {
-    return APP_VERSION
+    return APP_VERSION;
   }
 
   getDeamonVersionNumber() {
-    return this.props.version
+    return this.props.version;
   }
 
   // Mandatory React method
@@ -186,7 +186,7 @@ class About extends Component {
           </dl>
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -194,4 +194,4 @@ class About extends Component {
 export default connect(
   mapStateToProps
   //  mapDispatchToProps
-)(About)
+)(About);

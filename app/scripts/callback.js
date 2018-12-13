@@ -15,7 +15,7 @@
 **/
 
 /** Declare the Namespace for the AJAX Functions. **/
-var AJAX = AJAX || {}
+var AJAX = AJAX || {};
 
 /** 						
 _____________________________________________________________________________________ 
@@ -24,27 +24,27 @@ ________________________________________________________________________________
 _____________________________________________________________________________________ **/
 
 /** Declare the Namespace for the AJAX LOADER Handlers. **/
-AJAX.LOADER = AJAX.LOADER || {}
+AJAX.LOADER = AJAX.LOADER || {};
 
 /** Basic Loader Animation Handler for Future Callback Functions per Module. **/
 AJAX.LOADER.Show = function(LoaderID) {
-  if (LoaderID == undefined) LoaderID = 'Loader'
+  if (LoaderID == undefined) LoaderID = 'Loader';
 
   /** Set the Loader Opacity. **/
-  let loader = document.getElementById(LoaderID)
-  loader.style.opacity = 1
-  loader.style.visibility = 'visible'
-}
+  let loader = document.getElementById(LoaderID);
+  loader.style.opacity = 1;
+  loader.style.visibility = 'visible';
+};
 
 /** Basic Loader Animation Handler for Future Callback Functions per Module. **/
 AJAX.LOADER.Hide = function(LoaderID) {
-  if (LoaderID == undefined) LoaderID = 'Loader'
+  if (LoaderID == undefined) LoaderID = 'Loader';
 
   /** Set the Loader Opacity. **/
-  let loader = document.getElementById(LoaderID)
-  loader.style.visibility = 'hidden'
-  loader.style.opacity = 0
-}
+  let loader = document.getElementById(LoaderID);
+  loader.style.visibility = 'hidden';
+  loader.style.opacity = 0;
+};
 
 /** 						
 _____________________________________________________________________________________ 
@@ -53,101 +53,101 @@ ________________________________________________________________________________
 _____________________________________________________________________________________ **/
 
 /** Declare the Namespace for the AJAX LOADER Handlers. **/
-AJAX.CALLBACK = AJAX.CALLBACK || {}
+AJAX.CALLBACK = AJAX.CALLBACK || {};
 
 /** Declare the Module Namespace. **/
-AJAX.CALLBACK.MODULE = AJAX.CALLBACK.MODULE || {}
+AJAX.CALLBACK.MODULE = AJAX.CALLBACK.MODULE || {};
 
 /** Standard Function to Handle Initial AJAX Transitions / Loaders. **/
 AJAX.CALLBACK.Init = function(ResponseObject, TagID) {
   /** Show Loader on Ready State 1. **/
   if (ResponseObject.readyState == 1) {
     /** Show the Loader. **/
-    AJAX.LOADER.Show()
+    AJAX.LOADER.Show();
 
     /** Handle the Fade in Styles. **/
     if (TagID !== undefined && TagID !== '') {
-      document.getElementById(TagID).classList.add('fade-transition')
-      document.getElementById(TagID).style.opacity = 0
+      document.getElementById(TagID).classList.add('fade-transition');
+      document.getElementById(TagID).style.opacity = 0;
     }
   }
 
-  return ResponseObject.readyState != 4
-}
+  return ResponseObject.readyState != 4;
+};
 
 /** Standard Function to Handle Final AJAX Transitions / Loaders. **/
 AJAX.CALLBACK.Execute = function(ResponseObject, TagID) {
   /** Set the Content of the TagID from Response Object. **/
   if (ResponseObject.status == 200 && TagID !== undefined && TagID !== '')
-    document.getElementById(TagID).innerHTML = ResponseObject.responseText
+    document.getElementById(TagID).innerHTML = ResponseObject.responseText;
   else if (TagID !== undefined && TagID !== '')
     /** Displace space with 404 Error if Response Status Code is not 200. **/
     document.getElementById(TagID).innerHTML =
-      "<img src='images/404.png' class='center-screen'>"
-}
+      "<img src='images/404.png' class='center-screen'>";
+};
 
 /** Standard Function to Handle Final AJAX Transitions / Loaders. **/
 AJAX.CALLBACK.Final = function(ResponseObject, TagID) {
   /** Handle Loaders. **/
-  AJAX.LOADER.Hide()
+  AJAX.LOADER.Hide();
 
   /** Handle the Fades in Styles. **/
   if (TagID !== undefined && TagID !== '') {
-    document.getElementById(TagID).style.opacity = 1
+    document.getElementById(TagID).style.opacity = 1;
 
     /** Remove the Class from Tag after 2 seconds. **/
     setTimeout(function() {
-      document.getElementById(TagID).classList.remove('fade-transition')
-    }, 300)
+      document.getElementById(TagID).classList.remove('fade-transition');
+    }, 300);
   }
-}
+};
 
 /** Standard Callback Function. Requires Ajax Object, Address, and DIV of the tag that is being changed. **/
 AJAX.CALLBACK.Standard = function(ResponseObject, Address, TagID) {
   /** Handle the Generic Initialization. **/
-  if (AJAX.CALLBACK.Init(ResponseObject, TagID)) return
+  if (AJAX.CALLBACK.Init(ResponseObject, TagID)) return;
 
   /** Standard AJAX Module "On Load" Event Function. **/
   if (AJAX.CALLBACK.MODULE.Init !== undefined)
-    AJAX.CALLBACK.MODULE.Init(ResponseObject, Address, TagID)
+    AJAX.CALLBACK.MODULE.Init(ResponseObject, Address, TagID);
 
   /** Handle The Populating of AJAX Data to Body **/
-  AJAX.CALLBACK.Execute(ResponseObject, TagID)
+  AJAX.CALLBACK.Execute(ResponseObject, TagID);
 
   /** Standard AJAX Module "On Load" Event Function. **/
   if (AJAX.CALLBACK.MODULE.Final !== undefined)
-    AJAX.CALLBACK.MODULE.Final(ResponseObject, Address, TagID)
+    AJAX.CALLBACK.MODULE.Final(ResponseObject, Address, TagID);
 
   /** Handle Final Callback for Fades and Loaders. **/
   setTimeout(function() {
-    AJAX.CALLBACK.Final(ResponseObject, TagID)
-  }, 250)
-}
+    AJAX.CALLBACK.Final(ResponseObject, TagID);
+  }, 250);
+};
 
 /** Basic Callback Function. Requires Ajax Object, Address, and DIV of the tag that is being changed. **/
 AJAX.CALLBACK.Basic = function(ResponseObject, Address, TagID) {
   /** Handle the Generic Initialization. **/
-  if (AJAX.CALLBACK.Init(ResponseObject, TagID)) return
+  if (AJAX.CALLBACK.Init(ResponseObject, TagID)) return;
 
   /** Handle The Populating of AJAX Data to Body **/
-  AJAX.CALLBACK.Execute(ResponseObject, TagID)
+  AJAX.CALLBACK.Execute(ResponseObject, TagID);
 
   /** Handle Final Callback for Fades and Loaders. **/
   setTimeout(function() {
-    AJAX.CALLBACK.Final(ResponseObject, TagID)
-  }, 250)
-}
+    AJAX.CALLBACK.Final(ResponseObject, TagID);
+  }, 250);
+};
 
 /** Standard Callback Function. Requires Ajax Object, Address, and DIV of the tag that is being changed. **/
 AJAX.CALLBACK.Post = function(ResponseObject, Address, PostData, TagID) {
   /** Handle the Generic Initialization. **/
-  if (AJAX.CALLBACK.Init(ResponseObject, TagID)) return
+  if (AJAX.CALLBACK.Init(ResponseObject, TagID)) return;
 
   /** Handle Final Callback for Fades and Loaders. **/
-  AJAX.CALLBACK.Execute(ResponseObject, TagID)
+  AJAX.CALLBACK.Execute(ResponseObject, TagID);
 
   /** Handle Final Callback for Fades and Loaders. **/
   setTimeout(function() {
-    AJAX.CALLBACK.Final(ResponseObject, TagID)
-  }, 250)
-}
+    AJAX.CALLBACK.Final(ResponseObject, TagID);
+  }, 250);
+};

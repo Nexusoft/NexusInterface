@@ -4,21 +4,21 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { remote } from 'electron'
-import { access } from 'fs'
-import { connect } from 'react-redux'
-import Modal from 'react-responsive-modal'
-import { FormattedMessage } from 'react-intl'
-import * as FlagFile from 'languages/LanguageFlags'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { remote } from 'electron';
+import { access } from 'fs';
+import { connect } from 'react-redux';
+import Modal from 'react-responsive-modal';
+import { FormattedMessage } from 'react-intl';
+import * as FlagFile from 'languages/LanguageFlags';
 
 // Internal Dependencies
-import styles from './style.css'
-import core from 'api/core'
-import * as TYPE from 'actions/actiontypes'
-import * as RPC from 'scripts/rpc'
-import ContextMenuBuilder from 'contextmenu'
+import styles from './style.css';
+import core from 'api/core';
+import * as TYPE from 'actions/actiontypes';
+import * as RPC from 'scripts/rpc';
+import ContextMenuBuilder from 'contextmenu';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -26,440 +26,444 @@ const mapStateToProps = state => {
     ...state.common,
     ...state.settings,
     ...state.intl,
-  }
-}
+  };
+};
 const mapDispatchToProps = dispatch => ({
   setSettings: settings => {
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings })
+    dispatch({ type: TYPE.GET_SETTINGS, payload: settings });
   },
   OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   OpenModal2: type => {
-    dispatch({ type: TYPE.SHOW_MODAL2, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
   },
   OpenModal3: type => {
-    dispatch({ type: TYPE.SHOW_MODAL3, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
   },
   CloseModal2: type => {
-    dispatch({ type: TYPE.HIDE_MODAL2, payload: type })
+    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
   },
   CloseModal3: type => {
-    dispatch({ type: TYPE.HIDE_MODAL3, payload: type })
+    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
   },
   localeChange: returnSelectedLocale => {
-    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale })
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
   },
   SwitchLocale: locale => {
-    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale })
+    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
   },
   clearForRestart: () => {
-    dispatch({ type: TYPE.CLEAR_FOR_RESTART })
+    dispatch({ type: TYPE.CLEAR_FOR_RESTART });
   },
   CloseModal: () => {
-    dispatch({ type: TYPE.HIDE_MODAL })
+    dispatch({ type: TYPE.HIDE_MODAL });
   },
-})
+});
 
 class SettingsCore extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    var settings = require('api/settings.js').GetSettings()
+    var settings = require('api/settings.js').GetSettings();
 
     //Core settings
-    this.setManualDaemon(settings)
-    this.setManualDaemonUser(settings)
-    this.setManualDaemonPassword(settings)
-    this.setManualDaemonIP(settings)
-    this.setManualDaemonPort(settings)
-    this.setManualDaemonDataDir(settings)
-    this.setEnableMining(settings)
-    this.setEnableStaking(settings)
-    this.setVerboseLevel(settings)
-    this.setForkblocks(settings)
-    this.setMapPortUsingUpnp(settings)
-    this.setSocks4Proxy(settings)
-    this.setSocks4ProxyIP(settings)
-    this.setSocks4ProxyPort(settings)
-    this.setDetatchDatabaseOnShutdown(settings)
+    this.setManualDaemon(settings);
+    this.setManualDaemonUser(settings);
+    this.setManualDaemonPassword(settings);
+    this.setManualDaemonIP(settings);
+    this.setManualDaemonPort(settings);
+    this.setManualDaemonDataDir(settings);
+    this.setEnableMining(settings);
+    this.setEnableStaking(settings);
+    this.setVerboseLevel(settings);
+    this.setForkblocks(settings);
+    this.setMapPortUsingUpnp(settings);
+    this.setSocks4Proxy(settings);
+    this.setSocks4ProxyIP(settings);
+    this.setSocks4ProxyPort(settings);
+    this.setDetatchDatabaseOnShutdown(settings);
     // this.setOptionalTransactionFee(settings);
   }
 
   // Class Methods
   setEnableMining(settings) {
-    var enableMining = document.getElementById('enableMining')
+    var enableMining = document.getElementById('enableMining');
 
     if (settings.enableMining == true) {
-      enableMining.checked = true
+      enableMining.checked = true;
     } else {
-      enableMining.checked = false
+      enableMining.checked = false;
     }
   }
 
   setEnableStaking(settings) {
-    var enableStaking = document.getElementById('enableStaking')
+    var enableStaking = document.getElementById('enableStaking');
 
     if (settings.enableStaking == true) {
-      enableStaking.checked = true
+      enableStaking.checked = true;
     } else {
-      enableStaking.checked = false
+      enableStaking.checked = false;
     }
   }
 
   setVerboseLevel(settings) {
-    var verboseLevel = document.getElementById('verboseLevel')
+    var verboseLevel = document.getElementById('verboseLevel');
 
     if (settings.verboseLevel === undefined) {
-      verboseLevel.value = '2'
+      verboseLevel.value = '2';
     } else {
-      verboseLevel.value = settings.verboseLevel
+      verboseLevel.value = settings.verboseLevel;
     }
   }
 
   setForkblocks(settings) {
-    var numForkblocks = document.getElementById('forkblockNumber')
+    var numForkblocks = document.getElementById('forkblockNumber');
 
     if (settings.forkblocks === undefined) {
-      numForkblocks.value = '0'
+      numForkblocks.value = '0';
     } else {
-      numForkblocks.value = settings.forkblocks
+      numForkblocks.value = settings.forkblocks;
     }
   }
 
   setManualDaemon(settings) {
-    var manualDaemon = document.getElementById('manualDaemon')
-    var manualDaemonSettings = document.getElementById('manual-daemon-settings')
+    var manualDaemon = document.getElementById('manualDaemon');
+    var manualDaemonSettings = document.getElementById(
+      'manual-daemon-settings'
+    );
     var automaticDaemonSettings = document.getElementById(
       'automatic-daemon-settings'
-    )
+    );
 
     if (settings.manualDaemon == true) {
-      manualDaemon.checked = true
+      manualDaemon.checked = true;
     }
 
     if (manualDaemon.checked) {
-      manualDaemonSettings.style.display = 'block'
-      automaticDaemonSettings.style.display = 'none'
+      manualDaemonSettings.style.display = 'block';
+      automaticDaemonSettings.style.display = 'none';
     } else {
-      manualDaemonSettings.style.display = 'none'
-      automaticDaemonSettings.style.display = 'block'
+      manualDaemonSettings.style.display = 'none';
+      automaticDaemonSettings.style.display = 'block';
     }
   }
 
   setManualDaemonUser(settings) {
-    var manualDaemonUser = document.getElementById('manualDaemonUser')
+    var manualDaemonUser = document.getElementById('manualDaemonUser');
 
     if (settings.manualDaemonUser === undefined) {
-      manualDaemonUser.value = 'rpcserver'
+      manualDaemonUser.value = 'rpcserver';
     } else {
-      manualDaemonUser.value = settings.manualDaemonUser
+      manualDaemonUser.value = settings.manualDaemonUser;
     }
   }
 
   setManualDaemonPassword(settings) {
-    var manualDaemonPassword = document.getElementById('manualDaemonPassword')
+    var manualDaemonPassword = document.getElementById('manualDaemonPassword');
 
     if (settings.manualDaemonPassword === undefined) {
-      manualDaemonPassword.value = 'password'
+      manualDaemonPassword.value = 'password';
     } else {
-      manualDaemonPassword.value = settings.manualDaemonPassword
+      manualDaemonPassword.value = settings.manualDaemonPassword;
     }
   }
 
   setManualDaemonIP(settings) {
-    var manualDaemonIP = document.getElementById('manualDaemonIP')
+    var manualDaemonIP = document.getElementById('manualDaemonIP');
 
     if (settings.manualDaemonIP === undefined) {
-      manualDaemonIP.value = '127.0.0.1'
+      manualDaemonIP.value = '127.0.0.1';
     } else {
-      manualDaemonIP.value = settings.manualDaemonIP
+      manualDaemonIP.value = settings.manualDaemonIP;
     }
   }
 
   setManualDaemonPort(settings) {
-    var manualDaemonPort = document.getElementById('manualDaemonPort')
+    var manualDaemonPort = document.getElementById('manualDaemonPort');
 
     if (settings.manualDaemonPort === undefined) {
-      manualDaemonPort.value = '9336'
+      manualDaemonPort.value = '9336';
     } else {
-      manualDaemonPort.value = settings.manualDaemonPort
+      manualDaemonPort.value = settings.manualDaemonPort;
     }
   }
 
   setManualDaemonDataDir(settings) {
-    var manualDaemonDataDir = document.getElementById('manualDaemonDataDir')
+    var manualDaemonDataDir = document.getElementById('manualDaemonDataDir');
 
     if (settings.manualDaemonDataDir === undefined) {
-      manualDaemonDataDir.value = 'Nexus_Tritium_Data'
+      manualDaemonDataDir.value = 'Nexus_Tritium_Data';
     } else {
-      manualDaemonDataDir.value = settings.manualDaemonDataDir
+      manualDaemonDataDir.value = settings.manualDaemonDataDir;
     }
   }
 
   setMapPortUsingUpnp(settings) {
-    var mapPortUsingUpnp = document.getElementById('mapPortUsingUpnp')
+    var mapPortUsingUpnp = document.getElementById('mapPortUsingUpnp');
 
     if (settings.mapPortUsingUpnp === undefined) {
-      mapPortUsingUpnp.checked = true
+      mapPortUsingUpnp.checked = true;
     }
     if (settings.mapPortUsingUpnp == true) {
-      mapPortUsingUpnp.checked = true
+      mapPortUsingUpnp.checked = true;
     }
     if (settings.mapPortUsingUpnp == false) {
-      mapPortUsingUpnp.checked = false
+      mapPortUsingUpnp.checked = false;
     }
   }
 
   setSocks4Proxy(settings) {
-    var socks4Proxy = document.getElementById('socks4Proxy')
-    var socks4ProxyIP = document.getElementById('socks4ProxyIP')
-    var socks4ProxyPort = document.getElementById('socks4ProxyPort')
+    var socks4Proxy = document.getElementById('socks4Proxy');
+    var socks4ProxyIP = document.getElementById('socks4ProxyIP');
+    var socks4ProxyPort = document.getElementById('socks4ProxyPort');
 
     if (settings.socks4Proxy === undefined) {
-      socks4Proxy.checked = false
+      socks4Proxy.checked = false;
     }
     if (settings.socks4Proxy == true) {
-      socks4Proxy.checked = true
+      socks4Proxy.checked = true;
     }
     if (settings.socks4Proxy == false) {
-      socks4Proxy.checked = false
+      socks4Proxy.checked = false;
     }
 
     if (!socks4Proxy.checked) {
-      socks4ProxyIP.disabled = true
-      socks4ProxyPort.disabled = true
+      socks4ProxyIP.disabled = true;
+      socks4ProxyPort.disabled = true;
     }
   }
 
   setSocks4ProxyIP(settings) {
-    var socks4ProxyIP = document.getElementById('socks4ProxyIP')
+    var socks4ProxyIP = document.getElementById('socks4ProxyIP');
 
     if (settings.socks4ProxyIP === undefined) {
-      socks4ProxyIP.value = '127.0.0.1'
+      socks4ProxyIP.value = '127.0.0.1';
     } else {
-      socks4ProxyIP.value = settings.socks4ProxyIP
+      socks4ProxyIP.value = settings.socks4ProxyIP;
     }
   }
 
   setSocks4ProxyPort(settings) {
-    var socks4ProxyPort = document.getElementById('socks4ProxyPort')
+    var socks4ProxyPort = document.getElementById('socks4ProxyPort');
 
     if (settings.socks4ProxyPort === undefined) {
-      socks4ProxyPort.value = '9050'
+      socks4ProxyPort.value = '9050';
     } else {
-      socks4ProxyPort.value = settings.socks4ProxyPort
+      socks4ProxyPort.value = settings.socks4ProxyPort;
     }
   }
 
   setDetatchDatabaseOnShutdown(settings) {
     var detatchDatabaseOnShutdown = document.getElementById(
       'detatchDatabaseOnShutdown'
-    )
+    );
 
     if (settings.detatchDatabaseOnShutdown === undefined) {
-      detatchDatabaseOnShutdown.checked = false
+      detatchDatabaseOnShutdown.checked = false;
     }
     if (settings.detatchDatabaseOnShutdown == true) {
-      detatchDatabaseOnShutdown.checked = true
+      detatchDatabaseOnShutdown.checked = true;
     }
     if (settings.detatchDatabaseOnShutdown == false) {
-      detatchDatabaseOnShutdown.checked = false
+      detatchDatabaseOnShutdown.checked = false;
     }
   }
 
   updateEnableMining(event) {
-    var el = even.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = even.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.enableMining = el.checked
+    settingsObj.enableMining = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateEnableStaking(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.enableStaking = el.checked
+    settingsObj.enableStaking = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateVerboseLevel(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.verboseLevel = el.value
+    settingsObj.verboseLevel = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateForkBlockAmout(event) {
-    var el = event.target
-    var settings = require('../../api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('../../api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.forkblocks = el.value
+    settingsObj.forkblocks = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemon(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    var manualDaemonSettings = document.getElementById('manual-daemon-settings')
+    var manualDaemonSettings = document.getElementById(
+      'manual-daemon-settings'
+    );
     var automaticDaemonSettings = document.getElementById(
       'automatic-daemon-settings'
-    )
+    );
 
     if (el.checked) {
-      manualDaemonSettings.style.display = 'block'
-      automaticDaemonSettings.style.display = 'none'
+      manualDaemonSettings.style.display = 'block';
+      automaticDaemonSettings.style.display = 'none';
     } else {
-      manualDaemonSettings.style.display = 'none'
-      automaticDaemonSettings.style.display = 'block'
+      manualDaemonSettings.style.display = 'none';
+      automaticDaemonSettings.style.display = 'block';
     }
 
     let manualDeamonUserValue = document.getElementById('manualDaemonUser')
-      .value
+      .value;
     let manualDeamonPasswordValue = document.getElementById(
       'manualDaemonPassword'
-    ).value
-    let manualDeamonIPValue = document.getElementById('manualDaemonIP').value
+    ).value;
+    let manualDeamonIPValue = document.getElementById('manualDaemonIP').value;
     let manualDeamonPortValue = document.getElementById('manualDaemonPort')
-      .value
+      .value;
     let manualDeamonDataDirValue = document.getElementById(
       'manualDaemonDataDir'
-    ).value
+    ).value;
 
-    settingsObj.manualDaemon = el.checked
-    settingsObj.manualDaemonUser = manualDeamonUserValue
-    settingsObj.manualDaemonPassword = manualDeamonPasswordValue
-    settingsObj.manualDaemonIP = manualDeamonIPValue
-    settingsObj.manualDaemonPort = manualDeamonPortValue
-    settingsObj.manualDaemonDataDir = manualDeamonDataDirValue
-    console.log(manualDeamonUserValue)
-    console.log(settingsObj)
-    settings.SaveSettings(settingsObj)
+    settingsObj.manualDaemon = el.checked;
+    settingsObj.manualDaemonUser = manualDeamonUserValue;
+    settingsObj.manualDaemonPassword = manualDeamonPasswordValue;
+    settingsObj.manualDaemonIP = manualDeamonIPValue;
+    settingsObj.manualDaemonPort = manualDeamonPortValue;
+    settingsObj.manualDaemonDataDir = manualDeamonDataDirValue;
+    console.log(manualDeamonUserValue);
+    console.log(settingsObj);
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonUser(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonUser = el.value
+    settingsObj.manualDaemonUser = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonPassword(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonPassword = el.value
+    settingsObj.manualDaemonPassword = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonIP(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonIP = el.value
+    settingsObj.manualDaemonIP = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonPort(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonPort = el.value
+    settingsObj.manualDaemonPort = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonDataDir(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonDataDir = el.value
+    settingsObj.manualDaemonDataDir = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateMapPortUsingUpnp(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.mapPortUsingUpnp = el.checked
+    settingsObj.mapPortUsingUpnp = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateSocks4Proxy(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.socks4Proxy = el.checked
+    settingsObj.socks4Proxy = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
 
-    var socks4ProxyIP = document.getElementById('socks4ProxyIP')
-    var socks4ProxyPort = document.getElementById('socks4ProxyPort')
+    var socks4ProxyIP = document.getElementById('socks4ProxyIP');
+    var socks4ProxyPort = document.getElementById('socks4ProxyPort');
 
     if (el.checked) {
-      socks4ProxyIP.disabled = false
-      socks4ProxyPort.disabled = false
+      socks4ProxyIP.disabled = false;
+      socks4ProxyPort.disabled = false;
     } else {
-      socks4ProxyIP.disabled = true
-      socks4ProxyPort.disabled = true
+      socks4ProxyIP.disabled = true;
+      socks4ProxyPort.disabled = true;
     }
   }
 
   updateSocks4ProxyIP(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.socks4ProxyIP = el.value
+    settingsObj.socks4ProxyIP = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateSocks4ProxyPort(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.socks4ProxyPort = el.value
+    settingsObj.socks4ProxyPort = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateDetatchDatabaseOnShutdown(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
-    settingsObj.detatchDatabaseOnShutdown = el.checked
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
+    settingsObj.detatchDatabaseOnShutdown = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   coreRestart() {
-    core.restart()
+    core.restart();
   }
 
   // changeLocale(locale) {
@@ -682,9 +686,9 @@ class SettingsCore extends Component {
                   onClick={() => {
                     this.props.setSettings(
                       require('api/settings.js').GetSettings()
-                    )
-                    this.props.CloseModal2()
-                    this.props.OpenModal('Core Settings Saved')
+                    );
+                    this.props.CloseModal2();
+                    this.props.OpenModal('Core Settings Saved');
                   }}
                 />
               )}
@@ -697,7 +701,7 @@ class SettingsCore extends Component {
                     type="button"
                     className="button primary"
                     onClick={() => {
-                      this.props.CloseModal2()
+                      this.props.CloseModal2();
                     }}
                   />
                 )}
@@ -1076,11 +1080,11 @@ class SettingsCore extends Component {
               id="restart-core"
               className="button primary"
               onClick={e => {
-                e.preventDefault()
-                this.props.clearForRestart()
+                e.preventDefault();
+                this.props.clearForRestart();
 
-                core.restart()
-                this.props.OpenModal('Core Restarting')
+                core.restart();
+                this.props.OpenModal('Core Restarting');
               }}
             >
               <FormattedMessage
@@ -1092,8 +1096,8 @@ class SettingsCore extends Component {
               // id="restart-core"
               className="button primary"
               onClick={e => {
-                e.preventDefault()
-                this.props.OpenModal2()
+                e.preventDefault();
+                this.props.OpenModal2();
               }}
             >
               <FormattedMessage
@@ -1108,7 +1112,7 @@ class SettingsCore extends Component {
 
         {/* <button className="button primary" onClick={application.restart()}>Restart Core</button> */}
       </section>
-    )
+    );
   }
 }
 
@@ -1116,4 +1120,4 @@ class SettingsCore extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SettingsCore)
+)(SettingsCore);

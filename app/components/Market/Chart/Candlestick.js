@@ -5,7 +5,7 @@ Last Modified by: Brian Smith
 */
 
 // External Dependencies
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {
   VictoryChart,
   VictoryAxis,
@@ -13,7 +13,7 @@ import {
   VictoryPortal,
   VictoryLabel,
   VictoryTooltip,
-} from 'victory'
+} from 'victory';
 
 export default class Candlestick extends Component {
   // Mandatory React method
@@ -76,6 +76,6 @@ export default class Candlestick extends Component {
           />
         </VictoryChart>
       </div>
-    )
+    );
   }
 }
