@@ -144,7 +144,7 @@ class TerminalConsole extends Component {
                 tempConsoleOutput.push(outputObject + ': ');
               } else {
                 tempConsoleOutput.push(
-                  outputObject + ': ' + payload[outputObject]
+                  '       ' + outputObject + ': ' + payload[outputObject]
                 );
               }
 
