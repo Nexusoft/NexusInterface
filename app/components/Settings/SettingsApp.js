@@ -12,7 +12,7 @@ import config from 'api/configuration';
 import { access } from 'fs';
 import path from 'path';
 import Modal from 'react-responsive-modal';
-import messages from '../../languages/messages';
+
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 // Internal Dependencies
