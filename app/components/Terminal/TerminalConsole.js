@@ -92,6 +92,7 @@ class TerminalConsole extends Component {
   constructor(props) {
     super(props);
     this.inputRef = null;
+    this.outputRef = React.createRef();
   }
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -99,6 +100,24 @@ class TerminalConsole extends Component {
       let CommandList = payload.split('\n');
       this.props.setCommandList(CommandList);
     });
+  }
+
+  // Pass before update values to componentDidUpdate
+  getSnapshotBeforeUpdate() {
+    if (!this.outputRef) return null;
+    const { clientHeight, scrollTop, scrollHeight } = this.outputRef;
+    return {
+      scrollAtBottom: clientHeight + scrollTop === scrollHeight,
+    };
+  }
+
+  componentDidUpdate(prevProps, PrevState, beforeUpdate) {
+    // If the scroll was at the bottom before the DOM is updated
+    if (beforeUpdate && beforeUpdate.scrollAtBottom) {
+      // Scroll to bottom
+      const { clientHeight, scrollHeight } = this.outputRef;
+      this.outputRef.scrollTop = scrollHeight - clientHeight;
+    }
   }
 
   // Class Methods
@@ -342,7 +361,9 @@ class TerminalConsole extends Component {
             </AutoComplete>
           </ConsoleInput>
 
-          <ConsoleOutput>{this.processOutput()}</ConsoleOutput>
+          <ConsoleOutput ref={el => (this.outputRef = el)}>
+            {this.processOutput()}
+          </ConsoleOutput>
 
           <ClearConsoleButton
             className="button"
