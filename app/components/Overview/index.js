@@ -683,7 +683,11 @@ class Overview extends Component {
                 (NXS)
               </StatLabel>
               <StatValue>
-                {!!connections ? balance + (stake || 0) : '?'}
+                {!!connections ? (
+                  balance + (stake || 0)
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />
@@ -699,7 +703,11 @@ class Overview extends Component {
                 ({this.props.settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {!!connections ? this.calculateUSDvalue() : '?'}
+                {!!connections ? (
+                  this.calculateUSDvalue()
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
             <StatIcon icon={usdIcon} />
@@ -713,7 +721,13 @@ class Overview extends Component {
                   defaultMessage="Transactions"
                 />
               </StatLabel>
-              <StatValue>{!!connections ? this.props.txtotal : '?'}</StatValue>
+              <StatValue>
+                {!!connections ? (
+                  this.props.txtotal
+                ) : (
+                  <span className="dim">-</span>
+                )}
+              </StatValue>
             </div>
             <StatIcon icon={transactionIcon} />
           </Stat>
@@ -728,7 +742,11 @@ class Overview extends Component {
                 ({this.props.settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {!!displayNXSvalues[0] ? this.marketPriceFormatter() : '?'}
+                {!!displayNXSvalues[0] ? (
+                  this.marketPriceFormatter()
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
             <StatIcon icon={chartIcon} />
@@ -744,7 +762,11 @@ class Overview extends Component {
                 ({this.props.settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {!!displayNXSvalues[0] ? this.marketCapFormatter() : '?'}
+                {!!displayNXSvalues[0] ? (
+                  this.marketCapFormatter()
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
             <StatIcon icon={supplyIcon} />
@@ -760,9 +782,11 @@ class Overview extends Component {
                 ({this.props.settings.fiatCurrency} %)
               </StatLabel>
               <StatValue>
-                {!!displayNXSvalues[0]
-                  ? this.pctChange24hrFormatter() + '%'
-                  : '?'}
+                {!!displayNXSvalues[0] ? (
+                  this.pctChange24hrFormatter() + '%'
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
             <StatIcon icon={hours24Icon} />
@@ -780,7 +804,11 @@ class Overview extends Component {
                 />
               </StatLabel>
               <StatValue>
-                {!!connections ? this.props.connections : '?'}
+                {!!connections ? (
+                  this.props.connections
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
           </Stat>
@@ -795,7 +823,11 @@ class Overview extends Component {
                 />
               </StatLabel>
               <StatValue>
-                {!!connections ? this.props.interestweight + '%' : '?'}
+                {!!connections ? (
+                  this.props.interestweight + '%'
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
           </Stat>
@@ -811,7 +843,11 @@ class Overview extends Component {
               </StatLabel>
 
               <StatValue>
-                {!!connections ? this.numberWithCommas(this.props.blocks) : '?'}
+                {!!connections ? (
+                  this.numberWithCommas(this.props.blocks)
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
             <span className="tooltip left" style={{ whiteSpace: 'nowrap' }}>
@@ -829,7 +865,11 @@ class Overview extends Component {
                 />
               </StatLabel>
               <StatValue>
-                {!!connections ? this.props.blockweight : '?'}
+                {!!connections ? (
+                  this.props.blockweight
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
           </Stat>
@@ -844,7 +884,11 @@ class Overview extends Component {
                 />
               </StatLabel>
               <StatValue>
-                {!!connections ? this.props.trustweight : '?'}
+                {!!connections ? (
+                  this.props.trustweight
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
           </Stat>
@@ -859,7 +903,11 @@ class Overview extends Component {
                 />
               </StatLabel>
               <StatValue>
-                {!!connections ? this.props.stakeweight : '?'}
+                {!!connections ? (
+                  this.props.stakeweight
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
           </Stat>
