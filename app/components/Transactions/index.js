@@ -249,6 +249,7 @@ class Transactions extends Component {
 
   // The callback for the on Mount State
   setOnmountTransactionsCallback(incomingData) {
+    this.updateChartAndTableDimensions(null);
     let objectheaders = Object.keys(this.state.walletTransactions[0])
     let tabelheaders = []
     objectheaders.forEach(element => {
@@ -325,6 +326,9 @@ class Transactions extends Component {
   // Updates the height and width of the chart and table when you resize the window
   updateChartAndTableDimensions(event) {
     let chart = document.getElementById('transactions-chart')
+    if (chart === undefined || chart === null){
+      return;
+    }
     let filters = document.getElementById('transactions-filters')
     let details = document.getElementById('transactions-details')
     let parent = chart.parentNode
@@ -1121,12 +1125,9 @@ class Transactions extends Component {
         }
       }
     })
-    domain.y[0] = low === 0? -0.001:low;
-    
+    high = high == 0 ? 1 : high;
     domain.y[0] = -high;
-    domain.y[1] = high === 0? 0.00001:high;
-    //console.log(this.state);
-    //console.log(domain);
+    domain.y[1] = high;
     this.setState({ zoomDomain: domain })
   }
 
@@ -1517,7 +1518,7 @@ class Transactions extends Component {
 
   returnVictoryChart()
   {
-    
+    const chartData = this.returnChartData();
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
     return( 
         <VictoryChart
@@ -1661,6 +1662,7 @@ class Transactions extends Component {
               >
                 {this.accountChanger()}
               </select>{' '}
+              <br id="AccountChangeSpacer"/>
               <div
                 id="transactions-chart"
                 style={{ display: data.length === 0 ? 'none' : 'block' }}
