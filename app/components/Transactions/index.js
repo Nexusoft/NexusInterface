@@ -943,7 +943,6 @@ class Transactions extends Component {
   returnTableColumns() {
     var options = {
       month: 'short',
-      weekday: 'short',
       year: 'numeric',
       day: 'numeric',
       hour: 'numeric',
@@ -974,7 +973,7 @@ class Transactions extends Component {
         </div>
       ), // We want to display the time in  a readable format
       accessor: 'time',
-      maxWidth: 200,
+      maxWidth: 220,
     })
 
     tempColumns.push({
@@ -1008,7 +1007,7 @@ class Transactions extends Component {
       ),
       accessor: 'category',
 
-      maxWidth: 100,
+      maxWidth: 80,
     })
 
     tempColumns.push({
