@@ -96,11 +96,20 @@ class SettingsApp extends Component {
       this.refs.backupInputField.webkitdirectory = true
       this.refs.backupInputField.directory = true
     }
+
+    var minConf = document.getElementById('minimumConfirmations')
+    minConf.addEventListener("keypress", (event) => {
+      event.preventDefault();
+    });
     //this.OnFiatCurrencyChange = this.OnFiatCurrencyChange.bind(this);
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    this.props.setSettings(require('api/settings.js').GetSettings())
+    this.props.setSettings(require('api/settings.js').GetSettings());
+    var minConf = document.getElementById('minimumConfirmations')
+    minConf.removeEventListener("keypress", (event) => {
+      event.preventDefault();
+    });
   }
 
   // Class Methods
