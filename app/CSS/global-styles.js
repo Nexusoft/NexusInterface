@@ -1,10 +1,12 @@
 import React from 'react';
 import { Global, css } from '@emotion/core';
 import { fade } from 'utils/colors';
-import { colors } from 'styles';
+import { colors, consts } from 'styles';
 
 const styles = css`
-  * {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
 
@@ -27,6 +29,11 @@ const styles = css`
 
   canvas {
     overflow: hidden;
+  }
+
+  code {
+    font-family: consts.monoFontFamily;
+    font-size: 1.05em;
   }
 
   /* Customize Scrollbar */

@@ -317,7 +317,7 @@ class TerminalConsole extends Component {
             </div>
           </div>
 
-          <div id="terminal-console-output">{this.processOutput()}</div>
+          <code id="terminal-console-output">{this.processOutput()}</code>
 
           <button
             id="terminal-console-reset"

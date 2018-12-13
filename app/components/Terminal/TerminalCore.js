@@ -100,7 +100,7 @@ class TerminalCore extends Component {
           <div>Core in Manual Mode</div>
         ) : (
           this.props.coreOutput.map((d, i) => {
-            return <div key={i}>{d}</div>;
+            return <code key={i}>{d}</code>;
           })
         )}
       </div>
