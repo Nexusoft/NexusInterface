@@ -7,7 +7,7 @@ import { keyframes } from '@emotion/core';
 // Internal Global Depnedencies
 import HorizontalLine from 'components/common/HorizontalLine';
 import Icon from 'components/common/Icon';
-import { colors, timing } from 'styles';
+import { colors, timing, consts } from 'styles';
 
 const pulseRing = keyframes`
   0% {
@@ -38,6 +38,7 @@ const NavLinkItem = styled(NavLink)({
   position: 'relative',
   transitionProperties: 'opacity, color, transform',
   transitionDuration: timing.normal,
+  transitionTimingFunction: consts.enhancedEaseOut,
   color: colors.light,
   opacity: 0.45,
 

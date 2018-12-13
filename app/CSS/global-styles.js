@@ -4,6 +4,10 @@ import { fade } from 'utils/colors';
 import { colors } from 'styles';
 
 const styles = css`
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     color: ${colors.light};
     height: 100vh;
