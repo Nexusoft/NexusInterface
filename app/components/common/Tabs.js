@@ -51,7 +51,7 @@ export const TabItem = ({ link, icon, text }) => (
 
 export const Tabs = styled.ul({
   display: 'flex',
-  alignTtems: 'space-between',
+  justifyContent: 'space-between',
   margin: '0 0 1em',
   padding: 0,
 });

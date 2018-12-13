@@ -49,17 +49,30 @@ const TitleIcon = styled(Icon)({
   marginRight: '.3em',
 });
 
-const PanelBody = styled.div({
-  backgroundColor: fade(darken(colors.dark, 0.2), 0.2),
-  borderBottomLeftRadius: borderRadius,
-  borderBottomRightRadius: borderRadius,
-  flexGrow: 1,
+const PanelBody = styled.div(
+  {
+    backgroundColor: fade(darken(colors.dark, 0.2), 0.2),
+    borderBottomLeftRadius: borderRadius,
+    borderBottomRightRadius: borderRadius,
+    flexGrow: 1,
+    padding: '10px 20px',
+    position: 'relative',
+  },
+  ({ scrollable }) => ({
+    overflow: scrollable ? 'auto' : 'hidden',
+  })
+);
+
+const PanelBodyOverlay = styled.div({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
   padding: '10px 20px',
-  overflowY: 'overlay',
-  position: 'relative',
 });
 
-const Panel = ({ icon, title, controls, children }) => (
+const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
   <PanelWrapper>
     <PanelHeader>
       <div>
@@ -69,7 +82,13 @@ const Panel = ({ icon, title, controls, children }) => (
       {controls}
     </PanelHeader>
 
-    <PanelBody>{children}</PanelBody>
+    <PanelBody scrollable={bodyScrollable}>
+      {bodyScrollable ? (
+        children
+      ) : (
+        <PanelBodyOverlay>{children}</PanelBodyOverlay>
+      )}
+    </PanelBody>
   </PanelWrapper>
 );
 

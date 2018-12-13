@@ -1,13 +1,9 @@
-/*
-  Title: 
-  Description: 
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { remote } from 'electron';
-import { Route, Redirect } from 'react-router';
+import { Route, Redirect, Switch } from 'react-router';
+import styled from '@emotion/styled';
 
 // Internal Global Dependencies
 import ContextMenuBuilder from 'contextmenu';
@@ -18,13 +14,30 @@ import { Tabs, TabItem } from 'components/common/Tabs';
 // Internal Local Dependencies
 import TerminalConsole from './TerminalConsole';
 import TerminalCore from './TerminalCore';
-import styles from './style.css';
 
 // Images
 import consoleIcon from 'images/console.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
 import coreIcon from 'images/core.sprite.svg';
 import { FormattedMessage } from 'react-intl';
+
+const TerminalWrapper = styled.div({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+});
+
+const TerminalTabs = styled(Tabs)({
+  flexShrink: 0,
+});
+
+const TerminalContent = styled.div({
+  flexGrow: 1,
+  flexShrink: 1,
+  flexBasis: 0,
+  overflow: 'hidden',
+});
 
 export default class Terminal extends Component {
   // React Method (Life cycle hook)
@@ -53,42 +66,50 @@ export default class Terminal extends Component {
         title={
           <FormattedMessage id="Console.Console" defaultMessage="Console" />
         }
+        bodyScrollable={false}
       >
-        <Tabs>
-          <TabItem
-            link={`${this.props.match.url}/Console`}
-            icon={logoIcon}
-            text={
-              <FormattedMessage id="Console.Console" defaultMessage="Console" />
-            }
-          />
-          <TabItem
-            link={`${this.props.match.url}/Core`}
-            icon={coreIcon}
-            text={
-              <FormattedMessage
-                id="Console.CoreOutput"
-                defaultMessage="Console"
-              />
-            }
-          />
-        </Tabs>
+        <TerminalWrapper>
+          <TerminalTabs>
+            <TabItem
+              link={`${this.props.match.url}/Console`}
+              icon={logoIcon}
+              text={
+                <FormattedMessage
+                  id="Console.Console"
+                  defaultMessage="Console"
+                />
+              }
+            />
+            <TabItem
+              link={`${this.props.match.url}/Core`}
+              icon={coreIcon}
+              text={
+                <FormattedMessage
+                  id="Console.CoreOutput"
+                  defaultMessage="Console"
+                />
+              }
+            />
+          </TerminalTabs>
 
-        <div id="terminal-content">
-          <Redirect
-            exact
-            from={`${this.props.match.path}/`}
-            to={`${this.props.match.path}/Console`}
-          />
-          <Route
-            path={`${this.props.match.path}/Console`}
-            component={TerminalConsole}
-          />
-          <Route
-            path={`${this.props.match.path}/Core`}
-            component={TerminalCore}
-          />
-        </div>
+          <TerminalContent>
+            <Switch>
+              <Redirect
+                exact
+                from={`${this.props.match.path}/`}
+                to={`${this.props.match.path}/Console`}
+              />
+              <Route
+                path={`${this.props.match.path}/Console`}
+                component={TerminalConsole}
+              />
+              <Route
+                path={`${this.props.match.path}/Core`}
+                component={TerminalCore}
+              />
+            </Switch>
+          </TerminalContent>
+        </TerminalWrapper>
       </Panel>
     );
   }

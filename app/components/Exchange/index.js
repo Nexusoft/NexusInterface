@@ -1,13 +1,7 @@
-/*
-Title: Exchange Module
-Description: Shapeshift integration
-Last Modified by: Brian Smith
-*/
-
 // External Dependencies
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Route, Redirect } from 'react-router';
+import { Route, Redirect, Switch } from 'react-router';
 import { connect } from 'react-redux';
 import Modal from 'react-responsive-modal';
 import { Link } from 'react-router-dom';
@@ -203,19 +197,21 @@ class Exchange extends Component {
         </Tabs>
 
         <div className="grid-container">
-          <Redirect
-            exact
-            from={`${this.props.match.path}/`}
-            to={`${this.props.match.path}/Precise`}
-          />
-          <Route
-            path={`${this.props.match.path}/Precise`}
-            render={props => <Precise />}
-          />
-          <Route
-            path={`${this.props.match.path}/Fast`}
-            render={() => <Fast />}
-          />
+          <Switch>
+            <Redirect
+              exact
+              from={`${this.props.match.path}/`}
+              to={`${this.props.match.path}/Precise`}
+            />
+            <Route
+              path={`${this.props.match.path}/Precise`}
+              render={props => <Precise />}
+            />
+            <Route
+              path={`${this.props.match.path}/Fast`}
+              render={() => <Fast />}
+            />
+          </Switch>
         </div>
       </Panel>
     );

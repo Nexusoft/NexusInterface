@@ -1,21 +1,17 @@
-/*
-  Title: Terminal Console page
-  Description: 
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { timingSafeEqual } from 'crypto';
+import { FormattedMessage } from 'react-intl';
+import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 
-// Internal Dependencies
+// Internal Global Dependencies
 import WaitingText from 'components/common/WaitingText';
-import styles from './style.css';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
-import { FormattedMessage } from 'react-intl';
+import { colors, consts } from 'styles';
 
 let currentHistoryIndex = -1;
 
@@ -51,6 +47,45 @@ const mapDispatchToProps = dispatch => ({
   addToHistory: currentCommandItem =>
     dispatch({ type: TYPE.ADD_TO_HISTORY, payload: currentCommandItem }),
   // handleKeyboardInput: (key) => dispatch({type:TYPE.HANDLE_KEYBOARD_INPUT, payload: key})
+});
+
+const Console = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+});
+
+const ConsoleInput = styled.div({
+  display: 'flex',
+  marginBottom: '1em',
+  position: 'relative',
+});
+
+const TextInput = styled.input({
+  flexGrow: 1,
+});
+
+const ExecuteButton = styled.button({
+  margin: 0,
+});
+
+const AutoComplete = styled.div({
+  position: 'absolute',
+  top: '100%',
+  zIndex: 99,
+  background: 'black',
+  cursor: 'pointer',
+});
+
+const ConsoleOutput = styled.code({
+  flexGrow: 1,
+  flexBasis: 0,
+  backgroundColor: colors.dark,
+  overflow: 'auto',
+});
+
+const ClearConsoleButton = styled.button({
+  margin: 0,
 });
 
 class TerminalConsole extends Component {
@@ -274,15 +309,14 @@ class TerminalConsole extends Component {
       );
     } else {
       return (
-        <div id="terminal-console">
-          <div id="terminal-console-input">
+        <Console>
+          <ConsoleInput>
             <FormattedMessage
               id="Console.CommandsHere"
               defaultMessage="Enter console commands here (ex: getinfo, help)"
             >
               {cch => (
-                <input
-                  id="input-text"
+                <TextInput
                   ref={element => (this.inputRef = element)}
                   autoFocus
                   type="text"
@@ -294,8 +328,7 @@ class TerminalConsole extends Component {
                 />
               )}
             </FormattedMessage>
-            <button
-              id="terminal-console-input-button"
+            <ExecuteButton
               className="button"
               onClick={() => {
                 this.props.removeAutoCompleteDiv();
@@ -303,24 +336,15 @@ class TerminalConsole extends Component {
               }}
             >
               <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
-            </button>
-            <div
-              key="autocomplete"
-              style={{
-                position: 'absolute',
-                top: '100%',
-                zIndex: 99,
-                background: 'black',
-              }}
-            >
-              {this.autoComplete()}{' '}
-            </div>
-          </div>
+            </ExecuteButton>
+            <AutoComplete key="autocomplete">
+              {this.autoComplete()}
+            </AutoComplete>
+          </ConsoleInput>
 
-          <code id="terminal-console-output">{this.processOutput()}</code>
+          <ConsoleOutput>{this.processOutput()}</ConsoleOutput>
 
-          <button
-            id="terminal-console-reset"
+          <ClearConsoleButton
             className="button"
             onClick={() => this.props.resetMyConsole()}
           >
@@ -328,8 +352,8 @@ class TerminalConsole extends Component {
               id="Console.ClearConsole"
               defaultMessage="Clear Console"
             />
-          </button>
-        </div>
+          </ClearConsoleButton>
+        </Console>
       );
     }
   }
