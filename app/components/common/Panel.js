@@ -56,6 +56,7 @@ const PanelBody = styled.div({
   flexGrow: 1,
   padding: '10px 20px',
   overflowY: 'overlay',
+  position: 'relative',
 });
 
 const Panel = ({ icon, title, controls, children }) => (
