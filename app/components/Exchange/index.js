@@ -168,11 +168,6 @@ class Exchange extends Component {
 
   // Mandatory React method
   render() {
-    // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
-    if (this.props.location.pathname === this.props.match.url) {
-      return <Redirect to={`${this.props.match.url}/Precise`} />;
-    }
-
     return (
       <Panel
         icon={shapeshiftIcon}
@@ -208,10 +203,10 @@ class Exchange extends Component {
         </Tabs>
 
         <div className="grid-container">
-          <Route
+          <Redirect
             exact
-            path={`${this.props.match.path}/`}
-            render={() => <Precise />}
+            from={`${this.props.match.path}/`}
+            to={`${this.props.match.path}/Precise`}
           />
           <Route
             path={`${this.props.match.path}/Precise`}

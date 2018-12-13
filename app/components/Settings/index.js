@@ -67,12 +67,6 @@ class Settings extends Component {
   // Mandatory React method
   render() {
     const { encrypted, match, loggedIn } = this.props;
-    // Redirect to application settings if the pathname matches the url (eg: /Settings = /Settings)
-    if (this.props.location.pathname === this.props.match.url) {
-      console.log('Redirecting to Application Settings');
-
-      return <Redirect to={`${this.props.match.url}/App`} />;
-    }
 
     return (
       <Panel
@@ -120,11 +114,7 @@ class Settings extends Component {
 
         <div className="grid-container">
           <Switch>
-            <Route
-              exact
-              path={`${match.path}/`}
-              render={props => <SettingsApp {...this.props} />}
-            />
+            <Redirect exact from={`${match.path}/`} to={`${match.path}/App`} />
             <Route
               path={`${match.path}/App`}
               render={props => <SettingsApp {...this.props} />}

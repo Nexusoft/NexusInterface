@@ -47,13 +47,6 @@ export default class Terminal extends Component {
 
   // Mandatory React method
   render() {
-    // Redirect to application settings if the pathname matches the url (eg: /Terminal = /Terminal)
-    if (this.props.location.pathname === this.props.match.url) {
-      console.log('Redirecting to Terminal Console');
-
-      return <Redirect to={`${this.props.match.url}/Console`} />;
-    }
-
     return (
       <Panel
         icon={consoleIcon}
@@ -82,10 +75,10 @@ export default class Terminal extends Component {
         </Tabs>
 
         <div id="terminal-content">
-          <Route
+          <Redirect
             exact
-            path={`${this.props.match.path}/`}
-            component={TerminalConsole}
+            from={`${this.props.match.path}/`}
+            to={`${this.props.match.path}/Console`}
           />
           <Route
             path={`${this.props.match.path}/Console`}
