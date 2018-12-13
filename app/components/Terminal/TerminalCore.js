@@ -23,6 +23,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   printCoreOutput: data =>
     dispatch({ type: TYPE.PRINT_TO_CORE, payload: data }),
+  
 })
 
 class TerminalCore extends Component {
@@ -76,9 +77,14 @@ class TerminalCore extends Component {
       batch.push(d)
     })
     this.printCoreOutputTimer = setInterval(() => {
+      if (this.props.coreOutputPaused){
+        return;
+      }
       this.props.printCoreOutput(batch)
       batch = []
-    }, 5000)
+      let termoutput = document.getElementById('terminal-core-output');
+      termoutput.scrollTop = termoutput.scrollHeight;
+    }, 1000)
   }
 
   // Mandatory React method

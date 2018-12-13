@@ -12,6 +12,7 @@ const initialState = {
   commandHistory: [],
   currentHistoryIndex: 0,
   filteredCmdList: [],
+  coreOutputPaused: false,
 }
 
 export default (state = initialState, action) => {
@@ -127,7 +128,12 @@ export default (state = initialState, action) => {
         commandHistory: [...state.commandHistory, action.payload],
       }
       break
-
+    case TYPE.SET_PAUSE_CORE_OUTPUT:
+      return{
+        ...state,
+        coreOutputPaused: action.payload,
+      }
+      break
     default:
       return state
   }

@@ -163,6 +163,8 @@ class TerminalConsole extends Component {
               }
             }
             this.props.printToConsole(tempConsoleOutput)
+            let termConOut = document.getElementById('terminal-console-output');
+            termConOut.scrollTop = termConOut.scrollHeight;
           }
         })
         .catch(error => {
