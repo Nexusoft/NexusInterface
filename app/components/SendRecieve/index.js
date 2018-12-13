@@ -1040,7 +1040,7 @@ class SendRecieve extends Component {
           )
             .then(payload => {
               this.getAccountData()
-              console.log(payload)
+              this.props.CloseMoveModal()
               this.props.OpenModal('NXS Moved')
             })
             .catch(e => {
@@ -1050,15 +1050,6 @@ class SendRecieve extends Component {
                 this.props.OpenModal(e)
               }
             })
-          console.log(
-            'MOVE ' +
-              this.props.moveAmount +
-              ' NXS ' +
-              'from ' +
-              this.props.MoveFromAccount +
-              ' to ' +
-              this.props.MoveToAccount
-          )
         } else {
           this.props.OpenModal('Insufficient funds')
         }

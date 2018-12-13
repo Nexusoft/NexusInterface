@@ -255,7 +255,9 @@ class AddressBook extends Component {
 
     // remove the temporary element from the DOM
     input.remove()
-    this.props.ToggleModal()
+    if (this.props.modalVisable) {
+      this.props.ToggleModal()
+    }
     this.props.OpenModal('Copied')
     setTimeout(() => {
       if (this.props.open) {
@@ -1119,18 +1121,18 @@ class AddressBook extends Component {
 
   closeEdit(e) {
     if (e.target.className !== 'editFeildDoNotClose') {
-      if (this.props.prototypeName !== '') {
+      if (this.props.editName) {
         if (this.props.prototypeName !== '') {
           this.props.SaveName(this.props.selected, this.props.prototypeName)
         }
-      } else if (this.props.prototypePhoneNumber !== '') {
+      } else if (this.props.editPhone) {
         this.props.SavePhone(
           this.props.selected,
           this.props.prototypePhoneNumber
         )
-      } else if (this.props.prototypeNotes !== '') {
+      } else if (this.props.editNotes) {
         this.props.SaveNotes(this.props.selected, this.props.prototypeNotes)
-      } else if (this.props.prototypeTimezone !== 0) {
+      } else if (this.props.editTZ) {
         this.props.SaveTz(this.props.selected, this.props.prototypeTimezone)
       } else if (this.props.prototypeAddressLabel !== '') {
         RPC.PROMISE('validateaddress', [this.props.editAddressLabel]).then(
@@ -1169,12 +1171,6 @@ class AddressBook extends Component {
         </h2>
         {this.props.connections === undefined ? null : (
           <div className="impexpblock">
-            <a className="impexp" onClick={() => this.exportAddressBook()}>
-              <FormattedMessage
-                id="AddressBook.Export"
-                defaultMessage="Export"
-              />
-            </a>
             {/* <label htmlFor="importAddressBook">
               <a className="impexp">
                 <FormattedMessage
@@ -1250,6 +1246,15 @@ class AddressBook extends Component {
                 <FormattedMessage
                   id="AddressBook.addContact"
                   defaultMessage="Add Contact"
+                />
+              </button>
+              <button
+                className="button primary"
+                onClick={() => this.exportAddressBook()}
+              >
+                <FormattedMessage
+                  id="AddressBook.Export"
+                  defaultMessage="Export"
                 />
               </button>
             </div>

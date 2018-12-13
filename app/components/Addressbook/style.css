@@ -210,9 +210,9 @@ select {
 .myAddressTable {
   max-width: 100%;
   /* min-width: 50%; */
-  border-left: 0px;
+  border: 1px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 280px;
   text-align: center;
   display: block;
@@ -292,6 +292,7 @@ select {
   margin-left: -19px;
 }
 #Addresstable-wraper {
+  margin-top: 2px;
 }
 
 .impexpblock {

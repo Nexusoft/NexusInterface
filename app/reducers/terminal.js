@@ -33,19 +33,15 @@ export default (state = initialState, action) => {
       break
 
     case TYPE.PRINT_TO_CORE:
-      var payloadCopy = []
+      var newOutput = [...action.payload, ...state.coreOutput]
 
-      if (state.coreOutput.length < 1000) {
-        payloadCopy = [...action.payload, ...state.coreOutput]
-      } else if (action.payload.length <= 1) {
-        payloadCopy = [...state.coreOutput]
-      } else {
-        payloadCopy = [...action.payload]
+      if (newOutput.length > 1000) {
+        newOutput = newOutput.slice(0, 1000)
       }
 
       return {
         ...state,
-        coreOutput: payloadCopy,
+        coreOutput: newOutput,
       }
       break
 
@@ -129,7 +125,7 @@ export default (state = initialState, action) => {
       }
       break
     case TYPE.SET_PAUSE_CORE_OUTPUT:
-      return{
+      return {
         ...state,
         coreOutputPaused: action.payload,
       }
