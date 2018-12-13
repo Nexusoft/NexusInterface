@@ -228,58 +228,6 @@ class SettingsStyle extends Component {
         <section id="SettingsStyle">
           <form id="styleForm" className="aligned">
             {' '}
-            <div className="wallpaperDiv">
-              <label htmlFor="wallpaper" className="button">
-                <FormattedMessage
-                  id="Settings.Wallpaper"
-                  defaultMessage="Wallpapar"
-                />
-              </label>
-              <input
-                id="wallpaper"
-                accept="image/*"
-                type="file"
-                size="25"
-                onChange={this.updateWallpaper}
-                data-tooltip="The background wallpaper for your wallet"
-              />
-            </div>{' '}
-            <div className="field">
-              <label htmlFor="renderGlobe">
-                <FormattedMessage
-                  id="Settings.RenderGlobe"
-                  defaultMessage="Render Globe"
-                />
-              </label>
-
-              <FormattedMessage
-                id={
-                  this.props.webGLEnabled
-                    ? 'ToolTip.RenderGlobe'
-                    : 'ToolTip.RenderGlobeOpenGLFail'
-                }
-                defaultMessage={
-                  this.props.webGLEnabled
-                    ? 'Render the globe on the Overview page'
-                    : 'Your Computer does not support OPENGL 2.0'
-                }
-              >
-                {tt => (
-                  <input
-                    id="renderGlobe"
-                    type="checkbox"
-                    className="switch"
-                    disabled={false ? '' : 'disabled'}
-                    checked={this.props.settings.renderGlobe}
-                    onChange={() => {
-                      this.props.ToggleGlobeRender()
-                      this.updateRenderGlobe()
-                    }}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
             <div className="field">
               <label>
                 <select
@@ -371,12 +319,67 @@ class SettingsStyle extends Component {
                   </option>
                 </select>
               </label>
-              <ChromePicker
+            </div>
+            <br></br>
+            <br></br>
+            <ChromePicker
                 color={this.colorPresetter()}
                 disableAlpha={true}
                 onChangeComplete={(color, event) => {
                   this.handleColorChange(color)
                 }}
+              />
+            {' '}
+            <div className="field">
+              <label htmlFor="renderGlobe">
+                <FormattedMessage
+                  id="Settings.RenderGlobe"
+                  defaultMessage="Render Globe"
+                />
+              </label>
+
+              <FormattedMessage
+                id={
+                  this.props.webGLEnabled
+                    ? 'ToolTip.RenderGlobe'
+                    : 'ToolTip.RenderGlobeOpenGLFail'
+                }
+                defaultMessage={
+                  this.props.webGLEnabled
+                    ? 'Render the globe on the Overview page'
+                    : 'Your Computer does not support OPENGL 2.0'
+                }
+              >
+                {tt => (
+                  <input
+                    id="renderGlobe"
+                    type="checkbox"
+                    className="switch"
+                    disabled={this.props.webGLEnabled ? '' : 'disabled'}
+                    checked={this.props.settings.renderGlobe}
+                    onChange={() => {
+                      this.props.ToggleGlobeRender()
+                      this.updateRenderGlobe()
+                    }}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
+            </div>
+            <div className="wallpaperDiv">
+              <label htmlFor="wallpaper" className="button">
+                <FormattedMessage
+                  id="Settings.Wallpaper"
+                  defaultMessage="Wallpapar"
+                />
+              </label>
+              <input
+                id="wallpaper"
+                accept="image/*"
+                type="file"
+                size="25"
+                onChange={this.updateWallpaper}
+                data-tooltip="The background wallpaper for your wallet"
               />
             </div>
             <button
