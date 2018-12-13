@@ -8,9 +8,7 @@ const HorizontalLine = styled.div(
     backgroundImage: `-webkit-linear-gradient(left, transparent 0%, ${
       colors.primary
     } 50%, transparent 100%)`,
-    animationName: animations.expand,
-    animationDuration: timing.slow,
-    animationTimingFunction: consts.enhancedEaseOut,
+    animation: `${animations.expand} ${timing.slow} ${consts.enhancedEaseOut}`,
   },
   ({ width = '60%' }) => ({
     width,

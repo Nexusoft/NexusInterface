@@ -12,13 +12,17 @@ export const consts = {
 
 export const timing = {
   normal: '.2s',
-  slow: '1s',
+  slow: '1.5s',
 };
 
 export const animations = {
   expand: keyframes`
-    from { transform: scale(0.5, 1) }
+    from { transform: scale(0, 1) }
     to { transform: scale(1, 1) }
+  `,
+  fadeIn: keyframes`
+    from { opacity: 0 }
+    to { opacity: 1 }
   `,
   fadeInAndExpand: keyframes`
     from { 

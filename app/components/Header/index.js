@@ -48,9 +48,9 @@ const HeaderWrapper = styled.header({
 
 const LogoLink = styled(Link)({
   position: 'relative',
-  animationName: animations.expand,
-  animationDuration: timing.slow,
-  animationTimingFunction: consts.enhancedEaseOut,
+  animation: `${animations.fadeInAndExpand} ${timing.slow} ${
+    consts.enhancedEaseOut
+  }`,
 });
 
 const Logo = styled(Icon)({
@@ -74,6 +74,7 @@ const StatusIcons = styled.div({
   position: 'absolute',
   top: 24,
   right: 40,
+  animation: `${animations.fadeIn} ${timing.slow} ${consts.enhancedEaseOut}`,
 });
 
 const UnderHeader = styled.div({
