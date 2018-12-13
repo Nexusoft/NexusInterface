@@ -123,6 +123,7 @@ class Transactions extends Component {
       ],
       tableColumns: [],
       displayTimeFrame: 'All',
+      changeTimeFrame: false,
       amountFilter: 0,
       categoryFilter: 'all',
       addressFilter: '',
@@ -629,6 +630,7 @@ class Transactions extends Component {
   transactionTimeframeChange(event) {
     this.setState({
       displayTimeFrame: event.target.options[event.target.selectedIndex].value,
+      changeTimeFrame: true,
     })
   }
 
@@ -816,6 +818,14 @@ class Transactions extends Component {
         todaydate.getDate()
       )
     } else {
+      if (this.state.changeTimeFrame){
+        this.handleZoom({x:[new Date(inTransactions[0].time * 1000), new Date(inTransactions[inTransactions.length - 1].time * 1000),],y:[0,1,]});
+        this.setState(
+          {
+            changeTimeFrame: false
+          }
+        );
+      }
       return inTransactions
     }
     todaydate = Math.round(todaydate.getTime() / 1000)
@@ -831,6 +841,15 @@ class Transactions extends Component {
       if (element.time >= pastdate && element.time <= todaydate) {
         tempTrans.push(element)
       }
+    }
+
+    if (this.state.changeTimeFrame)    {
+      this.handleZoom({x:[new Date(pastdate * 1000), new Date(),],y:[0,1,]});
+      this.setState(
+        {
+          changeTimeFrame: false
+        }
+      );
     }
 
     return tempTrans
