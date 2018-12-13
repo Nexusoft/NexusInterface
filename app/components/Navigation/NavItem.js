@@ -36,16 +36,18 @@ const NavLinkItem = styled(NavLink)({
   alignItems: 'center',
   padding: '0 10px',
   position: 'relative',
-  transitionProperties: 'opacity, color',
+  transitionProperties: 'opacity, color, transform',
   transitionDuration: timing.normal,
   color: colors.light,
   opacity: 0.45,
 
   '&:hover': {
     opacity: 1,
+    transform: 'scale(1.15)',
   },
   '&.active': {
     opacity: 1,
+    transform: 'scale(1.15)',
     color: colors.primary,
 
     '&::before': {
