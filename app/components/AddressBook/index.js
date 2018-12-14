@@ -33,10 +33,11 @@ import addressBookIcon from 'images/address-book.sprite.svg';
 import exportIcon from 'images/export.sprite.svg';
 import addContactIcon from 'images/add-contact.sprite.svg';
 import searchIcon from 'images/search.sprite.svg';
+import userIcon from 'images/user.sprite.svg';
 
 const ControlIcon = styled(Icon)({
-  width: '1.3em',
-  height: '1.3em',
+  width: 20,
+  height: 20,
 });
 
 // React-Redux mandatory methods
@@ -1018,130 +1019,6 @@ class AddressBook extends Component {
       tempentry.push(e.name);
       tempentry.push(e.phoneNumber);
 
-      // let timezone = "";
-      // switch (e.timezone) {
-      //   case 840:
-      //     timezone = "Line Islands";
-      //     break;
-      //   case 780:
-      //     timezone = "Apia";
-      //     break;
-      //   case 765:
-      //     timezone = "Chatham Islands";
-      //     break;
-      //   case 720:
-      //     timezone = "Auckland";
-      //     break;
-      //   case 660:
-      //     timezone = "Noumea";
-      //     break;
-      //   case 630:
-      //     timezone = "Lord Howe Island";
-      //     break;
-      //   case 600:
-      //     timezone = "Port Moresby";
-      //     break;
-      //   case 570:
-      //     timezone = "Adelaide";
-      //     break;
-      //   case 540:
-      //     timezone = "Tokyo";
-      //     break;
-      //   case 525:
-      //     timezone = "Eucla";
-      //     break;
-      //   case 510:
-      //     timezone = "Pyongyang";
-      //     break;
-      //   case 480:
-      //     timezone = "Beijing";
-      //     break;
-      //   case 420:
-      //     timezone = "Bangkok";
-      //     break;
-      //   case 390:
-      //     timezone = "Yangon";
-      //     break;
-      //   case 360:
-      //     timezone = "Almaty";
-      //     break;
-      //   case 345:
-      //     timezone = "Kathmandu";
-      //     break;
-      //   case 330:
-      //     timezone = "Delhi";
-      //     break;
-      //   case 300:
-      //     timezone = "Karachi";
-      //     break;
-      //   case 270:
-      //     timezone = "Kabul";
-      //     break;
-      //   case 240:
-      //     timezone = "Dubai";
-      //     break;
-      //   case 210:
-      //     timezone = "Tehran";
-      //     break;
-      //   case 180:
-      //     timezone = "Moscow";
-      //     break;
-      //   case 120:
-      //     timezone = "Athens";
-      //     break;
-      //   case 60:
-      //     timezone = "Berlin";
-      //     break;
-      //   case 0:
-      //     timezone = "London";
-      //     break;
-      //   case -60:
-      //     timezone = "Cabo Verde";
-      //     break;
-      //   case -120:
-      //     timezone = "Fernando de Noronha";
-      //     break;
-      //   case -180:
-      //     timezone = "Buenos Aires";
-      //     break;
-      //   case -210:
-      //     timezone = "Newfoundland";
-      //     break;
-      //   case -240:
-      //     timezone = "Santiago";
-      //     break;
-      //   case -300:
-      //     timezone = "New York";
-      //     break;
-      //   case -360:
-      //     timezone = "Chicago";
-      //     break;
-      //   case -420:
-      //     timezone = "Phoenix";
-      //     break;
-      //   case -480:
-      //     timezone = "Los Angeles";
-      //     break;
-      //   case -540:
-      //     timezone = "Anchorage";
-      //     break;
-      //   case -570:
-      //     timezone = "Marquesas Islands";
-      //     break;
-      //   case -600:
-      //     timezone = "Papeete";
-      //     break;
-      //   case -660:
-      //     timezone = "Niue";
-      //     break;
-      //   case -720:
-      //     timezone = "Baker Island";
-      //     break;
-
-      //   default:
-      //     timezone = "blank";
-      //     break;
-      // }
       tempentry.push(e.timezone);
       tempentry.push(e.notes);
       // rows.push(tempentry); // moving down.
@@ -1206,38 +1083,6 @@ class AddressBook extends Component {
       1
     );
     console.log(csv().fromFile(path));
-    // csv()
-    //   .fromFile(path)
-    //   .then(jsonObj => {
-    //     for (var i = 0; i < jsonObj.length; i++) {
-    //       // dispatch a new account... (map it )
-    //       var name = jsonObj[i].AccountName
-    //       var phone = jsonObj[i].PhoneNumber
-    //       var notes = jsonObj[i].Notes
-    //       var tz = jsonObj[i].TimeZone
-    //       var label
-    //       var address
-    //       for (var k in jsonObj[i]) {
-    //         var key = k
-    //         var val = jsonObj[i][k]
-
-    //         if (key.includes('field')) {
-    //           var num = key.slice(5, key.length)
-    //           if (num % 2 == 1) {
-    //             label = val
-    //           } else {
-    //             address = val
-    //             // (name, address, num, notes, TZ)
-    //             this.props.AddContact(name, address, phone, notes, tz)
-    //             // so here is where we have unique address label pairs, we should add this now.
-    //             // also we don't really know how they had things labeled so we should check to see if they are ours or not.
-    //             label = ''
-    //             address = ''
-    //           }
-    //         }
-    //       }
-    //     }
-    //   })
   }
 
   // Mandatory React method
@@ -1281,6 +1126,24 @@ class AddressBook extends Component {
                   />
                 </div>
               </Button>
+              <Button
+                blank
+                className="relative"
+                as="a"
+                onClick={() => {
+                  this.props.clearSearch();
+                  this.loadMyAccounts();
+                  this.showMyAddresses();
+                }}
+              >
+                <ControlIcon icon={userIcon} />
+                <div className="tooltip bottom">
+                  <FormattedMessage
+                    id="AddressBook.MyAddresses"
+                    defaultMessage="My Addresses"
+                  />
+                </div>
+              </Button>
               <FormattedMessage
                 id="AddressBook.SearchContact"
                 defaultMessage="Search Contact"
@@ -1321,23 +1184,6 @@ class AddressBook extends Component {
           </WaitingText>
         ) : (
           <div>
-            <div id="addressbook-controls">
-              <div />
-
-              <button
-                className="button primary"
-                onClick={() => {
-                  this.props.clearSearch();
-                  this.loadMyAccounts();
-                  this.showMyAddresses();
-                }}
-              >
-                <FormattedMessage
-                  id="AddressBook.MyAddresses"
-                  defaultMessage="My Addresses"
-                />
-              </button>
-            </div>
             {this.props.addressbook.length > 0 ? (
               <div id="addressbookContent">
                 <div id="contactListContainer">{this.contactLister()}</div>

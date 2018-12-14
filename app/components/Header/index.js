@@ -425,10 +425,10 @@ class Header extends Component {
         </UnderHeader>
 
         <StatusIcons>
+          <SyncStatus {...this.props} />
           <SignInStatus {...this.props} />
           {/* wrap this in a check too... */}
           <StakingStatus {...this.props} />
-          <SyncStatus {...this.props} />
         </StatusIcons>
       </HeaderWrapper>
     );
