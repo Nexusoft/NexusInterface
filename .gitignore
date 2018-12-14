@@ -49,3 +49,5 @@ main.js.map
 npm-debug.log.*
 
 npm-shrinkwrap\.json~HEAD
+
+Test-Output
