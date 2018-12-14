@@ -63,7 +63,7 @@ const initialState = {
     selectedColorProp: 'MC1',
     minimumconfirmations: 3,
   },
-
+  manualDaemonModal: false,
   messages: initLanguage,
 };
 
@@ -107,10 +107,33 @@ export default (state = initialState, action) => {
     case TYPE.IGNORE_ENCRYPTION_WARNING:
       return {
         ...state,
-        ignoreEncryptionWarningFlag: true,
+        settings: {
+          ...state.settings,
+          ignoreEncryptionWarningFlag: true,
+        },
       };
       break;
-
+    case TYPE.OPEN_MANUAL_DAEMON_MODAL:
+      return {
+        ...state,
+        manualDaemonModal: true,
+      };
+      break;
+    case TYPE.UPDATE_MANUAL_DAEMON_SETTINGS:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          manualDaemon: action.payload,
+        },
+      };
+      break;
+    case TYPE.CLOSE_MANUAL_DAEMON_MODAL:
+      return {
+        ...state,
+        manualDaemonModal: false,
+      };
+      break;
     case TYPE.ACCEPT_MIT:
       return {
         ...state,

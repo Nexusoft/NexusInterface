@@ -1069,11 +1069,9 @@ class AddressBook extends Component {
     link.setAttribute('download', 'nexus-addressbook.csv'); //give link an action and a default name for the file. MUST BE .csv
 
     document.body.appendChild(link); // Required for FF
-    this.props.OpenModal('Contacts Exported');
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 3000);
-    link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
+
+    link.click();
+
     document.body.removeChild(link);
   }
 

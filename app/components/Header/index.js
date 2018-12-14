@@ -82,7 +82,6 @@ class Header extends Component {
     });
 
     core.on('stopping', () => {
-      clearInterval(self.set);
       this.props.clearOverviewVariables();
     });
     this.props.SetMarketAveData();
@@ -755,6 +754,16 @@ class Header extends Component {
             <FormattedMessage
               id="Alert.NoSecondAccountChosen"
               defaultMessage="No second account chosen"
+            />
+          </h2>
+        );
+        break;
+      case 'Please wait for daemon':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.DaemonLoadingWait"
+              defaultMessage="Loading Daemon, Please wait..."
             />
           </h2>
         );

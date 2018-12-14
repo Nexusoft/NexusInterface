@@ -2,6 +2,9 @@ import configuration from './configuration';
 import MenuBuilder from 'menu.js';
 import { GetSettings, SaveSettings } from './settings';
 import { resolve } from 'path';
+
+import * as RPC from 'scripts/rpc';
+
 const cp = require('child_process');
 const spawn = require('cross-spawn');
 const log = require('electron-log');
@@ -45,6 +48,7 @@ const EventEmitter = require('events');
 // SetCoreParameters: Get the path to local resources for the application (depending on running packaged vs via npm start)
 function SetCoreParameters(settings) {
   var parameters = [];
+
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
     ip =
@@ -139,8 +143,10 @@ function GetCoreBinaryName() {
 function GetCoreBinaryPath() {
   const path = require('path');
   if (process.env.NODE_ENV === 'development') {
+    let appDir = __dirname.split('/api');
+
     var coreBinaryPath = path.normalize(
-      path.join(__dirname, '..', 'cores', GetCoreBinaryName())
+      path.join(appDir[0], 'cores', GetCoreBinaryName())
     );
   } else {
     var coreBinaryPath = path.join(

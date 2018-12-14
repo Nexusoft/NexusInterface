@@ -181,7 +181,9 @@
   "Settings.BackupWallet": "Backup Wallet",
   "Settings.StartUp": "Start at system startup",
   "Settings.ChangesNexTime": "Changes to core settings will take effect the next time the core is restarted",
-
+  "Settings.ManualDaemonEntry": "Enter manual daemon mode?",
+  "Settings.ManualDaemonExit": "Exit manual daemon mode?",
+  "Settisgs.ManualDaemonWarning": "(This will shut down your daemon)",
   "Settings.Username": "Username",
 
   "Settings.IpAddress": "Ip Address",

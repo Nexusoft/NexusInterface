@@ -80,16 +80,12 @@ export default class MenuBuilder {
             if (settings.manualDaemon != true) {
               RPC.PROMISE('stop', [])
                 .then(payload => {
-                  setTimeout(() => {
-                    core.stop();
-                    remote.getCurrentWindow().close();
-                  }, 1000);
+                  core.stop();
+                  remote.getCurrentWindow().close();
                 })
                 .catch(e => {
-                  setTimeout(() => {
-                    remote.getGlobal('core').stop();
-                    remote.getCurrentWindow().close();
-                  }, 1000);
+                  remote.getGlobal('core').stop();
+                  remote.getCurrentWindow().close();
                 });
             } else {
               RPC.PROMISE('stop', []).then(payload => {

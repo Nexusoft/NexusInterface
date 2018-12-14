@@ -179,7 +179,9 @@ export default {
     'Settings.StartUp': 'Start at system startup',
     'Settings.ChangesNexTime':
       'Changes to core settings will take effect the next time the core is restarted',
-
+    'Settings.ManualDaemonEntry': 'Enter manual daemon mode?', // NEW STRING
+    'Settings.ManualDaemonExit': 'Exit manual daemon mode?', // NEW STRING
+    'Settisgs.ManualDaemonWarning': '(This will shut down your daemon)', // NEW STRING
     'Settings.Username': 'Username',
 
     'Settings.IpAddress': 'Ip Address',
