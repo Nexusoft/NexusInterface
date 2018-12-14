@@ -388,7 +388,7 @@ class Header extends Component {
 
   // Mandatory React method
   render() {
-    const { settings } = this.props;
+    const { settings, connections, daemonAvailable } = this.props;
 
     return (
       <HeaderWrapper>
@@ -424,12 +424,14 @@ class Header extends Component {
           <DaemonStatus {...this.props} />
         </UnderHeader>
 
-        <StatusIcons>
-          <SyncStatus {...this.props} />
-          <SignInStatus {...this.props} />
-          {/* wrap this in a check too... */}
-          <StakingStatus {...this.props} />
-        </StatusIcons>
+        {!!connections && !!daemonAvailable && (
+          <StatusIcons>
+            <SyncStatus {...this.props} />
+            <SignInStatus {...this.props} />
+            {/* wrap this in a check too... */}
+            <StakingStatus {...this.props} />
+          </StatusIcons>
+        )}
       </HeaderWrapper>
     );
   }

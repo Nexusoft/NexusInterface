@@ -14,7 +14,7 @@ import lockedIcon from 'images/padlock.sprite.svg';
 import unlockedIcon from 'images/padlock-open.sprite.svg';
 
 function statusIcon({ connections, daemonAvailable, unlocked_until }) {
-  if (connections === undefined || daemonAvailable === false) {
+  if (!connections || !daemonAvailable) {
     return <Icon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
   } else {
     if (unlocked_until === undefined) {
@@ -39,12 +39,12 @@ function signInStatusMessage({
     month: 'long',
     day: 'numeric',
   });
-  if (connections === undefined || daemonAvailable === false) {
+  if (!connections || !daemonAvailable) {
     return (
-      <FormattedMessage
-        id="Header.DaemonNotLoaded"
-        defaultMessage="Daemon Not Loaded"
-      />
+      <div>
+        <div>Unknown Lock Status</div>
+        <div>Waiting for daemon to load...</div>
+      </div>
     );
   }
 
