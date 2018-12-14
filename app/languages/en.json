@@ -331,6 +331,7 @@
   "Tooltip.RenderGlobeOpenGLFail": "Your computer does not support OPENGL 2.0",
 
   "ToolTip.DbOption": "Would you like to reduce the time it takes to sync by downloading a recent version of the database?",
+  "ToolTip.NotEnoughSpace": "Not Enough Space, Requires 20gb.",
   "ToolTip.BootStrapIt": "Yes, lets bootstrap it",
   "ToolTip.SyncFromScratch": "No, let it sync from scratch",
   "ToolTip.RecentDatabaseDownloading": "Recent Database Downloading",

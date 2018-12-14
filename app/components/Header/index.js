@@ -33,6 +33,7 @@ import { FormattedMessage } from 'react-intl';
 var tray = tray || null;
 let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
+var enoughSpace = true;
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -813,6 +814,22 @@ class Header extends Component {
 
   BootstrapModalInteriorBuilder() {
     if (this.props.percentDownloaded === 0) {
+      if (this.bootstrapModalController() )
+      {
+        const checkDiskSpace = require('check-disk-space');
+        let dir = process.env.APPDATA || process.env.HOME;
+        checkDiskSpace(dir).then((diskSpace) => {
+          if (diskSpace.free <= 20000000000){
+            enoughSpace = false; 
+            setTimeout(() => {
+              this.forceUpdate();
+            }, 5000);
+          }else{
+            enoughSpace = true;
+          }
+        });
+      }
+
       return (
         <div>
           <h3>
@@ -821,8 +838,22 @@ class Header extends Component {
               defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
             />
           </h3>
+          {
+            enoughSpace === true? null :
+            <h3 style={
+              {
+                color: "#ff0000"
+              }
+            }>
+            <FormattedMessage
+              id="ToolTip.NotEnoughSpace"
+              defaultMessage="Not Enough Space, Requires 20gb."
+            />
+            </h3>
+          }
           <button
             className="button"
+            disabled={enoughSpace === true? '' : 'true'}
             onClick={() => {
               this.props.OpenBootstrapModal(true);
               configuration.BootstrapRecentDatabase(this);

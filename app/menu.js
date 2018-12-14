@@ -210,7 +210,7 @@ export default class MenuBuilder {
             ) {
               let configuration = require('./api/configuration');
               self.props.OpenBootstrapModal(true);
-              configuration.BootstrapRecentDatabase(self);
+              //configuration.BootstrapRecentDatabase(self);
             } else {
               self.props.OpenModal('Please let the daemon start.');
               setTimeout(() => {
@@ -420,7 +420,7 @@ export default class MenuBuilder {
               ) {
                 let configuration = require('./api/configuration');
                 self.props.OpenBootstrapModal(true);
-                configuration.BootstrapRecentDatabase(self);
+                //configuration.BootstrapRecentDatabase(self);
               } else {
                 self.props.OpenModal('Please let the daemon start.');
                 setTimeout(() => {
