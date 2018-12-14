@@ -7,13 +7,15 @@ import { FormattedMessage } from 'react-intl';
 
 // Internal Global Dependencies
 import Icon from 'components/common/Icon';
+
+// Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';
 import lockedIcon from 'images/padlock.sprite.svg';
 import unlockedIcon from 'images/padlock-open.sprite.svg';
 
 function statusIcon({ connections, daemonAvailable, unlocked_until }) {
   if (connections === undefined || daemonAvailable === false) {
-    return <Icon icon={questionMarkIcon} />;
+    return <Icon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
   } else {
     if (unlocked_until === undefined) {
       return <Icon icon={unlockedIcon} css={{ color: 'red' }} />;
