@@ -1,0 +1,77 @@
+import React from 'react';
+import styled from '@emotion/styled';
+import Button from 'components/common/Button';
+import Icon from 'components/common/Icon';
+import { colors, timing } from 'styles';
+import { lighten, fade } from 'utils/colors';
+
+const inputHeight = '2.25em';
+const iconSpace = '3em';
+
+const TextField = styled.input(
+  {
+    backgroundColor: colors.lightGray,
+    color: colors.dark,
+    borderRadius: 2,
+    border: 'none',
+    outline: 'none',
+    padding: '0 1em',
+    height: inputHeight,
+    transitionProperty: 'background-color',
+    transitionDuration: timing.normal,
+
+    '&::placeholder': {
+      color: colors.gray,
+    },
+
+    '&:hover, &:focus': {
+      backgroundColor: colors.light,
+    },
+  },
+  ({ wrapped }) =>
+    wrapped && {
+      display: 'block',
+    },
+  ({ padLeft }) =>
+    padLeft && {
+      paddingLeft: iconSpace,
+    },
+  ({ padRight }) =>
+    padRight && {
+      paddingRight: iconSpace,
+    }
+);
+
+const InputWrapper = styled.div({
+  position: 'relative',
+  display: 'inline-flex',
+  alignItems: 'center',
+});
+
+const IconWrapper = styled.div({
+  position: 'absolute',
+  right: 0,
+  top: '50%',
+  transform: 'translateY(-50%)',
+  height: inputHeight,
+  width: iconSpace,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  color: colors.darkGray,
+});
+
+const WrappedTextField = ({ icon, inputProps, ...rest }) => (
+  <InputWrapper {...rest}>
+    <TextField wrapped {...inputProps} />
+    {icon && (
+      <IconWrapper>
+        <Icon icon={icon} />
+      </IconWrapper>
+    )}
+  </InputWrapper>
+);
+
+export default TextField;
+
+export { WrappedTextField };

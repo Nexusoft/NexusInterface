@@ -56,6 +56,7 @@ const LogoLink = styled(Link)({
 const Logo = styled(Icon)({
   display: 'block',
   height: 50,
+  width: 'auto',
   filter: 'var(--nxs-logo)',
   fill: colors.primary,
 });

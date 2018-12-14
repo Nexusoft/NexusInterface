@@ -7,6 +7,8 @@ const Svg = styled.svg({
   verticalAlign: 'middle',
   transitionProperty: 'fill, stroke',
   transitionDuration: '.2s',
+  width: '1em',
+  height: '1em',
 });
 
 const Icon = ({ icon = {}, ...rest }) => (

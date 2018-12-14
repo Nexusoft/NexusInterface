@@ -36,11 +36,15 @@ const PanelHeader = styled.div({
   borderTopRightRadius: borderRadius,
   flexShrink: 0,
   padding: '10px 30px',
-  fontSize: 28,
-  fontWeight: 200,
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+});
+
+const PanelTitle = styled.h3({
+  fontSize: 28,
+  fontWeight: 'normal',
+  margin: 0,
 });
 
 const TitleIcon = styled(Icon)({
@@ -75,10 +79,10 @@ const PanelBodyOverlay = styled.div({
 const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
   <PanelWrapper>
     <PanelHeader>
-      <div>
+      <PanelTitle>
         {!!icon && <TitleIcon icon={icon} width={28} height={28} />}
         <span className="v-align">{title}</span>
-      </div>
+      </PanelTitle>
       {controls}
     </PanelHeader>
 

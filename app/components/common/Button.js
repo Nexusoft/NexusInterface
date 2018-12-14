@@ -1,4 +1,3 @@
-// External Dependencies
 import React from 'react';
 import styled from '@emotion/styled';
 import { colors, timing } from 'styles';
@@ -6,20 +5,24 @@ import { lighten, fade } from 'utils/colors';
 
 const Button = styled.button(
   {
-    display: 'inline-block',
+    display: 'inline-flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 4,
-    padding: '0.8em 1.6em',
+    padding: '0.7em 1.5em',
     border: 'none',
     outline: 'none',
     background: 'transparent',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
     userSelect: 'none',
-    transitionProperties: 'border-color, color',
+    transitionProperty: 'border-color, color',
     transitionDuration: timing.normal,
     // Default styles
-    border: `2px solid ${colors.lightGray}`,
-    color: colors.lightGray,
+    '&, &:active': {
+      border: `2px solid ${colors.lightGray}`,
+      color: colors.lightGray,
+    },
     '&:hover': {
       borderColor: colors.light,
       color: colors.light,
@@ -28,27 +31,32 @@ const Button = styled.button(
 
   ({ primary }) =>
     !!primary && {
-      border: `2px solid ${colors.primary}`,
-      color: colors.primary,
-      fontWeight: 'bold',
-      transitionProperties: 'border-color, color, box-shadow, text-shadow',
+      '&, &:active': {
+        border: `2px solid ${colors.primary}`,
+        color: colors.primary,
+        fontWeight: 'bold',
+        transitionProperty: 'border-color, color, box-shadow, text-shadow',
+      },
       '&:hover': {
         borderColor: lighten(colors.primary, 0.3),
         color: lighten(colors.primary, 0.3),
-        boxShadow: `0 0 20px ${fade(colors.primary, 0.5)}`,
-        textShadow: `0 0 20px ${fade(colors.primary, 0.5)}`,
+        boxShadow: `0 0 20px ${fade(colors.primary, 0.7)}`,
+        textShadow: `0 0 20px ${fade(colors.primary, 0.7)}`,
       },
     },
 
-  ({ blank }) =>
+  ({ blank, dark }) =>
     !!blank && {
-      border: 'none',
-      backgroundColor: 'transparent',
-      color: colors.lightGray,
-      transitionProperties: 'color',
+      '&, &:active': {
+        padding: '0.5em 1em',
+        border: 'none',
+        backgroundColor: 'transparent',
+        color: dark ? colors.darkGray : colors.lightGray,
+        transitionProperty: 'color',
+      },
       '&:hover': {
         border: 'none',
-        color: colors.light,
+        color: dark ? colors.dark : colors.light,
       },
     }
 );
