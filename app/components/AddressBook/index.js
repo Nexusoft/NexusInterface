@@ -1,13 +1,3 @@
-/* 
-  Title: AddressBook
-  Description: This is where you manage your Nexus addresses 
-  for your own wallet and the outside world. You can import 
-  and export your addressbook here, add labels to addresses 
-  as well as store important inforamtion about each of your 
-  contacts.
-  Last Modified by: Brian Smith
-*/
-
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -17,6 +7,8 @@ import { Link } from 'react-router-dom';
 import Modal from 'react-responsive-modal';
 import csv from 'csvtojson';
 import { callbackify } from 'util';
+import { FormattedMessage } from 'react-intl';
+import styled from '@emotion/styled';
 
 // Internal Global Dependencies
 import config from 'api/configuration';
@@ -24,6 +16,8 @@ import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import * as actionsCreators from 'actions/addressbookActionCreators';
 import Icon from 'components/common/Icon';
+import Button from 'components/common/Button';
+import { WrappedTextField } from 'components/common/TextField';
 import Panel from 'components/common/Panel';
 import WaitingText from 'components/common/WaitingText';
 import ContextMenuBuilder from 'contextmenu';
@@ -36,7 +30,14 @@ import styles from './style.css';
 // Images
 import profilePlaceholder from 'images/Profile_Placeholder.png';
 import addressBookIcon from 'images/address-book.sprite.svg';
-import { FormattedMessage } from 'react-intl';
+import exportIcon from 'images/export.sprite.svg';
+import addContactIcon from 'images/add-contact.sprite.svg';
+import searchIcon from 'images/search.sprite.svg';
+
+const ControlIcon = styled(Icon)({
+  width: '1.3em',
+  height: '1.3em',
+});
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -1250,6 +1251,55 @@ class AddressBook extends Component {
             defaultMessage="Address Book"
           />
         }
+        controls={
+          !!this.props.connections && (
+            <div className="flex">
+              <Button
+                blank
+                className="relative"
+                onClick={this.showAddContactModal.bind(this)}
+              >
+                <ControlIcon icon={addContactIcon} />
+                <div className="tooltip bottom">
+                  <FormattedMessage
+                    id="AddressBook.addContact"
+                    defaultMessage="Add Contact"
+                  />
+                </div>
+              </Button>
+              <Button
+                blank
+                className="relative"
+                as="a"
+                onClick={this.exportAddressBook.bind(this)}
+              >
+                <ControlIcon icon={exportIcon} />
+                <div className="tooltip bottom">
+                  <FormattedMessage
+                    id="AddressBook.Export"
+                    defaultMessage="Export"
+                  />
+                </div>
+              </Button>
+              <FormattedMessage
+                id="AddressBook.SearchContact"
+                defaultMessage="Search Contact"
+              >
+                {sc => (
+                  <WrappedTextField
+                    style={{ marginLeft: '1em', fontSize: '.9375em' }}
+                    icon={searchIcon}
+                    inputProps={{
+                      placeholder: sc,
+                      value: this.props.contactSearch,
+                      onChange: e => this.props.ContactSearch(e.target.value),
+                    }}
+                  />
+                )}
+              </FormattedMessage>
+            </div>
+          )
+        }
       >
         <Modal
           open={this.props.modalVisable}
@@ -1260,33 +1310,6 @@ class AddressBook extends Component {
         >
           {this.modalInternalBuilder()}
         </Modal>
-        {this.props.connections === undefined ? null : (
-          <div className="impexpblock">
-            <a className="impexp" onClick={() => this.exportAddressBook()}>
-              <FormattedMessage
-                id="AddressBook.Export"
-                defaultMessage="Export"
-              />
-            </a>
-            {/* <label htmlFor="importAddressBook">
-              <a className="impexp">
-                <FormattedMessage
-                  id="AddressBook.Import"
-                  defaultMessage="Import Contacts"
-                />
-              </a>
-            </label>
-            <input
-              name="importAddressBook"
-              id="importAddressBook"
-              type="file"
-              onChange={e => {
-                console.log(e.target.files[0].path)
-                this.importAddressBook(e.target.files[0].path)
-              }}
-            /> */}
-          </div>
-        )}
 
         {this.props.connections === undefined ? (
           <WaitingText>
@@ -1299,23 +1322,7 @@ class AddressBook extends Component {
         ) : (
           <div>
             <div id="addressbook-controls">
-              <div id="addressbook-search">
-                <FormattedMessage
-                  id="AddressBook.SearchContact"
-                  defaultMessage="Search Contact"
-                >
-                  {sc => (
-                    <input
-                      className="searchaccount"
-                      type="text"
-                      placeholder={sc}
-                      value={this.props.contactSearch}
-                      onChange={e => this.props.ContactSearch(e.target.value)}
-                      required
-                    />
-                  )}
-                </FormattedMessage>
-              </div>
+              <div />
 
               <button
                 className="button primary"
@@ -1328,15 +1335,6 @@ class AddressBook extends Component {
                 <FormattedMessage
                   id="AddressBook.MyAddresses"
                   defaultMessage="My Addresses"
-                />
-              </button>
-              <button
-                className="button primary"
-                onClick={() => this.showAddContactModal()}
-              >
-                <FormattedMessage
-                  id="AddressBook.addContact"
-                  defaultMessage="Add Contact"
                 />
               </button>
             </div>
@@ -1594,12 +1592,15 @@ class AddressBook extends Component {
                 )}
               </div>
             ) : (
-              <h1 style={{ alignSelf: 'center' }}>
-                <FormattedMessage
-                  id="AddressBook.NoContacts"
-                  defaultMessage="No Contacts"
-                />
-              </h1>
+              <div style={{ marginTop: 50, textAlign: 'center' }}>
+                <div className="dim" style={{ marginBottom: '1em' }}>
+                  Your Address Book is empty!
+                </div>
+                <Button blank onClick={this.showAddContactModal.bind(this)}>
+                  <Icon icon={addContactIcon} />
+                  &nbsp; Add Contact
+                </Button>
+              </div>
             )}
           </div>
         )}
