@@ -740,24 +740,25 @@ class SettingsApp extends Component {
             </label>
             <div className="fee">
               <input
+                className="Folder"
                 type="text"
-                style={{ marginBottom: '15px' }}
                 value={this.props.settings.Folder}
                 onChange={e => this.props.SeeFolder(e.target.value)}
-              />
-
-              <button
-                className="feebutton"
                 onClick={e => {
                   e.preventDefault();
                   this.getFolder(this.props.settings.Folder[0]);
                 }}
-              >
-                <FormattedMessage
-                  id="Settings.chooseFolder"
-                  defaultMessage="Choose Directory"
-                />
-              </button>
+              />
+
+              {/* <button
+                  className="feebutton"
+                  onClick={e => {
+                    e.preventDefault();
+                    this.getFolder(this.props.settings.Folder[0]);
+                  }}
+                >
+                  ...
+                </button> */}
             </div>
           </div>
 
