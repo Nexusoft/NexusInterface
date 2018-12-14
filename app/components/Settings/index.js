@@ -9,6 +9,7 @@ import { Route, Redirect, Switch } from 'react-router';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
 import { FormattedMessage } from 'react-intl';
+import styled from '@emotion/styled';
 
 // Internal Global Dependencies
 import * as RPC from 'scripts/rpc';
@@ -34,6 +35,25 @@ import logoIcon from 'images/logo.sprite.svg';
 import lockIcon from 'images/lock-minting.sprite.svg';
 import marketImg from 'images/marketstats.svg';
 import developerIcon from 'images/developer.sprite.svg';
+
+const SettingsWrapper = styled.div({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+});
+
+const SettingsTabs = styled(Tabs)({
+  flexShrink: 0,
+});
+
+const SettingsContent = styled.div({
+  padding: '0 1em',
+  flexGrow: 1,
+  flexShrink: 1,
+  flexBasis: 0,
+  overflow: 'auto',
+});
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -70,79 +90,91 @@ class Settings extends Component {
 
     return (
       <Panel
+        bodyScrollable={false}
         icon={settingsIcon}
         title={
           <FormattedMessage id="Settings.Settings" defaultMessage="Settings" />
         }
       >
-        <Tabs>
-          <TabItem
-            link={`${match.url}/App`}
-            icon={logoIcon}
-            text={
-              <FormattedMessage
-                id="Settings.Application"
-                defaultMessage="Application"
-              />
-            }
-          />
-          <TabItem
-            link={`${match.url}/Core`}
-            icon={coreIcon}
-            text={<FormattedMessage id="Settings.Core" defaultMessage="Core" />}
-          />
-          <TabItem
-            link={`${match.url}/${
-              encrypted !== true ? 'Unencrypted' : 'Security'
-            }`}
-            isActive={(match, location) =>
-              [
-                `${match.url}/Security`,
-                `${match.url}/Login`,
-                `${match.url}/Unencrypted`,
-              ].includes(location.pathname)
-            }
-            icon={lockIcon}
-            text={
-              <FormattedMessage
-                id="Settings.Security"
-                defaultMessage="Security"
-              />
-            }
-          />
-          <TabItem
-            link={`${match.url}/Style`}
-            icon={developerIcon}
-            text={
-              <FormattedMessage id="Settings.Style" defaultMessage="Style" />
-            }
-          />
-        </Tabs>
-
-        <div className="grid-container">
-          <Switch>
-            <Redirect exact from={`${match.path}/`} to={`${match.path}/App`} />
-            <Route
-              path={`${match.path}/App`}
-              render={props => <SettingsApp {...this.props} />}
-            />
-            <Route path={`${match.path}/Core`} component={SettingsCore} />
-            <Route path={`${match.path}/Market`} component={SettingsMarket} />
-            <Route path={`${match.path}/Style`} component={SettingsStyle} />
-            <Route
-              path={`${match.path}/Security`}
-              render={props =>
-                loggedIn === true ? (
-                  <Security {...props} />
-                ) : (
-                  <Redirect to={`${match.path}/Login`} />
-                )
+        <SettingsWrapper>
+          <SettingsTabs>
+            <TabItem
+              link={`${match.url}/App`}
+              icon={logoIcon}
+              text={
+                <FormattedMessage
+                  id="Settings.Application"
+                  defaultMessage="Application"
+                />
               }
             />
-            <Route path={`${match.path}/Unencrypted`} component={Unencrypted} />
-            <Route path={`${match.path}/Login`} component={Login} />
-          </Switch>
-        </div>
+            <TabItem
+              link={`${match.url}/Core`}
+              icon={coreIcon}
+              text={
+                <FormattedMessage id="Settings.Core" defaultMessage="Core" />
+              }
+            />
+            <TabItem
+              link={`${match.url}/${
+                encrypted !== true ? 'Unencrypted' : 'Security'
+              }`}
+              isActive={(match, location) =>
+                [
+                  `${match.url}/Security`,
+                  `${match.url}/Login`,
+                  `${match.url}/Unencrypted`,
+                ].includes(location.pathname)
+              }
+              icon={lockIcon}
+              text={
+                <FormattedMessage
+                  id="Settings.Security"
+                  defaultMessage="Security"
+                />
+              }
+            />
+            <TabItem
+              link={`${match.url}/Style`}
+              icon={developerIcon}
+              text={
+                <FormattedMessage id="Settings.Style" defaultMessage="Style" />
+              }
+            />
+          </SettingsTabs>
+
+          <SettingsContent>
+            <Switch>
+              <Redirect
+                exact
+                from={`${match.path}/`}
+                to={`${match.path}/App`}
+              />
+              <Route
+                path={`${match.path}/App`}
+                render={props => <SettingsApp {...this.props} />}
+              />
+              <Route path={`${match.path}/Core`} component={SettingsCore} />
+              <Route path={`${match.path}/Market`} component={SettingsMarket} />
+              <Route path={`${match.path}/Style`} component={SettingsStyle} />
+              <Route
+                path={`${match.path}/Security`}
+                render={props =>
+                  loggedIn === true ? (
+                    <Security {...props} />
+                  ) : (
+                    <Redirect to={`${match.path}/Login`} />
+                  )
+                }
+              />
+              <Route
+                path={`${match.path}/Unencrypted`}
+                component={Unencrypted}
+              />
+              <Route path={`${match.path}/Login`} component={Login} />
+            </Switch>
+          </SettingsContent>
+        </SettingsWrapper>
       </Panel>
     );
   }
