@@ -19,6 +19,7 @@ export default {
     'overview.InterestRate': 'Stake Reward',
     'overview.StakeWeight': 'Stake Weight',
     'overview.Globe': 'Globe includes GeoLite2',
+    'overview.StakeBalance': 'Stake Balance',
 
     'sendReceive.SendNexus': 'Send NXS',
     'sendReceive.Address': 'NXS Address',
@@ -178,7 +179,11 @@ export default {
     'Settings.StartUp': 'Start at system startup',
     'Settings.ChangesNexTime':
       'Changes to core settings will take effect the next time the core is restarted',
-
+    'Settings.ManualDaemonEntry': 'Enter manual daemon mode?', // NEW STRING
+    'Settings.ManualDaemonExit': 'Exit manual daemon mode?', // NEW STRING
+    'Settisgs.ManualDaemonWarning': '(This will shut down your daemon)', // NEW STRING
+    'Settings.Folder': 'Backup Directory', // new string
+    'Settings.chooseFolder': 'Choose Directory', // new string
     'Settings.Username': 'Username',
 
     'Settings.IpAddress': 'Ip Address',
@@ -342,7 +347,7 @@ export default {
     'Alert.Sent': 'Transaction Sent',
     'Alert.Genesis': 'Genesis Transaction',
     'Alert.TrustTransaction': 'Trust Transaction',
-    'Alert.regiesteredToThis': 'This is an address regiestered to this wallet',
+    'Alert.registeredToThis': 'This is an address registered to this wallet',
     'Alert.InvalidAddress': 'Invalid Address',
     'Alert.InvalidAmount': 'Invalid Amount',
     'Alert.Invalid': 'Invalid',
@@ -391,4 +396,4 @@ export default {
     'Lang.Japanese': 'Japanese',
     'Lang.French': 'French',
   },
-}
+};

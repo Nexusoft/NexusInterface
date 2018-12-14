@@ -65,65 +65,65 @@ Available RPC methods:
 	Collection of RPC calls to populate the data for the GUI.
 	Add new Interface Specific Utilities Here. Module Specific Functions go In Module Scripts.
 **/
-export const COMMANDS = {}
-export const CALLBACK = {}
-import * as TYPE from 'actions/actiontypes'
-import core from 'api/core'
-import { GetSettings } from 'api/settings'
+export const COMMANDS = {};
+export const CALLBACK = {};
+import * as TYPE from 'actions/actiontypes';
+import core from 'api/core';
+import { GetSettings } from 'api/settings';
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 export const GETHOST = () => {
   // let core = require("electron").remote.getGlobal("core");
-  let settings = GetSettings()
+  let settings = GetSettings();
   if (settings.manualDaemon == true) {
-    let savedport = core.port
+    let savedport = core.port;
     if (settings.manualDaemonPort != undefined) {
-      savedport = settings.manualDaemonPort
+      savedport = settings.manualDaemonPort;
     }
-    let savedIP = core.ip
+    let savedIP = core.ip;
     if (settings.manualDaemonIP != undefined) {
-      savedIP = settings.manualDaemonIP
+      savedIP = settings.manualDaemonIP;
     }
-    return 'http://' + savedIP + ':' + savedport
+    return 'http://' + savedIP + ':' + savedport;
   } else {
-    return core.host
+    return core.host;
   }
-}
+};
 
 // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
 export const GETUSER = () => {
-  let settings = GetSettings()
+  let settings = GetSettings();
   if (settings.manualDaemon == true) {
     let saveduser =
       settings.manualDaemonUser === undefined
         ? core.user
-        : settings.manualDaemonUser
+        : settings.manualDaemonUser;
 
-    return saveduser
+    return saveduser;
   } else {
-    return core.user
+    return core.user;
   }
-}
+};
 
 // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
 export const GETPASSWORD = () => {
-  let settings = GetSettings()
+  let settings = GetSettings();
   if (settings.manualDaemon == true) {
     let savedpassword =
       settings.manualDaemonPassword === undefined
         ? core.password
-        : settings.manualDaemonPassword
+        : settings.manualDaemonPassword;
 
-    return savedpassword
+    return savedpassword;
   } else {
-    return core.password
+    return core.password;
   }
-}
+};
 
 export const GET = (cmd, args, Callback) => {
   var PostData = JSON.stringify({
     method: cmd,
     params: args,
-  })
+  });
 
   POST(
     GETHOST(),
@@ -132,32 +132,32 @@ export const GET = (cmd, args, Callback) => {
     Callback,
     GETUSER(),
     GETPASSWORD()
-  )
-}
+  );
+};
 
 export const PROMISE = (cmd, args) => {
   return new Promise((resolve, reject) => {
     var PostData = JSON.stringify({
       method: cmd,
       params: args,
-    })
-    var ResponseObject
+    });
+    var ResponseObject;
 
     /** Opera 8.0+, Firefox, Safari **/
     try {
-      ResponseObject = new XMLHttpRequest()
+      ResponseObject = new XMLHttpRequest();
     } catch (e) {
       /** Internet Explorer - All Versions **/
       try {
-        ResponseObject = new ActiveXObject('Msxml2.XMLHTTP')
+        ResponseObject = new ActiveXObject('Msxml2.XMLHTTP');
       } catch (e) {
         try {
-          ResponseObject = new ActiveXObject('Microsoft.XMLHTTP')
+          ResponseObject = new ActiveXObject('Microsoft.XMLHTTP');
         } catch (e) {
           try {
-            ResponseObject = new ActiveXObject('Msxml2.XMLHTTP.6.0')
+            ResponseObject = new ActiveXObject('Msxml2.XMLHTTP.6.0');
           } catch (e) {
-            return false
+            return false;
           }
         }
       }
@@ -166,48 +166,53 @@ export const PROMISE = (cmd, args) => {
     /** Establish the resolve. **/
     ResponseObject.onload = () => {
       if (ResponseObject.status == 404) {
-        reject('RPC Command {' + cmd + '} Not Found')
+        reject('RPC Command {' + cmd + '} Not Found');
       }
       if (ResponseObject.status == 401) {
         // console.error(ResponseObject.response)
       }
       if (ResponseObject.status == 500) {
-        console.log(JSON.parse(ResponseObject.responseText))
-        reject(JSON.parse(ResponseObject.responseText).error.message)
+        console.log(JSON.parse(ResponseObject.responseText));
+        reject(JSON.parse(ResponseObject.responseText).error.message);
       }
       if (cmd === 'validateaddress') {
         if (JSON.parse(ResponseObject.response).result.isvalid === false) {
-          reject(JSON.parse(ResponseObject.response).result.isvalid)
+          reject(JSON.parse(ResponseObject.response).result.isvalid);
         }
       }
-      var payload
+      var payload;
 
       if (cmd === 'getaddressesbyaccount') {
         payload = {
           name: args[0],
           addresses: JSON.parse(ResponseObject.response).result,
-        }
+        };
       } else {
-        payload = JSON.parse(ResponseObject.response).result
+        payload = JSON.parse(ResponseObject.response).result;
       }
-      resolve(payload)
-    }
+
+      resolve(payload);
+    };
 
     /** Generate the AJAX Request. **/
     if (GETUSER() == undefined && GETPASSWORD() == undefined)
-      ResponseObject.open('POST', GETHOST(), true)
-    else ResponseObject.open('POST', GETHOST(), true, GETUSER(), GETPASSWORD())
+      ResponseObject.open('POST', GETHOST(), true);
+    else ResponseObject.open('POST', GETHOST(), true, GETUSER(), GETPASSWORD());
 
     /** Send off the Post Data. **/
 
     ResponseObject.onerror = function(e) {
-      e.preventDefault()
-      reject(ResponseObject.responseText)
-    }
+      e.preventDefault();
+      if (ResponseObject.status == 401) {
+        reject(401);
+      } else {
+        reject(ResponseObject.responseText);
+      }
+    };
 
-    ResponseObject.send(PostData)
-  })
-}
+    ResponseObject.send(PostData);
+  });
+};
 
 // export const GETWITHPASS = (cmd, args, Callback, passdata) => {
 //   var PostData = JSON.stringify({
@@ -237,47 +242,47 @@ export const POST = (
   Content
 ) => {
   /** Object to handle the AJAX Requests. */
-  var ResponseObject
+  var ResponseObject;
 
   /** Opera 8.0+, Firefox, Safari **/
   try {
-    ResponseObject = new XMLHttpRequest()
+    ResponseObject = new XMLHttpRequest();
   } catch (e) {
     /** Internet Explorer - All Versions **/
     try {
-      ResponseObject = new ActiveXObject('Msxml2.XMLHTTP')
+      ResponseObject = new ActiveXObject('Msxml2.XMLHTTP');
     } catch (e) {
       try {
-        ResponseObject = new ActiveXObject('Microsoft.XMLHTTP')
+        ResponseObject = new ActiveXObject('Microsoft.XMLHTTP');
       } catch (e) {
         try {
-          ResponseObject = new ActiveXObject('Msxml2.XMLHTTP.6.0')
+          ResponseObject = new ActiveXObject('Msxml2.XMLHTTP.6.0');
         } catch (e) {
-          return false
+          return false;
         }
       }
     }
   }
 
   /** Asynchronous event on AJAX Completion. */
-  if (Callback == undefined) Callback = AJAX.CALLBACK.Post
+  if (Callback == undefined) Callback = AJAX.CALLBACK.Post;
 
   /** Handle the Tag ID being omitted. **/
-  if (TagID == undefined) TagID = ''
+  if (TagID == undefined) TagID = '';
 
   /** Establish the Callback Function. **/
   ResponseObject.onreadystatechange = () => {
-    Callback(ResponseObject, Address, PostData, TagID)
-  }
+    Callback(ResponseObject, Address, PostData, TagID);
+  };
 
   /** Generate the AJAX Request. **/
   if (Username == undefined && Password == undefined)
-    ResponseObject.open('POST', Address, true)
-  else ResponseObject.open('POST', Address, true, Username, Password)
+    ResponseObject.open('POST', Address, true);
+  else ResponseObject.open('POST', Address, true, Username, Password);
 
   if (Content !== undefined)
-    ResponseObject.setRequestHeader('Content-type', Content)
+    ResponseObject.setRequestHeader('Content-type', Content);
 
   /** Send off the Post Data. **/
-  ResponseObject.send(PostData)
-}
+  ResponseObject.send(PostData);
+};

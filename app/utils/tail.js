@@ -5,72 +5,72 @@ var Tail,
   fs,
   boundMethodCheck = function(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
-      throw new Error('Bound instance method accessed before binding')
+      throw new Error('Bound instance method accessed before binding');
     }
-  }
+  };
 
-events = require('events')
+events = require('events');
 
-fs = require('fs')
+fs = require('fs');
 
-environment = process.env['NODE_ENV'] || 'development'
+environment = process.env['NODE_ENV'] || 'development';
 
 Tail = class Tail extends events.EventEmitter {
   readBlock() {
-    var block, stream
-    boundMethodCheck(this, Tail)
+    var block, stream;
+    boundMethodCheck(this, Tail);
     if (this.queue.length >= 1) {
-      block = this.queue[0]
+      block = this.queue[0];
       if (block.end > block.start) {
         stream = fs.createReadStream(this.filename, {
           start: block.start,
           end: block.end - 1,
           encoding: this.encoding,
-        })
+        });
         stream.on('error', error => {
           if (this.logger) {
-            this.logger.error(`Tail error: ${error}`)
+            this.logger.error(`Tail error: ${error}`);
           }
-          return this.emit('error', error)
-        })
+          return this.emit('error', error);
+        });
         stream.on('end', () => {
-          var x
-          x = this.queue.shift()
+          var x;
+          x = this.queue.shift();
           if (this.queue.length > 0) {
-            this.internalDispatcher.emit('next')
+            this.internalDispatcher.emit('next');
           }
           if (this.flushAtEOF && this.buffer.length > 0) {
-            this.emit('line', this.buffer)
-            return (this.buffer = '')
+            this.emit('line', this.buffer);
+            return (this.buffer = '');
           }
-        })
+        });
         return stream.on('data', data => {
-          var chunk, i, len, parts, results
+          var chunk, i, len, parts, results;
           if (this.separator === null) {
-            return this.emit('line', data)
+            return this.emit('line', data);
           } else {
-            this.buffer += data
-            parts = this.buffer.split(this.separator)
-            this.buffer = parts.pop()
-            results = []
+            this.buffer += data;
+            parts = this.buffer.split(this.separator);
+            this.buffer = parts.pop();
+            results = [];
             for (i = 0, len = parts.length; i < len; i++) {
-              chunk = parts[i]
-              results.push(this.emit('line', chunk))
+              chunk = parts[i];
+              results.push(this.emit('line', chunk));
             }
-            return results
+            return results;
           }
-        })
+        });
       }
     }
   }
 
   constructor(filename, options = {}) {
-    var fromBeginning
-    super(filename, options)
-    this.readBlock = this.readBlock.bind(this)
-    this.change = this.change.bind(this)
-    this.filename = filename
-    ;({
+    var fromBeginning;
+    super(filename, options);
+    this.readBlock = this.readBlock.bind(this);
+    this.change = this.change.bind(this);
+    this.filename = filename;
+    ({
       separator: this.separator = /[\r]{0,1}\n/,
       fsWatchOptions: this.fsWatchOptions = {},
       follow: this.follow = true,
@@ -79,94 +79,94 @@ Tail = class Tail extends events.EventEmitter {
       flushAtEOF: this.flushAtEOF = false,
       encoding: this.encoding = 'utf-8',
       fromBeginning: fromBeginning = false,
-    } = options)
+    } = options);
     if (this.logger) {
-      this.logger.info('Tail starting...')
-      this.logger.info(`filename: ${this.filename}`)
-      this.logger.info(`encoding: ${this.encoding}`)
+      this.logger.info('Tail starting...');
+      this.logger.info(`filename: ${this.filename}`);
+      this.logger.info(`encoding: ${this.encoding}`);
     }
-    this.buffer = ''
-    this.internalDispatcher = new events.EventEmitter()
-    this.queue = []
-    this.isWatching = false
+    this.buffer = '';
+    this.internalDispatcher = new events.EventEmitter();
+    this.queue = [];
+    this.isWatching = false;
     this.internalDispatcher.on('next', () => {
-      return this.readBlock()
-    })
-    this.watch(fromBeginning)
+      return this.readBlock();
+    });
+    this.watch(fromBeginning);
   }
 
   change(filename) {
-    var err, stats
-    boundMethodCheck(this, Tail)
+    var err, stats;
+    boundMethodCheck(this, Tail);
     try {
-      stats = fs.statSync(filename)
+      stats = fs.statSync(filename);
     } catch (error1) {
-      err = error1
+      err = error1;
       if (this.logger) {
-        this.logger.error(`'${e}' event for ${filename}. ${err}`)
+        this.logger.error(`'${e}' event for ${filename}. ${err}`);
       }
-      this.emit('error', `'${e}' event for ${filename}. ${err}`)
-      return
+      this.emit('error', `'${e}' event for ${filename}. ${err}`);
+      return;
     }
     if (stats.size < this.pos) {
       //scenario where texts is not appended but it's actually a w+
-      this.pos = stats.size
+      this.pos = stats.size;
     }
     if (stats.size > this.pos) {
       this.queue.push({
         start: this.pos,
         end: stats.size,
-      })
-      this.pos = stats.size
+      });
+      this.pos = stats.size;
       if (this.queue.length === 1) {
-        return this.internalDispatcher.emit('next')
+        return this.internalDispatcher.emit('next');
       }
     }
   }
 
   watch(fromBeginning) {
-    var err, stats
+    var err, stats;
     if (this.isWatching) {
-      return
+      return;
     }
     if (this.logger) {
-      this.logger.info(`filesystem.watch present? ${fs.watch !== void 0}`)
-      this.logger.info(`useWatchFile: ${this.useWatchFile}`)
-      this.logger.info(`fromBeginning: ${fromBeginning}`)
+      this.logger.info(`filesystem.watch present? ${fs.watch !== void 0}`);
+      this.logger.info(`useWatchFile: ${this.useWatchFile}`);
+      this.logger.info(`fromBeginning: ${fromBeginning}`);
     }
-    this.isWatching = true
+    this.isWatching = true;
     try {
-      stats = fs.statSync(this.filename)
+      stats = fs.statSync(this.filename);
     } catch (error1) {
-      err = error1
+      err = error1;
       if (this.logger) {
-        this.logger.error(`watch for ${this.filename} failed: ${err}`)
+        this.logger.error(`watch for ${this.filename} failed: ${err}`);
       }
-      this.emit('error', `watch for ${this.filename} failed: ${err}`)
-      return
+      this.emit('error', `watch for ${this.filename} failed: ${err}`);
+      return;
     }
-    this.pos = fromBeginning ? 0 : stats.size
+    this.pos = fromBeginning ? 0 : stats.size;
     if (this.pos === 0) {
-      this.change(this.filename)
+      this.change(this.filename);
     }
     if (!this.useWatchFile && fs.watch) {
       if (this.logger) {
-        this.logger.info('watch strategy: watch')
+        this.logger.info('watch strategy: watch');
       }
       return (this.watcher = fs.watch(
         this.filename,
         this.fsWatchOptions,
         (e, filename) => {
-          return this.watchEvent(e, filename)
+          return this.watchEvent(e, filename);
         }
-      ))
+      ));
     } else {
       if (this.logger) {
-        this.logger.info('watch strategy: watchFile')
+        this.logger.info('watch strategy: watchFile');
       }
       return fs.watchFile(this.filename, this.fsWatchOptions, (curr, prev) => {
-        return this.watchFileEvent(curr, prev)
-      })
+        return this.watchFileEvent(curr, prev);
+      });
     }
   }
 
@@ -179,21 +179,21 @@ Tail = class Tail extends events.EventEmitter {
     //Better solution would be check inode but it will require a timeout and
     // a sync file read.
     if (filename === void 0 || filename !== this.filename) {
-      this.unwatch()
+      this.unwatch();
       if (this.follow) {
         return setTimeout(() => {
-          return this.watch()
-        }, 1000)
+          return this.watch();
+        }, 1000);
       } else {
         if (this.logger) {
           this.logger.error(
             `'rename' event for ${this.filename}. File not available.`
-          )
+          );
         }
         return this.emit(
           'error',
           `'rename' event for ${this.filename}. File not available.`
-        )
+        );
       }
     } else {
     }
@@ -202,37 +202,37 @@ Tail = class Tail extends events.EventEmitter {
   // @logger.info("rename event but same filename")
   watchEvent(e, evtFilename) {
     if (e === 'change') {
-      return this.change(this.filename)
+      return this.change(this.filename);
     } else if (e === 'rename') {
-      return this.rename(evtFilename)
+      return this.rename(evtFilename);
     }
   }
 
   watchFileEvent(curr, prev) {
     if (curr.size > prev.size) {
-      this.pos = curr.size // Update @pos so that a consumer can determine if entire file has been handled
+      this.pos = curr.size; // Update @pos so that a consumer can determine if entire file has been handled
       this.queue.push({
         start: prev.size,
         end: curr.size,
-      })
+      });
       if (this.queue.length === 1) {
-        return this.internalDispatcher.emit('next')
+        return this.internalDispatcher.emit('next');
       }
     }
   }
 
   unwatch() {
     if (this.watcher) {
-      this.watcher.close()
+      this.watcher.close();
     } else {
-      fs.unwatchFile(this.filename)
+      fs.unwatchFile(this.filename);
     }
-    this.isWatching = false
-    this.queue = []
+    this.isWatching = false;
+    this.queue = [];
     if (this.logger) {
-      return this.logger.info('Unwatch ', this.filename)
+      return this.logger.info('Unwatch ', this.filename);
     }
   }
-}
+};
 
-exports.Tail = Tail
+exports.Tail = Tail;

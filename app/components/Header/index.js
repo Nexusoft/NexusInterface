@@ -1,38 +1,38 @@
 // External Dependencies
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import electron from 'electron'
-import Modal from 'react-responsive-modal'
-import CustomProperties from 'react-custom-properties'
-import log from 'electron-log'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import electron from 'electron';
+import Modal from 'react-responsive-modal';
+import CustomProperties from 'react-custom-properties';
+import log from 'electron-log';
 
 // Internal Dependencies
-import MenuBuilder from 'menu'
-import styles from './style.css'
-import * as RPC from 'scripts/rpc'
-import * as TYPE from 'actions/actiontypes'
-import * as actionsCreators from 'actions/headerActionCreators'
-import { GetSettings, SaveSettings } from 'api/settings'
-import GOOGLE from 'scripts/googleanalytics'
-import configuration from 'api/configuration'
+import MenuBuilder from 'menu';
+import styles from './style.css';
+import * as RPC from 'scripts/rpc';
+import * as TYPE from 'actions/actiontypes';
+import * as actionsCreators from 'actions/headerActionCreators';
+import { GetSettings, SaveSettings } from 'api/settings';
+import GOOGLE from 'scripts/googleanalytics';
+import configuration from 'api/configuration';
 
 // Images
-import questionmark from 'images/questionmark.svg'
-import lockedImg from 'images/lock-encrypted.svg'
-import unencryptedImg from 'images/lock-unencrypted.svg'
-import unlockImg from 'images/lock-minting.svg'
-import statGood from 'images/status-good.svg'
-import statBad from 'images/sync.svg'
-import stakeImg from 'images/staking.svg'
-import logoFull from 'images/logo-full-beta.svg'
-import { write } from 'fs'
+import questionmark from 'images/questionmark.svg';
+import lockedImg from 'images/lock-encrypted.svg';
+import unencryptedImg from 'images/lock-unencrypted.svg';
+import unlockImg from 'images/lock-minting.svg';
+import statGood from 'images/status-good.svg';
+import statBad from 'images/sync.svg';
+import stakeImg from 'images/staking.svg';
+import logoFull from 'images/logo-full-beta.svg';
+import { write } from 'fs';
 
-import { FormattedMessage } from 'react-intl'
-var tray = tray || null
-let mainWindow = electron.remote.getCurrentWindow()
-var checkportinterval // shouldbemoved
+import { FormattedMessage } from 'react-intl';
+var tray = tray || null;
+let mainWindow = electron.remote.getCurrentWindow();
+var checkportinterval; // shouldbemoved
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -41,132 +41,131 @@ const mapStateToProps = state => {
     ...state.common,
     ...state.settings,
     ...state.intl,
-  }
-}
+  };
+};
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch)
+  bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    var self = this
-    const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id)
-    menuBuilder.buildMenu(self)
-    this.props.SetGoogleAnalytics(GOOGLE)
+    var self = this;
+    const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
+    menuBuilder.buildMenu(self);
+    this.props.SetGoogleAnalytics(GOOGLE);
 
-    if (tray === null) this.setupTray()
-    let settings = GetSettings()
+    if (tray === null) this.setupTray();
+    let settings = GetSettings();
 
     if (Object.keys(settings).length < 1) {
-      SaveSettings({ ...this.props.settings, keepDaemon: false })
-      this.props.SwitchMessages(this.props.settings.locale)
+      SaveSettings({ ...this.props.settings, keepDaemon: false });
+      this.props.SwitchMessages(this.props.settings.locale);
     } else {
-      this.props.SwitchMessages(settings.locale)
-      this.props.setSettings(settings)
+      this.props.SwitchMessages(settings.locale);
+      this.props.setSettings(settings);
     }
 
-    this.props.SetMarketAveData()
-    this.props.LoadAddressBook()
-    this.props.GetInfoDump()
+    this.props.SetMarketAveData();
+    this.props.LoadAddressBook();
+    this.props.GetInfoDump();
 
     self.set = setInterval(function() {
-      self.props.AddRPCCall('getInfo')
-      self.props.GetInfoDump()
-    }, 20000)
-    const core = electron.remote.getGlobal('core')
+      self.props.AddRPCCall('getInfo');
+      self.props.GetInfoDump();
+    }, 20000);
+    const core = electron.remote.getGlobal('core');
     core.on('starting', () => {
       self.set = setInterval(function() {
-        self.props.AddRPCCall('getInfo')
-        self.props.GetInfoDump()
-      }, 20000)
-    })
+        self.props.AddRPCCall('getInfo');
+        self.props.GetInfoDump();
+      }, 20000);
+    });
 
     core.on('stopping', () => {
-      clearInterval(self.set)
-      this.props.clearOverviewVariables()
-    })
-    this.props.SetMarketAveData()
+      this.props.clearOverviewVariables();
+    });
+    this.props.SetMarketAveData();
     self.mktData = setInterval(function() {
-      console.log('MARKET')
-      self.props.SetMarketAveData()
-    }, 900000)
+      console.log('MARKET');
+      self.props.SetMarketAveData();
+    }, 900000);
 
-    this.props.history.push('/')
+    this.props.history.push('/');
   }
   // React Method (Life cycle hook)
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
-      this.props.Unlock()
-      this.props.Unencrypted()
+      this.props.Unlock();
+      this.props.Unencrypted();
     } else if (nextProps.unlocked_until === 0) {
-      this.props.Lock()
-      this.props.Encrypted()
+      this.props.Lock();
+      this.props.Encrypted();
     } else if (nextProps.unlocked_until >= 0) {
-      this.props.Unlock()
-      this.props.Encrypted()
+      this.props.Unlock();
+      this.props.Encrypted();
     }
 
     if (
       this.props.connections === undefined &&
       nextProps.connections !== undefined
     ) {
-      this.loadMyAccounts()
+      this.loadMyAccounts();
     }
 
     if (nextProps.blocks !== this.props.blocks) {
       RPC.PROMISE('getpeerinfo', [], this.props)
         .then(peerresponse => {
-          let hpb = 0
+          let hpb = 0;
           peerresponse.forEach(element => {
             if (element.height >= hpb) {
-              hpb = element.height
+              hpb = element.height;
             }
-          })
+          });
 
-          return hpb
+          return hpb;
         })
         .then(hpb => {
-          this.props.SetHighestPeerBlock(hpb)
-        })
+          this.props.SetHighestPeerBlock(hpb);
+        });
     }
 
     if (this.props.heighestPeerBlock > nextProps.blocks) {
-      this.props.SetSyncStatus(false)
+      this.props.SetSyncStatus(false);
     } else {
-      this.props.SetSyncStatus(true)
+      this.props.SetSyncStatus(true);
     }
 
     if (this.props.txtotal < nextProps.txtotal) {
       RPC.PROMISE('listtransactions').then(payload => {
         let MRT = payload.reduce((a, b) => {
           if (a.time > b.time) {
-            return a
+            return a;
           } else {
-            return b
+            return b;
           }
-        })
+        });
 
         if (MRT.category === 'receive') {
-          this.doNotify('Received', MRT.amount + ' NXS')
-          this.props.OpenModal('receive')
+          this.doNotify('Received', MRT.amount + ' NXS');
+          this.props.OpenModal('receive');
         } else if (MRT.category === 'send') {
-          this.doNotify('Sent', MRT.amount + ' NXS')
-          this.props.OpenModal('send')
+          this.doNotify('Sent', MRT.amount + ' NXS');
+          this.props.OpenModal('send');
         } else if (MRT.category === 'genesis') {
-          this.doNotify('Genesis', MRT.amount + ' NXS')
-          this.props.OpenModal('genesis')
+          this.doNotify('Genesis', MRT.amount + ' NXS');
+          this.props.OpenModal('genesis');
         } else if (MRT.category === 'trust') {
-          this.doNotify('Trust', MRT.amount + ' NXS')
-          this.props.OpenModal('trust')
+          this.doNotify('Trust', MRT.amount + ' NXS');
+          this.props.OpenModal('trust');
         }
-      })
+      });
     } else {
-      return null
+      return null;
     }
   }
 
   bootstrapModalController() {
-    console.log()
+    console.log();
     if (this.props.manualDaemon !== true) {
       if (
         (this.props.settings.bootstrap &&
@@ -174,9 +173,9 @@ class Header extends Component {
           !this.props.isInSync) ||
         this.props.BootstrapModal
       ) {
-        return true
-      } else return false
-    } else return false
+        return true;
+      } else return false;
+    } else return false;
   }
 
   // Class methods
@@ -187,72 +186,72 @@ class Header extends Component {
           RPC.PROMISE('getaddressesbyaccount', [account])
         )
       ).then(payload => {
-        let validateAddressPromises = []
+        let validateAddressPromises = [];
 
         payload.map(element => {
           element.addresses.map(address => {
             validateAddressPromises.push(
               RPC.PROMISE('validateaddress', [address])
-            )
-          })
-        })
+            );
+          });
+        });
 
         Promise.all(validateAddressPromises).then(payload => {
-          let accountsList = []
+          let accountsList = [];
           let myaccts = payload.map(e => {
             if (e.ismine && e.isvalid) {
               let index = accountsList.findIndex(ele => {
                 if (ele.account === e.account) {
-                  return ele
+                  return ele;
                 }
-              })
+              });
               let indexDefault = accountsList.findIndex(ele => {
                 if (ele.account == '' || ele.account == 'default') {
-                  return ele
+                  return ele;
                 }
-              })
+              });
 
               if (e.account === '' || e.account === 'default') {
                 if (index === -1 && indexDefault === -1) {
                   accountsList.push({
                     account: 'default',
                     addresses: [e.address],
-                  })
+                  });
                 } else {
-                  accountsList[indexDefault].addresses.push(e.address)
+                  accountsList[indexDefault].addresses.push(e.address);
                 }
               } else {
                 if (index === -1) {
                   accountsList.push({
                     account: e.account,
                     addresses: [e.address],
-                  })
+                  });
                 } else {
-                  accountsList[index].addresses.push(e.address)
+                  accountsList[index].addresses.push(e.address);
                 }
               }
             }
-          })
-          this.props.MyAccountsList(accountsList)
-        })
-      })
-    })
+          });
+          this.props.MyAccountsList(accountsList);
+        });
+      });
+    });
   }
 
   doNotify(context, message) {
     Notification.requestPermission().then(result => {
       var myNotification = new Notification(context, {
         body: message,
-      })
-    })
+      });
+    });
   }
 
   setupTray() {
-    let trayImage = ''
-    let mainWindow = electron.remote.getCurrentWindow()
+    let trayImage = '';
+    let mainWindow = electron.remote.getCurrentWindow();
 
-    const path = require('path')
-    const app = electron.app || electron.remote.app
+    const path = require('path');
+    const app = electron.app || electron.remote.app;
 
     if (process.env.NODE_ENV === 'development') {
       if (process.platform == 'darwin') {
@@ -261,14 +260,14 @@ class Header extends Component {
           'images',
           'tray',
           'Nexus_Tray_Icon_Template_16.png'
-        )
+        );
       } else {
         trayImage = path.join(
           __dirname,
           'images',
           'tray',
           'Nexus_Tray_Icon_32.png'
-        )
+        );
       }
     } else {
       if (process.platform == 'darwin') {
@@ -277,18 +276,18 @@ class Header extends Component {
           'images',
           'tray',
           'Nexus_Tray_Icon_Template_16.png'
-        )
+        );
       } else {
         trayImage = path.join(
           configuration.GetAppResourceDir(),
           'images',
           'tray',
           'Nexus_Tray_Icon_32.png'
-        )
+        );
       }
     }
 
-    tray = new electron.remote.Tray(trayImage)
+    tray = new electron.remote.Tray(trayImage);
 
     if (process.env.NODE_ENV === 'development') {
       if (process.platform == 'darwin') {
@@ -299,7 +298,7 @@ class Header extends Component {
             'tray',
             'Nexus_Tray_Icon_Highlight_16.png'
           )
-        )
+        );
       }
     } else {
       tray.setPressedImage(
@@ -309,39 +308,39 @@ class Header extends Component {
           'tray',
           'Nexus_Tray_Icon_Highlight_16.png'
         )
-      )
+      );
     }
     tray.on('double-click', () => {
-      mainWindow.show()
-    })
+      mainWindow.show();
+    });
 
     var contextMenu = electron.remote.Menu.buildFromTemplate([
       {
         label: 'Show Nexus',
         click: function() {
-          mainWindow.show()
+          mainWindow.show();
         },
       },
       {
         label: 'Quit Nexus',
         click: function() {
-          log.info('header/index.js contextmenu: close and kill')
-          let settings = GetSettings()
-          settings.keepDaemon = false
-          SaveSettings(settings)
+          log.info('header/index.js contextmenu: close and kill');
+          let settings = GetSettings();
+          settings.keepDaemon = false;
+          SaveSettings(settings);
           if (settings.manualDaemon != true) {
             RPC.PROMISE('stop', []).then(payload => {
               setTimeout(() => {
-                mainWindow.close()
-              }, 1000)
-            })
+                mainWindow.close();
+              }, 1000);
+            });
           }
-          mainWindow.close()
+          mainWindow.close();
         },
       },
-    ])
+    ]);
 
-    tray.setContextMenu(contextMenu)
+    tray.setContextMenu(contextMenu);
   }
 
   signInStatus() {
@@ -349,14 +348,14 @@ class Header extends Component {
       this.props.connections === undefined ||
       this.props.daemonAvailable === false
     ) {
-      return questionmark
+      return questionmark;
     } else {
       if (this.props.unlocked_until === undefined) {
-        return unencryptedImg
+        return unencryptedImg;
       } else if (this.props.unlocked_until === 0) {
-        return lockedImg
+        return lockedImg;
       } else if (this.props.unlocked_until >= 0) {
-        return unlockImg
+        return unlockImg;
       }
     }
   }
@@ -365,7 +364,7 @@ class Header extends Component {
     let unlockDate = new Date(this.props.unlocked_until * 1000).toLocaleString(
       'en',
       { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-    )
+    );
     if (
       this.props.connections === undefined ||
       this.props.daemonAvailable === false
@@ -375,7 +374,7 @@ class Header extends Component {
           id="Header.DaemonNotLoaded"
           defaultMessage="Daemon Not Loaded"
         />
-      )
+      );
     }
 
     if (this.props.unlocked_until === undefined) {
@@ -384,14 +383,14 @@ class Header extends Component {
           id="Header.WalletUnencrypted"
           defaultMessage="Wallet Unencrypted"
         />
-      )
+      );
     } else if (this.props.unlocked_until === 0) {
       return (
         <FormattedMessage
           id="Header.WalletLocked"
           defaultMessage="Wallet Locked"
         />
-      )
+      );
     } else if (this.props.unlocked_until >= 0) {
       if (this.props.staking_only) {
         return (
@@ -406,7 +405,7 @@ class Header extends Component {
               defaultMessage="Staking Only"
             />
           </div>
-        )
+        );
       } else {
         return (
           <div>
@@ -416,24 +415,24 @@ class Header extends Component {
             />{' '}
             {unlockDate}
           </div>
-        )
+        );
       }
     }
   }
 
   syncStatus() {
-    let syncStatus = document.getElementById('syncStatus')
+    let syncStatus = document.getElementById('syncStatus');
     if (
       this.props.connections === undefined ||
       this.props.heighestPeerBlock > this.props.blocks ||
       this.props.daemonAvailable === false
     ) {
       // rotates
-      syncStatus.classList.remove('sync-img')
-      return statBad
+      syncStatus.classList.remove('sync-img');
+      return statBad;
     } else {
       // doesn't
-      return statGood
+      return statGood;
     }
   }
 
@@ -447,16 +446,18 @@ class Header extends Component {
           id="Header.DaemonNotLoaded"
           defaultMessage="Daemon Not Loaded"
         />
-      )
+      );
     } else {
       if (this.props.heighestPeerBlock > this.props.blocks) {
         return (
           this.props.messages['Header.Synching'] +
           (this.props.heighestPeerBlock - this.props.blocks).toString() +
           this.props.messages['Header.Blocks']
-        )
+        );
       } else {
-        return <FormattedMessage id="Header.Synched" defaultMessage="Synched" />
+        return (
+          <FormattedMessage id="Header.Synched" defaultMessage="Synched" />
+        );
       }
     }
   }
@@ -471,8 +472,8 @@ class Header extends Component {
               defaultMessage="Transaction Received"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'send':
         return (
           <h2>
@@ -481,8 +482,8 @@ class Header extends Component {
               defaultMessage="Transaction Sent"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'genesis':
         return (
           <h2>
@@ -491,8 +492,8 @@ class Header extends Component {
               defaultMessage="Genesis Transaction"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'trust':
         return (
           <h2>
@@ -501,18 +502,18 @@ class Header extends Component {
               defaultMessage="Trust Transaction"
             />
           </h2>
-        )
-        break
-      case 'This is an address regiestered to this wallet':
+        );
+        break;
+      case 'This is an address registered to this wallet':
         return (
           <h2>
             <FormattedMessage
-              id="Alert.regiesteredToThis"
-              defaultMessage="This is an address regiestered to this wallet"
+              id="Alert.registeredToThis"
+              defaultMessage="This is an address registered to this wallet"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Invalid Address':
         return (
           <h2>
@@ -521,8 +522,8 @@ class Header extends Component {
               defaultMessage="Invalid Address"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Invalid Amount':
         return (
           <h2>
@@ -531,15 +532,15 @@ class Header extends Component {
               defaultMessage="Invalid Amount"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Invalid':
         return (
           <h2>
             <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Address Added':
         return (
           <h2>
@@ -548,8 +549,8 @@ class Header extends Component {
               defaultMessage="Address Added"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'No Addresses':
         return (
           <h2>
@@ -558,9 +559,9 @@ class Header extends Component {
               defaultMessage="No Addresses"
             />
           </h2>
-        )
-        break
-      case 'Insufficient Funds':
+        );
+        break;
+      case 'Insufficient funds':
         return (
           <h2>
             <FormattedMessage
@@ -568,8 +569,8 @@ class Header extends Component {
               defaultMessage="Insufficient Funds"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Empty Queue!':
         return (
           <h2>
@@ -578,8 +579,8 @@ class Header extends Component {
               defaultMessage="Queue Empty"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Password has been changed.':
         return (
           <h2>
@@ -588,8 +589,8 @@ class Header extends Component {
               defaultMessage="Password has been changed"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Wallet has been encrypted':
         return (
           <h2>
@@ -598,8 +599,8 @@ class Header extends Component {
               defaultMessage="Wallet has been encrypted"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Settings saved':
         return (
           <h2>
@@ -608,8 +609,8 @@ class Header extends Component {
               defaultMessage="Settings Saved"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Transaction Fee Set':
         return (
           <h2>
@@ -618,8 +619,8 @@ class Header extends Component {
               defaultMessage="Transaction Fee Set"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Wallet Locked':
         return (
           <h2>
@@ -628,8 +629,8 @@ class Header extends Component {
               defaultMessage="Wallet Locked"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Wallet Backup':
         return (
           <h2>
@@ -638,8 +639,8 @@ class Header extends Component {
               defaultMessage="Wallet Backed Up"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Invalid Transaction Fee':
         return (
           <h2>
@@ -648,15 +649,15 @@ class Header extends Component {
               defaultMessage="Invalid Transaction Fee"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Copied':
         return (
           <h2>
             <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Style Settings Saved':
         return (
           <h2>
@@ -665,8 +666,8 @@ class Header extends Component {
               defaultMessage="Style Settings Saved"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'No ammount set':
         return (
           <h2>
@@ -675,8 +676,8 @@ class Header extends Component {
               defaultMessage="No Ammount Set"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Please Fill Out Field':
         return (
           <h2>
@@ -685,8 +686,8 @@ class Header extends Component {
               defaultMessage="Please Fill Out Field"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'FutureDate':
         return (
           <h2>
@@ -695,8 +696,8 @@ class Header extends Component {
               defaultMessage="Unlock until date/time must be at least an hour in the future"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Incorrect Passsword':
         return (
           <h2>
@@ -705,8 +706,8 @@ class Header extends Component {
               defaultMessage="Incorrect Passsword"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Core Settings Saved':
         return (
           <h2>
@@ -715,8 +716,8 @@ class Header extends Component {
               defaultMessage="Core Settings Saved"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Contacts Exported':
         return (
           <h2>
@@ -725,8 +726,8 @@ class Header extends Component {
               defaultMessage="Contacts Exported"
             />
           </h2>
-        )
-        break
+        );
+        break;
       case 'Core Restarting':
         return (
           <h2>
@@ -735,11 +736,41 @@ class Header extends Component {
               defaultMessage="Core Restarting"
             />
           </h2>
-        )
-        break
+        );
+        break;
+      case 'Accounts are the same':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.AccountsAreTheSame"
+              defaultMessage="Accounts are the same"
+            />
+          </h2>
+        );
+        break;
+      case 'No second account chosen':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.NoSecondAccountChosen"
+              defaultMessage="No second account chosen"
+            />
+          </h2>
+        );
+        break;
+      case 'Please wait for daemon':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.DaemonLoadingWait"
+              defaultMessage="Loading Daemon, Please wait..."
+            />
+          </h2>
+        );
+        break;
       default:
-        return <h2>{this.props.modaltype}</h2>
-        break
+        return <h2>{this.props.modaltype}</h2>;
+        break;
     }
   }
   daemonStatus() {
@@ -755,7 +786,7 @@ class Header extends Component {
           />
           ...
         </span>
-      )
+      );
     } else if (
       this.props.settings.manualDaemon === true &&
       this.props.daemonAvailable === false
@@ -767,17 +798,17 @@ class Header extends Component {
             defaultMessage="Daemon Process Not Found"
           />
         </span>
-      )
+      );
     } else {
-      return null
+      return null;
     }
   }
 
   CloseBootstrapModalAndSaveSettings() {
-    this.props.CloseBootstrapModal()
-    let settings = GetSettings()
-    settings.bootstrap = false
-    SaveSettings(settings)
+    this.props.CloseBootstrapModal();
+    let settings = GetSettings();
+    settings.bootstrap = false;
+    SaveSettings(settings);
   }
 
   BootstrapModalInteriorBuilder() {
@@ -793,9 +824,9 @@ class Header extends Component {
           <button
             className="button"
             onClick={() => {
-              this.props.OpenBootstrapModal(true)
-              configuration.BootstrapRecentDatabase(this)
-              this.props.setPercentDownloaded(0.001)
+              this.props.OpenBootstrapModal(true);
+              configuration.BootstrapRecentDatabase(this);
+              this.props.setPercentDownloaded(0.001);
             }}
           >
             <FormattedMessage
@@ -806,7 +837,7 @@ class Header extends Component {
           <button
             className="button"
             onClick={() => {
-              this.CloseBootstrapModalAndSaveSettings()
+              this.CloseBootstrapModalAndSaveSettings();
             }}
           >
             <FormattedMessage
@@ -815,7 +846,7 @@ class Header extends Component {
             />
           </button>
         </div>
-      )
+      );
     } else if (this.props.percentDownloaded < 100) {
       return (
         <div>
@@ -838,7 +869,7 @@ class Header extends Component {
             />
           </h3>
         </div>
-      )
+      );
     } else {
       return (
         <div>
@@ -856,7 +887,7 @@ class Header extends Component {
             />
           </h3>
         </div>
-      )
+      );
     }
   }
 
@@ -894,8 +925,8 @@ class Header extends Component {
           classNames={{ modal: 'custom-modal' }}
           onOpen={() => {
             setTimeout(() => {
-              this.props.CloseModal()
-            }, 3000)
+              this.props.CloseModal();
+            }, 3000);
           }}
         >
           {this.modalinternal()}
@@ -976,7 +1007,7 @@ class Header extends Component {
         <div id="hdr-line" className="animated fadeIn " />
         {this.daemonStatus()}
       </div>
-    )
+    );
   }
 }
 
@@ -984,4 +1015,4 @@ class Header extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Header)
+)(Header);

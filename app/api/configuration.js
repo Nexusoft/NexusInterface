@@ -4,39 +4,39 @@
 //
 //////////////////////////////////////////////////////
 
-var configuration = exports
+var configuration = exports;
 
 //
 // Exists: Check if a configuration file exists
 //
 
 configuration.Exists = function(filename) {
-  var fs = require('fs')
-  const path = require('path')
+  var fs = require('fs');
+  const path = require('path');
   try {
-    fs.accessSync(path.join(this.GetAppDataDirectory(), filename))
+    fs.accessSync(path.join(this.GetAppDataDirectory(), filename));
 
-    return true
+    return true;
   } catch (err) {
-    return false
+    return false;
   }
-}
+};
 
 //
 // Read: Read a configuration file
 //
 
 configuration.Read = function(filename) {
-  var fs = require('fs')
-  const path = require('path')
+  var fs = require('fs');
+  const path = require('path');
   try {
-    return fs.readFileSync(path.join(this.GetAppDataDirectory(), filename))
+    return fs.readFileSync(path.join(this.GetAppDataDirectory(), filename));
   } catch (err) {
-    console.log('Error reading file: ' + filename + ' => ' + err)
+    console.log('Error reading file: ' + filename + ' => ' + err);
 
-    return undefined
+    return undefined;
   }
-}
+};
 
 //
 // ReadJson: Read a json configuration file and return a json object
@@ -47,35 +47,35 @@ configuration.ReadJson = function(filename) {
   // TODO: Is utf-8 required here?
   //
 
-  var json = this.Read(filename)
+  var json = this.Read(filename);
 
-  if (!json) return {}
+  if (!json) return {};
 
-  return JSON.parse(json)
-}
+  return JSON.parse(json);
+};
 
 //
 // Write: Update a configuration file with provided content
 //
 
 configuration.Write = function(filename, content) {
-  var fs = require('fs')
-  const path = require('path')
+  var fs = require('fs');
+  const path = require('path');
   //  if (!this.Exists("settings.json")) {
   //    console.log("Creating settings.json in " + this.GetAppDataDirectory());
   //    fs.closeSync(fs.openSync(path.join(this.GetAppDataDirectory(), "settings.json"), 'w'));
   //    fs.writeFileSync(path.join(this.GetAppDataDirectory(), "settings.json"), '{}');
   //  }
   try {
-    fs.writeFileSync(path.join(this.GetAppDataDirectory(), filename), content)
+    fs.writeFileSync(path.join(this.GetAppDataDirectory(), filename), content);
 
-    return true
+    return true;
   } catch (err) {
-    console.log('Error writing file: ' + filename + ' => ' + err)
+    console.log('Error writing file: ' + filename + ' => ' + err);
 
-    return false
+    return false;
   }
-}
+};
 
 //
 // WriteJson: Update a json configuration file with provided json object
@@ -86,57 +86,57 @@ configuration.WriteJson = function(filename, json) {
   // TODO: Is utf-8 required here?
   //
 
-  return this.Write(filename, JSON.stringify(json, null, 2)) // pretty print the json so it is human readable
-}
+  return this.Write(filename, JSON.stringify(json, null, 2)); // pretty print the json so it is human readable
+};
 
 //
 // Delete: Delete the configuration file
 //
 
 configuration.Delete = function(filename) {
-  var fs = require('fs')
-  const path = require('path')
+  var fs = require('fs');
+  const path = require('path');
   try {
-    fs.unlink(path.join(this.GetAppDataDirectory(), filename))
+    fs.unlink(path.join(this.GetAppDataDirectory(), filename));
 
-    return true
+    return true;
   } catch (err) {
-    console.log('Error deleting file: ' + filename + ' => ' + err)
+    console.log('Error deleting file: ' + filename + ' => ' + err);
 
-    return false
+    return false;
   }
-}
+};
 
 //
 // Rename: Rename a configuration file
 //
 
 configuration.Rename = function(oldFilename, newFilename) {
-  var fs = require('fs')
-  const path = require('path')
+  var fs = require('fs');
+  const path = require('path');
   try {
     fs.renameSync(
       path.join(this.GetAppDataDirectory(), oldFilename),
       path.join(this.GetAppDataDirectory(), newFilename)
-    )
+    );
 
-    return true
+    return true;
   } catch (err) {
-    console.log('Error renaming file: ' + filename + ' => ' + err)
+    console.log('Error renaming file: ' + filename + ' => ' + err);
 
-    return false
+    return false;
   }
-}
+};
 
 //
 // GetAppDataDirectory: Get the application data directory
 //
 
 configuration.GetAppDataDirectory = function() {
-  const electron = require('electron')
-  const path = require('path')
-  const app = electron.app || electron.remote.app
-  let AppDataDirPath = ''
+  const electron = require('electron');
+  const path = require('path');
+  const app = electron.app || electron.remote.app;
+  let AppDataDirPath = '';
 
   if (process.platform === 'darwin') {
     AppDataDirPath = path.join(
@@ -145,172 +145,191 @@ configuration.GetAppDataDirectory = function() {
         .replace(' ', `\ `)
         .replace('/Electron/', app.getName()),
       app.getName()
-    )
+    );
   } else {
     AppDataDirPath = path.join(
       app.getPath('appData').replace('/Electron/', app.getName()),
       app.getName()
-    )
+    );
   }
 
-  return AppDataDirPath
-}
+  return AppDataDirPath;
+};
 
 configuration.GetAppResourceDir = function() {
-  const electron = require('electron')
-  const path = require('path')
-  const app = electron.app || electron.remote.app
-  let rawPath = ''
+  const electron = require('electron');
+  const path = require('path');
+  const app = electron.app || electron.remote.app;
+  let rawPath = '';
   if (process.platform === 'darwin') {
-    rawPath = path.dirname(app.getPath('exe')) + '/../Resources/app/'
+    rawPath = path.dirname(app.getPath('exe')) + '/../Resources/app/';
   } else {
-    rawPath = path.dirname(app.getPath('exe')) + '/resources/app/'
+    rawPath = path.dirname(app.getPath('exe')) + '/resources/app/';
   }
   if (process.env.NODE_ENV_RUN == 'production-test') {
-    rawPath = path.join(rawPath, '..', '..', '..', '..', '..', 'app')
+    rawPath = path.join(rawPath, '..', '..', '..', '..', '..', 'app');
   }
   if (process.platform == 'win32') {
-    return path.win32.normalize(rawPath)
+    return path.win32.normalize(rawPath);
   } else {
-    return path.normalize(rawPath)
+    return path.normalize(rawPath);
   }
-}
+};
 
 configuration.GetBootstrapSize = async function() {
-  let remote = require('remote-file-size')
-  const url = 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz'
+  let remote = require('remote-file-size');
+  const url = 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
 
-  let total = 0
+  let total = 0;
   let promise = new Promise((resolve, reject) => {
     remote(url, function(err, totalBytes) {
-      resolve(totalBytes)
-    })
-  })
-  await promise
-  return promise
-}
+      resolve(totalBytes);
+    });
+  });
+  await promise;
+  return promise;
+};
 
 configuration.BootstrapRecentDatabase = async function(self) {
-  const RPC = require('scripts/rpc')
-  const fs = require('fs')
-  const path = require('path')
-  const electron = require('electron')
-  const tarball = require('tarball-extract')
-  const moveFile = require('move-file')
+  const RPC = require('scripts/rpc');
+  const fs = require('fs');
+  const path = require('path');
+  const electron = require('electron');
+  const tarball = require('tarball-extract');
+  const moveFile = require('move-file');
 
-  let totalDownloadSize = await configuration.GetBootstrapSize()
+  let totalDownloadSize = await configuration.GetBootstrapSize();
 
   let now = new Date()
     .toString()
     .slice(0, 24)
     .split(' ')
     .reduce((a, b) => {
-      return a + '_' + b
+      return a + '_' + b;
     })
-    .replace(/:/g, '_')
-  let BackupDir = process.env.HOME + '/NexusBackups'
+    .replace(/:/g, '_');
+  let BackupDir = process.env.HOME + '/NexusBackups';
   if (process.platform === 'win32') {
-    BackupDir = process.env.USERPROFILE + '/NexusBackups'
-    BackupDir = BackupDir.replace(/\\/g, '/')
+    BackupDir = process.env.USERPROFILE + '/NexusBackups';
+    BackupDir = BackupDir.replace(/\\/g, '/');
+  }
+  if (self.props.settings.Folder !== BackupDir) {
+    BackupDir = self.props.settings.Folder;
   }
 
-  let ifBackupDirExists = fs.existsSync(BackupDir)
+  let ifBackupDirExists = fs.existsSync(BackupDir);
   if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
-    fs.mkdirSync(BackupDir)
+    fs.mkdirSync(BackupDir);
   }
   RPC.PROMISE('backupwallet', [
     BackupDir + '/NexusBackup_' + now + '.dat',
   ]).then(() => {
-    RPC.PROMISE('stop', []).then(payload => {
-      self.props.OpenModal('Wallet Backup')
-      electron.remote.getGlobal('core').stop()
-      setTimeout(() => {
-        self.props.CloseModal()
-      }, 3000)
+    RPC.PROMISE('stop', [])
+      .then(payload => {
+        self.props.OpenModal('Wallet Backup');
+        electron.remote.getGlobal('core').stop();
+        setTimeout(() => {
+          self.props.CloseModal();
+        }, 3000);
 
-      let tarGzLocation = path.join(this.GetAppDataDirectory(), 'recent.tar.gz')
-      if (fs.existsSync(tarGzLocation)) {
-        fs.unlink(tarGzLocation, err => {
-          if (err) throw err
-          console.log('recent.tar.gz was deleted')
-        })
-      }
+        let tarGzLocation = path.join(
+          this.GetAppDataDirectory(),
+          'recent.tar.gz'
+        );
+        if (fs.existsSync(tarGzLocation)) {
+          fs.unlink(tarGzLocation, err => {
+            if (err) throw err;
+            console.log('recent.tar.gz was deleted');
+          });
+        }
 
-      let datadir = ''
+        let datadir = '';
 
-      if (process.platform === 'win32') {
-        datadir = process.env.APPDATA + '\\Nexus_Tritium_Data'
-      } else if (process.platform === 'darwin') {
-        datadir = process.env.HOME + '/Nexus_Tritium_Data'
-      } else {
-        datadir = process.env.HOME + '/.Nexus_Tritium_Data'
-      }
+        if (process.platform === 'win32') {
+          datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
+        } else if (process.platform === 'darwin') {
+          datadir = process.env.HOME + '/Nexus_Tritium_Data';
+        } else {
+          datadir = process.env.HOME + '/.Nexus_Tritium_Data';
+        }
 
-      const url = 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz'
-      tarball.extractTarballDownload(url, tarGzLocation, datadir, {}, function(
-        err,
-        result
-      ) {
-        fs.stat(
-          path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
-          (stat, things) => console.log(stat, things)
-        )
-        try {
-          let recentContents = fs.readdirSync(path.join(datadir, 'recent'))
+        const url =
+          'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
+        tarball.extractTarballDownload(
+          url,
+          tarGzLocation,
+          datadir,
+          {},
+          function(err, result) {
+            fs.stat(
+              path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
+              (stat, things) => console.log(stat, things)
+            );
+            try {
+              let recentContents = fs.readdirSync(path.join(datadir, 'recent'));
 
-          for (let i = 0; i < recentContents.length; i++) {
-            const element = recentContents[i]
-            if (
-              fs.statSync(path.join(datadir, 'recent', element)).isDirectory()
-            ) {
-              let newcontents = fs.readdirSync(
-                path.join(datadir, 'recent', element)
-              )
+              for (let i = 0; i < recentContents.length; i++) {
+                const element = recentContents[i];
+                if (
+                  fs
+                    .statSync(path.join(datadir, 'recent', element))
+                    .isDirectory()
+                ) {
+                  let newcontents = fs.readdirSync(
+                    path.join(datadir, 'recent', element)
+                  );
 
-              for (let i = 0; i < newcontents.length; i++) {
-                const deeperEle = newcontents[i]
-                moveFile.sync(
-                  path.join(datadir, 'recent', element, deeperEle),
-                  path.join(datadir, element, deeperEle)
-                )
+                  for (let i = 0; i < newcontents.length; i++) {
+                    const deeperEle = newcontents[i];
+                    moveFile.sync(
+                      path.join(datadir, 'recent', element, deeperEle),
+                      path.join(datadir, element, deeperEle)
+                    );
+                  }
+                } else {
+                  moveFile.sync(
+                    path.join(datadir, 'recent', element),
+                    path.join(datadir, element)
+                  );
+                }
               }
-            } else {
-              moveFile.sync(
-                path.join(datadir, 'recent', element),
-                path.join(datadir, element)
-              )
+            } catch (error) {
+              console.log('Direct bootstrap');
             }
+            if (err) {
+              self.props.OpenModal(result.error);
+              setTimeout(() => {
+                self.props.CloseModal();
+              }, 3000);
+            }
+            console.log(err, result);
+            electron.remote.getGlobal('core').start();
           }
-        } catch (error) {
-          console.log('Direct bootstrap')
-        }
-        if (err) {
-          self.props.OpenModal(result.error)
-          setTimeout(() => {
-            self.props.CloseModal()
-          }, 3000)
-        }
-        console.log(err, result)
-        electron.remote.getGlobal('core').start()
+        );
       })
-    })
+      .catch(e => {
+        self.props.OpenModal(e);
+        setTimeout(() => {
+          self.props.CloseModal();
+        }, 3000);
+      });
 
     let percentChecker = setInterval(() => {
       fs.stat(
         path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
         (err, stats) => {
-          console.log((stats.size / totalDownloadSize) * 100)
+          console.log((stats.size / totalDownloadSize) * 100);
           self.props.setPercentDownloaded(
             (stats.size / totalDownloadSize) * 100
-          )
+          );
         }
-      )
-    }, 5000)
+      );
+    }, 5000);
     electron.remote.getGlobal('core').on('starting', () => {
-      self.CloseBootstrapModalAndSaveSettings()
-      clearInterval(percentChecker)
-      self.props.setPercentDownloaded(0)
-      self.CloseBootstrapModalAndSaveSettings()
-    })
-  })
-}
+      self.CloseBootstrapModalAndSaveSettings();
+      clearInterval(percentChecker);
+      self.props.setPercentDownloaded(0);
+      self.CloseBootstrapModalAndSaveSettings();
+    });
+  });
+};

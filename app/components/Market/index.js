@@ -4,72 +4,72 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import ReactTable from 'react-table'
-import { remote } from 'electron'
-import { VictoryArea, VictoryChart, VictoryAnimation } from 'victory'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import ReactTable from 'react-table';
+import { remote } from 'electron';
+import { VictoryArea, VictoryChart, VictoryAnimation } from 'victory';
 
 // Internal Dependencies
-import styles from './style.css'
-import * as TYPE from 'actions/actiontypes'
-import MarketDepth from './Chart/MarketDepth'
-import Candlestick from './Chart/Candlestick'
-import { FormattedMessage } from 'react-intl'
-import ContextMenuBuilder from 'contextmenu'
-import * as actionsCreators from 'actions/marketActionCreators'
+import styles from './style.css';
+import * as TYPE from 'actions/actiontypes';
+import MarketDepth from './Chart/MarketDepth';
+import Candlestick from './Chart/Candlestick';
+import { FormattedMessage } from 'react-intl';
+import ContextMenuBuilder from 'contextmenu';
+import * as actionsCreators from 'actions/marketActionCreators';
 
 // Images
-import marketimg from 'images/market.svg'
-import bittrexLogo from 'images/BittrexLogo.png'
-import binanceLogo from 'images/BINANCE.png'
-import cryptopiaLogo from 'images/CryptopiaLogo.png'
-import binanceSmallLogo from 'images/binanceSmallLogo.png'
-import bittrexSmallLogo from 'images/bittrexSmallLogo.png'
-import cryptopiaSmallLogo from 'images/cryptopiaSmallLogo.png'
-import arrow from 'images/arrow.svg'
+import marketimg from 'images/market.svg';
+import bittrexLogo from 'images/BittrexLogo.png';
+import binanceLogo from 'images/BINANCE.png';
+import cryptopiaLogo from 'images/CryptopiaLogo.png';
+import binanceSmallLogo from 'images/binanceSmallLogo.png';
+import bittrexSmallLogo from 'images/bittrexSmallLogo.png';
+import cryptopiaSmallLogo from 'images/cryptopiaSmallLogo.png';
+import arrow from 'images/arrow.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.market, ...state.common, ...state.intl, ...state.settings }
-}
+  return { ...state.market, ...state.common, ...state.intl, ...state.settings };
+};
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch)
+  bindActionCreators(actionsCreators, dispatch);
 
 class Market extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    this.refresher()
-    this.props.googleanalytics.SendScreen('Market')
-    window.addEventListener('contextmenu', this.setupcontextmenu, false)
+    this.refresher();
+    this.props.googleanalytics.SendScreen('Market');
+    window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu)
+    window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
   // Class Methods
   setupcontextmenu(e) {
-    e.preventDefault()
-    const contextmenu = new ContextMenuBuilder().defaultContext
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
-    defaultcontextmenu.popup(remote.getCurrentWindow())
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   refresher() {
-    let any = this
-    this.props.binanceDepthLoader()
-    this.props.bittrexDepthLoader()
-    this.props.cryptopiaDepthLoader()
-    this.props.binanceCandlestickLoader(any)
-    this.props.bittrexCandlestickLoader(any)
-    this.props.cryptopiaCandlestickLoader(any)
-    this.props.binance24hrInfo()
-    this.props.bittrex24hrInfo()
-    this.props.cryptopia24hrInfo()
+    let any = this;
+    this.props.binanceDepthLoader();
+    this.props.bittrexDepthLoader();
+    this.props.cryptopiaDepthLoader();
+    this.props.binanceCandlestickLoader(any);
+    this.props.bittrexCandlestickLoader(any);
+    this.props.cryptopiaCandlestickLoader(any);
+    this.props.binance24hrInfo();
+    this.props.bittrex24hrInfo();
+    this.props.cryptopia24hrInfo();
     // this.arbitageChecker();
   }
   // TODO: Implement the arbitrage work below.
@@ -252,18 +252,18 @@ class Market extends Component {
   // }
 
   formatBuyData(array) {
-    let newQuantity = 0
-    let prevQuantity = 0
+    let newQuantity = 0;
+    let prevQuantity = 0;
     let finnishedArray = array
       .map(e => {
-        newQuantity = prevQuantity + e.Volume
-        prevQuantity = newQuantity
+        newQuantity = prevQuantity + e.Volume;
+        prevQuantity = newQuantity;
 
         if (e.Price < array[0].Price * 0.05) {
           return {
             x: 0,
             y: newQuantity,
-          }
+          };
         } else {
           return {
             x: e.Price,
@@ -271,64 +271,64 @@ class Market extends Component {
             label: `${this.props.messages['Market.Price']}: ${e.Price} \n ${
               this.props.messages['Market.Volume']
             }: ${newQuantity}`,
-          }
+          };
         }
       })
-      .filter(e => e.x > 0)
+      .filter(e => e.x > 0);
 
-    return finnishedArray
+    return finnishedArray;
   }
 
   formatSellData(array) {
-    let newQuantity = 0
-    let prevQuantity = 0
+    let newQuantity = 0;
+    let prevQuantity = 0;
     let finnishedArray = array
       .sort((a, b) => b.Rate - a.Rate)
       .map(e => {
-        newQuantity = prevQuantity + e.Volume
-        prevQuantity = newQuantity
+        newQuantity = prevQuantity + e.Volume;
+        prevQuantity = newQuantity;
         if (e.Price < array[0].Price * 0.05) {
           return {
             x: 0,
             y: newQuantity,
-          }
+          };
         } else {
           return {
             x: e.Price,
             y: newQuantity,
             label: `Price: ${e.Price} \n Volume: ${newQuantity}`,
-          }
+          };
         }
       })
-      .filter(e => e.x > 0)
+      .filter(e => e.x > 0);
 
-    return finnishedArray
+    return finnishedArray;
   }
 
   formatChartData(exchange) {
-    const dataSetArray = []
+    const dataSetArray = [];
     switch (exchange) {
       case 'binanceBuy':
-        return this.formatBuyData(this.props.binance.buy)
-        break
+        return this.formatBuyData(this.props.binance.buy);
+        break;
       case 'binanceSell':
-        return this.formatBuyData(this.props.binance.sell)
-        break
+        return this.formatBuyData(this.props.binance.sell);
+        break;
       case 'bittrexBuy':
-        return this.formatBuyData(this.props.bittrex.buy)
-        break
+        return this.formatBuyData(this.props.bittrex.buy);
+        break;
       case 'bittrexSell':
-        return this.formatBuyData(this.props.bittrex.sell)
-        break
+        return this.formatBuyData(this.props.bittrex.sell);
+        break;
       case 'cryptopiaBuy':
-        return this.formatBuyData(this.props.cryptopia.buy)
-        break
+        return this.formatBuyData(this.props.cryptopia.buy);
+        break;
       case 'cryptopiaSell':
-        return this.formatBuyData(this.props.cryptopia.sell)
-        break
+        return this.formatBuyData(this.props.cryptopia.sell);
+        break;
       default:
-        return []
-        break
+        return [];
+        break;
     }
   }
 
@@ -363,7 +363,7 @@ class Market extends Component {
           {' NXS'}
         </div>
       </div>
-    )
+    );
   }
 
   // Mandatory React method
@@ -436,7 +436,7 @@ class Market extends Component {
           )}
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -444,4 +444,4 @@ class Market extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Market)
+)(Market);

@@ -4,32 +4,32 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // Internal Dependencies
-import * as TYPE from 'actions/actiontypes'
-import * as RPC from 'scripts/rpc'
-import styles from './style.css'
+import * as TYPE from 'actions/actiontypes';
+import * as RPC from 'scripts/rpc';
+import styles from './style.css';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.market,
-  }
-}
+  };
+};
 const mapDispatchToProps = dispatch => ({
   setTradeVol: TV => dispatch({ type: TYPE.SET_TRADEVOL, payload: TV }),
   setThershold: TH => dispatch({ type: TYPE.SET_THRESHOLD, payload: TH }),
   OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
-})
+});
 
 class SettingsMarket extends Component {
   // Class methods
   feedback() {
-    this.props.OpenModal('Settings saved')
+    this.props.OpenModal('Settings saved');
   }
   // Mandatory React method
   render() {
@@ -75,7 +75,7 @@ class SettingsMarket extends Component {
           </fieldset>
         </form>
       </div>
-    )
+    );
   }
 }
 
@@ -83,4 +83,4 @@ class SettingsMarket extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SettingsMarket)
+)(SettingsMarket);

@@ -365,7 +365,7 @@ class SendRecieve extends Component {
               } else {
                 this.props.busy();
                 this.props.OpenModal(
-                  'This is an address regiestered to this wallet'
+                  'This is an address registered to this wallet'
                 );
               }
             } else {
@@ -499,7 +499,7 @@ class SendRecieve extends Component {
               });
             } else {
               this.props.OpenModal(
-                'This is an address regiestered to this wallet'
+                'This is an address registered to this wallet'
               );
             }
           } else {
@@ -529,6 +529,7 @@ class SendRecieve extends Component {
             return (
               <td
                 onClick={() => {
+                  this.props.CloseModal4();
                   this.props.updateAddress(ele.address);
                   this.props.OpenModal('Copied');
                   setTimeout(() => {
@@ -902,26 +903,46 @@ class SendRecieve extends Component {
         <div>
           <div>
             <div className="moveSelectors">
-              <span> From Account:</span>
+              <span>
+                {' '}
+                <FormattedMessage
+                  id="sendReceive.FromAccount"
+                  defaultMessage="From Account"
+                />
+                :
+              </span>
               <select
                 id="select"
                 onChange={e => this.props.updateMoveFromAccount(e.target.value)}
               >
                 {' '}
                 <option defaultValue value="">
-                  Select an Account
+                  <FormattedMessage
+                    id="sendReceive.SelectAnAccount"
+                    defaultMessage="Select an Account"
+                  />
                 </option>
                 {this.accountChanger()}
               </select>
 
-              <span> To Account:</span>
+              <span>
+                {' '}
+                <FormattedMessage
+                  id="sendReceive.ToAccount"
+                  defaultMessage="To Account"
+                />
+                :
+              </span>
               <select
                 id="select"
                 onChange={e => this.props.updateMoveToAccount(e.target.value)}
               >
                 {' '}
                 <option defaultValue value="">
-                  Select an Account
+                  <FormattedMessage
+                    id="sendReceive.SelectAnAccount"
+                    defaultMessage="Select an Account"
+                  />
                 </option>
                 {this.accountChanger()}
               </select>
@@ -974,7 +995,10 @@ class SendRecieve extends Component {
             style={{ marginLeft: '0px' }}
             onClick={() => this.moveNXSbetweenAccounts()}
           >
-            Move NXS
+            <FormattedMessage
+              id="sendReceive.MoveNXS"
+              defaultMessage="Move NXS"
+            />
           </button>
         </div>
       </div>
@@ -1016,7 +1040,7 @@ class SendRecieve extends Component {
           )
             .then(payload => {
               this.getAccountData();
-              console.log(payload);
+              this.props.CloseMoveModal();
               this.props.OpenModal('NXS Moved');
             })
             .catch(e => {
@@ -1026,15 +1050,6 @@ class SendRecieve extends Component {
                 this.props.OpenModal(e);
               }
             });
-          console.log(
-            'MOVE ' +
-              this.props.moveAmount +
-              ' NXS ' +
-              'from ' +
-              this.props.MoveFromAccount +
-              ' to ' +
-              this.props.MoveToAccount
-          );
         } else {
           this.props.OpenModal('Insufficient funds');
         }
@@ -1061,7 +1076,16 @@ class SendRecieve extends Component {
             defaultMessage="Send Nexus"
           />
         </h2>
-
+        {/* <div className="impexpblock">
+          {this.props.connections !== undefined && (
+            <a className="impexp" onClick={() => this.props.OpenMoveModal()}>
+              <FormattedMessage
+                id="sendReceive.MoveNxsBetweenAccount"
+                defaultMessage="MOVE NXS BETWEEN ACCOUNTS"
+              />
+            </a>
+          )}
+        </div> */}
         {/* ADDRESS MODAL */}
         <Modal
           center
@@ -1135,7 +1159,10 @@ class SendRecieve extends Component {
                     onChange={e => this.props.AccountPicked(e.target.value)}
                   >
                     <option defaultValue value="">
-                      Select an Account
+                      <FormattedMessage
+                        id="sendReceive.SelectAnAccount"
+                        defaultMessage="Select an Account"
+                      />
                     </option>
                     {this.accountChanger()}
                   </select>{' '}
@@ -1290,7 +1317,10 @@ class SendRecieve extends Component {
                         className="button"
                         onClick={() => this.props.OpenMoveModal()}
                       >
-                        Move Between Accounts
+                        <FormattedMessage
+                          id="sendReceive.MoveNxsBetweenAccount"
+                          defaultMessage="MOVE NXS BETWEEN ACCOUNTS"
+                        />
                       </button>
                     )}
                   </div>

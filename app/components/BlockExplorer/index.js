@@ -5,52 +5,52 @@ Last Modified by: Brian Smith
 */
 
 // External Dependencies
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import styles from './style.css'
-import { connect } from 'react-redux'
-import { remote } from 'electron'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import styles from './style.css';
+import { connect } from 'react-redux';
+import { remote } from 'electron';
 
 // Internal Dependencies
-import * as TYPE from 'actions/actiontypes'
-import ContextMenuBuilder from 'contextmenu'
+import * as TYPE from 'actions/actiontypes';
+import ContextMenuBuilder from 'contextmenu';
 
 // Images
-import blockexplorerimg from 'images/blockexplorer.svg'
+import blockexplorerimg from 'images/blockexplorer.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.common, ...state.transactions }
-}
+  return { ...state.common, ...state.transactions };
+};
 const mapDispatchToProps = dispatch => ({
   SetExploreInfo: returnData => {
-    dispatch({ type: TYPE.SET_TRANSACTION_EXPLOREINFO, payload: returnData })
+    dispatch({ type: TYPE.SET_TRANSACTION_EXPLOREINFO, payload: returnData });
   },
-})
+});
 
 class BlockExplorer extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    window.addEventListener('contextmenu', this.setupcontextmenu, false)
+    window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.setupcontextmenu)
+    window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
   // Class methods
   setupcontextmenu(e) {
-    e.preventDefault()
-    const contextmenu = new ContextMenuBuilder().defaultContext
+    e.preventDefault();
+    const contextmenu = new ContextMenuBuilder().defaultContext;
     //build default
-    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu)
-    defaultcontextmenu.popup(remote.getCurrentWindow())
+    let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
+    defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
   // Mandatory React method
   render() {
     if (this.props.exploreinfo != undefined && this.props.exploreinfo != null) {
-      this.props.SetExploreInfo(null)
+      this.props.SetExploreInfo(null);
     }
 
     return (
@@ -62,7 +62,7 @@ class BlockExplorer extends Component {
 
         <div className="panel" />
       </div>
-    )
+    );
   }
 }
 
@@ -70,4 +70,4 @@ class BlockExplorer extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BlockExplorer)
+)(BlockExplorer);

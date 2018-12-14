@@ -4,16 +4,16 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Redirect } from 'react-router'
-import { remote } from 'electron'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+import { remote } from 'electron';
 // Internal Dependencies
-import core from 'api/core'
-import styles from './style.css'
-import * as RPC from 'scripts/rpc'
-import * as TYPE from 'actions/actiontypes'
-import { FormattedMessage } from 'react-intl'
+import core from 'api/core';
+import styles from './style.css';
+import * as RPC from 'scripts/rpc';
+import * as TYPE from 'actions/actiontypes';
+import { FormattedMessage } from 'react-intl';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -21,139 +21,156 @@ const mapStateToProps = state => {
     ...state.common,
     ...state.login,
     ...state.overview,
-  }
-}
+  };
+};
 const mapDispatchToProps = dispatch => ({
   wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
   busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
   OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
-})
+});
 
 class Unencrypted extends Component {
   // React Method (Life cycle hook)
   componentWillUnmount() {
-    this.props.wipe()
+    this.props.wipe();
   }
 
   // Class Methods
   showPrivKey(e) {
-    e.preventDefault()
-    let addressInput = document.getElementById('privKeyAddress')
-    let address = addressInput.value
-    let output = document.getElementById('privKeyOutput')
+    e.preventDefault();
+    let addressInput = document.getElementById('privKeyAddress');
+    let address = addressInput.value;
+    let output = document.getElementById('privKeyOutput');
     if (address) {
-      RPC.PROMISE('dumpprivkey', [address]).then(payload => {
-        output.value = payload
-      })
+      RPC.PROMISE('dumpprivkey', [address])
+        .then(payload => {
+          output.value = payload;
+        })
+        .catch(e => {
+          this.props.OpenModal(e);
+          setTimeout(() => {
+            this.props.CloseModal();
+          }, 3000);
+        });
     } else {
-      addressInput.focus()
+      addressInput.focus();
     }
-  }
-  coreRestart() {
-    core.restart()
-  }
-
-  encryptCallback() {
-    alert('Wallet Encrypted. Restarting wallet...')
-    this.coreRestart()
   }
 
   importPrivKey(e) {
-    e.preventDefault()
-    let acctname = document.getElementById('acctName')
-    let label = acctname.value.trim()
-    let privateKeyInput = document.getElementById('privateKey')
-    let pk = privateKeyInput.value.trim()
+    e.preventDefault();
+    let acctname = document.getElementById('acctName');
+    let label = acctname.value.trim();
+    let privateKeyInput = document.getElementById('privateKey');
+    let pk = privateKeyInput.value.trim();
 
     if (label && pk) {
-      RPC.PROMISE('importprivkey', [pk], [label]).then(payload => {
-        RPC.GET('rescan')
-      })
+      RPC.PROMISE('importprivkey', [pk], [label])
+        .then(payload => {
+          this.props.ResetForEncryptionRestart();
+          this.props.OpenModal('Private key imported rescanning now'); // new alert
+          RPC.PROMISE('rescan')
+            .then(payload => {
+              this.props.CloseModal();
+            })
+            .catch(e => {
+              this.props.OpenModal(e);
+              setTimeout(() => {
+                this.props.CloseModal();
+              }, 3000);
+            });
+        })
+        .catch(e => {
+          this.props.OpenModal(e);
+          setTimeout(() => {
+            this.props.CloseModal();
+          }, 3000);
+        });
     } else if (!label) {
-      acctname.focus()
+      acctname.focus();
     } else if (!pk) {
-      privateKeyInput.focus()
+      privateKeyInput.focus();
     }
   }
 
   copyPrivkey(e) {
-    e.preventDefault()
-    let output = document.getElementById('privKeyOutput')
-    output.type = 'text'
-    output.focus()
-    output.select()
-    document.execCommand('Copy', false, null)
-    output.type = 'password'
+    e.preventDefault();
+    let output = document.getElementById('privKeyOutput');
+    output.type = 'text';
+    output.focus();
+    output.select();
+    document.execCommand('Copy', false, null);
+    output.type = 'password';
+    this.props.OpenModal('Copied');
+    setTimeout(() => {
+      this.props.CloseModal();
+    }, 3000);
   }
 
   reEnterValidator(e) {
-    let newPass = document.getElementById('newPass')
-    let passHint = document.getElementById('passHint')
+    let newPass = document.getElementById('newPass');
+    let passHint = document.getElementById('passHint');
 
     if (e.target.value === newPass.value) {
-      e.preventDefault()
-      passHint.style.visibility = 'hidden'
+      e.preventDefault();
+      passHint.style.visibility = 'hidden';
     } else if (e.target.value.length === newPass.value.length) {
       if (passHint.innerText !== 'Passwords do not match') {
-        passHint.innerText = 'Passwords do not match'
+        passHint.innerText = 'Passwords do not match';
       }
-      passHint.style.visibility = 'visible'
+      passHint.style.visibility = 'visible';
     } else {
-      passHint.style.visibility = 'hidden'
+      passHint.style.visibility = 'hidden';
     }
   }
 
   encrypt(e) {
-    e.preventDefault()
-    let newPass = document.getElementById('newPass')
-    let passChk = document.getElementById('passChk')
-    let passHint = document.getElementById('passHint')
+    e.preventDefault();
+    let newPass = document.getElementById('newPass');
+    let passChk = document.getElementById('passChk');
+    let passHint = document.getElementById('passHint');
 
-    passHint.innerText = 'Passwords do not match'
+    passHint.innerText = 'Passwords do not match';
     if (newPass.value.trim()) {
       if (!/[-$/&*|<>]/.test(newPass.value)) {
         if (newPass.value === passChk.value) {
           if (!(newPass.value.endsWith(' ') || newPass.value.startsWith(' '))) {
             RPC.PROMISE('encryptwallet', [newPass.value])
               .then(payload => {
-                newPass.value = ''
-                passChk.value = ''
-                this.props.busy(false)
-                this.props.OpenModal('Wallet has been encrypted')
-                this.props.ResetForEncryptionRestart()
+                newPass.value = '';
+                passChk.value = '';
+                this.props.busy(false);
+                this.props.OpenModal('Wallet has been encrypted'); // new alert
+                this.props.ResetForEncryptionRestart();
 
                 // Start the daemon again... give it maybe 5 seconds.
                 setTimeout(() => {
-                  this.props.CloseModal()
-                  remote.getGlobal('core').start()
-                  this.props.history.replace('/')
-                }, 5000)
+                  this.props.CloseModal();
+                  remote.getGlobal('core').start();
+                  this.props.history.replace('/');
+                }, 5000);
               })
               .catch(e => {
-                this.props.OpenModal(e)
-              })
+                this.props.OpenModal(e);
+              });
           } else {
-            passChk.value = ''
-            passHint.innerText = 'Password cannot start or end with spaces'
-            passChk.focus()
+            this.props.OpenModal('Password cannot start or end with spaces'); // new alert
+            passChk.focus();
           }
         } else {
-          passChk.value = ''
-          passHint.innerText = 'Passwords do not match'
-          passChk.focus()
+          this.props.OpenModal('Passwords do not match'); // new alert
+          passChk.focus();
         }
       } else {
-        passChk.value = ''
-        passHint.style.visibility = 'visible'
-        passHint.innerText = 'Passwords cannot contain -$/&*|<>'
-        passChk.focus()
+        this.props.OpenModal('Passwords cannot contain -$/&*|<>'); // new alert
+        passChk.focus();
       }
     } else {
-      passChk.focus()
+      passChk.focus();
     }
   }
 
@@ -167,7 +184,7 @@ class Unencrypted extends Component {
             defaultMessage="Please wait for the Daemon to load"
           />
         </h2>
-      )
+      );
     } else {
       return (
         <div id="securitylogin">
@@ -256,54 +273,6 @@ class Unencrypted extends Component {
               </fieldset>
             </form>
           </div>
-          {/* <div className="securitySubContainer privKey">
-            <form>
-              <fieldset>
-                <legend>
-                  <FormattedMessage
-                    id="Settings.ViewPrivateKey"
-                    defaultMessage="View private key for address"
-                  />
-                </legend>
-
-                <div className="field">
-                  <label>
-                    <FormattedMessage
-                      id="Settings.Address"
-                      defaultMessage="Address"
-                    />
-                    :
-                  </label>
-                  <div className="expander">
-                    <FormattedMessage
-                      id="Settings.EnterAddressHere"
-                      defaultMessage="Enter Address Here"
-                    >
-                      {eah => (
-                        <input
-                          type="text"
-                          id="privKeyAddress"
-                          placeholder={eah}
-                          required
-                        />
-                      )}
-                    </FormattedMessage>
-                    <button
-                      style={{ width: "100%", margin: "0" }}
-                      disabled={this.props.busyFlag}
-                      className="button primary"
-                      onClick={e => this.encrypt(e)}
-                    >
-                      <FormattedMessage
-                        id="Settings.Submit"
-                        defaultMessage="Submit"
-                      />
-                    </button>
-                  </div>
-                </div>
-              </fieldset>
-            </form>
-          </div> */}
           <div className="securitySubContainer privKey">
             <form>
               <fieldset>
@@ -362,7 +331,9 @@ class Unencrypted extends Component {
                     <button
                       disabled={this.props.busyFlag}
                       className="button primary"
-                      onClick={e => this.importPrivKey(e)}
+                      onClick={e => {
+                        this.copyPrivkey(e);
+                      }}
                     >
                       <FormattedMessage
                         id="Settings.Copy"
@@ -448,7 +419,7 @@ class Unencrypted extends Component {
             </form>
           </div>
         </div>
-      )
+      );
     }
   }
 }
@@ -457,4 +428,4 @@ class Unencrypted extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Unencrypted)
+)(Unencrypted);

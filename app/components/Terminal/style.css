@@ -52,6 +52,7 @@
 	border: 1px solid rgba(255,255,255,0.1);
 	overflow: auto;
 	font-family: var(--mono-font-family);
+	word-break: break-all;
 }
 
 

@@ -4,21 +4,21 @@
   Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { remote } from 'electron'
-import { access } from 'fs'
-import { connect } from 'react-redux'
-import Modal from 'react-responsive-modal'
-import { FormattedMessage } from 'react-intl'
-import * as FlagFile from 'languages/LanguageFlags'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { remote } from 'electron';
+import { access } from 'fs';
+import { connect } from 'react-redux';
+import Modal from 'react-responsive-modal';
+import { FormattedMessage } from 'react-intl';
+import * as FlagFile from 'languages/LanguageFlags';
 
 // Internal Dependencies
-import styles from './style.css'
-import core from 'api/core'
-import * as TYPE from 'actions/actiontypes'
-import * as RPC from 'scripts/rpc'
-import ContextMenuBuilder from 'contextmenu'
+import styles from './style.css';
+import core from 'api/core';
+import * as TYPE from 'actions/actiontypes';
+import * as RPC from 'scripts/rpc';
+import ContextMenuBuilder from 'contextmenu';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -26,440 +26,577 @@ const mapStateToProps = state => {
     ...state.common,
     ...state.settings,
     ...state.intl,
-  }
-}
+  };
+};
 const mapDispatchToProps = dispatch => ({
   setSettings: settings => {
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings })
+    dispatch({ type: TYPE.GET_SETTINGS, payload: settings });
   },
   OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   OpenModal2: type => {
-    dispatch({ type: TYPE.SHOW_MODAL2, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
   },
   OpenModal3: type => {
-    dispatch({ type: TYPE.SHOW_MODAL3, payload: type })
+    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
   },
   CloseModal2: type => {
-    dispatch({ type: TYPE.HIDE_MODAL2, payload: type })
+    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
   },
   CloseModal3: type => {
-    dispatch({ type: TYPE.HIDE_MODAL3, payload: type })
+    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
   },
   localeChange: returnSelectedLocale => {
-    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale })
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
   },
   SwitchLocale: locale => {
-    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale })
+    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
   },
   clearForRestart: () => {
-    dispatch({ type: TYPE.CLEAR_FOR_RESTART })
+    dispatch({ type: TYPE.CLEAR_FOR_RESTART });
   },
   CloseModal: () => {
-    dispatch({ type: TYPE.HIDE_MODAL })
+    dispatch({ type: TYPE.HIDE_MODAL });
   },
-})
+  CloseManualDaemonModal: () => {
+    dispatch({ type: TYPE.CLOSE_MANUAL_DAEMON_MODAL });
+  },
+  OpenManualDaemonModal: () => {
+    dispatch({ type: TYPE.OPEN_MANUAL_DAEMON_MODAL });
+  },
+  updateManualDaemonSetting: bool => {
+    dispatch({ type: TYPE.UPDATE_MANUAL_DAEMON_SETTINGS, payload: bool });
+  },
+  clearOverviewVariables: () => {
+    dispatch({ type: TYPE.CLEAR_FOR_BOOTSTRAPING });
+  },
+});
 
 class SettingsCore extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    var settings = require('api/settings.js').GetSettings()
+    var settings = require('api/settings.js').GetSettings();
 
     //Core settings
-    this.setManualDaemon(settings)
-    this.setManualDaemonUser(settings)
-    this.setManualDaemonPassword(settings)
-    this.setManualDaemonIP(settings)
-    this.setManualDaemonPort(settings)
-    this.setManualDaemonDataDir(settings)
-    this.setEnableMining(settings)
-    this.setEnableStaking(settings)
-    this.setVerboseLevel(settings)
-    this.setForkblocks(settings)
-    this.setMapPortUsingUpnp(settings)
-    this.setSocks4Proxy(settings)
-    this.setSocks4ProxyIP(settings)
-    this.setSocks4ProxyPort(settings)
-    this.setDetatchDatabaseOnShutdown(settings)
+    this.setManualDaemon(settings);
+    this.setManualDaemonUser(settings);
+    this.setManualDaemonPassword(settings);
+    this.setManualDaemonIP(settings);
+    this.setManualDaemonPort(settings);
+    this.setManualDaemonDataDir(settings);
+    this.setEnableMining(settings);
+    this.setEnableStaking(settings);
+    this.setVerboseLevel(settings);
+    this.setForkblocks(settings);
+    this.setMapPortUsingUpnp(settings);
+    this.setSocks4Proxy(settings);
+    this.setSocks4ProxyIP(settings);
+    this.setSocks4ProxyPort(settings);
+    this.setDetatchDatabaseOnShutdown(settings);
     // this.setOptionalTransactionFee(settings);
   }
 
   // Class Methods
   setEnableMining(settings) {
-    var enableMining = document.getElementById('enableMining')
+    var enableMining = document.getElementById('enableMining');
 
     if (settings.enableMining == true) {
-      enableMining.checked = true
+      enableMining.checked = true;
     } else {
-      enableMining.checked = false
+      enableMining.checked = false;
     }
   }
 
   setEnableStaking(settings) {
-    var enableStaking = document.getElementById('enableStaking')
+    var enableStaking = document.getElementById('enableStaking');
 
     if (settings.enableStaking == true) {
-      enableStaking.checked = true
+      enableStaking.checked = true;
     } else {
-      enableStaking.checked = false
+      enableStaking.checked = false;
     }
   }
 
   setVerboseLevel(settings) {
-    var verboseLevel = document.getElementById('verboseLevel')
+    var verboseLevel = document.getElementById('verboseLevel');
 
     if (settings.verboseLevel === undefined) {
-      verboseLevel.value = '2'
+      verboseLevel.value = '2';
     } else {
-      verboseLevel.value = settings.verboseLevel
+      verboseLevel.value = settings.verboseLevel;
     }
   }
 
   setForkblocks(settings) {
-    var numForkblocks = document.getElementById('forkblockNumber')
+    var numForkblocks = document.getElementById('forkblockNumber');
 
     if (settings.forkblocks === undefined) {
-      numForkblocks.value = '0'
+      numForkblocks.value = '0';
     } else {
-      numForkblocks.value = settings.forkblocks
+      numForkblocks.value = settings.forkblocks;
     }
   }
 
   setManualDaemon(settings) {
-    var manualDaemon = document.getElementById('manualDaemon')
-    var manualDaemonSettings = document.getElementById('manual-daemon-settings')
+    var manualDaemon = document.getElementById('manualDaemon');
+    var manualDaemonSettings = document.getElementById(
+      'manual-daemon-settings'
+    );
     var automaticDaemonSettings = document.getElementById(
       'automatic-daemon-settings'
-    )
+    );
 
     if (settings.manualDaemon == true) {
-      manualDaemon.checked = true
+      manualDaemon.checked = true;
     }
 
     if (manualDaemon.checked) {
-      manualDaemonSettings.style.display = 'block'
-      automaticDaemonSettings.style.display = 'none'
+      manualDaemonSettings.style.display = 'block';
+      automaticDaemonSettings.style.display = 'none';
     } else {
-      manualDaemonSettings.style.display = 'none'
-      automaticDaemonSettings.style.display = 'block'
+      manualDaemonSettings.style.display = 'none';
+      automaticDaemonSettings.style.display = 'block';
     }
   }
 
   setManualDaemonUser(settings) {
-    var manualDaemonUser = document.getElementById('manualDaemonUser')
+    var manualDaemonUser = document.getElementById('manualDaemonUser');
 
     if (settings.manualDaemonUser === undefined) {
-      manualDaemonUser.value = 'rpcserver'
+      manualDaemonUser.value = 'rpcserver';
     } else {
-      manualDaemonUser.value = settings.manualDaemonUser
+      manualDaemonUser.value = settings.manualDaemonUser;
     }
   }
 
   setManualDaemonPassword(settings) {
-    var manualDaemonPassword = document.getElementById('manualDaemonPassword')
+    var manualDaemonPassword = document.getElementById('manualDaemonPassword');
 
     if (settings.manualDaemonPassword === undefined) {
-      manualDaemonPassword.value = 'password'
+      manualDaemonPassword.value = 'password';
     } else {
-      manualDaemonPassword.value = settings.manualDaemonPassword
+      manualDaemonPassword.value = settings.manualDaemonPassword;
     }
   }
 
   setManualDaemonIP(settings) {
-    var manualDaemonIP = document.getElementById('manualDaemonIP')
+    var manualDaemonIP = document.getElementById('manualDaemonIP');
 
     if (settings.manualDaemonIP === undefined) {
-      manualDaemonIP.value = '127.0.0.1'
+      manualDaemonIP.value = '127.0.0.1';
     } else {
-      manualDaemonIP.value = settings.manualDaemonIP
+      manualDaemonIP.value = settings.manualDaemonIP;
     }
   }
 
   setManualDaemonPort(settings) {
-    var manualDaemonPort = document.getElementById('manualDaemonPort')
+    var manualDaemonPort = document.getElementById('manualDaemonPort');
 
     if (settings.manualDaemonPort === undefined) {
-      manualDaemonPort.value = '9336'
+      manualDaemonPort.value = '9336';
     } else {
-      manualDaemonPort.value = settings.manualDaemonPort
+      manualDaemonPort.value = settings.manualDaemonPort;
     }
   }
 
   setManualDaemonDataDir(settings) {
-    var manualDaemonDataDir = document.getElementById('manualDaemonDataDir')
+    var manualDaemonDataDir = document.getElementById('manualDaemonDataDir');
 
     if (settings.manualDaemonDataDir === undefined) {
-      manualDaemonDataDir.value = 'Nexus_trit'
+      manualDaemonDataDir.value = 'Nexus_Tritium_Data';
     } else {
-      manualDaemonDataDir.value = settings.manualDaemonDataDir
+      manualDaemonDataDir.value = settings.manualDaemonDataDir;
     }
   }
 
   setMapPortUsingUpnp(settings) {
-    var mapPortUsingUpnp = document.getElementById('mapPortUsingUpnp')
+    var mapPortUsingUpnp = document.getElementById('mapPortUsingUpnp');
 
     if (settings.mapPortUsingUpnp === undefined) {
-      mapPortUsingUpnp.checked = true
+      mapPortUsingUpnp.checked = true;
     }
     if (settings.mapPortUsingUpnp == true) {
-      mapPortUsingUpnp.checked = true
+      mapPortUsingUpnp.checked = true;
     }
     if (settings.mapPortUsingUpnp == false) {
-      mapPortUsingUpnp.checked = false
+      mapPortUsingUpnp.checked = false;
     }
   }
 
   setSocks4Proxy(settings) {
-    var socks4Proxy = document.getElementById('socks4Proxy')
-    var socks4ProxyIP = document.getElementById('socks4ProxyIP')
-    var socks4ProxyPort = document.getElementById('socks4ProxyPort')
+    var socks4Proxy = document.getElementById('socks4Proxy');
+    var socks4ProxyIP = document.getElementById('socks4ProxyIP');
+    var socks4ProxyPort = document.getElementById('socks4ProxyPort');
 
     if (settings.socks4Proxy === undefined) {
-      socks4Proxy.checked = false
+      socks4Proxy.checked = false;
     }
     if (settings.socks4Proxy == true) {
-      socks4Proxy.checked = true
+      socks4Proxy.checked = true;
     }
     if (settings.socks4Proxy == false) {
-      socks4Proxy.checked = false
+      socks4Proxy.checked = false;
     }
 
     if (!socks4Proxy.checked) {
-      socks4ProxyIP.disabled = true
-      socks4ProxyPort.disabled = true
+      socks4ProxyIP.disabled = true;
+      socks4ProxyPort.disabled = true;
     }
   }
 
   setSocks4ProxyIP(settings) {
-    var socks4ProxyIP = document.getElementById('socks4ProxyIP')
+    var socks4ProxyIP = document.getElementById('socks4ProxyIP');
 
     if (settings.socks4ProxyIP === undefined) {
-      socks4ProxyIP.value = '127.0.0.1'
+      socks4ProxyIP.value = '127.0.0.1';
     } else {
-      socks4ProxyIP.value = settings.socks4ProxyIP
+      socks4ProxyIP.value = settings.socks4ProxyIP;
     }
   }
 
   setSocks4ProxyPort(settings) {
-    var socks4ProxyPort = document.getElementById('socks4ProxyPort')
+    var socks4ProxyPort = document.getElementById('socks4ProxyPort');
 
     if (settings.socks4ProxyPort === undefined) {
-      socks4ProxyPort.value = '9050'
+      socks4ProxyPort.value = '9050';
     } else {
-      socks4ProxyPort.value = settings.socks4ProxyPort
+      socks4ProxyPort.value = settings.socks4ProxyPort;
     }
   }
 
   setDetatchDatabaseOnShutdown(settings) {
     var detatchDatabaseOnShutdown = document.getElementById(
       'detatchDatabaseOnShutdown'
-    )
+    );
 
     if (settings.detatchDatabaseOnShutdown === undefined) {
-      detatchDatabaseOnShutdown.checked = false
+      detatchDatabaseOnShutdown.checked = false;
     }
     if (settings.detatchDatabaseOnShutdown == true) {
-      detatchDatabaseOnShutdown.checked = true
+      detatchDatabaseOnShutdown.checked = true;
     }
     if (settings.detatchDatabaseOnShutdown == false) {
-      detatchDatabaseOnShutdown.checked = false
+      detatchDatabaseOnShutdown.checked = false;
     }
   }
 
   updateEnableMining(event) {
-    var el = even.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = even.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.enableMining = el.checked
+    settingsObj.enableMining = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateEnableStaking(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.enableStaking = el.checked
+    settingsObj.enableStaking = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateVerboseLevel(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.verboseLevel = el.value
+    settingsObj.verboseLevel = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateForkBlockAmout(event) {
-    var el = event.target
-    var settings = require('../../api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('../../api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.forkblocks = el.value
+    settingsObj.forkblocks = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
-  updateManualDaemon(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+  updateManualDaemon(Manualsetting) {
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    var manualDaemonSettings = document.getElementById('manual-daemon-settings')
+    var manualDaemonSettings = document.getElementById(
+      'manual-daemon-settings'
+    );
     var automaticDaemonSettings = document.getElementById(
       'automatic-daemon-settings'
-    )
+    );
 
-    if (el.checked) {
-      manualDaemonSettings.style.display = 'block'
-      automaticDaemonSettings.style.display = 'none'
+    if (Manualsetting) {
+      manualDaemonSettings.style.display = 'block';
+      automaticDaemonSettings.style.display = 'none';
     } else {
-      manualDaemonSettings.style.display = 'none'
-      automaticDaemonSettings.style.display = 'block'
+      manualDaemonSettings.style.display = 'none';
+      automaticDaemonSettings.style.display = 'block';
     }
 
     let manualDeamonUserValue = document.getElementById('manualDaemonUser')
-      .value
+      .value;
     let manualDeamonPasswordValue = document.getElementById(
       'manualDaemonPassword'
-    ).value
-    let manualDeamonIPValue = document.getElementById('manualDaemonIP').value
+    ).value;
+    let manualDeamonIPValue = document.getElementById('manualDaemonIP').value;
     let manualDeamonPortValue = document.getElementById('manualDaemonPort')
-      .value
+      .value;
     let manualDeamonDataDirValue = document.getElementById(
       'manualDaemonDataDir'
-    ).value
+    ).value;
 
-    settingsObj.manualDaemon = el.checked
-    settingsObj.manualDaemonUser = manualDeamonUserValue
-    settingsObj.manualDaemonPassword = manualDeamonPasswordValue
-    settingsObj.manualDaemonIP = manualDeamonIPValue
-    settingsObj.manualDaemonPort = manualDeamonPortValue
-    settingsObj.manualDaemonDataDir = manualDeamonDataDirValue
-    console.log(manualDeamonUserValue)
-    console.log(settingsObj)
-    settings.SaveSettings(settingsObj)
+    settingsObj.manualDaemon = Manualsetting;
+    settingsObj.manualDaemonUser = manualDeamonUserValue;
+    settingsObj.manualDaemonPassword = manualDeamonPasswordValue;
+    settingsObj.manualDaemonIP = manualDeamonIPValue;
+    settingsObj.manualDaemonPort = manualDeamonPortValue;
+    settingsObj.manualDaemonDataDir = manualDeamonDataDirValue;
+    console.log(manualDeamonUserValue);
+    console.log(settingsObj);
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonUser(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonUser = el.value
+    settingsObj.manualDaemonUser = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonPassword(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonPassword = el.value
+    settingsObj.manualDaemonPassword = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonIP(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonIP = el.value
+    settingsObj.manualDaemonIP = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonPort(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonPort = el.value
+    settingsObj.manualDaemonPort = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateManualDaemonDataDir(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.manualDaemonDataDir = el.value
+    settingsObj.manualDaemonDataDir = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateMapPortUsingUpnp(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.mapPortUsingUpnp = el.checked
+    settingsObj.mapPortUsingUpnp = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateSocks4Proxy(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.socks4Proxy = el.checked
+    settingsObj.socks4Proxy = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
 
-    var socks4ProxyIP = document.getElementById('socks4ProxyIP')
-    var socks4ProxyPort = document.getElementById('socks4ProxyPort')
+    var socks4ProxyIP = document.getElementById('socks4ProxyIP');
+    var socks4ProxyPort = document.getElementById('socks4ProxyPort');
 
     if (el.checked) {
-      socks4ProxyIP.disabled = false
-      socks4ProxyPort.disabled = false
+      socks4ProxyIP.disabled = false;
+      socks4ProxyPort.disabled = false;
     } else {
-      socks4ProxyIP.disabled = true
-      socks4ProxyPort.disabled = true
+      socks4ProxyIP.disabled = true;
+      socks4ProxyPort.disabled = true;
     }
   }
 
   updateSocks4ProxyIP(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.socks4ProxyIP = el.value
+    settingsObj.socks4ProxyIP = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateSocks4ProxyPort(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
 
-    settingsObj.socks4ProxyPort = el.value
+    settingsObj.socks4ProxyPort = el.value;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   updateDetatchDatabaseOnShutdown(event) {
-    var el = event.target
-    var settings = require('api/settings.js')
-    var settingsObj = settings.GetSettings()
-    settingsObj.detatchDatabaseOnShutdown = el.checked
+    var el = event.target;
+    var settings = require('api/settings.js');
+    var settingsObj = settings.GetSettings();
+    settingsObj.detatchDatabaseOnShutdown = el.checked;
 
-    settings.SaveSettings(settingsObj)
+    settings.SaveSettings(settingsObj);
   }
 
   coreRestart() {
-    core.restart()
+    core.restart();
+  }
+
+  manualDaemonModalGenerator() {
+    if (this.props.settings.manualDaemon) {
+      return (
+        <div>
+          {' '}
+          <h2>
+            <FormattedMessage
+              id="Settings.ManualDaemonExit"
+              defaultMessage="Exit manual daemon mode?"
+            />
+          </h2>
+          <h2>
+            <FormattedMessage
+              id="Settings.ManualDaemonWarning"
+              defaultMessage="(This will shut down your daemon)"
+            />
+          </h2>
+          <div id="ok-button">
+            <FormattedMessage id="sendReceive.Yes">
+              {yes => (
+                <input
+                  value={yes}
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    RPC.PROMISE('stop', [])
+                      .then(payload => {
+                        this.props.updateManualDaemonSetting(false);
+                        this.updateManualDaemon(false);
+                        this.props.CloseManualDaemonModal();
+                        this.props.clearForRestart();
+                        remote.getGlobal('core').start();
+                      })
+                      .catch(e => {
+                        this.props.updateManualDaemonSetting(false);
+                        this.updateManualDaemon(false);
+                        this.props.clearForRestart();
+                        this.props.CloseManualDaemonModal();
+                        remote.getGlobal('core').start();
+                      });
+                  }}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+          <div id="no-button">
+            <FormattedMessage id="sendReceive.No" defaultMessage="No">
+              {no => (
+                <input
+                  value={no}
+                  type="button"
+                  className="button"
+                  onClick={() => {
+                    this.props.CloseManualDaemonModal();
+                  }}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          {' '}
+          <h2>
+            <FormattedMessage
+              id="Settings.ManualDaemonEntry"
+              defaultMessage="Enter manual daemon mode?"
+            />
+          </h2>
+          <h2>
+            <FormattedMessage
+              id="Settings.ManualDaemonWarning"
+              defaultMessage="(This will shut down your daemon)"
+            />
+          </h2>
+          <div id="ok-button">
+            <FormattedMessage id="sendReceive.Yes">
+              {yes => (
+                <input
+                  value={yes}
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    RPC.PROMISE('stop', [])
+                      .then(payload => {
+                        remote.getGlobal('core').stop();
+                        this.props.updateManualDaemonSetting(true);
+                        this.updateManualDaemon(true);
+                        this.props.CloseManualDaemonModal();
+                      })
+                      .catch(e => {
+                        remote.getGlobal('core').stop();
+                        this.props.updateManualDaemonSetting(true);
+                        this.updateManualDaemon(true);
+                        this.props.CloseManualDaemonModal();
+                      });
+                  }}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+          <div id="no-button">
+            <FormattedMessage id="sendReceive.No" defaultMessage="No">
+              {no => (
+                <input
+                  value={no}
+                  type="button"
+                  className="button"
+                  onClick={() => {
+                    this.props.CloseManualDaemonModal();
+                  }}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+        </div>
+      );
+    }
   }
 
   // changeLocale(locale) {
@@ -474,6 +611,19 @@ class SettingsCore extends Component {
   render() {
     return (
       <section id="core">
+        <Modal
+          classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
+          id="manualDaemonModal"
+          showCloseIcon={false}
+          open={this.props.manualDaemonModal}
+          onClose={e => {
+            e.preventDefault();
+            this.props.CloseManualDaemonModal();
+          }}
+          center
+        >
+          {this.manualDaemonModalGenerator()}
+        </Modal>
         <Modal
           center
           classNames={{ modal: 'custom-modal5' }}
@@ -682,9 +832,9 @@ class SettingsCore extends Component {
                   onClick={() => {
                     this.props.setSettings(
                       require('api/settings.js').GetSettings()
-                    )
-                    this.props.CloseModal2()
-                    this.props.OpenModal('Core Settings Saved')
+                    );
+                    this.props.CloseModal2();
+                    this.props.OpenModal('Core Settings Saved');
                   }}
                 />
               )}
@@ -697,7 +847,7 @@ class SettingsCore extends Component {
                     type="button"
                     className="button primary"
                     onClick={() => {
-                      this.props.CloseModal2()
+                      this.props.CloseModal2();
                     }}
                   />
                 )}
@@ -815,7 +965,8 @@ class SettingsCore extends Component {
                   id="manualDaemon"
                   type="checkbox"
                   className="switch"
-                  onChange={this.updateManualDaemon}
+                  checked={this.props.settings.manualDaemon}
+                  onChange={() => this.props.OpenManualDaemonModal()}
                   data-tooltip={tt}
                 />
               )}
@@ -908,29 +1059,6 @@ class SettingsCore extends Component {
                     type="text"
                     size="5"
                     onChange={this.updateManualDaemonPort}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-
-            <div className="field">
-              <label htmlFor="manualDaemonDataDir">
-                <FormattedMessage
-                  id="Settings.DDN"
-                  defaultMessage="Data Directory Name"
-                />{' '}
-              </label>
-              <FormattedMessage
-                id="ToolTip.DataDirectory"
-                defaultMessage="Data directory configured for manual daemon"
-              >
-                {tt => (
-                  <input
-                    id="manualDaemonDataDir"
-                    type="text"
-                    size="12"
-                    onChange={this.updateManualDaemonDataDir}
                     data-tooltip={tt}
                   />
                 )}
@@ -1049,6 +1177,28 @@ class SettingsCore extends Component {
                   />
                 )}
               </FormattedMessage>
+            </div>{' '}
+            <div className="field">
+              <label htmlFor="manualDaemonDataDir">
+                <FormattedMessage
+                  id="Settings.DDN"
+                  defaultMessage="Data Directory Name"
+                />{' '}
+              </label>
+              <FormattedMessage
+                id="ToolTip.DataDirectory"
+                defaultMessage="Data directory configured for manual daemon"
+              >
+                {tt => (
+                  <input
+                    id="manualDaemonDataDir"
+                    type="text"
+                    size="12"
+                    onChange={this.updateManualDaemonDataDir}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
             {/* <div className="field">
               <label htmlFor="optionalTransactionFee">
@@ -1072,43 +1222,42 @@ class SettingsCore extends Component {
                 </button>
               </div>
             </div> */}
-            <button
-              id="restart-core"
-              className="button primary"
-              onClick={e => {
-                e.preventDefault()
-                this.props.clearForRestart()
-
-                core.restart()
-                this.props.OpenModal('Core Restarting')
-              }}
-            >
-              <FormattedMessage
-                id="Settings.RestartCore"
-                defaultMesage="Restart Core"
-              />
-            </button>
-            <button
-              // id="restart-core"
-              className="button primary"
-              onClick={e => {
-                e.preventDefault()
-                this.props.OpenModal2()
-              }}
-            >
-              <FormattedMessage
-                id="Settings.SaveSettings"
-                defaultMessage="Save Settings"
-              />
-            </button>
           </div>
+          <button
+            id="restart-core"
+            className="button primary"
+            onClick={e => {
+              e.preventDefault();
+              this.props.clearForRestart();
 
+              core.restart();
+              this.props.OpenModal('Core Restarting');
+            }}
+          >
+            <FormattedMessage
+              id="Settings.RestartCore"
+              defaultMesage="Restart Core"
+            />
+          </button>
+          <button
+            // id="restart-core"
+            className="button primary"
+            onClick={e => {
+              e.preventDefault();
+              this.props.OpenModal2();
+            }}
+          >
+            <FormattedMessage
+              id="Settings.SaveSettings"
+              defaultMessage="Save Settings"
+            />
+          </button>
           <div className="clear-both" />
         </form>
 
         {/* <button className="button primary" onClick={application.restart()}>Restart Core</button> */}
       </section>
-    )
+    );
   }
 }
 
@@ -1116,4 +1265,4 @@ class SettingsCore extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SettingsCore)
+)(SettingsCore);

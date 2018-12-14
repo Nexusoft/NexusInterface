@@ -80,16 +80,12 @@ export default class MenuBuilder {
             if (settings.manualDaemon != true) {
               RPC.PROMISE('stop', [])
                 .then(payload => {
-                  setTimeout(() => {
-                    core.stop();
-                    remote.getCurrentWindow().close();
-                  }, 1000);
+                  core.stop();
+                  remote.getCurrentWindow().close();
                 })
                 .catch(e => {
-                  setTimeout(() => {
-                    remote.getGlobal('core').stop();
-                    remote.getCurrentWindow().close();
-                  }, 1000);
+                  remote.getGlobal('core').stop();
+                  remote.getCurrentWindow().close();
                 });
             } else {
               RPC.PROMISE('stop', []).then(payload => {
@@ -104,7 +100,7 @@ export default class MenuBuilder {
       label: 'File',
       submenu: [
         {
-          label: 'Back-up Wallet',
+          label: 'Backup Wallet',
           click: () => {
             let now = new Date()
               .toString()
@@ -118,6 +114,9 @@ export default class MenuBuilder {
             if (process.platform === 'win32') {
               BackupDir = app.getPath('documents') + '/NexusBackups';
               BackupDir = BackupDir.replace(/\\/g, '/');
+            }
+            if (self.props.settings.Folder !== BackupDir) {
+              BackupDir = self.props.settings.Folder;
             }
             let fs = require('fs');
             let ifBackupDirExists = fs.existsSync(BackupDir);
@@ -285,7 +284,7 @@ export default class MenuBuilder {
         label: '&File',
         submenu: [
           {
-            label: 'Back-up Wallet',
+            label: 'Backup Wallet',
             click: () => {
               let now = new Date()
                 .toString()
@@ -295,10 +294,14 @@ export default class MenuBuilder {
                   return a + '_' + b;
                 })
                 .replace(/:/g, '_');
+
               let BackupDir = process.env.HOME + '/NexusBackups';
               if (process.platform === 'win32') {
                 BackupDir = process.env.USERPROFILE + '/NexusBackups';
                 BackupDir = BackupDir.replace(/\\/g, '/');
+              }
+              if (self.props.settings.Folder !== BackupDir) {
+                BackupDir = self.props.settings.Folder;
               }
               let fs = require('fs');
               let ifBackupDirExists = fs.existsSync(BackupDir);

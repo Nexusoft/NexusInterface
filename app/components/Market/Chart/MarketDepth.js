@@ -4,7 +4,7 @@ Description: Handle how to draw graph for market depth
 Last Modified by: Brian Smith
 */
 // External Dependencies
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {
   VictoryArea,
   VictoryChart,
@@ -14,7 +14,7 @@ import {
   VictoryPortal,
   VictoryLabel,
   VictoryVoronoiContainer,
-} from 'victory'
+} from 'victory';
 
 export default class MarketDepth extends Component {
   // Mandatory React method
@@ -58,11 +58,11 @@ export default class MarketDepth extends Component {
             dependentAxis
             tickFormat={tick => {
               if (tick % 1000000 === 0) {
-                return `${tick / 1000}M`
+                return `${tick / 1000}M`;
               } else if (tick % 1000 === 0) {
-                return `${tick / 1000}K`
+                return `${tick / 1000}K`;
               } else {
-                return tick
+                return tick;
               }
             }}
           />
@@ -112,6 +112,6 @@ export default class MarketDepth extends Component {
           </defs>
         </svg>
       </div>
-    )
+    );
   }
 }

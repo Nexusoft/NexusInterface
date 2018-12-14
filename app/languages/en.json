@@ -14,7 +14,7 @@
   "overview.24hrChange": "24hr Change",
   "overview.Connections": "Connections",
   "overview.BlockCount": "Block Count",
-  "overview.InterestRate": "Interest Rate",
+  "overview.InterestRate": "Stake Reward",
   "overview.StakeWeight": "Stake Weight",
   "overview.Globe": "Globe includes GeoLite2",
 
@@ -47,6 +47,11 @@
   "sendReceive.FEE": "FEE",
   "sendReceive.CopyToFeild": "Copy To Field",
   "sendReceive.ClickToEdit": "Click To Edit",
+  "sendReceive.SelectAnAccount": "Select An Account",
+  "sendReceive.FromAccount": "From Account",
+  "sendReceive.ToAccount": "ToAccount",
+  "sendReceive.MoveNXS": "Move NXS",
+  "sendReceive.MoveNxsBetweenAccount": "MOVE NXS BETWEEN ACCOUNTS",
 
   "transactions.MoreDetails": "More Details",
   "transactions.Details": "Transaction Details",
@@ -86,6 +91,7 @@
   "transactions.Rows": "Rows",
   "transactions.Pending": "(Pending)",
   "transactions.NoRowsFound": "No Rows Found",
+  "transactions.AllAccounts": "All Accounts",
 
   "Market.Information": "Market Information",
   "Market.Refreash": "Refresh Market Data",
@@ -175,7 +181,9 @@
   "Settings.BackupWallet": "Backup Wallet",
   "Settings.StartUp": "Start at system startup",
   "Settings.ChangesNexTime": "Changes to core settings will take effect the next time the core is restarted",
-
+  "Settings.ManualDaemonEntry": "Enter manual daemon mode?",
+  "Settings.ManualDaemonExit": "Exit manual daemon mode?",
+  "Settisgs.ManualDaemonWarning": "(This will shut down your daemon)",
   "Settings.Username": "Username",
 
   "Settings.IpAddress": "Ip Address",
@@ -219,7 +227,6 @@
   "Settings.EnableMining": "Enable Mining",
   "Settings.EnableStaking": "Enable Staking",
   "Settings.VerboseLevel": "Verbose Level",
-  "Settings.Forkblock": "ForkBlocks",
   "Settings.SaveSettings": "Save Settings",
   "Settings.ManualDaemonMode": "Manual Daemon Mode",
   "Settings.DDN": "Data Directory Name",
@@ -233,6 +240,10 @@
   "Settings.LockWallet": "Lock Wallet",
   "Settings.ViewPrivateKeyForAddress": "View private key for address",
   "Settings.EncryptRestart": "Encrypt and Restart",
+  "Settings.MinimumConfirmations": "Minimum Confirmations",
+  "Settings.Forkblock": "ForkBlocks",
+  "Settings.Folder": "Backup Directory",
+  "Settings.chooseFolder": "Choose Directory",
 
   "Console.CoreOutput": "Core Output",
   "Console.Console": "Console",
@@ -243,7 +254,7 @@
 
   "TrustList.TrustList": "Trust List",
   "TrustList.Address": "Address",
-  "TrustList.InterestRate": "Interest Rate",
+  "TrustList.InterestRate": "Stake Reward",
   "TrustList.SyncMsg": "Please let your wallet sync with the network",
 
   "Exchange.Exchange": "Exchange",
@@ -280,7 +291,7 @@
   "Footer.List": "List",
 
   "Header.StakeWeight": "Stake Weight",
-  "Header.InterestRate": "Interest Rate",
+  "Header.InterestRate": "Stake Reward",
   "Header.BlockWeight": "Block Weight",
   "Header.TrustWeight": "Trust Weight",
   "Header.WalletUnencrypted": "Wallet Unencrypted",
@@ -303,7 +314,7 @@
   "ToolTip.EnableMining": "Enable/Disable mining to the wallet",
   "ToolTip.EnableStaking": "Enable/Disable staking on the wallet",
   "ToolTip.Verbose": "Verbose level for logs",
-  "ToolTip.ForkBlocks": "Step Back A Amount of Blocks",
+  "ToolTip.ForkBlock": "Step Back A Amount of Blocks",
   "ToolTip.MDM": "Enable manual daemon mode if you are running the daemon manually outside of the wallet",
   "ToolTip.UserName": "Username configured for manual daemon",
 
@@ -325,12 +336,12 @@
   "ToolTip.RecentDatabaseDownloading": "Recent Database Downloading",
   "ToolTip.PleaseWait": "Please Wait...",
   "ToolTip.RecentDatabaseExtracting": "Recent Database Extracting",
-
+  "ToolTip.MinimumConfirmations": "Blank",
   "Alert.Received": "Transaction Received",
   "Alert.Sent": "Transaction Sent",
   "Alert.Genesis": "Genesis Transaction",
   "Alert.TrustTransaction": "Trust Transaction",
-  "Alert.regiesteredToThis": "This is an address regiestered to this wallet",
+  "Alert.registeredToThis": "This is an address registered to this wallet",
   "Alert.InvalidAddress": "Invalid Address",
   "Alert.InvalidAmount": "Invalid Amount",
   "Alert.Invalid": "Invalid",
@@ -353,7 +364,11 @@
   "Alert.CoreSettingsSaved": "Core Settings Saved",
   "Alert.ContactsExported": "Contacts Exported",
   "Alert.DaemonLoadingWait": "Loading Daemon, Please Wait",
+
   "Alert.CoreRestarting": "Core Restarting",
+  "Alert.AccountsAreTheSame": "Accounts are the same",
+  "Alert.NoSecondAccountChosen": "No second account chosen",
+  "Alert.InsufficientFunds": "Insufficient funds",
 
   "Cp.AC1": "Accent Color 1",
   "Cp.AC2": "Accent Color 2",

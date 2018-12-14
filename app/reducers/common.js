@@ -1,4 +1,4 @@
-import * as TYPE from 'actions/actiontypes'
+import * as TYPE from 'actions/actiontypes';
 
 const initialState = {
   loggedIn: false,
@@ -25,7 +25,7 @@ const initialState = {
   displayBTCvalues: [],
   displayNXSvalues: [],
   BootstrapModal: false,
-}
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -33,161 +33,161 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loggedIn: false,
-      }
-      break
+      };
+      break;
     case TYPE.TOGGLE_MODAL_VIS_STATE:
       return {
         ...state,
         modalVisable: !state.modalVisable,
-      }
-      break
+      };
+      break;
     case TYPE.OPEN_BOOTSTRAP_MODAL:
       return {
         ...state,
         BootstrapModal: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.CLOSE_BOOTSTRAP_MODAL:
       return {
         ...state,
         BootstrapModal: false,
-      }
-      break
+      };
+      break;
     case TYPE.SEARCH:
       return {
         ...state,
         Search: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.CONTACT_SEARCH:
       return {
         ...state,
         contactSearch: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.SET_SYNC_STATUS:
-      return { ...state, isInSync: action.payload }
-      break
+      return { ...state, isInSync: action.payload };
+      break;
     case TYPE.TOGGLE_BUSY_FLAG:
       return {
         ...state,
         busyFlag: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.UNLOCK:
       return {
         ...state,
         loggedIn: true,
-      }
-      break
+      };
+      break;
     case TYPE.UNENCRYPTED:
       return {
         ...state,
         encrypted: false,
-      }
-      break
+      };
+      break;
     case TYPE.BLOCK_DATE:
       return {
         ...state,
         blockDate: action.payload,
-      }
+      };
 
     case TYPE.SHOW_MODAL:
       return {
         ...state,
         open: true,
         modaltype: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.HIDE_MODAL:
       return {
         ...state,
         open: false,
-      }
-      break
+      };
+      break;
     case TYPE.SHOW_MODAL2:
       return {
         ...state,
         openSecondModal: true,
         modaltype: action.payload,
-      }
-      break
+      };
+      break;
 
     case TYPE.HIDE_MODAL2:
       return {
         ...state,
         openSecondModal: false,
-      }
-      break
+      };
+      break;
     case TYPE.SHOW_MODAL3:
       return {
         ...state,
         openThirdModal: true,
         modaltype: action.payload,
-      }
-      break
+      };
+      break;
 
     case TYPE.HIDE_MODAL3:
       return {
         ...state,
         openThirdModal: false,
         modaltype: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.SHOW_MODAL4:
       return {
         ...state,
         openFourthModal: true,
         modaltype: action.payload,
-      }
-      break
+      };
+      break;
 
     case TYPE.HIDE_MODAL4:
       return {
         ...state,
         openFourthModal: false,
         modaltype: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.SET_HIGHEST_PEER_BLOCK:
       return {
         ...state,
         heighestPeerBlock: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.CLEAR_SEARCHBAR:
       return {
         ...state,
         Search: '',
         contactSearch: '',
-      }
-      break
+      };
+      break;
     case TYPE.ENCRYPTED:
       return {
         ...state,
         encrypted: true,
-      }
-      break
+      };
+      break;
     case TYPE.SET_GOOGLEANALYTICS:
       return {
         ...state,
         googleanalytics: action.payload,
-      }
-      break
+      };
+      break;
 
     case TYPE.PORT_AVAILABLE:
       return {
         ...state,
         portAvailable: action.payload,
-      }
-      break
+      };
+      break;
     case TYPE.ADD_RPC_CALL:
-      let oldArray = state.rpcCallList
-      oldArray.push(action.payload)
+      let oldArray = state.rpcCallList;
+      oldArray.push(action.payload);
       return {
         ...state,
         rpcCallList: oldArray,
-      }
+      };
     case TYPE.SET_MKT_AVE_DATA:
       return {
         ...state,
@@ -195,9 +195,9 @@ export default (state = initialState, action) => {
         rawBTCvalues: action.payload.rawBTC,
         displayNXSvalues: action.payload.displayNXS,
         rawNXSvalues: action.payload.rawNXS,
-      }
-      break
+      };
+      break;
     default:
-      return state
+      return state;
   }
-}
+};
