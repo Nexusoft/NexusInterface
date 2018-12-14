@@ -13,6 +13,7 @@ import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
+import Button from 'components/common/Button';
 import WaitingText from 'components/common/WaitingText';
 
 // Internal Local Dependencies
@@ -248,16 +249,16 @@ class SendRecieve extends Component {
       );
     } else {
       return (
-        <button
+        <Button
+          default
           name="Add To Queue"
-          className="button large"
           onClick={() => this.validateAddToQueue()}
         >
           <FormattedMessage
             id="sendReceive.AddToQueue"
             defaultMessage="Add To Queue"
           />
-        </button>
+        </Button>
       );
     }
   }
@@ -1245,8 +1246,7 @@ class SendRecieve extends Component {
                 </div>
                 <div id="left-buttons">
                   {this.editQueue()}
-                  <button
-                    className="button"
+                  <Button
                     onClick={() => {
                       console.log(this.props.encrypted, this.props.loggedIn);
                       if (
@@ -1272,7 +1272,7 @@ class SendRecieve extends Component {
                       id="sendReceive.SendNow"
                       defaultMessage="Send Now"
                     />
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -1288,12 +1288,9 @@ class SendRecieve extends Component {
                 </div>{' '}
                 <div id="moveButton">
                   {this.props.connections !== undefined && (
-                    <button
-                      className="button"
-                      onClick={() => this.props.OpenMoveModal()}
-                    >
+                    <Button onClick={() => this.props.OpenMoveModal()}>
                       Move Between Accounts
-                    </button>
+                    </Button>
                   )}
                 </div>
                 <table className="table">
@@ -1322,9 +1319,9 @@ class SendRecieve extends Component {
                   {this.fillQueue()}
                 </table>
                 <div className="foot">
-                  <button
+                  <Button
+                    primary
                     type="reset"
-                    className="button primary"
                     onClick={() => {
                       console.log(this.props.encrypted, this.props.loggedIn);
                       if (
@@ -1345,11 +1342,11 @@ class SendRecieve extends Component {
                       id="sendReceive.SendAll"
                       defaultMessage="SendAll"
                     />
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    primary
                     type="button"
-                    className="button primary"
                     onClick={() => {
                       this.props.OpenModal2('Clear Queue?');
                     }}
@@ -1358,7 +1355,7 @@ class SendRecieve extends Component {
                       id="sendReceive.ClearQueue"
                       defaultMessage="Clear Queue"
                     />
-                  </button>
+                  </Button>
 
                   <div>
                     <div className="counter">{this.addAmount()} </div>

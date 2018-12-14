@@ -1,10 +1,14 @@
 import { css, keyframes } from '@emotion/core';
+import { darken, mix } from 'utils/colors';
 
 export const colors = {};
 colors.primary = '#00b7fa';
 colors.dark = '#0f1b1f';
 colors.light = '#e6e9eb';
-colors.oppositePrimary = colors.light;
+colors.darkGray = mix(colors.dark, colors.light, 0.25);
+colors.gray = mix(colors.dark, colors.light);
+colors.lightGray = mix(colors.dark, colors.light, 0.75);
+colors.primaryContrast = '#fff';
 
 export const consts = {
   monoFontFamily: '"Roboto Mono", "Lucida Console", "Courier New", monospace',

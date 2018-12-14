@@ -16,14 +16,16 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import fs from 'fs';
 
-// Internal Dependencies
+// Internal Global Dependencies
 import { GetSettings, SaveSettings } from 'api/settings';
-import styles from './style.css';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import plusimg from 'images/plus.svg';
 import * as FlagFile from 'languages/LanguageFlags';
+
+// Internal Local Dependencies
+import styles from './style.css';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
