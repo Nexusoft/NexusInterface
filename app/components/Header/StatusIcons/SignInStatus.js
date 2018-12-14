@@ -1,25 +1,26 @@
+// @jsx jsx
 // External Dependencies
 import React from 'react';
 import styled from '@emotion/styled';
+import { jsx } from '@emotion/core';
 import { FormattedMessage } from 'react-intl';
 
 // Internal Global Dependencies
 import Icon from 'components/common/Icon';
 import questionMarkIcon from 'images/question-mark.sprite.svg';
-import unencryptedIcon from 'images/lock-unencrypted.sprite.svg';
-import lockedIcon from 'images/lock-encrypted.sprite.svg';
-import unlockedIcon from 'images/lock-minting.sprite.svg';
+import lockedIcon from 'images/padlock.sprite.svg';
+import unlockedIcon from 'images/padlock-open.sprite.svg';
 
 function statusIcon({ connections, daemonAvailable, unlocked_until }) {
   if (connections === undefined || daemonAvailable === false) {
-    return questionMarkIcon;
+    return <Icon icon={questionMarkIcon} />;
   } else {
     if (unlocked_until === undefined) {
-      return unencryptedIcon;
+      return <Icon icon={unlockedIcon} css={{ color: 'red' }} />;
     } else if (unlocked_until === 0) {
-      return lockedIcon;
+      return <Icon icon={lockedIcon} />;
     } else if (unlocked_until >= 0) {
-      return unlockedIcon;
+      return <Icon icon={unlockedIcon} />;
     }
   }
 }
@@ -90,7 +91,7 @@ function signInStatusMessage({
 
 const SignInStatus = props => (
   <div className="icon">
-    <Icon icon={statusIcon(props)} />
+    {statusIcon(props)}
     <div className="tooltip bottom">
       <div>{signInStatusMessage(props)}</div>
     </div>
