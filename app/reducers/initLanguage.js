@@ -182,6 +182,8 @@ export default {
     'Settings.ManualDaemonEntry': 'Enter manual daemon mode?', // NEW STRING
     'Settings.ManualDaemonExit': 'Exit manual daemon mode?', // NEW STRING
     'Settisgs.ManualDaemonWarning': '(This will shut down your daemon)', // NEW STRING
+    'Settings.Folder': 'Backup Directory', // new string
+    'Settings.chooseFolder': 'Choose Directory', // new string
     'Settings.Username': 'Username',
 
     'Settings.IpAddress': 'Ip Address',

@@ -115,6 +115,9 @@ export default class MenuBuilder {
               BackupDir = app.getPath('documents') + '/NexusBackups';
               BackupDir = BackupDir.replace(/\\/g, '/');
             }
+            if (self.props.settings.Folder !== BackupDir) {
+              BackupDir = self.props.settings.Folder;
+            }
             let fs = require('fs');
             let ifBackupDirExists = fs.existsSync(BackupDir);
             if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
@@ -291,10 +294,14 @@ export default class MenuBuilder {
                   return a + '_' + b;
                 })
                 .replace(/:/g, '_');
+
               let BackupDir = process.env.HOME + '/NexusBackups';
               if (process.platform === 'win32') {
                 BackupDir = process.env.USERPROFILE + '/NexusBackups';
                 BackupDir = BackupDir.replace(/\\/g, '/');
+              }
+              if (self.props.settings.Folder !== BackupDir) {
+                BackupDir = self.props.settings.Folder;
               }
               let fs = require('fs');
               let ifBackupDirExists = fs.existsSync(BackupDir);
