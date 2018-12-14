@@ -104,6 +104,12 @@ const mapDispatchToProps = dispatch => ({
   CloseModal4: type => {
     dispatch({ type: TYPE.HIDE_MODAL4, payload: type });
   },
+  OpenErrorModal: type => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  },
+  CloseErrorModal: type => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  },
   Confirm: Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
   },
@@ -341,7 +347,7 @@ class SendRecieve extends Component {
                     .catch(e => {
                       console.log(e);
                       this.props.busy();
-                      this.props.OpenModal(e);
+                      this.props.OpenErrorModal(e);
                     });
                 } else {
                   RPC.PROMISE('sendfrom', [
@@ -359,29 +365,29 @@ class SendRecieve extends Component {
                     .catch(e => {
                       console.log(e);
                       this.props.busy();
-                      this.props.OpenModal(e);
+                      this.props.OpenErrorModal(e);
                     });
                 }
               } else {
                 this.props.busy();
-                this.props.OpenModal(
+                this.props.OpenErrorModal(
                   'This is an address registered to this wallet'
                 );
               }
             } else {
               this.props.busy();
-              this.props.OpenModal('Invalid Address');
+              this.props.OpenErrorModal('Invalid Address');
             }
           })
           .catch(e => {
             this.props.busy();
-            this.props.OpenModal('Invalid Address');
+            this.props.OpenErrorModal('Invalid Address');
           });
       } else {
         this.props.busy();
       }
     } else {
-      this.props.OpenModal('No Account Selected');
+      this.props.OpenErrorModal('No Account Selected');
     }
   }
 
@@ -405,7 +411,7 @@ class SendRecieve extends Component {
           })
           .catch(e => {
             this.props.busy();
-            this.props.OpenModal(e);
+            this.props.OpenErrorModal(e);
           });
       } else if (Object.values(this.props.Queue)[0] > 0) {
         if (this.props.Message) {
@@ -426,7 +432,7 @@ class SendRecieve extends Component {
             .catch(e => {
               console.log(e);
               this.props.busy();
-              this.props.OpenModal(e);
+              this.props.OpenErrorModal(e);
             });
         } else {
           RPC.PROMISE('sendfrom', [
@@ -445,12 +451,12 @@ class SendRecieve extends Component {
             .catch(e => {
               console.log(e);
               this.props.busy();
-              this.props.OpenModal(e);
+              this.props.OpenErrorModal(e);
             });
         }
       }
     } else {
-      this.props.OpenModal('No Account Selected');
+      this.props.OpenErrorModal('No Account Selected');
     }
   }
 
@@ -498,16 +504,16 @@ class SendRecieve extends Component {
                 amount: parseFloat(this.props.Amount),
               });
             } else {
-              this.props.OpenModal(
+              this.props.OpenErrorModal(
                 'This is an address registered to this wallet'
               );
             }
           } else {
-            this.props.OpenModal('Invalid Address');
+            this.props.OpenErrorModal('Invalid Address');
           }
         })
         .catch(e => {
-          this.props.OpenModal('Invalid Address');
+          this.props.OpenErrorModal('Invalid Address');
         });
     }
   }
@@ -1045,19 +1051,19 @@ class SendRecieve extends Component {
             })
             .catch(e => {
               if (typeof e === 'object') {
-                this.props.OpenModal(e.Message);
+                this.props.OpenErrorModal(e.Message);
               } else {
-                this.props.OpenModal(e);
+                this.props.OpenErrorModal(e);
               }
             });
         } else {
-          this.props.OpenModal('Insufficient funds');
+          this.props.OpenErrorModal('Insufficient funds');
         }
       } else {
-        this.props.OpenModal('No second account chosen');
+        this.props.OpenErrorModal('No second account chosen');
       }
     } else {
-      this.props.OpenModal('Accounts are the same');
+      this.props.OpenErrorModal('Accounts are the same');
     }
   }
 
@@ -1284,12 +1290,12 @@ class SendRecieve extends Component {
                           ) {
                             this.props.OpenModal2('send transaction?');
                           } else {
-                            this.props.OpenModal('Wallet Locked');
+                            this.props.OpenErrorModal('Wallet Locked');
                           }
                         } else if (this.props.Amount <= 0) {
-                          this.props.OpenModal('Invalid Amount');
+                          this.props.OpenErrorModal('Invalid Amount');
                         } else {
-                          this.props.OpenModal('Invalid Address');
+                          this.props.OpenErrorModal('Invalid Address');
                         }
                       }}
                     >
@@ -1362,10 +1368,10 @@ class SendRecieve extends Component {
                           if (Object.keys(this.props.Queue).length > 0) {
                             this.props.OpenModal2('Send Multiple?');
                           } else {
-                            this.props.OpenModal('Empty Queue!');
+                            this.props.OpenErrorModal('Empty Queue!');
                           }
                         } else {
-                          this.props.OpenModal('Wallet Locked');
+                          this.props.OpenErrorModal('Wallet Locked');
                         }
                       }}
                     >

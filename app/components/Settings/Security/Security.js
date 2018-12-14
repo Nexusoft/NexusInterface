@@ -19,6 +19,12 @@ const mapDispatchToProps = dispatch => ({
   busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
   OpenModal: type => dispatch({ type: TYPE.SHOW_MODAL, payload: type }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
+  OpenErrorModal: type => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  },
+  CloseErrorModal: type => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  },
 });
 
 class Security extends Component {
@@ -38,7 +44,7 @@ class Security extends Component {
           });
       })
       .catch(e => {
-        this.props.OpenModal(e);
+        this.props.OpenErrorModal(e);
         setTimeout(() => {
           this.props.CloseModal();
         }, 3000);
@@ -56,7 +62,7 @@ class Security extends Component {
           output.value = payload;
         })
         .catch(e => {
-          this.props.OpenModal(e);
+          this.props.OpenErrorModal(e);
           setTimeout(() => {
             this.props.CloseModal();
           }, 3000);
@@ -83,14 +89,14 @@ class Security extends Component {
               this.props.CloseModal();
             })
             .catch(e => {
-              this.props.OpenModal(e);
+              this.props.OpenErrorModal(e);
               setTimeout(() => {
                 this.props.CloseModal();
               }, 3000);
             });
         })
         .catch(e => {
-          this.props.OpenModal(e);
+          this.props.OpenErrorModal(e);
           setTimeout(() => {
             this.props.CloseModal();
           }, 3000);

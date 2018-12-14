@@ -300,7 +300,7 @@
   "Header.WalletLocked": "Brieftasche gesperrt",
   "Header.UnlockedUntil": "Freigeschaltet bis",
   "Header.StakingOnly": "Nur abstecken",
-  "Header.Synched": "Synchronisiert",
+  "Header.Synced": "Synchronisiert",
   "Header.Synching": "Synchronisierung...\nHinter\n",
   "Header.Blocks": "Blöcke",
   "Header.DaemonNotLoaded": "Daemon nicht geladen",

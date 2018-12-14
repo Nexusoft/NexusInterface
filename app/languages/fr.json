@@ -293,7 +293,7 @@
   "Header.WalletLocked": "Portefeuille verrouillé",
   "Header.UnlockedUntil": "Débloqué jusqu'au",
   "Header.StakingOnly": "Piquetage seulement",
-  "Header.Synched": "Synchronisé",
+  "Header.Synced": "Synchronisé",
   "Header.Synching": "Synchronisation...\nDerrière\n",
   "Header.Blocks": "Des blocs",
   "Header.DaemonNotLoaded": "Daémon non chargé",

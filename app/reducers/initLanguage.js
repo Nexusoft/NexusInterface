@@ -295,7 +295,7 @@ export default {
     'Header.WalletLocked': 'Wallet Locked',
     'Header.UnlockedUntil': 'Unlocked until',
     'Header.StakingOnly': 'Staking Only',
-    'Header.Synched': 'Synched',
+    'Header.Synced': 'Synced',
     'Header.Synching': 'Syncing...\nBehind\n',
     'Header.Blocks': 'Blocks',
     'Header.DaemonNotLoaded': 'Daemon Not Loaded',

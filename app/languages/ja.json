@@ -295,7 +295,7 @@
   "Header.WalletLocked": "ウォレットロック",
   "Header.UnlockedUntil": "までロック解除",
   "Header.StakingOnly": "ステイキングのみ",
-  "Header.Synched": "同期された",
+  "Header.Synced": "同期された",
   "Header.Synching": "同期...後ろに\n",
   "Header.Blocks": "Blocks",
   "Header.DaemonNotLoaded": "デーモンがロードされていない",
