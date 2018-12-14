@@ -237,6 +237,10 @@
   "Settings.ViewPrivateKeyForAddress": "Ver clave privada para la dirección",
   "Settings.EncryptRestart": "Encriptar y reiniciar",
   "Settings.Forkblock": "Bloques de horquilla",
+  "Settings.ManualDaemonEntry": "¿Entrar en modo daemon manual?",
+  "Settings.ManualDaemonExit": "¿Salir del modo daemon manual?",
+  "Settisgs.ManualDaemonWarning": "(Esto cerrará tu Daemon)",
+  "Settings.Folder": "directorio de respaldo",
 
   "Console.CoreOutput": "Salida del núcleo",
   "Console.Console": "Consola",

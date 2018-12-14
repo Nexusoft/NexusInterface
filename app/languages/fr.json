@@ -239,6 +239,10 @@
   "Settings.EncryptRestart": "Crypter et redémarrer",
   "Settings.MinimumConfirmations": "Confirmations minimales",
   "Settings.Forkblock": "Blocs de fourche",
+  "Settings.ManualDaemonEntry": "Entrer en mode démon manuel?",
+  "Settings.ManualDaemonExit": "Quitter le mode démon manuel?",
+  "Settisgs.ManualDaemonWarning": "(Cela va arrêter votre démon)",
+  "Settings.Folder": "Répertoire de sauvegarde",
 
   "Console.CoreOutput": "Sortie de base",
   "Console.Console": "Console",

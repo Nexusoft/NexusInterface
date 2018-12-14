@@ -240,6 +240,10 @@
   "Settings.EncryptRestart": "Шифрование и перезапуск",
   "Settings.MinimumConfirmations": "Минимальные подтверждения",
   "Settings.Forkblock": "Вилочные блоки",
+  "Settings.ManualDaemonEntry": "Войдите в ручной режим демона?",
+  "Settings.ManualDaemonExit": "Выходить из ручного режима демона?",
+  "Settisgs.ManualDaemonWarning": "(Это отключит вашего демона)",
+  "Settings.Folder": "Резервный каталог",
 
   "Console.CoreOutput": "Основной выход",
   "Console.Console": "Консоль",

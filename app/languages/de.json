@@ -182,8 +182,11 @@
   "Settings.BackupWallet": "Brieftasche Sicherung",
   "Settings.StartUp": "Beginnen Sie beim Systemstart",
   "Settings.ChangesNexTime": "Änderungen an den Kerneinstellungen werden beim nächsten Neustart des Kerns wirksam",
-
   "Settings.Username": "Nutzername",
+  "Settings.ManualDaemonEntry": "In den manuellen Daemon-Modus wechseln?",
+  "Settings.ManualDaemonExit": "Manuellen Daemon-Modus verlassen?",
+  "Settisgs.ManualDaemonWarning": "(Dadurch wird Ihr Daemon heruntergefahren)",
+  "Settings.Folder": "Sicherungsverzeichnis",
 
   "Settings.IpAddress": "IP Adresse",
   "Settings.Port": "Hafen",
