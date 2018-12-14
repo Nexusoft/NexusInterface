@@ -95,6 +95,13 @@ class Settings extends Component {
             link={`${match.url}/${
               encrypted !== true ? 'Unencrypted' : 'Security'
             }`}
+            isActive={(match, location) =>
+              [
+                `${match.url}/Security`,
+                `${match.url}/Login`,
+                `${match.url}/Unencrypted`,
+              ].includes(location.pathname)
+            }
             icon={lockIcon}
             text={
               <FormattedMessage
