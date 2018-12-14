@@ -243,7 +243,6 @@
   "Settings.MinimumConfirmations": "Minimum Confirmations",
   "Settings.Forkblock": "ForkBlocks",
   "Settings.Folder": "Backup Directory",
-  "Settings.chooseFolder": "Choose Directory",
 
   "Console.CoreOutput": "Core Output",
   "Console.Console": "Console",
@@ -298,7 +297,7 @@
   "Header.WalletLocked": "Wallet Locked",
   "Header.UnlockedUntil": "Unlocked until",
   "Header.StakingOnly": "Staking Only",
-  "Header.Synched": "Synched",
+  "Header.Synced": "Synced",
   "Header.Synching": "Syncing...\nBehind\n",
   "Header.Blocks": "Blocks",
   "Header.DaemonNotLoaded": "Daemon Not Loaded",

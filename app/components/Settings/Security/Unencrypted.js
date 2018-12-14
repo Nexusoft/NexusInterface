@@ -31,6 +31,12 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
+  OpenErrorModal: type => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  },
+  CloseErrorModal: type => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  },
 });
 
 class Unencrypted extends Component {
@@ -54,7 +60,7 @@ class Unencrypted extends Component {
           if (e.includes(address)) {
             e = e.replace(address + ' ', '');
           }
-          this.props.OpenModal(e);
+          this.props.OpenErrorModal(e);
           setTimeout(() => {
             this.props.CloseModal();
           }, 3000);
@@ -81,14 +87,14 @@ class Unencrypted extends Component {
               this.props.CloseModal();
             })
             .catch(e => {
-              this.props.OpenModal(e);
+              this.props.OpenErrorModal(e);
               setTimeout(() => {
                 this.props.CloseModal();
               }, 3000);
             });
         })
         .catch(e => {
-          this.props.OpenModal(e);
+          this.props.OpenErrorModal(e);
           setTimeout(() => {
             this.props.CloseModal();
           }, 3000);
@@ -158,18 +164,20 @@ class Unencrypted extends Component {
                 }, 5000);
               })
               .catch(e => {
-                this.props.OpenModal(e);
+                this.props.OpenErrorModal(e);
               });
           } else {
-            this.props.OpenModal('Password cannot start or end with spaces'); // new alert
+            this.props.OpenErrorModal(
+              'Password cannot start or end with spaces'
+            ); // new alert
             passChk.focus();
           }
         } else {
-          this.props.OpenModal('Passwords do not match'); // new alert
+          this.props.OpenErrorModal('Passwords do not match'); // new alert
           passChk.focus();
         }
       } else {
-        this.props.OpenModal('Passwords cannot contain -$/&*|<>'); // new alert
+        this.props.OpenErrorModal('Passwords cannot contain -$/&*|<>'); // new alert
         passChk.focus();
       }
     } else {

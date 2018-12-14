@@ -155,6 +155,12 @@ export const OpenModal = content => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: content });
   };
 };
+export const OpenErrorModal = content => {
+  return dispatch => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: content });
+  };
+};
+
 export const Confirm = Answer => {
   return dispatch => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
@@ -204,6 +210,11 @@ export const SwitchMessages = locale => {
 export const CloseModal = () => {
   return dispatch => {
     dispatch({ type: TYPE.HIDE_MODAL });
+  };
+};
+export const CloseErrorModal = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL });
   };
 };
 export const OpenModal2 = () => {

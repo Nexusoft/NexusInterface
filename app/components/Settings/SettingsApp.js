@@ -78,6 +78,12 @@ const mapDispatchToProps = dispatch => ({
   SetMinimumConfirmationsNumber: inValue => {
     dispatch({ type: TYPE.SET_MIN_CONFIRMATIONS, payload: inValue });
   },
+  OpenErrorModal: type => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  },
+  CloseErrorModal: type => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  },
 });
 
 var currentBackupLocation = ''; //Might redo to use redux but this is only used to replace using json reader every render;
@@ -305,7 +311,7 @@ class SettingsApp extends Component {
       this.props.OpenModal('Transaction Fee Set');
       setTimeout(() => this.props.CloseModal(), 3000);
     } else {
-      this.props.OpenModal('Invalid Transaction Fee');
+      this.props.OpenErrorModal('Invalid Transaction Fee');
       setTimeout(() => this.props.CloseModal(), 3000);
     }
   }
@@ -525,7 +531,9 @@ class SettingsApp extends Component {
                     if (this.props.connections !== undefined) {
                       this.backupWallet(e);
                     } else {
-                      this.props.OpenModal('Please wait for Daemon to load');
+                      this.props.OpenErrorModal(
+                        'Please wait for Daemon to load'
+                      );
                     }
                   }}
                 />
@@ -570,6 +578,28 @@ class SettingsApp extends Component {
               )}
             </FormattedMessage>
           </div> */}
+          <div className="field">
+            <label htmlFor="devmode">
+              <FormattedMessage
+                id="Settings.DeveloperMode"
+                defaultMessage="Developer Mode"
+              />
+            </label>
+            <FormattedMessage
+              id="ToolTip.DevMode"
+              defaultMessage="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
+            >
+              {tt => (
+                <input
+                  id="devmode"
+                  type="checkbox"
+                  className="switch"
+                  onChange={this.updateDeveloperMode}
+                  data-tooltip={tt}
+                />
+              )}
+            </FormattedMessage>
+          </div>
 
           <div className="field">
             <label htmlFor="minimizeToTray">
@@ -1020,7 +1050,7 @@ class SettingsApp extends Component {
             </div>
           </div>
 
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="devmode">
               <FormattedMessage
                 id="Settings.DeveloperMode"
@@ -1041,7 +1071,7 @@ class SettingsApp extends Component {
                 />
               )}
             </FormattedMessage>
-          </div>
+          </div> */}
 
           {/* <div className="field">
             <label htmlFor="emailAddress">Email Address</label>

@@ -456,10 +456,154 @@ class Header extends Component {
           this.props.messages['Header.Blocks']
         );
       } else {
-        return (
-          <FormattedMessage id="Header.Synched" defaultMessage="Synched" />
-        );
+        return <FormattedMessage id="Header.Synced" defaultMessage="Synced" />;
       }
+    }
+  }
+
+  errorModalInternal() {
+    switch (this.props.modaltype) {
+      case 'This is an address registered to this wallet':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.registeredToThis"
+              defaultMessage="This is an address registered to this wallet"
+            />
+          </h2>
+        );
+        break;
+      case 'Invalid Address':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidAddress"
+              defaultMessage="Invalid Address"
+            />
+          </h2>
+        );
+        break;
+      case 'Invalid Amount':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidAmount"
+              defaultMessage="Invalid Amount"
+            />
+          </h2>
+        );
+        break;
+      case 'Invalid':
+        return (
+          <h2>
+            <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />
+          </h2>
+        );
+        break;
+      case 'No Addresses':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.NoAddresses"
+              defaultMessage="No Addresses"
+            />
+          </h2>
+        );
+        break;
+      case 'Insufficient funds':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InsufficientFunds"
+              defaultMessage="Insufficient Funds"
+            />
+          </h2>
+        );
+        break;
+      case 'Empty Queue!':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.QueueEmpty"
+              defaultMessage="Queue Empty"
+            />
+          </h2>
+        );
+        break;
+      case 'Invalid Transaction Fee':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.InvalidTransactionFee"
+              defaultMessage="Invalid Transaction Fee"
+            />
+          </h2>
+        );
+        break;
+      case 'No ammount set':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.NoAmmountSet"
+              defaultMessage="No Ammount Set"
+            />
+          </h2>
+        );
+        break;
+      case 'Please Fill Out Field':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.PleaseFillOutField"
+              defaultMessage="Please Fill Out Field"
+            />
+          </h2>
+        );
+        break;
+      case 'Incorrect Passsword':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.IncorrectPasssword"
+              defaultMessage="Incorrect Passsword"
+            />
+          </h2>
+        );
+        break;
+      case 'Accounts are the same':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.AccountsAreTheSame"
+              defaultMessage="Accounts are the same"
+            />
+          </h2>
+        );
+        break;
+      case 'No second account chosen':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.NoSecondAccountChosen"
+              defaultMessage="No second account chosen"
+            />
+          </h2>
+        );
+        break;
+      case 'Please wait for daemon':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.DaemonLoadingWait"
+              defaultMessage="Loading Daemon, Please wait..."
+            />
+          </h2>
+        );
+        break;
+
+      default:
+        return <h2>{this.props.modaltype}</h2>;
+        break;
     }
   }
 
@@ -505,43 +649,43 @@ class Header extends Component {
           </h2>
         );
         break;
-      case 'This is an address registered to this wallet':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.registeredToThis"
-              defaultMessage="This is an address registered to this wallet"
-            />
-          </h2>
-        );
-        break;
-      case 'Invalid Address':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.InvalidAddress"
-              defaultMessage="Invalid Address"
-            />
-          </h2>
-        );
-        break;
-      case 'Invalid Amount':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.InvalidAmount"
-              defaultMessage="Invalid Amount"
-            />
-          </h2>
-        );
-        break;
-      case 'Invalid':
-        return (
-          <h2>
-            <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />
-          </h2>
-        );
-        break;
+      // case 'This is an address registered to this wallet':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.registeredToThis"
+      //         defaultMessage="This is an address registered to this wallet"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
+      // case 'Invalid Address':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.InvalidAddress"
+      //         defaultMessage="Invalid Address"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
+      // case 'Invalid Amount':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.InvalidAmount"
+      //         defaultMessage="Invalid Amount"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
+      // case 'Invalid':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />
+      //     </h2>
+      //   );
+      //   break;
       case 'Address Added':
         return (
           <h2>
@@ -552,36 +696,36 @@ class Header extends Component {
           </h2>
         );
         break;
-      case 'No Addresses':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.NoAddresses"
-              defaultMessage="No Addresses"
-            />
-          </h2>
-        );
-        break;
-      case 'Insufficient funds':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.InsufficientFunds"
-              defaultMessage="Insufficient Funds"
-            />
-          </h2>
-        );
-        break;
-      case 'Empty Queue!':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.QueueEmpty"
-              defaultMessage="Queue Empty"
-            />
-          </h2>
-        );
-        break;
+      // case 'No Addresses':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.NoAddresses"
+      //         defaultMessage="No Addresses"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
+      // case 'Insufficient funds':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.InsufficientFunds"
+      //         defaultMessage="Insufficient Funds"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
+      // case 'Empty Queue!':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.QueueEmpty"
+      //         defaultMessage="Queue Empty"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
       case 'Password has been changed.':
         return (
           <h2>
@@ -642,16 +786,16 @@ class Header extends Component {
           </h2>
         );
         break;
-      case 'Invalid Transaction Fee':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.InvalidTransactionFee"
-              defaultMessage="Invalid Transaction Fee"
-            />
-          </h2>
-        );
-        break;
+      // case 'Invalid Transaction Fee':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.InvalidTransactionFee"
+      //         defaultMessage="Invalid Transaction Fee"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
       case 'Copied':
         return (
           <h2>
@@ -669,26 +813,26 @@ class Header extends Component {
           </h2>
         );
         break;
-      case 'No ammount set':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.NoAmmountSet"
-              defaultMessage="No Ammount Set"
-            />
-          </h2>
-        );
-        break;
-      case 'Please Fill Out Field':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.PleaseFillOutField"
-              defaultMessage="Please Fill Out Field"
-            />
-          </h2>
-        );
-        break;
+      // case 'No ammount set':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.NoAmmountSet"
+      //         defaultMessage="No Ammount Set"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
+      // case 'Please Fill Out Field':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.PleaseFillOutField"
+      //         defaultMessage="Please Fill Out Field"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
       case 'FutureDate':
         return (
           <h2>
@@ -699,16 +843,16 @@ class Header extends Component {
           </h2>
         );
         break;
-      case 'Incorrect Passsword':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.IncorrectPasssword"
-              defaultMessage="Incorrect Passsword"
-            />
-          </h2>
-        );
-        break;
+      // case 'Incorrect Passsword':
+      //   return (
+      //     <h2>
+      //       <FormattedMessage
+      //         id="Alert.IncorrectPasssword"
+      //         defaultMessage="Incorrect Passsword"
+      //       />
+      //     </h2>
+      //   );
+      //   break;
       case 'Core Settings Saved':
         return (
           <h2>
@@ -735,36 +879,6 @@ class Header extends Component {
             <FormattedMessage
               id="Alert.CoreRestarting"
               defaultMessage="Core Restarting"
-            />
-          </h2>
-        );
-        break;
-      case 'Accounts are the same':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.AccountsAreTheSame"
-              defaultMessage="Accounts are the same"
-            />
-          </h2>
-        );
-        break;
-      case 'No second account chosen':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.NoSecondAccountChosen"
-              defaultMessage="No second account chosen"
-            />
-          </h2>
-        );
-        break;
-      case 'Please wait for daemon':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.DaemonLoadingWait"
-              defaultMessage="Loading Daemon, Please wait..."
             />
           </h2>
         );
@@ -964,13 +1078,29 @@ class Header extends Component {
           open={this.props.open}
           onClose={this.props.CloseModal}
           classNames={{ modal: 'custom-modal' }}
-          onOpen={() => {
+          onEntered={() => {
+            console.log('Hoes');
             setTimeout(() => {
               this.props.CloseModal();
             }, 3000);
           }}
         >
           {this.modalinternal()}
+        </Modal>
+        <Modal
+          showCloseIcon={false}
+          center={true}
+          open={this.props.openErrorModal}
+          onClose={this.props.CloseErrorModal}
+          classNames={{ modal: 'custom-Error-Modal' }}
+          onEntered={() => {
+            console.log('yp');
+            setTimeout(() => {
+              this.props.CloseErrorModal();
+            }, 3000);
+          }}
+        >
+          {this.errorModalInternal()}
         </Modal>
         <Modal
           key="bootstrap-modal"
@@ -1029,7 +1159,7 @@ class Header extends Component {
             {this.props.heighestPeerBlock > this.props.blocks ? (
               <img id="syncing" className="sync-img" src={statBad} />
             ) : (
-              <img id="synced" src={statGood} />
+              <img id="Synced" src={statGood} />
             )}
             <div className="tooltip bottom" style={{ right: '100%' }}>
               <div>{this.returnSyncStatusTooltip()}</div>
