@@ -7,7 +7,7 @@ colors.light = '#e6e9eb';
 colors.oppositePrimary = colors.light;
 
 export const consts = {
-  monoFontFamily: '"Ubuntu Mono", "Lucida Console", "Courier New", monospace',
+  monoFontFamily: '"Roboto Mono", "Lucida Console", "Courier New", monospace',
   enhancedEaseOut: 'cubic-bezier(0, .9, .9, 1)',
 };
 

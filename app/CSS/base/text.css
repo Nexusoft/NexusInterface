@@ -50,9 +50,9 @@ Text
   --h6-font-family: "Noto Sans", sans-serif;
   --h6-font-weight: 400;
 
-  --mono-font-size: 1.05;
+  --mono-font-size: 1;
   --mono-font-color: inherit;
-  --mono-font-family: "Ubuntu Mono", "Lucida Console", "Courier New", monospace;
+  --mono-font-family: "Roboto Mono", "Lucida Console", "Courier New", monospace;
   --mono-font-weight: normal;
 
   --pre-border-width: 1px;

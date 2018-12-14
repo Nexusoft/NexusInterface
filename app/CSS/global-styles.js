@@ -32,8 +32,7 @@ const styles = css`
   }
 
   code {
-    font-family: consts.monoFontFamily;
-    font-size: 1.05em;
+    font-family: ${consts.monoFontFamily};
   }
 
   /* Customize Scrollbar */
