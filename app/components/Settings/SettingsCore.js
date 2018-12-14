@@ -925,7 +925,7 @@ class SettingsCore extends Component {
               )}
             </FormattedMessage>
           </div>
-
+             { /*
           <div className="field">
             <label htmlFor="forkblock">
               <FormattedMessage
@@ -948,7 +948,7 @@ class SettingsCore extends Component {
               )}
             </FormattedMessage>
           </div>
-
+          */}
           <div className="field">
             <label htmlFor="manualDaemon">
               <FormattedMessage
