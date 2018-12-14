@@ -213,6 +213,9 @@ configuration.BootstrapRecentDatabase = async function(self) {
     BackupDir = process.env.USERPROFILE + '/NexusBackups';
     BackupDir = BackupDir.replace(/\\/g, '/');
   }
+  if (self.props.settings.Folder !== BackupDir) {
+    BackupDir = self.props.settings.Folder;
+  }
 
   let ifBackupDirExists = fs.existsSync(BackupDir);
   if (ifBackupDirExists == undefined || ifBackupDirExists == false) {

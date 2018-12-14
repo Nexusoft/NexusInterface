@@ -179,7 +179,8 @@ export default {
     'Settings.StartUp': 'Start at system startup',
     'Settings.ChangesNexTime':
       'Changes to core settings will take effect the next time the core is restarted',
-
+    'Settings.Folder': 'Backup Directory', // new string
+    'Settings.chooseFolder': 'Choose Directory', // new string
     'Settings.Username': 'Username',
 
     'Settings.IpAddress': 'Ip Address',

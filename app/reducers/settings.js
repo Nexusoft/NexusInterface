@@ -17,7 +17,11 @@ if (process.env.NODE_ENV === 'development') {
     defaultWallpaperPath = defaultWallpaperPath.replace(/\\/g, '/');
   }
 }
-
+let BackupDir = process.env.HOME + '/NexusBackups';
+if (process.platform === 'win32') {
+  BackupDir = process.env.USERPROFILE + '/NexusBackups';
+  BackupDir = BackupDir.replace(/\\/g, '/');
+}
 const initialState = {
   settings: {
     manualDaemon: false,
@@ -32,7 +36,7 @@ const initialState = {
     renderGlobe: true,
     fiatCurrency: 'USD',
     locale: 'en',
-    Folder: 'Choose a Folder',
+    Folder: BackupDir,
     verboseLevel: '2',
     mapPortUsingUpnp: true,
     customStyling: {

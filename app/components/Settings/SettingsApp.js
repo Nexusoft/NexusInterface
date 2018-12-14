@@ -376,10 +376,15 @@ class SettingsApp extends Component {
       })
       .replace(/:/g, '_');
 
-    let BackupDir = this.props.settings.Folder;
+    let BackupDir = process.env.HOME + '/NexusBackups';
     if (process.platform === 'win32') {
+      BackupDir = process.env.USERPROFILE + '/NexusBackups';
       BackupDir = BackupDir.replace(/\\/g, '/');
     }
+    if (this.props.settings.Folder !== BackupDir) {
+      BackupDir = this.props.settings.Folder;
+    }
+
     let fs = require('fs');
     let ifBackupDirExists = fs.existsSync(BackupDir);
     if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
@@ -730,7 +735,7 @@ class SettingsApp extends Component {
             <label htmlFor="Folder">
               <FormattedMessage
                 id="Settings.Folder"
-                defaultMessage="Choose a Backup Directory"
+                defaultMessage="Backup Directory"
               />
             </label>
             <div className="fee">
