@@ -240,6 +240,8 @@
   "Settings.EncryptRestart": "Encrypt and Restart",
   "Settings.MinimumConfirmations": "Minimum Confirmations",
   "Settings.Forkblock": "ForkBlocks",
+  "Settings.Folder": "Backup Directory",
+  "Settings.chooseFolder": "Choose Directory",
 
   "Console.CoreOutput": "Core Output",
   "Console.Console": "Console",

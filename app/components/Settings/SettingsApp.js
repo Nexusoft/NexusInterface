@@ -376,10 +376,15 @@ class SettingsApp extends Component {
       })
       .replace(/:/g, '_');
 
-    let BackupDir = this.props.settings.Folder;
+    let BackupDir = process.env.HOME + '/NexusBackups';
     if (process.platform === 'win32') {
+      BackupDir = process.env.USERPROFILE + '/NexusBackups';
       BackupDir = BackupDir.replace(/\\/g, '/');
     }
+    if (this.props.settings.Folder !== BackupDir) {
+      BackupDir = this.props.settings.Folder;
+    }
+
     let fs = require('fs');
     let ifBackupDirExists = fs.existsSync(BackupDir);
     if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
@@ -728,26 +733,31 @@ class SettingsApp extends Component {
           {/*File */}
           <div className="field">
             <label htmlFor="Folder">
-              <FormattedMessage id="Settings.Folder" defaultMessage="..." />
+              <FormattedMessage
+                id="Settings.Folder"
+                defaultMessage="Backup Directory"
+              />
             </label>
             <div className="fee">
-              <div>
-                <input
-                  type="text"
-                  value={this.props.settings.Folder}
-                  onChange={e => this.props.SeeFolder(e.target.value)}
-                />
+              <input
+                type="text"
+                style={{ marginBottom: '15px' }}
+                value={this.props.settings.Folder}
+                onChange={e => this.props.SeeFolder(e.target.value)}
+              />
 
-                <button
-                  className="feebutton"
-                  onClick={e => {
-                    e.preventDefault();
-                    this.getFolder(this.props.settings.Folder[0]);
-                  }}
-                >
-                  ...
-                </button>
-              </div>
+              <button
+                className="feebutton"
+                onClick={e => {
+                  e.preventDefault();
+                  this.getFolder(this.props.settings.Folder[0]);
+                }}
+              >
+                <FormattedMessage
+                  id="Settings.chooseFolder"
+                  defaultMessage="Choose Directory"
+                />
+              </button>
             </div>
           </div>
 
