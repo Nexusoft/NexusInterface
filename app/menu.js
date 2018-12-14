@@ -125,7 +125,12 @@ export default class MenuBuilder {
             }
             RPC.PROMISE('backupwallet', [
               BackupDir + '/NexusBackup_' + now + '.dat',
-            ]);
+            ]).then(() => {
+              self.props.OpenModal('Wallet Backup');
+              setTimeout(() => {
+                self.props.CloseModal();
+              }, 3000);
+            });
           },
         },
         {
@@ -313,7 +318,12 @@ export default class MenuBuilder {
               }
               RPC.PROMISE('backupwallet', [
                 BackupDir + '/NexusBackup_' + now + '.dat',
-              ]).then(self.props.OpenModal('Wallet Backup'));
+              ]).then(() => {
+                self.props.OpenModal('Wallet Backup');
+                setTimeout(() => {
+                  self.props.CloseModal();
+                }, 3000);
+              });
             },
           },
 

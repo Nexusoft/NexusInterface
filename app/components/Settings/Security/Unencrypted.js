@@ -43,7 +43,7 @@ class Unencrypted extends Component {
   showPrivKey(e) {
     e.preventDefault();
     let addressInput = document.getElementById('privKeyAddress');
-    let address = addressInput.value;
+    let address = addressInput.value.trim();
     let output = document.getElementById('privKeyOutput');
     if (address) {
       RPC.PROMISE('dumpprivkey', [address])
@@ -51,6 +51,9 @@ class Unencrypted extends Component {
           output.value = payload;
         })
         .catch(e => {
+          if (e.includes(address)) {
+            e = e.replace(address + ' ', '');
+          }
           this.props.OpenModal(e);
           setTimeout(() => {
             this.props.CloseModal();

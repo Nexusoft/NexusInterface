@@ -455,7 +455,6 @@ class SettingsApp extends Component {
   render() {
     var settings = require('api/settings.js');
     var settingsObj = settings.GetSettings();
-    console.log(this.props.settings.Folder[0]);
 
     return (
       <section id="application">

@@ -372,6 +372,7 @@ export default {
     'Alert.ContactsExported': 'Contacts Exported',
     'Alert.DaemonLoadingWait': 'Loading Daemon, Please Wait',
     'Alert.CoreRestarting': 'Core Restarting',
+    'Alert.nodefaultname': 'Account cannot be named * or default', // NEW STRING
 
     'Cp.AC1': 'Accent Color 1',
     'Cp.AC2': 'Accent Color 2',
