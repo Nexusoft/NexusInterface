@@ -728,17 +728,24 @@ class SettingsApp extends Component {
           {/*File */}
           <div className="field">
             <label htmlFor="Folder">
-              <FormattedMessage id="Settings.Folder" defaultMessage="..." />
+              <FormattedMessage
+                id="Settings.Folder"
+                defaultMessage="Choose a Backup Directory"
+              />
             </label>
             <div className="fee">
-              <div>
-                <input
-                  type="text"
-                  value={this.props.settings.Folder}
-                  onChange={e => this.props.SeeFolder(e.target.value)}
-                />
+              <input
+                className="Folder"
+                type="text"
+                value={this.props.settings.Folder}
+                onChange={e => this.props.SeeFolder(e.target.value)}
+                onClick={e => {
+                  e.preventDefault();
+                  this.getFolder(this.props.settings.Folder[0]);
+                }}
+              />
 
-                <button
+              {/* <button
                   className="feebutton"
                   onClick={e => {
                     e.preventDefault();
@@ -746,8 +753,7 @@ class SettingsApp extends Component {
                   }}
                 >
                   ...
-                </button>
-              </div>
+                </button> */}
             </div>
           </div>
 

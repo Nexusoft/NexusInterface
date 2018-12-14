@@ -229,6 +229,15 @@ form {
   width: 420px;
   max-width: 100%;
 }
+.Folder {
+  color: transparent;
+  display: inline-block;
+  caret-color: transparent;
+  font-size: 2em;
+  text-shadow: 0 0 0 gray;
+  cursor: pointer;
+}
+
 /*------------------------------------------------------------------
 MEDIA QUERIES
 ------------------------------------------------------------------*/
