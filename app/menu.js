@@ -78,15 +78,12 @@ export default class MenuBuilder {
             log.info('menu.js darwin template: close and kill');
             let settings = GetSettings();
             if (settings.manualDaemon != true) {
-              RPC.PROMISE('stop', [])
-                .then(payload => {
-                  core.stop();
-                  remote.getCurrentWindow().close();
-                })
-                .catch(e => {
-                  remote.getGlobal('core').stop();
-                  remote.getCurrentWindow().close();
-                });
+              remote.getGlobal('core').stop();
+              self.props.clearOverviewVariables();
+              self.props.OpenModal('Closing Nexus');
+              setTimeout(() => {
+                remote.getCurrentWindow().close();
+              }, 10000);
             } else {
               RPC.PROMISE('stop', []).then(payload => {
                 remote.getCurrentWindow().close();
@@ -369,18 +366,19 @@ export default class MenuBuilder {
           {
             label: 'Quit Nexus',
             click() {
-              log.info('menu.js default template: close and kill');
+              log.info('menu.js darwin template: close and kill');
               let settings = GetSettings();
-
               if (settings.manualDaemon != true) {
+                remote.getGlobal('core').stop();
+                self.props.clearOverviewVariables();
+                self.props.OpenModal('Closing Nexus');
+                setTimeout(() => {
+                  remote.getCurrentWindow().close();
+                }, 10000);
+              } else {
                 RPC.PROMISE('stop', []).then(payload => {
-                  console.log('poststop');
-                  core.stop();
-                  setTimeout(() => {
-                    remote.getCurrentWindow().close();
-                  }, 1000);
+                  remote.getCurrentWindow().close();
                 });
-                remote.getCurrentWindow().close();
               }
             },
           },

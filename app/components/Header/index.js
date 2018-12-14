@@ -74,16 +74,7 @@ class Header extends Component {
       self.props.GetInfoDump();
     }, 20000);
     const core = electron.remote.getGlobal('core');
-    core.on('starting', () => {
-      self.set = setInterval(function() {
-        self.props.AddRPCCall('getInfo');
-        self.props.GetInfoDump();
-      }, 20000);
-    });
 
-    core.on('stopping', () => {
-      this.props.clearOverviewVariables();
-    });
     this.props.SetMarketAveData();
     self.mktData = setInterval(function() {
       console.log('MARKET');
@@ -249,7 +240,7 @@ class Header extends Component {
   setupTray() {
     let trayImage = '';
     let mainWindow = electron.remote.getCurrentWindow();
-
+    console.log(this);
     const path = require('path');
     const app = electron.app || electron.remote.app;
 
@@ -323,19 +314,20 @@ class Header extends Component {
       },
       {
         label: 'Quit Nexus',
-        click: function() {
-          log.info('header/index.js contextmenu: close and kill');
+        click() {
           let settings = GetSettings();
-          settings.keepDaemon = false;
-          SaveSettings(settings);
           if (settings.manualDaemon != true) {
+            remote.getGlobal('core').stop();
+            this.props.clearOverviewVariables();
+            this.props.OpenModal('Closing Nexus');
+            setTimeout(() => {
+              mainWindow.close();
+            }, 10000);
+          } else {
             RPC.PROMISE('stop', []).then(payload => {
-              setTimeout(() => {
-                mainWindow.close();
-              }, 1000);
+              mainWindow.close();
             });
           }
-          mainWindow.close();
         },
       },
     ]);

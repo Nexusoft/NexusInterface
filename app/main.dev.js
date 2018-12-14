@@ -180,12 +180,32 @@ app.on('ready', async () => {
         e.preventDefault();
         mainWindow.hide();
       } else {
-        core.stop();
-        app.quit();
+        if (settings.manualDaemon != true) {
+          core.stop();
+          // this.props.clearOverviewVariables();
+          // this.props.OpenModal('Closing Nexus'
+          setTimeout(() => {
+            app.quit();
+          }, 11000);
+        } else {
+          RPC.PROMISE('stop', []).then(payload => {
+            app.quit();
+          });
+        }
       }
     } else {
-      core.stop();
-      app.quit();
+      if (settings.manualDaemon != true) {
+        core.stop();
+        // this.props.clearOverviewVariables();
+        // this.props.OpenModal('Closing Nexus');
+        setTimeout(() => {
+          app.quit();
+        }, 11000);
+      } else {
+        RPC.PROMISE('stop', []).then(payload => {
+          app.quit();
+        });
+      }
     }
   });
 });

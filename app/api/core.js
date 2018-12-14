@@ -458,19 +458,31 @@ class Core extends EventEmitter {
 
     if (settings.keepDaemon != true) {
       if (corePID > '1') {
-        log.info('Core Manager: Killing process ' + corePID);
-        if (require('is-running')(corePID)) {
-          if (process.platform == 'win32') {
-            execSync('taskkill /F /PID %KILL_PID%', [], { env: modEnv });
-          } else {
-            execSync('kill -9 $KILL_PID', [], { env: modEnv });
-          }
+        try {
+          rpcGet('stop', []);
+        } catch (e) {
+          console.log(e);
         }
+        setTimeout(() => {
+          if (getCorePID() > '1') {
+            setTimeout(() => {
+              log.info('Core Manager: Killing process ' + corePID);
+              if (require('is-running')(corePID)) {
+                if (process.platform == 'win32') {
+                  execSync('taskkill /F /PID %KILL_PID%', [], { env: modEnv });
+                } else {
+                  execSync('kill -9 $KILL_PID', [], { env: modEnv });
+                }
+              }
+            }, 5000);
+          }
+        }, 5000);
       }
     } else {
       log.info('Core Manager: Closing wallet and leaving daemon running.');
     }
     this.emit('stopping');
+    console.log(this.emit);
     if (callback) {
       setTimeout(() => {
         callback(refToThis);

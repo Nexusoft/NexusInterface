@@ -28,7 +28,6 @@ export const GetInfoDump = () => {
       })
       .catch(err => {
         console.log(err);
-        dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: false });
         DaemonUnavailable();
       });
   };
