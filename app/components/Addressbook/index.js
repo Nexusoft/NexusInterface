@@ -430,15 +430,20 @@ class AddressBook extends Component {
             <button
               className="button primary"
               id="modalAddOrEditContact"
-              onClick={() =>
-                this.props.AddContact(
-                  this.props.prototypeName,
-                  this.props.prototypeAddress,
-                  this.props.prototypePhoneNumber,
-                  this.props.prototypeNotes,
-                  this.props.prototypeTimezone
-                )
-              }
+              onClick={() => {
+                let name = this.props.prototypeName.trim();
+                if (name !== '*' && name !== 'default') {
+                  this.props.AddContact(
+                    this.props.prototypeName,
+                    this.props.prototypeAddress,
+                    this.props.prototypePhoneNumber,
+                    this.props.prototypeNotes,
+                    this.props.prototypeTimezone
+                  );
+                } else {
+                  this.props.OpenModal('Account cannot be named * or default');
+                }
+              }}
             >
               {index === -1 ? (
                 <FormattedMessage
@@ -642,15 +647,20 @@ class AddressBook extends Component {
   }
 
   createAddress() {
-    if (this.props.prototypeName) {
-      RPC.PROMISE('getnewaddress', [this.props.prototypeName])
-        .then(success => {
-          this.props.ToggleModal();
-          this.loadMyAccounts();
-        })
-        .catch(e => {
-          alert(e);
-        });
+    let name = this.props.prototypeName.trim();
+    if (name !== '') {
+      if (name !== '*' && name !== 'default') {
+        RPC.PROMISE('getnewaddress', [name])
+          .then(success => {
+            this.props.ToggleModal();
+            this.loadMyAccounts();
+          })
+          .catch(e => {
+            alert(e);
+          });
+      } else {
+        this.props.OpenModal('Account cannot be named * or default');
+      }
     } else {
       RPC.PROMISE('getnewaddress', [''])
         .then(success => {

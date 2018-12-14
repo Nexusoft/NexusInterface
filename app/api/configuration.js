@@ -324,12 +324,22 @@ configuration.BootstrapRecentDatabase = async function(self) {
           );
         }
       );
-    }, 5000);
+    }, 3000);
     electron.remote.getGlobal('core').on('starting', () => {
       self.CloseBootstrapModalAndSaveSettings();
       clearInterval(percentChecker);
       self.props.setPercentDownloaded(0);
       self.CloseBootstrapModalAndSaveSettings();
+      let tarGzLocation = path.join(
+        this.GetAppDataDirectory(),
+        'recent.tar.gz'
+      );
+      if (fs.existsSync(tarGzLocation)) {
+        fs.unlink(tarGzLocation, err => {
+          if (err) throw err;
+          console.log('recent.tar.gz was deleted');
+        });
+      }
     });
   });
 };

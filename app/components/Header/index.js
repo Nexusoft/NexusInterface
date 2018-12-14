@@ -769,6 +769,16 @@ class Header extends Component {
           </h2>
         );
         break;
+      case 'Account cannot be named * or default':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.nodefaultname"
+              defaultMessage="Account cannot be named * or default"
+            />
+          </h2>
+        );
+        break;
       default:
         return <h2>{this.props.modaltype}</h2>;
         break;

@@ -56,6 +56,9 @@ class Security extends Component {
           output.value = payload;
         })
         .catch(e => {
+          if (e.includes(address)) {
+            e = e.replace(address + ' ', '');
+          }
           this.props.OpenModal(e);
           setTimeout(() => {
             this.props.CloseModal();
