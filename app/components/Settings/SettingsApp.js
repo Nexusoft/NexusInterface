@@ -23,6 +23,7 @@ import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import plusimg from 'images/plus.svg';
 import * as FlagFile from 'languages/LanguageFlags';
+const { dialog } = require('electron').remote;
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -70,6 +71,9 @@ const mapDispatchToProps = dispatch => ({
   },
   SwitchMessages: messages => {
     dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages });
+  },
+  SeeFolder: Folder => {
+    dispatch({ type: TYPE.SEE_FOLDER, payload: Folder });
   },
   SetMinimumConfirmationsNumber: inValue => {
     dispatch({ type: TYPE.SET_MIN_CONFIRMATIONS, payload: inValue });
@@ -372,7 +376,7 @@ class SettingsApp extends Component {
       })
       .replace(/:/g, '_');
 
-    let BackupDir = process.env.HOME + '/NexusBackups';
+    let BackupDir = this.props.settings.Folder;
     if (process.platform === 'win32') {
       BackupDir = BackupDir.replace(/\\/g, '/');
     }
@@ -389,6 +393,7 @@ class SettingsApp extends Component {
       this.props.OpenModal('Wallet Backup');
       setTimeout(() => this.props.CloseModal(), 3000);
     });
+    console.log(this.props.settings.Folder);
   }
 
   OnFiatCurrencyChange(e) {
@@ -397,6 +402,28 @@ class SettingsApp extends Component {
     settings.fiatCurrency = e.target.value;
     this.props.setSettings(settings);
     require('api/settings.js').SaveSettings(settings);
+  }
+
+  getFolder(folderPaths) {
+    dialog.showOpenDialog(
+      {
+        title: 'Select a folder',
+        properties: ['openDirectory'],
+      },
+      folderPaths => {
+        if (folderPaths === undefined) {
+          console.log('No destination folder selected');
+          return;
+        } else {
+          let settings = require('api/settings.js').GetSettings();
+          settings.Folder = folderPaths.toString();
+          this.props.SeeFolder(folderPaths[0]);
+
+          this.props.setSettings(settings);
+          require('api/settings.js').SaveSettings(settings);
+        }
+      }
+    );
   }
 
   changeLocale(locale) {
@@ -423,6 +450,8 @@ class SettingsApp extends Component {
   render() {
     var settings = require('api/settings.js');
     var settingsObj = settings.GetSettings();
+    console.log(this.props.settings.Folder[0]);
+
     return (
       <section id="application">
         <Modal
@@ -695,6 +724,31 @@ class SettingsApp extends Component {
                 />
               )}
             </FormattedMessage>
+          </div>
+          {/*File */}
+          <div className="field">
+            <label htmlFor="Folder">
+              <FormattedMessage id="Settings.Folder" defaultMessage="..." />
+            </label>
+            <div className="fee">
+              <div>
+                <input
+                  type="text"
+                  value={this.props.settings.Folder}
+                  onChange={e => this.props.SeeFolder(e.target.value)}
+                />
+
+                <button
+                  className="feebutton"
+                  onClick={e => {
+                    e.preventDefault();
+                    this.getFolder(this.props.settings.Folder[0]);
+                  }}
+                >
+                  ...
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* NEXUS FEE */}

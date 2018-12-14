@@ -32,6 +32,7 @@ const initialState = {
     renderGlobe: true,
     fiatCurrency: 'USD',
     locale: 'en',
+    Folder: 'Choose a Folder',
     verboseLevel: '2',
     mapPortUsingUpnp: true,
     customStyling: {
@@ -85,6 +86,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         messages: action.payload,
+      };
+      break;
+    case TYPE.SEE_FOLDER:
+      return {
+        ...state,
+        settings: { ...state.settings, Folder: action.payload },
       };
       break;
     case TYPE.SET_EXPERIMENTAL_WARNING:
