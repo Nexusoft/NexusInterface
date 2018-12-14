@@ -21,8 +21,11 @@
   display: inline-block;
   position: relative;
   margin: 0 7px;
-  font-size: 20px;
   filter: var(--icon-menu);
+}
+
+.icon > svg {
+  font-size: 20px;
 }
 
 .icon .tooltip {
