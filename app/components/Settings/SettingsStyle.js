@@ -206,9 +206,9 @@ class SettingsStyle extends Component {
   }
 
   updateRenderGlobe() {
-    let settings = GetSettings();
+    let settings =  require('api/settings.js').GetSettings();
     settings.renderGlobe = !this.props.settings.renderGlobe;
-    SaveSettings(settings);
+    require('api/settings.js').SaveSettings(settings);
   }
 
   SaveSettings() {
