@@ -54,7 +54,7 @@ class Header extends Component {
     menuBuilder.buildMenu(self);
     this.props.SetGoogleAnalytics(GOOGLE);
 
-    if (tray === null) this.setupTray();
+    if (tray === null) this.setupTray(self);
     let settings = GetSettings();
 
     if (Object.keys(settings).length < 1) {
@@ -64,6 +64,12 @@ class Header extends Component {
       this.props.SwitchMessages(settings.locale);
       this.props.setSettings(settings);
     }
+
+    mainWindow.on('close', e => {
+      e.preventDefault();
+      this.props.clearOverviewVariables();
+      this.props.OpenModal('Closing Nexus');
+    });
 
     this.props.SetMarketAveData();
     this.props.LoadAddressBook();
@@ -237,7 +243,8 @@ class Header extends Component {
     });
   }
 
-  setupTray() {
+  setupTray(self) {
+    console.log(self);
     let trayImage = '';
     let mainWindow = electron.remote.getCurrentWindow();
     console.log(this);
@@ -315,19 +322,9 @@ class Header extends Component {
       {
         label: 'Quit Nexus',
         click() {
-          let settings = GetSettings();
-          if (settings.manualDaemon != true) {
-            remote.getGlobal('core').stop();
-            this.props.clearOverviewVariables();
-            this.props.OpenModal('Closing Nexus');
-            setTimeout(() => {
-              mainWindow.close();
-            }, 10000);
-          } else {
-            RPC.PROMISE('stop', []).then(payload => {
-              mainWindow.close();
-            });
-          }
+          self.props.clearOverviewVariables();
+          self.props.OpenModal('Closing Nexus');
+          mainWindow.close();
         },
       },
     ]);

@@ -62,7 +62,12 @@ export default class MenuBuilder {
             if (settings.manualDaemon != true) {
               let core = require('./api/core');
 
-              core.stop();
+              remote
+                .getGlobal('core')
+                .stop()
+                .then(payload => {
+                  console.log(payload);
+                });
             } else {
               self.props.OpenModal('Manual Daemon Mode active invalid command');
             }
@@ -75,20 +80,9 @@ export default class MenuBuilder {
           label: 'Quit Nexus',
           accelerator: 'CmdOrCtrl+Q',
           click() {
-            log.info('menu.js darwin template: close and kill');
-            let settings = GetSettings();
-            if (settings.manualDaemon != true) {
-              remote.getGlobal('core').stop();
-              self.props.clearOverviewVariables();
-              self.props.OpenModal('Closing Nexus');
-              setTimeout(() => {
-                remote.getCurrentWindow().close();
-              }, 10000);
-            } else {
-              RPC.PROMISE('stop', []).then(payload => {
-                remote.getCurrentWindow().close();
-              });
-            }
+            self.props.clearOverviewVariables();
+            self.props.OpenModal('Closing Nexus');
+            remote.getCurrentWindow().close();
           },
         },
       ],
@@ -357,7 +351,12 @@ export default class MenuBuilder {
             label: 'Stop Daemon',
             click() {
               let core = require('./api/core');
-              core.stop();
+              remote
+                .getGlobal('core')
+                .stop()
+                .then(payload => {
+                  self.props.clearOverviewVariables();
+                });
             },
           },
           {
@@ -366,20 +365,9 @@ export default class MenuBuilder {
           {
             label: 'Quit Nexus',
             click() {
-              log.info('menu.js darwin template: close and kill');
-              let settings = GetSettings();
-              if (settings.manualDaemon != true) {
-                remote.getGlobal('core').stop();
-                self.props.clearOverviewVariables();
-                self.props.OpenModal('Closing Nexus');
-                setTimeout(() => {
-                  remote.getCurrentWindow().close();
-                }, 10000);
-              } else {
-                RPC.PROMISE('stop', []).then(payload => {
-                  remote.getCurrentWindow().close();
-                });
-              }
+              self.props.clearOverviewVariables();
+              self.props.OpenModal('Closing Nexus');
+              remote.getCurrentWindow().close();
             },
           },
         ],
