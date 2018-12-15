@@ -159,7 +159,7 @@ configuration.GetAppDataDirectory = function() {
 configuration.GetAppResourceDir = function() {
   const electron = require('electron');
   const path = require('path');
-  const app = electron.app != undefined? electron.app : electron.remote.app;
+  const app = electron.app != undefined ? electron.app : electron.remote.app;
   let rawPath = '';
   if (process.platform === 'darwin') {
     rawPath = path.dirname(app.getPath('exe')) + '/../Resources/app/';
@@ -224,10 +224,11 @@ configuration.BootstrapRecentDatabase = async function(self) {
   RPC.PROMISE('backupwallet', [
     BackupDir + '/NexusBackup_' + now + '.dat',
   ]).then(() => {
-    RPC.PROMISE('stop', [])
-      .then(payload => {
-        self.props.OpenModal('Wallet Backup');
-        electron.remote.getGlobal('core').stop();
+    self.props.OpenModal('Wallet Backup');
+    electron.remote
+      .getGlobal('core')
+      .stop()
+      .then(() => {
         setTimeout(() => {
           self.props.CloseModal();
         }, 3000);
