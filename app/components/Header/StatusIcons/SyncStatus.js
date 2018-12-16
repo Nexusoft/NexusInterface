@@ -24,7 +24,7 @@ function statusIcon({
 }) {
   if (!connections || !daemonAvailable) {
     return <Icon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
-  } else if (props.heighestPeerBlock > props.blocks) {
+  } else if (heighestPeerBlock > blocks) {
     return <SpinningIcon icon={syncingIcon} />;
   } else {
     return <Icon icon={checkIcon} />;
