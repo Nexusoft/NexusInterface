@@ -222,7 +222,10 @@ class Overview extends Component {
       SaveSettings(this.props.settings);
     }
 
-    if (this.props.webGLEnabled == false) {
+    if (
+      this.props.webGLEnabled == false ||
+      this.props.settings.renderGlobe == false
+    ) {
       return;
     }
 
@@ -230,10 +233,6 @@ class Overview extends Component {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
         this.redrawCurves();
       }
-    }
-
-    if (this.props.saveSettingsFlag) {
-      SaveSettings(this.props.settings);
     }
 
     if (

@@ -9,6 +9,7 @@ import csv from 'csvtojson';
 import { callbackify } from 'util';
 import { FormattedMessage } from 'react-intl';
 import styled from '@emotion/styled';
+import fs from 'fs';
 
 // Internal Global Dependencies
 import config from 'api/configuration';
@@ -261,7 +262,9 @@ class AddressBook extends Component {
 
     // remove the temporary element from the DOM
     input.remove();
-
+    if (this.props.modalVisable) {
+      this.props.ToggleModal();
+    }
     this.props.OpenModal('Copied');
     setTimeout(() => {
       if (this.props.open) {
@@ -432,15 +435,20 @@ class AddressBook extends Component {
             <button
               className="button primary"
               id="modalAddOrEditContact"
-              onClick={() =>
-                this.props.AddContact(
-                  this.props.prototypeName,
-                  this.props.prototypeAddress,
-                  this.props.prototypePhoneNumber,
-                  this.props.prototypeNotes,
-                  this.props.prototypeTimezone
-                )
-              }
+              onClick={() => {
+                let name = this.props.prototypeName.trim();
+                if (name !== '*' && name !== 'default') {
+                  this.props.AddContact(
+                    this.props.prototypeName,
+                    this.props.prototypeAddress,
+                    this.props.prototypePhoneNumber,
+                    this.props.prototypeNotes,
+                    this.props.prototypeTimezone
+                  );
+                } else {
+                  this.props.OpenModal('Account cannot be named * or default');
+                }
+              }}
             >
               {index === -1 ? (
                 <FormattedMessage
@@ -642,15 +650,20 @@ class AddressBook extends Component {
   }
 
   createAddress() {
-    if (this.props.prototypeName) {
-      RPC.PROMISE('getnewaddress', [this.props.prototypeName])
-        .then(success => {
-          this.props.ToggleModal();
-          this.loadMyAccounts();
-        })
-        .catch(e => {
-          alert(e);
-        });
+    let name = this.props.prototypeName.trim();
+    if (name !== '') {
+      if (name !== '*' && name !== 'default') {
+        RPC.PROMISE('getnewaddress', [name])
+          .then(success => {
+            this.props.ToggleModal();
+            this.loadMyAccounts();
+          })
+          .catch(e => {
+            alert(e);
+          });
+      } else {
+        this.props.OpenModal('Account cannot be named * or default');
+      }
     } else {
       RPC.PROMISE('getnewaddress', [''])
         .then(success => {
@@ -828,6 +841,7 @@ class AddressBook extends Component {
               >
                 {this.props.editAddressLabel === add.address ? (
                   <input
+                    className="editFeildDoNotClose"
                     onChange={e => this.props.EditProtoLabel(e.target.value)}
                     value={this.props.prototypeAddressLabel}
                     onDoubleClick={() =>
@@ -913,6 +927,7 @@ class AddressBook extends Component {
               >
                 {this.props.editAddressLabel === add.address ? (
                   <input
+                    className="editFeildDoNotClose"
                     onChange={e => this.props.EditProtoLabel(e.target.value)}
                     value={this.props.prototypeAddressLabel}
                     onDoubleClick={() =>
@@ -1067,11 +1082,9 @@ class AddressBook extends Component {
     link.setAttribute('download', 'nexus-addressbook.csv'); //give link an action and a default name for the file. MUST BE .csv
 
     document.body.appendChild(link); // Required for FF
-    this.props.OpenModal('Contacts Exported');
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 3000);
-    link.click(); //Finish by "Clicking" this link that will execute the download action we listed above
+
+    link.click();
+
     document.body.removeChild(link);
   }
 
@@ -1083,6 +1096,68 @@ class AddressBook extends Component {
       1
     );
     console.log(csv().fromFile(path));
+    csv()
+      .fromFile(path)
+      .then(jsonObj => {
+        for (var i = 0; i < jsonObj.length; i++) {
+          // dispatch a new account... (map it )
+          var name = jsonObj[i].AccountName;
+          var phone = jsonObj[i].PhoneNumber;
+          var notes = jsonObj[i].Notes;
+          var tz = jsonObj[i].TimeZone;
+          var label;
+          var address;
+          for (var k in jsonObj[i]) {
+            var key = k;
+            var val = jsonObj[i][k];
+
+            if (key.includes('field')) {
+              var num = key.slice(5, key.length);
+              if (num % 2 == 1) {
+                label = val;
+              } else {
+                address = val;
+                // (name, address, num, notes, TZ)
+                this.props.AddContact(name, address, phone, notes, tz);
+                // so here is where we have unique address label pairs, we should add this now.
+                // also we don't really know how they had things labeled so we should check to see if they are ours or not.
+                label = '';
+                address = '';
+              }
+            }
+          }
+        }
+      });
+  }
+
+  closeEdit(e) {
+    if (e.target.className !== 'editFeildDoNotClose') {
+      if (this.props.editName) {
+        if (this.props.prototypeName !== '') {
+          this.props.SaveName(this.props.selected, this.props.prototypeName);
+        }
+      } else if (this.props.editPhone) {
+        this.props.SavePhone(
+          this.props.selected,
+          this.props.prototypePhoneNumber
+        );
+      } else if (this.props.editNotes) {
+        this.props.SaveNotes(this.props.selected, this.props.prototypeNotes);
+      } else if (this.props.editTZ) {
+        this.props.SaveTz(this.props.selected, this.props.prototypeTimezone);
+      } else if (this.props.prototypeAddressLabel !== '') {
+        RPC.PROMISE('validateaddress', [this.props.editAddressLabel]).then(
+          payload => {
+            this.props.SaveLabel(
+              this.props.selected,
+              this.props.editAddressLabel,
+              this.props.prototypeAddressLabel,
+              payload.ismine
+            );
+          }
+        );
+      }
+    }
   }
 
   // Mandatory React method
@@ -1199,6 +1274,7 @@ class AddressBook extends Component {
                             {n => (
                               <input
                                 id="new-account-name"
+                                className="editFeildDoNotClose"
                                 type="text"
                                 value={this.props.prototypeName}
                                 onChange={e =>
@@ -1206,19 +1282,23 @@ class AddressBook extends Component {
                                 }
                                 onKeyDown={e => {
                                   if (e.which === 13 || e.which === 9) {
+                                    if (this.props.prototypeName !== '') {
+                                      this.props.SaveName(
+                                        this.props.selected,
+                                        this.props.prototypeName
+                                      );
+                                    }
+                                  }
+                                }}
+                                placeholder={n}
+                                onDoubleClick={e => {
+                                  if (this.props.prototypeName !== '') {
                                     this.props.SaveName(
                                       this.props.selected,
                                       this.props.prototypeName
                                     );
                                   }
                                 }}
-                                placeholder={n}
-                                onDoubleClick={() =>
-                                  this.props.SaveName(
-                                    this.props.selected,
-                                    this.props.prototypeName
-                                  )
-                                }
                               />
                             )}
                           </FormattedMessage>
@@ -1267,6 +1347,7 @@ class AddressBook extends Component {
                                   <input
                                     id="phoneNumber"
                                     name="phoneNumber"
+                                    className="editFeildDoNotClose"
                                     type="tel"
                                     onChange={e =>
                                       this.phoneNumberHandler(e.target.value)
@@ -1333,6 +1414,7 @@ class AddressBook extends Component {
                                 <textarea
                                   id="notes"
                                   name="notes"
+                                  className="editFeildDoNotClose"
                                   onDoubleClick={() =>
                                     this.props.SaveNotes(
                                       this.props.selected,
@@ -1380,7 +1462,10 @@ class AddressBook extends Component {
                           </div>
                         </div>
                         {this.props.addressbook[this.props.selected].imgSrc !==
-                        undefined ? (
+                          undefined &&
+                        fs.existsSync(
+                          this.props.addressbook[this.props.selected].imgSrc
+                        ) ? (
                           <label htmlFor="picUploader">
                             <img
                               src={
@@ -1398,12 +1483,14 @@ class AddressBook extends Component {
                           type="file"
                           accept="image/*"
                           name="picUploader"
-                          onChange={e =>
-                            this.props.ChangeContactImage(
-                              e.target.files[0].path,
-                              this.props.selected
-                            )
-                          }
+                          onChange={e => {
+                            if (e.target.files[0]) {
+                              this.props.ChangeContactImage(
+                                e.target.files[0].path,
+                                this.props.selected
+                              );
+                            }
+                          }}
                           id="picUploader"
                         />
                       </div>

@@ -32,6 +32,12 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
+  OpenErrorModal: type => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  },
+  CloseErrorModal: type => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  },
 });
 
 class Unencrypted extends Component {
@@ -44,23 +50,25 @@ class Unencrypted extends Component {
   showPrivKey(e) {
     e.preventDefault();
     let addressInput = document.getElementById('privKeyAddress');
-    let address = addressInput.value;
+    let address = addressInput.value.trim();
     let output = document.getElementById('privKeyOutput');
     if (address) {
-      RPC.PROMISE('dumpprivkey', [address]).then(payload => {
-        output.value = payload;
-      });
+      RPC.PROMISE('dumpprivkey', [address])
+        .then(payload => {
+          output.value = payload;
+        })
+        .catch(e => {
+          if (e.includes(address)) {
+            e = e.replace(address + ' ', '');
+          }
+          this.props.OpenErrorModal(e);
+          setTimeout(() => {
+            this.props.CloseModal();
+          }, 3000);
+        });
     } else {
       addressInput.focus();
     }
-  }
-  coreRestart() {
-    core.restart();
-  }
-
-  encryptCallback() {
-    alert('Wallet Encrypted. Restarting wallet...');
-    this.coreRestart();
   }
 
   importPrivKey(e) {
@@ -71,9 +79,27 @@ class Unencrypted extends Component {
     let pk = privateKeyInput.value.trim();
 
     if (label && pk) {
-      RPC.PROMISE('importprivkey', [pk], [label]).then(payload => {
-        RPC.GET('rescan');
-      });
+      RPC.PROMISE('importprivkey', [pk], [label])
+        .then(payload => {
+          this.props.ResetForEncryptionRestart();
+          this.props.OpenModal('Private key imported rescanning now'); // new alert
+          RPC.PROMISE('rescan')
+            .then(payload => {
+              this.props.CloseModal();
+            })
+            .catch(e => {
+              this.props.OpenErrorModal(e);
+              setTimeout(() => {
+                this.props.CloseModal();
+              }, 3000);
+            });
+        })
+        .catch(e => {
+          this.props.OpenErrorModal(e);
+          setTimeout(() => {
+            this.props.CloseModal();
+          }, 3000);
+        });
     } else if (!label) {
       acctname.focus();
     } else if (!pk) {
@@ -89,6 +115,10 @@ class Unencrypted extends Component {
     output.select();
     document.execCommand('Copy', false, null);
     output.type = 'password';
+    this.props.OpenModal('Copied');
+    setTimeout(() => {
+      this.props.CloseModal();
+    }, 3000);
   }
 
   reEnterValidator(e) {
@@ -124,7 +154,7 @@ class Unencrypted extends Component {
                 newPass.value = '';
                 passChk.value = '';
                 this.props.busy(false);
-                this.props.OpenModal('Wallet has been encrypted');
+                this.props.OpenModal('Wallet has been encrypted'); // new alert
                 this.props.ResetForEncryptionRestart();
 
                 // Start the daemon again... give it maybe 5 seconds.
@@ -135,22 +165,20 @@ class Unencrypted extends Component {
                 }, 5000);
               })
               .catch(e => {
-                this.props.OpenModal(e);
+                this.props.OpenErrorModal(e);
               });
           } else {
-            passChk.value = '';
-            passHint.innerText = 'Password cannot start or end with spaces';
+            this.props.OpenErrorModal(
+              'Password cannot start or end with spaces'
+            ); // new alert
             passChk.focus();
           }
         } else {
-          passChk.value = '';
-          passHint.innerText = 'Passwords do not match';
+          this.props.OpenErrorModal('Passwords do not match'); // new alert
           passChk.focus();
         }
       } else {
-        passChk.value = '';
-        passHint.style.visibility = 'visible';
-        passHint.innerText = 'Passwords cannot contain -$/&*|<>';
+        this.props.OpenErrorModal('Passwords cannot contain -$/&*|<>'); // new alert
         passChk.focus();
       }
     } else {
@@ -258,54 +286,6 @@ class Unencrypted extends Component {
               </fieldset>
             </form>
           </div>
-          {/* <div className="securitySubContainer privKey">
-            <form>
-              <fieldset>
-                <legend>
-                  <FormattedMessage
-                    id="Settings.ViewPrivateKey"
-                    defaultMessage="View private key for address"
-                  />
-                </legend>
-
-                <div className="field">
-                  <label>
-                    <FormattedMessage
-                      id="Settings.Address"
-                      defaultMessage="Address"
-                    />
-                    :
-                  </label>
-                  <div className="expander">
-                    <FormattedMessage
-                      id="Settings.EnterAddressHere"
-                      defaultMessage="Enter Address Here"
-                    >
-                      {eah => (
-                        <input
-                          type="text"
-                          id="privKeyAddress"
-                          placeholder={eah}
-                          required
-                        />
-                      )}
-                    </FormattedMessage>
-                    <button
-                      style={{ width: "100%", margin: "0" }}
-                      disabled={this.props.busyFlag}
-                      className="button primary"
-                      onClick={e => this.encrypt(e)}
-                    >
-                      <FormattedMessage
-                        id="Settings.Submit"
-                        defaultMessage="Submit"
-                      />
-                    </button>
-                  </div>
-                </div>
-              </fieldset>
-            </form>
-          </div> */}
           <div className="securitySubContainer privKey">
             <form>
               <fieldset>
@@ -364,7 +344,9 @@ class Unencrypted extends Component {
                     <button
                       disabled={this.props.busyFlag}
                       className="button primary"
-                      onClick={e => this.importPrivKey(e)}
+                      onClick={e => {
+                        this.copyPrivkey(e);
+                      }}
                     >
                       <FormattedMessage
                         id="Settings.Copy"

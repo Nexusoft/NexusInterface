@@ -2,6 +2,9 @@ import configuration from './configuration';
 import MenuBuilder from 'menu.js';
 import { GetSettings, SaveSettings } from './settings';
 import { resolve } from 'path';
+
+import * as RPC from 'scripts/rpc';
+
 const cp = require('child_process');
 const spawn = require('cross-spawn');
 const log = require('electron-log');
@@ -139,8 +142,10 @@ function GetCoreBinaryName() {
 function GetCoreBinaryPath() {
   const path = require('path');
   if (process.env.NODE_ENV === 'development') {
+    let appDir = __dirname.split('/api');
+
     var coreBinaryPath = path.normalize(
-      path.join(__dirname, '..', 'cores', GetCoreBinaryName())
+      path.join(appDir[0], 'cores', GetCoreBinaryName())
     );
   } else {
     var coreBinaryPath = path.join(
@@ -439,37 +444,60 @@ class Core extends EventEmitter {
 
   // stop: Stop the core from running by sending SIGTERM to the process
   stop(callback, refToThis) {
-    log.info('Core Manager: Stop function called');
-    let settings = GetSettings();
-    let coreBinaryName = GetCoreBinaryName();
-    let corePID = getCorePID();
-    // let coreParentPID = getCoreParentPID();
-    var cp = require('child_process');
-    var execSync = require('child_process').execSync;
-    var modEnv = process.env;
-    modEnv.KILL_PID = corePID;
-    var _this = this;
+    return new Promise((resolve, reject) => {
+      log.info('Core Manager: Stop function called');
+      let settings = GetSettings();
+      let coreBinaryName = GetCoreBinaryName();
+      let corePID = getCorePID();
+      // let coreParentPID = getCoreParentPID();
+      var cp = require('child_process');
+      var execSync = require('child_process').execSync;
+      var modEnv = process.env;
+      modEnv.KILL_PID = corePID;
+      var _this = this;
 
-    if (settings.keepDaemon != true) {
-      if (corePID > '1') {
-        log.info('Core Manager: Killing process ' + corePID);
-        if (require('is-running')(corePID)) {
-          if (process.platform == 'win32') {
-            execSync('taskkill /F /PID %KILL_PID%', [], { env: modEnv });
-          } else {
-            execSync('kill -9 $KILL_PID', [], { env: modEnv });
+      if (settings.keepDaemon != true) {
+        if (corePID > '1') {
+          try {
+            rpcGet('stop', []);
+          } catch (e) {
+            console.log(e);
           }
+          setTimeout(() => {
+            if (getCorePID() > '1') {
+              setTimeout(() => {
+                log.info('Core Manager: Killing process ' + corePID);
+                if (require('is-running')(corePID)) {
+                  if (process.platform == 'win32') {
+                    execSync('taskkill /F /PID %KILL_PID%', [], {
+                      env: modEnv,
+                    });
+                  } else {
+                    execSync('kill -9 $KILL_PID', [], { env: modEnv });
+                  }
+
+                  if (callback) {
+                    setTimeout(() => {
+                      callback(refToThis);
+                    }, 3000);
+                  }
+                  resolve('Stopping');
+                }
+              }, 5000);
+            } else {
+              if (callback) {
+                setTimeout(() => {
+                  callback(refToThis);
+                }, 3000);
+              }
+              resolve('Stopping');
+            }
+          }, 5000);
         }
+      } else {
+        log.info('Core Manager: Closing wallet and leaving daemon running.');
       }
-    } else {
-      log.info('Core Manager: Closing wallet and leaving daemon running.');
-    }
-    this.emit('stopping');
-    if (callback) {
-      setTimeout(() => {
-        callback(refToThis);
-      }, 3000);
-    }
+    });
   }
 
   // restart: Restart the core process

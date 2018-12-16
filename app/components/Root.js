@@ -9,7 +9,6 @@ import { connect, Provider } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
-import settings from 'api/settings';
 import locale from 'reducers/intl';
 import globalStyles from 'css/global-styles';
 

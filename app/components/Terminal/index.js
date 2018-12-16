@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import { remote } from 'electron';
 import { Route, Redirect, Switch } from 'react-router';
 import styled from '@emotion/styled';
+import { connect } from 'react-redux';
+import * as TYPE from 'actions/actiontypes';
 
 // Internal Global Dependencies
 import ContextMenuBuilder from 'contextmenu';
@@ -39,7 +41,16 @@ const TerminalContent = styled.div({
   overflow: 'hidden',
 });
 
-export default class Terminal extends Component {
+// React-Redux mandatory methods
+const mapStateToProps = state => {
+  return { ...state.terminal, ...state.common, ...state.settings };
+};
+const mapDispatchToProps = dispatch => ({
+  setCoreOutputPaused: isPaused =>
+    dispatch({ type: TYPE.SET_PAUSE_CORE_OUTPUT, payload: isPaused }),
+});
+
+class Terminal extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
@@ -91,6 +102,23 @@ export default class Terminal extends Component {
               }
             />
           </TerminalTabs>
+          {this.props.history.location.pathname === '/Terminal/Core' ? (
+            <button
+              className="button primary"
+              style={{
+                position: 'absolute',
+                right: '10px',
+                bottom: '5px',
+                marginBottom: '0px',
+              }}
+              onClick={() => {
+                console.log(this.props);
+                this.props.setCoreOutputPaused(!this.props.coreOutputPaused);
+              }}
+            >
+              {this.props.coreOutputPaused ? 'UnPause' : 'Pause'}
+            </button>
+          ) : null}
 
           <TerminalContent>
             <Switch>
@@ -114,3 +142,9 @@ export default class Terminal extends Component {
     );
   }
 }
+
+// Mandatory React-Redux method
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Terminal);

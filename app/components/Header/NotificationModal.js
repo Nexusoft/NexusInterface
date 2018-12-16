@@ -34,33 +34,43 @@ function modalContent(modaltype) {
         />
       );
       break;
-    case 'This is an address regiestered to this wallet':
-      return (
-        <FormattedMessage
-          id="Alert.regiesteredToThis"
-          defaultMessage="This is an address regiestered to this wallet"
-        />
-      );
-      break;
-    case 'Invalid Address':
-      return (
-        <FormattedMessage
-          id="Alert.InvalidAmount"
-          defaultMessage="Invalid Amount"
-        />
-      );
-      break;
-    case 'Invalid Amount':
-      return (
-        <FormattedMessage
-          id="Alert.InvalidAddress"
-          defaultMessage="Invalid Amount"
-        />
-      );
-      break;
-    case 'Invalid':
-      return <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />;
-      break;
+    // case 'This is an address registered to this wallet':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.registeredToThis"
+    //         defaultMessage="This is an address registered to this wallet"
+    //       />
+    //
+    //   );
+    //   break;
+    // case 'Invalid Address':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.InvalidAddress"
+    //         defaultMessage="Invalid Address"
+    //       />
+    //
+    //   );
+    //   break;
+    // case 'Invalid Amount':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.InvalidAmount"
+    //         defaultMessage="Invalid Amount"
+    //       />
+    //
+    //   );
+    //   break;
+    // case 'Invalid':
+    //   return (
+    //
+    //       <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />
+    //
+    //   );
+    //   break;
     case 'Address Added':
       return (
         <FormattedMessage
@@ -69,29 +79,36 @@ function modalContent(modaltype) {
         />
       );
       break;
-    case 'No Addresses':
-      return (
-        <FormattedMessage
-          id="Alert.NoAddresses"
-          defaultMessage="No Addresses"
-        />
-      );
-      break;
-    case 'Insufficient Funds':
-      return (
-        <h2>
-          <FormattedMessage
-            id="Alert.InsufficientFunds"
-            defaultMessage="Insufficient Funds"
-          />
-        </h2>
-      );
-      break;
-    case 'Empty Queue!':
-      return (
-        <FormattedMessage id="Alert.QueueEmpty" defaultMessage="Queue Empty" />
-      );
-      break;
+    // case 'No Addresses':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.NoAddresses"
+    //         defaultMessage="No Addresses"
+    //       />
+    //
+    //   );
+    //   break;
+    // case 'Insufficient funds':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.InsufficientFunds"
+    //         defaultMessage="Insufficient Funds"
+    //       />
+    //
+    //   );
+    //   break;
+    // case 'Empty Queue!':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.QueueEmpty"
+    //         defaultMessage="Queue Empty"
+    //       />
+    //
+    //   );
+    //   break;
     case 'Password has been changed.':
       return (
         <FormattedMessage
@@ -140,14 +157,16 @@ function modalContent(modaltype) {
         />
       );
       break;
-    case 'Invalid Transaction Fee':
-      return (
-        <FormattedMessage
-          id="Alert.InvalidTransactionFee"
-          defaultMessage="Invalid Transaction Fee"
-        />
-      );
-      break;
+    // case 'Invalid Transaction Fee':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.InvalidTransactionFee"
+    //         defaultMessage="Invalid Transaction Fee"
+    //       />
+    //
+    //   );
+    //   break;
     case 'Copied':
       return <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />;
       break;
@@ -159,22 +178,26 @@ function modalContent(modaltype) {
         />
       );
       break;
-    case 'No ammount set':
-      return (
-        <FormattedMessage
-          id="Alert.NoAmmountSet"
-          defaultMessage="No Ammount Set"
-        />
-      );
-      break;
-    case 'Please Fill Out Field':
-      return (
-        <FormattedMessage
-          id="Alert.PleaseFillOutField"
-          defaultMessage="Please Fill Out Field"
-        />
-      );
-      break;
+    // case 'No ammount set':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.NoAmmountSet"
+    //         defaultMessage="No Ammount Set"
+    //       />
+    //
+    //   );
+    //   break;
+    // case 'Please Fill Out Field':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.PleaseFillOutField"
+    //         defaultMessage="Please Fill Out Field"
+    //       />
+    //
+    //   );
+    //   break;
     case 'FutureDate':
       return (
         <FormattedMessage
@@ -183,14 +206,16 @@ function modalContent(modaltype) {
         />
       );
       break;
-    case 'Incorrect Passsword':
-      return (
-        <FormattedMessage
-          id="Alert.IncorrectPasssword"
-          defaultMessage="Incorrect Passsword"
-        />
-      );
-      break;
+    // case 'Incorrect Passsword':
+    //   return (
+    //
+    //       <FormattedMessage
+    //         id="Alert.IncorrectPasssword"
+    //         defaultMessage="Incorrect Passsword"
+    //       />
+    //
+    //   );
+    //   break;
     case 'Core Settings Saved':
       return (
         <FormattedMessage
@@ -215,6 +240,14 @@ function modalContent(modaltype) {
         />
       );
       break;
+    case 'Account cannot be named * or default':
+      return (
+        <FormattedMessage
+          id="Alert.nodefaultname"
+          defaultMessage="Account cannot be named * or default"
+        />
+      );
+      break;
     default:
       return modaltype;
       break;
@@ -228,7 +261,8 @@ const NotificationModal = ({ open, CloseModal, modaltype }) => (
     open={open}
     onClose={CloseModal}
     classNames={{ modal: 'custom-modal' }}
-    onOpen={() => {
+    onEntered={() => {
+      console.log('Hoes');
       setTimeout(() => {
         CloseModal();
       }, 3000);

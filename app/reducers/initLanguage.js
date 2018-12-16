@@ -19,6 +19,7 @@ export default {
     'overview.InterestRate': 'Stake Reward',
     'overview.StakeWeight': 'Stake Weight',
     'overview.Globe': 'Globe includes GeoLite2',
+    'overview.StakeBalance': 'Stake Balance',
 
     'sendReceive.SendNexus': 'Send NXS',
     'sendReceive.Address': 'NXS Address',
@@ -178,6 +179,10 @@ export default {
     'Settings.StartUp': 'Start at system startup',
     'Settings.ChangesNexTime':
       'Changes to core settings will take effect the next time the core is restarted',
+    'Settings.ManualDaemonEntry': 'Enter manual daemon mode?',
+    'Settings.ManualDaemonExit': 'Exit manual daemon mode?',
+    'Settisgs.ManualDaemonWarning': '(This will shut down your daemon)',
+    'Settings.Folder': 'Backup Directory',
 
     'Settings.Username': 'Username',
 
@@ -290,7 +295,7 @@ export default {
     'Header.WalletLocked': 'Wallet Locked',
     'Header.UnlockedUntil': 'Unlocked until',
     'Header.StakingOnly': 'Staking Only',
-    'Header.Synched': 'Synchronized',
+    'Header.Synced': 'Synchronized',
     'Header.Synching': 'Synchronizing...\nBehind\n',
     'Header.Blocks': 'Blocks',
     'Header.DaemonNotLoaded': 'Daemon Not Loaded',
@@ -342,7 +347,7 @@ export default {
     'Alert.Sent': 'Transaction Sent',
     'Alert.Genesis': 'Genesis Transaction',
     'Alert.TrustTransaction': 'Trust Transaction',
-    'Alert.regiesteredToThis': 'This is an address regiestered to this wallet',
+    'Alert.registeredToThis': 'This is an address registered to this wallet',
     'Alert.InvalidAddress': 'Invalid Address',
     'Alert.InvalidAmount': 'Invalid Amount',
     'Alert.Invalid': 'Invalid',
@@ -367,6 +372,7 @@ export default {
     'Alert.ContactsExported': 'Contacts Exported',
     'Alert.DaemonLoadingWait': 'Loading Daemon, Please Wait',
     'Alert.CoreRestarting': 'Core Restarting',
+    'Alert.nodefaultname': 'Account cannot be named * or default', // NEW STRING
 
     'Cp.AC1': 'Accent Color 1',
     'Cp.AC2': 'Accent Color 2',

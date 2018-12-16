@@ -23,6 +23,7 @@ import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import plusimg from 'images/plus.svg';
 import * as FlagFile from 'languages/LanguageFlags';
+import { remote as dialog } from 'electron';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -74,8 +75,17 @@ const mapDispatchToProps = dispatch => ({
   SwitchMessages: messages => {
     dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages });
   },
+  SeeFolder: Folder => {
+    dispatch({ type: TYPE.SEE_FOLDER, payload: Folder });
+  },
   SetMinimumConfirmationsNumber: inValue => {
     dispatch({ type: TYPE.SET_MIN_CONFIRMATIONS, payload: inValue });
+  },
+  OpenErrorModal: type => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  },
+  CloseErrorModal: type => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
   },
 });
 
@@ -87,9 +97,8 @@ class SettingsApp extends Component {
     var settings = GetSettings();
     // this.setDefaultUnitAmount(settings);
     //Application settings
-    this.setAutostart(settings);
+    // this.setAutostart(settings)
     this.setMinimizeToTray(settings);
-    this.setMinimizeOnClose(settings);
     this.setGoogleAnalytics(settings);
     this.setDeveloperMode(settings);
     this.setInfoPopup(settings);
@@ -100,11 +109,20 @@ class SettingsApp extends Component {
       this.refs.backupInputField.webkitdirectory = true;
       this.refs.backupInputField.directory = true;
     }
+
+    var minConf = document.getElementById('minimumConfirmations');
+    minConf.addEventListener('keypress', event => {
+      event.preventDefault();
+    });
     //this.OnFiatCurrencyChange = this.OnFiatCurrencyChange.bind(this);
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
     this.props.setSettings(GetSettings());
+    var minConf = document.getElementById('minimumConfirmations');
+    minConf.removeEventListener('keypress', event => {
+      event.preventDefault();
+    });
   }
 
   // Class Methods
@@ -133,20 +151,6 @@ class SettingsApp extends Component {
     }
     if (settings.minimizeToTray == false) {
       minimizeToTray.checked = false;
-    }
-  }
-
-  setMinimizeOnClose(settings) {
-    var minimizeOnClose = document.getElementById('minimizeOnClose');
-
-    if (settings.minimizeOnClose === undefined) {
-      minimizeOnClose.checked = false;
-    }
-    if (settings.minimizeOnClose == true) {
-      minimizeOnClose.checked = true;
-    }
-    if (settings.minimizeOnClose == false) {
-      minimizeOnClose.checked = false;
     }
   }
 
@@ -216,15 +220,6 @@ class SettingsApp extends Component {
     SaveSettings(settingsObj);
   }
 
-  updateInfoPopUp(event) {
-    var el = event.target;
-    var settingsObj = GetSettings();
-
-    settingsObj.infopopups = el.checked;
-
-    SaveSettings(settingsObj);
-  }
-
   updateAutoStart(event) {
     var el = event.target;
     var settingsObj = GetSettings();
@@ -234,6 +229,7 @@ class SettingsApp extends Component {
     SaveSettings(settingsObj);
 
     //This is the code that will create a reg to have the OS auto start the app
+    var AutoLaunch = require('auto-launch');
     // Change Name when we need to
     var autolaunchsettings = new AutoLaunch({
       name: 'Nexus',
@@ -266,15 +262,6 @@ class SettingsApp extends Component {
     var settingsObj = GetSettings();
 
     settingsObj.minimizeToTray = el.checked;
-
-    SaveSettings(settingsObj);
-  }
-
-  updateMinimizeOnClose(event) {
-    var el = event.target;
-    var settingsObj = GetSettings();
-
-    settingsObj.minimizeOnClose = el.checked;
 
     SaveSettings(settingsObj);
   }
@@ -322,7 +309,7 @@ class SettingsApp extends Component {
       this.props.OpenModal('Transaction Fee Set');
       setTimeout(() => this.props.CloseModal(), 3000);
     } else {
-      this.props.OpenModal('Invalid Transaction Fee');
+      this.props.OpenErrorModal('Invalid Transaction Fee');
       setTimeout(() => this.props.CloseModal(), 3000);
     }
   }
@@ -392,8 +379,13 @@ class SettingsApp extends Component {
 
     let BackupDir = process.env.HOME + '/NexusBackups';
     if (process.platform === 'win32') {
+      BackupDir = process.env.USERPROFILE + '/NexusBackups';
       BackupDir = BackupDir.replace(/\\/g, '/');
     }
+    if (this.props.settings.Folder !== BackupDir) {
+      BackupDir = this.props.settings.Folder;
+    }
+
     let ifBackupDirExists = fs.existsSync(BackupDir);
     if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
       fs.mkdirSync(BackupDir);
@@ -406,6 +398,7 @@ class SettingsApp extends Component {
       this.props.OpenModal('Wallet Backup');
       setTimeout(() => this.props.CloseModal(), 3000);
     });
+    console.log(this.props.settings.Folder);
   }
 
   OnFiatCurrencyChange(e) {
@@ -416,8 +409,30 @@ class SettingsApp extends Component {
     SaveSettings(settings);
   }
 
+  getFolder(folderPaths) {
+    dialog.showOpenDialog(
+      {
+        title: 'Select a folder',
+        properties: ['openDirectory'],
+      },
+      folderPaths => {
+        if (folderPaths === undefined) {
+          console.log('No destination folder selected');
+          return;
+        } else {
+          let settings = GetSettings();
+          settings.Folder = folderPaths.toString();
+          this.props.SeeFolder(folderPaths[0]);
+
+          this.props.setSettings(settings);
+          SaveSettings(settings);
+        }
+      }
+    );
+  }
+
   changeLocale(locale) {
-    let settings = GetSettings();
+    let settings = require('api/settings.js').GetSettings();
     settings.locale = locale;
     this.props.setSettings(settings);
     this.props.SwitchLocale(locale);
@@ -508,7 +523,9 @@ class SettingsApp extends Component {
                     if (this.props.connections !== undefined) {
                       this.backupWallet(e);
                     } else {
-                      this.props.OpenModal('Please wait for Daemon to load');
+                      this.props.OpenErrorModal(
+                        'Please wait for Daemon to load'
+                      );
                     }
                   }}
                 />
@@ -531,7 +548,7 @@ class SettingsApp extends Component {
           </div>
         </Modal>
         <form className="aligned">
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="autostart">
               <FormattedMessage
                 id="Settings.StartUp"
@@ -552,25 +569,24 @@ class SettingsApp extends Component {
                 />
               )}
             </FormattedMessage>
-          </div>
-
+          </div> */}
           <div className="field">
-            <label htmlFor="minimizeToTray">
+            <label htmlFor="devmode">
               <FormattedMessage
-                id="Settings.MinimizeTray"
-                defaultMessage="Minimize to tray"
+                id="Settings.DeveloperMode"
+                defaultMessage="Developer Mode"
               />
             </label>
             <FormattedMessage
-              id="ToolTip.MinimizeTheWallet"
-              defaultMessage="Minimize the wallet to the system tray"
+              id="ToolTip.DevMode"
+              defaultMessage="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
             >
               {tt => (
                 <input
-                  id="minimizeToTray"
+                  id="devmode"
                   type="checkbox"
                   className="switch"
-                  onChange={this.updateMinimizeToTray}
+                  onChange={this.updateDeveloperMode}
                   data-tooltip={tt}
                 />
               )}
@@ -578,8 +594,7 @@ class SettingsApp extends Component {
           </div>
 
           <div className="field">
-            <label htmlFor="minimizeOnClose">
-              {' '}
+            <label htmlFor="minimizeToTray">
               <FormattedMessage
                 id="Settings.MinimizeClose"
                 defaultMessage="Minimize On Close"
@@ -589,36 +604,12 @@ class SettingsApp extends Component {
               id="ToolTip.MinimizeOnClose"
               defaultMessage="Minimize the wallet when closing the window instead of closing it"
             >
-              {MoC => (
-                <input
-                  id="minimizeOnClose"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateMinimizeOnClose}
-                  data-tooltip={MoC}
-                />
-              )}
-            </FormattedMessage>
-          </div>
-
-          <div className="field">
-            <label htmlFor="infoPopUps">
-              {' '}
-              <FormattedMessage
-                id="Settings.InformationPop"
-                defaultMessage="Information Popups"
-              />
-            </label>
-            <FormattedMessage
-              id="ToolTip.ShowPopups"
-              defaultMessage="Show Informational Popups"
-            >
               {tt => (
                 <input
-                  id="infoPopUps"
+                  id="minimizeToTray"
                   type="checkbox"
                   className="switch"
-                  onChange={this.updateInfoPopUp}
+                  onChange={this.updateMinimizeToTray}
                   data-tooltip={tt}
                 />
               )}
@@ -758,6 +749,37 @@ class SettingsApp extends Component {
                 />
               )}
             </FormattedMessage>
+          </div>
+          {/*File */}
+          <div className="field">
+            <label htmlFor="Folder">
+              <FormattedMessage
+                id="Settings.Folder"
+                defaultMessage="Backup Directory"
+              />
+            </label>
+            <div className="fee">
+              <input
+                className="Folder"
+                type="text"
+                value={this.props.settings.Folder}
+                onChange={e => this.props.SeeFolder(e.target.value)}
+                onClick={e => {
+                  e.preventDefault();
+                  this.getFolder(this.props.settings.Folder[0]);
+                }}
+              />
+
+              {/* <button
+                  className="feebutton"
+                  onClick={e => {
+                    e.preventDefault();
+                    this.getFolder(this.props.settings.Folder[0]);
+                  }}
+                >
+                  ...
+                </button> */}
+            </div>
           </div>
 
           {/* NEXUS FEE */}
@@ -1019,7 +1041,7 @@ class SettingsApp extends Component {
             </div>
           </div>
 
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="devmode">
               <FormattedMessage
                 id="Settings.DeveloperMode"
@@ -1040,7 +1062,7 @@ class SettingsApp extends Component {
                 />
               )}
             </FormattedMessage>
-          </div>
+          </div> */}
 
           {/* <div className="field">
             <label htmlFor="emailAddress">Email Address</label>

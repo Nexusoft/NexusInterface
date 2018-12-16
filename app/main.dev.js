@@ -8,7 +8,7 @@ import {
   dialog,
   globalShortcut,
 } from 'electron';
-import log from 'electron-log';
+import log, { info } from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import core from './api/core';
@@ -174,31 +174,51 @@ app.on('ready', async () => {
   createWindow();
   core.start();
 
-  mainWindow.on('close', function() {
-    let settings = require('./api/settings.js').GetSettings();
-    core.stop();
+  mainWindow.on('close', function(e) {
+    e.preventDefault();
+
+    let settings = GetSettings();
+    log.info('close');
+
     if (settings) {
       if (settings.minimizeToTray == true) {
         e.preventDefault();
         mainWindow.hide();
       } else {
-        app.quit();
+        if (settings.manualDaemon != true) {
+          core.stop().then(payload => {
+            app.exit();
+          });
+        } else {
+          RPC.PROMISE('stop', []).then(payload => {
+            app.exit();
+          });
+        }
       }
     } else {
-      app.quit();
+      if (settings.manualDaemon != true) {
+        core.stop().then(payload => {
+          app.exit();
+        });
+      } else {
+        RPC.PROMISE('stop', []).then(payload => {
+          app.exit();
+        });
+      }
     }
   });
 });
 
 // Application Shutdown
-app.on('window-all-closed', function() {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+// app.on('window-all-closed', function() {
+//   if (process.platform !== 'darwin') {
+//     app.quit();
+//   }
+//   log.info('all');
+//   setTimeout(setTimeout(process.abort(), 3000), 3000);
+// });
 
-  setTimeout(setTimeout(process.abort(), 3000), 3000);
-});
-
-app.on('will-quit', function() {
-  app.exit();
-});
+// app.on('will-quit', function() {
+//   log.info('will');
+//   app.exit();
+// });

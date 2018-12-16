@@ -56,7 +56,7 @@ function syncStatusTooltip({
       );
     } else {
       return (
-        <FormattedMessage id="Header.Synched" defaultMessage="Synchronized" />
+        <FormattedMessage id="Header.Synced" defaultMessage="Synchronized" />
       );
     }
   }
