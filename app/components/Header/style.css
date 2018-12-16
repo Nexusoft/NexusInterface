@@ -61,6 +61,24 @@
   -moz-box-shadow: 0 3px 30px white;
   box-shadow: 0 3px 30px white;
 }
+.custom-Error-Modal {
+  background: red;
+  position: absolute;
+  bottom: 80%;
+  right: 0px;
+  height: 55px;
+
+  font-size: 10px;
+  border: 5px solid var(--color-5);
+  -webkit-animation: myErrorMove 5s;
+  animation: myErrorMove 5s;
+  white-space: nowrap;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 3px 30px white;
+  -moz-box-shadow: 0 3px 30px white;
+  box-shadow: 0 3px 30px white;
+}
+
 @keyframes mymove {
   0% {
     right: -5%;
@@ -79,6 +97,27 @@
   100% {
     right: 0px;
     background-color: var(--color-2);
+  }
+}
+/* Error Modal */
+@keyframes myErrorMove {
+  0% {
+    right: -5%;
+    background-color: red;
+  }
+  25% {
+    right: 0%;
+    background-color: white;
+  }
+
+  50% {
+    right: 0%;
+    background-color: red;
+  }
+
+  100% {
+    right: 0px;
+    background-color: white;
   }
 }
 

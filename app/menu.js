@@ -59,7 +59,12 @@ export default class MenuBuilder {
           click() {
             let settings = GetSettings();
             if (settings.manualDaemon != true) {
-              core.stop();
+              remote
+                .getGlobal('core')
+                .stop()
+                .then(payload => {
+                  console.log(payload);
+                });
             } else {
               self.props.OpenModal('Manual Daemon Mode active invalid command');
             }
@@ -72,27 +77,9 @@ export default class MenuBuilder {
           label: 'Quit Nexus',
           accelerator: 'CmdOrCtrl+Q',
           click() {
-            log.info('menu.js darwin template: close and kill');
-            let settings = GetSettings();
-            if (settings.manualDaemon != true) {
-              RPC.PROMISE('stop', [])
-                .then(payload => {
-                  setTimeout(() => {
-                    core.stop();
-                    remote.getCurrentWindow().close();
-                  }, 1000);
-                })
-                .catch(e => {
-                  setTimeout(() => {
-                    remote.getGlobal('core').stop();
-                    remote.getCurrentWindow().close();
-                  }, 1000);
-                });
-            } else {
-              RPC.PROMISE('stop', []).then(payload => {
-                remote.getCurrentWindow().close();
-              });
-            }
+            self.props.clearOverviewVariables();
+            self.props.OpenModal('Closing Nexus');
+            remote.getCurrentWindow().close();
           },
         },
       ],
@@ -101,7 +88,7 @@ export default class MenuBuilder {
       label: 'File',
       submenu: [
         {
-          label: 'Back-up Wallet',
+          label: 'Backup Wallet',
           click: () => {
             let now = new Date()
               .toString()
@@ -116,13 +103,21 @@ export default class MenuBuilder {
               BackupDir = app.getPath('documents') + '/NexusBackups';
               BackupDir = BackupDir.replace(/\\/g, '/');
             }
+            if (self.props.settings.Folder !== BackupDir) {
+              BackupDir = self.props.settings.Folder;
+            }
             let ifBackupDirExists = fs.existsSync(BackupDir);
             if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
               fs.mkdirSync(BackupDir);
             }
             RPC.PROMISE('backupwallet', [
               BackupDir + '/NexusBackup_' + now + '.dat',
-            ]);
+            ]).then(() => {
+              self.props.OpenModal('Wallet Backup');
+              setTimeout(() => {
+                self.props.CloseModal();
+              }, 3000);
+            });
           },
         },
         {
@@ -205,7 +200,7 @@ export default class MenuBuilder {
               !GetSettings().manualDaemon
             ) {
               self.props.OpenBootstrapModal(true);
-              configuration.BootstrapRecentDatabase(self.props);
+              //configuration.BootstrapRecentDatabase(self);
             } else {
               self.props.OpenModal('Please let the daemon start.');
               setTimeout(() => {
@@ -279,7 +274,7 @@ export default class MenuBuilder {
         label: '&File',
         submenu: [
           {
-            label: 'Back-up Wallet',
+            label: 'Backup Wallet',
             click: () => {
               let now = new Date()
                 .toString()
@@ -289,10 +284,14 @@ export default class MenuBuilder {
                   return a + '_' + b;
                 })
                 .replace(/:/g, '_');
+
               let BackupDir = process.env.HOME + '/NexusBackups';
               if (process.platform === 'win32') {
                 BackupDir = process.env.USERPROFILE + '/NexusBackups';
                 BackupDir = BackupDir.replace(/\\/g, '/');
+              }
+              if (self.props.settings.Folder !== BackupDir) {
+                BackupDir = self.props.settings.Folder;
               }
               let ifBackupDirExists = fs.existsSync(BackupDir);
               if (
@@ -303,7 +302,12 @@ export default class MenuBuilder {
               }
               RPC.PROMISE('backupwallet', [
                 BackupDir + '/NexusBackup_' + now + '.dat',
-              ]).then(self.props.OpenModal('Wallet Backup'));
+              ]).then(() => {
+                self.props.OpenModal('Wallet Backup');
+                setTimeout(() => {
+                  self.props.CloseModal();
+                }, 3000);
+              });
             },
           },
 
@@ -337,7 +341,12 @@ export default class MenuBuilder {
           {
             label: 'Stop Daemon',
             click() {
-              core.stop();
+              remote
+                .getGlobal('core')
+                .stop()
+                .then(payload => {
+                  self.props.clearOverviewVariables();
+                });
             },
           },
           {
@@ -346,19 +355,9 @@ export default class MenuBuilder {
           {
             label: 'Quit Nexus',
             click() {
-              log.info('menu.js default template: close and kill');
-              let settings = GetSettings();
-
-              if (settings.manualDaemon != true) {
-                RPC.PROMISE('stop', []).then(payload => {
-                  console.log('poststop');
-                  core.stop();
-                  setTimeout(() => {
-                    remote.getCurrentWindow().close();
-                  }, 1000);
-                });
-                remote.getCurrentWindow().close();
-              }
+              self.props.clearOverviewVariables();
+              self.props.OpenModal('Closing Nexus');
+              remote.getCurrentWindow().close();
             },
           },
         ],
@@ -406,7 +405,7 @@ export default class MenuBuilder {
                 !GetSettings().manualDaemon
               ) {
                 self.props.OpenBootstrapModal(true);
-                configuration.BootstrapRecentDatabase(self.props);
+                //configuration.BootstrapRecentDatabase(self);
               } else {
                 self.props.OpenModal('Please let the daemon start.');
                 setTimeout(() => {

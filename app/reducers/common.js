@@ -9,6 +9,7 @@ const initialState = {
   openSecondModal: false,
   openThirdModal: false,
   openFourthModal: false,
+  openErrorModal: false,
   modaltype: '',
   confirmation: false,
   actionItem: '',
@@ -147,6 +148,20 @@ export default (state = initialState, action) => {
         ...state,
         openFourthModal: false,
         modaltype: action.payload,
+      };
+      break;
+    case TYPE.SHOW_ERROR_MODAL:
+      return {
+        ...state,
+        openErrorModal: true,
+        modaltype: action.payload,
+      };
+      break;
+
+    case TYPE.HIDE_ERROR_MODAL:
+      return {
+        ...state,
+        openErrorModal: false,
       };
       break;
     case TYPE.SET_HIGHEST_PEER_BLOCK:

@@ -121,7 +121,10 @@ class Overview extends Component {
       SaveSettings(this.props.settings);
     }
 
-    if (this.props.webGLEnabled == false) {
+    if (
+      this.props.webGLEnabled == false ||
+      this.props.settings.renderGlobe == false
+    ) {
       return;
     }
 
@@ -129,10 +132,6 @@ class Overview extends Component {
       if (this.props.blocks != 0 && previousprops.blocks != 0) {
         this.redrawCurves();
       }
-    }
-
-    if (this.props.saveSettingsFlag) {
-      SaveSettings(this.props.settings);
     }
 
     if (
@@ -573,36 +572,20 @@ class Overview extends Component {
         <div className="left-stats">
           {this.props.connections === undefined ? null : (
             <div className="left-top-stats">
-              {this.props.stake > 0 ? (
-                <div
-                  id="nxs-balance-info"
-                  className="animated fadeInDown delay-1s"
-                >
-                  <div className="h2">
-                    Balance and Stake <span className="h2-nospace">(NXS)</span>
-                  </div>
-                  <img src={nxsStake} />
-                  <div className="overviewValue">
-                    {this.props.balance + this.props.stake}
-                  </div>
+              <div
+                id="nxs-balance-info"
+                className="animated fadeInDown delay-1s"
+              >
+                <div className="h2">
+                  <FormattedMessage
+                    id="overview.Balance"
+                    defaultMessage="Balance"
+                  />
+                  <span className="h2-nospace">(NXS)</span>
                 </div>
-              ) : (
-                <div
-                  id="nxs-balance-info"
-                  className="animated fadeInDown delay-1s"
-                >
-                  <div className="h2">
-                    <FormattedMessage
-                      id="overview.Balance"
-                      defaultMessage="Balance"
-                    />
-                    <span className="h2-nospace">(NXS)</span>
-                  </div>
-                  <img src={nxsStake} />
-                  <div className="overviewValue">{this.props.balance}</div>
-                </div>
-              )}
-
+                <img src={nxsStake} />
+                <div className="overviewValue">{this.props.balance}</div>
+              </div>
               <div
                 id="nxs-currency-value-info"
                 className="animated fadeInDown delay-1s"
@@ -655,7 +638,6 @@ class Overview extends Component {
                   {this.marketPriceFormatter()}
                 </div>
               </div>
-
               <div
                 id="nxs-market-price-info"
                 className="animated fadeInDown delay-1s"
@@ -672,7 +654,6 @@ class Overview extends Component {
                 <img src={supplyicon} />
                 <div className="overviewValue">{this.marketCapFormatter()}</div>
               </div>
-
               <div
                 id="nxs-market-price-info"
                 className="animated fadeInDown delay-1s"
@@ -691,6 +672,25 @@ class Overview extends Component {
                   {this.pctChange24hrFormatter()}%
                 </div>
               </div>
+              {parseFloat(this.props.stake) > 0 &&
+              this.props.displayBTCvalues[0] !== undefined ? (
+                <div
+                  id="nxs-balance-info"
+                  className="animated fadeInDown delay-1s"
+                >
+                  <div className="h2">
+                    <FormattedMessage
+                      id="overview.MarketPrice"
+                      defaultMessage="Market Price"
+                    />
+                    <span className="h2-nospace">(BTC)</span>
+                  </div>
+                  <img src={supplyicon} />
+                  <div className="overviewValue">
+                    {this.props.displayBTCvalues[0].price}
+                  </div>
+                </div>
+              ) : null}
             </div>
           )}
         </div>
@@ -699,6 +699,22 @@ class Overview extends Component {
           {' '}
           {this.props.connections === undefined ? null : (
             <div>
+              {parseFloat(this.props.stake) > 0 ? (
+                <div
+                  id="nxs-balance-info"
+                  className="animated fadeInDown delay-1s"
+                >
+                  <div className="h2">
+                    <FormattedMessage
+                      id="overview.StakeBalance"
+                      defaultMessage="Stake Balance"
+                    />
+                    <span className="h2-nospace">(NXS)</span>
+                  </div>
+                  <img src={nxsStake} />
+                  <div className="overviewValue">{this.props.stake}</div>
+                </div>
+              ) : null}
               <div
                 id="nxs-connections-info"
                 className="animated fadeInDown delay-1s"

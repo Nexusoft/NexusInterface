@@ -28,7 +28,6 @@ export const GetInfoDump = () => {
       })
       .catch(err => {
         console.log(err);
-        dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: false });
         DaemonUnavailable();
       });
   };
@@ -155,6 +154,12 @@ export const OpenModal = content => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: content });
   };
 };
+export const OpenErrorModal = content => {
+  return dispatch => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: content });
+  };
+};
+
 export const Confirm = Answer => {
   return dispatch => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
@@ -206,6 +211,11 @@ export const CloseModal = () => {
     dispatch({ type: TYPE.HIDE_MODAL });
   };
 };
+export const CloseErrorModal = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL });
+  };
+};
 export const OpenModal2 = () => {
   return dispatch => {
     dispatch({ type: TYPE.SHOW_MODAL2 });
@@ -231,7 +241,7 @@ export const setSettings = settings => {
 
 export const OpenModal3 = () => {
   return dispatch => {
-    dispatch({ type: TYPE.SHOW_MODAL3 });
+    dispatch({ type: TYPE.OPEN_MODAL3 });
   };
 };
 export const CloseModal4 = () => {
@@ -242,7 +252,7 @@ export const CloseModal4 = () => {
 
 export const OpenModal4 = () => {
   return dispatch => {
-    dispatch({ type: TYPE.SHOW_MODAL4 });
+    dispatch({ type: TYPE.OPEN_MODAL4 });
   };
 };
 

@@ -85,6 +85,13 @@ export default (state = initialState, action) => {
         walletitems: tempTransactionsWithfeeValues,
       };
       break;
+    case TYPE.UPDATE_FILTERED_TRANSACTIONS:
+      console.log('reducer');
+      return {
+        ...state,
+        filteredItems: action.payload,
+      };
+      break;
 
     default:
       return state;

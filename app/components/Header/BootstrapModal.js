@@ -7,6 +7,8 @@ import { FormattedMessage } from 'react-intl';
 import { GetSettings, SaveSettings } from 'api/settings';
 import configuration from 'api/configuration';
 
+var enoughSpace = true;
+
 const modalOpen = ({
   manualDaemon,
   settings,
@@ -26,8 +28,21 @@ const Prompting = props => (
         defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
       />
     </h3>
+    {!enoughSpace && (
+      <h3
+        style={{
+          color: '#ff0000',
+        }}
+      >
+        <FormattedMessage
+          id="ToolTip.NotEnoughSpace"
+          defaultMessage="Not Enough Space, Requires 20gb."
+        />
+      </h3>
+    )}
     <button
       className="button"
+      disabled={!enoughSpace}
       onClick={() => {
         props.OpenBootstrapModal(true);
         configuration.BootstrapRecentDatabase(props);
@@ -43,7 +58,7 @@ const Prompting = props => (
       className="button"
       onClick={() => {
         props.CloseBootstrapModal();
-        const settings = GetSettings();
+        let settings = GetSettings();
         settings.bootstrap = false;
         SaveSettings(settings);
       }}
@@ -99,6 +114,20 @@ const Extracting = () => (
 
 const modalContent = props => {
   if (props.percentDownloaded === 0) {
+    if (modalOpen(props)) {
+      const checkDiskSpace = require('check-disk-space');
+      let dir = process.env.APPDATA || process.env.HOME;
+      checkDiskSpace(dir).then(diskSpace => {
+        if (diskSpace.free <= 20000000000) {
+          enoughSpace = false;
+          setTimeout(() => {
+            this.forceUpdate();
+          }, 5000);
+        } else {
+          enoughSpace = true;
+        }
+      });
+    }
     return <Prompting {...props} />;
   }
 

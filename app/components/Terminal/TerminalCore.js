@@ -76,9 +76,14 @@ class TerminalCore extends Component {
       batch.push(d);
     });
     this.printCoreOutputTimer = setInterval(() => {
+      if (this.props.coreOutputPaused) {
+        return;
+      }
       this.props.printCoreOutput(batch);
       batch = [];
-    }, 5000);
+      let termoutput = document.getElementById('terminal-core-output');
+      termoutput.scrollTop = termoutput.scrollHeight;
+    }, 1000);
   }
 
   // Mandatory React method

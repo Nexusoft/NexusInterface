@@ -60,6 +60,18 @@ const mapDispatchToProps = dispatch => ({
   CloseModal: () => {
     dispatch({ type: TYPE.HIDE_MODAL });
   },
+  CloseManualDaemonModal: () => {
+    dispatch({ type: TYPE.CLOSE_MANUAL_DAEMON_MODAL });
+  },
+  OpenManualDaemonModal: () => {
+    dispatch({ type: TYPE.OPEN_MANUAL_DAEMON_MODAL });
+  },
+  updateManualDaemonSetting: bool => {
+    dispatch({ type: TYPE.UPDATE_MANUAL_DAEMON_SETTINGS, payload: bool });
+  },
+  clearOverviewVariables: () => {
+    dispatch({ type: TYPE.CLEAR_FOR_BOOTSTRAPING });
+  },
 });
 
 class SettingsCore extends Component {
@@ -193,7 +205,7 @@ class SettingsCore extends Component {
     var manualDaemonDataDir = document.getElementById('manualDaemonDataDir');
 
     if (settings.manualDaemonDataDir === undefined) {
-      manualDaemonDataDir.value = 'Nexus_trit';
+      manualDaemonDataDir.value = 'Nexus_Tritium_Data';
     } else {
       manualDaemonDataDir.value = settings.manualDaemonDataDir;
     }
@@ -306,8 +318,7 @@ class SettingsCore extends Component {
     SaveSettings(settingsObj);
   }
 
-  updateManualDaemon(event) {
-    var el = event.target;
+  updateManualDaemon(Manualsetting) {
     var settingsObj = GetSettings();
 
     var manualDaemonSettings = document.getElementById(
@@ -317,7 +328,7 @@ class SettingsCore extends Component {
       'automatic-daemon-settings'
     );
 
-    if (el.checked) {
+    if (Manualsetting) {
       manualDaemonSettings.style.display = 'block';
       automaticDaemonSettings.style.display = 'none';
     } else {
@@ -337,7 +348,7 @@ class SettingsCore extends Component {
       'manualDaemonDataDir'
     ).value;
 
-    settingsObj.manualDaemon = el.checked;
+    settingsObj.manualDaemon = Manualsetting;
     settingsObj.manualDaemonUser = manualDeamonUserValue;
     settingsObj.manualDaemonPassword = manualDeamonPasswordValue;
     settingsObj.manualDaemonIP = manualDeamonIPValue;
@@ -452,6 +463,128 @@ class SettingsCore extends Component {
     core.restart();
   }
 
+  manualDaemonModalGenerator() {
+    if (this.props.settings.manualDaemon) {
+      return (
+        <div>
+          {' '}
+          <h2>
+            <FormattedMessage
+              id="Settings.ManualDaemonExit"
+              defaultMessage="Exit manual daemon mode?"
+            />
+          </h2>
+          <h2>
+            <FormattedMessage
+              id="Settings.ManualDaemonWarning"
+              defaultMessage="(This will shut down your daemon)"
+            />
+          </h2>
+          <div id="ok-button">
+            <FormattedMessage id="sendReceive.Yes">
+              {yes => (
+                <input
+                  value={yes}
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    RPC.PROMISE('stop', [])
+                      .then(payload => {
+                        this.props.updateManualDaemonSetting(false);
+                        this.updateManualDaemon(false);
+                        this.props.CloseManualDaemonModal();
+                        this.props.clearForRestart();
+                        remote.getGlobal('core').start();
+                      })
+                      .catch(e => {
+                        this.props.updateManualDaemonSetting(false);
+                        this.updateManualDaemon(false);
+                        this.props.clearForRestart();
+                        this.props.CloseManualDaemonModal();
+                        remote.getGlobal('core').start();
+                      });
+                  }}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+          <div id="no-button">
+            <FormattedMessage id="sendReceive.No" defaultMessage="No">
+              {no => (
+                <input
+                  value={no}
+                  type="button"
+                  className="button"
+                  onClick={() => {
+                    this.props.CloseManualDaemonModal();
+                  }}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          {' '}
+          <h2>
+            <FormattedMessage
+              id="Settings.ManualDaemonEntry"
+              defaultMessage="Enter manual daemon mode?"
+            />
+          </h2>
+          <h2>
+            <FormattedMessage
+              id="Settings.ManualDaemonWarning"
+              defaultMessage="(This will shut down your daemon)"
+            />
+          </h2>
+          <div id="ok-button">
+            <FormattedMessage id="sendReceive.Yes">
+              {yes => (
+                <input
+                  value={yes}
+                  type="button"
+                  className="button primary"
+                  onClick={() => {
+                    RPC.PROMISE('stop', [])
+                      .then(payload => {
+                        remote.getGlobal('core').stop();
+                        this.props.updateManualDaemonSetting(true);
+                        this.updateManualDaemon(true);
+                        this.props.CloseManualDaemonModal();
+                      })
+                      .catch(e => {
+                        remote.getGlobal('core').stop();
+                        this.props.updateManualDaemonSetting(true);
+                        this.updateManualDaemon(true);
+                        this.props.CloseManualDaemonModal();
+                      });
+                  }}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+          <div id="no-button">
+            <FormattedMessage id="sendReceive.No" defaultMessage="No">
+              {no => (
+                <input
+                  value={no}
+                  type="button"
+                  className="button"
+                  onClick={() => {
+                    this.props.CloseManualDaemonModal();
+                  }}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+        </div>
+      );
+    }
+  }
+
   // changeLocale(locale) {
   //   let settings = require("api/settings.js").GetSettings();
   //   settings.locale = locale;
@@ -464,6 +597,19 @@ class SettingsCore extends Component {
   render() {
     return (
       <section id="core">
+        <Modal
+          classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
+          id="manualDaemonModal"
+          showCloseIcon={false}
+          open={this.props.manualDaemonModal}
+          onClose={e => {
+            e.preventDefault();
+            this.props.CloseManualDaemonModal();
+          }}
+          center
+        >
+          {this.manualDaemonModalGenerator()}
+        </Modal>
         <Modal
           center
           classNames={{ modal: 'custom-modal5' }}
@@ -763,7 +909,7 @@ class SettingsCore extends Component {
               )}
             </FormattedMessage>
           </div>
-
+          {/*
           <div className="field">
             <label htmlFor="forkblock">
               <FormattedMessage
@@ -786,7 +932,7 @@ class SettingsCore extends Component {
               )}
             </FormattedMessage>
           </div>
-
+          */}
           <div className="field">
             <label htmlFor="manualDaemon">
               <FormattedMessage
@@ -803,7 +949,8 @@ class SettingsCore extends Component {
                   id="manualDaemon"
                   type="checkbox"
                   className="switch"
-                  onChange={this.updateManualDaemon}
+                  checked={this.props.settings.manualDaemon}
+                  onChange={() => this.props.OpenManualDaemonModal()}
                   data-tooltip={tt}
                 />
               )}
@@ -896,29 +1043,6 @@ class SettingsCore extends Component {
                     type="text"
                     size="5"
                     onChange={this.updateManualDaemonPort}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-
-            <div className="field">
-              <label htmlFor="manualDaemonDataDir">
-                <FormattedMessage
-                  id="Settings.DDN"
-                  defaultMessage="Data Directory Name"
-                />{' '}
-              </label>
-              <FormattedMessage
-                id="ToolTip.DataDirectory"
-                defaultMessage="Data directory configured for manual daemon"
-              >
-                {tt => (
-                  <input
-                    id="manualDaemonDataDir"
-                    type="text"
-                    size="12"
-                    onChange={this.updateManualDaemonDataDir}
                     data-tooltip={tt}
                   />
                 )}
@@ -1037,6 +1161,28 @@ class SettingsCore extends Component {
                   />
                 )}
               </FormattedMessage>
+            </div>{' '}
+            <div className="field">
+              <label htmlFor="manualDaemonDataDir">
+                <FormattedMessage
+                  id="Settings.DDN"
+                  defaultMessage="Data Directory Name"
+                />{' '}
+              </label>
+              <FormattedMessage
+                id="ToolTip.DataDirectory"
+                defaultMessage="Data directory configured for manual daemon"
+              >
+                {tt => (
+                  <input
+                    id="manualDaemonDataDir"
+                    type="text"
+                    size="12"
+                    onChange={this.updateManualDaemonDataDir}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
             </div>
             {/* <div className="field">
               <label htmlFor="optionalTransactionFee">
@@ -1060,37 +1206,36 @@ class SettingsCore extends Component {
                 </button>
               </div>
             </div> */}
-            <button
-              id="restart-core"
-              className="button primary"
-              onClick={e => {
-                e.preventDefault();
-                this.props.clearForRestart();
-
-                core.restart();
-                this.props.OpenModal('Core Restarting');
-              }}
-            >
-              <FormattedMessage
-                id="Settings.RestartCore"
-                defaultMesage="Restart Core"
-              />
-            </button>
-            <button
-              // id="restart-core"
-              className="button primary"
-              onClick={e => {
-                e.preventDefault();
-                this.props.OpenModal2();
-              }}
-            >
-              <FormattedMessage
-                id="SaveSettings"
-                defaultMessage="Save Settings"
-              />
-            </button>
           </div>
+          <button
+            id="restart-core"
+            className="button primary"
+            onClick={e => {
+              e.preventDefault();
+              this.props.clearForRestart();
 
+              core.restart();
+              this.props.OpenModal('Core Restarting');
+            }}
+          >
+            <FormattedMessage
+              id="Settings.RestartCore"
+              defaultMesage="Restart Core"
+            />
+          </button>
+          <button
+            // id="restart-core"
+            className="button primary"
+            onClick={e => {
+              e.preventDefault();
+              this.props.OpenModal2();
+            }}
+          >
+            <FormattedMessage
+              id="Settings.SaveSettings"
+              defaultMessage="Save Settings"
+            />
+          </button>
           <div className="clear-both" />
         </form>
 

@@ -19,33 +19,57 @@ const mapDispatchToProps = dispatch => ({
   busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
   OpenModal: type => dispatch({ type: TYPE.SHOW_MODAL, payload: type }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
+  OpenErrorModal: type => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  },
+  CloseErrorModal: type => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  },
 });
 
 class Security extends Component {
   lockWallet() {
     this.props.busy();
-    RPC.PROMISE('walletlock', []).then(payload => {
-      this.props.wipe();
-      this.props.busy();
-      RPC.PROMISE('getinfo', [])
-        .then(payload => {
-          delete payload.timestamp;
-          return payload;
-        })
-        .then(payload => {
-          this.props.getInfo(payload);
-        });
-    });
+    RPC.PROMISE('walletlock', [])
+      .then(payload => {
+        this.props.wipe();
+        this.props.busy();
+        RPC.PROMISE('getinfo', [])
+          .then(payload => {
+            delete payload.timestamp;
+            return payload;
+          })
+          .then(payload => {
+            this.props.getInfo(payload);
+          });
+      })
+      .catch(e => {
+        this.props.OpenErrorModal(e);
+        setTimeout(() => {
+          this.props.CloseModal();
+        }, 3000);
+      });
   }
+
   showPrivKey(e) {
     e.preventDefault();
     let addressInput = document.getElementById('privKeyAddress');
     let address = addressInput.value;
     let output = document.getElementById('privKeyOutput');
     if (address) {
-      RPC.PROMISE('dumpprivkey', [address]).then(payload => {
-        output.value = payload;
-      });
+      RPC.PROMISE('dumpprivkey', [address])
+        .then(payload => {
+          output.value = payload;
+        })
+        .catch(e => {
+          if (e.includes(address)) {
+            e = e.replace(address + ' ', '');
+          }
+          this.props.OpenErrorModal(e);
+          setTimeout(() => {
+            this.props.CloseModal();
+          }, 3000);
+        });
     } else {
       addressInput.focus();
     }
@@ -59,9 +83,27 @@ class Security extends Component {
     let pk = privateKeyInput.value.trim();
 
     if (label && pk) {
-      RPC.PROMISE('importprivkey', [pk], [label]).then(payload => {
-        RPC.GET('rescan');
-      });
+      RPC.PROMISE('importprivkey', [pk], [label])
+        .then(payload => {
+          this.props.ResetForEncryptionRestart();
+          this.props.OpenModal('Private key imported rescanning now'); // new alert
+          RPC.PROMISE('rescan')
+            .then(payload => {
+              this.props.CloseModal();
+            })
+            .catch(e => {
+              this.props.OpenErrorModal(e);
+              setTimeout(() => {
+                this.props.CloseModal();
+              }, 3000);
+            });
+        })
+        .catch(e => {
+          this.props.OpenErrorModal(e);
+          setTimeout(() => {
+            this.props.CloseModal();
+          }, 3000);
+        });
     } else if (!label) {
       acctname.focus();
     } else if (!pk) {
@@ -77,6 +119,10 @@ class Security extends Component {
     output.select();
     document.execCommand('Copy', false, null);
     output.type = 'password';
+    this.props.OpenModal('Copied');
+    setTimeout(() => {
+      this.props.CloseModal();
+    }, 3000);
   }
 
   changePassword(e) {
@@ -316,7 +362,9 @@ class Security extends Component {
                   <button
                     // disabled={this.props.busyFlag}
                     className="button"
-                    onClick={e => this.copyPrivkey(e)}
+                    onClick={e => {
+                      this.copyPrivkey(e);
+                    }}
                   >
                     <FormattedMessage
                       id="Settings.Copy"

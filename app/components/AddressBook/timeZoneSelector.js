@@ -25,6 +25,8 @@ class TimeZoneSelector extends Component {
     return (
       <span>
         <select
+          className="editFeildDoNotClose"
+          ref="editTimeZone"
           id="addContactTimeZoneSelect"
           onChange={e => {
             if (this.props.editTZ) {

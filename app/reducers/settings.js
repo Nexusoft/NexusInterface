@@ -17,7 +17,11 @@ if (process.env.NODE_ENV === 'development') {
     defaultWallpaperPath = defaultWallpaperPath.replace(/\\/g, '/');
   }
 }
-
+let BackupDir = process.env.HOME + '/NexusBackups';
+if (process.platform === 'win32') {
+  BackupDir = process.env.USERPROFILE + '/NexusBackups';
+  BackupDir = BackupDir.replace(/\\/g, '/');
+}
 const initialState = {
   settings: {
     manualDaemon: false,
@@ -32,6 +36,9 @@ const initialState = {
     renderGlobe: true,
     fiatCurrency: 'USD',
     locale: 'en',
+    Folder: BackupDir,
+    verboseLevel: '2',
+    mapPortUsingUpnp: true,
     customStyling: {
       MC1: '#111111',
       MC2: '#0ca4fb',
@@ -61,7 +68,7 @@ const initialState = {
     selectedColorProp: 'MC1',
     minimumconfirmations: 3,
   },
-
+  manualDaemonModal: false,
   messages: initLanguage,
 };
 
@@ -85,6 +92,12 @@ export default (state = initialState, action) => {
         messages: action.payload,
       };
       break;
+    case TYPE.SEE_FOLDER:
+      return {
+        ...state,
+        settings: { ...state.settings, Folder: action.payload },
+      };
+      break;
     case TYPE.SET_EXPERIMENTAL_WARNING:
       if (action.payload) {
         return {
@@ -105,10 +118,33 @@ export default (state = initialState, action) => {
     case TYPE.IGNORE_ENCRYPTION_WARNING:
       return {
         ...state,
-        ignoreEncryptionWarningFlag: true,
+        settings: {
+          ...state.settings,
+          ignoreEncryptionWarningFlag: true,
+        },
       };
       break;
-
+    case TYPE.OPEN_MANUAL_DAEMON_MODAL:
+      return {
+        ...state,
+        manualDaemonModal: true,
+      };
+      break;
+    case TYPE.UPDATE_MANUAL_DAEMON_SETTINGS:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          manualDaemon: action.payload,
+        },
+      };
+      break;
+    case TYPE.CLOSE_MANUAL_DAEMON_MODAL:
+      return {
+        ...state,
+        manualDaemonModal: false,
+      };
+      break;
     case TYPE.ACCEPT_MIT:
       return {
         ...state,
@@ -345,7 +381,6 @@ export default (state = initialState, action) => {
         },
       };
       break;
-    // dead code?
     case TYPE.UNSET_STYLE_FLAG:
       return {
         ...state,

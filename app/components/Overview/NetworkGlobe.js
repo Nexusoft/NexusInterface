@@ -61,40 +61,43 @@ export default class NetworkGlobe extends Component {
         json: true,
       },
       (error, response, body) => {
+        // console.log(error, response, body)
         if (error) {
           console.log(error);
         } else {
-          if (response.statusCode === 200) {
-            RPC.PROMISE('getpeerinfo', []).then(payload => {
-              var tmp = {};
-              var ip = {};
-              let maxnodestoadd = payload.length;
-              if (maxnodestoadd > 20) {
-                maxnodestoadd = 20;
-              }
-              for (var i = 0; i < maxnodestoadd; i++) {
-                ip = payload[i].addr;
-                ip = ip.split(':')[0];
-                var tmp = geoiplookup.get(ip);
-                globeseries[0][1].push(tmp.location.latitude);
-                globeseries[0][1].push(tmp.location.longitude);
+          if (response !== undefined) {
+            if (response.statusCode === 200) {
+              RPC.PROMISE('getpeerinfo', []).then(payload => {
+                var tmp = {};
+                var ip = {};
+                let maxnodestoadd = payload.length;
+                if (maxnodestoadd > 20) {
+                  maxnodestoadd = 20;
+                }
+                for (var i = 0; i < maxnodestoadd; i++) {
+                  ip = payload[i].addr;
+                  ip = ip.split(':')[0];
+                  var tmp = geoiplookup.get(ip);
+                  globeseries[0][1].push(tmp.location.latitude);
+                  globeseries[0][1].push(tmp.location.longitude);
+                  globeseries[0][1].push(0.1); //temporary magnitude.
+                }
+
+                globeseries[0][1].push(body['geoplugin_latitude']);
+                globeseries[0][1].push(body['geoplugin_longitude']);
                 globeseries[0][1].push(0.1); //temporary magnitude.
-              }
 
-              globeseries[0][1].push(body['geoplugin_latitude']);
-              globeseries[0][1].push(body['geoplugin_longitude']);
-              globeseries[0][1].push(0.1); //temporary magnitude.
-
-              //glb = new DAT(this.threeRootElement);
-              glb.addData(globeseries[0][1], {
-                format: 'magnitude',
-                name: globeseries[0][0],
+                //glb = new DAT(this.threeRootElement);
+                glb.addData(globeseries[0][1], {
+                  format: 'magnitude',
+                  name: globeseries[0][0],
+                });
+                glb.createPoints();
+                //  Start the animations on the globe
+                initializedWithData = true;
+                //glb.animate();
               });
-              glb.createPoints();
-              //  Start the animations on the globe
-              initializedWithData = true;
-              //glb.animate();
-            });
+            }
           }
         }
       }
@@ -129,34 +132,36 @@ export default class NetworkGlobe extends Component {
         json: true,
       },
       (error, response, body) => {
-        if (response.statusCode === 200) {
-          RPC.PROMISE('getpeerinfo', []).then(payload => {
-            var tmp = {};
-            var ip = {};
-            let maxnodestoadd = payload.length;
-            if (maxnodestoadd > 20) {
-              maxnodestoadd = 20;
-            }
-            for (var i = 0; i < maxnodestoadd; i++) {
-              ip = payload[i].addr;
-              ip = ip.split(':')[0];
-              var tmp = geoiplookup.get(ip);
-              globeseries[0][1].push(tmp.location.latitude);
-              globeseries[0][1].push(tmp.location.longitude);
+        if (response !== undefined) {
+          if (response.statusCode === 200) {
+            RPC.PROMISE('getpeerinfo', []).then(payload => {
+              var tmp = {};
+              var ip = {};
+              let maxnodestoadd = payload.length;
+              if (maxnodestoadd > 20) {
+                maxnodestoadd = 20;
+              }
+              for (var i = 0; i < maxnodestoadd; i++) {
+                ip = payload[i].addr;
+                ip = ip.split(':')[0];
+                var tmp = geoiplookup.get(ip);
+                globeseries[0][1].push(tmp.location.latitude);
+                globeseries[0][1].push(tmp.location.longitude);
+                globeseries[0][1].push(0.1); //temporary magnitude.
+              }
+
+              globeseries[0][1].push(body['geoplugin_latitude']);
+              globeseries[0][1].push(body['geoplugin_longitude']);
               globeseries[0][1].push(0.1); //temporary magnitude.
-            }
 
-            globeseries[0][1].push(body['geoplugin_latitude']);
-            globeseries[0][1].push(body['geoplugin_longitude']);
-            globeseries[0][1].push(0.1); //temporary magnitude.
-
-            glb.removePoints();
-            glb.addData(globeseries[0][1], {
-              format: 'magnitude',
-              name: globeseries[0][0],
+              glb.removePoints();
+              glb.addData(globeseries[0][1], {
+                format: 'magnitude',
+                name: globeseries[0][0],
+              });
+              glb.createPoints();
             });
-            glb.createPoints();
-          });
+          }
         }
       }
     );

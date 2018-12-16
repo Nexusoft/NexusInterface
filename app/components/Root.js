@@ -11,7 +11,6 @@ import localesReducer from 'reducers/intl';
 import { connect, Provider } from 'react-redux';
 
 // Internal Global Dependencies
-import settings from 'api/settings';
 import locale from 'reducers/intl';
 
 // Internal Local Dependencies

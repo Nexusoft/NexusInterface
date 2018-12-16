@@ -18,9 +18,9 @@ describe('Application launch and Daemon Load', function() {
     if (process.platform === 'win32') {
       appPath = 'release/win-unpacked/Nexus.exe';
     } else if (process.platform === 'darwin') {
-      appPath = 'release/mac-unpacked/nexus-tritium-beta';
+      appPath = 'release/mac-unpacked/nexus';
     } else {
-      appPath = 'release/linux-unpacked/nexus-tritium-beta';
+      appPath = 'release/linux-unpacked/nexus';
     }
 
     this.app = new Application({
@@ -28,6 +28,8 @@ describe('Application launch and Daemon Load', function() {
       args: [path.join(__dirname, '..', appPath)],
     });
     appRef = this.app;
+    let fs = require('fs');
+    fs.mkdir('Test-Output', () => {});
     return this.app.start();
   });
 
@@ -49,7 +51,7 @@ describe('Application launch and Daemon Load', function() {
       this.app.browserWindow.capturePage().then(function(imageBuffer) {
         let fs = require('fs');
         fs.writeFile(
-          'Nexus_Fail_Test_' + testTitle + '.png',
+          'Test-Output/Nexus_Fail_Test_' + testTitle + '.png',
           imageBuffer,
           function() {}
         );
@@ -58,8 +60,8 @@ describe('Application launch and Daemon Load', function() {
   });
 
   after(function() {
-    let fs = require('fs');
-    fs.writeFile('Nexus_Fail_Test_Stats.txt', errorOutput, function() {});
+    //let fs = require('fs')
+    //fs.writeFile('Test-Output/Nexus_Fail_Test_Stats.txt', errorOutput, function() {})
     if (this.app && this.app.isRunning()) {
       // return this.app.stop()
     }
@@ -85,7 +87,7 @@ describe('Application launch and Daemon Load', function() {
       .waitUntilWindowLoaded()
       .pause(2000)
       .getTitle()
-      .should.eventually.equal('Nexus Tritium Wallet');
+      .should.eventually.equal('Nexus');
   });
 
   it('Test Close Agreement', function() {
@@ -121,6 +123,46 @@ describe('Application launch and Daemon Load', function() {
 
 describe('Run Page Tests', function() {
   this.timeout(222000000);
+
+  afterEach(function() {
+    if (this.currentTest.state == 'failed') {
+      var testTitle = this.currentTest.title;
+      console.log(this.currentTest);
+      errorOutput.push(this.currentTest.title);
+      errorOutput.push('\n');
+      errorOutput.push(this.currentTest.err);
+      errorOutput.push('\n \n \n');
+      appRef.browserWindow.capturePage().then(function(imageBuffer) {
+        let fs = require('fs');
+        fs.writeFile(
+          'Test-Output/Nexus_Fail_Test_' + testTitle + '.png',
+          imageBuffer,
+          function() {}
+        );
+      });
+    }
+  });
+
+  after(function() {
+    let fs = require('fs');
+    fs.writeFile(
+      'Test-Output/Nexus_Fail_Test_Stats.txt',
+      errorOutput,
+      function() {}
+    );
+  });
+
+  it('Test Disable Bootstrap', function() {
+    return appRef.client
+      .waitUntilWindowLoaded()
+      .pause(5000)
+      .waitUntilTextExists(
+        'h3',
+        'Would you like to reduce the time it takes to sync by downloading a recent version of the database?',
+        20000
+      )
+      .click('button*=No, let it sync form scratch');
+  });
 
   it('Test Go To Send', function() {
     return appRef.client
@@ -221,7 +263,10 @@ describe('Run Page Tests', function() {
       .waitUntilWindowLoaded()
       .pause(1000)
       .click('button*=Backup Wallet')
-      .waitUntilTextExists('span', 'Wallet Backed Up')
+      .pause(500)
+      .click('input[value="Yes"]')
+      .pause(500)
+      .waitUntilTextExists('span', 'Wallet Backed Up', 5000)
       .pause(1000);
   });
 

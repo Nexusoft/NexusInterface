@@ -309,6 +309,8 @@ export default (state = initialState, action) => {
                 return ele;
               }
             }),
+            prototypeAddress: '',
+            prototypeAddressLabel: '',
             editAddressLabel: '',
             save: true,
           };
@@ -343,6 +345,8 @@ export default (state = initialState, action) => {
                 return ele;
               }
             }),
+            prototypeAddress: '',
+            prototypeAddressLabel: '',
             editAddressLabel: '',
             save: true,
           };

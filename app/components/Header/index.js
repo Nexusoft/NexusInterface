@@ -10,6 +10,7 @@ import log from 'electron-log';
 import path from 'path';
 import styled from '@emotion/styled';
 import { FormattedMessage } from 'react-intl';
+import { write } from 'fs';
 
 // Internal Global Dependencies
 import MenuBuilder from 'menu';
@@ -25,6 +26,7 @@ import { colors, consts, timing, animations } from 'styles';
 
 // Internal Local Dependencies
 import NotificationModal from './NotificationModal';
+import ErrorModal from './ErrorModal';
 import BootstrapModal from './BootstrapModal';
 import SignInStatus from './StatusIcons/SignInStatus';
 import StakingStatus from './StatusIcons/StakingStatus';
@@ -108,7 +110,7 @@ class Header extends Component {
     menuBuilder.buildMenu(self);
     this.props.SetGoogleAnalytics(GOOGLE);
 
-    if (tray === null) this.setupTray();
+    if (tray === null) this.setupTray(self);
     let settings = GetSettings();
 
     if (Object.keys(settings).length < 1) {
@@ -119,6 +121,12 @@ class Header extends Component {
       this.props.setSettings(settings);
     }
 
+    mainWindow.on('close', e => {
+      e.preventDefault();
+      this.props.clearOverviewVariables();
+      this.props.OpenModal('Closing Nexus');
+    });
+
     this.props.SetMarketAveData();
     this.props.LoadAddressBook();
     this.props.GetInfoDump();
@@ -128,17 +136,6 @@ class Header extends Component {
       self.props.GetInfoDump();
     }, 20000);
     const core = electron.remote.getGlobal('core');
-    core.on('starting', () => {
-      self.set = setInterval(function() {
-        self.props.AddRPCCall('getInfo');
-        self.props.GetInfoDump();
-      }, 20000);
-    });
-
-    core.on('stopping', () => {
-      clearInterval(self.set);
-      this.props.clearOverviewVariables();
-    });
     this.props.SetMarketAveData();
     self.mktData = setInterval(function() {
       console.log('MARKET');
@@ -287,10 +284,12 @@ class Header extends Component {
     });
   }
 
-  setupTray() {
+  setupTray(self) {
+    console.log(self);
     let trayImage = '';
     let mainWindow = electron.remote.getCurrentWindow();
-
+    console.log(this);
+    const path = require('path');
     const app = electron.app || electron.remote.app;
 
     if (process.env.NODE_ENV === 'development') {
@@ -363,18 +362,9 @@ class Header extends Component {
       },
       {
         label: 'Quit Nexus',
-        click: function() {
-          log.info('header/index.js contextmenu: close and kill');
-          let settings = GetSettings();
-          settings.keepDaemon = false;
-          SaveSettings(settings);
-          if (settings.manualDaemon != true) {
-            RPC.PROMISE('stop', []).then(payload => {
-              setTimeout(() => {
-                mainWindow.close();
-              }, 1000);
-            });
-          }
+        click() {
+          self.props.clearOverviewVariables();
+          self.props.OpenModal('Closing Nexus');
           mainWindow.close();
         },
       },
@@ -409,6 +399,7 @@ class Header extends Component {
         />
 
         <NotificationModal {...this.props} />
+        <ErrorModal {...this.props} />
         <BootstrapModal {...this.props} />
 
         <LogoLink to="/">

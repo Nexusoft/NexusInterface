@@ -9,7 +9,7 @@ Forms
   --input-border-width: 0;
   --input-border-style: solid;
   --input-border-color: var(--color-5);
-  --input-border-radius: 0;
+  --input-border-radius: 3px;
   --input-background-color: var(--color-5);
   --input-color: var(--color-4);
   --input-focus-color: var(--color-1);
@@ -20,9 +20,9 @@ Forms
 /* Element Styles */
 
 fieldset {
-	margin: calc(var(--line-height) * 1em - 1px) 0; /* subtract 1px border */
-	padding: 0 calc(var(--line-height) * 1em);
-	border-color: var(--border-color);
+  margin: calc(var(--line-height) * 1em - 1px) 0; /* subtract 1px border */
+  padding: 0 calc(var(--line-height) * 1em);
+  border-color: var(--border-color);
 }
 
 textarea,
@@ -42,15 +42,15 @@ input[type="text"],
 input[type="time"],
 input[type="url"],
 input[type="week"] {
-	box-sizing: border-box;
-	margin: calc(var(--input-border-width) * -1) 0; /* if there is a border reduce margin so it sits properly on the vertical scale */
-	padding: .125em .5em;
-	border-width: var(--input-border-width);
-	border-style: var(--input-border-style);
-	border-color: var(--input-border-color);
-	border-radius: var(--input-border-radius);
-	background-color: var(--input-background-color);
-	font: inherit;
+  box-sizing: border-box;
+  margin: calc(var(--input-border-width) * -1) 0; /* if there is a border reduce margin so it sits properly on the vertical scale */
+  padding: 0.125em 0.5em;
+  border-width: var(--input-border-width);
+  border-style: var(--input-border-style);
+  border-color: var(--input-border-color);
+  border-radius: var(--input-border-radius);
+  background-color: var(--input-background-color);
+  font: inherit;
   color: var(--input-color);
   -webkit-appearance: none; /* makes select elements behave like regular inputs and respect padding */
 }
@@ -78,17 +78,13 @@ input[type="week"]:focus {
 
 input:invalid,
 textarea:invalid {
-	border-color: var(--input-invalid-border-color);
+  border-color: var(--input-invalid-border-color);
 }
 
 select {
-	/* unlike other form inputs a select doesn't use line-height, we need to add padding to get it there */
-	padding: calc(2px * 1em) 0 calc(1px * 1em) .375em;
+  /* unlike other form inputs a select doesn't use line-height, we need to add padding to get it there */
+  padding: calc(2px * 1em) 0 calc(1px * 1em) 0.375em;
 }
-
-
-
-
 
 .field,
 .block .field,
@@ -180,10 +176,10 @@ form div.field.aligned label {
   opacity: 0;
   background: #444;
   color: #fff;
-  padding: .25em .5em;
-  margin-left: .75em;
+  padding: 0.25em 0.5em;
+  margin-left: 0.75em;
   text-align: center;
-  transition: all .25s linear;
+  transition: all 0.25s linear;
   z-index: 1;
 }
 
@@ -195,14 +191,14 @@ form div.field.aligned label {
   opacity: 0;
   width: 0;
   height: 0;
-  margin-top: -.5em;
-  border-width: .5em;
+  margin-top: -0.5em;
+  border-width: 0.5em;
   border-style: solid;
   border-color: #444;
   border-top-color: transparent;
   border-left-color: transparent;
   border-bottom-color: transparent;
-  transition: all .25s linear;
+  transition: all 0.25s linear;
 }
 
 *:invalid + .hint {
@@ -226,7 +222,7 @@ form div.field.aligned label {
 .hint {
   top: auto;
   margin: 0;
-  margin-left: .75em;
+  margin-left: 0.75em;
 }
 
 .hint:before {

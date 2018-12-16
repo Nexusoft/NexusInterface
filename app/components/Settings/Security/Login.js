@@ -33,6 +33,12 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
+  OpenErrorModal: type => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  },
+  CloseErrorModal: type => {
+    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  },
 });
 
 class Login extends Component {
@@ -83,14 +89,14 @@ class Login extends Component {
           pass.value = '';
           if (e === 'Error: The wallet passphrase entered was incorrect.') {
             this.props.busy(false);
-            this.props.OpenModal('Incorrect Passsword');
+            this.props.OpenErrorModal('Incorrect Passsword');
             pass.focus();
           } else if (e === 'value is type null, expected int') {
             this.props.busy(false);
             this.props.OpenModal('FutureDate');
             pass.focus();
           } else {
-            this.props.OpenModal(e);
+            this.props.OpenErrorModal(e);
           }
         });
     } else {
@@ -112,14 +118,14 @@ class Login extends Component {
             pass.value = '';
             if (e === 'Error: The wallet passphrase entered was incorrect.') {
               this.props.busy(false);
-              this.props.OpenModal('Incorrect Passsword');
+              this.props.OpenErrorModal('Incorrect Passsword');
               pass.focus();
             } else if (e === 'value is type null, expected int') {
               this.props.busy(false);
               this.props.OpenModal('FutureDate');
               pass.focus();
             } else {
-              this.props.OpenModal(e);
+              this.props.OpenErrorModal(e);
             }
           });
       } else {

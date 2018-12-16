@@ -202,7 +202,11 @@ export const PROMISE = (cmd, args) => {
 
     ResponseObject.onerror = function(e) {
       e.preventDefault();
-      reject(ResponseObject.responseText);
+      if (ResponseObject.status == 401) {
+        reject(401);
+      } else {
+        reject(ResponseObject.responseText);
+      }
     };
 
     ResponseObject.send(PostData);

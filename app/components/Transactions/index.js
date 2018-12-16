@@ -88,6 +88,9 @@ const mapDispatchToProps = dispatch => ({
   UpdateFeeOnTransaction: returnData => {
     dispatch({ type: TYPE.UPDATE_FEEVALUE, payload: returnData });
   },
+  UpdateFilteredTransaction: returnData => {
+    dispatch({ type: TYPE.UPDATE_FILTERED_TRANSACTIONS, payload: returnData });
+  },
 });
 
 class Transactions extends Component {
@@ -122,6 +125,7 @@ class Transactions extends Component {
       ],
       tableColumns: [],
       displayTimeFrame: 'All',
+      changeTimeFrame: false,
       amountFilter: 0,
       categoryFilter: 'all',
       addressFilter: '',
@@ -254,6 +258,7 @@ class Transactions extends Component {
 
   // The callback for the on Mount State
   setOnmountTransactionsCallback(incomingData) {
+    this.updateChartAndTableDimensions(null);
     let objectheaders = Object.keys(this.state.walletTransactions[0]);
     let tabelheaders = [];
     objectheaders.forEach(element => {
@@ -330,10 +335,13 @@ class Transactions extends Component {
   // Updates the height and width of the chart and table when you resize the window
   updateChartAndTableDimensions(event) {
     let chart = document.getElementById('transactions-chart');
+    if (chart === undefined || chart === null) {
+      return;
+    }
     let filters = document.getElementById('transactions-filters');
     let details = document.getElementById('transactions-details');
-    if (chart) {
-      let parent = chart.parentNode;
+    let parent = chart.parentNode;
+    if (chart !== null) {
       let parentHeight =
         parseInt(parent.clientHeight) -
         parseInt(
@@ -363,7 +371,7 @@ class Transactions extends Component {
       let mainHeight = 150; // fixed height, should match CSS
       let miniHeight = 50 - 8; // right now this is disabled, if re-enabled this needs to be set properly
       this.setState({
-        mainChartWidth: chart.clientWidth,
+        mainChartWidth: parent.clientWidth,
         miniChartWidth: chart.clientWidth,
         mainChartHeight: mainHeight,
         miniChartHeight: miniHeight,
@@ -632,6 +640,7 @@ class Transactions extends Component {
   transactionTimeframeChange(event) {
     this.setState({
       displayTimeFrame: event.target.options[event.target.selectedIndex].value,
+      changeTimeFrame: true,
     });
   }
 
@@ -819,6 +828,18 @@ class Transactions extends Component {
         todaydate.getDate()
       );
     } else {
+      if (this.state.changeTimeFrame) {
+        this.handleZoom({
+          x: [
+            new Date(inTransactions[0].time * 1000),
+            new Date(inTransactions[inTransactions.length - 1].time * 1000),
+          ],
+          y: [0, 1],
+        });
+        this.setState({
+          changeTimeFrame: false,
+        });
+      }
       return inTransactions;
     }
     todaydate = Math.round(todaydate.getTime() / 1000);
@@ -834,6 +855,16 @@ class Transactions extends Component {
       if (element.time >= pastdate && element.time <= todaydate) {
         tempTrans.push(element);
       }
+    }
+
+    if (this.state.changeTimeFrame) {
+      this.handleZoom({
+        x: [new Date(pastdate * 1000), new Date()],
+        y: [0, 1],
+      });
+      this.setState({
+        changeTimeFrame: false,
+      });
     }
 
     return tempTrans;
@@ -946,7 +977,6 @@ class Transactions extends Component {
   returnTableColumns() {
     var options = {
       month: 'short',
-      weekday: 'short',
       year: 'numeric',
       day: 'numeric',
       hour: 'numeric',
@@ -977,7 +1007,7 @@ class Transactions extends Component {
         </div>
       ), // We want to display the time in  a readable format
       accessor: 'time',
-      maxWidth: 200,
+      maxWidth: 220,
     });
 
     tempColumns.push({
@@ -1011,7 +1041,7 @@ class Transactions extends Component {
       ),
       accessor: 'category',
 
-      maxWidth: 100,
+      maxWidth: 80,
     });
 
     tempColumns.push({
@@ -1112,12 +1142,6 @@ class Transactions extends Component {
     domain.x[0] = new Date(domain.x[0]);
     domain.x[1] = new Date(domain.x[1]);
 
-    if (
-      domain.x[1].getTime() >
-      this.props.walletitems[this.props.walletitems.length - 1]
-    ) {
-      //console.log("IM OUT");
-    }
     let high = 0;
     let low = 0;
     this.props.walletitems.forEach(element => {
@@ -1134,12 +1158,9 @@ class Transactions extends Component {
         }
       }
     });
-    domain.y[0] = low === 0 ? -0.001 : low;
-
+    high = high == 0 ? 1 : high;
     domain.y[0] = -high;
-    domain.y[1] = high === 0 ? 0.00001 : high;
-    //console.log(this.state);
-    //console.log(domain);
+    domain.y[1] = high;
     this.setState({ zoomDomain: domain });
   }
 
@@ -1504,8 +1525,10 @@ class Transactions extends Component {
     if (this.props)
       if (this.props.myAccounts[0]) {
         let tempMyAccounts = this.props.myAccounts.slice();
-        tempMyAccounts.unshift({ account: 'All' });
-        //console.log(tempAAAA);
+        tempMyAccounts.unshift({
+          account: this.props.messages['transactions.AllAccounts'],
+        });
+        // console.log(tempAAAA)
         return tempMyAccounts.map((e, i) => {
           return (
             <option key={'account_select_' + e.account} value={i}>
@@ -1523,6 +1546,7 @@ class Transactions extends Component {
   }
 
   returnVictoryChart() {
+    const chartData = this.returnChartData();
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
     return (
       <VictoryChart
@@ -1572,7 +1596,7 @@ class Transactions extends Component {
             />
           }
           labels={d => this.returnToolTipLable(d)}
-          data={this.returnChartData()}
+          data={chartData}
           x="a"
           y="b"
         />
@@ -1659,11 +1683,11 @@ class Transactions extends Component {
             </h2>
           ) : (
             <div>
-              Account Select:
               <select
                 id="select"
                 value={this.props.selectedAccount}
                 onChange={e => this.selectAccount(e.target.value)}
+                style={{ marginBottom: '5' }}
               >
                 {this.accountChanger()}
               </select>{' '}

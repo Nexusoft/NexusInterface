@@ -159,7 +159,7 @@ configuration.GetAppDataDirectory = function() {
 configuration.GetAppResourceDir = function() {
   const electron = require('electron');
   const path = require('path');
-  const app = electron.app || electron.remote.app;
+  const app = electron.app != undefined ? electron.app : electron.remote.app;
   let rawPath = '';
   if (process.platform === 'darwin') {
     rawPath = path.dirname(app.getPath('exe')) + '/../Resources/app/';
@@ -190,11 +190,7 @@ configuration.GetBootstrapSize = async function() {
   return promise;
 };
 
-configuration.BootstrapRecentDatabase = async function({
-  OpenModal,
-  CloseModal,
-  setPercentDownloaded,
-}) {
+configuration.BootstrapRecentDatabase = async function(self) {
   const RPC = require('scripts/rpc');
   const fs = require('fs');
   const path = require('path');
@@ -217,6 +213,9 @@ configuration.BootstrapRecentDatabase = async function({
     BackupDir = process.env.USERPROFILE + '/NexusBackups';
     BackupDir = BackupDir.replace(/\\/g, '/');
   }
+  if (self.props.settings.Folder !== BackupDir) {
+    BackupDir = self.props.settings.Folder;
+  }
 
   let ifBackupDirExists = fs.existsSync(BackupDir);
   if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
@@ -225,13 +224,113 @@ configuration.BootstrapRecentDatabase = async function({
   RPC.PROMISE('backupwallet', [
     BackupDir + '/NexusBackup_' + now + '.dat',
   ]).then(() => {
-    RPC.PROMISE('stop', []).then(payload => {
-      OpenModal('Wallet Backup');
-      electron.remote.getGlobal('core').stop();
-      setTimeout(() => {
-        CloseModal();
-      }, 3000);
+    self.props.OpenModal('Wallet Backup');
+    electron.remote
+      .getGlobal('core')
+      .stop()
+      .then(() => {
+        setTimeout(() => {
+          self.props.CloseModal();
+        }, 3000);
 
+        let tarGzLocation = path.join(
+          this.GetAppDataDirectory(),
+          'recent.tar.gz'
+        );
+        if (fs.existsSync(tarGzLocation)) {
+          fs.unlink(tarGzLocation, err => {
+            if (err) throw err;
+            console.log('recent.tar.gz was deleted');
+          });
+        }
+
+        let datadir = '';
+
+        if (process.platform === 'win32') {
+          datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
+        } else if (process.platform === 'darwin') {
+          datadir = process.env.HOME + '/Nexus_Tritium_Data';
+        } else {
+          datadir = process.env.HOME + '/.Nexus_Tritium_Data';
+        }
+
+        const url =
+          'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
+        tarball.extractTarballDownload(
+          url,
+          tarGzLocation,
+          datadir,
+          {},
+          function(err, result) {
+            fs.stat(
+              path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
+              (stat, things) => console.log(stat, things)
+            );
+            try {
+              let recentContents = fs.readdirSync(path.join(datadir, 'recent'));
+
+              for (let i = 0; i < recentContents.length; i++) {
+                const element = recentContents[i];
+                if (
+                  fs
+                    .statSync(path.join(datadir, 'recent', element))
+                    .isDirectory()
+                ) {
+                  let newcontents = fs.readdirSync(
+                    path.join(datadir, 'recent', element)
+                  );
+
+                  for (let i = 0; i < newcontents.length; i++) {
+                    const deeperEle = newcontents[i];
+                    moveFile.sync(
+                      path.join(datadir, 'recent', element, deeperEle),
+                      path.join(datadir, element, deeperEle)
+                    );
+                  }
+                } else {
+                  moveFile.sync(
+                    path.join(datadir, 'recent', element),
+                    path.join(datadir, element)
+                  );
+                }
+              }
+            } catch (error) {
+              console.log('Direct bootstrap');
+            }
+            if (err) {
+              self.props.OpenModal(result.error);
+              setTimeout(() => {
+                self.props.CloseModal();
+              }, 3000);
+            }
+            console.log(err, result);
+            electron.remote.getGlobal('core').start();
+          }
+        );
+      })
+      .catch(e => {
+        self.props.OpenModal(e);
+        setTimeout(() => {
+          self.props.CloseModal();
+        }, 3000);
+      });
+
+    let percentChecker = setInterval(() => {
+      fs.stat(
+        path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
+        (err, stats) => {
+          console.log((stats.size / totalDownloadSize) * 100);
+          self.props.setPercentDownloaded(
+            (stats.size / totalDownloadSize) * 100
+          );
+        }
+      );
+    }, 3000);
+    electron.remote.getGlobal('core').on('starting', () => {
+      self.CloseBootstrapModalAndSaveSettings();
+      clearInterval(percentChecker);
+      self.props.setPercentDownloaded(0);
+      self.CloseBootstrapModalAndSaveSettings();
       let tarGzLocation = path.join(
         this.GetAppDataDirectory(),
         'recent.tar.gz'
@@ -242,80 +341,6 @@ configuration.BootstrapRecentDatabase = async function({
           console.log('recent.tar.gz was deleted');
         });
       }
-
-      let datadir = '';
-
-      if (process.platform === 'win32') {
-        datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
-      } else if (process.platform === 'darwin') {
-        datadir = process.env.HOME + '/Nexus_Tritium_Data';
-      } else {
-        datadir = process.env.HOME + '/.Nexus_Tritium_Data';
-      }
-
-      const url = 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
-      tarball.extractTarballDownload(url, tarGzLocation, datadir, {}, function(
-        err,
-        result
-      ) {
-        fs.stat(
-          path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
-          (stat, things) => console.log(stat, things)
-        );
-        try {
-          let recentContents = fs.readdirSync(path.join(datadir, 'recent'));
-
-          for (let i = 0; i < recentContents.length; i++) {
-            const element = recentContents[i];
-            if (
-              fs.statSync(path.join(datadir, 'recent', element)).isDirectory()
-            ) {
-              let newcontents = fs.readdirSync(
-                path.join(datadir, 'recent', element)
-              );
-
-              for (let i = 0; i < newcontents.length; i++) {
-                const deeperEle = newcontents[i];
-                moveFile.sync(
-                  path.join(datadir, 'recent', element, deeperEle),
-                  path.join(datadir, element, deeperEle)
-                );
-              }
-            } else {
-              moveFile.sync(
-                path.join(datadir, 'recent', element),
-                path.join(datadir, element)
-              );
-            }
-          }
-        } catch (error) {
-          console.log('Direct bootstrap');
-        }
-        if (err) {
-          OpenModal(result.error);
-          setTimeout(() => {
-            CloseModal();
-          }, 3000);
-        }
-        console.log(err, result);
-        electron.remote.getGlobal('core').start();
-      });
-    });
-
-    let percentChecker = setInterval(() => {
-      fs.stat(
-        path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
-        (err, stats) => {
-          console.log((stats.size / totalDownloadSize) * 100);
-          setPercentDownloaded((stats.size / totalDownloadSize) * 100);
-        }
-      );
-    }, 5000);
-    electron.remote.getGlobal('core').on('starting', () => {
-      self.CloseBootstrapModalAndSaveSettings();
-      clearInterval(percentChecker);
-      setPercentDownloaded(0);
-      self.CloseBootstrapModalAndSaveSettings();
     });
   });
 };
