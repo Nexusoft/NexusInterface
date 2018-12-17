@@ -119,7 +119,7 @@ class Settings extends Component {
               link={`${match.url}/${
                 encrypted !== true ? 'Unencrypted' : 'Security'
               }`}
-              isActive={(match, location) =>
+              isActive={(m, location) =>
                 [
                   `${match.url}/Security`,
                   `${match.url}/Login`,
