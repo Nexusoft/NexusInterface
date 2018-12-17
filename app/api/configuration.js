@@ -294,7 +294,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
               console.log('Direct bootstrap');
             }
             if (err) {
-              self.props.OpenModal(result.error);
+              self.props.OpenErrorModal(result.error);
             }
             console.log(err, result);
             electron.remote.getGlobal('core').start();
@@ -302,7 +302,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
         );
       })
       .catch(e => {
-        self.props.OpenModal(e);
+        self.props.OpenErrorModal(e);
       });
 
     let percentChecker = setInterval(() => {

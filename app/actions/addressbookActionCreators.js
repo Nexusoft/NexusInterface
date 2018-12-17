@@ -267,7 +267,7 @@ export const AddContact = (name, address, num, notes, TZ) => {
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
       })
       .catch(e => {
-        dispatch({ type: TYPE.SHOW_MODAL, payload: 'Invalid Address' });
+        dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: 'Invalid Address' });
       });
   };
 };
@@ -310,7 +310,7 @@ export const AddAddress = (name, address, index) => {
       .catch(e => {
         dispatch({ type: TYPE.CLEAR_PROTOTYPE });
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
-        dispatch({ type: TYPE.SHOW_MODAL, payload: 'Invalid Address' });
+        dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: 'Invalid Address' });
       });
   };
 };

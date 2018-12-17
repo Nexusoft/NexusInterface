@@ -663,7 +663,7 @@ class AddressBook extends Component {
           this.loadMyAccounts();
         })
         .catch(e => {
-          alert(e);
+          this.props.OpenErrorModal(e);
         });
     }
   }
