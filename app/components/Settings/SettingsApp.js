@@ -24,6 +24,9 @@ import ContextMenuBuilder from 'contextmenu';
 import plusimg from 'images/plus.svg';
 import * as FlagFile from 'languages/LanguageFlags';
 import { remote as dialog } from 'electron';
+import SettingsField from 'components/common/SettingsField';
+import Button from 'components/common/Button';
+import TextBox from 'components/common/TextBox';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -93,120 +96,30 @@ var currentBackupLocation = ''; //Might redo to use redux but this is only used 
 
 class SettingsApp extends Component {
   // React Method (Life cycle hook)
-  componentDidMount() {
-    var settings = GetSettings();
-    // this.setDefaultUnitAmount(settings);
-    //Application settings
-    // this.setAutostart(settings)
-    this.setMinimizeToTray(settings);
-    this.setGoogleAnalytics(settings);
-    this.setDeveloperMode(settings);
-    this.setInfoPopup(settings);
-    this.setMinimumConfirmations(settings);
-    this.setSavedTxFee(settings);
+  constructor(props) {
+    super(props);
+    // Set initial settings
+    // This is a temporary fix for the current setting state mechanism
+    // Ideally this should be managed via Redux states & actions
+    const settings = GetSettings();
+    this.initialValues = {
+      minimizeToTray: !!settings.minimizeToTray,
+      googlesetting: !!settings.googlesetting,
+      devmode: !!settings.devmode,
+      minConf: settings.minConf !== undefined ? settings.minConf : 3,
+      txFee: props.paytxfee,
+    };
+  }
 
+  componentDidMount() {
     if (this.refs.backupInputField) {
       this.refs.backupInputField.webkitdirectory = true;
       this.refs.backupInputField.directory = true;
     }
-
-    var minConf = document.getElementById('minimumConfirmations');
-    minConf.addEventListener('keypress', event => {
-      event.preventDefault();
-    });
-    //this.OnFiatCurrencyChange = this.OnFiatCurrencyChange.bind(this);
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
     this.props.setSettings(GetSettings());
-    var minConf = document.getElementById('minimumConfirmations');
-    minConf.removeEventListener('keypress', event => {
-      event.preventDefault();
-    });
-  }
-
-  // Class Methods
-  setAutostart(settings) {
-    var autostart = document.getElementById('autostart');
-
-    if (settings.autostart === undefined) {
-      autostart.checked = false;
-    }
-    if (settings.autostart == true) {
-      autostart.checked = true;
-    }
-    if (settings.autostart == false) {
-      autostart.checked = false;
-    }
-  }
-
-  setMinimizeToTray(settings) {
-    var minimizeToTray = document.getElementById('minimizeToTray');
-
-    if (settings.minimizeToTray === undefined) {
-      minimizeToTray.checked = false;
-    }
-    if (settings.minimizeToTray == true) {
-      minimizeToTray.checked = true;
-    }
-    if (settings.minimizeToTray == false) {
-      minimizeToTray.checked = false;
-    }
-  }
-
-  setGoogleAnalytics(settings) {
-    var googlesetting = document.getElementById('googleAnalytics');
-
-    if (settings.googleAnalytics === undefined) {
-      googlesetting.checked = true;
-    }
-    if (settings.googleAnalytics == true) {
-      googlesetting.checked = true;
-    }
-    if (settings.googleAnalytics == false) {
-      googlesetting.checked = false;
-    }
-  }
-  // TODO: Finish this method.
-  // setDefaultUnitAmount(settings) {
-  //   var defaultUnitAmount = document.getElementById("defaultUnitAmount");
-
-  //   if (settings.defaultUnitAmount === undefined) {
-  //     defaultUnitAmount.value = "NXS";
-  //   } else {
-  //     defaultUnitAmount.value = settings.defaultUnitAmount;
-  //   }
-  // }
-
-  setDeveloperMode(settings) {
-    var devmode = document.getElementById('devmode');
-
-    if (settings.devMode == true) {
-      devmode.checked = true;
-    }
-  }
-
-  setMinimumConfirmations(settings) {
-    var minConf = document.getElementById('minimumConfirmations');
-
-    if (settings.minimumconfirmations !== undefined) {
-      minConf.value = settings.minimumconfirmations;
-    } else {
-      minConf.value = 3; //Default
-    }
-  }
-
-  setInfoPopup(settings) {
-    var infopop = document.getElementById('infoPopUps');
-
-    if (infopop && (settings.infopopups == true || settings.infopopups)) {
-      infopop.checked = true;
-    }
-  }
-
-  setSavedTxFee(settings) {
-    let settxobj = document.getElementById('optionalTransactionFee');
-    settxobj.value = this.props.paytxfee;
   }
 
   updateBackupLocation(event) {
@@ -547,7 +460,8 @@ class SettingsApp extends Component {
             </div>
           </div>
         </Modal>
-        <form className="aligned">
+
+        <form>
           {/* <div className="field">
             <label htmlFor="autostart">
               <FormattedMessage
@@ -565,91 +479,93 @@ class SettingsApp extends Component {
                   type="checkbox"
                   className="switch"
                   onChange={this.updateAutoStart}
-                  data-tooltip={tt}
+                  
                 />
               )}
             </FormattedMessage>
           </div> */}
-          <div className="field">
-            <label htmlFor="devmode">
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.DeveloperMode"
                 defaultMessage="Developer Mode"
               />
-            </label>
-            <FormattedMessage
-              id="ToolTip.DevMode"
-              defaultMessage="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
-            >
-              {tt => (
-                <input
-                  id="devmode"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateDeveloperMode}
-                  data-tooltip={tt}
-                />
-              )}
-            </FormattedMessage>
-          </div>
+            }
+            tooltip={
+              <FormattedMessage
+                id="ToolTip.DevMode"
+                defaultMessage="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
+              />
+            }
+          >
+            <input
+              type="checkbox"
+              defaultChecked={this.initialValues.devmode}
+              className="switch"
+              onChange={this.updateDeveloperMode}
+            />
+          </SettingsField>
 
-          <div className="field">
-            <label htmlFor="minimizeToTray">
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.MinimizeClose"
                 defaultMessage="Minimize On Close"
               />
-            </label>
-            <FormattedMessage
-              id="ToolTip.MinimizeOnClose"
-              defaultMessage="Minimize the wallet when closing the window instead of closing it"
-            >
-              {tt => (
-                <input
-                  id="minimizeToTray"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateMinimizeToTray}
-                  data-tooltip={tt}
-                />
-              )}
-            </FormattedMessage>
-          </div>
+            }
+            tooltip={
+              <FormattedMessage
+                id="ToolTip.MinimizeOnClose"
+                defaultMessage="Minimize the wallet when closing the window instead of closing it"
+              />
+            }
+          >
+            <input
+              type="checkbox"
+              defaultChecked={this.initialValues.minimizeToTray}
+              className="switch"
+              onChange={this.updateMinimizeToTray}
+            />
+          </SettingsField>
 
-          <div className="field">
-            <label htmlFor="googleAnalytics">
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.UsageData"
                 defaultMessage="Send anonymous usage data"
               />
-            </label>
-            <FormattedMessage
-              id="ToolTip.Usage"
-              defaultMessage="Send anonymous usage data to allow the Nexus developers to improve the wallet"
-            >
-              {tt => (
-                <input
-                  id="googleAnalytics"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateGoogleAnalytics.bind(this)}
-                  data-tooltip={tt}
-                />
-              )}
-            </FormattedMessage>
-          </div>
+            }
+            tooltip={
+              <FormattedMessage
+                id="ToolTip.Usage"
+                defaultMessage="Send anonymous usage data to allow the Nexus developers to improve the wallet"
+              />
+            }
+          >
+            <input
+              type="checkbox"
+              defaultChecked={this.initialValues.googlesettings}
+              className="switch"
+              onChange={this.updateGoogleAnalytics.bind(this)}
+            />
+          </SettingsField>
 
-          <div className="field">
-            <label htmlFor="fiatDefualt">
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.Fiat"
                 defaultMessage="Fiat Currency"
               />
-            </label>
+            }
+          >
             <select
-              id="fiatSelector"
               value={this.props.settings.fiatCurrency}
               onChange={e => this.OnFiatCurrencyChange(e)}
+              style={{ maxWidth: 260 }}
             >
               <option key="AUD" value="AUD">
                 Australian Dollar
@@ -724,111 +640,91 @@ class SettingsApp extends Component {
                 United States Dollar
               </option>
             </select>
-          </div>
+          </SettingsField>
 
-          <div className="field">
-            <label htmlFor="minimumConfirmationsLable">
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.MinimumConfirmations"
                 defaultMessage="Minimum Confirmations"
               />
-            </label>
-            <FormattedMessage
-              id="ToolTip.MinimumConfirmations"
-              defaultMessage="Minimum amount of confirmations before a block is accepted. Local Only."
-            >
-              {tt => (
-                <input
-                  id="minimumConfirmations"
-                  type="number"
-                  size="3"
-                  step="1"
-                  min="1"
-                  onChange={this.updateMinimumConfirmations.bind(this)}
-                  data-tooltip={tt}
-                />
-              )}
-            </FormattedMessage>
-          </div>
+            }
+            tooltip={
+              <FormattedMessage
+                id="ToolTip.MinimumConfirmations"
+                defaultMessage="Minimum amount of confirmations before a block is accepted. Local Only."
+              />
+            }
+          >
+            <input
+              type="number"
+              defaultValue={this.initialValues.minConf}
+              size="3"
+              step="1"
+              min="1"
+              onChange={this.updateMinimumConfirmations.bind(this)}
+              onKeyPress={e => {
+                e.preventDefault();
+              }}
+            />
+          </SettingsField>
+
           {/*File */}
-          <div className="field">
-            <label htmlFor="Folder">
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.Folder"
                 defaultMessage="Backup Directory"
               />
-            </label>
-            <div className="fee">
-              <input
-                className="Folder"
-                type="text"
-                value={this.props.settings.Folder}
-                onChange={e => this.props.SeeFolder(e.target.value)}
-                onClick={e => {
-                  e.preventDefault();
-                  this.getFolder(this.props.settings.Folder[0]);
-                }}
-              />
-
-              {/* <button
-                  className="feebutton"
-                  onClick={e => {
-                    e.preventDefault();
-                    this.getFolder(this.props.settings.Folder[0]);
-                  }}
-                >
-                  ...
-                </button> */}
-            </div>
-          </div>
+            }
+          >
+            <input
+              className="Folder"
+              type="text"
+              value={this.props.settings.Folder}
+              onChange={e => this.props.SeeFolder(e.target.value)}
+              onClick={e => {
+                e.preventDefault();
+                this.getFolder(this.props.settings.Folder[0]);
+              }}
+            />
+          </SettingsField>
 
           {/* NEXUS FEE */}
-          <div className="field">
-            <label htmlFor="optionalTransactionFee">
+          <SettingsField
+            label={
               <FormattedMessage
                 id="Settings.OptionalFee"
                 defaultMessage="Optional transaction fee (NXS)"
               />
-            </label>
-            <div className="fee">
+            }
+            tooltip={
               <FormattedMessage
                 id="ToolTip.OptionalFee"
                 defaultMessage="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"
-              >
-                {tt => (
-                  <input
-                    className="Txfee"
-                    id="optionalTransactionFee"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
+              />
+            }
+          >
+            <div className="fee">
+              <input
+                className="Txfee"
+                defaultValue={this.initialValues.txFee}
+                type="number"
+                step="0.01"
+                min="0"
+              />{' '}
               <button
                 className="feebutton"
-                onClick={e => {
-                  e.preventDefault();
-                  this.props.OpenModal2();
-                }}
+                type="button"
+                onClick={this.props.OpenModal2}
               >
                 Set
               </button>
             </div>
-          </div>
-          {/* <div className="field">
-            <label htmlFor="defaultUnitAmount">Default unit amount</label>
-            <select
-              id="defaultUnitAmount"
-              onChange={this.updateDefaultUnitAmount}
-              data-tooltip="Default unit amount to display throughout the wallet"
-            >
-              <option value="NXS">NXS</option>
-              <option value="mNXS">mNXS</option>
-              <option value="uNXS">uNXS</option>
-            </select>
-          </div> */}
+          </SettingsField>
+
           <Modal
             center
             classNames={{ modal: 'custom-modal5' }}
@@ -1018,13 +914,14 @@ class SettingsApp extends Component {
             </button> */}
             </div>
           </Modal>
-          <div className="field">
-            <label>
+          <SettingsField
+            label={
               <FormattedMessage
                 id="Settings.Language"
                 defaultMesage="Language"
               />
-            </label>
+            }
+          >
             <div className="langSet">
               <span className="flag-icon-background flag-icon-gr" />
               <button
@@ -1039,7 +936,7 @@ class SettingsApp extends Component {
                 />
               </button>
             </div>
-          </div>
+          </SettingsField>
 
           {/* <div className="field">
             <label htmlFor="devmode">
@@ -1058,7 +955,7 @@ class SettingsApp extends Component {
                   type="checkbox"
                   className="switch"
                   onChange={this.updateDeveloperMode}
-                  data-tooltip={tt}
+                  
                 />
               )}
             </FormattedMessage>
@@ -1080,22 +977,20 @@ class SettingsApp extends Component {
               Save
             </button>
           </div> */}
-          <div>
-            <button
-              className="button primary"
-              disabled={!this.props.connections}
-              onClick={e => {
-                e.preventDefault();
-                this.props.OpenModal4();
-              }}
-            >
-              <FormattedMessage
-                id="Settings.BackupWallet"
-                defaultMessage="Backup Wallet"
-              />
-            </button>
-          </div>
-          <div className="clear-both" />
+          <Button
+            primary
+            disabled={!this.props.connections}
+            style={{ marginTop: '1em' }}
+            onClick={e => {
+              e.preventDefault();
+              this.props.OpenModal4();
+            }}
+          >
+            <FormattedMessage
+              id="Settings.BackupWallet"
+              defaultMessage="Backup Wallet"
+            />
+          </Button>
         </form>
       </section>
     );

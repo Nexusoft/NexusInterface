@@ -65,9 +65,7 @@ function syncStatusTooltip({
 const SyncStatus = props => (
   <div className="icon">
     {statusIcon(props)}
-    <div className="tooltip bottom">
-      <div>{syncStatusTooltip(props)}</div>
-    </div>
+    <div className="tooltip bottom">{syncStatusTooltip(props)}</div>
   </div>
 );
 

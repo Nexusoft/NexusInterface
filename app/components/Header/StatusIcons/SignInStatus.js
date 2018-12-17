@@ -94,9 +94,7 @@ function signInStatusMessage({
 const SignInStatus = props => (
   <div className="icon">
     {statusIcon(props)}
-    <div className="tooltip bottom">
-      <div>{signInStatusMessage(props)}</div>
-    </div>
+    <div className="tooltip bottom">{signInStatusMessage(props)}</div>
   </div>
 );
 
