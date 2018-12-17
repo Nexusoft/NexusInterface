@@ -152,13 +152,25 @@ const Stats = styled.div(
     }
 );
 
-const Stat = styled.div({
-  margin: '1.7em 0',
-  display: 'flex',
-  alignItems: 'center',
-  textShadow: `0 0 8px rgba(0,0,0,.7)`,
-  color: colors.light,
-});
+const Stat = styled.div(
+  {
+    display: 'block',
+    margin: '1.7em 0',
+    display: 'flex',
+    alignItems: 'center',
+    textShadow: `0 0 8px rgba(0,0,0,.7)`,
+    color: colors.light,
+  },
+  ({ to }) =>
+    to && {
+      cursor: 'pointer',
+      transitionProperty: 'filter',
+      transitionDuration: timing.normal,
+      '&:hover': {
+        filter: 'brightness(120%)',
+      },
+    }
+);
 
 const StatLabel = styled.div({
   fontWeight: 'bold',
@@ -174,6 +186,7 @@ const StatIcon = styled(Icon)({
   width: 38,
   height: 38,
   color: colors.primary,
+  filter: 'drop-shadow(0 0 8px rgba(0,0,0,.7))',
 });
 
 const MaxmindCopyright = styled.div({
@@ -668,7 +681,10 @@ class Overview extends Component {
         )}
 
         <Stats left>
-          <Stat>
+          <Stat
+            as={connections ? Link : undefined}
+            to={!!connections && '/Transactions'}
+          >
             <div>
               <StatLabel>
                 {stake > 0 ? (
@@ -692,7 +708,10 @@ class Overview extends Component {
             <StatIcon icon={nxsStakeIcon} />
           </Stat>
 
-          <Stat>
+          <Stat
+            as={connections ? Link : undefined}
+            to={!!connections && '/Transactions'}
+          >
             <div>
               <StatLabel>
                 <FormattedMessage
@@ -712,7 +731,10 @@ class Overview extends Component {
             <StatIcon icon={usdIcon} />
           </Stat>
 
-          <Stat>
+          <Stat
+            as={connections ? Link : undefined}
+            to={!!connections && '/Transactions'}
+          >
             <div>
               <StatLabel>
                 <FormattedMessage
@@ -731,7 +753,10 @@ class Overview extends Component {
             <StatIcon icon={transactionIcon} />
           </Stat>
 
-          <Stat>
+          <Stat
+            as={connections ? Link : undefined}
+            to={!!connections && '/Market'}
+          >
             <div>
               <StatLabel>
                 <FormattedMessage
@@ -751,7 +776,10 @@ class Overview extends Component {
             <StatIcon icon={chartIcon} />
           </Stat>
 
-          <Stat>
+          <Stat
+            as={connections ? Link : undefined}
+            to={!!connections && '/Market'}
+          >
             <div>
               <StatLabel>
                 <FormattedMessage
@@ -771,7 +799,10 @@ class Overview extends Component {
             <StatIcon icon={supplyIcon} />
           </Stat>
 
-          <Stat>
+          <Stat
+            as={connections ? Link : undefined}
+            to={!!connections && '/Market'}
+          >
             <div>
               <StatLabel>
                 <FormattedMessage
