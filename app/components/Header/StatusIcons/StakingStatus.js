@@ -2,8 +2,9 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-// Internal Global Dependencies
-import Icon from 'components/common/Icon';
+// Internal Dependencies
+import { StatusIcon, StatusIconWrapper, StatusIconTooltip } from './components';
+
 import stakingIcon from 'images/staking.sprite.svg';
 
 const StakingStatus = ({
@@ -12,12 +13,12 @@ const StakingStatus = ({
   trustweight,
   blockweight,
 }) => (
-  <div className="icon">
-    <Icon icon={stakingIcon} />
+  <StatusIconWrapper>
+    <StatusIcon icon={stakingIcon} />
 
-    <div
+    <StatusIconTooltip
       className="tooltip bottom"
-      style={{ left: 'auto', transform: 'none', right: 0 }}
+      style={{ left: 'auto', transform: 'none', right: -20 }}
     >
       <div>
         <FormattedMessage
@@ -47,8 +48,8 @@ const StakingStatus = ({
         />
         : {blockweight}
       </div>
-    </div>
-  </div>
+    </StatusIconTooltip>
+  </StatusIconWrapper>
 );
 
 export default StakingStatus;

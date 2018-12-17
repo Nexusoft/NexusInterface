@@ -5,8 +5,8 @@ import styled from '@emotion/styled';
 import { jsx } from '@emotion/core';
 import { FormattedMessage } from 'react-intl';
 
-// Internal Global Dependencies
-import Icon from 'components/common/Icon';
+// Internal Dependencies
+import { StatusIcon, StatusIconWrapper, StatusIconTooltip } from './components';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';
@@ -15,14 +15,14 @@ import unlockedIcon from 'images/padlock-open.sprite.svg';
 
 function statusIcon({ connections, daemonAvailable, unlocked_until }) {
   if (!connections || !daemonAvailable) {
-    return <Icon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
+    return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
   } else {
     if (unlocked_until === undefined) {
-      return <Icon icon={unlockedIcon} css={{ color: 'red' }} />;
+      return <StatusIcon icon={unlockedIcon} css={{ color: 'red' }} />;
     } else if (unlocked_until === 0) {
-      return <Icon icon={lockedIcon} />;
+      return <StatusIcon icon={lockedIcon} />;
     } else if (unlocked_until >= 0) {
-      return <Icon icon={unlockedIcon} />;
+      return <StatusIcon icon={unlockedIcon} />;
     }
   }
 }
@@ -92,10 +92,12 @@ function signInStatusMessage({
 }
 
 const SignInStatus = props => (
-  <div className="icon">
+  <StatusIconWrapper>
     {statusIcon(props)}
-    <div className="tooltip bottom">{signInStatusMessage(props)}</div>
-  </div>
+    <StatusIconTooltip className="tooltip bottom">
+      {signInStatusMessage(props)}
+    </StatusIconTooltip>
+  </StatusIconWrapper>
 );
 
 export default SignInStatus;

@@ -6,15 +6,12 @@ import { jsx } from '@emotion/core';
 import { FormattedMessage } from 'react-intl';
 
 // Internal Global Dependencies
-import Icon from 'components/common/Icon';
 import { animations } from 'styles';
+import { StatusIcon, StatusIconWrapper, StatusIconTooltip } from './components';
+
 import questionMarkIcon from 'images/question-mark.sprite.svg';
 import checkIcon from 'images/check.sprite.svg';
 import syncingIcon from 'images/syncing.sprite.svg';
-
-const SpinningIcon = styled(Icon)({
-  animation: `${animations.spin} 2s linear infinite`,
-});
 
 function statusIcon({
   connections,
@@ -23,11 +20,16 @@ function statusIcon({
   blocks,
 }) {
   if (!connections || !daemonAvailable) {
-    return <Icon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
+    return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
   } else if (heighestPeerBlock > blocks) {
-    return <SpinningIcon icon={syncingIcon} />;
+    return (
+      <StatusIcon
+        icon={syncingIcon}
+        style={{ animation: `${animations.spin} 2s linear infinite` }}
+      />
+    );
   } else {
-    return <Icon icon={checkIcon} />;
+    return <StatusIcon icon={checkIcon} />;
   }
 }
 
@@ -63,10 +65,12 @@ function syncStatusTooltip({
 }
 
 const SyncStatus = props => (
-  <div className="icon">
+  <StatusIconWrapper>
     {statusIcon(props)}
-    <div className="tooltip bottom">{syncStatusTooltip(props)}</div>
-  </div>
+    <StatusIconTooltip className="tooltip bottom">
+      {syncStatusTooltip(props)}
+    </StatusIconTooltip>
+  </StatusIconWrapper>
 );
 
 export default SyncStatus;

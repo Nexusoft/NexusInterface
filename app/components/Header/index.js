@@ -78,6 +78,8 @@ const StatusIcons = styled.div({
   top: 24,
   right: 40,
   animation: `${animations.fadeIn} ${timing.slow} ${consts.enhancedEaseOut}`,
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const UnderHeader = styled.div({
