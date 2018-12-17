@@ -1,10 +1,4 @@
-/*
-  Title: App settings
-  Description: Control App settings.
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
-
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { remote } from 'electron';

@@ -1,8 +1,3 @@
-/*
-  Title: 
-  Description: 
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -949,7 +944,6 @@ class SettingsCore extends Component {
               <input
                 type="text"
                 defaultValue={this.initialValues.manualDaemonDataDir}
-                size="12"
                 onChange={this.updateManualDaemonDataDir}
               />
             </SettingsField>
