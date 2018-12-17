@@ -61,9 +61,6 @@ class Unencrypted extends Component {
             e = e.replace(address + ' ', '');
           }
           this.props.OpenErrorModal(e);
-          setTimeout(() => {
-            this.props.CloseModal();
-          }, 3000);
         });
     } else {
       addressInput.focus();
@@ -88,16 +85,10 @@ class Unencrypted extends Component {
             })
             .catch(e => {
               this.props.OpenErrorModal(e);
-              setTimeout(() => {
-                this.props.CloseModal();
-              }, 3000);
             });
         })
         .catch(e => {
           this.props.OpenErrorModal(e);
-          setTimeout(() => {
-            this.props.CloseModal();
-          }, 3000);
         });
     } else if (!label) {
       acctname.focus();
@@ -115,9 +106,6 @@ class Unencrypted extends Component {
     document.execCommand('Copy', false, null);
     output.type = 'password';
     this.props.OpenModal('Copied');
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 3000);
   }
 
   reEnterValidator(e) {
@@ -158,7 +146,6 @@ class Unencrypted extends Component {
 
                 // Start the daemon again... give it maybe 5 seconds.
                 setTimeout(() => {
-                  this.props.CloseModal();
                   remote.getGlobal('core').start();
                   this.props.history.replace('/');
                 }, 5000);

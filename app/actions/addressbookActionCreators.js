@@ -268,10 +268,13 @@ export const AddContact = (name, address, num, notes, TZ) => {
       })
       .catch(e => {
         dispatch({ type: TYPE.SHOW_MODAL, payload: 'Invalid Address' });
-        setTimeout(() => {
-          dispatch({ type: TYPE.HIDE_MODAL });
-        }, 3000);
       });
+  };
+};
+
+export const OpenErrorModal = type => {
+  return dispatch => {
+    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
   };
 };
 
@@ -303,17 +306,11 @@ export const AddAddress = (name, address, index) => {
         dispatch({ type: TYPE.CLEAR_PROTOTYPE });
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
         dispatch({ type: TYPE.SHOW_MODAL, payload: 'Address Added' });
-        setTimeout(() => {
-          dispatch({ type: TYPE.HIDE_MODAL });
-        }, 3000);
       })
       .catch(e => {
         dispatch({ type: TYPE.CLEAR_PROTOTYPE });
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
         dispatch({ type: TYPE.SHOW_MODAL, payload: 'Invalid Address' });
-        setTimeout(() => {
-          dispatch({ type: TYPE.HIDE_MODAL });
-        }, 3000);
       });
   };
 };

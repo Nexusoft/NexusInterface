@@ -114,11 +114,7 @@ class TerminalConsole extends Component {
       }
       RPCArguments.push(element);
     }
-    console.log(
-      this.props.commandList.some(function(v) {
-        return v.indexOf(splitInput[0]) >= 0;
-      })
-    );
+
     let termConOut = document.getElementById('terminal-console-output');
     /// Execute the command with the given args
     if (
@@ -131,9 +127,11 @@ class TerminalConsole extends Component {
           if (typeof payload === 'string' || typeof payload === 'number') {
             if (typeof payload === 'string') {
               let temppayload = payload;
+
               temppayload.split('\n').map((item, key) => {
-                return tempConsoleOutput.push(item);
+                return tempConsoleOutput.push('       ' + item);
               });
+
               this.props.printToConsole(tempConsoleOutput);
               termConOut.scrollTop = termConOut.scrollHeight;
             } else {
@@ -180,7 +178,6 @@ class TerminalConsole extends Component {
           }
         })
         .catch(error => {
-          console.log(error);
           if (error.message !== undefined) {
             tempConsoleOutput.push(
               'Error: ' +
@@ -192,9 +189,9 @@ class TerminalConsole extends Component {
           } else {
             //This is the error if the rpc is unavailable
             try {
-              tempConsoleOutput.push(error.error.message);
+              tempConsoleOutput.push('       ' + error.error.message);
             } catch (e) {
-              tempConsoleOutput.push(error);
+              tempConsoleOutput.push('       ' + error);
             }
           }
           this.props.printToConsole(tempConsoleOutput);
@@ -202,7 +199,7 @@ class TerminalConsole extends Component {
         });
     } else {
       tempConsoleOutput.push([
-        this.props.currentInput + ' is a invalid Command',
+        '       ' + this.props.currentInput + ' is a invalid Command',
       ]);
       // tempConsoleOutput.push(['\n  '])
       this.props.printToConsole(tempConsoleOutput);

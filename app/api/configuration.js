@@ -229,10 +229,6 @@ configuration.BootstrapRecentDatabase = async function(self) {
       .getGlobal('core')
       .stop()
       .then(() => {
-        setTimeout(() => {
-          self.props.CloseModal();
-        }, 3000);
-
         let tarGzLocation = path.join(
           this.GetAppDataDirectory(),
           'recent.tar.gz'
@@ -299,9 +295,6 @@ configuration.BootstrapRecentDatabase = async function(self) {
             }
             if (err) {
               self.props.OpenModal(result.error);
-              setTimeout(() => {
-                self.props.CloseModal();
-              }, 3000);
             }
             console.log(err, result);
             electron.remote.getGlobal('core').start();
@@ -310,9 +303,6 @@ configuration.BootstrapRecentDatabase = async function(self) {
       })
       .catch(e => {
         self.props.OpenModal(e);
-        setTimeout(() => {
-          self.props.CloseModal();
-        }, 3000);
       });
 
     let percentChecker = setInterval(() => {
