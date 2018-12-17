@@ -683,7 +683,7 @@ class Overview extends Component {
         <Stats left>
           <Stat
             as={connections ? Link : undefined}
-            to={!!connections && '/Transactions'}
+            to={connections ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>
@@ -710,7 +710,7 @@ class Overview extends Component {
 
           <Stat
             as={connections ? Link : undefined}
-            to={!!connections && '/Transactions'}
+            to={connections ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>
@@ -733,7 +733,7 @@ class Overview extends Component {
 
           <Stat
             as={connections ? Link : undefined}
-            to={!!connections && '/Transactions'}
+            to={connections ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>
@@ -755,7 +755,7 @@ class Overview extends Component {
 
           <Stat
             as={connections ? Link : undefined}
-            to={!!connections && '/Market'}
+            to={connections ? '/Market' : undefined}
           >
             <div>
               <StatLabel>
@@ -778,7 +778,7 @@ class Overview extends Component {
 
           <Stat
             as={connections ? Link : undefined}
-            to={!!connections && '/Market'}
+            to={connections ? '/Market' : undefined}
           >
             <div>
               <StatLabel>
@@ -801,7 +801,7 @@ class Overview extends Component {
 
           <Stat
             as={connections ? Link : undefined}
-            to={!!connections && '/Market'}
+            to={connections ? '/Market' : undefined}
           >
             <div>
               <StatLabel>

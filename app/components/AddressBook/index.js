@@ -18,7 +18,7 @@ import * as TYPE from 'actions/actiontypes';
 import * as actionsCreators from 'actions/addressbookActionCreators';
 import Icon from 'components/common/Icon';
 import Button from 'components/common/Button';
-import { WrappedTextField } from 'components/common/TextField';
+import { WrappedTextBox } from 'components/common/TextBox';
 import Panel from 'components/common/Panel';
 import WaitingText from 'components/common/WaitingText';
 import ContextMenuBuilder from 'contextmenu';
@@ -1224,7 +1224,7 @@ class AddressBook extends Component {
                 defaultMessage="Search Contact"
               >
                 {sc => (
-                  <WrappedTextField
+                  <WrappedTextBox
                     style={{ marginLeft: '1em', fontSize: '.9375em' }}
                     icon={searchIcon}
                     inputProps={{

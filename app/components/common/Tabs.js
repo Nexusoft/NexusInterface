@@ -40,9 +40,9 @@ const TabIcon = styled(Icon)({
   marginRight: '0.75em',
 });
 
-export const TabItem = ({ link, icon, text }) => (
+export const TabItem = ({ link, icon, text, isActive }) => (
   <TabLi>
-    <TabLink to={link}>
+    <TabLink to={link} isActive={isActive}>
       {!!icon && <TabIcon icon={icon} />}
       {text}
     </TabLink>

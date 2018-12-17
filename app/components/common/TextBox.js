@@ -8,7 +8,7 @@ import { lighten, fade } from 'utils/colors';
 const inputHeight = '2.25em';
 const iconSpace = '3em';
 
-const TextField = styled.input(
+const TextBox = styled.input(
   {
     backgroundColor: colors.lightGray,
     color: colors.dark,
@@ -61,9 +61,9 @@ const IconWrapper = styled.div({
   color: colors.darkGray,
 });
 
-const WrappedTextField = ({ icon, inputProps, ...rest }) => (
+const WrappedTextBox = ({ icon, inputProps, ...rest }) => (
   <InputWrapper {...rest}>
-    <TextField wrapped {...inputProps} />
+    <TextBox wrapped {...inputProps} />
     {icon && (
       <IconWrapper>
         <Icon icon={icon} />
@@ -72,6 +72,6 @@ const WrappedTextField = ({ icon, inputProps, ...rest }) => (
   </InputWrapper>
 );
 
-export default TextField;
+export default TextBox;
 
-export { WrappedTextField };
+export { WrappedTextBox };
