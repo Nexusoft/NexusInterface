@@ -19,7 +19,7 @@ const Button = styled.button(
     transitionProperty: 'border-color, color',
     transitionDuration: timing.normal,
     // Default styles
-    '&, &:active': {
+    '&, &:active, &&[disabled]': {
       border: `2px solid ${colors.lightGray}`,
       color: colors.lightGray,
     },
@@ -31,11 +31,13 @@ const Button = styled.button(
 
   ({ primary }) =>
     !!primary && {
-      '&, &:active': {
+      '&, &:active, &&[disabled]': {
         border: `2px solid ${colors.primary}`,
         color: colors.primary,
         fontWeight: 'bold',
         transitionProperty: 'border-color, color, box-shadow, text-shadow',
+        boxShadow: 'none',
+        textSahdow: 'none',
       },
       '&:hover': {
         borderColor: lighten(colors.primary, 0.3),
@@ -47,7 +49,7 @@ const Button = styled.button(
 
   ({ blank, dark }) =>
     !!blank && {
-      '&, &:active': {
+      '&, &:active, &&[disabled]': {
         padding: '0.5em 1em',
         border: 'none',
         backgroundColor: 'transparent',
@@ -58,7 +60,17 @@ const Button = styled.button(
         border: 'none',
         color: dark ? colors.dark : colors.light,
       },
+    },
+
+  ({ disabled }) =>
+    !!disabled && {
+      opacity: 0.5,
+      cursor: 'not-allowed',
     }
 );
+
+/**
+ * Note: the double & in &&[disabled] is a css specificity hack so that the disabled styles take priority over the hover styles
+ */
 
 export default Button;
