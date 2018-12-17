@@ -1142,7 +1142,8 @@ class Transactions extends Component {
 
     let high = 0;
     let low = 0;
-    this.props.walletitems.forEach(element => {
+    for (let index = 0; index < this.props.walletitems.length; index++) {
+      const element = this.props.walletitems[index];
       if (
         element.time * 1000 >= domain.x[0] &&
         element.time * 1000 <= domain.x[1]
@@ -1155,7 +1156,8 @@ class Transactions extends Component {
           low = element.amount - 1;
         }
       }
-    });
+    }
+
     high = high == 0 ? 1 : high;
     domain.y[0] = -high;
     domain.y[1] = high;
