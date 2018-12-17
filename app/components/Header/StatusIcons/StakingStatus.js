@@ -15,7 +15,10 @@ const StakingStatus = ({
   <div className="icon">
     <Icon icon={stakingIcon} />
 
-    <div className="tooltip bottom">
+    <div
+      className="tooltip bottom"
+      style={{ left: 'auto', transform: 'none', right: 0 }}
+    >
       <div>
         <FormattedMessage
           id="Header.StakeWeight"
