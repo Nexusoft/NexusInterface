@@ -132,10 +132,12 @@ class SettingsCore extends Component {
   setForkblocks(settings) {
     var numForkblocks = document.getElementById('forkblockNumber');
 
-    if (settings.forkblocks === undefined) {
-      numForkblocks.value = '0';
-    } else {
-      numForkblocks.value = settings.forkblocks;
+    if (numForkblocks) {
+      if (settings.forkblocks === undefined) {
+        numForkblocks.value = '0';
+      } else {
+        numForkblocks.value = settings.forkblocks;
+      }
     }
   }
 

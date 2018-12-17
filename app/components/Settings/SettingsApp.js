@@ -199,7 +199,7 @@ class SettingsApp extends Component {
   setInfoPopup(settings) {
     var infopop = document.getElementById('infoPopUps');
 
-    if (settings.infopopups == true || settings.infopopups) {
+    if (infopop && (settings.infopopups == true || settings.infopopups)) {
       infopop.checked = true;
     }
   }
