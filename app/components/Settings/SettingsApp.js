@@ -980,7 +980,7 @@ class SettingsApp extends Component {
           <Button
             primary
             disabled={!this.props.connections}
-            style={{ marginTop: '1em' }}
+            style={{ marginTop: '2em' }}
             onClick={e => {
               e.preventDefault();
               this.props.OpenModal4();

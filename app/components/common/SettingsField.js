@@ -27,7 +27,11 @@ class SettingsField extends Component {
       <FieldWrapper {...rest}>
         <Label htmlFor={connectLabel ? this.inputId : undefined}>
           {label}
-          <div className="tooltip bottom">{tooltip}</div>
+          {tooltip && (
+            <div className="tooltip bottom" style={{ width: 226 }}>
+              {tooltip}
+            </div>
+          )}
         </Label>
         {connectLabel
           ? React.cloneElement(React.Children.only(children), {

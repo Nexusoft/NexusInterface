@@ -20,6 +20,8 @@ import core from 'api/core';
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import ContextMenuBuilder from 'contextmenu';
+import SettingsField from 'components/common/SettingsField';
+import Button from 'components/common/Button';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -76,212 +78,34 @@ const mapDispatchToProps = dispatch => ({
 
 class SettingsCore extends Component {
   // React Method (Life cycle hook)
-  componentDidMount() {
-    var settings = GetSettings();
+  constructor(props) {
+    super(props);
+    // Set initial settings
+    // This is a temporary fix for the current setting state mechanism
+    // Ideally this should be managed via Redux states & actions
+    const settings = GetSettings();
+    this.initialValues = {
+      manualDaemon: !!settings.manualDaemon,
+      manualDaemonUser: settings.manualDaemonUser || 'rpcserver',
+      manualDaemonPassword: settings.manualDaemonPassword || 'password',
+      manualDaemonIP: settings.manualDaemonIP || '127.0.0.1',
+      manualDaemonPort: settings.manualDaemonPort || '9336',
+      manualDaemonDataDir: settings.manualDaemonDataDir || 'Nexus_Tritium_Data',
+      enableMining: !!settings.enableMining,
+      enableStaking: !!settings.enableStaking,
+      verboseLevel: settings.verboseLevel || '2',
+      forkblocks: settings.forkblocks || '0',
+      mapPortUsingUpnp: !!settings.mapPortUsingUpnp,
+      socks4Proxy: !!settings.socks4Proxy,
+      socks4ProxyIP: settings.socks4ProxyIP || '127.0.0.1',
+      socks4ProxyPort: settings.socks4ProxyPort || '9050',
+      detatchDatabaseOnShutdown: !!settings.detatchDatabaseOnShutdown,
+    };
 
-    //Core settings
-    this.setManualDaemon(settings);
-    this.setManualDaemonUser(settings);
-    this.setManualDaemonPassword(settings);
-    this.setManualDaemonIP(settings);
-    this.setManualDaemonPort(settings);
-    this.setManualDaemonDataDir(settings);
-    this.setEnableMining(settings);
-    this.setEnableStaking(settings);
-    this.setVerboseLevel(settings);
-    this.setForkblocks(settings);
-    this.setMapPortUsingUpnp(settings);
-    this.setSocks4Proxy(settings);
-    this.setSocks4ProxyIP(settings);
-    this.setSocks4ProxyPort(settings);
-    this.setDetatchDatabaseOnShutdown(settings);
-    // this.setOptionalTransactionFee(settings);
-  }
-
-  // Class Methods
-  setEnableMining(settings) {
-    var enableMining = document.getElementById('enableMining');
-
-    if (settings.enableMining == true) {
-      enableMining.checked = true;
-    } else {
-      enableMining.checked = false;
-    }
-  }
-
-  setEnableStaking(settings) {
-    var enableStaking = document.getElementById('enableStaking');
-
-    if (settings.enableStaking == true) {
-      enableStaking.checked = true;
-    } else {
-      enableStaking.checked = false;
-    }
-  }
-
-  setVerboseLevel(settings) {
-    var verboseLevel = document.getElementById('verboseLevel');
-
-    if (settings.verboseLevel === undefined) {
-      verboseLevel.value = '2';
-    } else {
-      verboseLevel.value = settings.verboseLevel;
-    }
-  }
-
-  setForkblocks(settings) {
-    var numForkblocks = document.getElementById('forkblockNumber');
-
-    if (numForkblocks) {
-      if (settings.forkblocks === undefined) {
-        numForkblocks.value = '0';
-      } else {
-        numForkblocks.value = settings.forkblocks;
-      }
-    }
-  }
-
-  setManualDaemon(settings) {
-    var manualDaemon = document.getElementById('manualDaemon');
-    var manualDaemonSettings = document.getElementById(
-      'manual-daemon-settings'
-    );
-    var automaticDaemonSettings = document.getElementById(
-      'automatic-daemon-settings'
-    );
-
-    if (settings.manualDaemon == true) {
-      manualDaemon.checked = true;
-    }
-
-    if (manualDaemon.checked) {
-      manualDaemonSettings.style.display = 'block';
-      automaticDaemonSettings.style.display = 'none';
-    } else {
-      manualDaemonSettings.style.display = 'none';
-      automaticDaemonSettings.style.display = 'block';
-    }
-  }
-
-  setManualDaemonUser(settings) {
-    var manualDaemonUser = document.getElementById('manualDaemonUser');
-
-    if (settings.manualDaemonUser === undefined) {
-      manualDaemonUser.value = 'rpcserver';
-    } else {
-      manualDaemonUser.value = settings.manualDaemonUser;
-    }
-  }
-
-  setManualDaemonPassword(settings) {
-    var manualDaemonPassword = document.getElementById('manualDaemonPassword');
-
-    if (settings.manualDaemonPassword === undefined) {
-      manualDaemonPassword.value = 'password';
-    } else {
-      manualDaemonPassword.value = settings.manualDaemonPassword;
-    }
-  }
-
-  setManualDaemonIP(settings) {
-    var manualDaemonIP = document.getElementById('manualDaemonIP');
-
-    if (settings.manualDaemonIP === undefined) {
-      manualDaemonIP.value = '127.0.0.1';
-    } else {
-      manualDaemonIP.value = settings.manualDaemonIP;
-    }
-  }
-
-  setManualDaemonPort(settings) {
-    var manualDaemonPort = document.getElementById('manualDaemonPort');
-
-    if (settings.manualDaemonPort === undefined) {
-      manualDaemonPort.value = '9336';
-    } else {
-      manualDaemonPort.value = settings.manualDaemonPort;
-    }
-  }
-
-  setManualDaemonDataDir(settings) {
-    var manualDaemonDataDir = document.getElementById('manualDaemonDataDir');
-
-    if (settings.manualDaemonDataDir === undefined) {
-      manualDaemonDataDir.value = 'Nexus_Tritium_Data';
-    } else {
-      manualDaemonDataDir.value = settings.manualDaemonDataDir;
-    }
-  }
-
-  setMapPortUsingUpnp(settings) {
-    var mapPortUsingUpnp = document.getElementById('mapPortUsingUpnp');
-
-    if (settings.mapPortUsingUpnp === undefined) {
-      mapPortUsingUpnp.checked = true;
-    }
-    if (settings.mapPortUsingUpnp == true) {
-      mapPortUsingUpnp.checked = true;
-    }
-    if (settings.mapPortUsingUpnp == false) {
-      mapPortUsingUpnp.checked = false;
-    }
-  }
-
-  setSocks4Proxy(settings) {
-    var socks4Proxy = document.getElementById('socks4Proxy');
-    var socks4ProxyIP = document.getElementById('socks4ProxyIP');
-    var socks4ProxyPort = document.getElementById('socks4ProxyPort');
-
-    if (settings.socks4Proxy === undefined) {
-      socks4Proxy.checked = false;
-    }
-    if (settings.socks4Proxy == true) {
-      socks4Proxy.checked = true;
-    }
-    if (settings.socks4Proxy == false) {
-      socks4Proxy.checked = false;
-    }
-
-    if (!socks4Proxy.checked) {
-      socks4ProxyIP.disabled = true;
-      socks4ProxyPort.disabled = true;
-    }
-  }
-
-  setSocks4ProxyIP(settings) {
-    var socks4ProxyIP = document.getElementById('socks4ProxyIP');
-
-    if (settings.socks4ProxyIP === undefined) {
-      socks4ProxyIP.value = '127.0.0.1';
-    } else {
-      socks4ProxyIP.value = settings.socks4ProxyIP;
-    }
-  }
-
-  setSocks4ProxyPort(settings) {
-    var socks4ProxyPort = document.getElementById('socks4ProxyPort');
-
-    if (settings.socks4ProxyPort === undefined) {
-      socks4ProxyPort.value = '9050';
-    } else {
-      socks4ProxyPort.value = settings.socks4ProxyPort;
-    }
-  }
-
-  setDetatchDatabaseOnShutdown(settings) {
-    var detatchDatabaseOnShutdown = document.getElementById(
-      'detatchDatabaseOnShutdown'
-    );
-
-    if (settings.detatchDatabaseOnShutdown === undefined) {
-      detatchDatabaseOnShutdown.checked = false;
-    }
-    if (settings.detatchDatabaseOnShutdown == true) {
-      detatchDatabaseOnShutdown.checked = true;
-    }
-    if (settings.detatchDatabaseOnShutdown == false) {
-      detatchDatabaseOnShutdown.checked = false;
-    }
+    this.state = {
+      manualDaemon: this.initialValues.manualDaemon,
+      socks4Proxy: this.initialValues.socks4Proxy,
+    };
   }
 
   updateEnableMining(event) {
@@ -320,45 +144,13 @@ class SettingsCore extends Component {
     SaveSettings(settingsObj);
   }
 
-  updateManualDaemon(Manualsetting) {
+  updateManualDaemon(manualDaemon) {
     var settingsObj = GetSettings();
 
-    var manualDaemonSettings = document.getElementById(
-      'manual-daemon-settings'
-    );
-    var automaticDaemonSettings = document.getElementById(
-      'automatic-daemon-settings'
-    );
+    settingsObj.manualDaemon = manualDaemon;
 
-    if (Manualsetting) {
-      manualDaemonSettings.style.display = 'block';
-      automaticDaemonSettings.style.display = 'none';
-    } else {
-      manualDaemonSettings.style.display = 'none';
-      automaticDaemonSettings.style.display = 'block';
-    }
-
-    let manualDeamonUserValue = document.getElementById('manualDaemonUser')
-      .value;
-    let manualDeamonPasswordValue = document.getElementById(
-      'manualDaemonPassword'
-    ).value;
-    let manualDeamonIPValue = document.getElementById('manualDaemonIP').value;
-    let manualDeamonPortValue = document.getElementById('manualDaemonPort')
-      .value;
-    let manualDeamonDataDirValue = document.getElementById(
-      'manualDaemonDataDir'
-    ).value;
-
-    settingsObj.manualDaemon = Manualsetting;
-    settingsObj.manualDaemonUser = manualDeamonUserValue;
-    settingsObj.manualDaemonPassword = manualDeamonPasswordValue;
-    settingsObj.manualDaemonIP = manualDeamonIPValue;
-    settingsObj.manualDaemonPort = manualDeamonPortValue;
-    settingsObj.manualDaemonDataDir = manualDeamonDataDirValue;
-    console.log(manualDeamonUserValue);
-    console.log(settingsObj);
     SaveSettings(settingsObj);
+    this.setState({ manualDaemon });
   }
 
   updateManualDaemonUser(event) {
@@ -417,22 +209,16 @@ class SettingsCore extends Component {
 
   updateSocks4Proxy(event) {
     var el = event.target;
+    console.log('socks4Proxy', el.checked);
     var settingsObj = GetSettings();
 
     settingsObj.socks4Proxy = el.checked;
 
     SaveSettings(settingsObj);
 
-    var socks4ProxyIP = document.getElementById('socks4ProxyIP');
-    var socks4ProxyPort = document.getElementById('socks4ProxyPort');
-
-    if (el.checked) {
-      socks4ProxyIP.disabled = false;
-      socks4ProxyPort.disabled = false;
-    } else {
-      socks4ProxyIP.disabled = true;
-      socks4ProxyPort.disabled = true;
-    }
+    this.setState({
+      socks4Proxy: el.checked,
+    });
   }
 
   updateSocks4ProxyIP(event) {
@@ -630,13 +416,10 @@ class SettingsCore extends Component {
                 value="en"
                 checked={this.props.settings.locale === 'en'}
                 onClick={() => this.changeLocale('en')}
-
-                // onChange={e => this.changeLocale(e.target.value)}
               />
+              // onChange={e => this.changeLocale(e.target.value)}
               &emsp;
-              <label htmlFor="English">
-                <FormattedMessage id="Lang.English" defaultMessage="English" />
-              </label>
+              <FormattedMessage id="Lang.English" defaultMessage="English" />
               &emsp; &emsp; &emsp;
               <span className="langTag">
                 <img src={FlagFile.America} />
@@ -656,9 +439,7 @@ class SettingsCore extends Component {
                 onClick={() => this.changeLocale('ru')}
               />
               &emsp;
-              <label htmlFor="Russian">
-                <FormattedMessage id="Lang.Russian" defaultMessage="Russian" />
-              </label>
+              <FormattedMessage id="Lang.Russian" defaultMessage="Russian" />
               &emsp; &emsp; &emsp;
               <span className="langTag">
                 <img src={FlagFile.Russia} />
@@ -678,9 +459,7 @@ class SettingsCore extends Component {
                 onClick={() => this.changeLocale('es')}
               />
               &emsp;
-              <label htmlFor="Spanish">
-                <FormattedMessage id="Lang.Spanish" defaultMessage="Spanish" />
-              </label>
+              <FormattedMessage id="Lang.Spanish" defaultMessage="Spanish" />
               &emsp; &emsp; &emsp;
               <span className="langTag">
                 <img src={FlagFile.Spain} />
@@ -700,9 +479,7 @@ class SettingsCore extends Component {
                 onClick={() => this.changeLocale('ko')}
               />
               &emsp;
-              <label htmlFor="Korean">
-                <FormattedMessage id="Lang.Korean" defaultMessage="Korean" />
-              </label>
+              <FormattedMessage id="Lang.Korean" defaultMessage="Korean" />
               &emsp; &emsp; &emsp;
               <span className="langTag">
                 <img src={FlagFile.Korea} />
@@ -722,9 +499,7 @@ class SettingsCore extends Component {
                 onClick={() => this.changeLocale('de')}
               />
               &emsp;
-              <label htmlFor="German">
-                <FormattedMessage id="Lang.German" defaultMessage="German" />
-              </label>
+              <FormattedMessage id="Lang.German" defaultMessage="German" />
               &emsp; &emsp; &emsp;
               <span className="langTag">
                 <img src={FlagFile.Germany} />
@@ -744,12 +519,7 @@ class SettingsCore extends Component {
                 onClick={() => this.changeLocale('ja')}
               />
               &emsp;
-              <label htmlFor="Japanese">
-                <FormattedMessage
-                  id="Lang.Japanese"
-                  defaultMessage="Japanese"
-                />
-              </label>
+              <FormattedMessage id="Lang.Japanese" defaultMessage="Japanese" />
               &emsp; &emsp; &emsp;
               <span className="langTag">
                 <img src={FlagFile.Japan} />
@@ -769,9 +539,7 @@ class SettingsCore extends Component {
                 onClick={() => this.changeLocale('fr')}
               />
               &emsp;
-              <label htmlFor="French">
-                <FormattedMessage id="Lang.French" defaultMessage="French" />
-              </label>
+              <FormattedMessage id="Lang.French" defaultMessage="French" />
               &emsp; &emsp; &emsp;
               <span className="langTag">
                 <img src={FlagFile.France} />
@@ -842,406 +610,383 @@ class SettingsCore extends Component {
           </div>
         </Modal>
 
-        <form className="aligned">
-          <div className="field">
-            <label htmlFor="enableMining">
+        <form>
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.EnableMining"
                 defaultMessage="Enable Mining"
               />
-            </label>
-            <FormattedMessage
-              id="ToolTip.EnableMining"
-              defaultMessage="Enable/Disable mining to the wallet"
-            >
-              {tt => (
-                <input
-                  id="enableMining"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateEnableMining}
-                  data-tooltip={tt}
-                />
-              )}
-            </FormattedMessage>
-          </div>
+            }
+            tooltip={
+              <FormattedMessage
+                id="ToolTip.EnableMining"
+                defaultMessage="Enable/Disable mining to the wallet"
+              />
+            }
+          >
+            <input
+              type="checkbox"
+              defaultChecked={this.initialValues.enableMining}
+              className="switch"
+              onChange={this.updateEnableMining}
+            />
+          </SettingsField>
 
-          <div className="field">
-            <label htmlFor="enableStaking">
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.EnableStaking"
                 defaultMessage="Enable Staking"
               />
-            </label>
-            <FormattedMessage
-              id="ToolTip.EnableStaking"
-              defaultMessage="Enable/Disable Staking to the wallet"
-            >
-              {tt => (
-                <input
-                  id="enableStaking"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateEnableStaking}
-                  data-tooltip={tt}
-                />
-              )}
-            </FormattedMessage>
-          </div>
+            }
+            tooltip={
+              <FormattedMessage
+                id="ToolTip.EnableStaking"
+                defaultMessage="Enable/Disable Staking to the wallet"
+              />
+            }
+          >
+            <input
+              type="checkbox"
+              defaultChecked={this.initialValues.enableStaking}
+              className="switch"
+              onChange={this.updateEnableStaking}
+            />
+          </SettingsField>
 
-          <div className="field">
-            <label htmlFor="verboseLevel">
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.VerboseLevel"
                 defaultMessage="Verbose Level"
               />
-            </label>
-            <FormattedMessage
-              id="ToolTip.Verbose"
-              defaultMessage="Verbose level for logs"
-            >
-              {TT => (
-                <input
-                  id="verboseLevel"
-                  type="text"
-                  size="3"
-                  onChange={this.updateVerboseLevel}
-                  data-tooltip={TT}
-                />
-              )}
-            </FormattedMessage>
-          </div>
+            }
+            tooltip={
+              <FormattedMessage
+                id="ToolTip.Verbose"
+                defaultMessage="Verbose level for logs"
+              />
+            }
+          >
+            <input
+              type="text"
+              defaultValue={this.initialValues.verboseLevel}
+              size="3"
+              onChange={this.updateVerboseLevel}
+            />
+          </SettingsField>
           {/*
-          <div className="field">
-            <label htmlFor="forkblock">
+          <SettingsField connectLabel label={
+            
               <FormattedMessage
                 id="Settings.Forkblock"
                 defaultMessage="ForkBlocks"
               />
-            </label>
+            
             <FormattedMessage
               id="ToolTip.ForkBlock"
               defaultMessage="Step Back A Amount of Blocks"
             >
-              {TT => (
+              
                 <input
                   id="forkblockNumber"
                   type="number"
                   size="3"
                   onChange={this.updateForkBlockAmout}
-                  data-tooltip={TT}
+                  
                 />
               )}
             </FormattedMessage>
           </div>
           */}
-          <div className="field">
-            <label htmlFor="manualDaemon">
+          <SettingsField
+            connectLabel
+            label={
               <FormattedMessage
                 id="Settings.ManualDaemonMode"
                 defaultMessage="Manual Daemon Mode"
               />
-            </label>
-            <FormattedMessage
-              id="ToolTip.MDM"
-              defaultMessage="Enable manual daemon mode if you are running the daemon manually outside of the wallet"
-            >
-              {tt => (
-                <input
-                  id="manualDaemon"
-                  type="checkbox"
-                  className="switch"
-                  checked={this.props.settings.manualDaemon}
-                  onChange={() => this.props.OpenManualDaemonModal()}
-                  data-tooltip={tt}
-                />
-              )}
-            </FormattedMessage>
-          </div>
+            }
+            tooltip={
+              <FormattedMessage
+                id="ToolTip.MDM"
+                defaultMessage="Enable manual daemon mode if you are running the daemon manually outside of the wallet"
+              />
+            }
+          >
+            <input
+              type="checkbox"
+              defaultChecked={this.initialValues.manualDaemon}
+              className="switch"
+              checked={this.props.settings.manualDaemon}
+              onChange={() => this.props.OpenManualDaemonModal()}
+            />
+          </SettingsField>
 
-          <div id="manual-daemon-settings">
-            <div className="field">
-              <label htmlFor="manualDaemonUser">
+          <div style={{ display: this.state.manualDaemon ? 'block' : 'none' }}>
+            <SettingsField
+              connectLabel
+              label={
                 <FormattedMessage
                   id="Settings.Username"
                   defaultMesage="Username"
                 />
-              </label>
-              <FormattedMessage
-                id="ToolTip.UserName"
-                defaultMessage="Username configured for manual daemon"
-              >
-                {tt => (
-                  <input
-                    id="manualDaemonUser"
-                    type="text"
-                    size="12"
-                    onChange={this.updateManualDaemonUser}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
+              }
+              tooltip={
+                <FormattedMessage
+                  id="ToolTip.UserName"
+                  defaultMessage="Username configured for manual daemon"
+                />
+              }
+            >
+              <input
+                type="text"
+                defaultValue={this.initialValues.manualDaemonUser}
+                size="12"
+                onChange={this.updateManualDaemonUser}
+              />
+            </SettingsField>
 
-            <div className="field">
-              <label htmlFor="manualDaemonPassword">
-                {' '}
+            <SettingsField
+              connectLabel
+              label={
                 <FormattedMessage
                   id="Settings.Password"
                   defaultMesage="Password"
                 />
-              </label>
-              <FormattedMessage
-                id="ToolTip.Password"
-                defaultMessage="Password configured for manual daemon"
-              >
-                {tt => (
-                  <input
-                    id="manualDaemonPassword"
-                    type="text"
-                    size="12"
-                    onChange={this.updateManualDaemonPassword}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
+              }
+              tooltip={
+                <FormattedMessage
+                  id="ToolTip.Password"
+                  defaultMessage="Password configured for manual daemon"
+                />
+              }
+            >
+              <input
+                type="text"
+                defaultValue={this.initialValues.manualDaemonPassword}
+                size="12"
+                onChange={this.updateManualDaemonPassword}
+              />
+            </SettingsField>
 
-            <div className="field">
-              <label htmlFor="manualDaemonIP">
-                {' '}
+            <SettingsField
+              connectLabel
+              label={
                 <FormattedMessage
                   id="Settings.IpAddress"
                   defaultMesage="Ip Address"
                 />
-              </label>
-              <FormattedMessage
-                id="ToolTip.IP"
-                defaultMessage="IP address configured for manual daemon"
-              >
-                {tt => (
-                  <input
-                    id="manualDaemonIP"
-                    type="text"
-                    size="12"
-                    onChange={this.updateManualDaemonIP}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
+              }
+              tooltip={
+                <FormattedMessage
+                  id="ToolTip.IP"
+                  defaultMessage="IP address configured for manual daemon"
+                />
+              }
+            >
+              <input
+                type="text"
+                defaultValue={this.initialValues.manualDaemonIP}
+                size="12"
+                onChange={this.updateManualDaemonIP}
+              />
+            </SettingsField>
 
-            <div className="field">
-              <label htmlFor="manualDaemonPort">
+            <SettingsField
+              connectLabel
+              label={
                 <FormattedMessage id="Settings.Port" defaultMesage="Port" />
-              </label>
-              <FormattedMessage
-                id="ToolTip.PortConfig"
-                defaultMessage="Port configured for manual daemon"
-              >
-                {tt => (
-                  <input
-                    id="manualDaemonPort"
-                    type="text"
-                    size="5"
-                    onChange={this.updateManualDaemonPort}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
+              }
+              tooltip={
+                <FormattedMessage
+                  id="ToolTip.PortConfig"
+                  defaultMessage="Port configured for manual daemon"
+                />
+              }
+            >
+              <input
+                type="text"
+                defaultValue={this.initialValues.manualDaemonPort}
+                size="5"
+                onChange={this.updateManualDaemonPort}
+              />
+            </SettingsField>
           </div>
 
-          <div id="automatic-daemon-settings">
-            <div className="field">
-              <label htmlFor="mapPortUsingUpnp">
-                {' '}
+          <div style={{ display: this.state.manualDaemon ? 'none' : 'block' }}>
+            <SettingsField
+              connectLabel
+              label={
                 <FormattedMessage
                   id="Settings.UPnp"
                   defaultMesage="Map port using UPnP"
                 />
-              </label>
-              <FormattedMessage
-                id="ToolTip.UPnP"
-                defaultMessage="Automatically open the Nexus client port on the router. This only works when your router supports UPnP and it is enabled."
-              >
-                {tt => (
-                  <input
-                    id="mapPortUsingUpnp"
-                    type="checkbox"
-                    className="switch"
-                    onChange={this.updateMapPortUsingUpnp}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-            <div className="field">
-              <label htmlFor="socks4Proxy">
+              }
+              tooltip={
+                <FormattedMessage
+                  id="ToolTip.UPnP"
+                  defaultMessage="Automatically open the Nexus client port on the router. This only works when your router supports UPnP and it is enabled."
+                />
+              }
+            >
+              <input
+                type="checkbox"
+                defaultValue={this.initialValues.mapPortUsingUpnp}
+                className="switch"
+                onChange={this.updateMapPortUsingUpnp}
+              />
+            </SettingsField>
+            <SettingsField
+              connectLabel
+              label={
                 <FormattedMessage
                   id="Settings.Socks4proxy"
                   defaultMesage="Connect through SOCKS4 proxy"
                 />
-              </label>
-              <FormattedMessage
-                id="ToolTip.Socks4"
-                defaultMessage="Connect to Nexus through a SOCKS4 proxy"
-              >
-                {tt => (
-                  <input
-                    id="socks4Proxy"
-                    type="checkbox"
-                    className="switch"
-                    onChange={this.updateSocks4Proxy}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-            <div className="field">
-              <label htmlFor="socks4ProxyIP">
+              }
+              tooltip={
                 <FormattedMessage
-                  id="Settings.ProxyIP"
-                  defaultMesage="Proxy IP Address"
+                  id="ToolTip.Socks4"
+                  defaultMessage="Connect to Nexus through a SOCKS4 proxy"
                 />
-              </label>
-              <FormattedMessage
-                id="ToolTip.IPAddressofSOCKS4proxy"
-                defaultMessage="IP Address of SOCKS4 proxy server"
-              >
-                {tt => (
-                  <input
-                    id="socks4ProxyIP"
-                    type="text"
-                    size="12"
-                    onChange={this.updateSocks4ProxyIP}
-                    data-tooltip={tt}
+              }
+            >
+              <input
+                type="checkbox"
+                defaultValue={this.initialValues.socks4Proxy}
+                className="switch"
+                onChange={this.updateSocks4Proxy.bind(this)}
+              />
+            </SettingsField>
+            <div style={{ display: this.state.socks4Proxy ? 'block' : 'none' }}>
+              <SettingsField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="Settings.ProxyIP"
+                    defaultMesage="Proxy IP Address"
                   />
-                )}
-              </FormattedMessage>
-            </div>
-            <div className="field">
-              <label htmlFor="socks4ProxyPort">
-                <FormattedMessage
-                  id="Settings.ProxyPort"
-                  defaultMesage="Proxy Port"
+                }
+                tooltip={
+                  <FormattedMessage
+                    id="ToolTip.IPAddressofSOCKS4proxy"
+                    defaultMessage="IP Address of SOCKS4 proxy server"
+                  />
+                }
+              >
+                <input
+                  type="text"
+                  defaultValue={this.initialValues.socks4ProxyIP}
+                  size="12"
+                  onChange={this.updateSocks4ProxyIP}
                 />
-              </label>
-              <FormattedMessage
-                id="ToolTip.PortOfSOCKS4proxyServer"
-                defaultMessage="Port of SOCKS4 proxy server"
-              >
-                {tt => (
-                  <input
-                    id="socks4ProxyPort"
-                    type="text"
-                    size="3"
-                    onChange={this.updateSocks4ProxyPort}
-                    data-tooltip={tt}
+              </SettingsField>
+              <SettingsField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="Settings.ProxyPort"
+                    defaultMesage="Proxy Port"
                   />
-                )}
-              </FormattedMessage>
+                }
+                tooltip={
+                  <FormattedMessage
+                    id="ToolTip.PortOfSOCKS4proxyServer"
+                    defaultMessage="Port of SOCKS4 proxy server"
+                  />
+                }
+              >
+                <input
+                  type="text"
+                  defaultValue={this.initialValues.socks4ProxyPort}
+                  size="3"
+                  onChange={this.updateSocks4ProxyPort}
+                />
+              </SettingsField>
             </div>
-            <div className="field">
-              <label htmlFor="detatchDatabaseOnShutdown">
+            <SettingsField
+              connectLabel
+              label={
                 <FormattedMessage
                   id="Settings.Detach"
                   defaultMesage="Detach database on shutdown"
                 />
-              </label>
-              <FormattedMessage
-                id="ToolTip.Detach"
-                defaultMessage="Detach the database when shutting down the wallet"
-              >
-                {tt => (
-                  <input
-                    id="detatchDatabaseOnShutdown"
-                    type="checkbox"
-                    className="switch"
-                    onChange={this.updateDetatchDatabaseOnShutdown}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>{' '}
-            <div className="field">
-              <label htmlFor="manualDaemonDataDir">
+              }
+              tooltip={
+                <FormattedMessage
+                  id="ToolTip.Detach"
+                  defaultMessage="Detach the database when shutting down the wallet"
+                />
+              }
+            >
+              <input
+                type="checkbox"
+                defaultValue={this.initialValues.detatchDatabaseOnShutdown}
+                className="switch"
+                onChange={this.updateDetatchDatabaseOnShutdown}
+              />
+            </SettingsField>
+            <SettingsField
+              connectLabel
+              label={
                 <FormattedMessage
                   id="Settings.DDN"
                   defaultMessage="Data Directory Name"
-                />{' '}
-              </label>
-              <FormattedMessage
-                id="ToolTip.DataDirectory"
-                defaultMessage="Data directory configured for manual daemon"
-              >
-                {tt => (
-                  <input
-                    id="manualDaemonDataDir"
-                    type="text"
-                    size="12"
-                    onChange={this.updateManualDaemonDataDir}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-            {/* <div className="field">
-              <label htmlFor="optionalTransactionFee">
-                <FormattedMessage
-                  id="Settings.Language"
-                  defaultMesage="Language"
                 />
-              </label>
-              <div className="langSet">
-                <span className="flag-icon-background flag-icon-gr" />
-                <button
-                  type="button"
-                  className="Languagebutton"
-                  // onClick={() => this.props.SwitchLocale()}
-                  onClick={() => this.props.OpenModal3()}
-                >
-                  <FormattedMessage
-                    id="Settings.LangButton"
-                    defaultMesage="English"
-                  />
-                </button>
-              </div>
-            </div> */}
+              }
+              tooltip={
+                <FormattedMessage
+                  id="ToolTip.DataDirectory"
+                  defaultMessage="Data directory configured for manual daemon"
+                />
+              }
+            >
+              <input
+                type="text"
+                defaultValue={this.initialValues.manualDaemonDataDir}
+                size="12"
+                onChange={this.updateManualDaemonDataDir}
+              />
+            </SettingsField>
           </div>
-          <button
-            id="restart-core"
-            className="button primary"
-            onClick={e => {
-              e.preventDefault();
-              this.props.clearForRestart();
 
-              core.restart();
-              this.props.OpenModal('Core Restarting');
-            }}
+          <div
+            style={{ display: 'flex', alignItems: 'center', marginTop: '2em' }}
           >
-            <FormattedMessage
-              id="Settings.RestartCore"
-              defaultMesage="Restart Core"
-            />
-          </button>
-          <button
-            // id="restart-core"
-            className="button primary"
-            onClick={e => {
-              e.preventDefault();
-              this.props.OpenModal2();
-            }}
-          >
-            <FormattedMessage
-              id="Settings.SaveSettings"
-              defaultMessage="Save Settings"
-            />
-          </button>
-          <div className="clear-both" />
+            <Button
+              onClick={e => {
+                e.preventDefault();
+                this.props.clearForRestart();
+
+                core.restart();
+                this.props.OpenModal('Core Restarting');
+              }}
+            >
+              <FormattedMessage
+                id="Settings.RestartCore"
+                defaultMesage="Restart Core"
+              />
+            </Button>
+            <Button
+              primary
+              onClick={e => {
+                e.preventDefault();
+                this.props.OpenModal2();
+              }}
+              style={{ marginLeft: 15 }}
+            >
+              <FormattedMessage
+                id="Settings.SaveSettings"
+                defaultMessage="Save Settings"
+              />
+            </Button>
+          </div>
         </form>
-
-        {/* <button className="button primary" onClick={application.restart()}>Restart Core</button> */}
       </section>
     );
   }
