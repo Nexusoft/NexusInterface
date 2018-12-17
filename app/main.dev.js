@@ -183,26 +183,14 @@ app.on('ready', async () => {
         e.preventDefault();
         mainWindow.hide();
       } else {
-        if (settings.manualDaemon != true) {
-          core.stop().then(payload => {
-            app.exit();
-          });
-        } else {
-          RPC.PROMISE('stop', []).then(payload => {
-            app.exit();
-          });
-        }
-      }
-    } else {
-      if (settings.manualDaemon != true) {
         core.stop().then(payload => {
           app.exit();
         });
-      } else {
-        RPC.PROMISE('stop', []).then(payload => {
-          app.exit();
-        });
       }
+    } else {
+      core.stop().then(payload => {
+        app.exit();
+      });
     }
   });
 });

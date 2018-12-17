@@ -1102,9 +1102,11 @@ class Header extends Component {
           onClose={this.props.CloseModal}
           classNames={{ modal: 'custom-modal' }}
           onEntered={() => {
-            setTimeout(() => {
-              this.props.CloseModal();
-            }, 1500);
+            if (this.props.modaltype != 'Closing Nexus') {
+              setTimeout(() => {
+                this.props.CloseModal();
+              }, 1500);
+            }
           }}
         >
           {this.modalinternal()}
