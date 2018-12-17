@@ -494,6 +494,13 @@ class Core extends EventEmitter {
               resolve('Stopping');
             }
           }, 5000);
+        } else {
+          if (callback) {
+            setTimeout(() => {
+              callback(refToThis);
+            }, 3000);
+          }
+          resolve('Stopping');
         }
       } else {
         log.info('Core Manager: Closing wallet and leaving daemon running.');

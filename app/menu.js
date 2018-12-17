@@ -118,9 +118,6 @@ export default class MenuBuilder {
               BackupDir + '/NexusBackup_' + now + '.dat',
             ]).then(() => {
               self.props.OpenModal('Wallet Backup');
-              setTimeout(() => {
-                self.props.CloseModal();
-              }, 3000);
             });
           },
         },
@@ -147,6 +144,11 @@ export default class MenuBuilder {
       label: 'Edit',
       submenu: [
         {
+          label: 'Cut',
+          accelerator: 'CmdOrCtrl+X',
+          role: 'cut',
+        },
+        {
           label: 'Copy',
           accelerator: 'CmdOrCtrl+C',
           role: 'copy',
@@ -155,11 +157,6 @@ export default class MenuBuilder {
           label: 'Paste',
           accelerator: 'CmdOrCtrl+V',
           role: 'paste',
-        },
-        {
-          label: 'Cut',
-          accelerator: 'CmdOrCtrl+X',
-          role: 'cut',
         },
       ],
     };
@@ -209,9 +206,6 @@ export default class MenuBuilder {
               //configuration.BootstrapRecentDatabase(self);
             } else {
               self.props.OpenModal('Please let the daemon start.');
-              setTimeout(() => {
-                self.props.CloseModal();
-              }, 3000);
             }
           },
         },
@@ -311,9 +305,6 @@ export default class MenuBuilder {
                 BackupDir + '/NexusBackup_' + now + '.dat',
               ]).then(() => {
                 self.props.OpenModal('Wallet Backup');
-                setTimeout(() => {
-                  self.props.CloseModal();
-                }, 3000);
               });
             },
           },
@@ -419,9 +410,6 @@ export default class MenuBuilder {
                 //configuration.BootstrapRecentDatabase(self);
               } else {
                 self.props.OpenModal('Please let the daemon start.');
-                setTimeout(() => {
-                  self.props.CloseModal();
-                }, 3000);
               }
             },
           },
