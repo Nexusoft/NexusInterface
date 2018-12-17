@@ -836,7 +836,7 @@ class SettingsCore extends Component {
             >
               <input
                 type="checkbox"
-                defaultValue={this.initialValues.mapPortUsingUpnp}
+                defaultChecked={this.initialValues.mapPortUsingUpnp}
                 className="switch"
                 onChange={this.updateMapPortUsingUpnp}
               />
@@ -858,7 +858,7 @@ class SettingsCore extends Component {
             >
               <input
                 type="checkbox"
-                defaultValue={this.initialValues.socks4Proxy}
+                defaultChecked={this.initialValues.socks4Proxy}
                 className="switch"
                 onChange={this.updateSocks4Proxy.bind(this)}
               />
@@ -926,7 +926,7 @@ class SettingsCore extends Component {
             >
               <input
                 type="checkbox"
-                defaultValue={this.initialValues.detatchDatabaseOnShutdown}
+                defaultChecked={this.initialValues.detatchDatabaseOnShutdown}
                 className="switch"
                 onChange={this.updateDetatchDatabaseOnShutdown}
               />
