@@ -14,6 +14,7 @@ import ContextMenuBuilder from 'contextmenu';
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
 import Button from 'components/common/Button';
+import ComboBox from 'components/common/ComboBox';
 import WaitingText from 'components/common/WaitingText';
 
 // Internal Local Dependencies
@@ -298,30 +299,12 @@ class SendRecieve extends Component {
 
   accountChanger() {
     if (this.props.AccountChanger) {
-      return this.props.AccountChanger.map(e =>
-        e.name ? (
-          <option key={e.name} value={e.name}>
-            {e.name}: {e.val}
-            NXS
-          </option>
-        ) : (
-          <FormattedMessage
-            id="sendReceive.MyAccount"
-            defaultMessage="My Account"
-            key={e.name}
-            value={e.name}
-          >
-            {placeholder => (
-              <option>
-                {placeholder} : {e.val.toFixed(5)}
-                NXS
-              </option>
-            )}
-          </FormattedMessage>
-        )
-      );
-      return null;
+      return this.props.AccountChanger.map(e => ({
+        value: e.name,
+        display: `${e.name}: ${e.val}NXS`,
+      }));
     }
+    return [];
   }
 
   sendOne() {
@@ -920,18 +903,22 @@ class SendRecieve extends Component {
                 />
                 :
               </span>
-              <select
-                id="select"
-                onChange={e => this.props.updateMoveFromAccount(e.target.value)}
-              >
-                <FormattedMessage
-                  id="sendReceive.SelectAnAccount"
-                  defaultMessage="Select an Account"
-                >
-                  {msg => <option value="">{msg}</option>}
-                </FormattedMessage>
-                {this.accountChanger()}
-              </select>
+              <ComboBox
+                value={this.props.MoveFromAccount}
+                onChange={this.props.updateMoveFromAccount}
+                options={[
+                  {
+                    value: '',
+                    display: (
+                      <FormattedMessage
+                        id="sendReceive.SelectAnAccount"
+                        defaultMessage="Select an Account"
+                      />
+                    ),
+                  },
+                  ...this.accountChanger(),
+                ]}
+              />
 
               <span>
                 {' '}
@@ -941,18 +928,22 @@ class SendRecieve extends Component {
                 />
                 :
               </span>
-              <select
-                id="select"
-                onChange={e => this.props.updateMoveToAccount(e.target.value)}
-              >
-                <FormattedMessage
-                  id="sendReceive.SelectAnAccount"
-                  defaultMessage="Select an Account"
-                >
-                  {msg => <option value="">{msg}</option>}
-                </FormattedMessage>
-                {this.accountChanger()}
-              </select>
+              <ComboBox
+                value={this.props.MoveToAccount}
+                onChange={this.props.updateMoveToAccount}
+                options={[
+                  {
+                    value: '',
+                    display: (
+                      <FormattedMessage
+                        id="sendReceive.SelectAnAccount"
+                        defaultMessage="Select an Account"
+                      />
+                    ),
+                  },
+                  ...this.accountChanger(),
+                ]}
+              />
             </div>
           </div>
           <div>
@@ -1150,18 +1141,22 @@ class SendRecieve extends Component {
           <div id="container">
             <div className="box1">
               <div className="field">
-                <select
-                  id="select"
-                  onChange={e => this.props.AccountPicked(e.target.value)}
-                >
-                  <FormattedMessage
-                    id="sendReceive.SelectAnAccount"
-                    defaultMessage="Select an Account"
-                  >
-                    {msg => <option value="">{msg}</option>}
-                  </FormattedMessage>
-                  {this.accountChanger()}
-                </select>{' '}
+                <ComboBox
+                  value={this.props.SelectedAccount}
+                  onChange={this.props.AccountPicked}
+                  options={[
+                    {
+                      value: '',
+                      display: (
+                        <FormattedMessage
+                          id="sendReceive.SelectAnAccount"
+                          defaultMessage="Select an Account"
+                        />
+                      ),
+                    },
+                    ...this.accountChanger(),
+                  ]}
+                />
                 <div>
                   <label>
                     <FormattedMessage
@@ -1263,6 +1258,7 @@ class SendRecieve extends Component {
                 <div id="left-buttons">
                   {this.editQueue()}
                   <Button
+                    style={{ marginLeft: 15 }}
                     onClick={() => {
                       console.log(this.props.encrypted, this.props.loggedIn);
                       if (
@@ -1340,6 +1336,7 @@ class SendRecieve extends Component {
                 <div className="foot">
                   <Button
                     primary
+                    style={{ marginRight: 15 }}
                     type="reset"
                     onClick={() => {
                       console.log(this.props.encrypted, this.props.loggedIn);
