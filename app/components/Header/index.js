@@ -1048,6 +1048,31 @@ class Header extends Component {
           </h3>
         </div>
       );
+    } else if (this.props.percentDownloaded === 'Connection Failure') {
+      return (
+        <div>
+          <h3>
+            <FormattedMessage
+              id="ToolTip.ConnectionFailure"
+              defaultMessage="Connection Failure"
+            />
+          </h3>
+
+          <button
+            className="button"
+            disabled={enoughSpace === true ? '' : 'true'}
+            onClick={() => {
+              this.props.OpenBootstrapModal(true);
+              configuration.bootstrapTryAgain(this);
+            }}
+          >
+            <FormattedMessage
+              id="ToolTip.TryAgain"
+              defaultMessage="Try Again"
+            />
+          </button>
+        </div>
+      );
     } else {
       return (
         <div>

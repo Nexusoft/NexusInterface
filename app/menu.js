@@ -69,7 +69,9 @@ export default class MenuBuilder {
                   console.log(payload);
                 });
             } else {
-              self.props.OpenModal('Manual Daemon Mode active invalid command');
+              RPC.PROMISE('stop', []).then(() => {
+                self.props.clearOverviewVariables();
+              });
             }
           },
         },
@@ -341,13 +343,21 @@ export default class MenuBuilder {
           {
             label: 'Stop Daemon',
             click() {
-              let core = require('./api/core');
-              remote
-                .getGlobal('core')
-                .stop()
-                .then(payload => {
+              let settings = GetSettings();
+              if (settings.manualDaemon != true) {
+                let core = require('./api/core');
+
+                remote
+                  .getGlobal('core')
+                  .stop()
+                  .then(payload => {
+                    self.props.clearOverviewVariables();
+                  });
+              } else {
+                RPC.PROMISE('stop', []).then(() => {
                   self.props.clearOverviewVariables();
                 });
+              }
             },
           },
           {
