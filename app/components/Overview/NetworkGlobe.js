@@ -142,7 +142,7 @@ export default class NetworkGlobe extends Component {
           if (maxnodestoadd > 20) {
             maxnodestoadd = 20;
           }
-          for (var i = 0; i < maxnodestoadd; i++) {S
+          for (var i = 0; i < maxnodestoadd; i++) {
             ip = payload[i].addr;
             ip = ip.split(':')[0];
             var tmp = geoiplookup.get(ip);
@@ -174,7 +174,7 @@ export default class NetworkGlobe extends Component {
           glb.createPoints();
         });
           
-        }
+        
       }
     );
   }
