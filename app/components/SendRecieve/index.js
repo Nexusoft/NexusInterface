@@ -297,37 +297,31 @@ class SendRecieve extends Component {
   }
 
   accountChanger() {
-    if (this.props)
-      if (this.props.AccountChanger[0]) {
-        return this.props.AccountChanger.map(e => {
-          if (e.name === '') {
-            return (
-              <FormattedMessage
-                id="sendReceive.MyAccount"
-                defaultMessage="My Account"
-                key={e.name}
-                value={e.name}
-              >
-                {placeholder => (
-                  <option>
-                    {placeholder} : {e.val.toFixed(5)}
-                    NXS
-                  </option>
-                )}
-              </FormattedMessage>
-            );
-          } else {
-            return (
-              <option key={e.name} value={e.name}>
-                {e.name}: {e.val}
+    if (this.props.AccountChanger) {
+      return this.props.AccountChanger.map(e =>
+        e.name ? (
+          <option key={e.name} value={e.name}>
+            {e.name}: {e.val}
+            NXS
+          </option>
+        ) : (
+          <FormattedMessage
+            id="sendReceive.MyAccount"
+            defaultMessage="My Account"
+            key={e.name}
+            value={e.name}
+          >
+            {placeholder => (
+              <option>
+                {placeholder} : {e.val.toFixed(5)}
                 NXS
               </option>
-            );
-          }
-        });
-      } else {
-        return null;
-      }
+            )}
+          </FormattedMessage>
+        )
+      );
+      return null;
+    }
   }
 
   sendOne() {
@@ -930,13 +924,12 @@ class SendRecieve extends Component {
                 id="select"
                 onChange={e => this.props.updateMoveFromAccount(e.target.value)}
               >
-                {' '}
-                <option defaultValue value="">
-                  <FormattedMessage
-                    id="sendReceive.SelectAnAccount"
-                    defaultMessage="Select an Account"
-                  />
-                </option>
+                <FormattedMessage
+                  id="sendReceive.SelectAnAccount"
+                  defaultMessage="Select an Account"
+                >
+                  {msg => <option value="">{msg}</option>}
+                </FormattedMessage>
                 {this.accountChanger()}
               </select>
 
@@ -952,13 +945,12 @@ class SendRecieve extends Component {
                 id="select"
                 onChange={e => this.props.updateMoveToAccount(e.target.value)}
               >
-                {' '}
-                <option defaultValue value="">
-                  <FormattedMessage
-                    id="sendReceive.SelectAnAccount"
-                    defaultMessage="Select an Account"
-                  />
-                </option>
+                <FormattedMessage
+                  id="sendReceive.SelectAnAccount"
+                  defaultMessage="Select an Account"
+                >
+                  {msg => <option value="">{msg}</option>}
+                </FormattedMessage>
                 {this.accountChanger()}
               </select>
             </div>
@@ -1162,12 +1154,12 @@ class SendRecieve extends Component {
                   id="select"
                   onChange={e => this.props.AccountPicked(e.target.value)}
                 >
-                  <option defaultValue value="">
-                    <FormattedMessage
-                      id="sendReceive.SelectAnAccount"
-                      defaultMessage="Select an Account"
-                    />
-                  </option>
+                  <FormattedMessage
+                    id="sendReceive.SelectAnAccount"
+                    defaultMessage="Select an Account"
+                  >
+                    {msg => <option value="">{msg}</option>}
+                  </FormattedMessage>
                   {this.accountChanger()}
                 </select>{' '}
                 <div>

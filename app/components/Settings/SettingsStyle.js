@@ -239,84 +239,75 @@ class SettingsStyle extends Component {
                     this.props.setSelectedColorProp(e.target.value);
                   }}
                 >
-                  <option value="MC2">
-                    <FormattedMessage
-                      id="Cp.AC1"
-                      defaultMessage="Accent Color 1"
-                    />
-                  </option>
-                  <option value="MC4">
-                    <FormattedMessage
-                      id="Cp.AC2"
-                      defaultMessage="Accent Color 2"
-                    />
-                  </option>
-                  <option value="MC3">
-                    <FormattedMessage
-                      id="Cp.THC"
-                      defaultMessage="Table Head Color"
-                    />
-                  </option>
-                  <option value="MC1">
-                    <FormattedMessage
-                      id="Cp.TTC"
-                      defaultMessage="Tooltip Color"
-                    />
-                  </option>
-                  <option value="MC5">
-                    <FormattedMessage id="Cp.TC" defaultMessage="Text Color" />
-                  </option>
-                  <option value="panel">
-                    <FormattedMessage
-                      id="Cp.PBC"
-                      defaultMessage="Panel Background Color"
-                    />
-                  </option>
-                  <option value="NXSlogo">
-                    <FormattedMessage
-                      id="Cp.NLC"
-                      defaultMessage="Nexus Logo Color"
-                    />
-                  </option>
-                  <option value="iconMenu">
-                    <FormattedMessage
-                      id="Cp.SIC"
-                      defaultMessage="Status Icon Color"
-                    />
-                  </option>
-                  <option value="footer">
-                    <FormattedMessage
-                      id="Cp.FBC"
-                      defaultMessage="Footer Base Color"
-                    />
-                  </option>
-                  <option value="footerHover">
-                    <FormattedMessage
-                      id="Cp.FHC"
-                      defaultMessage="Footer Hover Color"
-                    />
-                  </option>
-                  <option value="footerActive">
-                    <FormattedMessage
-                      id="Cp.FAC"
-                      defaultMessage="Footer Active Color"
-                    />
-                  </option>
-                  <option value="globeMulti">
-                    <FormattedMessage id="Cp.GC" defaultMessage="Globe Color" />
-                  </option>
-                  <option value="globePillar">
-                    <FormattedMessage
-                      id="Cp.GPC"
-                      defaultMessage="Globe Pillar Color"
-                    />
-                  </option>
-                  <option value="globeArch">
-                    <FormattedMessage
-                      id="Cp.GAC"
-                      defaultMessage="Globe Arch Color"
-                    />
-                  </option>
+                  <FormattedMessage id="Cp.AC1" defaultMessage="Accent Color 1">
+                    {text => <option value="MC2">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage id="Cp.AC2" defaultMessage="Accent Color 2">
+                    {text => <option value="MC4">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="Cp.THC"
+                    defaultMessage="Table Head Color"
+                  >
+                    {text => <option value="MC3">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage id="Cp.TTC" defaultMessage="Tooltip Color">
+                    {text => <option value="MC1">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage id="Cp.TC" defaultMessage="Text Color">
+                    {text => <option value="MC5">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="Cp.PBC"
+                    defaultMessage="Panel Background Color"
+                  >
+                    {text => <option value="panel">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="Cp.NLC"
+                    defaultMessage="Nexus Logo Color"
+                  >
+                    {text => <option value="NXSlogo">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="Cp.SIC"
+                    defaultMessage="Status Icon Color"
+                  >
+                    {text => <option value="iconMenu">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="Cp.FBC"
+                    defaultMessage="Footer Base Color"
+                  >
+                    {text => <option value="footer">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="Cp.FHC"
+                    defaultMessage="Footer Hover Color"
+                  >
+                    {text => <option value="footerHover">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="Cp.FAC"
+                    defaultMessage="Footer Active Color"
+                  >
+                    {text => <option value="footerActive">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage id="Cp.GC" defaultMessage="Globe Color">
+                    {text => <option value="globeMulti">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="Cp.GPC"
+                    defaultMessage="Globe Pillar Color"
+                  >
+                    {text => <option value="globePillar">{text}</option>}
+                  </FormattedMessage>
+                  <FormattedMessage
+                    id="Cp.GAC"
+                    defaultMessage="Globe Arch Color"
+                  >
+                    {text => <option value="globeArch">{text}</option>}
+                  </FormattedMessage>
                 </select>
               </label>
             </div>

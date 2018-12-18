@@ -111,9 +111,7 @@ class Settings extends Component {
               }
             />
             <TabItem
-              link={`${match.url}/${
-                encrypted !== true ? 'Unencrypted' : 'Security'
-              }`}
+              link={`${match.url}/${encrypted ? 'Security' : 'Unencrypted'}`}
               isActive={(m, location) =>
                 [
                   `${match.url}/Security`,
@@ -155,7 +153,7 @@ class Settings extends Component {
               <Route
                 path={`${match.path}/Security`}
                 render={props =>
-                  loggedIn === true ? (
+                  loggedIn ? (
                     <Security {...props} />
                   ) : (
                     <Redirect to={`${match.path}/Login`} />
