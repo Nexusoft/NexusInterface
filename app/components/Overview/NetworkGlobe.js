@@ -108,6 +108,8 @@ export default class NetworkGlobe extends Component {
   }
   // Class Methods
   updatePointsOnGlobe() {
+
+    console.log("start function");
     const globeseries = [['peers', []]];
     let geoiplookup = '';
 
@@ -126,42 +128,52 @@ export default class NetworkGlobe extends Component {
       );
     }
     let myIP = '';
+    console.log("before request");
     Request(
       {
         url: 'http://www.geoplugin.net/json.gp',
         json: true,
       },
       (error, response, body) => {
-        if (response !== undefined) {
-          if (response.statusCode === 200) {
-            RPC.PROMISE('getpeerinfo', []).then(payload => {
-              var tmp = {};
-              var ip = {};
-              let maxnodestoadd = payload.length;
-              if (maxnodestoadd > 20) {
-                maxnodestoadd = 20;
-              }
-              for (var i = 0; i < maxnodestoadd; i++) {
-                ip = payload[i].addr;
-                ip = ip.split(':')[0];
-                var tmp = geoiplookup.get(ip);
-                globeseries[0][1].push(tmp.location.latitude);
-                globeseries[0][1].push(tmp.location.longitude);
-                globeseries[0][1].push(0.1); //temporary magnitude.
-              }
+        RPC.PROMISE('getpeerinfo', []).then(payload => {
+          var tmp = {};
+          var ip = {};
+          let maxnodestoadd = payload.length;
+          if (maxnodestoadd > 20) {
+            maxnodestoadd = 20;
+          }
+          for (var i = 0; i < maxnodestoadd; i++) {S
+            ip = payload[i].addr;
+            ip = ip.split(':')[0];
+            var tmp = geoiplookup.get(ip);
+            globeseries[0][1].push(tmp.location.latitude);
+            globeseries[0][1].push(tmp.location.longitude);
+            globeseries[0][1].push(0.1); //temporary magnitude.
+          }
 
+          if (response !== undefined){
+            if (response.statusCode !== undefined && response.statusCode === 200)
+            {
               globeseries[0][1].push(body['geoplugin_latitude']);
               globeseries[0][1].push(body['geoplugin_longitude']);
               globeseries[0][1].push(0.1); //temporary magnitude.
-
-              glb.removePoints();
-              glb.addData(globeseries[0][1], {
-                format: 'magnitude',
-                name: globeseries[0][0],
-              });
-              glb.createPoints();
-            });
+            }
           }
+          else
+          {
+            globeseries[0][1].push(0);
+            globeseries[0][1].push(0);
+            globeseries[0][1].push(0.1); //temporary magnitude.
+          }
+
+          glb.removePoints();
+          glb.addData(globeseries[0][1], {
+            format: 'magnitude',
+            name: globeseries[0][0],
+          });
+          glb.createPoints();
+        });
+          
         }
       }
     );

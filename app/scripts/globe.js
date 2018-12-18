@@ -105,6 +105,7 @@ export default (DAT.Globe = function(container, opts) {
   var PI_HALF = Math.PI / 2;
 
   var tempoints = [];
+  var LastKnownLoc;
 
   function init() {
     // container.style.color = '#fff';
@@ -275,6 +276,20 @@ export default (DAT.Globe = function(container, opts) {
 
       if (i + step == data.length) {
         color = { r: 0, g: 1, b: 0 };
+        if (lat == 0 & lng == 0)
+        {
+          lat = LastKnownLoc.lat;
+          lng = LastKnownLoc.lng; 
+          color = {r: 1, g: 0, b: 0};
+        }
+        else
+        {
+          LastKnownLoc = 
+          {
+            lat: lat,
+            lng: lng
+          };
+        }
       }
 
       addPoint(lat, lng, size, color, subgeo);
@@ -530,7 +545,7 @@ export default (DAT.Globe = function(container, opts) {
     }
 
     //scene.remove(scene.getObjectByName(""));
-    //tempoints.length = 0;
+    tempoints.length = 0;
     //cureves.length = 0;
     //console.log(scene);
     //console.log(PillarMeshs);
