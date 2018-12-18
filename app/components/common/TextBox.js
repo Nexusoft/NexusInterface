@@ -8,7 +8,7 @@ import { lighten, fade } from 'utils/colors';
 const inputHeight = '2.25em';
 const iconSpace = '3em';
 
-const TextBox = styled.input(
+const TextInput = styled.input(
   {
     backgroundColor: colors.lightGray,
     color: colors.dark,
@@ -61,9 +61,12 @@ const IconWrapper = styled.div({
   color: colors.darkGray,
 });
 
+const TextBox = ({ multiline, ...rest }) =>
+  multiline ? <TextInput as="textarea" {...rest} /> : <TextInput {...rest} />;
+
 const WrappedTextBox = ({ icon, inputProps, ...rest }) => (
   <InputWrapper {...rest}>
-    <TextBox wrapped {...inputProps} />
+    <TextInput wrapped {...inputProps} />
     {icon && (
       <IconWrapper>
         <Icon icon={icon} />
