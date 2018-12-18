@@ -108,8 +108,6 @@ export default class NetworkGlobe extends Component {
   }
   // Class Methods
   updatePointsOnGlobe() {
-
-    console.log("start function");
     const globeseries = [['peers', []]];
     let geoiplookup = '';
 
@@ -128,7 +126,6 @@ export default class NetworkGlobe extends Component {
       );
     }
     let myIP = '';
-    console.log("before request");
     Request(
       {
         url: 'http://www.geoplugin.net/json.gp',
