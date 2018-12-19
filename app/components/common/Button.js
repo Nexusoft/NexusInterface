@@ -43,6 +43,10 @@ const Button = styled.button(
         transitionProperty: 'border-color, color, box-shadow, text-shadow',
         boxShadow: 'none',
         textSahdow: 'none',
+
+        '.tooltip': {
+          fontWeight: 'normal',
+        },
       },
       '&:hover': {
         borderColor: lighten(colors.primary, 0.3),
