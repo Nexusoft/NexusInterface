@@ -538,11 +538,6 @@ class SendRecieve extends Component {
                   this.props.CloseModal4();
                   this.props.updateAddress(ele.address);
                   this.props.OpenModal('Copied');
-                  setTimeout(() => {
-                    if (this.props.open) {
-                      this.props.CloseModal();
-                    }
-                  }, 3000);
                 }}
                 className="dt"
                 key={ele.address + i}

@@ -62,9 +62,16 @@ export default class MenuBuilder {
             if (settings.manualDaemon != true) {
               let core = require('./api/core');
 
-              core.stop();
+              remote
+                .getGlobal('core')
+                .stop()
+                .then(payload => {
+                  console.log(payload);
+                });
             } else {
-              self.props.OpenModal('Manual Daemon Mode active invalid command');
+              RPC.PROMISE('stop', []).then(() => {
+                self.props.clearOverviewVariables();
+              });
             }
           },
         },
@@ -75,23 +82,9 @@ export default class MenuBuilder {
           label: 'Quit Nexus',
           accelerator: 'CmdOrCtrl+Q',
           click() {
-            log.info('menu.js darwin template: close and kill');
-            let settings = GetSettings();
-            if (settings.manualDaemon != true) {
-              RPC.PROMISE('stop', [])
-                .then(payload => {
-                  core.stop();
-                  remote.getCurrentWindow().close();
-                })
-                .catch(e => {
-                  remote.getGlobal('core').stop();
-                  remote.getCurrentWindow().close();
-                });
-            } else {
-              RPC.PROMISE('stop', []).then(payload => {
-                remote.getCurrentWindow().close();
-              });
-            }
+            self.props.clearOverviewVariables();
+            self.props.OpenModal('Closing Nexus');
+            remote.getCurrentWindow().close();
           },
         },
       ],
@@ -125,7 +118,9 @@ export default class MenuBuilder {
             }
             RPC.PROMISE('backupwallet', [
               BackupDir + '/NexusBackup_' + now + '.dat',
-            ]);
+            ]).then(() => {
+              self.props.OpenModal('Wallet Backup');
+            });
           },
         },
         {
@@ -151,6 +146,11 @@ export default class MenuBuilder {
       label: 'Edit',
       submenu: [
         {
+          label: 'Cut',
+          accelerator: 'CmdOrCtrl+X',
+          role: 'cut',
+        },
+        {
           label: 'Copy',
           accelerator: 'CmdOrCtrl+C',
           role: 'copy',
@@ -159,11 +159,6 @@ export default class MenuBuilder {
           label: 'Paste',
           accelerator: 'CmdOrCtrl+V',
           role: 'paste',
-        },
-        {
-          label: 'Cut',
-          accelerator: 'CmdOrCtrl+X',
-          role: 'cut',
         },
       ],
     };
@@ -210,12 +205,9 @@ export default class MenuBuilder {
             ) {
               let configuration = require('./api/configuration');
               self.props.OpenBootstrapModal(true);
-              configuration.BootstrapRecentDatabase(self);
+              //configuration.BootstrapRecentDatabase(self);
             } else {
               self.props.OpenModal('Please let the daemon start.');
-              setTimeout(() => {
-                self.props.CloseModal();
-              }, 3000);
             }
           },
         },
@@ -313,7 +305,9 @@ export default class MenuBuilder {
               }
               RPC.PROMISE('backupwallet', [
                 BackupDir + '/NexusBackup_' + now + '.dat',
-              ]).then(self.props.OpenModal('Wallet Backup'));
+              ]).then(() => {
+                self.props.OpenModal('Wallet Backup');
+              });
             },
           },
 
@@ -349,8 +343,21 @@ export default class MenuBuilder {
           {
             label: 'Stop Daemon',
             click() {
-              let core = require('./api/core');
-              core.stop();
+              let settings = GetSettings();
+              if (settings.manualDaemon != true) {
+                let core = require('./api/core');
+
+                remote
+                  .getGlobal('core')
+                  .stop()
+                  .then(payload => {
+                    self.props.clearOverviewVariables();
+                  });
+              } else {
+                RPC.PROMISE('stop', []).then(() => {
+                  self.props.clearOverviewVariables();
+                });
+              }
             },
           },
           {
@@ -359,19 +366,9 @@ export default class MenuBuilder {
           {
             label: 'Quit Nexus',
             click() {
-              log.info('menu.js default template: close and kill');
-              let settings = GetSettings();
-
-              if (settings.manualDaemon != true) {
-                RPC.PROMISE('stop', []).then(payload => {
-                  console.log('poststop');
-                  core.stop();
-                  setTimeout(() => {
-                    remote.getCurrentWindow().close();
-                  }, 1000);
-                });
-                remote.getCurrentWindow().close();
-              }
+              self.props.clearOverviewVariables();
+              self.props.OpenModal('Closing Nexus');
+              remote.getCurrentWindow().close();
             },
           },
         ],
@@ -420,12 +417,9 @@ export default class MenuBuilder {
               ) {
                 let configuration = require('./api/configuration');
                 self.props.OpenBootstrapModal(true);
-                configuration.BootstrapRecentDatabase(self);
+                //configuration.BootstrapRecentDatabase(self);
               } else {
                 self.props.OpenModal('Please let the daemon start.');
-                setTimeout(() => {
-                  self.props.CloseModal();
-                }, 3000);
               }
             },
           },

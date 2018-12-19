@@ -49,7 +49,7 @@ class Unencrypted extends Component {
   showPrivKey(e) {
     e.preventDefault();
     let addressInput = document.getElementById('privKeyAddress');
-    let address = addressInput.value;
+    let address = addressInput.value.trim();
     let output = document.getElementById('privKeyOutput');
     if (address) {
       RPC.PROMISE('dumpprivkey', [address])
@@ -57,10 +57,10 @@ class Unencrypted extends Component {
           output.value = payload;
         })
         .catch(e => {
+          if (e.includes(address)) {
+            e = e.replace(address + ' ', '');
+          }
           this.props.OpenErrorModal(e);
-          setTimeout(() => {
-            this.props.CloseModal();
-          }, 3000);
         });
     } else {
       addressInput.focus();
@@ -85,16 +85,10 @@ class Unencrypted extends Component {
             })
             .catch(e => {
               this.props.OpenErrorModal(e);
-              setTimeout(() => {
-                this.props.CloseModal();
-              }, 3000);
             });
         })
         .catch(e => {
           this.props.OpenErrorModal(e);
-          setTimeout(() => {
-            this.props.CloseModal();
-          }, 3000);
         });
     } else if (!label) {
       acctname.focus();
@@ -112,9 +106,6 @@ class Unencrypted extends Component {
     document.execCommand('Copy', false, null);
     output.type = 'password';
     this.props.OpenModal('Copied');
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 3000);
   }
 
   reEnterValidator(e) {
@@ -155,7 +146,6 @@ class Unencrypted extends Component {
 
                 // Start the daemon again... give it maybe 5 seconds.
                 setTimeout(() => {
-                  this.props.CloseModal();
                   remote.getGlobal('core').start();
                   this.props.history.replace('/');
                 }, 5000);

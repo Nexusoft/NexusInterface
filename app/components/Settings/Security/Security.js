@@ -45,9 +45,6 @@ class Security extends Component {
       })
       .catch(e => {
         this.props.OpenErrorModal(e);
-        setTimeout(() => {
-          this.props.CloseModal();
-        }, 3000);
       });
   }
 
@@ -62,10 +59,10 @@ class Security extends Component {
           output.value = payload;
         })
         .catch(e => {
+          if (e.includes(address)) {
+            e = e.replace(address + ' ', '');
+          }
           this.props.OpenErrorModal(e);
-          setTimeout(() => {
-            this.props.CloseModal();
-          }, 3000);
         });
     } else {
       addressInput.focus();
@@ -90,16 +87,10 @@ class Security extends Component {
             })
             .catch(e => {
               this.props.OpenErrorModal(e);
-              setTimeout(() => {
-                this.props.CloseModal();
-              }, 3000);
             });
         })
         .catch(e => {
           this.props.OpenErrorModal(e);
-          setTimeout(() => {
-            this.props.CloseModal();
-          }, 3000);
         });
     } else if (!label) {
       acctname.focus();
@@ -117,9 +108,6 @@ class Security extends Component {
     document.execCommand('Copy', false, null);
     output.type = 'password';
     this.props.OpenModal('Copied');
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 3000);
   }
 
   changePassword(e) {

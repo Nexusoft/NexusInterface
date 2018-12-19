@@ -88,7 +88,7 @@ class SettingsCore extends Component {
     this.setEnableMining(settings);
     this.setEnableStaking(settings);
     this.setVerboseLevel(settings);
-    this.setForkblocks(settings);
+    // this.setForkblocks(settings);
     this.setMapPortUsingUpnp(settings);
     this.setSocks4Proxy(settings);
     this.setSocks4ProxyIP(settings);
@@ -925,7 +925,7 @@ class SettingsCore extends Component {
               )}
             </FormattedMessage>
           </div>
-
+          {/*
           <div className="field">
             <label htmlFor="forkblock">
               <FormattedMessage
@@ -948,7 +948,7 @@ class SettingsCore extends Component {
               )}
             </FormattedMessage>
           </div>
-
+          */}
           <div className="field">
             <label htmlFor="manualDaemon">
               <FormattedMessage

@@ -334,6 +334,9 @@ export default {
     'ToolTip.RenderGlobe': 'Render the globe on the Overview page',
     'Tooltip.RenderGlobeOpenGLFail':
       'Your computer does not support OPENGL 2.0',
+    'ToolTip.ConnectionFailure': 'Connection Failure', // NEW STRING
+
+    'ToolTip.TryAgain': 'Try Again?', // NEW STRING
 
     'ToolTip.DbOption':
       'Would you like to reduce the time it takes to sync by downloading a recent version of the database?',
@@ -372,6 +375,7 @@ export default {
     'Alert.ContactsExported': 'Contacts Exported',
     'Alert.DaemonLoadingWait': 'Loading Daemon, Please Wait',
     'Alert.CoreRestarting': 'Core Restarting',
+    'Alert.nodefaultname': 'Account cannot be named * or default', // NEW STRING
 
     'Cp.AC1': 'Accent Color 1',
     'Cp.AC2': 'Accent Color 2',

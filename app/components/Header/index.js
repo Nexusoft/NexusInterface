@@ -33,6 +33,7 @@ import { FormattedMessage } from 'react-intl';
 var tray = tray || null;
 let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
+var enoughSpace = true;
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -54,7 +55,7 @@ class Header extends Component {
     menuBuilder.buildMenu(self);
     this.props.SetGoogleAnalytics(GOOGLE);
 
-    if (tray === null) this.setupTray();
+    if (tray === null) this.setupTray(self);
     let settings = GetSettings();
 
     if (Object.keys(settings).length < 1) {
@@ -65,6 +66,12 @@ class Header extends Component {
       this.props.setSettings(settings);
     }
 
+    mainWindow.on('close', e => {
+      e.preventDefault();
+      this.props.clearOverviewVariables();
+      this.props.OpenModal('Closing Nexus');
+    });
+
     this.props.SetMarketAveData();
     this.props.LoadAddressBook();
     this.props.GetInfoDump();
@@ -74,16 +81,7 @@ class Header extends Component {
       self.props.GetInfoDump();
     }, 20000);
     const core = electron.remote.getGlobal('core');
-    core.on('starting', () => {
-      self.set = setInterval(function() {
-        self.props.AddRPCCall('getInfo');
-        self.props.GetInfoDump();
-      }, 20000);
-    });
 
-    core.on('stopping', () => {
-      this.props.clearOverviewVariables();
-    });
     this.props.SetMarketAveData();
     self.mktData = setInterval(function() {
       console.log('MARKET');
@@ -246,10 +244,11 @@ class Header extends Component {
     });
   }
 
-  setupTray() {
+  setupTray(self) {
+    console.log(self);
     let trayImage = '';
     let mainWindow = electron.remote.getCurrentWindow();
-
+    console.log(this);
     const path = require('path');
     const app = electron.app || electron.remote.app;
 
@@ -323,18 +322,9 @@ class Header extends Component {
       },
       {
         label: 'Quit Nexus',
-        click: function() {
-          log.info('header/index.js contextmenu: close and kill');
-          let settings = GetSettings();
-          settings.keepDaemon = false;
-          SaveSettings(settings);
-          if (settings.manualDaemon != true) {
-            RPC.PROMISE('stop', []).then(payload => {
-              setTimeout(() => {
-                mainWindow.close();
-              }, 1000);
-            });
-          }
+        click() {
+          self.props.clearOverviewVariables();
+          self.props.OpenModal('Closing Nexus');
           mainWindow.close();
         },
       },
@@ -460,8 +450,195 @@ class Header extends Component {
     }
   }
 
-  errorModalInternal() {
+  // errorModalInternal() {
+  //   switch (this.props.modaltype) {
+  //     case 'This is an address registered to this wallet':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.registeredToThis"
+  //             defaultMessage="This is an address registered to this wallet"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Invalid Address':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.InvalidAddress"
+  //             defaultMessage="Invalid Address"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Invalid Amount':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.InvalidAmount"
+  //             defaultMessage="Invalid Amount"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Invalid':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'No Addresses':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.NoAddresses"
+  //             defaultMessage="No Addresses"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Insufficient funds':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.InsufficientFunds"
+  //             defaultMessage="Insufficient Funds"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Empty Queue!':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.QueueEmpty"
+  //             defaultMessage="Queue Empty"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Invalid Transaction Fee':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.InvalidTransactionFee"
+  //             defaultMessage="Invalid Transaction Fee"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'No ammount set':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.NoAmmountSet"
+  //             defaultMessage="No Ammount Set"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Please Fill Out Field':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.PleaseFillOutField"
+  //             defaultMessage="Please Fill Out Field"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Incorrect Passsword':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.IncorrectPasssword"
+  //             defaultMessage="Incorrect Passsword"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Accounts are the same':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.AccountsAreTheSame"
+  //             defaultMessage="Accounts are the same"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'No second account chosen':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.NoSecondAccountChosen"
+  //             defaultMessage="No second account chosen"
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+  //     case 'Please wait for daemon':
+  //       return (
+  //         <h2>
+  //           <FormattedMessage
+  //             id="Alert.DaemonLoadingWait"
+  //             defaultMessage="Loading Daemon, Please wait..."
+  //           />
+  //         </h2>
+  //       );
+  //       break;
+
+  //     default:
+  //       return <h2>{this.props.modaltype}</h2>;
+  //       break;
+  //   }
+  // }
+
+  modalinternal() {
     switch (this.props.modaltype) {
+      case 'receive':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.Received"
+              defaultMessage="Transaction Received"
+            />
+          </h2>
+        );
+        break;
+      case 'send':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.Sent"
+              defaultMessage="Transaction Sent"
+            />
+          </h2>
+        );
+        break;
+      case 'genesis':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.Genesis"
+              defaultMessage="Genesis Transaction"
+            />
+          </h2>
+        );
+        break;
+      case 'trust':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.TrustTransaction"
+              defaultMessage="Trust Transaction"
+            />
+          </h2>
+        );
+        break;
+
       case 'This is an address registered to this wallet':
         return (
           <h2>
@@ -600,91 +777,6 @@ class Header extends Component {
         );
         break;
 
-      default:
-        return <h2>{this.props.modaltype}</h2>;
-        break;
-    }
-  }
-
-  modalinternal() {
-    switch (this.props.modaltype) {
-      case 'receive':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.Received"
-              defaultMessage="Transaction Received"
-            />
-          </h2>
-        );
-        break;
-      case 'send':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.Sent"
-              defaultMessage="Transaction Sent"
-            />
-          </h2>
-        );
-        break;
-      case 'genesis':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.Genesis"
-              defaultMessage="Genesis Transaction"
-            />
-          </h2>
-        );
-        break;
-      case 'trust':
-        return (
-          <h2>
-            <FormattedMessage
-              id="Alert.TrustTransaction"
-              defaultMessage="Trust Transaction"
-            />
-          </h2>
-        );
-        break;
-      // case 'This is an address registered to this wallet':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.registeredToThis"
-      //         defaultMessage="This is an address registered to this wallet"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
-      // case 'Invalid Address':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.InvalidAddress"
-      //         defaultMessage="Invalid Address"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
-      // case 'Invalid Amount':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.InvalidAmount"
-      //         defaultMessage="Invalid Amount"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
-      // case 'Invalid':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage id="Alert.Invalid" defaultMessage="Invalid" />
-      //     </h2>
-      //   );
-      //   break;
       case 'Address Added':
         return (
           <h2>
@@ -695,36 +787,7 @@ class Header extends Component {
           </h2>
         );
         break;
-      // case 'No Addresses':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.NoAddresses"
-      //         defaultMessage="No Addresses"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
-      // case 'Insufficient funds':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.InsufficientFunds"
-      //         defaultMessage="Insufficient Funds"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
-      // case 'Empty Queue!':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.QueueEmpty"
-      //         defaultMessage="Queue Empty"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
+
       case 'Password has been changed.':
         return (
           <h2>
@@ -785,16 +848,7 @@ class Header extends Component {
           </h2>
         );
         break;
-      // case 'Invalid Transaction Fee':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.InvalidTransactionFee"
-      //         defaultMessage="Invalid Transaction Fee"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
+
       case 'Copied':
         return (
           <h2>
@@ -812,26 +866,7 @@ class Header extends Component {
           </h2>
         );
         break;
-      // case 'No ammount set':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.NoAmmountSet"
-      //         defaultMessage="No Ammount Set"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
-      // case 'Please Fill Out Field':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.PleaseFillOutField"
-      //         defaultMessage="Please Fill Out Field"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
+
       case 'FutureDate':
         return (
           <h2>
@@ -842,16 +877,7 @@ class Header extends Component {
           </h2>
         );
         break;
-      // case 'Incorrect Passsword':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.IncorrectPasssword"
-      //         defaultMessage="Incorrect Passsword"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
+
       case 'Core Settings Saved':
         return (
           <h2>
@@ -882,36 +908,16 @@ class Header extends Component {
           </h2>
         );
         break;
-      // case 'Accounts are the same':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.AccountsAreTheSame"
-      //         defaultMessage="Accounts are the same"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
-      // case 'No second account chosen':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.NoSecondAccountChosen"
-      //         defaultMessage="No second account chosen"
-      //       />
-      //     </h2>
-      //   );
-      //   break;
-      // case 'Please wait for daemon':
-      //   return (
-      //     <h2>
-      //       <FormattedMessage
-      //         id="Alert.DaemonLoadingWait"
-      //         defaultMessage="Loading Daemon, Please wait..."
-      //       />
-      //     </h2>
-      //   );
-      //   break;
+      case 'Account cannot be named * or default':
+        return (
+          <h2>
+            <FormattedMessage
+              id="Alert.nodefaultname"
+              defaultMessage="Account cannot be named * or default"
+            />
+          </h2>
+        );
+        break;
       default:
         return <h2>{this.props.modaltype}</h2>;
         break;
@@ -957,6 +963,21 @@ class Header extends Component {
 
   BootstrapModalInteriorBuilder() {
     if (this.props.percentDownloaded === 0) {
+      if (this.bootstrapModalController()) {
+        const checkDiskSpace = require('check-disk-space');
+        let dir = process.env.APPDATA || process.env.HOME;
+        checkDiskSpace(dir).then(diskSpace => {
+          if (diskSpace.free <= 20000000000) {
+            enoughSpace = false;
+            setTimeout(() => {
+              this.forceUpdate();
+            }, 5000);
+          } else {
+            enoughSpace = true;
+          }
+        });
+      }
+
       return (
         <div>
           <h3>
@@ -965,8 +986,21 @@ class Header extends Component {
               defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
             />
           </h3>
+          {enoughSpace === true ? null : (
+            <h3
+              style={{
+                color: '#ff0000',
+              }}
+            >
+              <FormattedMessage
+                id="ToolTip.NotEnoughSpace"
+                defaultMessage="Not Enough Space, Requires 20gb."
+              />
+            </h3>
+          )}
           <button
             className="button"
+            disabled={enoughSpace === true ? '' : 'true'}
             onClick={() => {
               this.props.OpenBootstrapModal(true);
               configuration.BootstrapRecentDatabase(this);
@@ -1012,6 +1046,31 @@ class Header extends Component {
               defaultMessage="Please Wait..."
             />
           </h3>
+        </div>
+      );
+    } else if (this.props.percentDownloaded === 'Connection Failure') {
+      return (
+        <div>
+          <h3>
+            <FormattedMessage
+              id="ToolTip.ConnectionFailure"
+              defaultMessage="Connection Failure"
+            />
+          </h3>
+
+          <button
+            className="button"
+            disabled={enoughSpace === true ? '' : 'true'}
+            onClick={() => {
+              this.props.OpenBootstrapModal(true);
+              configuration.bootstrapTryAgain(this);
+            }}
+          >
+            <FormattedMessage
+              id="ToolTip.TryAgain"
+              defaultMessage="Try Again"
+            />
+          </button>
         </div>
       );
     } else {
@@ -1068,10 +1127,11 @@ class Header extends Component {
           onClose={this.props.CloseModal}
           classNames={{ modal: 'custom-modal' }}
           onEntered={() => {
-            console.log('Hoes');
-            setTimeout(() => {
-              this.props.CloseModal();
-            }, 3000);
+            if (this.props.modaltype != 'Closing Nexus') {
+              setTimeout(() => {
+                this.props.CloseModal();
+              }, 1500);
+            }
           }}
         >
           {this.modalinternal()}
@@ -1083,13 +1143,12 @@ class Header extends Component {
           onClose={this.props.CloseErrorModal}
           classNames={{ modal: 'custom-Error-Modal' }}
           onEntered={() => {
-            console.log('yp');
             setTimeout(() => {
               this.props.CloseErrorModal();
-            }, 3000);
+            }, 1500);
           }}
         >
-          {this.errorModalInternal()}
+          {this.modalinternal()}
         </Modal>
         <Modal
           key="bootstrap-modal"

@@ -130,9 +130,6 @@ class Login extends Component {
           });
       } else {
         this.props.OpenModal('FutureDate');
-        setTimeout(() => {
-          this.props.CloseModal();
-        }, 3000);
       }
     }
   }

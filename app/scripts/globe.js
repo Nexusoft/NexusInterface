@@ -55,7 +55,8 @@ export default (DAT.Globe = function(container, opts) {
         'varying vec2 vUv;',
         'void main() {',
         'vec3 diffuse = texture2D( _texture, vUv ).xyz;',
-        'float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );',
+        //'float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );',
+        'float intensity = 1.05 - vNormal.z ;',
         'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
         'gl_FragColor = vec4( (diffuse*colorMod.xyz) + atmosphere, 1.0 );',
         '}',
@@ -73,7 +74,8 @@ export default (DAT.Globe = function(container, opts) {
       fragmentShader: [
         'varying vec3 vNormal;',
         'void main() {',
-        'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 20.0 );',
+        // 'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 20.0 );',
+        'float intensity = pow( 0.8 - vNormal.z, 20.0 );',
         'gl_FragColor = vec4( 1.0, 1.0, 1.0, 0.5 ) * intensity;',
         '}',
       ].join('\n'),
@@ -103,6 +105,7 @@ export default (DAT.Globe = function(container, opts) {
   var PI_HALF = Math.PI / 2;
 
   var tempoints = [];
+  var LastKnownLoc;
 
   function init() {
     // container.style.color = '#fff';
@@ -227,7 +230,7 @@ export default (DAT.Globe = function(container, opts) {
   function addData(data, opts) {
     var lat, lng, size, color, i, step, colorFnWrapper;
 
-    opts.animated = opts.animated || false;
+    // opts.animated = opts.animated || false;
     this.is_animated = opts.animated;
     opts.format = opts.format || 'magnitude'; // other option is 'legend'
     if (opts.format === 'magnitude') {
@@ -273,6 +276,20 @@ export default (DAT.Globe = function(container, opts) {
 
       if (i + step == data.length) {
         color = { r: 0, g: 1, b: 0 };
+        if (lat == 0 & lng == 0)
+        {
+          lat = LastKnownLoc.lat;
+          lng = LastKnownLoc.lng; 
+          color = {r: 1, g: 0, b: 0};
+        }
+        else
+        {
+          LastKnownLoc = 
+          {
+            lat: lat,
+            lng: lng
+          };
+        }
       }
 
       addPoint(lat, lng, size, color, subgeo);
@@ -419,7 +436,8 @@ export default (DAT.Globe = function(container, opts) {
     mouse.x = -event.clientX;
     mouse.y = event.clientY;
 
-    var zoomDamp = distance / 1000;
+    //var zoomDamp = distance / 1000;
+    var zoomDamp = distance * 0.001;
 
     target.x = targetOnDown.x + (mouse.x - mouseOnDown.x) * 0.005 * zoomDamp;
     target.y = targetOnDown.y + (mouse.y - mouseOnDown.y) * 0.005 * zoomDamp;
@@ -527,7 +545,7 @@ export default (DAT.Globe = function(container, opts) {
     }
 
     //scene.remove(scene.getObjectByName(""));
-    //tempoints.length = 0;
+    tempoints.length = 0;
     //cureves.length = 0;
     //console.log(scene);
     //console.log(PillarMeshs);
@@ -583,7 +601,7 @@ export default (DAT.Globe = function(container, opts) {
     const points = new Float32Array(curveSegments * 3);
     const vertices = spline.getPoints(curveSegments - 1);
 
-    for (let i = 0, j = 0; i < vertices.length; i++) {
+    for (let i = 0, j = 0; i < vertices.length; ++i) {
       const vertex = vertices[i];
       points[j++] = vertex.x;
       points[j++] = vertex.y;
@@ -694,7 +712,7 @@ export default (DAT.Globe = function(container, opts) {
     var l = validMorphs.length - 1;
     var scaledt = t * l + 1;
     var index = Math.floor(scaledt);
-    for (i = 0; i < validMorphs.length; i++) {
+    for (i = 0; i < validMorphs.length; ++i) {
       this.points.morphTargetInfluences[validMorphs[i]] = 0;
     }
     var lastIndex = index - 1;

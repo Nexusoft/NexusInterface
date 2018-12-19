@@ -206,17 +206,15 @@ class SettingsStyle extends Component {
   }
 
   updateRenderGlobe() {
-    let settings = GetSettings();
+    let settings = require('api/settings.js').GetSettings();
     settings.renderGlobe = !this.props.settings.renderGlobe;
-    SaveSettings(settings);
+    require('api/settings.js').SaveSettings(settings);
   }
 
   SaveSettings() {
     require('api/settings.js').SaveSettings(this.props.settings);
     this.props.OpenModal('Style Settings Saved');
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 3000);
+
     this.props.googleanalytics.SendEvent('Settings', 'Style', 'Saved', 1);
   }
 
