@@ -116,7 +116,7 @@ export default class ComboBox extends Component {
           onClick={this.open}
         >
           <CurrentValue>{this.option(value).display}</CurrentValue>
-          <Button blank dark>
+          <Button freeHeight blank dark>
             <Arrow down width={12} height={8} />
           </Button>
         </ComboBoxControl>

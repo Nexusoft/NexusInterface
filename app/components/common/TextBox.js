@@ -20,7 +20,6 @@ const TextInput = styled.input(
     outline: 'none',
     padding: '0 .8em',
     height: inputHeight,
-    width: '100%',
     transitionProperty: 'background-color',
     transitionDuration: timing.normal,
 
@@ -34,6 +33,10 @@ const TextInput = styled.input(
       outline: 'none',
     },
   },
+  ({ size }) =>
+    !size && {
+      width: '100%',
+    },
   ({ padLeft }) =>
     padLeft && {
       paddingLeft: iconSpace,
@@ -58,8 +61,7 @@ const InputWrapper = styled.div({
 const IconWrapper = styled.div(
   {
     position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
+    top: 0,
     height: inputHeight,
     width: iconSpace,
     display: 'flex',
@@ -94,8 +96,6 @@ const TextBox = ({ multiline, ...rest }) =>
 const TailButton = styled(Button)({
   borderTopLeftRadius: 0,
   borderBottomLeftRadius: 0,
-  paddingTop: 0,
-  paddingBottom: 0,
   position: 'relative',
 });
 
@@ -125,7 +125,7 @@ const WrappedTextBox = ({
       </IconWrapper>
     )}
     {!!btnContent && (
-      <TailButton filled light onClick={btnOnClick}>
+      <TailButton filled light freeHeight onClick={btnOnClick}>
         {btnContent}
       </TailButton>
     )}

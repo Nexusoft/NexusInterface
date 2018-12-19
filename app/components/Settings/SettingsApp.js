@@ -20,10 +20,38 @@ import * as FlagFile from 'languages/LanguageFlags';
 import { remote as dialog } from 'electron';
 import SettingsField from 'components/common/SettingsField';
 import Button from 'components/common/Button';
-import TextBox from 'components/common/TextBox';
+import TextBox, { WrappedTextBox } from 'components/common/TextBox';
+import ComboBox from 'components/common/ComboBox';
 
 // Internal Local Dependencies
 import styles from './style.css';
+
+const fiatCurrencies = [
+  { value: 'AUD', display: 'Australian Dollar' },
+  { value: 'BRL', display: 'Brazilian Real' },
+  { value: 'GPB', display: 'British Pound' },
+  { value: 'CAD', display: 'Canadian Dollar' },
+  { value: 'CLP', display: 'Chilean Peso' },
+  { value: 'CNY', display: 'Chinese Yuan' },
+  { value: 'CZK', display: 'Czeck Koruna' },
+  { value: 'EUR', display: 'Euro' },
+  { value: 'HKD', display: 'Hong Kong Dollar' },
+  { value: 'INR', display: 'Israeli Shekel' },
+  { value: 'JPY', display: 'Japanese Yen' },
+  { value: 'KRW', display: 'Korean Won' },
+  { value: 'MYR', display: 'Malaysian Ringgit' },
+  { value: 'MXN', display: 'Mexican Peso' },
+  { value: 'NZD', display: 'New Zealand Dollar' },
+  { value: 'PKR', display: 'Pakistan Rupee' },
+  { value: 'RUB', display: 'Russian Ruble' },
+  { value: 'SAR', display: 'Saudi Riyal' },
+  { value: 'SGD', display: 'Singapore Dollar' },
+  { value: 'ZAR', display: 'South African Rand' },
+  { value: 'CHF', display: 'Swiss Franc' },
+  { value: 'TWD', display: 'Taiwan Dollar' },
+  { value: 'AED', display: 'United Arab Emirates Dirham' },
+  { value: 'USD', display: 'United States Dollar' },
+];
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -556,84 +584,12 @@ class SettingsApp extends Component {
               />
             }
           >
-            <select
+            <ComboBox
               value={this.props.settings.fiatCurrency}
               onChange={e => this.OnFiatCurrencyChange(e)}
               style={{ maxWidth: 260 }}
-            >
-              <option key="AUD" value="AUD">
-                Australian Dollar
-              </option>
-              <option key="BRL" value="BRL">
-                Brazilian Real
-              </option>
-              <option key="GPB" value="GPB">
-                British Pound
-              </option>
-              <option key="CAD" value="CAD">
-                Canadian Dollar
-              </option>
-              <option key="CLP" value="CLP">
-                Chilean Peso
-              </option>
-              <option key="CNY" value="CNY">
-                Chinese Yuan
-              </option>
-              <option key="CZK" value="CZK">
-                Czeck Koruna
-              </option>
-              <option key="EUR" value="EUR">
-                Euro
-              </option>
-              <option key="HKD" value="HKD">
-                Hong Kong Dollar
-              </option>
-              <option key="INR" value="INR">
-                Israeli Shekel
-              </option>
-              <option key="JPY" value="JPY">
-                Japanese Yen
-              </option>
-              <option key="KRW" value="KRW">
-                Korean Won
-              </option>
-              <option key="MYR" value="MYR">
-                Malaysian Ringgit
-              </option>
-              <option key="MXN" value="MXN">
-                Mexican Peso
-              </option>
-              <option key="NZD" value="NZD">
-                New Zealand Dollar
-              </option>
-              <option key="PKR" value="PKR">
-                Pakistan Rupee
-              </option>
-              <option key="RUB" value="RUB">
-                Russian Ruble
-              </option>
-              <option key="SAR" value="SAR">
-                Saudi Riyal
-              </option>
-              <option key="SGD" value="SGD">
-                Singapore Dollar
-              </option>
-              <option key="ZAR" value="ZAR">
-                South African Rand
-              </option>
-              <option key="CHF" value="CHF">
-                Swiss Franc
-              </option>
-              <option key="TWD" value="TWD">
-                Taiwan Dollar
-              </option>
-              <option key="AED" value="AED">
-                United Arab Emirates Dirham
-              </option>
-              <option key="USD" value="USD">
-                United States Dollar
-              </option>
-            </select>
+              options={fiatCurrencies}
+            />
           </SettingsField>
 
           <SettingsField
@@ -651,7 +607,7 @@ class SettingsApp extends Component {
               />
             }
           >
-            <input
+            <TextBox
               type="number"
               defaultValue={this.initialValues.minConf}
               style={{ width: 75 }}
@@ -675,10 +631,8 @@ class SettingsApp extends Component {
               />
             }
           >
-            <input
-              className="Folder"
-              type="text"
-              style={{ width: 260 }}
+            <TextBox
+              size={40}
               value={this.props.settings.Folder}
               onChange={e => this.props.SeeFolder(e.target.value)}
               onClick={e => {
@@ -703,21 +657,24 @@ class SettingsApp extends Component {
               />
             }
           >
-            <div className="fee">
-              <input
+            <div style={{ display: 'flex', alignItems: 'stretch' }}>
+              <TextBox
+                type="number"
                 className="Txfee"
                 defaultValue={this.initialValues.txFee}
-                type="number"
                 step="0.01"
                 min="0"
-              />{' '}
-              <button
-                className="feebutton"
-                type="button"
+                style={{ width: 100 }}
+              />
+              <Button
+                filled
+                primary
+                freeHeight
                 onClick={this.props.OpenModal2}
+                style={{ marginLeft: 10 }}
               >
                 Set
-              </button>
+              </Button>
             </div>
           </SettingsField>
 
@@ -920,17 +877,17 @@ class SettingsApp extends Component {
           >
             <div className="langSet">
               <span className="flag-icon-background flag-icon-gr" />
-              <button
-                type="button"
-                className="Languagebutton"
-                // onClick={() => this.props.SwitchLocale()}
+              <Button
+                style={{ height: '2.25em' }}
+                filled
+                light
                 onClick={() => this.props.OpenModal3()}
               >
                 <FormattedMessage
                   id="Settings.LangButton"
                   defaultMesage="English"
                 />
-              </button>
+              </Button>
             </div>
           </SettingsField>
 
@@ -974,7 +931,6 @@ class SettingsApp extends Component {
             </button>
           </div> */}
           <Button
-            primary
             disabled={!this.props.connections}
             style={{ marginTop: '2em' }}
             onClick={e => {

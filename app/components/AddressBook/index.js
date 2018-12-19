@@ -1173,7 +1173,7 @@ class AddressBook extends Component {
         }
         controls={
           !!this.props.connections && (
-            <div className="flex">
+            <div className="flex center">
               <Button
                 blank
                 className="relative"
