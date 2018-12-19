@@ -128,16 +128,16 @@ configuration.Rename = function(oldFilename, newFilename) {
   }
 };
 
-configuration.Start = function() {
-  var fs = require('fs');
-  if (!fs.existsSync(this.GetAppDataDirectory())) {
-    fs.mkdirSync(this.GetAppDataDirectory());
-  }
+// configuration.Start = function() {
+//   var fs = require('fs');
+//   if (!fs.existsSync(this.GetAppDataDirectory())) {
+//     fs.mkdirSync(this.GetAppDataDirectory());
+//   }
 
-  if (!fs.existsSync(this.GetAppResourceDir())) {
-    fs.mkdirSync(this.GetAppResourceDir());
-  }
-};
+//   if (!fs.existsSync(this.GetAppResourceDir())) {
+//     fs.mkdirSync(this.GetAppResourceDir());
+//   }
+// };
 
 //
 // GetAppDataDirectory: Get the application data directory
@@ -154,16 +154,19 @@ configuration.GetAppDataDirectory = function() {
       app
         .getPath('appData')
         .replace(' ', `\ `)
-        .replace('/Electron/', app.getName()),
+        .replace('/Electron/', ''),
       app.getName()
     );
   } else {
     AppDataDirPath = path.join(
-      app.getPath('appData').replace('/Electron/', app.getName()),
+      app.getPath('appData').replace('/Electron/', ''),
       app.getName()
     );
   }
-  AppDataDirPath += ' Wallet';
+  console.log(app.getPath('appData'));
+  console.log(app.getName());
+  console.log(AppDataDirPath);
+  // AppDataDirPath += ' Wallet';
   return AppDataDirPath;
 };
 
