@@ -93,6 +93,10 @@ input[type="text"]::placeholder {
   align-items: center;
 }
 
+.flex.stretch {
+  align-items: stretch;
+}
+
 /*------------------------------------------------------------------
 MEDIA QUERIES
 ------------------------------------------------------------------*/

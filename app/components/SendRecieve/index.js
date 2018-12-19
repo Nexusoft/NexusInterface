@@ -15,7 +15,7 @@ import ContextMenuBuilder from 'contextmenu';
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
 import Button from 'components/common/Button';
-import TextBox, { WrappedTextBox } from 'components/common/TextBox';
+import TextBox from 'components/common/TextBox';
 import ComboBox from 'components/common/ComboBox';
 import WaitingText from 'components/common/WaitingText';
 import FormField from 'components/common/FormField';
@@ -401,30 +401,35 @@ class SendRecieve extends Component {
                 />
               </FormField>
               <FormField connectLabel inputWrapped label="Send To">
-                <WrappedTextBox
-                  btnContent={
-                    <>
-                      <Icon icon={addressBookIcon} />
-                      <div className="tooltip bottom">
-                        <FormattedMessage
-                          id="sendReceive.Lookup"
-                          defaultMessage="Lookup Address"
-                        />
-                      </div>
-                    </>
-                  }
-                  btnOnClick={() => {
-                    this.props.clearSearch();
-                    this.props.OpenModal4('Address Lookup');
-                  }}
-                  inputProps={{
-                    type: 'text',
-                    placeholder: 'Recipient Address',
-                    value: this.props.Addressplaceholder,
-                    onChange: e => this.props.updateAddress(e.target.value),
-                    required: true,
-                  }}
-                />
+                <div className="flex stretch">
+                  <TextBox
+                    grouped="left"
+                    type="text"
+                    placeholder="Recipient Address"
+                    value={this.props.Addressplaceholder}
+                    onChange={e => this.props.updateAddress(e.target.value)}
+                    required
+                  />
+                  <Button
+                    grouped="right"
+                    freeHeight
+                    filled
+                    light
+                    className="relative"
+                    onClick={() => {
+                      this.props.clearSearch();
+                      this.props.OpenModal4('Address Lookup');
+                    }}
+                  >
+                    <Icon icon={addressBookIcon} />
+                    <div className="tooltip bottom">
+                      <FormattedMessage
+                        id="sendReceive.Lookup"
+                        defaultMessage="Lookup Address"
+                      />
+                    </div>
+                  </Button>
+                </div>
               </FormField>
               <SendAmount>
                 <SendAmountField>

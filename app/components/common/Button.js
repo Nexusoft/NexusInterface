@@ -42,6 +42,31 @@ const Button = styled.button(
       height: 'auto',
     },
 
+  ({ grouped }) => {
+    switch (grouped) {
+      case 'left':
+        return {
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
+        };
+      case 'right':
+        return {
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+        };
+      case 'top':
+        return {
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+        };
+      case 'bottom':
+        return {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+        };
+    }
+  },
+
   ({ primary, filled }) =>
     primary &&
     (filled
@@ -91,6 +116,22 @@ const Button = styled.button(
       '&:hover': {
         border: 'none',
         color: dark ? colors.dark : colors.light,
+      },
+    },
+
+  ({ filled, darkGray }) =>
+    filled &&
+    darkGray && {
+      '&, &:active, &&[disabled]': {
+        border: 'none',
+        backgroundColor: colors.darkGray,
+        color: colors.light,
+        transitionProperty: 'background-color',
+      },
+      '&:hover': {
+        border: 'none',
+        backgroundColor: lighten(colors.darkGray, 0.15),
+        color: colors.light,
       },
     },
 

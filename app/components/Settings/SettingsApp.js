@@ -20,7 +20,7 @@ import * as FlagFile from 'languages/LanguageFlags';
 import { remote as dialog } from 'electron';
 import SettingsField from 'components/common/SettingsField';
 import Button from 'components/common/Button';
-import TextBox, { WrappedTextBox } from 'components/common/TextBox';
+import TextBox from 'components/common/TextBox';
 import ComboBox from 'components/common/ComboBox';
 
 // Internal Local Dependencies
@@ -657,10 +657,10 @@ class SettingsApp extends Component {
               />
             }
           >
-            <div style={{ display: 'flex', alignItems: 'stretch' }}>
+            <div className="flex stretch">
               <TextBox
                 type="number"
-                className="Txfee"
+                grouped="left"
                 defaultValue={this.initialValues.txFee}
                 step="0.01"
                 min="0"
@@ -670,8 +670,8 @@ class SettingsApp extends Component {
                 filled
                 primary
                 freeHeight
+                grouped="right"
                 onClick={this.props.OpenModal2}
-                style={{ marginLeft: 10 }}
               >
                 Set
               </Button>

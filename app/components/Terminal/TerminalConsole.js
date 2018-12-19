@@ -9,9 +9,11 @@ import { css } from '@emotion/core';
 
 // Internal Global Dependencies
 import WaitingText from 'components/common/WaitingText';
+import Button from 'components/common/Button';
+import TextBox from 'components/common/TextBox';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
-import { colors, consts } from 'styles';
+import { colors, consts, timing } from 'styles';
 
 let currentHistoryIndex = -1;
 
@@ -57,35 +59,35 @@ const Console = styled.div({
 
 const ConsoleInput = styled.div({
   display: 'flex',
+  alignItems: 'stretch',
   marginBottom: '1em',
   position: 'relative',
-});
-
-const TextInput = styled.input({
-  flexGrow: 1,
-});
-
-const ExecuteButton = styled.button({
-  margin: 0,
 });
 
 const AutoComplete = styled.div({
   position: 'absolute',
   top: '100%',
   zIndex: 99,
-  background: 'black',
+  background: colors.dark,
+});
+
+const AutoCompleteItem = styled.a({
+  display: 'block',
   cursor: 'pointer',
+  color: colors.lightGray,
+  transition: `color ${timing.normal}`,
+
+  '&:hover': {
+    color: colors.light,
+  },
 });
 
 const ConsoleOutput = styled.code({
   flexGrow: 1,
   flexBasis: 0,
   backgroundColor: colors.dark,
+  border: `1px solid ${colors.darkGray}`,
   overflow: 'auto',
-});
-
-const ClearConsoleButton = styled.button({
-  margin: 0,
 });
 
 class TerminalConsole extends Component {
@@ -303,7 +305,7 @@ class TerminalConsole extends Component {
   autoComplete() {
     return this.props.filteredCmdList.map((item, key) => {
       return (
-        <a
+        <AutoCompleteItem
           key={key}
           onMouseDown={() => {
             setTimeout(() => {
@@ -315,7 +317,7 @@ class TerminalConsole extends Component {
         >
           {item}
           <br />
-        </a>
+        </AutoCompleteItem>
       );
     });
   }
@@ -341,10 +343,10 @@ class TerminalConsole extends Component {
               defaultMessage="Enter console commands here (ex: getinfo, help)"
             >
               {cch => (
-                <TextInput
+                <TextBox
                   ref={element => (this.inputRef = element)}
                   autoFocus
-                  type="text"
+                  grouped="left"
                   value={this.props.currentInput}
                   placeholder={cch}
                   onChange={e => this.props.onInputfieldChange(e.target.value)}
@@ -353,15 +355,18 @@ class TerminalConsole extends Component {
                 />
               )}
             </FormattedMessage>
-            <ExecuteButton
-              className="button"
+            <Button
+              filled
+              primary
+              freeHeight
+              grouped="right"
               onClick={() => {
                 this.props.removeAutoCompleteDiv();
                 this.processInput();
               }}
             >
               <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
-            </ExecuteButton>
+            </Button>
             <AutoComplete key="autocomplete">
               {this.autoComplete()}
             </AutoComplete>
@@ -371,15 +376,17 @@ class TerminalConsole extends Component {
             {this.processOutput()}
           </ConsoleOutput>
 
-          <ClearConsoleButton
-            className="button"
-            onClick={() => this.props.resetMyConsole()}
+          <Button
+            filled
+            darkGray
+            grouped="bottom"
+            onClick={this.props.resetMyConsole}
           >
             <FormattedMessage
               id="Console.ClearConsole"
               defaultMessage="Clear Console"
             />
-          </ClearConsoleButton>
+          </Button>
         </Console>
       );
     }

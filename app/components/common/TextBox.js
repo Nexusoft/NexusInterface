@@ -37,19 +37,41 @@ const TextInput = styled.input(
     !size && {
       width: '100%',
     },
+
   ({ padLeft }) =>
     padLeft && {
       paddingLeft: iconSpace,
     },
+
   ({ padRight }) =>
     padRight && {
       paddingRight: iconSpace,
     },
-  ({ connectRight }) =>
-    connectRight && {
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
+
+  ({ grouped }) => {
+    switch (grouped) {
+      case 'left':
+        return {
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
+        };
+      case 'right':
+        return {
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+        };
+      case 'top':
+        return {
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+        };
+      case 'bottom':
+        return {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+        };
     }
+  }
 );
 
 const InputWrapper = styled.div({
@@ -93,16 +115,9 @@ const TextBox = ({ multiline, ...rest }) =>
     <TextInput {...rest} />
   );
 
-const TailButton = styled(Button)({
-  borderTopLeftRadius: 0,
-  borderBottomLeftRadius: 0,
-  position: 'relative',
-});
-
 const WrappedTextBox = ({
   headIcon,
   tailIcon,
-  btnContent,
   btnOnClick,
   inputProps,
   ...rest
@@ -113,21 +128,11 @@ const WrappedTextBox = ({
         <Icon icon={headIcon} />
       </IconWrapper>
     )}
-    <TextInput
-      padLeft={!!headIcon}
-      padRight={!!tailIcon}
-      connectRight={!!btnContent}
-      {...inputProps}
-    />
+    <TextInput padLeft={!!headIcon} padRight={!!tailIcon} {...inputProps} />
     {!!tailIcon && (
       <IconWrapper tail>
         <Icon icon={tailIcon} />
       </IconWrapper>
-    )}
-    {!!btnContent && (
-      <TailButton filled light freeHeight onClick={btnOnClick}>
-        {btnContent}
-      </TailButton>
     )}
   </InputWrapper>
 );
