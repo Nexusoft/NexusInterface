@@ -125,7 +125,7 @@ const WrappedTextBox = ({
       </IconWrapper>
     )}
     {!!btnContent && (
-      <TailButton fill light onClick={btnOnClick}>
+      <TailButton filled light onClick={btnOnClick}>
         {btnContent}
       </TailButton>
     )}

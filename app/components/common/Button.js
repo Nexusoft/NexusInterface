@@ -67,8 +67,8 @@ const Button = styled.button(
       },
     },
 
-  ({ fill, light }) =>
-    fill &&
+  ({ filled, light }) =>
+    filled &&
     light && {
       '&, &:active, &&[disabled]': {
         border: 'none',

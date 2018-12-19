@@ -30,6 +30,8 @@ const ComboBoxControl = styled.div(
   ({ opening }) =>
     opening && {
       backgroundColor: colors.light,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
     }
 );
 

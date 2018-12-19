@@ -19,6 +19,7 @@ import ComboBox from 'components/common/ComboBox';
 import WaitingText from 'components/common/WaitingText';
 
 // Internal Local Dependencies
+import AddressModal from './AddressModal';
 import styles from './style.css';
 
 // Resources
@@ -506,55 +507,6 @@ class SendRecieve extends Component {
     }
   }
 
-  addressBookToQueue() {
-    let filteredAddress = this.props.addressbook.filter(e => {
-      return (
-        e.name.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
-      );
-    });
-    return filteredAddress.map((e, i) => {
-      return (
-        <tr>
-          <td className="tdn" key={e.name + i}>
-            {' '}
-            {e.name}
-          </td>
-          {e.notMine.map((ele, i) => {
-            return (
-              <td
-                onClick={() => {
-                  this.props.CloseModal4();
-                  this.props.updateAddress(ele.address);
-                  this.props.OpenModal('Copied');
-                  setTimeout(() => {
-                    if (this.props.open) {
-                      this.props.CloseModal();
-                    }
-                  }, 3000);
-                }}
-                className="dt"
-                key={ele.address + i}
-              >
-                {ele.address}
-                <span
-                  key={ele.address + i}
-                  className="tooltip right"
-                  style={{ whiteSpace: 'nowrap' }}
-                >
-                  {' '}
-                  <FormattedMessage
-                    id="sendReceive.CopyToFeild"
-                    defaultMessage="Copy To Field"
-                  />
-                </span>
-              </td>
-            );
-          })}
-        </tr>
-      );
-    });
-  }
-
   calculateUSDvalue() {
     if (this.props.rawNXSvalues[0]) {
       let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
@@ -661,67 +613,6 @@ class SendRecieve extends Component {
         </tr>
       );
     });
-  }
-
-  modalinternal3() {
-    switch (this.props.LookUpModalType) {
-      case 'Address Lookup':
-        return (
-          <div className="Addresstable-wraper">
-            {' '}
-            <h2 className="addressModalHeader">
-              <FormattedMessage
-                id="sendReceive.Lookup"
-                defaultMessage="Lookup Address"
-              />{' '}
-              <Icon icon={addressBookIcon} className="hdr-img" />
-            </h2>
-            <table id="AddressTable">
-              <thead className="AddressThead">
-                <th className="short-column">
-                  <FormattedMessage
-                    id="sendReceive.Name"
-                    defaultMessage="Name"
-                  />
-                </th>
-                <th className="long-column">
-                  <FormattedMessage
-                    id="sendReceive.Address"
-                    defaultMessage="Address"
-                  />
-                </th>
-                <th className="short-column">
-                  <FormattedMessage
-                    id="sendReceive.Lookup"
-                    defaultMessage="Search Address"
-                  >
-                    {placeholder => (
-                      <input
-                        className="searchBar"
-                        type="text"
-                        placeholder={placeholder}
-                        value={this.props.Search}
-                        onChange={e => this.props.SearchName(e.target.value)}
-                        required
-                      />
-                    )}
-                  </FormattedMessage>
-                </th>
-              </thead>
-              {this.props.addressbook.length == 0 ? (
-                <h1 style={{ alignSelf: 'center' }}>
-                  <FormattedMessage
-                    id="AddressBook.NoContacts"
-                    defaultMessage="No Contacts"
-                  />
-                </h1>
-              ) : (
-                this.addressBookToQueue()
-              )}
-            </table>
-          </div>
-        );
-    }
   }
 
   MyAddressesTable() {
@@ -1095,19 +986,7 @@ class SendRecieve extends Component {
           )
         }
       >
-        {/* ADDRESS MODAL */}
-        <Modal
-          center
-          classNames={{ modal: 'custom-modal3' }}
-          showCloseIcon={true}
-          open={this.props.openFourthModal}
-          onClose={e => {
-            e.preventDefault();
-            this.props.CloseModal4();
-          }}
-        >
-          {this.modalinternal3()}
-        </Modal>
+        <AddressModal {...this.props} />
 
         {/* CONFIRMATION MODAL */}
         <Modal
