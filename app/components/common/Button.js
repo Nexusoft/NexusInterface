@@ -29,6 +29,11 @@ const Button = styled.button(
     },
   },
 
+  ({ square }) =>
+    !!square && {
+      padding: square === true ? '.7em' : square,
+    },
+
   ({ primary }) =>
     !!primary && {
       '&, &:active, &&[disabled]': {
@@ -59,6 +64,19 @@ const Button = styled.button(
       '&:hover': {
         border: 'none',
         color: dark ? colors.dark : colors.light,
+      },
+    },
+
+  ({ fill, light }) =>
+    fill &&
+    light && {
+      '&, &:active, &&[disabled]': {
+        backgroundColor: colors.lighterGray,
+        color: colors.dark,
+        transitionProperty: 'background-color',
+      },
+      '&:hover': {
+        backgroundColor: colors.light,
       },
     },
 

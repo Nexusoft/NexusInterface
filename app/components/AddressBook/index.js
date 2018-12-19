@@ -1225,8 +1225,12 @@ class AddressBook extends Component {
               >
                 {sc => (
                   <WrappedTextBox
-                    style={{ marginLeft: '1em', fontSize: '.9375em' }}
-                    icon={searchIcon}
+                    style={{
+                      marginLeft: '1em',
+                      fontSize: '.9375em',
+                      width: 200,
+                    }}
+                    tailIcon={searchIcon}
                     inputProps={{
                       placeholder: sc,
                       value: this.props.contactSearch,

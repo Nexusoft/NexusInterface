@@ -25,6 +25,7 @@ import styles from './style.css';
 import sendIcon from 'images/send.sprite.svg';
 import plusimg from 'images/plus.svg';
 import trashimg from 'images/trash.svg';
+import swapIcon from 'images/swap.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 
 const mapStateToProps = state => {
@@ -1075,6 +1076,24 @@ class SendRecieve extends Component {
             defaultMessage="Send Nexus"
           />
         }
+        controls={
+          !!this.props.connections && (
+            <Button
+              square
+              primary
+              className="relative"
+              onClick={() => this.props.OpenMoveModal()}
+            >
+              <Icon icon={swapIcon} />
+              <div className="tooltip bottom">
+                <FormattedMessage
+                  id="sendReceive.MoveNxsBetweenAccount"
+                  defaultMessage="Move NXS between accounts"
+                />
+              </div>
+            </Button>
+          )
+        }
       >
         {/* ADDRESS MODAL */}
         <Modal
@@ -1301,16 +1320,6 @@ class SendRecieve extends Component {
                     />
                   </label>
                 </div>{' '}
-                <div id="moveButton">
-                  {this.props.connections !== undefined && (
-                    <Button onClick={() => this.props.OpenMoveModal()}>
-                      <FormattedMessage
-                        id="sendReceive.MoveNxsBetweenAccount"
-                        defaultMessage="MOVE NXS BETWEEN ACCOUNTS"
-                      />
-                    </Button>
-                  )}
-                </div>
                 <table className="table">
                   <thead>
                     <tr className="thead">

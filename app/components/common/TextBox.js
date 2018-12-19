@@ -20,6 +20,7 @@ const TextInput = styled.input(
     outline: 'none',
     padding: '0 .8em',
     height: inputHeight,
+    width: '100%',
     transitionProperty: 'background-color',
     transitionDuration: timing.normal,
 
@@ -49,18 +50,27 @@ const InputWrapper = styled.div({
   alignItems: 'center',
 });
 
-const IconWrapper = styled.div({
-  position: 'absolute',
-  right: 0,
-  top: '50%',
-  transform: 'translateY(-50%)',
-  height: inputHeight,
-  width: iconSpace,
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  color: colors.darkGray,
-});
+const IconWrapper = styled.div(
+  {
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    height: inputHeight,
+    width: iconSpace,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: colors.darkGray,
+  },
+  ({ head }) =>
+    head && {
+      left: 0,
+    },
+  ({ tail }) =>
+    tail && {
+      right: 0,
+    }
+);
 
 const multilineStyle = css({
   height: 'auto',
@@ -76,12 +86,17 @@ const TextBox = ({ multiline, ...rest }) =>
     <TextInput {...rest} />
   );
 
-const WrappedTextBox = ({ icon, inputProps, ...rest }) => (
+const WrappedTextBox = ({ headIcon, tailIcon, inputProps, ...rest }) => (
   <InputWrapper {...rest}>
-    <TextInput {...inputProps} />
-    {icon && (
-      <IconWrapper>
-        <Icon icon={icon} />
+    {headIcon && (
+      <IconWrapper head>
+        <Icon icon={headIcon} />
+      </IconWrapper>
+    )}
+    <TextInput padLeft={!!headIcon} padRight={!!tailIcon} {...inputProps} />
+    {tailIcon && (
+      <IconWrapper tail>
+        <Icon icon={tailIcon} />
       </IconWrapper>
     )}
   </InputWrapper>

@@ -654,6 +654,7 @@ class SettingsApp extends Component {
             <input
               type="number"
               defaultValue={this.initialValues.minConf}
+              style={{ width: 75 }}
               size="3"
               step="1"
               min="1"
@@ -677,6 +678,7 @@ class SettingsApp extends Component {
             <input
               className="Folder"
               type="text"
+              style={{ width: 260 }}
               value={this.props.settings.Folder}
               onChange={e => this.props.SeeFolder(e.target.value)}
               onClick={e => {

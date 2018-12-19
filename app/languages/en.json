@@ -51,7 +51,7 @@
   "sendReceive.FromAccount": "From Account",
   "sendReceive.ToAccount": "ToAccount",
   "sendReceive.MoveNXS": "Move NXS",
-  "sendReceive.MoveNxsBetweenAccount": "MOVE NXS BETWEEN ACCOUNTS",
+  "sendReceive.MoveNxsBetweenAccount": "Move NXS between accounts",
 
   "transactions.MoreDetails": "More Details",
   "transactions.Details": "Transaction Details",
