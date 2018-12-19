@@ -1183,32 +1183,28 @@ class SendRecieve extends Component {
                       id="sendReceive.Address"
                       defaultMessage="Nexus Address"
                     />
-                  </label>{' '}
-                  <FormattedMessage
-                    id="sendReceive.Lookup"
-                    defaultMessage="Lookup Address"
-                  >
-                    {Al => (
-                      <div className="Addresslookup" title={Al}>
-                        {/* <span className="tooltip top" /> */}
-                        <img
-                          src={plusimg}
-                          className="lookupButton"
-                          onClick={() => {
-                            this.props.clearSearch();
-                            this.props.OpenModal4('Address Lookup');
-                          }}
-                        />
-                      </div>
-                    )}
-                  </FormattedMessage>
+                  </label>
                   <FormattedMessage
                     id="sendReceive.Address"
                     defaultMessage="Nexus Address"
                   >
                     {placeholder => (
                       <WrappedTextBox
-                        icon={addressBookIcon}
+                        btnContent={
+                          <>
+                            <Icon icon={addressBookIcon} />
+                            <div className="tooltip bottom">
+                              <FormattedMessage
+                                id="sendReceive.Lookup"
+                                defaultMessage="Lookup Address"
+                              />
+                            </div>
+                          </>
+                        }
+                        btnOnClick={() => {
+                          this.props.clearSearch();
+                          this.props.OpenModal4('Address Lookup');
+                        }}
                         inputProps={{
                           type: 'text',
                           placeholder: placeholder,

@@ -41,13 +41,18 @@ const TextInput = styled.input(
   ({ padRight }) =>
     padRight && {
       paddingRight: iconSpace,
+    },
+  ({ connectRight }) =>
+    connectRight && {
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
     }
 );
 
 const InputWrapper = styled.div({
   position: 'relative',
-  display: 'inline-flex',
-  alignItems: 'center',
+  display: 'flex',
+  alignItems: 'stretch',
 });
 
 const IconWrapper = styled.div(
@@ -86,18 +91,43 @@ const TextBox = ({ multiline, ...rest }) =>
     <TextInput {...rest} />
   );
 
-const WrappedTextBox = ({ headIcon, tailIcon, inputProps, ...rest }) => (
+const TailButton = styled(Button)({
+  borderTopLeftRadius: 0,
+  borderBottomLeftRadius: 0,
+  paddingTop: 0,
+  paddingBottom: 0,
+  position: 'relative',
+});
+
+const WrappedTextBox = ({
+  headIcon,
+  tailIcon,
+  btnContent,
+  btnOnClick,
+  inputProps,
+  ...rest
+}) => (
   <InputWrapper {...rest}>
-    {headIcon && (
+    {!!headIcon && (
       <IconWrapper head>
         <Icon icon={headIcon} />
       </IconWrapper>
     )}
-    <TextInput padLeft={!!headIcon} padRight={!!tailIcon} {...inputProps} />
-    {tailIcon && (
+    <TextInput
+      padLeft={!!headIcon}
+      padRight={!!tailIcon}
+      connectRight={!!btnContent}
+      {...inputProps}
+    />
+    {!!tailIcon && (
       <IconWrapper tail>
         <Icon icon={tailIcon} />
       </IconWrapper>
+    )}
+    {!!btnContent && (
+      <TailButton fill light onClick={btnOnClick}>
+        {btnContent}
+      </TailButton>
     )}
   </InputWrapper>
 );

@@ -71,12 +71,15 @@ const Button = styled.button(
     fill &&
     light && {
       '&, &:active, &&[disabled]': {
+        border: 'none',
         backgroundColor: colors.lighterGray,
         color: colors.dark,
         transitionProperty: 'background-color',
       },
       '&:hover': {
+        border: 'none',
         backgroundColor: colors.light,
+        color: colors.dark,
       },
     },
 
