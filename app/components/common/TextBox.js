@@ -33,6 +33,12 @@ const TextInput = styled.input(
       outline: 'none',
     },
   },
+
+  ({ type }) =>
+    type === 'number' && {
+      paddingRight: '.2em',
+    },
+
   ({ size }) =>
     !size && {
       width: '100%',
