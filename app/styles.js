@@ -17,8 +17,8 @@ export const consts = {
 };
 
 export const timing = {
-  normal: '.2s',
-  slow: '1.5s',
+  normal: '.3s',
+  slow: '2s',
 };
 
 export const animations = {
