@@ -14,6 +14,7 @@ import ContextMenuBuilder from 'contextmenu';
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
 import Button from 'components/common/Button';
+import TextBox, { WrappedTextBox } from 'components/common/TextBox';
 import ComboBox from 'components/common/ComboBox';
 import WaitingText from 'components/common/WaitingText';
 
@@ -1187,13 +1188,17 @@ class SendRecieve extends Component {
                     defaultMessage="Nexus Address"
                   >
                     {placeholder => (
-                      <input
-                        size="35"
-                        type="text"
-                        placeholder={placeholder}
-                        value={this.props.Address}
-                        onChange={e => this.props.updateAddress(e.target.value)}
-                        required
+                      <WrappedTextBox
+                        icon={addressBookIcon}
+                        inputProps={{
+                          type: 'text',
+                          placeholder: placeholder,
+                          value: this.props.Addressplaceholder,
+                          onChange: e =>
+                            this.props.updateAddress(e.target.value),
+                          placeholder,
+                          required: true,
+                        }}
                       />
                     )}
                   </FormattedMessage>
@@ -1211,8 +1216,7 @@ class SendRecieve extends Component {
                     </label>
                   </div>
                   <div className="convertor">
-                    <input
-                      className="input"
+                    <TextBox
                       type="text"
                       placeholder="0.00000"
                       value={this.props.Amount}
@@ -1220,8 +1224,7 @@ class SendRecieve extends Component {
                       required
                     />{' '}
                     <label>=</label>
-                    <input
-                      className="input"
+                    <TextBox
                       type="text"
                       placeholder="0.00"
                       value={this.props.USDAmount}
@@ -1244,12 +1247,12 @@ class SendRecieve extends Component {
                     defaultMessage="Enter Your Message"
                   >
                     {placeholder => (
-                      <textarea
+                      <TextBox
+                        multiline
                         value={this.props.Message}
                         onChange={e => this.props.updateMessage(e.target.value)}
                         name="message"
                         rows="5"
-                        cols="41"
                         placeholder={placeholder}
                       />
                     )}

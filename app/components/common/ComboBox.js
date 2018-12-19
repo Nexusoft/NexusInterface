@@ -16,7 +16,7 @@ const ComboBoxControl = styled.div(
   {
     display: 'flex',
     alignItems: 'stretch',
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.lighterGray,
     color: colors.dark,
     height: optionHeight,
     borderRadius: 2,
@@ -66,7 +66,7 @@ const Option = styled.li({
   transition: `background-color ${timing.normal}`,
 
   '&:hover': {
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.lighterGray,
   },
 });
 

@@ -1,5 +1,7 @@
+// @jsx jsx
 import React from 'react';
 import styled from '@emotion/styled';
+import { jsx, css } from '@emotion/core';
 import Button from 'components/common/Button';
 import Icon from 'components/common/Icon';
 import { colors, timing } from 'styles';
@@ -10,12 +12,13 @@ const iconSpace = '3em';
 
 const TextInput = styled.input(
   {
-    backgroundColor: colors.lightGray,
+    display: 'block',
+    backgroundColor: colors.lighterGray,
     color: colors.dark,
     borderRadius: 2,
     border: 'none',
     outline: 'none',
-    padding: '0 1em',
+    padding: '0 .8em',
     height: inputHeight,
     transitionProperty: 'background-color',
     transitionDuration: timing.normal,
@@ -26,12 +29,10 @@ const TextInput = styled.input(
 
     '&:hover, &:focus': {
       backgroundColor: colors.light,
+      color: colors.dark, // override old style
+      outline: 'none',
     },
   },
-  ({ wrapped }) =>
-    wrapped && {
-      display: 'block',
-    },
   ({ padLeft }) =>
     padLeft && {
       paddingLeft: iconSpace,
@@ -61,12 +62,23 @@ const IconWrapper = styled.div({
   color: colors.darkGray,
 });
 
+const multilineStyle = css({
+  height: 'auto',
+  width: '100%',
+  paddingTop: '.4em',
+  paddingBottom: '.5em',
+});
+
 const TextBox = ({ multiline, ...rest }) =>
-  multiline ? <TextInput as="textarea" {...rest} /> : <TextInput {...rest} />;
+  multiline ? (
+    <TextInput as="textarea" css={multilineStyle} {...rest} />
+  ) : (
+    <TextInput {...rest} />
+  );
 
 const WrappedTextBox = ({ icon, inputProps, ...rest }) => (
   <InputWrapper {...rest}>
-    <TextInput wrapped {...inputProps} />
+    <TextInput {...inputProps} />
     {icon && (
       <IconWrapper>
         <Icon icon={icon} />

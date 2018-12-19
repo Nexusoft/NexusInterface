@@ -8,6 +8,7 @@ colors.light = '#e6e9eb';
 colors.darkGray = mix(colors.dark, colors.light, 0.25);
 colors.gray = mix(colors.dark, colors.light);
 colors.lightGray = mix(colors.dark, colors.light, 0.75);
+colors.lighterGray = mix(colors.dark, colors.light, 0.875);
 colors.primaryContrast = '#fff';
 
 export const consts = {
