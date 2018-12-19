@@ -128,6 +128,17 @@ configuration.Rename = function(oldFilename, newFilename) {
   }
 };
 
+configuration.Start = function() {
+  var fs = require('fs');
+  if (!fs.existsSync(this.GetAppDataDirectory())) {
+    fs.mkdirSync(this.GetAppDataDirectory());
+  }
+
+  if (!fs.existsSync(this.GetAppResourceDir())) {
+    fs.mkdirSync(this.GetAppResourceDir());
+  }
+};
+
 //
 // GetAppDataDirectory: Get the application data directory
 //
@@ -152,7 +163,7 @@ configuration.GetAppDataDirectory = function() {
       app.getName()
     );
   }
-
+  AppDataDirPath += ' Wallet';
   return AppDataDirPath;
 };
 
@@ -241,11 +252,13 @@ configuration.BootstrapRecentDatabase = async function(self) {
         }
 
         let datadir = '';
+        const electron =
+          require('electron').app || require('electron').remote.app;
 
         if (process.platform === 'win32') {
           datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
         } else if (process.platform === 'darwin') {
-          datadir = process.env.HOME + '/Nexus_Tritium_Data';
+          datadir = electron.getPath('appData') + '/.Nexus_Wallet_Data';
         } else {
           datadir = process.env.HOME + '/.Nexus_Tritium_Data';
         }

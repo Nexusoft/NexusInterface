@@ -204,7 +204,7 @@ class SettingsCore extends Component {
     var manualDaemonDataDir = document.getElementById('manualDaemonDataDir');
 
     if (settings.manualDaemonDataDir === undefined) {
-      manualDaemonDataDir.value = 'Nexus_Tritium_Data';
+      manualDaemonDataDir.value = '.Nexus_Wallet_Data';
     } else {
       manualDaemonDataDir.value = settings.manualDaemonDataDir;
     }
