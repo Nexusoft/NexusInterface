@@ -1,0 +1,4 @@
+export const newUID = (function() {
+  let counter = 1;
+  return () => `uid-${counter++}`;
+})();

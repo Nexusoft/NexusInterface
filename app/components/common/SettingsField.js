@@ -1,11 +1,9 @@
-// External Dependencies
+// External
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
-const newUID = (function() {
-  let counter = 1;
-  return () => `uid-${counter++}`;
-})();
+// Internal
+import { newUID } from 'utils';
 
 const FieldWrapper = styled.div({
   display: 'flex',

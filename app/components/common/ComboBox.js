@@ -8,7 +8,7 @@ import Arrow from 'components/common/Arrow';
 import Overlay from 'components/common/Overlay';
 import { colors, timing } from 'styles';
 
-const optionHeight = 36;
+const defaultOptionHeight = 36;
 
 const ComboBoxWrapper = styled.div({});
 
@@ -18,7 +18,6 @@ const ComboBoxControl = styled.div(
     alignItems: 'stretch',
     backgroundColor: colors.lighterGray,
     color: colors.dark,
-    height: optionHeight,
     borderRadius: 2,
     cursor: 'pointer',
     transition: `background-color ${timing.normal}`,
@@ -32,7 +31,10 @@ const ComboBoxControl = styled.div(
       backgroundColor: colors.light,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
-    }
+    },
+  ({ optionHeight }) => ({
+    height: optionHeight || defaultOptionHeight,
+  })
 );
 
 const CurrentValue = styled.div({
@@ -57,20 +59,24 @@ const Options = styled.ul({
   margin: 0,
 });
 
-const Option = styled.li({
-  height: optionHeight,
-  display: 'flex',
-  alignItems: 'center',
-  padding: '0 .8em',
-  overflow: 'visible',
-  color: colors.dark,
-  cursor: 'pointer',
-  transition: `background-color ${timing.normal}`,
+const Option = styled.li(
+  {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 .8em',
+    overflow: 'visible',
+    color: colors.dark,
+    cursor: 'pointer',
+    transition: `background-color ${timing.normal}`,
 
-  '&:hover': {
-    backgroundColor: colors.lighterGray,
+    '&:hover': {
+      backgroundColor: colors.lighterGray,
+    },
   },
-});
+  ({ optionHeight }) => ({
+    height: optionHeight || defaultOptionHeight,
+  })
+);
 
 export default class ComboBox extends Component {
   state = {
@@ -98,12 +104,13 @@ export default class ComboBox extends Component {
   };
 
   render() {
-    const { options, value, onChange } = this.props;
+    const { options, optionHeight, value, onChange } = this.props;
     const { open, top, left, width } = this.state;
 
     return (
       <ComboBoxWrapper>
         <ComboBoxControl
+          optionHeight={optionHeight}
           ref={el => (this.controlRef = el)}
           opening={open}
           onClick={this.open}
@@ -119,9 +126,9 @@ export default class ComboBox extends Component {
             <Options style={{ top, left, width }}>
               {options.map(option => (
                 <Option
+                  optionHeight={optionHeight}
                   key={option.value}
                   onClick={() => {
-                    console.log('onCLick', option.value);
                     this.close();
                     onChange(option.value);
                   }}
