@@ -9,6 +9,7 @@ import Modal from 'react-responsive-modal';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import fs from 'fs';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import { GetSettings, SaveSettings } from 'api/settings';
@@ -208,22 +209,22 @@ class SettingsApp extends Component {
     settingsObj.googleAnalytics = el.checked;
 
     if (el.checked == true) {
-      this.props.googleanalytics.EnableAnalytics();
+      googleanalytics.EnableAnalytics();
 
-      this.props.googleanalytics.SendEvent(
+      googleanalytics.SendEvent(
         'Settings',
         'Analytics',
         'Enabled',
         1
       );
     } else {
-      this.props.googleanalytics.SendEvent(
+      googleanalytics.SendEvent(
         'Settings',
         'Analytics',
         'Disabled',
         1
       );
-      this.props.googleanalytics.DisableAnalytics();
+      googleanalytics.DisableAnalytics();
     }
 
     SaveSettings(settingsObj);

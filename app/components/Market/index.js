@@ -1,8 +1,3 @@
-/*
-  Title: Market
-  Description: Creates the market module
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -11,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import ReactTable from 'react-table';
 import { remote } from 'electron';
 import { VictoryArea, VictoryChart, VictoryAnimation } from 'victory';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import * as TYPE from 'actions/actiontypes';
@@ -46,7 +42,7 @@ class Market extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     this.refresher();
-    this.props.googleanalytics.SendScreen('Market');
+    googleanalytics.SendScreen('Market');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)

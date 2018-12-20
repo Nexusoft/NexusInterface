@@ -10,6 +10,7 @@ import { callbackify } from 'util';
 import { FormattedMessage } from 'react-intl';
 import styled from '@emotion/styled';
 import fs from 'fs';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import config from 'api/configuration';
@@ -60,7 +61,7 @@ class AddressBook extends Component {
     this.loadMyAccounts();
     this.addressbookContextMenu = this.addressbookContextMenu.bind(this);
     window.addEventListener('contextmenu', this.addressbookContextMenu, false);
-    this.props.googleanalytics.SendScreen('AddressBook');
+    googleanalytics.SendScreen('AddressBook');
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
@@ -1012,7 +1013,7 @@ class AddressBook extends Component {
   }
 
   exportAddressBook() {
-    this.props.googleanalytics.SendEvent(
+    googleanalytics.SendEvent(
       'AddressBook',
       'IOAddress',
       'Export',
@@ -1089,7 +1090,7 @@ class AddressBook extends Component {
   }
 
   importAddressBook(path) {
-    this.props.googleanalytics.SendEvent(
+    googleanalytics.SendEvent(
       'AddressBook',
       'IOAddress',
       'Import',

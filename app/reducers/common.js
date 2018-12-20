@@ -2,7 +2,6 @@ import * as TYPE from 'actions/actiontypes';
 
 const initialState = {
   loggedIn: false,
-  googleanalytics: null,
   encrypted: false,
   busyFlag: false,
   open: false,
@@ -181,12 +180,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         encrypted: true,
-      };
-      break;
-    case TYPE.SET_GOOGLEANALYTICS:
-      return {
-        ...state,
-        googleanalytics: action.payload,
       };
       break;
 

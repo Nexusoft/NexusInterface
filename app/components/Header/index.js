@@ -19,7 +19,6 @@ import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import * as actionsCreators from 'actions/headerActionCreators';
 import { GetSettings, SaveSettings } from 'api/settings';
-import GOOGLE from 'scripts/googleanalytics';
 import configuration from 'api/configuration';
 import Icon from 'components/common/Icon';
 import HorizontalLine from 'components/common/HorizontalLine';
@@ -113,7 +112,6 @@ class Header extends Component {
     var self = this;
     const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
     menuBuilder.buildMenu(self);
-    this.props.SetGoogleAnalytics(GOOGLE);
 
     if (tray === null) this.setupTray(self);
     let settings = GetSettings();

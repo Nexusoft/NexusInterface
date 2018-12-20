@@ -274,12 +274,6 @@ export const SetPortIsAvailable = isAvailable => {
   };
 };
 
-export const SetGoogleAnalytics = returnData => {
-  return dispatch => {
-    dispatch({ type: TYPE.SET_GOOGLEANALYTICS, payload: returnData });
-  };
-};
-
 export const LoadAddressBook = () => {
   let json = null;
   if (config.Exists('addressbook.json')) {

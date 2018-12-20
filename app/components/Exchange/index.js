@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import Request from 'request';
 import { remote } from 'electron';
 import Countdown from 'react-countdown-now';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import Panel from 'components/common/Panel';
@@ -48,7 +49,7 @@ const mapDispatchToProps = dispatch => ({
 class Exchange extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    this.props.googleanalytics.SendScreen('Exchange');
+    googleanalytics.SendScreen('Exchange');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     var settingsObj = GetSettings();
     if (settingsObj.email) {

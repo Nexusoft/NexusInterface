@@ -11,6 +11,7 @@ import { remote } from 'electron';
 import Request from 'request';
 import { bindActionCreators } from 'redux';
 import { Squares } from 'react-activity';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Dependencies
 import * as TYPE from 'actions/actiontypes';
@@ -148,7 +149,7 @@ class Precise extends Component {
   }
 
   executeTransaction() {
-    this.props.googleanalytics.SendEvent('Shapeshift', 'Precise', 'Sent', 1);
+    googleanalytics.SendEvent('Shapeshift', 'Precise', 'Sent', 1);
     let pair = this.props.from + '_' + this.props.to;
     if (this.props.toAddress !== '') {
       if (this.props.refundAddress !== '') {

@@ -31,6 +31,7 @@ import {
 } from 'victory';
 import rp from 'request-promise';
 import { FormattedMessage } from 'react-intl';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import Icon from 'components/common/Icon';
@@ -175,7 +176,7 @@ class Transactions extends Component {
     console.log(this.props.messages);
     this._isMounted = true;
     this.updateChartAndTableDimensions();
-    this.props.googleanalytics.SendScreen('Transactions');
+    googleanalytics.SendScreen('Transactions');
 
     this.gethistorydatajson();
     let myaddresbook = this.readAddressBook();
@@ -650,7 +651,7 @@ class Transactions extends Component {
   }
 
   DownloadCSV() {
-    this.props.googleanalytics.SendEvent(
+    googleanalytics.SendEvent(
       'Transaction',
       'Data',
       'Download CSV',

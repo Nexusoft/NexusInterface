@@ -8,6 +8,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import Icon from 'components/common/Icon';
@@ -40,7 +41,7 @@ class List extends Component {
     RPC.PROMISE('getnetworktrustkeys', []).then(payload => {
       this.props.GetListDump(payload.keys);
     });
-    this.props.googleanalytics.SendScreen('TrustList');
+    googleanalytics.SendScreen('TrustList');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)

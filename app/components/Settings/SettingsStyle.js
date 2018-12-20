@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ChromePicker } from 'react-color';
 import { FormattedMessage } from 'react-intl';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Dependencies
 import * as TYPE from 'actions/actiontypes';
@@ -217,7 +218,7 @@ class SettingsStyle extends Component {
     setTimeout(() => {
       this.props.CloseModal();
     }, 3000);
-    this.props.googleanalytics.SendEvent('Settings', 'Style', 'Saved', 1);
+    googleanalytics.SendEvent('Settings', 'Style', 'Saved', 1);
   }
 
   // Mandatory React method

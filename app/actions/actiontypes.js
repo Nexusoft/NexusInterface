@@ -52,7 +52,6 @@ export const SET_TIME = 'SET_TIME';
 // Common
 export const LOCK = 'LOCK';
 export const UNLOCK = 'UNLOCK';
-export const SET_GOOGLEANALYTICS = 'SET_GOOGLEANALYTICS';
 export const ENCRYPTED = 'ENCRYPTED';
 export const UNENCRYPTED = 'UNENCRYPTED';
 export const TOGGLE_MODAL_VIS_STATE = 'TOGGLE_MODAL_VIS_STATE';

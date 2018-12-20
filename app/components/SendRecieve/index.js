@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { remote } from 'electron';
 import { access } from 'fs';
 import styled from '@emotion/styled';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import * as RPC from 'scripts/rpc';
@@ -174,7 +175,7 @@ class SendRecieve extends Component {
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     this.getAccountData();
-    this.props.googleanalytics.SendScreen('Send');
+    googleanalytics.SendScreen('Send');
   }
   getAccountData() {
     RPC.PROMISE('listaccounts').then(payload => {

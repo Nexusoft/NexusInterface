@@ -18,6 +18,7 @@ import path from 'path';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 import { intlReducer } from 'react-intl-redux';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import Icon from 'components/common/Icon';
@@ -214,9 +215,7 @@ class Overview extends Component {
     }
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
 
-    if (this.props.googleanalytics != null) {
-      this.props.googleanalytics.SendScreen('Overview');
-    }
+    googleanalytics.SendScreen('Overview');
   }
   reDrawEverything() {}
   // React Method (Life cycle hook)

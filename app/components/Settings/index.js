@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 import { FormattedMessage } from 'react-intl';
 import styled from '@emotion/styled';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import * as RPC from 'scripts/rpc';
@@ -62,7 +63,7 @@ const mapStateToProps = state => {
 class Settings extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    this.props.googleanalytics.SendScreen('Settings');
+    googleanalytics.SendScreen('Settings');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
   // React Method (Life cycle hook)

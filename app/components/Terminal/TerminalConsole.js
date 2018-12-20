@@ -6,6 +6,7 @@ import { timingSafeEqual } from 'crypto';
 import { FormattedMessage } from 'react-intl';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
+import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import WaitingText from 'components/common/WaitingText';
@@ -139,7 +140,7 @@ class TerminalConsole extends Component {
       return;
     }
 
-    this.props.googleanalytics.SendEvent(
+    googleanalytics.SendEvent(
       'Terminal',
       'Console',
       'UseCommand',
