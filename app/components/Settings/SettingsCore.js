@@ -716,7 +716,6 @@ class SettingsCore extends Component {
           >
             <input
               type="checkbox"
-              defaultChecked={this.initialValues.manualDaemon}
               className="switch"
               checked={this.props.settings.manualDaemon}
               onChange={() => this.props.OpenManualDaemonModal()}
