@@ -401,7 +401,7 @@ class SendRecieve extends Component {
                   ]}
                 />
               </FormField>
-              <FormField connectLabel inputWrapped label="Send To">
+              <FormField label="Send To">
                 <div className="flex stretch">
                   <TextBox
                     grouped="left"
