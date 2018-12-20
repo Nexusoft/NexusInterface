@@ -172,18 +172,18 @@ class Login extends Component {
                 value={this.props.unlockUntillDate}
                 onChange={e => this.setUnlockDate(e.target.value)}
                 required
+                hint="Unlock until date is required."
               />
             </FormField>
-            <span className="hint">Unlock until date is required.</span>
             <FormField connectLabel label="Unlock Until Time">
               <TextBox
                 type="time"
                 value={this.props.unlockUntillTime}
                 onChange={e => this.props.setTime(e.target.value)}
                 required
+                hint="Unlock until time is required."
               />
             </FormField>
-            <span className="hint">Unlock until time is required.</span>
             <FormField connectLabel label="Password">
               <TextBox
                 type="password"
@@ -211,9 +211,8 @@ class Login extends Component {
                   e.preventDefault();
                   this.handleSubmit();
                 }}
-                // disabled={this.props.busyFlag}
               >
-                Submit
+                Unlock Wallet
               </Button>
             </Buttons>
           </LoginFieldSet>

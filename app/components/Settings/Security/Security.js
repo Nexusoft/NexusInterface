@@ -25,11 +25,11 @@ const SecuritySettings = styled.div({
 
 const ChangePassword = styled.form({
   flex: 2,
+  marginRight: '1em',
 });
 
 const ImportPrivKey = styled.form({
   flex: 3,
-  marginLeft: '1em',
 });
 
 const mapStateToProps = state => {
@@ -233,6 +233,12 @@ class Security extends Component {
                     defaultMessage="Previous Password"
                   />
                 }
+                hint={
+                  <FormattedMessage
+                    id="Settings.PasswordRequired"
+                    defaultMessage="Password Is Required"
+                  />
+                }
               >
                 <FormattedMessage
                   id="Settings.Password"
@@ -248,17 +254,17 @@ class Security extends Component {
                   )}
                 </FormattedMessage>
               </FormField>
-              <span className="hint">
-                <FormattedMessage
-                  id="Settings.PasswordRequired"
-                  defaultMessage="Password Is Required"
-                />
-              </span>
               <FormField
                 label={
                   <FormattedMessage
                     id="Settings.NewPassword"
                     defaultMessage="New Password"
+                  />
+                }
+                hint={
+                  <FormattedMessage
+                    id="Settings.PasswordRequired"
+                    defaultMessage="Password Is Required"
                   />
                 }
               >
@@ -276,17 +282,17 @@ class Security extends Component {
                   )}
                 </FormattedMessage>
               </FormField>
-              <span className="hint">
-                <FormattedMessage
-                  id="Settings.PasswordRequired"
-                  defaultMessage="Password Is Required"
-                />
-              </span>
               <FormField
                 label={
                   <FormattedMessage
                     id="Settings.ReEnterPassword"
                     defaultMessage="Re-Enter Password:"
+                  />
+                }
+                hint={
+                  <FormattedMessage
+                    id="Settings.NoMatch"
+                    defaultMessage="Passwords do not match"
                   />
                 }
               >
@@ -304,12 +310,14 @@ class Security extends Component {
                   )}
                 </FormattedMessage>
               </FormField>
-              <span id="passHint" className="err invalid">
+              {/* temporary workaround to avoid error */}
+              <span id="passHint" style={{ display: 'none' }} />
+              {/* <span id="passHint" className="err invalid">
                 <FormattedMessage
                   id="Settings.NoMatch"
                   defaultMessage="Passwords do not match"
                 />
-              </span>
+              </span> */}
 
               <Button
                 primary
