@@ -1,17 +1,28 @@
-/*
-  Title: Login Settings
-  Description: Renders the login page.
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
+import styled from '@emotion/styled';
 
 // Internal Dependencies
 import styles from './style.css';
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
+import FormField from 'components/common/FormField';
+import TextBox from 'components/common/TextBox';
+import Button from 'components/common/Button';
+import FieldSet from 'components/common/FieldSet';
+
+const LoginFieldSet = styled(FieldSet)({
+  maxWidth: 400,
+  margin: '0 auto',
+});
+
+const Buttons = styled.div({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  marginTop: '1.5em',
+});
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -151,65 +162,61 @@ class Login extends Component {
       );
     }
     return (
-      <div id="securitylogin">
+      <div>
         <form>
-          <fieldset>
-            <legend>Login</legend>
-            <div className="field">
-              <label>Unlock Until Date:</label>
-              <input
+          <LoginFieldSet legend="Login">
+            <FormField connectLabel label="Unlock Until Date">
+              <TextBox
                 type="date"
                 min={this.getMinDate()}
                 value={this.props.unlockUntillDate}
                 onChange={e => this.setUnlockDate(e.target.value)}
                 required
               />
-              <span className="hint">Unlock until date is required.</span>
-            </div>
-            <div className="field">
-              <label>Unlock Until Time:</label>
-              <input
+            </FormField>
+            <span className="hint">Unlock until date is required.</span>
+            <FormField connectLabel label="Unlock Until Time">
+              <TextBox
                 type="time"
                 value={this.props.unlockUntillTime}
                 onChange={e => this.props.setTime(e.target.value)}
                 required
               />
-              <span className="hint">Unlock until time is required.</span>
-            </div>
-            <div className="field">
-              <label>Password:</label>
-              <input
+            </FormField>
+            <span className="hint">Unlock until time is required.</span>
+            <FormField connectLabel label="Password">
+              <TextBox
                 type="password"
                 placeholder="Password"
                 id="pass"
                 required
-                style={{ width: '100%' }}
               />
-            </div>
+            </FormField>
 
             {/* STAKING FLAG STUFF  TURNED OFF UNTILL WE HAVE A FLAG COMING BACK FROM THE DAEMON TELLING US THAT ITS UNLOCKED FOR STAKING ONLY */}
-            <div className="field" id="checkFeild">
-              <label>Staking Only:</label>
+            <FormField inline connectLabel label="Staking Only">
               <input
                 type="checkbox"
                 className="switch"
                 value={this.props.stakingFlag}
                 onChange={() => this.props.stake()}
               />
-            </div>
-          </fieldset>
+            </FormField>
 
-          <p>
-            <input
-              type="submit"
-              className="button primary"
-              onClick={e => {
-                e.preventDefault();
-                this.handleSubmit();
-              }}
-              // disabled={this.props.busyFlag}
-            />
-          </p>
+            <Buttons>
+              <Button
+                primary
+                type="submit"
+                onClick={e => {
+                  e.preventDefault();
+                  this.handleSubmit();
+                }}
+                // disabled={this.props.busyFlag}
+              >
+                Submit
+              </Button>
+            </Buttons>
+          </LoginFieldSet>
         </form>
       </div>
     );

@@ -5,10 +5,21 @@ import styled from '@emotion/styled';
 // Internal
 import { newUID } from 'utils';
 
+const FormFieldWrapper = styled.div(
+  { marginTop: '1em' },
+  ({ inline }) =>
+    inline && {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: '',
+    }
+);
+
 const Label = styled.label({
   display: 'block',
   position: 'relative',
-  marginTop: '.5em',
+
   marginBottom: '.2em',
 });
 
@@ -26,7 +37,7 @@ class FormField extends Component {
     } = this.props;
 
     return (
-      <div {...rest}>
+      <FormFieldWrapper {...rest}>
         <Label htmlFor={connectLabel ? this.inputId : undefined}>
           {label}
           {tooltip && (
@@ -50,7 +61,7 @@ class FormField extends Component {
               )
             : children}
         </div>
-      </div>
+      </FormFieldWrapper>
     );
   }
 }
