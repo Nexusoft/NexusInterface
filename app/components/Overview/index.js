@@ -127,10 +127,10 @@ const Stats = styled.div(
     transform: 'translateY(-50%)',
     whiteSpace: 'nowrap',
   },
-  ({ left }) =>
+  ({ left, compact }) =>
     left && {
       textAlign: 'right',
-      right: 'calc(66% + 120px)',
+      right: compact ? 'calc(50% + 80px)' : 'calc(66% + 120px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideRight}`,
       [Stat]: {
         justifyContent: 'flex-end',
@@ -139,10 +139,10 @@ const Stats = styled.div(
         marginLeft: 15,
       },
     },
-  ({ right }) =>
+  ({ right, compact }) =>
     right && {
       textAlign: 'left',
-      left: 'calc(66% + 120px)',
+      left: compact ? 'calc(50% + 80px)' : 'calc(66% + 120px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideLeft}`,
       [Stat]: {
         justifyContent: 'flex-start',
@@ -679,7 +679,7 @@ class Overview extends Component {
           </>
         )}
 
-        <Stats left>
+        <Stats left compact={!this.isGlobeEnabled()}>
           <Stat
             as={connections ? Link : undefined}
             to={connections ? '/Transactions' : undefined}
@@ -822,7 +822,7 @@ class Overview extends Component {
           </Stat>
         </Stats>
 
-        <Stats right>
+        <Stats right compact={!this.isGlobeEnabled()}>
           <Stat>
             <StatIcon icon={this.connectionsImage()} />
             <div>
