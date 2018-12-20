@@ -84,8 +84,8 @@ form {
   position: relative;
   /* padding: calc(var(--line-height) * 1em);
 	padding-top: 0; */
-  border: 1px solid transparent;
-  text-align: left;
+  /* border: 1px solid transparent;
+  text-align: left; */
 }
 
 .note {

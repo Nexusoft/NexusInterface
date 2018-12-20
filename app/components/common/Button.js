@@ -37,6 +37,11 @@ const Button = styled.button(
       width: square === true ? '2.8em' : square,
     },
 
+  ({ wide }) =>
+    wide && {
+      width: '100%',
+    },
+
   ({ freeHeight }) =>
     freeHeight && {
       height: 'auto',

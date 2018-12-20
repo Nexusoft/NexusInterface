@@ -1,11 +1,36 @@
+// External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
+import { FormattedMessage } from 'react-intl';
+import styled from '@emotion/styled';
 
+// Internal
 import styles from './style.css';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
-import { FormattedMessage } from 'react-intl';
+import FormField from 'components/common/FormField';
+import TextBox from 'components/common/TextBox';
+import Button from 'components/common/Button';
+import FieldSet from 'components/common/FieldSet';
+import Icon from 'components/common/Icon';
+import copyIcon from 'images/copy.sprite.svg';
+
+const SecuritySettings = styled.div({
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+});
+
+const ChangePassword = styled.form({
+  flex: 2,
+});
+
+const ImportPrivKey = styled.form({
+  flex: 3,
+  marginLeft: '1em',
+});
 
 const mapStateToProps = state => {
   return {
@@ -190,29 +215,31 @@ class Security extends Component {
       );
     }
     return (
-      <div id="securitylogin">
-        <div className="securitySubContainer">
-          <form>
-            <fieldset>
-              <legend>
+      <div>
+        <SecuritySettings>
+          <ChangePassword>
+            <FieldSet
+              legend={
                 <FormattedMessage
                   id="Settings.ChangePassword"
                   defaultMessage="Change Password"
                 />
-              </legend>
-              <div className="field">
-                <label>
+              }
+            >
+              <FormField
+                label={
                   <FormattedMessage
                     id="Settings.PreviousPassword"
                     defaultMessage="Previous Password"
                   />
-                </label>
+                }
+              >
                 <FormattedMessage
                   id="Settings.Password"
                   defaultMessage="Password"
                 >
                   {p => (
-                    <input
+                    <TextBox
                       type="password"
                       placeholder={p}
                       id="oldPass"
@@ -220,26 +247,27 @@ class Security extends Component {
                     />
                   )}
                 </FormattedMessage>
-                <span className="hint">
-                  <FormattedMessage
-                    id="Settings.PasswordRequired"
-                    defaultMessage="Password Is Required"
-                  />
-                </span>
-              </div>
-              <div className="field">
-                <label>
+              </FormField>
+              <span className="hint">
+                <FormattedMessage
+                  id="Settings.PasswordRequired"
+                  defaultMessage="Password Is Required"
+                />
+              </span>
+              <FormField
+                label={
                   <FormattedMessage
                     id="Settings.NewPassword"
                     defaultMessage="New Password"
                   />
-                </label>
+                }
+              >
                 <FormattedMessage
                   id="Settings.NewPassword"
                   defaultMessage="New Password"
                 >
                   {np => (
-                    <input
+                    <TextBox
                       type="password"
                       placeholder={np}
                       id="newPass"
@@ -247,26 +275,27 @@ class Security extends Component {
                     />
                   )}
                 </FormattedMessage>
-                <span className="hint">
-                  <FormattedMessage
-                    id="Settings.PasswordRequired"
-                    defaultMessage="Password Is Required"
-                  />
-                </span>
-              </div>
-              <div className="field">
-                <label>
+              </FormField>
+              <span className="hint">
+                <FormattedMessage
+                  id="Settings.PasswordRequired"
+                  defaultMessage="Password Is Required"
+                />
+              </span>
+              <FormField
+                label={
                   <FormattedMessage
                     id="Settings.ReEnterPassword"
                     defaultMessage="Re-Enter Password:"
                   />
-                </label>
+                }
+              >
                 <FormattedMessage
                   id="Settings.ReEnterPassword"
                   defaultMessage="Re-Enter Password:"
                 >
                   {rep => (
-                    <input
+                    <TextBox
                       type="password"
                       placeholder={rep}
                       id="passChk"
@@ -274,178 +303,181 @@ class Security extends Component {
                     />
                   )}
                 </FormattedMessage>
-                <span id="passHint" className="err invalid">
-                  <FormattedMessage
-                    id="Settings.NoMatch"
-                    defaultMessage="Passwords do not match"
-                  />
-                </span>
-              </div>
-              <p>
-                <button
-                  style={{ width: '100%', margin: '0' }}
-                  // disabled={this.props.busyFlag}
-                  className="button primary"
-                  onClick={() => this.changePassword(e)}
-                >
-                  <FormattedMessage
-                    id="Settings.Submit"
-                    defaultMessage="Submit"
-                  />
-                </button>
-              </p>
-            </fieldset>
-          </form>
-          <button
-            style={{ width: '100%', margin: '0' }}
-            id="lockWallet"
-            className="button primary"
-            // disabled={this.props.busyFlag}
-            onClick={e => {
-              e.preventDefault();
-              this.lockWallet();
-            }}
-          >
-            <FormattedMessage
-              id="Settings.LockWallet"
-              defaultMessage="Lock Wallet"
-            />
-          </button>
-        </div>
-        <div className="securitySubContainer privKey">
-          <form>
-            <fieldset>
-              <legend>
-                {' '}
+              </FormField>
+              <span id="passHint" className="err invalid">
                 <FormattedMessage
-                  id="Settings.ViewPrivateKeyForAddress"
-                  defaultMessage="View private key for address"
+                  id="Settings.NoMatch"
+                  defaultMessage="Passwords do not match"
                 />
-              </legend>
+              </span>
 
-              <div className="field">
-                <label>
-                  <FormattedMessage
-                    id="Settings.Address"
-                    defaultMessage="Address"
-                  />
-                </label>
-                <div className="expander">
-                  <input
-                    type="text"
-                    id="privKeyAddress"
-                    placeholder="Enter Address Here"
-                    required
-                  />
-                  <button
-                    // disabled={this.props.busyFlag}
-                    className="button primary"
-                    onClick={e => this.showPrivKey(e)}
-                  >
-                    <FormattedMessage
-                      id="Settings.Submit"
-                      defaultMessage="Submit"
-                    />
-                  </button>
-                </div>
-              </div>
+              <Button
+                primary
+                wide
+                style={{ marginTop: '2em' }}
+                onClick={() => this.changePassword(e)}
+              >
+                <FormattedMessage
+                  id="Settings.Submit"
+                  defaultMessage="Submit"
+                />
+              </Button>
+            </FieldSet>
+          </ChangePassword>
 
-              <div className="field">
-                <label>
-                  <FormattedMessage
-                    id="Settings.PrivateKey"
-                    defaultMessage="Private Key:"
-                  />
-                </label>
-                <div className="expander">
-                  <input type="password" id="privKeyOutput" />
-                  <button
-                    // disabled={this.props.busyFlag}
-                    className="button"
-                    onClick={e => {
-                      this.copyPrivkey(e);
-                    }}
-                  >
-                    <FormattedMessage
-                      id="Settings.Copy"
-                      defaultMessage="Copy"
-                    />
-                  </button>
-                </div>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-        <div className="securitySubContainer privKey">
-          <form>
-            <fieldset>
-              <legend>
+          <ImportPrivKey>
+            <FieldSet
+              legend={
                 <FormattedMessage
                   id="Settings.ImportPrivateKey"
                   defaultMessage="Import Private Key"
                 />
-              </legend>
-              <div className="field">
-                <label>
+              }
+            >
+              <FormField
+                label={
                   <FormattedMessage
                     id="Settings.AccountName"
                     defaultMessage="Account Name:"
                   />
-                </label>
-                <div className="expander">
-                  <FormattedMessage
-                    id="Settings.AccountName"
-                    defaultMessage="Account Name"
-                  >
-                    {An => (
-                      <input
-                        type="Text"
-                        placeholder={An}
-                        id="acctName"
-                        required
-                      />
-                    )}
-                  </FormattedMessage>
-                </div>
-              </div>
-              <div className="field">
-                <label>
-                  <FormattedMessage
-                    id="Settings.PrivateKey"
-                    defaultMessage="Account Name:"
-                  />
-                </label>
-                <div className="expander">
-                  <FormattedMessage
-                    id="Settings.PrivateKey"
-                    defaultMessage="Private Key"
-                  >
-                    {pk => (
-                      <input
-                        type="password"
-                        placeholder={pk}
-                        id="privateKey"
-                        required
-                      />
-                    )}
-                  </FormattedMessage>
-                </div>
-              </div>
-              <p>
-                <button
-                  disabled={this.props.busyFlag}
-                  className="button primary"
-                  onClick={e => this.importPrivKey(e)}
+                }
+              >
+                <FormattedMessage
+                  id="Settings.AccountName"
+                  defaultMessage="Account Name"
                 >
+                  {An => (
+                    <TextBox
+                      type="Text"
+                      placeholder={An}
+                      id="acctName"
+                      required
+                    />
+                  )}
+                </FormattedMessage>
+              </FormField>
+              <FormField
+                label={
                   <FormattedMessage
-                    id="Settings.Submit"
-                    defaultMessage="Submit"
+                    id="Settings.PrivateKey"
+                    defaultMessage="Account Name:"
                   />
-                </button>
-              </p>
-            </fieldset>
-          </form>
-        </div>
+                }
+              >
+                <FormattedMessage
+                  id="Settings.PrivateKey"
+                  defaultMessage="Private Key"
+                >
+                  {pk => (
+                    <TextBox
+                      type="password"
+                      placeholder={pk}
+                      id="privateKey"
+                      required
+                    />
+                  )}
+                </FormattedMessage>
+              </FormField>
+              <Button
+                primary
+                wide
+                style={{ marginTop: '2em' }}
+                disabled={this.props.busyFlag}
+                onClick={e => this.importPrivKey(e)}
+              >
+                <FormattedMessage
+                  id="Settings.Submit"
+                  defaultMessage="Submit"
+                />
+              </Button>
+            </FieldSet>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                filled
+                darkGray
+                onClick={e => {
+                  e.preventDefault();
+                  this.lockWallet();
+                }}
+              >
+                <FormattedMessage
+                  id="Settings.LockWallet"
+                  defaultMessage="Lock Wallet"
+                />
+              </Button>
+            </div>
+          </ImportPrivKey>
+        </SecuritySettings>
+
+        <form>
+          <FieldSet
+            legend={
+              <FormattedMessage
+                id="Settings.ViewPrivateKeyForAddress"
+                defaultMessage="View private key for address"
+              />
+            }
+          >
+            <FormField
+              label={
+                <FormattedMessage
+                  id="Settings.Address"
+                  defaultMessage="Address"
+                />
+              }
+            >
+              <div className="flex stretch">
+                <TextBox
+                  grouped="left"
+                  id="privKeyAddress"
+                  placeholder="Enter Address Here"
+                  required
+                />
+                <Button
+                  filled
+                  primary
+                  freeHeight
+                  grouped="right"
+                  onClick={e => this.showPrivKey(e)}
+                >
+                  Import
+                </Button>
+              </div>
+            </FormField>
+
+            <FormField
+              label={
+                <FormattedMessage
+                  id="Settings.PrivateKey"
+                  defaultMessage="Private Key:"
+                />
+              }
+            >
+              <div className="flex stretch">
+                <TextBox grouped="left" type="password" id="privKeyOutput" />
+                <Button
+                  filled
+                  light
+                  freeHeight
+                  grouped="right"
+                  className="relative"
+                  onClick={e => {
+                    this.copyPrivkey(e);
+                  }}
+                >
+                  <Icon icon={copyIcon} />
+                  <div className="tooltip bottom">
+                    <FormattedMessage
+                      id="Settings.Copy"
+                      defaultMessage="Copy"
+                    />
+                  </div>
+                </Button>
+              </div>
+            </FormField>
+          </FieldSet>
+        </form>
       </div>
     );
   }
