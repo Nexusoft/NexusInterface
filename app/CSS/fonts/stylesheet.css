@@ -1,4 +1,11 @@
 @font-face {
+  font-family: "Roboto Mono";
+  src: url("RobotoMono-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "Noto Sans";
   src: url("NotoSans-Bold.woff2") format("woff2");
   font-weight: bold;
@@ -8,13 +15,6 @@
 @font-face {
   font-family: "Noto Sans";
   src: url("NotoSans.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Roboto Mono";
-  src: url("RobotoMono-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
 }
