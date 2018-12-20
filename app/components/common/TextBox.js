@@ -8,6 +8,7 @@ import { colors, timing } from 'styles';
 import { lighten, fade } from 'utils/colors';
 
 const inputHeight = '2.25em';
+const inputHeightHalf = '1.125em';
 const iconSpace = '3em';
 
 const TextInput = styled.input(
@@ -31,6 +32,18 @@ const TextInput = styled.input(
       backgroundColor: colors.light,
       color: colors.dark, // override old style
       outline: 'none',
+    },
+
+    '&::-webkit-inner-spin-button': {
+      cursor: 'pointer',
+    },
+
+    '&[type="date"], &[type="time"]': {
+      '&::-webkit-inner-spin-button': {
+        position: 'relative',
+        top: inputHeightHalf,
+        transform: 'translateY(-50%)',
+      },
     },
   },
 
