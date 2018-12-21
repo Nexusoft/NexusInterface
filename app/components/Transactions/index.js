@@ -122,9 +122,10 @@ const timeFrames = [
 const Filters = styled.div({
   display: 'grid',
   gridTemplateAreas: '"search type minAmount timeFrame download"',
-  gridTemplateColumns: '1fr 7em 7em 7em auto',
+  gridTemplateColumns: '1fr 110px 100px 140px auto',
   columnGap: '.75em',
   alignItems: 'end',
+  fontSize: 15,
   marginBottom: '1em',
 });
 
@@ -1719,7 +1720,7 @@ class Transactions extends Component {
             value={this.props.selectedAccount}
             onChange={value => this.selectAccount(value)}
             options={this.accountChanger()}
-            style={{ minWidth: 200 }}
+            style={{ minWidth: 200, fontSize: 15 }}
           />
         }
       >
@@ -1752,6 +1753,7 @@ class Transactions extends Component {
             <Filters>
               <FormField
                 connectLabel
+                inputWrapped
                 label={
                   <FormattedMessage
                     id="transactions.SearchAddress"

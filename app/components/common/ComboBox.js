@@ -9,9 +9,7 @@ import Arrow from 'components/common/Arrow';
 import Overlay from 'components/common/Overlay';
 import { colors, timing } from 'styles';
 
-const defaultOptionHeight = 36;
-
-const ComboBoxWrapper = styled.div({});
+const defaultOptionHeight = '2.25em';
 
 const ComboBoxControl = styled.div(
   {
@@ -45,6 +43,7 @@ const CurrentValue = styled.div({
   display: 'flex',
   alignItems: 'center',
   paddingLeft: '.8em',
+  whiteSpace: 'nowrap',
 });
 
 const ArrowButton = styled(Button)({
@@ -124,12 +123,13 @@ export default class ComboBox extends Component {
     const selectedOption = this.option(value);
 
     return (
-      <ComboBoxWrapper {...rest}>
+      <>
         <ComboBoxControl
           optionHeight={optionHeight}
           ref={el => (this.controlRef = el)}
           opening={open}
           onClick={this.open}
+          {...rest}
         >
           <CurrentValue>
             {selectedOption ? selectedOption.display : null}
@@ -157,7 +157,7 @@ export default class ComboBox extends Component {
             </Options>
           </Overlay>
         )}
-      </ComboBoxWrapper>
+      </>
     );
   }
 }
