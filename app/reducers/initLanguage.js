@@ -245,7 +245,7 @@ export default {
 
     'Console.CoreOutput': 'Core Output',
     'Console.Console': 'Console',
-    'Console.ClearConsole': 'ClearConsole',
+    'Console.ClearConsole': 'Clear Console',
     'Console.Exe': 'Execute',
     'Console.MdMode': 'Started In Manual Deamon Mode',
     'Console.CommandsHere': 'Enter Console Commands Here (ex: getinfo, help)',
@@ -297,8 +297,8 @@ export default {
     'Header.WalletLocked': 'Wallet Locked',
     'Header.UnlockedUntil': 'Unlocked until',
     'Header.StakingOnly': 'Staking Only',
-    'Header.Synced': 'Synced',
-    'Header.Synching': 'Syncing...\nBehind\n',
+    'Header.Synced': 'Synchronized',
+    'Header.Synching': 'Synchronizing...\nBehind\n',
     'Header.Blocks': 'Blocks',
     'Header.DaemonNotLoaded': 'Daemon Not Loaded',
 

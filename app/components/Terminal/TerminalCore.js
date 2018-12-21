@@ -1,21 +1,15 @@
-/*
-  Title: Terminal Core
-  Description: show what methods have been called to the rpc server
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { timingSafeEqual } from 'crypto';
 import { connect } from 'react-redux';
-// import { Tail } from "tail";
+import styled from '@emotion/styled';
 
-// Internal Dependencies
-import styles from './style.css';
-import configuration from 'api/configuration';
+// Internal Global Dependencies
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { Tail } from 'utils/tail';
+import { colors } from 'styles';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -24,6 +18,22 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   printCoreOutput: data =>
     dispatch({ type: TYPE.PRINT_TO_CORE, payload: data }),
+});
+
+const TerminalCoreWrapper = styled.div(
+  {
+    height: '100%',
+    display: 'flex',
+    overflowY: 'auto',
+  },
+  ({ reverse }) => ({
+    flexDirection: reverse ? 'column-reverse' : 'column',
+  })
+);
+
+const OutputLine = styled.code({
+  backgroundColor: colors.dark,
+  borderColor: colors.dark,
 });
 
 class TerminalCore extends Component {
@@ -85,26 +95,15 @@ class TerminalCore extends Component {
   // Mandatory React method
   render() {
     return (
-      <div
-        id="terminal-core-output"
-        style={{
-          display: 'flex',
-          flexDirection: this.props.settings.manualDaemon
-            ? 'column'
-            : 'column-reverse',
-        }}
-        onScroll={e => {
-          e.preventDefault();
-        }}
-      >
+      <TerminalCoreWrapper reverse={!this.props.settings.manualDaemon}>
         {this.props.settings.manualDaemon ? (
-          <div>Core in Manual Mode</div>
+          <div className="dim">Core in Manual Mode</div>
         ) : (
-          this.props.coreOutput.map((d, i) => {
-            return <div key={i}>{d}</div>;
-          })
+          this.props.coreOutput.map((d, i) => (
+            <OutputLine key={i}>{d}</OutputLine>
+          ))
         )}
-      </div>
+      </TerminalCoreWrapper>
     );
   }
 }

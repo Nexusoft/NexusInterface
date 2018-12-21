@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 import Request from 'request';
 import { Promise } from 'bluebird-lst';
+import fs from 'fs';
 import Modal from 'react-responsive-modal';
 import {
   VictoryBar,
@@ -28,19 +29,25 @@ import {
   createContainer,
   Flyout,
 } from 'victory';
-var rp = require('request-promise');
+import rp from 'request-promise';
+import { FormattedMessage } from 'react-intl';
 
-// Internal Dependencies
+// Internal Global Dependencies
+import Icon from 'components/common/Icon';
+import Panel from 'components/common/Panel';
+import WaitingText from 'components/common/WaitingText';
+import { GetSettings } from 'api/settings.js';
 import Table from 'scripts/utilities-react';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import config from 'api/configuration';
+
+// Internal Local Dependencies
 import styles from './style.css';
-import { FormattedMessage } from 'react-intl';
 
 // Images
-import transactionsimg from 'images/transactions.svg';
+import transactionIcon from 'images/transaction.sprite.svg';
 
 import copy from 'copy-to-clipboard';
 import { wrap } from 'module';
@@ -1176,8 +1183,6 @@ class Transactions extends Component {
 
   // Either load in the file from local or start downloading more data and make a new one.
   gethistorydatajson() {
-    let fs = require('fs');
-
     try {
       const electronapp =
         require('electron').app || require('electron').remote.app;
@@ -1335,8 +1340,6 @@ class Transactions extends Component {
         ? electronapp.getPath('appData')
         : process.env.HOME);
     appdataloc = appdataloc + '/Nexus Wallet/';
-
-    let fs = require('fs');
 
     fs.writeFile(
       appdataloc + 'historydata.json',
@@ -1658,196 +1661,191 @@ class Transactions extends Component {
     const open = this.state.open;
     const pageSize = this.returnDefaultPageSize();
     return (
-      <div id="transactions" className="animated fadeIn">
+      <Panel
+        icon={transactionIcon}
+        title={
+          <FormattedMessage
+            id="transactions.Details"
+            defaultMessage="Transaction Details"
+          />
+        }
+      >
         <Modal
           open={open}
           onClose={this.onCloseModal.bind(this)}
           center
           classNames={{ modal: 'modal' }}
         >
-          <h2 style={{ textAlign: 'center' }}>
-            <FormattedMessage
-              id="transactions.Details"
-              defaultMessage="Transaction Details"
-            />
-          </h2>
+          <h2 style={{ textAlign: 'center' }} />
           {this.returnModalInternal()}
         </Modal>
 
-        <h2>
-          <img src={transactionsimg} className="hdr-img" />
-          <FormattedMessage
-            id="transactions.Transactions"
-            defaultMessage="Transactions"
-          />
-        </h2>
-
-        <div className="panel">
-          {this.props.connections === undefined ? (
-            <h2>
-              <FormattedMessage
-                id="transactions.Loading"
-                defaultMessage="Please wait for the daemon to load"
-              />
-            </h2>
-          ) : (
-            <div>
-              <select
-                id="select"
-                value={this.props.selectedAccount}
-                onChange={e => this.selectAccount(e.target.value)}
-                style={{ marginBottom: '5' }}
-              >
-                {this.accountChanger()}
-              </select>{' '}
-              <div
-                id="transactions-chart"
-                style={{ display: data.length === 0 ? 'none' : 'block' }}
-              >
-                {data.length === 0 ? null : this.returnVictoryChart()}
-              </div>
-              <div id="transactions-filters">
-                <div id="filter-address" className="filter-field">
-                  <label htmlFor="address-filter">
-                    <FormattedMessage
-                      id="transactions.SearchAddress"
-                      defaultMessage="Search Address"
-                    />
-                  </label>
-                  <input
-                    id="address-filter"
-                    type="search"
-                    name="addressfilter"
-                    onChange={this.transactionaddressfiltercallback}
-                  />
-                </div>
-
-                <div id="filter-type" className="filter-field">
-                  <label htmlFor="transactiontype-dropdown">
-                    <FormattedMessage
-                      id="transactions.Type"
-                      defaultMessage="TYPE"
-                    />
-                  </label>
-                  <select
-                    id="transactiontype-dropdown"
-                    onChange={this.transactiontypefiltercallback}
-                  >
-                    <option value="all">
-                      <FormattedMessage
-                        id="transactions.All"
-                        defaultMessage="All"
-                      />
-                    </option>
-                    <option value="credit">
-                      <FormattedMessage
-                        id="transactions.Receive"
-                        defaultMessage="Receive"
-                      />
-                    </option>
-                    <option value="debit">
-                      <FormattedMessage
-                        id="transactions.Sent"
-                        defaultMessage="Sent"
-                      />
-                    </option>
-                    <option value="genesis">
-                      <FormattedMessage
-                        id="transactions.Genesis"
-                        defaultMessage="Genesis"
-                      />
-                    </option>
-                    <option value="trust">
-                      <FormattedMessage
-                        id="transactions.Trust"
-                        defaultMessage="Trust"
-                      />
-                    </option>
-                  </select>
-                </div>
-
-                <div id="filter-minimum" className="filter-field">
-                  <label htmlFor="minimum-nxs">
-                    <FormattedMessage
-                      id="transactions.MinimumAmount"
-                      defaultMessage="Min Amount"
-                    />
-                  </label>
-                  <input
-                    id="minimum-nxs"
-                    type="number"
-                    min="0"
-                    placeholder="0.00"
-                    onChange={this.transactionamountfiltercallback}
-                  />
-                </div>
-
-                <div id="filter-timeframe" className="filter-field">
-                  <label htmlFor="transaction-timeframe">
-                    <FormattedMessage
-                      id="transactions.Time"
-                      defaultMessage="TIME SPAN"
-                    />
-                  </label>
-                  <select
-                    id="transaction-timeframe"
-                    onChange={event => this.transactionTimeframeChange(event)}
-                  >
-                    <option value="All">
-                      <FormattedMessage
-                        id="transactions.All"
-                        defaultMessage="All"
-                      />
-                    </option>
-                    <option value="Year">
-                      <FormattedMessage
-                        id="transactions.PastYear"
-                        defaultMessage="All"
-                      />
-                    </option>
-                    <option value="Month">
-                      <FormattedMessage
-                        id="transactions.PastMonth"
-                        defaultMessage="Past Month"
-                      />
-                    </option>
-                    <option value="Week">
-                      <FormattedMessage
-                        id="transactions.PastWeek"
-                        defaultMessage="Past Week"
-                      />
-                    </option>
-                  </select>
-                </div>
-
-                <button
-                  id="download-cvs-button"
-                  className="button primary"
-                  value="Download"
-                  onClick={() => this.DownloadCSV()}
-                >
+        {this.props.connections === undefined ? (
+          <WaitingText>
+            <FormattedMessage
+              id="transactions.Loading"
+              defaultMessage="Please wait for the daemon to load"
+            />
+            ...
+          </WaitingText>
+        ) : (
+          <div>
+            Account Select:
+            <select
+              id="select"
+              value={this.props.selectedAccount}
+              onChange={e => this.selectAccount(e.target.value)}
+              style={{ marginBottom: '5' }}
+            >
+              {this.accountChanger()}
+            </select>{' '}
+            <div
+              id="transactions-chart"
+              style={{ display: data.length === 0 ? 'none' : 'block' }}
+            >
+              {data.length === 0 ? null : this.returnVictoryChart()}
+            </div>
+            <div id="transactions-filters">
+              <div id="filter-address" className="filter-field">
+                <label htmlFor="address-filter">
                   <FormattedMessage
-                    id="transactions.Download"
-                    defaultMessage="Download"
+                    id="transactions.SearchAddress"
+                    defaultMessage="Search Address"
                   />
-                </button>
-              </div>
-              <div id="transactions-details">
-                <Table
-                  key="table-top"
-                  data={data}
-                  columns={columns}
-                  minRows={pageSize}
-                  selectCallback={this.tableSelectCallback.bind(this)}
-                  defaultsortingid={1}
-                  onMouseOverCallback={this.mouseOverCallback.bind(this)}
-                  onMouseOutCallback={this.mouseOutCallback.bind(this)}
+                </label>
+                <input
+                  id="address-filter"
+                  type="search"
+                  name="addressfilter"
+                  onChange={this.transactionaddressfiltercallback}
                 />
               </div>
+
+              <div id="filter-type" className="filter-field">
+                <label htmlFor="transactiontype-dropdown">
+                  <FormattedMessage
+                    id="transactions.Type"
+                    defaultMessage="TYPE"
+                  />
+                </label>
+                <select
+                  id="transactiontype-dropdown"
+                  onChange={this.transactiontypefiltercallback}
+                >
+                  <option value="all">
+                    <FormattedMessage
+                      id="transactions.All"
+                      defaultMessage="All"
+                    />
+                  </option>
+                  <option value="credit">
+                    <FormattedMessage
+                      id="transactions.Receive"
+                      defaultMessage="Receive"
+                    />
+                  </option>
+                  <option value="debit">
+                    <FormattedMessage
+                      id="transactions.Sent"
+                      defaultMessage="Sent"
+                    />
+                  </option>
+                  <option value="genesis">
+                    <FormattedMessage
+                      id="transactions.Genesis"
+                      defaultMessage="Genesis"
+                    />
+                  </option>
+                  <option value="trust">
+                    <FormattedMessage
+                      id="transactions.Trust"
+                      defaultMessage="Trust"
+                    />
+                  </option>
+                </select>
+              </div>
+
+              <div id="filter-minimum" className="filter-field">
+                <label htmlFor="minimum-nxs">
+                  <FormattedMessage
+                    id="transactions.MinimumAmount"
+                    defaultMessage="Min Amount"
+                  />
+                </label>
+                <input
+                  id="minimum-nxs"
+                  type="number"
+                  min="0"
+                  placeholder="0.00"
+                  onChange={this.transactionamountfiltercallback}
+                />
+              </div>
+
+              <div id="filter-timeframe" className="filter-field">
+                <label htmlFor="transaction-timeframe">
+                  <FormattedMessage
+                    id="transactions.Time"
+                    defaultMessage="TIME SPAN"
+                  />
+                </label>
+                <select
+                  id="transaction-timeframe"
+                  onChange={event => this.transactionTimeframeChange(event)}
+                >
+                  <option value="All">
+                    <FormattedMessage
+                      id="transactions.All"
+                      defaultMessage="All"
+                    />
+                  </option>
+                  <option value="Year">
+                    <FormattedMessage
+                      id="transactions.PastYear"
+                      defaultMessage="All"
+                    />
+                  </option>
+                  <option value="Month">
+                    <FormattedMessage
+                      id="transactions.PastMonth"
+                      defaultMessage="Past Month"
+                    />
+                  </option>
+                  <option value="Week">
+                    <FormattedMessage
+                      id="transactions.PastWeek"
+                      defaultMessage="Past Week"
+                    />
+                  </option>
+                </select>
+              </div>
+
+              <button
+                id="download-cvs-button"
+                className="button primary"
+                value="Download"
+                onClick={() => this.DownloadCSV()}
+              >
+                <FormattedMessage
+                  id="transactions.Download"
+                  defaultMessage="Download"
+                />
+              </button>
             </div>
-          )}
-        </div>
-      </div>
+            <div id="transactions-details">
+              <Table
+                key="table-top"
+                data={data}
+                columns={columns}
+                minRows={pageSize}
+                selectCallback={this.tableSelectCallback.bind(this)}
+                defaultsortingid={1}
+                onMouseOverCallback={this.mouseOverCallback.bind(this)}
+                onMouseOutCallback={this.mouseOutCallback.bind(this)}
+              />
+            </div>
+          </div>
+        )}
+      </Panel>
     );
   }
 }

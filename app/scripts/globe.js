@@ -104,8 +104,8 @@ export default (DAT.Globe = function(container, opts) {
   var padding = 40;
   var PI_HALF = Math.PI / 2;
 
-  var tempoints = [];
   var LastKnownLoc;
+  var tempointsObjs = [];
 
   function init() {
     // container.style.color = '#fff';
@@ -185,7 +185,7 @@ export default (DAT.Globe = function(container, opts) {
     mesh = new THREE.Mesh(geometry, material);
     mesh.scale.set(1.1, 1.1, 1.1);
 
-    scene.add(mesh);
+    // scene.add(mesh);
 
     geometry = new THREE.BoxGeometry(0.75, 0.75, 1);
     geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -0.5));
@@ -276,18 +276,14 @@ export default (DAT.Globe = function(container, opts) {
 
       if (i + step == data.length) {
         color = { r: 0, g: 1, b: 0 };
-        if (lat == 0 & lng == 0)
-        {
+        if ((lat == 0) & (lng == 0)) {
           lat = LastKnownLoc.lat;
-          lng = LastKnownLoc.lng; 
-          color = {r: 1, g: 0, b: 0};
-        }
-        else
-        {
-          LastKnownLoc = 
-          {
+          lng = LastKnownLoc.lng;
+          color = { r: 1, g: 0, b: 0 };
+        } else {
+          LastKnownLoc = {
             lat: lat,
-            lng: lng
+            lng: lng,
           };
         }
       }
@@ -335,19 +331,18 @@ export default (DAT.Globe = function(container, opts) {
           })
         );
       }
-
-      let tempPoints = [];
-
-      const lastpoint = tempoints[tempoints.length - 1];
-      for (let index = 0; index < tempoints.length - 1; index++) {
-        const element = tempoints[index];
+      const lastpoint = tempointsObjs[tempointsObjs.length - 1];
+      let tempPointsArrays = tempointsObjs.map(element => {
         let temparray = [];
         temparray.push(element.lat);
         temparray.push(element.lng);
         temparray.push(parseFloat(lastpoint.lat));
         temparray.push(parseFloat(lastpoint.lng));
-        tempPoints.push(temparray);
-      }
+
+        return temparray;
+      });
+
+      console.log('temparrs:', tempPointsArrays);
 
       let newCurveMesh = new THREE.Mesh(
         this._baseGeometry,
@@ -357,18 +352,18 @@ export default (DAT.Globe = function(container, opts) {
           morphTargets: true,
         })
       );
-
-      initCurves(tempPoints, newCurveMesh);
+      console.log(scene);
+      initCurves(tempPointsArrays, newCurveMesh);
 
       playCurve();
-
+      console.log(cureves);
       if (CurveMeshs != null) {
         scene.remove(CurveMeshs);
       }
       if (PillarMeshs != null) {
         scene.remove(PillarMeshs);
       }
-
+      console.log(this.points);
       CurveMeshs = newCurveMesh;
       PillarMeshs = this.points;
 
@@ -376,21 +371,21 @@ export default (DAT.Globe = function(container, opts) {
       CurveMeshs.name = 'CurveMesh';
 
       scene.add(PillarMeshs);
-      scene.add(CurveMeshs);
+      // scene.add(CurveMeshs);
     }
   }
 
-  function returnPointVector3(lat, lng) {
-    let vector3 = new THREE.Vector3(0, 0, 0);
-    var phi = ((90 - lat) * Math.PI) / 180;
-    var theta = ((180 - lng) * Math.PI) / 180;
+  // function returnPointVector3(lat, lng) {
+  //   let vector3 = new THREE.Vector3(0, 0, 0);
+  //   var phi = ((90 - lat) * Math.PI) / 180;
+  //   var theta = ((180 - lng) * Math.PI) / 180;
 
-    vector3.x = 200 * Math.sin(phi) * Math.cos(theta);
-    vector3.y = 200 * Math.cos(phi);
-    vector3.z = 200 * Math.sin(phi) * Math.sin(theta);
+  //   vector3.x = 200 * Math.sin(phi) * Math.cos(theta);
+  //   vector3.y = 200 * Math.cos(phi);
+  //   vector3.z = 200 * Math.sin(phi) * Math.sin(theta);
 
-    return vector3;
-  }
+  //   return vector3;
+  // }
 
   function addPoint(lat, lng, size, color, subgeo) {
     var phi = ((90 - lat) * Math.PI) / 180;
@@ -405,7 +400,7 @@ export default (DAT.Globe = function(container, opts) {
     point.scale.z = Math.max(size, 0.1); // avoid non-invertible matrix
     point.updateMatrix();
 
-    tempoints.push({ lat: lat, lng: lng });
+    tempointsObjs.push({ lat: lat, lng: lng });
 
     for (var i = 0; i < point.geometry.faces.length; i++) {
       point.geometry.faces[i].color = color;
@@ -480,9 +475,9 @@ export default (DAT.Globe = function(container, opts) {
     }
   }
 
-  var prevW = 0;
-  var prevH = 0;
-  var scale = 1;
+  // var prevW = 0;
+  // var prevH = 0;
+  // var scale = 1;
   function onWindowResize(event) {
     // if(prevH == 0 || prevW == 0)
     // {
@@ -521,14 +516,14 @@ export default (DAT.Globe = function(container, opts) {
   }
 
   function playCurve() {
-    cureves.forEach(element => {
+    cureves.map(element => {
       element.restart();
       element.play();
     });
   }
 
   function removePoints() {
-    cureves.forEach(element => {
+    cureves.map(element => {
       element.stop();
     });
     if (CurveMeshs != null) {
@@ -543,21 +538,23 @@ export default (DAT.Globe = function(container, opts) {
       PillarMeshs.material.dispose();
       PillarMeshs = null;
     }
-
+    console.log('BEFORE:', tempointsObjs);
+    tempointsObjs = [];
+    console.log('AFTER:', tempointsObjs);
     //scene.remove(scene.getObjectByName(""));
-    tempoints.length = 0;
+    //tempointsObjs.length = 0;
     //cureves.length = 0;
     //console.log(scene);
     //console.log(PillarMeshs);
     //console.log(CurveMeshs);
-    //console.log(tempoints);
+    //console.log(tempointsObjs);
     //console.log(cureves);
     //console.log("globe:removePoints");
   }
 
   function render() {
     zoom(curZoomSpeed);
-    //playCurve();
+    // playCurve();
     target.x += incr_rotation.x;
     rotation.x += (target.x - rotation.x) * 0.1;
     rotation.y += (target.y - rotation.y) * 0.1;
@@ -581,14 +578,14 @@ export default (DAT.Globe = function(container, opts) {
     });
     const curveMesh = new THREE.Mesh();
 
-    cureves.length = 0;
-    allCoords.forEach((coords, index) => {
+    cureves = allCoords.map(coords => {
       const curve = new Curve(coords, material);
-      cureves.push(curve);
-      curveMesh.add(curve.mesh);
+      scene.add(curve.mesh);
+      return curve;
     });
-
-    incomingmesh.add(curveMesh);
+    console.log('cm:', curveMesh);
+    return curveMesh;
+    // incomingmesh.add(curveMesh);
   }
 
   function Curve(coords, material) {
@@ -702,12 +699,14 @@ export default (DAT.Globe = function(container, opts) {
 
   this.__defineSetter__('time', function(t) {
     var validMorphs = [];
+
     var morphDict = this.points.morphTargetDictionary;
     for (var k in morphDict) {
       if (k.indexOf('morphPadding') < 0) {
         validMorphs.push(morphDict[k]);
       }
     }
+
     validMorphs.sort();
     var l = validMorphs.length - 1;
     var scaledt = t * l + 1;

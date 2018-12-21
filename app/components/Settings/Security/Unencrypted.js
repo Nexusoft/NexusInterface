@@ -14,6 +14,7 @@ import styles from './style.css';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { FormattedMessage } from 'react-intl';
+import WaitingText from 'components/common/WaitingText';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -176,12 +177,13 @@ class Unencrypted extends Component {
   render() {
     if (this.props.connections === undefined) {
       return (
-        <h2>
+        <WaitingText>
           <FormattedMessage
             id="transactions.Loading"
             defaultMessage="Please wait for the Daemon to load"
           />
-        </h2>
+          ...
+        </WaitingText>
       );
     } else {
       return (

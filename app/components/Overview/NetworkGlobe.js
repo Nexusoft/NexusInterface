@@ -5,28 +5,39 @@
 */
 // External Dependencies
 import React, { Component } from 'react';
+import { remote } from 'electron';
+import path from 'path';
+import styled from '@emotion/styled';
 
 import maxmind from 'maxmind';
 import Request from 'request';
 import * as THREE from 'three';
 
 // Internal Dependencies
-import styles from './style.css';
 import DAT from 'scripts/globe';
 import * as RPC from 'scripts/rpc';
 import configuration from 'api/configuration';
 
 var glb;
 var initializedWithData = false;
+let myIP = [];
+const GlobeWrapper = styled.div({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  overflow: 'hidden',
+});
 
 export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
+    console.log('Hello From the Network Globe Component!');
     this.props.handleOnLineRender(this.testRestartLines);
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
     this.props.handleOnAddData(this.updatePointsOnGlobe);
     this.props.handleRemoveAllPoints(this.removeAllPoints);
-    const path = require('path');
     const globeseries = [['peers', []]];
     let geoiplookup = '';
     if (process.env.NODE_ENV === 'development') {
@@ -81,9 +92,13 @@ export default class NetworkGlobe extends Component {
                   globeseries[0][1].push(tmp.location.longitude);
                   globeseries[0][1].push(0.1); //temporary magnitude.
                 }
+                myIP = [
+                  parseFloat(body['geoplugin_latitude']),
+                  parseFloat(body['geoplugin_longitude']),
+                ];
 
-                globeseries[0][1].push(body['geoplugin_latitude']);
-                globeseries[0][1].push(body['geoplugin_longitude']);
+                globeseries[0][1].push(parseFloat(body['geoplugin_latitude']));
+                globeseries[0][1].push(parseFloat(body['geoplugin_longitude']));
                 globeseries[0][1].push(0.1); //temporary magnitude.
 
                 //glb = new DAT(this.threeRootElement);
@@ -105,13 +120,13 @@ export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
   componentWillUnmount() {
     this.threeRootElement.remove();
+    glb.removePoints();
   }
   // Class Methods
   updatePointsOnGlobe() {
     const globeseries = [['peers', []]];
     let geoiplookup = '';
 
-    const path = require('path');
     if (process.env.NODE_ENV === 'development') {
       geoiplookup = maxmind.openSync(
         path.join(__dirname, 'GeoLite2-City', 'GeoLite2-City.mmdb')
@@ -125,55 +140,34 @@ export default class NetworkGlobe extends Component {
         )
       );
     }
-    let myIP = '';
-    Request(
-      {
-        url: 'http://www.geoplugin.net/json.gp',
-        json: true,
-      },
-      (error, response, body) => {
-        RPC.PROMISE('getpeerinfo', []).then(payload => {
-          var tmp = {};
-          var ip = {};
-          let maxnodestoadd = payload.length;
-          if (maxnodestoadd > 20) {
-            maxnodestoadd = 20;
-          }
-          for (var i = 0; i < maxnodestoadd; i++) {
-            ip = payload[i].addr;
-            ip = ip.split(':')[0];
-            var tmp = geoiplookup.get(ip);
-            globeseries[0][1].push(tmp.location.latitude);
-            globeseries[0][1].push(tmp.location.longitude);
-            globeseries[0][1].push(0.1); //temporary magnitude.
-          }
-
-          if (response !== undefined){
-            if (response.statusCode !== undefined && response.statusCode === 200)
-            {
-              globeseries[0][1].push(body['geoplugin_latitude']);
-              globeseries[0][1].push(body['geoplugin_longitude']);
-              globeseries[0][1].push(0.1); //temporary magnitude.
-            }
-          }
-          else
-          {
-            globeseries[0][1].push(0);
-            globeseries[0][1].push(0);
-            globeseries[0][1].push(0.1); //temporary magnitude.
-          }
-
-          glb.removePoints();
-          glb.addData(globeseries[0][1], {
-            format: 'magnitude',
-            name: globeseries[0][0],
-          });
-          glb.createPoints();
-        });
-          
-        
+    console.log('update');
+    RPC.PROMISE('getpeerinfo', []).then(payload => {
+      var tmp = {};
+      var ip = {};
+      let maxnodestoadd = payload.length;
+      if (maxnodestoadd > 20) {
+        maxnodestoadd = 20;
       }
-    );
+      for (var i = 0; i < maxnodestoadd; i++) {
+        ip = payload[i].addr;
+        ip = ip.split(':')[0];
+        var tmp = geoiplookup.get(ip);
+        globeseries[0][1].push(tmp.location.latitude);
+        globeseries[0][1].push(tmp.location.longitude);
+        globeseries[0][1].push(0.1); //temporary magnitude.
+      }
+
+      globeseries[0][1].push(myIP[0]);
+      globeseries[0][1].push(myIP[1]);
+      globeseries[0][1].push(0.1); //temporary magnitude.
+
+      glb.removePoints();
+      glb.addData(globeseries[0][1], {
+        format: 'magnitude',
+        name: globeseries[0][0],
+      });
+      glb.createPoints();
+    });
   }
 
   testRestartLines() {
@@ -202,7 +196,7 @@ export default class NetworkGlobe extends Component {
   }
 
   getResourcesDirectory() {
-    let appPath = require('electron').remote.app.getAppPath();
+    let appPath = remote.app.getAppPath();
 
     if (process.cwd() === appPath) return './';
     else return process.resourcesPath + '/';
@@ -211,9 +205,9 @@ export default class NetworkGlobe extends Component {
   // Mandatory React method
   render() {
     return (
-      <div id="nxs-earth" className="earth">
+      <GlobeWrapper>
         <div ref={element => (this.threeRootElement = element)} />
-      </div>
+      </GlobeWrapper>
     );
   }
 }

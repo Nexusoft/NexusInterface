@@ -41,7 +41,7 @@ export const DaemonUnavailable = () => {
 
 export const DaemonAvailable = () => {
   return dispatch => {
-    dispatch({ type: TYPE.DAEMON_UNAVALIBLE, payload: true });
+    dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: true });
   };
 };
 

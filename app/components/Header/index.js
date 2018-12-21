@@ -1,39 +1,99 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import electron from 'electron';
 import Modal from 'react-responsive-modal';
 import CustomProperties from 'react-custom-properties';
 import log from 'electron-log';
+import path from 'path';
+import styled from '@emotion/styled';
+import { FormattedMessage } from 'react-intl';
+import { write } from 'fs';
 
-// Internal Dependencies
+// Internal Global Dependencies
 import MenuBuilder from 'menu';
-import styles from './style.css';
-import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
+import * as RPC from 'scripts/rpc';
 import * as actionsCreators from 'actions/headerActionCreators';
 import { GetSettings, SaveSettings } from 'api/settings';
 import GOOGLE from 'scripts/googleanalytics';
 import configuration from 'api/configuration';
+import Icon from 'components/common/Icon';
+import HorizontalLine from 'components/common/HorizontalLine';
+import { colors, consts, timing, animations } from 'styles';
 
-// Images
-import questionmark from 'images/questionmark.svg';
-import lockedImg from 'images/lock-encrypted.svg';
-import unencryptedImg from 'images/lock-unencrypted.svg';
-import unlockImg from 'images/lock-minting.svg';
-import statGood from 'images/status-good.svg';
-import statBad from 'images/sync.svg';
-import stakeImg from 'images/staking.svg';
-import logoFull from 'images/logo-full-beta.svg';
-import { write } from 'fs';
+// Internal Local Dependencies
+import NotificationModal from './NotificationModal';
+import ErrorModal from './ErrorModal';
+import BootstrapModal from './BootstrapModal';
+import SignInStatus from './StatusIcons/SignInStatus';
+import StakingStatus from './StatusIcons/StakingStatus';
+import SyncStatus from './StatusIcons/SyncStatus';
+import DaemonStatus from './DaemonStatus';
+import logoFull from './logo-full-beta.sprite.svg';
+import './style.css';
 
-import { FormattedMessage } from 'react-intl';
+const HeaderWrapper = styled.header({
+  gridArea: 'header',
+  position: 'relative',
+  top: 0,
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: colors.primary,
+  zIndex: 999,
+});
+
+const LogoLink = styled(Link)({
+  position: 'relative',
+  animation: `${animations.fadeInAndExpand} ${timing.slow} ${
+    consts.enhancedEaseOut
+  }`,
+});
+
+const Logo = styled(Icon)({
+  display: 'block',
+  height: 50,
+  width: 'auto',
+  filter: 'var(--nxs-logo)',
+  fill: colors.primary,
+});
+
+const Beta = styled.div({
+  color: 'white',
+  fontSize: 12,
+  position: 'absolute',
+  bottom: 3,
+  right: -26,
+  letterSpacing: 1,
+  textTransform: 'uppercase',
+});
+
+const StatusIcons = styled.div({
+  position: 'absolute',
+  top: 24,
+  right: 40,
+  animation: `${animations.fadeIn} ${timing.slow} ${consts.enhancedEaseOut}`,
+  display: 'flex',
+  alignItems: 'center',
+});
+
+const UnderHeader = styled.div({
+  position: 'absolute',
+  top: '100%',
+  left: 0,
+  right: 0,
+  textAlign: 'center',
+  color: colors.light,
+});
+
 var tray = tray || null;
 let mainWindow = electron.remote.getCurrentWindow();
 var checkportinterval; // shouldbemoved
-var enoughSpace = true;
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -81,7 +141,6 @@ class Header extends Component {
       self.props.GetInfoDump();
     }, 20000);
     const core = electron.remote.getGlobal('core');
-
     this.props.SetMarketAveData();
     self.mktData = setInterval(function() {
       console.log('MARKET');
@@ -160,20 +219,6 @@ class Header extends Component {
     } else {
       return null;
     }
-  }
-
-  bootstrapModalController() {
-    console.log();
-    if (this.props.manualDaemon !== true) {
-      if (
-        (this.props.settings.bootstrap &&
-          this.props.connections !== undefined &&
-          !this.props.isInSync) ||
-        this.props.BootstrapModal
-      ) {
-        return true;
-      } else return false;
-    } else return false;
   }
 
   // Class methods
@@ -1138,144 +1183,60 @@ class Header extends Component {
 
   // Mandatory React method
   render() {
+    const { settings, connections, daemonAvailable } = this.props;
+
     return (
-      <div id="Header">
+      <HeaderWrapper>
         <CustomProperties
           global
           properties={{
-            '--color-1': this.props.settings.customStyling.MC1,
-            '--color-2': this.props.settings.customStyling.MC2,
-            '--color-3': this.props.settings.customStyling.MC3,
-            '--color-4': this.props.settings.customStyling.MC4,
-            '--color-5': this.props.settings.customStyling.MC5,
-            '--nxs-logo': this.props.settings.customStyling.NXSlogo,
-            '--icon-menu': this.props.settings.customStyling.iconMenu,
-            '--footer': this.props.settings.customStyling.footer,
-            '--footer-hover': this.props.settings.customStyling.footerHover,
-            '--footer-active': this.props.settings.customStyling.footerActive,
-            '--background-main-image': `url('${
-              this.props.settings.wallpaper
-            }')`,
-            '--panel-background-color': this.props.settings.customStyling
-              .pannelBack,
-            '--maxMind-copyright': this.props.settings.customStyling
-              .maxMindCopyright,
+            '--color-1': settings.customStyling.MC1,
+            '--color-2': settings.customStyling.MC2,
+            '--color-3': settings.customStyling.MC3,
+            '--color-4': settings.customStyling.MC4,
+            '--color-5': settings.customStyling.MC5,
+            '--nxs-logo': settings.customStyling.NXSlogo,
+            '--icon-menu': settings.customStyling.iconMenu,
+            '--footer': settings.customStyling.footer,
+            '--footer-hover': settings.customStyling.footerHover,
+            '--footer-active': settings.customStyling.footerActive,
+            '--background-main-image': `url('${settings.wallpaper}')`,
+            '--panel-background-color': settings.customStyling.pannelBack,
+            '--maxMind-copyright': settings.customStyling.maxMindCopyright,
           }}
         />
-        <Modal
-          showCloseIcon={false}
-          center={true}
-          open={this.props.open}
-          onClose={this.props.CloseModal}
-          classNames={{ modal: 'custom-modal' }}
-          onEntered={() => {
-            if (this.props.modaltype != 'Closing Nexus') {
-              setTimeout(() => {
-                this.props.CloseModal();
-              }, 1500);
-            }
-          }}
-        >
-          {this.modalinternal()}
-        </Modal>
-        <Modal
-          showCloseIcon={false}
-          center={true}
-          open={this.props.openErrorModal}
-          onClose={this.props.CloseErrorModal}
-          classNames={{ modal: 'custom-Error-Modal' }}
-          onEntered={() => {
-            setTimeout(() => {
-              this.props.CloseErrorModal();
-            }, 1500);
-          }}
-        >
-          {this.modalinternal()}
-        </Modal>
-        <Modal
-          key="bootstrap-modal"
-          open={this.bootstrapModalController()}
-          onClose={() => true}
-          center
-          focusTrapped={true}
-          showCloseIcon={false}
-          classNames={{ modal: 'modal' }}
-        >
-          {this.BootstrapModalInteriorBuilder()}
-        </Modal>
-        <div id="settings-menu" className="animated rotateInDownRight ">
-          <div className="icon">
-            <img src={this.signInStatus()} />
-            <div className="tooltip bottom">
-              <div>{this.signInStatusMessage()}</div>
-            </div>
-          </div>
-          {this.CancelTT()}
 
-          {/* <div className="icon">
-            <img src={stakeImg} />
+        <NotificationModal {...this.props} />
+        <ErrorModal {...this.props} />
+        <BootstrapModal {...this.props} />
 
-            <div className="tooltip bottom">
-              <div>
-                <FormattedMessage
-                  id="Header.StakeWeight"
-                  defaultMessage="Stake Weight"
-                />
-                : {this.props.stakeweight}%
-              </div>
-              <div>
-                <FormattedMessage
-                  id="Header.InterestRate"
-                  defaultMessage="Stake Reward"
-                />
-                : {this.props.interestweight}%
-              </div>
-              <div>
-                <FormattedMessage
-                  id="Header.TrustWeight"
-                  defaultMessage="Trust Weight"
-                />
-                : {this.props.trustweight}%
-              </div>
-              <div>
-                <FormattedMessage
-                  id="Header.BlockWeight"
-                  defaultMessage="Block Weight"
-                />
-                : {this.props.blockweight}
-              </div>
-            </div>
-          </div> */}
+        <LogoLink to="/">
+          <Logo icon={logoFull} />
+          <Beta>BETA</Beta>
+        </LogoLink>
 
-          <div className="icon">
-            {this.props.heighestPeerBlock > this.props.blocks ? (
-              <img id="syncing" className="sync-img" src={statBad} />
-            ) : (
-              <img id="Synced" src={statGood} />
-            )}
-            <div className="tooltip bottom" style={{ right: '100%' }}>
-              <div>{this.returnSyncStatusTooltip()}</div>
-            </div>
-          </div>
-        </div>
+        <UnderHeader>
+          <HorizontalLine />
+          <DaemonStatus {...this.props} />
+        </UnderHeader>
 
-        <Link to="/">
-          <img
-            id="logo"
-            className="animated zoomIn"
-            src={logoFull}
-            alt="Nexus Logo"
-          />
-        </Link>
-        <div id="hdr-line" className="animated fadeIn " />
-        {this.daemonStatus()}
-      </div>
+        {!!connections && !!daemonAvailable && (
+          <StatusIcons>
+            <SyncStatus {...this.props} />
+            <SignInStatus {...this.props} />
+            {/* wrap this in a check too... */}
+            <StakingStatus {...this.props} />
+          </StatusIcons>
+        )}
+      </HeaderWrapper>
     );
   }
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Header);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Header)
+);

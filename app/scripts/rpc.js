@@ -191,7 +191,6 @@ export const PROMISE = (cmd, args) => {
       } else {
         payload = JSON.parse(ResponseObject.response).result;
       }
-
       resolve(payload);
     };
 

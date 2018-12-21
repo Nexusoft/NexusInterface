@@ -3,9 +3,7 @@ import { app, Menu, shell, BrowserWindow, remote } from 'electron';
 import * as RPC from './scripts/rpc';
 
 export default class ContextMenuBuilder {
-  defaultContext: [];
-
-  constructor(defaultContext: []) {
+  constructor() {
     this.defaultContext = this.ReturnDefaultContextMenu();
   }
 

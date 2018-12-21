@@ -1,63 +1,63 @@
-const Application = require('spectron').Application
-const chai = require('chai')
-const chaiAsPromised = require('chai-as-promised')
-const electronPath = require('electron')
-const path = require('path')
+const Application = require('spectron').Application;
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const electronPath = require('electron');
+const path = require('path');
 
-chai.should()
-chai.use(chaiAsPromised)
-this.app = null
-var appRef = null
-var errorOutput = []
-var appPath = ''
+chai.should();
+chai.use(chaiAsPromised);
+this.app = null;
+var appRef = null;
+var errorOutput = [];
+var appPath = '';
 
 describe('Application launch and Daemon Load', function() {
-  this.timeout(1000000)
+  this.timeout(1000000);
 
   before(function() {
     if (process.platform === 'win32') {
-      appPath = 'release/win-unpacked/Nexus.exe'
+      appPath = 'release/win-unpacked/Nexus.exe';
     } else if (process.platform === 'darwin') {
-      appPath = 'release/mac-unpacked/nexus'
+      appPath = 'release/mac-unpacked/nexus';
     } else {
-      appPath = 'release/linux-unpacked/nexus'
+      appPath = 'release/linux-unpacked/nexus';
     }
 
     this.app = new Application({
       path: path.join(__dirname, '..', appPath),
       args: [path.join(__dirname, '..', appPath)],
-    })
-    appRef = this.app
-    let fs = require('fs')
-    fs.mkdir('Test-Output',() => {} );
-    return this.app.start()
-  })
+    });
+    appRef = this.app;
+    let fs = require('fs');
+    fs.mkdir('Test-Output', () => {});
+    return this.app.start();
+  });
 
   beforeEach(function() {
-    chaiAsPromised.transferPromiseness = this.app.transferPromiseness
-  })
+    chaiAsPromised.transferPromiseness = this.app.transferPromiseness;
+  });
 
   afterEach(function() {
     if (this.app && this.app.isRunning()) {
       //return this.app.stop()
     }
     if (this.currentTest.state == 'failed') {
-      var testTitle = this.currentTest.title
-      console.log(this.currentTest)
-      errorOutput.push(this.currentTest.title)
-      errorOutput.push('\n')
-      errorOutput.push(this.currentTest.err)
-      errorOutput.push('\n \n \n')
+      var testTitle = this.currentTest.title;
+      console.log(this.currentTest);
+      errorOutput.push(this.currentTest.title);
+      errorOutput.push('\n');
+      errorOutput.push(this.currentTest.err);
+      errorOutput.push('\n \n \n');
       this.app.browserWindow.capturePage().then(function(imageBuffer) {
-        let fs = require('fs')
+        let fs = require('fs');
         fs.writeFile(
           'Test-Output/Nexus_Fail_Test_' + testTitle + '.png',
           imageBuffer,
           function() {}
-        )
-      })
+        );
+      });
     }
-  })
+  });
 
   after(function() {
     //let fs = require('fs')
@@ -65,7 +65,7 @@ describe('Application launch and Daemon Load', function() {
     if (this.app && this.app.isRunning()) {
       // return this.app.stop()
     }
-  })
+  });
 
   it('opens a window', function() {
     return this.app.client
@@ -80,81 +80,89 @@ describe('Application launch and Daemon Load', function() {
       .and.be.above(0)
       .browserWindow.getBounds()
       .should.eventually.have.property('height')
-      .and.be.above(0)
-  })
+      .and.be.above(0);
+  });
   it('tests the title', function() {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(2000)
       .getTitle()
-      .should.eventually.equal('Nexus')
-  })
+      .should.eventually.equal('Nexus');
+  });
 
   it('Test Close Agreement', function() {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(2000)
-      .click('button*=ACCEPT')
+      .click('button*=ACCEPT');
     //.element('button*=Accept').click();
-  })
+  });
 
   it('Test Close Experiment', function() {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(3000)
-      .click("button*=Don't")
+      .click("button*=Don't");
     //.element('button[class="button primary"]').click();
-  })
-  this.app
+  });
+  this.app;
   it('Test Close Encrypt', function() {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(3000)
-      .click('button*=Ignore')
-  })
+      .click('button*=Ignore');
+  });
 
   it('Wait Till Daemon Loads', function() {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(3500)
-      .waitUntilTextExists('span', 'Connections', 2147483646)
-  })
-})
+      .waitUntilTextExists('span', 'Connections', 2147483646);
+  });
+});
 
 describe('Run Page Tests', function() {
-  this.timeout(222000000)
-
+  this.timeout(222000000);
 
   afterEach(function() {
     if (this.currentTest.state == 'failed') {
-      var testTitle = this.currentTest.title
-      console.log(this.currentTest)
-      errorOutput.push(this.currentTest.title)
-      errorOutput.push('\n')
-      errorOutput.push(this.currentTest.err)
-      errorOutput.push('\n \n \n')
+      var testTitle = this.currentTest.title;
+      console.log(this.currentTest);
+      errorOutput.push(this.currentTest.title);
+      errorOutput.push('\n');
+      errorOutput.push(this.currentTest.err);
+      errorOutput.push('\n \n \n');
       appRef.browserWindow.capturePage().then(function(imageBuffer) {
-        let fs = require('fs')
+        let fs = require('fs');
         fs.writeFile(
           'Test-Output/Nexus_Fail_Test_' + testTitle + '.png',
           imageBuffer,
           function() {}
-        )
-      })
+        );
+      });
     }
-  })
+  });
 
   after(function() {
-    let fs = require('fs')
-    fs.writeFile('Test-Output/Nexus_Fail_Test_Stats.txt', errorOutput, function() {})
-  })
+    let fs = require('fs');
+    fs.writeFile(
+      'Test-Output/Nexus_Fail_Test_Stats.txt',
+      errorOutput,
+      function() {}
+    );
+  });
 
   it('Test Disable Bootstrap', function() {
-    return appRef.client.waitUntilWindowLoaded()
-    .pause(5000)
-    .waitUntilTextExists('h3','Would you like to reduce the time it takes to sync by downloading a recent version of the database?',20000)
-    .click('button*=No, let it sync form scratch')
-  })
+    return appRef.client
+      .waitUntilWindowLoaded()
+      .pause(5000)
+      .waitUntilTextExists(
+        'h3',
+        'Would you like to reduce the time it takes to sync by downloading a recent version of the database?',
+        20000
+      )
+      .click('button*=No, let it sync form scratch');
+  });
 
   it('Test Go To Send', function() {
     return appRef.client
@@ -164,8 +172,8 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/SendRecieve"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Queue', 50000)
-  })
+      .waitUntilTextExists('span', 'Queue', 50000);
+  });
 
   it('Add To Queue', function() {
     return appRef.client
@@ -183,8 +191,8 @@ describe('Run Page Tests', function() {
       .waitUntilTextExists(
         'td',
         '2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd'
-      )
-  })
+      );
+  });
 
   it('Test Go To Transactions', function() {
     return appRef.client
@@ -194,8 +202,8 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/Transactions"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Transactions', 50000)
-  })
+      .waitUntilTextExists('span', 'Transactions', 50000);
+  });
 
   it('Test Go To Market', function() {
     return appRef.client
@@ -205,8 +213,8 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/Market"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Market Information', 50000)
-  })
+      .waitUntilTextExists('span', 'Market Information', 50000);
+  });
 
   it('Test Go To Address Book', function() {
     return appRef.client
@@ -216,8 +224,8 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/AddressBook"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Address Book', 50000)
-  })
+      .waitUntilTextExists('span', 'Address Book', 50000);
+  });
 
   it('Test Add Contact', function() {
     return appRef.client
@@ -236,8 +244,8 @@ describe('Run Page Tests', function() {
         'input[id="nxsaddress"]',
         '2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd'
       )
-      .click('button[id="modalAddOrEditContact"]')
-  })
+      .click('button[id="modalAddOrEditContact"]');
+  });
 
   it('Test Go To Settings', function() {
     return appRef.client
@@ -247,8 +255,8 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/Settings"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Settings', 50000)
-  })
+      .waitUntilTextExists('span', 'Settings', 50000);
+  });
 
   it('Test Backup wallet', function() {
     return appRef.client
@@ -258,9 +266,9 @@ describe('Run Page Tests', function() {
       .pause(500)
       .click('input[value="Yes"]')
       .pause(500)
-      .waitUntilTextExists('span', 'Wallet Backed Up',5000)
-      .pause(1000)
-  })
+      .waitUntilTextExists('span', 'Wallet Backed Up', 5000)
+      .pause(1000);
+  });
 
   it('Change Fiat Settings', function() {
     return appRef.client
@@ -278,8 +286,8 @@ describe('Run Page Tests', function() {
       .click()
       .pause(500)
       .element('#fiatSelector')
-      .selectByValue('USD')
-  })
+      .selectByValue('USD');
+  });
 
   it('Test Go Terminal', function() {
     return appRef.client
@@ -293,8 +301,8 @@ describe('Run Page Tests', function() {
       .setValue('input[id="input-text"]', 'getinfo')
       .element('button[id="terminal-console-input-button"]')
       .click()
-      .waitUntilTextExists('div', 'balance: 0')
-  })
+      .waitUntilTextExists('div', 'balance: 0');
+  });
 
   it('Test Go To Exchange', function() {
     return appRef.client
@@ -304,8 +312,8 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/Exchange"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Exchange', 50000)
-  })
+      .waitUntilTextExists('span', 'Exchange', 50000);
+  });
 
   it('Test Go To Trust', function() {
     return appRef.client
@@ -315,8 +323,8 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/List"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Trust List', 50000)
-  })
+      .waitUntilTextExists('span', 'Trust List', 50000);
+  });
 
   /*
 
@@ -341,4 +349,4 @@ describe('Run Page Tests', function() {
   });
 
   */
-})
+});

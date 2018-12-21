@@ -1,19 +1,19 @@
-/*
-  Title: Terminal Console page
-  Description: 
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { timingSafeEqual } from 'crypto';
+import { FormattedMessage } from 'react-intl';
+import styled from '@emotion/styled';
+import { css } from '@emotion/core';
 
-// Internal Dependencies
-import styles from './style.css';
+// Internal Global Dependencies
+import WaitingText from 'components/common/WaitingText';
+import Button from 'components/common/Button';
+import TextBox from 'components/common/TextBox';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
-import { FormattedMessage } from 'react-intl';
+import { colors, consts, timing } from 'styles';
 
 let currentHistoryIndex = -1;
 
@@ -51,10 +51,50 @@ const mapDispatchToProps = dispatch => ({
   // handleKeyboardInput: (key) => dispatch({type:TYPE.HANDLE_KEYBOARD_INPUT, payload: key})
 });
 
+const Console = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+});
+
+const ConsoleInput = styled.div({
+  display: 'flex',
+  alignItems: 'stretch',
+  marginBottom: '1em',
+  position: 'relative',
+});
+
+const AutoComplete = styled.div({
+  position: 'absolute',
+  top: '100%',
+  zIndex: 99,
+  background: colors.dark,
+});
+
+const AutoCompleteItem = styled.a({
+  display: 'block',
+  cursor: 'pointer',
+  color: colors.lightGray,
+  transition: `color ${timing.normal}`,
+
+  '&:hover': {
+    color: colors.light,
+  },
+});
+
+const ConsoleOutput = styled.code({
+  flexGrow: 1,
+  flexBasis: 0,
+  backgroundColor: colors.dark,
+  border: `1px solid ${colors.darkGray}`,
+  overflow: 'auto',
+});
+
 class TerminalConsole extends Component {
   constructor(props) {
     super(props);
     this.inputRef = null;
+    this.outputRef = React.createRef();
   }
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -62,6 +102,24 @@ class TerminalConsole extends Component {
       let CommandList = payload.split('\n');
       this.props.setCommandList(CommandList);
     });
+  }
+
+  // Pass before update values to componentDidUpdate
+  getSnapshotBeforeUpdate() {
+    if (!this.outputRef) return null;
+    const { clientHeight, scrollTop, scrollHeight } = this.outputRef;
+    return {
+      scrollAtBottom: clientHeight + scrollTop === scrollHeight,
+    };
+  }
+
+  componentDidUpdate(prevProps, PrevState, beforeUpdate) {
+    // If the scroll was at the bottom before the DOM is updated
+    if (beforeUpdate && beforeUpdate.scrollAtBottom) {
+      // Scroll to bottom
+      const { clientHeight, scrollHeight } = this.outputRef;
+      this.outputRef.scrollTop = scrollHeight - clientHeight;
+    }
   }
 
   // Class Methods
@@ -244,7 +302,7 @@ class TerminalConsole extends Component {
   autoComplete() {
     return this.props.filteredCmdList.map((item, key) => {
       return (
-        <a
+        <AutoCompleteItem
           key={key}
           onMouseDown={() => {
             setTimeout(() => {
@@ -256,7 +314,7 @@ class TerminalConsole extends Component {
         >
           {item}
           <br />
-        </a>
+        </AutoCompleteItem>
       );
     });
   }
@@ -265,27 +323,27 @@ class TerminalConsole extends Component {
   render() {
     if (this.props.connections === undefined) {
       return (
-        <h2>
+        <WaitingText>
           <FormattedMessage
             id="transactions.Loading"
             defaultMessage="transactions.Loading"
           />
-        </h2>
+          ...
+        </WaitingText>
       );
     } else {
       return (
-        <div id="terminal-console">
-          <div id="terminal-console-input">
+        <Console>
+          <ConsoleInput>
             <FormattedMessage
               id="Console.CommandsHere"
               defaultMessage="Enter console commands here (ex: getinfo, help)"
             >
               {cch => (
-                <input
-                  id="input-text"
+                <TextBox
                   ref={element => (this.inputRef = element)}
                   autoFocus
-                  type="text"
+                  grouped="left"
                   value={this.props.currentInput}
                   placeholder={cch}
                   onChange={e => this.props.onInputfieldChange(e.target.value)}
@@ -294,42 +352,39 @@ class TerminalConsole extends Component {
                 />
               )}
             </FormattedMessage>
-            <button
-              id="terminal-console-input-button"
-              className="button"
+            <Button
+              filled
+              primary
+              freeHeight
+              grouped="right"
               onClick={() => {
                 this.props.removeAutoCompleteDiv();
                 this.processInput();
               }}
             >
               <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
-            </button>
-            <div
-              key="autocomplete"
-              style={{
-                position: 'absolute',
-                top: '100%',
-                zIndex: 99,
-                background: 'black',
-              }}
-            >
-              {this.autoComplete()}{' '}
-            </div>
-          </div>
+            </Button>
+            <AutoComplete key="autocomplete">
+              {this.autoComplete()}
+            </AutoComplete>
+          </ConsoleInput>
 
-          <div id="terminal-console-output">{this.processOutput()}</div>
+          <ConsoleOutput ref={el => (this.outputRef = el)}>
+            {this.processOutput()}
+          </ConsoleOutput>
 
-          <button
-            id="terminal-console-reset"
-            className="button"
-            onClick={() => this.props.resetMyConsole()}
+          <Button
+            filled
+            darkGray
+            grouped="bottom"
+            onClick={this.props.resetMyConsole}
           >
             <FormattedMessage
               id="Console.ClearConsole"
               defaultMessage="Clear Console"
             />
-          </button>
-        </div>
+          </Button>
+        </Console>
       );
     }
   }

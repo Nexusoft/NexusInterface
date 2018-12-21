@@ -45,7 +45,6 @@ configuration.Start();
 // SetCoreParameters: Get the path to local resources for the application (depending on running packaged vs via npm start)
 function SetCoreParameters(settings) {
   var parameters = [];
-
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
     ip =
@@ -514,4 +513,4 @@ class Core extends EventEmitter {
   }
 }
 
-module.exports = new Core();
+export default new Core();

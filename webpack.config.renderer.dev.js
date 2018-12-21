@@ -7,22 +7,22 @@
  * https://webpack.js.org/concepts/hot-module-replacement/
  */
 
-import path from 'path'
-import fs from 'fs'
-import webpack from 'webpack'
-import chalk from 'chalk'
-import merge from 'webpack-merge'
-import { spawn, execSync } from 'child_process'
+import path from 'path';
+import fs from 'fs';
+import webpack from 'webpack';
+import chalk from 'chalk';
+import merge from 'webpack-merge';
+import { spawn, execSync } from 'child_process';
 //import ExtractTextPlugin from "extract-text-webpack-plugin";
-import baseConfig from './webpack.config.base'
-import CheckNodeEnv from './internals/scripts/CheckNodeEnv'
+import baseConfig from './webpack.config.base';
+import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
-CheckNodeEnv('development')
+CheckNodeEnv('development');
 
-const port = process.env.PORT || 1212
-const publicPath = `http://localhost:${port}/dist`
-const dll = path.resolve(process.cwd(), 'dll')
-const manifest = path.resolve(dll, 'renderer.json')
+const port = process.env.PORT || 1212;
+const publicPath = `http://localhost:${port}/dist`;
+const dll = path.resolve(process.cwd(), 'dll');
+const manifest = path.resolve(dll, 'renderer.json');
 
 /**
  * Warn if the DLL is not built
@@ -32,21 +32,18 @@ if (!(fs.existsSync(dll) && fs.existsSync(manifest))) {
     chalk.black.bgYellow.bold(
       'The DLL files are missing. Sit back while we build them for you with "npm run build-dll"'
     )
-  )
-  execSync('npm run build-dll')
+  );
+  execSync('npm run build-dll');
 }
 
 export default merge.smart(baseConfig, {
-  devtool: 'inline-source-map',
+  mode: 'development',
+
+  devtool: 'cheap-module-eval-source-map',
 
   target: 'electron-renderer',
 
-  entry: [
-    'react-hot-loader/patch',
-    `webpack-dev-server/client?http://localhost:${port}/`,
-    'webpack/hot/only-dev-server',
-    path.join(__dirname, 'app/index.js'),
-  ],
+  entry: './app/index.js',
 
   output: {
     publicPath: `http://localhost:${port}/dist/`,
@@ -65,8 +62,6 @@ export default merge.smart(baseConfig, {
               // Here, we include babel plugins that are only required for the
               // renderer process. The 'transform-*' plugins must be included
               // before react-hot-loader/babel
-              'transform-class-properties',
-              'transform-es2015-classes',
               'react-hot-loader/babel',
             ],
           },
@@ -100,45 +95,6 @@ export default merge.smart(baseConfig, {
               importLoaders: 1,
               localIdentName: '[name]__[local]__[hash:base64:5]',
             },
-          },
-        ],
-      },
-      // Add SASS support  - compile all .global.scss files and pipe it to style.css
-      {
-        test: /\.global\.scss$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-      // Add SASS support  - compile all other .scss files and pipe it to style.css
-      {
-        test: /^((?!\.global).)*\.scss$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              sourceMap: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-            },
-          },
-          {
-            loader: 'sass-loader',
           },
         ],
       },
@@ -180,16 +136,35 @@ export default merge.smart(baseConfig, {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         use: 'file-loader',
       },
-      // SVG Font
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'image/svg+xml',
+        oneOf: [
+          // SVG Sprite icons
+          {
+            test: /\.sprite.svg$/,
+            use: [
+              {
+                loader: 'svg-sprite-loader',
+              },
+              {
+                loader: 'svgo-loader',
+                options: {
+                  externalConfig: 'svgo-config.json',
+                },
+              },
+            ],
           },
-        },
+          // SVG Font
+          {
+            use: {
+              loader: 'url-loader',
+              options: {
+                limit: 10000,
+                mimetype: 'image/svg+xml',
+              },
+            },
+          },
+        ],
       },
       // Common Image Formats
       {
@@ -236,10 +211,6 @@ export default merge.smart(baseConfig, {
 
     new webpack.LoaderOptionsPlugin({
       debug: true,
-      //    }),
-
-      //    new ExtractTextPlugin({
-      //      filename: "[name].css"
     }),
   ],
 
@@ -270,15 +241,15 @@ export default merge.smart(baseConfig, {
     },
     before() {
       if (process.env.START_HOT) {
-        console.log('Staring Main Process...')
+        console.log('Staring Main Process...');
         spawn('npm', ['run', 'start-main-dev'], {
           shell: true,
           env: process.env,
           stdio: 'inherit',
         })
           .on('close', code => process.exit(code))
-          .on('error', spawnError => console.error(spawnError))
+          .on('error', spawnError => console.error(spawnError));
       }
     },
   },
-})
+});

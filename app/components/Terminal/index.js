@@ -1,27 +1,45 @@
-/*
-  Title: 
-  Description: 
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { remote } from 'electron';
-import { Route, Redirect } from 'react-router';
+import { Route, Redirect, Switch } from 'react-router';
+import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 import * as TYPE from 'actions/actiontypes';
 
-// Internal Dependencies
+// Internal Global Dependencies
+import ContextMenuBuilder from 'contextmenu';
+import Icon from 'components/common/Icon';
+import Panel from 'components/common/Panel';
+import { Tabs, TabItem } from 'components/common/Tabs';
+
+// Internal Local Dependencies
 import TerminalConsole from './TerminalConsole';
 import TerminalCore from './TerminalCore';
-import ContextMenuBuilder from 'contextmenu';
-import styles from './style.css';
 
 // Images
-import consoleimg from 'images/console.svg';
-import mainlogo from 'images/logo.svg';
-import coreImg from 'images/core.svg';
+import consoleIcon from 'images/console.sprite.svg';
+import logoIcon from 'images/logo.sprite.svg';
+import coreIcon from 'images/core.sprite.svg';
 import { FormattedMessage } from 'react-intl';
+
+const TerminalWrapper = styled.div({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+});
+
+const TerminalTabs = styled(Tabs)({
+  flexShrink: 0,
+});
+
+const TerminalContent = styled.div({
+  flexGrow: 1,
+  flexShrink: 1,
+  flexBasis: 0,
+  overflow: 'hidden',
+});
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -53,76 +71,74 @@ class Terminal extends Component {
 
   // Mandatory React method
   render() {
-    // Redirect to application settings if the pathname matches the url (eg: /Terminal = /Terminal)
-    if (this.props.location.pathname === this.props.match.url) {
-      console.log('Redirecting to Terminal Console');
-
-      return <Redirect to={`${this.props.match.url}/Console`} />;
-    }
-
     return (
-      <div id="terminal" className="animated fadeIn">
-        <h2>
-          <img src={consoleimg} className="hdr-img" />
+      <Panel
+        icon={consoleIcon}
+        title={
           <FormattedMessage id="Console.Console" defaultMessage="Console" />
-        </h2>
-
-        <div className="panel">
-          <ul className="tabs">
-            <li>
-              <NavLink to={`${this.props.match.url}/Console`}>
-                <img src={mainlogo} alt="Console" />
+        }
+        bodyScrollable={false}
+      >
+        <TerminalWrapper>
+          <TerminalTabs>
+            <TabItem
+              link={`${this.props.match.url}/Console`}
+              icon={logoIcon}
+              text={
                 <FormattedMessage
                   id="Console.Console"
                   defaultMessage="Console"
                 />
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to={`${this.props.match.url}/Core`}>
-                <img src={coreImg} alt="Core Output" />
+              }
+            />
+            <TabItem
+              link={`${this.props.match.url}/Core`}
+              icon={coreIcon}
+              text={
                 <FormattedMessage
                   id="Console.CoreOutput"
                   defaultMessage="Console"
                 />
-              </NavLink>
-            </li>
-            {this.props.history.location.pathname === '/Terminal/Core' ? (
-              <button
-                className="button primary"
-                style={{
-                  position: 'absolute',
-                  right: '10px',
-                  bottom: '5px',
-                  marginBottom: '0px',
-                }}
-                onClick={() => {
-                  console.log(this.props);
-                  this.props.setCoreOutputPaused(!this.props.coreOutputPaused);
-                }}
-              >
-                {this.props.coreOutputPaused ? 'UnPause' : 'Pause'}
-              </button>
-            ) : null}
-          </ul>
+              }
+            />
+          </TerminalTabs>
+          {this.props.history.location.pathname === '/Terminal/Core' ? (
+            <button
+              className="button primary"
+              style={{
+                position: 'absolute',
+                right: '10px',
+                bottom: '5px',
+                marginBottom: '0px',
+              }}
+              onClick={() => {
+                console.log(this.props);
+                this.props.setCoreOutputPaused(!this.props.coreOutputPaused);
+              }}
+            >
+              {this.props.coreOutputPaused ? 'UnPause' : 'Pause'}
+            </button>
+          ) : null}
 
-          <div id="terminal-content">
-            <Route
-              exact
-              path={`${this.props.match.path}/`}
-              component={TerminalConsole}
-            />
-            <Route
-              path={`${this.props.match.path}/Console`}
-              component={TerminalConsole}
-            />
-            <Route
-              path={`${this.props.match.path}/Core`}
-              component={TerminalCore}
-            />
-          </div>
-        </div>
-      </div>
+          <TerminalContent>
+            <Switch>
+              <Redirect
+                exact
+                from={`${this.props.match.path}/`}
+                to={`${this.props.match.path}/Console`}
+              />
+              <Route
+                path={`${this.props.match.path}/Console`}
+                component={TerminalConsole}
+              />
+              <Route
+                path={`${this.props.match.path}/Core`}
+                component={TerminalCore}
+              />
+            </Switch>
+          </TerminalContent>
+        </TerminalWrapper>
+      </Panel>
     );
   }
 }

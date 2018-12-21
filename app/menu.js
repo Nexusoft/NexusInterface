@@ -1,14 +1,14 @@
 import { app, Menu, shell, BrowserWindow, remote } from 'electron';
 import log from 'electron-log';
+import fs from 'fs';
 import * as RPC from './scripts/rpc';
 import { callbackify } from 'util';
 import { GetSettings, SaveSettings } from './api/settings';
 import core from './api/core';
+import configuration from './api/configuration';
 
 export default class MenuBuilder {
-  mainWindow: remote.BrowserWindow;
-
-  constructor(mainWindow: remote.BrowserWindow) {
+  constructor() {
     this.mainWindow = remote.getCurrentWindow();
   }
 
@@ -51,7 +51,6 @@ export default class MenuBuilder {
         {
           label: 'Start Daemon',
           click() {
-            let core = require('./api/core');
             core.start();
           },
         },
@@ -60,8 +59,6 @@ export default class MenuBuilder {
           click() {
             let settings = GetSettings();
             if (settings.manualDaemon != true) {
-              let core = require('./api/core');
-
               remote
                 .getGlobal('core')
                 .stop()
@@ -117,7 +114,6 @@ export default class MenuBuilder {
             if (self.props.settings.Folder !== BackupDir) {
               BackupDir = self.props.settings.Folder;
             }
-            let fs = require('fs');
             let ifBackupDirExists = fs.existsSync(BackupDir);
             if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
               fs.mkdirSync(BackupDir);
@@ -132,7 +128,6 @@ export default class MenuBuilder {
         {
           label: 'View Backups',
           click() {
-            let fs = require('fs');
             let BackupDir = process.env.HOME + '/NexusBackups';
 
             if (process.platform === 'win32') {
@@ -209,7 +204,6 @@ export default class MenuBuilder {
               self.props.connections !== undefined &&
               !GetSettings().manualDaemon
             ) {
-              let configuration = require('./api/configuration');
               self.props.OpenBootstrapModal(true);
               //configuration.BootstrapRecentDatabase(self);
             } else {
@@ -302,7 +296,6 @@ export default class MenuBuilder {
               if (self.props.settings.Folder !== BackupDir) {
                 BackupDir = self.props.settings.Folder;
               }
-              let fs = require('fs');
               let ifBackupDirExists = fs.existsSync(BackupDir);
               if (
                 ifBackupDirExists == undefined ||
@@ -321,7 +314,6 @@ export default class MenuBuilder {
           {
             label: 'View Backups',
             click() {
-              let fs = require('fs');
               let BackupDir = process.env.HOME + '/NexusBackups';
               if (process.platform === 'win32') {
                 BackupDir = process.env.USERPROFILE + '/NexusBackups';
@@ -343,25 +335,16 @@ export default class MenuBuilder {
           {
             label: 'Start Daemon',
             click() {
-              let core = require('./api/core');
               core.start();
             },
           },
           {
             label: 'Stop Daemon',
             click() {
-              let settings = GetSettings();
-              if (settings.manualDaemon != true) {
-                let core = require('./api/core');
-
-                remote
-                  .getGlobal('core')
-                  .stop()
-                  .then(payload => {
-                    self.props.clearOverviewVariables();
-                  });
-              } else {
-                RPC.PROMISE('stop', []).then(() => {
+              remote
+                .getGlobal('core')
+                .stop()
+                .then(payload => {
                   self.props.clearOverviewVariables();
                 });
               }
@@ -422,7 +405,6 @@ export default class MenuBuilder {
                 self.props.connections !== undefined &&
                 !GetSettings().manualDaemon
               ) {
-                let configuration = require('./api/configuration');
                 self.props.OpenBootstrapModal(true);
                 //configuration.BootstrapRecentDatabase(self);
               } else {
