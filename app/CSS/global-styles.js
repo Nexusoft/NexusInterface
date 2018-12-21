@@ -41,9 +41,16 @@ const resetStyles = css`
 
   /* Customize Scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
     background: rgba(0, 0, 0, 0.25);
     z-index: 10000000;
+  }
+
+  ::-webkit-scrollbar:vertical {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+    height: 6px;
   }
 
   ::-webkit-scrollbar:hover {

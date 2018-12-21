@@ -1,4 +1,4 @@
-// External Dependencies
+// External
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -27,8 +27,9 @@ import {
 import rp from 'request-promise';
 import { FormattedMessage } from 'react-intl';
 import googleanalytics from 'scripts/googleanalytics';
+import styled from '@emotion/styled';
 
-// Internal Global Dependencies
+// Internal
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
 import WaitingText from 'components/common/WaitingText';
@@ -42,12 +43,12 @@ import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import config from 'api/configuration';
-
-// Internal Local Dependencies
 import styles from './style.css';
 
 // Images
 import transactionIcon from 'images/transaction.sprite.svg';
+import downloadIcon from 'images/download.sprite.svg';
+import searchIcon from 'images/search.sprite.svg';
 
 import copy from 'copy-to-clipboard';
 import { wrap } from 'module';
@@ -60,6 +61,72 @@ import { wrap } from 'module';
 
 // Global variables
 let tempaddpress = new Map();
+
+const categories = [
+  {
+    value: 'all',
+    display: <FormattedMessage id="transactions.All" defaultMessage="All" />,
+  },
+  {
+    value: 'credit',
+    display: (
+      <FormattedMessage id="transactions.Receive" defaultMessage="Receive" />
+    ),
+  },
+  {
+    value: 'debit',
+    display: <FormattedMessage id="transactions.Sent" defaultMessage="Sent" />,
+  },
+  {
+    value: 'genesis',
+    display: (
+      <FormattedMessage id="transactions.Genesis" defaultMessage="Genesis" />
+    ),
+  },
+  {
+    value: 'trust',
+    display: (
+      <FormattedMessage id="transactions.Trust" defaultMessage="Trust" />
+    ),
+  },
+];
+
+const timeFrames = [
+  {
+    value: 'All',
+    display: <FormattedMessage id="transactions.All" defaultMessage="All" />,
+  },
+  {
+    value: 'Year',
+    display: (
+      <FormattedMessage id="transactions.PastYear" defaultMessage="Past Year" />
+    ),
+  },
+  {
+    value: 'Month',
+    display: (
+      <FormattedMessage
+        id="transactions.PastMonth"
+        defaultMessage="Past Month"
+      />
+    ),
+  },
+  {
+    value: 'Week',
+    display: (
+      <FormattedMessage id="transactions.PastWeek" defaultMessage="Past Week" />
+    ),
+  },
+];
+
+const Filters = styled.div({
+  display: 'grid',
+  gridTemplateAreas: '"search type minAmount timeFrame download"',
+  gridTemplateColumns: '1fr 7em 7em 7em auto',
+  columnGap: '.75em',
+  alignItems: 'end',
+  marginBottom: '1em',
+});
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -340,13 +407,10 @@ class Transactions extends Component {
   // Updates the height and width of the chart and table when you resize the window
   updateChartAndTableDimensions(event) {
     let chart = document.getElementById('transactions-chart');
-    if (chart === undefined || chart === null) {
-      return;
-    }
     let filters = document.getElementById('transactions-filters');
     let details = document.getElementById('transactions-details');
-    let parent = chart.parentNode;
-    if (chart !== null) {
+    if (chart && filters && details) {
+      let parent = chart.parentNode;
       let parentHeight =
         parseInt(parent.clientHeight) -
         parseInt(
@@ -568,7 +632,7 @@ class Transactions extends Component {
     }
     let tempWalletTransactions = [];
 
-    let settingsCheckDev = require('api/settings.js').GetSettings();
+    let settingsCheckDev = GetSettings();
 
     // If in Dev Mode add some random transactions
     if (settingsCheckDev.devMode == true) {
@@ -642,9 +706,9 @@ class Transactions extends Component {
   }
 
   // Set the display property in state from the dropdown element
-  transactionTimeframeChange(event) {
+  transactionTimeframeChange(value) {
     this.setState({
-      displayTimeFrame: event.target.options[event.target.selectedIndex].value,
+      displayTimeFrame: value,
       changeTimeFrame: true,
     });
   }
@@ -717,10 +781,9 @@ class Transactions extends Component {
   }
 
   // Callback for when you change the category filter
-  transactiontypefiltercallback = e => {
-    const catSearch = e.target.value;
+  transactiontypefiltercallback = categoryFilter => {
     this.setState({
-      categoryFilter: catSearch,
+      categoryFilter,
     });
   };
 
@@ -1686,132 +1749,91 @@ class Transactions extends Component {
             >
               {data.length === 0 ? null : this.returnVictoryChart()}
             </div>
-            <div id="transactions-filters">
-              <div id="filter-address" className="filter-field">
-                <label htmlFor="address-filter">
+            <Filters>
+              <FormField
+                connectLabel
+                label={
                   <FormattedMessage
                     id="transactions.SearchAddress"
                     defaultMessage="Search Address"
                   />
-                </label>
-                <input
-                  id="address-filter"
-                  type="search"
-                  name="addressfilter"
-                  onChange={this.transactionaddressfiltercallback}
+                }
+              >
+                <TextBox.Wrapped
+                  inputProps={{
+                    type: 'search',
+                    name: 'addressfilter',
+                    placeholder: 'Search for Address',
+                    onChange: this.transactionaddressfiltercallback.bind(this),
+                  }}
+                  headIcon={searchIcon}
                 />
-              </div>
+              </FormField>
 
-              <div id="filter-type" className="filter-field">
-                <label htmlFor="transactiontype-dropdown">
+              <FormField
+                label={
                   <FormattedMessage
                     id="transactions.Type"
-                    defaultMessage="TYPE"
+                    defaultMessage="Type"
                   />
-                </label>
-                <select
-                  id="transactiontype-dropdown"
-                  onChange={this.transactiontypefiltercallback}
-                >
-                  <option value="all">
-                    <FormattedMessage
-                      id="transactions.All"
-                      defaultMessage="All"
-                    />
-                  </option>
-                  <option value="credit">
-                    <FormattedMessage
-                      id="transactions.Receive"
-                      defaultMessage="Receive"
-                    />
-                  </option>
-                  <option value="debit">
-                    <FormattedMessage
-                      id="transactions.Sent"
-                      defaultMessage="Sent"
-                    />
-                  </option>
-                  <option value="genesis">
-                    <FormattedMessage
-                      id="transactions.Genesis"
-                      defaultMessage="Genesis"
-                    />
-                  </option>
-                  <option value="trust">
-                    <FormattedMessage
-                      id="transactions.Trust"
-                      defaultMessage="Trust"
-                    />
-                  </option>
-                </select>
-              </div>
+                }
+              >
+                <ComboBox
+                  value={this.state.categoryFilter}
+                  onChange={this.transactiontypefiltercallback.bind(this)}
+                  options={categories}
+                />
+              </FormField>
 
-              <div id="filter-minimum" className="filter-field">
-                <label htmlFor="minimum-nxs">
+              <FormField
+                connectLabel
+                label={
                   <FormattedMessage
                     id="transactions.MinimumAmount"
                     defaultMessage="Min Amount"
                   />
-                </label>
-                <input
-                  id="minimum-nxs"
+                }
+              >
+                <TextBox
                   type="number"
                   min="0"
                   placeholder="0.00"
-                  onChange={this.transactionamountfiltercallback}
+                  onChange={this.transactionamountfiltercallback.bind(this)}
                 />
-              </div>
+              </FormField>
 
-              <div id="filter-timeframe" className="filter-field">
-                <label htmlFor="transaction-timeframe">
+              <FormField
+                label={
                   <FormattedMessage
                     id="transactions.Time"
-                    defaultMessage="TIME SPAN"
+                    defaultMessage="Time span"
                   />
-                </label>
-                <select
-                  id="transaction-timeframe"
-                  onChange={event => this.transactionTimeframeChange(event)}
-                >
-                  <option value="All">
-                    <FormattedMessage
-                      id="transactions.All"
-                      defaultMessage="All"
-                    />
-                  </option>
-                  <option value="Year">
-                    <FormattedMessage
-                      id="transactions.PastYear"
-                      defaultMessage="All"
-                    />
-                  </option>
-                  <option value="Month">
-                    <FormattedMessage
-                      id="transactions.PastMonth"
-                      defaultMessage="Past Month"
-                    />
-                  </option>
-                  <option value="Week">
-                    <FormattedMessage
-                      id="transactions.PastWeek"
-                      defaultMessage="Past Week"
-                    />
-                  </option>
-                </select>
-              </div>
+                }
+              >
+                <ComboBox
+                  value={this.state.displayTimeFrame}
+                  onChange={this.transactionTimeframeChange.bind(this)}
+                  options={timeFrames}
+                />
+              </FormField>
 
-              <button
-                id="download-cvs-button"
-                className="button primary"
-                value="Download"
+              <Button
+                square
+                className="relative"
                 onClick={() => this.DownloadCSV()}
               >
-                <FormattedMessage
-                  id="transactions.Download"
-                  defaultMessage="Download"
-                />
-              </button>
-            </div>
+                <Icon icon={downloadIcon} />
+                <div
+                  className="tooltip bottom"
+                  style={{ left: 'auto', transform: 'none', right: 0 }} // fix horizontal scrolling
+                >
+                  <FormattedMessage
+                    id="transactions.Download"
+                    defaultMessage="Download"
+                  />
+                </div>
+              </Button>
+            </Filters>
             <div id="transactions-details">
               <Table
                 key="table-top"
