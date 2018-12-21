@@ -38,11 +38,11 @@ var datadir = '';
 console.log('core', process.env.HOME);
 //Set data directory by OS for automatic daemon mode
 if (process.platform === 'win32') {
-  var datadir = process.env.APPDATA + '\\Nexus_Tritium_Data_BETA_v0.8.4';
+  var datadir = process.env.APPDATA + '\\Nexus_Core_Data_BETA_v0.8.4';
 } else if (process.platform === 'darwin') {
-  var datadir = asdfg.getPath('appData') + '/.Nexus_Wallet_Data_BETA_v0.8.4';
+  var datadir = asdfg.getPath('appData') + '/.Nexus_Core_Data_BETA_v0.8.4';
 } else {
-  var datadir = process.env.HOME + '/.Nexus_Tritium_Data_BETA_v0.8.4';
+  var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v0.8.4';
 }
 
 const EventEmitter = require('events');
