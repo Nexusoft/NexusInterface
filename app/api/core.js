@@ -33,17 +33,17 @@ var port = '9336';
 var ip = '127.0.0.1';
 var host = 'http://' + ip + ':' + port;
 var verbose = '2'; // <--Lower to 0 after beta ends
-var datadir = configuration.GetAppDataDirectory();
-// console.log(process.env.APPDATA);
+var datadir = '';
+// console.log(process.env.APPDATA);configuration.GetAppDataDirectory();
 console.log('core', process.env.HOME);
 //Set data directory by OS for automatic daemon mode
-// if (process.platform === 'win32') {
-//   var datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
-// } else if (process.platform === 'darwin') {
-//   var datadir = asdfg.getPath('appData') + '/.Nexus_Wallet_Data';
-// } else {
-//   var datadir = process.env.HOME + '/.Nexus_Tritium_Data';
-// }
+if (process.platform === 'win32') {
+  var datadir = process.env.APPDATA + '\\Nexus_Tritium_Data_BETA_v0.8.4';
+} else if (process.platform === 'darwin') {
+  var datadir = asdfg.getPath('appData') + '/.Nexus_Wallet_Data_BETA_v0.8.4';
+} else {
+  var datadir = process.env.HOME + '/.Nexus_Tritium_Data_BETA_v0.8.4';
+}
 
 const EventEmitter = require('events');
 

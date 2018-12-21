@@ -155,12 +155,12 @@ configuration.GetAppDataDirectory = function() {
         .getPath('appData')
         .replace(' ', `\ `)
         .replace('/Electron/', ''),
-      app.getName()
+      'Nexus_Wallet_BETA_v0.8.4'
     );
   } else {
     AppDataDirPath = path.join(
       app.getPath('appData').replace('/Electron/', ''),
-      app.getName()
+      'Nexus_Wallet_BETA_v0.8.4'
     );
   }
   console.log(app.getPath('appData'));
