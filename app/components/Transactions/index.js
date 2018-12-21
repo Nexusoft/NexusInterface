@@ -1,8 +1,3 @@
-/*
-  Title: Transactions Module
-  Description:
-  Last Modified by: Kendal Cormany
-*/
 // External Dependencies
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -37,6 +32,10 @@ import googleanalytics from 'scripts/googleanalytics';
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
 import WaitingText from 'components/common/WaitingText';
+import ComboBox from 'components/common/ComboBox';
+import TextBox from 'components/common/TextBox';
+import FormField from 'components/common/FormField';
+import Button from 'components/common/Button';
 import { GetSettings } from 'api/settings.js';
 import Table from 'scripts/utilities-react';
 import * as RPC from 'scripts/rpc';
@@ -651,12 +650,7 @@ class Transactions extends Component {
   }
 
   DownloadCSV() {
-    googleanalytics.SendEvent(
-      'Transaction',
-      'Data',
-      'Download CSV',
-      1
-    );
+    googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
     this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
   }
 
@@ -1528,23 +1522,17 @@ class Transactions extends Component {
   }
 
   accountChanger() {
-    if (this.props)
-      if (this.props.myAccounts[0]) {
-        let tempMyAccounts = this.props.myAccounts.slice();
-        tempMyAccounts.unshift({
-          account: this.props.messages['transactions.AllAccounts'],
-        });
-        // console.log(tempAAAA)
-        return tempMyAccounts.map((e, i) => {
-          return (
-            <option key={'account_select_' + e.account} value={i}>
-              {e.account}
-            </option>
-          );
-        });
-      } else {
-        return null;
-      }
+    if (this.props.myAccounts) {
+      const accounts = this.props.myAccounts.map((e, i) => ({
+        value: i + 1,
+        display: e.account,
+      }));
+      return [
+        { value: 0, display: this.props.messages['transactions.AllAccounts'] },
+        ...accounts,
+      ];
+    }
+    return [];
   }
 
   selectAccount(inAccount) {
@@ -1663,6 +1651,14 @@ class Transactions extends Component {
             defaultMessage="Transaction Details"
           />
         }
+        controls={
+          <ComboBox
+            value={this.props.selectedAccount}
+            onChange={value => this.selectAccount(value)}
+            options={this.accountChanger()}
+            style={{ minWidth: 200 }}
+          />
+        }
       >
         <Modal
           open={open}
@@ -1684,15 +1680,6 @@ class Transactions extends Component {
           </WaitingText>
         ) : (
           <div>
-            Account Select:
-            <select
-              id="select"
-              value={this.props.selectedAccount}
-              onChange={e => this.selectAccount(e.target.value)}
-              style={{ marginBottom: '5' }}
-            >
-              {this.accountChanger()}
-            </select>{' '}
             <div
               id="transactions-chart"
               style={{ display: data.length === 0 ? 'none' : 'block' }}

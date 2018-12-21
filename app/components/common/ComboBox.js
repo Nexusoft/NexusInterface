@@ -64,10 +64,11 @@ const Option = styled.li(
     display: 'flex',
     alignItems: 'center',
     padding: '0 .8em',
-    overflow: 'visible',
+    overflow: 'hidden',
     color: colors.dark,
     cursor: 'pointer',
     transition: `background-color ${timing.normal}`,
+    whiteSpace: 'nowrap',
 
     '&:hover': {
       backgroundColor: colors.lighterGray,
@@ -106,6 +107,7 @@ export default class ComboBox extends Component {
   render() {
     const { options, optionHeight, value, onChange, ...rest } = this.props;
     const { open, top, left, width } = this.state;
+    const selectedOption = this.option(value);
 
     return (
       <ComboBoxWrapper {...rest}>
@@ -115,7 +117,9 @@ export default class ComboBox extends Component {
           opening={open}
           onClick={this.open}
         >
-          <CurrentValue>{this.option(value).display}</CurrentValue>
+          <CurrentValue>
+            {selectedOption ? selectedOption.display : null}
+          </CurrentValue>
           <Button freeHeight blank dark>
             <Arrow down width={12} height={8} />
           </Button>
