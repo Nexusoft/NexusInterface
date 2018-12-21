@@ -128,16 +128,16 @@ configuration.Rename = function(oldFilename, newFilename) {
   }
 };
 
-// configuration.Start = function() {
-//   var fs = require('fs');
-//   if (!fs.existsSync(this.GetAppDataDirectory())) {
-//     fs.mkdirSync(this.GetAppDataDirectory());
-//   }
+configuration.Start = function() {
+  var fs = require('fs');
+  if (!fs.existsSync(this.GetAppDataDirectory())) {
+    fs.mkdirSync(this.GetAppDataDirectory());
+  }
 
-//   if (!fs.existsSync(this.GetAppResourceDir())) {
-//     fs.mkdirSync(this.GetAppResourceDir());
-//   }
-// };
+  if (!fs.existsSync(this.GetAppResourceDir())) {
+    fs.mkdirSync(this.GetAppResourceDir());
+  }
+};
 
 //
 // GetAppDataDirectory: Get the application data directory
@@ -163,11 +163,22 @@ configuration.GetAppDataDirectory = function() {
       'Nexus_Wallet_BETA_v0.8.4'
     );
   }
-  console.log(app.getPath('appData'));
-  console.log(app.getName());
-  console.log(AppDataDirPath);
-  // AppDataDirPath += ' Wallet';
+
   return AppDataDirPath;
+};
+
+configuration.GetCoreDataDir = function() {
+  var datadir = '';
+
+  //Set data directory by OS for automatic daemon mode
+  if (process.platform === 'win32') {
+    var datadir = process.env.APPDATA + '\\Nexus_Core_Data_BETA_v0.8.4';
+  } else if (process.platform === 'darwin') {
+    var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v0.8.4';
+  } else {
+    var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v0.8.4';
+  }
+  return datadir;
 };
 
 configuration.GetAppResourceDir = function() {
@@ -255,17 +266,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
           });
         }
 
-        let datadir = '';
-        const electron =
-          require('electron').app || require('electron').remote.app;
-
-        if (process.platform === 'win32') {
-          datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
-        } else if (process.platform === 'darwin') {
-          datadir = electron.getPath('appData') + '/.Nexus_Wallet_Data';
-        } else {
-          datadir = process.env.HOME + '/.Nexus_Tritium_Data';
-        }
+        let datadir = configuration.GetCoreDataDir();
 
         const url =
           'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
@@ -430,15 +431,7 @@ configuration.bootstrapTryAgain = async function(self) {
         });
       }
 
-      let datadir = '';
-
-      if (process.platform === 'win32') {
-        datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
-      } else if (process.platform === 'darwin') {
-        datadir = process.env.HOME + '/Nexus_Tritium_Data';
-      } else {
-        datadir = process.env.HOME + '/.Nexus_Tritium_Data';
-      }
+      let datadir = configuration.GetCoreDataDir();
 
       const url = 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
       tarball.extractTarballDownload(url, tarGzLocation, datadir, {}, function(

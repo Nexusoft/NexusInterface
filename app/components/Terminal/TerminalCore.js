@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import styles from './style.css';
+import configuration from 'api/configuration';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { Tail } from 'utils/tail';
@@ -34,16 +35,9 @@ class TerminalCore extends Component {
     if (this.props.settings.manualDaemon == true) {
       return;
     }
-    let datadir;
+    let datadir = configuration.GetCoreDataDir();
     const electronapp =
       require('electron').app || require('electron').remote.app;
-    if (process.platform === 'win32') {
-      datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
-    } else if (process.platform === 'darwin') {
-      datadir = electronapp.getPath('appData') + '/.Nexus_Wallet_Data';
-    } else {
-      datadir = process.env.HOME + '/.Nexus_Tritium_Data';
-    }
 
     var debugfile;
     if (process.platform === 'win32') {
