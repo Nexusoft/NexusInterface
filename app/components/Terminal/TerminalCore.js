@@ -92,15 +92,17 @@ class TerminalCore extends Component {
       }
       this.props.printCoreOutput(batch);
       batch = [];
-      let termoutput = document.getElementById('terminal-core-output');
-      termoutput.scrollTop = termoutput.scrollHeight;
+      this.outputRef.scrollTop = this.outputRef.scrollHeight;
     }, 1000);
   }
 
   // Mandatory React method
   render() {
     return (
-      <TerminalCoreWrapper reverse={!this.props.settings.manualDaemon}>
+      <TerminalCoreWrapper
+        ref={el => (this.outputRef = el)}
+        reverse={!this.props.settings.manualDaemon}
+      >
         {this.props.settings.manualDaemon ? (
           <div className="dim">Core in Manual Mode</div>
         ) : (

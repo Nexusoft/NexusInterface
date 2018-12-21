@@ -140,12 +140,7 @@ class TerminalConsole extends Component {
       return;
     }
 
-    googleanalytics.SendEvent(
-      'Terminal',
-      'Console',
-      'UseCommand',
-      1
-    );
+    googleanalytics.SendEvent('Terminal', 'Console', 'UseCommand', 1);
     //
     let tempConsoleOutput = [...this.props.consoleOutput];
     let splitInput = this.props.currentInput.split(' ');
@@ -178,7 +173,7 @@ class TerminalConsole extends Component {
         return v.indexOf(splitInput[0]) >= 0;
       })
     );
-    let termConOut = document.getElementById('terminal-console-output');
+    // let termConOut = document.getElementById('terminal-console-output');
     /// Execute the command with the given args
     if (
       this.props.commandList.some(function(v) {
@@ -194,11 +189,11 @@ class TerminalConsole extends Component {
                 return tempConsoleOutput.push(item);
               });
               this.props.printToConsole(tempConsoleOutput);
-              termConOut.scrollTop = termConOut.scrollHeight;
+              // // termConOut.scrollTop = termConOut.scrollHeight;
             } else {
               tempConsoleOutput.push(payload);
               this.props.printToConsole(tempConsoleOutput);
-              termConOut.scrollTop = termConOut.scrollHeight;
+              // // termConOut.scrollTop = termConOut.scrollHeight;
             }
           } else {
             for (let outputObject in payload) {
@@ -235,7 +230,7 @@ class TerminalConsole extends Component {
               }
             }
             this.props.printToConsole(tempConsoleOutput);
-            termConOut.scrollTop = termConOut.scrollHeight;
+            // // termConOut.scrollTop = termConOut.scrollHeight;
           }
         })
         .catch(error => {
@@ -257,7 +252,7 @@ class TerminalConsole extends Component {
             }
           }
           this.props.printToConsole(tempConsoleOutput);
-          termConOut.scrollTop = termConOut.scrollHeight;
+          // // termConOut.scrollTop = termConOut.scrollHeight;
         });
     } else {
       tempConsoleOutput.push([
@@ -265,7 +260,7 @@ class TerminalConsole extends Component {
       ]);
       // tempConsoleOutput.push(['\n  '])
       this.props.printToConsole(tempConsoleOutput);
-      termConOut.scrollTop = termConOut.scrollHeight;
+      // // termConOut.scrollTop = termConOut.scrollHeight;
     }
   }
 
