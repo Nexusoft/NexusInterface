@@ -2,9 +2,34 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import Modal from 'react-responsive-modal';
+import styled from '@emotion/styled';
 
 // Internal
 import ComboBox from 'components/common/ComboBox';
+import TextBox from 'components/common/TextBox';
+import FormField from 'components/common/FormField';
+import Button from 'components/common/Button';
+
+const AccountSelectors = styled.div({
+  display: 'grid',
+  gridTemplateColumns: 'auto auto',
+  gridTemplateRows: 'auto auto',
+  gridGap: '1em .5em',
+  alignItems: 'center',
+});
+
+const Equal = styled.div({
+  display: 'flex',
+  alignItems: 'flex-end',
+  padding: '.3em .6em',
+  fontSize: '1.2em',
+});
+
+const Buttons = styled.div({
+  marginTop: '1em',
+  display: 'flex',
+  justifyContent: 'flex-end',
+});
 
 export default class MoveBetweenAccountsModal extends Component {
   moveAmmountConverter(e, isNxs) {
@@ -77,112 +102,104 @@ export default class MoveBetweenAccountsModal extends Component {
       >
         <div className="MoveModal">
           <div>
-            <div>
-              <div className="moveSelectors">
-                <span>
-                  {' '}
-                  <FormattedMessage
-                    id="sendReceive.FromAccount"
-                    defaultMessage="From Account"
-                  />
-                  :
-                </span>
-                <ComboBox
-                  value={this.props.MoveFromAccount}
-                  onChange={this.props.updateMoveFromAccount}
-                  options={[
-                    {
-                      value: '',
-                      display: (
-                        <FormattedMessage
-                          id="sendReceive.SelectAnAccount"
-                          defaultMessage="Select an Account"
-                        />
-                      ),
-                    },
-                    ...this.props.accountChanger(),
-                  ]}
+            <AccountSelectors>
+              <label>
+                <FormattedMessage
+                  id="sendReceive.FromAccount"
+                  defaultMessage="From Account"
                 />
+              </label>
+              <ComboBox
+                value={this.props.MoveFromAccount}
+                onChange={this.props.updateMoveFromAccount}
+                options={[
+                  {
+                    value: '',
+                    display: (
+                      <FormattedMessage
+                        id="sendReceive.SelectAnAccount"
+                        defaultMessage="Select an Account"
+                      />
+                    ),
+                  },
+                  ...this.props.accountChanger(),
+                ]}
+              />
 
-                <span>
-                  {' '}
-                  <FormattedMessage
-                    id="sendReceive.ToAccount"
-                    defaultMessage="To Account"
-                  />
-                  :
-                </span>
-                <ComboBox
-                  value={this.props.MoveToAccount}
-                  onChange={this.props.updateMoveToAccount}
-                  options={[
-                    {
-                      value: '',
-                      display: (
-                        <FormattedMessage
-                          id="sendReceive.SelectAnAccount"
-                          defaultMessage="Select an Account"
-                        />
-                      ),
-                    },
-                    ...this.props.accountChanger(),
-                  ]}
+              <label>
+                <FormattedMessage
+                  id="sendReceive.ToAccount"
+                  defaultMessage="To Account"
                 />
-              </div>
-            </div>
+              </label>
+              <ComboBox
+                value={this.props.MoveToAccount}
+                onChange={this.props.updateMoveToAccount}
+                options={[
+                  {
+                    value: '',
+                    display: (
+                      <FormattedMessage
+                        id="sendReceive.SelectAnAccount"
+                        defaultMessage="Select an Account"
+                      />
+                    ),
+                  },
+                  ...this.props.accountChanger(),
+                ]}
+              />
+            </AccountSelectors>
             <div>
-              <div className="convertor">
-                <label>
-                  <FormattedMessage
-                    id="sendReceive.Amount"
-                    defaultMessage="Nexus Amount"
+              <div className="flex">
+                <FormField
+                  connectLabel
+                  style={{ flex: 1 }}
+                  label={
+                    <FormattedMessage
+                      id="sendReceive.Amount"
+                      defaultMessage="Nexus Amount"
+                    />
+                  }
+                >
+                  <TextBox
+                    placeholder="0.00000"
+                    value={this.props.moveAmount}
+                    onChange={e => this.moveAmmountConverter(e, true)}
+                    required
                   />
-                </label>
-                <label className="UsdConvertorLabel">
-                  {this.props.settings.fiatCurrency}
-                </label>
-              </div>
-              <div className="convertor">
-                <input
-                  className="input"
-                  type="text"
-                  placeholder="0.00000"
-                  value={this.props.moveAmount}
-                  onChange={e => this.moveAmmountConverter(e, true)}
-                  required
-                />{' '}
-                <label>=</label>
-                <input
-                  className="input"
-                  type="text"
-                  placeholder="0.00"
-                  value={this.props.moveUSDAmount}
-                  onChange={e => {
-                    this.moveAmmountConverter(e);
-                  }}
-                  required
-                />
+                </FormField>
+                <Equal>=</Equal>
+                <FormField
+                  connectLabel
+                  style={{ flex: 1 }}
+                  label={this.props.settings.fiatCurrency}
+                >
+                  <TextBox
+                    placeholder="0.00"
+                    value={this.props.moveUSDAmount}
+                    onChange={e => {
+                      this.moveAmmountConverter(e);
+                    }}
+                    required
+                  />
+                </FormField>
               </div>
               {this.props.paytxfee && (
-                <div>
+                <div style={{ marginTop: '1em' }}>
                   <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />
                   : {this.props.paytxfee.toFixed(5)} NXS
                 </div>
               )}
             </div>
           </div>
-          <div>
-            <button
-              className="button primary"
-              style={{ marginLeft: '0px' }}
-              onClick={() => this.moveNXSbetweenAccounts()}
-            >
+          <Buttons>
+            <Button primary onClick={() => this.moveNXSbetweenAccounts()}>
               <FormattedMessage
                 id="sendReceive.MoveNXS"
                 defaultMessage="Move NXS"
               />
-            </button>
-          </div>
+            </Button>
+          </Buttons>
         </div>
       </Modal>
     );

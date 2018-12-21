@@ -104,11 +104,11 @@ export default class ComboBox extends Component {
   };
 
   render() {
-    const { options, optionHeight, value, onChange } = this.props;
+    const { options, optionHeight, value, onChange, ...rest } = this.props;
     const { open, top, left, width } = this.state;
 
     return (
-      <ComboBoxWrapper>
+      <ComboBoxWrapper {...rest}>
         <ComboBoxControl
           optionHeight={optionHeight}
           ref={el => (this.controlRef = el)}
