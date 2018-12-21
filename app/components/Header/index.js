@@ -44,6 +44,7 @@ const HeaderWrapper = styled.header({
   alignItems: 'center',
   justifyContent: 'center',
   color: colors.primary,
+  background: 'linear-gradient(to bottom, rgb(0,0,0), rgba(0,0,0,.5))',
   zIndex: 999,
 });
 

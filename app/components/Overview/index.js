@@ -175,8 +175,10 @@ const Stat = styled.div(
 
 const StatLabel = styled.div({
   fontWeight: 'bold',
-  letterSpacing: 1,
+  letterSpacing: 0.5,
   color: colors.primary,
+  textTransform: 'uppercase',
+  fontSize: '.9em',
 });
 
 const StatValue = styled.div({
