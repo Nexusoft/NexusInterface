@@ -338,6 +338,7 @@ export default class MenuBuilder {
               core.start();
             },
           },
+
           {
             label: 'Stop Daemon',
             click() {
@@ -347,7 +348,6 @@ export default class MenuBuilder {
                 .then(payload => {
                   self.props.clearOverviewVariables();
                 });
-              }
             },
           },
           {
