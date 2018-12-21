@@ -33,17 +33,14 @@ var port = '9336';
 var ip = '127.0.0.1';
 var host = 'http://' + ip + ':' + port;
 var verbose = '2'; // <--Lower to 0 after beta ends
-
+var datadir = configuration.GetCoreDataDir();
+// console.log(process.env.APPDATA);configuration.GetAppDataDirectory();
+console.log('core', process.env.HOME);
 //Set data directory by OS for automatic daemon mode
-if (process.platform === 'win32') {
-  var datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
-} else if (process.platform === 'darwin') {
-  var datadir = process.env.HOME + '/Nexus_Tritium_Data';
-} else {
-  var datadir = process.env.HOME + '/.Nexus_Tritium_Data';
-}
 
 const EventEmitter = require('events');
+
+configuration.Start();
 
 // SetCoreParameters: Get the path to local resources for the application (depending on running packaged vs via npm start)
 function SetCoreParameters(settings) {
@@ -192,12 +189,11 @@ function getCorePID() {
           return process;
         }
       });
-    console.log(tempPID);
 
     if (tempPID[0]) {
       tempPID = tempPID[0].trim().split(' ')[0];
     }
-    console.log(tempPID);
+
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, '');
     log.info('PID: ' + PID);
     if (Number(PID) == 'NaN' || Number(PID) < '2') {

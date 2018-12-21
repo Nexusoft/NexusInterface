@@ -204,7 +204,7 @@ class SettingsCore extends Component {
     var manualDaemonDataDir = document.getElementById('manualDaemonDataDir');
 
     if (settings.manualDaemonDataDir === undefined) {
-      manualDaemonDataDir.value = 'Nexus_Tritium_Data';
+      manualDaemonDataDir.value = '.Nexus_Wallet_Data';
     } else {
       manualDaemonDataDir.value = settings.manualDaemonDataDir;
     }
@@ -903,7 +903,7 @@ class SettingsCore extends Component {
             </FormattedMessage>
           </div>
 
-          <div className="field">
+          {/* <div className="field">
             <label htmlFor="verboseLevel">
               <FormattedMessage
                 id="Settings.VerboseLevel"
@@ -924,7 +924,7 @@ class SettingsCore extends Component {
                 />
               )}
             </FormattedMessage>
-          </div>
+          </div> */}
           {/*
           <div className="field">
             <label htmlFor="forkblock">
@@ -1113,50 +1113,6 @@ class SettingsCore extends Component {
               </FormattedMessage>
             </div>
             <div className="field">
-              <label htmlFor="socks4ProxyIP">
-                <FormattedMessage
-                  id="Settings.ProxyIP"
-                  defaultMesage="Proxy IP Address"
-                />
-              </label>
-              <FormattedMessage
-                id="ToolTip.IPAddressofSOCKS4proxy"
-                defaultMessage="IP Address of SOCKS4 proxy server"
-              >
-                {tt => (
-                  <input
-                    id="socks4ProxyIP"
-                    type="text"
-                    size="12"
-                    onChange={this.updateSocks4ProxyIP}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-            <div className="field">
-              <label htmlFor="socks4ProxyPort">
-                <FormattedMessage
-                  id="Settings.ProxyPort"
-                  defaultMesage="Proxy Port"
-                />
-              </label>
-              <FormattedMessage
-                id="ToolTip.PortOfSOCKS4proxyServer"
-                defaultMessage="Port of SOCKS4 proxy server"
-              >
-                {tt => (
-                  <input
-                    id="socks4ProxyPort"
-                    type="text"
-                    size="3"
-                    onChange={this.updateSocks4ProxyPort}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-            <div className="field">
               <label htmlFor="detatchDatabaseOnShutdown">
                 <FormattedMessage
                   id="Settings.Detach"
@@ -1179,6 +1135,72 @@ class SettingsCore extends Component {
               </FormattedMessage>
             </div>{' '}
             <div className="field">
+              <label htmlFor="verboseLevel">
+                <FormattedMessage
+                  id="Settings.VerboseLevel"
+                  defaultMessage="Verbose Level"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.Verbose"
+                defaultMessage="Verbose level for logs"
+              >
+                {TT => (
+                  <input
+                    id="verboseLevel"
+                    type="text"
+                    size="4"
+                    onChange={this.updateVerboseLevel}
+                    data-tooltip={TT}
+                  />
+                )}
+              </FormattedMessage>
+            </div>
+            <div className="field">
+              <label htmlFor="socks4ProxyPort">
+                <FormattedMessage
+                  id="Settings.ProxyPort"
+                  defaultMesage="Proxy Port"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.PortOfSOCKS4proxyServer"
+                defaultMessage="Port of SOCKS4 proxy server"
+              >
+                {tt => (
+                  <input
+                    id="socks4ProxyPort"
+                    type="text"
+                    size="4"
+                    onChange={this.updateSocks4ProxyPort}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
+            </div>
+            <div className="field">
+              <label htmlFor="socks4ProxyIP">
+                <FormattedMessage
+                  id="Settings.ProxyIP"
+                  defaultMesage="Proxy IP Address"
+                />
+              </label>
+              <FormattedMessage
+                id="ToolTip.IPAddressofSOCKS4proxy"
+                defaultMessage="IP Address of SOCKS4 proxy server"
+              >
+                {tt => (
+                  <input
+                    id="socks4ProxyIP"
+                    type="text"
+                    size="12"
+                    onChange={this.updateSocks4ProxyIP}
+                    data-tooltip={tt}
+                  />
+                )}
+              </FormattedMessage>
+            </div>
+            <div className="field">
               <label htmlFor="manualDaemonDataDir">
                 <FormattedMessage
                   id="Settings.DDN"
@@ -1192,8 +1214,9 @@ class SettingsCore extends Component {
                 {tt => (
                   <input
                     id="manualDaemonDataDir"
+                    className="selfadapt"
+                    size="30"
                     type="text"
-                    size="12"
                     onChange={this.updateManualDaemonDataDir}
                     data-tooltip={tt}
                   />

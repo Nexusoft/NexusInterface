@@ -969,7 +969,7 @@ class SendRecieve extends Component {
                 value={this.props.moveAmount}
                 onChange={e => this.moveAmmountConverter(e, true)}
                 required
-              />{' '}
+              />
               <label>=</label>
               <input
                 className="input"

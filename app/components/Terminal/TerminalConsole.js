@@ -124,6 +124,7 @@ class TerminalConsole extends Component {
     ) {
       RPC.PROMISE(splitInput[0], RPCArguments)
         .then(payload => {
+          console.log(payload);
           if (typeof payload === 'string' || typeof payload === 'number') {
             if (typeof payload === 'string') {
               let temppayload = payload;
@@ -140,44 +141,43 @@ class TerminalConsole extends Component {
               termConOut.scrollTop = termConOut.scrollHeight;
             }
           } else {
-            for (let outputObject in payload) {
-              if (typeof payload[outputObject] === 'object') {
-                tempConsoleOutput.push(outputObject + ': ');
-              } else {
-                tempConsoleOutput.push(
-                  '       ' + outputObject + ': ' + payload[outputObject]
-                );
-              }
-
-              if (typeof payload[outputObject] === 'object') {
-                for (let interalres in payload[outputObject]) {
-                  if (typeof payload[outputObject][interalres] === 'object') {
-                    for (let internalmicro in payload[outputObject][
-                      interalres
-                    ]) {
-                      tempConsoleOutput.push(
-                        '       ' +
-                          internalmicro +
-                          ':' +
-                          payload[outputObject][interalres][internalmicro]
-                      );
-                    }
-                  } else {
-                    tempConsoleOutput.push(
-                      '       ' +
-                        interalres +
-                        ':' +
-                        payload[outputObject][interalres]
-                    );
-                  }
+            
+              function tabMaker(y)
+              {
+                let count = y;
+                let tempTab = "";
+                while (count != 0)
+                {
+                  tempTab += "       ";
+                  count--;
                 }
+                return tempTab;
               }
+            function outputLoop(incomingObj, numOfTabs) {
+              var keys = Object.keys(incomingObj);
+              if (true){
+              if (keys.length) {
+                return keys.forEach(aElement => {
+                  if (typeof incomingObj[aElement] === 'object')
+                  {
+                    tempConsoleOutput.push(tabMaker(numOfTabs) + aElement + ":");
+                    outputLoop(incomingObj[aElement],numOfTabs + 1);
+                  }
+                  else
+                  {
+                    tempConsoleOutput.push(tabMaker(numOfTabs) + aElement + ":" + incomingObj[aElement]);
+                  }
+                });
+              }}
             }
+            outputLoop(payload,1);
+
             this.props.printToConsole(tempConsoleOutput);
             termConOut.scrollTop = termConOut.scrollHeight;
           }
         })
         .catch(error => {
+          console.log(error);
           if (error.message !== undefined) {
             tempConsoleOutput.push(
               'Error: ' +

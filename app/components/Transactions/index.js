@@ -1179,12 +1179,14 @@ class Transactions extends Component {
     let fs = require('fs');
 
     try {
+      const electronapp =
+        require('electron').app || require('electron').remote.app;
       let appdataloc =
         process.env.APPDATA ||
         (process.platform == 'darwin'
-          ? process.env.HOME + 'Library/Preferences'
+          ? electronapp.getPath('appData')
           : process.env.HOME);
-      appdataloc = appdataloc + '/.Nexus/';
+      appdataloc = appdataloc + '/Nexus Wallet/';
       let incominghistoryfile = JSON.parse(
         fs.readFileSync(appdataloc + 'historydata.json', 'utf8')
       );
@@ -1324,12 +1326,15 @@ class Transactions extends Component {
     this.setState({
       needsHistorySave: false,
     });
+
+    const electronapp =
+      require('electron').app || require('electron').remote.app;
     let appdataloc =
       process.env.APPDATA ||
       (process.platform == 'darwin'
-        ? process.env.HOME + 'Library/Preferences'
+        ? electronapp.getPath('appData')
         : process.env.HOME);
-    appdataloc = appdataloc + '/.Nexus/';
+    appdataloc = appdataloc + '/Nexus Wallet/';
 
     let fs = require('fs');
 
