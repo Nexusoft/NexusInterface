@@ -87,6 +87,12 @@ export default class MenuBuilder {
             remote.getCurrentWindow().close();
           },
         },
+        {
+          label: 'About',
+          click() {
+            self.props.history.push('/About');
+          },
+        },
       ],
     };
     const subMenuFile = {
@@ -239,20 +245,21 @@ export default class MenuBuilder {
     const subMenuHelp = {
       label: 'Help',
       submenu: [
+        // {
+        //   label: 'About',
+        //   click() {
+        //     self.props.history.push('/About');
+        //   },
+        // },
+
         {
-          label: 'About',
-          click() {
-            self.props.history.push('/About');
-          },
-        },
-        {
-          label: 'Website',
+          label: 'Nexus Earth Website',
           click() {
             shell.openExternal('http://nexusearth.com');
           },
         },
         {
-          label: 'Github',
+          label: 'Nexus Git Repository',
           click() {
             shell.openExternal('http://github.com/Nexusoft');
           },
@@ -459,13 +466,13 @@ export default class MenuBuilder {
             },
           },
           {
-            label: 'Website',
+            label: 'Nexus Earth Website',
             click() {
               shell.openExternal('http://nexusearth.com');
             },
           },
           {
-            label: 'Github',
+            label: 'Nexus Git Repository',
             click() {
               shell.openExternal('http://github.com/Nexusoft');
             },

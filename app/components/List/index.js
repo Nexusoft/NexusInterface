@@ -110,32 +110,41 @@ class List extends Component {
             </h2>
           ) : (
             <div id="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>
-                      <div>
-                        <FormattedMessage
-                          id="TrustList.Address"
-                          defaultMessage="Address"
-                        />
-                      </div>
-                    </th>
+              {this.props.trustlist ? (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        <div>
+                          <FormattedMessage
+                            id="TrustList.Address"
+                            defaultMessage="Address"
+                          />
+                        </div>
+                      </th>
 
-                    <th onClick={() => this.props.ToggleSortDir()}>
-                      <div>
-                        {' '}
-                        <FormattedMessage
-                          id="TrustList.InterestRate"
-                          defaultMessage="Stake Reward"
-                        />
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
+                      <th onClick={() => this.props.ToggleSortDir()}>
+                        <div>
+                          {' '}
+                          <FormattedMessage
+                            id="TrustList.InterestRate"
+                            defaultMessage="Stake Reward"
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
 
-                <tbody>{this.buildList()}</tbody>
-              </table>
+                  <tbody>{this.buildList()}</tbody>
+                </table>
+              ) : (
+                <h2>
+                  <FormattedMessage
+                    id="TrustList.RetrieveList"
+                    defaultMessage="Retrieving Trust List..."
+                  />
+                </h2>
+              )}
             </div>
           )}
         </div>

@@ -1093,6 +1093,48 @@ class Header extends Component {
       );
     }
   }
+  CancelTT() {
+    if (this.props.history.location.pathname === '/') {
+      return null;
+    } else {
+      return (
+        <div className="icon">
+          <img src={stakeImg} />
+
+          <div className="tooltip bottom">
+            <div>
+              <FormattedMessage
+                id="Header.StakeWeight"
+                defaultMessage="Stake Weight"
+              />
+              : {this.props.stakeweight}%
+            </div>
+            <div>
+              <FormattedMessage
+                id="Header.InterestRate"
+                defaultMessage="Stake Reward"
+              />
+              : {this.props.interestweight}%
+            </div>
+            <div>
+              <FormattedMessage
+                id="Header.TrustWeight"
+                defaultMessage="Trust Weight"
+              />
+              : {this.props.trustweight}%
+            </div>
+            <div>
+              <FormattedMessage
+                id="Header.BlockWeight"
+                defaultMessage="Block Weight"
+              />
+              : {this.props.blockweight}
+            </div>
+          </div>
+        </div>
+      );
+    }
+  }
 
   // Mandatory React method
   render() {
@@ -1168,8 +1210,9 @@ class Header extends Component {
               <div>{this.signInStatusMessage()}</div>
             </div>
           </div>
-          {/* wrap this in a check too... */}
-          <div className="icon">
+          {this.CancelTT()}
+
+          {/* <div className="icon">
             <img src={stakeImg} />
 
             <div className="tooltip bottom">
@@ -1202,7 +1245,8 @@ class Header extends Component {
                 : {this.props.blockweight}
               </div>
             </div>
-          </div>
+          </div> */}
+
           <div className="icon">
             {this.props.heighestPeerBlock > this.props.blocks ? (
               <img id="syncing" className="sync-img" src={statBad} />

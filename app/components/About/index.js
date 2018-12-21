@@ -54,7 +54,7 @@ class About extends Component {
                 <b>Build Date: </b> December 7th 2018 <br />
               </column>
               <column>
-                <b>Deamon Version:</b> {this.getDeamonVersionNumber()} <br />
+                <b>Daemon Version:</b> {this.getDeamonVersionNumber()} <br />
                 <b>Build Date: </b> December 7th 2018 <br />
               </column>
             </row>

@@ -89,6 +89,7 @@ export default {
     'transactions.Rows': 'Rows',
     'transactions.Pending': '(Pending)',
     'transactions.NoRowsFound': 'No Rows Found',
+    'transactions.PENDINGTR': 'PENDING TRANSACTION',
 
     'Market.Information': 'Market Information',
     'Market.Refreash': 'Refresh Market Data',
@@ -253,6 +254,7 @@ export default {
     'TrustList.Address': 'Address',
     'TrustList.InterestRate': 'Stake Reward',
     'TrustList.SyncMsg': 'Please let your wallet sync with the network',
+    'TrustList.RetrieveList': 'Retrieving Trust List...', //NEW STRING//
 
     'Exchange.Exchange': 'Exchange',
     'Exchange.ShoutOut': 'powered by ShapeShift',
@@ -334,9 +336,9 @@ export default {
     'ToolTip.RenderGlobe': 'Render the globe on the Overview page',
     'Tooltip.RenderGlobeOpenGLFail':
       'Your computer does not support OPENGL 2.0',
-    'ToolTip.ConnectionFailure': 'Connection Failure', // NEW STRING
+    'ToolTip.ConnectionFailure': 'Connection Failure',
 
-    'ToolTip.TryAgain': 'Try Again?', // NEW STRING
+    'ToolTip.TryAgain': 'Try Again?',
 
     'ToolTip.DbOption':
       'Would you like to reduce the time it takes to sync by downloading a recent version of the database?',
@@ -375,7 +377,7 @@ export default {
     'Alert.ContactsExported': 'Contacts Exported',
     'Alert.DaemonLoadingWait': 'Loading Daemon, Please Wait',
     'Alert.CoreRestarting': 'Core Restarting',
-    'Alert.nodefaultname': 'Account cannot be named * or default', // NEW STRING
+    'Alert.nodefaultname': 'Account cannot be named * or default',
 
     'Cp.AC1': 'Accent Color 1',
     'Cp.AC2': 'Accent Color 2',
