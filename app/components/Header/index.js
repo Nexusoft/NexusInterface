@@ -23,6 +23,7 @@ import configuration from 'api/configuration';
 import Icon from 'components/common/Icon';
 import HorizontalLine from 'components/common/HorizontalLine';
 import { colors, consts, timing, animations } from 'styles';
+import { lighten, fade } from 'utils/colors';
 
 // Internal Local Dependencies
 import NotificationModal from './NotificationModal';
@@ -61,6 +62,7 @@ const Logo = styled(Icon)({
   width: 'auto',
   filter: 'var(--nxs-logo)',
   fill: colors.primary,
+  filter: `drop-shadow(0 0 10px ${fade(lighten(colors.primary, 0.3), 0.3)})`,
 });
 
 const Beta = styled.div({

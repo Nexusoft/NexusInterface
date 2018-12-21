@@ -28,6 +28,7 @@ import ContextMenuBuilder from 'contextmenu';
 import * as helpers from 'scripts/helper.js';
 import configuration from 'api/configuration';
 import { colors, timing, consts } from 'styles';
+import { fade, lighten } from 'utils/colors';
 
 // Internal Local Dependencies
 import NetworkGlobe from './NetworkGlobe';
@@ -159,7 +160,7 @@ const Stat = styled.div(
     margin: '1.7em 0',
     display: 'flex',
     alignItems: 'center',
-    textShadow: `0 0 8px rgba(0,0,0,.7)`,
+    filter: `drop-shadow(0 0 8px rgba(0,0,0,.7))`,
     color: colors.light,
   },
   ({ to }) =>
@@ -167,8 +168,9 @@ const Stat = styled.div(
       cursor: 'pointer',
       transitionProperty: 'filter',
       transitionDuration: timing.normal,
+      transitionTimingFunction: 'ease-out',
       '&:hover': {
-        filter: 'brightness(120%)',
+        filter: `drop-shadow(0 0 8px ${fade(lighten(colors.primary, 0.3), 0)})`,
       },
     }
 );
@@ -189,7 +191,7 @@ const StatIcon = styled(Icon)({
   width: 38,
   height: 38,
   color: colors.primary,
-  filter: 'drop-shadow(0 0 8px rgba(0,0,0,.7))',
+  // filter: 'drop-shadow(0 0 8px rgba(0,0,0,.7))',
 });
 
 const MaxmindCopyright = styled.div({
