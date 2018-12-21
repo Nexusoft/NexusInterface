@@ -40,7 +40,7 @@ console.log('core', process.env.HOME);
 if (process.platform === 'win32') {
   var datadir = process.env.APPDATA + '\\Nexus_Core_Data_BETA_v0.8.4';
 } else if (process.platform === 'darwin') {
-  var datadir = asdfg.getPath('appData') + '/.Nexus_Core_Data_BETA_v0.8.4';
+  var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v0.8.4';
 } else {
   var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v0.8.4';
 }
