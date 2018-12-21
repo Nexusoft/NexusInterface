@@ -20,7 +20,7 @@ import configuration from 'api/configuration';
 
 var glb;
 var initializedWithData = false;
-
+let myIP = [];
 const GlobeWrapper = styled.div({
   position: 'fixed',
   top: 0,
@@ -33,6 +33,7 @@ const GlobeWrapper = styled.div({
 export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
+    console.log('Hello From the Network Globe Component!');
     this.props.handleOnLineRender(this.testRestartLines);
     this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
     this.props.handleOnAddData(this.updatePointsOnGlobe);
@@ -91,9 +92,13 @@ export default class NetworkGlobe extends Component {
                   globeseries[0][1].push(tmp.location.longitude);
                   globeseries[0][1].push(0.1); //temporary magnitude.
                 }
+                myIP = [
+                  parseFloat(body['geoplugin_latitude']),
+                  parseFloat(body['geoplugin_longitude']),
+                ];
 
-                globeseries[0][1].push(body['geoplugin_latitude']);
-                globeseries[0][1].push(body['geoplugin_longitude']);
+                globeseries[0][1].push(parseFloat(body['geoplugin_latitude']));
+                globeseries[0][1].push(parseFloat(body['geoplugin_longitude']));
                 globeseries[0][1].push(0.1); //temporary magnitude.
 
                 //glb = new DAT(this.threeRootElement);
@@ -115,6 +120,7 @@ export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
   componentWillUnmount() {
     this.threeRootElement.remove();
+    glb.removePoints();
   }
   // Class Methods
   updatePointsOnGlobe() {
@@ -134,46 +140,34 @@ export default class NetworkGlobe extends Component {
         )
       );
     }
-    let myIP = '';
-    Request(
-      {
-        url: 'http://www.geoplugin.net/json.gp',
-        json: true,
-      },
-      (error, response, body) => {
-        if (response !== undefined) {
-          if (response.statusCode === 200) {
-            RPC.PROMISE('getpeerinfo', []).then(payload => {
-              var tmp = {};
-              var ip = {};
-              let maxnodestoadd = payload.length;
-              if (maxnodestoadd > 20) {
-                maxnodestoadd = 20;
-              }
-              for (var i = 0; i < maxnodestoadd; i++) {
-                ip = payload[i].addr;
-                ip = ip.split(':')[0];
-                var tmp = geoiplookup.get(ip);
-                globeseries[0][1].push(tmp.location.latitude);
-                globeseries[0][1].push(tmp.location.longitude);
-                globeseries[0][1].push(0.1); //temporary magnitude.
-              }
-
-              globeseries[0][1].push(body['geoplugin_latitude']);
-              globeseries[0][1].push(body['geoplugin_longitude']);
-              globeseries[0][1].push(0.1); //temporary magnitude.
-
-              glb.removePoints();
-              glb.addData(globeseries[0][1], {
-                format: 'magnitude',
-                name: globeseries[0][0],
-              });
-              glb.createPoints();
-            });
-          }
-        }
+    console.log('update');
+    RPC.PROMISE('getpeerinfo', []).then(payload => {
+      var tmp = {};
+      var ip = {};
+      let maxnodestoadd = payload.length;
+      if (maxnodestoadd > 20) {
+        maxnodestoadd = 20;
       }
-    );
+      for (var i = 0; i < maxnodestoadd; i++) {
+        ip = payload[i].addr;
+        ip = ip.split(':')[0];
+        var tmp = geoiplookup.get(ip);
+        globeseries[0][1].push(tmp.location.latitude);
+        globeseries[0][1].push(tmp.location.longitude);
+        globeseries[0][1].push(0.1); //temporary magnitude.
+      }
+
+      globeseries[0][1].push(myIP[0]);
+      globeseries[0][1].push(myIP[1]);
+      globeseries[0][1].push(0.1); //temporary magnitude.
+
+      glb.removePoints();
+      glb.addData(globeseries[0][1], {
+        format: 'magnitude',
+        name: globeseries[0][0],
+      });
+      glb.createPoints();
+    });
   }
 
   testRestartLines() {

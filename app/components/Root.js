@@ -10,7 +10,7 @@ import styled from '@emotion/styled';
 
 // Internal Global Dependencies
 import locale from 'reducers/intl';
-import globalStyles from 'css/global-styles';
+import globalStyles from 'CSS/global-styles';
 
 // Internal Local Dependencies
 import Loader from './Loader';
@@ -20,7 +20,7 @@ import Navigation from './Navigation';
 import SendRecieve from './SendRecieve';
 import Transactions from './Transactions';
 import Market from './Market';
-import AddressBook from './Addressbook';
+import AddressBook from './AddressBook';
 import BlockExplorer from './BlockExplorer';
 import Settings from './Settings';
 import Terminal from './Terminal';

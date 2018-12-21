@@ -17,7 +17,7 @@
 @import "./controls/tooltip.css";
 
 @import "~components/Header/style.css";
-@import "~components/Addressbook/style.css";
+@import "~components/AddressBook/style.css";
 @import "~components/BlockExplorer/style.css";
 @import "~components/TrustList/style.css";
 @import "~components/Market/style.css";
