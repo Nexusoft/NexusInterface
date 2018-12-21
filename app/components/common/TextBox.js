@@ -134,13 +134,7 @@ const TextBox = ({ multiline, ...rest }) =>
     <TextInput {...rest} />
   );
 
-const WrappedTextBox = ({
-  headIcon,
-  tailIcon,
-  btnOnClick,
-  inputProps,
-  ...rest
-}) => (
+const WrappedTextBox = ({ headIcon, tailIcon, inputProps, ...rest }) => (
   <InputWrapper {...rest}>
     {!!headIcon && (
       <IconWrapper head>
@@ -155,6 +149,8 @@ const WrappedTextBox = ({
     )}
   </InputWrapper>
 );
+
+TextBox.Wrapped = WrappedTextBox;
 
 export default TextBox;
 

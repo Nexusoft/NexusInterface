@@ -21,7 +21,7 @@ const Button = styled.button(
     transitionDuration: timing.normal,
     // Default styles
     '&, &:active, &&[disabled]': {
-      border: `2px solid ${colors.lightGray}`,
+      border: `1px solid ${colors.lightGray}`,
       color: colors.lightGray,
     },
     '&:hover': {
