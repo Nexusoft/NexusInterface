@@ -1,6 +1,7 @@
 // External Dependencies
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
+import { keyframes } from '@emotion/core';
 
 // Internal Dependencies
 import Button from 'components/common/Button';
@@ -51,12 +52,25 @@ const ArrowButton = styled(Button)({
   paddingBottom: 0,
 });
 
+const vertExpand = keyframes`
+  0% {
+    opacity: 0; 
+    transform: scaleY(.5); 
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+`;
+
 const Options = styled.ul({
   position: 'absolute',
   overflowY: 'auto',
   backgroundColor: colors.light,
   padding: 0,
   margin: 0,
+  transformOrigin: 'top',
+  animation: `${vertExpand} ${timing.quick} ease-out`,
 });
 
 const Option = styled.li(
