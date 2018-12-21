@@ -239,10 +239,7 @@ form {
 }
 
 .selfadapt {
-  min-width: 13.5ch;
-  text-indent: 5px;
-  font-size: 1;
-  width: calc(var(--size) * 1ch);
+  padding: 0;
 }
 
 /*------------------------------------------------------------------

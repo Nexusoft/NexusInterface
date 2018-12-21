@@ -95,19 +95,6 @@ class SettingsCore extends Component {
     this.setSocks4ProxyPort(settings);
     this.setDetatchDatabaseOnShutdown(settings);
     // this.setOptionalTransactionFee(settings);
-
-    let input = document.querySelector('.selfadapt');
-    let root = document.documentElement.style;
-
-    /* on input event auto resize the field */
-    input.addEventListener('input', function() {
-      root.setProperty('--size', this.value.length);
-    });
-
-    /* resize the field if it is pre-populated */
-    document.addEventListener('DOMContentLoaded', function() {
-      root.setProperty('--size', input.value.length);
-    });
   }
 
   // Class Methods
@@ -1228,6 +1215,7 @@ class SettingsCore extends Component {
                   <input
                     id="manualDaemonDataDir"
                     className="selfadapt"
+                    size="30"
                     type="text"
                     onChange={this.updateManualDaemonDataDir}
                     data-tooltip={tt}
