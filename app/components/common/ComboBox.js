@@ -8,8 +8,11 @@ import Button from 'components/common/Button';
 import Arrow from 'components/common/Arrow';
 import Overlay from 'components/common/Overlay';
 import { colors, timing } from 'styles';
+import { start } from 'repl';
 
 const defaultOptionHeight = '2.25em';
+// Minimum gap from the dropdown to the bottom edge of the screen
+const minScreenGap = 20;
 
 const ComboBoxControl = styled.div(
   {
@@ -51,10 +54,12 @@ const ArrowButton = styled(Button)({
   paddingBottom: 0,
 });
 
+const startingScaleDown = 2;
+
 const vertExpand = keyframes`
   0% {
     opacity: 0; 
-    transform: scaleY(.5); 
+    transform: scaleY(${1 / startingScaleDown});
   }
   100% {
     opacity: 1;
@@ -101,6 +106,19 @@ export default class ComboBox extends Component {
     width: 200,
   };
 
+  componentDidUpdate() {
+    if (this.optionsRef) {
+      const rect = this.optionsRef.getBoundingClientRect();
+      // Due to the expand animation, the current element's size is only a part of of the full size
+      // So we need to find the real bottom position when the element is in full size
+      const fullSizeBottom = rect.top + rect.height * startingScaleDown;
+      if (fullSizeBottom > window.innerHeight - minScreenGap) {
+        this.optionsRef.style.maxHeight =
+          window.innerHeight - minScreenGap - rect.top + 'px';
+      }
+    }
+  }
+
   option = value => this.props.options.find(o => o.value === value);
 
   open = () => {
@@ -110,7 +128,12 @@ export default class ComboBox extends Component {
       width,
       height,
     } = this.controlRef.getBoundingClientRect();
-    this.setState({ open: true, top: top + height, left, width });
+    this.setState({
+      open: true,
+      top: top + height,
+      left,
+      width,
+    });
   };
 
   close = () => {
@@ -141,7 +164,10 @@ export default class ComboBox extends Component {
 
         {open && (
           <Overlay onBackgroundClick={this.close}>
-            <Options style={{ top, left, width }}>
+            <Options
+              ref={el => (this.optionsRef = el)}
+              style={{ top, left, width }}
+            >
               {options.map(option => (
                 <Option
                   optionHeight={optionHeight}
