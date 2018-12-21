@@ -8,8 +8,6 @@
 @import "./base/tables.css";
 @import "./base/text.css";
 
-@import "./fonts/stylesheet.css";
-
 @import "./controls/modal.css";
 @import "./controls/progress.css";
 @import "./controls/react-table.css";
@@ -70,31 +68,6 @@ input[type="text"]::placeholder {
   width: 35px;
   padding-right: 20px;
   filter: var(--icon-menu);
-}
-
-/* Utility classes */
-.relative {
-  position: relative;
-}
-
-.v-align {
-  vertical-align: middle;
-}
-
-.dim {
-  opacity: 0.5;
-}
-
-.flex {
-  display: flex;
-}
-
-.flex.center {
-  align-items: center;
-}
-
-.flex.stretch {
-  align-items: stretch;
 }
 
 /*------------------------------------------------------------------

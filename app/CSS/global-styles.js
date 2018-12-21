@@ -1,9 +1,13 @@
+// External
 import React from 'react';
 import { Global, css } from '@emotion/core';
+
+// Internal
 import { fade } from 'utils/colors';
 import { colors, consts } from 'styles';
+import fontStyles from './fonts';
 
-const styles = css`
+const resetStyles = css`
   *,
   *::before,
   *::after {
@@ -60,4 +64,30 @@ const styles = css`
   }
 `;
 
-export default <Global styles={styles} />;
+const utilityClasses = css`
+  .relative {
+    position: relative;
+  }
+
+  .v-align {
+    vertical-align: middle;
+  }
+
+  .dim {
+    opacity: 0.5;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex.center {
+    align-items: center;
+  }
+
+  .flex.stretch {
+    align-items: stretch;
+  }
+`;
+
+export default <Global styles={[fontStyles, resetStyles, utilityClasses]} />;
