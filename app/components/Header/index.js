@@ -54,6 +54,13 @@ const LogoLink = styled(Link)({
   animation: `${animations.fadeInAndExpand} ${timing.slow} ${
     consts.enhancedEaseOut
   }`,
+  transitionProperty: 'filter',
+  transitionDuration: timing.normal,
+  transitionTimingFunction: 'ease-out',
+
+  '&:hover': {
+    filter: `drop-shadow(0 0 8px ${colors.primary}) brightness(110%)`,
+  },
 });
 
 const Logo = styled(Icon)({
@@ -62,11 +69,11 @@ const Logo = styled(Icon)({
   width: 'auto',
   filter: 'var(--nxs-logo)',
   fill: colors.primary,
-  filter: `drop-shadow(0 0 10px ${fade(lighten(colors.primary, 0.3), 0.3)})`,
+  // filter: `drop-shadow(0 0 10px ${fade(lighten(colors.primary, 0.3), 0.3)})`,
 });
 
 const Beta = styled.div({
-  color: 'white',
+  color: colors.light,
   fontSize: 12,
   position: 'absolute',
   bottom: 3,

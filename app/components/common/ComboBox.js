@@ -107,12 +107,15 @@ export default class ComboBox extends Component {
   };
 
   componentDidUpdate() {
+    // Prevent the Options dropdown to outreach the screen
     if (this.optionsRef) {
       const rect = this.optionsRef.getBoundingClientRect();
       // Due to the expand animation, the current element's size is only a part of of the full size
       // So we need to find the real bottom position when the element is in full size
       const fullSizeBottom = rect.top + rect.height * startingScaleDown;
       if (fullSizeBottom > window.innerHeight - minScreenGap) {
+        // Manipulate the DOM directly so it won't waste another render cycle
+        // and the maxHeight style doesn't affect other parts so it doesn't need to be in the state
         this.optionsRef.style.maxHeight =
           window.innerHeight - minScreenGap - rect.top + 'px';
       }

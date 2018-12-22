@@ -170,7 +170,7 @@ const Stat = styled.div(
       transitionDuration: timing.normal,
       transitionTimingFunction: 'ease-out',
       '&:hover': {
-        filter: `drop-shadow(0 0 8px ${fade(lighten(colors.primary, 0.3), 0)})`,
+        filter: `drop-shadow(0 0 8px ${colors.primary}) brightness(120%)`,
       },
     }
 );
