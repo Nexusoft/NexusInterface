@@ -197,23 +197,21 @@ class Exchange extends Component {
           />
         </Tabs>
 
-        <div className="grid-container">
-          <Switch>
-            <Redirect
-              exact
-              from={`${this.props.match.path}/`}
-              to={`${this.props.match.path}/Precise`}
-            />
-            <Route
-              path={`${this.props.match.path}/Precise`}
-              render={props => <Precise />}
-            />
-            <Route
-              path={`${this.props.match.path}/Fast`}
-              render={() => <Fast />}
-            />
-          </Switch>
-        </div>
+        <Switch>
+          <Redirect
+            exact
+            from={`${this.props.match.path}/`}
+            to={`${this.props.match.path}/Precise`}
+          />
+          <Route
+            path={`${this.props.match.path}/Precise`}
+            render={props => <Precise />}
+          />
+          <Route
+            path={`${this.props.match.path}/Fast`}
+            render={() => <Fast />}
+          />
+        </Switch>
       </Panel>
     );
   }

@@ -7,7 +7,6 @@ Last Modified by: Brian Smith
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
 import Request from 'request';
 import { bindActionCreators } from 'redux';
 import { Squares } from 'react-activity';
@@ -15,7 +14,7 @@ import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Dependencies
 import * as TYPE from 'actions/actiontypes';
-import ContextMenuBuilder from 'contextmenu';
+import ExchangeForm from './ExchangeForm';
 import styles from './style.css';
 
 import arrow from 'images/arrow.svg';
@@ -308,116 +307,10 @@ class Precise extends Component {
   // Mandatory React method
   render() {
     return (
-      <div id="ExchngeContainer">
-        <div id="shifty-pannel">
-          <div>
-            <form>
-              <fieldset>
-                <legend>
-                  <FormattedMessage id="Exchange.Send" defaultMessage="Send" />
-                </legend>
-
-                <div className="field">
-                  <select
-                    className="soflow-color"
-                    value={this.props.from}
-                    onChange={e => this.toFromHandler(e, 'from')}
-                  >
-                    {this.optionbuilder()}
-                  </select>
-                </div>
-                <div className="field">
-                  <label>
-                    {' '}
-                    <FormattedMessage
-                      id="Exchange.TradeAmount"
-                      defaultMessage="Trade Amount"
-                    />
-                    :
-                  </label>
-                  <FormattedMessage
-                    id="Exchange.MinTrade"
-                    defaultMessage="Minimum Trade"
-                  >
-                    {MT => (
-                      <input
-                        type="text"
-                        placeholder={
-                          this.minAmmount() + ' ' + this.props.from + MT
-                        }
-                        value={this.props.ammount}
-                        onChange={e => this.ammountHandler(e.target.value)}
-                        required
-                      />
-                    )}
-                  </FormattedMessage>
-                </div>
-                {this.props.from !== 'NXS' ? (
-                  <div className="field">
-                    <label>
-                      <FormattedMessage
-                        id="Exchange.RefundAddress"
-                        defaultMessage="Refund Address"
-                      />
-                      :
-                    </label>
-                    <input
-                      type="text"
-                      value={this.props.refundAddress}
-                      onChange={e =>
-                        this.props.refundAddressSetter(e.target.value)
-                      }
-                      required
-                    />
-                  </div>
-                ) : null}
-              </fieldset>
-            </form>
-          </div>
-          <div>
-            <div id="line" />
-          </div>
-          <div>
-            <form style={{ display: 'flex', height: '100%' }}>
-              <fieldset>
-                <legend>
-                  <FormattedMessage
-                    id="Exchange.Receive"
-                    defaultMessage="Receive"
-                  />
-                </legend>
-                <div className="field">
-                  <select
-                    className="soflow-color"
-                    onChange={e => this.toFromHandler(e, 'to')}
-                    value={this.props.to}
-                  >
-                    {this.optionbuilder()}
-                  </select>
-                </div>
-
-                <div className="field">
-                  <label>
-                    {this.currencylabel()}{' '}
-                    <FormattedMessage
-                      id="Footer.Address"
-                      defaultMessage="Address"
-                    />
-                    :
-                  </label>
-                  <input
-                    type="text"
-                    value={this.props.toAddress}
-                    onChange={e => this.props.toAddressSetter(e.target.value)}
-                    required
-                  />
-                </div>
-              </fieldset>
-            </form>
-          </div>
-        </div>
+      <form>
+        <ExchangeForm {...this.props} />
         <div>{this.buildConfermation()}</div>
-      </div>
+      </form>
     );
   }
 }

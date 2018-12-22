@@ -1,23 +1,16 @@
-/*
-Title: Fast Exchange Page
-Description: Handle fast transactions for the exchange module
-Last Modified by: Brian Smith
-*/
-
-// External Dependencies
+// External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { remote } from 'electron';
 import Request from 'request';
 import { bindActionCreators } from 'redux';
 import { Squares } from 'react-activity';
 import googleanalytics from 'scripts/googleanalytics';
-
-// Internal Dependencies
 import { FormattedMessage } from 'react-intl';
+
+// Internal
 import * as TYPE from 'actions/actiontypes';
-import ContextMenuBuilder from 'contextmenu';
 import * as actionsCreators from 'actions/exchangeActionCreators';
+import ExchangeForm from './ExchangeForm';
 import styles from './style.css';
 
 // Images
@@ -188,60 +181,8 @@ class Fast extends Component {
     } else return null;
   }
 
-  optionbuilder() {
-    return Object.values(this.props.availableCoins).map(e => {
-      if (e.status === 'available') {
-        return (
-          <option key={e.symbol} value={e.symbol}>
-            {e.name}
-          </option>
-        );
-      } else return null;
-    });
-  }
-
-  minAmmount() {
-    if (this.props.marketPairData.minimum) {
-      return this.props.marketPairData.minimum;
-    } else return 0;
-  }
-
-  maxAmmount() {
-    if (this.props.marketPairData.maxLimit) {
-      return this.props.marketPairData.maxLimit;
-    } else return 1;
-  }
-
   currencylabel() {
-    if (this.props.to) {
-      return this.props.availableCoins[this.props.to].name;
-    } else return null;
-  }
-
-  ammountHandler(value) {
-    if (/^[0-9.]+$/.test(value) | (value === '')) {
-      this.props.ammountUpdater(value);
-    } else {
-      return null;
-    }
-  }
-
-  toFromHandler(e, switcher) {
-    if (switcher === 'to') {
-      if (e.target.value !== this.props.from) {
-        this.props.setBusyFlag();
-        this.props.ToSetter(e.target.value);
-      } else {
-        this.props.ToSetter(e.target.value);
-      }
-    } else {
-      if (e.target.value !== this.props.to) {
-        this.props.setBusyFlag();
-        this.props.FromSetter(e.target.value);
-      } else {
-        this.props.FromSetter(e.target.value);
-      }
-    }
+    return this.props.to ? this.props.availableCoins[this.props.to].name : null;
   }
 
   executeTrade() {
@@ -300,115 +241,10 @@ class Fast extends Component {
   // Mandatory React method
   render() {
     return (
-      <div id="ExchngeContainer">
-        <div id="shifty-pannel">
-          <div>
-            <form>
-              <fieldset>
-                <legend>
-                  <FormattedMessage id="Exchange.Send" defaultMessage="Send" />
-                </legend>
-
-                <div className="field">
-                  <select
-                    className="soflow-color"
-                    value={this.props.from}
-                    onChange={e => this.toFromHandler(e, 'from')}
-                  >
-                    {this.optionbuilder()}
-                  </select>
-                </div>
-                <div className="field">
-                  <label>
-                    <FormattedMessage
-                      id="Exchange.TradeAmount"
-                      defaultMessage="Trade Amount"
-                    />
-                    :
-                  </label>
-                  <FormattedMessage
-                    id="Exchange.MinTrade"
-                    defaultMessage="Minimum trade"
-                  >
-                    {MT => (
-                      <input
-                        type="text"
-                        placeholder={
-                          this.minAmmount() + ' ' + this.props.from + MT
-                        }
-                        value={this.props.ammount}
-                        onChange={e => this.ammountHandler(e.target.value)}
-                        required
-                      />
-                    )}
-                  </FormattedMessage>
-                </div>
-                {this.props.from !== 'NXS' ? (
-                  <div className="field">
-                    <label>
-                      <FormattedMessage
-                        id="Exchange.RefundAddress"
-                        defaultMessage="Refund Address"
-                      />
-                      :
-                    </label>
-                    <input
-                      type="text"
-                      value={this.props.refundAddress}
-                      onChange={e =>
-                        this.props.refundAddressSetter(e.target.value)
-                      }
-                      required
-                    />
-                  </div>
-                ) : null}
-              </fieldset>
-            </form>
-          </div>
-          <div>
-            <div id="line" />
-          </div>
-          <div>
-            <form style={{ display: 'flex', height: '100%' }}>
-              <fieldset>
-                <legend>
-                  <FormattedMessage
-                    id="Exchange.Receive"
-                    defaultMessage="Receive"
-                  />
-                </legend>
-                <div className="field">
-                  <select
-                    className="soflow-color"
-                    onChange={e => this.toFromHandler(e, 'to')}
-                    value={this.props.to}
-                  >
-                    {this.optionbuilder()}
-                  </select>
-                </div>
-
-                <div className="field">
-                  <label>
-                    {this.currencylabel()}{' '}
-                    <FormattedMessage
-                      id="Footer.Address"
-                      defaultMessage="Address"
-                    />
-                    :
-                  </label>
-                  <input
-                    type="text"
-                    value={this.props.toAddress}
-                    onChange={e => this.props.toAddressSetter(e.target.value)}
-                    required
-                  />
-                </div>
-              </fieldset>
-            </form>
-          </div>
-        </div>
+      <form>
+        <ExchangeForm {...this.props} />
         <div>{this.buildConfermation()}</div>
-      </div>
+      </form>
     );
   }
 }
