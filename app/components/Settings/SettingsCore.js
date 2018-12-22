@@ -904,8 +904,8 @@ class SettingsCore extends Component {
               connectLabel
               label={
                 <FormattedMessage
-                  id="Settings.Detach"
-                  defaultMesage="Detach database on shutdown"
+                  id="Settings.ProxyIP"
+                  defaultMesage="Proxy IP Address"
                 />
               }
               tooltip={

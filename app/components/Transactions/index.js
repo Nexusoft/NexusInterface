@@ -1208,7 +1208,8 @@ class Transactions extends Component {
 
     let high = 0;
     let low = 0;
-    this.props.walletitems.forEach(element => {
+    for (let index = 0; index < this.props.walletitems.length; index++) {
+      const element = this.props.walletitems[index];
       if (
         element.time * 1000 >= domain.x[0] &&
         element.time * 1000 <= domain.x[1]
@@ -1221,7 +1222,8 @@ class Transactions extends Component {
           low = element.amount - 1;
         }
       }
-    });
+    }
+
     high = high == 0 ? 1 : high;
     domain.y[0] = -high;
     domain.y[1] = high;
@@ -1241,12 +1243,14 @@ class Transactions extends Component {
   // Either load in the file from local or start downloading more data and make a new one.
   gethistorydatajson() {
     try {
+      const electronapp =
+        require('electron').app || require('electron').remote.app;
       let appdataloc =
         process.env.APPDATA ||
         (process.platform == 'darwin'
-          ? process.env.HOME + 'Library/Preferences'
+          ? electronapp.getPath('appData')
           : process.env.HOME);
-      appdataloc = appdataloc + '/.Nexus/';
+      appdataloc = appdataloc + '/Nexus Wallet/';
       let incominghistoryfile = JSON.parse(
         fs.readFileSync(appdataloc + 'historydata.json', 'utf8')
       );
@@ -1386,12 +1390,15 @@ class Transactions extends Component {
     this.setState({
       needsHistorySave: false,
     });
+
+    const electronapp =
+      require('electron').app || require('electron').remote.app;
     let appdataloc =
       process.env.APPDATA ||
       (process.platform == 'darwin'
-        ? process.env.HOME + 'Library/Preferences'
+        ? electronapp.getPath('appData')
         : process.env.HOME);
-    appdataloc = appdataloc + '/.Nexus/';
+    appdataloc = appdataloc + '/Nexus Wallet/';
 
     fs.writeFile(
       appdataloc + 'historydata.json',

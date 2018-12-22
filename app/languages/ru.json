@@ -93,6 +93,7 @@
   "transactions.Pending": "(В ожидании)",
   "transactions.NoRowsFound": "Нет строк найдено",
   "transactions.AllAccounts": "Все аккаунты",
+  "transactions.PENDINGTR": "В ожидании сделки",
 
   "Market.Information": "Информация о рынке",
   "Market.Refreash": "обновление",
@@ -335,6 +336,9 @@
   "ToolTip.RecentDatabaseExtracting": "Извлечение последней базы данных",
   "ToolTip.ForkBlock": "Шаг назад Количество блоков",
   "ToolTip.MinimumConfirmations": "Blank",
+  "ToolTip.ConnectionFailure": "Ошибка подключения",
+
+  "ToolTip.TryAgain": "Попробуйте снова?",
 
   "Alert.Received": "Полученная транзакция",
   "Alert.Sent": "Отправленная транзакция",
@@ -367,6 +371,7 @@
   "Alert.AccountsAreTheSame": "Счета одинаковые",
   "Alert.NoSecondAccountChosen": "Второй аккаунт не выбран",
   "Alert.InsufficientFunds": "Недостаточно средств",
+  "Alert.nodefaultname": "Аккаунт не может быть назван * или по умолчанию",
 
   "Cp.AC1": "Цвет акцента 1",
   "Cp.AC2": "Цвет акцента 2",

@@ -282,9 +282,7 @@ class Overview extends Component {
           this.props.connections !== undefined &&
           previousprops.connections !== undefined
         ) {
-          if (this.props.connections != 0 && previousprops.connections != 0) {
             this.reDrawEverything();
-          }
         }
       }
     }

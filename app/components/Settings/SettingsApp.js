@@ -243,10 +243,8 @@ class SettingsApp extends Component {
     if (parseFloat(TxFee) > 0) {
       RPC.PROMISE('settxfee', [parseFloat(TxFee)]);
       this.props.OpenModal('Transaction Fee Set');
-      setTimeout(() => this.props.CloseModal(), 3000);
     } else {
       this.props.OpenErrorModal('Invalid Transaction Fee');
-      setTimeout(() => this.props.CloseModal(), 3000);
     }
   }
 
@@ -332,7 +330,6 @@ class SettingsApp extends Component {
     ]).then(payload => {
       this.props.CloseModal4();
       this.props.OpenModal('Wallet Backup');
-      setTimeout(() => this.props.CloseModal(), 3000);
     });
     console.log(this.props.settings.Folder);
   }

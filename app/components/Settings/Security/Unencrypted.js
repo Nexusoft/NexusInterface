@@ -21,7 +21,6 @@ const SecuritySettings = styled.div({
   alignItems: 'flex-start',
 });
 
-// React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
     ...state.common,
@@ -46,12 +45,10 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Unencrypted extends Component {
-  // React Method (Life cycle hook)
   componentWillUnmount() {
     this.props.wipe();
   }
 
-  // Mandatory React method
   render() {
     if (this.props.connections === undefined) {
       return (
@@ -77,7 +74,6 @@ class Unencrypted extends Component {
   }
 }
 
-// Mandatory React-Redux method
 export default connect(
   mapStateToProps,
   mapDispatchToProps

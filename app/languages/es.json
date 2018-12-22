@@ -92,6 +92,7 @@
   "transactions.Pending": "(Pendiente)",
   "transactions.NoRowsFound": "No se encontraron filas",
   "transactions.AllAccounts": "Todas las cuentas",
+  "transactions.PENDINGTR": "TRANSACCIÓN PENDIENTE",
 
   "Market.Information": "Información de mercado",
   "Market.Refreash": "Actualizar datos de mercado",
@@ -332,6 +333,9 @@
   "ToolTip.RecentDatabaseDownloading": "Descarga de base de datos recientes",
   "ToolTip.PleaseWait": "Por favor espera...",
   "ToolTip.RecentDatabaseExtracting": "Extracción reciente de la base de datos",
+  "ToolTip.ConnectionFailure": "Fallo de conexión",
+
+  "ToolTip.TryAgain": "¿Inténtalo de nuevo?",
 
   "Alert.Received": "Transacción recibida",
   "Alert.Sent": "Transacción enviada",
@@ -364,6 +368,7 @@
   "Alert.NoSecondAccountChosen": "Ninguna segunda cuenta elegida",
   "Alert.InsufficientFunds": "Fondos insuficientes",
   "Alert.CoreRestarting": "Reinicio del núcleo",
+  "Alert.nodefaultname": "La cuenta no puede ser nombrada * o por defecto",
 
   "Cp.AC1": "Color de Acento 1",
   "Cp.AC2": "Color de acento 2",

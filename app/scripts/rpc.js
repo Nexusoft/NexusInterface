@@ -170,6 +170,7 @@ export const PROMISE = (cmd, args) => {
       }
       if (ResponseObject.status == 401) {
         // console.error(ResponseObject.response)
+        reject('Bad Usernam and Password');
       }
       if (ResponseObject.status == 500) {
         console.log(JSON.parse(ResponseObject.responseText));

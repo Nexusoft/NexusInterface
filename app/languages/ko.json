@@ -92,7 +92,7 @@
   "transactions.Pending": "(대기 중)",
   "transactions.NoRowsFound": "행이 없습니다.",
   "transactions.AllAccounts": "모든 계정",
-
+  "transactions.PENDINGTR": "보류중인 거래",
   "Market.Information": "시장 정보",
   "Market.Refreash": "시장 데이터 새로 고침",
 
@@ -325,6 +325,9 @@
   "ToolTip.Detach": "지갑을 종료 할 때 데이터베이스 분리",
   "ToolTip.RenderGlobe": "개요 페이지에서 지구본 렌더링",
   "ToolTip.ForkBlock": "블록의 양을 뒤로 젖히십시오.",
+  "ToolTip.ConnectionFailure": "연결 실패",
+
+  "ToolTip.TryAgain": "다시 시도하십시오.",
 
   "ToolTip.DbOption": "최신 버전의 데이터베이스를 다운로드하여 동기화에 소요되는 시간을 단축 하시겠습니까?",
   "ToolTip.BootStrapIt": "예, 부트 스트랩 해 보겠습니다.",
@@ -364,6 +367,7 @@
   "Alert.AccountsAreTheSame": "계정은 동일합니다.",
   "Alert.NoSecondAccountChosen": "두 번째 계정이 선택되지 않았습니다.",
   "Alert.InsufficientFunds": "불충분 한 자금",
+  "Alert.nodefaultname": "계정 이름은 * 또는 기본값 일 수 없습니다.",
 
   "Cp.AC1": "악센트 색상 1",
   "Cp.AC2": "악센트 색상 2",

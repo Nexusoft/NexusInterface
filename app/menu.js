@@ -66,7 +66,9 @@ export default class MenuBuilder {
                   console.log(payload);
                 });
             } else {
-              self.props.OpenModal('Manual Daemon Mode active invalid command');
+              RPC.PROMISE('stop', []).then(() => {
+                self.props.clearOverviewVariables();
+              });
             }
           },
         },
@@ -80,6 +82,12 @@ export default class MenuBuilder {
             self.props.clearOverviewVariables();
             self.props.OpenModal('Closing Nexus');
             remote.getCurrentWindow().close();
+          },
+        },
+        {
+          label: 'About',
+          click() {
+            self.props.history.push('/About');
           },
         },
       ],
@@ -114,9 +122,6 @@ export default class MenuBuilder {
               BackupDir + '/NexusBackup_' + now + '.dat',
             ]).then(() => {
               self.props.OpenModal('Wallet Backup');
-              setTimeout(() => {
-                self.props.CloseModal();
-              }, 3000);
             });
           },
         },
@@ -142,6 +147,11 @@ export default class MenuBuilder {
       label: 'Edit',
       submenu: [
         {
+          label: 'Cut',
+          accelerator: 'CmdOrCtrl+X',
+          role: 'cut',
+        },
+        {
           label: 'Copy',
           accelerator: 'CmdOrCtrl+C',
           role: 'copy',
@@ -150,11 +160,6 @@ export default class MenuBuilder {
           label: 'Paste',
           accelerator: 'CmdOrCtrl+V',
           role: 'paste',
-        },
-        {
-          label: 'Cut',
-          accelerator: 'CmdOrCtrl+X',
-          role: 'cut',
         },
       ],
     };
@@ -203,9 +208,6 @@ export default class MenuBuilder {
               //configuration.BootstrapRecentDatabase(self);
             } else {
               self.props.OpenModal('Please let the daemon start.');
-              setTimeout(() => {
-                self.props.CloseModal();
-              }, 3000);
             }
           },
         },
@@ -237,20 +239,21 @@ export default class MenuBuilder {
     const subMenuHelp = {
       label: 'Help',
       submenu: [
+        // {
+        //   label: 'About',
+        //   click() {
+        //     self.props.history.push('/About');
+        //   },
+        // },
+
         {
-          label: 'About',
-          click() {
-            self.props.history.push('/About');
-          },
-        },
-        {
-          label: 'Website',
+          label: 'Nexus Earth Website',
           click() {
             shell.openExternal('http://nexusearth.com');
           },
         },
         {
-          label: 'Github',
+          label: 'Nexus Git Repository',
           click() {
             shell.openExternal('http://github.com/Nexusoft');
           },
@@ -304,9 +307,6 @@ export default class MenuBuilder {
                 BackupDir + '/NexusBackup_' + now + '.dat',
               ]).then(() => {
                 self.props.OpenModal('Wallet Backup');
-                setTimeout(() => {
-                  self.props.CloseModal();
-                }, 3000);
               });
             },
           },
@@ -338,6 +338,7 @@ export default class MenuBuilder {
               core.start();
             },
           },
+
           {
             label: 'Stop Daemon',
             click() {
@@ -408,9 +409,6 @@ export default class MenuBuilder {
                 //configuration.BootstrapRecentDatabase(self);
               } else {
                 self.props.OpenModal('Please let the daemon start.');
-                setTimeout(() => {
-                  self.props.CloseModal();
-                }, 3000);
               }
             },
           },
@@ -450,13 +448,13 @@ export default class MenuBuilder {
             },
           },
           {
-            label: 'Website',
+            label: 'Nexus Earth Website',
             click() {
               shell.openExternal('http://nexusearth.com');
             },
           },
           {
-            label: 'Github',
+            label: 'Nexus Git Repository',
             click() {
               shell.openExternal('http://github.com/Nexusoft');
             },

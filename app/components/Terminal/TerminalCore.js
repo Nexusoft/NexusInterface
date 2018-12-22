@@ -45,14 +45,9 @@ class TerminalCore extends Component {
     if (this.props.settings.manualDaemon == true) {
       return;
     }
-    let datadir;
-    if (process.platform === 'win32') {
-      datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
-    } else if (process.platform === 'darwin') {
-      datadir = process.env.HOME + '/Nexus_Tritium_Data';
-    } else {
-      datadir = process.env.HOME + '/.Nexus_Tritium_Data';
-    }
+    let datadir = configuration.GetCoreDataDir();
+    const electronapp =
+      require('electron').app || require('electron').remote.app;
 
     var debugfile;
     if (process.platform === 'win32') {

@@ -88,9 +88,6 @@ export default class ChangePassword extends Component {
       })
       .catch(e => {
         this.props.OpenErrorModal(e);
-        setTimeout(() => {
-          this.props.CloseModal();
-        }, 3000);
       });
   }
 

@@ -33,16 +33,10 @@ export default class ImportPrivKey extends Component {
             })
             .catch(e => {
               this.props.OpenErrorModal(e);
-              setTimeout(() => {
-                this.props.CloseModal();
-              }, 3000);
             });
         })
         .catch(e => {
           this.props.OpenErrorModal(e);
-          setTimeout(() => {
-            this.props.CloseModal();
-          }, 3000);
         });
     } else if (!label) {
       acctname.focus();

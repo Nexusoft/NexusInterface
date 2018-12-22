@@ -93,6 +93,7 @@
   "transactions.Pending": "(Steht aus)",
   "transactions.NoRowsFound": "Keine Zeilen gefunden",
   "transactions.AllAccounts": "Alle Konten",
+  "transactions.PENDINGTR": "AUSSTEHENDER VORGANG",
 
   "Market.Information": "Marktinformationen",
   "Market.Refreash": "Marktdaten aktualisieren",
@@ -340,6 +341,10 @@
   "ToolTip.PleaseWait": "Warten Sie mal...",
   "ToolTip.RecentDatabaseExtracting": "Letzte Datenbankextraktion",
   "ToolTip.MinimumConfirmations": "Blank",
+  "ToolTip.ConnectionFailure": "Verbindungsfehler",
+
+  "ToolTip.TryAgain": "Versuchen Sie es nochmal?",
+
   "Alert.Received": "Transaktion erhalten",
   "Alert.Sent": "Transaktion gesendet",
   "Alert.Genesis": "Genesis Transaktion",
@@ -372,6 +377,7 @@
   "Alert.AccountsAreTheSame": "Konten sind die gleichen",
   "Alert.NoSecondAccountChosen": "Kein zweites Konto ausgewählt",
   "Alert.InsufficientFunds": "Unzureichende Mittel",
+  "Alert.nodefaultname": "Das Konto kann nicht * oder Standard sein",
 
   "Cp.AC1": "Akzentfarbe 1",
   "Cp.AC2": "Akzentfarbe 2",

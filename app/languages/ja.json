@@ -92,6 +92,7 @@
   "transactions.Pending": "（保留中)",
   "transactions.NoRowsFound": "行が見つかりません",
   "transactions.AllAccounts": "すべてのアカウント",
+  "transactions.PENDINGTR": "保留中の取引",
 
   "Market.Information": "市場情報",
   "Market.Refreash": "マーケットデータをリフレッシュする",
@@ -337,6 +338,9 @@
   "ToolTip.RecentDatabaseExtracting": "最近のデータベース抽出",
   "ToolTip.ForkBlock": "ステップバックブロック量",
   "ToolTip.MinimumConfirmations": "Blank",
+  "ToolTip.ConnectionFailure": "接続障害",
+
+  "ToolTip.TryAgain": "再試行する？",
 
   "Alert.Received": "トランザクションの受領",
   "Alert.Sent": "トランザクション送信済み",
@@ -369,6 +373,7 @@
   "Alert.AccountsAreTheSame": "アカウントは同じです",
   "Alert.NoSecondAccountChosen": "選択された第2のアカウント",
   "Alert.InsufficientFunds": "残高不足",
+  "Alert.nodefaultname": "アカウント名は*またはデフォルトにすることはできません",
 
   "Cp.AC1": "アクセントカラー1",
   "Cp.AC2": "アクセントカラー2",

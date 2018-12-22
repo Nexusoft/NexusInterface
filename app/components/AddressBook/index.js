@@ -267,11 +267,6 @@ class AddressBook extends Component {
       this.props.ToggleModal();
     }
     this.props.OpenModal('Copied');
-    setTimeout(() => {
-      if (this.props.open) {
-        this.props.CloseModal();
-      }
-    }, 3000);
   }
 
   MyAddressesTable() {
@@ -660,7 +655,7 @@ class AddressBook extends Component {
             this.loadMyAccounts();
           })
           .catch(e => {
-            alert(e);
+            this.props.OpenErrorModal(e);
           });
       } else {
         this.props.OpenModal('Account cannot be named * or default');
@@ -672,7 +667,7 @@ class AddressBook extends Component {
           this.loadMyAccounts();
         })
         .catch(e => {
-          alert(e);
+          this.props.OpenErrorModal(e);
         });
     }
   }

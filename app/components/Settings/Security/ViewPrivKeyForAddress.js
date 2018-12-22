@@ -27,9 +27,6 @@ export default class ViewPrivKeyForAddress extends Component {
             e = e.replace(address + ' ', '');
           }
           this.props.OpenErrorModal(e);
-          setTimeout(() => {
-            this.props.CloseModal();
-          }, 3000);
         });
     } else {
       addressInput.focus();
@@ -45,9 +42,6 @@ export default class ViewPrivKeyForAddress extends Component {
     document.execCommand('Copy', false, null);
     output.type = 'password';
     this.props.OpenModal('Copied');
-    setTimeout(() => {
-      this.props.CloseModal();
-    }, 3000);
   }
 
   render() {

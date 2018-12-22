@@ -128,6 +128,17 @@ configuration.Rename = function(oldFilename, newFilename) {
   }
 };
 
+configuration.Start = function() {
+  var fs = require('fs');
+  if (!fs.existsSync(this.GetAppDataDirectory())) {
+    fs.mkdirSync(this.GetAppDataDirectory());
+  }
+
+  if (!fs.existsSync(this.GetAppResourceDir())) {
+    fs.mkdirSync(this.GetAppResourceDir());
+  }
+};
+
 //
 // GetAppDataDirectory: Get the application data directory
 //
@@ -143,17 +154,31 @@ configuration.GetAppDataDirectory = function() {
       app
         .getPath('appData')
         .replace(' ', `\ `)
-        .replace('/Electron/', app.getName()),
-      app.getName()
+        .replace('/Electron/', ''),
+      'Nexus_Wallet_BETA_v0.8.4'
     );
   } else {
     AppDataDirPath = path.join(
-      app.getPath('appData').replace('/Electron/', app.getName()),
-      app.getName()
+      app.getPath('appData').replace('/Electron/', ''),
+      'Nexus_Wallet_BETA_v0.8.4'
     );
   }
 
   return AppDataDirPath;
+};
+
+configuration.GetCoreDataDir = function() {
+  var datadir = '';
+
+  //Set data directory by OS for automatic daemon mode
+  if (process.platform === 'win32') {
+    var datadir = process.env.APPDATA + '\\Nexus_Core_Data_BETA_v0.8.4';
+  } else if (process.platform === 'darwin') {
+    var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v0.8.4';
+  } else {
+    var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v0.8.4';
+  }
+  return datadir;
 };
 
 configuration.GetAppResourceDir = function() {
@@ -229,10 +254,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
       .getGlobal('core')
       .stop()
       .then(() => {
-        setTimeout(() => {
-          self.props.CloseModal();
-        }, 3000);
-
+        self.props.clearOverviewVariables();
         let tarGzLocation = path.join(
           this.GetAppDataDirectory(),
           'recent.tar.gz'
@@ -244,15 +266,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
           });
         }
 
-        let datadir = '';
-
-        if (process.platform === 'win32') {
-          datadir = process.env.APPDATA + '\\Nexus_Tritium_Data';
-        } else if (process.platform === 'darwin') {
-          datadir = process.env.HOME + '/Nexus_Tritium_Data';
-        } else {
-          datadir = process.env.HOME + '/.Nexus_Tritium_Data';
-        }
+        let datadir = configuration.GetCoreDataDir();
 
         const url =
           'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
@@ -298,10 +312,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
               console.log('Direct bootstrap');
             }
             if (err) {
-              self.props.OpenModal(result.error);
-              setTimeout(() => {
-                self.props.CloseModal();
-              }, 3000);
+              self.props.OpenErrorModal(result.error);
             }
             console.log(err, result);
             electron.remote.getGlobal('core').start();
@@ -309,23 +320,51 @@ configuration.BootstrapRecentDatabase = async function(self) {
         );
       })
       .catch(e => {
-        self.props.OpenModal(e);
-        setTimeout(() => {
-          self.props.CloseModal();
-        }, 3000);
+        self.props.OpenErrorModal(e);
       });
+
+    let prevDownloadPercentArr = [];
 
     let percentChecker = setInterval(() => {
       fs.stat(
         path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
         (err, stats) => {
           console.log((stats.size / totalDownloadSize) * 100);
-          self.props.setPercentDownloaded(
-            (stats.size / totalDownloadSize) * 100
-          );
+          let sample = (stats.size / totalDownloadSize) * 100;
+          prevDownloadPercentArr.push(sample);
+          let checkarr = prevDownloadPercentArr.filter(ele => {
+            if (ele === self.props.percentDownloaded) {
+              return ele;
+            }
+          });
+
+          if (checkarr.length > 20 && self.props.percentDownloaded < 100) {
+            prevDownloadPercentArr = [];
+            console.log('Connection Failure');
+            self.props.setPercentDownloaded('Connection Failure');
+            clearInterval(percentChecker);
+          } else {
+            self.props.setPercentDownloaded(
+              (stats.size / totalDownloadSize) * 100
+            );
+          }
         }
       );
+
+      let checkarr = prevDownloadPercentArr.filter(ele => {
+        if (ele === self.props.percentDownloaded) {
+          return ele;
+        }
+      });
+
+      if (checkarr.length > 20 && self.props.percentDownloaded < 100) {
+        prevDownloadPercentArr = [];
+        console.log('Connection Failure');
+        self.props.setPercentDownloaded('Connection Failure');
+        clearInterval(percentChecker);
+      }
     }, 3000);
+
     electron.remote.getGlobal('core').on('starting', () => {
       self.CloseBootstrapModalAndSaveSettings();
       clearInterval(percentChecker);
@@ -343,4 +382,166 @@ configuration.BootstrapRecentDatabase = async function(self) {
       }
     });
   });
+};
+
+configuration.bootstrapTryAgain = async function(self) {
+  const fs = require('fs');
+  const path = require('path');
+  const electron = require('electron');
+  const tarball = require('tarball-extract');
+  const moveFile = require('move-file');
+
+  let totalDownloadSize = await configuration.GetBootstrapSize();
+
+  let now = new Date()
+    .toString()
+    .slice(0, 24)
+    .split(' ')
+    .reduce((a, b) => {
+      return a + '_' + b;
+    })
+    .replace(/:/g, '_');
+  let BackupDir = process.env.HOME + '/NexusBackups';
+  if (process.platform === 'win32') {
+    BackupDir = process.env.USERPROFILE + '/NexusBackups';
+    BackupDir = BackupDir.replace(/\\/g, '/');
+  }
+  if (self.props.settings.Folder !== BackupDir) {
+    BackupDir = self.props.settings.Folder;
+  }
+
+  let ifBackupDirExists = fs.existsSync(BackupDir);
+  if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+    fs.mkdirSync(BackupDir);
+  }
+
+  electron.remote
+    .getGlobal('core')
+    .stop()
+    .then(() => {
+      self.props.clearOverviewVariables();
+      let tarGzLocation = path.join(
+        this.GetAppDataDirectory(),
+        'recent.tar.gz'
+      );
+      if (fs.existsSync(tarGzLocation)) {
+        fs.unlink(tarGzLocation, err => {
+          if (err) throw err;
+          console.log('recent.tar.gz was deleted');
+        });
+      }
+
+      let datadir = configuration.GetCoreDataDir();
+
+      const url = 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
+      tarball.extractTarballDownload(url, tarGzLocation, datadir, {}, function(
+        err,
+        result
+      ) {
+        fs.stat(
+          path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
+          (stat, things) => console.log(stat, things)
+        );
+        try {
+          let recentContents = fs.readdirSync(path.join(datadir, 'recent'));
+
+          for (let i = 0; i < recentContents.length; i++) {
+            const element = recentContents[i];
+            if (
+              fs.statSync(path.join(datadir, 'recent', element)).isDirectory()
+            ) {
+              let newcontents = fs.readdirSync(
+                path.join(datadir, 'recent', element)
+              );
+
+              for (let i = 0; i < newcontents.length; i++) {
+                const deeperEle = newcontents[i];
+                moveFile.sync(
+                  path.join(datadir, 'recent', element, deeperEle),
+                  path.join(datadir, element, deeperEle)
+                );
+              }
+            } else {
+              moveFile.sync(
+                path.join(datadir, 'recent', element),
+                path.join(datadir, element)
+              );
+            }
+          }
+        } catch (error) {
+          console.log('Direct bootstrap');
+        }
+        if (err) {
+          console.log(result.error, err);
+          self.props.OpenErrorModal('No Connection');
+        }
+        console.log(err, result);
+        electron.remote.getGlobal('core').start();
+      });
+
+      let prevDownloadPercentArr = [];
+
+      let percentChecker = setInterval(() => {
+        if (
+          fs.existsSync(
+            path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz')
+          )
+        ) {
+          fs.stat(
+            path.join(configuration.GetAppDataDirectory(), 'recent.tar.gz'),
+            (err, stats) => {
+              console.log((stats.size / totalDownloadSize) * 100);
+              let sample = (stats.size / totalDownloadSize) * 100;
+              prevDownloadPercentArr.push(sample);
+              let checkarr = prevDownloadPercentArr.filter(ele => {
+                if (ele === self.props.percentDownloaded) {
+                  return ele;
+                }
+              });
+
+              if (checkarr.length > 20 && self.props.percentDownloaded < 100) {
+                prevDownloadPercentArr = [];
+                console.log('Connection Failure');
+                self.props.setPercentDownloaded('Connection Failure');
+                clearInterval(percentChecker);
+              } else {
+                self.props.setPercentDownloaded(
+                  (stats.size / totalDownloadSize) * 100
+                );
+              }
+            }
+          );
+        }
+
+        let checkarr = prevDownloadPercentArr.filter(ele => {
+          if (ele === self.props.percentDownloaded) {
+            return ele;
+          }
+        });
+
+        if (checkarr.length > 20 && self.props.percentDownloaded < 100) {
+          prevDownloadPercentArr = [];
+          console.log('Connection Failure');
+          self.props.setPercentDownloaded('Connection Failure');
+          clearInterval(percentChecker);
+        }
+      }, 3000);
+
+      electron.remote.getGlobal('core').on('starting', () => {
+        self.CloseBootstrapModalAndSaveSettings();
+        clearInterval(percentChecker);
+        self.props.setPercentDownloaded(0);
+        self.CloseBootstrapModalAndSaveSettings();
+        let tarGzLocation = path.join(
+          this.GetAppDataDirectory(),
+          'recent.tar.gz'
+        );
+        if (fs.existsSync(tarGzLocation)) {
+          fs.unlink(tarGzLocation, err => {
+            if (err) throw err;
+            console.log('recent.tar.gz was deleted');
+          });
+        }
+      });
+    });
 };
