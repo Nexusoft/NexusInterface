@@ -35,15 +35,10 @@ const TabLink = styled(NavLink)({
   },
 });
 
-const TabIcon = styled(Icon)({
-  height: '1.25em',
-  marginRight: '0.75em',
-});
-
 export const TabItem = ({ link, icon, text, isActive }) => (
   <TabLi>
     <TabLink to={link} isActive={isActive}>
-      {!!icon && <TabIcon icon={icon} />}
+      {!!icon && <Icon spaceRight icon={icon} />}
       {text}
     </TabLink>
   </TabLi>

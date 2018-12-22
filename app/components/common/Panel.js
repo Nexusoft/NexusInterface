@@ -47,12 +47,6 @@ const PanelTitle = styled.h3({
   margin: 0,
 });
 
-const TitleIcon = styled(Icon)({
-  width: 28,
-  height: 28,
-  marginRight: '.3em',
-});
-
 const PanelBody = styled.div(
   {
     backgroundColor: fade(darken(colors.dark, 0.2), 0.2),
@@ -80,7 +74,7 @@ const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
   <PanelWrapper>
     <PanelHeader>
       <PanelTitle>
-        {!!icon && <TitleIcon icon={icon} width={28} height={28} />}
+        {!!icon && <Icon spaceRight icon={icon} width={28} height={28} />}
         <span className="v-align">{title}</span>
       </PanelTitle>
       {controls}
