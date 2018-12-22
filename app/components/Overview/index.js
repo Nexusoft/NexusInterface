@@ -28,7 +28,6 @@ import ContextMenuBuilder from 'contextmenu';
 import * as helpers from 'scripts/helper.js';
 import configuration from 'api/configuration';
 import { colors, timing, consts } from 'styles';
-import { fade, lighten } from 'utils/colors';
 
 // Internal Local Dependencies
 import NetworkGlobe from './NetworkGlobe';
@@ -282,7 +281,7 @@ class Overview extends Component {
           this.props.connections !== undefined &&
           previousprops.connections !== undefined
         ) {
-            this.reDrawEverything();
+          this.reDrawEverything();
         }
       }
     }
@@ -755,8 +754,8 @@ class Overview extends Component {
           </Stat>
 
           <Stat
-            as={connections ? Link : undefined}
-            to={connections ? '/Market' : undefined}
+            as={displayNXSvalues[0] ? Link : undefined}
+            to={displayNXSvalues[0] ? '/Market' : undefined}
           >
             <div>
               <StatLabel>
@@ -778,8 +777,8 @@ class Overview extends Component {
           </Stat>
 
           <Stat
-            as={connections ? Link : undefined}
-            to={connections ? '/Market' : undefined}
+            as={displayNXSvalues[0] ? Link : undefined}
+            to={displayNXSvalues[0] ? '/Market' : undefined}
           >
             <div>
               <StatLabel>
@@ -801,8 +800,8 @@ class Overview extends Component {
           </Stat>
 
           <Stat
-            as={connections ? Link : undefined}
-            to={connections ? '/Market' : undefined}
+            as={displayNXSvalues[0] ? Link : undefined}
+            to={displayNXSvalues[0] ? '/Market' : undefined}
           >
             <div>
               <StatLabel>
