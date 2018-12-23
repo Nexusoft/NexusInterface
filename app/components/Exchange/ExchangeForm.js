@@ -8,7 +8,7 @@ import FormField from 'components/common/FormField';
 import TextField from 'components/common/TextField';
 import Button from 'components/common/Button';
 import FieldSet from 'components/common/FieldSet';
-import ComboBox from 'components/common/ComboBox';
+import Select from 'components/common/Select';
 
 const ExchangeFormWrapper = styled.div({
   display: 'grid',
@@ -66,7 +66,7 @@ export default class ExchangeForm extends Component {
         <FieldSet
           legend={<FormattedMessage id="Exchange.Send" defaultMessage="Send" />}
         >
-          <ComboBox
+          <Select
             value={this.props.from}
             onChange={e => this.toFromHandler(e, 'from')}
             options={this.optionbuilder()}
@@ -117,7 +117,7 @@ export default class ExchangeForm extends Component {
             <FormattedMessage id="Exchange.Receive" defaultMessage="Receive" />
           }
         >
-          <ComboBox
+          <Select
             onChange={e => this.toFromHandler(e, 'to')}
             value={this.props.to}
             options={this.optionbuilder()}

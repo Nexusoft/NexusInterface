@@ -22,7 +22,7 @@ import { remote as dialog } from 'electron';
 import SettingsField from 'components/common/SettingsField';
 import Button from 'components/common/Button';
 import TextField from 'components/common/TextField';
-import ComboBox from 'components/common/ComboBox';
+import Select from 'components/common/Select';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -572,7 +572,7 @@ class SettingsApp extends Component {
               />
             }
           >
-            <ComboBox
+            <Select
               value={this.props.settings.fiatCurrency}
               onChange={e => this.OnFiatCurrencyChange(e)}
               style={{ maxWidth: 260 }}

@@ -35,7 +35,7 @@ const TabLink = styled(NavLink)({
   },
 });
 
-export const TabItem = ({ link, icon, text, isActive }) => (
+const Tab = ({ link, icon, text, isActive }) => (
   <TabLi>
     <TabLink to={link} isActive={isActive}>
       {!!icon && <Icon spaceRight icon={icon} />}
@@ -44,11 +44,13 @@ export const TabItem = ({ link, icon, text, isActive }) => (
   </TabLi>
 );
 
-export const Tabs = styled.ul({
+const TabBar = styled.ul({
   display: 'flex',
   justifyContent: 'space-between',
   margin: '0 0 1em',
   padding: 0,
 });
 
-export default Tabs;
+Tab.Bar = TabBar;
+
+export default Tab;

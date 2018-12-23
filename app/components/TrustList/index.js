@@ -13,7 +13,7 @@ import googleanalytics from 'scripts/googleanalytics';
 // Internal Global Dependencies
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
-import WaitingText from 'components/common/WaitingText';
+import WaitingMessage from 'components/common/WaitingMessage';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { FormattedMessage } from 'react-intl';
@@ -107,13 +107,13 @@ class List extends Component {
       >
         {this.props.isInSync === false ||
         this.props.connections === undefined ? (
-          <WaitingText>
+          <WaitingMessage>
             <FormattedMessage
               id="TrustList.SyncMsg"
               defaultMessage="Please let your wallet sync with the network"
             />
             ...
-          </WaitingText>
+          </WaitingMessage>
         ) : (
           <div id="table-wrap">
             <table>

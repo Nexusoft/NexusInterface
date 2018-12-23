@@ -17,7 +17,7 @@ import Loader from './Loader';
 import Overview from './Overview';
 import Header from './Header';
 import Navigation from './Navigation';
-import SendRecieve from './SendRecieve';
+import SendPage from './SendPage';
 import Transactions from './Transactions';
 import Market from './Market';
 import AddressBook from './AddressBook';
@@ -65,7 +65,7 @@ export default class Root extends Component {
               <Main>
                 <Switch>
                   <Route exact path="/" component={Overview} />
-                  <Route exact path="/SendRecieve" component={SendRecieve} />
+                  <Route exact path="/SendPage" component={SendPage} />
                   <Route exact path="/Transactions" component={Transactions} />
                   <Route exact path="/Market" component={Market} />
                   <Route exact path="/AddressBook" component={AddressBook} />

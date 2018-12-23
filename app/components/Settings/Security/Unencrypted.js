@@ -9,7 +9,7 @@ import styled from '@emotion/styled';
 // Internal
 import styles from './style.css';
 import * as TYPE from 'actions/actiontypes';
-import WaitingText from 'components/common/WaitingText';
+import WaitingMessage from 'components/common/WaitingMessage';
 import EncryptWallet from './EncryptWallet';
 import ImportPrivKey from './ImportPrivKey';
 import ViewPrivKeyForAddress from './ViewPrivKeyForAddress';
@@ -52,13 +52,13 @@ class Unencrypted extends Component {
   render() {
     if (this.props.connections === undefined) {
       return (
-        <WaitingText>
+        <WaitingMessage>
           <FormattedMessage
             id="transactions.Loading"
             defaultMessage="Please wait for the Daemon to load"
           />
           ...
-        </WaitingText>
+        </WaitingMessage>
       );
     } else {
       return (

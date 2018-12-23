@@ -12,7 +12,7 @@ import { colors, timing, consts } from 'styles';
 // Minimum gap from the dropdown to the bottom edge of the screen
 const minScreenGap = 20;
 
-const ComboBoxControl = styled.div(
+const SelectControl = styled.div(
   {
     display: 'flex',
     alignItems: 'stretch',
@@ -139,7 +139,7 @@ const Option = styled.div(
   }
 );
 
-export default class ComboBox extends Component {
+export default class Select extends Component {
   state = {
     open: false,
     // Options dropdown's size and position
@@ -198,7 +198,7 @@ export default class ComboBox extends Component {
 
     return (
       <>
-        <ComboBoxControl
+        <SelectControl
           ref={el => (this.controlRef = el)}
           active={open}
           onClick={this.open}
@@ -214,7 +214,7 @@ export default class ComboBox extends Component {
           >
             <Arrow down width={12} height={8} />
           </Button>
-        </ComboBoxControl>
+        </SelectControl>
 
         {open && (
           <Overlay onBackgroundClick={this.close}>

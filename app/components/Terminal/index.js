@@ -11,7 +11,7 @@ import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
-import { Tabs, TabItem } from 'components/common/Tabs';
+import Tab from 'components/common/Tab';
 
 // Internal Local Dependencies
 import TerminalConsole from './TerminalConsole';
@@ -30,7 +30,7 @@ const TerminalWrapper = styled.div({
   justifyContent: 'space-between',
 });
 
-const TerminalTabs = styled(Tabs)({
+const TerminalTabBar = styled(Tab.Bar)({
   flexShrink: 0,
 });
 
@@ -73,8 +73,8 @@ class Terminal extends Component {
         bodyScrollable={false}
       >
         <TerminalWrapper>
-          <TerminalTabs>
-            <TabItem
+          <TerminalTabBar>
+            <Tab
               link={`${this.props.match.url}/Console`}
               icon={logoIcon}
               text={
@@ -84,7 +84,7 @@ class Terminal extends Component {
                 />
               }
             />
-            <TabItem
+            <Tab
               link={`${this.props.match.url}/Core`}
               icon={coreIcon}
               text={
@@ -94,7 +94,7 @@ class Terminal extends Component {
                 />
               }
             />
-          </TerminalTabs>
+          </TerminalTabBar>
 
           <Switch>
             <Redirect

@@ -9,7 +9,7 @@ import { css } from '@emotion/core';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
-import WaitingText from 'components/common/WaitingText';
+import WaitingMessage from 'components/common/WaitingMessage';
 import Button from 'components/common/Button';
 import TextField from 'components/common/TextField';
 import * as RPC from 'scripts/rpc';
@@ -326,13 +326,13 @@ class TerminalConsole extends Component {
   render() {
     if (this.props.connections === undefined) {
       return (
-        <WaitingText>
+        <WaitingMessage>
           <FormattedMessage
             id="transactions.Loading"
             defaultMessage="transactions.Loading"
           />
           ...
-        </WaitingText>
+        </WaitingMessage>
       );
     } else {
       return (

@@ -21,7 +21,7 @@ import Icon from 'components/common/Icon';
 import Button from 'components/common/Button';
 import TextField from 'components/common/TextField';
 import Panel from 'components/common/Panel';
-import WaitingText from 'components/common/WaitingText';
+import WaitingMessage from 'components/common/WaitingMessage';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
@@ -1233,13 +1233,13 @@ class AddressBook extends Component {
         </Modal>
 
         {this.props.connections === undefined ? (
-          <WaitingText>
+          <WaitingMessage>
             <FormattedMessage
               id="AddressBook.Loading"
               defaultMessage="Please wait for the daemon to load"
             />
             ...
-          </WaitingText>
+          </WaitingMessage>
         ) : (
           <div>
             {this.props.addressbook.length > 0 ? (

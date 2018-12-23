@@ -12,7 +12,7 @@ import * as RPC from 'scripts/rpc';
 import ContextMenuBuilder from 'contextmenu';
 import Panel from 'components/common/Panel';
 import Icon from 'components/common/Icon';
-import { Tabs, TabItem } from 'components/common/Tabs';
+import Tab from 'components/common/Tab';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -39,7 +39,7 @@ const SettingsWrapper = styled.div({
   justifyContent: 'space-between',
 });
 
-const SettingsTabs = styled(Tabs)({
+const SettingsTabBar = styled(Tab.Bar)({
   flexShrink: 0,
 });
 
@@ -93,8 +93,8 @@ class Settings extends Component {
         }
       >
         <SettingsWrapper>
-          <SettingsTabs>
-            <TabItem
+          <SettingsTabBar>
+            <Tab
               link={`${match.url}/App`}
               icon={logoIcon}
               text={
@@ -104,14 +104,14 @@ class Settings extends Component {
                 />
               }
             />
-            <TabItem
+            <Tab
               link={`${match.url}/Core`}
               icon={coreIcon}
               text={
                 <FormattedMessage id="Settings.Core" defaultMessage="Core" />
               }
             />
-            <TabItem
+            <Tab
               link={`${match.url}/${encrypted ? 'Security' : 'Unencrypted'}`}
               isActive={(m, location) =>
                 [
@@ -128,14 +128,14 @@ class Settings extends Component {
                 />
               }
             />
-            <TabItem
+            <Tab
               link={`${match.url}/Style`}
               icon={developerIcon}
               text={
                 <FormattedMessage id="Settings.Style" defaultMessage="Style" />
               }
             />
-          </SettingsTabs>
+          </SettingsTabBar>
 
           <SettingsContent>
             <Switch>

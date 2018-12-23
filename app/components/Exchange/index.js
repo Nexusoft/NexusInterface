@@ -12,7 +12,7 @@ import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import Panel from 'components/common/Panel';
-import { Tabs, TabItem } from 'components/common/Tabs';
+import Tab from 'components/common/Tab';
 import { GetSettings } from 'api/settings.js';
 import Icon from 'components/common/Icon';
 import * as RPC from 'scripts/rpc';
@@ -179,8 +179,8 @@ class Exchange extends Component {
           {this.modalContents()}
         </Modal>
 
-        <Tabs>
-          <TabItem
+        <Tab.Bar>
+          <Tab
             link={`${this.props.match.url}/Precise`}
             icon={bullseyeIcon}
             text={
@@ -190,12 +190,12 @@ class Exchange extends Component {
               />
             }
           />
-          <TabItem
+          <Tab
             link={`${this.props.match.url}/Fast`}
             icon={fastIcon}
             text={<FormattedMessage id="Exchange.Fast" defaultMessage="Fast" />}
           />
-        </Tabs>
+        </Tab.Bar>
 
         <Switch>
           <Redirect

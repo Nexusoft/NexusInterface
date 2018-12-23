@@ -62,8 +62,8 @@ const Navigation = () => (
         <FormattedMessage id="Footer.Overview" defaultMessage="Overview" />
       </NavItem>
 
-      <NavItem icon={sendIcon} to="/SendRecieve">
-        <FormattedMessage id="Footer.Send" defaultMessage="Send" />
+      <NavItem icon={sendIcon} to="/SendPage">
+        Send NXS
       </NavItem>
 
       <NavItem icon={transactionsIcon} to="/Transactions">

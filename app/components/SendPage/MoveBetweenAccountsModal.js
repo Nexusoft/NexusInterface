@@ -5,7 +5,7 @@ import Modal from 'react-responsive-modal';
 import styled from '@emotion/styled';
 
 // Internal
-import ComboBox from 'components/common/ComboBox';
+import Select from 'components/common/Select';
 import TextField from 'components/common/TextField';
 import FormField from 'components/common/FormField';
 import Button from 'components/common/Button';
@@ -109,7 +109,7 @@ export default class MoveBetweenAccountsModal extends Component {
                   defaultMessage="From Account"
                 />
               </label>
-              <ComboBox
+              <Select
                 value={this.props.MoveFromAccount}
                 onChange={this.props.updateMoveFromAccount}
                 options={[
@@ -132,7 +132,7 @@ export default class MoveBetweenAccountsModal extends Component {
                   defaultMessage="To Account"
                 />
               </label>
-              <ComboBox
+              <Select
                 value={this.props.MoveToAccount}
                 onChange={this.props.updateMoveToAccount}
                 options={[

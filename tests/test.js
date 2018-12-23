@@ -169,7 +169,7 @@ describe('Run Page Tests', function() {
       .waitUntilWindowLoaded()
       .pause(5000)
       .element('#navigation')
-      .element('a[href^="#/SendRecieve"]')
+      .element('a[href^="#/SendPage"]')
       .click()
       .pause(1000)
       .waitUntilTextExists('span', 'Queue', 50000);

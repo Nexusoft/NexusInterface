@@ -17,8 +17,8 @@ import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
 import Button from 'components/common/Button';
 import TextField from 'components/common/TextField';
-import ComboBox from 'components/common/ComboBox';
-import WaitingText from 'components/common/WaitingText';
+import Select from 'components/common/Select';
+import WaitingMessage from 'components/common/WaitingMessage';
 import FormField from 'components/common/FormField';
 import InputGroup from 'components/common/InputGroup';
 
@@ -172,7 +172,7 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-class SendRecieve extends Component {
+class SendPage extends Component {
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     this.getAccountData();
@@ -374,18 +374,18 @@ class SendRecieve extends Component {
         />
 
         {!this.props.isInSync || !this.props.connections ? (
-          <WaitingText>
+          <WaitingMessage>
             <FormattedMessage
               id="TrustList.SyncMsg"
               defaultMessage="Please wait for the daemon to load"
             />
             ...
-          </WaitingText>
+          </WaitingMessage>
         ) : (
           <div>
             <SendForm>
               <FormField connectLabel label="Send From">
-                <ComboBox
+                <Select
                   value={this.props.SelectedAccount}
                   onChange={this.props.AccountPicked}
                   options={[
@@ -529,4 +529,4 @@ class SendRecieve extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SendRecieve);
+)(SendPage);

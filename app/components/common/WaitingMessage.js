@@ -12,11 +12,11 @@ const breathe = keyframes`
   }
 `;
 
-const WaitingText = styled.div({
+const WaitingMessage = styled.div({
   textAlign: 'center',
   padding: '30px 0',
   fontSize: '1.2em',
   animation: `${breathe} 1.5s ease 0s infinite alternate`,
 });
 
-export default WaitingText;
+export default WaitingMessage;

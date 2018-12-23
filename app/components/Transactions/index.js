@@ -32,8 +32,8 @@ import styled from '@emotion/styled';
 // Internal
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
-import WaitingText from 'components/common/WaitingText';
-import ComboBox from 'components/common/ComboBox';
+import WaitingMessage from 'components/common/WaitingMessage';
+import Select from 'components/common/Select';
 import TextField from 'components/common/TextField';
 import FormField from 'components/common/FormField';
 import Button from 'components/common/Button';
@@ -561,7 +561,7 @@ class Transactions extends Component {
         account: this.state.walletTransactions[this.hoveringID].account,
         amount: this.state.walletTransactions[this.hoveringID].amount,
       });
-      this.context.router.history.push('/SendRecieve');
+      this.context.router.history.push('/SendPage');
     };
     //sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
 
@@ -1723,7 +1723,7 @@ class Transactions extends Component {
           />
         }
         controls={
-          <ComboBox
+          <Select
             value={this.props.selectedAccount}
             onChange={value => this.selectAccount(value)}
             options={this.accountChanger()}
@@ -1742,13 +1742,13 @@ class Transactions extends Component {
         </Modal>
 
         {this.props.connections === undefined ? (
-          <WaitingText>
+          <WaitingMessage>
             <FormattedMessage
               id="transactions.Loading"
               defaultMessage="Please wait for the daemon to load"
             />
             ...
-          </WaitingText>
+          </WaitingMessage>
         ) : (
           <div>
             <div
@@ -1786,7 +1786,7 @@ class Transactions extends Component {
                   />
                 }
               >
-                <ComboBox
+                <Select
                   value={this.state.categoryFilter}
                   onChange={this.transactiontypefiltercallback.bind(this)}
                   options={categories}
@@ -1818,7 +1818,7 @@ class Transactions extends Component {
                   />
                 }
               >
-                <ComboBox
+                <Select
                   value={this.state.displayTimeFrame}
                   onChange={this.transactionTimeframeChange.bind(this)}
                   options={timeFrames}
