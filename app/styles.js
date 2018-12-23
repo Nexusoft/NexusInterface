@@ -5,6 +5,7 @@ export const colors = {};
 colors.primary = '#00b7fa';
 colors.dark = '#0f1b1f';
 colors.light = '#e6e9eb';
+colors.darkerGray = mix(colors.dark, colors.light, 0.125);
 colors.darkGray = mix(colors.dark, colors.light, 0.25);
 colors.gray = mix(colors.dark, colors.light);
 colors.lightGray = mix(colors.dark, colors.light, 0.75);
@@ -14,6 +15,7 @@ colors.primaryContrast = '#fff';
 export const consts = {
   monoFontFamily: '"Roboto Mono", "Lucida Console", "Courier New", monospace',
   enhancedEaseOut: 'cubic-bezier(0, .9, .9, 1)',
+  inputHeightEm: 2.25,
 };
 
 export const timing = {

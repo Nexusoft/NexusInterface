@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import FormField from 'components/common/FormField';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import Button from 'components/common/Button';
 import FieldSet from 'components/common/FieldSet';
 import ComboBox from 'components/common/ComboBox';
@@ -85,7 +85,7 @@ export default class ExchangeForm extends Component {
                   />
                 }
               >
-                <TextBox
+                <TextField
                   placeholder={`${this.minAmount()} ${this.props.from} ${text}`}
                   value={this.props.ammount}
                   onChange={e => this.amountHandler(e.target.value)}
@@ -104,7 +104,7 @@ export default class ExchangeForm extends Component {
                 />
               }
             >
-              <TextBox
+              <TextField
                 value={this.props.refundAddress}
                 onChange={e => this.props.refundAddressSetter(e.target.value)}
                 required
@@ -135,7 +135,7 @@ export default class ExchangeForm extends Component {
               </span>
             }
           >
-            <TextBox
+            <TextField
               value={this.props.toAddress}
               onChange={e => this.props.toAddressSetter(e.target.value)}
               required

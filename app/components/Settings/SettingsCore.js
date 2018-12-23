@@ -17,7 +17,7 @@ import * as RPC from 'scripts/rpc';
 import ContextMenuBuilder from 'contextmenu';
 import SettingsField from 'components/common/SettingsField';
 import Button from 'components/common/Button';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -668,8 +668,7 @@ class SettingsCore extends Component {
               />
             }
           >
-            <TextBox
-              type="text"
+            <TextField
               defaultValue={this.initialValues.verboseLevel}
               size={3}
               onChange={this.updateVerboseLevel}
@@ -738,7 +737,7 @@ class SettingsCore extends Component {
                 />
               }
             >
-              <TextBox
+              <TextField
                 defaultValue={this.initialValues.manualDaemonUser}
                 size="12"
                 onChange={this.updateManualDaemonUser}
@@ -760,7 +759,7 @@ class SettingsCore extends Component {
                 />
               }
             >
-              <TextBox
+              <TextField
                 defaultValue={this.initialValues.manualDaemonPassword}
                 size="12"
                 onChange={this.updateManualDaemonPassword}
@@ -782,7 +781,7 @@ class SettingsCore extends Component {
                 />
               }
             >
-              <TextBox
+              <TextField
                 defaultValue={this.initialValues.manualDaemonIP}
                 size="12"
                 onChange={this.updateManualDaemonIP}
@@ -801,7 +800,7 @@ class SettingsCore extends Component {
                 />
               }
             >
-              <TextBox
+              <TextField
                 defaultValue={this.initialValues.manualDaemonPort}
                 size="5"
                 onChange={this.updateManualDaemonPort}
@@ -870,8 +869,7 @@ class SettingsCore extends Component {
                   />
                 }
               >
-                <TextBox
-                  type="text"
+                <TextField
                   defaultValue={this.initialValues.socks4ProxyIP}
                   size="12"
                   onChange={this.updateSocks4ProxyIP}
@@ -892,8 +890,7 @@ class SettingsCore extends Component {
                   />
                 }
               >
-                <TextBox
-                  type="text"
+                <TextField
                   defaultValue={this.initialValues.socks4ProxyPort}
                   size="3"
                   onChange={this.updateSocks4ProxyPort}
@@ -937,8 +934,7 @@ class SettingsCore extends Component {
                 />
               }
             >
-              <TextBox
-                type="text"
+              <TextField
                 size={30}
                 defaultValue={this.initialValues.manualDaemonDataDir}
                 onChange={this.updateManualDaemonDataDir}
@@ -968,7 +964,7 @@ class SettingsCore extends Component {
               />
             </Button>
             <Button
-              primary
+              skin="primary"
               onClick={e => {
                 e.preventDefault();
                 this.props.OpenModal2();

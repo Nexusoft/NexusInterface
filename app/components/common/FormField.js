@@ -16,11 +16,18 @@ const FormFieldWrapper = styled.div(
     }
 );
 
-const Label = styled.label({
-  display: 'block',
-  position: 'relative',
-  marginBottom: '.2em',
-});
+const Label = styled.label(
+  {
+    display: 'block',
+    position: 'relative',
+    marginBottom: '.2em',
+  },
+  ({ capitalize }) =>
+    capitalize && {
+      textTransform: 'uppercase',
+      fontSize: '.8em',
+    }
+);
 
 const Hint = styled.div({
   position: 'absolute',
@@ -66,6 +73,7 @@ class FormField extends Component {
   render() {
     const {
       label,
+      capitalizeLabel = true,
       tooltip,
       connectLabel,
       inputWrapped,
@@ -76,7 +84,10 @@ class FormField extends Component {
 
     return (
       <FormFieldWrapper {...rest}>
-        <Label htmlFor={connectLabel ? this.inputId : undefined}>
+        <Label
+          capitalize={capitalizeLabel}
+          htmlFor={connectLabel ? this.inputId : undefined}
+        >
           {label}
           {tooltip && (
             <div className="tooltip left" style={{ width: 226 }}>

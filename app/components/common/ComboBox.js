@@ -7,10 +7,8 @@ import { keyframes } from '@emotion/core';
 import Button from 'components/common/Button';
 import Arrow from 'components/common/Arrow';
 import Overlay from 'components/common/Overlay';
-import { colors, timing } from 'styles';
-import { start } from 'repl';
+import { colors, timing, consts } from 'styles';
 
-const defaultOptionHeight = '2.25em';
 // Minimum gap from the dropdown to the bottom edge of the screen
 const minScreenGap = 20;
 
@@ -18,25 +16,50 @@ const ComboBoxControl = styled.div(
   {
     display: 'flex',
     alignItems: 'stretch',
-    backgroundColor: colors.lighterGray,
-    color: colors.dark,
-    borderRadius: 2,
     cursor: 'pointer',
-    transition: `background-color ${timing.normal}`,
-
-    '&:hover': {
-      backgroundColor: colors.light,
-    },
+    height: consts.inputHeightEm + 'em',
   },
-  ({ opening }) =>
-    opening && {
-      backgroundColor: colors.light,
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0,
-    },
-  ({ optionHeight }) => ({
-    height: optionHeight || defaultOptionHeight,
-  })
+
+  ({ skin, active }) => {
+    switch (skin) {
+      case 'underline':
+        return {
+          backgroundColor: 'transparent',
+          color: colors.lighterGray,
+          borderBottom: `2px solid ${colors.gray}`,
+          transitionProperty: 'color, border-bottom-color',
+          transitionDuration: timing.normal,
+          '&:hover': {
+            color: colors.light,
+            borderBottomColor: colors.lightGray,
+          },
+          ...(active
+            ? {
+                color: colors.light,
+                borderBottomColor: colors.primary,
+              }
+            : null),
+        };
+      case 'filled-light':
+        return {
+          paddingLeft: '.8em',
+          backgroundColor: colors.lighterGray,
+          color: colors.dark,
+          borderRadius: 2,
+          transition: `background-color ${timing.normal}`,
+          '&:hover': {
+            backgroundColor: colors.light,
+          },
+          ...(active
+            ? {
+                backgroundColor: colors.light,
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+              }
+            : null),
+        };
+    }
+  }
 );
 
 const CurrentValue = styled.div({
@@ -45,13 +68,7 @@ const CurrentValue = styled.div({
   overflow: 'hidden',
   display: 'flex',
   alignItems: 'center',
-  paddingLeft: '.8em',
   whiteSpace: 'nowrap',
-});
-
-const ArrowButton = styled(Button)({
-  paddingTop: 0,
-  paddingBottom: 0,
 });
 
 const startingScaleDown = 2;
@@ -67,34 +84,59 @@ const vertExpand = keyframes`
   }
 `;
 
-const Options = styled.ul({
-  position: 'absolute',
-  overflowY: 'auto',
-  backgroundColor: colors.light,
-  padding: 0,
-  margin: 0,
-  transformOrigin: 'top',
-  animation: `${vertExpand} ${timing.quick} ease-out`,
-});
+const Options = styled.div(
+  {
+    position: 'absolute',
+    overflowY: 'auto',
+    padding: 0,
+    margin: 0,
+    transformOrigin: 'top',
+    animation: `${vertExpand} ${timing.quick} ease-out`,
+    boxShadow: `0 0 8px rgba(0,0,0,.7)`,
+  },
+  ({ skin }) => {
+    switch (skin) {
+      case 'underline':
+        return {
+          backgroundColor: colors.dark,
+          color: colors.light,
+        };
+      case 'filled-light':
+        return {
+          backgroundColor: colors.light,
+          color: colors.dark,
+        };
+    }
+  }
+);
 
-const Option = styled.li(
+const Option = styled.div(
   {
     display: 'flex',
     alignItems: 'center',
     padding: '0 .8em',
     overflow: 'hidden',
-    color: colors.dark,
     cursor: 'pointer',
     transition: `background-color ${timing.normal}`,
     whiteSpace: 'nowrap',
-
-    '&:hover': {
-      backgroundColor: colors.lighterGray,
-    },
+    height: consts.inputHeightEm + 'em',
   },
-  ({ optionHeight }) => ({
-    height: optionHeight || defaultOptionHeight,
-  })
+  ({ skin }) => {
+    switch (skin) {
+      case 'underline':
+        return {
+          '&:hover': {
+            backgroundColor: colors.darkerGray,
+          },
+        };
+      case 'filled-light':
+        return {
+          '&:hover': {
+            backgroundColor: colors.lighterGray,
+          },
+        };
+    }
+  }
 );
 
 export default class ComboBox extends Component {
@@ -144,23 +186,32 @@ export default class ComboBox extends Component {
   };
 
   render() {
-    const { options, optionHeight, value, onChange, ...rest } = this.props;
+    const {
+      skin = 'underline',
+      options,
+      value,
+      onChange,
+      ...rest
+    } = this.props;
     const { open, top, left, width } = this.state;
     const selectedOption = this.option(value);
 
     return (
       <>
         <ComboBoxControl
-          optionHeight={optionHeight}
           ref={el => (this.controlRef = el)}
-          opening={open}
+          active={open}
           onClick={this.open}
+          skin={skin}
           {...rest}
         >
           <CurrentValue>
             {selectedOption ? selectedOption.display : null}
           </CurrentValue>
-          <Button freeHeight blank dark>
+          <Button
+            fitHeight
+            skin={skin === 'filled-light' ? 'blank-dark' : 'blank-light'}
+          >
             <Arrow down width={12} height={8} />
           </Button>
         </ComboBoxControl>
@@ -168,13 +219,14 @@ export default class ComboBox extends Component {
         {open && (
           <Overlay onBackgroundClick={this.close}>
             <Options
+              skin={skin}
               ref={el => (this.optionsRef = el)}
               style={{ top, left, width }}
             >
               {options.map(option => (
                 <Option
-                  optionHeight={optionHeight}
                   key={option.value}
+                  skin={skin}
                   onClick={() => {
                     this.close();
                     onChange(option.value);

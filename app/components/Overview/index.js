@@ -159,7 +159,7 @@ const Stat = styled.div(
     margin: '1.7em 0',
     display: 'flex',
     alignItems: 'center',
-    filter: `drop-shadow(0 0 8px rgba(0,0,0,.7))`,
+    filter: `drop-shadow(0 0 10px #000)`,
     color: colors.light,
   },
   ({ to }) =>

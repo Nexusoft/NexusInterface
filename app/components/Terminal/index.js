@@ -34,13 +34,6 @@ const TerminalTabs = styled(Tabs)({
   flexShrink: 0,
 });
 
-const TerminalContent = styled.div({
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: 0,
-  overflow: 'hidden',
-});
-
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.terminal, ...state.common, ...state.settings };
@@ -102,41 +95,22 @@ class Terminal extends Component {
               }
             />
           </TerminalTabs>
-          {this.props.history.location.pathname === '/Terminal/Core' ? (
-            <button
-              className="button primary"
-              style={{
-                position: 'absolute',
-                right: '10px',
-                bottom: '5px',
-                marginBottom: '0px',
-              }}
-              onClick={() => {
-                console.log(this.props);
-                this.props.setCoreOutputPaused(!this.props.coreOutputPaused);
-              }}
-            >
-              {this.props.coreOutputPaused ? 'UnPause' : 'Pause'}
-            </button>
-          ) : null}
 
-          <TerminalContent>
-            <Switch>
-              <Redirect
-                exact
-                from={`${this.props.match.path}/`}
-                to={`${this.props.match.path}/Console`}
-              />
-              <Route
-                path={`${this.props.match.path}/Console`}
-                component={TerminalConsole}
-              />
-              <Route
-                path={`${this.props.match.path}/Core`}
-                component={TerminalCore}
-              />
-            </Switch>
-          </TerminalContent>
+          <Switch>
+            <Redirect
+              exact
+              from={`${this.props.match.path}/`}
+              to={`${this.props.match.path}/Console`}
+            />
+            <Route
+              path={`${this.props.match.path}/Console`}
+              component={TerminalConsole}
+            />
+            <Route
+              path={`${this.props.match.path}/Core`}
+              component={TerminalCore}
+            />
+          </Switch>
         </TerminalWrapper>
       </Panel>
     );

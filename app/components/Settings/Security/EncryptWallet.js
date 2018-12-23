@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import FormField from 'components/common/FormField';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import Button from 'components/common/Button';
 import FieldSet from 'components/common/FieldSet';
 import { colors, consts } from 'styles';
@@ -66,7 +66,6 @@ export default class EncryptWallet extends Component {
 
                 // Start the daemon again... give it maybe 5 seconds.
                 setTimeout(() => {
-                  this.props.CloseModal();
                   remote.getGlobal('core').start();
                   this.props.history.replace('/');
                 }, 5000);
@@ -126,7 +125,7 @@ export default class EncryptWallet extends Component {
                   />
                 }
               >
-                <TextBox
+                <TextField
                   type="password"
                   placeholder={p}
                   id="newPass"
@@ -149,7 +148,7 @@ export default class EncryptWallet extends Component {
                   />
                 }
               >
-                <TextBox
+                <TextField
                   type="password"
                   placeholder={rep}
                   id="passChk"
@@ -172,7 +171,7 @@ export default class EncryptWallet extends Component {
           </span> */}
 
           <Button
-            primary
+            skin="primary"
             wide
             style={{ marginTop: '2em' }}
             disabled={this.props.busyFlag}

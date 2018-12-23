@@ -9,7 +9,7 @@ const Button = styled.button(
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
-    padding: '0 1.5em',
+    padding: '0 1em',
     height: '2.8em',
     border: 'none',
     outline: 'none',
@@ -19,15 +19,6 @@ const Button = styled.button(
     userSelect: 'none',
     transitionProperty: 'border-color, color',
     transitionDuration: timing.normal,
-    // Default styles
-    '&, &:active, &&[disabled]': {
-      border: `1px solid ${colors.lightGray}`,
-      color: colors.lightGray,
-    },
-    '&:hover': {
-      borderColor: colors.light,
-      color: colors.light,
-    },
   },
 
   ({ square }) =>
@@ -39,7 +30,7 @@ const Button = styled.button(
 
   ({ wide }) => wide && { width: '100%' },
 
-  ({ freeHeight }) => freeHeight && { height: 'auto' },
+  ({ fitHeight }) => fitHeight && { height: 'auto', alignSelf: 'stretch' },
 
   ({ grouped }) => {
     switch (grouped) {
@@ -66,28 +57,39 @@ const Button = styled.button(
     }
   },
 
-  ({ primary, filled }) =>
-    primary &&
-    (filled
-      ? {
+  ({ uppercase }) =>
+    uppercase && {
+      textTransform: 'uppercase',
+      fontSize: '.9em',
+    },
+
+  ({ disabled }) =>
+    !!disabled && {
+      opacity: 0.5,
+      cursor: 'not-allowed',
+    },
+
+  ({ skin = 'default' }) => {
+    switch (skin) {
+      case 'default':
+        return {
           '&, &:active, &&[disabled]': {
-            border: 'none',
-            backgroundColor: darken(colors.primary, 0.1),
-            color: colors.primaryContrast,
-            transitionProperty: 'background-color',
+            border: `1px solid ${colors.lightGray}`,
+            color: colors.lightGray,
           },
           '&:hover': {
-            border: 'none',
-            backgroundColor: colors.primary,
-            color: colors.primaryContrast,
+            borderColor: colors.light,
+            color: colors.light,
           },
-        }
-      : {
+        };
+      case 'primary':
+        return {
           '&, &:active, &&[disabled]': {
             border: `2px solid ${colors.primary}`,
             color: colors.primary,
             fontWeight: 'bold',
-            transitionProperty: 'border-color, color, box-shadow, text-shadow',
+            transitionProperty: 'border-color, color, filter',
+            transitionTimingFunction: 'ease-out',
             boxShadow: 'none',
             textSahdow: 'none',
 
@@ -98,63 +100,71 @@ const Button = styled.button(
           '&:hover': {
             borderColor: lighten(colors.primary, 0.3),
             color: lighten(colors.primary, 0.3),
-            boxShadow: `0 0 20px ${fade(colors.primary, 0.7)}`,
-            textShadow: `0 0 20px ${fade(colors.primary, 0.7)}`,
+            filter: `drop-shadow(0 0 7px ${fade(colors.primary, 0.3)})`,
           },
-        }),
-
-  ({ blank, dark }) =>
-    !!blank && {
-      '&, &:active, &&[disabled]': {
-        padding: '0.5em 1em',
-        border: 'none',
-        backgroundColor: 'transparent',
-        color: dark ? colors.darkGray : colors.lightGray,
-        transitionProperty: 'color',
-      },
-      '&:hover': {
-        border: 'none',
-        color: dark ? colors.dark : colors.light,
-      },
-    },
-
-  ({ filled, darkGray }) =>
-    filled &&
-    darkGray && {
-      '&, &:active, &&[disabled]': {
-        border: 'none',
-        backgroundColor: colors.darkGray,
-        color: colors.light,
-        transitionProperty: 'background-color',
-      },
-      '&:hover': {
-        border: 'none',
-        backgroundColor: lighten(colors.darkGray, 0.15),
-        color: colors.light,
-      },
-    },
-
-  ({ filled, light }) =>
-    filled &&
-    light && {
-      '&, &:active, &&[disabled]': {
-        border: 'none',
-        backgroundColor: colors.lighterGray,
-        color: colors.dark,
-        transitionProperty: 'background-color',
-      },
-      '&:hover': {
-        border: 'none',
-        backgroundColor: colors.light,
-        color: colors.dark,
-      },
-    },
-
-  ({ disabled }) =>
-    !!disabled && {
-      opacity: 0.5,
-      cursor: 'not-allowed',
+        };
+      case 'filled-primary':
+        return {
+          '&, &:active, &&[disabled]': {
+            backgroundColor: darken(colors.primary, 0.1),
+            color: colors.primaryContrast,
+            transitionProperty: 'background-color',
+          },
+          '&:hover': {
+            backgroundColor: colors.primary,
+            color: colors.primaryContrast,
+          },
+        };
+      case 'filled-dark':
+        return {
+          '&, &:active, &&[disabled]': {
+            backgroundColor: colors.dark,
+            color: colors.light,
+            transitionProperty: 'background-color',
+          },
+          '&:hover': {
+            backgroundColor: colors.darkerGray,
+            color: colors.light,
+          },
+        };
+      case 'filled-light':
+        return {
+          '&, &:active, &&[disabled]': {
+            backgroundColor: colors.lighterGray,
+            color: colors.dark,
+            transitionProperty: 'background-color',
+          },
+          '&:hover': {
+            backgroundColor: colors.light,
+            color: colors.dark,
+          },
+        };
+      case 'blank-dark':
+        return {
+          '&, &:active, &&[disabled]': {
+            padding: '0.5em 1em',
+            backgroundColor: 'transparent',
+            color: colors.darkGray,
+            transitionProperty: 'color',
+          },
+          '&:hover': {
+            color: colors.dark,
+          },
+        };
+      case 'blank-light':
+        return {
+          '&, &:active, &&[disabled]': {
+            padding: '0.5em 1em',
+            backgroundColor: 'transparent',
+            color: colors.lightGray,
+            transitionProperty: 'color',
+          },
+          '&:hover': {
+            color: colors.light,
+          },
+        };
     }
+  }
 );
 
 /**

@@ -188,7 +188,7 @@ export default class Queue extends Component {
             />
           </Button>
           <Button
-            primary
+            skin="primary"
             onClick={() => {
               console.log(this.props.encrypted, this.props.loggedIn);
               if (

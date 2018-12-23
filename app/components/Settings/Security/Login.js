@@ -9,7 +9,7 @@ import styles from './style.css';
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import FormField from 'components/common/FormField';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import Button from 'components/common/Button';
 import FieldSet from 'components/common/FieldSet';
 
@@ -163,7 +163,7 @@ class Login extends Component {
         <form>
           <LoginFieldSet legend="Login">
             <FormField connectLabel label="Unlock Until Date">
-              <TextBox
+              <TextField
                 type="date"
                 min={this.getMinDate()}
                 value={this.props.unlockUntillDate}
@@ -173,7 +173,7 @@ class Login extends Component {
               />
             </FormField>
             <FormField connectLabel label="Unlock Until Time">
-              <TextBox
+              <TextField
                 type="time"
                 value={this.props.unlockUntillTime}
                 onChange={e => this.props.setTime(e.target.value)}
@@ -182,7 +182,7 @@ class Login extends Component {
               />
             </FormField>
             <FormField connectLabel label="Password">
-              <TextBox
+              <TextField
                 type="password"
                 placeholder="Password"
                 id="pass"
@@ -202,7 +202,7 @@ class Login extends Component {
 
             <Buttons>
               <Button
-                primary
+                skin="primary"
                 type="submit"
                 onClick={e => {
                   e.preventDefault();

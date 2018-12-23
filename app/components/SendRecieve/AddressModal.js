@@ -90,7 +90,6 @@ const AddressModal = props => (
                 {placeholder => (
                   <input
                     className="searchBar"
-                    type="text"
                     placeholder={placeholder}
                     value={props.Search}
                     onChange={e => props.SearchName(e.target.value)}

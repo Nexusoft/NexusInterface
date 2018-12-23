@@ -9,6 +9,8 @@ import styled from '@emotion/styled';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { Tail } from 'utils/tail';
+import configuration from 'api/configuration';
+import Button from 'components/common/Button';
 import { colors } from 'styles';
 
 // React-Redux mandatory methods
@@ -20,11 +22,27 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.PRINT_TO_CORE, payload: data }),
 });
 
-const TerminalCoreWrapper = styled.div(
+const TerminalContent = styled.div({
+  flexGrow: 1,
+  flexShrink: 1,
+  flexBasis: 0,
+  overflow: 'hidden',
+});
+
+const TerminalCoreWrapper = styled.div({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  border: `1px solid ${colors.darkerGray}`,
+});
+
+const Output = styled.div(
   {
-    height: '100%',
-    display: 'flex',
     overflowY: 'auto',
+    flexGrow: 1,
+    display: 'flex',
+    background: colors.dark,
+    borderBottom: `1px solid ${colors.darkerGray}`,
   },
   ({ reverse }) => ({
     flexDirection: reverse ? 'column-reverse' : 'column',
@@ -94,18 +112,32 @@ class TerminalCore extends Component {
   // Mandatory React method
   render() {
     return (
-      <TerminalCoreWrapper
-        ref={el => (this.outputRef = el)}
-        reverse={!this.props.settings.manualDaemon}
-      >
-        {this.props.settings.manualDaemon ? (
-          <div className="dim">Core in Manual Mode</div>
-        ) : (
-          this.props.coreOutput.map((d, i) => (
-            <OutputLine key={i}>{d}</OutputLine>
-          ))
-        )}
-      </TerminalCoreWrapper>
+      <TerminalContent>
+        <TerminalCoreWrapper ref={el => (this.outputRef = el)}>
+          {this.props.settings.manualDaemon ? (
+            <div className="dim">Core in Manual Mode</div>
+          ) : (
+            <>
+              <Output reverse={!this.props.settings.manualDaemon}>
+                {this.props.coreOutput.map((d, i) => (
+                  <OutputLine key={i}>{d}</OutputLine>
+                ))}
+              </Output>
+              <Button
+                skin="filled-dark"
+                fullWidth
+                onClick={() => {
+                  console.log(this.props);
+                  this.props.setCoreOutputPaused(!this.props.coreOutputPaused);
+                }}
+                style={{ flexShrink: 0 }}
+              >
+                {this.props.coreOutputPaused ? 'UnPause' : 'Pause'}
+              </Button>
+            </>
+          )}
+        </TerminalCoreWrapper>
+      </TerminalContent>
     );
   }
 }

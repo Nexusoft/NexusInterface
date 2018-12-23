@@ -16,10 +16,11 @@ import ContextMenuBuilder from 'contextmenu';
 import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
 import Button from 'components/common/Button';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import ComboBox from 'components/common/ComboBox';
 import WaitingText from 'components/common/WaitingText';
 import FormField from 'components/common/FormField';
+import InputGroup from 'components/common/InputGroup';
 
 // Internal Local Dependencies
 import AddressModal from './AddressModal';
@@ -50,14 +51,14 @@ const SendAmountField = styled.div({
 const SendAmountEqual = styled.div({
   display: 'flex',
   alignItems: 'flex-end',
-  padding: '.3em .6em',
+  padding: '.1em .6em',
   fontSize: '1.2em',
 });
 
 const SendFormButtons = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
-  marginTop: '1em',
+  marginTop: '2em',
 });
 
 const mapStateToProps = state => {
@@ -341,7 +342,7 @@ class SendRecieve extends Component {
           !!this.props.connections && (
             <Button
               square
-              primary
+              skin="primary"
               className="relative"
               onClick={() => this.props.OpenMoveModal()}
             >
@@ -402,35 +403,26 @@ class SendRecieve extends Component {
                 />
               </FormField>
               <FormField label="Send To">
-                <div className="flex stretch">
-                  <TextBox
-                    grouped="left"
-                    type="text"
+                <InputGroup>
+                  <TextField
                     placeholder="Recipient Address"
                     value={this.props.Addressplaceholder}
                     onChange={e => this.props.updateAddress(e.target.value)}
                     required
+                    style={{ flexGrow: 1 }}
                   />
                   <Button
-                    grouped="right"
-                    freeHeight
-                    filled
-                    light
+                    fitHeight
                     className="relative"
                     onClick={() => {
                       this.props.clearSearch();
                       this.props.OpenModal4('Address Lookup');
                     }}
                   >
-                    <Icon icon={addressBookIcon} />
-                    <div className="tooltip bottom">
-                      <FormattedMessage
-                        id="sendReceive.Lookup"
-                        defaultMessage="Lookup Address"
-                      />
-                    </div>
+                    <Icon spaceRight icon={addressBookIcon} />
+                    Lookup
                   </Button>
-                </div>
+                </InputGroup>
               </FormField>
               <SendAmount>
                 <SendAmountField>
@@ -443,8 +435,7 @@ class SendRecieve extends Component {
                       />
                     }
                   >
-                    <TextBox
-                      type="text"
+                    <TextField
                       placeholder="0.00000"
                       value={this.props.Amount}
                       onChange={e => this.nxsAmount(e, true)}
@@ -458,8 +449,7 @@ class SendRecieve extends Component {
                     connectLabel
                     label={this.props.settings.fiatCurrency}
                   >
-                    <TextBox
-                      type="text"
+                    <TextField
                       placeholder="0.00"
                       value={this.props.USDAmount}
                       onChange={e => {
@@ -484,12 +474,12 @@ class SendRecieve extends Component {
                       />
                     }
                   >
-                    <TextBox
+                    <TextField
                       multiline
                       value={this.props.Message}
                       onChange={e => this.props.updateMessage(e.target.value)}
                       name="message"
-                      rows={3}
+                      rows={1}
                       placeholder={placeholder}
                     />
                   </FormField>
@@ -498,7 +488,7 @@ class SendRecieve extends Component {
               <SendFormButtons>
                 {this.editQueue()}
                 <Button
-                  primary
+                  skin="primary"
                   onClick={() => {
                     console.log(this.props.encrypted, this.props.loggedIn);
                     if (!(this.props.Address === '') && this.props.Amount > 0) {
@@ -517,6 +507,7 @@ class SendRecieve extends Component {
                     }
                   }}
                 >
+                  <Icon icon={sendIcon} spaceRight />
                   <FormattedMessage
                     id="sendReceive.SendNow"
                     defaultMessage="Send Now"

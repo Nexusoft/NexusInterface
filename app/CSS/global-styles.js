@@ -39,35 +39,42 @@ const resetStyles = css`
     font-family: ${consts.monoFontFamily};
   }
 
-  /* Customize Scrollbar */
+  input,
+  textarea {
+    border: none;
+    outline: none;
+    &:focus {
+      outline: none;
+    }
+  }
+  input::-webkit-inner-spin-button: {
+    cursor: pointer;
+  }
+`;
+
+const customizedScrollbar = css`
   ::-webkit-scrollbar {
     background: rgba(0, 0, 0, 0.25);
     z-index: 10000000;
-  }
-
-  ::-webkit-scrollbar:vertical {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar:horizontal {
-    height: 6px;
-  }
-
-  ::-webkit-scrollbar:hover {
-    background: rgba(0, 0, 0, 0.5);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: ${fade(colors.primary, 0.25)};
-    border-radius: 2px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: ${fade(colors.primary, 0.1)};
-  }
-
-  ::-webkit-scrollbar-corner {
-    background: rgba(0, 0, 0, 0.5);
+    &:vertical {
+      width: 6px;
+    }
+    &:horizontal {
+      height: 6px;
+    }
+    &:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+    &-thumb {
+      background: ${fade(colors.primary, 0.25)};
+      border-radius: 2px;
+    }
+    &-thumb:hover {
+      background: ${fade(colors.primary, 0.1)};
+    }
+    &-corner {
+      background: rgba(0, 0, 0, 0.5);
+    }
   }
 `;
 
@@ -86,15 +93,17 @@ const utilityClasses = css`
 
   .flex {
     display: flex;
-  }
-
-  .flex.center {
-    align-items: center;
-  }
-
-  .flex.stretch {
-    align-items: stretch;
+    &.center {
+      align-items: center;
+    }
+    &.stretch {
+      align-items: stretch;
+    }
   }
 `;
 
-export default <Global styles={[fontStyles, resetStyles, utilityClasses]} />;
+export default (
+  <Global
+    styles={[fontStyles, resetStyles, customizedScrollbar, utilityClasses]}
+  />
+);

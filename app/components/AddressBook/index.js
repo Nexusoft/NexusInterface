@@ -19,7 +19,7 @@ import * as TYPE from 'actions/actiontypes';
 import * as actionsCreators from 'actions/addressbookActionCreators';
 import Icon from 'components/common/Icon';
 import Button from 'components/common/Button';
-import { WrappedTextBox } from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import Panel from 'components/common/Panel';
 import WaitingText from 'components/common/WaitingText';
 import ContextMenuBuilder from 'contextmenu';
@@ -352,7 +352,6 @@ class AddressBook extends Component {
                 {n => (
                   <input
                     id="new-account-name"
-                    type="text"
                     value={this.props.prototypeName}
                     onChange={e => this.props.EditProtoName(e.target.value)}
                     placeholder={n}
@@ -419,7 +418,6 @@ class AddressBook extends Component {
                 {na => (
                   <input
                     id="nxsaddress"
-                    type="text"
                     onChange={e => this.props.EditProtoAddress(e.target.value)}
                     value={this.props.prototypeAddress}
                     placeholder={na}
@@ -492,7 +490,6 @@ class AddressBook extends Component {
                       {sba => (
                         <input
                           className="searchaccount"
-                          type="text"
                           placeholder={sba}
                           value={this.props.Search}
                           onChange={e => this.props.SearchName(e.target.value)}
@@ -552,7 +549,6 @@ class AddressBook extends Component {
                 {na => (
                   <input
                     id="new-account-name"
-                    type="text"
                     onChange={e => this.props.EditProtoAddress(e.target.value)}
                     value={this.props.prototypeAddress}
                     placeholder={na}
@@ -611,7 +607,6 @@ class AddressBook extends Component {
                 {ean => (
                   <input
                     id="new-account-name"
-                    type="text"
                     value={this.props.prototypeName}
                     onChange={e => this.props.EditProtoName(e.target.value)}
                     placeholder={ean}
@@ -1008,12 +1003,7 @@ class AddressBook extends Component {
   }
 
   exportAddressBook() {
-    googleanalytics.SendEvent(
-      'AddressBook',
-      'IOAddress',
-      'Export',
-      1
-    );
+    googleanalytics.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
 
     const rows = []; //Set up a blank array for each row
     let csvContent = 'data:text/csv;charset=utf-8,'; //Set formating
@@ -1085,12 +1075,7 @@ class AddressBook extends Component {
   }
 
   importAddressBook(path) {
-    googleanalytics.SendEvent(
-      'AddressBook',
-      'IOAddress',
-      'Import',
-      1
-    );
+    googleanalytics.SendEvent('AddressBook', 'IOAddress', 'Import', 1);
     console.log(csv().fromFile(path));
     csv()
       .fromFile(path)
@@ -1171,7 +1156,7 @@ class AddressBook extends Component {
           !!this.props.connections && (
             <div className="flex center">
               <Button
-                blank
+                skin="blank-light"
                 className="relative"
                 onClick={this.showAddContactModal.bind(this)}
               >
@@ -1184,7 +1169,7 @@ class AddressBook extends Component {
                 </div>
               </Button>
               <Button
-                blank
+                skin="blank-light"
                 className="relative"
                 as="a"
                 onClick={this.exportAddressBook.bind(this)}
@@ -1198,7 +1183,7 @@ class AddressBook extends Component {
                 </div>
               </Button>
               <Button
-                blank
+                skin="blank-light"
                 className="relative"
                 as="a"
                 onClick={() => {
@@ -1220,18 +1205,16 @@ class AddressBook extends Component {
                 defaultMessage="Search Contact"
               >
                 {sc => (
-                  <WrappedTextBox
+                  <TextField
                     style={{
                       marginLeft: '1em',
                       fontSize: '.9375em',
                       width: 200,
                     }}
-                    tailIcon={searchIcon}
-                    inputProps={{
-                      placeholder: sc,
-                      value: this.props.contactSearch,
-                      onChange: e => this.props.ContactSearch(e.target.value),
-                    }}
+                    left={<Icon icon={searchIcon} spaceRight />}
+                    placeholder={sc}
+                    value={this.props.contactSearch}
+                    onChange={e => this.props.ContactSearch(e.target.value)}
                   />
                 )}
               </FormattedMessage>
@@ -1275,7 +1258,6 @@ class AddressBook extends Component {
                               <input
                                 id="new-account-name"
                                 className="editFeildDoNotClose"
-                                type="text"
                                 value={this.props.prototypeName}
                                 onChange={e =>
                                   this.props.EditProtoName(e.target.value)
@@ -1529,7 +1511,10 @@ class AddressBook extends Component {
                 <div className="dim" style={{ marginBottom: '1em' }}>
                   Your Address Book is empty!
                 </div>
-                <Button blank onClick={this.showAddContactModal.bind(this)}>
+                <Button
+                  skin="blank-light"
+                  onClick={this.showAddContactModal.bind(this)}
+                >
                   <Icon icon={addContactIcon} />
                   &nbsp; Add Contact
                 </Button>

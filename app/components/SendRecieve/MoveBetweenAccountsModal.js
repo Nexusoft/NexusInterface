@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import ComboBox from 'components/common/ComboBox';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import FormField from 'components/common/FormField';
 import Button from 'components/common/Button';
 
@@ -21,7 +21,7 @@ const AccountSelectors = styled.div({
 const Equal = styled.div({
   display: 'flex',
   alignItems: 'flex-end',
-  padding: '.3em .6em',
+  padding: '.1em .6em',
   fontSize: '1.2em',
 });
 
@@ -161,7 +161,7 @@ export default class MoveBetweenAccountsModal extends Component {
                     />
                   }
                 >
-                  <TextBox
+                  <TextField
                     placeholder="0.00000"
                     value={this.props.moveAmount}
                     onChange={e => this.moveAmmountConverter(e, true)}
@@ -174,7 +174,7 @@ export default class MoveBetweenAccountsModal extends Component {
                   style={{ flex: 1 }}
                   label={this.props.settings.fiatCurrency}
                 >
-                  <TextBox
+                  <TextField
                     placeholder="0.00"
                     value={this.props.moveUSDAmount}
                     onChange={e => {
@@ -193,7 +193,10 @@ export default class MoveBetweenAccountsModal extends Component {
             </div>
           </div>
           <Buttons>
-            <Button primary onClick={() => this.moveNXSbetweenAccounts()}>
+            <Button
+              skin="primary"
+              onClick={() => this.moveNXSbetweenAccounts()}
+            >
               <FormattedMessage
                 id="sendReceive.MoveNXS"
                 defaultMessage="Move NXS"

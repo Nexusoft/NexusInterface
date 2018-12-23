@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import FormField from 'components/common/FormField';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import Button from 'components/common/Button';
 import FieldSet from 'components/common/FieldSet';
 
@@ -118,7 +118,7 @@ export default class ChangePassword extends Component {
           >
             <FormattedMessage id="Settings.Password" defaultMessage="Password">
               {p => (
-                <TextBox
+                <TextField
                   type="password"
                   placeholder={p}
                   id="oldPass"
@@ -146,7 +146,7 @@ export default class ChangePassword extends Component {
               defaultMessage="New Password"
             >
               {np => (
-                <TextBox
+                <TextField
                   type="password"
                   placeholder={np}
                   id="newPass"
@@ -174,7 +174,7 @@ export default class ChangePassword extends Component {
               defaultMessage="Re-Enter Password:"
             >
               {rep => (
-                <TextBox
+                <TextField
                   type="password"
                   placeholder={rep}
                   id="passChk"
@@ -193,7 +193,7 @@ export default class ChangePassword extends Component {
               </span> */}
 
           <Button
-            primary
+            skin="primary"
             wide
             style={{ marginTop: '2em' }}
             onClick={() => this.changePassword(e)}
@@ -203,8 +203,6 @@ export default class ChangePassword extends Component {
         </FieldSet>
 
         <Button
-          filled
-          darkGray
           wide
           onClick={e => {
             e.preventDefault();

@@ -21,7 +21,7 @@ import * as FlagFile from 'languages/LanguageFlags';
 import { remote as dialog } from 'electron';
 import SettingsField from 'components/common/SettingsField';
 import Button from 'components/common/Button';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import ComboBox from 'components/common/ComboBox';
 
 // Internal Local Dependencies
@@ -211,19 +211,9 @@ class SettingsApp extends Component {
     if (el.checked == true) {
       googleanalytics.EnableAnalytics();
 
-      googleanalytics.SendEvent(
-        'Settings',
-        'Analytics',
-        'Enabled',
-        1
-      );
+      googleanalytics.SendEvent('Settings', 'Analytics', 'Enabled', 1);
     } else {
-      googleanalytics.SendEvent(
-        'Settings',
-        'Analytics',
-        'Disabled',
-        1
-      );
+      googleanalytics.SendEvent('Settings', 'Analytics', 'Disabled', 1);
       googleanalytics.DisableAnalytics();
     }
 
@@ -605,11 +595,10 @@ class SettingsApp extends Component {
               />
             }
           >
-            <TextBox
+            <TextField
               type="number"
               defaultValue={this.initialValues.minConf}
               style={{ width: 75 }}
-              size="3"
               step="1"
               min="1"
               onChange={this.updateMinimumConfirmations.bind(this)}
@@ -629,14 +618,14 @@ class SettingsApp extends Component {
               />
             }
           >
-            <TextBox
-              size={40}
+            <TextField
               value={this.props.settings.Folder}
               onChange={e => this.props.SeeFolder(e.target.value)}
               onClick={e => {
                 e.preventDefault();
                 this.getFolder(this.props.settings.Folder[0]);
               }}
+              style={{ width: 300 }}
             />
           </SettingsField>
 
@@ -656,20 +645,17 @@ class SettingsApp extends Component {
             }
           >
             <div className="flex stretch">
-              <TextBox
+              <TextField
                 type="number"
-                grouped="left"
                 defaultValue={this.initialValues.txFee}
                 step="0.01"
                 min="0"
                 style={{ width: 100 }}
               />
               <Button
-                filled
-                primary
-                freeHeight
-                grouped="right"
+                fitHeight
                 onClick={this.props.OpenModal2}
+                style={{ marginLeft: '1em' }}
               >
                 Set
               </Button>
@@ -877,8 +863,6 @@ class SettingsApp extends Component {
               <span className="flag-icon-background flag-icon-gr" />
               <Button
                 style={{ height: '2.25em' }}
-                filled
-                light
                 onClick={() => this.props.OpenModal3()}
               >
                 <FormattedMessage

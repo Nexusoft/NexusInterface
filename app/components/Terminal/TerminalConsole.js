@@ -11,7 +11,7 @@ import googleanalytics from 'scripts/googleanalytics';
 // Internal Global Dependencies
 import WaitingText from 'components/common/WaitingText';
 import Button from 'components/common/Button';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { colors, consts, timing } from 'styles';
@@ -52,6 +52,13 @@ const mapDispatchToProps = dispatch => ({
   // handleKeyboardInput: (key) => dispatch({type:TYPE.HANDLE_KEYBOARD_INPUT, payload: key})
 });
 
+const TerminalContent = styled.div({
+  flexGrow: 1,
+  flexShrink: 1,
+  flexBasis: 0,
+  overflow: 'visible',
+});
+
 const Console = styled.div({
   display: 'flex',
   flexDirection: 'column',
@@ -59,8 +66,6 @@ const Console = styled.div({
 });
 
 const ConsoleInput = styled.div({
-  display: 'flex',
-  alignItems: 'stretch',
   marginBottom: '1em',
   position: 'relative',
 });
@@ -331,58 +336,69 @@ class TerminalConsole extends Component {
       );
     } else {
       return (
-        <Console>
-          <ConsoleInput>
-            <FormattedMessage
-              id="Console.CommandsHere"
-              defaultMessage="Enter console commands here (ex: getinfo, help)"
-            >
-              {cch => (
-                <TextBox
-                  ref={element => (this.inputRef = element)}
-                  autoFocus
-                  grouped="left"
-                  value={this.props.currentInput}
-                  placeholder={cch}
-                  onChange={e => this.props.onInputfieldChange(e.target.value)}
-                  onKeyPress={e => this.handleKeyboardInput(e)}
-                  onKeyDown={e => this.handleKeyboardArrows(e)}
-                />
-              )}
-            </FormattedMessage>
+        <TerminalContent>
+          <Console>
+            <ConsoleInput>
+              <FormattedMessage
+                id="Console.CommandsHere"
+                defaultMessage="Enter console commands here (ex: getinfo, help)"
+              >
+                {cch => (
+                  <TextField
+                    ref={element => (this.inputRef = element)}
+                    autoFocus
+                    skin="filled-dark"
+                    value={this.props.currentInput}
+                    placeholder={cch}
+                    onChange={e =>
+                      this.props.onInputfieldChange(e.target.value)
+                    }
+                    onKeyPress={e => this.handleKeyboardInput(e)}
+                    onKeyDown={e => this.handleKeyboardArrows(e)}
+                    grouped="left"
+                    style={{ flexGrow: 1 }}
+                    right={
+                      <Button
+                        skin="filled-dark"
+                        fitHeight
+                        grouped="right"
+                        onClick={() => {
+                          this.props.removeAutoCompleteDiv();
+                          this.processInput();
+                        }}
+                        style={{ borderLeft: `1px solid ${colors.darkerGray}` }}
+                      >
+                        <FormattedMessage
+                          id="Console.Exe"
+                          defaultMessage="Execute"
+                        />
+                      </Button>
+                    }
+                  />
+                )}
+              </FormattedMessage>
+
+              <AutoComplete key="autocomplete">
+                {this.autoComplete()}
+              </AutoComplete>
+            </ConsoleInput>
+
+            <ConsoleOutput ref={el => (this.outputRef = el)}>
+              {this.processOutput()}
+            </ConsoleOutput>
+
             <Button
-              filled
-              primary
-              freeHeight
-              grouped="right"
-              onClick={() => {
-                this.props.removeAutoCompleteDiv();
-                this.processInput();
-              }}
+              skin="filled-dark"
+              grouped="bottom"
+              onClick={this.props.resetMyConsole}
             >
-              <FormattedMessage id="Console.Exe" defaultMessage="Execute" />
+              <FormattedMessage
+                id="Console.ClearConsole"
+                defaultMessage="Clear Console"
+              />
             </Button>
-            <AutoComplete key="autocomplete">
-              {this.autoComplete()}
-            </AutoComplete>
-          </ConsoleInput>
-
-          <ConsoleOutput ref={el => (this.outputRef = el)}>
-            {this.processOutput()}
-          </ConsoleOutput>
-
-          <Button
-            filled
-            darkGray
-            grouped="bottom"
-            onClick={this.props.resetMyConsole}
-          >
-            <FormattedMessage
-              id="Console.ClearConsole"
-              defaultMessage="Clear Console"
-            />
-          </Button>
-        </Console>
+          </Console>
+        </TerminalContent>
       );
     }
   }

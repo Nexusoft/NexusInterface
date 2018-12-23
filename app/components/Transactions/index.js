@@ -34,7 +34,7 @@ import Icon from 'components/common/Icon';
 import Panel from 'components/common/Panel';
 import WaitingText from 'components/common/WaitingText';
 import ComboBox from 'components/common/ComboBox';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import FormField from 'components/common/FormField';
 import Button from 'components/common/Button';
 import { GetSettings } from 'api/settings.js';
@@ -1760,7 +1760,6 @@ class Transactions extends Component {
             <Filters>
               <FormField
                 connectLabel
-                inputWrapped
                 label={
                   <FormattedMessage
                     id="transactions.SearchAddress"
@@ -1768,14 +1767,14 @@ class Transactions extends Component {
                   />
                 }
               >
-                <TextBox.Wrapped
+                <TextField
                   inputProps={{
                     type: 'search',
                     name: 'addressfilter',
                     placeholder: 'Search for Address',
                     onChange: this.transactionaddressfiltercallback.bind(this),
                   }}
-                  headIcon={searchIcon}
+                  left={<Icon icon={searchIcon} spaceRight />}
                 />
               </FormField>
 
@@ -1803,7 +1802,7 @@ class Transactions extends Component {
                   />
                 }
               >
-                <TextBox
+                <TextField
                   type="number"
                   min="0"
                   placeholder="0.00"

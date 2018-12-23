@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import FormField from 'components/common/FormField';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import Button from 'components/common/Button';
 import FieldSet from 'components/common/FieldSet';
 
@@ -69,7 +69,12 @@ export default class ImportPrivKey extends Component {
               defaultMessage="Account Name"
             >
               {An => (
-                <TextBox type="Text" placeholder={An} id="acctName" required />
+                <TextField
+                  type="Text"
+                  placeholder={An}
+                  id="acctName"
+                  required
+                />
               )}
             </FormattedMessage>
           </FormField>
@@ -86,7 +91,7 @@ export default class ImportPrivKey extends Component {
               defaultMessage="Private Key"
             >
               {pk => (
-                <TextBox
+                <TextField
                   type="password"
                   placeholder={pk}
                   id="privateKey"
@@ -96,7 +101,7 @@ export default class ImportPrivKey extends Component {
             </FormattedMessage>
           </FormField>
           <Button
-            primary
+            skin="primary"
             wide
             style={{ marginTop: '2em' }}
             disabled={this.props.busyFlag}

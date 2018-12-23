@@ -6,9 +6,10 @@ import * as RPC from 'scripts/rpc';
 // Internal
 import Icon from 'components/common/Icon';
 import FormField from 'components/common/FormField';
-import TextBox from 'components/common/TextBox';
+import TextField from 'components/common/TextField';
 import Button from 'components/common/Button';
 import FieldSet from 'components/common/FieldSet';
+import InputGroup from 'components/common/InputGroup';
 import copyIcon from 'images/copy.sprite.svg';
 
 export default class ViewPrivKeyForAddress extends Component {
@@ -63,23 +64,20 @@ export default class ViewPrivKeyForAddress extends Component {
               />
             }
           >
-            <div className="flex stretch">
-              <TextBox
-                grouped="left"
+            <InputGroup>
+              <TextField
                 id="privKeyAddress"
                 placeholder="Enter Address Here"
                 required
               />
               <Button
-                filled
-                primary
-                freeHeight
-                grouped="right"
+                skin="primary"
+                fitHeight
                 onClick={e => this.showPrivKey(e)}
               >
                 Import
               </Button>
-            </div>
+            </InputGroup>
           </FormField>
 
           <FormField
@@ -90,24 +88,19 @@ export default class ViewPrivKeyForAddress extends Component {
               />
             }
           >
-            <div className="flex stretch">
-              <TextBox grouped="left" type="password" id="privKeyOutput" />
+            <InputGroup>
+              <TextField type="password" id="privKeyOutput" />
               <Button
-                filled
-                light
-                freeHeight
-                grouped="right"
+                fitHeight
                 className="relative"
                 onClick={e => {
                   this.copyPrivkey(e);
                 }}
               >
-                <Icon icon={copyIcon} />
-                <div className="tooltip bottom">
-                  <FormattedMessage id="Settings.Copy" defaultMessage="Copy" />
-                </div>
+                <Icon icon={copyIcon} spaceRight />
+                <FormattedMessage id="Settings.Copy" defaultMessage="Copy" />
               </Button>
-            </div>
+            </InputGroup>
           </FormField>
         </FieldSet>
       </form>
