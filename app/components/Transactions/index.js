@@ -852,18 +852,10 @@ class Transactions extends Component {
 
   // Filter the transactions based on the AddressFilter
   filterByAddress(inTransactions) {
-    let tempTrans = [];
-    const addressfiltervalue = this.state.addressFilter;
-
-    for (let index = 0; index < inTransactions.length; index++) {
-      const element = inTransactions[index];
-      if (
-        element.address.toLowerCase().includes(addressfiltervalue.toLowerCase())
-      ) {
-        tempTrans.push(element);
-      }
-    }
-    return tempTrans;
+    const addressFilter = this.state.addressFilter.toLowerCase();
+    return inTransactions.filter(
+      tx => tx && tx.address && tx.address.toLowerCase().includes(addressFilter)
+    );
   }
 
   // Filter the transactions based on the DisplayTimeFrame
