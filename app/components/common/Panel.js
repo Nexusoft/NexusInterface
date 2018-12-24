@@ -31,7 +31,7 @@ const PanelWrapper = styled.div({
 });
 
 const PanelHeader = styled.div({
-  backgroundColor: colors.dark,
+  background: colors.dark,
   borderTopLeftRadius: borderRadius,
   borderTopRightRadius: borderRadius,
   flexShrink: 0,
@@ -49,7 +49,7 @@ const PanelTitle = styled.h3({
 
 const PanelBody = styled.div(
   {
-    backgroundColor: fade(darken(colors.dark, 0.2), 0.2),
+    background: fade(darken(colors.dark, 0.2), 0.2),
     borderBottomLeftRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
     flexGrow: 1,

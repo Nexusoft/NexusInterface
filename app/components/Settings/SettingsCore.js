@@ -18,6 +18,7 @@ import ContextMenuBuilder from 'contextmenu';
 import SettingsField from 'components/common/SettingsField';
 import Button from 'components/common/Button';
 import TextField from 'components/common/TextField';
+import Switch from 'components/common/Switch';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -622,10 +623,8 @@ class SettingsCore extends Component {
               />
             }
           >
-            <input
-              type="checkbox"
+            <Switch
               defaultChecked={this.initialValues.enableMining}
-              className="switch"
               onChange={this.updateEnableMining}
             />
           </SettingsField>
@@ -645,10 +644,8 @@ class SettingsCore extends Component {
               />
             }
           >
-            <input
-              type="checkbox"
+            <Switch
               defaultChecked={this.initialValues.enableStaking}
-              className="switch"
               onChange={this.updateEnableStaking}
             />
           </SettingsField>
@@ -713,9 +710,7 @@ class SettingsCore extends Component {
               />
             }
           >
-            <input
-              type="checkbox"
-              className="switch"
+            <Switch
               checked={this.props.settings.manualDaemon}
               onChange={() => this.props.OpenManualDaemonModal()}
             />
@@ -824,10 +819,8 @@ class SettingsCore extends Component {
                 />
               }
             >
-              <input
-                type="checkbox"
+              <Switch
                 defaultChecked={this.initialValues.mapPortUsingUpnp}
-                className="switch"
                 onChange={this.updateMapPortUsingUpnp}
               />
             </SettingsField>
@@ -846,10 +839,8 @@ class SettingsCore extends Component {
                 />
               }
             >
-              <input
-                type="checkbox"
+              <Switch
                 defaultChecked={this.initialValues.socks4Proxy}
-                className="switch"
                 onChange={this.updateSocks4Proxy.bind(this)}
               />
             </SettingsField>
@@ -912,10 +903,8 @@ class SettingsCore extends Component {
                 />
               }
             >
-              <input
-                type="checkbox"
+              <Switch
                 defaultChecked={this.initialValues.detatchDatabaseOnShutdown}
-                className="switch"
                 onChange={this.updateDetatchDatabaseOnShutdown}
               />
             </SettingsField>

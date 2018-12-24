@@ -15,6 +15,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import * as TYPE from 'actions/actiontypes';
 import styles from './style.css';
 import { GetSettings, SaveSettings } from 'api/settings';
+import Switch from '../common/Switch';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -340,10 +341,8 @@ class SettingsStyle extends Component {
                 }
               >
                 {tt => (
-                  <input
+                  <Switch
                     id="renderGlobe"
-                    type="checkbox"
-                    className="switch"
                     disabled={this.props.webGLEnabled ? '' : 'disabled'}
                     checked={this.props.settings.renderGlobe}
                     onChange={() => {

@@ -16,6 +16,7 @@ export const consts = {
   monoFontFamily: '"Roboto Mono", "Lucida Console", "Courier New", monospace',
   enhancedEaseOut: 'cubic-bezier(0, .9, .9, 1)',
   inputHeightEm: 2.25,
+  lineHeight: 1.625,
 };
 
 export const timing = {

@@ -19,6 +19,11 @@ const Button = styled.button(
     userSelect: 'none',
     transitionProperty: 'border-color, color',
     transitionDuration: timing.normal,
+
+    '&:disabled': {
+      opacity: 0.5,
+      cursor: 'not-allowed',
+    },
   },
 
   ({ square }) =>
@@ -63,12 +68,6 @@ const Button = styled.button(
       fontSize: '.9em',
     },
 
-  ({ disabled }) =>
-    !!disabled && {
-      opacity: 0.5,
-      cursor: 'not-allowed',
-    },
-
   ({ skin = 'default' }) => {
     switch (skin) {
       case 'default':
@@ -106,36 +105,36 @@ const Button = styled.button(
       case 'filled-primary':
         return {
           '&, &:active, &&[disabled]': {
-            backgroundColor: darken(colors.primary, 0.1),
+            background: darken(colors.primary, 0.1),
             color: colors.primaryContrast,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            backgroundColor: colors.primary,
+            background: colors.primary,
             color: colors.primaryContrast,
           },
         };
       case 'filled-dark':
         return {
           '&, &:active, &&[disabled]': {
-            backgroundColor: colors.dark,
+            background: colors.dark,
             color: colors.light,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            backgroundColor: colors.darkerGray,
+            background: colors.darkerGray,
             color: colors.light,
           },
         };
       case 'filled-light':
         return {
           '&, &:active, &&[disabled]': {
-            backgroundColor: colors.lighterGray,
+            background: colors.lighterGray,
             color: colors.dark,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            backgroundColor: colors.light,
+            background: colors.light,
             color: colors.dark,
           },
         };
@@ -143,7 +142,7 @@ const Button = styled.button(
         return {
           '&, &:active, &&[disabled]': {
             padding: '0.5em 1em',
-            backgroundColor: 'transparent',
+            background: 'transparent',
             color: colors.darkGray,
             transitionProperty: 'color',
           },
@@ -155,7 +154,7 @@ const Button = styled.button(
         return {
           '&, &:active, &&[disabled]': {
             padding: '0.5em 1em',
-            backgroundColor: 'transparent',
+            background: 'transparent',
             color: colors.lightGray,
             transitionProperty: 'color',
           },

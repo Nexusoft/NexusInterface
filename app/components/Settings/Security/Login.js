@@ -12,6 +12,7 @@ import FormField from 'components/common/FormField';
 import TextField from 'components/common/TextField';
 import Button from 'components/common/Button';
 import FieldSet from 'components/common/FieldSet';
+import Switch from 'components/common/Switch';
 
 const LoginFieldSet = styled(FieldSet)({
   maxWidth: 400,
@@ -192,9 +193,7 @@ class Login extends Component {
 
             {/* STAKING FLAG STUFF  TURNED OFF UNTILL WE HAVE A FLAG COMING BACK FROM THE DAEMON TELLING US THAT ITS UNLOCKED FOR STAKING ONLY */}
             <FormField inline connectLabel label="Staking Only">
-              <input
-                type="checkbox"
-                className="switch"
+              <Switch
                 value={this.props.stakingFlag}
                 onChange={() => this.props.stake()}
               />

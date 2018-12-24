@@ -50,7 +50,7 @@ const Output = styled.div(
 );
 
 const OutputLine = styled.code({
-  backgroundColor: colors.dark,
+  background: colors.dark,
   borderColor: colors.dark,
 });
 

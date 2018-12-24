@@ -20,6 +20,7 @@ const resetStyles = css`
     background-color: #232c39;
     font-family: 'Noto Sans', sans-serif;
     font-size: 16px;
+    line-height: ${consts.lineHeight};
     overflow: hidden;
   }
 

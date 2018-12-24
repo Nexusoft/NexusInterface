@@ -34,20 +34,20 @@ const InputWrapper = styled.div(
             right: 0,
             height: 2,
             borderRadius: 1,
-            backgroundColor: colors.gray,
+            background: colors.gray,
             transitionProperty: 'background-color, box-shadow, color',
             transitionDuration: timing.normal,
           },
           '&:hover': {
             color: colors.light,
             '&::after': {
-              backgroundColor: colors.lightGray,
+              background: colors.lightGray,
             },
           },
           ...(focus
             ? {
                 '&&::after': {
-                  backgroundColor: lighten(colors.primary, 0.3),
+                  background: lighten(colors.primary, 0.3),
                   boxShadow: `0 0 15px ${colors.primary}`,
                 },
               }
@@ -56,17 +56,17 @@ const InputWrapper = styled.div(
       case 'filled-light':
         return {
           borderRadius: 2,
-          backgroundColor: colors.lighterGray,
+          background: colors.lighterGray,
           color: colors.dark,
           transitionProperty: 'background-color',
           transitionDuration: timing.normal,
           '&:hover': {
-            backgroundColor: colors.light,
+            background: colors.light,
           },
           ...(focus
             ? {
                 '&&::after': {
-                  backgroundColor: colors.light,
+                  background: colors.light,
                 },
               }
             : null),
@@ -74,7 +74,7 @@ const InputWrapper = styled.div(
       case 'filled-dark':
         return {
           border: `1px solid ${colors.darkerGray}`,
-          backgroundColor: colors.dark,
+          background: colors.dark,
           color: colors.light,
           borderRadius: 2,
           transitionProperty: 'border-color, box-shadow',
@@ -98,7 +98,7 @@ const InputWrapper = styled.div(
 const Input = styled.input(
   {
     display: 'block',
-    backgroundColor: 'transparent',
+    background: 'transparent',
     color: 'inherit',
     padding: 0,
     height: '100%',

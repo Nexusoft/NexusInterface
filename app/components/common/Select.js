@@ -24,7 +24,7 @@ const SelectControl = styled.div(
     switch (skin) {
       case 'underline':
         return {
-          backgroundColor: 'transparent',
+          background: 'transparent',
           color: colors.lighterGray,
           borderBottom: `2px solid ${colors.gray}`,
           transitionProperty: 'color, border-bottom-color',
@@ -43,16 +43,16 @@ const SelectControl = styled.div(
       case 'filled-light':
         return {
           paddingLeft: '.8em',
-          backgroundColor: colors.lighterGray,
+          background: colors.lighterGray,
           color: colors.dark,
           borderRadius: 2,
           transition: `background-color ${timing.normal}`,
           '&:hover': {
-            backgroundColor: colors.light,
+            background: colors.light,
           },
           ...(active
             ? {
-                backgroundColor: colors.light,
+                background: colors.light,
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
               }
@@ -98,12 +98,12 @@ const Options = styled.div(
     switch (skin) {
       case 'underline':
         return {
-          backgroundColor: colors.dark,
+          background: colors.dark,
           color: colors.light,
         };
       case 'filled-light':
         return {
-          backgroundColor: colors.light,
+          background: colors.light,
           color: colors.dark,
         };
     }
@@ -126,13 +126,13 @@ const Option = styled.div(
       case 'underline':
         return {
           '&:hover': {
-            backgroundColor: colors.darkerGray,
+            background: colors.darkerGray,
           },
         };
       case 'filled-light':
         return {
           '&:hover': {
-            backgroundColor: colors.lighterGray,
+            background: colors.lighterGray,
           },
         };
     }

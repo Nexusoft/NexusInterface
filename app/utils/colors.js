@@ -30,9 +30,9 @@ export function desaturate(color, value) {
     .string();
 }
 
-export function grayscale(color, value) {
+export function grayscale(color) {
   return Color(color)
-    .grayscale(value)
+    .grayscale()
     .string();
 }
 

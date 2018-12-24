@@ -23,6 +23,7 @@ import SettingsField from 'components/common/SettingsField';
 import Button from 'components/common/Button';
 import TextField from 'components/common/TextField';
 import Select from 'components/common/Select';
+import Switch from 'components/common/Switch';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -472,28 +473,6 @@ class SettingsApp extends Component {
         </Modal>
 
         <form>
-          {/* <div className="field">
-            <label htmlFor="autostart">
-              <FormattedMessage
-                id="Settings.StartUp"
-                defaultMessage="Start at system startup"
-              />
-            </label>
-            <FormattedMessage
-              id="ToolTip.SystemStartUP"
-              defaultMessage="Automatically start the wallet when you log into your system"
-            >
-              {tt => (
-                <input
-                  id="autostart"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateAutoStart}
-                  
-                />
-              )}
-            </FormattedMessage>
-          </div> */}
           <SettingsField
             connectLabel
             label={
@@ -509,10 +488,8 @@ class SettingsApp extends Component {
               />
             }
           >
-            <input
-              type="checkbox"
+            <Switch
               defaultChecked={this.initialValues.devmode}
-              className="switch"
               onChange={this.updateDeveloperMode}
             />
           </SettingsField>
@@ -532,10 +509,8 @@ class SettingsApp extends Component {
               />
             }
           >
-            <input
-              type="checkbox"
+            <Switch
               defaultChecked={this.initialValues.minimizeToTray}
-              className="switch"
               onChange={this.updateMinimizeToTray}
             />
           </SettingsField>
@@ -555,11 +530,9 @@ class SettingsApp extends Component {
               />
             }
           >
-            <input
-              type="checkbox"
+            <Switch
               defaultChecked={this.initialValues.googlesettings}
-              className="switch"
-              onChange={this.updateGoogleAnalytics.bind(this)}
+              onChange={this.updateGoogleAnalytics}
             />
           </SettingsField>
 
@@ -681,9 +654,7 @@ class SettingsApp extends Component {
                   name="radio-group"
                   type="radio"
                   value="en"
-                  checked={this.props.settings.locale === 'en'}
-                  // onClick={() => this.changeLocale('en')}
-
+                  checked={this.props.settings.locale === 'en'} // onClick={() => this.changeLocale('en')}
                   onChange={e => this.changeLocale(e.target.value)}
                 />
                 &emsp;
@@ -873,45 +844,6 @@ class SettingsApp extends Component {
             </div>
           </SettingsField>
 
-          {/* <div className="field">
-            <label htmlFor="devmode">
-              <FormattedMessage
-                id="Settings.DeveloperMode"
-                defaultMessage="Developer Mode"
-              />
-            </label>
-            <FormattedMessage
-              id="ToolTip.DevMode"
-              defaultMessage="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
-            >
-              {tt => (
-                <input
-                  id="devmode"
-                  type="checkbox"
-                  className="switch"
-                  onChange={this.updateDeveloperMode}
-                  
-                />
-              )}
-            </FormattedMessage>
-          </div> */}
-
-          {/* <div className="field">
-            <label htmlFor="emailAddress">Email Address</label>
-            <input
-              id="emailAddress"
-              type="email"
-              placeholder={settingsObj.email || ""}
-              data-tooltip="Email address for email reciepts."
-            />
-            <button
-              className="button primary"
-              id="noPad"
-              onClick={() => this.saveEmail()}
-            >
-              Save
-            </button>
-          </div> */}
           <Button
             disabled={!this.props.connections}
             style={{ marginTop: '2em' }}

@@ -91,7 +91,7 @@ const AutoCompleteItem = styled.a({
 const ConsoleOutput = styled.code({
   flexGrow: 1,
   flexBasis: 0,
-  backgroundColor: colors.dark,
+  background: colors.dark,
   border: `1px solid ${colors.darkGray}`,
   overflow: 'auto',
 });
