@@ -721,7 +721,6 @@ class SettingsApp extends Component {
           </SettingsField>
 
           <SettingsField
-            connectLabel
             label={
               <FormattedMessage
                 id="Settings.Fiat"
@@ -787,6 +786,7 @@ class SettingsApp extends Component {
 
           {/* NEXUS FEE */}
           <SettingsField
+            connectLabel
             label={
               <FormattedMessage
                 id="Settings.OptionalFee"
@@ -800,22 +800,25 @@ class SettingsApp extends Component {
               />
             }
           >
-            <div className="flex stretch">
-              <TextField
-                type="number"
-                defaultValue={this.initialValues.txFee}
-                step="0.01"
-                min="0"
-                style={{ width: 100 }}
-              />
-              <Button
-                fitHeight
-                onClick={this.props.OpenModal2}
-                style={{ marginLeft: '1em' }}
-              >
-                Set
-              </Button>
-            </div>
+            {inputId => (
+              <div className="flex stretch">
+                <TextField
+                  id={inputId}
+                  type="number"
+                  defaultValue={this.initialValues.txFee}
+                  step="0.01"
+                  min="0"
+                  style={{ width: 100 }}
+                />
+                <Button
+                  fitHeight
+                  onClick={this.props.OpenModal2}
+                  style={{ marginLeft: '1em' }}
+                >
+                  Set
+                </Button>
+              </div>
+            )}
           </SettingsField>
 
           <SettingsField

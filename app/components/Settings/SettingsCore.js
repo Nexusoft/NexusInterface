@@ -677,30 +677,7 @@ class SettingsCore extends Component {
               onChange={this.updateVerboseLevel}
             />
           </SettingsField>
-          {/*
-          <SettingsField connectLabel label={
-            
-              <FormattedMessage
-                id="Settings.Forkblock"
-                defaultMessage="ForkBlocks"
-              />
-            
-            <FormattedMessage
-              id="ToolTip.ForkBlock"
-              defaultMessage="Step Back A Amount of Blocks"
-            >
-              
-                <input
-                  id="forkblockNumber"
-                  type="number"
-                  size="3"
-                  onChange={this.updateForkBlockAmout}
-                  
-                />
-              )}
-            </FormattedMessage>
-          </div>
-          */}
+
           <SettingsField
             connectLabel
             label={

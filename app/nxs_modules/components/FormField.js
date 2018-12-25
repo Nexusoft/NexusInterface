@@ -70,12 +70,26 @@ const Hint = styled.div({
 class FormField extends Component {
   inputId = newUID();
 
+  formInput = () => {
+    const { connectLabel, children } = this.props;
+    if (connectLabel) {
+      if (typeof children === 'function') {
+        return children(this.inputId);
+      } else {
+        return React.cloneElement(React.Children.only(children), {
+          id: this.inputId,
+        });
+      }
+    }
+
+    return children;
+  };
+
   render() {
     const {
       label,
       capitalizeLabel = true,
       connectLabel,
-      inputWrapped,
       children,
       hint,
       ...rest
@@ -90,19 +104,7 @@ class FormField extends Component {
           {label}
         </Label>
         <div className="relative">
-          {connectLabel
-            ? React.cloneElement(
-                React.Children.only(children),
-                inputWrapped
-                  ? {
-                      inputProps: {
-                        id: this.inputId,
-                        ...children.props.inputProps,
-                      },
-                    }
-                  : { id: this.inputId }
-              )
-            : children}
+          {formInput()}
           {!!hint && <Hint>{hint}</Hint>}
         </div>
       </FormFieldWrapper>

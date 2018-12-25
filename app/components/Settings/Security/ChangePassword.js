@@ -102,87 +102,90 @@ export default class ChangePassword extends Component {
             />
           }
         >
-          <FormField
-            label={
-              <FormattedMessage
-                id="Settings.PreviousPassword"
-                defaultMessage="Previous Password"
-              />
-            }
-            hint={
-              <FormattedMessage
-                id="Settings.PasswordRequired"
-                defaultMessage="Password Is Required"
-              />
-            }
-          >
-            <FormattedMessage id="Settings.Password" defaultMessage="Password">
-              {p => (
+          <FormattedMessage id="Settings.Password" defaultMessage="Password">
+            {p => (
+              <FormField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="Settings.PreviousPassword"
+                    defaultMessage="Previous Password"
+                  />
+                }
+                hint={
+                  <FormattedMessage
+                    id="Settings.PasswordRequired"
+                    defaultMessage="Password Is Required"
+                  />
+                }
+              >
                 <TextField
                   type="password"
                   placeholder={p}
                   id="oldPass"
                   required
                 />
-              )}
-            </FormattedMessage>
-          </FormField>
-          <FormField
-            label={
-              <FormattedMessage
-                id="Settings.NewPassword"
-                defaultMessage="New Password"
-              />
-            }
-            hint={
-              <FormattedMessage
-                id="Settings.PasswordRequired"
-                defaultMessage="Password Is Required"
-              />
-            }
+              </FormField>
+            )}
+          </FormattedMessage>
+          <FormattedMessage
+            id="Settings.NewPassword"
+            defaultMessage="New Password"
           >
-            <FormattedMessage
-              id="Settings.NewPassword"
-              defaultMessage="New Password"
-            >
-              {np => (
+            {np => (
+              <FormField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="Settings.NewPassword"
+                    defaultMessage="New Password"
+                  />
+                }
+                hint={
+                  <FormattedMessage
+                    id="Settings.PasswordRequired"
+                    defaultMessage="Password Is Required"
+                  />
+                }
+              >
                 <TextField
                   type="password"
                   placeholder={np}
                   id="newPass"
                   required
                 />
-              )}
-            </FormattedMessage>
-          </FormField>
-          <FormField
-            label={
-              <FormattedMessage
-                id="Settings.ReEnterPassword"
-                defaultMessage="Re-Enter Password:"
-              />
-            }
-            hint={
-              <FormattedMessage
-                id="Settings.NoMatch"
-                defaultMessage="Passwords do not match"
-              />
-            }
+              </FormField>
+            )}
+          </FormattedMessage>
+          <FormattedMessage
+            id="Settings.ReEnterPassword"
+            defaultMessage="Re-Enter Password:"
           >
-            <FormattedMessage
-              id="Settings.ReEnterPassword"
-              defaultMessage="Re-Enter Password:"
-            >
-              {rep => (
+            {rep => (
+              <FormField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="Settings.ReEnterPassword"
+                    defaultMessage="Re-Enter Password:"
+                  />
+                }
+                hint={
+                  <FormattedMessage
+                    id="Settings.NoMatch"
+                    defaultMessage="Passwords do not match"
+                  />
+                }
+              >
                 <TextField
                   type="password"
                   placeholder={rep}
                   id="passChk"
                   onChange={e => this.reEnterValidator(e)}
                 />
-              )}
-            </FormattedMessage>
-          </FormField>
+              </FormField>
+            )}
+          </FormattedMessage>
           {/* temporary workaround to avoid error */}
           <span id="passHint" style={{ display: 'none' }} />
           {/* <span id="passHint" className="err invalid">

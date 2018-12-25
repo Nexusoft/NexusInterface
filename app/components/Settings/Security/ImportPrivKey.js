@@ -56,50 +56,52 @@ export default class ImportPrivKey extends Component {
             />
           }
         >
-          <FormField
-            label={
-              <FormattedMessage
-                id="Settings.AccountName"
-                defaultMessage="Account Name:"
-              />
-            }
+          <FormattedMessage
+            id="Settings.AccountName"
+            defaultMessage="Account Name"
           >
-            <FormattedMessage
-              id="Settings.AccountName"
-              defaultMessage="Account Name"
-            >
-              {An => (
+            {An => (
+              <FormField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="Settings.AccountName"
+                    defaultMessage="Account Name:"
+                  />
+                }
+              >
                 <TextField
                   type="Text"
                   placeholder={An}
                   id="acctName"
                   required
                 />
-              )}
-            </FormattedMessage>
-          </FormField>
-          <FormField
-            label={
-              <FormattedMessage
-                id="Settings.PrivateKey"
-                defaultMessage="Account Name:"
-              />
-            }
+              </FormField>
+            )}
+          </FormattedMessage>
+          <FormattedMessage
+            id="Settings.PrivateKey"
+            defaultMessage="Private Key"
           >
-            <FormattedMessage
-              id="Settings.PrivateKey"
-              defaultMessage="Private Key"
-            >
-              {pk => (
+            {pk => (
+              <FormField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="Settings.PrivateKey"
+                    defaultMessage="Account Name:"
+                  />
+                }
+              >
                 <TextField
                   type="password"
                   placeholder={pk}
                   id="privateKey"
                   required
                 />
-              )}
-            </FormattedMessage>
-          </FormField>
+              </FormField>
+            )}
+          </FormattedMessage>
           <Button
             skin="primary"
             wide

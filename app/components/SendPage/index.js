@@ -388,7 +388,7 @@ class SendPage extends Component {
         ) : (
           <div>
             <SendForm>
-              <FormField connectLabel label="Send From">
+              <FormField label="Send From">
                 <Select
                   value={this.props.SelectedAccount}
                   onChange={this.props.AccountPicked}

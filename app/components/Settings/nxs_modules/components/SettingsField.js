@@ -38,6 +38,21 @@ const Input = styled.div({
 class SettingsField extends Component {
   inputId = newUID();
 
+  settingsInput = () => {
+    const { connectLabel, children } = this.props;
+    if (connectLabel) {
+      if (typeof children === 'function') {
+        return children(this.inputId);
+      } else {
+        return React.cloneElement(React.Children.only(children), {
+          id: this.inputId,
+        });
+      }
+    }
+
+    return children;
+  };
+
   render() {
     const { label, subLabel, connectLabel, children, ...rest } = this.props;
     return (
@@ -46,13 +61,7 @@ class SettingsField extends Component {
           <div>{label}</div>
           {subLabel && <SubLabel>{subLabel}</SubLabel>}
         </Label>
-        <Input>
-          {connectLabel
-            ? React.cloneElement(React.Children.only(children), {
-                id: this.inputId,
-              })
-            : children}
-        </Input>
+        <Input>{this.settingsInput()}</Input>
       </FieldWrapper>
     );
   }

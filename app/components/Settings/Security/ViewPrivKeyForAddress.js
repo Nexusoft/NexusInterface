@@ -15,13 +15,11 @@ import copyIcon from 'images/copy.sprite.svg';
 export default class ViewPrivKeyForAddress extends Component {
   showPrivKey(e) {
     e.preventDefault();
-    let addressInput = document.getElementById('privKeyAddress');
-    let address = addressInput.value;
-    let output = document.getElementById('privKeyOutput');
+    let address = this.inputRef.value;
     if (address) {
       RPC.PROMISE('dumpprivkey', [address])
         .then(payload => {
-          output.value = payload;
+          this.outputRef.value = payload;
         })
         .catch(e => {
           if (e.includes(address)) {
@@ -30,18 +28,17 @@ export default class ViewPrivKeyForAddress extends Component {
           this.props.OpenErrorModal(e);
         });
     } else {
-      addressInput.focus();
+      this.inputRef.focus();
     }
   }
 
   copyPrivkey(e) {
     e.preventDefault();
-    let output = document.getElementById('privKeyOutput');
-    output.type = 'text';
-    output.focus();
-    output.select();
+    this.outputRef.type = 'text';
+    this.outputRef.focus();
+    this.outputRef.select();
     document.execCommand('Copy', false, null);
-    output.type = 'password';
+    this.outputRef.type = 'password';
     this.props.OpenModal('Copied');
   }
 
@@ -57,6 +54,7 @@ export default class ViewPrivKeyForAddress extends Component {
           }
         >
           <FormField
+            connectLabel
             label={
               <FormattedMessage
                 id="Settings.Address"
@@ -64,23 +62,29 @@ export default class ViewPrivKeyForAddress extends Component {
               />
             }
           >
-            <InputGroup>
-              <TextField
-                id="privKeyAddress"
-                placeholder="Enter Address Here"
-                required
-              />
-              <Button
-                skin="primary"
-                fitHeight
-                onClick={e => this.showPrivKey(e)}
-              >
-                Import
-              </Button>
-            </InputGroup>
+            {inputId => (
+              <InputGroup>
+                <TextField
+                  id={inputId}
+                  ref={el => {
+                    this.inputRef = el;
+                  }}
+                  placeholder="Enter Address Here"
+                  required
+                />
+                <Button
+                  skin="primary"
+                  fitHeight
+                  onClick={e => this.showPrivKey(e)}
+                >
+                  Import
+                </Button>
+              </InputGroup>
+            )}
           </FormField>
 
           <FormField
+            connectLabel
             label={
               <FormattedMessage
                 id="Settings.PrivateKey"
@@ -88,19 +92,27 @@ export default class ViewPrivKeyForAddress extends Component {
               />
             }
           >
-            <InputGroup>
-              <TextField type="password" id="privKeyOutput" />
-              <Button
-                fitHeight
-                className="relative"
-                onClick={e => {
-                  this.copyPrivkey(e);
-                }}
-              >
-                <Icon icon={copyIcon} spaceRight />
-                <FormattedMessage id="Settings.Copy" defaultMessage="Copy" />
-              </Button>
-            </InputGroup>
+            {inputId => (
+              <InputGroup>
+                <TextField
+                  type="password"
+                  id={inputId}
+                  ref={el => {
+                    this.outputRef = el;
+                  }}
+                />
+                <Button
+                  fitHeight
+                  className="relative"
+                  onClick={e => {
+                    this.copyPrivkey(e);
+                  }}
+                >
+                  <Icon icon={copyIcon} spaceRight />
+                  <FormattedMessage id="Settings.Copy" defaultMessage="Copy" />
+                </Button>
+              </InputGroup>
+            )}
           </FormField>
         </FieldSet>
       </form>
