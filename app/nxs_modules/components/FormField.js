@@ -104,7 +104,7 @@ class FormField extends Component {
           {label}
         </Label>
         <div className="relative">
-          {formInput()}
+          {this.formInput()}
           {!!hint && <Hint>{hint}</Hint>}
         </div>
       </FormFieldWrapper>
