@@ -831,6 +831,7 @@ class AddressBook extends Component {
                     defaultMessage="Click To Copy"
                   />
                 }
+                key={i + add.address}
               >
                 <div
                   onContextMenu={e => {
@@ -839,7 +840,6 @@ class AddressBook extends Component {
                       type: 'notMine',
                     });
                   }}
-                  key={i + add.address}
                 >
                   {this.props.editAddressLabel === add.address ? (
                     <input
@@ -1180,6 +1180,7 @@ class AddressBook extends Component {
                   <ControlIcon icon={addContactIcon} />
                 </Button>
               </Tooltip.Trigger>
+
               <Tooltip.Trigger
                 tooltip={
                   <FormattedMessage
@@ -1191,14 +1192,14 @@ class AddressBook extends Component {
                 <Button
                   skin="blank-light"
                   className="relative"
-                  as="a"
                   onClick={this.exportAddressBook.bind(this)}
                 >
                   <ControlIcon icon={exportIcon} />
                 </Button>
               </Tooltip.Trigger>
+
               <Tooltip.Trigger
-                tootlip={
+                tooltip={
                   <FormattedMessage
                     id="AddressBook.MyAddresses"
                     defaultMessage="My Addresses"
@@ -1208,7 +1209,6 @@ class AddressBook extends Component {
                 <Button
                   skin="blank-light"
                   className="relative"
-                  as="a"
                   onClick={() => {
                     this.props.clearSearch();
                     this.loadMyAccounts();
@@ -1218,6 +1218,7 @@ class AddressBook extends Component {
                   <ControlIcon icon={userIcon} />
                 </Button>
               </Tooltip.Trigger>
+
               <FormattedMessage
                 id="AddressBook.SearchContact"
                 defaultMessage="Search Contact"
