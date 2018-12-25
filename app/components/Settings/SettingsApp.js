@@ -331,10 +331,10 @@ class SettingsApp extends Component {
     console.log(this.props.settings.Folder);
   }
 
-  OnFiatCurrencyChange(e) {
-    this.props.setFiatCurrency(e.target.value);
+  OnFiatCurrencyChange(value) {
+    this.props.setFiatCurrency(value);
     let settings = GetSettings();
-    settings.fiatCurrency = e.target.value;
+    settings.fiatCurrency = value;
     this.props.setSettings(settings);
     SaveSettings(settings);
   }

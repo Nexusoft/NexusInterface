@@ -37,7 +37,7 @@ const InputWrapper = styled.div(
             height: 2,
             borderRadius: 1,
             background: colors.gray,
-            transitionProperty: 'background-color, box-shadow, color',
+            transitionProperty: 'background-color, box-shadow',
             transitionDuration: timing.normal,
           },
           '&:hover': {

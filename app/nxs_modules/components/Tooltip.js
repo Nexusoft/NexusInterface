@@ -90,7 +90,7 @@ const TooltipWrapper = styled.div(
     background: tooltipBg,
     color: colors.light,
     borderRadius: 4,
-    filter: 'drop-shadow(0 0 15px rgba(0,0,0,.7))',
+    filter: 'drop-shadow(0 0 8px rgba(0,0,0,.7))',
     fontSize: 15,
     padding: '.4em .8em',
     animation: `${animations.fadeIn} ${timing.normal} ease-out`,

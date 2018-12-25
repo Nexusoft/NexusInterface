@@ -7,10 +7,13 @@ import { keyframes } from '@emotion/core';
 import Button from 'components/Button';
 import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
-import { colors, timing, consts } from 'styles';
+import { colors, timing, consts, animations } from 'styles';
+import { lighten } from 'utils/colors';
 
 // Minimum gap from the dropdown to the bottom edge of the screen
 const minScreenGap = 20;
+// Options's horizontal padding
+const optionHPadding = 12;
 
 const SelectControl = styled.div(
   {
@@ -26,17 +29,34 @@ const SelectControl = styled.div(
         return {
           background: 'transparent',
           color: colors.lighterGray,
-          borderBottom: `2px solid ${colors.gray}`,
           transitionProperty: 'color, border-bottom-color',
           transitionDuration: timing.normal,
+          position: 'relative',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 2,
+            borderRadius: 1,
+            background: colors.gray,
+            transitionProperty: 'background-color',
+            transitionDuration: timing.normal,
+          },
           '&:hover': {
             color: colors.light,
             borderBottomColor: colors.lightGray,
+            '&::after': {
+              background: colors.lightGray,
+            },
           },
           ...(active
             ? {
                 color: colors.light,
-                borderBottomColor: colors.primary,
+                '&&::after': {
+                  background: lighten(colors.primary, 0.3),
+                },
               }
             : null),
         };
@@ -84,14 +104,18 @@ const vertExpand = keyframes`
   }
 `;
 
-const Options = styled.div(
+const OptionsWrapper = styled.div(
   {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 'auto',
+    height: 'auto',
+    visibility: 'hidden',
     overflowY: 'auto',
-    padding: 0,
+    borderRadius: 4,
+    padding: '4px 0',
     margin: 0,
-    transformOrigin: 'top',
-    animation: `${vertExpand} ${timing.quick} ease-out`,
     boxShadow: `0 0 8px rgba(0,0,0,.7)`,
   },
   ({ skin }) => {
@@ -107,26 +131,34 @@ const Options = styled.div(
           color: colors.dark,
         };
     }
-  }
+  },
+  ({ ready }) =>
+    ready && {
+      visibility: 'visible',
+      animation: `${animations.fadeIn} ${timing.quick} ease-out`,
+    }
 );
 
 const Option = styled.div(
   {
     display: 'flex',
     alignItems: 'center',
-    padding: '0 .8em',
+    padding: `0 ${optionHPadding}px`,
     overflow: 'hidden',
     cursor: 'pointer',
     transition: `background-color ${timing.normal}`,
     whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
     height: consts.inputHeightEm + 'em',
   },
-  ({ skin }) => {
+  ({ skin, selected }) => {
     switch (skin) {
       case 'underline':
         return {
+          background: selected ? colors.primary : undefined,
+          color: selected ? colors.primaryContrast : undefined,
           '&:hover': {
-            background: colors.darkerGray,
+            background: selected ? colors.primary : colors.darkerGray,
           },
         };
       case 'filled-light':
@@ -139,46 +171,108 @@ const Option = styled.div(
   }
 );
 
+class Options extends Component {
+  state = {
+    ready: false,
+    // Apply the same fon-size with the Select control
+    styles: {
+      fontSize: window
+        .getComputedStyle(this.props.controlRef)
+        .getPropertyValue('font-size'),
+    },
+  };
+
+  positionDropdown = () => {
+    const styles = { fontSize: this.state.styles.fontSize };
+
+    // Horizontally align Options dropdown with the Select control
+    const controlRect = this.props.controlRef.getBoundingClientRect();
+    if (this.props.skin === 'underline') {
+      styles.left = controlRect.left - optionHPadding;
+      styles.width = controlRect.width + optionHPadding;
+    } else {
+      styles.left = controlRect.left;
+      styles.width = controlRect.width;
+    }
+
+    // Vertically align Selected Option with the Select control
+    const thisRect = this.el.getBoundingClientRect();
+    const selectedRect = this.selectedRef.getBoundingClientRect();
+    const selectedOptTop = selectedRect.top - thisRect.top;
+    styles.top = controlRect.top - selectedOptTop;
+
+    styles.height = thisRect.height;
+
+    // Prevent the Options dropdown to outreach the top of the screen
+    if (styles.top < minScreenGap) {
+      this.scrollTop = minScreenGap - styles.top;
+      styles.height = styles.top + styles.height - minScreenGap;
+      styles.top = minScreenGap;
+    }
+
+    // Prevent the Options dropdown to outreach the screen
+    if (styles.top + styles.height > window.innerHeight - minScreenGap) {
+      styles.height = window.innerHeight - minScreenGap - styles.top;
+    }
+
+    this.setState({ ready: true, styles });
+  };
+
+  select = option => {
+    this.props.close();
+    this.props.onChange(option.value);
+  };
+
+  render() {
+    const { skin, options, close, onChange, value, ...rest } = this.props;
+    const { ready, styles } = this.state;
+
+    return (
+      <Overlay onBackgroundClick={close} onMount={this.positionDropdown}>
+        <OptionsWrapper
+          skin={skin}
+          ref={el => {
+            if (el && this.scrollTop) {
+              el.scrollTop = this.scrollTop;
+              this.scrollTop = null;
+            }
+            this.el = el;
+          }}
+          style={styles}
+          ready={ready}
+        >
+          {options.map(option => (
+            <Option
+              key={option.value}
+              skin={skin}
+              onClick={() => this.select(option)}
+              selected={option.value === value}
+              ref={
+                option.value === value
+                  ? el => {
+                      this.selectedRef = el;
+                    }
+                  : undefined
+              }
+            >
+              {option.display}
+            </Option>
+          ))}
+        </OptionsWrapper>
+      </Overlay>
+    );
+  }
+}
+
 export default class Select extends Component {
   state = {
     open: false,
-    // Options dropdown's size and position
-    top: 0,
-    left: 0,
-    width: 200,
   };
-
-  componentDidUpdate() {
-    // Prevent the Options dropdown to outreach the screen
-    if (this.optionsRef) {
-      const rect = this.optionsRef.getBoundingClientRect();
-      // Due to the expand animation, the current element's size is only a part of of the full size
-      // So we need to find the real bottom position when the element is in full size
-      const fullSizeBottom = rect.top + rect.height * startingScaleDown;
-      if (fullSizeBottom > window.innerHeight - minScreenGap) {
-        // Manipulate the DOM directly so it won't waste another render cycle
-        // and the maxHeight style doesn't affect other parts so it doesn't need to be in the state
-        this.optionsRef.style.maxHeight =
-          window.innerHeight - minScreenGap - rect.top + 'px';
-      }
-    }
-  }
 
   option = value => this.props.options.find(o => o.value === value);
 
   open = () => {
-    const {
-      top,
-      left,
-      width,
-      height,
-    } = this.controlRef.getBoundingClientRect();
-    this.setState({
-      open: true,
-      top: top + height,
-      left,
-      width,
-    });
+    this.setState({ open: true });
   };
 
   close = () => {
@@ -193,13 +287,25 @@ export default class Select extends Component {
       onChange,
       ...rest
     } = this.props;
-    const { open, top, left, width } = this.state;
+    const { open } = this.state;
+    if (!options.length) {
+      console.error('Empty options is invalid');
+      return null;
+    }
     const selectedOption = this.option(value);
+    if (!selectedOption) {
+      console.error(
+        `Selected value ${value} is not found among the options: ${options}`
+      );
+      return null;
+    }
 
     return (
       <>
         <SelectControl
-          ref={el => (this.controlRef = el)}
+          ref={el => {
+            this.controlRef = el;
+          }}
           active={open}
           onClick={this.open}
           skin={skin}
@@ -217,26 +323,11 @@ export default class Select extends Component {
         </SelectControl>
 
         {open && (
-          <Overlay onBackgroundClick={this.close}>
-            <Options
-              skin={skin}
-              ref={el => (this.optionsRef = el)}
-              style={{ top, left, width }}
-            >
-              {options.map(option => (
-                <Option
-                  key={option.value}
-                  skin={skin}
-                  onClick={() => {
-                    this.close();
-                    onChange(option.value);
-                  }}
-                >
-                  {option.display}
-                </Option>
-              ))}
-            </Options>
-          </Overlay>
+          <Options
+            {...{ skin, options, value, onChange }}
+            close={this.close}
+            controlRef={this.controlRef}
+          />
         )}
       </>
     );

@@ -34,6 +34,7 @@ export default class Overlay extends Component {
 
   componentDidMount() {
     document.getElementsByTagName('body')[0].appendChild(this.el);
+    this.props.onMount && this.props.onMount();
   }
 
   componentWillUnmount() {
