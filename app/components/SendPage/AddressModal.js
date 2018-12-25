@@ -5,6 +5,7 @@ import Modal from 'react-responsive-modal';
 
 // Internal
 import Icon from 'components/common/Icon';
+import Tooltip from 'components/common/Tooltip';
 import addressBookIcon from 'images/address-book.sprite.svg';
 
 function addressBookToQueue(props) {
@@ -18,33 +19,32 @@ function addressBookToQueue(props) {
         {e.name}
       </td>
       {e.notMine.map((ele, i) => (
-        <td
-          onClick={() => {
-            props.CloseModal4();
-            props.updateAddress(ele.address);
-            props.OpenModal('Copied');
-            setTimeout(() => {
-              if (props.open) {
-                props.CloseModal();
-              }
-            }, 3000);
-          }}
-          className="dt"
-          key={ele.address + i}
-        >
-          {ele.address}
-          <span
-            key={ele.address + i}
-            className="tooltip right"
-            style={{ whiteSpace: 'nowrap' }}
-          >
-            {' '}
+        <Tooltip.Trigger
+          position="right"
+          tooltip={
             <FormattedMessage
               id="sendReceive.CopyToFeild"
               defaultMessage="Copy To Field"
             />
-          </span>
-        </td>
+          }
+        >
+          <td
+            onClick={() => {
+              props.CloseModal4();
+              props.updateAddress(ele.address);
+              props.OpenModal('Copied');
+              setTimeout(() => {
+                if (props.open) {
+                  props.CloseModal();
+                }
+              }, 3000);
+            }}
+            className="dt"
+            key={ele.address + i}
+          >
+            {ele.address}
+          </td>
+        </Tooltip.Trigger>
       ))}
     </tr>
   ));

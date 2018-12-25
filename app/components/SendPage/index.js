@@ -21,6 +21,7 @@ import Select from 'components/common/Select';
 import WaitingMessage from 'components/common/WaitingMessage';
 import FormField from 'components/common/FormField';
 import InputGroup from 'components/common/InputGroup';
+import Tooltip from 'components/common/Tooltip';
 
 // Internal Local Dependencies
 import AddressModal from './AddressModal';
@@ -340,20 +341,23 @@ class SendPage extends Component {
         }
         controls={
           !!this.props.connections && (
-            <Button
-              square
-              skin="primary"
-              className="relative"
-              onClick={() => this.props.OpenMoveModal()}
-            >
-              <Icon icon={swapIcon} />
-              <div className="tooltip bottom">
+            <Tooltip.Trigger
+              tooltip={
                 <FormattedMessage
                   id="sendReceive.MoveNxsBetweenAccount"
                   defaultMessage="Move NXS between accounts"
                 />
-              </div>
-            </Button>
+              }
+            >
+              <Button
+                square
+                skin="primary"
+                className="relative"
+                onClick={() => this.props.OpenMoveModal()}
+              >
+                <Icon icon={swapIcon} />
+              </Button>
+            </Tooltip.Trigger>
           )
         }
       >

@@ -22,6 +22,7 @@ import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import Icon from 'components/common/Icon';
+import Tooltip from 'components/common/Tooltip';
 import WEBGL from 'scripts/WebGLCheck.js';
 import { GetSettings, SaveSettings } from 'api/settings';
 import ContextMenuBuilder from 'contextmenu';
@@ -862,28 +863,27 @@ class Overview extends Component {
             </div>
           </Stat>
 
-          <Stat className="relative">
-            <StatIcon icon={nxsblocksIcon} />
-            <div>
-              <StatLabel>
-                <FormattedMessage
-                  id="overview.BlockCount"
-                  defaultMessage="Block Count"
-                />
-              </StatLabel>
+          <Tooltip.Trigger position="left" tooltip={this.BlockRapper()}>
+            <Stat className="relative">
+              <StatIcon icon={nxsblocksIcon} />
+              <div>
+                <StatLabel>
+                  <FormattedMessage
+                    id="overview.BlockCount"
+                    defaultMessage="Block Count"
+                  />
+                </StatLabel>
 
-              <StatValue>
-                {!!connections ? (
-                  this.numberWithCommas(this.props.blocks)
-                ) : (
-                  <span className="dim">-</span>
-                )}
-              </StatValue>
-            </div>
-            <span className="tooltip left" style={{ whiteSpace: 'nowrap' }}>
-              {this.BlockRapper()}
-            </span>
-          </Stat>
+                <StatValue>
+                  {!!connections ? (
+                    this.numberWithCommas(this.props.blocks)
+                  ) : (
+                    <span className="dim">-</span>
+                  )}
+                </StatValue>
+              </div>
+            </Stat>
+          </Tooltip.Trigger>
 
           <Stat>
             <StatIcon icon={this.blockWeightImage()} />

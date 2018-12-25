@@ -37,6 +37,7 @@ import Select from 'components/common/Select';
 import TextField from 'components/common/TextField';
 import FormField from 'components/common/FormField';
 import Button from 'components/common/Button';
+import Tooltip from 'components/common/Tooltip';
 import { GetSettings } from 'api/settings.js';
 import Table from 'scripts/utilities-react';
 import * as RPC from 'scripts/rpc';
@@ -1817,22 +1818,22 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <Button
-                square
-                className="relative"
-                onClick={() => this.DownloadCSV()}
-              >
-                <Icon icon={downloadIcon} />
-                <div
-                  className="tooltip bottom"
-                  style={{ left: 'auto', transform: 'none', right: 0 }} // fix horizontal scrolling
-                >
+              <Tooltip.Trigger
+                tooltip={
                   <FormattedMessage
                     id="transactions.Download"
                     defaultMessage="Download"
                   />
-                </div>
-              </Button>
+                }
+              >
+                <Button
+                  square
+                  className="relative"
+                  onClick={() => this.DownloadCSV()}
+                >
+                  <Icon icon={downloadIcon} />
+                </Button>
+              </Tooltip.Trigger>
             </Filters>
             <div id="transactions-details">
               <Table

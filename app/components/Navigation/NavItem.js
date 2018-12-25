@@ -7,6 +7,7 @@ import { keyframes } from '@emotion/core';
 // Internal Global Depnedencies
 import HorizontalLine from 'components/common/HorizontalLine';
 import Icon from 'components/common/Icon';
+import Tooltip from 'components/common/Tooltip';
 import { colors, timing, consts } from 'styles';
 
 const pulseRing = keyframes`
@@ -86,12 +87,11 @@ const NavIcon = styled(Icon)({
 });
 
 const NavItem = ({ icon, children, ...rest }) => (
-  <NavLinkItem {...rest}>
-    <NavIcon icon={icon} />
-    <div className="tooltip top" style={{ whiteSpace: 'nowrap' }}>
-      {children}
-    </div>
-  </NavLinkItem>
+  <Tooltip.Trigger tooltip={children} position="top">
+    <NavLinkItem {...rest}>
+      <NavIcon icon={icon} />
+    </NavLinkItem>
+  </Tooltip.Trigger>
 );
 
 export default NavItem;

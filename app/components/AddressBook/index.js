@@ -22,6 +22,7 @@ import Button from 'components/common/Button';
 import TextField from 'components/common/TextField';
 import Panel from 'components/common/Panel';
 import WaitingMessage from 'components/common/WaitingMessage';
+import Tooltip from 'components/common/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
@@ -298,14 +299,15 @@ class AddressBook extends Component {
               </td>
               {acct.addresses.map(address => {
                 return (
-                  <td className="tdd" key={address + i}>
-                    <span onClick={event => this.copyaddress(event)}>
-                      {address}
-                    </span>
-                    <span key={address + i} className="tooltip">
-                      {this.props.messages['AddressBook.Copy']}
-                    </span>
-                  </td>
+                  <Tooltip.Trigger
+                    tooltip={this.props.messages['AddressBook.Copy']}
+                  >
+                    <td className="tdd" key={address + i}>
+                      <span onClick={event => this.copyaddress(event)}>
+                        {address}
+                      </span>
+                    </td>
+                  </Tooltip.Trigger>
                 );
               })}
             </tr>
@@ -821,73 +823,76 @@ class AddressBook extends Component {
         <div>
           {this.props.addressbook[this.props.selected].notMine.map((add, i) => {
             return (
-              <div
-                onContextMenu={e => {
-                  this.props.SetMousePosition('address', {
-                    index: i,
-                    type: 'notMine',
-                  });
-                }}
-                key={i + add.address}
+              <Tooltip.Trigger
+                tooltip={
+                  <FormattedMessage
+                    id="AddressBook.Copy"
+                    defaultMessage="Click To Copy"
+                  />
+                }
               >
-                {this.props.editAddressLabel === add.address ? (
-                  <input
-                    className="editFeildDoNotClose"
-                    onChange={e => this.props.EditProtoLabel(e.target.value)}
-                    value={this.props.prototypeAddressLabel}
-                    onDoubleClick={() =>
-                      this.props.SaveLabel(
-                        this.props.selected,
-                        add.address,
-                        this.props.prototypeAddressLabel,
-                        false
-                      )
-                    }
-                    onKeyDown={e => {
-                      if (e.which === 13 || e.which === 9) {
+                <div
+                  onContextMenu={e => {
+                    this.props.SetMousePosition('address', {
+                      index: i,
+                      type: 'notMine',
+                    });
+                  }}
+                  key={i + add.address}
+                >
+                  {this.props.editAddressLabel === add.address ? (
+                    <input
+                      className="editFeildDoNotClose"
+                      onChange={e => this.props.EditProtoLabel(e.target.value)}
+                      value={this.props.prototypeAddressLabel}
+                      onDoubleClick={() =>
                         this.props.SaveLabel(
                           this.props.selected,
                           add.address,
                           this.props.prototypeAddressLabel,
                           false
-                        );
+                        )
                       }
-                    }}
-                  />
-                ) : (
-                  <span
-                    onDoubleClick={() => {
-                      if (add.label === "'s Address") {
-                        this.props.LabelToggler(
-                          this.props.addressbook[this.props.selected].name +
-                            add.label,
-                          add.address
-                        );
-                      } else {
-                        this.props.LabelToggler(add.label, add.address);
-                      }
-                    }}
-                  >
-                    {add.label === "'s Address"
-                      ? `${
-                          this.props.addressbook[this.props.selected].name
-                        }${"'s"}${'  '}${
-                          this.props.messages['AddressBook.Address']
-                        }`
-                      : add.label}
-                    :
-                  </span>
-                )}
-                <div onClick={event => this.copyaddress(event)}>
-                  {add.address}
+                      onKeyDown={e => {
+                        if (e.which === 13 || e.which === 9) {
+                          this.props.SaveLabel(
+                            this.props.selected,
+                            add.address,
+                            this.props.prototypeAddressLabel,
+                            false
+                          );
+                        }
+                      }}
+                    />
+                  ) : (
+                    <span
+                      onDoubleClick={() => {
+                        if (add.label === "'s Address") {
+                          this.props.LabelToggler(
+                            this.props.addressbook[this.props.selected].name +
+                              add.label,
+                            add.address
+                          );
+                        } else {
+                          this.props.LabelToggler(add.label, add.address);
+                        }
+                      }}
+                    >
+                      {add.label === "'s Address"
+                        ? `${
+                            this.props.addressbook[this.props.selected].name
+                          }${"'s"}${'  '}${
+                            this.props.messages['AddressBook.Address']
+                          }`
+                        : add.label}
+                      :
+                    </span>
+                  )}
+                  <div onClick={event => this.copyaddress(event)}>
+                    {add.address}
+                  </div>
                 </div>
-                <span className="tooltip">
-                  <FormattedMessage
-                    id="AddressBook.Copy"
-                    defaultMessage="Click To Copy"
-                  />
-                </span>
-              </div>
+              </Tooltip.Trigger>
             );
           })}
         </div>
@@ -897,85 +902,88 @@ class AddressBook extends Component {
 
   myAddressLister() {
     return (
-      <div id="myAddresses">
-        <h3>
+      <Tooltip.Trigger
+        tooltip={
           <FormattedMessage
-            id="AddressBook.MyAddresses"
-            defaultMessage="My Addresses"
+            id="AddressBook.Copy"
+            defaultMessage="Click To Copy"
           />
-        </h3>
-        <div>
-          {this.props.addressbook[this.props.selected].mine.map((add, i) => {
-            return (
-              <div
-                onContextMenu={e => {
-                  this.props.SetMousePosition('address', {
-                    index: i,
-                    type: 'mine',
-                  });
-                }}
-                key={i + add.address}
-              >
-                {this.props.editAddressLabel === add.address ? (
-                  <input
-                    className="editFeildDoNotClose"
-                    onChange={e => this.props.EditProtoLabel(e.target.value)}
-                    value={this.props.prototypeAddressLabel}
-                    onDoubleClick={() =>
-                      this.props.SaveLabel(
-                        this.props.selected,
-                        add.address,
-                        this.props.prototypeAddressLabel,
-                        true
-                      )
-                    }
-                    onKeyDown={e => {
-                      if (e.which === 13 || e.which === 9) {
+        }
+      >
+        <div id="myAddresses">
+          <h3>
+            <FormattedMessage
+              id="AddressBook.MyAddresses"
+              defaultMessage="My Addresses"
+            />
+          </h3>
+          <div>
+            {this.props.addressbook[this.props.selected].mine.map((add, i) => {
+              return (
+                <div
+                  onContextMenu={e => {
+                    this.props.SetMousePosition('address', {
+                      index: i,
+                      type: 'mine',
+                    });
+                  }}
+                  key={i + add.address}
+                >
+                  {this.props.editAddressLabel === add.address ? (
+                    <input
+                      className="editFeildDoNotClose"
+                      onChange={e => this.props.EditProtoLabel(e.target.value)}
+                      value={this.props.prototypeAddressLabel}
+                      onDoubleClick={() =>
                         this.props.SaveLabel(
                           this.props.selected,
                           add.address,
                           this.props.prototypeAddressLabel,
                           true
-                        );
+                        )
                       }
-                    }}
-                  />
-                ) : (
-                  <span
-                    onDoubleClick={() => {
-                      if (add.label === 'My Address for ') {
-                        this.props.LabelToggler(
-                          add.label +
-                            this.props.addressbook[this.props.selected].name,
-                          add.address
-                        );
-                      } else {
-                        this.props.LabelToggler(add.label, add.address);
-                      }
-                    }}
-                  >
-                    {add.label === 'My Address for '
-                      ? `${add.label}${
-                          this.props.addressbook[this.props.selected].name
-                        }`
-                      : add.label}
-                    :
-                  </span>
-                )}
-                <div onClick={event => this.copyaddress(event)}>
-                  {add.address}{' '}
+                      onKeyDown={e => {
+                        if (e.which === 13 || e.which === 9) {
+                          this.props.SaveLabel(
+                            this.props.selected,
+                            add.address,
+                            this.props.prototypeAddressLabel,
+                            true
+                          );
+                        }
+                      }}
+                    />
+                  ) : (
+                    <span
+                      onDoubleClick={() => {
+                        if (add.label === 'My Address for ') {
+                          this.props.LabelToggler(
+                            add.label +
+                              this.props.addressbook[this.props.selected].name,
+                            add.address
+                          );
+                        } else {
+                          this.props.LabelToggler(add.label, add.address);
+                        }
+                      }}
+                    >
+                      {add.label === 'My Address for '
+                        ? `${add.label}${
+                            this.props.addressbook[this.props.selected].name
+                          }`
+                        : add.label}
+                      :
+                    </span>
+                  )}
+                  <div onClick={event => this.copyaddress(event)}>
+                    {add.address}{' '}
+                  </div>
                 </div>
-              </div>
-            );
-          })}{' '}
-          <span className="tooltip">
-            <FormattedMessage
-              id="AddressBook.Copy"
-              defaultMessage="Click To Copy"
-            />
-          </span>
+              );
+            })}{' '}
+          </div>
         </div>
-      </div>
+      </Tooltip.Trigger>
     );
   }
 
@@ -1155,51 +1163,60 @@ class AddressBook extends Component {
         controls={
           !!this.props.connections && (
             <div className="flex center">
-              <Button
-                skin="blank-light"
-                className="relative"
-                onClick={this.showAddContactModal.bind(this)}
-              >
-                <ControlIcon icon={addContactIcon} />
-                <div className="tooltip bottom">
+              <Tooltip.Trigger
+                tooltip={
                   <FormattedMessage
                     id="AddressBook.addContact"
                     defaultMessage="Add Contact"
                   />
-                </div>
-              </Button>
-              <Button
-                skin="blank-light"
-                className="relative"
-                as="a"
-                onClick={this.exportAddressBook.bind(this)}
+                }
               >
-                <ControlIcon icon={exportIcon} />
-                <div className="tooltip bottom">
+                <Button
+                  skin="blank-light"
+                  className="relative"
+                  onClick={this.showAddContactModal.bind(this)}
+                >
+                  <ControlIcon icon={addContactIcon} />
+                </Button>
+              </Tooltip.Trigger>
+              <Tooltip.Trigger
+                tooltip={
                   <FormattedMessage
                     id="AddressBook.Export"
                     defaultMessage="Export"
                   />
-                </div>
-              </Button>
-              <Button
-                skin="blank-light"
-                className="relative"
-                as="a"
-                onClick={() => {
-                  this.props.clearSearch();
-                  this.loadMyAccounts();
-                  this.showMyAddresses();
-                }}
+                }
               >
-                <ControlIcon icon={userIcon} />
-                <div className="tooltip bottom">
+                <Button
+                  skin="blank-light"
+                  className="relative"
+                  as="a"
+                  onClick={this.exportAddressBook.bind(this)}
+                >
+                  <ControlIcon icon={exportIcon} />
+                </Button>
+              </Tooltip.Trigger>
+              <Tooltip.Trigger
+                tootlip={
                   <FormattedMessage
                     id="AddressBook.MyAddresses"
                     defaultMessage="My Addresses"
                   />
-                </div>
-              </Button>
+                }
+              >
+                <Button
+                  skin="blank-light"
+                  className="relative"
+                  as="a"
+                  onClick={() => {
+                    this.props.clearSearch();
+                    this.loadMyAccounts();
+                    this.showMyAddresses();
+                  }}
+                >
+                  <ControlIcon icon={userIcon} />
+                </Button>
+              </Tooltip.Trigger>
               <FormattedMessage
                 id="AddressBook.SearchContact"
                 defaultMessage="Search Contact"
@@ -1248,200 +1265,212 @@ class AddressBook extends Component {
                 {this.props.addressbook[this.props.selected].mine && (
                   <div id="contactDetailContainer">
                     <fieldset id="contactDetails">
-                      <legend>
-                        {this.props.editName === true ? (
+                      <Tooltip.Trigger
+                        tooltip={
                           <FormattedMessage
-                            id="AddressBook.Name"
-                            defaultMessage="Name"
-                          >
-                            {n => (
-                              <input
-                                id="new-account-name"
-                                className="editFeildDoNotClose"
-                                value={this.props.prototypeName}
-                                onChange={e =>
-                                  this.props.EditProtoName(e.target.value)
-                                }
-                                onKeyDown={e => {
-                                  if (e.which === 13 || e.which === 9) {
+                            id="AddressBook.ClickToEdit"
+                            defaultMessage="Doubleclick To Edit"
+                          />
+                        }
+                      >
+                        <legend>
+                          {this.props.editName === true ? (
+                            <FormattedMessage
+                              id="AddressBook.Name"
+                              defaultMessage="Name"
+                            >
+                              {n => (
+                                <input
+                                  id="new-account-name"
+                                  className="editFeildDoNotClose"
+                                  value={this.props.prototypeName}
+                                  onChange={e =>
+                                    this.props.EditProtoName(e.target.value)
+                                  }
+                                  onKeyDown={e => {
+                                    if (e.which === 13 || e.which === 9) {
+                                      if (this.props.prototypeName !== '') {
+                                        this.props.SaveName(
+                                          this.props.selected,
+                                          this.props.prototypeName
+                                        );
+                                      }
+                                    }
+                                  }}
+                                  placeholder={n}
+                                  onDoubleClick={e => {
                                     if (this.props.prototypeName !== '') {
                                       this.props.SaveName(
                                         this.props.selected,
                                         this.props.prototypeName
                                       );
                                     }
-                                  }
-                                }}
-                                placeholder={n}
-                                onDoubleClick={e => {
-                                  if (this.props.prototypeName !== '') {
-                                    this.props.SaveName(
-                                      this.props.selected,
-                                      this.props.prototypeName
-                                    );
-                                  }
-                                }}
-                              />
-                            )}
-                          </FormattedMessage>
-                        ) : (
-                          <span
-                            onDoubleClick={() =>
-                              this.props.NameToggler(
-                                this.props.addressbook[this.props.selected].name
-                              )
-                            }
-                          >
-                            {this.props.addressbook[this.props.selected].name}
-                          </span>
-                        )}{' '}
-                        <div className="tooltip">
-                          <FormattedMessage
-                            id="AddressBook.ClickToEdit"
-                            defaultMessage="Doubleclick To Edit"
-                          />
-                        </div>
-                      </legend>
-                      <div id="contactInformation">
-                        <div>
-                          <div>
-                            {' '}
-                            <label
+                                  }}
+                                />
+                              )}
+                            </FormattedMessage>
+                          ) : (
+                            <span
                               onDoubleClick={() =>
-                                this.props.PhoneToggler(
+                                this.props.NameToggler(
                                   this.props.addressbook[this.props.selected]
-                                    .phoneNumber
+                                    .name
                                 )
                               }
-                              htmlFor="phoneNumber"
                             >
+                              {this.props.addressbook[this.props.selected].name}
+                            </span>
+                          )}{' '}
+                        </legend>
+                      </Tooltip.Trigger>
+                      <div id="contactInformation">
+                        <div>
+                          <Tooltip.Trigger
+                            tooltip={
                               <FormattedMessage
-                                id="AddressBook.PhoneNumber"
-                                defaultMessage="Phone Number"
+                                id="AddressBook.ClickToEdit"
+                                defaultMessage="Doubleclick To Edit"
                               />
-                            </label>
-                            {this.props.editPhone === true ? (
-                              <FormattedMessage
-                                id="AddressBook.Phone"
-                                defaultMessage="Phone #"
-                              >
-                                {p => (
-                                  <input
-                                    id="phoneNumber"
-                                    name="phoneNumber"
-                                    className="editFeildDoNotClose"
-                                    type="tel"
-                                    onChange={e =>
-                                      this.phoneNumberHandler(e.target.value)
-                                    }
-                                    onKeyDown={e => {
-                                      if (e.which === 13 || e.which === 9) {
-                                        this.props.SavePhone(
-                                          this.props.selected,
-                                          this.props.prototypePhoneNumber
-                                        );
-                                      }
-                                    }}
-                                    value={this.props.prototypePhoneNumber}
-                                    placeholder={p}
-                                    onDoubleClick={() =>
-                                      this.props.SavePhone(
-                                        this.props.selected,
-                                        this.props.prototypePhoneNumber
-                                      )
-                                    }
-                                  />
-                                )}
-                              </FormattedMessage>
-                            ) : (
-                              <span
+                            }
+                          >
+                            <div>
+                              {' '}
+                              <label
                                 onDoubleClick={() =>
                                   this.props.PhoneToggler(
                                     this.props.addressbook[this.props.selected]
                                       .phoneNumber
                                   )
                                 }
-                                id="phoneNumber"
+                                htmlFor="phoneNumber"
                               >
-                                {' '}
-                                {this.phoneFormatter()}
-                              </span>
-                            )}
-                            <span className="tooltip">
+                                <FormattedMessage
+                                  id="AddressBook.PhoneNumber"
+                                  defaultMessage="Phone Number"
+                                />
+                              </label>
+                              {this.props.editPhone === true ? (
+                                <FormattedMessage
+                                  id="AddressBook.Phone"
+                                  defaultMessage="Phone #"
+                                >
+                                  {p => (
+                                    <input
+                                      id="phoneNumber"
+                                      name="phoneNumber"
+                                      className="editFeildDoNotClose"
+                                      type="tel"
+                                      onChange={e =>
+                                        this.phoneNumberHandler(e.target.value)
+                                      }
+                                      onKeyDown={e => {
+                                        if (e.which === 13 || e.which === 9) {
+                                          this.props.SavePhone(
+                                            this.props.selected,
+                                            this.props.prototypePhoneNumber
+                                          );
+                                        }
+                                      }}
+                                      value={this.props.prototypePhoneNumber}
+                                      placeholder={p}
+                                      onDoubleClick={() =>
+                                        this.props.SavePhone(
+                                          this.props.selected,
+                                          this.props.prototypePhoneNumber
+                                        )
+                                      }
+                                    />
+                                  )}
+                                </FormattedMessage>
+                              ) : (
+                                <span
+                                  onDoubleClick={() =>
+                                    this.props.PhoneToggler(
+                                      this.props.addressbook[
+                                        this.props.selected
+                                      ].phoneNumber
+                                    )
+                                  }
+                                  id="phoneNumber"
+                                >
+                                  {' '}
+                                  {this.phoneFormatter()}
+                                </span>
+                              )}
+                            </div>
+                          </Tooltip.Trigger>
+                          {this.localTimeFormater()}
+                          <Tooltip.Trigger
+                            tooltip={
                               <FormattedMessage
                                 id="AddressBook.ClickToEdit"
                                 defaultMessage="Doubleclick To Edit"
                               />
-                            </span>
-                          </div>
-                          {this.localTimeFormater()}
-                          <div id="notesContainer">
-                            <label
-                              onDoubleClick={() =>
-                                this.props.NotesToggler(
-                                  this.props.addressbook[this.props.selected]
-                                    .notes
-                                )
-                              }
-                              htmlFor="notes"
-                            >
-                              <FormattedMessage
-                                id="AddressBook.Notes"
-                                defaultMessage="Notes"
-                              />
-                              :
-                            </label>
-                            {this.props.editNotes === true ? (
-                              <div>
-                                <textarea
-                                  id="notes"
-                                  name="notes"
-                                  className="editFeildDoNotClose"
-                                  onDoubleClick={() =>
-                                    this.props.SaveNotes(
-                                      this.props.selected,
-                                      this.props.prototypeNotes
-                                    )
-                                  }
-                                  onKeyDown={e => {
-                                    if (e.which === 13 || e.which === 9) {
-                                      this.props.SaveNotes(
-                                        this.props.selected,
-                                        this.props.prototypeNotes
-                                      );
-                                    }
-                                  }}
-                                  onChange={e =>
-                                    this.props.EditProtoNotes(e.target.value)
-                                  }
-                                  value={this.props.prototypeNotes}
-                                  rows="3"
-                                />
-                              </div>
-                            ) : (
-                              <div
-                                id="notes"
-                                name="notes"
+                            }
+                          >
+                            <div id="notesContainer">
+                              <label
                                 onDoubleClick={() =>
                                   this.props.NotesToggler(
                                     this.props.addressbook[this.props.selected]
                                       .notes
                                   )
                                 }
+                                htmlFor="notes"
                               >
-                                {
-                                  this.props.addressbook[this.props.selected]
-                                    .notes
-                                }
-                              </div>
-                            )}
-                            <span className="tooltip">
-                              <FormattedMessage
-                                id="AddressBook.ClickToEdit"
-                                defaultMessage="Doubleclick To Edit"
-                              />
-                            </span>
-                          </div>
+                                <FormattedMessage
+                                  id="AddressBook.Notes"
+                                  defaultMessage="Notes"
+                                />
+                                :
+                              </label>
+                              {this.props.editNotes === true ? (
+                                <div>
+                                  <textarea
+                                    id="notes"
+                                    name="notes"
+                                    className="editFeildDoNotClose"
+                                    onDoubleClick={() =>
+                                      this.props.SaveNotes(
+                                        this.props.selected,
+                                        this.props.prototypeNotes
+                                      )
+                                    }
+                                    onKeyDown={e => {
+                                      if (e.which === 13 || e.which === 9) {
+                                        this.props.SaveNotes(
+                                          this.props.selected,
+                                          this.props.prototypeNotes
+                                        );
+                                      }
+                                    }}
+                                    onChange={e =>
+                                      this.props.EditProtoNotes(e.target.value)
+                                    }
+                                    value={this.props.prototypeNotes}
+                                    rows="3"
+                                  />
+                                </div>
+                              ) : (
+                                <div
+                                  id="notes"
+                                  name="notes"
+                                  onDoubleClick={() =>
+                                    this.props.NotesToggler(
+                                      this.props.addressbook[
+                                        this.props.selected
+                                      ].notes
+                                    )
+                                  }
+                                >
+                                  {
+                                    this.props.addressbook[this.props.selected]
+                                      .notes
+                                  }
+                                </div>
+                              )}
+                            </div>
+                          </Tooltip.Trigger>
                         </div>
                         {this.props.addressbook[this.props.selected].imgSrc !==
                           undefined &&

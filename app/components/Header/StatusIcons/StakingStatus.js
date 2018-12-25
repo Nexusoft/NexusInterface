@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 // Internal Dependencies
+import Tooltip from 'components/common/Tooltip';
 import { StatusIcon, StatusIconWrapper, StatusIconTooltip } from './components';
 
 import stakingIcon from 'images/staking.sprite.svg';
@@ -13,43 +14,45 @@ const StakingStatus = ({
   trustweight,
   blockweight,
 }) => (
-  <StatusIconWrapper>
-    <StatusIcon icon={stakingIcon} />
-
-    <StatusIconTooltip
-      className="tooltip bottom"
-      style={{ left: 'auto', transform: 'none', right: -20 }}
-    >
+  <Tooltip.Trigger
+    align="end"
+    tooltip={
       <div>
-        <FormattedMessage
-          id="Header.StakeWeight"
-          defaultMessage="Stake Weight"
-        />
-        : {stakeweight}%
+        <div>
+          <FormattedMessage
+            id="Header.StakeWeight"
+            defaultMessage="Stake Weight"
+          />
+          : {stakeweight}%
+        </div>
+        <div>
+          <FormattedMessage
+            id="Header.InterestRate"
+            defaultMessage="Stake Reward"
+          />
+          : {interestweight}%
+        </div>
+        <div>
+          <FormattedMessage
+            id="Header.TrustWeight"
+            defaultMessage="Trust Weight"
+          />
+          : {trustweight}%
+        </div>
+        <div>
+          <FormattedMessage
+            id="Header.BlockWeight"
+            defaultMessage="Block Weight"
+          />
+          : {blockweight}
+        </div>
       </div>
-      <div>
-        <FormattedMessage
-          id="Header.InterestRate"
-          defaultMessage="Stake Reward"
-        />
-        : {interestweight}%
-      </div>
-      <div>
-        <FormattedMessage
-          id="Header.TrustWeight"
-          defaultMessage="Trust Weight"
-        />
-        : {trustweight}%
-      </div>
-      <div>
-        <FormattedMessage
-          id="Header.BlockWeight"
-          defaultMessage="Block Weight"
-        />
-        : {blockweight}
-      </div>
-    </StatusIconTooltip>
-  </StatusIconWrapper>
+    }
+  >
+    <StatusIconWrapper>
+      <StatusIcon icon={stakingIcon} />
+    </StatusIconWrapper>
+  </Tooltip.Trigger>
 );
 
 export default StakingStatus;

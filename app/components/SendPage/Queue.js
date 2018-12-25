@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import Button from 'components/common/Button';
+import Tooltip from 'components/common/Tooltip';
 import { colors } from 'styles';
 import trashimg from 'images/trash.svg';
 
@@ -42,15 +43,18 @@ export default class Queue extends Component {
     return queueArray.map((e, i) => {
       return (
         <tr key={i}>
-          <td className="td" onClick={() => this.props.updateAddress(e.key)}>
-            <span className="tooltip ">
+          <Tooltip.Trigger
+            tooltip={
               <FormattedMessage
                 id="sendReceive.ClickToEdit"
                 defaultMessage="Click To Edit"
               />
-            </span>
-            {e.key}
-          </td>
+            }
+          >
+            <td className="td" onClick={() => this.props.updateAddress(e.key)}>
+              {e.key}
+            </td>
+          </Tooltip.Trigger>
           <td className="td">{e.val.toFixed(5)}</td>
           <td className="td">
             <img
