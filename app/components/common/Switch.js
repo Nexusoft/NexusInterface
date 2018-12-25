@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import { colors, timing, consts } from 'styles';
-import { lighten, desaturate, darken, mix } from 'utils/colors';
+import { lighten, mix } from 'utils/colors';
 
 const switchHeight = consts.lineHeight; // em
 const switchWidth = consts.lineHeight * 1.75; // em

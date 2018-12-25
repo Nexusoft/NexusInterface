@@ -212,7 +212,7 @@ export default class Select extends Component {
             fitHeight
             skin={skin === 'filled-light' ? 'blank-dark' : 'blank-light'}
           >
-            <Arrow down width={12} height={8} />
+            <Arrow direction="down" width={12} height={8} />
           </Button>
         </SelectControl>
 
