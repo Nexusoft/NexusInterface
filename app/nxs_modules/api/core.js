@@ -1,7 +1,6 @@
-import configuration from './configuration';
-import MenuBuilder from 'menu.js';
-import { GetSettings, SaveSettings } from './settings';
 import { resolve } from 'path';
+import configuration from './configuration';
+import { GetSettings, SaveSettings } from './settings';
 
 import * as RPC from 'scripts/rpc';
 

@@ -10,10 +10,9 @@ import {
 } from 'electron';
 import log, { info } from 'electron-log';
 import { autoUpdater } from 'electron-updater';
-import MenuBuilder from './menu';
-import core from './api/core';
-import configuration from './api/configuration';
-import { GetSettings, SaveSettings } from './api/settings';
+import core from 'api/core';
+import configuration from 'api/configuration';
+import { GetSettings, SaveSettings } from 'api/settings';
 
 const path = require('path');
 
@@ -142,7 +141,7 @@ function createWindow() {
 
     resizeTimer = setTimeout(function() {
       // Resize event has been completed
-      let settings = require('./api/settings.js').GetSettings();
+      let settings = GetSettings();
 
       settings.windowWidth = mainWindow.getBounds().width;
       settings.windowHeight = mainWindow.getBounds().height;
@@ -153,7 +152,7 @@ function createWindow() {
 
   // Event when the window is minimized
   mainWindow.on('minimize', function(event) {
-    let settings = require('./api/settings.js').GetSettings();
+    let settings = GetSettings();
 
     if (settings.minimizeToTray) {
       event.preventDefault();

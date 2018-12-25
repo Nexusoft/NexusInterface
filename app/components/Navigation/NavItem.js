@@ -5,9 +5,9 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal Global Depnedencies
-import HorizontalLine from 'components/common/HorizontalLine';
-import Icon from 'components/common/Icon';
-import Tooltip from 'components/common/Tooltip';
+import HorizontalLine from 'components/HorizontalLine';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import { colors, timing, consts } from 'styles';
 
 const pulseRing = keyframes`

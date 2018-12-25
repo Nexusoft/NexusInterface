@@ -12,18 +12,7 @@
 @import "./controls/progress.css";
 @import "./controls/react-table.css";
 
-@import "~components/Header/style.css";
-@import "~components/AddressBook/style.css";
-@import "~components/BlockExplorer/style.css";
-@import "~components/TrustList/style.css";
-@import "~components/Market/style.css";
-@import "~components/StyleGuide/style.css";
-@import "~components/SendPage/style.css";
-@import "~components/Settings/style.css";
-@import "~components/Transactions/style.css";
-@import "~components/Exchange/style.css";
-@import "~components/Loader/style.css";
-@import "../../node_modules/react-activity/lib/Squares/Squares.css";
+@import "~react-activity/lib/Squares/Squares.css";
 :root {
   /* COLOR PALETTE VARIABLES */
   --color-6: #ffffff; /* <-- White */
@@ -43,8 +32,6 @@
     rgba(17, 17, 17, 0),
     rgba(17, 17, 17, 0)
   );
-
-  --background-main-image: url("~images/background/starrynight.jpg"); /* <-- Full Screen Background Image for Nexus Earth Theme */
 
   /* FONTS */
   --font-1: "Noto Sans"; /* <-- Sourced Above in First @font-face*/

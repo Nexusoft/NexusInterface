@@ -5,10 +5,10 @@ import * as RPC from 'scripts/rpc';
 import styled from '@emotion/styled';
 
 // Internal
-import FormField from 'components/common/FormField';
-import TextField from 'components/common/TextField';
-import Button from 'components/common/Button';
-import FieldSet from 'components/common/FieldSet';
+import FormField from 'components/FormField';
+import TextField from 'components/TextField';
+import Button from 'components/Button';
+import FieldSet from 'components/FieldSet';
 import { colors, consts } from 'styles';
 
 const EncryptWalletWrapper = styled.form({

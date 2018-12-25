@@ -39,7 +39,7 @@ export default {
    */
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
-    modules: [path.join(__dirname, 'app'), 'node_modules'],
+    modules: ['nxs_modules', 'node_modules'],
   },
 
   plugins: [

@@ -6,7 +6,7 @@ import { access } from 'fs';
 import { connect } from 'react-redux';
 import Modal from 'react-responsive-modal';
 import { FormattedMessage } from 'react-intl';
-import * as FlagFile from 'languages/LanguageFlags';
+import * as FlagFile from 'images/LanguageFlags';
 import styled from '@emotion/styled';
 
 // Internal Dependencies
@@ -16,10 +16,10 @@ import core from 'api/core';
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import ContextMenuBuilder from 'contextmenu';
-import SettingsField from 'components/common/SettingsField';
-import Button from 'components/common/Button';
-import TextField from 'components/common/TextField';
-import Switch from 'components/common/Switch';
+import SettingsField from 'components/SettingsField';
+import Button from 'components/Button';
+import TextField from 'components/TextField';
+import Switch from 'components/Switch';
 
 const CoreSettings = styled.div({
   maxWidth: 750,

@@ -8,11 +8,11 @@ import styled from '@emotion/styled';
 import styles from './style.css';
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
-import FormField from 'components/common/FormField';
-import TextField from 'components/common/TextField';
-import Button from 'components/common/Button';
-import FieldSet from 'components/common/FieldSet';
-import Switch from 'components/common/Switch';
+import FormField from 'components/FormField';
+import TextField from 'components/TextField';
+import Button from 'components/Button';
+import FieldSet from 'components/FieldSet';
+import Switch from 'components/Switch';
 
 const LoginFieldSet = styled(FieldSet)({
   maxWidth: 400,

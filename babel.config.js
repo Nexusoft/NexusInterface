@@ -51,12 +51,6 @@ module.exports = function(api) {
       ['emotion', { sourceMap: development }],
       ...stage0Preset,
       ...(development ? devPlugins : prodPlugins),
-      [
-        'module-resolver',
-        {
-          root: ['./app'],
-        },
-      ],
     ],
   };
 };

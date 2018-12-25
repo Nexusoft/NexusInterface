@@ -5,7 +5,7 @@ import { keyframes } from '@emotion/core';
 import { darken, fade } from 'utils/colors';
 
 // Internal Global Dependencies
-import Icon from 'components/common/Icon';
+import Icon from 'components/Icon';
 import { colors } from 'styles';
 
 const intro = keyframes`

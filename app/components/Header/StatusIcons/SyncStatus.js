@@ -7,8 +7,8 @@ import { FormattedMessage } from 'react-intl';
 
 // Internal Global Dependencies
 import { animations } from 'styles';
-import Tooltip from 'components/common/Tooltip';
-import { StatusIcon, StatusIconWrapper, StatusIconTooltip } from './components';
+import Tooltip from 'components/Tooltip';
+import StatusIcon from './StatusIcon';
 
 import questionMarkIcon from 'images/question-mark.sprite.svg';
 import checkIcon from 'images/check.sprite.svg';
@@ -67,7 +67,7 @@ function syncStatusTooltip({
 
 const SyncStatus = props => (
   <Tooltip.Trigger tooltip={syncStatusTooltip(props)}>
-    <StatusIconWrapper>{statusIcon(props)}</StatusIconWrapper>
+    <StatusIcon.Wrapper>{statusIcon(props)}</StatusIcon.Wrapper>
   </Tooltip.Trigger>
 );
 

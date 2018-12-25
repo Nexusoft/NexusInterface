@@ -6,8 +6,8 @@ import { jsx } from '@emotion/core';
 import { FormattedMessage } from 'react-intl';
 
 // Internal Dependencies
-import Tooltip from 'components/common/Tooltip';
-import { StatusIcon, StatusIconWrapper, StatusIconTooltip } from './components';
+import Tooltip from 'components/Tooltip';
+import StatusIcon from './StatusIcon';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';
@@ -94,7 +94,7 @@ function signInStatusMessage({
 
 const SignInStatus = props => (
   <Tooltip.Trigger tooltip={signInStatusMessage(props)}>
-    <StatusIconWrapper>{statusIcon(props)}</StatusIconWrapper>
+    <StatusIcon.Wrapper>{statusIcon(props)}</StatusIcon.Wrapper>
   </Tooltip.Trigger>
 );
 

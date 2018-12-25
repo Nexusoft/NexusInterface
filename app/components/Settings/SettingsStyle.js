@@ -11,10 +11,10 @@ import styled from '@emotion/styled';
 import * as TYPE from 'actions/actiontypes';
 import styles from './style.css';
 import { GetSettings, SaveSettings } from 'api/settings';
-import SettingsField from 'components/common/SettingsField';
-import Button from 'components/common/Button';
-import Switch from 'components/common/Switch';
-import Tooltip from 'components/common/Tooltip';
+import SettingsField from 'components/SettingsField';
+import Button from 'components/Button';
+import Switch from 'components/Switch';
+import Tooltip from 'components/Tooltip';
 
 const StyleSettings = styled.div({
   maxWidth: 750,

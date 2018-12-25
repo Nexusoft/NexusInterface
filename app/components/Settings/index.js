@@ -10,9 +10,9 @@ import googleanalytics from 'scripts/googleanalytics';
 // Internal Global Dependencies
 import * as RPC from 'scripts/rpc';
 import ContextMenuBuilder from 'contextmenu';
-import Panel from 'components/common/Panel';
-import Icon from 'components/common/Icon';
-import Tab from 'components/common/Tab';
+import Panel from 'components/Panel';
+import Icon from 'components/Icon';
+import Tab from 'components/Tab';
 
 // Internal Local Dependencies
 import styles from './style.css';

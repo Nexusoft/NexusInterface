@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { remote } from 'electron';
 
 // Internal Dependencies
-import Icon from 'components/common/Icon';
+import Icon from 'components/Icon';
 import styles from './style.css';
 import ContextMenuBuilder from 'contextmenu';
 

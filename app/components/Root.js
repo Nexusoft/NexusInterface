@@ -10,7 +10,7 @@ import styled from '@emotion/styled';
 
 // Internal Global Dependencies
 import locale from 'reducers/intl';
-import globalStyles from 'CSS/global-styles';
+import globalStyles from './styles/global';
 
 // Internal Local Dependencies
 import Loader from './Loader';

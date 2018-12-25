@@ -10,8 +10,8 @@ import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
 import * as TYPE from 'actions/actiontypes';
-import Icon from 'components/common/Icon';
-import Panel from 'components/common/Panel';
+import Icon from 'components/Icon';
+import Panel from 'components/Panel';
 import { FormattedMessage } from 'react-intl';
 import ContextMenuBuilder from 'contextmenu';
 import * as actionsCreators from 'actions/marketActionCreators';

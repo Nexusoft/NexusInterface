@@ -4,12 +4,12 @@ import { FormattedMessage } from 'react-intl';
 import * as RPC from 'scripts/rpc';
 
 // Internal
-import Icon from 'components/common/Icon';
-import FormField from 'components/common/FormField';
-import TextField from 'components/common/TextField';
-import Button from 'components/common/Button';
-import FieldSet from 'components/common/FieldSet';
-import InputGroup from 'components/common/InputGroup';
+import Icon from 'components/Icon';
+import FormField from 'components/FormField';
+import TextField from 'components/TextField';
+import Button from 'components/Button';
+import FieldSet from 'components/FieldSet';
+import InputGroup from 'components/InputGroup';
 import copyIcon from 'images/copy.sprite.svg';
 
 export default class ViewPrivKeyForAddress extends Component {

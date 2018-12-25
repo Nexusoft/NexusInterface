@@ -3,8 +3,8 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 // Internal Dependencies
-import Tooltip from 'components/common/Tooltip';
-import { StatusIcon, StatusIconWrapper, StatusIconTooltip } from './components';
+import Tooltip from 'components/Tooltip';
+import StatusIcon from './StatusIcon';
 
 import stakingIcon from 'images/staking.sprite.svg';
 
@@ -49,9 +49,9 @@ const StakingStatus = ({
       </div>
     }
   >
-    <StatusIconWrapper>
+    <StatusIcon.Wrapper>
       <StatusIcon icon={stakingIcon} />
-    </StatusIconWrapper>
+    </StatusIcon.Wrapper>
   </Tooltip.Trigger>
 );
 

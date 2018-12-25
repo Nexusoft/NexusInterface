@@ -30,14 +30,14 @@ import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
 
 // Internal
-import Icon from 'components/common/Icon';
-import Panel from 'components/common/Panel';
-import WaitingMessage from 'components/common/WaitingMessage';
-import Select from 'components/common/Select';
-import TextField from 'components/common/TextField';
-import FormField from 'components/common/FormField';
-import Button from 'components/common/Button';
-import Tooltip from 'components/common/Tooltip';
+import Icon from 'components/Icon';
+import Panel from 'components/Panel';
+import WaitingMessage from 'components/WaitingMessage';
+import Select from 'components/Select';
+import TextField from 'components/TextField';
+import FormField from 'components/FormField';
+import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
 import { GetSettings } from 'api/settings.js';
 import Table from 'scripts/utilities-react';
 import * as RPC from 'scripts/rpc';

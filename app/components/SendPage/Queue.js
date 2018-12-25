@@ -5,8 +5,8 @@ import Modal from 'react-responsive-modal';
 import styled from '@emotion/styled';
 
 // Internal
-import Button from 'components/common/Button';
-import Tooltip from 'components/common/Tooltip';
+import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
 import { colors } from 'styles';
 import trashimg from 'images/trash.svg';
 

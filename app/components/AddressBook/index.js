@@ -17,18 +17,17 @@ import config from 'api/configuration';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import * as actionsCreators from 'actions/addressbookActionCreators';
-import Icon from 'components/common/Icon';
-import Button from 'components/common/Button';
-import TextField from 'components/common/TextField';
-import Panel from 'components/common/Panel';
-import WaitingMessage from 'components/common/WaitingMessage';
-import Tooltip from 'components/common/Tooltip';
+import Icon from 'components/Icon';
+import Button from 'components/Button';
+import TextField from 'components/TextField';
+import Panel from 'components/Panel';
+import WaitingMessage from 'components/WaitingMessage';
+import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
 import TimeZoneSelector from './timeZoneSelector';
 import styles from './style.css';
-// import messages from 'languages/messages'
 
 // Images
 import profilePlaceholder from 'images/Profile_Placeholder.png';

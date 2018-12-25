@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { jsx, css } from '@emotion/core';
-import Button from 'components/common/Button';
-import Icon from 'components/common/Icon';
+import Button from 'components/Button';
+import Icon from 'components/Icon';
 import { colors, timing, consts } from 'styles';
 import { lighten, fade } from 'utils/colors';
 

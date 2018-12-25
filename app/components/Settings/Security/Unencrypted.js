@@ -9,7 +9,7 @@ import styled from '@emotion/styled';
 // Internal
 import styles from './style.css';
 import * as TYPE from 'actions/actiontypes';
-import WaitingMessage from 'components/common/WaitingMessage';
+import WaitingMessage from 'components/WaitingMessage';
 import EncryptWallet from './EncryptWallet';
 import ImportPrivKey from './ImportPrivKey';
 import ViewPrivKeyForAddress from './ViewPrivKeyForAddress';

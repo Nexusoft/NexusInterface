@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 
 // Internal Global Dependencies
-import Icon from 'components/common/Icon';
+import Icon from 'components/Icon';
 import { colors, timing } from 'styles';
 
 const TabLi = styled.li({

@@ -18,13 +18,13 @@ import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import plusimg from 'images/plus.svg';
-import * as FlagFile from 'languages/LanguageFlags';
+import * as FlagFile from 'images/LanguageFlags';
 import { remote as dialog } from 'electron';
-import SettingsField from 'components/common/SettingsField';
-import Button from 'components/common/Button';
-import TextField from 'components/common/TextField';
-import Select from 'components/common/Select';
-import Switch from 'components/common/Switch';
+import SettingsField from 'components/SettingsField';
+import Button from 'components/Button';
+import TextField from 'components/TextField';
+import Select from 'components/Select';
+import Switch from 'components/Switch';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -368,11 +368,15 @@ class SettingsApp extends Component {
     this.props.SwitchLocale(locale);
     let messages = {};
     if (process.env.NODE_ENV === 'development') {
-      messages = JSON.parse(fs.readFileSync(`app/languages/${locale}.json`));
+      messages = JSON.parse(fs.readFileSync(`app/translations/${locale}.json`));
     } else {
       messages = JSON.parse(
         fs.readFileSync(
-          path.join(config.GetAppResourceDir(), 'languages', `${locale}.json`)
+          path.join(
+            config.GetAppResourceDir(),
+            'translations',
+            `${locale}.json`
+          )
         )
       );
     }

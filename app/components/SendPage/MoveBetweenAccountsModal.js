@@ -5,10 +5,10 @@ import Modal from 'react-responsive-modal';
 import styled from '@emotion/styled';
 
 // Internal
-import Select from 'components/common/Select';
-import TextField from 'components/common/TextField';
-import FormField from 'components/common/FormField';
-import Button from 'components/common/Button';
+import Select from 'components/Select';
+import TextField from 'components/TextField';
+import FormField from 'components/FormField';
+import Button from 'components/Button';
 
 const AccountSelectors = styled.div({
   display: 'grid',

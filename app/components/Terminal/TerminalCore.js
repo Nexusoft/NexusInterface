@@ -10,7 +10,7 @@ import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { Tail } from 'utils/tail';
 import configuration from 'api/configuration';
-import Button from 'components/common/Button';
+import Button from 'components/Button';
 import { colors } from 'styles';
 
 // React-Redux mandatory methods

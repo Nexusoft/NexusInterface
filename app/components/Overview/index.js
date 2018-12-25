@@ -21,8 +21,8 @@ import { intlReducer } from 'react-intl-redux';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
-import Icon from 'components/common/Icon';
-import Tooltip from 'components/common/Tooltip';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import WEBGL from 'scripts/WebGLCheck.js';
 import { GetSettings, SaveSettings } from 'api/settings';
 import ContextMenuBuilder from 'contextmenu';

@@ -11,10 +11,10 @@ import Countdown from 'react-countdown-now';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
-import Panel from 'components/common/Panel';
-import Tab from 'components/common/Tab';
+import Panel from 'components/Panel';
+import Tab from 'components/Tab';
 import { GetSettings } from 'api/settings.js';
-import Icon from 'components/common/Icon';
+import Icon from 'components/Icon';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { FormattedMessage } from 'react-intl';

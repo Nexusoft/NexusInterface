@@ -192,12 +192,12 @@ export const OpenBootstrapModal = bool => {
 export const SwitchMessages = locale => {
   let messages = {};
   if (process.env.NODE_ENV === 'development') {
-    messages = JSON.parse(fs.readFileSync(`app/languages/${locale}.json`));
+    messages = JSON.parse(fs.readFileSync(`app/translations/${locale}.json`));
     console.log(messages);
   } else {
     messages = JSON.parse(
       fs.readFileSync(
-        path.join(config.GetAppResourceDir(), 'languages', `${locale}.json`)
+        path.join(config.GetAppResourceDir(), 'translations', `${locale}.json`)
       )
     );
   }

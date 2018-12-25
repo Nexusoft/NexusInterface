@@ -4,9 +4,9 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal Dependencies
-import Button from 'components/common/Button';
-import Arrow from 'components/common/Arrow';
-import Overlay from 'components/common/Overlay';
+import Button from 'components/Button';
+import Arrow from 'components/Arrow';
+import Overlay from 'components/Overlay';
 import { colors, timing, consts } from 'styles';
 
 // Minimum gap from the dropdown to the bottom edge of the screen

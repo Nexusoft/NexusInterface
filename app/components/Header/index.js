@@ -20,8 +20,8 @@ import * as RPC from 'scripts/rpc';
 import * as actionsCreators from 'actions/headerActionCreators';
 import { GetSettings, SaveSettings } from 'api/settings';
 import configuration from 'api/configuration';
-import Icon from 'components/common/Icon';
-import HorizontalLine from 'components/common/HorizontalLine';
+import Icon from 'components/Icon';
+import HorizontalLine from 'components/HorizontalLine';
 import { colors, consts, timing, animations } from 'styles';
 import { fade, lighten } from 'utils/colors';
 

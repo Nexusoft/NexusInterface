@@ -9,9 +9,9 @@ import { css } from '@emotion/core';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
-import WaitingMessage from 'components/common/WaitingMessage';
-import Button from 'components/common/Button';
-import TextField from 'components/common/TextField';
+import WaitingMessage from 'components/WaitingMessage';
+import Button from 'components/Button';
+import TextField from 'components/TextField';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { colors, consts, timing } from 'styles';

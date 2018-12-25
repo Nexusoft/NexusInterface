@@ -11,9 +11,9 @@ import { remote } from 'electron';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
-import Icon from 'components/common/Icon';
-import Panel from 'components/common/Panel';
-import WaitingMessage from 'components/common/WaitingMessage';
+import Icon from 'components/Icon';
+import Panel from 'components/Panel';
+import WaitingMessage from 'components/WaitingMessage';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { FormattedMessage } from 'react-intl';

@@ -3,7 +3,6 @@ import itLocaleData from 'react-intl/locale-data/it';
 import enLocaleData from 'react-intl/locale-data/en';
 import zhLocaleData from 'react-intl/locale-data/zh';
 import { FormattedMessage, addLocaleData } from 'react-intl';
-// import messages from 'languages/messages'
 // import { intlReducer } from "react-intl-redux";
 const initialState = {
   defaultLocale: 'en',

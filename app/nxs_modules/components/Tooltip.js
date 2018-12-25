@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { jsx } from '@emotion/core';
 
 // Internal
-import { arrowStyles } from 'components/common/Arrow';
+import { arrowStyles } from 'components/Arrow';
 import { colors, timing, animations } from 'styles';
 import { lighten } from 'utils/colors';
 

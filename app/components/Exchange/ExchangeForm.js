@@ -4,11 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import styled from '@emotion/styled';
 
 // Internal
-import FormField from 'components/common/FormField';
-import TextField from 'components/common/TextField';
-import Button from 'components/common/Button';
-import FieldSet from 'components/common/FieldSet';
-import Select from 'components/common/Select';
+import FormField from 'components/FormField';
+import TextField from 'components/TextField';
+import Button from 'components/Button';
+import FieldSet from 'components/FieldSet';
+import Select from 'components/Select';
 
 const ExchangeFormWrapper = styled.div({
   display: 'grid',

@@ -13,15 +13,15 @@ import googleanalytics from 'scripts/googleanalytics';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
-import Icon from 'components/common/Icon';
-import Panel from 'components/common/Panel';
-import Button from 'components/common/Button';
-import TextField from 'components/common/TextField';
-import Select from 'components/common/Select';
-import WaitingMessage from 'components/common/WaitingMessage';
-import FormField from 'components/common/FormField';
-import InputGroup from 'components/common/InputGroup';
-import Tooltip from 'components/common/Tooltip';
+import Icon from 'components/Icon';
+import Panel from 'components/Panel';
+import Button from 'components/Button';
+import TextField from 'components/TextField';
+import Select from 'components/Select';
+import WaitingMessage from 'components/WaitingMessage';
+import FormField from 'components/FormField';
+import InputGroup from 'components/InputGroup';
+import Tooltip from 'components/Tooltip';
 
 // Internal Local Dependencies
 import AddressModal from './AddressModal';

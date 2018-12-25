@@ -9,9 +9,9 @@ import * as TYPE from 'actions/actiontypes';
 
 // Internal Global Dependencies
 import ContextMenuBuilder from 'contextmenu';
-import Icon from 'components/common/Icon';
-import Panel from 'components/common/Panel';
-import Tab from 'components/common/Tab';
+import Icon from 'components/Icon';
+import Panel from 'components/Panel';
+import Tab from 'components/Tab';
 
 // Internal Local Dependencies
 import TerminalConsole from './TerminalConsole';

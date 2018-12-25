@@ -4,8 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import Modal from 'react-responsive-modal';
 
 // Internal
-import Icon from 'components/common/Icon';
-import Tooltip from 'components/common/Tooltip';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import addressBookIcon from 'images/address-book.sprite.svg';
 
 function addressBookToQueue(props) {
