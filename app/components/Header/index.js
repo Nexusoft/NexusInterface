@@ -154,8 +154,6 @@ class Header extends Component {
       console.log('MARKET');
       self.props.SetMarketAveData();
     }, 900000);
-
-    this.props.history.push('/');
   }
   // React Method (Life cycle hook)
   componentWillReceiveProps(nextProps) {

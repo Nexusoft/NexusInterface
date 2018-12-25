@@ -23,8 +23,13 @@ class Loader extends Component {
   };
   // React Method (Life cycle hook)
   componentDidMount() {
-    setTimeout(() => this.setState({ loading: false }), 5000);
+    this.autoClose = setTimeout(() => this.setState({ loading: false }), 5000);
   }
+
+  componentWillUnmount() {
+    clearTimeout(this.autoClose);
+  }
+
   // Mandatory React method
   render() {
     const { loading } = this.state;
