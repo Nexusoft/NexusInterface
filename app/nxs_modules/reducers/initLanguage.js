@@ -187,7 +187,7 @@ export default {
 
     'Settings.Username': 'Username',
 
-    'Settings.IpAddress': 'Ip Address',
+    'Settings.IpAddress': 'IP Address',
     'Settings.Port': 'Port',
     'Settings.UPnp': 'Map port using UPnP',
     'Settings.Socks4proxy': 'Connect through SOCKS4 proxy',

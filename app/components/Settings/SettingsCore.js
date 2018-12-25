@@ -772,7 +772,7 @@ class SettingsCore extends Component {
               label={
                 <FormattedMessage
                   id="Settings.IpAddress"
-                  defaultMesage="Ip Address"
+                  defaultMesage="IP Address"
                 />
               }
               subLabel={

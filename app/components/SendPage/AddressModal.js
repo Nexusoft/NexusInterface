@@ -27,6 +27,7 @@ function addressBookToQueue(props) {
               defaultMessage="Copy To Field"
             />
           }
+          key={ele.address + i}
         >
           <td
             onClick={() => {
@@ -40,7 +41,6 @@ function addressBookToQueue(props) {
               }, 3000);
             }}
             className="dt"
-            key={ele.address + i}
           >
             {ele.address}
           </td>
