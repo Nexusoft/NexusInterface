@@ -3,14 +3,14 @@ import { darken, mix } from 'utils/colors';
 
 export const colors = {};
 colors.primary = '#00b7fa';
-colors.dark = '#0f1b1f';
-colors.light = '#e6e9eb';
+colors.primaryContrast = '#fff';
+colors.dark = '#1c1d1f';
+colors.light = '#ebebe6';
 colors.darkerGray = mix(colors.dark, colors.light, 0.125);
 colors.darkGray = mix(colors.dark, colors.light, 0.25);
 colors.gray = mix(colors.dark, colors.light);
 colors.lightGray = mix(colors.dark, colors.light, 0.75);
 colors.lighterGray = mix(colors.dark, colors.light, 0.875);
-colors.primaryContrast = '#fff';
 
 export const consts = {
   monoFontFamily: '"Roboto Mono", "Lucida Console", "Courier New", monospace',
