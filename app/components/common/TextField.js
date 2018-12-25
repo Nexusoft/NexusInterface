@@ -14,9 +14,12 @@ const InputWrapper = styled.div(
   {
     position: 'relative',
     height: consts.inputHeightEm + 'em',
-    display: 'flex',
     alignItems: 'center',
   },
+
+  ({ size }) => ({
+    display: size ? 'inline-flex' : 'flex',
+  }),
 
   ({ focus }) => ({ skin, focus }) => {
     switch (skin) {
@@ -27,7 +30,6 @@ const InputWrapper = styled.div(
           transitionDuration: timing.normal,
           '&::after': {
             content: '""',
-            display: 'block',
             position: 'absolute',
             bottom: 0,
             left: 0,
@@ -179,11 +181,13 @@ export default class TextField extends Component {
       multiline,
       left,
       right,
+      size,
       ...rest
     } = this.props;
 
     const inputProps = {
       skin,
+      size,
       onFocus: () => this.setState({ focus: true }),
       onBlur: () => this.setState({ focus: false }),
       ...(multiline
@@ -196,7 +200,10 @@ export default class TextField extends Component {
     };
 
     return (
-      <InputWrapper {...{ className, style, skin }} focus={this.state.focus}>
+      <InputWrapper
+        {...{ className, style, skin, size }}
+        focus={this.state.focus}
+      >
         {left}
         <Input {...inputProps} />
         {right}

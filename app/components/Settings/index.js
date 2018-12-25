@@ -44,7 +44,6 @@ const SettingsTabBar = styled(Tab.Bar)({
 });
 
 const SettingsContent = styled.div({
-  padding: '0 1em',
   flexGrow: 1,
   flexShrink: 1,
   flexBasis: 0,

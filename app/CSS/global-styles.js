@@ -100,6 +100,9 @@ const utilityClasses = css`
     &.stretch {
       align-items: stretch;
     }
+    &.space-between {
+      justify-content: space-between;
+    }
   }
 `;
 

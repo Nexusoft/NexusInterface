@@ -101,6 +101,10 @@ const TooltipWrapper = styled.div(
       position: 'absolute',
     },
   },
+  ({ position }) =>
+    (position === 'top' || position === 'bottom') && {
+      textAlign: 'center',
+    },
   ({ position }) => ({
     '&::before': arrowStyles({
       direction: positionToArrowDirection[position],
@@ -174,7 +178,7 @@ class TooltipTrigger extends Component {
           onMouseEnter: this.showTooltip,
           onMouseLeave: this.hideTooltip,
         })}
-        {this.state.active && (
+        {!!tooltip && this.state.active && (
           <Tooltip css={this.state.tooltipStyles} {...rest}>
             {tooltip}
           </Tooltip>

@@ -1,21 +1,25 @@
-/*
-  Title: Style Settings
-  Description: Settings specifically for style, background color pickers etc.
-  Last Modified by: Brian Smith
-*/
-// External Dependencies
+// External
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ChromePicker } from 'react-color';
 import { FormattedMessage } from 'react-intl';
 import googleanalytics from 'scripts/googleanalytics';
+import styled from '@emotion/styled';
 
-// Internal Dependencies
+// Internal
 import * as TYPE from 'actions/actiontypes';
 import styles from './style.css';
 import { GetSettings, SaveSettings } from 'api/settings';
-import Switch from '../common/Switch';
+import SettingsField from 'components/common/SettingsField';
+import Button from 'components/common/Button';
+import Switch from 'components/common/Switch';
+import Tooltip from 'components/common/Tooltip';
+
+const StyleSettings = styled.div({
+  maxWidth: 750,
+  margin: '0 auto',
+});
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -224,154 +228,48 @@ class SettingsStyle extends Component {
   render() {
     console.log(this.props.messages);
     return (
-      <div>
-        <section id="SettingsStyle">
-          <form id="styleForm" className="aligned">
-            {' '}
-            <div className="field">
-              <label>
-                <select
-                  style={{
-                    maxWidth: '80%',
-                  }}
-                  id="select"
-                  onChange={e => {
-                    this.props.setSelectedColorProp(e.target.value);
-                  }}
-                >
-                  <FormattedMessage id="Cp.AC1" defaultMessage="Accent Color 1">
-                    {text => <option value="MC2">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage id="Cp.AC2" defaultMessage="Accent Color 2">
-                    {text => <option value="MC4">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage
-                    id="Cp.THC"
-                    defaultMessage="Table Head Color"
-                  >
-                    {text => <option value="MC3">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage id="Cp.TTC" defaultMessage="Tooltip Color">
-                    {text => <option value="MC1">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage id="Cp.TC" defaultMessage="Text Color">
-                    {text => <option value="MC5">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage
-                    id="Cp.PBC"
-                    defaultMessage="Panel Background Color"
-                  >
-                    {text => <option value="panel">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage
-                    id="Cp.NLC"
-                    defaultMessage="Nexus Logo Color"
-                  >
-                    {text => <option value="NXSlogo">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage
-                    id="Cp.SIC"
-                    defaultMessage="Status Icon Color"
-                  >
-                    {text => <option value="iconMenu">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage
-                    id="Cp.FBC"
-                    defaultMessage="Footer Base Color"
-                  >
-                    {text => <option value="footer">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage
-                    id="Cp.FHC"
-                    defaultMessage="Footer Hover Color"
-                  >
-                    {text => <option value="footerHover">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage
-                    id="Cp.FAC"
-                    defaultMessage="Footer Active Color"
-                  >
-                    {text => <option value="footerActive">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage id="Cp.GC" defaultMessage="Globe Color">
-                    {text => <option value="globeMulti">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage
-                    id="Cp.GPC"
-                    defaultMessage="Globe Pillar Color"
-                  >
-                    {text => <option value="globePillar">{text}</option>}
-                  </FormattedMessage>
-                  <FormattedMessage
-                    id="Cp.GAC"
-                    defaultMessage="Globe Arch Color"
-                  >
-                    {text => <option value="globeArch">{text}</option>}
-                  </FormattedMessage>
-                </select>
-              </label>
-            </div>
-            <br />
-            <br />
-            <ChromePicker
-              color={this.colorPresetter()}
-              disableAlpha={true}
-              onChangeComplete={(color, event) => {
-                this.handleColorChange(color);
-              }}
-            />{' '}
-            <div className="field">
-              <label htmlFor="renderGlobe">
-                <FormattedMessage
-                  id="Settings.RenderGlobe"
-                  defaultMessage="Render Globe"
-                />
-              </label>
-
+      <StyleSettings>
+        <form>
+          <SettingsField
+            connectlabel
+            label={
               <FormattedMessage
-                id={
-                  this.props.webGLEnabled
-                    ? 'ToolTip.RenderGlobe'
-                    : 'ToolTip.RenderGlobeOpenGLFail'
-                }
-                defaultMessage={
-                  this.props.webGLEnabled
-                    ? 'Render the globe on the Overview page'
-                    : 'Your Computer does not support OPENGL 2.0'
-                }
-              >
-                {tt => (
-                  <Switch
-                    id="renderGlobe"
-                    disabled={this.props.webGLEnabled ? '' : 'disabled'}
-                    checked={this.props.settings.renderGlobe}
-                    onChange={() => {
-                      this.props.ToggleGlobeRender();
-                      this.updateRenderGlobe();
-                    }}
-                    data-tooltip={tt}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-            <div className="wallpaperDiv">
-              <label htmlFor="wallpaper" className="button">
-                <FormattedMessage
-                  id="Settings.Wallpaper"
-                  defaultMessage="Wallpapar"
-                />
-              </label>
-              <input
-                id="wallpaper"
-                accept="image/*"
-                type="file"
-                size="25"
-                onChange={this.updateWallpaper}
-                data-tooltip="The background wallpaper for your wallet"
+                id="Settings.RenderGlobe"
+                defaultMessage="Render Globe"
               />
-            </div>
-            <button
-              className="button primary"
+            }
+            subLabel={
+              <FormattedMessage
+                id="ToolTip.RenderGlobe"
+                defaultMessage="Render the globe on the Overview page"
+              />
+            }
+          >
+            <Tooltip.Trigger
+              tooltip={
+                !this.props.webGLEnabled && (
+                  <FormattedMessage
+                    id="ToolTip.RenderGlobeOpenGLFail"
+                    defaultMessage="Your Computer does not support OPENGL 2.0"
+                  />
+                )
+              }
+            >
+              <Switch
+                disabled={!this.props.webGLEnabled}
+                checked={this.props.settings.renderGlobe}
+                onChange={() => {
+                  this.props.ToggleGlobeRender();
+                  this.updateRenderGlobe();
+                }}
+              />
+            </Tooltip.Trigger>
+          </SettingsField>
+
+          <div className="flex space-between" style={{ marginTop: '2em' }}>
+            <div />
+            <Button
+              skin="primary"
               onClick={e => {
                 e.preventDefault();
                 this.SaveSettings();
@@ -381,23 +279,10 @@ class SettingsStyle extends Component {
                 id="Settings.SaveSettings"
                 defaultMessage="Save Settings"
               />
-            </button>
-            <button
-              className="button"
-              onClick={e => {
-                e.preventDefault();
-                this.props.ResetStyle();
-              }}
-            >
-              <FormattedMessage
-                id="Settings.ResetStyle"
-                defaultMessage="Reset Style Settings"
-              />
-            </button>
-            <div className="clear-both" />
-          </form>
-        </section>
-      </div>
+            </Button>
+          </div>
+        </form>
+      </StyleSettings>
     );
   }
 }

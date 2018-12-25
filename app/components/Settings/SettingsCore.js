@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Modal from 'react-responsive-modal';
 import { FormattedMessage } from 'react-intl';
 import * as FlagFile from 'languages/LanguageFlags';
+import styled from '@emotion/styled';
 
 // Internal Dependencies
 import { GetSettings, SaveSettings } from 'api/settings.js';
@@ -19,6 +20,11 @@ import SettingsField from 'components/common/SettingsField';
 import Button from 'components/common/Button';
 import TextField from 'components/common/TextField';
 import Switch from 'components/common/Switch';
+
+const CoreSettings = styled.div({
+  maxWidth: 750,
+  margin: '0 auto',
+});
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -381,7 +387,7 @@ class SettingsCore extends Component {
   // Mandatory React method
   render() {
     return (
-      <section id="core">
+      <CoreSettings>
         <Modal
           classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
           id="manualDaemonModal"
@@ -616,7 +622,7 @@ class SettingsCore extends Component {
                 defaultMessage="Enable Mining"
               />
             }
-            tooltip={
+            subLabel={
               <FormattedMessage
                 id="ToolTip.EnableMining"
                 defaultMessage="Enable/Disable mining to the wallet"
@@ -637,7 +643,7 @@ class SettingsCore extends Component {
                 defaultMessage="Enable Staking"
               />
             }
-            tooltip={
+            subLabel={
               <FormattedMessage
                 id="ToolTip.EnableStaking"
                 defaultMessage="Enable/Disable Staking to the wallet"
@@ -658,7 +664,7 @@ class SettingsCore extends Component {
                 defaultMessage="Verbose Level"
               />
             }
-            tooltip={
+            subLabel={
               <FormattedMessage
                 id="ToolTip.Verbose"
                 defaultMessage="Verbose level for logs"
@@ -703,7 +709,7 @@ class SettingsCore extends Component {
                 defaultMessage="Manual Daemon Mode"
               />
             }
-            tooltip={
+            subLabel={
               <FormattedMessage
                 id="ToolTip.MDM"
                 defaultMessage="Enable manual daemon mode if you are running the daemon manually outside of the wallet"
@@ -725,7 +731,7 @@ class SettingsCore extends Component {
                   defaultMesage="Username"
                 />
               }
-              tooltip={
+              subLabel={
                 <FormattedMessage
                   id="ToolTip.UserName"
                   defaultMessage="Username configured for manual daemon"
@@ -747,7 +753,7 @@ class SettingsCore extends Component {
                   defaultMesage="Password"
                 />
               }
-              tooltip={
+              subLabel={
                 <FormattedMessage
                   id="ToolTip.Password"
                   defaultMessage="Password configured for manual daemon"
@@ -769,7 +775,7 @@ class SettingsCore extends Component {
                   defaultMesage="Ip Address"
                 />
               }
-              tooltip={
+              subLabel={
                 <FormattedMessage
                   id="ToolTip.IP"
                   defaultMessage="IP address configured for manual daemon"
@@ -788,7 +794,7 @@ class SettingsCore extends Component {
               label={
                 <FormattedMessage id="Settings.Port" defaultMesage="Port" />
               }
-              tooltip={
+              subLabel={
                 <FormattedMessage
                   id="ToolTip.PortConfig"
                   defaultMessage="Port configured for manual daemon"
@@ -812,7 +818,7 @@ class SettingsCore extends Component {
                   defaultMesage="Map port using UPnP"
                 />
               }
-              tooltip={
+              subLabel={
                 <FormattedMessage
                   id="ToolTip.UPnP"
                   defaultMessage="Automatically open the Nexus client port on the router. This only works when your router supports UPnP and it is enabled."
@@ -832,7 +838,7 @@ class SettingsCore extends Component {
                   defaultMesage="Connect through SOCKS4 proxy"
                 />
               }
-              tooltip={
+              subLabel={
                 <FormattedMessage
                   id="ToolTip.Socks4"
                   defaultMessage="Connect to Nexus through a SOCKS4 proxy"
@@ -853,7 +859,7 @@ class SettingsCore extends Component {
                     defaultMesage="Proxy IP Address"
                   />
                 }
-                tooltip={
+                subLabel={
                   <FormattedMessage
                     id="ToolTip.IPAddressofSOCKS4proxy"
                     defaultMessage="IP Address of SOCKS4 proxy server"
@@ -874,7 +880,7 @@ class SettingsCore extends Component {
                     defaultMesage="Proxy Port"
                   />
                 }
-                tooltip={
+                subLabel={
                   <FormattedMessage
                     id="ToolTip.PortOfSOCKS4proxyServer"
                     defaultMessage="Port of SOCKS4 proxy server"
@@ -896,7 +902,7 @@ class SettingsCore extends Component {
                   defaultMesage="Proxy IP Address"
                 />
               }
-              tooltip={
+              subLabel={
                 <FormattedMessage
                   id="ToolTip.Detach"
                   defaultMessage="Detach the database when shutting down the wallet"
@@ -916,7 +922,7 @@ class SettingsCore extends Component {
                   defaultMessage="Data Directory Name"
                 />
               }
-              tooltip={
+              subLabel={
                 <FormattedMessage
                   id="ToolTip.DataDirectory"
                   defaultMessage="Data directory configured for manual daemon"
@@ -931,13 +937,7 @@ class SettingsCore extends Component {
             </SettingsField>
           </div>
 
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginTop: '2em',
-            }}
-          >
+          <div className="flex space-between" style={{ marginTop: '2em' }}>
             <Button
               onClick={e => {
                 e.preventDefault();
@@ -967,7 +967,7 @@ class SettingsCore extends Component {
             </Button>
           </div>
         </form>
-      </section>
+      </CoreSettings>
     );
   }
 }

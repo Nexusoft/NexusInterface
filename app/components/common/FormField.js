@@ -74,7 +74,6 @@ class FormField extends Component {
     const {
       label,
       capitalizeLabel = true,
-      tooltip,
       connectLabel,
       inputWrapped,
       children,
@@ -89,11 +88,6 @@ class FormField extends Component {
           htmlFor={connectLabel ? this.inputId : undefined}
         >
           {label}
-          {tooltip && (
-            <div className="tooltip left" style={{ width: 226 }}>
-              {tooltip}
-            </div>
-          )}
         </Label>
         <div className="relative">
           {connectLabel

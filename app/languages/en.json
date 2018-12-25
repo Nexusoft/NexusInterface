@@ -336,7 +336,7 @@
   "ToolTip.RecentDatabaseDownloading": "Recent Database Downloading",
   "ToolTip.PleaseWait": "Please Wait...",
   "ToolTip.RecentDatabaseExtracting": "Recent Database Extracting",
-  "ToolTip.MinimumConfirmations": "Blank",
+  "ToolTip.MinimumConfirmations": "Minimum amount of confirmations before a block is accepted. Local Only.",
   "Alert.Received": "Transaction Received",
   "Alert.Sent": "Transaction Sent",
   "Alert.Genesis": "Genesis Transaction",

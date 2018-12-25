@@ -289,8 +289,8 @@ class AddressBook extends Component {
       <div id="Addresstable-wraper">
         {filteredAddress.map((acct, i) => {
           return (
-            <tr>
-              <td key={acct + i} className="tdAccounts">
+            <tr key={acct + i}>
+              <td className="tdAccounts">
                 {acct.account === '' ? (
                   <span>{this.props.messages['AddressBook.MyAccount']}</span>
                 ) : (
@@ -300,9 +300,10 @@ class AddressBook extends Component {
               {acct.addresses.map(address => {
                 return (
                   <Tooltip.Trigger
+                    key={address + i}
                     tooltip={this.props.messages['AddressBook.Copy']}
                   >
-                    <td className="tdd" key={address + i}>
+                    <td className="tdd">
                       <span onClick={event => this.copyaddress(event)}>
                         {address}
                       </span>
