@@ -14,7 +14,6 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
-import Tooltip from 'components/Tooltip';
 
 const StyleSettings = styled.div({
   maxWidth: 750,
@@ -226,12 +225,11 @@ class SettingsStyle extends Component {
 
   // Mandatory React method
   render() {
-    console.log(this.props.messages);
     return (
       <StyleSettings>
         <form>
           <SettingsField
-            connectlabel
+            connectLabel
             label={
               <FormattedMessage
                 id="Settings.RenderGlobe"
@@ -239,31 +237,30 @@ class SettingsStyle extends Component {
               />
             }
             subLabel={
-              <FormattedMessage
-                id="ToolTip.RenderGlobe"
-                defaultMessage="Render the globe on the Overview page"
-              />
+              <div>
+                <FormattedMessage
+                  id="ToolTip.RenderGlobe"
+                  defaultMessage="Render the globe on the Overview page"
+                />
+                {!this.props.webGLEnabled && (
+                  <div className="error">
+                    <FormattedMessage
+                      id="ToolTip.RenderGlobeOpenGLFail"
+                      defaultMessage="Your Computer does not support OPENGL 2.0"
+                    />
+                  </div>
+                )}
+              </div>
             }
           >
-            <Tooltip.Trigger
-              tooltip={
-                !this.props.webGLEnabled && (
-                  <FormattedMessage
-                    id="ToolTip.RenderGlobeOpenGLFail"
-                    defaultMessage="Your Computer does not support OPENGL 2.0"
-                  />
-                )
-              }
-            >
-              <Switch
-                disabled={!this.props.webGLEnabled}
-                checked={this.props.settings.renderGlobe}
-                onChange={() => {
-                  this.props.ToggleGlobeRender();
-                  this.updateRenderGlobe();
-                }}
-              />
-            </Tooltip.Trigger>
+            <Switch
+              disabled={!this.props.webGLEnabled}
+              checked={this.props.settings.renderGlobe}
+              onChange={() => {
+                this.props.ToggleGlobeRender();
+                this.updateRenderGlobe();
+              }}
+            />
           </SettingsField>
 
           <div className="flex space-between" style={{ marginTop: '2em' }}>

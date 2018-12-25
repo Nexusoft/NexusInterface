@@ -104,6 +104,10 @@ const utilityClasses = css`
       justify-content: space-between;
     }
   }
+
+  .error {
+    color: red;
+  }
 `;
 
 export default (
