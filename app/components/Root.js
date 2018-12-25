@@ -6,6 +6,7 @@ import enLocaleData from 'react-intl/locale-data/en';
 import { addLocaleData } from 'react-intl';
 import localesReducer from 'reducers/intl';
 import { connect, Provider } from 'react-redux';
+import IntlWrapper from './IntlWrapper';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
@@ -28,8 +29,20 @@ import StyleGuide from './StyleGuide';
 import TrustList from './TrustList';
 import About from './About';
 import Exchange from './Exchange';
-import App from './App';
 import StarrySky from './StarrySky';
+
+const App = styled.div({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: 'grid',
+  height: '100%',
+  gridTemplateColumns: '1fr',
+  gridTemplateRows: '74px auto 75px',
+  gridTemplateAreas: '"header" "content" "navigation"',
+});
 
 const Main = styled.main({
   gridArea: 'content',
@@ -53,39 +66,45 @@ export default class Root extends Component {
     const { store, history } = this.props;
     return (
       <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <div>
-            {globalStyles}
-            <StarrySky />
-            <AppLoader>
-              <Loader />
-            </AppLoader>
-            <App>
-              <Header />
-              <Main>
-                <Switch>
-                  <Route exact path="/" component={Overview} />
-                  <Route exact path="/SendPage" component={SendPage} />
-                  <Route exact path="/Transactions" component={Transactions} />
-                  <Route exact path="/Market" component={Market} />
-                  <Route exact path="/AddressBook" component={AddressBook} />
-                  <Route
-                    exact
-                    path="/BlockExplorer"
-                    component={BlockExplorer}
-                  />
-                  <Route path="/Settings" component={Settings} />
-                  <Route path="/Terminal" component={Terminal} />
-                  <Route exact path="/StyleGuide" component={StyleGuide} />
-                  <Route path="/Exchange" component={Exchange} />
-                  <Route exact path="/List" component={TrustList} />
-                  <Route exact path="/About" component={About} />
-                </Switch>
-              </Main>
-              <Navigation />
-            </App>
-          </div>
-        </ConnectedRouter>
+        <IntlWrapper>
+          <ConnectedRouter history={history}>
+            <div>
+              {globalStyles}
+              <StarrySky />
+              <AppLoader>
+                <Loader />
+              </AppLoader>
+              <App>
+                <Header />
+                <Main>
+                  <Switch>
+                    <Route exact path="/" component={Overview} />
+                    <Route exact path="/SendPage" component={SendPage} />
+                    <Route
+                      exact
+                      path="/Transactions"
+                      component={Transactions}
+                    />
+                    <Route exact path="/Market" component={Market} />
+                    <Route exact path="/AddressBook" component={AddressBook} />
+                    <Route
+                      exact
+                      path="/BlockExplorer"
+                      component={BlockExplorer}
+                    />
+                    <Route path="/Settings" component={Settings} />
+                    <Route path="/Terminal" component={Terminal} />
+                    <Route exact path="/StyleGuide" component={StyleGuide} />
+                    <Route path="/Exchange" component={Exchange} />
+                    <Route exact path="/List" component={TrustList} />
+                    <Route exact path="/About" component={About} />
+                  </Switch>
+                </Main>
+                <Navigation />
+              </App>
+            </div>
+          </ConnectedRouter>
+        </IntlWrapper>
       </Provider>
     );
   }
