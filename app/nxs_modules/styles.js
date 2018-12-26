@@ -34,6 +34,10 @@ export const animations = {
     from { opacity: 0 }
     to { opacity: 1 }
   `,
+  fadeOut: keyframes`
+    from { opacity: 1 }
+    to { opacity: 0 }
+  `,
   fadeInAndExpand: keyframes`
     from { 
       transform: scale(0.5);

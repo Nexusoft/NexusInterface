@@ -13,6 +13,7 @@ export const ModalContext = React.createContext({
   modalID: null,
   openModal: () => {},
   closeModal: () => {},
+  openConfirmModal: () => {},
 });
 
 const intro = keyframes`
@@ -45,7 +46,7 @@ const ModalWrapper = styled.div(
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    maxWidth: '60%',
+    width: '60%',
     maxHeight: '60%',
     background: color.darken(colors.dark, 0.2),
     color: colors.lightGray,
@@ -74,6 +75,7 @@ const ModalHeader = styled.div({
 
 const ModalBody = styled.div({
   padding: '30px 50px',
+  overflow: 'auto',
 });
 
 export default class Modal extends PureComponent {
@@ -89,14 +91,13 @@ export default class Modal extends PureComponent {
   };
 
   startClosing = () => {
-    this.setState({ closing: true });
+    if (this.context.modalID && this.context.closeModal) {
+      this.setState({ closing: true });
+    }
   };
 
   close = () => {
-    const { closeModal, modalID } = this.context;
-    if (modalID && closeModal) {
-      closeModal(modalID);
-    }
+    this.context.closeModal(this.context.modalID);
   };
 
   render() {
@@ -116,6 +117,7 @@ export default class Modal extends PureComponent {
         onBackgroundClick={
           closeOnBackgroundClick ? this.startClosing : undefined
         }
+        closing={closing}
       >
         <ModalWrapper
           closing={closing}

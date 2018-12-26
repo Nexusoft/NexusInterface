@@ -24,8 +24,7 @@ import Tooltip from 'components/Tooltip';
 import Modal from 'components/Modal';
 
 // Internal Local Dependencies
-import AddressModal from './AddressModal';
-import ConfirmationModal from './ConfirmationModal';
+import LookupAddressModal from './LookupAddressModal';
 import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
 import Queue from './Queue';
 import styles from './style.css';
@@ -37,7 +36,7 @@ import swapIcon from 'images/swap.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 
 const SendForm = styled.div({
-  maxWidth: 600,
+  maxWidth: 620,
   margin: '0 auto',
 });
 
@@ -346,6 +345,98 @@ class SendPage extends Component {
     });
   };
 
+  lookupAddress = () => {
+    this.context.openModal(LookupAddressModal, this.props);
+  };
+
+  sendOne() {
+    console.log('Send');
+    this.props.busy();
+    if (this.props.SelectedAccount !== '') {
+      if (this.props.Address !== '' && this.props.Amount > 0) {
+        RPC.PROMISE('validateaddress', [this.props.Address])
+          .then(payload => {
+            if (payload.isvalid) {
+              if (!payload.ismine) {
+                if (this.props.Message) {
+                  RPC.PROMISE('sendfrom', [
+                    this.props.SelectedAccount,
+                    this.props.Address,
+                    parseFloat(this.props.Amount),
+                    parseInt(this.props.settings.minimumconfirmations),
+                    this.props.Message,
+                  ])
+                    .then(payload => {
+                      this.getAccountData();
+                      this.props.OpenModal('send');
+                      this.props.clearForm();
+                      this.props.busy();
+                    })
+                    .catch(e => {
+                      console.log(e);
+                      this.props.busy();
+                      this.props.OpenErrorModal(e);
+                    });
+                } else {
+                  RPC.PROMISE('sendfrom', [
+                    this.props.SelectedAccount,
+                    this.props.Address,
+                    parseFloat(this.props.Amount),
+                    parseInt(this.props.settings.minimumconfirmations),
+                  ])
+                    .then(payoad => {
+                      this.getAccountData();
+                      this.props.OpenModal('send');
+                      this.props.clearForm();
+                      this.props.busy();
+                    })
+                    .catch(e => {
+                      console.log(e);
+                      this.props.busy();
+                      this.props.OpenErrorModal(e);
+                    });
+                }
+              } else {
+                this.props.busy();
+                this.props.OpenErrorModal(
+                  'This is an address registered to this wallet'
+                );
+              }
+            } else {
+              this.props.busy();
+              this.props.OpenErrorModal('Invalid Address');
+            }
+          })
+          .catch(e => {
+            this.props.busy();
+            this.props.OpenErrorModal('Invalid Address');
+          });
+      } else {
+        this.props.busy();
+      }
+    } else {
+      this.props.OpenErrorModal('No Account Selected');
+    }
+  }
+
+  confirmSendNow = () => {
+    const { Address, Amount, encrypted, loggedIn, OpenErrorModal } = this.props;
+
+    if (!Address) OpenErrorModal('Invalid Address');
+    if (Amount <= 0) OpenErrorModal('Invalid Amount');
+    if (encrypted && !loggedIn) OpenErrorModal('Wallet Locked');
+
+    this.context.openConfirmModal({
+      question: (
+        <FormattedMessage
+          id="sendReceive.SendTransaction"
+          defaultMessage="Send Transaction"
+        />
+      ),
+      yesCallback: this.sendOne,
+    });
+  };
+
   render() {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
@@ -383,15 +474,6 @@ class SendPage extends Component {
           )
         }
       >
-        <AddressModal {...this.props} />
-
-        <ConfirmationModal
-          accHud={this.accHud.bind(this)}
-          getAccountData={this.getAccountData.bind(this)}
-          validateAddToQueue={this.validateAddToQueue.bind(this)}
-          {...this.props}
-        />
-
         {!this.props.isInSync || !this.props.connections ? (
           <WaitingMessage>
             <FormattedMessage
@@ -422,10 +504,7 @@ class SendPage extends Component {
                   <Button
                     fitHeight
                     className="relative"
-                    onClick={() => {
-                      this.props.clearSearch();
-                      this.props.OpenModal4('Address Lookup');
-                    }}
+                    onClick={this.lookupAddress}
                   >
                     <Icon spaceRight icon={addressBookIcon} />
                     Lookup
@@ -495,26 +574,7 @@ class SendPage extends Component {
               </FormattedMessage>
               <SendFormButtons>
                 {this.editQueue()}
-                <Button
-                  skin="primary"
-                  onClick={() => {
-                    console.log(this.props.encrypted, this.props.loggedIn);
-                    if (!(this.props.Address === '') && this.props.Amount > 0) {
-                      if (
-                        this.props.encrypted === false ||
-                        this.props.loggedIn === true
-                      ) {
-                        this.props.OpenModal2('send transaction?');
-                      } else {
-                        this.props.OpenErrorModal('Wallet Locked');
-                      }
-                    } else if (this.props.Amount <= 0) {
-                      this.props.OpenErrorModal('Invalid Amount');
-                    } else {
-                      this.props.OpenErrorModal('Invalid Address');
-                    }
-                  }}
-                >
+                <Button skin="primary" onClick={this.confirmSendNow}>
                   <Icon icon={sendIcon} spaceRight />
                   <FormattedMessage
                     id="sendReceive.SendNow"
@@ -525,7 +585,11 @@ class SendPage extends Component {
             </SendForm>
 
             {this.props.Queue && !!Object.keys(this.props.Queue).length && (
-              <Queue accHud={this.accHud.bind(this)} {...this.props} />
+              <Queue
+                accHud={this.accHud.bind(this)}
+                getAccountData={this.getAccountData.bind(this)}
+                {...this.props}
+              />
             )}
           </div>
         )}

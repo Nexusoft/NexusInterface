@@ -33,6 +33,7 @@ function signInStatusMessage({
   daemonAvailable,
   unlocked_until,
   minting_only,
+  staking_only,
 }) {
   let unlockDate = new Date(unlocked_until * 1000).toLocaleString('en', {
     weekday: 'long',

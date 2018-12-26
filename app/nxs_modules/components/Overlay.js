@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
+import { animations, timing } from 'styles';
+
 const OverlayWrapper = styled.div({
   position: 'fixed',
   top: 0,
@@ -19,10 +21,15 @@ const OverlayBackground = styled.div(
     left: 0,
     right: 0,
     bottom: 0,
+    animation: `${animations.fadeIn} ${timing.quick} ease-out`,
   },
   ({ dimmed }) =>
     dimmed && {
       background: 'rgba(0,0,0,0.5)',
+    },
+  ({ closing }) =>
+    closing && {
+      animation: `${animations.fadeOut} ${timing.quick} ease-out`,
     }
 );
 
@@ -42,10 +49,14 @@ export default class Overlay extends Component {
   }
 
   render() {
-    const { dimBackground, onBackgroundClick, children } = this.props;
+    const { dimBackground, onBackgroundClick, closing, children } = this.props;
     return ReactDOM.createPortal(
       <OverlayWrapper>
-        <OverlayBackground dimmed={dimBackground} onClick={onBackgroundClick} />
+        <OverlayBackground
+          dimmed={dimBackground}
+          onClick={onBackgroundClick}
+          closing={closing}
+        />
         {this.props.children}
       </OverlayWrapper>,
       this.el

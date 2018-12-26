@@ -24,6 +24,10 @@ const resetStyles = css`
     overflow: hidden;
   }
 
+  a {
+    outline: none;
+  }
+
   svg {
     fill: currentColor;
   }

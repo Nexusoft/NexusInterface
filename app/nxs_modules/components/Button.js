@@ -90,7 +90,7 @@ const Button = styled.button(
             transitionProperty: 'border-color, color, filter',
             transitionTimingFunction: 'ease-out',
             boxShadow: 'none',
-            textSahdow: 'none',
+            textShadow: 'none',
 
             '.tooltip': {
               fontWeight: 'normal',

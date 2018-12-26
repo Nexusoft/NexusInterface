@@ -1,12 +1,12 @@
 // External
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import Modal from 'react-responsive-modal';
 import styled from '@emotion/styled';
 
 // Internal
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+import Modal from 'components/Modal';
 import { colors } from 'styles';
 import trashimg from 'images/trash.svg';
 
@@ -30,94 +30,55 @@ const QueueSummary = styled.div({
   marginTop: '1em',
 });
 
-export default class Queue extends Component {
-  fillQueue() {
-    let Keys = Object.keys(this.props.Queue);
-    let values = Object.values(this.props.Queue);
-    let queueArray = Keys.map((e, i) => {
-      let newObj = { key: e, val: values[i] };
+class QueueBody extends Component {
+  static contextType = Modal.Context;
 
-      return newObj;
+  confirmRemove = key => {
+    this.context.openConfirmModal({
+      question: (
+        <FormattedMessage
+          id="sendReceive.RemoveFromQueue"
+          defaultMessage="Remove From Queue"
+        />
+      ),
+      yesCallback: () => this.props.removeQueue(key),
     });
+  };
 
-    return queueArray.map((e, i) => {
-      return (
-        <tr key={i}>
-          <Tooltip.Trigger
-            tooltip={
-              <FormattedMessage
-                id="sendReceive.ClickToEdit"
-                defaultMessage="Click To Edit"
-              />
-            }
-          >
-            <td className="td" onClick={() => this.props.updateAddress(e.key)}>
-              {e.key}
-            </td>
-          </Tooltip.Trigger>
-          <td className="td">{e.val.toFixed(5)}</td>
-          <td className="td">
-            <img
-              id="Remove"
-              src={trashimg}
-              onClick={() => {
-                this.props.OpenModal3();
-              }}
-            />
-          </td>
-          <Modal
-            classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
-            showCloseIcon={false}
-            open={this.props.openThirdModal}
-            onClose={e => {
-              e.preventDefault();
-              this.props.CloseModal3();
-            }}
-            center
-          >
-            <div>
-              {' '}
-              <h2>
+  render() {
+    return (
+      <tbody>
+        {Object.keys(this.props.Queue).map(key => (
+          <tr key={key}>
+            <Tooltip.Trigger
+              tooltip={
                 <FormattedMessage
-                  id="sendReceive.RemoveFromQueue"
-                  defaultMessage="Remove From Queue"
+                  id="sendReceive.ClickToEdit"
+                  defaultMessage="Click To Edit"
                 />
-              </h2>
-              <div id="ok-button">
-                <FormattedMessage id="sendReceive.Yes">
-                  {yes => (
-                    <input
-                      value={yes}
-                      type="button"
-                      className="button primary"
-                      onClick={() => {
-                        this.props.removeQueue(e.key);
-                        this.props.CloseModal3();
-                      }}
-                    />
-                  )}
-                </FormattedMessage>
-              </div>
-              <div id="no-button">
-                <FormattedMessage id="sendReceive.No" defaultMessage="No">
-                  {no => (
-                    <input
-                      value={no}
-                      type="button"
-                      className="button"
-                      onClick={() => {
-                        this.props.CloseModal3();
-                      }}
-                    />
-                  )}
-                </FormattedMessage>
-              </div>
-            </div>
-          </Modal>
-        </tr>
-      );
-    });
+              }
+            >
+              <td className="td" onClick={() => this.props.updateAddress(key)}>
+                {key}
+              </td>
+            </Tooltip.Trigger>
+            <td className="td">{this.props.Queue[key].toFixed(5)}</td>
+            <td className="td">
+              <img
+                id="Remove"
+                src={trashimg}
+                onClick={() => this.confirmRemove(key)}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    );
   }
+}
+
+export default class Queue extends Component {
+  static contextType = Modal.Context;
 
   addAmount() {
     let keyCheck = Object.keys(this.props.Queue);
@@ -149,6 +110,107 @@ export default class Queue extends Component {
     }
   }
 
+  confirmClearQueue = () => {
+    this.context.openConfirmModal({
+      question: (
+        <FormattedMessage
+          id="sendReceive.ClearQueue"
+          defaultMessage="Clear Queue?"
+        />
+      ),
+      yesCallback: this.props.clearQueue,
+    });
+  };
+
+  sendMany() {
+    this.props.busy();
+    let keyCheck = Object.keys(this.props.Queue);
+    if (this.props.SelectedAccount !== '') {
+      if (keyCheck.length > 1) {
+        RPC.PROMISE(
+          'sendmany',
+          [this.props.SelectedAccount, this.props.Queue],
+          parseInt(this.props.settings.minimumconfirmations),
+          this.props.Message
+        )
+          .then(payoad => {
+            this.props.OpenModal('send');
+            this.props.getAccountData();
+            this.props.busy();
+            this.props.clearForm();
+            this.props.clearQueue();
+          })
+          .catch(e => {
+            this.props.busy();
+            this.props.OpenErrorModal(e);
+          });
+      } else if (Object.values(this.props.Queue)[0] > 0) {
+        if (this.props.Message) {
+          RPC.PROMISE('sendfrom', [
+            this.props.SelectedAccount,
+            keyCheck[0],
+            parseFloat(Object.values(this.props.Queue)[0]),
+            parseInt(this.props.settings.minimumconfirmations),
+            this.props.Message,
+          ])
+            .then(payload => {
+              this.props.getAccountData();
+              this.props.OpenModal('send');
+              this.props.clearForm();
+              this.props.clearQueue();
+              this.props.busy();
+            })
+            .catch(e => {
+              console.log(e);
+              this.props.busy();
+              this.props.OpenErrorModal(e);
+            });
+        } else {
+          RPC.PROMISE('sendfrom', [
+            this.props.SelectedAccount,
+            keyCheck[0],
+            parseFloat(Object.values(this.props.Queue)[0]),
+            parseInt(this.props.settings.minimumconfirmations),
+          ])
+            .then(payoad => {
+              this.props.getAccountData();
+              this.props.OpenModal('send');
+              this.props.clearForm();
+              this.props.clearQueue();
+              this.props.busy();
+            })
+            .catch(e => {
+              console.log(e);
+              this.props.busy();
+              this.props.OpenErrorModal(e);
+            });
+        }
+      }
+    } else {
+      this.props.OpenErrorModal('No Account Selected');
+    }
+  }
+
+  confirmSendMultiple = () => {
+    const { Queue, encrypted, loggedIn, OpenErrorModal } = this.props;
+
+    if (encrypted && !loggedIn) OpenErrorModal('Wallet Locked');
+    if (Object.keys(Queue).length === 0) OpenErrorModal('Empty Queue!');
+
+    this.context.openConfirmModal({
+      question: (
+        <div>
+          <FormattedMessage
+            id="sendReceive.SendAllFrom"
+            defaultMessage="Send All Transactions From: "
+          />
+          {this.props.accHud()}
+        </div>
+      ),
+      yesCallback: this.sendMany,
+    });
+  };
+
   render() {
     return (
       <QueueWrapper>
@@ -176,39 +238,17 @@ export default class Queue extends Component {
               </th>
             </tr>
           </thead>
-          <tbody>{this.fillQueue()}</tbody>
+          <QueueBody {...this.props} />
         </table>
 
         <QueueButtons>
-          <Button
-            type="reset"
-            onClick={() => {
-              this.props.OpenModal2('Clear Queue?');
-            }}
-          >
+          <Button type="reset" onClick={this.confirmClearQueue}>
             <FormattedMessage
               id="sendReceive.ClearQueue"
               defaultMessage="Clear Queue"
             />
           </Button>
-          <Button
-            skin="primary"
-            onClick={() => {
-              console.log(this.props.encrypted, this.props.loggedIn);
-              if (
-                this.props.encrypted === false ||
-                this.props.loggedIn === true
-              ) {
-                if (Object.keys(this.props.Queue).length > 0) {
-                  this.props.OpenModal2('Send Multiple?');
-                } else {
-                  this.props.OpenErrorModal('Empty Queue!');
-                }
-              } else {
-                this.props.OpenErrorModal('Wallet Locked');
-              }
-            }}
-          >
+          <Button skin="primary" onClick={this.confirmSendMultiple}>
             <FormattedMessage
               id="sendReceive.SendAll"
               defaultMessage="SendAll"

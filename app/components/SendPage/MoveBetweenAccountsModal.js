@@ -12,10 +12,14 @@ import Modal from 'components/Modal';
 
 const AccountSelectors = styled.div({
   display: 'grid',
-  gridTemplateColumns: 'auto auto',
+  gridTemplateColumns: 'auto 1fr',
   gridTemplateRows: 'auto auto',
   gridGap: '1em .5em',
   alignItems: 'center',
+});
+
+const Label = styled.label({
+  paddingRight: '2em',
 });
 
 const Equal = styled.div({
@@ -90,29 +94,29 @@ export default class MoveBetweenAccountsModal extends Component {
 
   render() {
     return (
-      <Modal style={{ width: '50%' }}>
+      <Modal style={{ maxWidth: 650 }}>
         <Modal.Header>Move NXS between accounts</Modal.Header>
 
         <Modal.Body>
-          <AccountSelectors style={{ marginTop: 20 }}>
-            <label>
+          <AccountSelectors>
+            <Label>
               <FormattedMessage
                 id="sendReceive.FromAccount"
                 defaultMessage="From Account"
               />
-            </label>
+            </Label>
             <Select
               value={this.props.MoveFromAccount}
               onChange={this.props.updateMoveFromAccount}
               options={this.props.accountOptions}
             />
 
-            <label>
+            <Label>
               <FormattedMessage
                 id="sendReceive.ToAccount"
                 defaultMessage="To Account"
               />
-            </label>
+            </Label>
             <Select
               value={this.props.MoveToAccount}
               onChange={this.props.updateMoveToAccount}

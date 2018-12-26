@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 // Internal
 import Modal from 'components/Modal';
+import ConfirmModal from 'components/Modals/ConfirmModal';
 
 const newModalID = (function() {
   let counter = 1;
@@ -44,9 +45,12 @@ export default class ModalController extends Component {
     return false;
   };
 
+  openConfirmModal = props => this.openModal(ConfirmModal, props);
+
   controller = {
     openModal: this.openModal,
     closeModal: this.closeModal,
+    openConfirmModal: this.openConfirmModal,
   };
 
   render() {

@@ -54,6 +54,10 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Login extends Component {
+  state = {
+    password: '',
+  };
+
   getMinDate() {
     const today = new Date();
 
@@ -75,7 +79,6 @@ class Login extends Component {
     unlockDate = new Date(
       unlockDate.setMinutes(this.props.unlockUntillTime.slice(3))
     );
-    const pass = document.getElementById('pass');
 
     let unlockUntill = Math.round(
       (unlockDate.getTime() - today.getTime()) / 1000
@@ -83,8 +86,9 @@ class Login extends Component {
 
     // this.props.busy(true);
 
+    const { password } = this.state;
     if (this.props.stakingFlag) {
-      RPC.PROMISE('walletpassphrase', [pass.value, unlockUntill, true])
+      RPC.PROMISE('walletpassphrase', [password, unlockUntill, true])
         .then(payload => {
           this.props.wipe();
           RPC.PROMISE('getinfo', [])
@@ -98,22 +102,22 @@ class Login extends Component {
             });
         })
         .catch(e => {
-          pass.value = '';
+          password = '';
           if (e === 'Error: The wallet passphrase entered was incorrect.') {
             this.props.busy(false);
             this.props.OpenErrorModal('Incorrect Passsword');
-            pass.focus();
+            // this.passwordRef.focus();
           } else if (e === 'value is type null, expected int') {
             this.props.busy(false);
             this.props.OpenModal('FutureDate');
-            pass.focus();
+            this.passwordRef.focus();
           } else {
             this.props.OpenErrorModal(e);
           }
         });
     } else {
       if (unlockUntill !== NaN && unlockUntill > 3600) {
-        RPC.PROMISE('walletpassphrase', [pass.value, unlockUntill, false])
+        RPC.PROMISE('walletpassphrase', [password, unlockUntill, false])
           .then(payload => {
             this.props.wipe();
             RPC.PROMISE('getinfo', [])
@@ -127,15 +131,15 @@ class Login extends Component {
               });
           })
           .catch(e => {
-            pass.value = '';
+            password = '';
             if (e === 'Error: The wallet passphrase entered was incorrect.') {
               this.props.busy(false);
               this.props.OpenErrorModal('Incorrect Passsword');
-              pass.focus();
+              this.passwordRef.focus();
             } else if (e === 'value is type null, expected int') {
               this.props.busy(false);
               this.props.OpenModal('FutureDate');
-              pass.focus();
+              this.passwordRef.focus();
             } else {
               this.props.OpenErrorModal(e);
             }
@@ -186,7 +190,10 @@ class Login extends Component {
               <TextField
                 type="password"
                 placeholder="Password"
-                id="pass"
+                value={this.state.password}
+                onChange={e => {
+                  this.setState({ password: e.target.value });
+                }}
                 required
               />
             </FormField>
