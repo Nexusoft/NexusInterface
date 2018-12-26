@@ -101,7 +101,7 @@ class Terminal extends Component {
                   this.props.setCoreOutputPaused(!this.props.coreOutputPaused);
                 }}
               >
-                {this.props.coreOutputPaused ? 'UnPause' : 'Pause'}
+                {this.props.coreOutputPaused ? 'Unpause' : 'Pause'}
               </button>
             ) : null}
           </ul>
