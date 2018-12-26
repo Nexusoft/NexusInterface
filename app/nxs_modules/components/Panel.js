@@ -74,7 +74,7 @@ const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
   <PanelWrapper>
     <PanelHeader>
       <PanelTitle>
-        {!!icon && <Icon spaceRight icon={icon} width={28} height={28} />}
+        {!!icon && <Icon spaceRight icon={icon} />}
         <span className="v-align">{title}</span>
       </PanelTitle>
       {controls}

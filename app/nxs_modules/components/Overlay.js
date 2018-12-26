@@ -22,7 +22,7 @@ const OverlayBackground = styled.div(
   },
   ({ dimmed }) =>
     dimmed && {
-      background: rgba(0, 0, 0, 0.5),
+      background: 'rgba(0,0,0,0.5)',
     }
 );
 
