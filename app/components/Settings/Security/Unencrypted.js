@@ -36,12 +36,6 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
-  OpenErrorModal: type => {
-    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
-  },
-  CloseErrorModal: type => {
-    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
-  },
 });
 
 class Unencrypted extends Component {

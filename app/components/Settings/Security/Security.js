@@ -5,6 +5,7 @@ import { Redirect } from 'react-router';
 import styled from '@emotion/styled';
 
 // Internal
+import Modal from 'components/Modal';
 import styles from './style.css';
 import * as TYPE from 'actions/actiontypes';
 import ChangePassword from './ChangePassword';
@@ -30,12 +31,6 @@ const mapDispatchToProps = dispatch => ({
   busy: () => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG }),
   OpenModal: type => dispatch({ type: TYPE.SHOW_MODAL, payload: type }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
-  OpenErrorModal: type => {
-    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
-  },
-  CloseErrorModal: type => {
-    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
-  },
 });
 
 class Security extends Component {

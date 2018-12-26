@@ -149,12 +149,12 @@ const mapDispatchToProps = dispatch => ({
   CloseModal4: type => {
     dispatch({ type: TYPE.HIDE_MODAL4, payload: type });
   },
-  OpenErrorModal: type => {
-    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
-  },
-  CloseErrorModal: type => {
-    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
-  },
+  // OpenErrorModal: type => {
+  //   dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  // },
+  // CloseErrorModal: type => {
+  //   dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  // },
   Confirm: Answer => {
     dispatch({ type: TYPE.CONFIRM, payload: Answer });
   },
@@ -302,16 +302,16 @@ class SendPage extends Component {
                 amount: parseFloat(this.props.Amount),
               });
             } else {
-              this.props.OpenErrorModal(
-                'This is an address registered to this wallet'
-              );
+              this.context.openErrorModal({
+                message: 'This is an address registered to this wallet',
+              });
             }
           } else {
-            this.props.OpenErrorModal('Invalid Address');
+            this.context.openErrorModal({ message: 'Invalid Address' });
           }
         })
         .catch(e => {
-          this.props.OpenErrorModal('Invalid Address');
+          this.context.openErrorModal({ message: 'Invalid Address' });
         });
     }
   }
@@ -375,7 +375,7 @@ class SendPage extends Component {
                     .catch(e => {
                       console.log(e);
                       this.props.busy();
-                      this.props.OpenErrorModal(e);
+                      this.context.openErrorModal({ message: e });
                     });
                 } else {
                   RPC.PROMISE('sendfrom', [
@@ -393,38 +393,47 @@ class SendPage extends Component {
                     .catch(e => {
                       console.log(e);
                       this.props.busy();
-                      this.props.OpenErrorModal(e);
+                      this.context.openErrorModal({ message: e });
                     });
                 }
               } else {
                 this.props.busy();
-                this.props.OpenErrorModal(
-                  'This is an address registered to this wallet'
-                );
+                this.context.openErrorModal({
+                  message: 'This is an address registered to this wallet',
+                });
               }
             } else {
               this.props.busy();
-              this.props.OpenErrorModal('Invalid Address');
+              this.context.openErrorModal({ message: 'Invalid Address' });
             }
           })
           .catch(e => {
             this.props.busy();
-            this.props.OpenErrorModal('Invalid Address');
+            this.context.openErrorModal({ message: 'Invalid Address' });
           });
       } else {
         this.props.busy();
       }
     } else {
-      this.props.OpenErrorModal('No Account Selected');
+      this.context.openErrorModal({ message: 'No Account Selected' });
     }
   }
 
   confirmSendNow = () => {
     const { Address, Amount, encrypted, loggedIn, OpenErrorModal } = this.props;
 
-    if (!Address) return OpenErrorModal('Invalid Address');
-    if (Amount <= 0) return OpenErrorModal('Invalid Amount');
-    if (encrypted && !loggedIn) return OpenErrorModal('Wallet Locked');
+    if (!Address) {
+      this.context.openErrorModal({ message: 'Invalid Address' });
+      return;
+    }
+    if (Amount <= 0) {
+      this.context.openErrorModal({ message: 'Invalid Amount' });
+      return;
+    }
+    if (encrypted && !loggedIn) {
+      this.context.openErrorModal({ message: 'Wallet Locked' });
+      return;
+    }
 
     this.context.openConfirmModal({
       question: (

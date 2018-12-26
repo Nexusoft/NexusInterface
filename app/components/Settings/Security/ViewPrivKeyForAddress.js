@@ -10,9 +10,12 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
+import Modal from 'components/Modal';
 import copyIcon from 'images/copy.sprite.svg';
 
 export default class ViewPrivKeyForAddress extends Component {
+  static contextType = Modal.Context;
+
   showPrivKey(e) {
     e.preventDefault();
     let address = this.inputRef.value;
@@ -25,7 +28,7 @@ export default class ViewPrivKeyForAddress extends Component {
           if (e.includes(address)) {
             e = e.replace(address + ' ', '');
           }
-          this.props.OpenErrorModal(e);
+          this.context.openErrorModal({ message: e });
         });
     } else {
       this.inputRef.focus();

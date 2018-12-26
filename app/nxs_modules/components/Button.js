@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { colors, timing } from 'styles';
-import { lighten, darken, fade } from 'utils/colors';
+import { color } from 'utils';
 
 const Button = styled.button(
   {
@@ -97,21 +97,20 @@ const Button = styled.button(
             },
           },
           '&:hover': {
-            borderColor: lighten(colors.primary, 0.3),
-            color: lighten(colors.primary, 0.3),
-            filter: `drop-shadow(0 0 7px ${fade(colors.primary, 0.3)})`,
+            borderColor: color.lighten(colors.primary, 0.3),
+            color: color.lighten(colors.primary, 0.3),
+            filter: `drop-shadow(0 0 7px ${color.fade(colors.primary, 0.3)})`,
           },
         };
       case 'filled-primary':
         return {
           '&, &:active, &&[disabled]': {
-            background: darken(colors.primary, 0.1),
+            background: color.darken(colors.primary, 0.1),
             color: colors.primaryContrast,
             transitionProperty: 'background-color',
           },
           '&:hover': {
             background: colors.primary,
-            color: colors.primaryContrast,
           },
         };
       case 'filled-dark':
@@ -123,7 +122,6 @@ const Button = styled.button(
           },
           '&:hover': {
             background: colors.darkerGray,
-            color: colors.light,
           },
         };
       case 'filled-light':
@@ -135,7 +133,17 @@ const Button = styled.button(
           },
           '&:hover': {
             background: colors.light,
-            color: colors.dark,
+          },
+        };
+      case 'filled-error':
+        return {
+          '&, &:active, &&[disabled]': {
+            background: colors.error,
+            color: colors.errorContrast,
+            transitionProperty: 'background-color',
+          },
+          '&:hover': {
+            background: color.lighten(colors.error, 0.2),
           },
         };
       case 'blank-dark':

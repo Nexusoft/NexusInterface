@@ -23,6 +23,7 @@ import TextField from 'components/TextField';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
+import Modal from 'components/Modal';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
@@ -56,6 +57,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class AddressBook extends Component {
+  static contextType = Modal.Context;
+
   // React Method (Life cycle hook)
   componentDidMount() {
     this.loadMyAccounts();
@@ -652,7 +655,7 @@ class AddressBook extends Component {
             this.loadMyAccounts();
           })
           .catch(e => {
-            this.props.OpenErrorModal(e);
+            this.context.openErrorModal({ message: e });
           });
       } else {
         this.props.OpenModal('Account cannot be named * or default');
@@ -664,7 +667,7 @@ class AddressBook extends Component {
           this.loadMyAccounts();
         })
         .catch(e => {
-          this.props.OpenErrorModal(e);
+          this.context.openErrorModal({ message: e });
         });
     }
   }

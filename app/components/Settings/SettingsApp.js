@@ -25,6 +25,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
+import Modal from 'components/Modal';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -114,17 +115,19 @@ const mapDispatchToProps = dispatch => ({
   SetMinimumConfirmationsNumber: inValue => {
     dispatch({ type: TYPE.SET_MIN_CONFIRMATIONS, payload: inValue });
   },
-  OpenErrorModal: type => {
-    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
-  },
-  CloseErrorModal: type => {
-    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
-  },
+  // OpenErrorModal: type => {
+  //   dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  // },
+  // CloseErrorModal: type => {
+  //   dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  // },
 });
 
 var currentBackupLocation = ''; //Might redo to use redux but this is only used to replace using json reader every render;
 
 class SettingsApp extends Component {
+  static contextType = Modal.Context;
+
   // React Method (Life cycle hook)
   constructor(props) {
     super(props);
@@ -241,7 +244,7 @@ class SettingsApp extends Component {
       RPC.PROMISE('settxfee', [parseFloat(TxFee)]);
       this.props.OpenModal('Transaction Fee Set');
     } else {
-      this.props.OpenErrorModal('Invalid Transaction Fee');
+      this.context.openErrorModal({ message: 'Invalid Transaction Fee' });
     }
   }
 
@@ -457,9 +460,9 @@ class SettingsApp extends Component {
                     if (this.props.connections !== undefined) {
                       this.backupWallet(e);
                     } else {
-                      this.props.OpenErrorModal(
-                        'Please wait for Daemon to load'
-                      );
+                      this.context.openErrorModal({
+                        message: 'Please wait for Daemon to load',
+                      });
                     }
                   }}
                 />

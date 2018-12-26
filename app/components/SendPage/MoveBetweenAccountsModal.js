@@ -36,6 +36,8 @@ const Buttons = styled.div({
 });
 
 export default class MoveBetweenAccountsModal extends Component {
+  static contextType = Modal.Context;
+
   moveAmmountConverter(e, isNxs) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === '')) {
       if (isNxs) {
@@ -76,19 +78,19 @@ export default class MoveBetweenAccountsModal extends Component {
             })
             .catch(e => {
               if (typeof e === 'object') {
-                this.props.OpenErrorModal(e.Message);
+                this.context.openErrorModal({ message: e.Message });
               } else {
-                this.props.OpenErrorModal(e);
+                this.context.openErrorModal({ message: e });
               }
             });
         } else {
-          this.props.OpenErrorModal('Insufficient funds');
+          this.context.openErrorModal({ message: 'Insufficient funds' });
         }
       } else {
-        this.props.OpenErrorModal('No second account chosen');
+        this.context.openErrorModal({ message: 'No second account chosen' });
       }
     } else {
-      this.props.OpenErrorModal('Accounts are the same');
+      this.context.openErrorModal({ message: 'Accounts are the same' });
     }
   }
 

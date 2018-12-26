@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 // Internal
 import Modal from 'components/Modal';
 import ConfirmModal from 'components/Modals/ConfirmModal';
+import ErrorModal from 'components/Modals/ErrorModal';
 
 const newModalID = (function() {
   let counter = 1;
@@ -47,10 +48,13 @@ export default class ModalController extends Component {
 
   openConfirmModal = props => this.openModal(ConfirmModal, props);
 
+  openErrorModal = props => this.openModal(ErrorModal, props);
+
   controller = {
     openModal: this.openModal,
     closeModal: this.closeModal,
     openConfirmModal: this.openConfirmModal,
+    openErrorModal: this.openErrorModal,
   };
 
   render() {

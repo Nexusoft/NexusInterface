@@ -14,6 +14,7 @@ export const ModalContext = React.createContext({
   openModal: () => {},
   closeModal: () => {},
   openConfirmModal: () => {},
+  openErrorModal: () => {},
 });
 
 const intro = keyframes`

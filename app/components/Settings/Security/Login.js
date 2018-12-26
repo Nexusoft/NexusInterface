@@ -13,6 +13,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
+import Modal from 'components/Modal';
 
 const LoginFieldSet = styled(FieldSet)({
   maxWidth: 400,
@@ -45,15 +46,17 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
-  OpenErrorModal: type => {
-    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
-  },
-  CloseErrorModal: type => {
-    dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
-  },
+  // OpenErrorModal: type => {
+  //   dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+  // },
+  // CloseErrorModal: type => {
+  //   dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
+  // },
 });
 
 class Login extends Component {
+  static contextType = Modal.Context;
+
   state = {
     password: '',
   };
@@ -105,14 +108,14 @@ class Login extends Component {
           password = '';
           if (e === 'Error: The wallet passphrase entered was incorrect.') {
             this.props.busy(false);
-            this.props.OpenErrorModal('Incorrect Passsword');
+            this.context.openErrorModal({ message: 'Incorrect Passsword' });
             // this.passwordRef.focus();
           } else if (e === 'value is type null, expected int') {
             this.props.busy(false);
             this.props.OpenModal('FutureDate');
             this.passwordRef.focus();
           } else {
-            this.props.OpenErrorModal(e);
+            this.context.openErrorModal({ message: e });
           }
         });
     } else {
@@ -134,14 +137,14 @@ class Login extends Component {
             password = '';
             if (e === 'Error: The wallet passphrase entered was incorrect.') {
               this.props.busy(false);
-              this.props.OpenErrorModal('Incorrect Passsword');
+              this.context.openErrorModal({ message: 'Incorrect Passsword' });
               this.passwordRef.focus();
             } else if (e === 'value is type null, expected int') {
               this.props.busy(false);
               this.props.OpenModal('FutureDate');
               this.passwordRef.focus();
             } else {
-              this.props.OpenErrorModal(e);
+              this.context.openErrorModal({ message: e });
             }
           });
       } else {

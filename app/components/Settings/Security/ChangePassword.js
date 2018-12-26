@@ -9,6 +9,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
+import Modal from 'components/Modal';
 
 const ChangePasswordWrapper = styled.form({
   flex: 2,
@@ -16,6 +17,8 @@ const ChangePasswordWrapper = styled.form({
 });
 
 export default class ChangePassword extends Component {
+  static contextType = Modal.Context;
+
   changePassword(e) {
     e.preventDefault();
     let pass, newPass, passChk, passHint;
@@ -87,7 +90,7 @@ export default class ChangePassword extends Component {
           });
       })
       .catch(e => {
-        this.props.OpenErrorModal(e);
+        this.context.openErrorModal({ message: e });
       });
   }
 

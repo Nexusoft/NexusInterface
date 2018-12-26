@@ -142,7 +142,7 @@ export default class Queue extends Component {
           })
           .catch(e => {
             this.props.busy();
-            this.props.OpenErrorModal(e);
+            this.context.openErrorModal({ message: e });
           });
       } else if (Object.values(this.props.Queue)[0] > 0) {
         if (this.props.Message) {
@@ -163,7 +163,7 @@ export default class Queue extends Component {
             .catch(e => {
               console.log(e);
               this.props.busy();
-              this.props.OpenErrorModal(e);
+              this.context.openErrorModal({ message: e });
             });
         } else {
           RPC.PROMISE('sendfrom', [
@@ -182,20 +182,26 @@ export default class Queue extends Component {
             .catch(e => {
               console.log(e);
               this.props.busy();
-              this.props.OpenErrorModal(e);
+              this.context.openErrorModal({ message: e });
             });
         }
       }
     } else {
-      this.props.OpenErrorModal('No Account Selected');
+      this.context.openErrorModal({ message: 'No Account Selected' });
     }
   }
 
   confirmSendMultiple = () => {
-    const { Queue, encrypted, loggedIn, OpenErrorModal } = this.props;
+    const { Queue, encrypted, loggedIn } = this.props;
 
-    if (encrypted && !loggedIn) return OpenErrorModal('Wallet Locked');
-    if (Object.keys(Queue).length === 0) return OpenErrorModal('Empty Queue!');
+    if (encrypted && !loggedIn) {
+      this.context.openErrorModal('Wallet Locked');
+      return;
+    }
+    if (Object.keys(Queue).length === 0) {
+      this.context.openErrorModal('Empty Queue!');
+      return;
+    }
 
     this.context.openConfirmModal({
       question: (

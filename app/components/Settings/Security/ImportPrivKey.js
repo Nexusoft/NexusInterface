@@ -9,12 +9,15 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
+import Modal from 'components/Modal';
 
 const ImportPrivKeyWrapper = styled.form({
   flex: 3,
 });
 
 export default class ImportPrivKey extends Component {
+  static contextType = Modal.Context;
+
   importPrivKey(e) {
     e.preventDefault();
     let acctname = document.getElementById('acctName');
@@ -32,11 +35,11 @@ export default class ImportPrivKey extends Component {
               this.props.CloseModal();
             })
             .catch(e => {
-              this.props.OpenErrorModal(e);
+              this.context.openErrorModal({ message: e });
             });
         })
         .catch(e => {
-          this.props.OpenErrorModal(e);
+          this.context.openErrorModal({ message: e });
         });
     } else if (!label) {
       acctname.focus();

@@ -9,6 +9,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
+import Modal from 'components/Modal';
 import { colors, consts } from 'styles';
 
 const EncryptWalletWrapper = styled.form({
@@ -28,6 +29,8 @@ const Characters = styled.span({
 });
 
 export default class EncryptWallet extends Component {
+  static contextType = Modal.Context;
+
   reEnterValidator(e) {
     let newPass = document.getElementById('newPass');
     let passHint = document.getElementById('passHint');
@@ -71,20 +74,22 @@ export default class EncryptWallet extends Component {
                 }, 5000);
               })
               .catch(e => {
-                this.props.OpenErrorModal(e);
+                this.context.openErrorModal({ message: e });
               });
           } else {
-            this.props.OpenErrorModal(
-              'Password cannot start or end with spaces'
-            ); // new alert
+            this.context.openErrorModal({
+              message: 'Password cannot start or end with spaces',
+            }); // new alert
             passChk.focus();
           }
         } else {
-          this.props.OpenErrorModal('Passwords do not match'); // new alert
+          this.context.openErrorModal({ message: 'Passwords do not match' }); // new alert
           passChk.focus();
         }
       } else {
-        this.props.OpenErrorModal('Passwords cannot contain -$/&*|<>'); // new alert
+        this.context.openErrorModal({
+          message: 'Passwords cannot contain -$/&*|<>',
+        }); // new alert
         passChk.focus();
       }
     } else {
