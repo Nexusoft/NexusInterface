@@ -200,6 +200,7 @@ const MaxmindCopyright = styled.div({
   bottom: 3,
   opacity: 0.4,
   color: colors.primary,
+  zIndex: 1, // over the navigation bar
 });
 
 const MaxmindLogo = styled.img({
