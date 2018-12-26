@@ -27,7 +27,7 @@ import statGood from 'images/status-good.svg';
 import statBad from 'images/sync.svg';
 import stakeImg from 'images/staking.svg';
 import logoFull from 'images/logo-full-beta.svg';
-import { write } from 'fs';
+import { write, fstat, existsSync } from 'fs';
 
 import { FormattedMessage } from 'react-intl';
 var tray = tray || null;
@@ -1136,6 +1136,29 @@ class Header extends Component {
     }
   }
 
+  wallpaperCheck() {
+    if (fs.existsSync(this.props.settings.wallpaper)) {
+      return this.props.settings.wallpaper;
+    } else {
+      let defaultWallpaperPath = '';
+
+      if (process.env.NODE_ENV === 'development') {
+        defaultWallpaperPath = '~images/background/starrynight.jpg';
+      } else {
+        defaultWallpaperPath = path.join(
+          configuration.GetAppResourceDir(),
+          'images',
+          'background',
+          'starrynight.jpg'
+        );
+        if (process.platform === 'win32') {
+          defaultWallpaperPath = defaultWallpaperPath.replace(/\\/g, '/');
+        }
+      }
+      return defaultWallpaperPath;
+    }
+  }
+
   // Mandatory React method
   render() {
     return (
@@ -1153,9 +1176,7 @@ class Header extends Component {
             '--footer': this.props.settings.customStyling.footer,
             '--footer-hover': this.props.settings.customStyling.footerHover,
             '--footer-active': this.props.settings.customStyling.footerActive,
-            '--background-main-image': `url('${
-              this.props.settings.wallpaper
-            }')`,
+            '--background-main-image': `url('${this.wallpaperCheck()}')`,
             '--panel-background-color': this.props.settings.customStyling
               .pannelBack,
             '--maxMind-copyright': this.props.settings.customStyling
