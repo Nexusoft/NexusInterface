@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
-import { darken, fade } from 'utils/colors';
+import { color } from 'utils';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
@@ -49,7 +49,7 @@ const PanelTitle = styled.h3({
 
 const PanelBody = styled.div(
   {
-    background: fade(darken(colors.dark, 0.2), 0.2),
+    background: color.fade(color.darken(colors.dark, 0.2), 0.2),
     borderBottomLeftRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
     flexGrow: 1,

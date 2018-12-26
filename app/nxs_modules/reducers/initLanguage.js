@@ -47,7 +47,7 @@ export default {
     'sendReceive.No': 'No',
     'sendReceive.Total': 'TOTAL',
     'sendReceive.From': 'FROM',
-    'sendReceive.FEE': 'FEE',
+    'sendReceive.FEE': 'Fee',
     'sendReceive.CopyToFeild': 'Copy To Field',
     'sendReceive.ClickToEdit': 'Click To Edit',
 

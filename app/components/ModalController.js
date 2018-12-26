@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 // Internal
-import Modal, { ModalContext } from 'components/Modal';
+import Modal from 'components/Modal';
 
 const newModalID = (function() {
   let counter = 1;
@@ -23,6 +23,10 @@ export default class ModalController extends Component {
           id: modalID,
           component,
           props,
+          context: {
+            modalID,
+            ...this.controller,
+          },
         },
       ],
     });
@@ -47,12 +51,14 @@ export default class ModalController extends Component {
 
   render() {
     return (
-      <ModalContext.Provider value={this.controller}>
+      <Modal.Context.Provider value={this.controller}>
         {this.props.children}
-        {this.state.modals.map(({ id, component: Comp, props }) => (
-          <Comp key={id} modalID={id} {...props} />
+        {this.state.modals.map(({ id, component: Comp, props, context }) => (
+          <Modal.Context.Provider key={id} value={context}>
+            <Comp {...props} />
+          </Modal.Context.Provider>
         ))}
-      </ModalContext.Provider>
+      </Modal.Context.Provider>
     );
   }
 }

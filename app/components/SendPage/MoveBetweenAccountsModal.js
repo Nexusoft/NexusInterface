@@ -1,7 +1,6 @@
 // External
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import Modal from 'react-responsive-modal';
 import styled from '@emotion/styled';
 
 // Internal
@@ -9,6 +8,7 @@ import Select from 'components/Select';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
+import Modal from 'components/Modal';
 
 const AccountSelectors = styled.div({
   display: 'grid',
@@ -90,107 +90,76 @@ export default class MoveBetweenAccountsModal extends Component {
 
   render() {
     return (
-      <Modal
-        center
-        classNames={{ modal: 'modal' }}
-        showCloseIcon={true}
-        open={this.props.moveModal}
-        onClose={e => {
-          e.preventDefault();
-          this.props.CloseMoveModal();
-        }}
-      >
-        <div className="MoveModal">
-          <div>
-            <AccountSelectors>
-              <label>
-                <FormattedMessage
-                  id="sendReceive.FromAccount"
-                  defaultMessage="From Account"
-                />
-              </label>
-              <Select
-                value={this.props.MoveFromAccount}
-                onChange={this.props.updateMoveFromAccount}
-                options={[
-                  {
-                    value: '',
-                    display: (
-                      <FormattedMessage
-                        id="sendReceive.SelectAnAccount"
-                        defaultMessage="Select an Account"
-                      />
-                    ),
-                  },
-                  ...this.props.accountChanger(),
-                ]}
-              />
+      <Modal style={{ width: '50%' }}>
+        <Modal.Header>Move NXS between accounts</Modal.Header>
 
-              <label>
-                <FormattedMessage
-                  id="sendReceive.ToAccount"
-                  defaultMessage="To Account"
-                />
-              </label>
-              <Select
-                value={this.props.MoveToAccount}
-                onChange={this.props.updateMoveToAccount}
-                options={[
-                  {
-                    value: '',
-                    display: (
-                      <FormattedMessage
-                        id="sendReceive.SelectAnAccount"
-                        defaultMessage="Select an Account"
-                      />
-                    ),
-                  },
-                  ...this.props.accountChanger(),
-                ]}
+        <Modal.Body>
+          <AccountSelectors style={{ marginTop: 20 }}>
+            <label>
+              <FormattedMessage
+                id="sendReceive.FromAccount"
+                defaultMessage="From Account"
               />
-            </AccountSelectors>
-            <div>
-              <div className="flex">
-                <FormField
-                  connectLabel
-                  style={{ flex: 1 }}
-                  label={
-                    <FormattedMessage
-                      id="sendReceive.Amount"
-                      defaultMessage="Nexus Amount"
-                    />
-                  }
-                >
-                  <TextField
-                    placeholder="0.00000"
-                    value={this.props.moveAmount}
-                    onChange={e => this.moveAmmountConverter(e, true)}
-                    required
+            </label>
+            <Select
+              value={this.props.MoveFromAccount}
+              onChange={this.props.updateMoveFromAccount}
+              options={this.props.accountOptions}
+            />
+
+            <label>
+              <FormattedMessage
+                id="sendReceive.ToAccount"
+                defaultMessage="To Account"
+              />
+            </label>
+            <Select
+              value={this.props.MoveToAccount}
+              onChange={this.props.updateMoveToAccount}
+              options={this.props.accountOptions}
+            />
+          </AccountSelectors>
+          <div>
+            <div className="flex">
+              <FormField
+                connectLabel
+                style={{ flex: 1 }}
+                label={
+                  <FormattedMessage
+                    id="sendReceive.Amount"
+                    defaultMessage="Nexus Amount"
                   />
-                </FormField>
-                <Equal>=</Equal>
-                <FormField
-                  connectLabel
-                  style={{ flex: 1 }}
-                  label={this.props.settings.fiatCurrency}
-                >
-                  <TextField
-                    placeholder="0.00"
-                    value={this.props.moveUSDAmount}
-                    onChange={e => {
-                      this.moveAmmountConverter(e);
-                    }}
-                    required
-                  />
-                </FormField>
-              </div>
-              {this.props.paytxfee && (
-                <div style={{ marginTop: '1em' }}>
-                  <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />
-                  : {this.props.paytxfee.toFixed(5)} NXS
-                </div>
-              )}
+                }
+              >
+                <TextField
+                  placeholder="0.00000"
+                  value={this.props.moveAmount}
+                  onChange={e => this.moveAmmountConverter(e, true)}
+                  required
+                />
+              </FormField>
+              <Equal>=</Equal>
+              <FormField
+                connectLabel
+                style={{ flex: 1 }}
+                label={this.props.settings.fiatCurrency}
+              >
+                <TextField
+                  placeholder="0.00"
+                  value={this.props.moveUSDAmount}
+                  onChange={e => {
+                    this.moveAmmountConverter(e);
+                  }}
+                  required
+                />
+              </FormField>
             </div>
+            {this.props.paytxfee && (
+              <div style={{ marginTop: '1em' }}>
+                <FormattedMessage id="sendReceive.FEE" defaultMessage="Fee" />:{' '}
+                {this.props.paytxfee.toFixed(5)} NXS
+              </div>
+            )}
           </div>
           <Buttons>
             <Button
@@ -203,7 +172,7 @@ export default class MoveBetweenAccountsModal extends Component {
               />
             </Button>
           </Buttons>
-        </div>
+        </Modal.Body>
       </Modal>
     );
   }

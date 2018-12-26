@@ -10,14 +10,15 @@ import { colors, timing } from 'styles';
 import { color } from 'utils';
 
 export const ModalContext = React.createContext({
+  modalID: null,
   openModal: () => {},
   closeModal: () => {},
 });
 
 const intro = keyframes`
   from { 
-    transform: translate(-50%, -50%) scale(0.92);
-    opacity: 0.66 
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0 
   }
   to { 
     transform: translate(-50%, -50%) scale(1);
@@ -31,8 +32,8 @@ const outtro = keyframes`
     opacity: 1
   }
   to { 
-    transform: translate(-50%, -50%) scale(0.92);
-    opacity: 0.66 
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0 
   }
 `;
 
@@ -51,20 +52,20 @@ const ModalWrapper = styled.div(
     borderRadius: modalBorderRadius,
     boxShadow: '0 0 20px #000',
     position: 'relative',
-    animation: `${intro} ${timing.normal} ease-out`,
+    animation: `${intro} ${timing.quick} ease-out`,
   },
   ({ closing }) =>
     closing && {
-      animation: `${outtro} ${timing.normal} ease-out`,
+      animation: `${outtro} ${timing.quick} ease-in`,
     }
 );
 
 const ModalHeader = styled.div({
   borderTopLeftRadius: modalBorderRadius,
   borderTopRightRadius: modalBorderRadius,
-  padding: '15px 0',
-  margin: '0 30px',
-  borderBottom: `1px solid ${colors.primary}`,
+  padding: '20px 0',
+  margin: '0 50px',
+  borderBottom: `2px solid ${colors.primary}`,
   color: colors.primary,
   fontSize: 24,
   fontWeight: 'normal',
@@ -72,7 +73,7 @@ const ModalHeader = styled.div({
 });
 
 const ModalBody = styled.div({
-  padding: '15px 30px',
+  padding: '30px 50px',
 });
 
 export default class Modal extends PureComponent {
@@ -92,7 +93,10 @@ export default class Modal extends PureComponent {
   };
 
   close = () => {
-    this.context.closeModal(this.props.modalID);
+    const { closeModal, modalID } = this.context;
+    if (modalID && closeModal) {
+      closeModal(modalID);
+    }
   };
 
   render() {
@@ -110,12 +114,13 @@ export default class Modal extends PureComponent {
       <Overlay
         dimBackground={this.props.dimBackground}
         onBackgroundClick={
-          closeOnBackgroundClick ? this.context.closeCurrentModal : undefined
+          closeOnBackgroundClick ? this.startClosing : undefined
         }
       >
         <ModalWrapper
           closing={closing}
           onAnimationEnd={closing ? this.close : undefined}
+          {...rest}
         >
           {typeof children === 'function'
             ? children(this.startClosing)
@@ -126,5 +131,6 @@ export default class Modal extends PureComponent {
   }
 }
 
+Modal.Context = ModalContext;
 Modal.Header = ModalHeader;
 Modal.Body = ModalBody;

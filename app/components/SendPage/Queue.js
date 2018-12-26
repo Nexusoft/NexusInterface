@@ -135,7 +135,7 @@ export default class Queue extends Component {
 
           {this.props.paytxfee && (
             <div>
-              <FormattedMessage id="sendReceive.FEE" defaultMessage="FEE" />:{' '}
+              <FormattedMessage id="sendReceive.FEE" defaultMessage="Fee" />:{' '}
               {this.props.paytxfee.toFixed(5)} NXS
             </div>
           )}

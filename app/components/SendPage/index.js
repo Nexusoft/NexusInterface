@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Modal from 'react-responsive-modal';
 import { FormattedMessage } from 'react-intl';
 import { remote } from 'electron';
 import { access } from 'fs';
@@ -22,6 +21,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import FormField from 'components/FormField';
 import InputGroup from 'components/InputGroup';
 import Tooltip from 'components/Tooltip';
+import Modal from 'components/Modal';
 
 // Internal Local Dependencies
 import AddressModal from './AddressModal';
@@ -174,6 +174,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SendPage extends Component {
+  static contextType = Modal.Context;
+
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     this.getAccountData();
@@ -269,12 +271,23 @@ class SendPage extends Component {
     }
   }
 
-  accountChanger() {
+  accountOptions() {
     if (this.props.AccountChanger) {
-      return this.props.AccountChanger.map(e => ({
-        value: e.name,
-        display: `${e.name} (${e.val} NXS)`,
-      }));
+      return [
+        {
+          value: '',
+          display: (
+            <FormattedMessage
+              id="sendReceive.SelectAnAccount"
+              defaultMessage="Select an Account"
+            />
+          ),
+        },
+        ...this.props.AccountChanger.map(e => ({
+          value: e.name,
+          display: `${e.name} (${e.val} NXS)`,
+        })),
+      ];
     }
     return [];
   }
@@ -324,6 +337,15 @@ class SendPage extends Component {
     }
   }
 
+  moveBetweenAccounts = () => {
+    this.context.openModal(MoveBetweenAccountsModal, {
+      calculateUSDvalue: this.calculateUSDvalue.bind(this),
+      getAccountData: this.getAccountData.bind(this),
+      accountOptions: this.accountOptions(),
+      ...this.props,
+    });
+  };
+
   render() {
     ///THIS IS NOT THE RIGHT AREA, this is for auto completing when you press a transaction
     if (this.props.sendagain != undefined && this.props.sendagain != null) {
@@ -353,7 +375,7 @@ class SendPage extends Component {
                 square
                 skin="primary"
                 className="relative"
-                onClick={() => this.props.OpenMoveModal()}
+                onClick={this.moveBetweenAccounts}
               >
                 <Icon icon={swapIcon} />
               </Button>
@@ -367,13 +389,6 @@ class SendPage extends Component {
           accHud={this.accHud.bind(this)}
           getAccountData={this.getAccountData.bind(this)}
           validateAddToQueue={this.validateAddToQueue.bind(this)}
-          {...this.props}
-        />
-
-        <MoveBetweenAccountsModal
-          calculateUSDvalue={this.calculateUSDvalue.bind(this)}
-          getAccountData={this.getAccountData.bind(this)}
-          accountChanger={this.accountChanger.bind(this)}
           {...this.props}
         />
 
@@ -392,18 +407,7 @@ class SendPage extends Component {
                 <Select
                   value={this.props.SelectedAccount}
                   onChange={this.props.AccountPicked}
-                  options={[
-                    {
-                      value: '',
-                      display: (
-                        <FormattedMessage
-                          id="sendReceive.SelectAnAccount"
-                          defaultMessage="Select an Account"
-                        />
-                      ),
-                    },
-                    ...this.accountChanger(),
-                  ]}
+                  options={this.accountOptions()}
                 />
               </FormField>
               <FormField label="Send To">
