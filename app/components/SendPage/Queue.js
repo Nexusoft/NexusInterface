@@ -194,8 +194,8 @@ export default class Queue extends Component {
   confirmSendMultiple = () => {
     const { Queue, encrypted, loggedIn, OpenErrorModal } = this.props;
 
-    if (encrypted && !loggedIn) OpenErrorModal('Wallet Locked');
-    if (Object.keys(Queue).length === 0) OpenErrorModal('Empty Queue!');
+    if (encrypted && !loggedIn) return OpenErrorModal('Wallet Locked');
+    if (Object.keys(Queue).length === 0) return OpenErrorModal('Empty Queue!');
 
     this.context.openConfirmModal({
       question: (

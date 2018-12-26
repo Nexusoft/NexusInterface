@@ -6,15 +6,30 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import { colors } from 'styles';
+import { color } from 'utils';
 
 const ConfirmModalWrapper = styled(Modal)({
   width: 500,
 });
 
+const QuestionMark = styled.div({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  fontSize: 56,
+  color: colors.light,
+  width: 80,
+  height: 80,
+  borderRadius: '50%',
+  borderWidth: 2,
+  borderStyle: 'solid',
+  filter: `drop-shadow(0 0 5px ${color.fade(colors.light, 0.5)})`,
+  margin: '0 auto 20px',
+});
+
 const Question = styled.div({
   textAlign: 'center',
   fontSize: 28,
-  color: colors.primary,
 });
 
 const Buttons = styled.div({
@@ -39,6 +54,7 @@ const ConfirmModal = ({
   <ConfirmModalWrapper {...rest}>
     {closeModal => (
       <Modal.Body>
+        <QuestionMark>?</QuestionMark>
         <Question>{question}</Question>
         <Buttons>
           <ConfirmModalButton

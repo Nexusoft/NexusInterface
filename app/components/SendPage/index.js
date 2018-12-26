@@ -422,9 +422,9 @@ class SendPage extends Component {
   confirmSendNow = () => {
     const { Address, Amount, encrypted, loggedIn, OpenErrorModal } = this.props;
 
-    if (!Address) OpenErrorModal('Invalid Address');
-    if (Amount <= 0) OpenErrorModal('Invalid Amount');
-    if (encrypted && !loggedIn) OpenErrorModal('Wallet Locked');
+    if (!Address) return OpenErrorModal('Invalid Address');
+    if (Amount <= 0) return OpenErrorModal('Invalid Amount');
+    if (encrypted && !loggedIn) return OpenErrorModal('Wallet Locked');
 
     this.context.openConfirmModal({
       question: (

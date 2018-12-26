@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
+import { colors } from 'styles';
 import { newUID } from 'utils';
 
 const FormFieldWrapper = styled.div(
@@ -59,11 +60,11 @@ const Hint = styled.div({
     visibility: 'visible',
     opacity: 1,
     color: '#fff',
-    background: 'red',
+    background: colors.error,
   },
 
   'input:invalid:focus + &::before': {
-    borderBottomColor: 'red',
+    borderBottomColor: colors.error,
   },
 });
 

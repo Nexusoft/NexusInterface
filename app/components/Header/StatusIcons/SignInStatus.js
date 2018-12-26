@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl';
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
 import StatusIcon from './StatusIcon';
+import { colors } from 'styles';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';
@@ -19,7 +20,7 @@ function statusIcon({ connections, daemonAvailable, unlocked_until }) {
     return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
   } else {
     if (unlocked_until === undefined) {
-      return <StatusIcon icon={unlockedIcon} css={{ color: 'red' }} />;
+      return <StatusIcon icon={unlockedIcon} css={{ color: colors.error }} />;
     } else if (unlocked_until === 0) {
       return <StatusIcon icon={lockedIcon} />;
     } else if (unlocked_until >= 0) {

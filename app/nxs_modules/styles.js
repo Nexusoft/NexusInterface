@@ -6,6 +6,7 @@ colors.primary = '#00b7fa';
 colors.primaryContrast = '#fff';
 colors.dark = '#1c1d1f';
 colors.light = '#ebebe6';
+colors.error = '#d35400';
 colors.darkerGray = mix(colors.dark, colors.light, 0.125);
 colors.darkGray = mix(colors.dark, colors.light, 0.25);
 colors.gray = mix(colors.dark, colors.light);
