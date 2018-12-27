@@ -22,6 +22,7 @@ const NotificationsComponent = styled.div({
   position: 'fixed',
   top: 20,
   left: 20,
+  zIndex: 9001,
 });
 
 const Modals = ({ modals }) => (
