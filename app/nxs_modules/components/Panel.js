@@ -49,7 +49,7 @@ const PanelTitle = styled.h3({
 
 const PanelBody = styled.div(
   {
-    background: color.fade(color.darken(colors.dark, 0.2), 0.2),
+    background: color.darken(colors.dark, 0.3),
     borderBottomLeftRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
     flexGrow: 1,
