@@ -6,6 +6,7 @@ const UIContext = React.createContext({
   closeModal: () => {},
   openConfirmModal: () => {},
   openErrorModal: () => {},
+  openSuccessModal: () => {},
 
   showNotification: () => {},
   hideNotification: () => {},

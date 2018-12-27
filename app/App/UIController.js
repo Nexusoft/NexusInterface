@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 // Internal
 import ConfirmModal from 'components/Modals/ConfirmModal';
 import ErrorModal from 'components/Modals/ErrorModal';
+import SuccessModal from 'components/Modals/SuccessModal';
 import Notification from 'components/Notification';
 import UIContext from 'context/ui';
 
@@ -85,6 +86,8 @@ export default class UIController extends Component {
 
   openErrorModal = props => this.openModal(ErrorModal, props);
 
+  openSuccessModal = props => this.openModal(SuccessModal, props);
+
   showNotification = (content, type) => {
     const notifID = newNotifID();
     this.setState({
@@ -116,6 +119,7 @@ export default class UIController extends Component {
     closeModal: this.closeModal,
     openConfirmModal: this.openConfirmModal,
     openErrorModal: this.openErrorModal,
+    openSuccessModal: this.openSuccessModal,
 
     showNotification: this.showNotification,
     hideNotification: this.hideNotification,
