@@ -59,7 +59,7 @@ const resetStyles = css`
 
 const customizedScrollbar = css`
   ::-webkit-scrollbar {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.15);
     z-index: 10000000;
     &:vertical {
       width: 6px;
@@ -68,7 +68,7 @@ const customizedScrollbar = css`
       height: 6px;
     }
     &:hover {
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.3);
     }
     &-thumb {
       background: ${color.fade(colors.primary, 0.25)};
