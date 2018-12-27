@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { colors, timing } from 'styles';
 import { color } from 'utils';
 
-const Button = styled.button(
+const ButtonComponent = styled.button(
   {
     display: 'inline-flex',
     justifyContent: 'center',
@@ -177,5 +177,7 @@ const Button = styled.button(
 /**
  * Note: the double & in &&[disabled] is a css specificity hack so that the disabled styles take priority over the hover styles
  */
+
+const Button = props => <ButtonComponent type="button" {...props} />;
 
 export default Button;

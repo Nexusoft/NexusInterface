@@ -20,6 +20,7 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
+import UIContext from 'context/ui';
 
 const CoreSettings = styled.div({
   maxWidth: 750,
@@ -80,6 +81,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsCore extends Component {
+  static contextType = UIContext;
+
   // React Method (Life cycle hook)
   constructor(props) {
     super(props);
@@ -376,15 +379,26 @@ class SettingsCore extends Component {
     }
   }
 
-  // changeLocale(locale) {
-  //   let settings = require("api/settings.js").GetSettings();
-  //   settings.locale = locale;
-  //   this.props.setSettings(settings);
-  //   this.props.SwitchLocale(locale);
-  //   require("api/settings.js").SaveSettings(settings);
-  // }
+  confirmSaveSettings = () => {
+    this.context.openConfirmModal({
+      question: (
+        <>
+          <FormattedMessage id="SaveSettings" defaultMessage="Save Settings" />?
+        </>
+      ),
+      yesCallback: () => {
+        this.props.setSettings(GetSettings());
+        this.context.showNotification(
+          <FormattedMessage
+            id="Alert.CoreSettingsSaved"
+            defaultMessage="Core Settings Saved"
+          />,
+          'success'
+        );
+      },
+    });
+  };
 
-  // Mandatory React method
   render() {
     return (
       <CoreSettings>
@@ -931,10 +945,7 @@ class SettingsCore extends Component {
             </Button>
             <Button
               skin="primary"
-              onClick={e => {
-                e.preventDefault();
-                this.props.OpenModal2();
-              }}
+              onClick={this.confirmSaveSettings}
               style={{ marginLeft: 15 }}
             >
               <FormattedMessage
