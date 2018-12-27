@@ -27,7 +27,6 @@ import { fade, lighten } from 'utils/colors';
 
 // Internal Local Dependencies
 import NotificationModal from './NotificationModal';
-import ErrorModal from './ErrorModal';
 import BootstrapModal from './BootstrapModal';
 import SignInStatus from './StatusIcons/SignInStatus';
 import StakingStatus from './StatusIcons/StakingStatus';
@@ -410,7 +409,6 @@ class Header extends Component {
         />
 
         <NotificationModal {...this.props} />
-        <ErrorModal {...this.props} />
         <BootstrapModal {...this.props} />
 
         <LogoLink to="/">
