@@ -313,8 +313,7 @@ class SettingsApp extends Component {
     } else alert('Invalid Email');
   }
 
-  backupWallet(e) {
-    e.preventDefault();
+  backupWallet() {
     let now = new Date()
       .toString()
       .slice(0, 24)
@@ -350,7 +349,6 @@ class SettingsApp extends Component {
         'success'
       );
     });
-    console.log(this.props.settings.Folder);
   }
 
   OnFiatCurrencyChange(value) {
@@ -407,103 +405,43 @@ class SettingsApp extends Component {
     SaveSettings(settings);
   }
 
+  confirmSetTxFee = () => {
+    this.context.openConfirmModal({
+      question: (
+        <FormattedMessage
+          id="Settings.SetFee"
+          defaultMessage="Set Transaction Fee?"
+        />
+      ),
+      yesCallback: this.setTxFee,
+    });
+  };
+
+  confirmBackupWallet = () => {
+    this.context.openConfirmModal({
+      question: (
+        <FormattedMessage
+          id="Settings.BackupWallet"
+          defaultMessage="Backup Wallet?"
+        />
+      ),
+      yesCallback: () => {
+        if (this.props.connections !== undefined) {
+          this.backupWallet();
+        } else {
+          this.context.openErrorModal({
+            message: 'Please wait for Daemon to load',
+          });
+        }
+      },
+    });
+  };
+
   // Mandatory React method
   render() {
     var settingsObj = GetSettings();
     return (
       <AppSettings>
-        <Modal
-          center
-          classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
-          showCloseIcon={false}
-          open={this.props.openSecondModal}
-          onClose={this.props.CloseModal2}
-        >
-          <div>
-            <h2>
-              <FormattedMessage
-                id="Settings.SetFee"
-                defaultMessage="Set Transaction Fee?"
-              />
-            </h2>
-            <FormattedMessage id="Settings.Yes">
-              {yes => (
-                <input
-                  value={yes}
-                  type="button"
-                  className="button primary"
-                  onClick={() => {
-                    this.setTxFee();
-                    this.props.CloseModal2();
-                  }}
-                />
-              )}
-            </FormattedMessage>
-            <div id="no-button">
-              <FormattedMessage id="Settings.No">
-                {no => (
-                  <input
-                    value={no}
-                    type="button"
-                    className="button primary"
-                    onClick={() => {
-                      this.props.CloseModal2();
-                    }}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-          </div>
-        </Modal>
-        <Modal
-          center
-          classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
-          showCloseIcon={false}
-          open={this.props.openFourthModal}
-          onClose={this.props.CloseModal4}
-        >
-          <div>
-            <h2>
-              <FormattedMessage
-                id="Settings.BackupWallet"
-                defaultMessage="Backup Wallet?"
-              />
-            </h2>
-            <FormattedMessage id="Settings.Yes">
-              {yes => (
-                <input
-                  value={yes}
-                  type="button"
-                  className="button primary"
-                  onClick={e => {
-                    if (this.props.connections !== undefined) {
-                      this.backupWallet(e);
-                    } else {
-                      this.context.openErrorModal({
-                        message: 'Please wait for Daemon to load',
-                      });
-                    }
-                  }}
-                />
-              )}
-            </FormattedMessage>
-            <div id="no-button">
-              <FormattedMessage id="Settings.No">
-                {no => (
-                  <input
-                    value={no}
-                    type="button"
-                    className="button primary"
-                    onClick={() => {
-                      this.props.CloseModal4();
-                    }}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-          </div>
-        </Modal>
-
         <Modal
           center
           classNames={{ modal: 'custom-modal5' }}
@@ -834,7 +772,7 @@ class SettingsApp extends Component {
                 />
                 <Button
                   fitHeight
-                  onClick={this.props.OpenModal2}
+                  onClick={this.confirmSetTxFee}
                   style={{ marginLeft: '1em' }}
                 >
                   Set
@@ -867,10 +805,7 @@ class SettingsApp extends Component {
           <Button
             disabled={!this.props.connections}
             style={{ marginTop: '2em' }}
-            onClick={e => {
-              e.preventDefault();
-              this.props.OpenModal4();
-            }}
+            onClick={this.confirmBackupWallet}
           >
             <FormattedMessage
               id="Settings.BackupWallet"
