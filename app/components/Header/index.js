@@ -1137,7 +1137,7 @@ class Header extends Component {
   }
 
   wallpaperCheck() {
-    if (fs.existsSync(this.props.settings.wallpaper)) {
+    if (existsSync(this.props.settings.wallpaper)) {
       return this.props.settings.wallpaper;
     } else {
       let defaultWallpaperPath = '';
