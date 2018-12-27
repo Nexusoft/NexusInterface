@@ -135,7 +135,13 @@ export default class Queue extends Component {
           this.props.Message
         )
           .then(payoad => {
-            this.props.OpenModal('send');
+            this.context.showNotification(
+              <FormattedMessage
+                id="Alert.Sent"
+                defaultMessage="Transaction Sent"
+              />,
+              'success'
+            );
             this.props.getAccountData();
             this.props.busy();
             this.props.clearForm();
@@ -156,7 +162,13 @@ export default class Queue extends Component {
           ])
             .then(payload => {
               this.props.getAccountData();
-              this.props.OpenModal('send');
+              this.context.showNotification(
+                <FormattedMessage
+                  id="Alert.Sent"
+                  defaultMessage="Transaction Sent"
+                />,
+                'success'
+              );
               this.props.clearForm();
               this.props.clearQueue();
               this.props.busy();
@@ -175,7 +187,13 @@ export default class Queue extends Component {
           ])
             .then(payoad => {
               this.props.getAccountData();
-              this.props.OpenModal('send');
+              this.context.showNotification(
+                <FormattedMessage
+                  id="Alert.Sent"
+                  defaultMessage="Transaction Sent"
+                />,
+                'success'
+              );
               this.props.clearForm();
               this.props.clearQueue();
               this.props.busy();

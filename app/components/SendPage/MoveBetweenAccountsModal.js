@@ -75,7 +75,7 @@ export default class MoveBetweenAccountsModal extends Component {
             .then(payload => {
               this.props.getAccountData();
               this.props.CloseMoveModal();
-              this.props.OpenModal('NXS Moved');
+              this.context.showNotification('NXS Moved', 'success');
             })
             .catch(e => {
               if (typeof e === 'object') {

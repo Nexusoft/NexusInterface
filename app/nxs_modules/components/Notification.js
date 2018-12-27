@@ -124,11 +124,6 @@ export default class Notification extends Component {
   }
 
   startClosing = () => {
-    console.log(
-      'startClosing',
-      this.props.notifID,
-      this.context.hideNotification
-    );
     if (this.props.notifID && this.context.hideNotification) {
       this.stopAutoClose();
       this.setState({ closing: true });
@@ -146,7 +141,6 @@ export default class Notification extends Component {
   startAutoClose = () => {
     this.stopAutoClose();
     this.autoClose = setTimeout(this.startClosing, this.props.autoClose);
-    console.log('autoClose');
   };
 
   render() {

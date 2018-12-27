@@ -14,6 +14,7 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
+import UIContext from 'context/ui';
 
 const StyleSettings = styled.div({
   maxWidth: 750,
@@ -81,6 +82,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsStyle extends Component {
+  static contextType = UIContext;
+
   // Class Methods
   constructor() {
     super();
@@ -218,7 +221,13 @@ class SettingsStyle extends Component {
 
   SaveSettings() {
     SaveSettings(this.props.settings);
-    this.props.OpenModal('Style Settings Saved');
+    this.context.showNotification(
+      <FormattedMessage
+        id="Alert.StyleSettingsSaved"
+        defaultMessage="Style Settings Saved"
+      />,
+      'success'
+    );
 
     googleanalytics.SendEvent('Settings', 'Style', 'Saved', 1);
   }

@@ -1,16 +1,10 @@
-/*
-  Title: Settings Market page
-  Description: Antequated, 
-  Last Modified by: Brian Smith
-*/
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
 import * as TYPE from 'actions/actiontypes';
-import * as RPC from 'scripts/rpc';
-import styles from './style.css';
+import UIContext from 'context/ui';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -27,9 +21,17 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsMarket extends Component {
+  static contextType = UIContext;
+
   // Class methods
   feedback() {
-    this.props.OpenModal('Settings saved');
+    this.context.showNotification(
+      <FormattedMessage
+        id="Alert.SettingsSaved"
+        defaultMessage="Settings Saved"
+      />,
+      'success'
+    );
   }
   // Mandatory React method
   render() {

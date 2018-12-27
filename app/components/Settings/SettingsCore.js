@@ -257,127 +257,67 @@ class SettingsCore extends Component {
     core.restart();
   }
 
-  manualDaemonModalGenerator() {
+  confirmSwitchManualDaemon = () => {
     if (this.props.settings.manualDaemon) {
-      return (
-        <div>
-          {' '}
-          <h2>
-            <FormattedMessage
-              id="Settings.ManualDaemonExit"
-              defaultMessage="Exit manual daemon mode?"
-            />
-          </h2>
-          <h2>
-            <FormattedMessage
-              id="Settings.ManualDaemonWarning"
-              defaultMessage="(This will shut down your daemon)"
-            />
-          </h2>
-          <div id="ok-button">
-            <FormattedMessage id="sendReceive.Yes">
-              {yes => (
-                <input
-                  value={yes}
-                  type="button"
-                  className="button primary"
-                  onClick={() => {
-                    RPC.PROMISE('stop', [])
-                      .then(payload => {
-                        this.props.updateManualDaemonSetting(false);
-                        this.updateManualDaemon(false);
-                        this.props.CloseManualDaemonModal();
-                        this.props.clearForRestart();
-                        remote.getGlobal('core').start();
-                      })
-                      .catch(e => {
-                        this.props.updateManualDaemonSetting(false);
-                        this.updateManualDaemon(false);
-                        this.props.clearForRestart();
-                        this.props.CloseManualDaemonModal();
-                        remote.getGlobal('core').start();
-                      });
-                  }}
-                />
-              )}
-            </FormattedMessage>
-          </div>
-          <div id="no-button">
-            <FormattedMessage id="sendReceive.No" defaultMessage="No">
-              {no => (
-                <input
-                  value={no}
-                  type="button"
-                  className="button"
-                  onClick={() => {
-                    this.props.CloseManualDaemonModal();
-                  }}
-                />
-              )}
-            </FormattedMessage>
-          </div>
-        </div>
-      );
+      this.context.openConfirmModal({
+        question: (
+          <FormattedMessage
+            id="Settings.ManualDaemonExit"
+            defaultMessage="Exit manual daemon mode?"
+          />
+        ),
+        note: (
+          <FormattedMessage
+            id="Settings.ManualDaemonWarning"
+            defaultMessage="(This will shut down your daemon)"
+          />
+        ),
+        yesCallback: () => {
+          RPC.PROMISE('stop', [])
+            .then(payload => {
+              this.props.updateManualDaemonSetting(false);
+              this.updateManualDaemon(false);
+              this.props.clearForRestart();
+              remote.getGlobal('core').start();
+            })
+            .catch(e => {
+              this.props.updateManualDaemonSetting(false);
+              this.updateManualDaemon(false);
+              this.props.clearForRestart();
+              remote.getGlobal('core').start();
+            });
+        },
+      });
     } else {
-      return (
-        <div>
-          {' '}
-          <h2>
-            <FormattedMessage
-              id="Settings.ManualDaemonEntry"
-              defaultMessage="Enter manual daemon mode?"
-            />
-          </h2>
-          <h2>
-            <FormattedMessage
-              id="Settings.ManualDaemonWarning"
-              defaultMessage="(This will shut down your daemon)"
-            />
-          </h2>
-          <div id="ok-button">
-            <FormattedMessage id="sendReceive.Yes">
-              {yes => (
-                <input
-                  value={yes}
-                  type="button"
-                  className="button primary"
-                  onClick={() => {
-                    RPC.PROMISE('stop', [])
-                      .then(payload => {
-                        remote.getGlobal('core').stop();
-                        this.props.updateManualDaemonSetting(true);
-                        this.updateManualDaemon(true);
-                        this.props.CloseManualDaemonModal();
-                      })
-                      .catch(e => {
-                        remote.getGlobal('core').stop();
-                        this.props.updateManualDaemonSetting(true);
-                        this.updateManualDaemon(true);
-                        this.props.CloseManualDaemonModal();
-                      });
-                  }}
-                />
-              )}
-            </FormattedMessage>
-          </div>
-          <div id="no-button">
-            <FormattedMessage id="sendReceive.No" defaultMessage="No">
-              {no => (
-                <input
-                  value={no}
-                  type="button"
-                  className="button"
-                  onClick={() => {
-                    this.props.CloseManualDaemonModal();
-                  }}
-                />
-              )}
-            </FormattedMessage>
-          </div>
-        </div>
-      );
+      this.context.openConfirmModal({
+        question: (
+          <FormattedMessage
+            id="Settings.ManualDaemonEntry"
+            defaultMessage="Enter manual daemon mode?"
+          />
+        ),
+        note: (
+          <FormattedMessage
+            id="Settings.ManualDaemonWarning"
+            defaultMessage="(This will shut down your daemon)"
+          />
+        ),
+        yesCallback: () => {
+          RPC.PROMISE('stop', [])
+            .then(payload => {
+              remote.getGlobal('core').stop();
+              this.props.updateManualDaemonSetting(true);
+              this.updateManualDaemon(true);
+            })
+            .catch(e => {
+              remote.getGlobal('core').stop();
+              this.props.updateManualDaemonSetting(true);
+              this.updateManualDaemon(true);
+            });
+        },
+      });
     }
-  }
+  };
 
   confirmSaveSettings = () => {
     this.context.openConfirmModal({
@@ -385,6 +325,12 @@ class SettingsCore extends Component {
         <>
           <FormattedMessage id="SaveSettings" defaultMessage="Save Settings" />?
         </>
+      ),
+      note: (
+        <FormattedMessage
+          id="Settings.ChangesNexTime"
+          defaultMessage="Changes to core settings will take effect the next time the core is restarted"
+        />
       ),
       yesCallback: () => {
         this.props.setSettings(GetSettings());
@@ -402,19 +348,6 @@ class SettingsCore extends Component {
   render() {
     return (
       <CoreSettings>
-        <Modal
-          classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
-          id="manualDaemonModal"
-          showCloseIcon={false}
-          open={this.props.manualDaemonModal}
-          onClose={e => {
-            e.preventDefault();
-            this.props.CloseManualDaemonModal();
-          }}
-          center
-        >
-          {this.manualDaemonModalGenerator()}
-        </Modal>
         <Modal
           center
           classNames={{ modal: 'custom-modal5' }}
@@ -575,58 +508,6 @@ class SettingsCore extends Component {
           </div>
         </Modal>
 
-        <Modal
-          center
-          classNames={{ modal: 'custom-modal2', overlay: 'custom-overlay' }}
-          showCloseIcon={false}
-          open={this.props.openSecondModal}
-          onClose={this.props.CloseModal2}
-        >
-          <div>
-            <h2>
-              <FormattedMessage
-                id="SaveSettings"
-                defaultMessage="Save Settings"
-              />
-              ?
-            </h2>
-            <div className="note">
-              <FormattedMessage
-                id="Settings.ChangesNexTime"
-                defaultMessage="Changes to core settings will take effect the next time the core is restarted"
-              />
-            </div>{' '}
-            <FormattedMessage id="Settings.Yes" defaultMessage="Yes">
-              {y => (
-                <input
-                  value={y}
-                  type="button"
-                  className="button primary"
-                  onClick={() => {
-                    this.props.setSettings(GetSettings());
-                    this.props.CloseModal2();
-                    this.props.OpenModal('Core Settings Saved');
-                  }}
-                />
-              )}
-            </FormattedMessage>
-            <div id="no-button">
-              <FormattedMessage id="Settings.No">
-                {n => (
-                  <input
-                    value={n}
-                    type="button"
-                    className="button primary"
-                    onClick={() => {
-                      this.props.CloseModal2();
-                    }}
-                  />
-                )}
-              </FormattedMessage>
-            </div>
-          </div>
-        </Modal>
-
         <form>
           <SettingsField
             connectLabel
@@ -709,7 +590,7 @@ class SettingsCore extends Component {
           >
             <Switch
               checked={this.props.settings.manualDaemon}
-              onChange={() => this.props.OpenManualDaemonModal()}
+              onChange={this.confirmSwitchManualDaemon}
             />
           </SettingsField>
 
@@ -935,7 +816,12 @@ class SettingsCore extends Component {
                 this.props.clearForRestart();
 
                 core.restart();
-                this.props.OpenModal('Core Restarting');
+                this.context.showNotification(
+                  <FormattedMessage
+                    id="Alert.CoreRestarting"
+                    defaultMessage="Core Restarting"
+                  />
+                );
               }}
             >
               <FormattedMessage

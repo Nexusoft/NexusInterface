@@ -388,7 +388,13 @@ class SendPage extends Component {
                   ])
                     .then(payload => {
                       this.getAccountData();
-                      this.props.OpenModal('send');
+                      this.context.showNotification(
+                        <FormattedMessage
+                          id="Alert.Sent"
+                          defaultMessage="Transaction Sent"
+                        />,
+                        'success'
+                      );
                       this.props.clearForm();
                       this.props.busy();
                     })
@@ -406,7 +412,13 @@ class SendPage extends Component {
                   ])
                     .then(payoad => {
                       this.getAccountData();
-                      this.props.OpenModal('send');
+                      this.context.showNotification(
+                        <FormattedMessage
+                          id="Alert.Sent"
+                          defaultMessage="Transaction Sent"
+                        />,
+                        'success'
+                      );
                       this.props.clearForm();
                       this.props.busy();
                     })

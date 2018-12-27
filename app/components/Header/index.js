@@ -5,17 +5,11 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import electron from 'electron';
-import Modal from 'react-responsive-modal';
 import CustomProperties from 'react-custom-properties';
-import log from 'electron-log';
-import path from 'path';
 import styled from '@emotion/styled';
-import { FormattedMessage } from 'react-intl';
-import { write } from 'fs';
 
 // Internal Global Dependencies
 import MenuBuilder from 'menu';
-import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import * as actionsCreators from 'actions/headerActionCreators';
 import { GetSettings, SaveSettings } from 'api/settings';
@@ -24,9 +18,9 @@ import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import { colors, consts, timing, animations } from 'styles';
 import { fade, lighten } from 'utils/colors';
+import UIContext from 'context/ui';
 
 // Internal Local Dependencies
-import NotificationModal from './NotificationModal';
 import BootstrapModal from './BootstrapModal';
 import SignInStatus from './StatusIcons/SignInStatus';
 import StakingStatus from './StatusIcons/StakingStatus';
@@ -116,6 +110,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
+  static contextType = UIContext;
+
   // React Method (Life cycle hook)
   componentDidMount() {
     var self = this;
@@ -136,7 +132,7 @@ class Header extends Component {
     mainWindow.on('close', e => {
       e.preventDefault();
       this.props.clearOverviewVariables();
-      this.props.OpenModal('Closing Nexus');
+      this.context.showNotification('Closing Nexus...');
     });
 
     this.props.SetMarketAveData();
@@ -209,16 +205,40 @@ class Header extends Component {
 
         if (MRT.category === 'receive') {
           this.doNotify('Received', MRT.amount + ' NXS');
-          this.props.OpenModal('receive');
+          this.context.showNotification(
+            <FormattedMessage
+              id="Alert.Received"
+              defaultMessage="Transaction Received"
+            />,
+            'success'
+          );
         } else if (MRT.category === 'send') {
           this.doNotify('Sent', MRT.amount + ' NXS');
-          this.props.OpenModal('send');
+          this.context.showNotification(
+            <FormattedMessage
+              id="Alert.Sent"
+              defaultMessage="Transaction Sent"
+            />,
+            'success'
+          );
         } else if (MRT.category === 'genesis') {
           this.doNotify('Genesis', MRT.amount + ' NXS');
-          this.props.OpenModal('genesis');
+          this.context.showNotification(
+            <FormattedMessage
+              id="Alert.Genesis"
+              defaultMessage="Genesis Transaction"
+            />,
+            'success'
+          );
         } else if (MRT.category === 'trust') {
           this.doNotify('Trust', MRT.amount + ' NXS');
-          this.props.OpenModal('trust');
+          this.context.showNotification(
+            <FormattedMessage
+              id="Alert.TrustTransaction"
+              defaultMessage="Trust Transaction"
+            />,
+            'success'
+          );
         }
       });
     } else {
@@ -374,7 +394,7 @@ class Header extends Component {
         label: 'Quit Nexus',
         click() {
           self.props.clearOverviewVariables();
-          self.props.OpenModal('Closing Nexus');
+          self.context.showNotification('Closing Nexus...');
           mainWindow.close();
         },
       },
@@ -408,7 +428,6 @@ class Header extends Component {
           }}
         />
 
-        <NotificationModal {...this.props} />
         <BootstrapModal {...this.props} />
 
         <LogoLink to="/">

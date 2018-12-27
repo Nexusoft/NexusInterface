@@ -29,7 +29,10 @@ export default class ImportPrivKey extends Component {
       RPC.PROMISE('importprivkey', [pk], [label])
         .then(payload => {
           this.props.ResetForEncryptionRestart();
-          this.props.OpenModal('Private key imported rescanning now'); // new alert
+          this.context.showNotification(
+            'Private key imported rescanning now',
+            'success'
+          ); // new alert
           RPC.PROMISE('rescan')
             .then(payload => {
               this.props.CloseModal();

@@ -80,7 +80,7 @@ export default class MenuBuilder {
           accelerator: 'CmdOrCtrl+Q',
           click() {
             self.props.clearOverviewVariables();
-            self.props.OpenModal('Closing Nexus');
+            self.context.showNotification('Closing Nexus');
             remote.getCurrentWindow().close();
           },
         },
@@ -121,7 +121,7 @@ export default class MenuBuilder {
             RPC.PROMISE('backupwallet', [
               BackupDir + '/NexusBackup_' + now + '.dat',
             ]).then(() => {
-              self.props.OpenModal('Wallet Backup');
+              self.context.showNotification('Wallet Backup');
             });
           },
         },
@@ -207,7 +207,7 @@ export default class MenuBuilder {
               self.props.OpenBootstrapModal(true);
               //configuration.BootstrapRecentDatabase(self);
             } else {
-              self.props.OpenModal('Please let the daemon start.');
+              self.context.showNotification('Please let the daemon start.');
             }
           },
         },
@@ -306,7 +306,7 @@ export default class MenuBuilder {
               RPC.PROMISE('backupwallet', [
                 BackupDir + '/NexusBackup_' + now + '.dat',
               ]).then(() => {
-                self.props.OpenModal('Wallet Backup');
+                self.context.showNotification('Wallet Backup');
               });
             },
           },
@@ -357,7 +357,7 @@ export default class MenuBuilder {
             label: 'Quit Nexus',
             click() {
               self.props.clearOverviewVariables();
-              self.props.OpenModal('Closing Nexus');
+              self.context.showNotification('Closing Nexus');
               remote.getCurrentWindow().close();
             },
           },
@@ -408,7 +408,7 @@ export default class MenuBuilder {
                 self.props.OpenBootstrapModal(true);
                 //configuration.BootstrapRecentDatabase(self);
               } else {
-                self.props.OpenModal('Please let the daemon start.');
+                self.context.showNotification('Please let the daemon start.');
               }
             },
           },

@@ -249,7 +249,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
   RPC.PROMISE('backupwallet', [
     BackupDir + '/NexusBackup_' + now + '.dat',
   ]).then(() => {
-    self.props.OpenModal('Wallet Backup');
+    self.context.showNotification('Wallet backed up', 'success');
     electron.remote
       .getGlobal('core')
       .stop()

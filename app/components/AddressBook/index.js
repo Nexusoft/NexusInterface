@@ -269,7 +269,10 @@ class AddressBook extends Component {
     if (this.props.modalVisable) {
       this.props.ToggleModal();
     }
-    this.props.OpenModal('Copied');
+    this.context.showNotification(
+      <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />,
+      'success'
+    );
   }
 
   MyAddressesTable() {
@@ -445,7 +448,13 @@ class AddressBook extends Component {
                     this.props.prototypeTimezone
                   );
                 } else {
-                  this.props.OpenModal('Account cannot be named * or default');
+                  this.context.showNotification(
+                    <FormattedMessage
+                      id="Alert.nodefaultname"
+                      defaultMessage="Account cannot be named * or default"
+                    />,
+                    'error'
+                  );
                 }
               }}
             >
@@ -658,7 +667,13 @@ class AddressBook extends Component {
             this.context.openErrorModal({ message: e });
           });
       } else {
-        this.props.OpenModal('Account cannot be named * or default');
+        this.context.showNotification(
+          <FormattedMessage
+            id="Alert.nodefaultname"
+            defaultMessage="Account cannot be named * or default"
+          />,
+          'error'
+        );
       }
     } else {
       RPC.PROMISE('getnewaddress', [''])

@@ -32,6 +32,11 @@ const Question = styled.div({
   fontSize: 28,
 });
 
+const Note = styled.div({
+  textAlign: 'center',
+  marginTop: '.5em',
+});
+
 const Buttons = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
@@ -45,6 +50,7 @@ const ConfirmModalButton = styled(Button)({
 
 const ConfirmModal = ({
   question,
+  note,
   yesLabel,
   yesCallback,
   noLabel,
@@ -56,6 +62,7 @@ const ConfirmModal = ({
       <Modal.Body>
         <QuestionMark>?</QuestionMark>
         <Question>{question}</Question>
+        {!!note && <Note>{note}</Note>}
         <Buttons>
           <ConfirmModalButton
             onClick={() => {

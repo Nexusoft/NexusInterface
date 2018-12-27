@@ -1,14 +1,13 @@
 // External
-import React from 'react';
+import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 // Internal
-import Icon from 'components/Icon';
+import UIContext from 'context/ui';
 import Tooltip from 'components/Tooltip';
 import Modal from 'components/Modal';
-import addressBookIcon from 'images/address-book.sprite.svg';
 
-function addressBookToQueue(props, closeModal) {
+function addressBookToQueue(props, context, closeModal) {
   let filteredAddress = props.addressbook.filter(e => {
     return e.name.toLowerCase().indexOf(props.Search.toLowerCase()) !== -1;
   });
@@ -30,7 +29,10 @@ function addressBookToQueue(props, closeModal) {
             onClick={() => {
               closeModal();
               props.updateAddress(ele.address);
-              props.OpenModal('Copied');
+              context.showNotification(
+                <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />,
+                'success'
+              );
               setTimeout(() => {
                 if (props.open) {
                   props.CloseModal();
@@ -46,62 +48,68 @@ function addressBookToQueue(props, closeModal) {
   ));
 }
 
-const LookupAddressModal = props => (
-  <Modal>
-    {closeModal => (
-      <>
-        <Modal.Header>Lookup Address</Modal.Header>
-        <Modal.Body>
-          <table id="AddressTable">
-            <thead>
-              <tr>
-                <th className="short-column">
-                  <FormattedMessage
-                    id="sendReceive.Name"
-                    defaultMessage="Name"
-                  />
-                </th>
-                <th className="long-column">
-                  <FormattedMessage
-                    id="sendReceive.Address"
-                    defaultMessage="Address"
-                  />
-                </th>
-                <th className="short-column">
-                  <FormattedMessage
-                    id="sendReceive.Lookup"
-                    defaultMessage="Search Address"
-                  >
-                    {placeholder => (
-                      <input
-                        className="searchBar"
-                        placeholder={placeholder}
-                        value={props.Search}
-                        onChange={e => props.SearchName(e.target.value)}
-                        required
-                      />
-                    )}
-                  </FormattedMessage>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {props.addressbook.length == 0 ? (
-                <h1 style={{ alignSelf: 'center' }}>
-                  <FormattedMessage
-                    id="AddressBook.NoContacts"
-                    defaultMessage="No Contacts"
-                  />
-                </h1>
-              ) : (
-                addressBookToQueue(props, closeModal)
-              )}
-            </tbody>
-          </table>
-        </Modal.Body>
-      </>
-    )}
-  </Modal>
-);
+export default class LookupAddressModal extends Component {
+  static contextType = UIContext;
 
-export default LookupAddressModal;
+  render() {
+    return (
+      <Modal>
+        {closeModal => (
+          <>
+            <Modal.Header>Lookup Address</Modal.Header>
+            <Modal.Body>
+              <table id="AddressTable">
+                <thead>
+                  <tr>
+                    <th className="short-column">
+                      <FormattedMessage
+                        id="sendReceive.Name"
+                        defaultMessage="Name"
+                      />
+                    </th>
+                    <th className="long-column">
+                      <FormattedMessage
+                        id="sendReceive.Address"
+                        defaultMessage="Address"
+                      />
+                    </th>
+                    <th className="short-column">
+                      <FormattedMessage
+                        id="sendReceive.Lookup"
+                        defaultMessage="Search Address"
+                      >
+                        {placeholder => (
+                          <input
+                            className="searchBar"
+                            placeholder={placeholder}
+                            value={this.props.Search}
+                            onChange={e =>
+                              this.props.SearchName(e.target.value)
+                            }
+                            required
+                          />
+                        )}
+                      </FormattedMessage>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.props.addressbook.length == 0 ? (
+                    <h1 style={{ alignSelf: 'center' }}>
+                      <FormattedMessage
+                        id="AddressBook.NoContacts"
+                        defaultMessage="No Contacts"
+                      />
+                    </h1>
+                  ) : (
+                    addressBookToQueue(this.props, this.context, closeModal)
+                  )}
+                </tbody>
+              </table>
+            </Modal.Body>
+          </>
+        )}
+      </Modal>
+    );
+  }
+}

@@ -42,7 +42,10 @@ export default class ViewPrivKeyForAddress extends Component {
     this.outputRef.select();
     document.execCommand('Copy', false, null);
     this.outputRef.type = 'password';
-    this.props.OpenModal('Copied');
+    this.context.showNotification(
+      <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />,
+      'success'
+    );
   }
 
   render() {

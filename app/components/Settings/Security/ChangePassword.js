@@ -38,7 +38,13 @@ export default class ChangePassword extends Component {
                 pass.value = '';
                 newPass.value = '';
                 passChk.value = '';
-                this.props.OpenModal('Password has been changed.');
+                this.context.showNotification(
+                  <FormattedMessage
+                    id="Alert.PasswordHasBeenChanged"
+                    defaultMessage="Password has been changed"
+                  />,
+                  'success'
+                );
               }
             });
           } else {

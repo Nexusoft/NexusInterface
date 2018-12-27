@@ -119,7 +119,13 @@ class Login extends Component {
             // this.passwordRef.focus();
           } else if (e === 'value is type null, expected int') {
             this.props.busy(false);
-            this.props.OpenModal('FutureDate');
+            this.context.showNotification(
+              <FormattedMessage
+                id="Alert.FutureDate"
+                defaultMessage="Unlock until date/time must be at least an hour in the future"
+              />,
+              'error'
+            );
             this.passwordRef.focus();
           } else {
             this.context.openErrorModal({ message: e });
@@ -155,14 +161,26 @@ class Login extends Component {
               this.passwordRef.focus();
             } else if (e === 'value is type null, expected int') {
               this.props.busy(false);
-              this.props.OpenModal('FutureDate');
+              this.context.showNotification(
+                <FormattedMessage
+                  id="Alert.FutureDate"
+                  defaultMessage="Unlock until date/time must be at least an hour in the future"
+                />,
+                'error'
+              );
               this.passwordRef.focus();
             } else {
               this.context.openErrorModal({ message: e });
             }
           });
       } else {
-        this.props.OpenModal('FutureDate');
+        this.context.showNotification(
+          <FormattedMessage
+            id="Alert.FutureDate"
+            defaultMessage="Unlock until date/time must be at least an hour in the future"
+          />,
+          'error'
+        );
       }
     }
   }

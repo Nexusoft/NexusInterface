@@ -242,7 +242,13 @@ class SettingsApp extends Component {
     let TxFee = document.getElementById('optionalTransactionFee').value;
     if (parseFloat(TxFee) > 0) {
       RPC.PROMISE('settxfee', [parseFloat(TxFee)]);
-      this.props.OpenModal('Transaction Fee Set');
+      this.context.showNotification(
+        <FormattedMessage
+          id="Alert.TransactionFeeSet"
+          defaultMessage="Transaction Fee Set"
+        />,
+        'success'
+      );
     } else {
       this.context.openErrorModal({
         message: (
@@ -336,7 +342,13 @@ class SettingsApp extends Component {
       BackupDir + '/NexusBackup_' + now + '.dat',
     ]).then(payload => {
       this.props.CloseModal4();
-      this.props.OpenModal('Wallet Backup');
+      this.context.showNotification(
+        <FormattedMessage
+          id="Alert.WalletBackedUp"
+          defaultMessage="Wallet Backed Up"
+        />,
+        'success'
+      );
     });
     console.log(this.props.settings.Folder);
   }

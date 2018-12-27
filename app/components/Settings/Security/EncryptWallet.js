@@ -64,7 +64,13 @@ export default class EncryptWallet extends Component {
                 newPass.value = '';
                 passChk.value = '';
                 this.props.busy(false);
-                this.props.OpenModal('Wallet has been encrypted'); // new alert
+                this.context.showNotification(
+                  <FormattedMessage
+                    id="Alert.WalletHasBeenEncrypted"
+                    defaultMessage="Wallet has been encrypted"
+                  />,
+                  'success'
+                ); // new alert
                 this.props.ResetForEncryptionRestart();
 
                 // Start the daemon again... give it maybe 5 seconds.
