@@ -8,9 +8,9 @@ import { jsx } from '@emotion/core';
 // Internal
 import { arrowStyles } from 'components/Arrow';
 import { colors, timing, animations } from 'styles';
-import { lighten } from 'utils/colors';
+import { color } from 'utils';
 
-const tooltipBg = lighten(colors.dark, 0.2);
+const tooltipBg = color.lighten(colors.dark, 0.2);
 const spacing = 10;
 const arrowPadding = 15;
 const positionToArrowDirection = {

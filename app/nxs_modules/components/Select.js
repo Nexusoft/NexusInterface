@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
 import { colors, timing, consts, animations } from 'styles';
-import { lighten } from 'utils/colors';
+import { color } from 'utils';
 
 // Minimum gap from the dropdown to the bottom edge of the screen
 const minScreenGap = 20;
@@ -55,7 +55,7 @@ const SelectControl = styled.div(
             ? {
                 color: colors.light,
                 '&&::after': {
-                  background: lighten(colors.primary, 0.3),
+                  background: color.lighten(colors.primary, 0.3),
                 },
               }
             : null),

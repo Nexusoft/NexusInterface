@@ -5,7 +5,7 @@ import { jsx, css } from '@emotion/core';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { colors, timing, consts } from 'styles';
-import { lighten, fade } from 'utils/colors';
+import { color } from 'utils';
 
 const inputHeightHalf = '1.125em';
 const iconSpace = '3em';
@@ -49,7 +49,7 @@ const TextFieldComponent = styled.div(
           ...(focus
             ? {
                 '&&::after': {
-                  background: lighten(colors.primary, 0.3),
+                  background: color.lighten(colors.primary, 0.3),
                   boxShadow: `0 0 15px ${colors.primary}`,
                 },
               }

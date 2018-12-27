@@ -17,7 +17,7 @@ import configuration from 'api/configuration';
 import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import { colors, consts, timing, animations } from 'styles';
-import { fade, lighten } from 'utils/colors';
+import { color } from 'utils';
 import UIContext from 'context/ui';
 
 // Internal Local Dependencies
@@ -47,7 +47,10 @@ const LogoLink = styled(Link)({
   animation: `${animations.fadeInAndExpand} ${timing.slow} ${
     consts.enhancedEaseOut
   }`,
-  filter: `drop-shadow(0 0 8px ${fade(lighten(colors.primary, 0.2), 0.3)})`,
+  filter: `drop-shadow(0 0 8px ${color.fade(
+    color.lighten(colors.primary, 0.2),
+    0.3
+  )})`,
   transitionProperty: 'filter',
   transitionDuration: timing.normal,
   transitionTimingFunction: 'ease-out',

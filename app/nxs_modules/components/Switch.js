@@ -4,11 +4,11 @@ import styled from '@emotion/styled';
 
 // Internal
 import { colors, timing, consts } from 'styles';
-import { lighten, mix } from 'utils/colors';
+import { color } from 'utils';
 
 const switchHeight = consts.lineHeight; // em
 const switchWidth = consts.lineHeight * 1.75; // em
-const checkedBg = mix(colors.dark, colors.primary);
+const checkedBg = color.mix(colors.dark, colors.primary);
 
 const SwitchInput = styled.input({
   display: 'block',
@@ -58,7 +58,7 @@ const SwitchInput = styled.input({
 
   '&:hover': {
     '&::before': {
-      background: lighten(colors.darkGray, 0.15),
+      background: color.lighten(colors.darkGray, 0.15),
     },
     '&::after': {
       background: colors.lightGray,
@@ -74,17 +74,17 @@ const SwitchInput = styled.input({
       },
       '&::after': {
         transform: `translateX(${switchWidth - switchHeight}em)`,
-        background: lighten(colors.primary, 0.15),
+        background: color.lighten(colors.primary, 0.15),
         boxShadow: `0 0 5px ${checkedBg}`,
       },
     },
 
     '&:hover': {
       '&::before': {
-        background: lighten(checkedBg, 0.15),
+        background: color.lighten(checkedBg, 0.15),
       },
       '&::after': {
-        background: lighten(colors.primary, 0.3),
+        background: color.lighten(colors.primary, 0.3),
         boxShadow: `0 0 10px ${colors.primary}`,
       },
     },

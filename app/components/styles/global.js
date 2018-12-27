@@ -3,7 +3,7 @@ import React from 'react';
 import { Global, css } from '@emotion/core';
 
 // Internal
-import { fade } from 'utils/colors';
+import { color } from 'utils';
 import { colors, consts } from 'styles';
 import fontStyles from './fonts';
 
@@ -71,11 +71,11 @@ const customizedScrollbar = css`
       background: rgba(0, 0, 0, 0.5);
     }
     &-thumb {
-      background: ${fade(colors.primary, 0.25)};
+      background: ${color.fade(colors.primary, 0.25)};
       border-radius: 2px;
     }
     &-thumb:hover {
-      background: ${fade(colors.primary, 0.1)};
+      background: ${color.fade(colors.primary, 0.1)};
     }
     &-corner {
       background: rgba(0, 0, 0, 0.5);

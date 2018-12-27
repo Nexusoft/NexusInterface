@@ -3,4 +3,4 @@ export const newUID = (function() {
   return () => `uid-${counter++}`;
 })();
 
-export * as color from './colors';
+export * as color from './color';
