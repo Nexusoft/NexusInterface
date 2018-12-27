@@ -6,19 +6,13 @@ import styled from '@emotion/styled';
 import { newUID } from 'utils';
 import { colors } from 'styles';
 
-const Field = styled.div(
-  {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    padding: '1em 0',
-    borderBottom: `1px solid ${colors.darkerGray}`,
-  },
-  ({ center }) =>
-    center && {
-      alignItems: 'center',
-    }
-);
+const Field = styled.div({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '1em 0',
+  borderBottom: `1px solid ${colors.darkerGray}`,
+});
 
 const Label = styled.label({
   position: 'relative',
@@ -56,7 +50,7 @@ class SettingsField extends Component {
   render() {
     const { label, subLabel, connectLabel, children, ...rest } = this.props;
     return (
-      <Field center={!subLabel} {...rest}>
+      <Field {...rest}>
         <Label htmlFor={connectLabel ? this.inputId : undefined}>
           <div>{label}</div>
           {subLabel && <SubLabel>{subLabel}</SubLabel>}
