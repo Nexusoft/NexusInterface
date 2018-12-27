@@ -30,7 +30,7 @@ import TrustList from './TrustList';
 import About from './About';
 import Exchange from './Exchange';
 import StarrySky from './StarrySky';
-import ModalController from './ModalController';
+import UIContextProvider from './UIContextProvider';
 
 const App = styled.div({
   position: 'fixed',
@@ -69,7 +69,7 @@ export default class Root extends Component {
       <Provider store={store}>
         <IntlWrapper>
           <ConnectedRouter history={history}>
-            <ModalController>
+            <UIContextProvider>
               <div>
                 {globalStyles}
                 <StarrySky />
@@ -109,7 +109,7 @@ export default class Root extends Component {
                   <Navigation />
                 </App>
               </div>
-            </ModalController>
+            </UIContextProvider>
           </ConnectedRouter>
         </IntlWrapper>
       </Provider>

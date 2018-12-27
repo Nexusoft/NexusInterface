@@ -9,6 +9,7 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 
 const AccountSelectors = styled.div({
   display: 'grid',
@@ -36,7 +37,7 @@ const Buttons = styled.div({
 });
 
 export default class MoveBetweenAccountsModal extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   moveAmmountConverter(e, isNxs) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === '')) {

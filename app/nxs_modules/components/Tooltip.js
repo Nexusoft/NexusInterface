@@ -87,6 +87,8 @@ const arrowAligning = (position, align) => {
 
 const TooltipComponent = styled.div(
   {
+    whiteSpace: 'pre',
+    maxWidth: 300,
     background: tooltipBg,
     color: colors.light,
     borderRadius: 4,

@@ -23,7 +23,7 @@ import TextField from 'components/TextField';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
-import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
@@ -57,7 +57,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class AddressBook extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   // React Method (Life cycle hook)
   componentDidMount() {

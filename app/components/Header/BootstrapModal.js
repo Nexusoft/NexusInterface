@@ -1,12 +1,12 @@
 // External Dependencies
-import React from 'react';
-import Modal from 'react-responsive-modal';
+import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
+import Modal from 'react-responsive-modal';
 
 // Internal Global Dependencies
 import { GetSettings, SaveSettings } from 'api/settings';
 import configuration from 'api/configuration';
-import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 
 var enoughSpace = true;
 
@@ -22,7 +22,7 @@ const modalOpen = ({
     BootstrapModal);
 
 class Prompting extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
   render() {
     return (
       <>

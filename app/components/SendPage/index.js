@@ -22,6 +22,7 @@ import FormField from 'components/FormField';
 import InputGroup from 'components/InputGroup';
 import Tooltip from 'components/Tooltip';
 import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 
 // Internal Local Dependencies
 import LookupAddressModal from './LookupAddressModal';
@@ -173,7 +174,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SendPage extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);

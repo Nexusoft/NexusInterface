@@ -9,7 +9,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 
 const ChangePasswordComponent = styled.form({
   flex: 2,
@@ -17,7 +17,7 @@ const ChangePasswordComponent = styled.form({
 });
 
 export default class ChangePassword extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   changePassword(e) {
     e.preventDefault();

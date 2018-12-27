@@ -9,14 +9,14 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 
 const ImportPrivKeyComponent = styled.form({
   flex: 3,
 });
 
 export default class ImportPrivKey extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   importPrivKey(e) {
     e.preventDefault();

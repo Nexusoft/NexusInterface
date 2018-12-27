@@ -9,7 +9,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 import { colors, consts } from 'styles';
 
 const EncryptWalletComponent = styled.form({
@@ -29,7 +29,7 @@ const Characters = styled.span({
 });
 
 export default class EncryptWallet extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   reEnterValidator(e) {
     let newPass = document.getElementById('newPass');

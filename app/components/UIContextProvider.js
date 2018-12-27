@@ -5,13 +5,14 @@ import React, { Component } from 'react';
 import Modal from 'components/Modal';
 import ConfirmModal from 'components/Modals/ConfirmModal';
 import ErrorModal from 'components/Modals/ErrorModal';
+import UIContext from 'context/ui';
 
 const newModalID = (function() {
   let counter = 1;
   return () => `modal-${counter++}`;
 })();
 
-export default class ModalController extends Component {
+export default class UIContextProvider extends Component {
   state = {
     modals: [],
   };
@@ -19,7 +20,18 @@ export default class ModalController extends Component {
   openModal = (component, props) => {
     const modalID = newModalID();
     this.setState({
-      modals: [...this.state.modals, { id: modalID, component, props }],
+      modals: [
+        ...this.state.modals,
+        {
+          id: modalID,
+          component,
+          props,
+          context: {
+            modalID,
+            ...this.controller,
+          },
+        },
+      ],
     });
     return modalID;
   };
@@ -48,12 +60,14 @@ export default class ModalController extends Component {
 
   render() {
     return (
-      <Modal.Context.Provider value={this.controller}>
+      <UIContext.Provider value={this.controller}>
         {this.props.children}
-        {this.state.modals.map(({ id, component: Comp, props }) => (
-          <Comp key={id} {...props} />
+        {this.state.modals.map(({ id, component: Comp, props, context }) => (
+          <UIContext.Provider key={id} value={context}>
+            <Comp {...props} />
+          </UIContext.Provider>
         ))}
-      </Modal.Context.Provider>
+      </UIContext.Provider>
     );
   }
 }

@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 import { colors } from 'styles';
 import trashimg from 'images/trash.svg';
 
@@ -31,7 +32,7 @@ const QueueSummary = styled.div({
 });
 
 class QueueBody extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   confirmRemove = key => {
     this.context.openConfirmModal({
@@ -78,7 +79,7 @@ class QueueBody extends Component {
 }
 
 export default class Queue extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   addAmount() {
     let keyCheck = Object.keys(this.props.Queue);

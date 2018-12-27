@@ -25,7 +25,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
-import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -126,7 +126,7 @@ const mapDispatchToProps = dispatch => ({
 var currentBackupLocation = ''; //Might redo to use redux but this is only used to replace using json reader every render;
 
 class SettingsApp extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   // React Method (Life cycle hook)
   constructor(props) {

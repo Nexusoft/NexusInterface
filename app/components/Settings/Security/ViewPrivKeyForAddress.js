@@ -10,11 +10,11 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
-import Modal from 'components/Modal';
+import UIContext from 'context/ui';
 import copyIcon from 'images/copy.sprite.svg';
 
 export default class ViewPrivKeyForAddress extends Component {
-  static contextType = Modal.Context;
+  static contextType = UIContext;
 
   showPrivKey(e) {
     e.preventDefault();

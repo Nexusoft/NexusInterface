@@ -4,17 +4,11 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal
+import UIContext from 'context/ui';
 import Overlay from 'components/Overlay';
 import Icon from 'components/Icon';
 import { colors, timing } from 'styles';
 import { color } from 'utils';
-
-export const ModalContext = React.createContext({=
-  openModal: () => {},
-  closeModal: () => {},
-  openConfirmModal: () => {},
-  openErrorModal: () => {},
-});
 
 const intro = keyframes`
   from { 
@@ -84,20 +78,20 @@ export default class Modal extends PureComponent {
     closeOnBackgroundClick: true,
   };
 
-  static contextType = ModalContext;
+  static contextType = UIContext;
 
   state = {
     closing: false,
   };
 
   startClosing = () => {
-    if (this.props.modalID && this.context.closeModal) {
+    if (this.context.modalID && this.context.closeModal) {
       this.setState({ closing: true });
     }
   };
 
   close = () => {
-    this.context.closeModal(this.props.modalID);
+    this.context.closeModal(this.context.modalID);
   };
 
   render() {
@@ -133,6 +127,6 @@ export default class Modal extends PureComponent {
   }
 }
 
-Modal.Context = ModalContext;
+Modal.UIContext = UIContext;
 Modal.Header = ModalHeader;
 Modal.Body = ModalBody;
