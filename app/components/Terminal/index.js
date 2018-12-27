@@ -23,7 +23,7 @@ import logoIcon from 'images/logo.sprite.svg';
 import coreIcon from 'images/core.sprite.svg';
 import { FormattedMessage } from 'react-intl';
 
-const TerminalWrapper = styled.div({
+const TerminalComponent = styled.div({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -72,7 +72,7 @@ class Terminal extends Component {
         }
         bodyScrollable={false}
       >
-        <TerminalWrapper>
+        <TerminalComponent>
           <TerminalTabBar>
             <Tab
               link={`${this.props.match.url}/Console`}
@@ -111,7 +111,7 @@ class Terminal extends Component {
               component={TerminalCore}
             />
           </Switch>
-        </TerminalWrapper>
+        </TerminalComponent>
       </Panel>
     );
   }

@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { newUID } from 'utils';
 import { colors } from 'styles';
 
-const FieldWrapper = styled.div(
+const Field = styled.div(
   {
     display: 'flex',
     justifyContent: 'space-between',
@@ -56,13 +56,13 @@ class SettingsField extends Component {
   render() {
     const { label, subLabel, connectLabel, children, ...rest } = this.props;
     return (
-      <FieldWrapper center={!subLabel} {...rest}>
+      <Field center={!subLabel} {...rest}>
         <Label htmlFor={connectLabel ? this.inputId : undefined}>
           <div>{label}</div>
           {subLabel && <SubLabel>{subLabel}</SubLabel>}
         </Label>
         <Input>{this.settingsInput()}</Input>
-      </FieldWrapper>
+      </Field>
     );
   }
 }

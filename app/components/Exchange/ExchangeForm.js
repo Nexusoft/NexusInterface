@@ -10,7 +10,7 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Select from 'components/Select';
 
-const ExchangeFormWrapper = styled.div({
+const ExchangeFormComponent = styled.div({
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
   columnGap: 20,
@@ -62,7 +62,7 @@ export default class ExchangeForm extends Component {
 
   render() {
     return (
-      <ExchangeFormWrapper>
+      <ExchangeFormComponent>
         <FieldSet
           legend={<FormattedMessage id="Exchange.Send" defaultMessage="Send" />}
         >
@@ -142,7 +142,7 @@ export default class ExchangeForm extends Component {
             />
           </FormField>
         </FieldSet>
-      </ExchangeFormWrapper>
+      </ExchangeFormComponent>
     );
   }
 }

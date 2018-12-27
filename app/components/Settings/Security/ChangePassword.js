@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Modal from 'components/Modal';
 
-const ChangePasswordWrapper = styled.form({
+const ChangePasswordComponent = styled.form({
   flex: 2,
   marginRight: '1em',
 });
@@ -96,7 +96,7 @@ export default class ChangePassword extends Component {
 
   render() {
     return (
-      <ChangePasswordWrapper>
+      <ChangePasswordComponent>
         <FieldSet
           legend={
             <FormattedMessage
@@ -220,7 +220,7 @@ export default class ChangePassword extends Component {
             defaultMessage="Lock Wallet"
           />
         </Button>
-      </ChangePasswordWrapper>
+      </ChangePasswordComponent>
     );
   }
 }

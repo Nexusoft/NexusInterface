@@ -10,7 +10,7 @@ import Modal from 'components/Modal';
 import { colors } from 'styles';
 import trashimg from 'images/trash.svg';
 
-const QueueWrapper = styled.div({
+const QueueComponent = styled.div({
   marginTop: 50,
   borderTop: `1px solid ${colors.lightGray}`,
   paddingTop: 20,
@@ -226,7 +226,7 @@ export default class Queue extends Component {
 
   render() {
     return (
-      <QueueWrapper>
+      <QueueComponent>
         <QueueHeading>Transactions Queue</QueueHeading>
         <table className="table">
           <thead>
@@ -270,7 +270,7 @@ export default class Queue extends Component {
         </QueueButtons>
 
         {this.addAmount()}
-      </QueueWrapper>
+      </QueueComponent>
     );
   }
 }

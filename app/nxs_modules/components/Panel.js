@@ -21,7 +21,7 @@ const intro = keyframes`
 
 const borderRadius = 4;
 
-const PanelWrapper = styled.div({
+const PanelComponent = styled.div({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'stretch',
@@ -71,7 +71,7 @@ const PanelBodyOverlay = styled.div({
 });
 
 const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
-  <PanelWrapper>
+  <PanelComponent>
     <PanelHeader>
       <PanelTitle>
         {!!icon && <Icon spaceRight icon={icon} />}
@@ -87,7 +87,7 @@ const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
         <PanelBodyOverlay>{children}</PanelBodyOverlay>
       )}
     </PanelBody>
-  </PanelWrapper>
+  </PanelComponent>
 );
 
 export default Panel;

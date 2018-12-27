@@ -29,7 +29,7 @@ const slideUp = keyframes`
     to { opacity: 1; transform: translateY(0) }
 `;
 
-const NavWrapper = styled.nav({
+const Nav = styled.nav({
   gridArea: 'navigation',
   position: 'relative',
   background: 'linear-gradient(to top, rgb(0,0,0), rgba(0,0,0,.5))',
@@ -52,7 +52,7 @@ const AboveNav = styled.div({
 });
 
 const Navigation = () => (
-  <NavWrapper>
+  <Nav>
     <AboveNav>
       <HorizontalLine />
     </AboveNav>
@@ -103,7 +103,7 @@ const Navigation = () => (
         <FormattedMessage id="Footer.List" defaultMessage="List" />
       </NavItem>
     </NavBar>
-  </NavWrapper>
+  </Nav>
 );
 
 export default Navigation;

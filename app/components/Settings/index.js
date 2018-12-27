@@ -32,7 +32,7 @@ import lockIcon from 'images/lock-minting.sprite.svg';
 import marketImg from 'images/marketstats.svg';
 import developerIcon from 'images/developer.sprite.svg';
 
-const SettingsWrapper = styled.div({
+const SettingsComponent = styled.div({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -91,7 +91,7 @@ class Settings extends Component {
           <FormattedMessage id="Settings.Settings" defaultMessage="Settings" />
         }
       >
-        <SettingsWrapper>
+        <SettingsComponent>
           <SettingsTabBar>
             <Tab
               link={`${match.url}/App`}
@@ -167,7 +167,7 @@ class Settings extends Component {
               <Route path={`${match.path}/Login`} component={Login} />
             </Switch>
           </SettingsContent>
-        </SettingsWrapper>
+        </SettingsComponent>
       </Panel>
     );
   }

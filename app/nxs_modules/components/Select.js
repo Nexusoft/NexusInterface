@@ -104,7 +104,7 @@ const vertExpand = keyframes`
   }
 `;
 
-const OptionsWrapper = styled.div(
+const OptionsComponent = styled.div(
   {
     position: 'absolute',
     top: 0,
@@ -229,7 +229,7 @@ class Options extends Component {
 
     return (
       <Overlay onBackgroundClick={close} onMount={this.positionDropdown}>
-        <OptionsWrapper
+        <OptionsComponent
           skin={skin}
           ref={el => {
             if (el && this.scrollTop) {
@@ -258,7 +258,7 @@ class Options extends Component {
               {option.display}
             </Option>
           ))}
-        </OptionsWrapper>
+        </OptionsComponent>
       </Overlay>
     );
   }

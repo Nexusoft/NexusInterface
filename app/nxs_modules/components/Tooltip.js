@@ -85,7 +85,7 @@ const arrowAligning = (position, align) => {
   }
 };
 
-const TooltipWrapper = styled.div(
+const TooltipComponent = styled.div(
   {
     background: tooltipBg,
     color: colors.light,
@@ -136,7 +136,7 @@ class Tooltip extends Component {
   }
 
   render() {
-    return ReactDOM.createPortal(<TooltipWrapper {...this.props} />, this.el);
+    return ReactDOM.createPortal(<TooltipComponent {...this.props} />, this.el);
   }
 }
 

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 import { animations, timing } from 'styles';
 
-const OverlayWrapper = styled.div({
+const OverlayComponent = styled.div({
   position: 'fixed',
   top: 0,
   left: 0,
@@ -51,14 +51,14 @@ export default class Overlay extends Component {
   render() {
     const { dimBackground, onBackgroundClick, closing, children } = this.props;
     return ReactDOM.createPortal(
-      <OverlayWrapper>
+      <OverlayComponent>
         <OverlayBackground
           dimmed={dimBackground}
           onClick={onBackgroundClick}
           closing={closing}
         />
         {this.props.children}
-      </OverlayWrapper>,
+      </OverlayComponent>,
       this.el
     );
   }

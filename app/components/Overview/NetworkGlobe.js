@@ -21,7 +21,7 @@ import configuration from 'api/configuration';
 var glb;
 var initializedWithData = false;
 let myIP = [];
-const GlobeWrapper = styled.div({
+const Globe = styled.div({
   position: 'fixed',
   top: 0,
   left: 0,
@@ -205,9 +205,9 @@ export default class NetworkGlobe extends Component {
   // Mandatory React method
   render() {
     return (
-      <GlobeWrapper>
+      <Globe>
         <div ref={element => (this.threeRootElement = element)} />
-      </GlobeWrapper>
+      </Globe>
     );
   }
 }

@@ -29,7 +29,7 @@ const TerminalContent = styled.div({
   overflow: 'hidden',
 });
 
-const TerminalCoreWrapper = styled.div({
+const TerminalCoreComponent = styled.div({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -113,7 +113,7 @@ class TerminalCore extends Component {
   render() {
     return (
       <TerminalContent>
-        <TerminalCoreWrapper ref={el => (this.outputRef = el)}>
+        <TerminalCoreComponent ref={el => (this.outputRef = el)}>
           {this.props.settings.manualDaemon ? (
             <div className="dim">Core in Manual Mode</div>
           ) : (
@@ -136,7 +136,7 @@ class TerminalCore extends Component {
               </Button>
             </>
           )}
-        </TerminalCoreWrapper>
+        </TerminalCoreComponent>
       </TerminalContent>
     );
   }

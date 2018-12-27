@@ -40,14 +40,14 @@ const outtro = keyframes`
 
 const modalBorderRadius = 4;
 
-const ModalWrapper = styled.div(
+const ModalComponent = styled.div(
   {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '60%',
-    maxHeight: '60%',
+    maxHeight: '80%',
     background: color.darken(colors.dark, 0.2),
     color: colors.lightGray,
     borderRadius: modalBorderRadius,
@@ -119,7 +119,7 @@ export default class Modal extends PureComponent {
         }
         closing={closing}
       >
-        <ModalWrapper
+        <ModalComponent
           closing={closing}
           onAnimationEnd={closing ? this.close : undefined}
           {...rest}
@@ -127,7 +127,7 @@ export default class Modal extends PureComponent {
           {typeof children === 'function'
             ? children(this.startClosing)
             : children}
-        </ModalWrapper>
+        </ModalComponent>
       </Overlay>
     );
   }

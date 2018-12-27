@@ -9,7 +9,7 @@ import Icon from 'components/Icon';
 import { colors } from 'styles';
 import { color } from 'utils';
 
-const ErrorModalWrapper = styled(Modal)({
+const ErrorModalComponent = styled(Modal)({
   width: 500,
 });
 
@@ -46,7 +46,7 @@ const ErrorModalButton = styled(Button)({
 });
 
 const ErrorModal = ({ message, ...rest }) => (
-  <ErrorModalWrapper {...rest}>
+  <ErrorModalComponent {...rest}>
     {closeModal => (
       <>
         <Modal.Body>
@@ -58,7 +58,7 @@ const ErrorModal = ({ message, ...rest }) => (
         </ErrorModalButton>
       </>
     )}
-  </ErrorModalWrapper>
+  </ErrorModalComponent>
 );
 
 export default ErrorModal;

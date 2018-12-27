@@ -10,7 +10,7 @@ import { lighten, fade } from 'utils/colors';
 const inputHeightHalf = '1.125em';
 const iconSpace = '3em';
 
-const InputWrapper = styled.div(
+const TextFieldComponent = styled.div(
   {
     position: 'relative',
     height: consts.inputHeightEm + 'em',
@@ -200,14 +200,14 @@ export default class TextField extends Component {
     };
 
     return (
-      <InputWrapper
+      <TextFieldComponent
         {...{ className, style, skin, size }}
         focus={this.state.focus}
       >
         {left}
         <Input {...inputProps} />
         {right}
-      </InputWrapper>
+      </TextFieldComponent>
     );
   }
 }

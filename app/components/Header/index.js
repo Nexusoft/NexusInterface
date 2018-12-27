@@ -35,7 +35,7 @@ import DaemonStatus from './DaemonStatus';
 import logoFull from './logo-full-beta.sprite.svg';
 import './style.css';
 
-const HeaderWrapper = styled.header({
+const HeaderComponent = styled.header({
   gridArea: 'header',
   position: 'relative',
   top: 0,
@@ -388,7 +388,7 @@ class Header extends Component {
     const { settings, connections, daemonAvailable } = this.props;
 
     return (
-      <HeaderWrapper>
+      <HeaderComponent>
         <CustomProperties
           global
           properties={{
@@ -429,7 +429,7 @@ class Header extends Component {
             <StakingStatus {...this.props} />
           </StatusIcons>
         )}
-      </HeaderWrapper>
+      </HeaderComponent>
     );
   }
 }

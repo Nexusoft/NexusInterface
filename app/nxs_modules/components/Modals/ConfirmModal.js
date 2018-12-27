@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import { colors } from 'styles';
 import { color } from 'utils';
 
-const ConfirmModalWrapper = styled(Modal)({
+const ConfirmModalComponent = styled(Modal)({
   width: 500,
 });
 
@@ -51,7 +51,7 @@ const ConfirmModal = ({
   noCallback,
   ...rest
 }) => (
-  <ConfirmModalWrapper {...rest}>
+  <ConfirmModalComponent {...rest}>
     {closeModal => (
       <Modal.Body>
         <QuestionMark>?</QuestionMark>
@@ -77,7 +77,7 @@ const ConfirmModal = ({
         </Buttons>
       </Modal.Body>
     )}
-  </ConfirmModalWrapper>
+  </ConfirmModalComponent>
 );
 
 export default ConfirmModal;

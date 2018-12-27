@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { colors } from 'styles';
 import { newUID } from 'utils';
 
-const FormFieldWrapper = styled.div(
+const FormFieldComponent = styled.div(
   { marginTop: '1em' },
   ({ inline }) =>
     inline && {
@@ -97,7 +97,7 @@ class FormField extends Component {
     } = this.props;
 
     return (
-      <FormFieldWrapper {...rest}>
+      <FormFieldComponent {...rest}>
         <Label
           capitalize={capitalizeLabel}
           htmlFor={connectLabel ? this.inputId : undefined}
@@ -108,7 +108,7 @@ class FormField extends Component {
           {this.formInput()}
           {!!hint && <Hint>{hint}</Hint>}
         </div>
-      </FormFieldWrapper>
+      </FormFieldComponent>
     );
   }
 }

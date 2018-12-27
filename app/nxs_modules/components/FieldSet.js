@@ -3,7 +3,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { colors } from 'styles';
 
-const FieldSetWrapper = styled.fieldset({
+const FieldSetComponent = styled.fieldset({
   padding: '.5em 1.5em 1.5em',
   border: `1px solid ${colors.darkgray}`,
   borderRadius: 4,
@@ -17,10 +17,10 @@ const Legend = styled.legend({
 });
 
 const FieldSet = ({ legend, children, ...rest }) => (
-  <FieldSetWrapper {...rest}>
+  <FieldSetComponent {...rest}>
     <Legend>{legend}</Legend>
     {children}
-  </FieldSetWrapper>
+  </FieldSetComponent>
 );
 
 export default FieldSet;

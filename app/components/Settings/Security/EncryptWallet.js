@@ -12,7 +12,7 @@ import FieldSet from 'components/FieldSet';
 import Modal from 'components/Modal';
 import { colors, consts } from 'styles';
 
-const EncryptWalletWrapper = styled.form({
+const EncryptWalletComponent = styled.form({
   flex: 2,
   marginRight: '1em',
 });
@@ -99,7 +99,7 @@ export default class EncryptWallet extends Component {
 
   render() {
     return (
-      <EncryptWalletWrapper>
+      <EncryptWalletComponent>
         <FieldSet
           legend={
             <FormattedMessage
@@ -188,7 +188,7 @@ export default class EncryptWallet extends Component {
             />
           </Button>
         </FieldSet>
-      </EncryptWalletWrapper>
+      </EncryptWalletComponent>
     );
   }
 }

@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Modal from 'components/Modal';
 
-const ImportPrivKeyWrapper = styled.form({
+const ImportPrivKeyComponent = styled.form({
   flex: 3,
 });
 
@@ -50,7 +50,7 @@ export default class ImportPrivKey extends Component {
 
   render() {
     return (
-      <ImportPrivKeyWrapper>
+      <ImportPrivKeyComponent>
         <FieldSet
           legend={
             <FormattedMessage
@@ -117,7 +117,7 @@ export default class ImportPrivKey extends Component {
         </FieldSet>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end' }} />
-      </ImportPrivKeyWrapper>
+      </ImportPrivKeyComponent>
     );
   }
 }
