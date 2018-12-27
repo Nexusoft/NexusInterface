@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import Root from './components/Root';
+import App from './App';
 import { configureStore, history } from './store/configureStore';
 import './CSS/app.global.css';
 
@@ -16,10 +16,10 @@ function renderApp(Component) {
   );
 }
 
-renderApp(Root);
+renderApp(App);
 
 if (module.hot) {
-  module.hot.accept('./components/Root', () => {
-    renderApp(Root);
+  module.hot.accept('./App', () => {
+    renderApp(App);
   });
 }
