@@ -312,7 +312,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
               console.log('Direct bootstrap');
             }
             if (err) {
-              self.props.OpenErrorModal(result.error);
+              self.context.openErrorModal({ message: result.error });
             }
             console.log(err, result);
             electron.remote.getGlobal('core').start();
@@ -320,7 +320,7 @@ configuration.BootstrapRecentDatabase = async function(self) {
         );
       })
       .catch(e => {
-        self.props.OpenErrorModal(e);
+        self.context.openErrorModal({ message: e });
       });
 
     let prevDownloadPercentArr = [];
@@ -473,7 +473,7 @@ configuration.bootstrapTryAgain = async function(self) {
         }
         if (err) {
           console.log(result.error, err);
-          self.props.OpenErrorModal('No Connection');
+          self.context.openErrorModal({ message: 'No Connection' });
         }
         console.log(err, result);
         electron.remote.getGlobal('core').start();

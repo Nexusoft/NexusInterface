@@ -199,7 +199,14 @@ export default class Queue extends Component {
       return;
     }
     if (Object.keys(Queue).length === 0) {
-      this.context.openErrorModal('Empty Queue!');
+      this.context.openErrorModal({
+        message: (
+          <FormattedMessage
+            id="Alert.QueueEmpty"
+            defaultMessage="Queue Empty"
+          />
+        ),
+      });
       return;
     }
 

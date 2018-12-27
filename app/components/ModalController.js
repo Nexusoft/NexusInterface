@@ -19,18 +19,7 @@ export default class ModalController extends Component {
   openModal = (component, props) => {
     const modalID = newModalID();
     this.setState({
-      modals: [
-        ...this.state.modals,
-        {
-          id: modalID,
-          component,
-          props,
-          context: {
-            modalID,
-            ...this.controller,
-          },
-        },
-      ],
+      modals: [...this.state.modals, { id: modalID, component, props }],
     });
     return modalID;
   };
@@ -61,10 +50,8 @@ export default class ModalController extends Component {
     return (
       <Modal.Context.Provider value={this.controller}>
         {this.props.children}
-        {this.state.modals.map(({ id, component: Comp, props, context }) => (
-          <Modal.Context.Provider key={id} value={context}>
-            <Comp {...props} />
-          </Modal.Context.Provider>
+        {this.state.modals.map(({ id, component: Comp, props }) => (
+          <Comp key={id} {...props} />
         ))}
       </Modal.Context.Provider>
     );

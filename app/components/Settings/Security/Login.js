@@ -108,7 +108,14 @@ class Login extends Component {
           password = '';
           if (e === 'Error: The wallet passphrase entered was incorrect.') {
             this.props.busy(false);
-            this.context.openErrorModal({ message: 'Incorrect Passsword' });
+            this.context.openErrorModal({
+              message: (
+                <FormattedMessage
+                  id="Alert.IncorrectPasssword"
+                  defaultMessage="Incorrect Passsword"
+                />
+              ),
+            });
             // this.passwordRef.focus();
           } else if (e === 'value is type null, expected int') {
             this.props.busy(false);
@@ -137,7 +144,14 @@ class Login extends Component {
             password = '';
             if (e === 'Error: The wallet passphrase entered was incorrect.') {
               this.props.busy(false);
-              this.context.openErrorModal({ message: 'Incorrect Passsword' });
+              this.context.openErrorModal({
+                message: (
+                  <FormattedMessage
+                    id="Alert.IncorrectPasssword"
+                    defaultMessage="Incorrect Passsword"
+                  />
+                ),
+              });
               this.passwordRef.focus();
             } else if (e === 'value is type null, expected int') {
               this.props.busy(false);

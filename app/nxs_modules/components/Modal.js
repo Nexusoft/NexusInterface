@@ -9,8 +9,7 @@ import Icon from 'components/Icon';
 import { colors, timing } from 'styles';
 import { color } from 'utils';
 
-export const ModalContext = React.createContext({
-  modalID: null,
+export const ModalContext = React.createContext({=
   openModal: () => {},
   closeModal: () => {},
   openConfirmModal: () => {},
@@ -92,13 +91,13 @@ export default class Modal extends PureComponent {
   };
 
   startClosing = () => {
-    if (this.context.modalID && this.context.closeModal) {
+    if (this.props.modalID && this.context.closeModal) {
       this.setState({ closing: true });
     }
   };
 
   close = () => {
-    this.context.closeModal(this.context.modalID);
+    this.context.closeModal(this.props.modalID);
   };
 
   render() {

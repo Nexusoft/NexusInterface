@@ -303,15 +303,34 @@ class SendPage extends Component {
               });
             } else {
               this.context.openErrorModal({
-                message: 'This is an address registered to this wallet',
+                message: (
+                  <FormattedMessage
+                    id="Alert.registeredToThis"
+                    defaultMessage="This is an address registered to this wallet"
+                  />
+                ),
               });
             }
           } else {
-            this.context.openErrorModal({ message: 'Invalid Address' });
+            this.context.openErrorModal({
+              message: (
+                <FormattedMessage
+                  id="Alert.InvalidAddress"
+                  defaultMessage="Invalid Address"
+                />
+              ),
+            });
           }
         })
         .catch(e => {
-          this.context.openErrorModal({ message: 'Invalid Address' });
+          this.context.openErrorModal({
+            message: (
+              <FormattedMessage
+                id="Alert.InvalidAddress"
+                defaultMessage="Invalid Address"
+              />
+            ),
+          });
         });
     }
   }
@@ -399,17 +418,36 @@ class SendPage extends Component {
               } else {
                 this.props.busy();
                 this.context.openErrorModal({
-                  message: 'This is an address registered to this wallet',
+                  message: (
+                    <FormattedMessage
+                      id="Alert.registeredToThis"
+                      defaultMessage="This is an address registered to this wallet"
+                    />
+                  ),
                 });
               }
             } else {
               this.props.busy();
-              this.context.openErrorModal({ message: 'Invalid Address' });
+              this.context.openErrorModal({
+                message: (
+                  <FormattedMessage
+                    id="Alert.InvalidAddress"
+                    defaultMessage="Invalid Address"
+                  />
+                ),
+              });
             }
           })
           .catch(e => {
             this.props.busy();
-            this.context.openErrorModal({ message: 'Invalid Address' });
+            this.context.openErrorModal({
+              message: (
+                <FormattedMessage
+                  id="Alert.InvalidAddress"
+                  defaultMessage="Invalid Address"
+                />
+              ),
+            });
           });
       } else {
         this.props.busy();
@@ -420,14 +458,28 @@ class SendPage extends Component {
   }
 
   confirmSendNow = () => {
-    const { Address, Amount, encrypted, loggedIn, OpenErrorModal } = this.props;
+    const { Address, Amount, encrypted, loggedIn } = this.props;
 
     if (!Address) {
-      this.context.openErrorModal({ message: 'Invalid Address' });
+      this.context.openErrorModal({
+        message: (
+          <FormattedMessage
+            id="Alert.InvalidAddress"
+            defaultMessage="Invalid Address"
+          />
+        ),
+      });
       return;
     }
     if (Amount <= 0) {
-      this.context.openErrorModal({ message: 'Invalid Amount' });
+      this.context.openErrorModal({
+        message: (
+          <FormattedMessage
+            id="Alert.InvalidAmount"
+            defaultMessage="Invalid Amount"
+          />
+        ),
+      });
       return;
     }
     if (encrypted && !loggedIn) {

@@ -272,11 +272,11 @@ export const AddContact = (name, address, num, notes, TZ) => {
   };
 };
 
-export const OpenErrorModal = type => {
-  return dispatch => {
-    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
-  };
-};
+// export const OpenErrorModal = type => {
+//   return dispatch => {
+//     dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
+//   };
+// };
 
 export const AddAddress = (name, address, index) => {
   return dispatch => {

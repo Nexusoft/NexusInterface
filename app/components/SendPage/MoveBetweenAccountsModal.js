@@ -84,13 +84,34 @@ export default class MoveBetweenAccountsModal extends Component {
               }
             });
         } else {
-          this.context.openErrorModal({ message: 'Insufficient funds' });
+          this.context.openErrorModal({
+            message: (
+              <FormattedMessage
+                id="Alert.InsufficientFunds"
+                defaultMessage="Insufficient Funds"
+              />
+            ),
+          });
         }
       } else {
-        this.context.openErrorModal({ message: 'No second account chosen' });
+        this.context.openErrorModal({
+          message: (
+            <FormattedMessage
+              id="Alert.NoSecondAccountChosen"
+              defaultMessage="No second account chosen"
+            />
+          ),
+        });
       }
     } else {
-      this.context.openErrorModal({ message: 'Accounts are the same' });
+      this.context.openErrorModal({
+        message: (
+          <FormattedMessage
+            id="Alert.AccountsAreTheSame"
+            defaultMessage="Accounts are the same"
+          />
+        ),
+      });
     }
   }
 

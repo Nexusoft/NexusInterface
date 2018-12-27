@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 // Internal Global Dependencies
 import { GetSettings, SaveSettings } from 'api/settings';
 import configuration from 'api/configuration';
+import Modal from 'components/Modal';
 
 var enoughSpace = true;
 
@@ -20,56 +21,61 @@ const modalOpen = ({
   ((settings.bootstrap && connections !== undefined && !isInSync) ||
     BootstrapModal);
 
-const Prompting = props => (
-  <>
-    <h3>
-      <FormattedMessage
-        id="ToolTip.DbOption"
-        defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
-      />
-    </h3>
-    {!enoughSpace && (
-      <h3
-        style={{
-          color: '#ff0000',
-        }}
-      >
-        <FormattedMessage
-          id="ToolTip.NotEnoughSpace"
-          defaultMessage="Not Enough Space, Requires 20gb."
-        />
-      </h3>
-    )}
-    <button
-      className="button"
-      disabled={!enoughSpace}
-      onClick={() => {
-        props.OpenBootstrapModal(true);
-        configuration.BootstrapRecentDatabase(props);
-        props.setPercentDownloaded(0.001);
-      }}
-    >
-      <FormattedMessage
-        id="ToolTip.BootStrapIt"
-        defaultMessage="Yes, let's bootstrap it"
-      />
-    </button>
-    <button
-      className="button"
-      onClick={() => {
-        props.CloseBootstrapModal();
-        let settings = GetSettings();
-        settings.bootstrap = false;
-        SaveSettings(settings);
-      }}
-    >
-      <FormattedMessage
-        id="ToolTip.SyncFromScratch"
-        defaultMessage="No, let it sync form scratch"
-      />
-    </button>
-  </>
-);
+class Prompting extends Component {
+  static contextType = Modal.Context;
+  render() {
+    return (
+      <>
+        <h3>
+          <FormattedMessage
+            id="ToolTip.DbOption"
+            defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
+          />
+        </h3>
+        {!enoughSpace && (
+          <h3
+            style={{
+              color: '#ff0000',
+            }}
+          >
+            <FormattedMessage
+              id="ToolTip.NotEnoughSpace"
+              defaultMessage="Not Enough Space, Requires 20gb."
+            />
+          </h3>
+        )}
+        <button
+          className="button"
+          disabled={!enoughSpace}
+          onClick={() => {
+            this.props.OpenBootstrapModal(true);
+            configuration.BootstrapRecentDatabase(this);
+            this.props.setPercentDownloaded(0.001);
+          }}
+        >
+          <FormattedMessage
+            id="ToolTip.BootStrapIt"
+            defaultMessage="Yes, let's bootstrap it"
+          />
+        </button>
+        <button
+          className="button"
+          onClick={() => {
+            this.props.CloseBootstrapModal();
+            let settings = GetSettings();
+            settings.bootstrap = false;
+            SaveSettings(settings);
+          }}
+        >
+          <FormattedMessage
+            id="ToolTip.SyncFromScratch"
+            defaultMessage="No, let it sync form scratch"
+          />
+        </button>
+      </>
+    );
+  }
+}
 
 const Downloading = props => (
   <>

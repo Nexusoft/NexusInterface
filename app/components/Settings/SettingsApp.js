@@ -244,7 +244,14 @@ class SettingsApp extends Component {
       RPC.PROMISE('settxfee', [parseFloat(TxFee)]);
       this.props.OpenModal('Transaction Fee Set');
     } else {
-      this.context.openErrorModal({ message: 'Invalid Transaction Fee' });
+      this.context.openErrorModal({
+        message: (
+          <FormattedMessage
+            id="Alert.InvalidTransactionFee"
+            defaultMessage="Invalid Transaction Fee"
+          />
+        ),
+      });
     }
   }
 

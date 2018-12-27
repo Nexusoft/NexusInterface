@@ -154,11 +154,11 @@ export const OpenModal = content => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: content });
   };
 };
-export const OpenErrorModal = content => {
-  return dispatch => {
-    dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: content });
-  };
-};
+// export const OpenErrorModal = content => {
+//   return dispatch => {
+//     dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: content });
+//   };
+// };
 
 export const Confirm = Answer => {
   return dispatch => {
