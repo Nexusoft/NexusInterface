@@ -13,6 +13,7 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import UIContext from 'context/ui';
 import ColorPicker from './ColorPicker';
+import BackgroundPicker from './BackgroundPicker';
 
 const StyleSettings = styled.div({
   maxWidth: 750,
@@ -51,126 +52,15 @@ class SettingsStyle extends Component {
     this.updateWallpaper = this.updateWallpaper.bind(this);
   }
 
-  updateWallpaper(event) {
-    let el = event.target;
+  updateWallpaper(wallpaper) {
+    const el = event.target;
+    if (!el.files.length) return;
+
     let imagePath = el.files[0].path;
     if (process.platform === 'win32') {
       imagePath = imagePath.replace(/\\/g, '/');
     }
     this.props.SetWalpaper(imagePath);
-  }
-
-  handleColorChange(color) {
-    let filterSetting;
-    let H = color.hsl.h - 196.3;
-    let S = 100 + (color.hsl.s * 100 - 100);
-    let L = 100 + (color.hsl.l * 100 - 46.9);
-    if (color.hex === '#ffffff') {
-      filterSetting = 'hue-rotate(0deg) brightness(200%) grayscale(100%)';
-    } else if (color.hex === '#000000') {
-      filterSetting = 'hue-rotate(0deg) brightness(0%) grayscale(100%)';
-    } else {
-      filterSetting = `hue-rotate(${H}deg) brightness(${L}%) grayscale(0%) saturate(${S}%)`;
-    }
-    switch (this.props.selectedColorProp) {
-      case 'MC1':
-        this.props.ChangeColor1(color.hex);
-        break;
-      case 'MC2':
-        this.props.ChangeColor2(color.hex);
-        break;
-      case 'MC3':
-        this.props.ChangeColor3(color.hex);
-        break;
-      case 'MC4':
-        this.props.ChangeColor4(color.hex);
-        break;
-      case 'MC5':
-        this.props.ChangeColor5(color.hex);
-        break;
-      case 'NXSlogo':
-        this.props.ChangeNexusLogoColor(filterSetting, color.hex);
-        break;
-      case 'iconMenu':
-        this.props.ChangeIconMenuColor(filterSetting, color.hex);
-        break;
-      case 'footer':
-        this.props.ChangeFooterColor(filterSetting, color.hex);
-        break;
-      case 'footerHover':
-        this.props.ChangeFooterHoverColor(filterSetting, color.hex);
-        break;
-      case 'footerActive':
-        this.props.ChangeFooterActiveColor(filterSetting, color.hex);
-        break;
-      case 'globePillar':
-        this.props.ChangeGlobePillarColor(filterSetting, color.hex);
-        break;
-      case 'globeArch':
-        this.props.ChangeGlobeArchColor(filterSetting, color.hex);
-        break;
-      case 'globeMulti':
-        this.props.ChangeGlobeMultiColor(filterSetting, color.hex);
-        break;
-      case 'panel':
-        let newPannelBack = `rgba(${color.rgb.r}, ${color.rgb.g}, ${
-          color.rgb.b
-        }, 0.7)`;
-        this.props.ChangePanelColor(newPannelBack);
-        break;
-      default:
-        break;
-    }
-  }
-
-  colorPresetter() {
-    this.props.settings.customStyling[this.props.selectedColorProp];
-    switch (this.props.selectedColorProp) {
-      case 'MC1':
-        return this.props.settings.customStyling.MC1;
-        break;
-      case 'MC2':
-        return this.props.settings.customStyling.MC2;
-        break;
-      case 'MC3':
-        return this.props.settings.customStyling.MC3;
-        break;
-      case 'MC4':
-        return this.props.settings.customStyling.MC4;
-        break;
-      case 'MC5':
-        return this.props.settings.customStyling.MC5;
-        break;
-      case 'NXSlogo':
-        return this.props.NXSlogoRGB;
-        break;
-      case 'iconMenu':
-        return this.props.iconMenuRGB;
-        break;
-      case 'footer':
-        return this.props.footerRGB;
-        break;
-      case 'footerHover':
-        return this.props.footerHoverRGB;
-        break;
-      case 'footerActive':
-        return this.props.footerActiveRGB;
-        break;
-      case 'globePillar':
-        return this.props.settings.customStyling.globePillarColorRGB;
-        break;
-      case 'globeArch':
-        return this.props.settings.customStyling.globeArchColorRGB;
-        break;
-      case 'globeMulti':
-        return this.props.settings.customStyling.globeMultiColorRGB;
-        break;
-      case 'panel':
-        return this.props.settings.customStyling.pannelBack;
-        break;
-      default:
-        break;
-    }
   }
 
   updateRenderGlobe() {
@@ -202,12 +92,11 @@ class SettingsStyle extends Component {
   // Mandatory React method
   render() {
     const {
-      theme,
       settings,
       webGLEnabled,
       ToggleGlobeRender,
-      CustomizeStyling,
       ResetStyle,
+      SetWalpaper,
     } = this.props;
 
     return (
@@ -248,8 +137,18 @@ class SettingsStyle extends Component {
             />
           </SettingsField>
 
+          <SettingsField
+            label="Background"
+            subLabel="Customize your background wallpaper"
+          >
+            <BackgroundPicker
+              wallpaper={settings.wallpaper}
+              onChange={SetWalpaper}
+            />
+          </SettingsField>
+
           <SettingsField label="Color scheme">
-            <Button onClick={this.props.ResetStyle}>Reset to default</Button>
+            <Button onClick={ResetStyle}>Reset to default</Button>
           </SettingsField>
 
           <SettingsField indent={1} label="Background color">

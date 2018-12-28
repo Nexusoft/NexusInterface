@@ -23,7 +23,7 @@ import StyleGuide from './StyleGuide';
 import TrustList from './TrustList';
 import About from './About';
 import Exchange from './Exchange';
-import StarrySky from './StarrySky';
+import AppBackground from './AppBackground';
 import UIController from './UIController';
 import ThemeController from './ThemeController';
 
@@ -68,7 +68,7 @@ export default class App extends Component {
               <UIController>
                 <div>
                   <GlobalStyles />
-                  <StarrySky />
+                  <AppBackground />
                   <AppLoader>
                     <Loader />
                   </AppLoader>

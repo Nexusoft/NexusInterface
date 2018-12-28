@@ -20,6 +20,7 @@ const Label = styled.label(
   {
     position: 'relative',
     paddingRight: '3em',
+    flexShrink: 0,
   },
   ({ indent = 0 }) => ({
     width: 400 - indent * indentSpace,
