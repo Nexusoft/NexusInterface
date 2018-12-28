@@ -16,6 +16,7 @@ import configuration from 'api/configuration';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { Tail } from 'utils/tail';
+import  fs from 'fs';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -29,6 +30,7 @@ const mapDispatchToProps = dispatch => ({
 class TerminalCore extends Component {
   constructor(props) {
     super(props);
+    this.debugFileLocation = '';
   }
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -45,6 +47,9 @@ class TerminalCore extends Component {
     } else {
       debugfile = datadir + '/debug.log';
     }
+    fs.watchFile(debugfile, (curr, prev) => {
+    });
+    this.debugFileLocation = debugfile;
     this.processDeamonOutput(debugfile);
   }
 
@@ -53,6 +58,7 @@ class TerminalCore extends Component {
     if (this.tail != undefined) {
       this.tail.unwatch();
     }
+    fs.unwatchFile(this.debugFileLocation);
     clearInterval(this.printCoreOutputTimer);
   }
 
