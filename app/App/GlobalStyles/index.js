@@ -114,8 +114,6 @@ const utilityClasses = css`
   }
 `;
 
-export default (
-  <Global
-    styles={[fontStyles, resetStyles, customizedScrollbar, utilityClasses]}
-  />
-);
+const styles = [fontStyles, resetStyles, customizedScrollbar, utilityClasses];
+
+export default () => <Global styles={styles} />;

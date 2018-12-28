@@ -1,19 +1,13 @@
-// External Dependencies
+// External
 import React, { Component } from 'react';
 import { ConnectedRouter } from 'connected-react-router';
 import { Route, Switch } from 'react-router';
-import enLocaleData from 'react-intl/locale-data/en';
-import { addLocaleData } from 'react-intl';
-import localesReducer from 'reducers/intl';
-import { connect, Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 import IntlWrapper from './IntlWrapper';
 import styled from '@emotion/styled';
 
-// Internal Global Dependencies
-import locale from 'reducers/intl';
-import globalStyles from './styles/global';
-
-// Internal Local Dependencies
+// Internal
+import GlobalStyles from './GlobalStyles';
 import Loader from './Loader';
 import Overview from './Overview';
 import Header from './Header';
@@ -71,7 +65,7 @@ export default class App extends Component {
           <ConnectedRouter history={history}>
             <UIController>
               <div>
-                {globalStyles}
+                <GlobalStyles />
                 <StarrySky />
                 <AppLoader>
                   <Loader />
