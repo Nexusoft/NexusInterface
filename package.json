@@ -2,7 +2,7 @@
   "name": "nexus_wallet",
   "productName": "Nexus Wallet",
   "version": "0.8.4",
-  "buildDate": "December 7th 2018",
+  "buildDate": "December 27th 2018",
   "description": "Nexus",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
