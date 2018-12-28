@@ -204,7 +204,7 @@ class SettingsCore extends Component {
     var manualDaemonDataDir = document.getElementById('manualDaemonDataDir');
 
     if (settings.manualDaemonDataDir === undefined) {
-      manualDaemonDataDir.value = '.Nexus_Wallet_Data';
+      manualDaemonDataDir.value = '.Nexus_Core_Data_BETA_v0.8.4';
     } else {
       manualDaemonDataDir.value = settings.manualDaemonDataDir;
     }
