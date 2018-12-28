@@ -15,7 +15,7 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import configuration from 'api/configuration';
 import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
-import { colors, consts, timing, animations } from 'styles';
+import { consts, timing, animations } from 'styles';
 import { color } from 'utils';
 import UIContext from 'context/ui';
 
@@ -28,7 +28,7 @@ import DaemonStatus from './DaemonStatus';
 import logoFull from './logo-full-beta.sprite.svg';
 import './style.css';
 
-const HeaderComponent = styled.header({
+const HeaderComponent = styled.header(({ theme }) => ({
   gridArea: 'header',
   position: 'relative',
   top: 0,
@@ -36,46 +36,46 @@ const HeaderComponent = styled.header({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: colors.primary,
   background: 'linear-gradient(to bottom, rgb(0,0,0), rgba(0,0,0,.5))',
+  color: theme.primary,
   zIndex: 999,
-});
+}));
 
-const LogoLink = styled(Link)({
+const LogoLink = styled(Link)(({ theme }) => ({
   position: 'relative',
   animation: `${animations.fadeInAndExpand} ${timing.slow} ${
     consts.enhancedEaseOut
   }`,
-  filter: `drop-shadow(0 0 8px ${color.fade(
-    color.lighten(colors.primary, 0.2),
-    0.3
-  )})`,
   transitionProperty: 'filter',
   transitionDuration: timing.normal,
   transitionTimingFunction: 'ease-out',
+  filter: `drop-shadow(0 0 8px ${color.fade(
+    color.lighten(theme.primary, 0.2),
+    0.3
+  )})`,
 
   '&:hover': {
-    filter: `drop-shadow(0 0 10px ${colors.primary}) brightness(110%)`,
+    filter: `drop-shadow(0 0 10px ${theme.primary}) brightness(110%)`,
   },
-});
+}));
 
-const Logo = styled(Icon)({
+const Logo = styled(Icon)(({ theme }) => ({
   display: 'block',
   height: 50,
   width: 'auto',
   filter: 'var(--nxs-logo)',
-  fill: colors.primary,
-});
+  fill: theme.primary,
+}));
 
-const Beta = styled.div({
-  color: colors.light,
+const Beta = styled.div(({ theme }) => ({
   fontSize: 12,
   position: 'absolute',
   bottom: 3,
   right: -26,
   letterSpacing: 1,
   textTransform: 'uppercase',
-});
+  color: theme.light,
+}));
 
 const StatusIcons = styled.div({
   position: 'absolute',
@@ -86,14 +86,14 @@ const StatusIcons = styled.div({
   alignItems: 'center',
 });
 
-const UnderHeader = styled.div({
+const UnderHeader = styled.div(({ theme }) => ({
   position: 'absolute',
   top: '100%',
   left: 0,
   right: 0,
   textAlign: 'center',
-  color: colors.light,
-});
+  color: theme.light,
+}));
 
 var tray = tray || null;
 let mainWindow = electron.remote.getCurrentWindow();

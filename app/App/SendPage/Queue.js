@@ -8,14 +8,13 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Modal from 'components/Modal';
 import UIContext from 'context/ui';
-import { colors } from 'styles';
 import trashimg from 'images/trash.svg';
 
-const QueueComponent = styled.div({
+const QueueComponent = styled.div(({ theme }) => ({
   marginTop: 50,
-  borderTop: `1px solid ${colors.lightGray}`,
   paddingTop: 20,
-});
+  borderTop: `1px solid ${theme.lightGray}`,
+}));
 
 const QueueHeading = styled.div({
   fontSize: '1.4em',

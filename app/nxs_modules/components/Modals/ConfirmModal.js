@@ -5,27 +5,26 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import { colors } from 'styles';
 import { color } from 'utils';
 
 const ConfirmModalComponent = styled(Modal)({
   width: 500,
 });
 
-const QuestionMark = styled.div({
+const QuestionMark = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   fontSize: 56,
-  color: colors.light,
+  color: theme.light,
   width: 80,
   height: 80,
   borderRadius: '50%',
   borderWidth: 2,
   borderStyle: 'solid',
-  filter: `drop-shadow(0 0 5px ${color.fade(colors.light, 0.5)})`,
+  filter: `drop-shadow(0 0 5px ${color.fade(theme.light, 0.5)})`,
   margin: '0 auto 20px',
-});
+}));
 
 const Question = styled.div({
   textAlign: 'center',

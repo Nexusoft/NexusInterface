@@ -1,89 +1,87 @@
 // External
 import React from 'react';
 import { Global, css } from '@emotion/core';
+import { withTheme } from 'emotion-theming';
 
 // Internal
 import { color } from 'utils';
-import { colors, consts } from 'styles';
+import { consts } from 'styles';
 import fontStyles from './fonts';
 
-const resetStyles = css`
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
+const resetStyles = theme => ({
+  '*, *::before, *::after': {
+    boxSizing: 'border-box',
+  },
 
-  body {
-    color: ${colors.light};
-    height: 100vh;
-    background-color: #232c39;
-    font-family: 'Noto Sans', sans-serif;
-    font-size: 16px;
-    line-height: ${consts.lineHeight};
-    overflow: hidden;
-  }
+  body: {
+    color: theme.light,
+    height: '100vh',
+    backgroundColor: '#232c39',
+    fontFamily: '"Noto Sans", sans-serif',
+    fontSize: 16,
+    lineHeight: consts.lineHeight,
+    overflow: 'hidden',
+  },
 
-  a {
-    outline: none;
-  }
+  a: {
+    outline: 'none',
+  },
 
-  svg {
-    fill: currentColor;
-  }
+  svg: {
+    fill: 'currentColor',
+  },
 
-  li {
-    list-style: none;
-  }
+  li: {
+    listStyle: 'none',
+  },
 
-  canvas {
-    overflow: hidden;
-  }
+  canvas: {
+    overflow: 'hidden',
+  },
 
-  code {
-    font-family: ${consts.monoFontFamily};
-  }
+  code: {
+    fontFamily: consts.monoFontFamily,
+  },
 
-  input,
-  textarea {
-    border: none;
-    outline: none;
-    &:focus {
-      outline: none;
-    }
-  }
-  input::-webkit-inner-spin-button: {
-    cursor: pointer;
-  }
-`;
+  'input, textarea': {
+    border: 'none',
+    outline: 'none',
+    '&:focus': {
+      outline: 'none',
+    },
+  },
+  'input::-webkit-inner-spin-button:': {
+    cursor: 'pointer',
+  },
+});
 
-const customizedScrollbar = css`
-  ::-webkit-scrollbar {
-    background: rgba(0, 0, 0, 0.15);
-    z-index: 10000000;
-    &:vertical {
-      width: 6px;
-    }
-    &:horizontal {
-      height: 6px;
-    }
-    &:hover {
-      background: rgba(0, 0, 0, 0.3);
-    }
-    &-thumb {
-      background: ${color.fade(colors.primary, 0.25)};
-      border-radius: 2px;
-    }
-    &-thumb:hover {
-      background: ${color.fade(colors.primary, 0.1)};
-    }
-    &-corner {
-      background: rgba(0, 0, 0, 0.5);
-    }
-  }
-`;
+const customizedScrollbar = theme => ({
+  '::-webkit-scrollbar': {
+    background: 'rgba(0, 0, 0, 0.15)',
+    zIndex: 10000000,
+    '&:vertical': {
+      width: 6,
+    },
+    '&:horizontal': {
+      height: 6,
+    },
+    '&:hover': {
+      background: 'rgba(0, 0, 0, 0.3)',
+    },
+    '&-thumb': {
+      background: color.fade(theme.primary, 0.25),
+      borderRadius: 2,
+    },
+    '&-thumb:hover': {
+      background: color.fade(theme.primary, 0.1),
+    },
+    '&-corner': {
+      background: 'rgba(0, 0, 0, 0.5)',
+    },
+  },
+});
 
-const utilityClasses = css`
+const utilityClasses = theme => css`
   .relative {
     position: relative;
   }
@@ -110,10 +108,17 @@ const utilityClasses = css`
   }
 
   .error {
-    color: red;
+    color: ${theme.error};
   }
 `;
 
-const styles = [fontStyles, resetStyles, customizedScrollbar, utilityClasses];
+const GlobalStyles = () => (
+  <>
+    <Global styles={fontStyles} />
+    <Global styles={resetStyles} />
+    <Global styles={customizedScrollbar} />
+    <Global styles={utilityClasses} />
+  </>
+);
 
-export default () => <Global styles={styles} />;
+export default GlobalStyles;

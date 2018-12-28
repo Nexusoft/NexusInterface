@@ -4,22 +4,17 @@ import styled from '@emotion/styled';
 
 // Internal
 import { newUID } from 'utils';
-import { colors } from 'styles';
 
 const indentSpace = 20;
 
-const Field = styled.div(
-  {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '1em 0',
-    borderBottom: `1px solid ${colors.darkerGray}`,
-  },
-  ({ indent = 0 }) => ({
-    marginLeft: indent * indentSpace,
-  })
-);
+const Field = styled.div(({ indent = 0, theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '1em 0',
+  borderBottom: `1px solid ${theme.darkerGray}`,
+  marginLeft: indent * indentSpace,
+}));
 
 const Label = styled.label(
   {
@@ -31,10 +26,10 @@ const Label = styled.label(
   })
 );
 
-const SubLabel = styled.div({
-  color: colors.lightGray,
+const SubLabel = styled.div(({ theme }) => ({
   fontSize: '.9em',
-});
+  color: theme.lightGray,
+}));
 
 const Input = styled.div({
   flexGrow: 1,

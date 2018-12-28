@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
-import { colors, timing } from 'styles';
+import { timing } from 'styles';
 import { color } from 'utils';
 
 const ButtonComponent = styled.button(
@@ -68,24 +68,24 @@ const ButtonComponent = styled.button(
       fontSize: '.9em',
     },
 
-  ({ skin = 'default' }) => {
+  ({ skin, theme }) => {
     switch (skin) {
       case 'default':
         return {
           '&, &:active, &&[disabled]': {
-            border: `1px solid ${colors.lightGray}`,
-            color: colors.lightGray,
+            border: `1px solid ${theme.lightGray}`,
+            color: theme.lightGray,
           },
           '&:hover': {
-            borderColor: colors.light,
-            color: colors.light,
+            borderColor: theme.light,
+            color: theme.light,
           },
         };
       case 'primary':
         return {
           '&, &:active, &&[disabled]': {
-            border: `2px solid ${colors.primary}`,
-            color: colors.primary,
+            border: `2px solid ${theme.primary}`,
+            color: theme.primary,
             fontWeight: 'bold',
             transitionProperty: 'border-color, color, filter',
             transitionTimingFunction: 'ease-out',
@@ -97,53 +97,53 @@ const ButtonComponent = styled.button(
             },
           },
           '&:hover': {
-            borderColor: color.lighten(colors.primary, 0.3),
-            color: color.lighten(colors.primary, 0.3),
-            filter: `drop-shadow(0 0 7px ${color.fade(colors.primary, 0.3)})`,
+            borderColor: color.lighten(theme.primary, 0.3),
+            color: color.lighten(theme.primary, 0.3),
+            filter: `drop-shadow(0 0 7px ${color.fade(theme.primary, 0.3)})`,
           },
         };
       case 'filled-primary':
         return {
           '&, &:active, &&[disabled]': {
-            background: color.darken(colors.primary, 0.1),
-            color: colors.primaryContrast,
+            background: color.darken(theme.primary, 0.1),
+            color: theme.primaryContrast,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            background: colors.primary,
+            background: theme.primary,
           },
         };
       case 'filled-dark':
         return {
           '&, &:active, &&[disabled]': {
-            background: colors.dark,
-            color: colors.light,
+            background: theme.dark,
+            color: theme.light,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            background: colors.darkerGray,
+            background: theme.darkerGray,
           },
         };
       case 'filled-light':
         return {
           '&, &:active, &&[disabled]': {
-            background: colors.lighterGray,
-            color: colors.dark,
+            background: theme.lighterGray,
+            color: theme.dark,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            background: colors.light,
+            background: theme.light,
           },
         };
       case 'filled-error':
         return {
           '&, &:active, &&[disabled]': {
-            background: colors.error,
-            color: colors.errorContrast,
+            background: theme.error,
+            color: theme.errorContrast,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            background: color.lighten(colors.error, 0.2),
+            background: color.lighten(theme.error, 0.2),
           },
         };
       case 'blank-dark':
@@ -151,11 +151,11 @@ const ButtonComponent = styled.button(
           '&, &:active, &&[disabled]': {
             padding: '0.5em 1em',
             background: 'transparent',
-            color: colors.darkGray,
+            color: theme.darkGray,
             transitionProperty: 'color',
           },
           '&:hover': {
-            color: colors.dark,
+            color: theme.dark,
           },
         };
       case 'blank-light':
@@ -163,11 +163,11 @@ const ButtonComponent = styled.button(
           '&, &:active, &&[disabled]': {
             padding: '0.5em 1em',
             background: 'transparent',
-            color: colors.lightGray,
+            color: theme.lightGray,
             transitionProperty: 'color',
           },
           '&:hover': {
-            color: colors.light,
+            color: theme.light,
           },
         };
     }
@@ -181,6 +181,7 @@ const ButtonComponent = styled.button(
 export default class Button extends Component {
   static defaultProps = {
     type: 'button',
+    skin: 'default',
   };
 
   render() {

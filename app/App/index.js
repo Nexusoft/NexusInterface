@@ -25,6 +25,7 @@ import About from './About';
 import Exchange from './Exchange';
 import StarrySky from './StarrySky';
 import UIController from './UIController';
+import ThemeController from './ThemeController';
 
 const AppWrapper = styled.div({
   position: 'fixed',
@@ -62,49 +63,55 @@ export default class App extends Component {
     return (
       <Provider store={store}>
         <IntlWrapper>
-          <ConnectedRouter history={history}>
-            <UIController>
-              <div>
-                <GlobalStyles />
-                <StarrySky />
-                <AppLoader>
-                  <Loader />
-                </AppLoader>
-                <AppWrapper>
-                  <Header />
-                  <Main>
-                    <Switch>
-                      <Route exact path="/" component={Overview} />
-                      <Route exact path="/SendPage" component={SendPage} />
-                      <Route
-                        exact
-                        path="/Transactions"
-                        component={Transactions}
-                      />
-                      <Route exact path="/Market" component={Market} />
-                      <Route
-                        exact
-                        path="/AddressBook"
-                        component={AddressBook}
-                      />
-                      <Route
-                        exact
-                        path="/BlockExplorer"
-                        component={BlockExplorer}
-                      />
-                      <Route path="/Settings" component={Settings} />
-                      <Route path="/Terminal" component={Terminal} />
-                      <Route exact path="/StyleGuide" component={StyleGuide} />
-                      <Route path="/Exchange" component={Exchange} />
-                      <Route exact path="/List" component={TrustList} />
-                      <Route exact path="/About" component={About} />
-                    </Switch>
-                  </Main>
-                  <Navigation />
-                </AppWrapper>
-              </div>
-            </UIController>
-          </ConnectedRouter>
+          <ThemeController>
+            <ConnectedRouter history={history}>
+              <UIController>
+                <div>
+                  <GlobalStyles />
+                  <StarrySky />
+                  <AppLoader>
+                    <Loader />
+                  </AppLoader>
+                  <AppWrapper>
+                    <Header />
+                    <Main>
+                      <Switch>
+                        <Route exact path="/" component={Overview} />
+                        <Route exact path="/SendPage" component={SendPage} />
+                        <Route
+                          exact
+                          path="/Transactions"
+                          component={Transactions}
+                        />
+                        <Route exact path="/Market" component={Market} />
+                        <Route
+                          exact
+                          path="/AddressBook"
+                          component={AddressBook}
+                        />
+                        <Route
+                          exact
+                          path="/BlockExplorer"
+                          component={BlockExplorer}
+                        />
+                        <Route path="/Settings" component={Settings} />
+                        <Route path="/Terminal" component={Terminal} />
+                        <Route
+                          exact
+                          path="/StyleGuide"
+                          component={StyleGuide}
+                        />
+                        <Route path="/Exchange" component={Exchange} />
+                        <Route exact path="/List" component={TrustList} />
+                        <Route exact path="/About" component={About} />
+                      </Switch>
+                    </Main>
+                    <Navigation />
+                  </AppWrapper>
+                </div>
+              </UIController>
+            </ConnectedRouter>
+          </ThemeController>
         </IntlWrapper>
       </Provider>
     );

@@ -8,7 +8,7 @@ import { keyframes } from '@emotion/core';
 import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import { colors, timing, consts } from 'styles';
+import { timing, consts } from 'styles';
 
 const pulseRing = keyframes`
   0% {
@@ -32,7 +32,7 @@ const pulseDot = keyframes`
   }
 `;
 
-const NavLinkItem = styled(NavLink)({
+const NavLinkItem = styled(NavLink)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: '0 10px',
@@ -40,7 +40,7 @@ const NavLinkItem = styled(NavLink)({
   transitionProperties: 'opacity, color, transform',
   transitionDuration: timing.normal,
   transitionTimingFunction: consts.enhancedEaseOut,
-  color: colors.light,
+  color: theme.light,
   opacity: 0.45,
 
   '&:hover': {
@@ -50,14 +50,14 @@ const NavLinkItem = styled(NavLink)({
   '&.active': {
     opacity: 1,
     transform: 'scale(1.15)',
-    color: colors.primary,
+    color: theme.primary,
 
     '&::before': {
       content: '""',
       display: 'block',
       width: 20,
       height: 20,
-      background: colors.primary,
+      background: theme.primary,
       borderRadius: 45,
       position: 'absolute',
       bottom: 0,
@@ -70,7 +70,7 @@ const NavLinkItem = styled(NavLink)({
       content: '""',
       height: 6,
       width: 6,
-      background: colors.light,
+      background: theme.light,
       borderRadius: '50%',
       position: 'absolute',
       bottom: 0,
@@ -79,7 +79,7 @@ const NavLinkItem = styled(NavLink)({
       animation: `${pulseDot} 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite`,
     },
   },
-});
+}));
 
 const NavIcon = styled(Icon)({
   width: 36,

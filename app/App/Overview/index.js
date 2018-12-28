@@ -28,7 +28,7 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import ContextMenuBuilder from 'contextmenu';
 import * as helpers from 'scripts/helper.js';
 import configuration from 'api/configuration';
-import { colors, timing, consts } from 'styles';
+import { timing, consts } from 'styles';
 
 // Internal Local Dependencies
 import NetworkGlobe from './NetworkGlobe';
@@ -155,53 +155,52 @@ const Stats = styled.div(
 );
 
 const Stat = styled.div(
-  {
+  ({ theme }) => ({
     display: 'block',
     margin: '1.7em 0',
     display: 'flex',
     alignItems: 'center',
     filter: `drop-shadow(0 0 10px #000)`,
-    color: colors.light,
-  },
-  ({ to }) =>
+    color: theme.light,
+  }),
+  ({ to, theme }) =>
     to && {
       cursor: 'pointer',
       transitionProperty: 'filter',
       transitionDuration: timing.normal,
       transitionTimingFunction: 'ease-out',
       '&:hover': {
-        filter: `drop-shadow(0 0 8px ${colors.primary}) brightness(120%)`,
+        filter: `drop-shadow(0 0 8px ${theme.primary}) brightness(120%)`,
       },
     }
 );
 
-const StatLabel = styled.div({
+const StatLabel = styled.div(({ theme }) => ({
   fontWeight: 'bold',
   letterSpacing: 0.5,
-  color: colors.primary,
   textTransform: 'uppercase',
   fontSize: '.9em',
-});
+  color: theme.primary,
+}));
 
 const StatValue = styled.div({
   fontSize: '1.8em',
 });
 
-const StatIcon = styled(Icon)({
+const StatIcon = styled(Icon)(({ theme }) => ({
   width: 38,
   height: 38,
-  color: colors.primary,
-  // filter: 'drop-shadow(0 0 8px rgba(0,0,0,.7))',
-});
+  color: theme.primary,
+}));
 
-const MaxmindCopyright = styled.div({
+const MaxmindCopyright = styled.div(({ theme }) => ({
   position: 'fixed',
   left: 6,
   bottom: 3,
   opacity: 0.4,
-  color: colors.primary,
+  color: theme.primary,
   zIndex: 1, // over the navigation bar
-});
+}));
 
 const MaxmindLogo = styled.img({
   display: 'block',

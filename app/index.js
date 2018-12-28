@@ -4,14 +4,9 @@ import { AppContainer } from 'react-hot-loader';
 import App from './App';
 import { configureStore, history } from './store/configureStore';
 import { GetSettings } from 'api/settings';
-import { colors } from 'styles';
 import './CSS/app.global.css';
 
 const store = configureStore();
-
-// Configure custom colors
-// const settings = GetSettings();
-// colors.customize(settings.customStyling);
 
 function renderApp(Component) {
   render(

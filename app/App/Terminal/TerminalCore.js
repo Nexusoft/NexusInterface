@@ -11,7 +11,6 @@ import * as TYPE from 'actions/actiontypes';
 import { Tail } from 'utils/tail';
 import configuration from 'api/configuration';
 import Button from 'components/Button';
-import { colors } from 'styles';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -29,30 +28,30 @@ const TerminalContent = styled.div({
   overflow: 'hidden',
 });
 
-const TerminalCoreComponent = styled.div({
+const TerminalCoreComponent = styled.div(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  border: `1px solid ${colors.darkerGray}`,
-});
+  border: `1px solid ${theme.darkerGray}`,
+}));
 
 const Output = styled.div(
-  {
+  ({ theme }) => ({
     overflowY: 'auto',
     flexGrow: 1,
     display: 'flex',
-    background: colors.dark,
-    borderBottom: `1px solid ${colors.darkerGray}`,
-  },
+    background: theme.dark,
+    borderBottom: `1px solid ${theme.darkerGray}`,
+  }),
   ({ reverse }) => ({
     flexDirection: reverse ? 'column-reverse' : 'column',
   })
 );
 
-const OutputLine = styled.code({
-  background: colors.dark,
-  borderColor: colors.dark,
-});
+const OutputLine = styled.code(({ theme }) => ({
+  background: theme.dark,
+  borderColor: theme.dark,
+}));
 
 class TerminalCore extends Component {
   constructor(props) {

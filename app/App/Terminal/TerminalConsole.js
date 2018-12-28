@@ -14,7 +14,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
-import { colors, consts, timing } from 'styles';
+import { consts, timing } from 'styles';
 
 let currentHistoryIndex = -1;
 
@@ -70,31 +70,35 @@ const ConsoleInput = styled.div({
   position: 'relative',
 });
 
-const AutoComplete = styled.div({
+const AutoComplete = styled.div(({ theme }) => ({
   position: 'absolute',
   top: '100%',
   zIndex: 99,
-  background: colors.dark,
-});
+  background: theme.dark,
+}));
 
-const AutoCompleteItem = styled.a({
+const AutoCompleteItem = styled.a(({ theme }) => ({
   display: 'block',
   cursor: 'pointer',
-  color: colors.lightGray,
   transition: `color ${timing.normal}`,
+  color: theme.lightGray,
 
   '&:hover': {
-    color: colors.light,
+    color: theme.light,
   },
-});
+}));
 
-const ConsoleOutput = styled.code({
+const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
   flexBasis: 0,
-  background: colors.dark,
-  border: `1px solid ${colors.darkGray}`,
   overflow: 'auto',
-});
+  background: theme.dark,
+  border: `1px solid ${theme.darkGray}`,
+}));
+
+const ExecuteButton = styled(Button)(({ theme }) => ({
+  borderLeft: `1px solid ${theme.darkerGray}`,
+}));
 
 class TerminalConsole extends Component {
   constructor(props) {
@@ -358,7 +362,7 @@ class TerminalConsole extends Component {
                     grouped="left"
                     style={{ flexGrow: 1 }}
                     right={
-                      <Button
+                      <ExecuteButton
                         skin="filled-dark"
                         fitHeight
                         grouped="right"
@@ -366,13 +370,12 @@ class TerminalConsole extends Component {
                           this.props.removeAutoCompleteDiv();
                           this.processInput();
                         }}
-                        style={{ borderLeft: `1px solid ${colors.darkerGray}` }}
                       >
                         <FormattedMessage
                           id="Console.Exe"
                           defaultMessage="Execute"
                         />
-                      </Button>
+                      </ExecuteButton>
                     }
                   />
                 )}

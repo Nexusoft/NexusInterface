@@ -79,3 +79,7 @@ export function isLight(color) {
 export function isDark(color) {
   return Color(color).isDark();
 }
+
+export function toHex(color) {
+  return Color(color).hex();
+}

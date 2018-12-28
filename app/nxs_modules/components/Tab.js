@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
-import { colors, timing } from 'styles';
+import { timing } from 'styles';
 
 const TabLi = styled.li({
   listStyle: 'none',
@@ -13,26 +13,26 @@ const TabLi = styled.li({
   flexBasis: 0,
 });
 
-const TabLink = styled(NavLink)({
+const TabLink = styled(NavLink)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   padding: '0.75em 1.5em',
   fontSize: '1.125em',
-  color: colors.lightGray,
-  borderBottom: `1px solid ${colors.darkGray}`,
+  color: theme.lightGray,
+  borderBottom: `1px solid ${theme.darkGray}`,
   transitionProperties: 'color, borderBottom',
   transitionDuration: timing.normal,
 
   '&:hover': {
-    color: colors.light,
+    color: theme.light,
   },
 
   '&.active': {
-    color: colors.primary,
-    borderBottomColor: colors.primary,
+    color: theme.primary,
+    borderBottomColor: theme.primary,
   },
-});
+}));
 
 const Tab = ({ link, icon, text, isActive }) => (
   <TabLi>

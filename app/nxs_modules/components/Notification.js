@@ -5,7 +5,7 @@ import { keyframes } from '@emotion/core';
 
 // Internal
 import UIContext from 'context/ui';
-import { colors, timing } from 'styles';
+import { timing } from 'styles';
 import { color } from 'utils';
 
 const notifHeight = 40;
@@ -66,30 +66,30 @@ const NotificationComponent = styled.div(
     animation: `${intro} ${timing.normal} ease-out`,
   }),
 
-  ({ type }) => {
+  ({ type, theme }) => {
     switch (type) {
       case 'info':
         return {
-          background: colors.darkerGray,
-          color: colors.light,
+          background: theme.darkerGray,
+          color: theme.light,
           '&:hover': {
-            background: color.lighten(colors.darkerGray, 0.2),
+            background: color.lighten(theme.darkerGray, 0.2),
           },
         };
       case 'success':
         return {
-          background: color.darken(colors.primary, 0.3),
-          color: colors.primaryContrast,
+          background: color.darken(theme.primary, 0.3),
+          color: theme.primaryContrast,
           '&:hover': {
-            background: color.darken(colors.primary, 0.1),
+            background: color.darken(theme.primary, 0.1),
           },
         };
       case 'error':
         return {
-          background: color.darken(colors.error, 0.2),
-          color: colors.errorContrast,
+          background: color.darken(theme.error, 0.2),
+          color: theme.errorContrast,
           '&:hover': {
-            background: colors.error,
+            background: theme.error,
           },
         };
     }

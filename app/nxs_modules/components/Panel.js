@@ -6,7 +6,6 @@ import { color } from 'utils';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
-import { colors } from 'styles';
 
 const intro = keyframes`
   from { 
@@ -21,17 +20,17 @@ const intro = keyframes`
 
 const borderRadius = 4;
 
-const PanelComponent = styled.div({
+const PanelComponent = styled.div(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'stretch',
-  color: colors.light,
+  color: theme.light,
   width: '100%',
   animation: `${intro} .2s ease-out`,
-});
+}));
 
-const PanelHeader = styled.div({
-  background: colors.dark,
+const PanelHeader = styled.div(({ theme }) => ({
+  background: theme.dark,
   borderTopLeftRadius: borderRadius,
   borderTopRightRadius: borderRadius,
   flexShrink: 0,
@@ -39,7 +38,7 @@ const PanelHeader = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-});
+}));
 
 const PanelTitle = styled.h3({
   fontSize: 28,
@@ -48,14 +47,14 @@ const PanelTitle = styled.h3({
 });
 
 const PanelBody = styled.div(
-  {
-    background: color.darken(colors.dark, 0.3),
+  ({ theme }) => ({
+    background: color.darken(theme.dark, 0.3),
     borderBottomLeftRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
     flexGrow: 1,
     padding: '10px 20px',
     position: 'relative',
-  },
+  }),
   ({ scrollable }) => ({
     overflow: scrollable ? 'auto' : 'hidden',
   })

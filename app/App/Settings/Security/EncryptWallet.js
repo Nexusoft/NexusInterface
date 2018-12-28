@@ -10,18 +10,18 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIContext from 'context/ui';
-import { colors, consts } from 'styles';
+import { consts } from 'styles';
 
 const EncryptWalletComponent = styled.form({
   flex: 2,
   marginRight: '1em',
 });
 
-const Note = styled.div({
+const Note = styled.div(({ theme }) => ({
   padding: '1em',
-  border: `2px dashed ${colors.gray}`,
-  color: colors.gray,
-});
+  border: `2px dashed ${theme.gray}`,
+  color: theme.gray,
+}));
 
 const Characters = styled.span({
   fontFamily: consts.monoFontFamily,

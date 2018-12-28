@@ -4583,6 +4583,15 @@ emojis-list@^2.0.0:
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
   integrity sha1-TapNnbAPmBmIDHn6RXrlsJof04k=
 
+emotion-theming@^10.0.5:
+  version "10.0.5"
+  resolved "https://registry.yarnpkg.com/emotion-theming/-/emotion-theming-10.0.5.tgz#dfd783a4b45c7142cbe1d68d03a0b934a25e452f"
+  integrity sha512-mTXZuSsGVW00HY/rVvBTn9lkwFWVCzJZymx52c4UtVIKbj0xVNfjuTZARYmOqbJDK3QZm7aBIbTgyTj/IJ2s2g==
+  dependencies:
+    "@emotion/weak-memoize" "0.2.2"
+    hoist-non-react-statics "^2.3.1"
+    object-assign "^4.1.1"
+
 encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
@@ -6181,7 +6190,7 @@ hoek@6.x.x:
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-6.1.1.tgz#dae8ca1c97b091b123281d87d4eba38d71580b7d"
   integrity sha512-q60PigXXRtRFSe1+Eal3y/wlIq5weFsYPiyulkg1EAObgWhkDqSwj4xqgtd7qT3IpS6e4eLigyMWH6duPRI7QA==
 
-hoist-non-react-statics@^2.5.0, hoist-non-react-statics@^2.5.5:
+hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0, hoist-non-react-statics@^2.5.5:
   version "2.5.5"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
   integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==

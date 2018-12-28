@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { colors } from 'styles';
 import { color } from 'utils';
 import checkIcon from 'images/check.sprite.svg';
 
@@ -14,20 +13,20 @@ const SuccessModalComponent = styled(Modal)({
   width: 500,
 });
 
-const CheckMark = styled.div({
+const CheckMark = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   fontSize: 44,
-  color: colors.primary,
+  color: theme.primary,
   width: 80,
   height: 80,
   borderRadius: '50%',
   borderWidth: 3,
   borderStyle: 'solid',
-  filter: `drop-shadow(0 0 5px ${color.fade(colors.primary, 0.5)})`,
+  filter: `drop-shadow(0 0 5px ${color.fade(theme.primary, 0.5)})`,
   margin: '0 auto 20px',
-});
+}));
 
 const ErrorMessage = styled.div({
   textAlign: 'center',

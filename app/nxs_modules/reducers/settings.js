@@ -32,30 +32,14 @@ const initialState = {
     windowWidth: 1600,
     windowHeight: 1388,
     devMode: false,
-    wallpaper: defaultWallpaperPath,
+    wallpaper: '',
     renderGlobe: true,
     fiatCurrency: 'USD',
     locale: 'en',
     Folder: BackupDir,
     verboseLevel: '2',
     mapPortUsingUpnp: true,
-    customStyling: {
-      MC1: '#111111',
-      MC2: '#0ca4fb',
-      MC3: '#556070',
-      MC4: '#34495e',
-      MC5: '#ffffff',
-      NXSlogo: 'hue-rotate(0deg) brightness(100%) grayscale(0%) saturate(100%)',
-      iconMenu: 'hue-rotate(0deg) brightness(100%) grayscale(0%)',
-      footer: 'hue-rotate(0deg) grayscale(100%) brightness(200%)',
-      footerHover: 'hue-rotate(0deg) grayscale(0%) brightness(100%)',
-      footerActive: 'hue-rotate(0deg) grayscale(0%) brightness(100%)',
-      pannelBack: 'rgba(47, 50, 65, 0.7)',
-      globePillarColorRGB: 'rgb(0,255,255)',
-      globeArchColorRGB: 'rgb(0,255,255)',
-      globeMultiColorRGB: 'rgb(0,151,228)',
-      maxMindCopyright: 'hue-rotate(0deg) grayscale(0%) brightness(100%)',
-    },
+    customStyling: {},
     NXSlogoRGB: 'rgb(0,174,239)',
     footerRGB: 'rgb(0,174,239)',
     footerActiveRGB: 'rgb(0,174,239)',
@@ -179,197 +163,22 @@ export default (state = initialState, action) => {
         },
       };
       break;
-    case TYPE.CHANGE_COLOR_1:
+    case TYPE.CUSTOMIZE_STYLING:
       return {
         ...state,
         settings: {
           ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            MC1: action.payload,
-          },
+          customStyling: action.payload,
         },
       };
       break;
-    case TYPE.CHANGE_COLOR_2:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            MC2: action.payload,
-          },
-        },
-      };
-      break;
-    case TYPE.CHANGE_COLOR_3:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            MC3: action.payload,
-          },
-        },
-      };
-      break;
-    case TYPE.CHANGE_COLOR_4:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            MC4: action.payload,
-          },
-        },
-      };
-      break;
-    case TYPE.CHANGE_COLOR_5:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            MC5: action.payload,
-          },
-        },
-      };
-      break;
-    case TYPE.SET_SELECTED_COLOR_PROP:
-      return {
-        ...state,
-        selectedColorProp: action.payload,
-      };
-      break;
-    case TYPE.SET_NEXUS_LOGO_COLOR:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            NXSlogo: action.payload.setting,
-          },
-        },
-        NXSlogoRGB: action.payload.hex,
-      };
-    case TYPE.SET_FOOTER_COLOR:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            footer: action.payload.setting,
-          },
-        },
-        footerRGB: action.payload.hex,
-      };
-    case TYPE.SET_FOOTER_ACTIVE_COLOR:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            footerActive: action.payload.setting,
-          },
-        },
-        footerActiveRGB: action.payload.hex,
-      };
-    case TYPE.SET_FOOTER_HOVER_COLOR:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            footerHover: action.payload.setting,
-          },
-        },
-        footerHoverRGB: action.payload.hex,
-      };
-
-    case TYPE.CHANGE_PANEL_COLOR:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            pannelBack: action.payload,
-          },
-        },
-        footerHoverRGB: action.payload.hex,
-      };
-
-    case TYPE.SET_ICON_MENU_COLOR:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            iconMenu: action.payload.setting,
-          },
-        },
-        iconMenuRGB: action.payload.hex,
-      };
-    case TYPE.CHANGE_GLOBE_PILLAR_COLOR:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            globePillarColorRGB: action.payload.hex,
-          },
-        },
-      };
-      break;
-    case TYPE.CHANGE_GLOBE_ARCH_COLOR:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            globeArchColorRGB: action.payload.hex,
-          },
-        },
-      };
-      break;
-    case TYPE.CHANGE_GLOBE_MULTI_COLOR:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          customStyling: {
-            ...state.settings.customStyling,
-            globeMultiColorRGB: action.payload.hex,
-          },
-        },
-      };
     case TYPE.RESET_CUSTOM_STYLING:
       return {
         ...state,
         settings: {
           ...state.settings,
-          wallpaper: initialState.settings.wallpaper,
           customStyling: initialState.settings.customStyling,
         },
-        NXSlogoRGB: initialState.NXSlogoRGB,
-        footerRGB: initialState.footerRGB,
-        footerActiveRGB: initialState.footerActiveRGB,
-        footerHoverRGB: initialState.footerHoverRGB,
-        iconMenuRGB: initialState.iconMenuRGB,
-        globeArchColorRGB: initialState.globeArchColorRGB,
-        globePillarColorRGB: initialState.globePillarColorRGB,
-        globeMultiColorRGB: initialState.globeMultiColorRGB,
       };
       break;
     case TYPE.TOGGLE_GLOBE_RENDER:

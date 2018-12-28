@@ -11,15 +11,19 @@ const defaultColors = {
 };
 
 function deriveColors(colors) {
-  colors.darkerGray = color.mix(colors.dark, colors.light, 0.125);
-  colors.darkGray = color.mix(colors.dark, colors.light, 0.25);
-  colors.gray = color.mix(colors.dark, colors.light);
-  colors.lightGray = color.mix(colors.dark, colors.light, 0.75);
-  colors.lighterGray = color.mix(colors.dark, colors.light, 0.875);
-  return colors;
+  return {
+    ...colors,
+    darkerGray: color.mix(colors.dark, colors.light, 0.125),
+    darkGray: color.mix(colors.dark, colors.light, 0.25),
+    gray: color.mix(colors.dark, colors.light),
+    lightGray: color.mix(colors.dark, colors.light, 0.75),
+    lighterGray: color.mix(colors.dark, colors.light, 0.875),
+  };
 }
 
 export const colors = deriveColors({ ...defaultColors });
+colors.default = defaultColors;
+colors.derive = deriveColors;
 
 export const consts = {
   monoFontFamily: '"Roboto Mono", "Lucida Console", "Courier New", monospace',

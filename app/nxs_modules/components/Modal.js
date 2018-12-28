@@ -7,7 +7,7 @@ import { keyframes } from '@emotion/core';
 import UIContext from 'context/ui';
 import Overlay from 'components/Overlay';
 import Icon from 'components/Icon';
-import { colors, timing } from 'styles';
+import { timing } from 'styles';
 import { color } from 'utils';
 
 const intro = keyframes`
@@ -35,37 +35,37 @@ const outtro = keyframes`
 const modalBorderRadius = 4;
 
 const ModalComponent = styled.div(
-  {
+  ({ theme }) => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '60%',
     maxHeight: '80%',
-    background: color.darken(colors.dark, 0.2),
-    color: colors.lightGray,
+    background: color.darken(theme.dark, 0.2),
+    color: theme.lightGray,
     borderRadius: modalBorderRadius,
     boxShadow: '0 0 20px #000',
     position: 'relative',
     animation: `${intro} ${timing.quick} ease-out`,
-  },
+  }),
   ({ closing }) =>
     closing && {
       animation: `${outtro} ${timing.quick} ease-in`,
     }
 );
 
-const ModalHeader = styled.div({
+const ModalHeader = styled.div(({ theme }) => ({
   borderTopLeftRadius: modalBorderRadius,
   borderTopRightRadius: modalBorderRadius,
   padding: '20px 0',
   margin: '0 50px',
-  borderBottom: `2px solid ${colors.primary}`,
-  color: colors.primary,
+  borderBottom: `2px solid ${theme.primary}`,
+  color: theme.primary,
   fontSize: 24,
   fontWeight: 'normal',
   textAlign: 'center',
-});
+}));
 
 const ModalBody = styled.div({
   padding: '30px 50px',

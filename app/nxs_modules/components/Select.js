@@ -7,7 +7,7 @@ import { keyframes } from '@emotion/core';
 import Button from 'components/Button';
 import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
-import { colors, timing, consts, animations } from 'styles';
+import { timing, consts, animations } from 'styles';
 import { color } from 'utils';
 
 // Minimum gap from the dropdown to the bottom edge of the screen
@@ -23,12 +23,12 @@ const SelectControl = styled.div(
     height: consts.inputHeightEm + 'em',
   },
 
-  ({ skin, active }) => {
+  ({ skin, active, theme }) => {
     switch (skin) {
       case 'underline':
         return {
           background: 'transparent',
-          color: colors.lighterGray,
+          color: theme.lighterGray,
           transitionProperty: 'color, border-bottom-color',
           transitionDuration: timing.normal,
           position: 'relative',
@@ -40,22 +40,22 @@ const SelectControl = styled.div(
             right: 0,
             height: 2,
             borderRadius: 1,
-            background: colors.gray,
+            background: theme.gray,
             transitionProperty: 'background-color',
             transitionDuration: timing.normal,
           },
           '&:hover': {
-            color: colors.light,
-            borderBottomColor: colors.lightGray,
+            color: theme.light,
+            borderBottomColor: theme.lightGray,
             '&::after': {
-              background: colors.lightGray,
+              background: theme.lightGray,
             },
           },
           ...(active
             ? {
-                color: colors.light,
+                color: theme.light,
                 '&&::after': {
-                  background: color.lighten(colors.primary, 0.3),
+                  background: color.lighten(theme.primary, 0.3),
                 },
               }
             : null),
@@ -63,16 +63,16 @@ const SelectControl = styled.div(
       case 'filled-light':
         return {
           paddingLeft: '.8em',
-          background: colors.lighterGray,
-          color: colors.dark,
+          background: theme.lighterGray,
+          color: theme.dark,
           borderRadius: 2,
           transition: `background-color ${timing.normal}`,
           '&:hover': {
-            background: colors.light,
+            background: theme.light,
           },
           ...(active
             ? {
-                background: colors.light,
+                background: theme.light,
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
               }
@@ -118,17 +118,17 @@ const OptionsComponent = styled.div(
     margin: 0,
     boxShadow: `0 0 8px rgba(0,0,0,.7)`,
   },
-  ({ skin }) => {
+  ({ skin, theme }) => {
     switch (skin) {
       case 'underline':
         return {
-          background: colors.dark,
-          color: colors.light,
+          background: theme.dark,
+          color: theme.light,
         };
       case 'filled-light':
         return {
-          background: colors.light,
-          color: colors.dark,
+          background: theme.light,
+          color: theme.dark,
         };
     }
   },
@@ -151,20 +151,20 @@ const Option = styled.div(
     textOverflow: 'ellipsis',
     height: consts.inputHeightEm + 'em',
   },
-  ({ skin, selected }) => {
+  ({ skin, selected, theme }) => {
     switch (skin) {
       case 'underline':
         return {
-          background: selected ? colors.primary : undefined,
-          color: selected ? colors.primaryContrast : undefined,
+          background: selected ? theme.primary : undefined,
+          color: selected ? theme.primaryContrast : undefined,
           '&:hover': {
-            background: selected ? colors.primary : colors.darkerGray,
+            background: selected ? theme.primary : theme.darkerGray,
           },
         };
       case 'filled-light':
         return {
           '&:hover': {
-            background: colors.lighterGray,
+            background: theme.lighterGray,
           },
         };
     }

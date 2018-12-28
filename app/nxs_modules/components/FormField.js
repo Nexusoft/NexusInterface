@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import { colors } from 'styles';
 import { newUID } from 'utils';
 
 const FormFieldComponent = styled.div(
@@ -30,7 +29,7 @@ const Label = styled.label(
     }
 );
 
-const Hint = styled.div({
+const Hint = styled.div(({ theme }) => ({
   position: 'absolute',
   visibility: 'hidden',
   opacity: 0,
@@ -60,13 +59,13 @@ const Hint = styled.div({
     visibility: 'visible',
     opacity: 1,
     color: '#fff',
-    background: colors.error,
+    background: theme.error,
   },
 
   'input:invalid:focus + &::before': {
-    borderBottomColor: colors.error,
+    borderBottomColor: theme.error,
   },
-});
+}));
 
 class FormField extends Component {
   inputId = newUID();

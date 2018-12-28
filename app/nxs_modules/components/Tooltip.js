@@ -7,10 +7,10 @@ import { jsx } from '@emotion/core';
 
 // Internal
 import { arrowStyles } from 'components/Arrow';
-import { colors, timing, animations } from 'styles';
+import { timing, animations } from 'styles';
 import { color } from 'utils';
 
-const tooltipBg = color.lighten(colors.dark, 0.2);
+const tooltipBg = theme => color.lighten(theme.dark, 0.2);
 const spacing = 10;
 const arrowPadding = 15;
 const positionToArrowDirection = {
@@ -86,11 +86,11 @@ const arrowAligning = (position, align) => {
 };
 
 const TooltipComponent = styled.div(
-  {
+  ({ theme }) => ({
     whiteSpace: 'pre',
     maxWidth: 300,
-    background: tooltipBg,
-    color: colors.light,
+    background: tooltipBg(theme),
+    color: theme.light,
     borderRadius: 4,
     filter: 'drop-shadow(0 0 8px rgba(0,0,0,.7))',
     fontSize: 15,
@@ -102,17 +102,17 @@ const TooltipComponent = styled.div(
       content: '""',
       position: 'absolute',
     },
-  },
+  }),
   ({ position }) =>
     (position === 'top' || position === 'bottom') && {
       textAlign: 'center',
     },
-  ({ position }) => ({
+  ({ position, theme }) => ({
     '&::before': arrowStyles({
       direction: positionToArrowDirection[position],
       width: 15,
       height: 8,
-      color: tooltipBg,
+      color: tooltipBg(theme),
     }),
   }),
   ({ position, align }) => ({

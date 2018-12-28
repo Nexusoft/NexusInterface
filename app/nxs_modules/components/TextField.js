@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { jsx, css } from '@emotion/core';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { colors, timing, consts } from 'styles';
+import { timing, consts } from 'styles';
 import { color } from 'utils';
 
 const inputHeightHalf = '1.125em';
@@ -21,11 +21,11 @@ const TextFieldComponent = styled.div(
     display: size ? 'inline-flex' : 'flex',
   }),
 
-  ({ focus }) => ({ skin, focus }) => {
+  ({ skin, focus, theme }) => {
     switch (skin) {
       case 'underline':
         return {
-          color: colors.lighterGray,
+          color: theme.lighterGray,
           transitionProperty: 'color',
           transitionDuration: timing.normal,
           '&::after': {
@@ -36,21 +36,21 @@ const TextFieldComponent = styled.div(
             right: 0,
             height: 2,
             borderRadius: 1,
-            background: colors.gray,
+            background: theme.gray,
             transitionProperty: 'background-color, box-shadow',
             transitionDuration: timing.normal,
           },
           '&:hover': {
-            color: colors.light,
+            color: theme.light,
             '&::after': {
-              background: colors.lightGray,
+              background: theme.lightGray,
             },
           },
           ...(focus
             ? {
                 '&&::after': {
-                  background: color.lighten(colors.primary, 0.3),
-                  boxShadow: `0 0 15px ${colors.primary}`,
+                  background: color.lighten(theme.primary, 0.3),
+                  boxShadow: `0 0 15px ${theme.primary}`,
                 },
               }
             : null),
@@ -58,37 +58,37 @@ const TextFieldComponent = styled.div(
       case 'filled-light':
         return {
           borderRadius: 2,
-          background: colors.lighterGray,
-          color: colors.dark,
+          background: theme.lighterGray,
+          color: theme.dark,
           transitionProperty: 'background-color',
           transitionDuration: timing.normal,
           '&:hover': {
-            background: colors.light,
+            background: theme.light,
           },
           ...(focus
             ? {
                 '&&::after': {
-                  background: colors.light,
+                  background: theme.light,
                 },
               }
             : null),
         };
       case 'filled-dark':
         return {
-          border: `1px solid ${colors.darkerGray}`,
-          background: colors.dark,
-          color: colors.light,
+          border: `1px solid ${theme.darkerGray}`,
+          background: theme.dark,
+          color: theme.light,
           borderRadius: 2,
           transitionProperty: 'border-color, box-shadow',
           transitionDuration: timing.normal,
           '&:hover': {
-            borderColor: colors.darkGray,
+            borderColor: theme.darkGray,
           },
           ...(focus
             ? {
                 '&, &:hover': {
-                  borderColor: colors.primary,
-                  boxShadow: `0 0 5px ${colors.primary}`,
+                  borderColor: theme.primary,
+                  boxShadow: `0 0 5px ${theme.primary}`,
                 },
               }
             : null),
@@ -98,7 +98,7 @@ const TextFieldComponent = styled.div(
 );
 
 const Input = styled.input(
-  {
+  ({ theme }) => ({
     display: 'block',
     background: 'transparent',
     color: 'inherit',
@@ -108,7 +108,7 @@ const Input = styled.input(
     transitionDuration: timing.normal,
 
     '&::placeholder': {
-      color: colors.gray,
+      color: theme.gray,
     },
 
     '&[type="date"], &[type="time"]': {
@@ -118,7 +118,7 @@ const Input = styled.input(
         transform: 'translateY(-50%)',
       },
     },
-  },
+  }),
 
   ({ type }) =>
     type === 'number' && {

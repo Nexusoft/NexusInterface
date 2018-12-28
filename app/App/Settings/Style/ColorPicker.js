@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 import { ChromePicker } from 'react-color';
+import { withTheme } from 'emotion-theming';
 
 // Internal
 import Button from 'components/Button';
@@ -25,7 +26,7 @@ const ColorButton = styled(Button)(({ color: c }) => {
   };
 });
 
-export default class ColorPicker extends Component {
+class ColorPicker extends Component {
   state = {
     open: false,
     pickerStyles: {},
@@ -46,7 +47,13 @@ export default class ColorPicker extends Component {
     this.setState({ open: false, pickerStyles: {} });
   };
 
+  handleColorChange = pickedColor => {
+    this.props.onChange(this.props.colorName, pickedColor.hex);
+  };
+
   render() {
+    const currentColor = this.props.theme[this.props.colorName];
+
     return (
       <>
         <ColorButton
@@ -54,18 +61,19 @@ export default class ColorPicker extends Component {
             this.btnRef = el;
           }}
           uppercase
+          color={currentColor}
           onClick={this.openPicker}
           {...this.props}
         >
-          {this.props.color}
+          {currentColor}
         </ColorButton>
         {this.state.open && (
           <Overlay onBackgroundClick={this.closePicker}>
             <div style={this.state.pickerStyles}>
               <ChromePicker
-                color={this.props.color}
+                color={currentColor}
                 disableAlpha={true}
-                onChangeComplete={this.props.onChange}
+                onChangeComplete={this.handleColorChange}
               />
             </div>
           </Overlay>
@@ -74,3 +82,5 @@ export default class ColorPicker extends Component {
     );
   }
 }
+
+export default withTheme(ColorPicker);

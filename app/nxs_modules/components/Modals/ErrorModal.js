@@ -5,27 +5,26 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import { colors } from 'styles';
 import { color } from 'utils';
 
 const ErrorModalComponent = styled(Modal)({
   width: 500,
 });
 
-const XMark = styled.div({
+const XMark = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   fontSize: 56,
-  color: colors.error,
+  color: theme.error,
   width: 80,
   height: 80,
   borderRadius: '50%',
   borderWidth: 3,
   borderStyle: 'solid',
-  filter: `drop-shadow(0 0 5px ${color.fade(colors.error, 0.5)})`,
+  filter: `drop-shadow(0 0 5px ${color.fade(theme.error, 0.5)})`,
   margin: '0 auto 20px',
-});
+}));
 
 const ErrorMessage = styled.div({
   textAlign: 'center',

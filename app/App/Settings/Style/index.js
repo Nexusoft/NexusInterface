@@ -12,7 +12,6 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import UIContext from 'context/ui';
-import { colors } from 'styles';
 import ColorPicker from './ColorPicker';
 
 const StyleSettings = styled.div({
@@ -36,46 +35,8 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   SetWalpaper: path => dispatch({ type: TYPE.SET_WALLPAPER, payload: path }),
-  ChangeColor1: hex => dispatch({ type: TYPE.CHANGE_COLOR_1, payload: hex }),
-  ChangeColor2: hex => dispatch({ type: TYPE.CHANGE_COLOR_2, payload: hex }),
-  ChangeColor3: hex => dispatch({ type: TYPE.CHANGE_COLOR_3, payload: hex }),
-  ChangeColor4: hex => dispatch({ type: TYPE.CHANGE_COLOR_4, payload: hex }),
-  ChangeColor5: hex => dispatch({ type: TYPE.CHANGE_COLOR_5, payload: hex }),
-  setSelectedColorProp: selected =>
-    dispatch({ type: TYPE.SET_SELECTED_COLOR_PROP, payload: selected }),
-  ChangeNexusLogoColor: (setting, hex) =>
-    dispatch({
-      type: TYPE.SET_NEXUS_LOGO_COLOR,
-      payload: { setting: setting, hex: hex },
-    }),
-  ChangeIconMenuColor: (setting, hex) =>
-    dispatch({
-      type: TYPE.SET_ICON_MENU_COLOR,
-      payload: { setting: setting, hex: hex },
-    }),
-  ChangeFooterColor: (setting, hex) =>
-    dispatch({
-      type: TYPE.SET_FOOTER_COLOR,
-      payload: { setting: setting, hex: hex },
-    }),
-  ChangeFooterHoverColor: (setting, hex) =>
-    dispatch({
-      type: TYPE.SET_FOOTER_HOVER_COLOR,
-      payload: { setting: setting, hex: hex },
-    }),
-  ChangeFooterActiveColor: (setting, hex) =>
-    dispatch({
-      type: TYPE.SET_FOOTER_ACTIVE_COLOR,
-      payload: { setting: setting, hex: hex },
-    }),
-  ChangePanelColor: rgb =>
-    dispatch({ type: TYPE.CHANGE_PANEL_COLOR, payload: rgb }),
-  ChangeGlobePillarColor: (setting, hex) =>
-    dispatch({ type: TYPE.CHANGE_GLOBE_PILLAR_COLOR, payload: { hex: hex } }),
-  ChangeGlobeArchColor: (setting, hex) =>
-    dispatch({ type: TYPE.CHANGE_GLOBE_ARCH_COLOR, payload: { hex: hex } }),
-  ChangeGlobeMultiColor: (setting, hex) =>
-    dispatch({ type: TYPE.CHANGE_GLOBE_MULTI_COLOR, payload: { hex: hex } }),
+  CustomizeStyling: hex =>
+    dispatch({ type: TYPE.CUSTOMIZE_STYLING, payload: hex }),
   ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
   ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER }),
 });
@@ -231,8 +192,24 @@ class SettingsStyle extends Component {
     googleanalytics.SendEvent('Settings', 'Style', 'Saved', 1);
   }
 
+  setColor = (key, value) => {
+    this.props.CustomizeStyling({
+      ...this.props.settings.customStyling,
+      [key]: value,
+    });
+  };
+
   // Mandatory React method
   render() {
+    const {
+      theme,
+      settings,
+      webGLEnabled,
+      ToggleGlobeRender,
+      CustomizeStyling,
+      ResetStyle,
+    } = this.props;
+
     return (
       <StyleSettings>
         <form>
@@ -250,7 +227,7 @@ class SettingsStyle extends Component {
                   id="ToolTip.RenderGlobe"
                   defaultMessage="Render the globe on the Overview page"
                 />
-                {!this.props.webGLEnabled && (
+                {!webGLEnabled && (
                   <div className="error">
                     <FormattedMessage
                       id="ToolTip.RenderGlobeOpenGLFail"
@@ -262,36 +239,36 @@ class SettingsStyle extends Component {
             }
           >
             <Switch
-              disabled={!this.props.webGLEnabled}
-              checked={this.props.settings.renderGlobe}
+              disabled={!webGLEnabled}
+              checked={settings.renderGlobe}
               onChange={() => {
-                this.props.ToggleGlobeRender();
+                ToggleGlobeRender();
                 this.updateRenderGlobe();
               }}
             />
           </SettingsField>
 
           <SettingsField label="Color scheme">
-            <Button>Reset to default</Button>
+            <Button onClick={this.props.ResetStyle}>Reset to default</Button>
           </SettingsField>
 
-          <SettingsField indent={1} label="Background Color">
-            <ColorPicker color={colors.dark} />
+          <SettingsField indent={1} label="Background color">
+            <ColorPicker colorName="dark" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Foreground Color">
-            <ColorPicker color={colors.light} />
+          <SettingsField indent={1} label="Foreground color">
+            <ColorPicker colorName="light" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Primary Color">
-            <ColorPicker color={colors.primary} />
+          <SettingsField indent={1} label="Primary color">
+            <ColorPicker colorName="primary" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Primary contrast Color">
-            <ColorPicker color={colors.primaryContrast} />
+          <SettingsField indent={1} label="Primary contrast color">
+            <ColorPicker colorName="primaryContrast" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Error Color">
-            <ColorPicker color={colors.error} />
+          <SettingsField indent={1} label="Error color">
+            <ColorPicker colorName="error" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Error contrast Color">
-            <ColorPicker color={colors.errorContrast} />
+          <SettingsField indent={1} label="Error contrast color">
+            <ColorPicker colorName="errorContrast" onChange={this.setColor} />
           </SettingsField>
 
           <div className="flex space-between" style={{ marginTop: '2em' }}>
