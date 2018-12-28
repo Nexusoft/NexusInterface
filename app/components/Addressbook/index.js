@@ -972,7 +972,7 @@ class AddressBook extends Component {
           <span className="tooltip">
             <FormattedMessage
               id="AddressBook.Copy"
-              defaultMessage="Click To Copy"
+              defaultMessage="Click Address To Copy"
             />
           </span>
         </div>

@@ -121,7 +121,10 @@ class Overview extends Component {
       require('../../api/settings.js').SaveSettings(this.props.settings);
     }
 
-    if (this.props.webGLEnabled == false || this.props.settings.renderGlobe == false) {
+    if (
+      this.props.webGLEnabled == false ||
+      this.props.settings.renderGlobe == false
+    ) {
       return;
     }
 
@@ -162,7 +165,7 @@ class Overview extends Component {
           this.props.connections !== undefined &&
           previousprops.connections !== undefined
         ) {
-            this.reDrawEverything();
+          this.reDrawEverything();
         }
       }
     }
@@ -471,7 +474,12 @@ class Overview extends Component {
           return ele;
         }
       });
-      return selectedCurrancyValue[0].changePct24Hr;
+      // return selectedCurrancyValue[0].changePct24Hr;
+      if (selectedCurrancyValue[0].changePct24Hr > 0) {
+        return `+ ${selectedCurrancyValue[0].changePct24Hr}`;
+      } else {
+        return `- ${selectedCurrancyValue[0].changePct24Hr}`;
+      }
     } else {
       return '0';
     }
