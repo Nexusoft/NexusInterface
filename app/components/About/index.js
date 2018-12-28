@@ -51,11 +51,11 @@ class About extends Component {
               <column>
                 <b>Interface Version:</b> {this.getInterfaceVersionNumber()}{' '}
                 <br />
-                <b>Build Date: </b> December 7th 2018 <br />
+                <b>Build Date: </b> December 27th 2018 <br />
               </column>
               <column>
                 <b>Daemon Version:</b> {this.getDeamonVersionNumber()} <br />
-                <b>Build Date: </b> December 7th 2018 <br />
+                <b>Build Date: </b> December 27th 2018 <br />
               </column>
             </row>
             <br />
