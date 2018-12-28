@@ -770,7 +770,7 @@ class SettingsApp extends Component {
                 type="text"
                 value={this.props.settings.Folder}
                 onChange={e => this.props.SeeFolder(e.target.value)}
-                onClick={e => {
+                onDoubleClick={e => {
                   e.preventDefault();
                   this.getFolder(this.props.settings.Folder[0]);
                 }}
