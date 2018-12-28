@@ -71,3 +71,11 @@ export function mix(color1, color2, value) {
     .mix(Color(color2), value)
     .string();
 }
+
+export function isLight(color) {
+  return Color(color).isLight();
+}
+
+export function isDark(color) {
+  return Color(color).isDark();
+}

@@ -1,20 +1,19 @@
 // External
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { ChromePicker } from 'react-color';
 import { FormattedMessage } from 'react-intl';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
-import styles from './style.css';
 import { GetSettings, SaveSettings } from 'api/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import UIContext from 'context/ui';
+import { colors } from 'styles';
+import ColorPicker from './ColorPicker';
 
 const StyleSettings = styled.div({
   maxWidth: 750,
@@ -270,6 +269,29 @@ class SettingsStyle extends Component {
                 this.updateRenderGlobe();
               }}
             />
+          </SettingsField>
+
+          <SettingsField label="Color scheme">
+            <Button>Reset to default</Button>
+          </SettingsField>
+
+          <SettingsField indent={1} label="Background Color">
+            <ColorPicker color={colors.dark} />
+          </SettingsField>
+          <SettingsField indent={1} label="Foreground Color">
+            <ColorPicker color={colors.light} />
+          </SettingsField>
+          <SettingsField indent={1} label="Primary Color">
+            <ColorPicker color={colors.primary} />
+          </SettingsField>
+          <SettingsField indent={1} label="Primary contrast Color">
+            <ColorPicker color={colors.primaryContrast} />
+          </SettingsField>
+          <SettingsField indent={1} label="Error Color">
+            <ColorPicker color={colors.error} />
+          </SettingsField>
+          <SettingsField indent={1} label="Error contrast Color">
+            <ColorPicker color={colors.errorContrast} />
           </SettingsField>
 
           <div className="flex space-between" style={{ marginTop: '2em' }}>

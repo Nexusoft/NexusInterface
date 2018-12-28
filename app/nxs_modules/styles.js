@@ -1,18 +1,25 @@
 import { css, keyframes } from '@emotion/core';
 import { color } from 'utils';
 
-export const colors = {};
-colors.primary = '#00b7fa';
-colors.primaryContrast = '#fff';
-colors.dark = '#1c1d1f';
-colors.light = '#ebebe6';
-colors.error = '#8f240e';
-colors.errorContrast = '#fff';
-colors.darkerGray = color.mix(colors.dark, colors.light, 0.125);
-colors.darkGray = color.mix(colors.dark, colors.light, 0.25);
-colors.gray = color.mix(colors.dark, colors.light);
-colors.lightGray = color.mix(colors.dark, colors.light, 0.75);
-colors.lighterGray = color.mix(colors.dark, colors.light, 0.875);
+const defaultColors = {
+  dark: '#1c1d1f',
+  light: '#ebebe6',
+  primary: '#00b7fa',
+  primaryContrast: '#ffffff',
+  error: '#8f240e',
+  errorContrast: '#ffffff',
+};
+
+function deriveColors(colors) {
+  colors.darkerGray = color.mix(colors.dark, colors.light, 0.125);
+  colors.darkGray = color.mix(colors.dark, colors.light, 0.25);
+  colors.gray = color.mix(colors.dark, colors.light);
+  colors.lightGray = color.mix(colors.dark, colors.light, 0.75);
+  colors.lighterGray = color.mix(colors.dark, colors.light, 0.875);
+  return colors;
+}
+
+export const colors = deriveColors({ ...defaultColors });
 
 export const consts = {
   monoFontFamily: '"Roboto Mono", "Lucida Console", "Courier New", monospace',

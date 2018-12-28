@@ -5,7 +5,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import electron from 'electron';
-import CustomProperties from 'react-custom-properties';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
@@ -412,25 +411,6 @@ class Header extends Component {
 
     return (
       <HeaderComponent>
-        <CustomProperties
-          global
-          properties={{
-            '--color-1': settings.customStyling.MC1,
-            '--color-2': settings.customStyling.MC2,
-            '--color-3': settings.customStyling.MC3,
-            '--color-4': settings.customStyling.MC4,
-            '--color-5': settings.customStyling.MC5,
-            '--nxs-logo': settings.customStyling.NXSlogo,
-            '--icon-menu': settings.customStyling.iconMenu,
-            '--footer': settings.customStyling.footer,
-            '--footer-hover': settings.customStyling.footerHover,
-            '--footer-active': settings.customStyling.footerActive,
-            '--background-main-image': `url('${settings.wallpaper}')`,
-            '--panel-background-color': settings.customStyling.pannelBack,
-            '--maxMind-copyright': settings.customStyling.maxMindCopyright,
-          }}
-        />
-
         <BootstrapModal {...this.props} />
 
         <LogoLink to="/">

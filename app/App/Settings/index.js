@@ -19,7 +19,7 @@ import styles from './style.css';
 import SettingsApp from './SettingsApp';
 import SettingsCore from './SettingsCore';
 import SettingsMarket from './SettingsMarket';
-import SettingsStyle from './SettingsStyle';
+import SettingsStyle from './Style';
 import Security from './Security/Security';
 import Login from './Security/Login';
 import Unencrypted from './Security/Unencrypted';
