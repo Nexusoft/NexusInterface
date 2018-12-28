@@ -170,6 +170,23 @@ const ButtonComponent = styled.button(
             color: theme.light,
           },
         };
+      case 'hyperlink':
+        return {
+          '&, &:active, &&[disabled]': {
+            display: 'inline',
+            padding: '.2em 0',
+            height: 'auto',
+            background: 'transparent',
+            borderBottomWidth: 1,
+            borderBottomStyle: 'solid',
+            borderRadius: 0,
+            color: theme.lightGray,
+            transitionProperty: 'color',
+          },
+          '&:hover': {
+            color: theme.light,
+          },
+        };
     }
   }
 );

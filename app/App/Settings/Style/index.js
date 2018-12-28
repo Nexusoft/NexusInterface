@@ -89,13 +89,20 @@ class SettingsStyle extends Component {
     });
   };
 
+  resetColors = () => {
+    this.props.ResetStyle();
+    this.context.showNotification(
+      'Color scheme has been reset to default',
+      'success'
+    );
+  };
+
   // Mandatory React method
   render() {
     const {
       settings,
       webGLEnabled,
       ToggleGlobeRender,
-      ResetStyle,
       SetWalpaper,
     } = this.props;
 
@@ -148,7 +155,9 @@ class SettingsStyle extends Component {
           </SettingsField>
 
           <SettingsField label="Color scheme">
-            <Button onClick={ResetStyle}>Reset to default</Button>
+            <Button skin="hyperlink" onClick={this.resetColors}>
+              Reset to default
+            </Button>
           </SettingsField>
 
           <SettingsField indent={1} label="Background color">

@@ -10,13 +10,15 @@ import Button from 'components/Button';
 import Overlay from 'components/Overlay';
 import { color } from 'utils';
 
-const ColorButton = styled(Button)(({ color: c }) => {
+const ColorButton = styled(Button)(({ color: c, open }) => {
   const contrastColor = color.isDark(c) ? '#fff' : '#000';
   return {
     '&, &:active, &&[disabled]': {
       background: c,
-      color: color.fade(contrastColor, 0.3),
-      border: `1px solid ${color.fade(contrastColor, 0.3)}`,
+      color: open ? contrastColor : color.fade(contrastColor, 0.3),
+      border: `1px solid ${
+        open ? contrastColor : color.fade(contrastColor, 0.3)
+      }`,
       transitionProperty: 'color, border-color',
     },
     '&:hover': {
@@ -62,6 +64,7 @@ class ColorPicker extends Component {
           }}
           uppercase
           color={currentColor}
+          open={this.state.open}
           onClick={this.openPicker}
           {...this.props}
         >
