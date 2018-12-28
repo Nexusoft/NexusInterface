@@ -596,6 +596,7 @@ class SettingsCore extends Component {
 
           <div style={{ display: this.state.manualDaemon ? 'block' : 'none' }}>
             <SettingsField
+              indent={1}
               connectLabel
               label={
                 <FormattedMessage
@@ -618,6 +619,7 @@ class SettingsCore extends Component {
             </SettingsField>
 
             <SettingsField
+              indent={1}
               connectLabel
               label={
                 <FormattedMessage
@@ -640,6 +642,7 @@ class SettingsCore extends Component {
             </SettingsField>
 
             <SettingsField
+              indent={1}
               connectLabel
               label={
                 <FormattedMessage
@@ -662,6 +665,7 @@ class SettingsCore extends Component {
             </SettingsField>
 
             <SettingsField
+              indent={1}
               connectLabel
               label={
                 <FormattedMessage id="Settings.Port" defaultMesage="Port" />
@@ -683,6 +687,7 @@ class SettingsCore extends Component {
 
           <div style={{ display: this.state.manualDaemon ? 'none' : 'block' }}>
             <SettingsField
+              indent={1}
               connectLabel
               label={
                 <FormattedMessage
@@ -703,6 +708,7 @@ class SettingsCore extends Component {
               />
             </SettingsField>
             <SettingsField
+              indent={1}
               connectLabel
               label={
                 <FormattedMessage
@@ -722,8 +728,10 @@ class SettingsCore extends Component {
                 onChange={this.updateSocks4Proxy.bind(this)}
               />
             </SettingsField>
+
             <div style={{ display: this.state.socks4Proxy ? 'block' : 'none' }}>
               <SettingsField
+                indent={2}
                 connectLabel
                 label={
                   <FormattedMessage
@@ -745,6 +753,7 @@ class SettingsCore extends Component {
                 />
               </SettingsField>
               <SettingsField
+                indent={2}
                 connectLabel
                 label={
                   <FormattedMessage
@@ -767,6 +776,7 @@ class SettingsCore extends Component {
               </SettingsField>
             </div>
             <SettingsField
+              indent={1}
               connectLabel
               label={
                 <FormattedMessage
@@ -787,6 +797,7 @@ class SettingsCore extends Component {
               />
             </SettingsField>
             <SettingsField
+              indent={1}
               connectLabel
               label={
                 <FormattedMessage

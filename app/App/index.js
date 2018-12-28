@@ -32,7 +32,7 @@ import Exchange from './Exchange';
 import StarrySky from './StarrySky';
 import UIController from './UIController';
 
-const App = styled.div({
+const AppWrapper = styled.div({
   position: 'fixed',
   top: 0,
   left: 0,
@@ -62,7 +62,7 @@ const AppLoader = styled.div({
   transform: 'translate(-50%,-50%)',
 });
 
-export default class Root extends Component {
+export default class App extends Component {
   render() {
     const { store, history } = this.props;
     return (
@@ -76,7 +76,7 @@ export default class Root extends Component {
                 <AppLoader>
                   <Loader />
                 </AppLoader>
-                <App>
+                <AppWrapper>
                   <Header />
                   <Main>
                     <Switch>
@@ -107,7 +107,7 @@ export default class Root extends Component {
                     </Switch>
                   </Main>
                   <Navigation />
-                </App>
+                </AppWrapper>
               </div>
             </UIController>
           </ConnectedRouter>

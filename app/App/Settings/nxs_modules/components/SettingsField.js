@@ -6,19 +6,30 @@ import styled from '@emotion/styled';
 import { newUID } from 'utils';
 import { colors } from 'styles';
 
-const Field = styled.div({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: '1em 0',
-  borderBottom: `1px solid ${colors.darkerGray}`,
-});
+const indentSpace = 20;
 
-const Label = styled.label({
-  position: 'relative',
-  paddingRight: '3em',
-  width: 400,
-});
+const Field = styled.div(
+  {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '1em 0',
+    borderBottom: `1px solid ${colors.darkerGray}`,
+  },
+  ({ indent = 0 }) => ({
+    marginLeft: indent * indentSpace,
+  })
+);
+
+const Label = styled.label(
+  {
+    position: 'relative',
+    paddingRight: '3em',
+  },
+  ({ indent = 0 }) => ({
+    width: 400 - indent * indentSpace,
+  })
+);
 
 const SubLabel = styled.div({
   color: colors.lightGray,
@@ -48,10 +59,20 @@ class SettingsField extends Component {
   };
 
   render() {
-    const { label, subLabel, connectLabel, children, ...rest } = this.props;
+    const {
+      label,
+      subLabel,
+      connectLabel,
+      children,
+      indent,
+      ...rest
+    } = this.props;
     return (
-      <Field {...rest}>
-        <Label htmlFor={connectLabel ? this.inputId : undefined}>
+      <Field indent={indent} {...rest}>
+        <Label
+          htmlFor={connectLabel ? this.inputId : undefined}
+          indent={indent}
+        >
           <div>{label}</div>
           {subLabel && <SubLabel>{subLabel}</SubLabel>}
         </Label>
