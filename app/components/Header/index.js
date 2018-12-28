@@ -28,6 +28,7 @@ import statBad from 'images/sync.svg';
 import stakeImg from 'images/staking.svg';
 import logoFull from 'images/logo-full-beta.svg';
 import { write, fstat, existsSync } from 'fs';
+import { join } from 'path';
 
 import { FormattedMessage } from 'react-intl';
 var tray = tray || null;
@@ -1149,7 +1150,7 @@ class Header extends Component {
       if (process.env.NODE_ENV === 'development') {
         defaultWallpaperPath = '~images/background/starrynight.jpg';
       } else {
-        defaultWallpaperPath = path.join(
+        defaultWallpaperPath = join(
           configuration.GetAppResourceDir(),
           'images',
           'background',
