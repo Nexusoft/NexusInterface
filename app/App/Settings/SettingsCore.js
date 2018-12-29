@@ -96,7 +96,8 @@ class SettingsCore extends Component {
       manualDaemonPassword: settings.manualDaemonPassword || 'password',
       manualDaemonIP: settings.manualDaemonIP || '127.0.0.1',
       manualDaemonPort: settings.manualDaemonPort || '9336',
-      manualDaemonDataDir: settings.manualDaemonDataDir || 'Nexus_Tritium_Data',
+      manualDaemonDataDir:
+        settings.manualDaemonDataDir || '.Nexus_Core_Data_BETA_v0.8.4',
       enableMining: !!settings.enableMining,
       enableStaking: !!settings.enableStaking,
       verboseLevel: settings.verboseLevel || '2',

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { timingSafeEqual } from 'crypto';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
+import fs from 'fs';
 
 // Internal Global Dependencies
 import * as RPC from 'scripts/rpc';
@@ -56,6 +57,7 @@ const OutputLine = styled.code(({ theme }) => ({
 class TerminalCore extends Component {
   constructor(props) {
     super(props);
+    this.debugFileLocation = '';
   }
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -72,6 +74,8 @@ class TerminalCore extends Component {
     } else {
       debugfile = datadir + '/debug.log';
     }
+    fs.watchFile(debugfile, (curr, prev) => {});
+    this.debugFileLocation = debugfile;
     this.processDeamonOutput(debugfile);
   }
 
@@ -80,6 +84,7 @@ class TerminalCore extends Component {
     if (this.tail != undefined) {
       this.tail.unwatch();
     }
+    fs.unwatchFile(this.debugFileLocation);
     clearInterval(this.printCoreOutputTimer);
   }
 
@@ -131,7 +136,7 @@ class TerminalCore extends Component {
                 }}
                 style={{ flexShrink: 0 }}
               >
-                {this.props.coreOutputPaused ? 'UnPause' : 'Pause'}
+                {this.props.coreOutputPaused ? 'Unpause' : 'Pause'}
               </Button>
             </>
           )}

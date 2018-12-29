@@ -28,9 +28,18 @@ const CustomWallpaper = styled.div(
 );
 
 class AppBackground extends Component {
+  wallpaperCheck() {
+    let pathCheck = false;
+    try {
+      pathCheck = existsSync(this.props.wallpaper);
+    } catch (e) {}
+
+    return pathCheck;
+  }
+
   render() {
     const { wallpaper } = this.props;
-    return !!wallpaper && existsSync(wallpaper) ? (
+    return !!wallpaper && this.wallpaperCheck(wallpaper) ? (
       <CustomWallpaper wallpaper={wallpaper} />
     ) : (
       <StarrySky />

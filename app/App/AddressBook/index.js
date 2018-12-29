@@ -924,7 +924,7 @@ class AddressBook extends Component {
         tooltip={
           <FormattedMessage
             id="AddressBook.Copy"
-            defaultMessage="Click To Copy"
+            defaultMessage="Click Address To Copy"
           />
         }
       >

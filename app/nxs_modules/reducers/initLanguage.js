@@ -150,7 +150,7 @@ export default {
     'AddressBook.Create': 'Create',
     'AddressBook.NameOption': 'Name (Optional)',
     'AddressBook.AddAddressTO': 'Add Address To',
-    'AddressBook.Copy': 'Click To Copy',
+    'AddressBook.Copy': 'Click Address To Copy',
     'AddressBook.Back': 'Back',
     'AddressBook.TheirAddresses': 'Their Addresses',
     'AddressBook.Address': 'Address',
