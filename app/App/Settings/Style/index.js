@@ -29,12 +29,6 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = dispatch => ({
-  setSettings: settings =>
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings }),
-  OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
-  },
-  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   SetWalpaper: path => dispatch({ type: TYPE.SET_WALLPAPER, payload: path }),
   CustomizeStyling: hex =>
     dispatch({ type: TYPE.CUSTOMIZE_STYLING, payload: hex }),
@@ -44,30 +38,6 @@ const mapDispatchToProps = dispatch => ({
 
 class SettingsStyle extends Component {
   static contextType = UIContext;
-
-  // Class Methods
-  constructor() {
-    super();
-
-    this.updateWallpaper = this.updateWallpaper.bind(this);
-  }
-
-  updateWallpaper(wallpaper) {
-    const el = event.target;
-    if (!el.files.length) return;
-
-    let imagePath = el.files[0].path;
-    if (process.platform === 'win32') {
-      imagePath = imagePath.replace(/\\/g, '/');
-    }
-    this.props.SetWalpaper(imagePath);
-  }
-
-  updateRenderGlobe() {
-    let settings = GetSettings();
-    settings.renderGlobe = !this.props.settings.renderGlobe;
-    SaveSettings(settings);
-  }
 
   SaveSettings() {
     SaveSettings(this.props.settings);
@@ -137,10 +107,7 @@ class SettingsStyle extends Component {
             <Switch
               disabled={!webGLEnabled}
               checked={settings.renderGlobe}
-              onChange={() => {
-                ToggleGlobeRender();
-                this.updateRenderGlobe();
-              }}
+              onChange={ToggleGlobeRender}
             />
           </SettingsField>
 

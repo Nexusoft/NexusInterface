@@ -218,6 +218,7 @@ class SettingsApp extends Component {
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {
+    // Why?
     this.props.setSettings(GetSettings());
   }
 
