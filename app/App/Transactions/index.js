@@ -1,10 +1,9 @@
 // External
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { remote } from 'electron';
-import Request from 'request';
 import { Promise } from 'bluebird-lst';
 import fs from 'fs';
 import Modal from 'react-responsive-modal';
@@ -44,6 +43,8 @@ import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import config from 'api/configuration';
+import UIContext from 'context/ui';
+import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 
 // Images
@@ -168,9 +169,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Transactions extends Component {
-  static contextTypes = {
-    router: PropTypes.object,
-  };
+  static contextType = UIContext;
+
   constructor(props) {
     super(props);
     this.copyRef = element => {
@@ -453,6 +453,14 @@ class Transactions extends Component {
     }
   }
 
+  openTxDetailsModal = () => {
+    this.context.openModal(TransactionDetailsModal, {
+      hoveringID: this.hoveringID,
+      walletItems: this.props.walletitems,
+      settings: this.props.settings,
+    });
+  };
+
   // This is the method that is called when the user pressed the right click
   // Input:
   //   e || Event || Default Events given by the system for right click
@@ -466,37 +474,12 @@ class Transactions extends Component {
     //create new custom
     let transactiontablecontextmenu = new remote.Menu();
 
-    //Creates the action that happens when you click
-    let moreDatailsCallback = function() {
-      this.setState({
-        highlightedBlockHash: 'Loading',
-        highlightedBlockNum: 'Loading',
-        open: true,
-      });
-
-      if (this.props.walletitems[this.hoveringID].confirmations != 0) {
-        RPC.PROMISE('gettransaction', [
-          this.props.walletitems[this.hoveringID].txid,
-        ]).then(payload => {
-          RPC.PROMISE('getblock', [payload.blockhash]).then(payload2 => {
-            this.setState({
-              highlightedBlockHash: payload.blockhash,
-              highlightedBlockNum: payload2.height,
-            });
-          });
-        });
-      }
-    };
-    moreDatailsCallback = moreDatailsCallback.bind(this);
-
     // Build out the context menu
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
         label: this.props.messages['transactions.MoreDetails'],
-        click() {
-          moreDatailsCallback();
-        },
+        click: this.openTxDetailsModal,
       })
     );
 
@@ -562,7 +545,7 @@ class Transactions extends Component {
         account: this.state.walletTransactions[this.hoveringID].account,
         amount: this.state.walletTransactions[this.hoveringID].amount,
       });
-      this.context.router.history.push('/SendPage');
+      this.props.history.push('/SendPage');
     };
     //sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
 
@@ -570,7 +553,7 @@ class Transactions extends Component {
       this.props.SetExploreInfo({
         transactionId: this.state.walletTransactions[this.hoveringID].txid,
       });
-      this.context.router.history.push('/BlockExplorer');
+      this.props.history.push('/BlockExplorer');
     };
 
     //sendtoBlockExplorercallback = sendtoBlockExplorercallback.bind(this);
@@ -1458,123 +1441,6 @@ class Transactions extends Component {
     }
   }
 
-  // Fired when you attempt to open the modal
-  onOpenModal() {
-    this.setState({ open: true });
-  }
-
-  // Fired when you attempt to open the modal
-  onCloseModal() {
-    this.setState({ open: false });
-  }
-
-  returnModalInternal() {
-    let internalString = [];
-    if (this.hoveringID != 999999999999 && this.props.walletitems.length != 0) {
-      const selectedTransaction = this.props.walletitems[this.hoveringID];
-      if (selectedTransaction === undefined) {
-        return;
-      }
-      if (
-        selectedTransaction.confirmations <=
-        this.props.settings.minimumconfirmations
-      ) {
-        internalString.push(
-          <a key="isPending">
-            <FormattedMessage
-              id="transactions.PendingTransaction"
-              defaultMessage="PENDING TRANSACTION"
-            />
-          </a>
-        );
-        internalString.push(<br key="br10" />);
-      }
-
-      internalString.push(
-        <div key="modal_amount" className="detailCat">
-          <FormattedMessage id="transactions.AMOUNT" defaultMessage="Amount" />
-          <span className="TXdetails">{selectedTransaction.amount}</span>
-        </div>
-      );
-      internalString.push(<br key="br2" />);
-      if (selectedTransaction.category == 'debit') {
-        internalString.push(
-          <div key="modal_fee" className="detailCat">
-            <FormattedMessage id="transactions.fee" defaultMessage="Fee" />:
-            <span className="TXdetails">{+selectedTransaction.fee}</span>
-          </div>
-        );
-        internalString.push(<br key="br11" />);
-      }
-      internalString.push(
-        <div key="modal_time" className="detailCat">
-          <FormattedMessage id="transactions.TIME" defaultMessage="Time" />
-          <span className="TXdetails">
-            {new Date(selectedTransaction.time * 1000).toLocaleString(
-              this.props.settings.locale
-            )}
-          </span>
-        </div>
-      );
-      internalString.push(<br key="br3" />);
-      internalString.push(
-        <div key="modal_Account" className="detailCat">
-          <FormattedMessage id="AddressBook.Account" defaultMessage="Account" />
-          :<span className="TXdetails">{selectedTransaction.account}</span>
-        </div>
-      );
-      internalString.push(<br key="br4" />);
-      internalString.push(
-        <div key="modal_Confirms" className="detailCat">
-          <FormattedMessage
-            id="transactions.confirmations"
-            defaultMessage="Confirmations"
-          />
-          :
-          <span className="TXdetails">{selectedTransaction.confirmations}</span>
-        </div>
-      );
-      internalString.push(<br key="br15" />);
-      internalString.push(
-        <div key="modal_TXID">
-          <FormattedMessage
-            id="transactions.modalTxID"
-            defaultMessage="Transaction ID"
-          />
-          :
-          <div className="blockHash" style={{ wordWrap: 'break-word' }}>
-            <span>{selectedTransaction.txid}</span>
-          </div>
-        </div>
-      );
-      internalString.push(<br key="br6" />);
-      internalString.push(
-        <div key="modal_BlockNumber" className="detailCat">
-          <FormattedMessage
-            id="transactions.blocknumber"
-            defaultMessage="Block Number"
-          />
-          :<span className="TXdetails">{this.state.highlightedBlockNum}</span>
-        </div>
-      );
-      internalString.push(<br key="br5" />);
-      internalString.push(
-        <div key="modal_BlockHash">
-          <FormattedMessage
-            id="transactions.blockhash"
-            defaultMessage="Block Hash"
-          />
-          :
-          <div className="blockHash" style={{ wordWrap: 'break-word' }}>
-            <span>{this.state.highlightedBlockHash}</span>
-          </div>
-        </div>
-      );
-    }
-
-    return internalString;
-  }
-
   returnDefaultPageSize() {
     let defPagesize = 10;
     if (this.props.walletitems != undefined) {
@@ -1724,16 +1590,6 @@ class Transactions extends Component {
           />
         }
       >
-        <Modal
-          open={open}
-          onClose={this.onCloseModal.bind(this)}
-          center
-          classNames={{ modal: 'modal' }}
-        >
-          <h2 style={{ textAlign: 'center' }} />
-          {this.returnModalInternal()}
-        </Modal>
-
         {this.props.connections === undefined ? (
           <WaitingMessage>
             <FormattedMessage
@@ -1868,7 +1724,9 @@ class CustomTooltip extends React.Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Transactions);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Transactions)
+);

@@ -1,21 +1,15 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { remote } from 'electron';
-import { access } from 'fs';
 import { connect } from 'react-redux';
-import Modal from 'react-responsive-modal';
 import { FormattedMessage } from 'react-intl';
-import * as FlagFile from 'images/LanguageFlags';
 import styled from '@emotion/styled';
 
 // Internal Dependencies
 import { GetSettings, SaveSettings } from 'api/settings.js';
-import styles from './style.css';
 import core from 'api/core';
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
-import ContextMenuBuilder from 'contextmenu';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -349,166 +343,6 @@ class SettingsCore extends Component {
   render() {
     return (
       <CoreSettings>
-        <Modal
-          center
-          classNames={{ modal: 'custom-modal5' }}
-          showCloseIcon={true}
-          open={this.props.openThirdModal}
-          onClose={this.props.CloseModal3}
-        >
-          <ul className="langList">
-            {/* ENGLISH */}
-            <li className="LanguageTranslation">
-              &emsp;
-              <input
-                id="English"
-                name="radio-group"
-                type="radio"
-                value="en"
-                checked={this.props.settings.locale === 'en'}
-                onClick={() => this.changeLocale('en')}
-              />
-              // onChange={e => this.changeLocale(e.target.value)}
-              &emsp;
-              <FormattedMessage id="Lang.English" defaultMessage="English" />
-              &emsp; &emsp; &emsp;
-              <span className="langTag">
-                <img src={FlagFile.America} />
-                (English, US) &emsp;
-              </span>
-            </li>
-
-            {/* RUSSIAN */}
-            <li className="LanguageTranslation">
-              &emsp;
-              <input
-                id="Russian"
-                name="radio-group"
-                type="radio"
-                value="ru"
-                checked={this.props.settings.locale === 'ru'}
-                onClick={() => this.changeLocale('ru')}
-              />
-              &emsp;
-              <FormattedMessage id="Lang.Russian" defaultMessage="Russian" />
-              &emsp; &emsp; &emsp;
-              <span className="langTag">
-                <img src={FlagFile.Russia} />
-                (Pусский) &emsp;
-              </span>
-            </li>
-
-            {/* SPANISH */}
-            <li className="LanguageTranslation">
-              &emsp;
-              <input
-                id="Spanish"
-                name="radio-group"
-                type="radio"
-                value="es"
-                checked={this.props.settings.locale === 'es'}
-                onClick={() => this.changeLocale('es')}
-              />
-              &emsp;
-              <FormattedMessage id="Lang.Spanish" defaultMessage="Spanish" />
-              &emsp; &emsp; &emsp;
-              <span className="langTag">
-                <img src={FlagFile.Spain} />
-                (Español) &emsp;
-              </span>
-            </li>
-
-            {/* KOREAN */}
-            <li className="LanguageTranslation">
-              &emsp;
-              <input
-                id="Korean"
-                name="radio-group"
-                type="radio"
-                value="ko"
-                checked={this.props.settings.locale === 'ko'}
-                onClick={() => this.changeLocale('ko')}
-              />
-              &emsp;
-              <FormattedMessage id="Lang.Korean" defaultMessage="Korean" />
-              &emsp; &emsp; &emsp;
-              <span className="langTag">
-                <img src={FlagFile.Korea} />
-                (한국어) &emsp;
-              </span>
-            </li>
-
-            {/* GERMAN */}
-            <li className="LanguageTranslation">
-              &emsp;
-              <input
-                id="German"
-                name="radio-group"
-                type="radio"
-                value="de"
-                checked={this.props.settings.locale === 'de'}
-                onClick={() => this.changeLocale('de')}
-              />
-              &emsp;
-              <FormattedMessage id="Lang.German" defaultMessage="German" />
-              &emsp; &emsp; &emsp;
-              <span className="langTag">
-                <img src={FlagFile.Germany} />
-                (Deutsch) &emsp;
-              </span>
-            </li>
-
-            {/* JAPANESE */}
-            <li className="LanguageTranslation">
-              &emsp;
-              <input
-                id="Japanese"
-                name="radio-group"
-                type="radio"
-                value="ja"
-                checked={this.props.settings.locale === 'ja'}
-                onClick={() => this.changeLocale('ja')}
-              />
-              &emsp;
-              <FormattedMessage id="Lang.Japanese" defaultMessage="Japanese" />
-              &emsp; &emsp; &emsp;
-              <span className="langTag">
-                <img src={FlagFile.Japan} />
-                (日本人) &emsp;
-              </span>
-            </li>
-
-            {/* FRENCH */}
-            <li className="LanguageTranslation">
-              &emsp;
-              <input
-                id="French"
-                name="radio-group"
-                type="radio"
-                value="fr"
-                checked={this.props.settings.locale === 'fr'}
-                onClick={() => this.changeLocale('fr')}
-              />
-              &emsp;
-              <FormattedMessage id="Lang.French" defaultMessage="French" />
-              &emsp; &emsp; &emsp;
-              <span className="langTag">
-                <img src={FlagFile.France} />
-                (Français) &emsp;
-              </span>
-            </li>
-          </ul>
-          <div className="langsetter">
-            {/* <button
-              type="button"
-              className="feebutton"
-              onClick={() => this.props.SwitchLocale()}
-            >
-              <FormattedMessage id="Settings.Set" defaultMesage="Set" />
-            </button> */}
-          </div>
-        </Modal>
-
         <form>
           <SettingsField
             connectLabel

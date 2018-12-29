@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import config from 'api/configuration';
 import path from 'path';
-import Modal from 'react-responsive-modal';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import fs from 'fs';
