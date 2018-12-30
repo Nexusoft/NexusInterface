@@ -6,7 +6,6 @@ import { withRouter } from 'react-router';
 import { remote } from 'electron';
 import { Promise } from 'bluebird-lst';
 import fs from 'fs';
-import Modal from 'react-responsive-modal';
 import {
   VictoryBar,
   VictoryChart,
