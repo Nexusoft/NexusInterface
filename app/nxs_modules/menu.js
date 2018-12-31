@@ -1,11 +1,8 @@
 import { app, Menu, shell, BrowserWindow, remote } from 'electron';
-import log from 'electron-log';
 import fs from 'fs';
 import * as RPC from 'scripts/rpc';
-import { callbackify } from 'util';
 import { GetSettings, SaveSettings } from 'api/settings';
 import core from 'api/core';
-import configuration from 'api/configuration';
 
 export default class MenuBuilder {
   constructor() {
