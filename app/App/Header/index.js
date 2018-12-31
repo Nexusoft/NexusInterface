@@ -8,10 +8,8 @@ import electron from 'electron';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
-import MenuBuilder from 'menu';
 import * as RPC from 'scripts/rpc';
 import * as actionsCreators from 'actions/headerActionCreators';
-import { GetSettings, SaveSettings } from 'api/settings';
 import configuration from 'api/configuration';
 import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
@@ -95,10 +93,6 @@ const UnderHeader = styled.div(({ theme }) => ({
   color: theme.light,
 }));
 
-var tray = tray || null;
-let mainWindow = electron.remote.getCurrentWindow();
-var checkportinterval; // shouldbemoved
-
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
@@ -112,44 +106,6 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
-  // React Method (Life cycle hook)
-  componentDidMount() {
-    var self = this;
-    const menuBuilder = new MenuBuilder(electron.remote.getCurrentWindow().id);
-    menuBuilder.buildMenu(self);
-
-    if (tray === null) this.setupTray(self);
-    let settings = GetSettings();
-
-    if (Object.keys(settings).length < 1) {
-      SaveSettings({ ...this.props.settings, keepDaemon: false });
-      this.props.SwitchMessages(this.props.settings.locale);
-    } else {
-      this.props.SwitchMessages(settings.locale);
-      this.props.setSettings(settings);
-    }
-
-    mainWindow.on('close', e => {
-      e.preventDefault();
-      this.props.clearOverviewVariables();
-      UIController.showNotification('Closing Nexus...');
-    });
-
-    this.props.SetMarketAveData();
-    this.props.LoadAddressBook();
-    this.props.GetInfoDump();
-
-    self.set = setInterval(function() {
-      self.props.AddRPCCall('getInfo');
-      self.props.GetInfoDump();
-    }, 20000);
-    const core = electron.remote.getGlobal('core');
-    this.props.SetMarketAveData();
-    self.mktData = setInterval(function() {
-      console.log('MARKET');
-      self.props.SetMarketAveData();
-    }, 900000);
-  }
   // React Method (Life cycle hook)
   componentWillReceiveProps(nextProps) {
     if (nextProps.unlocked_until === undefined) {
@@ -312,95 +268,6 @@ class Header extends Component {
         body: message,
       });
     });
-  }
-
-  setupTray(self) {
-    console.log(self);
-    let trayImage = '';
-    let mainWindow = electron.remote.getCurrentWindow();
-    console.log(this);
-    const path = require('path');
-    const app = electron.app || electron.remote.app;
-
-    if (process.env.NODE_ENV === 'development') {
-      if (process.platform == 'darwin') {
-        trayImage = path.join(
-          __dirname,
-          'images',
-          'tray',
-          'Nexus_Tray_Icon_Template_16.png'
-        );
-      } else {
-        trayImage = path.join(
-          __dirname,
-          'images',
-          'tray',
-          'Nexus_Tray_Icon_32.png'
-        );
-      }
-    } else {
-      if (process.platform == 'darwin') {
-        trayImage = path.join(
-          configuration.GetAppResourceDir(),
-          'images',
-          'tray',
-          'Nexus_Tray_Icon_Template_16.png'
-        );
-      } else {
-        trayImage = path.join(
-          configuration.GetAppResourceDir(),
-          'images',
-          'tray',
-          'Nexus_Tray_Icon_32.png'
-        );
-      }
-    }
-
-    tray = new electron.remote.Tray(trayImage);
-
-    if (process.env.NODE_ENV === 'development') {
-      if (process.platform == 'darwin') {
-        tray.setPressedImage(
-          path.join(
-            __dirname,
-            'images',
-            'tray',
-            'Nexus_Tray_Icon_Highlight_16.png'
-          )
-        );
-      }
-    } else {
-      tray.setPressedImage(
-        path.join(
-          configuration.GetAppResourceDir(),
-          'images',
-          'tray',
-          'Nexus_Tray_Icon_Highlight_16.png'
-        )
-      );
-    }
-    tray.on('double-click', () => {
-      mainWindow.show();
-    });
-
-    var contextMenu = electron.remote.Menu.buildFromTemplate([
-      {
-        label: 'Show Nexus',
-        click: function() {
-          mainWindow.show();
-        },
-      },
-      {
-        label: 'Quit Nexus',
-        click() {
-          self.props.clearOverviewVariables();
-          self.context.showNotification('Closing Nexus...');
-          mainWindow.close();
-        },
-      },
-    ]);
-
-    tray.setContextMenu(contextMenu);
   }
 
   // Mandatory React method

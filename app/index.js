@@ -3,10 +3,12 @@ import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import App from './App';
 import { configureStore, history } from './store/configureStore';
-import { GetSettings } from 'api/settings';
+import setupApp from './setupApp';
 import './CSS/app.global.css';
 
 const store = configureStore();
+
+setupApp(store, history);
 
 function renderApp(Component) {
   render(

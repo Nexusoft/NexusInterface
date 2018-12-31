@@ -4,18 +4,21 @@ import * as RPC from 'scripts/rpc';
 import { GetSettings, SaveSettings } from 'api/settings';
 import core from 'api/core';
 
+import UIController from 'components/UIController';
+import * as ac from 'actions/headerActionCreators';
+
 export default class MenuBuilder {
   constructor() {
     this.mainWindow = remote.getCurrentWindow();
   }
 
-  buildMenu(self) {
+  buildMenu(store, history) {
     let template;
 
     if (process.platform === 'darwin') {
-      template = this.buildDarwinTemplate(self);
+      template = this.buildDarwinTemplate(store, history);
     } else {
-      template = this.buildDefaultTemplate(self);
+      template = this.buildDefaultTemplate(store, history);
     }
 
     const menu = remote.Menu.buildFromTemplate(template);
@@ -41,7 +44,7 @@ export default class MenuBuilder {
     });
   }
 
-  buildDarwinTemplate(self) {
+  buildDarwinTemplate(store, history) {
     const subMenuAbout = {
       label: 'Nexus',
       submenu: [
@@ -64,7 +67,7 @@ export default class MenuBuilder {
                 });
             } else {
               RPC.PROMISE('stop', []).then(() => {
-                self.props.clearOverviewVariables();
+                store.dispatch(ac.clearOverviewVariables());
               });
             }
           },
@@ -76,15 +79,15 @@ export default class MenuBuilder {
           label: 'Quit Nexus',
           accelerator: 'CmdOrCtrl+Q',
           click() {
-            self.props.clearOverviewVariables();
-            self.context.showNotification('Closing Nexus');
+            store.dispatch(ac.clearOverviewVariables());
+            UIController.showNotification('Closing Nexus');
             remote.getCurrentWindow().close();
           },
         },
         {
           label: 'About',
           click() {
-            self.props.history.push('/About');
+            history.push('/About');
           },
         },
       ],
@@ -108,17 +111,18 @@ export default class MenuBuilder {
               BackupDir = app.getPath('documents') + '/NexusBackups';
               BackupDir = BackupDir.replace(/\\/g, '/');
             }
-            if (self.props.settings.Folder !== BackupDir) {
-              BackupDir = self.props.settings.Folder;
+            const state = store.getState();
+            if (state.settings.settings.Folder !== BackupDir) {
+              BackupDir = state.settings.settings.Folder;
             }
             let ifBackupDirExists = fs.existsSync(BackupDir);
-            if (ifBackupDirExists == undefined || ifBackupDirExists == false) {
+            if (!ifBackupDirExists) {
               fs.mkdirSync(BackupDir);
             }
             RPC.PROMISE('backupwallet', [
               BackupDir + '/NexusBackup_' + now + '.dat',
             ]).then(() => {
-              self.context.showNotification('Wallet Backup');
+              UIController.showNotification('Wallet Backup');
             });
           },
         },
@@ -166,29 +170,30 @@ export default class MenuBuilder {
         {
           label: 'Core',
           click() {
-            self.props.history.push('/Settings/Core');
+            history.push('/Settings/Core');
           },
         },
         {
           label: 'Application',
           click() {
-            self.props.history.push('/Settings/App');
+            history.push('/Settings/App');
           },
         },
         {
           label: 'Key Management',
           click() {
-            if (self.props.unlocked_until !== undefined) {
-              self.props.history.push('/Settings/Security');
+            const state = store.getState();
+            if (state.common.unlocked_until !== undefined) {
+              history.push('/Settings/Security');
             } else {
-              self.props.history.push('/Settings/Unencrypted');
+              history.push('/Settings/Unencrypted');
             }
           },
         },
         {
           label: 'Style',
           click() {
-            self.props.history.push('/Settings/Style');
+            history.push('/Settings/Style');
           },
         },
         {
@@ -197,14 +202,14 @@ export default class MenuBuilder {
         {
           label: 'Download Recent Database',
           click() {
+            const state = store.getState();
             if (
-              self.props.connections !== undefined &&
+              state.common.connections !== undefined &&
               !GetSettings().manualDaemon
             ) {
-              self.props.OpenBootstrapModal(true);
-              //configuration.BootstrapRecentDatabase(self);
+              store.dispatch(ac.OpenBootstrapModal(true));
             } else {
-              self.context.showNotification('Please let the daemon start.');
+              UIController.showNotification('Please let the daemon start.');
             }
           },
         },
@@ -239,7 +244,7 @@ export default class MenuBuilder {
         // {
         //   label: 'About',
         //   click() {
-        //     self.props.history.push('/About');
+        //     history.push('/About');
         //   },
         // },
 
@@ -268,7 +273,7 @@ export default class MenuBuilder {
     ];
   }
 
-  buildDefaultTemplate(self) {
+  buildDefaultTemplate(store, history) {
     const templateDefault = [
       {
         label: '&File',
@@ -290,8 +295,9 @@ export default class MenuBuilder {
                 BackupDir = process.env.USERPROFILE + '/NexusBackups';
                 BackupDir = BackupDir.replace(/\\/g, '/');
               }
-              if (self.props.settings.Folder !== BackupDir) {
-                BackupDir = self.props.settings.Folder;
+              const state = store.getState();
+              if (state.settings.settings.Folder !== BackupDir) {
+                BackupDir = state.settings.settings.Folder;
               }
               let ifBackupDirExists = fs.existsSync(BackupDir);
               if (
@@ -303,7 +309,7 @@ export default class MenuBuilder {
               RPC.PROMISE('backupwallet', [
                 BackupDir + '/NexusBackup_' + now + '.dat',
               ]).then(() => {
-                self.context.showNotification('Wallet Backup');
+                UIController.showNotification('Wallet Backup');
               });
             },
           },
@@ -343,7 +349,7 @@ export default class MenuBuilder {
                 .getGlobal('core')
                 .stop()
                 .then(payload => {
-                  self.props.clearOverviewVariables();
+                  store.dispatch(ac.clearOverviewVariables());
                 });
             },
           },
@@ -353,8 +359,8 @@ export default class MenuBuilder {
           {
             label: 'Quit Nexus',
             click() {
-              self.props.clearOverviewVariables();
-              self.context.showNotification('Closing Nexus');
+              store.dispatch(ac.clearOverviewVariables());
+              UIController.showNotification('Closing Nexus');
               remote.getCurrentWindow().close();
             },
           },
@@ -367,29 +373,30 @@ export default class MenuBuilder {
           {
             label: 'Core',
             click() {
-              self.props.history.push('/Settings/Core');
+              history.push('/Settings/Core');
             },
           },
           {
             label: 'Application',
             click() {
-              self.props.history.push('/Settings/App');
+              history.push('/Settings/App');
             },
           },
           {
             label: 'Key Management',
             click() {
-              if (self.props.unlocked_until !== undefined) {
-                self.props.history.push('/Settings/Security');
+              const state = store.getState();
+              if (state.common.unlocked_until !== undefined) {
+                history.push('/Settings/Security');
               } else {
-                self.props.history.push('/Settings/Unencrypted');
+                history.push('/Settings/Unencrypted');
               }
             },
           },
           {
             label: 'Style',
             click() {
-              self.props.history.push('/Settings/Style');
+              history.push('/Settings/Style');
             },
           },
           {
@@ -398,14 +405,14 @@ export default class MenuBuilder {
           {
             label: 'Download Recent Database',
             click() {
+              const state = store.getState();
               if (
-                self.props.connections !== undefined &&
+                state.common.connections !== undefined &&
                 !GetSettings().manualDaemon
               ) {
-                self.props.OpenBootstrapModal(true);
-                //configuration.BootstrapRecentDatabase(self);
+                store.dispatch(ac.OpenBootstrapModal(true));
               } else {
-                self.context.showNotification('Please let the daemon start.');
+                UIController.showNotification('Please let the daemon start.');
               }
             },
           },
@@ -441,7 +448,7 @@ export default class MenuBuilder {
           {
             label: 'About',
             click() {
-              self.props.history.push('/About');
+              history.push('/About');
             },
           },
           {
