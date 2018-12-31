@@ -42,7 +42,7 @@ import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import config from 'api/configuration';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 
@@ -168,8 +168,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Transactions extends Component {
-  static contextType = UIContext;
-
   constructor(props) {
     super(props);
     this.copyRef = element => {
@@ -453,7 +451,7 @@ class Transactions extends Component {
   }
 
   openTxDetailsModal = () => {
-    this.context.openModal(TransactionDetailsModal, {
+    UIController.openModal(TransactionDetailsModal, {
       hoveringID: this.hoveringID,
       walletItems: this.props.walletitems,
       settings: this.props.settings,

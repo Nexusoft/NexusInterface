@@ -13,7 +13,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 const LoginFieldSet = styled(FieldSet)({
   maxWidth: 400,
@@ -55,8 +55,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Login extends Component {
-  static contextType = UIContext;
-
   state = {
     password: '',
   };
@@ -108,7 +106,7 @@ class Login extends Component {
           password = '';
           if (e === 'Error: The wallet passphrase entered was incorrect.') {
             this.props.busy(false);
-            this.context.openErrorModal({
+            UIController.openErrorModal({
               message: (
                 <FormattedMessage
                   id="Alert.IncorrectPasssword"
@@ -119,7 +117,7 @@ class Login extends Component {
             // this.passwordRef.focus();
           } else if (e === 'value is type null, expected int') {
             this.props.busy(false);
-            this.context.showNotification(
+            UIController.showNotification(
               <FormattedMessage
                 id="Alert.FutureDate"
                 defaultMessage="Unlock until date/time must be at least an hour in the future"
@@ -128,7 +126,7 @@ class Login extends Component {
             );
             this.passwordRef.focus();
           } else {
-            this.context.openErrorModal({ message: e });
+            UIController.openErrorModal({ message: e });
           }
         });
     } else {
@@ -150,7 +148,7 @@ class Login extends Component {
             password = '';
             if (e === 'Error: The wallet passphrase entered was incorrect.') {
               this.props.busy(false);
-              this.context.openErrorModal({
+              UIController.openErrorModal({
                 message: (
                   <FormattedMessage
                     id="Alert.IncorrectPasssword"
@@ -161,7 +159,7 @@ class Login extends Component {
               this.passwordRef.focus();
             } else if (e === 'value is type null, expected int') {
               this.props.busy(false);
-              this.context.showNotification(
+              UIController.showNotification(
                 <FormattedMessage
                   id="Alert.FutureDate"
                   defaultMessage="Unlock until date/time must be at least an hour in the future"
@@ -170,11 +168,11 @@ class Login extends Component {
               );
               this.passwordRef.focus();
             } else {
-              this.context.openErrorModal({ message: e });
+              UIController.openErrorModal({ message: e });
             }
           });
       } else {
-        this.context.showNotification(
+        UIController.showNotification(
           <FormattedMessage
             id="Alert.FutureDate"
             defaultMessage="Unlock until date/time must be at least an hour in the future"

@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Modal from 'components/Modal';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 import trashimg from 'images/trash.svg';
 
 const QueueComponent = styled.div(({ theme }) => ({
@@ -31,10 +31,8 @@ const QueueSummary = styled.div({
 });
 
 class QueueBody extends Component {
-  static contextType = UIContext;
-
   confirmRemove = key => {
-    this.context.openConfirmModal({
+    UIController.openConfirmModal({
       question: (
         <FormattedMessage
           id="sendReceive.RemoveFromQueue"
@@ -78,8 +76,6 @@ class QueueBody extends Component {
 }
 
 export default class Queue extends Component {
-  static contextType = UIContext;
-
   addAmount() {
     let keyCheck = Object.keys(this.props.Queue);
     if (keyCheck.length > 0) {
@@ -111,7 +107,7 @@ export default class Queue extends Component {
   }
 
   confirmClearQueue = () => {
-    this.context.openConfirmModal({
+    UIController.openConfirmModal({
       question: (
         <FormattedMessage
           id="sendReceive.ClearQueue"
@@ -134,7 +130,7 @@ export default class Queue extends Component {
           this.props.Message
         )
           .then(payoad => {
-            this.context.showNotification(
+            UIController.showNotification(
               <FormattedMessage
                 id="Alert.Sent"
                 defaultMessage="Transaction Sent"
@@ -148,7 +144,7 @@ export default class Queue extends Component {
           })
           .catch(e => {
             this.props.busy();
-            this.context.openErrorModal({ message: e });
+            UIController.openErrorModal({ message: e });
           });
       } else if (Object.values(this.props.Queue)[0] > 0) {
         if (this.props.Message) {
@@ -161,7 +157,7 @@ export default class Queue extends Component {
           ])
             .then(payload => {
               this.props.getAccountData();
-              this.context.showNotification(
+              UIController.showNotification(
                 <FormattedMessage
                   id="Alert.Sent"
                   defaultMessage="Transaction Sent"
@@ -175,7 +171,7 @@ export default class Queue extends Component {
             .catch(e => {
               console.log(e);
               this.props.busy();
-              this.context.openErrorModal({ message: e });
+              UIController.openErrorModal({ message: e });
             });
         } else {
           RPC.PROMISE('sendfrom', [
@@ -186,7 +182,7 @@ export default class Queue extends Component {
           ])
             .then(payoad => {
               this.props.getAccountData();
-              this.context.showNotification(
+              UIController.showNotification(
                 <FormattedMessage
                   id="Alert.Sent"
                   defaultMessage="Transaction Sent"
@@ -200,12 +196,12 @@ export default class Queue extends Component {
             .catch(e => {
               console.log(e);
               this.props.busy();
-              this.context.openErrorModal({ message: e });
+              UIController.openErrorModal({ message: e });
             });
         }
       }
     } else {
-      this.context.openErrorModal({ message: 'No Account Selected' });
+      UIController.openErrorModal({ message: 'No Account Selected' });
     }
   }
 
@@ -213,11 +209,11 @@ export default class Queue extends Component {
     const { Queue, encrypted, loggedIn } = this.props;
 
     if (encrypted && !loggedIn) {
-      this.context.openErrorModal('Wallet Locked');
+      UIController.openErrorModal('Wallet Locked');
       return;
     }
     if (Object.keys(Queue).length === 0) {
-      this.context.openErrorModal({
+      UIController.openErrorModal({
         message: (
           <FormattedMessage
             id="Alert.QueueEmpty"
@@ -228,7 +224,7 @@ export default class Queue extends Component {
       return;
     }
 
-    this.context.openConfirmModal({
+    UIController.openConfirmModal({
       question: (
         <div>
           <FormattedMessage

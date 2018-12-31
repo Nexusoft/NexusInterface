@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import * as TYPE from 'actions/actiontypes';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -21,11 +21,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsMarket extends Component {
-  static contextType = UIContext;
-
   // Class methods
   feedback() {
-    this.context.showNotification(
+    UIController.showNotification(
       <FormattedMessage
         id="Alert.SettingsSaved"
         defaultMessage="Settings Saved"

@@ -23,7 +23,7 @@ import TextField from 'components/TextField';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
@@ -57,8 +57,6 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class AddressBook extends Component {
-  static contextType = UIContext;
-
   // React Method (Life cycle hook)
   componentDidMount() {
     this.loadMyAccounts();
@@ -269,7 +267,7 @@ class AddressBook extends Component {
     if (this.props.modalVisable) {
       this.props.ToggleModal();
     }
-    this.context.showNotification(
+    UIController.showNotification(
       <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />,
       'success'
     );
@@ -448,7 +446,7 @@ class AddressBook extends Component {
                     this.props.prototypeTimezone
                   );
                 } else {
-                  this.context.showNotification(
+                  UIController.showNotification(
                     <FormattedMessage
                       id="Alert.nodefaultname"
                       defaultMessage="Account cannot be named * or default"
@@ -664,10 +662,10 @@ class AddressBook extends Component {
             this.loadMyAccounts();
           })
           .catch(e => {
-            this.context.openErrorModal({ message: e });
+            UIController.openErrorModal({ message: e });
           });
       } else {
-        this.context.showNotification(
+        UIController.showNotification(
           <FormattedMessage
             id="Alert.nodefaultname"
             defaultMessage="Account cannot be named * or default"
@@ -682,7 +680,7 @@ class AddressBook extends Component {
           this.loadMyAccounts();
         })
         .catch(e => {
-          this.context.openErrorModal({ message: e });
+          UIController.openErrorModal({ message: e });
         });
     }
   }

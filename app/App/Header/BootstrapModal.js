@@ -6,7 +6,6 @@ import Modal from 'react-responsive-modal';
 // Internal Global Dependencies
 import { GetSettings, SaveSettings } from 'api/settings';
 import configuration from 'api/configuration';
-import UIContext from 'context/ui';
 
 var enoughSpace = true;
 
@@ -22,7 +21,6 @@ const modalOpen = ({
     BootstrapModal);
 
 class Prompting extends Component {
-  static contextType = UIContext;
   render() {
     return (
       <>

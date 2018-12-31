@@ -9,7 +9,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 const ChangePasswordComponent = styled.form({
   flex: 2,
@@ -17,8 +17,6 @@ const ChangePasswordComponent = styled.form({
 });
 
 export default class ChangePassword extends Component {
-  static contextType = UIContext;
-
   changePassword(e) {
     e.preventDefault();
     let pass, newPass, passChk, passHint;
@@ -38,7 +36,7 @@ export default class ChangePassword extends Component {
                 pass.value = '';
                 newPass.value = '';
                 passChk.value = '';
-                this.context.showNotification(
+                UIController.showNotification(
                   <FormattedMessage
                     id="Alert.PasswordHasBeenChanged"
                     defaultMessage="Password has been changed"
@@ -96,7 +94,7 @@ export default class ChangePassword extends Component {
           });
       })
       .catch(e => {
-        this.context.openErrorModal({ message: e });
+        UIController.openErrorModal({ message: e });
       });
   }
 

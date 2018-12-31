@@ -11,7 +11,7 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
 
@@ -37,11 +37,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsStyle extends Component {
-  static contextType = UIContext;
-
   SaveSettings() {
     SaveSettings(this.props.settings);
-    this.context.showNotification(
+    UIController.showNotification(
       <FormattedMessage
         id="Alert.StyleSettingsSaved"
         defaultMessage="Style Settings Saved"
@@ -61,7 +59,7 @@ class SettingsStyle extends Component {
 
   resetColors = () => {
     this.props.ResetStyle();
-    this.context.showNotification(
+    UIController.showNotification(
       'Color scheme has been reset to default',
       'success'
     );

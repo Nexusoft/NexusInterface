@@ -9,7 +9,7 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 const AccountSelectors = styled.div({
   display: 'grid',
@@ -37,8 +37,6 @@ const Buttons = styled.div({
 });
 
 export default class MoveBetweenAccountsModal extends Component {
-  static contextType = UIContext;
-
   moveAmmountConverter(e, isNxs) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === '')) {
       if (isNxs) {
@@ -75,17 +73,17 @@ export default class MoveBetweenAccountsModal extends Component {
             .then(payload => {
               this.props.getAccountData();
               this.props.CloseMoveModal();
-              this.context.showNotification('NXS Moved', 'success');
+              UIController.showNotification('NXS Moved', 'success');
             })
             .catch(e => {
               if (typeof e === 'object') {
-                this.context.openErrorModal({ message: e.Message });
+                UIController.openErrorModal({ message: e.Message });
               } else {
-                this.context.openErrorModal({ message: e });
+                UIController.openErrorModal({ message: e });
               }
             });
         } else {
-          this.context.openErrorModal({
+          UIController.openErrorModal({
             message: (
               <FormattedMessage
                 id="Alert.InsufficientFunds"
@@ -95,7 +93,7 @@ export default class MoveBetweenAccountsModal extends Component {
           });
         }
       } else {
-        this.context.openErrorModal({
+        UIController.openErrorModal({
           message: (
             <FormattedMessage
               id="Alert.NoSecondAccountChosen"
@@ -105,7 +103,7 @@ export default class MoveBetweenAccountsModal extends Component {
         });
       }
     } else {
-      this.context.openErrorModal({
+      UIController.openErrorModal({
         message: (
           <FormattedMessage
             id="Alert.AccountsAreTheSame"

@@ -9,15 +9,13 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 const ImportPrivKeyComponent = styled.form({
   flex: 3,
 });
 
 export default class ImportPrivKey extends Component {
-  static contextType = UIContext;
-
   importPrivKey(e) {
     e.preventDefault();
     let acctname = document.getElementById('acctName');
@@ -29,7 +27,7 @@ export default class ImportPrivKey extends Component {
       RPC.PROMISE('importprivkey', [pk], [label])
         .then(payload => {
           this.props.ResetForEncryptionRestart();
-          this.context.showNotification(
+          UIController.showNotification(
             'Private key imported rescanning now',
             'success'
           ); // new alert
@@ -38,11 +36,11 @@ export default class ImportPrivKey extends Component {
               this.props.CloseModal();
             })
             .catch(e => {
-              this.context.openErrorModal({ message: e });
+              UIController.openErrorModal({ message: e });
             });
         })
         .catch(e => {
-          this.context.openErrorModal({ message: e });
+          UIController.openErrorModal({ message: e });
         });
     } else if (!label) {
       acctname.focus();

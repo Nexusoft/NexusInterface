@@ -7,6 +7,7 @@ import IntlWrapper from './IntlWrapper';
 import styled from '@emotion/styled';
 
 // Internal
+import UIController from 'components/UIController';
 import GlobalStyles from './GlobalStyles';
 import Loader from './Loader';
 import Overview from './Overview';
@@ -24,7 +25,6 @@ import TrustList from './TrustList';
 import About from './About';
 import Exchange from './Exchange';
 import AppBackground from './AppBackground';
-import UIController from './UIController';
 import ThemeController from './ThemeController';
 
 const AppWrapper = styled.div({

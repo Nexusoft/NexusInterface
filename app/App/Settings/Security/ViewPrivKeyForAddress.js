@@ -10,12 +10,10 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 import copyIcon from 'images/copy.sprite.svg';
 
 export default class ViewPrivKeyForAddress extends Component {
-  static contextType = UIContext;
-
   showPrivKey(e) {
     e.preventDefault();
     let address = this.inputRef.value;
@@ -28,7 +26,7 @@ export default class ViewPrivKeyForAddress extends Component {
           if (e.includes(address)) {
             e = e.replace(address + ' ', '');
           }
-          this.context.openErrorModal({ message: e });
+          UIController.openErrorModal({ message: e });
         });
     } else {
       this.inputRef.focus();
@@ -42,7 +40,7 @@ export default class ViewPrivKeyForAddress extends Component {
     this.outputRef.select();
     document.execCommand('Copy', false, null);
     this.outputRef.type = 'password';
-    this.context.showNotification(
+    UIController.showNotification(
       <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />,
       'success'
     );

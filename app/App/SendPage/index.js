@@ -1,10 +1,8 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { remote } from 'electron';
-import { access } from 'fs';
 import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 
@@ -21,8 +19,7 @@ import WaitingMessage from 'components/WaitingMessage';
 import FormField from 'components/FormField';
 import InputGroup from 'components/InputGroup';
 import Tooltip from 'components/Tooltip';
-import Modal from 'components/Modal';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 // Internal Local Dependencies
 import LookupAddressModal from './LookupAddressModal';
@@ -32,7 +29,6 @@ import styles from './style.css';
 
 // Resources
 import sendIcon from 'images/send.sprite.svg';
-import plusimg from 'images/plus.svg';
 import swapIcon from 'images/swap.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 
@@ -174,8 +170,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SendPage extends Component {
-  static contextType = UIContext;
-
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     this.getAccountData();
@@ -303,7 +297,7 @@ class SendPage extends Component {
                 amount: parseFloat(this.props.Amount),
               });
             } else {
-              this.context.openErrorModal({
+              UIController.openErrorModal({
                 message: (
                   <FormattedMessage
                     id="Alert.registeredToThis"
@@ -313,7 +307,7 @@ class SendPage extends Component {
               });
             }
           } else {
-            this.context.openErrorModal({
+            UIController.openErrorModal({
               message: (
                 <FormattedMessage
                   id="Alert.InvalidAddress"
@@ -324,7 +318,7 @@ class SendPage extends Component {
           }
         })
         .catch(e => {
-          this.context.openErrorModal({
+          UIController.openErrorModal({
             message: (
               <FormattedMessage
                 id="Alert.InvalidAddress"
@@ -357,7 +351,7 @@ class SendPage extends Component {
   }
 
   moveBetweenAccounts = () => {
-    this.context.openModal(MoveBetweenAccountsModal, {
+    UIController.openModal(MoveBetweenAccountsModal, {
       calculateUSDvalue: this.calculateUSDvalue.bind(this),
       getAccountData: this.getAccountData.bind(this),
       accountOptions: this.accountOptions(),
@@ -366,7 +360,7 @@ class SendPage extends Component {
   };
 
   lookupAddress = () => {
-    this.context.openModal(LookupAddressModal, this.props);
+    UIController.openModal(LookupAddressModal, this.props);
   };
 
   sendOne() {
@@ -388,7 +382,7 @@ class SendPage extends Component {
                   ])
                     .then(payload => {
                       this.getAccountData();
-                      this.context.showNotification(
+                      UIController.showNotification(
                         <FormattedMessage
                           id="Alert.Sent"
                           defaultMessage="Transaction Sent"
@@ -401,7 +395,7 @@ class SendPage extends Component {
                     .catch(e => {
                       console.log(e);
                       this.props.busy();
-                      this.context.openErrorModal({ message: e });
+                      UIController.openErrorModal({ message: e });
                     });
                 } else {
                   RPC.PROMISE('sendfrom', [
@@ -412,7 +406,7 @@ class SendPage extends Component {
                   ])
                     .then(payoad => {
                       this.getAccountData();
-                      this.context.showNotification(
+                      UIController.showNotification(
                         <FormattedMessage
                           id="Alert.Sent"
                           defaultMessage="Transaction Sent"
@@ -425,12 +419,12 @@ class SendPage extends Component {
                     .catch(e => {
                       console.log(e);
                       this.props.busy();
-                      this.context.openErrorModal({ message: e });
+                      UIController.openErrorModal({ message: e });
                     });
                 }
               } else {
                 this.props.busy();
-                this.context.openErrorModal({
+                UIController.openErrorModal({
                   message: (
                     <FormattedMessage
                       id="Alert.registeredToThis"
@@ -441,7 +435,7 @@ class SendPage extends Component {
               }
             } else {
               this.props.busy();
-              this.context.openErrorModal({
+              UIController.openErrorModal({
                 message: (
                   <FormattedMessage
                     id="Alert.InvalidAddress"
@@ -453,7 +447,7 @@ class SendPage extends Component {
           })
           .catch(e => {
             this.props.busy();
-            this.context.openErrorModal({
+            UIController.openErrorModal({
               message: (
                 <FormattedMessage
                   id="Alert.InvalidAddress"
@@ -466,7 +460,7 @@ class SendPage extends Component {
         this.props.busy();
       }
     } else {
-      this.context.openErrorModal({ message: 'No Account Selected' });
+      UIController.openErrorModal({ message: 'No Account Selected' });
     }
   }
 
@@ -474,7 +468,7 @@ class SendPage extends Component {
     const { Address, Amount, encrypted, loggedIn } = this.props;
 
     if (!Address) {
-      this.context.openErrorModal({
+      UIController.openErrorModal({
         message: (
           <FormattedMessage
             id="Alert.InvalidAddress"
@@ -485,7 +479,7 @@ class SendPage extends Component {
       return;
     }
     if (Amount <= 0) {
-      this.context.openErrorModal({
+      UIController.openErrorModal({
         message: (
           <FormattedMessage
             id="Alert.InvalidAmount"
@@ -496,11 +490,11 @@ class SendPage extends Component {
       return;
     }
     if (encrypted && !loggedIn) {
-      this.context.openErrorModal({ message: 'Wallet Locked' });
+      UIController.openErrorModal({ message: 'Wallet Locked' });
       return;
     }
 
-    this.context.openConfirmModal({
+    UIController.openConfirmModal({
       question: (
         <FormattedMessage
           id="sendReceive.SendTransaction"

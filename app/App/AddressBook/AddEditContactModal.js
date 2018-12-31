@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import FormField from 'components/FormField';
 import Select from 'components/Select';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 const timeZones = [
   { value: '0', display: '(UTC + 0.00 hr) London, Casablanca, Accra' },
@@ -87,152 +87,163 @@ const timeZones = [
 ];
 
 class AddEditContactModal extends Component {
-  static contextType = UIContext;
-
   render() {
     const { editEntry } = this.props;
 
     return (
       <Modal>
-        <Modal.Header>
-          {editEntry ? (
-            <FormattedMessage
-              id="AddressBook.EditContact"
-              defaultMessage="Edit Contact"
-            />
-          ) : (
-            <FormattedMessage
-              id="AddressBook.addContact"
-              defaultMessage="Add Contact"
-            />
-          )}
-        </Modal.Header>
-        <Modal.Body>
-          <FormField
-            connectLabel
-            label={
-              <FormattedMessage id="AddressBook.Name" defaultMessage="Name" />
-            }
-          >
-            <TextField
-              value={this.props.prototypeName}
-              onChange={e => this.props.EditProtoName(e.target.value)}
-              placeholder="Name"
-              required
-            />
-          </FormField>
-
-          <FormField
-            connectLabel
-            label={
-              <FormattedMessage
-                id="AddressBook.Phone"
-                defaultMessage="Phone #"
-              />
-            }
-          >
-            <TextField
-              type="tel"
-              onChange={e => this.phoneNumberHandler(e.target.value)}
-              value={this.props.prototypePhoneNumber}
-              placeholder="Phone #"
-            />
-          </FormField>
-
-          <FormField
-            connectLabel
-            label={
-              <FormattedMessage
-                id="AddressBook.LocalTime"
-                defaultMessage="Local Time"
-              />
-            }
-          >
-            <Select
-              options={timeZones}
-              onChange={e => {
-                if (this.props.editTZ) {
-                  this.props.SaveTz(
-                    this.props.selected,
-                    parseInt(e.target.value)
-                  );
-                } else {
-                  this.props.EditProtoTZ(parseInt(e.target.value));
-                }
-              }}
-              value={this.props.prototypeTimezone}
-            />
-          </FormField>
-
-          <FormField
-            connectLabel
-            label={
-              <FormattedMessage id="AddressBook.Notes" defaultMessage="Notes" />
-            }
-          >
-            <TextField
-              multiline
-              value={this.props.prototypeNotes}
-              onChange={e => this.props.EditProtoNotes(e.target.value)}
-              rows="1"
-            />
-          </FormField>
-
-          <FormField
-            connectLabel
-            label={
-              <FormattedMessage
-                id="AddressBook.NXSAddress"
-                defaultMessage="NXS Address"
-              />
-            }
-          >
-            <TextField
-              value={this.props.prototypeAddress}
-              onChange={e => this.props.EditProtoAddress(e.target.value)}
-              placeholder="Address"
-            />
-          </FormField>
-
-          <Button
-            skin="primary"
-            onClick={() => {
-              let name = this.props.prototypeName.trim();
-              if (name !== '*' && name !== 'default') {
-                this.props.AddContact(
-                  this.props.prototypeName,
-                  this.props.prototypeAddress,
-                  this.props.prototypePhoneNumber,
-                  this.props.prototypeNotes,
-                  this.props.prototypeTimezone
-                );
-              } else {
-                this.context.showNotification(
+        {closeModal => (
+          <>
+            <Modal.Header>
+              {editEntry ? (
+                <FormattedMessage
+                  id="AddressBook.EditContact"
+                  defaultMessage="Edit Contact"
+                />
+              ) : (
+                <FormattedMessage
+                  id="AddressBook.addContact"
+                  defaultMessage="Add Contact"
+                />
+              )}
+            </Modal.Header>
+            <Modal.Body>
+              <FormField
+                connectLabel
+                label={
                   <FormattedMessage
-                    id="Alert.nodefaultname"
-                    defaultMessage="Account cannot be named * or default"
-                  />,
-                  'error'
-                );
-              }
-            }}
-          >
-            {index === -1 ? (
-              <FormattedMessage
-                id="AddressBook.addContact"
-                defaultMessage="Add Contact"
-              />
-            ) : (
-              <FormattedMessage
-                id="AddressBook.EditContact"
-                defaultMessage="Edit Contact"
-              />
-            )}
-          </Button>
-          <Button onClick={() => this.context.closeModal(this.context.modalID)}>
-            <FormattedMessage id="AddressBook.Cancel" defaultMessage="Cancel" />
-          </Button>
-        </Modal.Body>
+                    id="AddressBook.Name"
+                    defaultMessage="Name"
+                  />
+                }
+              >
+                <TextField
+                  value={this.props.prototypeName}
+                  onChange={e => this.props.EditProtoName(e.target.value)}
+                  placeholder="Name"
+                  required
+                />
+              </FormField>
+
+              <FormField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="AddressBook.Phone"
+                    defaultMessage="Phone #"
+                  />
+                }
+              >
+                <TextField
+                  type="tel"
+                  onChange={e => this.phoneNumberHandler(e.target.value)}
+                  value={this.props.prototypePhoneNumber}
+                  placeholder="Phone #"
+                />
+              </FormField>
+
+              <FormField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="AddressBook.LocalTime"
+                    defaultMessage="Local Time"
+                  />
+                }
+              >
+                <Select
+                  options={timeZones}
+                  onChange={e => {
+                    if (this.props.editTZ) {
+                      this.props.SaveTz(
+                        this.props.selected,
+                        parseInt(e.target.value)
+                      );
+                    } else {
+                      this.props.EditProtoTZ(parseInt(e.target.value));
+                    }
+                  }}
+                  value={this.props.prototypeTimezone}
+                />
+              </FormField>
+
+              <FormField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="AddressBook.Notes"
+                    defaultMessage="Notes"
+                  />
+                }
+              >
+                <TextField
+                  multiline
+                  value={this.props.prototypeNotes}
+                  onChange={e => this.props.EditProtoNotes(e.target.value)}
+                  rows="1"
+                />
+              </FormField>
+
+              <FormField
+                connectLabel
+                label={
+                  <FormattedMessage
+                    id="AddressBook.NXSAddress"
+                    defaultMessage="NXS Address"
+                  />
+                }
+              >
+                <TextField
+                  value={this.props.prototypeAddress}
+                  onChange={e => this.props.EditProtoAddress(e.target.value)}
+                  placeholder="Address"
+                />
+              </FormField>
+
+              <Button
+                skin="primary"
+                onClick={() => {
+                  let name = this.props.prototypeName.trim();
+                  if (name !== '*' && name !== 'default') {
+                    this.props.AddContact(
+                      this.props.prototypeName,
+                      this.props.prototypeAddress,
+                      this.props.prototypePhoneNumber,
+                      this.props.prototypeNotes,
+                      this.props.prototypeTimezone
+                    );
+                  } else {
+                    UIController.showNotification(
+                      <FormattedMessage
+                        id="Alert.nodefaultname"
+                        defaultMessage="Account cannot be named * or default"
+                      />,
+                      'error'
+                    );
+                  }
+                }}
+              >
+                {index === -1 ? (
+                  <FormattedMessage
+                    id="AddressBook.addContact"
+                    defaultMessage="Add Contact"
+                  />
+                ) : (
+                  <FormattedMessage
+                    id="AddressBook.EditContact"
+                    defaultMessage="Edit Contact"
+                  />
+                )}
+              </Button>
+              <Button onClick={closeModal}>
+                <FormattedMessage
+                  id="AddressBook.Cancel"
+                  defaultMessage="Cancel"
+                />
+              </Button>
+            </Modal.Body>
+          </>
+        )}
       </Modal>
     );
   }

@@ -19,7 +19,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 // Internal Local Dependencies
 import styles from './style.css';
@@ -191,8 +191,6 @@ const mapDispatchToProps = dispatch => ({
 var currentBackupLocation = ''; //Might redo to use redux but this is only used to replace using json reader every render;
 
 class SettingsApp extends Component {
-  static contextType = UIContext;
-
   // React Method (Life cycle hook)
   constructor(props) {
     super(props);
@@ -308,7 +306,7 @@ class SettingsApp extends Component {
     let TxFee = document.getElementById('optionalTransactionFee').value;
     if (parseFloat(TxFee) > 0) {
       RPC.PROMISE('settxfee', [parseFloat(TxFee)]);
-      this.context.showNotification(
+      UIController.showNotification(
         <FormattedMessage
           id="Alert.TransactionFeeSet"
           defaultMessage="Transaction Fee Set"
@@ -316,7 +314,7 @@ class SettingsApp extends Component {
         'success'
       );
     } else {
-      this.context.openErrorModal({
+      UIController.openErrorModal({
         message: (
           <FormattedMessage
             id="Alert.InvalidTransactionFee"
@@ -407,7 +405,7 @@ class SettingsApp extends Component {
       BackupDir + '/NexusBackup_' + now + '.dat',
     ]).then(payload => {
       this.props.CloseModal4();
-      this.context.showNotification(
+      UIController.showNotification(
         <FormattedMessage
           id="Alert.WalletBackedUp"
           defaultMessage="Wallet Backed Up"
@@ -472,7 +470,7 @@ class SettingsApp extends Component {
   };
 
   confirmSetTxFee = () => {
-    this.context.openConfirmModal({
+    UIController.openConfirmModal({
       question: (
         <FormattedMessage
           id="Settings.SetFee"
@@ -484,7 +482,7 @@ class SettingsApp extends Component {
   };
 
   confirmBackupWallet = () => {
-    this.context.openConfirmModal({
+    UIController.openConfirmModal({
       question: (
         <FormattedMessage
           id="Settings.BackupWallet"
@@ -495,7 +493,7 @@ class SettingsApp extends Component {
         if (this.props.connections !== undefined) {
           this.backupWallet();
         } else {
-          this.context.openErrorModal({
+          UIController.openErrorModal({
             message: 'Please wait for Daemon to load',
           });
         }

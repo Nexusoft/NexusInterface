@@ -17,7 +17,7 @@ import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
 import { color } from 'utils';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 // Internal Local Dependencies
 import BootstrapModal from './BootstrapModal';
@@ -112,8 +112,6 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
 class Header extends Component {
-  static contextType = UIContext;
-
   // React Method (Life cycle hook)
   componentDidMount() {
     var self = this;
@@ -134,7 +132,7 @@ class Header extends Component {
     mainWindow.on('close', e => {
       e.preventDefault();
       this.props.clearOverviewVariables();
-      this.context.showNotification('Closing Nexus...');
+      UIController.showNotification('Closing Nexus...');
     });
 
     this.props.SetMarketAveData();
@@ -207,7 +205,7 @@ class Header extends Component {
 
         if (MRT.category === 'receive') {
           this.doNotify('Received', MRT.amount + ' NXS');
-          this.context.showNotification(
+          UIController.showNotification(
             <FormattedMessage
               id="Alert.Received"
               defaultMessage="Transaction Received"
@@ -216,7 +214,7 @@ class Header extends Component {
           );
         } else if (MRT.category === 'send') {
           this.doNotify('Sent', MRT.amount + ' NXS');
-          this.context.showNotification(
+          UIController.showNotification(
             <FormattedMessage
               id="Alert.Sent"
               defaultMessage="Transaction Sent"
@@ -225,7 +223,7 @@ class Header extends Component {
           );
         } else if (MRT.category === 'genesis') {
           this.doNotify('Genesis', MRT.amount + ' NXS');
-          this.context.showNotification(
+          UIController.showNotification(
             <FormattedMessage
               id="Alert.Genesis"
               defaultMessage="Genesis Transaction"
@@ -234,7 +232,7 @@ class Header extends Component {
           );
         } else if (MRT.category === 'trust') {
           this.doNotify('Trust', MRT.amount + ' NXS');
-          this.context.showNotification(
+          UIController.showNotification(
             <FormattedMessage
               id="Alert.TrustTransaction"
               defaultMessage="Trust Transaction"

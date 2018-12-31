@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 import { timing } from 'styles';
 import { color } from 'utils';
 
@@ -102,8 +102,6 @@ const NotificationComponent = styled.div(
 );
 
 export default class Notification extends Component {
-  static contextType = UIContext;
-
   static defaultProps = {
     type: 'info',
     autoClose: 3000, // ms
@@ -124,14 +122,14 @@ export default class Notification extends Component {
   }
 
   startClosing = () => {
-    if (this.props.notifID && this.context.hideNotification) {
+    if (this.props.notifID) {
       this.stopAutoClose();
       this.setState({ closing: true });
     }
   };
 
   close = () => {
-    this.context.hideNotification(this.props.notifID);
+    UIController.hideNotification(this.props.notifID);
   };
 
   stopAutoClose = () => {

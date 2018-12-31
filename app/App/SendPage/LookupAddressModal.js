@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 // Internal
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 import Tooltip from 'components/Tooltip';
 import Modal from 'components/Modal';
 
-function addressBookToQueue(props, context, closeModal) {
+function addressBookToQueue(props, closeModal) {
   let filteredAddress = props.addressbook.filter(e => {
     return e.name.toLowerCase().indexOf(props.Search.toLowerCase()) !== -1;
   });
@@ -29,15 +29,10 @@ function addressBookToQueue(props, context, closeModal) {
             onClick={() => {
               closeModal();
               props.updateAddress(ele.address);
-              context.showNotification(
+              UIController.showNotification(
                 <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />,
                 'success'
               );
-              setTimeout(() => {
-                if (props.open) {
-                  props.CloseModal();
-                }
-              }, 3000);
             }}
           >
             {ele.address}
@@ -49,8 +44,6 @@ function addressBookToQueue(props, context, closeModal) {
 }
 
 export default class LookupAddressModal extends Component {
-  static contextType = UIContext;
-
   render() {
     return (
       <Modal>
@@ -102,7 +95,7 @@ export default class LookupAddressModal extends Component {
                       />
                     </h1>
                   ) : (
-                    addressBookToQueue(this.props, this.context, closeModal)
+                    addressBookToQueue(this.props, closeModal)
                   )}
                 </tbody>
               </table>

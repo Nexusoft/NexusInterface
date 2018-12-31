@@ -9,7 +9,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 import { consts } from 'styles';
 
 const EncryptWalletComponent = styled.form({
@@ -29,8 +29,6 @@ const Characters = styled.span({
 });
 
 export default class EncryptWallet extends Component {
-  static contextType = UIContext;
-
   reEnterValidator(e) {
     let newPass = document.getElementById('newPass');
     let passHint = document.getElementById('passHint');
@@ -64,7 +62,7 @@ export default class EncryptWallet extends Component {
                 newPass.value = '';
                 passChk.value = '';
                 this.props.busy(false);
-                this.context.showNotification(
+                UIController.showNotification(
                   <FormattedMessage
                     id="Alert.WalletHasBeenEncrypted"
                     defaultMessage="Wallet has been encrypted"
@@ -80,20 +78,20 @@ export default class EncryptWallet extends Component {
                 }, 5000);
               })
               .catch(e => {
-                this.context.openErrorModal({ message: e });
+                UIController.openErrorModal({ message: e });
               });
           } else {
-            this.context.openErrorModal({
+            UIController.openErrorModal({
               message: 'Password cannot start or end with spaces',
             }); // new alert
             passChk.focus();
           }
         } else {
-          this.context.openErrorModal({ message: 'Passwords do not match' }); // new alert
+          UIController.openErrorModal({ message: 'Passwords do not match' }); // new alert
           passChk.focus();
         }
       } else {
-        this.context.openErrorModal({
+        UIController.openErrorModal({
           message: 'Passwords cannot contain -$/&*|<>',
         }); // new alert
         passChk.focus();

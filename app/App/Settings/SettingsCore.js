@@ -14,7 +14,7 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
-import UIContext from 'context/ui';
+import UIController from 'components/UIController';
 
 const CoreSettings = styled.div({
   maxWidth: 750,
@@ -75,8 +75,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SettingsCore extends Component {
-  static contextType = UIContext;
-
   // React Method (Life cycle hook)
   constructor(props) {
     super(props);
@@ -254,7 +252,7 @@ class SettingsCore extends Component {
 
   confirmSwitchManualDaemon = () => {
     if (this.props.settings.manualDaemon) {
-      this.context.openConfirmModal({
+      UIController.openConfirmModal({
         question: (
           <FormattedMessage
             id="Settings.ManualDaemonExit"
@@ -284,7 +282,7 @@ class SettingsCore extends Component {
         },
       });
     } else {
-      this.context.openConfirmModal({
+      UIController.openConfirmModal({
         question: (
           <FormattedMessage
             id="Settings.ManualDaemonEntry"
@@ -315,7 +313,7 @@ class SettingsCore extends Component {
   };
 
   confirmSaveSettings = () => {
-    this.context.openConfirmModal({
+    UIController.openConfirmModal({
       question: (
         <>
           <FormattedMessage id="SaveSettings" defaultMessage="Save Settings" />?
@@ -329,7 +327,7 @@ class SettingsCore extends Component {
       ),
       yesCallback: () => {
         this.props.setSettings(GetSettings());
-        this.context.showNotification(
+        UIController.showNotification(
           <FormattedMessage
             id="Alert.CoreSettingsSaved"
             defaultMessage="Core Settings Saved"
@@ -662,7 +660,7 @@ class SettingsCore extends Component {
                 this.props.clearForRestart();
 
                 core.restart();
-                this.context.showNotification(
+                UIController.showNotification(
                   <FormattedMessage
                     id="Alert.CoreRestarting"
                     defaultMessage="Core Restarting"

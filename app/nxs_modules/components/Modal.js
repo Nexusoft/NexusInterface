@@ -4,9 +4,9 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal
-import UIContext from 'context/ui';
+import ModalContext from 'context/modal';
+import UIController from 'components/UIController';
 import Overlay from 'components/Overlay';
-import Icon from 'components/Icon';
 import { timing } from 'styles';
 import { color } from 'utils';
 
@@ -78,26 +78,27 @@ export default class Modal extends PureComponent {
     closeOnBackgroundClick: true,
   };
 
-  static contextType = UIContext;
+  static contextType = ModalContext;
 
   state = {
     closing: false,
   };
 
   startClosing = () => {
-    if (this.context.modalID && this.context.closeModal) {
+    const modalID = this.context;
+    if (modalID) {
       this.setState({ closing: true });
     }
   };
 
   close = () => {
-    this.context.closeModal(this.context.modalID);
+    const modalID = this.context;
+    UIController.closeModal(modalID);
   };
 
   render() {
     const {
       open,
-      modalID,
       dimBackground,
       closeOnBackgroundClick,
       children,
@@ -127,6 +128,5 @@ export default class Modal extends PureComponent {
   }
 }
 
-Modal.UIContext = UIContext;
 Modal.Header = ModalHeader;
 Modal.Body = ModalBody;

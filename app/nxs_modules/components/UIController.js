@@ -7,7 +7,7 @@ import ConfirmModal from 'components/Modals/ConfirmModal';
 import ErrorModal from 'components/Modals/ErrorModal';
 import SuccessModal from 'components/Modals/SuccessModal';
 import Notification from 'components/Notification';
-import UIContext from 'context/ui';
+import ModalContext from 'context/modal';
 
 const newModalID = (function() {
   let counter = 1;
@@ -29,9 +29,9 @@ const NotificationsComponent = styled.div({
 const Modals = ({ modals }) => (
   <>
     {modals.map(({ id, component: Comp, props, context }) => (
-      <UIContext.Provider key={id} value={context}>
+      <ModalContext.Provider key={id} value={id}>
         <Comp {...props} />
-      </UIContext.Provider>
+      </ModalContext.Provider>
     ))}
   </>
 );
@@ -46,7 +46,31 @@ const Notifications = ({ notifications }) => (
   </NotificationsComponent>
 );
 
+// Store the only instance of UIController class
+let singleton = null;
+
+// UIController is a SINGLETON class
 export default class UIController extends Component {
+  constructor(props) {
+    super(props);
+
+    // Ensure there are no other instances
+    if (singleton) {
+      throw new Error('Cannot have more than one instance of UIController!');
+    }
+    singleton = this;
+
+    // Expose the public UI APIs
+    UIController.openModal = this.openModal;
+    UIController.closeModal = this.closeModal;
+    UIController.openConfirmModal = this.openConfirmModal;
+    UIController.openErrorModal = this.openErrorModal;
+    UIController.openSuccessModal = this.openSuccessModal;
+
+    UIController.showNotification = this.showNotification;
+    UIController.hideNotification = this.hideNotification;
+  }
+
   state = {
     modals: [],
     notifications: [],
@@ -61,10 +85,6 @@ export default class UIController extends Component {
           id: modalID,
           component,
           props,
-          context: {
-            modalID,
-            ...this.controller,
-          },
         },
       ],
     });
@@ -127,11 +147,11 @@ export default class UIController extends Component {
 
   render() {
     return (
-      <UIContext.Provider value={this.controller}>
+      <>
         {this.props.children}
         <Modals modals={this.state.modals} />
         <Notifications notifications={this.state.notifications} />
-      </UIContext.Provider>
+      </>
     );
   }
 }
