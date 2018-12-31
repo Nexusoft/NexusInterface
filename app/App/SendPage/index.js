@@ -564,7 +564,7 @@ class SendPage extends Component {
                 <InputGroup>
                   <TextField
                     placeholder="Recipient Address"
-                    value={this.props.Addressplaceholder}
+                    value={this.props.Address}
                     onChange={e => this.props.updateAddress(e.target.value)}
                     required
                     style={{ flexGrow: 1 }}

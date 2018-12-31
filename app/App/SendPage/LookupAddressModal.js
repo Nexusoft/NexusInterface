@@ -12,27 +12,18 @@ function addressBookToQueue(props, closeModal) {
     return e.name.toLowerCase().indexOf(props.Search.toLowerCase()) !== -1;
   });
   return filteredAddress.map((e, i) => (
-    <tr key={i + e.name}>
+    <tr key={i}>
       <td key={e.name + i}> {e.name}</td>
       {e.notMine.map((ele, i) => (
         <Tooltip.Trigger
           position="right"
-          tooltip={
-            <FormattedMessage
-              id="sendReceive.CopyToFeild"
-              defaultMessage="Copy To Field"
-            />
-          }
-          key={ele.address + i}
+          tooltip="Select recipient address"
+          key={ele.address}
         >
           <td
             onClick={() => {
               closeModal();
               props.updateAddress(ele.address);
-              UIController.showNotification(
-                <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />,
-                'success'
-              );
             }}
           >
             {ele.address}
