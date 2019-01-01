@@ -1138,17 +1138,13 @@ class Header extends Component {
   }
 
   wallpaperCheck() {
-    let pathCheck = false;
-    try {
-      pathCheck = existsSync(this.props.settings.wallpaper);
-    } catch (e) {}
-    if (pathCheck) {
+    if (existsSync(this.props.settings.wallpaper)) {
       return this.props.settings.wallpaper;
     } else {
       let defaultWallpaperPath = '';
 
       if (process.env.NODE_ENV === 'development') {
-        defaultWallpaperPath = '~images/background/starrynight.jpg';
+        defaultWallpaperPath = 'images/background/starrynight.jpg';
       } else {
         defaultWallpaperPath = join(
           configuration.GetAppResourceDir(),
