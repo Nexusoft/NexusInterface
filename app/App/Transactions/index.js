@@ -1150,6 +1150,7 @@ class Transactions extends Component {
     high = high == 0 ? 1 : high;
     domain.y[0] = -high;
     domain.y[1] = high;
+    console.log(domain);
     this.setState({ zoomDomain: domain });
   }
 
@@ -1420,16 +1421,15 @@ class Transactions extends Component {
   returnVictoryChart() {
     const chartData = this.returnChartData();
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
+    const leftPadding = parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
     return (
       <VictoryChart
         width={this.state.mainChartWidth}
         height={this.state.mainChartHeight}
         scale={{ x: 'time' }}
-        style={{ parent: { overflow: 'visible' } }}
-        // theme={VictoryTheme.material}
+        style={{ overflow: 'visible' }}
         domainPadding={{ x: 90, y: 30 }}
-        // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
-        padding={{ top: 6, bottom: 6, left: 0, right: 0 }}
+        padding={{ top: 6, bottom: 6, left: leftPadding < 30 ? 30 : leftPadding, right: 0 }}
         domain={this.state.zoomDomain}
         containerComponent={
           <VictoryZoomVoronoiContainer
