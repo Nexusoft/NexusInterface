@@ -562,7 +562,7 @@ class Overview extends Component {
       if (selectedCurrancyValue[0].changePct24Hr > 0) {
         return `+ ${selectedCurrancyValue[0].changePct24Hr}`;
       } else {
-        return `- ${selectedCurrancyValue[0].changePct24Hr}`;
+        return `${selectedCurrancyValue[0].changePct24Hr}`;
       }
     } else {
       return '0';

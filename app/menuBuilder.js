@@ -204,7 +204,7 @@ export default class MenuBuilder {
           click() {
             const state = store.getState();
             if (
-              state.common.connections !== undefined &&
+              state.overview.connections !== undefined &&
               !GetSettings().manualDaemon
             ) {
               store.dispatch(ac.OpenBootstrapModal(true));
@@ -407,7 +407,7 @@ export default class MenuBuilder {
             click() {
               const state = store.getState();
               if (
-                state.common.connections !== undefined &&
+                state.overview.connections !== undefined &&
                 !GetSettings().manualDaemon
               ) {
                 store.dispatch(ac.OpenBootstrapModal(true));

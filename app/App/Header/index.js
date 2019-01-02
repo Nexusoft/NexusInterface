@@ -244,12 +244,26 @@ class Header extends Component {
     });
   }
 
+  CancelTT() {
+    if (this.props.history.location.pathname === '/') {
+      return <Icon />;
+    } else {
+      return <StakingStatus {...this.props} />;
+    }
+  }
+
   doNotify(context, message) {
     Notification.requestPermission().then(result => {
       var myNotification = new Notification(context, {
         body: message,
       });
     });
+  }
+  CloseBootstrapModalAndSaveSettings() {
+    this.props.CloseBootstrapModal();
+    let settings = GetSettings();
+    settings.bootstrap = false;
+    SaveSettings(settings);
   }
 
   // Mandatory React method
@@ -274,8 +288,8 @@ class Header extends Component {
           <StatusIcons>
             <SyncStatus {...this.props} />
             <SignInStatus {...this.props} />
-            {/* wrap this in a check too... */}
-            <StakingStatus {...this.props} />
+            {this.CancelTT()}
+            {/* <StakingStatus {...this.props} /> */}
           </StatusIcons>
         )}
       </HeaderComponent>
