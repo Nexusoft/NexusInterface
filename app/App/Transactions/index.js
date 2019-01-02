@@ -23,7 +23,6 @@ import {
   Flyout,
 } from 'victory';
 import rp from 'request-promise';
-import Text from 'components/Text';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
 
@@ -36,6 +35,7 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+import Text, { translate } from 'components/Text';
 import { GetSettings } from 'api/settings.js';
 import Table from 'scripts/utilities-react';
 import * as RPC from 'scripts/rpc';
@@ -223,7 +223,7 @@ class Transactions extends Component {
 
   // React Method (Life cycle hook)
   componentDidMount() {
-    console.log(this.props.messages);
+    const { locale } = this.props.settings;
     this._isMounted = true;
     this.updateChartAndTableDimensions();
     googleanalytics.SendScreen('Transactions');
@@ -243,7 +243,7 @@ class Transactions extends Component {
             eachAddress.name +
               "'s" +
               `${' '}` +
-              this.props.messages['Footer.Address']
+              translate('Footer.Address', locale)
           );
         }
       }
@@ -446,7 +446,8 @@ class Transactions extends Component {
   // This is the method that is called when the user pressed the right click
   // Input:
   //   e || Event || Default Events given by the system for right click
-  transactioncontextfunction(e) {
+  transactioncontextfunction = e => {
+    const { locale } = this.props.settings;
     // Prevent default action of right click
     e.preventDefault();
 
@@ -460,7 +461,7 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: this.props.messages['transactions.MoreDetails'],
+        label: translate('transactions.MoreDetails', locale),
         click: this.openTxDetailsModal,
       })
     );
@@ -494,23 +495,23 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: this.props.messages['Settings.Copy'],
+        label: translate('Settings.Copy', locale),
         submenu: [
           {
-            label: this.props.messages['AddressBook.Address'],
+            label: translate('AddressBook.Address', locale),
             click() {
               tablecopyaddresscallback();
             },
           },
           {
-            label: this.props.messages['AddressBook.Account'],
+            label: translate('AddressBook.Account', locale),
 
             click() {
               tablecopyaccountcallback();
             },
           },
           {
-            label: this.props.messages['sendReceive.TableAmount'],
+            label: translate('sendReceive.TableAmount', locale),
             click() {
               tablecopyamountcallback();
             },
@@ -569,7 +570,7 @@ class Transactions extends Component {
     } else {
       defaultcontextmenu.popup(remote.getCurrentWindow());
     }
-  }
+  };
 
   // Input :
   //   instringtocopy      || String || String to copy
@@ -976,11 +977,6 @@ class Transactions extends Component {
       if (ele.confirmations <= this.props.settings.minimumconfirmations) {
         isPending = '(Pending)';
       }
-      // if (ele.category === "send") {
-      //   return (ele.category = this.props.messages[
-      //     "transactions.Sent"
-      //   ]);
-      // }
 
       return {
         transactionnumber: txCounter,
@@ -1107,7 +1103,8 @@ class Transactions extends Component {
   }
 
   // Returns the tooltip lable for the chart
-  returnToolTipLable(inData) {
+  returnToolTipLable = inData => {
+    const { locale } = this.props.settings;
     var options = {
       month: 'short',
       weekday: 'short',
@@ -1120,18 +1117,18 @@ class Transactions extends Component {
     };
 
     if (inData.category == 'credit') {
-      inData.category = this.props.messages['transactions.Receive'];
+      inData.category = translate('transactions.Receive', locale);
     } else if (inData.category == 'debit') {
-      inData.category = this.props.messages['transactions.Sent'];
+      inData.category = translate('transactions.Sent', locale);
     }
     return (
       inData.category +
-      `\n ${this.props.messages['transactions.AMOUNT']}` +
+      `\n ${translate('transactions.AMOUNT', locale)}` +
       inData.b +
-      `\n ${this.props.messages['transactions.TIME']}` +
+      `\n ${translate('transactions.TIME', locale)}` +
       inData.a.toLocaleString(this.props.settings.locale, options)
     );
-  }
+  };
 
   // The event listener for when you zoom in and out
   handleZoom(domain) {
@@ -1408,19 +1405,20 @@ class Transactions extends Component {
     return defPagesize;
   }
 
-  accountChanger() {
+  accountChanger = () => {
+    const { locale } = this.props.settings;
     if (this.props.myAccounts) {
       const accounts = this.props.myAccounts.map((e, i) => ({
         value: i + 1,
         display: e.account,
       }));
       return [
-        { value: 0, display: this.props.messages['transactions.AllAccounts'] },
+        { value: 0, display: translate('transactions.AllAccounts', locale) },
         ...accounts,
       ];
     }
     return [];
-  }
+  };
 
   selectAccount(inAccount) {
     this.props.SetSelectedMyAccount(inAccount);

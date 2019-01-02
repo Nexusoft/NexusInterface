@@ -166,7 +166,9 @@ const mapDispatchToProps = dispatch => ({
   CloseModal3: type => {
     dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
   },
-  SwitchLocale: locale => dispatch(SwitchLocale(locale)),
+  SwitchLocale: locale => {
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: locale });
+  },
   SwitchMessages: messages => {
     dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages });
   },

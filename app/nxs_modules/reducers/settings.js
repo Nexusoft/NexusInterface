@@ -68,8 +68,7 @@ export default (state = initialState, action) => {
     case TYPE.SWITCH_LOCALES:
       return {
         ...state,
-        settings: { ...state.settings, locale: action.payload.locale },
-        messages: action.payload.messages,
+        settings: { ...state.settings, locale: action.payload },
       };
       break;
     case TYPE.SWITCH_MESSAGES:

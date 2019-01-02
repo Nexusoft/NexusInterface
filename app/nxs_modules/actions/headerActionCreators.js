@@ -115,13 +115,10 @@ export const SetMarketAveData = () => {
   };
 };
 
-export const SwitchLocale = locale => (dispatch, getState) => {
-  const state = getState();
-  // Don't reload the translation messages if the locale doesn't change
-  if (locale === state.settings.settings.locale) return;
-
-  const messages = getMessages(locale);
-  dispatch({ type: TYPE.SWITCH_LOCALES, payload: { locale, messages } });
+export const SwitchLocale = locale => {
+  return dispatch => {
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: locale });
+  };
 };
 
 export const Lock = () => {

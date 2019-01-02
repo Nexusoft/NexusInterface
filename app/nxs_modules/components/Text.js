@@ -1,15 +1,33 @@
-import React from 'react';
-import { FormattedMessage, formatMessage } from 'react-intl';
+import { connect } from 'react-redux';
 import { getMessages } from 'utils/language';
 
 const en = getMessages('en');
 
-const Text = ({ id, ...rest }) => (
-  <FormattedMessage id={id} defaultMessage={en[id]} {...rest} />
-);
-
-export function text(id, values) {
-  return formatMessage({ id, defaultMessage: en[id] }, values);
+function messageTemplate(rawMessage, data) {
+  return Object.keys(data).reduce(
+    (msg, key) => msg.replace(`{${key}}`, data[key]),
+    rawMessage
+  );
 }
 
-export default Text;
+export function translate(id, locale, data) {
+  const rawMessage = getMessages(locale)[id] || en[id];
+  const message = data ? messageTemplate(rawMessage, data) : rawMessage;
+  return message;
+}
+
+const Text = ({ id, locale, data, children }) => {
+  const message = translate(id, locale, data);
+
+  if (typeof children === 'function') {
+    return children(message);
+  } else {
+    return message;
+  }
+};
+
+const mapStateToProps = state => ({
+  locale: state.settings.settings.locale,
+});
+
+export default connect(mapStateToProps)(Text);

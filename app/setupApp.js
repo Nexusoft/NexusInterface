@@ -128,10 +128,8 @@ function setupTray(dispatch) {
 function setupSettings(dispatch) {
   const settings = GetSettings();
   if (Object.keys(settings).length < 1) {
-    dispatch(ac.SwitchLocale(settings.locale));
     SaveSettings({ ...settings, keepDaemon: false });
   } else {
-    dispatch(ac.SwitchLocale(settings.locale));
     dispatch(ac.setSettings(settings));
   }
 }
