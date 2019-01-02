@@ -1,6 +1,6 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import Modal from 'react-responsive-modal';
 
 // Internal Global Dependencies
@@ -25,10 +25,7 @@ class Prompting extends Component {
     return (
       <>
         <h3>
-          <FormattedMessage
-            id="ToolTip.DbOption"
-            defaultMessage="Would you like to reduce the time it takes to sync by downloading a recent version of the database?"
-          />
+          <Text id="ToolTip.DbOption" />
         </h3>
         {!enoughSpace && (
           <h3
@@ -36,10 +33,7 @@ class Prompting extends Component {
               color: '#ff0000',
             }}
           >
-            <FormattedMessage
-              id="ToolTip.NotEnoughSpace"
-              defaultMessage="Not Enough Space, Requires 20gb."
-            />
+            <Text id="ToolTip.NotEnoughSpace" />
           </h3>
         )}
         <button
@@ -51,10 +45,7 @@ class Prompting extends Component {
             this.props.setPercentDownloaded(0.001);
           }}
         >
-          <FormattedMessage
-            id="ToolTip.BootStrapIt"
-            defaultMessage="Yes, let's bootstrap it"
-          />
+          <Text id="ToolTip.BootStrapIt" />
         </button>
         <button
           className="button"
@@ -65,10 +56,7 @@ class Prompting extends Component {
             SaveSettings(settings);
           }}
         >
-          <FormattedMessage
-            id="ToolTip.SyncFromScratch"
-            defaultMessage="No, let it sync form scratch"
-          />
+          <Text id="ToolTip.SyncFromScratch" />
         </button>
       </>
     );
@@ -78,10 +66,7 @@ class Prompting extends Component {
 const Downloading = props => (
   <>
     <h3>
-      <FormattedMessage
-        id="ToolTip.RecentDatabaseDownloading"
-        defaultMessage="Recent Database Downloading"
-      />
+      <Text id="ToolTip.RecentDatabaseDownloading" />
     </h3>
     <div className="progress-bar">
       <div
@@ -90,10 +75,7 @@ const Downloading = props => (
       />
     </div>
     <h3>
-      <FormattedMessage
-        id="ToolTip.PleaseWait"
-        defaultMessage="Please Wait..."
-      />
+      <Text id="ToolTip.PleaseWait" />
     </h3>
   </>
 );
@@ -101,17 +83,11 @@ const Downloading = props => (
 const Extracting = () => (
   <>
     <h3>
-      <FormattedMessage
-        id="ToolTip.RecentDatabaseExtracting"
-        defaultMessage="Recent Database Extracting"
-      />
+      <Text id="ToolTip.RecentDatabaseExtracting" />
     </h3>
 
     <h3>
-      <FormattedMessage
-        id="ToolTip.PleaseWait"
-        defaultMessage="Please Wait..."
-      />
+      <Text id="ToolTip.PleaseWait" />
     </h3>
   </>
 );

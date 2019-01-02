@@ -12,12 +12,11 @@ import * as TYPE from 'actions/actiontypes';
 import { NavLink } from 'react-router-dom';
 import { remote } from 'electron';
 import Request from 'request';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import fs from 'fs';
 import path from 'path';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
-import { intlReducer } from 'react-intl-redux';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
@@ -303,12 +302,7 @@ class Overview extends Component {
 
   BlockRapper() {
     if (this.props.blockDate === 'Getting Next Block...') {
-      return (
-        <FormattedMessage
-          id="ToolTip.GettingNextBlock"
-          defaultMessage="Getting Next Block..."
-        />
-      );
+      return <Text id="ToolTip.GettingNextBlock" />;
     } else {
       return this.props.blockDate.toLocaleString(this.props.settings.locale);
     }
@@ -612,10 +606,7 @@ class Overview extends Component {
           <div>
             <h2>
               {' '}
-              <FormattedMessage
-                id="overview.LicensceAgreement"
-                defaultMessage="License Agreement"
-              />
+              <Text id="overview.LicensceAgreement" />
             </h2>
             {this.returnLicenseModalInternal()}
           </div>
@@ -639,30 +630,21 @@ class Overview extends Component {
         >
           <h3>
             {' '}
-            <FormattedMessage
-              id="overview.EncryptedModal"
-              defaultMessage="Your Wallet Is Not Encrypted!"
-            />
+            <Text id="overview.EncryptedModal" />
           </h3>
           <p>
-            <FormattedMessage
-              id="overview.Suggestion"
-              defaultMessage="You really should encrypt your wallet to keep your Nexus safe."
-            />
+            <Text id="overview.Suggestion" />
           </p>
           <NavLink to="/Settings/Unencrypted">
             <button className="button primary">
-              <FormattedMessage
-                id="overview.TakeMeThere"
-                defaultMessage="Take Me There"
-              />
+              <Text id="overview.TakeMeThere" />
             </button>
           </NavLink>
           <button
             className="button negative"
             onClick={() => this.props.ignoreEncryptionWarning()}
           >
-            <FormattedMessage id="overview.Ignore" defaultMessage="Ignore" />{' '}
+            <Text id="overview.Ignore" />{' '}
           </button>
         </Modal>
 
@@ -696,10 +678,7 @@ class Overview extends Component {
                 {stake > 0 ? (
                   <span>Balance and Stake</span>
                 ) : (
-                  <FormattedMessage
-                    id="overview.Balance"
-                    defaultMessage="Balance"
-                  />
+                  <Text id="overview.Balance" />
                 )}{' '}
                 (NXS)
               </StatLabel>
@@ -720,11 +699,8 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.Balance"
-                  defaultMessage="Balance"
-                />{' '}
-                ({this.props.settings.fiatCurrency})
+                <Text id="overview.Balance" /> (
+                {this.props.settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!connections ? (
@@ -743,10 +719,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.Transactions"
-                  defaultMessage="Transactions"
-                />
+                <Text id="overview.Transactions" />
               </StatLabel>
               <StatValue>
                 {!!connections ? (
@@ -765,11 +738,8 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.MarketPrice"
-                  defaultMessage="Market Price"
-                />{' '}
-                ({this.props.settings.fiatCurrency})
+                <Text id="overview.MarketPrice" /> (
+                {this.props.settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -788,11 +758,8 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.MarketCap"
-                  defaultMessage="Market Cap"
-                />{' '}
-                ({this.props.settings.fiatCurrency})
+                <Text id="overview.MarketCap" /> (
+                {this.props.settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -811,11 +778,8 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.24hrChange"
-                  defaultMessage="24hr Change"
-                />{' '}
-                ({this.props.settings.fiatCurrency} %)
+                <Text id="overview.24hrChange" /> (
+                {this.props.settings.fiatCurrency} %)
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -834,10 +798,7 @@ class Overview extends Component {
             <StatIcon icon={this.connectionsImage()} />
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.Connections"
-                  defaultMessage="Connections"
-                />
+                <Text id="overview.Connections" />
               </StatLabel>
               <StatValue>
                 {!!connections ? (
@@ -853,10 +814,7 @@ class Overview extends Component {
             <StatIcon icon={interestIcon} />
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.InterestRate"
-                  defaultMessage="Stake Reward"
-                />
+                <Text id="overview.InterestRate" />
               </StatLabel>
               <StatValue>
                 {!!connections ? (
@@ -873,10 +831,7 @@ class Overview extends Component {
               <StatIcon icon={nxsblocksIcon} />
               <div>
                 <StatLabel>
-                  <FormattedMessage
-                    id="overview.BlockCount"
-                    defaultMessage="Block Count"
-                  />
+                  <Text id="overview.BlockCount" />
                 </StatLabel>
 
                 <StatValue>
@@ -894,10 +849,7 @@ class Overview extends Component {
             <StatIcon icon={this.blockWeightImage()} />
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.BlockWeightt"
-                  defaultMessage="Block Weight"
-                />
+                <Text id="overview.BlockWeightt" />
               </StatLabel>
               <StatValue>
                 {!!connections ? (
@@ -913,10 +865,7 @@ class Overview extends Component {
             <StatIcon icon={this.trustImg()} />
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.TrustWeight"
-                  defaultMessage="Trust Weight"
-                />
+                <Text id="overview.TrustWeight" />
               </StatLabel>
               <StatValue>
                 {!!connections ? (
@@ -932,10 +881,7 @@ class Overview extends Component {
             <StatIcon icon={stakeIcon} />
             <div>
               <StatLabel>
-                <FormattedMessage
-                  id="overview.StakeWeight"
-                  defaultMessage="Stake Weight"
-                />
+                <Text id="overview.StakeWeight" />
               </StatLabel>
               <StatValue>
                 {!!connections ? (

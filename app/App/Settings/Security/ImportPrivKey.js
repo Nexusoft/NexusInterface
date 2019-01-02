@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import * as RPC from 'scripts/rpc';
 import styled from '@emotion/styled';
 
@@ -52,27 +52,12 @@ export default class ImportPrivKey extends Component {
   render() {
     return (
       <ImportPrivKeyComponent>
-        <FieldSet
-          legend={
-            <FormattedMessage
-              id="Settings.ImportPrivateKey"
-              defaultMessage="Import Private Key"
-            />
-          }
-        >
-          <FormattedMessage
-            id="Settings.AccountName"
-            defaultMessage="Account Name"
-          >
+        <FieldSet legend={<Text id="Settings.ImportPrivateKey" />}>
+          <Text id="Settings.AccountName">
             {An => (
               <FormField
                 connectLabel
-                label={
-                  <FormattedMessage
-                    id="Settings.AccountName"
-                    defaultMessage="Account Name:"
-                  />
-                }
+                label={<Text id="Settings.AccountName" />}
               >
                 <TextField
                   type="Text"
@@ -82,21 +67,10 @@ export default class ImportPrivKey extends Component {
                 />
               </FormField>
             )}
-          </FormattedMessage>
-          <FormattedMessage
-            id="Settings.PrivateKey"
-            defaultMessage="Private Key"
-          >
+          </Text>
+          <Text id="Settings.PrivateKey">
             {pk => (
-              <FormField
-                connectLabel
-                label={
-                  <FormattedMessage
-                    id="Settings.PrivateKey"
-                    defaultMessage="Account Name:"
-                  />
-                }
-              >
+              <FormField connectLabel label={<Text id="Settings.PrivateKey" />}>
                 <TextField
                   type="password"
                   placeholder={pk}
@@ -105,7 +79,7 @@ export default class ImportPrivKey extends Component {
                 />
               </FormField>
             )}
-          </FormattedMessage>
+          </Text>
           <Button
             skin="primary"
             wide
@@ -113,7 +87,7 @@ export default class ImportPrivKey extends Component {
             disabled={this.props.busyFlag}
             onClick={e => this.importPrivKey(e)}
           >
-            <FormattedMessage id="Settings.Submit" defaultMessage="Submit" />
+            <Text id="Settings.Submit" />
           </Button>
         </FieldSet>
 

@@ -23,13 +23,7 @@ const mapDispatchToProps = dispatch => ({
 class SettingsMarket extends Component {
   // Class methods
   feedback() {
-    UIController.showNotification(
-      <FormattedMessage
-        id="Alert.SettingsSaved"
-        defaultMessage="Settings Saved"
-      />,
-      'success'
-    );
+    UIController.showNotification(<Text id="Alert.SettingsSaved" />, 'success');
   }
   // Mandatory React method
   render() {

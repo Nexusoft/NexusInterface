@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import config from 'api/configuration';
 import path from 'path';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import fs from 'fs';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
@@ -303,20 +303,12 @@ class SettingsApp extends Component {
     if (parseFloat(TxFee) > 0) {
       RPC.PROMISE('settxfee', [parseFloat(TxFee)]);
       UIController.showNotification(
-        <FormattedMessage
-          id="Alert.TransactionFeeSet"
-          defaultMessage="Transaction Fee Set"
-        />,
+        <Text id="Alert.TransactionFeeSet" />,
         'success'
       );
     } else {
       UIController.openErrorModal({
-        message: (
-          <FormattedMessage
-            id="Alert.InvalidTransactionFee"
-            defaultMessage="Invalid Transaction Fee"
-          />
-        ),
+        message: <Text id="Alert.InvalidTransactionFee" />,
       });
     }
   }
@@ -402,10 +394,7 @@ class SettingsApp extends Component {
     ]).then(payload => {
       this.props.CloseModal4();
       UIController.showNotification(
-        <FormattedMessage
-          id="Alert.WalletBackedUp"
-          defaultMessage="Wallet Backed Up"
-        />,
+        <Text id="Alert.WalletBackedUp" />,
         'success'
       );
     });
@@ -450,24 +439,14 @@ class SettingsApp extends Component {
 
   confirmSetTxFee = () => {
     UIController.openConfirmModal({
-      question: (
-        <FormattedMessage
-          id="Settings.SetFee"
-          defaultMessage="Set Transaction Fee?"
-        />
-      ),
+      question: <Text id="Settings.SetFee" />,
       yesCallback: this.setTxFee,
     });
   };
 
   confirmBackupWallet = () => {
     UIController.openConfirmModal({
-      question: (
-        <FormattedMessage
-          id="Settings.BackupWallet"
-          defaultMessage="Backup Wallet?"
-        />
-      ),
+      question: <Text id="Settings.BackupWallet" />,
       yesCallback: () => {
         if (this.props.connections !== undefined) {
           this.backupWallet();
@@ -486,14 +465,7 @@ class SettingsApp extends Component {
     return (
       <AppSettings>
         <form>
-          <SettingsField
-            label={
-              <FormattedMessage
-                id="Settings.Language"
-                defaultMesage="Language"
-              />
-            }
-          >
+          <SettingsField label={<Text id="Settings.Language" />}>
             <Select
               options={languages}
               value={this.props.settings.locale}
@@ -503,18 +475,8 @@ class SettingsApp extends Component {
 
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.MinimizeClose"
-                defaultMessage="Minimize On Close"
-              />
-            }
-            subLabel={
-              <FormattedMessage
-                id="ToolTip.MinimizeOnClose"
-                defaultMessage="Minimize the wallet when closing the window instead of closing it"
-              />
-            }
+            label={<Text id="Settings.MinimizeClose" />}
+            subLabel={<Text id="ToolTip.MinimizeOnClose" />}
           >
             <Switch
               defaultChecked={this.initialValues.minimizeToTray}
@@ -524,18 +486,8 @@ class SettingsApp extends Component {
 
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.UsageData"
-                defaultMessage="Send anonymous usage data"
-              />
-            }
-            subLabel={
-              <FormattedMessage
-                id="ToolTip.Usage"
-                defaultMessage="Send anonymous usage data to allow the Nexus developers to improve the wallet"
-              />
-            }
+            label={<Text id="Settings.UsageData" />}
+            subLabel={<Text id="ToolTip.Usage" />}
           >
             <Switch
               defaultChecked={this.initialValues.googlesettings}
@@ -543,14 +495,7 @@ class SettingsApp extends Component {
             />
           </SettingsField>
 
-          <SettingsField
-            label={
-              <FormattedMessage
-                id="Settings.Fiat"
-                defaultMessage="Fiat Currency"
-              />
-            }
-          >
+          <SettingsField label={<Text id="Settings.Fiat" />}>
             <Select
               value={this.props.settings.fiatCurrency}
               onChange={e => this.OnFiatCurrencyChange(e)}
@@ -561,18 +506,8 @@ class SettingsApp extends Component {
 
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.MinimumConfirmations"
-                defaultMessage="Minimum Confirmations"
-              />
-            }
-            subLabel={
-              <FormattedMessage
-                id="ToolTip.MinimumConfirmations"
-                defaultMessage="Minimum amount of confirmations before a block is accepted. Local Only."
-              />
-            }
+            label={<Text id="Settings.MinimumConfirmations" />}
+            subLabel={<Text id="ToolTip.MinimumConfirmations" />}
           >
             <TextField
               type="number"
@@ -588,15 +523,7 @@ class SettingsApp extends Component {
           </SettingsField>
 
           {/*File */}
-          <SettingsField
-            connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.Folder"
-                defaultMessage="Backup Directory"
-              />
-            }
-          >
+          <SettingsField connectLabel label={<Text id="Settings.Folder" />}>
             <TextField
               value={this.props.settings.Folder}
               onChange={e => this.props.SeeFolder(e.target.value)}
@@ -610,18 +537,8 @@ class SettingsApp extends Component {
           {/* NEXUS FEE */}
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.OptionalFee"
-                defaultMessage="Optional transaction fee (NXS)"
-              />
-            }
-            subLabel={
-              <FormattedMessage
-                id="ToolTip.OptionalFee"
-                defaultMessage="Optional transaction fee to include on transactions. Higher amounts will allow transactions to be processed faster, lower may cause additional transaction processing"
-              />
-            }
+            label={<Text id="Settings.OptionalFee" />}
+            subLabel={<Text id="ToolTip.OptionalFee" />}
           >
             {inputId => (
               <div className="flex stretch">
@@ -646,18 +563,8 @@ class SettingsApp extends Component {
 
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.DeveloperMode"
-                defaultMessage="Developer Mode"
-              />
-            }
-            subLabel={
-              <FormattedMessage
-                id="ToolTip.DevMode"
-                defaultMessage="Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features"
-              />
-            }
+            label={<Text id="Settings.DeveloperMode" />}
+            subLabel={<Text id="ToolTip.DevMode" />}
           >
             <Switch
               defaultChecked={this.initialValues.devmode}
@@ -670,10 +577,7 @@ class SettingsApp extends Component {
             style={{ marginTop: '2em' }}
             onClick={this.confirmBackupWallet}
           >
-            <FormattedMessage
-              id="Settings.BackupWallet"
-              defaultMessage="Backup Wallet"
-            />
+            <Text id="Settings.BackupWallet" />
           </Button>
         </form>
       </AppSettings>

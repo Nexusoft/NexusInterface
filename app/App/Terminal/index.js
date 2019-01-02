@@ -21,7 +21,7 @@ import TerminalCore from './TerminalCore';
 import consoleIcon from 'images/console.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
 import coreIcon from 'images/core.sprite.svg';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 
 const TerminalComponent = styled.div({
   height: '100%',
@@ -67,9 +67,7 @@ class Terminal extends Component {
     return (
       <Panel
         icon={consoleIcon}
-        title={
-          <FormattedMessage id="Console.Console" defaultMessage="Console" />
-        }
+        title={<Text id="Console.Console" />}
         bodyScrollable={false}
       >
         <TerminalComponent>
@@ -77,22 +75,12 @@ class Terminal extends Component {
             <Tab
               link={`${this.props.match.url}/Console`}
               icon={logoIcon}
-              text={
-                <FormattedMessage
-                  id="Console.Console"
-                  defaultMessage="Console"
-                />
-              }
+              text={<Text id="Console.Console" />}
             />
             <Tab
               link={`${this.props.match.url}/Core`}
               icon={coreIcon}
-              text={
-                <FormattedMessage
-                  id="Console.CoreOutput"
-                  defaultMessage="Console"
-                />
-              }
+              text={<Text id="Console.CoreOutput" />}
             />
           </TerminalTabBar>
 

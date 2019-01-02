@@ -1,7 +1,7 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import { remote } from 'electron';
 import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
@@ -220,19 +220,13 @@ class SendPage extends Component {
             this.props.OpenModal2('Edit Entry?');
           }}
         >
-          <FormattedMessage
-            id="sendReceive.EditQueue"
-            defaultMessage="Edit Entry"
-          />
+          <Text id="sendReceive.EditQueue" />
         </Button>
       );
     } else {
       return (
         <Button onClick={() => this.validateAddToQueue()}>
-          <FormattedMessage
-            id="sendReceive.AddToQueue"
-            defaultMessage="Add To Queue"
-          />
+          <Text id="sendReceive.AddToQueue" />
         </Button>
       );
     }
@@ -254,12 +248,7 @@ class SendPage extends Component {
 
   accHud() {
     if (this.props.SelectedAccount === '') {
-      return (
-        <FormattedMessage
-          id="sendReceive.MyAccount"
-          defaultMessage="My Account"
-        />
-      );
+      return <Text id="sendReceive.MyAccount" />;
     } else {
       return this.props.SelectedAccount;
     }
@@ -270,12 +259,7 @@ class SendPage extends Component {
       return [
         {
           value: '',
-          display: (
-            <FormattedMessage
-              id="sendReceive.SelectAnAccount"
-              defaultMessage="Select an Account"
-            />
-          ),
+          display: <Text id="sendReceive.SelectAnAccount" />,
         },
         ...this.props.AccountChanger.map(e => ({
           value: e.name,
@@ -298,33 +282,18 @@ class SendPage extends Component {
               });
             } else {
               UIController.openErrorModal({
-                message: (
-                  <FormattedMessage
-                    id="Alert.registeredToThis"
-                    defaultMessage="This is an address registered to this wallet"
-                  />
-                ),
+                message: <Text id="Alert.registeredToThis" />,
               });
             }
           } else {
             UIController.openErrorModal({
-              message: (
-                <FormattedMessage
-                  id="Alert.InvalidAddress"
-                  defaultMessage="Invalid Address"
-                />
-              ),
+              message: <Text id="Alert.InvalidAddress" />,
             });
           }
         })
         .catch(e => {
           UIController.openErrorModal({
-            message: (
-              <FormattedMessage
-                id="Alert.InvalidAddress"
-                defaultMessage="Invalid Address"
-              />
-            ),
+            message: <Text id="Alert.InvalidAddress" />,
           });
         });
     }
@@ -383,10 +352,7 @@ class SendPage extends Component {
                     .then(payload => {
                       this.getAccountData();
                       UIController.showNotification(
-                        <FormattedMessage
-                          id="Alert.Sent"
-                          defaultMessage="Transaction Sent"
-                        />,
+                        <Text id="Alert.Sent" />,
                         'success'
                       );
                       this.props.clearForm();
@@ -407,10 +373,7 @@ class SendPage extends Component {
                     .then(payoad => {
                       this.getAccountData();
                       UIController.showNotification(
-                        <FormattedMessage
-                          id="Alert.Sent"
-                          defaultMessage="Transaction Sent"
-                        />,
+                        <Text id="Alert.Sent" />,
                         'success'
                       );
                       this.props.clearForm();
@@ -425,35 +388,20 @@ class SendPage extends Component {
               } else {
                 this.props.busy();
                 UIController.openErrorModal({
-                  message: (
-                    <FormattedMessage
-                      id="Alert.registeredToThis"
-                      defaultMessage="This is an address registered to this wallet"
-                    />
-                  ),
+                  message: <Text id="Alert.registeredToThis" />,
                 });
               }
             } else {
               this.props.busy();
               UIController.openErrorModal({
-                message: (
-                  <FormattedMessage
-                    id="Alert.InvalidAddress"
-                    defaultMessage="Invalid Address"
-                  />
-                ),
+                message: <Text id="Alert.InvalidAddress" />,
               });
             }
           })
           .catch(e => {
             this.props.busy();
             UIController.openErrorModal({
-              message: (
-                <FormattedMessage
-                  id="Alert.InvalidAddress"
-                  defaultMessage="Invalid Address"
-                />
-              ),
+              message: <Text id="Alert.InvalidAddress" />,
             });
           });
       } else {
@@ -469,23 +417,13 @@ class SendPage extends Component {
 
     if (!Address) {
       UIController.openErrorModal({
-        message: (
-          <FormattedMessage
-            id="Alert.InvalidAddress"
-            defaultMessage="Invalid Address"
-          />
-        ),
+        message: <Text id="Alert.InvalidAddress" />,
       });
       return;
     }
     if (Amount <= 0) {
       UIController.openErrorModal({
-        message: (
-          <FormattedMessage
-            id="Alert.InvalidAmount"
-            defaultMessage="Invalid Amount"
-          />
-        ),
+        message: <Text id="Alert.InvalidAmount" />,
       });
       return;
     }
@@ -495,12 +433,7 @@ class SendPage extends Component {
     }
 
     UIController.openConfirmModal({
-      question: (
-        <FormattedMessage
-          id="sendReceive.SendTransaction"
-          defaultMessage="Send Transaction"
-        />
-      ),
+      question: <Text id="sendReceive.SendTransaction" />,
       yesCallback: this.sendOne,
     });
   };
@@ -514,21 +447,11 @@ class SendPage extends Component {
     return (
       <Panel
         icon={sendIcon}
-        title={
-          <FormattedMessage
-            id="sendReceive.SendNexus"
-            defaultMessage="Send Nexus"
-          />
-        }
+        title={<Text id="sendReceive.SendNexus" />}
         controls={
           !!this.props.connections && (
             <Tooltip.Trigger
-              tooltip={
-                <FormattedMessage
-                  id="sendReceive.MoveNxsBetweenAccount"
-                  defaultMessage="Move NXS between accounts"
-                />
-              }
+              tooltip={<Text id="sendReceive.MoveNxsBetweenAccount" />}
             >
               <Button
                 square
@@ -544,10 +467,7 @@ class SendPage extends Component {
       >
         {!this.props.isInSync || !this.props.connections ? (
           <WaitingMessage>
-            <FormattedMessage
-              id="TrustList.SyncMsg"
-              defaultMessage="Please wait for the daemon to load"
-            />
+            <Text id="TrustList.SyncMsg" />
             ...
           </WaitingMessage>
         ) : (
@@ -583,12 +503,7 @@ class SendPage extends Component {
                 <SendAmountField>
                   <FormField
                     connectLabel
-                    label={
-                      <FormattedMessage
-                        id="sendReceive.Amount"
-                        defaultMessage="Nexus Amount"
-                      />
-                    }
+                    label={<Text id="sendReceive.Amount" />}
                   >
                     <TextField
                       placeholder="0.00000"
@@ -615,19 +530,11 @@ class SendPage extends Component {
                   </FormField>
                 </SendAmountField>
               </SendAmount>
-              <FormattedMessage
-                id="sendReceive.EnterYourMessage"
-                defaultMessage="Enter Your Message"
-              >
+              <Text id="sendReceive.EnterYourMessage">
                 {placeholder => (
                   <FormField
                     connectLabel
-                    label={
-                      <FormattedMessage
-                        id="sendReceive.Message"
-                        defaultMessage="Message"
-                      />
-                    }
+                    label={<Text id="sendReceive.Message" />}
                   >
                     <TextField
                       multiline
@@ -639,15 +546,12 @@ class SendPage extends Component {
                     />
                   </FormField>
                 )}
-              </FormattedMessage>
+              </Text>
               <SendFormButtons>
                 {this.editQueue()}
                 <Button skin="primary" onClick={this.confirmSendNow}>
                   <Icon icon={sendIcon} spaceRight />
-                  <FormattedMessage
-                    id="sendReceive.SendNow"
-                    defaultMessage="Send Now"
-                  />
+                  <Text id="sendReceive.SendNow" />
                 </Button>
               </SendFormButtons>
             </SendForm>

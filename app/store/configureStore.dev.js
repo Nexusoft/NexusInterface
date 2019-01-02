@@ -6,10 +6,8 @@ import { createLogger } from 'redux-logger';
 import createRootReducer from 'reducers';
 
 import { addLocaleData } from 'react-intl';
-import { Provider } from 'react-intl-redux';
 import itLocaleData from 'react-intl/locale-data/it';
 import enLocaleData from 'react-intl/locale-data/en';
-import { updateIntl } from 'react-intl-redux';
 import zhLocaleData from 'react-intl/locale-data/zh';
 const UPDATE_LOCALES = 'UPDATE_LOCALES';
 // import * as counterActions from "actions/counter";

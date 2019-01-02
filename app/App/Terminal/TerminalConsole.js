@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { timingSafeEqual } from 'crypto';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 import googleanalytics from 'scripts/googleanalytics';
@@ -331,10 +331,7 @@ class TerminalConsole extends Component {
     if (this.props.connections === undefined) {
       return (
         <WaitingMessage>
-          <FormattedMessage
-            id="transactions.Loading"
-            defaultMessage="transactions.Loading"
-          />
+          <Text id="transactions.Loading" />
           ...
         </WaitingMessage>
       );
@@ -343,10 +340,7 @@ class TerminalConsole extends Component {
         <TerminalContent>
           <Console>
             <ConsoleInput>
-              <FormattedMessage
-                id="Console.CommandsHere"
-                defaultMessage="Enter console commands here (ex: getinfo, help)"
-              >
+              <Text id="Console.CommandsHere">
                 {cch => (
                   <TextField
                     ref={element => (this.inputRef = element)}
@@ -371,15 +365,12 @@ class TerminalConsole extends Component {
                           this.processInput();
                         }}
                       >
-                        <FormattedMessage
-                          id="Console.Exe"
-                          defaultMessage="Execute"
-                        />
+                        <Text id="Console.Exe" />
                       </ExecuteButton>
                     }
                   />
                 )}
-              </FormattedMessage>
+              </Text>
 
               <AutoComplete key="autocomplete">
                 {this.autoComplete()}
@@ -395,10 +386,7 @@ class TerminalConsole extends Component {
               grouped="bottom"
               onClick={this.props.resetMyConsole}
             >
-              <FormattedMessage
-                id="Console.ClearConsole"
-                defaultMessage="Clear Console"
-              />
+              <Text id="Console.ClearConsole" />
             </Button>
           </Console>
         </TerminalContent>

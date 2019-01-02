@@ -107,21 +107,13 @@ class Login extends Component {
           if (e === 'Error: The wallet passphrase entered was incorrect.') {
             this.props.busy(false);
             UIController.openErrorModal({
-              message: (
-                <FormattedMessage
-                  id="Alert.IncorrectPasssword"
-                  defaultMessage="Incorrect Passsword"
-                />
-              ),
+              message: <Text id="Alert.IncorrectPasssword" />,
             });
             // this.passwordRef.focus();
           } else if (e === 'value is type null, expected int') {
             this.props.busy(false);
             UIController.showNotification(
-              <FormattedMessage
-                id="Alert.FutureDate"
-                defaultMessage="Unlock until date/time must be at least an hour in the future"
-              />,
+              <Text id="Alert.FutureDate" />,
               'error'
             );
             this.passwordRef.focus();
@@ -149,21 +141,13 @@ class Login extends Component {
             if (e === 'Error: The wallet passphrase entered was incorrect.') {
               this.props.busy(false);
               UIController.openErrorModal({
-                message: (
-                  <FormattedMessage
-                    id="Alert.IncorrectPasssword"
-                    defaultMessage="Incorrect Passsword"
-                  />
-                ),
+                message: <Text id="Alert.IncorrectPasssword" />,
               });
               this.passwordRef.focus();
             } else if (e === 'value is type null, expected int') {
               this.props.busy(false);
               UIController.showNotification(
-                <FormattedMessage
-                  id="Alert.FutureDate"
-                  defaultMessage="Unlock until date/time must be at least an hour in the future"
-                />,
+                <Text id="Alert.FutureDate" />,
                 'error'
               );
               this.passwordRef.focus();
@@ -172,13 +156,7 @@ class Login extends Component {
             }
           });
       } else {
-        UIController.showNotification(
-          <FormattedMessage
-            id="Alert.FutureDate"
-            defaultMessage="Unlock until date/time must be at least an hour in the future"
-          />,
-          'error'
-        );
+        UIController.showNotification(<Text id="Alert.FutureDate" />, 'error');
       }
     }
   }

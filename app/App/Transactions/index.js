@@ -23,7 +23,7 @@ import {
   Flyout,
 } from 'victory';
 import rp from 'request-promise';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
 
@@ -66,57 +66,42 @@ let tempaddpress = new Map();
 const categories = [
   {
     value: 'all',
-    display: <FormattedMessage id="transactions.All" defaultMessage="All" />,
+    display: <Text id="transactions.All" />,
   },
   {
     value: 'credit',
-    display: (
-      <FormattedMessage id="transactions.Receive" defaultMessage="Receive" />
-    ),
+    display: <Text id="transactions.Receive" />,
   },
   {
     value: 'debit',
-    display: <FormattedMessage id="transactions.Sent" defaultMessage="Sent" />,
+    display: <Text id="transactions.Sent" />,
   },
   {
     value: 'genesis',
-    display: (
-      <FormattedMessage id="transactions.Genesis" defaultMessage="Genesis" />
-    ),
+    display: <Text id="transactions.Genesis" />,
   },
   {
     value: 'trust',
-    display: (
-      <FormattedMessage id="transactions.Trust" defaultMessage="Trust" />
-    ),
+    display: <Text id="transactions.Trust" />,
   },
 ];
 
 const timeFrames = [
   {
     value: 'All',
-    display: <FormattedMessage id="transactions.All" defaultMessage="All" />,
+    display: <Text id="transactions.All" />,
   },
   {
     value: 'Year',
-    display: (
-      <FormattedMessage id="transactions.PastYear" defaultMessage="Past Year" />
-    ),
+    display: <Text id="transactions.PastYear" />,
   },
   {
     value: 'Month',
-    display: (
-      <FormattedMessage
-        id="transactions.PastMonth"
-        defaultMessage="Past Month"
-      />
-    ),
+    display: <Text id="transactions.PastMonth" />,
   },
   {
     value: 'Week',
-    display: (
-      <FormattedMessage id="transactions.PastWeek" defaultMessage="Past Week" />
-    ),
+    display: <Text id="transactions.PastWeek" />,
   },
 ];
 
@@ -1024,15 +1009,13 @@ class Transactions extends Component {
     let tempColumns = [];
 
     tempColumns.push({
-      Header: (
-        <FormattedMessage id="transactions.TX" defaultMessage="TX Number" />
-      ),
+      Header: <Text id="transactions.TX" />,
       accessor: 'transactionnumber',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: <FormattedMessage id="transactions.Time" defaultMessage="Time" />,
+      Header: <Text id="transactions.Time" />,
       id: 'time',
       Cell: d => (
         <div>
@@ -1051,56 +1034,33 @@ class Transactions extends Component {
       id: 'category',
       Cell: q => {
         if (q.value === 'debit') {
-          return (
-            <FormattedMessage id="transactions.Sent" defaultMessage="Sent" />
-          );
+          return <Text id="transactions.Sent" />;
         } else if (q.value === 'credit') {
-          return (
-            <FormattedMessage
-              id="transactions.Receive"
-              defaultMessage="Received"
-            />
-          );
+          return <Text id="transactions.Receive" />;
         } else {
-          return (
-            <FormattedMessage
-              id="transactions.Pending"
-              defaultMessage="(Pending)"
-            />
-          );
+          return <Text id="transactions.Pending" />;
         }
       },
-      Header: (
-        <FormattedMessage
-          id="transactions.Category"
-          defaultMessage="Catagory"
-        />
-      ),
+      Header: <Text id="transactions.Category" />,
       accessor: 'category',
 
       maxWidth: 80,
     });
 
     tempColumns.push({
-      Header: (
-        <FormattedMessage id="transactions.Amount" defaultMessage="Amount" />
-      ),
+      Header: <Text id="transactions.Amount" />,
       accessor: 'amount',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: (
-        <FormattedMessage id="transactions.Account" defaultMessage="Account" />
-      ),
+      Header: <Text id="transactions.Account" />,
       accessor: 'account',
       maxWidth: 150,
     });
 
     tempColumns.push({
-      Header: (
-        <FormattedMessage id="transactions.Address" defaultMessage="Address" />
-      ),
+      Header: <Text id="transactions.Address" />,
       accessor: 'address',
     });
     return tempColumns;
@@ -1572,12 +1532,7 @@ class Transactions extends Component {
     return (
       <Panel
         icon={transactionIcon}
-        title={
-          <FormattedMessage
-            id="transactions.Details"
-            defaultMessage="Transaction Details"
-          />
-        }
+        title={<Text id="transactions.Details" />}
         controls={
           <Select
             value={this.props.selectedAccount}
@@ -1589,10 +1544,7 @@ class Transactions extends Component {
       >
         {this.props.connections === undefined ? (
           <WaitingMessage>
-            <FormattedMessage
-              id="transactions.Loading"
-              defaultMessage="Please wait for the daemon to load"
-            />
+            <Text id="transactions.Loading" />
             ...
           </WaitingMessage>
         ) : (
@@ -1606,12 +1558,7 @@ class Transactions extends Component {
             <Filters>
               <FormField
                 connectLabel
-                label={
-                  <FormattedMessage
-                    id="transactions.SearchAddress"
-                    defaultMessage="Search Address"
-                  />
-                }
+                label={<Text id="transactions.SearchAddress" />}
               >
                 <TextField
                   inputProps={{
@@ -1624,14 +1571,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField
-                label={
-                  <FormattedMessage
-                    id="transactions.Type"
-                    defaultMessage="Type"
-                  />
-                }
-              >
+              <FormField label={<Text id="transactions.Type" />}>
                 <Select
                   value={this.state.categoryFilter}
                   onChange={this.transactiontypefiltercallback.bind(this)}
@@ -1641,12 +1581,7 @@ class Transactions extends Component {
 
               <FormField
                 connectLabel
-                label={
-                  <FormattedMessage
-                    id="transactions.MinimumAmount"
-                    defaultMessage="Min Amount"
-                  />
-                }
+                label={<Text id="transactions.MinimumAmount" />}
               >
                 <TextField
                   type="number"
@@ -1656,14 +1591,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField
-                label={
-                  <FormattedMessage
-                    id="transactions.Time"
-                    defaultMessage="Time span"
-                  />
-                }
-              >
+              <FormField label={<Text id="transactions.Time" />}>
                 <Select
                   value={this.state.displayTimeFrame}
                   onChange={this.transactionTimeframeChange.bind(this)}
@@ -1671,14 +1599,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <Tooltip.Trigger
-                tooltip={
-                  <FormattedMessage
-                    id="transactions.Download"
-                    defaultMessage="Download"
-                  />
-                }
-              >
+              <Tooltip.Trigger tooltip={<Text id="transactions.Download" />}>
                 <Button
                   square
                   className="relative"

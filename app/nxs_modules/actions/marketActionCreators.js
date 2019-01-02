@@ -1,6 +1,6 @@
 import Request from 'request';
 import * as TYPE from './actiontypes';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text'
 import React from 'react';
 import locale from 'reducers/settings';
 

@@ -12,7 +12,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import * as TYPE from 'actions/actiontypes';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 import * as actionsCreators from 'actions/marketActionCreators';
 
@@ -190,20 +190,9 @@ class Market extends Component {
   // Mandatory React method
   render() {
     return (
-      <Panel
-        icon={chartIcon}
-        title={
-          <FormattedMessage
-            id="Market.Information"
-            defaultMessage="Market Information"
-          />
-        }
-      >
+      <Panel icon={chartIcon} title={<Text id="Market.Information" />}>
         <a className="refresh" onClick={() => this.refresher()}>
-          <FormattedMessage
-            id="Market.Refreash"
-            defaultMessage="Refresh Market Data"
-          />
+          <Text id="Market.Refreash" />
         </a>
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 

@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { jsx } from '@emotion/core';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 
 // Internal Global Dependencies
 import { animations } from 'styles';
@@ -58,9 +58,7 @@ function syncStatusTooltip({
         messages['Header.Blocks']
       );
     } else {
-      return (
-        <FormattedMessage id="Header.Synced" defaultMessage="Synchronized" />
-      );
+      return <Text id="Header.Synced" />;
     }
   }
 }

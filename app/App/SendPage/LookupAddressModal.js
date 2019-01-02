@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 
 // Internal
 import UIController from 'components/UIController';
@@ -46,22 +46,13 @@ export default class LookupAddressModal extends Component {
                 <thead>
                   <tr>
                     <th className="short-column">
-                      <FormattedMessage
-                        id="sendReceive.Name"
-                        defaultMessage="Name"
-                      />
+                      <Text id="sendReceive.Name" />
                     </th>
                     <th className="long-column">
-                      <FormattedMessage
-                        id="sendReceive.Address"
-                        defaultMessage="Address"
-                      />
+                      <Text id="sendReceive.Address" />
                     </th>
                     <th className="short-column">
-                      <FormattedMessage
-                        id="sendReceive.Lookup"
-                        defaultMessage="Search Address"
-                      >
+                      <Text id="sendReceive.Lookup">
                         {placeholder => (
                           <input
                             className="searchBar"
@@ -73,17 +64,14 @@ export default class LookupAddressModal extends Component {
                             required
                           />
                         )}
-                      </FormattedMessage>
+                      </Text>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {this.props.addressbook.length == 0 ? (
                     <h1 style={{ alignSelf: 'center' }}>
-                      <FormattedMessage
-                        id="AddressBook.NoContacts"
-                        defaultMessage="No Contacts"
-                      />
+                      <Text id="AddressBook.NoContacts" />
                     </h1>
                   ) : (
                     addressBookToQueue(this.props, closeModal)

@@ -16,7 +16,7 @@ import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
@@ -96,22 +96,11 @@ class List extends Component {
   // Mandatory React method
   render() {
     return (
-      <Panel
-        icon={trustIcon}
-        title={
-          <FormattedMessage
-            id="TrustList.TrustList"
-            defaultMessage="Trust List"
-          />
-        }
-      >
+      <Panel icon={trustIcon} title={<Text id="TrustList.TrustList" />}>
         {this.props.isInSync === false ||
         this.props.connections === undefined ? (
           <WaitingMessage>
-            <FormattedMessage
-              id="TrustList.SyncMsg"
-              defaultMessage="Please let your wallet sync with the network"
-            />
+            <Text id="TrustList.SyncMsg" />
             ...
           </WaitingMessage>
         ) : (
@@ -121,20 +110,14 @@ class List extends Component {
                 <tr>
                   <th>
                     <div>
-                      <FormattedMessage
-                        id="TrustList.Address"
-                        defaultMessage="Address"
-                      />
+                      <Text id="TrustList.Address" />
                     </div>
                   </th>
 
                   <th onClick={() => this.props.ToggleSortDir()}>
                     <div>
                       {' '}
-                      <FormattedMessage
-                        id="TrustList.InterestRate"
-                        defaultMessage="Stake Reward"
-                      />
+                      <Text id="TrustList.InterestRate" />
                     </div>
                   </th>
                 </tr>
