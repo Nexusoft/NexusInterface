@@ -24,6 +24,8 @@ import styles from './style.css';
 
 // Images
 import trustIcon from 'images/trust-list.sprite.svg';
+import caretUp from 'images/caret-up-solid.sprite.svg';
+import caretdown from 'images/caret-down-solid.sprite.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -118,6 +120,11 @@ class List extends Component {
                     <div>
                       {' '}
                       <Text id="TrustList.InterestRate" />
+                      {this.props.acc ? (
+                        <Icon spaceRight icon={caretdown} />
+                      ) : (
+                        <Icon spaceRight icon={caretUp} />
+                      )}
                     </div>
                   </th>
                 </tr>

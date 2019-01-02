@@ -190,12 +190,14 @@ export default class NetworkGlobe extends Component {
       globeseries[0][1].push(myIP[1]);
       globeseries[0][1].push(0.1); //temporary magnitude.
       // console.log(myIP);
-      glb.removePoints();
-      glb.addData(globeseries[0][1], {
-        format: 'magnitude',
-        name: globeseries[0][0],
-      });
-      glb.createPoints();
+      if (myIP[1]) {
+        glb.removePoints();
+        glb.addData(globeseries[0][1], {
+          format: 'magnitude',
+          name: globeseries[0][0],
+        });
+        glb.createPoints();
+      }
     });
   }
 
