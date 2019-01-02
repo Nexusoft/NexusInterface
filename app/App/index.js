@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { ConnectedRouter } from 'connected-react-router';
 import { Route, Switch } from 'react-router';
 import { Provider } from 'react-redux';
-import IntlWrapper from './IntlWrapper';
+// import IntlWrapper from './IntlWrapper';
 import styled from '@emotion/styled';
 
 // Internal
@@ -62,57 +62,51 @@ export default class App extends Component {
     const { store, history } = this.props;
     return (
       <Provider store={store}>
-        <IntlWrapper>
-          <ThemeController>
-            <ConnectedRouter history={history}>
-              <UIController>
-                <div>
-                  <GlobalStyles />
-                  <AppBackground />
-                  <AppLoader>
-                    <Loader />
-                  </AppLoader>
-                  <AppWrapper>
-                    <Header />
-                    <Main>
-                      <Switch>
-                        <Route exact path="/" component={Overview} />
-                        <Route exact path="/SendPage" component={SendPage} />
-                        <Route
-                          exact
-                          path="/Transactions"
-                          component={Transactions}
-                        />
-                        <Route exact path="/Market" component={Market} />
-                        <Route
-                          exact
-                          path="/AddressBook"
-                          component={AddressBook}
-                        />
-                        <Route
-                          exact
-                          path="/BlockExplorer"
-                          component={BlockExplorer}
-                        />
-                        <Route path="/Settings" component={Settings} />
-                        <Route path="/Terminal" component={Terminal} />
-                        <Route
-                          exact
-                          path="/StyleGuide"
-                          component={StyleGuide}
-                        />
-                        <Route path="/Exchange" component={Exchange} />
-                        <Route exact path="/List" component={TrustList} />
-                        <Route exact path="/About" component={About} />
-                      </Switch>
-                    </Main>
-                    <Navigation />
-                  </AppWrapper>
-                </div>
-              </UIController>
-            </ConnectedRouter>
-          </ThemeController>
-        </IntlWrapper>
+        <ThemeController>
+          <ConnectedRouter history={history}>
+            <UIController>
+              <div>
+                <GlobalStyles />
+                <AppBackground />
+                <AppLoader>
+                  <Loader />
+                </AppLoader>
+                <AppWrapper>
+                  <Header />
+                  <Main>
+                    <Switch>
+                      <Route exact path="/" component={Overview} />
+                      <Route exact path="/SendPage" component={SendPage} />
+                      <Route
+                        exact
+                        path="/Transactions"
+                        component={Transactions}
+                      />
+                      <Route exact path="/Market" component={Market} />
+                      <Route
+                        exact
+                        path="/AddressBook"
+                        component={AddressBook}
+                      />
+                      <Route
+                        exact
+                        path="/BlockExplorer"
+                        component={BlockExplorer}
+                      />
+                      <Route path="/Settings" component={Settings} />
+                      <Route path="/Terminal" component={Terminal} />
+                      <Route exact path="/StyleGuide" component={StyleGuide} />
+                      <Route path="/Exchange" component={Exchange} />
+                      <Route exact path="/List" component={TrustList} />
+                      <Route exact path="/About" component={About} />
+                    </Switch>
+                  </Main>
+                  <Navigation />
+                </AppWrapper>
+              </div>
+            </UIController>
+          </ConnectedRouter>
+        </ThemeController>
       </Provider>
     );
   }

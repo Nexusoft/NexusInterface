@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import { remote } from 'electron';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Internal
@@ -47,10 +47,7 @@ class Unencrypted extends Component {
     if (this.props.connections === undefined) {
       return (
         <WaitingMessage>
-          <FormattedMessage
-            id="transactions.Loading"
-            defaultMessage="Please wait for the Daemon to load"
-          />
+          <Text id="transactions.Loading" />
           ...
         </WaitingMessage>
       );

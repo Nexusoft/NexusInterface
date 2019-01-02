@@ -12,7 +12,6 @@ const mapStateToProps = state => ({
 
 class ThemeController extends PureComponent {
   render() {
-    console.log('Colors updated', this.props.customColors);
     const newColors = colors.derive({
       ...colors.default,
       ...this.props.customColors,

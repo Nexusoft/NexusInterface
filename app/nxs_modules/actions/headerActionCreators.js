@@ -11,6 +11,7 @@ import fs from 'fs';
 // Internal Dependencies
 import * as TYPE from './actiontypes';
 import * as RPC from 'scripts/rpc';
+import { getMessages } from 'utils/language';
 import config from 'api/configuration';
 // import messages from '../languages/messages'
 
@@ -116,7 +117,7 @@ export const SetMarketAveData = () => {
 
 export const SwitchLocale = locale => {
   return dispatch => {
-    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
+    dispatch({ type: TYPE.SWITCH_LOCALES, payload: locale });
   };
 };
 

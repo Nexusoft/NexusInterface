@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Internal
@@ -33,12 +33,7 @@ const QueueSummary = styled.div({
 class QueueBody extends Component {
   confirmRemove = key => {
     UIController.openConfirmModal({
-      question: (
-        <FormattedMessage
-          id="sendReceive.RemoveFromQueue"
-          defaultMessage="Remove From Queue"
-        />
-      ),
+      question: <Text id="sendReceive.RemoveFromQueue" />,
       yesCallback: () => this.props.removeQueue(key),
     });
   };
@@ -48,14 +43,7 @@ class QueueBody extends Component {
       <tbody>
         {Object.keys(this.props.Queue).map(key => (
           <tr key={key}>
-            <Tooltip.Trigger
-              tooltip={
-                <FormattedMessage
-                  id="sendReceive.ClickToEdit"
-                  defaultMessage="Click To Edit"
-                />
-              }
-            >
+            <Tooltip.Trigger tooltip={<Text id="sendReceive.ClickToEdit" />}>
               <td className="td" onClick={() => this.props.updateAddress(key)}>
                 {key}
               </td>
@@ -85,20 +73,19 @@ export default class Queue extends Component {
       return (
         <QueueSummary>
           <div>
-            <FormattedMessage id="sendReceive.Total" defaultMessage="TOTAL" />:{' '}
-            {''}
+            <Text id="sendReceive.Total" />: {''}
             {sum.toFixed(5)} NXS
           </div>
 
           {this.props.paytxfee && (
             <div>
-              <FormattedMessage id="sendReceive.FEE" defaultMessage="Fee" />:{' '}
-              {this.props.paytxfee.toFixed(5)} NXS
+              <Text id="sendReceive.FEE" />: {this.props.paytxfee.toFixed(5)}{' '}
+              NXS
             </div>
           )}
 
           <div>
-            <FormattedMessage id="sendReceive.From" defaultMessage="FROM" />:{' '}
+            <Text id="sendReceive.From" />:{' '}
             {this.props.accHud(this.props.SelectedAccount)}
           </div>
         </QueueSummary>
@@ -108,12 +95,7 @@ export default class Queue extends Component {
 
   confirmClearQueue = () => {
     UIController.openConfirmModal({
-      question: (
-        <FormattedMessage
-          id="sendReceive.ClearQueue"
-          defaultMessage="Clear Queue?"
-        />
-      ),
+      question: <Text id="sendReceive.ClearQueue" />,
       yesCallback: this.props.clearQueue,
     });
   };
@@ -130,13 +112,7 @@ export default class Queue extends Component {
           this.props.Message
         )
           .then(payoad => {
-            UIController.showNotification(
-              <FormattedMessage
-                id="Alert.Sent"
-                defaultMessage="Transaction Sent"
-              />,
-              'success'
-            );
+            UIController.showNotification(<Text id="Alert.Sent" />, 'success');
             this.props.getAccountData();
             this.props.busy();
             this.props.clearForm();
@@ -158,10 +134,7 @@ export default class Queue extends Component {
             .then(payload => {
               this.props.getAccountData();
               UIController.showNotification(
-                <FormattedMessage
-                  id="Alert.Sent"
-                  defaultMessage="Transaction Sent"
-                />,
+                <Text id="Alert.Sent" />,
                 'success'
               );
               this.props.clearForm();
@@ -183,10 +156,7 @@ export default class Queue extends Component {
             .then(payoad => {
               this.props.getAccountData();
               UIController.showNotification(
-                <FormattedMessage
-                  id="Alert.Sent"
-                  defaultMessage="Transaction Sent"
-                />,
+                <Text id="Alert.Sent" />,
                 'success'
               );
               this.props.clearForm();
@@ -214,12 +184,7 @@ export default class Queue extends Component {
     }
     if (Object.keys(Queue).length === 0) {
       UIController.openErrorModal({
-        message: (
-          <FormattedMessage
-            id="Alert.QueueEmpty"
-            defaultMessage="Queue Empty"
-          />
-        ),
+        message: <Text id="Alert.QueueEmpty" />,
       });
       return;
     }
@@ -227,10 +192,7 @@ export default class Queue extends Component {
     UIController.openConfirmModal({
       question: (
         <div>
-          <FormattedMessage
-            id="sendReceive.SendAllFrom"
-            defaultMessage="Send All Transactions From: "
-          />
+          <Text id="sendReceive.SendAllFrom" />
           {this.props.accHud()}
         </div>
       ),
@@ -246,22 +208,13 @@ export default class Queue extends Component {
           <thead>
             <tr className="thead">
               <th>
-                <FormattedMessage
-                  id="sendReceive.TableAddress"
-                  defaultMessage="Address"
-                />
+                <Text id="sendReceive.TableAddress" />
               </th>
               <th>
-                <FormattedMessage
-                  id="sendReceive.TableAmount"
-                  defaultMessage="Amount"
-                />
+                <Text id="sendReceive.TableAmount" />
               </th>
               <th style={{ whiteSpace: 'nowrap' }}>
-                <FormattedMessage
-                  id="sendReceive.Remove"
-                  defaultMessage="Remove"
-                />
+                <Text id="sendReceive.Remove" />
               </th>
             </tr>
           </thead>
@@ -270,16 +223,10 @@ export default class Queue extends Component {
 
         <QueueButtons>
           <Button type="reset" onClick={this.confirmClearQueue}>
-            <FormattedMessage
-              id="sendReceive.ClearQueue"
-              defaultMessage="Clear Queue"
-            />
+            <Text id="sendReceive.ClearQueue" />
           </Button>
           <Button skin="primary" onClick={this.confirmSendMultiple}>
-            <FormattedMessage
-              id="sendReceive.SendAll"
-              defaultMessage="SendAll"
-            />
+            <Text id="sendReceive.SendAll" />
           </Button>
         </QueueButtons>
 

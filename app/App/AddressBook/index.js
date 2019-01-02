@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Modal from 'react-responsive-modal';
 import csv from 'csvtojson';
 import { callbackify } from 'util';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 import fs from 'fs';
 import googleanalytics from 'scripts/googleanalytics';
@@ -20,6 +20,7 @@ import * as actionsCreators from 'actions/addressbookActionCreators';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
+import { translate } from 'components/Text';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
@@ -60,7 +61,6 @@ class AddressBook extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     this.loadMyAccounts();
-    this.addressbookContextMenu = this.addressbookContextMenu.bind(this);
     window.addEventListener('contextmenu', this.addressbookContextMenu, false);
     googleanalytics.SendScreen('AddressBook');
   }
@@ -79,15 +79,17 @@ class AddressBook extends Component {
   }
 
   // Class methods
-  addressbookContextMenu() {
+  addressbookContextMenu = () => {
+    const { locale } = this.props.settings;
+
     const txtTemplate = [
       {
-        label: this.props.messages['Settings.Copy'],
+        label: translate('Settings.Copy', locale),
         accelerator: 'CmdOrCtrl+C',
         role: 'copy',
       },
       {
-        label: this.props.messages['Settings.Paste'],
+        label: translate('Settings.Paste', locale),
         accelerator: 'CmdOrCtrl+V',
         role: 'paste',
       },
@@ -95,18 +97,18 @@ class AddressBook extends Component {
 
     const acctTemplate = [
       {
-        label: this.props.messages['Settings.Copy'],
+        label: translate('Settings.Copy', locale),
         accelerator: 'CmdOrCtrl+C',
         role: 'copy',
       },
       {
-        label: this.props.messages['Settings.Paste'],
+        label: translate('Settings.Paste', locale),
 
         accelerator: 'CmdOrCtrl+V',
         role: 'paste',
       },
       {
-        label: this.props.messages['AddressBook.DeleteContact'],
+        label: translate('AddressBook.DeleteContact', locale),
 
         click(item, focusedWindow) {
           deleteAccountCallback();
@@ -117,7 +119,7 @@ class AddressBook extends Component {
     let deleteAccountCallback = () => {
       if (
         confirm(
-          `${this.props.messages['AddressBook.AreYouSureDelete']} ${
+          `${translate('AddressBook.AreYouSureDelete', locale)} ${
             this.props.addressbook[this.props.actionItem].name
           }?`
         )
@@ -128,17 +130,17 @@ class AddressBook extends Component {
 
     const addTemplate = [
       {
-        label: this.props.messages['Settings.Copy'],
+        label: translate('Settings.Copy', locale),
         accelerator: 'CmdOrCtrl+C',
         role: 'copy',
       },
       {
-        label: this.props.messages['Settings.Paste'],
+        label: translate('Settings.Paste', locale),
         accelerator: 'CmdOrCtrl+V',
         role: 'paste',
       },
       {
-        label: this.props.messages['AddressBook.DeleteAddress'],
+        label: translate('AddressBook.DeleteAddress', locale),
         click(item, focusedWindow) {
           deleteAddressCallback();
         },
@@ -147,7 +149,7 @@ class AddressBook extends Component {
     let deleteAddressCallback = () => {
       if (
         confirm(
-          `${this.props.messages['AddressBook.ThisAddress']}? ${
+          `${translate('AddressBook.ThisAddress', locale)}? ${
             this.props.addressbook[this.props.selected][
               this.props.actionItem.type
             ][this.props.actionItem.index].address
@@ -178,7 +180,7 @@ class AddressBook extends Component {
         defaultcontextmenu.popup(remote.getCurrentWindow());
         break;
     }
-  }
+  };
 
   loadMyAccounts() {
     RPC.PROMISE('listaccounts', [0]).then(payload => {
@@ -267,16 +269,14 @@ class AddressBook extends Component {
     if (this.props.modalVisable) {
       this.props.ToggleModal();
     }
-    UIController.showNotification(
-      <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />,
-      'success'
-    );
+    UIController.showNotification(<Text id="Alert.Copied" />, 'success');
   }
 
-  MyAddressesTable() {
+  MyAddressesTable = () => {
+    const { locale } = this.props.settings;
     let filteredAddress = this.props.myAccounts.filter(acct => {
       if (acct.account === '') {
-        let dummie = this.props.messages['AddressBook.MyAccount'];
+        let dummie = translate('AddressBook.MyAccount', locale);
         return (
           dummie.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
         );
@@ -295,7 +295,7 @@ class AddressBook extends Component {
             <tr key={acct + i}>
               <td className="tdAccounts">
                 {acct.account === '' ? (
-                  <span>{this.props.messages['AddressBook.MyAccount']}</span>
+                  <span>{translate('AddressBook.MyAccount', locale)}</span>
                 ) : (
                   acct.account
                 )}
@@ -304,7 +304,7 @@ class AddressBook extends Component {
                 return (
                   <Tooltip.Trigger
                     key={address + i}
-                    tooltip={this.props.messages['AddressBook.Copy']}
+                    tooltip={translate('AddressBook.Copy', locale)}
                   >
                     <td className="tdd">
                       <span onClick={event => this.copyaddress(event)}>
@@ -319,7 +319,7 @@ class AddressBook extends Component {
         })}
       </div>
     );
-  }
+  };
 
   modalInternalBuilder() {
     let index = this.props.addressbook.findIndex(ele => {
@@ -335,26 +335,20 @@ class AddressBook extends Component {
             {index === -1 ? (
               <h2 className="m1">
                 <Icon icon={addressBookIcon} className="hdr-img" />
-                <FormattedMessage
-                  id="AddressBook.addContact"
-                  defaultMessage="Add Contact"
-                />
+                <Text id="AddressBook.addContact" />
               </h2>
             ) : (
               <h2 className="m1">
                 <Icon icon={addressBookIcon} className="hdr-img" />
-                <FormattedMessage
-                  id="AddressBook.EditContact"
-                  defaultMessage="Edit Contact"
-                />
+                <Text id="AddressBook.EditContact" />
               </h2>
             )}
 
             <div className="field">
               <label htmlFor="new-account-name">
-                <FormattedMessage id="AddressBook.Name" defaultMessage="Name" />
+                <Text id="AddressBook.Name" />
               </label>
-              <FormattedMessage id="AddressBook.Name" defaultMessage="Name">
+              <Text id="AddressBook.Name">
                 {n => (
                   <input
                     id="new-account-name"
@@ -364,16 +358,13 @@ class AddressBook extends Component {
                     required
                   />
                 )}
-              </FormattedMessage>
+              </Text>
             </div>
             <div className="field">
               <label htmlFor="new-account-name">
-                <FormattedMessage
-                  id="AddressBook.Phone"
-                  defaultMessage="Phone #"
-                />
+                <Text id="AddressBook.Phone" />
               </label>
-              <FormattedMessage id="AddressBook.Phone" defaultMessage="Phone #">
+              <Text id="AddressBook.Phone">
                 {p => (
                   <input
                     id="new-account-phone"
@@ -383,24 +374,18 @@ class AddressBook extends Component {
                     placeholder={p}
                   />
                 )}
-              </FormattedMessage>
+              </Text>
             </div>
             <div className="contact-detail">
               <label>
-                <FormattedMessage
-                  id="AddressBook.LocalTime"
-                  defaultMessage="Local Time"
-                />
+                <Text id="AddressBook.LocalTime" />
               </label>
               <TimeZoneSelector />
             </div>
 
             <div className="field">
               <label htmlFor="new-account-notes">
-                <FormattedMessage
-                  id="AddressBook.Notes"
-                  defaultMessage="Notes"
-                />
+                <Text id="AddressBook.Notes" />
               </label>
               <textarea
                 id="new-account-notes"
@@ -412,15 +397,9 @@ class AddressBook extends Component {
 
             <div className="field">
               <label htmlFor="nxsaddress">
-                <FormattedMessage
-                  id="AddressBook.NXSAddress"
-                  defaultMessage="NXS Address"
-                />
+                <Text id="AddressBook.NXSAddress" />
               </label>
-              <FormattedMessage
-                id="AddressBook.NXSAddress"
-                defaultMessage="NXS Address"
-              >
+              <Text id="AddressBook.NXSAddress">
                 {na => (
                   <input
                     id="nxsaddress"
@@ -429,7 +408,7 @@ class AddressBook extends Component {
                     placeholder={na}
                   />
                 )}
-              </FormattedMessage>
+              </Text>
             </div>
 
             <button
@@ -447,32 +426,20 @@ class AddressBook extends Component {
                   );
                 } else {
                   UIController.showNotification(
-                    <FormattedMessage
-                      id="Alert.nodefaultname"
-                      defaultMessage="Account cannot be named * or default"
-                    />,
+                    <Text id="Alert.nodefaultname" />,
                     'error'
                   );
                 }
               }}
             >
               {index === -1 ? (
-                <FormattedMessage
-                  id="AddressBook.addContact"
-                  defaultMessage="Add Contact"
-                />
+                <Text id="AddressBook.addContact" />
               ) : (
-                <FormattedMessage
-                  id="AddressBook.EditContact"
-                  defaultMessage="Edit Contact"
-                />
+                <Text id="AddressBook.EditContact" />
               )}
             </button>
             <button className="button" onClick={() => this.props.ToggleModal()}>
-              <FormattedMessage
-                id="AddressBook.Cancel"
-                defaultMessage="Cancel"
-              />
+              <Text id="AddressBook.Cancel" />
             </button>
           </div>
         );
@@ -483,22 +450,13 @@ class AddressBook extends Component {
             <div id="Addresstable-wraper">
               <h2 className="m1">
                 <Icon icon={addressBookIcon} className="hdr-img" />
-                <FormattedMessage
-                  id="AddressBook.MyAddresses"
-                  defaultMessage="My Addresses"
-                />
+                <Text id="AddressBook.MyAddresses" />
               </h2>
               <table className="myAddressTable">
                 <thead className="AddressThead">
                   <th className="short-column">
-                    <FormattedMessage
-                      id="AddressBook.Account"
-                      defaultMessage="Account"
-                    />
-                    <FormattedMessage
-                      id="AddressBook.searchC"
-                      defaultMessage="Search Account"
-                    >
+                    <Text id="AddressBook.Account" />
+                    <Text id="AddressBook.searchC">
                       {sba => (
                         <input
                           className="searchaccount"
@@ -508,7 +466,7 @@ class AddressBook extends Component {
                           required
                         />
                       )}
-                    </FormattedMessage>
+                    </Text>
                   </th>
                 </thead>
                 {this.MyAddressesTable()}
@@ -517,20 +475,14 @@ class AddressBook extends Component {
                 className="button primary"
                 onClick={() => this.props.SetModalType('NEW_MY_ADDRESS')}
               >
-                <FormattedMessage
-                  id="AddressBook.CreateAddress"
-                  defaultMessage="Create New Address"
-                />
+                <Text id="AddressBook.CreateAddress" />
               </button>
             </div>
           );
         } else
           return (
             <h2>
-              <FormattedMessage
-                id="AddressBook.Loading"
-                defaultMessage="Please wait for the daemon to load"
-              />
+              <Text id="AddressBook.Loading" />
             </h2>
           );
         break;
@@ -539,25 +491,16 @@ class AddressBook extends Component {
           <div>
             <h2 className="m1">
               <Icon icon={addressBookIcon} className="hdr-img" />
-              <FormattedMessage
-                id="AddressBook.AddAddressTO"
-                defaultMessage="Add Address To"
-              />
+              <Text id="AddressBook.AddAddressTO" />
               <span className="chosen">
                 ({this.props.addressbook[this.props.selected].name})
               </span>
             </h2>
             <div className="create2">
               <label htmlFor="nxsaddress">
-                <FormattedMessage
-                  id="AddressBook.NXSAddress"
-                  defaultMessage="Nexus Address"
-                />
+                <Text id="AddressBook.NXSAddress" />
               </label>
-              <FormattedMessage
-                id="AddressBook.NXSAddress"
-                defaultMessage="Nexus Address"
-              >
+              <Text id="AddressBook.NXSAddress">
                 {na => (
                   <input
                     id="new-account-name"
@@ -566,7 +509,7 @@ class AddressBook extends Component {
                     placeholder={na}
                   />
                 )}
-              </FormattedMessage>
+              </Text>
             </div>
 
             <button
@@ -580,20 +523,14 @@ class AddressBook extends Component {
                 );
               }}
             >
-              <FormattedMessage
-                id="AddressBook.AddAddress"
-                defaultMessage="Add Address"
-              />
+              <Text id="AddressBook.AddAddress" />
             </button>
             <button
               id="back"
               className="button"
               onClick={() => this.props.ToggleModal()}
             >
-              <FormattedMessage
-                id="AddressBook.Cancel"
-                defaultMessage="Cancel"
-              />
+              <Text id="AddressBook.Cancel" />
             </button>
           </div>
         );
@@ -603,19 +540,13 @@ class AddressBook extends Component {
           <div>
             <h2 className="m1">
               <Icon icon={addressBookIcon} className="hdr-img" />
-              <FormattedMessage
-                id="AddressBook.Create"
-                defaultMessage="Create"
-              />
+              <Text id="AddressBook.Create" />
             </h2>
             <div className="create">
               <label htmlFor="new-account-name">
-                <FormattedMessage
-                  id="AddressBook.NameOption"
-                  defaultMessage="Name (Optional)"
-                />
+                <Text id="AddressBook.NameOption" />
               </label>
-              <FormattedMessage id="AddressBook.Name" defaultMessage="Name">
+              <Text id="AddressBook.Name">
                 {ean => (
                   <input
                     id="new-account-name"
@@ -625,24 +556,21 @@ class AddressBook extends Component {
                     required
                   />
                 )}
-              </FormattedMessage>
+              </Text>
             </div>{' '}
             <button
               id="Add"
               className="ghost button"
               onClick={() => this.createAddress()}
             >
-              <FormattedMessage
-                id="AddressBook.CreateAddress"
-                defaultMessage="Create New Address"
-              />
+              <Text id="AddressBook.CreateAddress" />
             </button>
             <button
               id="back"
               className="button ghost"
               onClick={() => this.props.SetModalType('MY_ADDRESSES')}
             >
-              <FormattedMessage id="AddressBook.Back" defaultMessage="Back" />
+              <Text id="AddressBook.Back" />
             </button>
           </div>
         );
@@ -666,10 +594,7 @@ class AddressBook extends Component {
           });
       } else {
         UIController.showNotification(
-          <FormattedMessage
-            id="Alert.nodefaultname"
-            defaultMessage="Account cannot be named * or default"
-          />,
+          <Text id="Alert.nodefaultname" />,
           'error'
         );
       }
@@ -685,7 +610,8 @@ class AddressBook extends Component {
     }
   }
 
-  contactLister() {
+  contactLister = () => {
+    const { locale } = this.props.settings;
     let filteredAddress = this.props.addressbook.map((contact, i) => {
       if (
         contact.name
@@ -726,8 +652,8 @@ class AddressBook extends Component {
                   <span className="contactAddresses">
                     {addTotal}{' '}
                     {addTotal > 1
-                      ? this.props.messages['AddressBook.Addresses']
-                      : this.props.messages['AddressBook.Address']}
+                      ? translate('AddressBook.Addresses', locale)
+                      : translate('AddressBook.Address', locale)}
                   </span>
                 </div>
               );
@@ -738,7 +664,7 @@ class AddressBook extends Component {
         </div>
       );
     }
-  }
+  };
 
   phoneFormatter() {
     let num = this.props.addressbook[this.props.selected].phoneNumber;
@@ -804,11 +730,7 @@ class AddressBook extends Component {
           }}
         >
           {' '}
-          <FormattedMessage
-            id="AddressBook.LocalTime"
-            defaultMessage="Local Time"
-          />
-          :
+          <Text id="AddressBook.LocalTime" />:
         </span>{' '}
         {this.props.editTZ === true ? (
           <TimeZoneSelector />
@@ -827,25 +749,18 @@ class AddressBook extends Component {
     );
   }
 
-  theirAddressLister() {
+  theirAddressLister = () => {
+    const { locale } = this.props.settings;
     return (
       <div>
         <h3>
-          <FormattedMessage
-            id="AddressBook.TheirAddresses"
-            defaultMessage="Their Addresses"
-          />
+          <Text id="AddressBook.TheirAddresses" />
         </h3>
         <div>
           {this.props.addressbook[this.props.selected].notMine.map((add, i) => {
             return (
               <Tooltip.Trigger
-                tooltip={
-                  <FormattedMessage
-                    id="AddressBook.Copy"
-                    defaultMessage="Click To Copy"
-                  />
-                }
+                tooltip={<Text id="AddressBook.Copy" />}
                 key={i + add.address}
               >
                 <div
@@ -897,9 +812,7 @@ class AddressBook extends Component {
                       {add.label === "'s Address"
                         ? `${
                             this.props.addressbook[this.props.selected].name
-                          }${"'s"}${'  '}${
-                            this.props.messages['AddressBook.Address']
-                          }`
+                          }'s  ${translate('AddressBook.Address', locale)}`
                         : add.label}
                       :
                     </span>
@@ -914,24 +827,14 @@ class AddressBook extends Component {
         </div>
       </div>
     );
-  }
+  };
 
   myAddressLister() {
     return (
-      <Tooltip.Trigger
-        tooltip={
-          <FormattedMessage
-            id="AddressBook.Copy"
-            defaultMessage="Click Address To Copy"
-          />
-        }
-      >
+      <Tooltip.Trigger tooltip={<Text id="AddressBook.Copy" />}>
         <div id="myAddresses">
           <h3>
-            <FormattedMessage
-              id="AddressBook.MyAddresses"
-              defaultMessage="My Addresses"
-            />
+            <Text id="AddressBook.MyAddresses" />
           </h3>
           <div>
             {this.props.addressbook[this.props.selected].mine.map((add, i) => {
@@ -1170,23 +1073,11 @@ class AddressBook extends Component {
     return (
       <Panel
         icon={addressBookIcon}
-        title={
-          <FormattedMessage
-            id="AddressBook.AddressBook"
-            defaultMessage="Address Book"
-          />
-        }
+        title={<Text id="AddressBook.AddressBook" />}
         controls={
           !!this.props.connections && (
             <div className="flex center">
-              <Tooltip.Trigger
-                tooltip={
-                  <FormattedMessage
-                    id="AddressBook.addContact"
-                    defaultMessage="Add Contact"
-                  />
-                }
-              >
+              <Tooltip.Trigger tooltip={<Text id="AddressBook.addContact" />}>
                 <Button
                   skin="blank-light"
                   className="relative"
@@ -1196,14 +1087,7 @@ class AddressBook extends Component {
                 </Button>
               </Tooltip.Trigger>
 
-              <Tooltip.Trigger
-                tooltip={
-                  <FormattedMessage
-                    id="AddressBook.Export"
-                    defaultMessage="Export"
-                  />
-                }
-              >
+              <Tooltip.Trigger tooltip={<Text id="AddressBook.Export" />}>
                 <Button
                   skin="blank-light"
                   className="relative"
@@ -1213,14 +1097,7 @@ class AddressBook extends Component {
                 </Button>
               </Tooltip.Trigger>
 
-              <Tooltip.Trigger
-                tooltip={
-                  <FormattedMessage
-                    id="AddressBook.MyAddresses"
-                    defaultMessage="My Addresses"
-                  />
-                }
-              >
+              <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
                 <Button
                   skin="blank-light"
                   className="relative"
@@ -1234,10 +1111,7 @@ class AddressBook extends Component {
                 </Button>
               </Tooltip.Trigger>
 
-              <FormattedMessage
-                id="AddressBook.SearchContact"
-                defaultMessage="Search Contact"
-              >
+              <Text id="AddressBook.SearchContact">
                 {sc => (
                   <TextField
                     style={{
@@ -1251,7 +1125,7 @@ class AddressBook extends Component {
                     onChange={e => this.props.ContactSearch(e.target.value)}
                   />
                 )}
-              </FormattedMessage>
+              </Text>
             </div>
           )
         }
@@ -1268,10 +1142,7 @@ class AddressBook extends Component {
 
         {this.props.connections === undefined ? (
           <WaitingMessage>
-            <FormattedMessage
-              id="AddressBook.Loading"
-              defaultMessage="Please wait for the daemon to load"
-            />
+            <Text id="AddressBook.Loading" />
             ...
           </WaitingMessage>
         ) : (
@@ -1283,19 +1154,11 @@ class AddressBook extends Component {
                   <div id="contactDetailContainer">
                     <fieldset id="contactDetails">
                       <Tooltip.Trigger
-                        tooltip={
-                          <FormattedMessage
-                            id="AddressBook.ClickToEdit"
-                            defaultMessage="Doubleclick To Edit"
-                          />
-                        }
+                        tooltip={<Text id="AddressBook.ClickToEdit" />}
                       >
                         <legend>
                           {this.props.editName === true ? (
-                            <FormattedMessage
-                              id="AddressBook.Name"
-                              defaultMessage="Name"
-                            >
+                            <Text id="AddressBook.Name">
                               {n => (
                                 <input
                                   id="new-account-name"
@@ -1325,7 +1188,7 @@ class AddressBook extends Component {
                                   }}
                                 />
                               )}
-                            </FormattedMessage>
+                            </Text>
                           ) : (
                             <span
                               onDoubleClick={() =>
@@ -1343,12 +1206,7 @@ class AddressBook extends Component {
                       <div id="contactInformation">
                         <div>
                           <Tooltip.Trigger
-                            tooltip={
-                              <FormattedMessage
-                                id="AddressBook.ClickToEdit"
-                                defaultMessage="Doubleclick To Edit"
-                              />
-                            }
+                            tooltip={<Text id="AddressBook.ClickToEdit" />}
                           >
                             <div>
                               {' '}
@@ -1361,16 +1219,10 @@ class AddressBook extends Component {
                                 }
                                 htmlFor="phoneNumber"
                               >
-                                <FormattedMessage
-                                  id="AddressBook.PhoneNumber"
-                                  defaultMessage="Phone Number"
-                                />
+                                <Text id="AddressBook.PhoneNumber" />
                               </label>
                               {this.props.editPhone === true ? (
-                                <FormattedMessage
-                                  id="AddressBook.Phone"
-                                  defaultMessage="Phone #"
-                                >
+                                <Text id="AddressBook.Phone">
                                   {p => (
                                     <input
                                       id="phoneNumber"
@@ -1398,7 +1250,7 @@ class AddressBook extends Component {
                                       }
                                     />
                                   )}
-                                </FormattedMessage>
+                                </Text>
                               ) : (
                                 <span
                                   onDoubleClick={() =>
@@ -1418,12 +1270,7 @@ class AddressBook extends Component {
                           </Tooltip.Trigger>
                           {this.localTimeFormater()}
                           <Tooltip.Trigger
-                            tooltip={
-                              <FormattedMessage
-                                id="AddressBook.ClickToEdit"
-                                defaultMessage="Doubleclick To Edit"
-                              />
-                            }
+                            tooltip={<Text id="AddressBook.ClickToEdit" />}
                           >
                             <div id="notesContainer">
                               <label
@@ -1435,11 +1282,7 @@ class AddressBook extends Component {
                                 }
                                 htmlFor="notes"
                               >
-                                <FormattedMessage
-                                  id="AddressBook.Notes"
-                                  defaultMessage="Notes"
-                                />
-                                :
+                                <Text id="AddressBook.Notes" />:
                               </label>
                               {this.props.editNotes === true ? (
                                 <div>
@@ -1543,10 +1386,7 @@ class AddressBook extends Component {
                         className="button ghost hero"
                         onClick={() => this.addAddressHandler()}
                       >
-                        <FormattedMessage
-                          id="AddressBook.AddAddress"
-                          defaultMessage="Add Address"
-                        />
+                        <Text id="AddressBook.AddAddress" />
                       </button>
                     </div>
                   </div>

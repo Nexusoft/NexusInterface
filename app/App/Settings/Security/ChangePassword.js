@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import * as RPC from 'scripts/rpc';
 import styled from '@emotion/styled';
 
@@ -37,10 +37,7 @@ export default class ChangePassword extends Component {
                 newPass.value = '';
                 passChk.value = '';
                 UIController.showNotification(
-                  <FormattedMessage
-                    id="Alert.PasswordHasBeenChanged"
-                    defaultMessage="Password has been changed"
-                  />,
+                  <Text id="Alert.PasswordHasBeenChanged" />,
                   'success'
                 );
               }
@@ -101,30 +98,13 @@ export default class ChangePassword extends Component {
   render() {
     return (
       <ChangePasswordComponent>
-        <FieldSet
-          legend={
-            <FormattedMessage
-              id="Settings.ChangePassword"
-              defaultMessage="Change Password"
-            />
-          }
-        >
-          <FormattedMessage id="Settings.Password" defaultMessage="Password">
+        <FieldSet legend={<Text id="Settings.ChangePassword" />}>
+          <Text id="Settings.Password">
             {p => (
               <FormField
                 connectLabel
-                label={
-                  <FormattedMessage
-                    id="Settings.PreviousPassword"
-                    defaultMessage="Previous Password"
-                  />
-                }
-                hint={
-                  <FormattedMessage
-                    id="Settings.PasswordRequired"
-                    defaultMessage="Password Is Required"
-                  />
-                }
+                label={<Text id="Settings.PreviousPassword" />}
+                hint={<Text id="Settings.PasswordRequired" />}
               >
                 <TextField
                   type="password"
@@ -134,26 +114,13 @@ export default class ChangePassword extends Component {
                 />
               </FormField>
             )}
-          </FormattedMessage>
-          <FormattedMessage
-            id="Settings.NewPassword"
-            defaultMessage="New Password"
-          >
+          </Text>
+          <Text id="Settings.NewPassword">
             {np => (
               <FormField
                 connectLabel
-                label={
-                  <FormattedMessage
-                    id="Settings.NewPassword"
-                    defaultMessage="New Password"
-                  />
-                }
-                hint={
-                  <FormattedMessage
-                    id="Settings.PasswordRequired"
-                    defaultMessage="Password Is Required"
-                  />
-                }
+                label={<Text id="Settings.NewPassword" />}
+                hint={<Text id="Settings.PasswordRequired" />}
               >
                 <TextField
                   type="password"
@@ -163,26 +130,13 @@ export default class ChangePassword extends Component {
                 />
               </FormField>
             )}
-          </FormattedMessage>
-          <FormattedMessage
-            id="Settings.ReEnterPassword"
-            defaultMessage="Re-Enter Password:"
-          >
+          </Text>
+          <Text id="Settings.ReEnterPassword">
             {rep => (
               <FormField
                 connectLabel
-                label={
-                  <FormattedMessage
-                    id="Settings.ReEnterPassword"
-                    defaultMessage="Re-Enter Password:"
-                  />
-                }
-                hint={
-                  <FormattedMessage
-                    id="Settings.NoMatch"
-                    defaultMessage="Passwords do not match"
-                  />
-                }
+                label={<Text id="Settings.ReEnterPassword" />}
+                hint={<Text id="Settings.NoMatch" />}
               >
                 <TextField
                   type="password"
@@ -192,13 +146,12 @@ export default class ChangePassword extends Component {
                 />
               </FormField>
             )}
-          </FormattedMessage>
+          </Text>
           {/* temporary workaround to avoid error */}
           <span id="passHint" style={{ display: 'none' }} />
           {/* <span id="passHint" className="err invalid">
-                <FormattedMessage
+                <Text
                   id="Settings.NoMatch"
-                  defaultMessage="Passwords do not match"
                 />
               </span> */}
 
@@ -208,7 +161,7 @@ export default class ChangePassword extends Component {
             style={{ marginTop: '2em' }}
             onClick={() => this.changePassword(e)}
           >
-            <FormattedMessage id="Settings.Submit" defaultMessage="Submit" />
+            <Text id="Settings.Submit" />
           </Button>
         </FieldSet>
 
@@ -219,10 +172,7 @@ export default class ChangePassword extends Component {
             this.lockWallet();
           }}
         >
-          <FormattedMessage
-            id="Settings.LockWallet"
-            defaultMessage="Lock Wallet"
-          />
+          <Text id="Settings.LockWallet" />
         </Button>
       </ChangePasswordComponent>
     );

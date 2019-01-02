@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import * as RPC from 'scripts/rpc';
 
 // Internal
@@ -40,32 +40,14 @@ export default class ViewPrivKeyForAddress extends Component {
     this.outputRef.select();
     document.execCommand('Copy', false, null);
     this.outputRef.type = 'password';
-    UIController.showNotification(
-      <FormattedMessage id="Alert.Copied" defaultMessage="Copied" />,
-      'success'
-    );
+    UIController.showNotification(<Text id="Alert.Copied" />, 'success');
   }
 
   render() {
     return (
       <form>
-        <FieldSet
-          legend={
-            <FormattedMessage
-              id="Settings.ViewPrivateKeyForAddress"
-              defaultMessage="View private key for address"
-            />
-          }
-        >
-          <FormField
-            connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.Address"
-                defaultMessage="Address"
-              />
-            }
-          >
+        <FieldSet legend={<Text id="Settings.ViewPrivateKeyForAddress" />}>
+          <FormField connectLabel label={<Text id="Settings.Address" />}>
             {inputId => (
               <InputGroup>
                 <TextField
@@ -87,15 +69,7 @@ export default class ViewPrivKeyForAddress extends Component {
             )}
           </FormField>
 
-          <FormField
-            connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.PrivateKey"
-                defaultMessage="Private Key:"
-              />
-            }
-          >
+          <FormField connectLabel label={<Text id="Settings.PrivateKey" />}>
             {inputId => (
               <InputGroup>
                 <TextField
@@ -113,7 +87,7 @@ export default class ViewPrivKeyForAddress extends Component {
                   }}
                 >
                   <Icon icon={copyIcon} spaceRight />
-                  <FormattedMessage id="Settings.Copy" defaultMessage="Copy" />
+                  <Text id="Settings.Copy" />
                 </Button>
               </InputGroup>
             )}

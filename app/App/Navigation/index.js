@@ -1,7 +1,7 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
@@ -59,7 +59,7 @@ const Navigation = () => (
 
     <NavBar>
       <NavItem icon={logoIcon} exact to="/">
-        <FormattedMessage id="Footer.Overview" defaultMessage="Overview" />
+        <Text id="Footer.Overview" />
       </NavItem>
 
       <NavItem icon={sendIcon} to="/SendPage">
@@ -67,40 +67,37 @@ const Navigation = () => (
       </NavItem>
 
       <NavItem icon={transactionsIcon} to="/Transactions">
-        <FormattedMessage
-          id="Footer.Transactions"
-          defaultMessage="Transactions"
-        />
+        <Text id="Footer.Transactions" />
       </NavItem>
 
       <NavItem icon={chartIcon} to="/Market">
-        <FormattedMessage id="Footer.Market" defaultMessage="Market" />
+        <Text id="Footer.Market" />
         &nbsp;
-        <FormattedMessage id="Footer.Data" defaultMessage="Data" />
+        <Text id="Footer.Data" />
       </NavItem>
 
       <NavItem icon={addressBookIcon} to="/AddressBook">
-        <FormattedMessage id="Footer.Address" defaultMessage="Address" />
+        <Text id="Footer.Address" />
         &nbsp;
-        <FormattedMessage id="Footer.Book" defaultMessage="Book" />
+        <Text id="Footer.Book" />
       </NavItem>
 
       <NavItem icon={settingsIcon} to="/Settings">
-        <FormattedMessage id="Footer.Settings" defaultMessage="Settings" />
+        <Text id="Footer.Settings" />
       </NavItem>
 
       <NavItem icon={consoleIcon} to="/Terminal">
-        <FormattedMessage id="Footer.Console" defaultMessage="Console" />
+        <Text id="Footer.Console" />
       </NavItem>
 
       <NavItem icon={shapeshiftIcon} to="/Exchange">
-        <FormattedMessage id="Footer.Exchange" defaultMessage="Exchange" />
+        <Text id="Footer.Exchange" />
       </NavItem>
 
       <NavItem icon={trustListIcon} to="/List">
-        <FormattedMessage id="Footer.Trust" defaultMessage="Trust" />
+        <Text id="Footer.Trust" />
         &nbsp;
-        <FormattedMessage id="Footer.List" defaultMessage="List" />
+        <Text id="Footer.List" />
       </NavItem>
     </NavBar>
   </Nav>

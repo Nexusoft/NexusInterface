@@ -1,6 +1,6 @@
 // External Dependencies
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 
 // Internal Dependencies
 import Tooltip from 'components/Tooltip';
@@ -19,32 +19,16 @@ const StakingStatus = ({
     tooltip={
       <div>
         <div>
-          <FormattedMessage
-            id="Header.StakeWeight"
-            defaultMessage="Stake Weight"
-          />
-          : {stakeweight}%
+          <Text id="Header.StakeWeight" />: {stakeweight}%
         </div>
         <div>
-          <FormattedMessage
-            id="Header.InterestRate"
-            defaultMessage="Stake Reward"
-          />
-          : {interestweight}%
+          <Text id="Header.InterestRate" />: {interestweight}%
         </div>
         <div>
-          <FormattedMessage
-            id="Header.TrustWeight"
-            defaultMessage="Trust Weight"
-          />
-          : {trustweight}%
+          <Text id="Header.TrustWeight" />: {trustweight}%
         </div>
         <div>
-          <FormattedMessage
-            id="Header.BlockWeight"
-            defaultMessage="Block Weight"
-          />
-          : {blockweight}
+          <Text id="Header.BlockWeight" />: {blockweight}
         </div>
       </div>
     }

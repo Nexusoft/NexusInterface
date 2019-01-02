@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 
 export default class Table extends Component {
   constructor(props) {
@@ -44,34 +44,20 @@ export default class Table extends Component {
     }
 
     return (
-      <FormattedMessage id="transactions.Rows" defaultMessage="Rows">
+      <Text id="transactions.Rows">
         {R => (
           <ReactTable
-            noDataText={
-              <FormattedMessage
-                id="transactions.NoRowsFound"
-                defaultMessage="No Rows Found"
-              />
-            }
+            noDataText={<Text id="transactions.NoRowsFound" />}
             key="table-child"
             data={data}
-            pageText={
-              <FormattedMessage id="transactions.Page" defaultMessage="Page" />
-            }
+            pageText={<Text id="transactions.Page" />}
             columns={columns}
             minRows={minRows}
             defaultSorted={defaultsorting}
             defaultPageSize={10}
             rowsText={R}
-            previousText={
-              <FormattedMessage
-                id="transactions.Previous"
-                defaultMessage="Previous"
-              />
-            }
-            nextText={
-              <FormattedMessage id="transactions.Next" defaultMessage="Next" />
-            }
+            previousText={<Text id="transactions.Previous" />}
+            nextText={<Text id="transactions.Next" />}
             getTrProps={(state, rowInfo) => {
               return {
                 onClick: e => {
@@ -104,7 +90,7 @@ export default class Table extends Component {
             }}
           />
         )}
-      </FormattedMessage>
+      </Text>
     );
 
     /*

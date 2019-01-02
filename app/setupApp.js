@@ -41,71 +41,29 @@ export default function setupApp(store, history) {
 }
 
 function setupTray(dispatch) {
-  let trayImage = '';
   const mainWindow = remote.getCurrentWindow();
 
-  if (process.env.NODE_ENV === 'development') {
-    if (process.platform == 'darwin') {
-      trayImage = path.join(
-        __dirname,
-        'images',
-        'tray',
-        'Nexus_Tray_Icon_Template_16.png'
-      );
-    } else {
-      trayImage = path.join(
-        __dirname,
-        'images',
-        'tray',
-        'Nexus_Tray_Icon_32.png'
-      );
-    }
-  } else {
-    if (process.platform == 'darwin') {
-      trayImage = path.join(
-        configuration.GetAppResourceDir(),
-        'images',
-        'tray',
-        'Nexus_Tray_Icon_Template_16.png'
-      );
-    } else {
-      trayImage = path.join(
-        configuration.GetAppResourceDir(),
-        'images',
-        'tray',
-        'Nexus_Tray_Icon_32.png'
-      );
-    }
-  }
+  const root =
+    process.env.NODE_ENV === 'development'
+      ? __dirname
+      : configuration.GetAppResourceDir();
+  const fileName =
+    process.platform == 'darwin'
+      ? 'Nexus_Tray_Icon_Template_16.png'
+      : 'Nexus_Tray_Icon_32.png';
+  const trayImage = path.join(root, 'images', 'tray', fileName);
 
   tray = new remote.Tray(trayImage);
 
-  if (process.env.NODE_ENV === 'development') {
-    if (process.platform == 'darwin') {
-      tray.setPressedImage(
-        path.join(
-          __dirname,
-          'images',
-          'tray',
-          'Nexus_Tray_Icon_Highlight_16.png'
-        )
-      );
-    }
-  } else {
-    tray.setPressedImage(
-      path.join(
-        configuration.GetAppResourceDir(),
-        'images',
-        'tray',
-        'Nexus_Tray_Icon_Highlight_16.png'
-      )
-    );
-  }
+  const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
+  const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
+
+  tray.setPressedImage(pressedImage);
   tray.on('double-click', () => {
     mainWindow.show();
   });
 
-  var contextMenu = remote.Menu.buildFromTemplate([
+  const contextMenu = remote.Menu.buildFromTemplate([
     {
       label: 'Show Nexus',
       click: function() {
@@ -129,9 +87,7 @@ function setupSettings(dispatch) {
   const settings = GetSettings();
   if (Object.keys(settings).length < 1) {
     SaveSettings({ ...settings, keepDaemon: false });
-    dispatch(ac.SwitchMessages(settings.locale));
   } else {
-    dispatch(ac.SwitchMessages(settings.locale));
     dispatch(ac.setSettings(settings));
   }
 }

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { jsx } from '@emotion/core';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import { withTheme } from 'emotion-theming';
 
 // Internal Dependencies
@@ -40,42 +40,21 @@ class SignInStatus extends Component {
     }
 
     if (unlocked_until === undefined) {
-      return (
-        <FormattedMessage
-          id="Header.WalletUnencrypted"
-          defaultMessage="Wallet Unencrypted"
-        />
-      );
+      return <Text id="Header.WalletUnencrypted" />;
     } else if (unlocked_until === 0) {
-      return (
-        <FormattedMessage
-          id="Header.WalletLocked"
-          defaultMessage="Wallet Locked"
-        />
-      );
+      return <Text id="Header.WalletLocked" />;
     } else if (unlocked_until >= 0) {
       if (staking_only) {
         return (
           <>
-            <FormattedMessage
-              id="Header.UnlockedUntil"
-              defaultMessage="Unlocked Until"
-            />{' '}
-            {unlockDate}{' '}
-            <FormattedMessage
-              id="Header.StakingOnly"
-              defaultMessage="Staking Only"
-            />
+            <Text id="Header.UnlockedUntil" /> {unlockDate}{' '}
+            <Text id="Header.StakingOnly" />
           </>
         );
       } else {
         return (
           <>
-            <FormattedMessage
-              id="Header.UnlockedUntil"
-              defaultMessage="Unlocked Until"
-            />{' '}
-            {unlockDate}
+            <Text id="Header.UnlockedUntil" /> {unlockDate}
           </>
         );
       }

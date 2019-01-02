@@ -17,7 +17,7 @@ import { GetSettings } from 'api/settings.js';
 import Icon from 'components/Icon';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
@@ -164,12 +164,7 @@ class Exchange extends Component {
   // Mandatory React method
   render() {
     return (
-      <Panel
-        icon={shapeshiftIcon}
-        title={
-          <FormattedMessage id="Exchange.Exchange" defaultMessage="Exchange" />
-        }
-      >
+      <Panel icon={shapeshiftIcon} title={<Text id="Exchange.Exchange" />}>
         <Modal
           open={this.props.transactionModalFlag}
           onClose={this.props.clearTransaction}
@@ -183,17 +178,12 @@ class Exchange extends Component {
           <Tab
             link={`${this.props.match.url}/Precise`}
             icon={bullseyeIcon}
-            text={
-              <FormattedMessage
-                id="Exchange.Precise"
-                defaultMessage="Precise"
-              />
-            }
+            text={<Text id="Exchange.Precise" />}
           />
           <Tab
             link={`${this.props.match.url}/Fast`}
             icon={fastIcon}
-            text={<FormattedMessage id="Exchange.Fast" defaultMessage="Fast" />}
+            text={<Text id="Exchange.Fast" />}
           />
         </Tab.Bar>
 
