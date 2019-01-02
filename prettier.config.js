@@ -6,9 +6,8 @@ module.exports = {
     {
       files: '*.css',
       options: {
-        semi: true,
         singleQuote: false,
       },
     },
   ],
-}
+};

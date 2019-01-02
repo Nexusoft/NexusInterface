@@ -7,4 +7,7 @@
 *.bmp binary
 *.svg binary
 *.jpeg binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
 app/cores/* binary

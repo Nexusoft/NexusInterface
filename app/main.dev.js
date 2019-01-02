@@ -10,10 +10,9 @@ import {
 } from 'electron';
 import log, { info } from 'electron-log';
 import { autoUpdater } from 'electron-updater';
-import MenuBuilder from './menu';
-import core from './api/core';
-import configuration from './api/configuration';
-import settings from './api/settings';
+import core from 'api/core';
+import configuration from 'api/configuration';
+import { GetSettings, SaveSettings } from 'api/settings';
 
 const path = require('path');
 
@@ -86,7 +85,7 @@ function createWindow() {
     );
   }
 
-  let settings = require('./api/settings').GetSettings();
+  let settings = GetSettings();
   let iconPath = '';
   if (process.env.NODE_ENV === 'development') {
     iconPath = path.join(
@@ -114,6 +113,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
     height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
+    minWidth: 1050,
+    minHeight: 847,
     icon: iconPath,
     backgroundColor: '#232c39',
     show: false,
@@ -140,18 +141,18 @@ function createWindow() {
 
     resizeTimer = setTimeout(function() {
       // Resize event has been completed
-      let settings = require('./api/settings.js').GetSettings();
+      let settings = GetSettings();
 
       settings.windowWidth = mainWindow.getBounds().width;
       settings.windowHeight = mainWindow.getBounds().height;
 
-      require('./api/settings').SaveSettings(settings);
+      SaveSettings(settings);
     }, 250);
   });
 
   // Event when the window is minimized
   mainWindow.on('minimize', function(event) {
-    let settings = require('./api/settings.js').GetSettings();
+    let settings = GetSettings();
 
     if (settings.minimizeToTray) {
       event.preventDefault();
@@ -175,7 +176,7 @@ app.on('ready', async () => {
   mainWindow.on('close', function(e) {
     e.preventDefault();
 
-    let settings = require('./api/settings.js').GetSettings();
+    let settings = GetSettings();
     log.info('close');
 
     if (settings) {
