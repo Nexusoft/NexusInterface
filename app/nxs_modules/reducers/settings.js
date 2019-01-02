@@ -1,7 +1,8 @@
 import * as TYPE from 'actions/actiontypes';
 // import messages from '../languages/messages'
 import configuration from 'api/configuration';
-import initLanguage from './initLanguage';
+import { getMessages } from 'utils/language';
+
 const path = require('path');
 let defaultWallpaperPath = '';
 if (process.env.NODE_ENV === 'development') {
@@ -53,7 +54,7 @@ const initialState = {
     minimumconfirmations: 3,
   },
   manualDaemonModal: false,
-  messages: initLanguage,
+  messages: getMessages('en'),
 };
 
 export default (state = initialState, action) => {
@@ -64,10 +65,11 @@ export default (state = initialState, action) => {
         settings: { ...state.settings, ...action.payload },
       };
       break;
-    case TYPE.UPDATE_LOCALES:
+    case TYPE.SWITCH_LOCALES:
       return {
         ...state,
-        settings: { ...state.settings, locale: action.payload },
+        settings: { ...state.settings, locale: action.payload.locale },
+        messages: action.payload.messages,
       };
       break;
     case TYPE.SWITCH_MESSAGES:

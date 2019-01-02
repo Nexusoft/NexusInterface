@@ -4,3 +4,5 @@ export const newUID = (function() {
 })();
 
 export * as color from './color';
+
+export * as language from './language';

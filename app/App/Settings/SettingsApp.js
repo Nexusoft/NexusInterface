@@ -13,6 +13,7 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import * as FlagFile from 'images/LanguageFlags';
+import { SwitchLocale } from 'actions/headerActionCreators';
 import { remote as dialog } from 'electron';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -165,12 +166,7 @@ const mapDispatchToProps = dispatch => ({
   CloseModal3: type => {
     dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
   },
-  localeChange: returnSelectedLocale => {
-    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
-  },
-  SwitchLocale: locale => {
-    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
-  },
+  SwitchLocale: locale => dispatch(SwitchLocale(locale)),
   SwitchMessages: messages => {
     dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages });
   },
@@ -448,24 +444,7 @@ class SettingsApp extends Component {
   changeLocale = locale => {
     let settings = GetSettings();
     settings.locale = locale;
-    this.props.setSettings(settings);
     this.props.SwitchLocale(locale);
-    let messages = {};
-    if (process.env.NODE_ENV === 'development') {
-      messages = JSON.parse(fs.readFileSync(`app/translations/${locale}.json`));
-    } else {
-      messages = JSON.parse(
-        fs.readFileSync(
-          path.join(
-            config.GetAppResourceDir(),
-            'translations',
-            `${locale}.json`
-          )
-        )
-      );
-    }
-
-    this.props.SwitchMessages(messages);
     SaveSettings(settings);
   };
 

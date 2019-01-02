@@ -53,7 +53,7 @@
       "./app/images/background/**/*",
       "license.txt",
       "installerSidebar.bmp",
-      "./app/translations/*"
+      "./app/languages/*"
     ],
     "publish": {
       "provider": "github"

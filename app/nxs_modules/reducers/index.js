@@ -22,7 +22,6 @@ import en from 'react-intl/locale-data/en';
 import ko from 'react-intl/locale-data/ko';
 import fr from 'react-intl/locale-data/fr';
 import es from 'react-intl/locale-data/es';
-import { FormattedMessage } from 'react-intl';
 
 addLocaleData(ru);
 addLocaleData(en);

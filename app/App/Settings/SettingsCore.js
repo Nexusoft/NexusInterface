@@ -48,12 +48,6 @@ const mapDispatchToProps = dispatch => ({
   CloseModal3: type => {
     dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
   },
-  localeChange: returnSelectedLocale => {
-    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
-  },
-  SwitchLocale: locale => {
-    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
-  },
   clearForRestart: () => {
     dispatch({ type: TYPE.CLEAR_FOR_RESTART });
   },
