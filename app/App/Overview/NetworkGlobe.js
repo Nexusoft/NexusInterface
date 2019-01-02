@@ -33,9 +33,9 @@ const Globe = styled.div({
 export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    console.log('Hello From the Network Globe Component!');
+    // console.log('Hello From the Network Globe Component!');
     this.props.handleOnLineRender(this.testRestartLines);
-    this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw);
+    // this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw); // casues issues
     this.props.handleOnAddData(this.updatePointsOnGlobe);
     this.props.handleRemoveAllPoints(this.removeAllPoints);
     const globeseries = [['peers', []]];
@@ -53,7 +53,7 @@ export default class NetworkGlobe extends Component {
         )
       );
     }
-    let myIP = '';
+
     let incomingPillarColor = this.props.pillarColor;
     let incomingArchColor = this.props.archColor;
     let globeOptions = {
@@ -77,40 +77,69 @@ export default class NetworkGlobe extends Component {
         } else {
           if (response !== undefined) {
             if (response.statusCode === 200) {
-              RPC.PROMISE('getpeerinfo', []).then(payload => {
-                var tmp = {};
-                var ip = {};
-                let maxnodestoadd = payload.length;
-                if (maxnodestoadd > 20) {
-                  maxnodestoadd = 20;
-                }
-                for (var i = 0; i < maxnodestoadd; i++) {
-                  ip = payload[i].addr;
-                  ip = ip.split(':')[0];
-                  var tmp = geoiplookup.get(ip);
-                  globeseries[0][1].push(tmp.location.latitude);
-                  globeseries[0][1].push(tmp.location.longitude);
+              // console.log(body);
+              myIP = [
+                parseFloat(body['geoplugin_latitude']),
+                parseFloat(body['geoplugin_longitude']),
+              ];
+              RPC.PROMISE('getpeerinfo', [])
+                .then(payload => {
+                  var tmp = {};
+                  var ip = {};
+                  let maxnodestoadd = payload.length;
+                  if (maxnodestoadd > 20) {
+                    maxnodestoadd = 20;
+                  }
+                  for (var i = 0; i < maxnodestoadd; i++) {
+                    ip = payload[i].addr;
+                    ip = ip.split(':')[0];
+                    var tmp = geoiplookup.get(ip);
+                    globeseries[0][1].push(tmp.location.latitude);
+                    globeseries[0][1].push(tmp.location.longitude);
+                    globeseries[0][1].push(0.1); //temporary magnitude.
+                  }
+                  myIP = [
+                    parseFloat(body['geoplugin_latitude']),
+                    parseFloat(body['geoplugin_longitude']),
+                  ];
+
+                  globeseries[0][1].push(
+                    parseFloat(body['geoplugin_latitude'])
+                  );
+                  globeseries[0][1].push(
+                    parseFloat(body['geoplugin_longitude'])
+                  );
                   globeseries[0][1].push(0.1); //temporary magnitude.
-                }
-                myIP = [
-                  parseFloat(body['geoplugin_latitude']),
-                  parseFloat(body['geoplugin_longitude']),
-                ];
-
-                globeseries[0][1].push(parseFloat(body['geoplugin_latitude']));
-                globeseries[0][1].push(parseFloat(body['geoplugin_longitude']));
-                globeseries[0][1].push(0.1); //temporary magnitude.
-
-                //glb = new DAT(this.threeRootElement);
-                glb.addData(globeseries[0][1], {
-                  format: 'magnitude',
-                  name: globeseries[0][0],
+                  // console.log(globeseries[0][1]);
+                  //glb = new DAT(this.threeRootElement);
+                  glb.addData(globeseries[0][1], {
+                    format: 'magnitude',
+                    name: globeseries[0][0],
+                  });
+                  glb.createPoints();
+                  //  Start the animations on the globe
+                  initializedWithData = true;
+                  //glb.animate();
+                })
+                .catch(e => {
+                  globeseries[0][1].push(
+                    parseFloat(body['geoplugin_latitude'])
+                  );
+                  globeseries[0][1].push(
+                    parseFloat(body['geoplugin_longitude'])
+                  );
+                  globeseries[0][1].push(0.1); //temporary magnitude.
+                  // console.log(globeseries[0][1]);
+                  //glb = new DAT(this.threeRootElement);
+                  glb.addData(globeseries[0][1], {
+                    format: 'magnitude',
+                    name: globeseries[0][0],
+                  });
+                  glb.createPoints();
+                  //  Start the animations on the globe
+                  initializedWithData = true;
+                  //glb.animate();
                 });
-                glb.createPoints();
-                //  Start the animations on the globe
-                initializedWithData = true;
-                //glb.animate();
-              });
             }
           }
         }
@@ -160,7 +189,7 @@ export default class NetworkGlobe extends Component {
       globeseries[0][1].push(myIP[0]);
       globeseries[0][1].push(myIP[1]);
       globeseries[0][1].push(0.1); //temporary magnitude.
-
+      // console.log(myIP);
       glb.removePoints();
       glb.addData(globeseries[0][1], {
         format: 'magnitude',

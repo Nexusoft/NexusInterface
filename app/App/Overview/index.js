@@ -562,7 +562,7 @@ class Overview extends Component {
       if (selectedCurrancyValue[0].changePct24Hr > 0) {
         return `+ ${selectedCurrancyValue[0].changePct24Hr}`;
       } else {
-        return `${selectedCurrancyValue[0].changePct24Hr}`;
+        return selectedCurrancyValue[0].changePct24Hr;
       }
     } else {
       return '0';
@@ -652,7 +652,7 @@ class Overview extends Component {
           <>
             <NetworkGlobe
               handleOnLineRender={e => (this.redrawCurves = e)}
-              handleOnRemoveOldPoints={e => (this.removeOldPoints = e)}
+              // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
               handleOnAddData={e => (this.reDrawEverything = e)}
               handleRemoveAllPoints={e => (this.removeAllPoints = e)}
               pillarColor={
