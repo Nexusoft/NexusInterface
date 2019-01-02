@@ -229,7 +229,7 @@ export default (DAT.Globe = function(container, opts) {
 
   function addData(data, opts) {
     var lat, lng, size, color, i, step, colorFnWrapper;
-
+    // console.log(data, opts);
     // opts.animated = opts.animated || false;
     this.is_animated = opts.animated;
     opts.format = opts.format || 'magnitude'; // other option is 'legend'
@@ -311,6 +311,7 @@ export default (DAT.Globe = function(container, opts) {
             morphTargets: false,
           })
         );
+        this.points.name = 'Pillars';
       } else {
         if (this._baseGeometry.morphTargets.length < 8) {
           var padding = 8 - this._baseGeometry.morphTargets.length;
@@ -330,8 +331,11 @@ export default (DAT.Globe = function(container, opts) {
             morphTargets: true,
           })
         );
+        this.points.name = 'Pillars';
       }
+      // console.log(tempointsObjs);
       const lastpoint = tempointsObjs[tempointsObjs.length - 1];
+      // console.log('Lastpoint: ', lastpoint);
       let tempPointsArrays = tempointsObjs.map(element => {
         let temparray = [];
         temparray.push(element.lat);
@@ -342,7 +346,7 @@ export default (DAT.Globe = function(container, opts) {
         return temparray;
       });
 
-      console.log('temparrs:', tempPointsArrays);
+      // console.log('temparrs:', tempPointsArrays);
 
       let newCurveMesh = new THREE.Mesh(
         this._baseGeometry,
@@ -352,18 +356,18 @@ export default (DAT.Globe = function(container, opts) {
           morphTargets: true,
         })
       );
-      console.log(scene);
+      // console.log(scene);
       initCurves(tempPointsArrays, newCurveMesh);
 
       playCurve();
-      console.log(cureves);
+      // console.log(cureves);
       if (CurveMeshs != null) {
         scene.remove(CurveMeshs);
       }
       if (PillarMeshs != null) {
         scene.remove(PillarMeshs);
       }
-      console.log(this.points);
+      // console.log('this.points: ', this.points);
       CurveMeshs = newCurveMesh;
       PillarMeshs = this.points;
 
@@ -408,6 +412,9 @@ export default (DAT.Globe = function(container, opts) {
     if (point.matrixAutoUpdate) {
       point.updateMatrix();
     }
+    point.name = 'pillar';
+    // console.log(point);
+
     subgeo.merge(point.geometry, point.matrix);
   }
 
@@ -516,6 +523,7 @@ export default (DAT.Globe = function(container, opts) {
   }
 
   function playCurve() {
+    // console.log(cureves);
     cureves.map(element => {
       element.restart();
       element.play();
@@ -523,9 +531,11 @@ export default (DAT.Globe = function(container, opts) {
   }
 
   function removePoints() {
+    // console.log('curves: ', cureves);
     cureves.map(element => {
       element.stop();
     });
+    // console.log('curve Mesh: ', CurveMeshs);
     if (CurveMeshs != null) {
       scene.remove(CurveMeshs);
       CurveMeshs.geometry.dispose();
@@ -538,13 +548,13 @@ export default (DAT.Globe = function(container, opts) {
       PillarMeshs.material.dispose();
       PillarMeshs = null;
     }
-    console.log('BEFORE:', tempointsObjs);
+    // console.log('BEFORE:', tempointsObjs);
     tempointsObjs = [];
-    console.log('AFTER:', tempointsObjs);
-    //scene.remove(scene.getObjectByName(""));
+    // console.log('AFTER:', tempointsObjs);
+    // scene.remove(scene.getObjectByName(''));
     //tempointsObjs.length = 0;
     //cureves.length = 0;
-    //console.log(scene);
+    // console.log(scene);
     //console.log(PillarMeshs);
     //console.log(CurveMeshs);
     //console.log(tempointsObjs);
@@ -576,16 +586,18 @@ export default (DAT.Globe = function(container, opts) {
       transparent: true,
       color: colorArch,
     });
-    const curveMesh = new THREE.Mesh();
+    // const curveMesh = new THREE.Mesh();
 
     cureves = allCoords.map(coords => {
       const curve = new Curve(coords, material);
-      scene.add(curve.mesh);
+      // console.log('Indevidual Curve: ', curve);
+      incomingmesh.add(curve.mesh);
       return curve;
     });
-    console.log('cm:', curveMesh);
-    return curveMesh;
-    // incomingmesh.add(curveMesh);
+    scene.add(incomingmesh);
+    // console.log('cm:', cureves);
+    // console.log(scene);
+    // return curveMesh;
   }
 
   function Curve(coords, material) {
