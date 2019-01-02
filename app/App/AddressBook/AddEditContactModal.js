@@ -1,5 +1,6 @@
 // External
 import React, { Component } from 'react';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Internal
@@ -96,27 +97,13 @@ class AddEditContactModal extends Component {
           <>
             <Modal.Header>
               {editEntry ? (
-                <FormattedMessage
-                  id="AddressBook.EditContact"
-                  defaultMessage="Edit Contact"
-                />
+                <Text id="AddressBook.EditContact" />
               ) : (
-                <FormattedMessage
-                  id="AddressBook.addContact"
-                  defaultMessage="Add Contact"
-                />
+                <Text id="AddressBook.addContact" />
               )}
             </Modal.Header>
             <Modal.Body>
-              <FormField
-                connectLabel
-                label={
-                  <FormattedMessage
-                    id="AddressBook.Name"
-                    defaultMessage="Name"
-                  />
-                }
-              >
+              <FormField connectLabel label={<Text id="AddressBook.Name" />}>
                 <TextField
                   value={this.props.prototypeName}
                   onChange={e => this.props.EditProtoName(e.target.value)}
@@ -125,15 +112,7 @@ class AddEditContactModal extends Component {
                 />
               </FormField>
 
-              <FormField
-                connectLabel
-                label={
-                  <FormattedMessage
-                    id="AddressBook.Phone"
-                    defaultMessage="Phone #"
-                  />
-                }
-              >
+              <FormField connectLabel label={<Text id="AddressBook.Phone" />}>
                 <TextField
                   type="tel"
                   onChange={e => this.phoneNumberHandler(e.target.value)}
@@ -144,12 +123,7 @@ class AddEditContactModal extends Component {
 
               <FormField
                 connectLabel
-                label={
-                  <FormattedMessage
-                    id="AddressBook.LocalTime"
-                    defaultMessage="Local Time"
-                  />
-                }
+                label={<Text id="AddressBook.LocalTime" />}
               >
                 <Select
                   options={timeZones}
@@ -167,15 +141,7 @@ class AddEditContactModal extends Component {
                 />
               </FormField>
 
-              <FormField
-                connectLabel
-                label={
-                  <FormattedMessage
-                    id="AddressBook.Notes"
-                    defaultMessage="Notes"
-                  />
-                }
-              >
+              <FormField connectLabel label={<Text id="AddressBook.Notes" />}>
                 <TextField
                   multiline
                   value={this.props.prototypeNotes}
@@ -186,12 +152,7 @@ class AddEditContactModal extends Component {
 
               <FormField
                 connectLabel
-                label={
-                  <FormattedMessage
-                    id="AddressBook.NXSAddress"
-                    defaultMessage="NXS Address"
-                  />
-                }
+                label={<Text id="AddressBook.NXSAddress" />}
               >
                 <TextField
                   value={this.props.prototypeAddress}
@@ -214,32 +175,20 @@ class AddEditContactModal extends Component {
                     );
                   } else {
                     UIController.showNotification(
-                      <FormattedMessage
-                        id="Alert.nodefaultname"
-                        defaultMessage="Account cannot be named * or default"
-                      />,
+                      <Text id="Alert.nodefaultname" />,
                       'error'
                     );
                   }
                 }}
               >
                 {index === -1 ? (
-                  <FormattedMessage
-                    id="AddressBook.addContact"
-                    defaultMessage="Add Contact"
-                  />
+                  <Text id="AddressBook.addContact" />
                 ) : (
-                  <FormattedMessage
-                    id="AddressBook.EditContact"
-                    defaultMessage="Edit Contact"
-                  />
+                  <Text id="AddressBook.EditContact" />
                 )}
               </Button>
               <Button onClick={closeModal}>
-                <FormattedMessage
-                  id="AddressBook.Cancel"
-                  defaultMessage="Cancel"
-                />
+                <Text id="AddressBook.Cancel" />
               </Button>
             </Modal.Body>
           </>

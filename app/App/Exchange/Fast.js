@@ -5,7 +5,7 @@ import Request from 'request';
 import { bindActionCreators } from 'redux';
 import { Squares } from 'react-activity';
 import googleanalytics from 'scripts/googleanalytics';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
@@ -70,20 +70,14 @@ class Fast extends Component {
       } else {
         return (
           <div>
-            <FormattedMessage
-              id="Exchange.TradeExceed"
-              defaultMessage="Trade Maximum Exceeded"
-            />
+            <Text id="Exchange.TradeExceed" />
           </div>
         );
       }
     } else {
       return (
         <div>
-          <FormattedMessage
-            id="Exchange.TradeUnMet"
-            defaultMessage="Trade Minimum Unmet"
-          />
+          <Text id="Exchange.TradeUnMet" />
         </div>
       );
     }
@@ -104,10 +98,7 @@ class Fast extends Component {
               <div id="sendSideConfirm">
                 <div className="confirmationWords">
                   <h3>
-                    <FormattedMessage
-                      id="Exchange.YouAreSending"
-                      defaultMessage="YOU ARE SENDING"
-                    />
+                    <Text id="Exchange.YouAreSending" />
                   </h3>
                   <div>
                     {this.props.ammount} {this.props.from}
@@ -126,10 +117,7 @@ class Fast extends Component {
                 />
                 <div className="confirmationWords">
                   <h3>
-                    <FormattedMessage
-                      id="Exchange.YouWillReceive"
-                      defaultMessage="YOU WILL RECEIVE"
-                    />
+                    <Text id="Exchange.YouWillReceive" />
                   </h3>
 
                   {this.transferCalculator()}
@@ -142,11 +130,7 @@ class Fast extends Component {
       } else {
         return (
           <h1>
-            <FormattedMessage
-              id="Exchange.Exchange.NotAvailible"
-              defaultMessage="That pair is temporarily unavailable for trades"
-            />
-            .
+            <Text id="Exchange.Exchange.NotAvailible" />.
           </h1>
         );
       }
@@ -169,10 +153,7 @@ class Fast extends Component {
           disabled={this.props.acyncButtonFlag}
         >
           {this.props.acyncButtonFlag === false ? (
-            <FormattedMessage
-              id="Exchange.ExecuteTrade"
-              defaultMessage="Execute Trade"
-            />
+            <Text id="Exchange.ExecuteTrade" />
           ) : (
             <Squares color="white" />
           )}

@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Internal
@@ -84,32 +84,17 @@ export default class MoveBetweenAccountsModal extends Component {
             });
         } else {
           UIController.openErrorModal({
-            message: (
-              <FormattedMessage
-                id="Alert.InsufficientFunds"
-                defaultMessage="Insufficient Funds"
-              />
-            ),
+            message: <Text id="Alert.InsufficientFunds" />,
           });
         }
       } else {
         UIController.openErrorModal({
-          message: (
-            <FormattedMessage
-              id="Alert.NoSecondAccountChosen"
-              defaultMessage="No second account chosen"
-            />
-          ),
+          message: <Text id="Alert.NoSecondAccountChosen" />,
         });
       }
     } else {
       UIController.openErrorModal({
-        message: (
-          <FormattedMessage
-            id="Alert.AccountsAreTheSame"
-            defaultMessage="Accounts are the same"
-          />
-        ),
+        message: <Text id="Alert.AccountsAreTheSame" />,
       });
     }
   }
@@ -122,10 +107,7 @@ export default class MoveBetweenAccountsModal extends Component {
         <Modal.Body>
           <AccountSelectors>
             <Label>
-              <FormattedMessage
-                id="sendReceive.FromAccount"
-                defaultMessage="From Account"
-              />
+              <Text id="sendReceive.FromAccount" />
             </Label>
             <Select
               value={this.props.MoveFromAccount}
@@ -134,10 +116,7 @@ export default class MoveBetweenAccountsModal extends Component {
             />
 
             <Label>
-              <FormattedMessage
-                id="sendReceive.ToAccount"
-                defaultMessage="To Account"
-              />
+              <Text id="sendReceive.ToAccount" />
             </Label>
             <Select
               value={this.props.MoveToAccount}
@@ -150,12 +129,7 @@ export default class MoveBetweenAccountsModal extends Component {
               <FormField
                 connectLabel
                 style={{ flex: 1 }}
-                label={
-                  <FormattedMessage
-                    id="sendReceive.Amount"
-                    defaultMessage="Nexus Amount"
-                  />
-                }
+                label={<Text id="sendReceive.Amount" />}
               >
                 <TextField
                   placeholder="0.00000"
@@ -182,8 +156,8 @@ export default class MoveBetweenAccountsModal extends Component {
             </div>
             {this.props.paytxfee && (
               <div style={{ marginTop: '1em' }}>
-                <FormattedMessage id="sendReceive.FEE" defaultMessage="Fee" />:{' '}
-                {this.props.paytxfee.toFixed(5)} NXS
+                <Text id="sendReceive.FEE" />: {this.props.paytxfee.toFixed(5)}{' '}
+                NXS
               </div>
             )}
           </div>
@@ -192,10 +166,7 @@ export default class MoveBetweenAccountsModal extends Component {
               skin="primary"
               onClick={() => this.moveNXSbetweenAccounts()}
             >
-              <FormattedMessage
-                id="sendReceive.MoveNXS"
-                defaultMessage="Move NXS"
-              />
+              <Text id="sendReceive.MoveNXS" />
             </Button>
           </Buttons>
         </Modal.Body>

@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
 
@@ -40,10 +40,7 @@ class SettingsStyle extends Component {
   SaveSettings() {
     SaveSettings(this.props.settings);
     UIController.showNotification(
-      <FormattedMessage
-        id="Alert.StyleSettingsSaved"
-        defaultMessage="Style Settings Saved"
-      />,
+      <Text id="Alert.StyleSettingsSaved" />,
       'success'
     );
 
@@ -79,24 +76,13 @@ class SettingsStyle extends Component {
         <form>
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.RenderGlobe"
-                defaultMessage="Render Globe"
-              />
-            }
+            label={<Text id="Settings.RenderGlobe" />}
             subLabel={
               <div>
-                <FormattedMessage
-                  id="ToolTip.RenderGlobe"
-                  defaultMessage="Render the globe on the Overview page"
-                />
+                <Text id="ToolTip.RenderGlobe" />
                 {!webGLEnabled && (
                   <div className="error">
-                    <FormattedMessage
-                      id="ToolTip.RenderGlobeOpenGLFail"
-                      defaultMessage="Your Computer does not support OPENGL 2.0"
-                    />
+                    <Text id="ToolTip.RenderGlobeOpenGLFail" />
                   </div>
                 )}
               </div>
@@ -153,10 +139,7 @@ class SettingsStyle extends Component {
                 this.SaveSettings();
               }}
             >
-              <FormattedMessage
-                id="Settings.SaveSettings"
-                defaultMessage="Save Settings"
-              />
+              <Text id="Settings.SaveSettings" />
             </Button>
           </div>
         </form>

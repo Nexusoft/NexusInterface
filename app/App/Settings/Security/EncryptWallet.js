@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import * as RPC from 'scripts/rpc';
 import styled from '@emotion/styled';
 
@@ -63,10 +63,7 @@ export default class EncryptWallet extends Component {
                 passChk.value = '';
                 this.props.busy(false);
                 UIController.showNotification(
-                  <FormattedMessage
-                    id="Alert.WalletHasBeenEncrypted"
-                    defaultMessage="Wallet has been encrypted"
-                  />,
+                  <Text id="Alert.WalletHasBeenEncrypted" />,
                   'success'
                 ); // new alert
                 this.props.ResetForEncryptionRestart();
@@ -104,36 +101,15 @@ export default class EncryptWallet extends Component {
   render() {
     return (
       <EncryptWalletComponent>
-        <FieldSet
-          legend={
-            <FormattedMessage
-              id="Settings.EncryptWallet"
-              defaultMessage="Encrypt Wallet"
-            />
-          }
-        >
+        <FieldSet legend={<Text id="Settings.EncryptWallet" />}>
           <Note>
-            <FormattedMessage
-              id="Settings.CannotContain"
-              defaultMessage="Password cannot contain these characters"
-            />
+            <Text id="Settings.CannotContain" />
             :<br />
             <Characters>{' -$/&*|<>'}</Characters>
           </Note>
-          <FormattedMessage
-            id="Settings.NewPassword"
-            defaultMessage="New Password:"
-          >
+          <Text id="Settings.NewPassword">
             {p => (
-              <FormField
-                connectLabel
-                label={
-                  <FormattedMessage
-                    id="Settings.Password"
-                    defaultMessage="Password:"
-                  />
-                }
-              >
+              <FormField connectLabel label={<Text id="Settings.Password" />}>
                 <TextField
                   type="password"
                   placeholder={p}
@@ -142,21 +118,10 @@ export default class EncryptWallet extends Component {
                 />
               </FormField>
             )}
-          </FormattedMessage>
-          <FormattedMessage
-            id="Settings.Re-Enter"
-            defaultMessage="Re-Enter Password"
-          >
+          </Text>
+          <Text id="Settings.Re-Enter">
             {rep => (
-              <FormField
-                connectLabel
-                label={
-                  <FormattedMessage
-                    id="Settings.Re-Enter"
-                    defaultMessage="Re-Enter Password"
-                  />
-                }
-              >
+              <FormField connectLabel label={<Text id="Settings.Re-Enter" />}>
                 <TextField
                   type="password"
                   placeholder={rep}
@@ -165,7 +130,7 @@ export default class EncryptWallet extends Component {
                 />
               </FormField>
             )}
-          </FormattedMessage>
+          </Text>
           {/* Temporary workaround to avoid error */}
           <span id="passHint" style={{ display: 'none' }} />
           {/* <span
@@ -173,9 +138,8 @@ export default class EncryptWallet extends Component {
             style={{ visibility: 'hidden' }}
             className="err invalid"
           >
-            <FormattedMessage
+            <Text
               id="Settings.Re-Enter"
-              defaultMessage="Re-Enter Password"
             />
           </span> */}
 
@@ -186,10 +150,7 @@ export default class EncryptWallet extends Component {
             disabled={this.props.busyFlag}
             onClick={e => this.encrypt(e)}
           >
-            <FormattedMessage
-              id="Settings.EncryptRestart"
-              defaultMessage="Encrypt and Restart"
-            />
+            <Text id="Settings.EncryptRestart" />
           </Button>
         </FieldSet>
       </EncryptWalletComponent>

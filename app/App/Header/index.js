@@ -162,37 +162,19 @@ class Header extends Component {
         if (MRT.category === 'receive') {
           this.doNotify('Received', MRT.amount + ' NXS');
           UIController.showNotification(
-            <FormattedMessage
-              id="Alert.Received"
-              defaultMessage="Transaction Received"
-            />,
+            <Text id="Alert.Received" />,
             'success'
           );
         } else if (MRT.category === 'send') {
           this.doNotify('Sent', MRT.amount + ' NXS');
-          UIController.showNotification(
-            <FormattedMessage
-              id="Alert.Sent"
-              defaultMessage="Transaction Sent"
-            />,
-            'success'
-          );
+          UIController.showNotification(<Text id="Alert.Sent" />, 'success');
         } else if (MRT.category === 'genesis') {
           this.doNotify('Genesis', MRT.amount + ' NXS');
-          UIController.showNotification(
-            <FormattedMessage
-              id="Alert.Genesis"
-              defaultMessage="Genesis Transaction"
-            />,
-            'success'
-          );
+          UIController.showNotification(<Text id="Alert.Genesis" />, 'success');
         } else if (MRT.category === 'trust') {
           this.doNotify('Trust', MRT.amount + ' NXS');
           UIController.showNotification(
-            <FormattedMessage
-              id="Alert.TrustTransaction"
-              defaultMessage="Trust Transaction"
-            />,
+            <Text id="Alert.TrustTransaction" />,
             'success'
           );
         }

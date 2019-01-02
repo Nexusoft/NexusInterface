@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Internal
@@ -63,27 +63,17 @@ export default class ExchangeForm extends Component {
   render() {
     return (
       <ExchangeFormComponent>
-        <FieldSet
-          legend={<FormattedMessage id="Exchange.Send" defaultMessage="Send" />}
-        >
+        <FieldSet legend={<Text id="Exchange.Send" />}>
           <Select
             value={this.props.from}
             onChange={e => this.toFromHandler(e, 'from')}
             options={this.optionbuilder()}
           />
-          <FormattedMessage
-            id="Exchange.MinTrade"
-            defaultMessage="Minimum trade"
-          >
+          <Text id="Exchange.MinTrade">
             {text => (
               <FormField
                 connectLabel
-                label={
-                  <FormattedMessage
-                    id="Exchange.TradeAmount"
-                    defaultMessage="Trade Amount"
-                  />
-                }
+                label={<Text id="Exchange.TradeAmount" />}
               >
                 <TextField
                   placeholder={`${this.minAmount()} ${this.props.from} ${text}`}
@@ -93,16 +83,11 @@ export default class ExchangeForm extends Component {
                 />
               </FormField>
             )}
-          </FormattedMessage>
+          </Text>
           {this.props.from !== 'NXS' && (
             <FormField
               connectLabel
-              label={
-                <FormattedMessage
-                  id="Exchange.RefundAddress"
-                  defaultMessage="Refund Address"
-                />
-              }
+              label={<Text id="Exchange.RefundAddress" />}
             >
               <TextField
                 value={this.props.refundAddress}
@@ -112,11 +97,7 @@ export default class ExchangeForm extends Component {
             </FormField>
           )}
         </FieldSet>
-        <FieldSet
-          legend={
-            <FormattedMessage id="Exchange.Receive" defaultMessage="Receive" />
-          }
-        >
+        <FieldSet legend={<Text id="Exchange.Receive" />}>
           <Select
             onChange={e => this.toFromHandler(e, 'to')}
             value={this.props.to}
@@ -127,11 +108,7 @@ export default class ExchangeForm extends Component {
             connectLabel
             label={
               <span>
-                {this.currencylabel()}{' '}
-                <FormattedMessage
-                  id="Footer.Address"
-                  defaultMessage="Address"
-                />
+                {this.currencylabel()} <Text id="Footer.Address" />
               </span>
             }
           >

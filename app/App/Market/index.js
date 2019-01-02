@@ -12,7 +12,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import * as TYPE from 'actions/actiontypes';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
-import { FormattedMessage } from 'react-intl';
+import Text, { translate } from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 import * as actionsCreators from 'actions/marketActionCreators';
 
@@ -72,7 +72,8 @@ class Market extends Component {
     this.props.cryptopia24hrInfo();
   }
 
-  formatBuyData(array) {
+  formatBuyData = array => {
+    const { locale } = this.props.settings;
     let newQuantity = 0;
     let prevQuantity = 0;
     let finnishedArray = array
@@ -89,16 +90,16 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${this.props.messages['Market.Price']}: ${e.Price} \n ${
-              this.props.messages['Market.Volume']
-            }: ${newQuantity}`,
+            label: `${translate('Market.Price', locale)}: ${
+              e.Price
+            } \n ${translate('Market.Volume', locale)}: ${newQuantity}`,
           };
         }
       })
       .filter(e => e.x > 0);
 
     return finnishedArray;
-  }
+  };
 
   formatSellData(array) {
     let newQuantity = 0;
@@ -117,7 +118,9 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `Price: ${e.Price} \n Volume: ${newQuantity}`,
+            label: `${translate('Market.Price', locale)}: ${
+              e.Price
+            } \n ${translate('Market.Volume', locale)}: ${newQuantity}`,
           };
         }
       })
@@ -190,20 +193,9 @@ class Market extends Component {
   // Mandatory React method
   render() {
     return (
-      <Panel
-        icon={chartIcon}
-        title={
-          <FormattedMessage
-            id="Market.Information"
-            defaultMessage="Market Information"
-          />
-        }
-      >
+      <Panel icon={chartIcon} title={<Text id="Market.Information" />}>
         <a className="refresh" onClick={() => this.refresher()}>
-          <FormattedMessage
-            id="Market.Refreash"
-            defaultMessage="Refresh Market Data"
-          />
+          <Text id="Market.Refreash" />
         </a>
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 

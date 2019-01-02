@@ -1,8 +1,6 @@
 import Request from 'request';
 import * as TYPE from './actiontypes';
-import { FormattedMessage } from 'react-intl';
-import React from 'react';
-import locale from 'reducers/settings';
+import { translate } from 'components/Text';
 
 //action creator for loaded flag
 
@@ -198,6 +196,7 @@ export const bittrexDepthLoader = () => {
 // actions creators for candlestick data
 
 export const binanceCandlestickLoader = any => {
+  const { locale } = any.props.settings;
   return dispatch => {
     Request(
       {
@@ -215,15 +214,15 @@ export const binanceCandlestickLoader = any => {
                 close: parseFloat(e[4]),
                 high: parseFloat(e[2]),
                 low: parseFloat(e[3]),
-                label: `${any.props.messages['Market.Date']}: ${new Date(
+                label: `${translate('Market.Date', locale)}: ${new Date(
                   e[0]
                 ).getMonth() + 1}/${new Date(e[0]).getDate()}/${new Date(
                   e[0]
                 ).getFullYear()}
-             ${any.props.messages['Market.Open']}: ${parseFloat(e[1])}
-             ${any.props.messages['Market.Close']}: ${parseFloat(e[4])}
-             ${any.props.messages['Market.High']}: ${parseFloat(e[2])}
-             ${any.props.messages['Market.Low']}: ${parseFloat(e[3])}`,
+             ${translate('Market.Open', locale)}: ${parseFloat(e[1])}
+             ${translate('Market.Close', locale)}: ${parseFloat(e[4])}
+             ${translate('Market.High', locale)}: ${parseFloat(e[2])}
+             ${translate('Market.Low', locale)}: ${parseFloat(e[3])}`,
               };
             })
             .slice(0, 30);
@@ -236,6 +235,7 @@ export const binanceCandlestickLoader = any => {
 };
 
 export const bittrexCandlestickLoader = any => {
+  const { locale } = any.props.settings;
   return dispatch => {
     Request(
       {
@@ -254,15 +254,15 @@ export const bittrexCandlestickLoader = any => {
                 close: e.C,
                 high: e.H,
                 low: e.L,
-                label: `${any.props.messages['Market.Date']}: ${new Date(
+                label: `${translate('Market.Date', locale)}: ${new Date(
                   e.T
                 ).getMonth() + 1}/${new Date(e.T).getDate()}/${new Date(
                   e.T
                 ).getFullYear()}
-                ${any.props.messages['Market.Open']}: ${e.O}
-                ${any.props.messages['Market.Close']}: ${e.C}
-                ${any.props.messages['Market.High']}: ${e.H}
-                ${any.props.messages['Market.Low']}: ${e.L}`,
+                ${translate('Market.Open', locale)}: ${e.O}
+                ${translate('Market.Close', locale)}: ${e.C}
+                ${translate('Market.High', locale)}: ${e.H}
+                ${translate('Market.Low', locale)}: ${e.L}`,
               };
             })
             .slice(0, 30);
@@ -275,6 +275,7 @@ export const bittrexCandlestickLoader = any => {
 };
 
 export const cryptopiaCandlestickLoader = (any, mes) => {
+  const { locale } = any.props.settings;
   return dispatch => {
     Request(
       {
@@ -293,15 +294,15 @@ export const cryptopiaCandlestickLoader = (any, mes) => {
                   close: e[4],
                   high: e[2],
                   low: e[3],
-                  label: `${any.props.messages['Market.Date']}: ${new Date(
+                  label: `${translate('Market.Date', locale)}: ${new Date(
                     e[0]
                   ).getMonth() + 1}/${new Date(e[0]).getDate()}/${new Date(
                     e[0]
                   ).getFullYear()}
-                  ${any.props.messages['Market.Open']}: ${e[1]}
-                  ${any.props.messages['Market.Close']}: ${e[4]}
-                  ${any.props.messages['Market.High']}: ${e[2]}
-                  ${any.props.messages['Market.Low']}: ${e[3]}`,
+                  ${translate('Market.Open', locale)}: ${e[1]}
+                  ${translate('Market.Close', locale)}: ${e[4]}
+                  ${translate('Market.High', locale)}: ${e[2]}
+                  ${translate('Market.Low', locale)}: ${e[3]}`,
                 };
               })
               .slice(0, 30);

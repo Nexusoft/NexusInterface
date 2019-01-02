@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Route, Redirect, Switch } from 'react-router';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 
@@ -87,28 +87,19 @@ class Settings extends Component {
       <Panel
         bodyScrollable={false}
         icon={settingsIcon}
-        title={
-          <FormattedMessage id="Settings.Settings" defaultMessage="Settings" />
-        }
+        title={<Text id="Settings.Settings" />}
       >
         <SettingsComponent>
           <SettingsTabBar>
             <Tab
               link={`${match.url}/App`}
               icon={logoIcon}
-              text={
-                <FormattedMessage
-                  id="Settings.Application"
-                  defaultMessage="Application"
-                />
-              }
+              text={<Text id="Settings.Application" />}
             />
             <Tab
               link={`${match.url}/Core`}
               icon={coreIcon}
-              text={
-                <FormattedMessage id="Settings.Core" defaultMessage="Core" />
-              }
+              text={<Text id="Settings.Core" />}
             />
             <Tab
               link={`${match.url}/${encrypted ? 'Security' : 'Unencrypted'}`}
@@ -120,19 +111,12 @@ class Settings extends Component {
                 ].includes(location.pathname)
               }
               icon={lockIcon}
-              text={
-                <FormattedMessage
-                  id="Settings.Security"
-                  defaultMessage="Security"
-                />
-              }
+              text={<Text id="Settings.Security" />}
             />
             <Tab
               link={`${match.url}/Style`}
               icon={developerIcon}
-              text={
-                <FormattedMessage id="Settings.Style" defaultMessage="Style" />
-              }
+              text={<Text id="Settings.Style" />}
             />
           </SettingsTabBar>
 

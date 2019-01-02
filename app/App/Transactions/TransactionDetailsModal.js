@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Internal
@@ -51,77 +51,54 @@ class TransactionDetailsModal extends Component {
             {tx.confirmations <= settings.minimumconfirmations && (
               <div>
                 <a>
-                  <FormattedMessage
-                    id="transactions.PendingTransaction"
-                    defaultMessage="PENDING TRANSACTION"
-                  />
+                  <Text id="transactions.PendingTransaction" />
                 </a>
               </div>
             )}
 
             <div key="modal_amount" className="detailCat">
-              <FormattedMessage
-                id="transactions.AMOUNT"
-                defaultMessage="Amount"
-              />
+              <Text id="transactions.AMOUNT" />
               <span className="TXdetails">{tx.amount}</span>
             </div>
 
             {tx.category === 'debit' && (
               <div key="modal_fee" className="detailCat">
-                <FormattedMessage id="transactions.fee" defaultMessage="Fee" />:
+                <Text id="transactions.fee" />:
                 <span className="TXdetails">{+tx.fee}</span>
               </div>
             )}
 
             <div key="modal_time" className="detailCat">
-              <FormattedMessage id="transactions.TIME" defaultMessage="Time" />
+              <Text id="transactions.TIME" />
               <span className="TXdetails">
                 {new Date(tx.time * 1000).toLocaleString(settings.locale)}
               </span>
             </div>
 
             <div key="modal_Account" className="detailCat">
-              <FormattedMessage
-                id="AddressBook.Account"
-                defaultMessage="Account"
-              />
-              :<span className="TXdetails">{tx.account}</span>
+              <Text id="AddressBook.Account" />:
+              <span className="TXdetails">{tx.account}</span>
             </div>
 
             <div key="modal_Confirms" className="detailCat">
-              <FormattedMessage
-                id="transactions.confirmations"
-                defaultMessage="Confirmations"
-              />
-              :<span className="TXdetails">{tx.confirmations}</span>
+              <Text id="transactions.confirmations" />:
+              <span className="TXdetails">{tx.confirmations}</span>
             </div>
 
             <div key="modal_TXID">
-              <FormattedMessage
-                id="transactions.modalTxID"
-                defaultMessage="Transaction ID"
-              />
-              :
+              <Text id="transactions.modalTxID" />:
               <div className="blockHash" style={{ wordWrap: 'break-word' }}>
                 <span>{tx.txid}</span>
               </div>
             </div>
 
             <div key="modal_BlockNumber" className="detailCat">
-              <FormattedMessage
-                id="transactions.blocknumber"
-                defaultMessage="Block Number"
-              />
-              :<span className="TXdetails">{highlightedBlockNum}</span>
+              <Text id="transactions.blocknumber" />:
+              <span className="TXdetails">{highlightedBlockNum}</span>
             </div>
 
             <div key="modal_BlockHash">
-              <FormattedMessage
-                id="transactions.blockhash"
-                defaultMessage="Block Hash"
-              />
-              :
+              <Text id="transactions.blockhash" />:
               <div className="blockHash" style={{ wordWrap: 'break-word' }}>
                 <span>{highlightedBlockHash}</span>
               </div>

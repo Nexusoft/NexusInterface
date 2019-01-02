@@ -19,7 +19,7 @@ import styles from './style.css';
 
 import arrow from 'images/arrow.svg';
 import * as actionsCreators from 'actions/exchangeActionCreators';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -209,10 +209,7 @@ class Precise extends Component {
             disabled={this.props.acyncButtonFlag}
           >
             {this.props.acyncButtonFlag === false ? (
-              <FormattedMessage
-                id="Exchange.ExecuteTrade"
-                defaultMessage="EXECUTE TRADE"
-              />
+              <Text id="Exchange.ExecuteTrade" />
             ) : (
               <Squares color="white" />
             )}
@@ -228,10 +225,7 @@ class Precise extends Component {
             disabled={this.props.acyncButtonFlag}
           >
             {this.props.acyncButtonFlag === false ? (
-              <FormattedMessage
-                id="Exchange.QUOTE"
-                defaultMessage="GET QUOTE"
-              />
+              <Text id="Exchange.QUOTE" />
             ) : (
               <Squares color="white" />
             )}
@@ -256,10 +250,7 @@ class Precise extends Component {
               <div id="sendSideConfirm">
                 <div className="confirmationWords">
                   <h3>
-                    <FormattedMessage
-                      id="Exchange.YouAreSending"
-                      defaultMessage="YOU ARE SENDING"
-                    />
+                    <Text id="Exchange.YouAreSending" />
                   </h3>
                   <div>
                     {this.props.ammount} {this.props.from}
@@ -278,10 +269,7 @@ class Precise extends Component {
                 />
                 <div className="confirmationWords">
                   <h3>
-                    <FormattedMessage
-                      id="Exchange.YouWillReceive"
-                      defaultMessage="YOU WILL RECEIVE"
-                    />
+                    <Text id="Exchange.YouWillReceive" />
                   </h3>
 
                   {this.transferCalculator()}
@@ -294,10 +282,7 @@ class Precise extends Component {
       } else {
         return (
           <h1>
-            <FormattedMessage
-              id="Exchange.NotAvailible"
-              defaultMessage="That pair is temporarily unavailable for trades"
-            />
+            <Text id="Exchange.NotAvailible" />
           </h1>
         );
       }

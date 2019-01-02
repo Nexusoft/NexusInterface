@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { remote } from 'electron';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Internal Dependencies
@@ -47,12 +47,6 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal3: type => {
     dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
-  },
-  localeChange: returnSelectedLocale => {
-    dispatch({ type: TYPE.SWITCH_LOCALES, payload: returnSelectedLocale });
-  },
-  SwitchLocale: locale => {
-    dispatch({ type: TYPE.UPDATE_LOCALES, payload: locale });
   },
   clearForRestart: () => {
     dispatch({ type: TYPE.CLEAR_FOR_RESTART });
@@ -253,18 +247,8 @@ class SettingsCore extends Component {
   confirmSwitchManualDaemon = () => {
     if (this.props.settings.manualDaemon) {
       UIController.openConfirmModal({
-        question: (
-          <FormattedMessage
-            id="Settings.ManualDaemonExit"
-            defaultMessage="Exit manual daemon mode?"
-          />
-        ),
-        note: (
-          <FormattedMessage
-            id="Settings.ManualDaemonWarning"
-            defaultMessage="(This will shut down your daemon)"
-          />
-        ),
+        question: <Text id="Settings.ManualDaemonExit" />,
+        note: <Text id="Settings.ManualDaemonWarning" />,
         yesCallback: () => {
           RPC.PROMISE('stop', [])
             .then(payload => {
@@ -283,18 +267,8 @@ class SettingsCore extends Component {
       });
     } else {
       UIController.openConfirmModal({
-        question: (
-          <FormattedMessage
-            id="Settings.ManualDaemonEntry"
-            defaultMessage="Enter manual daemon mode?"
-          />
-        ),
-        note: (
-          <FormattedMessage
-            id="Settings.ManualDaemonWarning"
-            defaultMessage="(This will shut down your daemon)"
-          />
-        ),
+        question: <Text id="Settings.ManualDaemonEntry" />,
+        note: <Text id="Settings.ManualDaemonWarning" />,
         yesCallback: () => {
           RPC.PROMISE('stop', [])
             .then(payload => {
@@ -316,22 +290,14 @@ class SettingsCore extends Component {
     UIController.openConfirmModal({
       question: (
         <>
-          <FormattedMessage id="SaveSettings" defaultMessage="Save Settings" />?
+          <Text id="SaveSettings" />?
         </>
       ),
-      note: (
-        <FormattedMessage
-          id="Settings.ChangesNexTime"
-          defaultMessage="Changes to core settings will take effect the next time the core is restarted"
-        />
-      ),
+      note: <Text id="Settings.ChangesNexTime" />,
       yesCallback: () => {
         this.props.setSettings(GetSettings());
         UIController.showNotification(
-          <FormattedMessage
-            id="Alert.CoreSettingsSaved"
-            defaultMessage="Core Settings Saved"
-          />,
+          <Text id="Alert.CoreSettingsSaved" />,
           'success'
         );
       },
@@ -344,18 +310,8 @@ class SettingsCore extends Component {
         <form>
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.EnableMining"
-                defaultMessage="Enable Mining"
-              />
-            }
-            subLabel={
-              <FormattedMessage
-                id="ToolTip.EnableMining"
-                defaultMessage="Enable/Disable mining to the wallet"
-              />
-            }
+            label={<Text id="Settings.EnableMining" />}
+            subLabel={<Text id="ToolTip.EnableMining" />}
           >
             <Switch
               defaultChecked={this.initialValues.enableMining}
@@ -365,18 +321,8 @@ class SettingsCore extends Component {
 
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.EnableStaking"
-                defaultMessage="Enable Staking"
-              />
-            }
-            subLabel={
-              <FormattedMessage
-                id="ToolTip.EnableStaking"
-                defaultMessage="Enable/Disable Staking to the wallet"
-              />
-            }
+            label={<Text id="Settings.EnableStaking" />}
+            subLabel={<Text id="ToolTip.EnableStaking" />}
           >
             <Switch
               defaultChecked={this.initialValues.enableStaking}
@@ -386,18 +332,8 @@ class SettingsCore extends Component {
 
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.VerboseLevel"
-                defaultMessage="Verbose Level"
-              />
-            }
-            subLabel={
-              <FormattedMessage
-                id="ToolTip.Verbose"
-                defaultMessage="Verbose level for logs"
-              />
-            }
+            label={<Text id="Settings.VerboseLevel" />}
+            subLabel={<Text id="ToolTip.Verbose" />}
           >
             <TextField
               defaultValue={this.initialValues.verboseLevel}
@@ -408,18 +344,8 @@ class SettingsCore extends Component {
 
           <SettingsField
             connectLabel
-            label={
-              <FormattedMessage
-                id="Settings.ManualDaemonMode"
-                defaultMessage="Manual Daemon Mode"
-              />
-            }
-            subLabel={
-              <FormattedMessage
-                id="ToolTip.MDM"
-                defaultMessage="Enable manual daemon mode if you are running the daemon manually outside of the wallet"
-              />
-            }
+            label={<Text id="Settings.ManualDaemonMode" />}
+            subLabel={<Text id="ToolTip.MDM" />}
           >
             <Switch
               checked={this.props.settings.manualDaemon}
@@ -431,18 +357,8 @@ class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={
-                <FormattedMessage
-                  id="Settings.Username"
-                  defaultMesage="Username"
-                />
-              }
-              subLabel={
-                <FormattedMessage
-                  id="ToolTip.UserName"
-                  defaultMessage="Username configured for manual daemon"
-                />
-              }
+              label={<Text id="Settings.Username" defaultMesage="Username" />}
+              subLabel={<Text id="ToolTip.UserName" />}
             >
               <TextField
                 defaultValue={this.initialValues.manualDaemonUser}
@@ -454,18 +370,8 @@ class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={
-                <FormattedMessage
-                  id="Settings.Password"
-                  defaultMesage="Password"
-                />
-              }
-              subLabel={
-                <FormattedMessage
-                  id="ToolTip.Password"
-                  defaultMessage="Password configured for manual daemon"
-                />
-              }
+              label={<Text id="Settings.Password" defaultMesage="Password" />}
+              subLabel={<Text id="ToolTip.Password" />}
             >
               <TextField
                 defaultValue={this.initialValues.manualDaemonPassword}
@@ -478,17 +384,9 @@ class SettingsCore extends Component {
               indent={1}
               connectLabel
               label={
-                <FormattedMessage
-                  id="Settings.IpAddress"
-                  defaultMesage="IP Address"
-                />
+                <Text id="Settings.IpAddress" defaultMesage="IP Address" />
               }
-              subLabel={
-                <FormattedMessage
-                  id="ToolTip.IP"
-                  defaultMessage="IP address configured for manual daemon"
-                />
-              }
+              subLabel={<Text id="ToolTip.IP" />}
             >
               <TextField
                 defaultValue={this.initialValues.manualDaemonIP}
@@ -500,15 +398,8 @@ class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={
-                <FormattedMessage id="Settings.Port" defaultMesage="Port" />
-              }
-              subLabel={
-                <FormattedMessage
-                  id="ToolTip.PortConfig"
-                  defaultMessage="Port configured for manual daemon"
-                />
-              }
+              label={<Text id="Settings.Port" />}
+              subLabel={<Text id="ToolTip.PortConfig" />}
             >
               <TextField
                 defaultValue={this.initialValues.manualDaemonPort}
@@ -523,17 +414,9 @@ class SettingsCore extends Component {
               indent={1}
               connectLabel
               label={
-                <FormattedMessage
-                  id="Settings.UPnp"
-                  defaultMesage="Map port using UPnP"
-                />
+                <Text id="Settings.UPnp" defaultMesage="Map port using UPnP" />
               }
-              subLabel={
-                <FormattedMessage
-                  id="ToolTip.UPnP"
-                  defaultMessage="Automatically open the Nexus client port on the router. This only works when your router supports UPnP and it is enabled."
-                />
-              }
+              subLabel={<Text id="ToolTip.UPnP" />}
             >
               <Switch
                 defaultChecked={this.initialValues.mapPortUsingUpnp}
@@ -544,17 +427,12 @@ class SettingsCore extends Component {
               indent={1}
               connectLabel
               label={
-                <FormattedMessage
+                <Text
                   id="Settings.Socks4proxy"
                   defaultMesage="Connect through SOCKS4 proxy"
                 />
               }
-              subLabel={
-                <FormattedMessage
-                  id="ToolTip.Socks4"
-                  defaultMessage="Connect to Nexus through a SOCKS4 proxy"
-                />
-              }
+              subLabel={<Text id="ToolTip.Socks4" />}
             >
               <Switch
                 defaultChecked={this.initialValues.socks4Proxy}
@@ -567,17 +445,12 @@ class SettingsCore extends Component {
                 indent={2}
                 connectLabel
                 label={
-                  <FormattedMessage
+                  <Text
                     id="Settings.ProxyIP"
                     defaultMesage="Proxy IP Address"
                   />
                 }
-                subLabel={
-                  <FormattedMessage
-                    id="ToolTip.IPAddressofSOCKS4proxy"
-                    defaultMessage="IP Address of SOCKS4 proxy server"
-                  />
-                }
+                subLabel={<Text id="ToolTip.IPAddressofSOCKS4proxy" />}
               >
                 <TextField
                   defaultValue={this.initialValues.socks4ProxyIP}
@@ -589,17 +462,9 @@ class SettingsCore extends Component {
                 indent={2}
                 connectLabel
                 label={
-                  <FormattedMessage
-                    id="Settings.ProxyPort"
-                    defaultMesage="Proxy Port"
-                  />
+                  <Text id="Settings.ProxyPort" defaultMesage="Proxy Port" />
                 }
-                subLabel={
-                  <FormattedMessage
-                    id="ToolTip.PortOfSOCKS4proxyServer"
-                    defaultMessage="Port of SOCKS4 proxy server"
-                  />
-                }
+                subLabel={<Text id="ToolTip.PortOfSOCKS4proxyServer" />}
               >
                 <TextField
                   defaultValue={this.initialValues.socks4ProxyPort}
@@ -612,17 +477,9 @@ class SettingsCore extends Component {
               indent={1}
               connectLabel
               label={
-                <FormattedMessage
-                  id="Settings.ProxyIP"
-                  defaultMesage="Proxy IP Address"
-                />
+                <Text id="Settings.ProxyIP" defaultMesage="Proxy IP Address" />
               }
-              subLabel={
-                <FormattedMessage
-                  id="ToolTip.Detach"
-                  defaultMessage="Detach the database when shutting down the wallet"
-                />
-              }
+              subLabel={<Text id="ToolTip.Detach" />}
             >
               <Switch
                 defaultChecked={this.initialValues.detatchDatabaseOnShutdown}
@@ -632,18 +489,8 @@ class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={
-                <FormattedMessage
-                  id="Settings.DDN"
-                  defaultMessage="Data Directory Name"
-                />
-              }
-              subLabel={
-                <FormattedMessage
-                  id="ToolTip.DataDirectory"
-                  defaultMessage="Data directory configured for manual daemon"
-                />
-              }
+              label={<Text id="Settings.DDN" />}
+              subLabel={<Text id="ToolTip.DataDirectory" />}
             >
               <TextField
                 size={30}
@@ -661,27 +508,18 @@ class SettingsCore extends Component {
 
                 core.restart();
                 UIController.showNotification(
-                  <FormattedMessage
-                    id="Alert.CoreRestarting"
-                    defaultMessage="Core Restarting"
-                  />
+                  <Text id="Alert.CoreRestarting" />
                 );
               }}
             >
-              <FormattedMessage
-                id="Settings.RestartCore"
-                defaultMesage="Restart Core"
-              />
+              <Text id="Settings.RestartCore" defaultMesage="Restart Core" />
             </Button>
             <Button
               skin="primary"
               onClick={this.confirmSaveSettings}
               style={{ marginLeft: 15 }}
             >
-              <FormattedMessage
-                id="Settings.SaveSettings"
-                defaultMessage="Save Settings"
-              />
+              <Text id="Settings.SaveSettings" />
             </Button>
           </div>
         </form>
