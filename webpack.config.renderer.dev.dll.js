@@ -2,18 +2,20 @@
  * Builds the DLL for development electron renderer process
  */
 
-import webpack from 'webpack'
-import path from 'path'
-import merge from 'webpack-merge'
-import baseConfig from './webpack.config.base'
-import { dependencies } from './package.json'
-import CheckNodeEnv from './internals/scripts/CheckNodeEnv'
+import webpack from 'webpack';
+import path from 'path';
+import merge from 'webpack-merge';
+import baseConfig from './webpack.config.base';
+import { dependencies } from './package.json';
+import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
-CheckNodeEnv('development')
+CheckNodeEnv('development');
 
-const dist = path.resolve(process.cwd(), 'dll')
+const dist = path.resolve(process.cwd(), 'dll');
 
 export default merge.smart(baseConfig, {
+  mode: 'development',
+
   context: process.cwd(),
 
   devtool: 'eval',
@@ -28,6 +30,22 @@ export default merge.smart(baseConfig, {
    */
   module: {
     rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            plugins: [
+              // Here, we include babel plugins that are only required for the
+              // renderer process. The 'transform-*' plugins must be included
+              // before react-hot-loader/babel
+              'react-hot-loader/babel',
+            ],
+          },
+        },
+      },
       {
         test: /\.global\.css$/,
         use: [
@@ -59,45 +77,6 @@ export default merge.smart(baseConfig, {
           },
         ],
       },
-      // Add SASS support  - compile all .global.scss files and pipe it to style.css
-      {
-        test: /\.global\.scss$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-      // Add SASS support  - compile all other .scss files and pipe it to style.css
-      {
-        test: /^((?!\.global).)*\.scss$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              sourceMap: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
       // WOFF Font
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
@@ -116,7 +95,7 @@ export default merge.smart(baseConfig, {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/font-woff',
+            mimetype: 'font/woff2',
           },
         },
       },
@@ -136,16 +115,35 @@ export default merge.smart(baseConfig, {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         use: 'file-loader',
       },
-      // SVG Font
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'image/svg+xml',
+        oneOf: [
+          // SVG Sprite icons
+          {
+            test: /\.sprite.svg$/,
+            use: [
+              {
+                loader: 'svg-sprite-loader',
+              },
+              {
+                loader: 'svgo-loader',
+                options: {
+                  externalConfig: 'svgo-config.json',
+                },
+              },
+            ],
           },
-        },
+          // SVG Font
+          {
+            use: {
+              loader: 'url-loader',
+              options: {
+                limit: 10000,
+                mimetype: 'image/svg+xml',
+              },
+            },
+          },
+        ],
       },
       // Common Image Formats
       {
@@ -203,4 +201,4 @@ export default merge.smart(baseConfig, {
       },
     }),
   ],
-})
+});

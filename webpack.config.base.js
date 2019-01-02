@@ -2,12 +2,12 @@
  * Base webpack config used across other specific configs
  */
 
-import path from 'path'
-import webpack from 'webpack'
-import { dependencies as externals } from './app/package.json'
-import packageJson from './package.json'
+import path from 'path';
+import webpack from 'webpack';
+import { dependencies as externals } from './app/package.json';
+import packageJson from './package.json';
 
-const appVersion = packageJson.version
+const appVersion = packageJson.version;
 
 export default {
   externals: Object.keys(externals || {}),
@@ -39,7 +39,7 @@ export default {
    */
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
-    modules: [path.join(__dirname, 'app'), 'node_modules'],
+    modules: ['nxs_modules', 'node_modules'],
   },
 
   plugins: [
@@ -52,4 +52,4 @@ export default {
 
     new webpack.NamedModulesPlugin(),
   ],
-}
+};

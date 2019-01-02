@@ -5,11 +5,9 @@ import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import createRootReducer from 'reducers';
 
-import { FormattedMessage, addLocaleData } from 'react-intl';
-import { Provider } from 'react-intl-redux';
+import { addLocaleData } from 'react-intl';
 import itLocaleData from 'react-intl/locale-data/it';
 import enLocaleData from 'react-intl/locale-data/en';
-import { updateIntl } from 'react-intl-redux';
 import zhLocaleData from 'react-intl/locale-data/zh';
 const UPDATE_LOCALES = 'UPDATE_LOCALES';
 // import * as counterActions from "actions/counter";
@@ -58,9 +56,8 @@ const configureStore = () => {
   const store = createStore(createRootReducer(history), enhancer);
 
   if (module.hot) {
-    module.hot.accept(
-      'reducers',
-      () => store.replaceReducer(require('reducers').default) // eslint-disable-line global-require
+    module.hot.accept('reducers', () =>
+      store.replaceReducer(createRootReducer(history))
     );
   }
 

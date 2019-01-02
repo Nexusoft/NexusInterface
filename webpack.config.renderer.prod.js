@@ -2,26 +2,25 @@
  * Build config for electron renderer process
  */
 
-import path from 'path'
-import webpack from 'webpack'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import merge from 'webpack-merge'
-// import BabiliPlugin from "babili-webpack-plBabiliPluginugin";
-import baseConfig from './webpack.config.base'
-import CheckNodeEnv from './internals/scripts/CheckNodeEnv'
+import path from 'path';
+import webpack from 'webpack';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import merge from 'webpack-merge';
+import baseConfig from './webpack.config.base';
+import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
-CheckNodeEnv('production')
+CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
+  mode: 'production',
+
   devtool: 'source-map',
 
   target: 'electron-renderer',
 
   entry: './app/index',
-
-  mode: 'production',
 
   output: {
     path: path.join(__dirname, 'app/dist'),
@@ -62,44 +61,6 @@ export default merge.smart(baseConfig, {
           },
         ],
       },
-      // Add SASS support  - compile all .global.scss files and pipe it to style.css
-      {
-        test: /\.global\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-      // Add SASS support  - compile all other .scss files and pipe it to style.css
-      {
-        test: /^((?!\.global).)*\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
       // WOFF Font
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
@@ -118,7 +79,7 @@ export default merge.smart(baseConfig, {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/font-woff',
+            mimetype: 'font/woff2',
           },
         },
       },
@@ -138,16 +99,35 @@ export default merge.smart(baseConfig, {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         use: 'file-loader',
       },
-      // SVG Font
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            // limit: 10000,
-            mimetype: 'image/svg+xml',
+        oneOf: [
+          // SVG Sprite icons
+          {
+            test: /\.sprite.svg$/,
+            use: [
+              {
+                loader: 'svg-sprite-loader',
+              },
+              {
+                loader: 'svgo-loader',
+                options: {
+                  externalConfig: 'svgo-config.json',
+                },
+              },
+            ],
           },
-        },
+          // SVG Font
+          {
+            use: {
+              loader: 'url-loader',
+              options: {
+                // limit: 10000,
+                mimetype: 'image/svg+xml',
+              },
+            },
+          },
+        ],
       },
 
       // Common Image Formats
@@ -188,11 +168,6 @@ export default merge.smart(baseConfig, {
       ),
     }),
 
-    /**
-     * Babli is an ES6+ aware minifier based on the Babel toolchain (beta)
-     */
-    // new BabiliPlugin(),
-
     new MiniCssExtractPlugin({
       filename: 'style.css',
     }),
@@ -203,4 +178,4 @@ export default merge.smart(baseConfig, {
       openAnalyzer: process.env.OPEN_ANALYZER === 'true',
     }),
   ],
-})
+});

@@ -2,23 +2,22 @@
  * Webpack config for production electron main process
  */
 
-import webpack from 'webpack'
-import merge from 'webpack-merge'
-import BabiliPlugin from 'babili-webpack-plugin'
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import baseConfig from './webpack.config.base'
-import CheckNodeEnv from './internals/scripts/CheckNodeEnv'
+import webpack from 'webpack';
+import merge from 'webpack-merge';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import baseConfig from './webpack.config.base';
+import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
-CheckNodeEnv('production')
+CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
+  mode: 'production',
+
   devtool: 'source-map',
 
   target: 'electron-main',
 
-  entry: './app/main.dev',
-
-  mode: 'production',
+  entry: './app/main',
 
   // 'main.js' in root
   output: {
@@ -27,11 +26,6 @@ export default merge.smart(baseConfig, {
   },
 
   plugins: [
-    /**
-     * Babli is an ES6+ aware minifier based on the Babel toolchain (beta)
-     */
-    // new BabiliPlugin(),
-
     new BundleAnalyzerPlugin({
       analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
@@ -63,4 +57,4 @@ export default merge.smart(baseConfig, {
     __dirname: false,
     __filename: false,
   },
-})
+});

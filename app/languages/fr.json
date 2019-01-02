@@ -51,7 +51,7 @@
   "sendReceive.FromAccount": "Du compte",
   "sendReceive.ToAccount": "Estimer",
   "sendReceive.MoveNXS": "DÉPLACEZ NXS",
-  "sendReceive.MoveNxsBetweenAccount": "DÉPLACER NXS ENTRE COMPTES",
+  "sendReceive.MoveNxsBetweenAccount": "Déplacer NXS entre comptes",
 
   "transactions.MoreDetails": "Plus de détails",
   "transactions.Details": "Détails de la transaction",
@@ -61,7 +61,7 @@
   "transactions.blocknumber": "Numéro de bloc",
   "transactions.Transactions": "Transactions",
   "transactions.SearchAddress": "Adresse de recherche",
-  "transactions.Type": "TYPE",
+  "transactions.Type": "Type",
   "transactions.All": "Tout",
   "transactions.Receive": "Recevoir",
   "transactions.Sent": "Envoyé",

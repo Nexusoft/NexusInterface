@@ -42,7 +42,6 @@ app/style.css
 app/style.css.map
 app/dist
 dll
-main.js
 main.js.map
 
 .idea
@@ -51,3 +50,5 @@ npm-debug.log.*
 npm-shrinkwrap\.json~HEAD
 
 Test-Output
+
+.vscode/*
