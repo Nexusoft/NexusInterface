@@ -32,7 +32,7 @@ const slideUp = keyframes`
 const Nav = styled.nav({
   gridArea: 'navigation',
   position: 'relative',
-  background: 'linear-gradient(to top, rgb(0,0,0), rgba(0,0,0,.5))',
+  background: 'linear-gradient(to top, rgba(0,0,0,.6), transparent)',
 });
 
 const NavBar = styled.div({

@@ -130,7 +130,7 @@ const Stats = styled.div(
   ({ left, compact }) =>
     left && {
       textAlign: 'right',
-      right: compact ? 'calc(50% + 80px)' : 'calc(66% + 120px)',
+      right: compact ? 'calc(56% + 80px)' : 'calc(70% + 120px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideRight}`,
       [Stat]: {
         justifyContent: 'flex-end',
@@ -142,7 +142,7 @@ const Stats = styled.div(
   ({ right, compact }) =>
     right && {
       textAlign: 'left',
-      left: compact ? 'calc(50% + 80px)' : 'calc(66% + 120px)',
+      left: compact ? 'calc(56% + 80px)' : 'calc(70% + 120px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideLeft}`,
       [Stat]: {
         justifyContent: 'flex-start',
@@ -159,7 +159,7 @@ const Stat = styled.div(
     margin: '1.7em 0',
     display: 'flex',
     alignItems: 'center',
-    filter: `drop-shadow(0 0 10px #000)`,
+    filter: `drop-shadow(0 0 5px #000)`,
     color: theme.light,
   }),
   ({ to, theme }) =>
