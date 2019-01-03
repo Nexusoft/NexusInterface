@@ -8,7 +8,7 @@
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r @babel/register ./node_modules/webpack/bin/webpack --mode=development --config webpack.config.renderer.dev.dll.js --color",
     "build-main": "cross-env NODE_ENV=production node --trace-warnings -r @babel/register ./node_modules/webpack/bin/webpack --mode=production --config webpack.config.main.prod.js --color",
-    "build-main-dev": "cross-env NODE_ENV=development node --trace-warnings -r @babel/register ./node_modules/webpack/bin/webpack --mode=production --config webpack.config.main.dev.js --color",
+    "build-main-dev": "cross-env NODE_ENV=development node --trace-warnings -r @babel/register ./node_modules/webpack/bin/webpack --mode=development --config webpack.config.main.dev.js --color",
     "build-renderer": "cross-env NODE_ENV=production node  --max-old-space-size=4076 --trace-warnings -r @babel/register ./node_modules/webpack/bin/webpack --mode=production --config webpack.config.renderer.prod.js --color",
     "dev": "cross-env START_HOT=1 npm run start-renderer-dev",
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",

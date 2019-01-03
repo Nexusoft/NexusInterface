@@ -4,22 +4,19 @@
 //
 //////////////////////////////////////////////////////
 
-var settings = exports;
-
-var config = require('./configuration');
+import config from './configuration';
 
 //
 // GetSettings: Get the application settings.json file from disk and return it
 //
-
-settings.GetSettings = function() {
+export function GetSettings() {
   return config.ReadJson('settings.json');
-};
+}
 
 //
 // SaveSettings: Save the application settings.json file
 //
 
-settings.SaveSettings = function(settingsJson) {
+export function SaveSettings(settingsJson) {
   return config.WriteJson('settings.json', settingsJson);
-};
+}

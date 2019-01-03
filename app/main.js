@@ -1,23 +1,19 @@
-import {
-  app,
-  BrowserWindow,
-  remote,
-  Tray,
-  Menu,
-  ipcMain,
-  dialog,
-  globalShortcut,
-} from 'electron';
-import log, { info } from 'electron-log';
+// External
+import { app, BrowserWindow, dialog } from 'electron';
+import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
+import path from 'path';
+import module from 'module';
+import sourceMapSupport from 'source-map-support';
+import devToolsInstaller from 'electron-devtools-installer';
+import 'electron-debug';
+
+// Internal
 import core from 'api/core';
 import configuration from 'api/configuration';
 import { GetSettings, SaveSettings } from 'api/settings';
 
-const path = require('path');
-
 let mainWindow;
-let tray;
 let resizeTimer;
 // Global Objects
 global.core = core;
@@ -28,21 +24,20 @@ autoUpdater.logger.transports.file.level = 'info';
 
 // Enable source map support
 if (process.env.NODE_ENV === 'production') {
-  const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
 }
 
-require('electron-debug');
 const p = path.join(__dirname, '..', 'app', 'node_modules');
-require('module').globalPaths.push(p);
+module.globalPaths.push(p);
 
 // Enable development tools for REACT and REDUX
 const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
   return Promise.all(
-    extensions.map(name => installer.default(installer[name], forceDownload))
+    extensions.map(name =>
+      devToolsInstaller.default(devToolsInstaller[name], forceDownload)
+    )
   ).catch();
 };
 
