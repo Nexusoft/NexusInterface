@@ -72,6 +72,33 @@ import interestIcon from 'images/interest.sprite.svg';
 import stakeIcon from 'images/staking-white.sprite.svg';
 import maxmindLogo from 'images/maxmind-header-logo-compact.svg';
 
+const trustIcons = [
+  trust00,
+  trust10,
+  trust20,
+  trust30,
+  trust40,
+  trust50,
+  trust60,
+  trust70,
+  trust80,
+  trust90,
+  trust100,
+];
+
+const blockWeightIcons = [
+  blockweight0,
+  blockweight1,
+  blockweight2,
+  blockweight3,
+  blockweight4,
+  blockweight5,
+  blockweight6,
+  blockweight7,
+  blockweight8,
+  blockweight9,
+];
+
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
@@ -386,12 +413,10 @@ class Overview extends Component {
     );
   }
 
-  connectionsImage() {
+  connectionsIcon() {
     const con = this.props.connections;
 
-    if (con <= 4) {
-      return Connections0;
-    } else if (con > 4 && con <= 6) {
+    if (con > 4 && con <= 6) {
       return Connections4;
     } else if (con > 6 && con <= 12) {
       return Connections8;
@@ -406,85 +431,14 @@ class Overview extends Component {
     }
   }
 
-  trustImg() {
-    const TW = parseInt(this.props.trustweight / 10);
-    switch (TW) {
-      case 0:
-        return trust00;
-        break;
-      case 1:
-        return trust10;
-        break;
-      case 2:
-        return trust20;
-        break;
-      case 3:
-        return trust30;
-        break;
-      case 4:
-        return trust40;
-        break;
-      case 5:
-        return trust50;
-        break;
-      case 6:
-        return trust60;
-        break;
-      case 7:
-        return trust70;
-        break;
-      case 8:
-        return trust80;
-        break;
-      case 9:
-        return trust90;
-        break;
-      case 10:
-        return trust100;
-        break;
-      default:
-        return trust00;
-        break;
-    }
+  trustIcon() {
+    const tw = Math.round(this.props.trustweight / 10);
+    return trustIcons[tw];
   }
 
-  blockWeightImage() {
-    const BW = parseInt(this.props.blockweight / 10);
-    switch (BW) {
-      case 0:
-        return blockweight0;
-        break;
-      case 1:
-        return blockweight1;
-        break;
-      case 2:
-        return blockweight2;
-        break;
-      case 3:
-        return blockweight3;
-        break;
-      case 4:
-        return blockweight4;
-        break;
-      case 5:
-        return blockweight5;
-        break;
-      case 6:
-        return blockweight6;
-        break;
-      case 7:
-        return blockweight7;
-        break;
-      case 8:
-        return blockweight8;
-        break;
-      case 9:
-        return blockweight9;
-        break;
-      default:
-        return blockweight0;
-        break;
-    }
+  blockWeightIcon() {
+    const bw = Math.round(this.props.blockweight / 10);
+    return blockWeightIcons[bw];
   }
 
   returnIfDrawLines() {
@@ -789,7 +743,7 @@ class Overview extends Component {
 
         <Stats right compact={!this.isGlobeEnabled()}>
           <Stat>
-            <StatIcon icon={this.connectionsImage()} />
+            <StatIcon icon={this.connectionsIcon()} />
             <div>
               <StatLabel>
                 <Text id="overview.Connections" />
@@ -828,7 +782,7 @@ class Overview extends Component {
           </Tooltip.Trigger>
 
           <Stat>
-            <StatIcon icon={this.blockWeightImage()} />
+            <StatIcon icon={this.blockWeightIcon()} />
             <div>
               <StatLabel>
                 <Text id="overview.BlockWeightt" />
@@ -840,7 +794,7 @@ class Overview extends Component {
           </Stat>
 
           <Stat>
-            <StatIcon icon={this.trustImg()} />
+            <StatIcon icon={this.trustIcon()} />
             <div>
               <StatLabel>
                 <Text id="overview.TrustWeight" />
