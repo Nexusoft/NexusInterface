@@ -34,7 +34,7 @@ const HeaderComponent = styled.header(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  background: 'linear-gradient(to bottom, rgb(0,0,0), rgba(0,0,0,.5))',
+  background: 'linear-gradient(to bottom, rgba(0,0,0,.6), transparent)',
   color: theme.primary,
   zIndex: 999,
 }));
