@@ -5,7 +5,10 @@ import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import module from 'module';
 import sourceMapSupport from 'source-map-support';
-import devToolsInstaller from 'electron-devtools-installer';
+import devToolsInstall, {
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS,
+} from 'electron-devtools-installer';
 import 'electron-debug';
 
 // Internal
@@ -33,12 +36,10 @@ module.globalPaths.push(p);
 // Enable development tools for REACT and REDUX
 const installExtensions = async () => {
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
-  return Promise.all(
-    extensions.map(name =>
-      devToolsInstaller.default(devToolsInstaller[name], forceDownload)
-    )
-  ).catch();
+  return Promise.all([
+    devToolsInstall(REACT_DEVELOPER_TOOLS, forceDownload),
+    devToolsInstall(REDUX_DEVTOOLS, forceDownload),
+  ]).catch();
 };
 
 //

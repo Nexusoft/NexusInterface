@@ -16,12 +16,12 @@ import moveFile from 'move-file';
 import * as RPC from 'scripts/rpc';
 import UIController from 'components/UIController';
 
-export default {
+const configuration = {
   //
   // Exists: Check if a configuration file exists
   //
 
-  Exists: function(filename) {
+  Exists(filename) {
     try {
       fs.accessSync(path.join(this.GetAppDataDirectory(), filename));
       return true;
@@ -34,7 +34,7 @@ export default {
   // Read: Read a configuration file
   //
 
-  Read: function(filename) {
+  Read(filename) {
     try {
       return fs.readFileSync(path.join(this.GetAppDataDirectory(), filename));
     } catch (err) {
@@ -48,7 +48,7 @@ export default {
   // ReadJson: Read a json configuration file and return a json object
   //
 
-  ReadJson: function(filename) {
+  ReadJson(filename) {
     //
     // TODO: Is utf-8 required here?
     //
@@ -62,7 +62,7 @@ export default {
   // Write: Update a configuration file with provided content
   //
 
-  Write: function(filename, content) {
+  Write(filename, content) {
     //  if (!this.Exists("settings.json")) {
     //    console.log("Creating settings.json in " + this.GetAppDataDirectory());
     //    fs.closeSync(fs.openSync(path.join(this.GetAppDataDirectory(), "settings.json"), 'w'));
@@ -86,7 +86,7 @@ export default {
   // WriteJson: Update a json configuration file with provided json object
   //
 
-  WriteJson: function(filename, json) {
+  WriteJson(filename, json) {
     //
     // TODO: Is utf-8 required here?
     //
@@ -98,7 +98,7 @@ export default {
   // Delete: Delete the configuration file
   //
 
-  Delete: function(filename) {
+  Delete(filename) {
     try {
       fs.unlink(path.join(this.GetAppDataDirectory(), filename));
 
@@ -114,7 +114,7 @@ export default {
   // Rename: Rename a configuration file
   //
 
-  Rename: function(oldFilename, newFilename) {
+  Rename(oldFilename, newFilename) {
     try {
       fs.renameSync(
         path.join(this.GetAppDataDirectory(), oldFilename),
@@ -129,7 +129,7 @@ export default {
     }
   },
 
-  Start: function() {
+  Start() {
     if (!fs.existsSync(this.GetAppDataDirectory())) {
       fs.mkdirSync(this.GetAppDataDirectory());
     }
@@ -143,7 +143,7 @@ export default {
   // GetAppDataDirectory: Get the application data directory
   //
 
-  GetAppDataDirectory: function() {
+  GetAppDataDirectory() {
     const app = electron.app || electron.remote.app;
     let AppDataDirPath = '';
 
@@ -165,7 +165,7 @@ export default {
     return AppDataDirPath;
   },
 
-  GetCoreDataDir: function() {
+  GetCoreDataDir() {
     var datadir = '';
 
     //Set data directory by OS for automatic daemon mode
@@ -179,7 +179,7 @@ export default {
     return datadir;
   },
 
-  GetAppResourceDir: function() {
+  GetAppResourceDir() {
     const app = electron.app != undefined ? electron.app : electron.remote.app;
     let rawPath = '';
     if (process.platform === 'darwin') {
@@ -539,3 +539,7 @@ export default {
       });
   },
 };
+
+configuration.Start();
+
+export default configuration;

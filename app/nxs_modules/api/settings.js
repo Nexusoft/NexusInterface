@@ -4,7 +4,7 @@
 //
 //////////////////////////////////////////////////////
 
-import config from './configuration';
+import config from 'api/configuration';
 
 //
 // GetSettings: Get the application settings.json file from disk and return it

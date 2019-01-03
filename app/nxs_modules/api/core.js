@@ -1,4 +1,3 @@
-import configuration from './configuration';
 import crypto from 'crypto';
 import spawn from 'cross-spawn';
 import log from 'electron-log';
@@ -10,7 +9,9 @@ import childProcess from 'child_process';
 import xmlhttprequest from 'xmlhttprequest';
 import isRunning from 'is-running';
 
-import { GetSettings, SaveSettings } from './settings';
+// TODO: Fix circular dependencies core -> configuration -> rpc -> core
+import configuration from 'api/configuration';
+import { GetSettings, SaveSettings } from 'api/settings';
 
 const statusdelay = 1000;
 var prevCoreProcess = 0;
@@ -34,15 +35,14 @@ var port = '9336';
 var ip = '127.0.0.1';
 var host = 'http://' + ip + ':' + port;
 var verbose = '2'; // <--Lower to 0 after beta ends
-var datadir = configuration.GetCoreDataDir();
+
 // console.log(process.env.APPDATA);configuration.GetAppDataDirectory();
 console.log('core', process.env.HOME);
 //Set data directory by OS for automatic daemon mode
 
-configuration.Start();
-
 // SetCoreParameters: Get the path to local resources for the application (depending on running packaged vs via npm start)
 function SetCoreParameters(settings) {
+  var datadir = configuration.GetCoreDataDir();
   var parameters = [];
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
@@ -383,6 +383,7 @@ class Core extends EventEmitter {
 
   // start: Start up the core with necessary parameters and return the spawned process
   start(refToThis) {
+    var datadir = configuration.GetCoreDataDir();
     let settings = GetSettings();
     let parameters = SetCoreParameters(settings);
     let coreBinaryPath = GetCoreBinaryPath();
