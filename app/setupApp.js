@@ -12,8 +12,8 @@ let tray = window.tray || null;
 
 export default function setupApp(store, history) {
   const { dispatch } = store;
-  const menuBuilder = new MenuBuilder(remote.getCurrentWindow().id);
-  menuBuilder.buildMenu(store, history);
+  const menuBuilder = new MenuBuilder(store, history);
+  menuBuilder.buildMenu();
 
   if (tray === null) setupTray(dispatch);
 
