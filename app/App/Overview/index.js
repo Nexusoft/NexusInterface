@@ -251,8 +251,8 @@ class Overview extends Component {
     }
 
     if (
-      (this.props.connections == 0 ||
-        (this.props.connections == undefined &&
+      (this.props.connections === 0 ||
+        (this.props.connections === undefined &&
           this.props.percentDownloaded == 0.001)) &&
       this.props.daemonAvailable == false
     ) {
@@ -267,9 +267,10 @@ class Overview extends Component {
       this.props.webGLEnabled !== false
     ) {
       if (
-        (previousprops.connections == undefined ||
-          previousprops.connections == 0) &&
-        (this.props.connections != 0 || this.props.connections != undefined) &&
+        (previousprops.connections === undefined ||
+          previousprops.connections === 0) &&
+        (this.props.connections !== 0 ||
+          this.props.connections !== undefined) &&
         this.props.webGLEnabled !== false &&
         this.props.settings.renderGlobe === true
       ) {
@@ -277,7 +278,7 @@ class Overview extends Component {
         this.reDrawEverything();
       } else {
         if (
-          this.props.connections != previousprops.connections &&
+          this.props.connections !== previousprops.connections &&
           this.props.connections !== undefined &&
           previousprops.connections !== undefined
         ) {
@@ -589,6 +590,13 @@ class Overview extends Component {
     } else return false;
   }
 
+  waitForDaemon = stat =>
+    this.props.connections !== undefined ? (
+      stat
+    ) : (
+      <span className="dim">-</span>
+    );
+
   // Mandatory React method
   render() {
     const { connections, balance, stake, displayNXSvalues } = this.props;
@@ -683,11 +691,7 @@ class Overview extends Component {
                 (NXS)
               </StatLabel>
               <StatValue>
-                {!!connections ? (
-                  balance + (stake || 0)
-                ) : (
-                  <span className="dim">-</span>
-                )}
+                {this.waitForDaemon(balance + (stake || 0))}
               </StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />
@@ -703,11 +707,7 @@ class Overview extends Component {
                 {this.props.settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {!!connections ? (
-                  this.calculateUSDvalue()
-                ) : (
-                  <span className="dim">-</span>
-                )}
+                {this.waitForDaemon(this.calculateUSDvalue())}
               </StatValue>
             </div>
             <StatIcon icon={usdIcon} />
@@ -721,13 +721,7 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.Transactions" />
               </StatLabel>
-              <StatValue>
-                {!!connections ? (
-                  this.props.txtotal
-                ) : (
-                  <span className="dim">-</span>
-                )}
-              </StatValue>
+              <StatValue>{this.waitForDaemon(this.props.txtotal)}</StatValue>
             </div>
             <StatIcon icon={transactionIcon} />
           </Stat>
@@ -801,11 +795,7 @@ class Overview extends Component {
                 <Text id="overview.Connections" />
               </StatLabel>
               <StatValue>
-                {!!connections ? (
-                  this.props.connections
-                ) : (
-                  <span className="dim">-</span>
-                )}
+                {this.waitForDaemon(this.props.connections)}
               </StatValue>
             </div>
           </Stat>
@@ -817,11 +807,7 @@ class Overview extends Component {
                 <Text id="overview.InterestRate" />
               </StatLabel>
               <StatValue>
-                {!!connections ? (
-                  this.props.interestweight + '%'
-                ) : (
-                  <span className="dim">-</span>
-                )}
+                {this.waitForDaemon(this.props.interestweight + '%')}
               </StatValue>
             </div>
           </Stat>
@@ -835,11 +821,7 @@ class Overview extends Component {
                 </StatLabel>
 
                 <StatValue>
-                  {!!connections ? (
-                    this.numberWithCommas(this.props.blocks)
-                  ) : (
-                    <span className="dim">-</span>
-                  )}
+                  {this.waitForDaemon(this.numberWithCommas(this.props.blocks))}
                 </StatValue>
               </div>
             </Stat>
@@ -852,11 +834,7 @@ class Overview extends Component {
                 <Text id="overview.BlockWeightt" />
               </StatLabel>
               <StatValue>
-                {!!connections ? (
-                  this.props.blockweight
-                ) : (
-                  <span className="dim">-</span>
-                )}
+                {this.waitForDaemon(this.props.blockweight)}
               </StatValue>
             </div>
           </Stat>
@@ -868,11 +846,7 @@ class Overview extends Component {
                 <Text id="overview.TrustWeight" />
               </StatLabel>
               <StatValue>
-                {!!connections ? (
-                  this.props.trustweight
-                ) : (
-                  <span className="dim">-</span>
-                )}
+                {this.waitForDaemon(this.props.trustweight)}
               </StatValue>
             </div>
           </Stat>
@@ -884,11 +858,7 @@ class Overview extends Component {
                 <Text id="overview.StakeWeight" />
               </StatLabel>
               <StatValue>
-                {!!connections ? (
-                  this.props.stakeweight
-                ) : (
-                  <span className="dim">-</span>
-                )}
+                {this.waitForDaemon(this.props.stakeweight)}
               </StatValue>
             </div>
           </Stat>
