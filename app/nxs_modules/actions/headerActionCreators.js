@@ -16,21 +16,9 @@ import config from 'api/configuration';
 // import messages from '../languages/messages'
 
 // Header Action Creators
-export const GetInfoDump = () => {
+export const GetInfo = info => {
   return dispatch => {
-    RPC.PROMISE('getinfo', [])
-      .then(payload => {
-        delete payload.timestamp;
-        return payload;
-      })
-      .then(payload => {
-        DaemonAvailable();
-        dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload });
-      })
-      .catch(err => {
-        console.log(err);
-        DaemonUnavailable();
-      });
+    dispatch({ type: TYPE.GET_INFO_DUMP, payload: info });
   };
 };
 

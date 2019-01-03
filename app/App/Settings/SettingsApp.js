@@ -575,7 +575,7 @@ class SettingsApp extends Component {
           </SettingsField>
 
           <Button
-            disabled={!this.props.connections}
+            disabled={this.props.connections === undefined}
             style={{ marginTop: '2em' }}
             onClick={this.confirmBackupWallet}
           >

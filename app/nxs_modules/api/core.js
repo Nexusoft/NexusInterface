@@ -1,22 +1,25 @@
-import { resolve } from 'path';
-import configuration from './configuration';
-import { GetSettings, SaveSettings } from './settings';
+import crypto from 'crypto';
+import spawn from 'cross-spawn';
+import log from 'electron-log';
+import fs from 'fs';
+import path from 'path';
+import macaddress from 'macaddress';
+import EventEmitter from 'events';
+import childProcess from 'child_process';
+import xmlhttprequest from 'xmlhttprequest';
+import isRunning from 'is-running';
 
-import * as RPC from 'scripts/rpc';
+// TODO: Fix circular dependencies core -> configuration -> rpc -> core
+import configuration from 'api/configuration';
+import { GetSettings, SaveSettings } from 'api/settings';
 
-const cp = require('child_process');
-const spawn = require('cross-spawn');
-const log = require('electron-log');
 const statusdelay = 1000;
-const crypto = require('crypto');
 var prevCoreProcess = 0;
 
 var coreprocess = null;
-var settings = require('./settings');
 var responding = false;
 var user = 'rpcserver';
 //Generate automatic daemon password from machines hardware info
-var macaddress = require('macaddress');
 var secret = 'secret';
 if (process.platform === 'darwin') {
   const secret = process.env.USER + process.env.HOME + process.env.SHELL;
@@ -32,17 +35,14 @@ var port = '9336';
 var ip = '127.0.0.1';
 var host = 'http://' + ip + ':' + port;
 var verbose = '2'; // <--Lower to 0 after beta ends
-var datadir = configuration.GetCoreDataDir();
+
 // console.log(process.env.APPDATA);configuration.GetAppDataDirectory();
 console.log('core', process.env.HOME);
 //Set data directory by OS for automatic daemon mode
 
-const EventEmitter = require('events');
-
-configuration.Start();
-
 // SetCoreParameters: Get the path to local resources for the application (depending on running packaged vs via npm start)
 function SetCoreParameters(settings) {
+  var datadir = configuration.GetCoreDataDir();
   var parameters = [];
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
@@ -136,7 +136,6 @@ function GetCoreBinaryName() {
 
 // GetCoreBinaryPath: Get the path to the specific core binary for the user's system
 function GetCoreBinaryPath() {
-  const path = require('path');
   if (process.env.NODE_ENV === 'development') {
     let appDir = __dirname.split('/api');
 
@@ -155,7 +154,7 @@ function GetCoreBinaryPath() {
 
 // Determine if daemon running and if so, get PID
 function getCorePID() {
-  var execSync = require('child_process').execSync;
+  var execSync = childProcess.execSync;
   var modEnv = process.env;
   modEnv.Nexus_Daemon = GetCoreBinaryName();
   if (process.platform == 'win32') {
@@ -220,8 +219,7 @@ function getCorePID() {
 
 // If daemon is running, get it's parent PID
 function getCoreParentPID() {
-  const util = require('util');
-  var execSync = require('child_process').execSync;
+  var execSync = childProcess.execSync;
   var modEnv = process.env;
   modEnv.Nexus_Daemon = GetCoreBinaryName();
   modEnv.Daemon_PID = getCorePID();
@@ -261,7 +259,6 @@ function getCoreParentPID() {
 
 // CoreBinaryExists: Check if the core binary for the user's system exists or not
 function CoreBinaryExists() {
-  var fs = require('fs');
   log.info('Checking if core binary exists: ' + GetCoreBinaryPath());
   try {
     fs.accessSync(GetCoreBinaryPath());
@@ -319,7 +316,7 @@ function rpcPost(
   passwd,
   content
 ) {
-  var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+  var XMLHttpRequest = xmlhttprequest.XMLHttpRequest;
   var response = new XMLHttpRequest();
   /** Handle the Tag ID being omitted. **/
   if (tagid == undefined) tagid = '';
@@ -386,6 +383,7 @@ class Core extends EventEmitter {
 
   // start: Start up the core with necessary parameters and return the spawned process
   start(refToThis) {
+    var datadir = configuration.GetCoreDataDir();
     let settings = GetSettings();
     let parameters = SetCoreParameters(settings);
     let coreBinaryPath = GetCoreBinaryPath();
@@ -403,7 +401,6 @@ class Core extends EventEmitter {
     } else {
       log.info('isCoreRunning() output: ' + corePID);
       if (CoreBinaryExists()) {
-        var fs = require('fs');
         if (!fs.existsSync(datadir)) {
           log.info(
             'Core Manager: Data Directory path not found. Creating folder: ' +
@@ -445,8 +442,7 @@ class Core extends EventEmitter {
       let coreBinaryName = GetCoreBinaryName();
       let corePID = getCorePID();
       // let coreParentPID = getCoreParentPID();
-      var cp = require('child_process');
-      var execSync = require('child_process').execSync;
+      var execSync = childProcess.execSync;
       var modEnv = process.env;
       modEnv.KILL_PID = corePID;
       var _this = this;
@@ -462,7 +458,7 @@ class Core extends EventEmitter {
             if (getCorePID() > '1') {
               setTimeout(() => {
                 log.info('Core Manager: Killing process ' + corePID);
-                if (require('is-running')(corePID)) {
+                if (isRunning(corePID)) {
                   if (process.platform == 'win32') {
                     execSync('taskkill /F /PID %KILL_PID%', [], {
                       env: modEnv,

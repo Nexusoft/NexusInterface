@@ -30,7 +30,7 @@ class SignInStatus extends Component {
       month: 'long',
       day: 'numeric',
     });
-    if (!connections || !daemonAvailable) {
+    if (connections === undefined || !daemonAvailable) {
       return (
         <div>
           <div>Unknown Lock Status</div>
@@ -63,7 +63,7 @@ class SignInStatus extends Component {
 
   statusIcon = () => {
     const { connections, daemonAvailable, unlocked_until, theme } = this.props;
-    if (!connections || !daemonAvailable) {
+    if (connections === undefined || !daemonAvailable) {
       return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
     } else {
       if (unlocked_until === undefined) {

@@ -449,7 +449,7 @@ class SendPage extends Component {
         icon={sendIcon}
         title={<Text id="sendReceive.SendNexus" />}
         controls={
-          !!this.props.connections && (
+          this.props.connections !== undefined && (
             <Tooltip.Trigger
               tooltip={<Text id="sendReceive.MoveNxsBetweenAccount" />}
             >
@@ -465,7 +465,7 @@ class SendPage extends Component {
           )
         }
       >
-        {!this.props.isInSync || !this.props.connections ? (
+        {!this.props.isInSync || this.props.connections === undefined ? (
           <WaitingMessage>
             <Text id="TrustList.SyncMsg" />
             ...
