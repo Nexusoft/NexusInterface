@@ -91,12 +91,6 @@ body {
   color: var(--body-font-color);
 }
 
-p {
-  margin-top: calc(var(--line-height) * 1em);
-  margin-bottom: calc(var(--line-height) * 1em);
-  color: var(--body-font-color);
-}
-
 h1 {
   font-size: calc(var(--h1-font-size) * 1em);
   /*line-height: calc($line-height / $size * ceil($size / $line-height)); <-- there is no ceiling function in vanilla css*/

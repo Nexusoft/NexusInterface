@@ -105,7 +105,6 @@ export default class UIController extends Component {
   };
 
   closeModal = modalID => {
-    console.log('close', modalID);
     const modals = [...this.state.modals];
     const index = modals.findIndex(m => m.id === modalID);
     if (index >= 0) {

@@ -447,17 +447,6 @@ class Overview extends Component {
     }
   }
 
-  encryptedModalController() {
-    if (
-      this.daemonAvailable &&
-      !this.props.experimentalOpen &&
-      this.props.settings.acceptedagreement &&
-      (!this.props.encrypted && !this.props.ignoreEncryptionWarningFlag)
-    ) {
-      return true;
-    } else return false;
-  }
-
   waitForDaemon = stat =>
     this.props.connections !== undefined ? (
       stat
@@ -470,33 +459,6 @@ class Overview extends Component {
     const { connections, balance, stake, displayNXSvalues } = this.props;
     return (
       <OverviewPage>
-        <Modal
-          key="encrypted-modal"
-          open={this.encryptedModalController()}
-          onClose={() => this.props.ignoreEncryptionWarning()}
-          center
-          classNames={{ modal: 'modal' }}
-        >
-          <h3>
-            {' '}
-            <Text id="overview.EncryptedModal" />
-          </h3>
-          <p>
-            <Text id="overview.Suggestion" />
-          </p>
-          <NavLink to="/Settings/Unencrypted">
-            <button className="button primary">
-              <Text id="overview.TakeMeThere" />
-            </button>
-          </NavLink>
-          <button
-            className="button negative"
-            onClick={() => this.props.ignoreEncryptionWarning()}
-          >
-            <Text id="overview.Ignore" />{' '}
-          </button>
-        </Modal>
-
         {!!this.isGlobeEnabled() && (
           <>
             <NetworkGlobe

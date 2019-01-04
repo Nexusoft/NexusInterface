@@ -132,6 +132,7 @@ export default class Modal extends PureComponent {
   close = () => {
     const modalID = this.context;
     UIController.closeModal(modalID);
+    this.props.onClose && this.props.onClose();
   };
 
   render() {
@@ -139,6 +140,7 @@ export default class Modal extends PureComponent {
       open,
       dimBackground,
       closeOnBackgroundClick,
+      onClose,
       fullScreen,
       children,
       ...rest

@@ -4,7 +4,7 @@ import UIController from 'components/UIController';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 
-export default function setupSettings(dispatch) {
+export default function loadSettings({ dispatch }) {
   const settings = GetSettings();
   if (Object.keys(settings).length < 1) {
     SaveSettings({ ...settings, keepDaemon: false });

@@ -6,7 +6,7 @@ const Dialog = styled(Modal)({
   width: 500,
 });
 
-Dialog.Icon = styled.div(({ theme }) => ({
+Dialog.Icon = styled.div({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -16,7 +16,7 @@ Dialog.Icon = styled.div(({ theme }) => ({
   borderWidth: 2,
   borderStyle: 'solid',
   margin: '0 auto 20px',
-}));
+});
 
 Dialog.Message = styled.div({
   textAlign: 'center',

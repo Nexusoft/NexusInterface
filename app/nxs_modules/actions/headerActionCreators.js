@@ -284,3 +284,9 @@ export const AddRPCCall = returnCall => {
     dispatch({ type: TYPE.ADD_RPC_CALL, payload: returnCall });
   };
 };
+
+export const ShowEncryptionModal = () => {
+  return dispatch => {
+    dispatch({ type: TYPE.SHOW_ENCRYPTION_MODAL });
+  };
+};
