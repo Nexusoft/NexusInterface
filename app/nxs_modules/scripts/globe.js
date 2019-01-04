@@ -580,11 +580,13 @@ export default (DAT.Globe = function(container, opts) {
   }
   // TODO: Figure out where to set the color of the arcs. The following currerntly does it.
   function initCurves(allCoords, incomingmesh) {
-    const material = new THREE.MeshBasicMaterial({
+    const material = new THREE.LineBasicMaterial({
       blending: THREE.AdditiveBlending,
       opacity: 0.6,
       transparent: true,
       color: colorArch,
+      linewidth: 1.6,
+      linejoin: 'bevel',
     });
     // const curveMesh = new THREE.Mesh();
 
@@ -603,7 +605,7 @@ export default (DAT.Globe = function(container, opts) {
   function Curve(coords, material) {
     const { spline } = getSplineFromCoords(coords);
 
-    const curveSegments = 32;
+    const curveSegments = 40;
     let index = 0;
     // add curve geometry
     const curveGeometry = new THREE.BufferGeometry();
