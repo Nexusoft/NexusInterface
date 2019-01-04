@@ -123,8 +123,11 @@ class Header extends Component {
           <StatusIcons>
             <SyncStatus {...this.props} />
             <SignInStatus {...this.props} />
-            {this.CancelTT()}
-            {/* <StakingStatus {...this.props} /> */}
+            {this.props.history.location.pathname !== '/' ? (
+              <StakingStatus {...this.props} />
+            ) : (
+              <Icon />
+            )}
           </StatusIcons>
         )}
       </HeaderComponent>
