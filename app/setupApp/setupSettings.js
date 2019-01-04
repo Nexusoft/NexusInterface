@@ -1,6 +1,8 @@
 import { GetSettings, SaveSettings } from 'api/settings';
 import * as ac from 'actions/headerActionCreators';
+import UIController from 'components/UIController';
 import LicenseAgreementModal from './LicenseAgreementModal';
+import ExperimentalWarningModal from './ExperimentalWarningModal';
 
 export default function setupSettings(dispatch) {
   const settings = GetSettings();
@@ -12,5 +14,9 @@ export default function setupSettings(dispatch) {
 
   if (!settings.acceptedagreement) {
     UIController.openModal(LicenseAgreementModal);
+  }
+
+  if (settings.experimentalWarning) {
+    UIController.openModal(ExperimentalWarningModal);
   }
 }
