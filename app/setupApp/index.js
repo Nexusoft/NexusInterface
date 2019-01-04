@@ -3,11 +3,11 @@ import { remote } from 'electron';
 import path from 'path';
 
 // Internal
-import { GetSettings, SaveSettings } from 'api/settings';
 import * as ac from 'actions/headerActionCreators';
 import * as RPC from 'scripts/rpc';
 import UIController from 'components/UIController';
 import MenuBuilder from './menuBuilder';
+import setupSettings from './setupSettings';
 
 let tray = window.tray || null;
 
@@ -76,15 +76,6 @@ function setupTray(dispatch) {
   tray.on('double-click', () => {
     mainWindow.show();
   });
-}
-
-function setupSettings(dispatch) {
-  const settings = GetSettings();
-  if (Object.keys(settings).length < 1) {
-    SaveSettings({ ...settings, keepDaemon: false });
-  } else {
-    dispatch(ac.setSettings(settings));
-  }
 }
 
 async function getInfo({ dispatch, getState }) {

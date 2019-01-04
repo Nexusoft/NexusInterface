@@ -48,9 +48,22 @@ const Notifications = ({ notifications }) => (
 
 // Store the only instance of UIController class
 let singleton = null;
+// Default state for modals, can be updated even before
+// the UIController instance is created
+const defaultModals = [];
 
 // UIController is a SINGLETON class
 export default class UIController extends Component {
+  // For opening modals before the UIController instance is even created
+  static openModal = (component, props) => {
+    const modalID = newModalID();
+    defaultModals.push({
+      id: modalID,
+      component,
+      props,
+    });
+  };
+
   constructor(props) {
     super(props);
 
@@ -72,7 +85,7 @@ export default class UIController extends Component {
   }
 
   state = {
-    modals: [],
+    modals: defaultModals,
     notifications: [],
   };
 
@@ -92,6 +105,7 @@ export default class UIController extends Component {
   };
 
   closeModal = modalID => {
+    console.log('close', modalID);
     const modals = [...this.state.modals];
     const index = modals.findIndex(m => m.id === modalID);
     if (index >= 0) {

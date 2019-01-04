@@ -13,7 +13,6 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import * as FlagFile from 'images/LanguageFlags';
-import { SwitchLocale } from 'actions/headerActionCreators';
 import { remote as dialog } from 'electron';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';

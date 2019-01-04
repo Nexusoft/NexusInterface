@@ -27,6 +27,11 @@ const resetStyles = theme => ({
     outline: 'none',
   },
 
+  p: {
+    marginTop: '1em',
+    marginBottom: '1em',
+  },
+
   svg: {
     fill: 'currentColor',
   },
