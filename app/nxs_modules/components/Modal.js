@@ -79,6 +79,14 @@ const ModalComponent = styled.div(
     }
 );
 
+const ModalLayout = styled.div({
+  height: '100%',
+  display: 'grid',
+  gridTemplateAreas: '"header" "body" "footer"',
+  gridTemplateColumns: '1fr',
+  gridTemplateRows: 'auto 1fr',
+});
+
 const ModalHeader = styled.div(({ theme }) => ({
   borderTopLeftRadius: modalBorderRadius,
   borderTopRightRadius: modalBorderRadius,
@@ -98,12 +106,8 @@ const ModalBody = styled.div({
   gridArea: 'body',
 });
 
-const ModalLayout = styled.div({
-  height: '100%',
-  display: 'grid',
-  gridTemplateAreas: '"header" "body"',
-  gridTemplateColumns: '1fr',
-  gridTemplateRows: 'auto 1fr',
+const ModalFooter = styled.div({
+  gridArea: 'footer',
 });
 
 export default class Modal extends PureComponent {
@@ -167,3 +171,4 @@ export default class Modal extends PureComponent {
 Modal.Layout = ModalLayout;
 Modal.Header = ModalHeader;
 Modal.Body = ModalBody;
+Modal.Footer = ModalFooter;
