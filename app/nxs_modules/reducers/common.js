@@ -25,6 +25,7 @@ const initialState = {
   displayBTCvalues: [],
   displayNXSvalues: [],
   BootstrapModal: false,
+  encryptionModalShown: false,
 };
 
 export default (state = initialState, action) => {
@@ -205,6 +206,11 @@ export default (state = initialState, action) => {
         rawNXSvalues: action.payload.rawNXS,
       };
       break;
+    case TYPE.SHOW_ENCRYPTION_MODAL:
+      return {
+        ...state,
+        encryptionModalShown: true,
+      };
     default:
       return state;
   }

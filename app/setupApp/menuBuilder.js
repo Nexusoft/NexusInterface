@@ -246,8 +246,16 @@ export default class MenuBuilder {
 
     const subMenuWindow = {
       label: 'View',
-      submenu: [this.toggleFullScreen, this.toggleDevTools],
+      submenu: [this.toggleFullScreen],
     };
+    const state = this.store.getState();
+    if (
+      process.env.NODE_ENV === 'development' ||
+      state.settings.settings.devMode
+    ) {
+      subMenuWindow.submenu.push(this.toggleDevTools);
+    }
+
     const subMenuHelp = {
       label: 'Help',
       submenu: [this.websiteLink, this.gitRepoLink],
@@ -264,42 +272,47 @@ export default class MenuBuilder {
   }
 
   buildDefaultTemplate() {
-    const templateDefault = [
-      {
-        label: '&File',
-        submenu: [
-          this.backupWallet,
-          this.viewBackups,
-          this.separator,
-          this.startDaemon,
-          this.stopDaemon,
-          this.separator,
-          this.quitNexus,
-        ],
-      },
+    const subMenuFile = {
+      label: '&File',
+      submenu: [
+        this.backupWallet,
+        this.viewBackups,
+        this.separator,
+        this.startDaemon,
+        this.stopDaemon,
+        this.separator,
+        this.quitNexus,
+      ],
+    };
+    const subMenuSettings = {
+      label: 'Settings',
+      submenu: [
+        this.coreSettings,
+        this.appSettings,
+        this.keyManagement,
+        this.styleSettings,
+        this.separator,
+        this.downloadRecent,
+      ],
+    };
+    const subMenuView = {
+      label: '&View',
+      submenu: [this.toggleFullScreen],
+    };
+    const state = this.store.getState();
+    if (
+      process.env.NODE_ENV === 'development' ||
+      state.settings.settings.devMode
+    ) {
+      subMenuView.submenu.push(this.separator, this.toggleDevTools);
+    }
 
-      {
-        label: 'Settings',
-        submenu: [
-          this.coreSettings,
-          this.appSettings,
-          this.keyManagement,
-          this.styleSettings,
-          this.separator,
-          this.downloadRecent,
-        ],
-      },
-      {
-        label: '&View',
-        submenu: [this.toggleFullScreen, this.separator, this.toggleDevTools],
-      },
-      {
-        label: 'Help',
-        submenu: [this.about, this.websiteLink, this.gitRepoLink],
-      },
-    ];
+    const subMenuHelp = {
+      label: 'Help',
+      submenu: [this.about, this.websiteLink, this.gitRepoLink],
+    };
 
-    return templateDefault;
+    return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
   }
 
   buildMenu() {

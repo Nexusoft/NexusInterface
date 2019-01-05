@@ -20,7 +20,7 @@ function statusIcon({
   heighestPeerBlock,
   blocks,
 }) {
-  if (!connections || !daemonAvailable) {
+  if (connections === undefined || !daemonAvailable) {
     return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
   } else if (heighestPeerBlock > blocks) {
     return (
@@ -42,7 +42,7 @@ function syncStatusTooltip({
   messages,
   settings,
 }) {
-  if (connections === undefined || daemonAvailable === false) {
+  if (connections === undefined || !daemonAvailable) {
     return (
       <div>
         <div>Unknown Sync Status</div>

@@ -16,7 +16,7 @@ const OverlayComponent = styled.div({
 
 const OverlayBackground = styled.div(
   {
-    position: 'absolute',
+    position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
@@ -49,15 +49,21 @@ export default class Overlay extends Component {
   }
 
   render() {
-    const { dimBackground, onBackgroundClick, closing, children } = this.props;
+    const {
+      dimBackground,
+      onBackgroundClick,
+      closing,
+      children,
+      ...rest
+    } = this.props;
     return ReactDOM.createPortal(
-      <OverlayComponent>
+      <OverlayComponent {...rest}>
         <OverlayBackground
           dimmed={dimBackground}
           onClick={onBackgroundClick}
           closing={closing}
         />
-        {this.props.children}
+        {children}
       </OverlayComponent>,
       this.el
     );

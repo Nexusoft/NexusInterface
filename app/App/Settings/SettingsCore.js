@@ -290,7 +290,7 @@ class SettingsCore extends Component {
     UIController.openConfirmModal({
       question: (
         <>
-          <Text id="SaveSettings" />?
+          <Text id="Settings.SaveSettings" />?
         </>
       ),
       note: <Text id="Settings.ChangesNexTime" />,

@@ -23,12 +23,12 @@ const NotificationsComponent = styled.div({
   position: 'fixed',
   top: 20,
   left: 20,
-  zIndex: 9001,
+  zIndex: 9002,
 });
 
 const Modals = ({ modals }) => (
   <>
-    {modals.map(({ id, component: Comp, props, context }) => (
+    {modals.map(({ id, component: Comp, props }) => (
       <ModalContext.Provider key={id} value={id}>
         <Comp {...props} />
       </ModalContext.Provider>
@@ -48,9 +48,22 @@ const Notifications = ({ notifications }) => (
 
 // Store the only instance of UIController class
 let singleton = null;
+// Default state for modals, can be updated even before
+// the UIController instance is created
+const defaultModals = [];
 
 // UIController is a SINGLETON class
 export default class UIController extends Component {
+  // For opening modals before the UIController instance is even created
+  static openModal = (component, props) => {
+    const modalID = newModalID();
+    defaultModals.push({
+      id: modalID,
+      component,
+      props,
+    });
+  };
+
   constructor(props) {
     super(props);
 
@@ -72,7 +85,7 @@ export default class UIController extends Component {
   }
 
   state = {
-    modals: [],
+    modals: defaultModals,
     notifications: [],
   };
 

@@ -119,7 +119,7 @@ class Header extends Component {
           <DaemonStatus {...this.props} />
         </UnderHeader>
 
-        {!!connections && !!daemonAvailable && (
+        {connections !== undefined && !!daemonAvailable && (
           <StatusIcons>
             <SyncStatus {...this.props} />
             <SignInStatus {...this.props} />

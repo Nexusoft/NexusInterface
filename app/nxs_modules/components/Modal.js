@@ -7,7 +7,7 @@ import { keyframes } from '@emotion/core';
 import ModalContext from 'context/modal';
 import UIController from 'components/UIController';
 import Overlay from 'components/Overlay';
-import { timing } from 'styles';
+import { timing, animations } from 'styles';
 import { color } from 'utils';
 
 const intro = keyframes`
@@ -32,11 +32,33 @@ const outtro = keyframes`
   }
 `;
 
+const fullScreenIntro = keyframes`
+  from { 
+    transform: scale(0.9);
+    opacity: 0
+  }
+  to { 
+    transform: scale(1);
+    opacity: 1 
+  }
+`;
+
+const fullScreenOuttro = keyframes`
+  from { 
+    transform: scale(1);
+    opacity: 1
+  }
+  to { 
+    transform: scale(0.9);
+    opacity: 0 
+  }
+`;
+
 const modalBorderRadius = 4;
 
 const ModalComponent = styled.div(
   ({ theme }) => ({
-    position: 'absolute',
+    position: 'fixed',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -49,11 +71,32 @@ const ModalComponent = styled.div(
     position: 'relative',
     animation: `${intro} ${timing.quick} ease-out`,
   }),
-  ({ closing }) =>
+  ({ fullScreen }) =>
+    fullScreen && {
+      top: 0,
+      left: 0,
+      transform: 'none',
+      width: '100%',
+      height: '100%',
+      maxHeight: 'none',
+      borderRadius: 0,
+      animation: `${fullScreenIntro} ${timing.quick} ease-out`,
+    },
+  ({ closing, fullScreen }) =>
     closing && {
-      animation: `${outtro} ${timing.quick} ease-in`,
+      animation: `${fullScreen ? fullScreenOuttro : outtro} ${
+        timing.quick
+      } ease-in`,
     }
 );
+
+const ModalLayout = styled.div({
+  height: '100%',
+  display: 'grid',
+  gridTemplateAreas: '"header" "body" "footer"',
+  gridTemplateColumns: '1fr',
+  gridTemplateRows: 'auto 1fr',
+});
 
 const ModalHeader = styled.div(({ theme }) => ({
   borderTopLeftRadius: modalBorderRadius,
@@ -65,11 +108,17 @@ const ModalHeader = styled.div(({ theme }) => ({
   fontSize: 24,
   fontWeight: 'normal',
   textAlign: 'center',
+  gridArea: 'header',
 }));
 
 const ModalBody = styled.div({
   padding: '30px 50px',
   overflow: 'auto',
+  gridArea: 'body',
+});
+
+const ModalFooter = styled.div({
+  gridArea: 'footer',
 });
 
 export default class Modal extends PureComponent {
@@ -88,12 +137,14 @@ export default class Modal extends PureComponent {
     const modalID = this.context;
     if (modalID) {
       this.setState({ closing: true });
+      setTimeout(this.close, parseInt(timing.quick));
     }
   };
 
   close = () => {
     const modalID = this.context;
     UIController.closeModal(modalID);
+    this.props.onClose && this.props.onClose();
   };
 
   render() {
@@ -101,6 +152,8 @@ export default class Modal extends PureComponent {
       open,
       dimBackground,
       closeOnBackgroundClick,
+      onClose,
+      fullScreen,
       children,
       ...rest
     } = this.props;
@@ -113,12 +166,9 @@ export default class Modal extends PureComponent {
           closeOnBackgroundClick ? this.startClosing : undefined
         }
         closing={closing}
+        style={{ zIndex: fullScreen ? 9001 : undefined }}
       >
-        <ModalComponent
-          closing={closing}
-          onAnimationEnd={closing ? this.close : undefined}
-          {...rest}
-        >
+        <ModalComponent closing={closing} fullScreen={fullScreen} {...rest}>
           {typeof children === 'function'
             ? children(this.startClosing)
             : children}
@@ -128,5 +178,7 @@ export default class Modal extends PureComponent {
   }
 }
 
+Modal.Layout = ModalLayout;
 Modal.Header = ModalHeader;
 Modal.Body = ModalBody;
+Modal.Footer = ModalFooter;
