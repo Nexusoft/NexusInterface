@@ -13,9 +13,8 @@ export default async function getInfo({ dispatch, getState }) {
     return;
   }
 
-  delete info.timestamp;
-  dispatch(ac.GetInfo(info));
   const state = getState();
+  const oldInfo = state.overview;
 
   if (info.unlocked_until === undefined) {
     dispatch(ac.Unlock());
@@ -35,30 +34,32 @@ export default async function getInfo({ dispatch, getState }) {
     dispatch(ac.Encrypted());
   }
 
-  if (
-    state.overview.connections === undefined &&
-    info.connections !== undefined
-  ) {
-    loadMyAccounts(store);
+  if (info.connections !== undefined && oldInfo.connections === undefined) {
+    loadMyAccounts(dispatch);
   }
 
-  if (state.overview.blocks !== info.blocks) {
+  if (info.blocks !== oldInfo.blocks) {
     const peerresponse = await RPC.PROMISE('getpeerinfo', []);
-
-    const hpb = peerresponse.reduce(
-      (highest, element) => (element.height >= hpb ? element.height : highest),
+    const highestPeerBlock = peerresponse.reduce(
+      (highest, element) =>
+        element.height >= highest ? element.height : highest,
       0
     );
-    dispatch(ac.SetHighestPeerBlock(hpb));
+
+    dispatch(ac.SetHighestPeerBlock(highestPeerBlock));
+    if (highestPeerBlock > info.blocks) {
+      dispatch(ac.SetSyncStatus(false));
+    } else {
+      dispatch(ac.SetSyncStatus(true));
+    }
+
+    if (!oldInfo.blocks || info.blocks > oldInfo.blocks) {
+      let newDate = new Date();
+      dispatch(ac.BlockDate(newDate));
+    }
   }
 
-  if (state.overview.heighestPeerBlock > info.blocks) {
-    dispatch(ac.SetSyncStatus(false));
-  } else {
-    dispatch(ac.SetSyncStatus(true));
-  }
-
-  if (state.overview.txtotal < info.txtotal) {
+  if (info.txtotal > oldInfo.txtotal) {
     const txList = await RPC.PROMISE('listtransactions');
     const mostRecentTx = txList.reduce((a, b) => (a.time > b.time ? a : b));
 
@@ -84,9 +85,12 @@ export default async function getInfo({ dispatch, getState }) {
         break;
     }
   }
+
+  delete info.timestamp;
+  dispatch(ac.GetInfo(info));
 }
 
-async function loadMyAccounts({ dispatch }) {
+async function loadMyAccounts(dispatch) {
   const accList = await RPC.PROMISE('listaccounts', [0]);
 
   const addrList = await Promise.all(

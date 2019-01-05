@@ -1,35 +1,20 @@
-/*
-  Title: Overview
-  Description: the landing page for the application.
-  Last Modified by: Brian Smith
-*/
-// External Dependencies
+// External
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Modal from 'react-responsive-modal';
 import * as TYPE from 'actions/actiontypes';
-import { NavLink } from 'react-router-dom';
 import { remote } from 'electron';
-import Request from 'request';
 import Text from 'components/Text';
-import fs from 'fs';
-import path from 'path';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 import googleanalytics from 'scripts/googleanalytics';
 
-// Internal Global Dependencies
+// Internal
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import WEBGL from 'scripts/WebGLCheck.js';
-import { GetSettings, SaveSettings } from 'api/settings';
 import ContextMenuBuilder from 'contextmenu';
 import * as helpers from 'scripts/helper.js';
-import configuration from 'api/configuration';
 import { timing, consts } from 'styles';
-
-// Internal Local Dependencies
 import NetworkGlobe from './NetworkGlobe';
 
 // Images
@@ -116,8 +101,6 @@ const mapDispatchToProps = dispatch => ({
   toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
   ignoreEncryptionWarning: () =>
     dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING }),
-  setWebGLEnabled: isEnabled =>
-    dispatch({ type: TYPE.SET_WEBGL_ENABLED, payload: isEnabled }),
 });
 
 const OverviewPage = styled.div({
@@ -236,13 +219,6 @@ const MaxmindLogo = styled.img({
 class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    if (WEBGL.isWebGLAvailable()) {
-      this.props.setWebGLEnabled(true);
-    } else {
-      this.props.setWebGLEnabled(false);
-      var warning = WEBGL.getWebGLErrorMessage();
-      console.error(warning);
-    }
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
 
     googleanalytics.SendScreen('Overview');
@@ -254,60 +230,37 @@ class Overview extends Component {
   }
 
   // React Method (Life cycle hook)
-  componentDidUpdate(previousprops) {
-    if (this.props.blocks > previousprops.blocks) {
-      let newDate = new Date();
-      this.props.BlockDate(newDate);
-    }
+  componentDidUpdate(prevProps) {
+    const {
+      blocks,
+      webGLEnabled,
+      settings,
+      connections,
+      percentDownloaded,
+    } = this.props;
 
-    if (this.props.saveSettingsFlag) {
-      SaveSettings(this.props.settings);
-    }
-
-    if (
-      this.props.webGLEnabled == false ||
-      this.props.settings.renderGlobe == false
-    ) {
-      return;
-    }
-
-    if (this.props.blocks != previousprops.blocks) {
-      if (this.props.blocks != 0 && previousprops.blocks != 0) {
+    if (webGLEnabled && settings.renderGlobe) {
+      if (blocks != prevProps.blocks && blocks && prevProps.blocks) {
         this.redrawCurves();
       }
-    }
 
-    if (
-      this.props.connections === 0 ||
-      (this.props.connections === undefined &&
-        this.props.percentDownloaded == 0.001)
-    ) {
-      this.removeAllPoints();
-      this.reDrawEverything();
-      return;
-    }
-
-    if (
-      this.props.settings.acceptedagreement !== false ||
-      this.props.settings.renderGlobe !== false ||
-      this.props.webGLEnabled !== false
-    ) {
       if (
-        (previousprops.connections === undefined ||
-          previousprops.connections === 0) &&
-        (this.props.connections !== 0 ||
-          this.props.connections !== undefined) &&
-        this.props.webGLEnabled !== false &&
-        this.props.settings.renderGlobe === true
+        connections === 0 ||
+        (connections === undefined && percentDownloaded == 0.001)
       ) {
-        //Daemon Starting Up
+        this.removeAllPoints();
         this.reDrawEverything();
-      } else {
+        return;
+      }
+
+      if (settings.acceptedagreement || settings.renderGlobe || webGLEnabled) {
         if (
-          this.props.connections !== previousprops.connections &&
-          this.props.connections !== undefined &&
-          previousprops.connections !== undefined
+          (!prevProps.connections && connections) ||
+          (connections !== prevProps.connections &&
+            connections !== undefined &&
+            prevProps.connections !== undefined)
         ) {
+          //Daemon Starting Up
           this.reDrawEverything();
         }
       }
@@ -323,12 +276,8 @@ class Overview extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
-  closeLicenseModal() {
-    this.props.acceptMITAgreement();
-  }
-
-  BlockRapper() {
-    if (this.props.blockDate === 'Getting Next Block...') {
+  blockDate() {
+    if (!this.props.blockDate) {
       return <Text id="ToolTip.GettingNextBlock" />;
     } else {
       return this.props.blockDate.toLocaleString(this.props.settings.locale);
@@ -337,7 +286,6 @@ class Overview extends Component {
 
   connectionsIcon() {
     const con = this.props.connections;
-
     if (con > 4 && con <= 6) {
       return Connections4;
     } else if (con > 6 && con <= 12) {
@@ -361,10 +309,6 @@ class Overview extends Component {
   blockWeightIcon() {
     const bw = Math.round(this.props.blockweight / 10);
     return blockWeightIcons[bw];
-  }
-
-  returnIfDrawLines() {
-    //if (testinglines == true)
   }
 
   isGlobeEnabled() {
@@ -614,7 +558,7 @@ class Overview extends Component {
             </div>
           </Stat>
 
-          <Tooltip.Trigger position="left" tooltip={this.BlockRapper()}>
+          <Tooltip.Trigger position="left" tooltip={this.blockDate()}>
             <Stat className="relative">
               <StatIcon icon={nxsblocksIcon} />
               <div>

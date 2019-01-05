@@ -15,7 +15,7 @@ const initialState = {
   modalVisable: false,
   heighestPeerBlock: 0,
   isInSync: false,
-  blockDate: 'Getting Next Block...',
+  blockDate: null,
   portAvailable: false,
   Search: '',
   contactSearch: '',

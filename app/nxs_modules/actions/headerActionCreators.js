@@ -278,3 +278,9 @@ export const ShowEncryptionModal = () => {
     dispatch({ type: TYPE.SHOW_ENCRYPTION_MODAL });
   };
 };
+
+export const setWebGLEnabled = enabled => {
+  return dispatch => {
+    dispatch({ type: TYPE.SET_WEBGL_ENABLED, payload: enabled });
+  };
+};
