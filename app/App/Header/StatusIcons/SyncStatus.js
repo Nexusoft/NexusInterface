@@ -14,13 +14,8 @@ import questionMarkIcon from 'images/question-mark.sprite.svg';
 import checkIcon from 'images/check.sprite.svg';
 import syncingIcon from 'images/syncing.sprite.svg';
 
-function statusIcon({
-  connections,
-  daemonAvailable,
-  heighestPeerBlock,
-  blocks,
-}) {
-  if (connections === undefined || !daemonAvailable) {
+function statusIcon({ connections, heighestPeerBlock, blocks }) {
+  if (connections === undefined) {
     return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
   } else if (heighestPeerBlock > blocks) {
     return (
@@ -36,13 +31,11 @@ function statusIcon({
 
 function syncStatusTooltip({
   connections,
-  daemonAvailable,
   heighestPeerBlock,
   blocks,
   messages,
-  settings,
 }) {
-  if (connections === undefined || !daemonAvailable) {
+  if (connections === undefined) {
     return (
       <div>
         <div>Unknown Sync Status</div>

@@ -10,12 +10,10 @@ export default async function getInfo({ dispatch, getState }) {
     info = await RPC.PROMISE('getinfo', []);
   } catch (err) {
     console.log(err);
-    dispatch(ac.DaemonUnavailable());
     return;
   }
 
   delete info.timestamp;
-  dispatch(ac.DaemonAvailable());
   dispatch(ac.GetInfo(info));
   const state = getState();
 

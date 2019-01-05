@@ -149,7 +149,7 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   setSettings: settings =>
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings }),
+    dispatch({ type: TYPE.SET_SETTINGS, payload: settings }),
   setFiatCurrency: inValue => {
     dispatch({ type: TYPE.SET_FIAT_CURRENCY, payload: inValue });
   },

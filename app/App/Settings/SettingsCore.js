@@ -31,7 +31,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => ({
   setSettings: settings => {
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings });
+    dispatch({ type: TYPE.SET_SETTINGS, payload: settings });
   },
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });

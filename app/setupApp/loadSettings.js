@@ -6,11 +6,7 @@ import ExperimentalWarningModal from './ExperimentalWarningModal';
 
 export default function loadSettings({ dispatch }) {
   const settings = GetSettings();
-  if (Object.keys(settings).length < 1) {
-    SaveSettings({ ...settings, keepDaemon: false });
-  } else {
-    dispatch(ac.setSettings(settings));
-  }
+  dispatch(ac.setSettings(settings));
 
   const showExperimentalWarning = () => {
     if (settings.experimentalWarning) {

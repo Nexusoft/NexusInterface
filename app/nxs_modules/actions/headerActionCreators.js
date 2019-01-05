@@ -22,18 +22,6 @@ export const GetInfo = info => {
   };
 };
 
-export const DaemonUnavailable = () => {
-  return dispatch => {
-    dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: false });
-  };
-};
-
-export const DaemonAvailable = () => {
-  return dispatch => {
-    dispatch({ type: TYPE.DAEMON_UNAVAILABLE, payload: true });
-  };
-};
-
 export const clearOverviewVariables = () => {
   return dispatch => {
     dispatch({ type: TYPE.CLEAR_FOR_BOOTSTRAPING });
@@ -224,7 +212,7 @@ export const CloseModal3 = () => {
 
 export const setSettings = settings => {
   return dispatch => {
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings });
+    dispatch({ type: TYPE.SET_SETTINGS, payload: settings });
   };
 };
 

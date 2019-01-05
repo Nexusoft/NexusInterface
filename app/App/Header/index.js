@@ -103,7 +103,7 @@ const mapDispatchToProps = dispatch =>
 
 class Header extends Component {
   render() {
-    const { settings, connections, daemonAvailable } = this.props;
+    const { connections } = this.props;
 
     return (
       <HeaderComponent>
@@ -119,7 +119,7 @@ class Header extends Component {
           <DaemonStatus {...this.props} />
         </UnderHeader>
 
-        {connections !== undefined && !!daemonAvailable && (
+        {connections !== undefined && (
           <StatusIcons>
             <SyncStatus {...this.props} />
             <SignInStatus {...this.props} />

@@ -2,8 +2,8 @@
 import React from 'react';
 import Text from 'components/Text';
 
-const DaemonStatus = ({ settings, connections, daemonAvailable }) => {
-  if (settings.manualDaemon === false && connections === undefined) {
+const DaemonStatus = ({ settings, connections }) => {
+  if (!settings.manualDaemon && connections === undefined) {
     return (
       <span className="dim">
         <Text id="Alert.DaemonLoadingWait" />
@@ -11,7 +11,7 @@ const DaemonStatus = ({ settings, connections, daemonAvailable }) => {
       </span>
     );
   }
-  if (settings.manualDaemon === true && daemonAvailable === false) {
+  if (settings.manualDaemon && connections === undefined) {
     return (
       <span className="dim">
         <Text id="Alert.ManualDaemonDown" />

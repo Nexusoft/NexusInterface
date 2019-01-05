@@ -278,10 +278,9 @@ class Overview extends Component {
     }
 
     if (
-      (this.props.connections === 0 ||
-        (this.props.connections === undefined &&
-          this.props.percentDownloaded == 0.001)) &&
-      this.props.daemonAvailable == false
+      this.props.connections === 0 ||
+      (this.props.connections === undefined &&
+        this.props.percentDownloaded == 0.001)
     ) {
       this.removeAllPoints();
       this.reDrawEverything();
