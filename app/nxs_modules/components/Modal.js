@@ -32,6 +32,17 @@ const outtro = keyframes`
   }
 `;
 
+const fullScreenIntro = keyframes`
+  from { 
+    transform: scale(0.9);
+    opacity: 0
+  }
+  to { 
+    transform: scale(1);
+    opacity: 1 
+  }
+`;
+
 const fullScreenOuttro = keyframes`
   from { 
     transform: scale(1);
@@ -69,7 +80,7 @@ const ModalComponent = styled.div(
       height: '100%',
       maxHeight: 'none',
       borderRadius: 0,
-      animation: `${animations.fadeIn} ${timing.quick} ease-out`,
+      animation: `${fullScreenIntro} ${timing.quick} ease-out`,
     },
   ({ closing, fullScreen }) =>
     closing && {
@@ -126,6 +137,7 @@ export default class Modal extends PureComponent {
     const modalID = this.context;
     if (modalID) {
       this.setState({ closing: true });
+      setTimeout(this.close, parseInt(timing.quick));
     }
   };
 
@@ -154,13 +166,9 @@ export default class Modal extends PureComponent {
           closeOnBackgroundClick ? this.startClosing : undefined
         }
         closing={closing}
+        style={{ zIndex: fullScreen ? 9001 : undefined }}
       >
-        <ModalComponent
-          closing={closing}
-          onAnimationEnd={closing ? this.close : undefined}
-          fullScreen={fullScreen}
-          {...rest}
-        >
+        <ModalComponent closing={closing} fullScreen={fullScreen} {...rest}>
           {typeof children === 'function'
             ? children(this.startClosing)
             : children}

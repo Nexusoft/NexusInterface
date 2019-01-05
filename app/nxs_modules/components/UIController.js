@@ -23,12 +23,12 @@ const NotificationsComponent = styled.div({
   position: 'fixed',
   top: 20,
   left: 20,
-  zIndex: 9001,
+  zIndex: 9002,
 });
 
 const Modals = ({ modals }) => (
   <>
-    {modals.map(({ id, component: Comp, props, context }) => (
+    {modals.map(({ id, component: Comp, props }) => (
       <ModalContext.Provider key={id} value={id}>
         <Comp {...props} />
       </ModalContext.Provider>

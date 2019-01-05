@@ -12,11 +12,16 @@ export default function loadSettings({ dispatch }) {
     dispatch(ac.setSettings(settings));
   }
 
-  if (!settings.acceptedagreement) {
-    UIController.openModal(LicenseAgreementModal);
-  }
+  const showExperimentalWarning = () => {
+    if (settings.experimentalWarning) {
+      UIController.openModal(ExperimentalWarningModal);
+    }
+  };
 
-  if (settings.experimentalWarning) {
-    UIController.openModal(ExperimentalWarningModal);
+  if (!settings.acceptedagreement) {
+    UIController.openModal(LicenseAgreementModal, {
+      fullScreen: true,
+      onClose: showExperimentalWarning,
+    });
   }
 }

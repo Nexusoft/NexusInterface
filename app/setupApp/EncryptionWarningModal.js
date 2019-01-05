@@ -29,8 +29,8 @@ const WarningMessage = styled.div({
   fontSize: 28,
 });
 
-const EncryptionWarningModal = () => (
-  <WarningModal>
+const EncryptionWarningModal = props => (
+  <WarningModal props>
     {closeModal => (
       <Modal.Body style={{ fontSize: 18 }}>
         <WarningIcon icon={warningIcon} />

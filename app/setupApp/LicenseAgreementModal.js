@@ -5,8 +5,8 @@ import React from 'react';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 
-const LicenseAgreementModal = () => (
-  <Modal fullScreen>
+const LicenseAgreementModal = props => (
+  <Modal fullScreen {...props}>
     {closeModal => (
       <Modal.Layout style={{ maxWidth: 768, margin: '0 auto' }}>
         <Modal.Header>License Agreement</Modal.Header>

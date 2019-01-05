@@ -33,9 +33,9 @@ export const consts = {
 };
 
 export const timing = {
-  quick: '.15s',
-  normal: '.3s',
-  slow: '2s',
+  quick: '150ms',
+  normal: '300ms',
+  slow: '2000ms',
 };
 
 export const animations = {
