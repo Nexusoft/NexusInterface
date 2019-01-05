@@ -5,6 +5,7 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import core from 'api/core';
 
 import UIController from 'components/UIController';
+
 import * as ac from 'actions/headerActionCreators';
 
 export default class MenuBuilder {
@@ -88,7 +89,7 @@ export default class MenuBuilder {
       RPC.PROMISE('backupwallet', [
         BackupDir + '/NexusBackup_' + now + '.dat',
       ]).then(() => {
-        UIController.showNotification('Wallet Backup');
+        UIController.showNotification('Wallet Backed Up');
       });
     },
   };
@@ -165,7 +166,7 @@ export default class MenuBuilder {
     click: () => {
       const state = this.store.getState();
       if (
-        state.common.connections !== undefined &&
+        state.overview.connections !== undefined &&
         !GetSettings().manualDaemon
       ) {
         this.store.dispatch(ac.OpenBootstrapModal(true));
@@ -176,17 +177,12 @@ export default class MenuBuilder {
   };
 
   toggleFullScreen = {
-    label: 'Download Recent Database',
+    label: 'Toggle FullScreen',
+    accelerator: 'F11',
     click: () => {
-      const state = this.store.getState();
-      if (
-        state.common.connections !== undefined &&
-        !GetSettings().manualDaemon
-      ) {
-        this.store.dispatch(ac.OpenBootstrapModal(true));
-      } else {
-        UIController.showNotification('Please let the daemon start.');
-      }
+      remote
+        .getCurrentWindow()
+        .setFullScreen(!remote.getCurrentWindow().isFullScreen());
     },
   };
 
