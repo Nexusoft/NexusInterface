@@ -7,7 +7,9 @@ import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
 import SuccessDialog from 'components/Dialogs/SuccessDialog';
 import Notification from 'components/Notification';
+import BackgroundTask from 'components/BackgroundTask';
 import ModalContext from 'context/modal';
+import TaskContext from 'context/task';
 
 const newModalID = (function() {
   let counter = 1;
@@ -19,7 +21,12 @@ const newNotifID = (function() {
   return () => `notif-${counter++}`;
 })();
 
-const NotificationsComponent = styled.div({
+const newTaskID = (function() {
+  let counter = 1;
+  return () => `task-${counter++}`;
+})();
+
+const SnackBars = styled.div({
   position: 'fixed',
   top: 20,
   left: 20,
@@ -36,14 +43,24 @@ const Modals = ({ modals }) => (
   </>
 );
 
-const Notifications = ({ notifications }) => (
-  <NotificationsComponent>
+const BackgroundTasks = ({ tasks }) => (
+  <SnackBars>
+    {tasks.map(({ id, component: Comp, props }, i) => (
+      <TaskContext.Provider key={id} value={id}>
+        <Comp index={i} {...props} />
+      </TaskContext.Provider>
+    ))}
+  </SnackBars>
+);
+
+const Notifications = ({ notifications, taskCount }) => (
+  <SnackBars>
     {notifications.map(({ id, type, content }, i) => (
-      <Notification key={id} notifID={id} type={type} index={i}>
+      <Notification key={id} notifID={id} type={type} index={taskCount + i}>
         {content}
       </Notification>
     ))}
-  </NotificationsComponent>
+  </SnackBars>
 );
 
 // Store the only instance of UIController class
@@ -82,10 +99,14 @@ export default class UIController extends Component {
 
     UIController.showNotification = this.showNotification;
     UIController.hideNotification = this.hideNotification;
+
+    UIController.showBackgroundTask = this.showBackgroundTask;
+    UIController.hideBackgroundTask = this.hideBackgroundTask;
   }
 
   state = {
     modals: defaultModals,
+    tasks: [],
     notifications: [],
   };
 
@@ -147,15 +168,30 @@ export default class UIController extends Component {
     return false;
   };
 
-  controller = {
-    openModal: this.openModal,
-    closeModal: this.closeModal,
-    openConfirmDialog: this.openConfirmDialog,
-    openErrorDialog: this.openErrorDialog,
-    openSuccessDialog: this.openSuccessDialog,
+  showBackgroundTask = (component, props) => {
+    const taskID = newTaskID();
+    this.setState({
+      tasks: [
+        ...this.state.tasks,
+        {
+          id: taskID,
+          component,
+          props,
+        },
+      ],
+    });
+    return taskID;
+  };
 
-    showNotification: this.showNotification,
-    hideNotification: this.hideNotification,
+  hideBackgroundTask = taskID => {
+    const tasks = [...this.state.tasks];
+    const index = tasks.findIndex(m => m.id === taskID);
+    if (index >= 0) {
+      tasks.splice(index, 1);
+      this.setState({ tasks });
+      return true;
+    }
+    return false;
   };
 
   render() {
@@ -163,7 +199,11 @@ export default class UIController extends Component {
       <>
         {this.props.children}
         <Modals modals={this.state.modals} />
-        <Notifications notifications={this.state.notifications} />
+        <BackgroundTasks tasks={this.state.tasks} />
+        <Notifications
+          notifications={this.state.notifications}
+          taskCount={this.state.tasks.length}
+        />
       </>
     );
   }
