@@ -31,10 +31,10 @@ export default class Bootstrapper {
   /**
    * PRIVATE PROPERTIES
    */
-  _onProgress = null;
-  _onAbort = null;
-  _onError = null;
-  _onFinish = null;
+  _onProgress = () => {};
+  _onAbort = () => {};
+  _onError = () => {};
+  _onFinish = () => {};
 
   _aborted = false;
 
@@ -48,11 +48,11 @@ export default class Bootstrapper {
 
   async start({ backupFolder, clearOverviewVariables }) {
     try {
-      this._onProgress && this._onProgress('backing_up');
+      this._onProgress('backing_up');
       await this._backupWallet(backupFolder);
       if (this._aborted) return;
 
-      this._onProgress && this._onProgress('stopping_core');
+      this._onProgress('stopping_core');
       await electron.remote.getGlobal('core').stop();
       if (this._aborted) return;
 
@@ -64,22 +64,22 @@ export default class Bootstrapper {
         });
       }
 
-      this._onProgress && this._onProgress('downloading', {});
+      this._onProgress('downloading', {});
       await this._downloadCompressedDb();
       if (this._aborted) return;
 
-      this._onProgress && this._onProgress('extracting');
+      this._onProgress('extracting');
       await this._extractDb();
       if (this._aborted) return;
 
-      this._onProgress && this._onProgress('finalizing');
+      this._onProgress('finalizing');
       await this._moveExtractedContent();
 
       this._cleanUp();
 
-      this._onFinish && this._onFinish();
+      this._onFinish();
     } catch (err) {
-      this._onError && this._onError(err);
+      this._onError(err);
     } finally {
       electron.remote.getGlobal('core').start();
     }
@@ -95,7 +95,7 @@ export default class Bootstrapper {
   abort() {
     this._aborted = true;
     if (this.request) this.request.abort();
-    this._onAbort && this._onAbort();
+    this._onAbort();
   }
 
   /**
@@ -132,8 +132,7 @@ export default class Bootstrapper {
 
           response.on('data', chunk => {
             downloaded += chunk.length;
-            this._onProgress &&
-              this._onProgress('downloading', { downloaded, totalSize });
+            this._onProgress('downloading', { downloaded, totalSize });
           });
 
           response.pipe(file);
