@@ -6,4 +6,12 @@ export const newUID = (function() {
   return () => `uid-${counter++}`;
 })();
 
+export function normalizePath(path) {
+  if (process.platform === 'win32') {
+    return path.replace(/\\/g, '/');
+  } else {
+    return path;
+  }
+}
+
 export { color, language };
