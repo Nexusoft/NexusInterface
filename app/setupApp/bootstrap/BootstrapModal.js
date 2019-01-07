@@ -154,7 +154,7 @@ class BootstrapModalContent extends Component {
 }
 
 const BootstrapModal = props => (
-  <Modal closeOnBackgroundClick={false}>
+  <Modal onBackgroundClick={null}>
     {closeModal => (
       <Modal.Body>
         <Title>Bootstrap Recent Database</Title>

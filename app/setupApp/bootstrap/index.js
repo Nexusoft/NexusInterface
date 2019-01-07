@@ -19,6 +19,7 @@ export default async function bootstrap(store) {
     UIController.openErrorModal({
       message: <Text id="ToolTip.NotEnoughSpace" />,
     });
+    return;
   }
 
   const state = store.getState();
@@ -26,7 +27,8 @@ export default async function bootstrap(store) {
     state.overview.connections === undefined ||
     state.settings.settings.manualDaemon
   ) {
-    UIController.showNotification('Please let the daemon start.');
+    UIController.showNotification('Please wait for the daemon to start.');
+    return;
   }
 
   UIController.openConfirmModal({

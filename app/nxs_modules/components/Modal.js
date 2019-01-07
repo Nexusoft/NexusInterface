@@ -124,7 +124,6 @@ const ModalFooter = styled.div({
 export default class Modal extends PureComponent {
   static defaultProps = {
     dimBackground: true,
-    closeOnBackgroundClick: true,
   };
 
   static contextType = ModalContext;
@@ -133,7 +132,7 @@ export default class Modal extends PureComponent {
     closing: false,
   };
 
-  startClosing = () => {
+  animatedClose = () => {
     const modalID = this.context;
     if (modalID) {
       this.setState({ closing: true });
@@ -151,7 +150,7 @@ export default class Modal extends PureComponent {
     const {
       open,
       dimBackground,
-      closeOnBackgroundClick,
+      onBackgroundClick = this.animatedClose,
       onClose,
       fullScreen,
       children,
@@ -162,15 +161,13 @@ export default class Modal extends PureComponent {
     return (
       <Overlay
         dimBackground={this.props.dimBackground}
-        onBackgroundClick={
-          closeOnBackgroundClick ? this.startClosing : undefined
-        }
+        onBackgroundClick={onBackgroundClick}
         closing={closing}
         style={{ zIndex: fullScreen ? 9001 : undefined }}
       >
         <ModalComponent closing={closing} fullScreen={fullScreen} {...rest}>
           {typeof children === 'function'
-            ? children(this.startClosing)
+            ? children(this.animatedClose)
             : children}
         </ModalComponent>
       </Overlay>
