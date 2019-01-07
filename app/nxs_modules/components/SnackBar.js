@@ -3,26 +3,21 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal
-import { timing } from 'styles';
+import { timing, animations } from 'styles';
 import { color } from 'utils';
 
 const notifHeight = 40;
 const notifMargin = 15;
 
-const intro = keyframes`
+const intro = index => keyframes`
   from {
     opacity: 0;
-    transform: translateY(-${notifHeight + notifMargin}px)
+    transform: translateY(-${(index - 1) * (notifHeight + notifMargin)}px)
   }
   to {
     opacity: 1;
-    transform: translateY(0)
+    transform: translateY(${index * (notifHeight + notifMargin)})
   }
-`;
-
-const outtro = keyframes`
-  from { opacity: 1 }
-  to { opacity: 0 }
 `;
 
 const SnackBar = styled.div(
@@ -34,34 +29,18 @@ const SnackBar = styled.div(
     height: notifHeight,
     display: 'flex',
     alignItems: 'center',
-    paddingLeft: '1.5em',
-    paddingRight: '1.5em',
+    padding: '0 1.5em',
     borderRadius: 2,
     boxShadow: '0 0 8px rgba(0,0,0,.7)',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
     transitionProperty: 'background-color, transform',
     transitionDuration: timing.normal,
-    '&::after': {
-      content: '"✕"',
-      fontSize: 10,
-      fontWeight: 'bold',
-      position: 'absolute',
-      top: 2,
-      right: 5,
-      opacity: 0,
-      transition: `opacity ${timing.normal}`,
-    },
-    '&:hover': {
-      '&::after': {
-        opacity: 1,
-      },
-    },
   },
 
   ({ index }) => ({
     transform: `translateY(${index * (notifHeight + notifMargin)}px)`,
-    animation: `${intro} ${timing.normal} ease-out`,
+    animation: `${intro(index)} ${timing.normal} ease-out`,
   }),
 
   ({ type, theme }) => {
@@ -92,11 +71,11 @@ const SnackBar = styled.div(
         };
       case 'work':
         return {
-          background: theme.darkerGray,
-          border: `1px solid ${theme.light}`,
+          background: theme.dark,
+          border: `1px solid ${theme.gray}`,
           color: theme.light,
           '&:hover': {
-            background: color.lighten(theme.darkerGray, 0.2),
+            background: color.lighten(theme.dark, 0.2),
           },
         };
     }
@@ -104,7 +83,7 @@ const SnackBar = styled.div(
 
   ({ closing }) =>
     closing && {
-      animation: `${outtro} ${timing.normal} ease-out`,
+      animation: `${animations.fadeOut} ${timing.normal} ease-out`,
     }
 );
 

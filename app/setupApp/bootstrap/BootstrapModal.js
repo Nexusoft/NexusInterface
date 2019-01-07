@@ -1,15 +1,61 @@
 // External
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import styled from '@emotion/styled';
 import prettyBytes from 'pretty-bytes';
+import styled from '@emotion/styled';
+import { keyframes } from '@emotion/core';
 
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import UIController from 'components/UIController';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
 import { timing } from 'styles';
+import BootstrapBackgroundTask from './BootstrapBackgroundTask';
+import arrowUpLeftIcon from 'images/arrow-up-left.sprite.svg';
+
+const maximizeFromCorner = keyframes`
+  from { 
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+    top: 25%;
+    left: 25%;
+  }
+  to { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+  }
+`;
+
+const minimizeToCorner = keyframes`
+  from { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+  }
+  to { 
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+    top: 25%;
+    left: 25%;
+  }
+`;
+
+const BootstrapModalComponent = styled(Modal)(
+  ({ maximizing }) =>
+    maximizing && {
+      animation: `${maximizeFromCorner} ${timing.normal} ease-out`,
+    },
+  ({ minimizing }) =>
+    minimizing && {
+      animation: `${minimizeToCorner} ${timing.normal} ease-in`,
+    }
+);
 
 const Title = styled.div({
   fontSize: 28,
@@ -33,10 +79,25 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
   },
 }));
 
+const MinimizeIcon = styled(Icon)(({ theme }) => ({
+  position: 'absolute',
+  top: 10,
+  left: 10,
+  fontSize: 10,
+  cursor: 'pointer',
+  color: theme.gray,
+  transition: `color ${timing.normal}`,
+  '&:hover': {
+    color: theme.lightGray,
+  },
+}));
+
 @connect(state => ({
   locale: state.settings.settings.locale,
 }))
-class BootstrapModalContent extends Component {
+export default class BootstrapModal extends PureComponent {
+  static contextType = ModalContext;
+
   constructor(props) {
     super(props);
     props.bootstrapper.registerEvents({
@@ -47,14 +108,52 @@ class BootstrapModalContent extends Component {
     });
   }
 
+  statusMessage = ({ step, details }) => {
+    switch (step) {
+      case 'backing_up':
+        return 'Backing up your wallet...';
+      case 'stopping_core':
+        return 'Stopping daemon...';
+      case 'downloading':
+        const { locale } = this.props;
+        const { downloaded, totalSize } = details || {};
+        const percentage = totalSize
+          ? Math.min(Math.round((1000 * downloaded) / totalSize), 1000) / 10
+          : 0;
+        const sizeProgress = totalSize
+          ? `(${prettyBytes(downloaded, locale)} / ${prettyBytes(
+              totalSize,
+              locale
+            )})`
+          : '';
+        return `Downloading the database... ${percentage}% ${sizeProgress}`;
+      case 'extracting':
+        return 'Uncompressing the database...';
+      case 'finalizing':
+        return 'Finalizing...';
+      default:
+        return '';
+    }
+  };
+
   state = {
-    step: null,
+    status: this.statusMessage(this.props.bootstrapper.currentProgress()),
     percentage: 0,
-    bytes: '',
+    minimizing: false,
   };
 
   handleProgress = (step, details) => {
-    if (step !== this.state.step) this.setState({ step: step });
+    const status = this.statusMessage({ step, details });
+    this.setState({ status });
+
+    if (step === 'downloading') {
+      const { downloaded, totalSize } = details || {};
+      if (totalSize) {
+        const percentage =
+          Math.min(Math.round((1000 * downloaded) / totalSize), 1000) / 10;
+        this.setState({ percentage });
+      }
+    }
 
     if (this.state.step === 'backing_up' && step === 'stopping_core') {
       UIController.showNotification(
@@ -62,33 +161,18 @@ class BootstrapModalContent extends Component {
         'success'
       );
     }
-
-    if (step === 'downloading') {
-      const { downloaded, totalSize } = details || {};
-      if (totalSize) {
-        const percentage =
-          Math.min(Math.round((1000 * downloaded) / totalSize), 1000) / 10;
-        if (percentage !== this.state.percentage) this.setState({ percentage });
-
-        const bytes = `${prettyBytes(
-          downloaded,
-          this.props.locale
-        )} / ${prettyBytes(totalSize, this.props.locale)}`;
-        if (bytes !== this.state.bytes) this.setState({ bytes });
-      }
-    }
   };
 
   handleAbort = () => {
-    this.props.closeModal();
+    this.closeModal();
     UIController.showNotification(
-      'Aborted bootstrapping recent database',
+      'Aborted recent database bootstrapping',
       'error'
     );
   };
 
   handleError = err => {
-    this.props.closeModal();
+    this.closeModal();
     UIController.openErrorDialog({
       message: 'Error bootstrapping recent database',
       note: err.message || 'An unknown error occured',
@@ -97,31 +181,11 @@ class BootstrapModalContent extends Component {
   };
 
   handleFinish = () => {
-    this.props.closeModal();
+    this.closeModal();
     UIController.openSuccessDialog({
       message: 'Recent database has been successfully updated',
     });
     UIController.showNotification('Daemon is restarting...');
-  };
-
-  statusMessage = () => {
-    const { step, percentage, bytes } = this.state;
-    switch (step) {
-      case 'backing_up':
-        return 'Backing up your wallet...';
-      case 'stopping_core':
-        return 'Stopping daemon...';
-      case 'downloading':
-        return `Downloading the database... ${percentage}% ${
-          bytes ? `(${bytes})` : ''
-        }`;
-      case 'extracting':
-        return 'Uncompressing the database...';
-      case 'finalizing':
-        return 'Finalizing...';
-      default:
-        return ' ';
-    }
   };
 
   confirmAbort = () => {
@@ -137,31 +201,41 @@ class BootstrapModalContent extends Component {
     });
   };
 
+  minimize = () => {
+    UIController.showBackgroundTask(BootstrapBackgroundTask, {
+      bootstrapper: this.props.bootstrapper,
+    });
+
+    const modalID = this.context;
+    this.setState({ closing: true });
+    setTimeout(() => {
+      UIController.closeModal(modalID);
+    }, parseInt(timing.normal));
+  };
+
   render() {
     return (
-      <>
-        <p>{this.statusMessage()}</p>
-        <ProgressBar percentage={this.state.percentage} />
-        <div className="flex space-between" style={{ marginTop: '2em' }}>
-          <div />
-          <Button skin="error" onClick={this.confirmAbort}>
-            Abort
-          </Button>
-        </div>
-      </>
+      <BootstrapModalComponent
+        maximizing={this.props.maximizing}
+        minimizing={this.state.minimizing}
+        onBackgroundClick={this.minimize}
+        assignClose={closeModal => (this.closeModal = closeModal)}
+      >
+        <Modal.Body>
+          <Title>Bootstrap Recent Database</Title>
+          <p>{this.state.status}</p>
+          <ProgressBar percentage={this.state.percentage} />
+          <div className="flex space-between" style={{ marginTop: '2em' }}>
+            <div />
+            <Button skin="error" onClick={this.confirmAbort}>
+              Abort
+            </Button>
+          </div>
+          <Tooltip.Trigger tooltip="Minimize">
+            <MinimizeIcon onClick={this.minimize} icon={arrowUpLeftIcon} />
+          </Tooltip.Trigger>
+        </Modal.Body>
+      </BootstrapModalComponent>
     );
   }
 }
-
-const BootstrapModal = props => (
-  <Modal onBackgroundClick={null}>
-    {closeModal => (
-      <Modal.Body>
-        <Title>Bootstrap Recent Database</Title>
-        <BootstrapModalContent {...props} closeModal={closeModal} />
-      </Modal.Body>
-    )}
-  </Modal>
-);
-
-export default BootstrapModal;

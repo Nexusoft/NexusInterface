@@ -1,9 +1,29 @@
 // External
 import React, { Component } from 'react';
+import styled from '@emotion/styled';
 
 // Internal
 import UIController from 'components/UIController';
 import SnackBar from 'components/SnackBar';
+import { timing } from 'styles';
+
+const NotificationComponent = styled(SnackBar)({
+  '&::after': {
+    content: '"✕"',
+    fontSize: 10,
+    fontWeight: 'bold',
+    position: 'absolute',
+    top: 2,
+    right: 5,
+    opacity: 0,
+    transition: `opacity ${timing.normal}`,
+  },
+  '&:hover': {
+    '&::after': {
+      opacity: 1,
+    },
+  },
+});
 
 export default class Notification extends Component {
   static defaultProps = {
@@ -47,7 +67,7 @@ export default class Notification extends Component {
 
   render() {
     return (
-      <SnackBar
+      <NotificationComponent
         closing={this.state.closing}
         onClick={this.startClosing}
         onAnimationEnd={this.state.closing ? this.close : undefined}

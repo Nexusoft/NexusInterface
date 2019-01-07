@@ -6,6 +6,7 @@ import UIController from 'components/UIController';
 import SnackBar from 'components/SnackBar';
 import Icon from 'components/Icon';
 import TaskContext from 'context/task';
+import { timing } from 'styles';
 import workIcon from 'images/work.sprite.svg';
 
 export default class BackgroundTask extends Component {
@@ -27,23 +28,25 @@ export default class BackgroundTask extends Component {
   animatedClose = () => {
     const taskID = this.context;
     if (taskID) {
-      this.stopAutoClose();
       this.setState({ closing: true });
+      setTimeout(this.close, parseInt(timing.normal));
     }
   };
 
   close = () => {
     const taskID = this.context;
-    UIController.hideNotification(taskID);
+    UIController.hideBackgroundTask(taskID);
   };
 
   render() {
     const { children, assignClose, ...rest } = this.props;
     return (
       <SnackBar
+        ref={el => {
+          this.element = el;
+        }}
         closing={this.state.closing}
         onClick={this.animatedClose}
-        onAnimationEnd={this.state.closing ? this.close : undefined}
         {...rest}
       >
         <Icon icon={workIcon} spaceRight />

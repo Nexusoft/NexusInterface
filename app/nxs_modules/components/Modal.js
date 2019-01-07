@@ -68,7 +68,6 @@ const ModalComponent = styled.div(
     color: theme.lightGray,
     borderRadius: modalBorderRadius,
     boxShadow: '0 0 20px #000',
-    position: 'relative',
     animation: `${intro} ${timing.quick} ease-out`,
   }),
   ({ fullScreen }) =>
@@ -128,6 +127,11 @@ export default class Modal extends PureComponent {
 
   static contextType = ModalContext;
 
+  constructor(props) {
+    super(props);
+    props.assignClose && props.assignClose(this.animatedClose);
+  }
+
   state = {
     closing: false,
   };
@@ -154,6 +158,7 @@ export default class Modal extends PureComponent {
       onClose,
       fullScreen,
       children,
+      assignClose,
       ...rest
     } = this.props;
     const { closing } = this.state;

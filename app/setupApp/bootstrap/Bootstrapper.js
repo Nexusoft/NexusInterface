@@ -37,6 +37,10 @@ export default class Bootstrapper {
   _onFinish = () => {};
 
   _aborted = false;
+  _currentProgress = {
+    step: null,
+    details: {},
+  };
 
   /**
    * PUBLIC METHODS
@@ -48,13 +52,13 @@ export default class Bootstrapper {
 
   async start({ backupFolder, clearOverviewVariables }) {
     try {
-      this._onProgress('backing_up');
-      await this._backupWallet(backupFolder);
-      if (this._aborted) return;
+      // this._progress('backing_up');
+      // await this._backupWallet(backupFolder);
+      // if (this._aborted) return;
 
-      this._onProgress('stopping_core');
-      await electron.remote.getGlobal('core').stop();
-      if (this._aborted) return;
+      // this._progress('stopping_core');
+      // await electron.remote.getGlobal('core').stop();
+      // if (this._aborted) return;
 
       clearOverviewVariables();
       // Remove the old file if exists
@@ -64,15 +68,15 @@ export default class Bootstrapper {
         });
       }
 
-      this._onProgress('downloading', {});
+      this._progress('downloading', {});
       await this._downloadCompressedDb();
       if (this._aborted) return;
 
-      this._onProgress('extracting');
+      this._progress('extracting');
       await this._extractDb();
       if (this._aborted) return;
 
-      this._onProgress('finalizing');
+      this._progress('finalizing');
       await this._moveExtractedContent();
 
       this._cleanUp();
@@ -98,9 +102,18 @@ export default class Bootstrapper {
     this._onAbort();
   }
 
+  currentProgress() {
+    return this._currentProgress;
+  }
+
   /**
    * PRIVATE METHODS
    */
+  _progress(step, details) {
+    this._currentProgress = { step, details };
+    this._onProgress(step, details);
+  }
+
   async _backupWallet(backupFolder) {
     const backupDir = backupFolder || defaultBackupDir;
     if (!fs.existsSync(backupDir)) {
@@ -132,7 +145,7 @@ export default class Bootstrapper {
 
           response.on('data', chunk => {
             downloaded += chunk.length;
-            this._onProgress('downloading', { downloaded, totalSize });
+            this._progress('downloading', { downloaded, totalSize });
           });
 
           response.pipe(file);
@@ -142,7 +155,7 @@ export default class Bootstrapper {
         })
         .on('error', reject)
         .on('timeout', function() {
-          this.request.abort();
+          if (this.request) this.request.abort();
           reject(new Error('Request timeout!'));
         })
         .on('abort', function() {

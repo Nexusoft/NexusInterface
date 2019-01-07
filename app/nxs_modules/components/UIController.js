@@ -7,7 +7,6 @@ import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import ErrorDialog from 'components/Dialogs/ErrorDialog';
 import SuccessDialog from 'components/Dialogs/SuccessDialog';
 import Notification from 'components/Notification';
-import BackgroundTask from 'components/BackgroundTask';
 import ModalContext from 'context/modal';
 import TaskContext from 'context/task';
 
@@ -126,14 +125,8 @@ export default class UIController extends Component {
   };
 
   closeModal = modalID => {
-    const modals = [...this.state.modals];
-    const index = modals.findIndex(m => m.id === modalID);
-    if (index >= 0) {
-      modals.splice(index, 1);
-      this.setState({ modals });
-      return true;
-    }
-    return false;
+    const modals = this.state.modals.filter(m => m.id !== modalID);
+    this.setState({ modals });
   };
 
   openConfirmDialog = props => this.openModal(ConfirmDialog, props);
@@ -158,14 +151,10 @@ export default class UIController extends Component {
   };
 
   hideNotification = notifID => {
-    const notifications = [...this.state.notifications];
-    const index = notifications.findIndex(n => n.id === notifID);
-    if (index >= 0) {
-      notifications.splice(index, 1);
-      this.setState({ notifications });
-      return true;
-    }
-    return false;
+    const notifications = this.state.notifications.filter(
+      n => n.id !== notifID
+    );
+    this.setState({ notifications });
   };
 
   showBackgroundTask = (component, props) => {
@@ -184,14 +173,8 @@ export default class UIController extends Component {
   };
 
   hideBackgroundTask = taskID => {
-    const tasks = [...this.state.tasks];
-    const index = tasks.findIndex(m => m.id === taskID);
-    if (index >= 0) {
-      tasks.splice(index, 1);
-      this.setState({ tasks });
-      return true;
-    }
-    return false;
+    const tasks = this.state.tasks.filter(t => t.id !== taskID);
+    this.setState({ tasks });
   };
 
   render() {
