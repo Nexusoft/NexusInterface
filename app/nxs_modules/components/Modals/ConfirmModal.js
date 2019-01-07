@@ -21,9 +21,11 @@ const ConfirmationButton = styled(Button)({
 const ConfirmModal = ({
   question,
   note,
-  yesLabel,
+  yesLabel = 'Yes',
+  yesSkin = 'primary',
   yesCallback,
-  noLabel,
+  noLabel = 'No',
+  noSkin = undefined,
   noCallback,
   ...rest
 }) => (
@@ -35,21 +37,22 @@ const ConfirmModal = ({
         {!!note && <Dialog.Note>{note}</Dialog.Note>}
         <Dialog.Buttons>
           <ConfirmationButton
+            skin={noSkin}
             onClick={() => {
               noCallback && noCallback();
               closeModal();
             }}
           >
-            {noLabel || 'No'}
+            {noLabel}
           </ConfirmationButton>
           <ConfirmationButton
-            skin="primary"
+            skin={yesSkin}
             onClick={() => {
               yesCallback && yesCallback();
               closeModal();
             }}
           >
-            {yesLabel || 'Yes'}
+            {yesLabel}
           </ConfirmationButton>
         </Dialog.Buttons>
       </Modal.Body>

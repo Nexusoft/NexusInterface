@@ -69,10 +69,7 @@ const Downloading = props => (
       <Text id="ToolTip.RecentDatabaseDownloading" />
     </h3>
     <div className="progress-bar">
-      <div
-        className="filler"
-        style={{ width: `${props.percentDownloaded}%` }}
-      />
+      <div className="filler" style={{ width: `${20}%` }} />
     </div>
     <h3>
       <Text id="ToolTip.PleaseWait" />
@@ -93,25 +90,25 @@ const Extracting = () => (
 );
 
 const modalContent = props => {
-  if (props.percentDownloaded === 0) {
-    if (modalOpen(props)) {
-      const checkDiskSpace = require('check-disk-space');
-      let dir = process.env.APPDATA || process.env.HOME;
-      checkDiskSpace(dir).then(diskSpace => {
-        if (diskSpace.free <= 20000000000) {
-          enoughSpace = false;
-          setTimeout(() => {
-            this.forceUpdate();
-          }, 5000);
-        } else {
-          enoughSpace = true;
-        }
-      });
-    }
-    return <Prompting {...props} />;
-  }
+  // if (props.percentDownloaded === 0) {
+  //   if (modalOpen(props)) {
+  //     const checkDiskSpace = require('check-disk-space');
+  //     let dir = process.env.APPDATA || process.env.HOME;
+  //     checkDiskSpace(dir).then(diskSpace => {
+  //       if (diskSpace.free <= 20000000000) {
+  //         enoughSpace = false;
+  //         setTimeout(() => {
+  //           this.forceUpdate();
+  //         }, 5000);
+  //       } else {
+  //         enoughSpace = true;
+  //       }
+  //     });
+  //   }
+  //   return <Prompting {...props} />;
+  // }
 
-  if (props.percentDownloaded < 100) {
+  if (true) {
     return <Downloading {...props} />;
   }
 
@@ -124,7 +121,6 @@ const BootstrapModal = props => (
     open={modalOpen(props)}
     onClose={() => true}
     center
-    focusTrapped={true}
     showCloseIcon={false}
     classNames={{ modal: 'modal' }}
   >

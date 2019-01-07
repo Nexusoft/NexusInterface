@@ -1,10 +1,11 @@
 import { app, Menu, shell, BrowserWindow, remote } from 'electron';
 import fs from 'fs';
+
 import * as RPC from 'scripts/rpc';
 import { GetSettings, SaveSettings } from 'api/settings';
 import core from 'api/core';
-
 import UIController from 'components/UIController';
+import bootstrap from './bootstrap';
 
 import * as ac from 'actions/headerActionCreators';
 
@@ -164,15 +165,7 @@ export default class MenuBuilder {
   downloadRecent = {
     label: 'Download Recent Database',
     click: () => {
-      const state = this.store.getState();
-      if (
-        state.overview.connections !== undefined &&
-        !GetSettings().manualDaemon
-      ) {
-        this.store.dispatch(ac.OpenBootstrapModal(true));
-      } else {
-        UIController.showNotification('Please let the daemon start.');
-      }
+      bootstrap(this.store);
     },
   };
 
