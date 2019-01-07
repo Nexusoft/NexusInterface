@@ -89,7 +89,7 @@ class BootstrapModalContent extends Component {
 
   handleError = err => {
     this.props.closeModal();
-    UIController.openErrorModal({
+    UIController.openErrorDialog({
       message: 'Error bootstrapping recent database',
       note: err.message || 'An unknown error occured',
     });
@@ -98,7 +98,7 @@ class BootstrapModalContent extends Component {
 
   handleFinish = () => {
     this.props.closeModal();
-    UIController.openSuccessModal({
+    UIController.openSuccessDialog({
       message: 'Recent database has been successfully updated',
     });
     UIController.showNotification('Daemon is restarting...');
@@ -125,7 +125,7 @@ class BootstrapModalContent extends Component {
   };
 
   confirmAbort = () => {
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: 'Are you sure you want to abort the process?',
       yesLabel: 'Yes, abort',
       yesSkin: 'error',

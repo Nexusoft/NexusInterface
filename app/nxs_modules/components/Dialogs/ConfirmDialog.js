@@ -3,10 +3,10 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import Dialog from 'components/Dialog';
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 import { color } from 'utils';
+import Dialog from './Dialog';
 
 const QuestionMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 56,
@@ -18,7 +18,7 @@ const ConfirmationButton = styled(Button)({
   minWidth: 180,
 });
 
-const ConfirmModal = ({
+const ConfirmDialog = ({
   question,
   note,
   yesLabel = 'Yes',
@@ -60,4 +60,4 @@ const ConfirmModal = ({
   </Dialog>
 );
 
-export default ConfirmModal;
+export default ConfirmDialog;

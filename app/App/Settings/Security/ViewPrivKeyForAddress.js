@@ -26,7 +26,7 @@ export default class ViewPrivKeyForAddress extends Component {
           if (e.includes(address)) {
             e = e.replace(address + ' ', '');
           }
-          UIController.openErrorModal({ message: e });
+          UIController.openErrorDialog({ message: e });
         });
     } else {
       this.inputRef.focus();

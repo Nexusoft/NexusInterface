@@ -91,7 +91,7 @@ export default class ChangePassword extends Component {
           });
       })
       .catch(e => {
-        UIController.openErrorModal({ message: e });
+        UIController.openErrorDialog({ message: e });
       });
   }
 

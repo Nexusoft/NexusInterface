@@ -246,7 +246,7 @@ class SettingsCore extends Component {
 
   confirmSwitchManualDaemon = () => {
     if (this.props.settings.manualDaemon) {
-      UIController.openConfirmModal({
+      UIController.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonExit" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
         yesCallback: () => {
@@ -266,7 +266,7 @@ class SettingsCore extends Component {
         },
       });
     } else {
-      UIController.openConfirmModal({
+      UIController.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonEntry" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
         yesCallback: () => {
@@ -287,7 +287,7 @@ class SettingsCore extends Component {
   };
 
   confirmSaveSettings = () => {
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: (
         <>
           <Text id="Settings.SaveSettings" />?

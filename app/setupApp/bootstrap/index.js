@@ -16,7 +16,7 @@ export default async function bootstrap(store) {
 
   const enoughSpace = await Bootstrapper.checkFreeSpace();
   if (!enoughSpace) {
-    UIController.openErrorModal({
+    UIController.openErrorDialog({
       message: <Text id="ToolTip.NotEnoughSpace" />,
     });
     return;
@@ -31,7 +31,7 @@ export default async function bootstrap(store) {
     return;
   }
 
-  UIController.openConfirmModal({
+  UIController.openConfirmDialog({
     question: 'Download recent database?',
     note:
       'Downloading a recent version of the database might reduce the time it takes to synchronize your wallet',

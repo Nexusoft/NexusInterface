@@ -590,7 +590,7 @@ class AddressBook extends Component {
             this.loadMyAccounts();
           })
           .catch(e => {
-            UIController.openErrorModal({ message: e });
+            UIController.openErrorDialog({ message: e });
           });
       } else {
         UIController.showNotification(
@@ -605,7 +605,7 @@ class AddressBook extends Component {
           this.loadMyAccounts();
         })
         .catch(e => {
-          UIController.openErrorModal({ message: e });
+          UIController.openErrorDialog({ message: e });
         });
     }
   }

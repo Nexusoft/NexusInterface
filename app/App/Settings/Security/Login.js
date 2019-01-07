@@ -106,7 +106,7 @@ class Login extends Component {
           password = '';
           if (e === 'Error: The wallet passphrase entered was incorrect.') {
             this.props.busy(false);
-            UIController.openErrorModal({
+            UIController.openErrorDialog({
               message: <Text id="Alert.IncorrectPasssword" />,
             });
             // this.passwordRef.focus();
@@ -118,7 +118,7 @@ class Login extends Component {
             );
             this.passwordRef.focus();
           } else {
-            UIController.openErrorModal({ message: e });
+            UIController.openErrorDialog({ message: e });
           }
         });
     } else {
@@ -140,7 +140,7 @@ class Login extends Component {
             password = '';
             if (e === 'Error: The wallet passphrase entered was incorrect.') {
               this.props.busy(false);
-              UIController.openErrorModal({
+              UIController.openErrorDialog({
                 message: <Text id="Alert.IncorrectPasssword" />,
               });
               this.passwordRef.focus();
@@ -152,7 +152,7 @@ class Login extends Component {
               );
               this.passwordRef.focus();
             } else {
-              UIController.openErrorModal({ message: e });
+              UIController.openErrorDialog({ message: e });
             }
           });
       } else {

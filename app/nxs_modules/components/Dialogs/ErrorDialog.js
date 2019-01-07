@@ -3,9 +3,9 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import Dialog from 'components/Dialog';
 import Modal from 'components/Modal';
 import { color } from 'utils';
+import Dialog from './Dialog';
 
 const XMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 56,
@@ -14,7 +14,7 @@ const XMark = styled(Dialog.Icon)(({ theme }) => ({
   filter: `drop-shadow(0 0 5px ${color.fade(theme.error, 0.5)})`,
 }));
 
-const ErrorModal = ({ message, note, ...rest }) => (
+const ErrorDialog = ({ message, note, ...rest }) => (
   <Dialog {...rest}>
     {closeModal => (
       <>
@@ -31,4 +31,4 @@ const ErrorModal = ({ message, note, ...rest }) => (
   </Dialog>
 );
 
-export default ErrorModal;
+export default ErrorDialog;

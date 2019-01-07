@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import ConfirmModal from 'components/Modals/ConfirmModal';
-import ErrorModal from 'components/Modals/ErrorModal';
-import SuccessModal from 'components/Modals/SuccessModal';
+import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
+import ErrorDialog from 'components/Dialogs/ErrorDialog';
+import SuccessDialog from 'components/Dialogs/SuccessDialog';
 import Notification from 'components/Notification';
 import ModalContext from 'context/modal';
 
@@ -76,9 +76,9 @@ export default class UIController extends Component {
     // Expose the public UI APIs
     UIController.openModal = this.openModal;
     UIController.closeModal = this.closeModal;
-    UIController.openConfirmModal = this.openConfirmModal;
-    UIController.openErrorModal = this.openErrorModal;
-    UIController.openSuccessModal = this.openSuccessModal;
+    UIController.openConfirmDialog = this.openConfirmDialog;
+    UIController.openErrorDialog = this.openErrorDialog;
+    UIController.openSuccessDialog = this.openSuccessDialog;
 
     UIController.showNotification = this.showNotification;
     UIController.hideNotification = this.hideNotification;
@@ -115,11 +115,11 @@ export default class UIController extends Component {
     return false;
   };
 
-  openConfirmModal = props => this.openModal(ConfirmModal, props);
+  openConfirmDialog = props => this.openModal(ConfirmDialog, props);
 
-  openErrorModal = props => this.openModal(ErrorModal, props);
+  openErrorDialog = props => this.openModal(ErrorDialog, props);
 
-  openSuccessModal = props => this.openModal(SuccessModal, props);
+  openSuccessDialog = props => this.openModal(SuccessDialog, props);
 
   showNotification = (content, type) => {
     const notifID = newNotifID();
@@ -150,9 +150,9 @@ export default class UIController extends Component {
   controller = {
     openModal: this.openModal,
     closeModal: this.closeModal,
-    openConfirmModal: this.openConfirmModal,
-    openErrorModal: this.openErrorModal,
-    openSuccessModal: this.openSuccessModal,
+    openConfirmDialog: this.openConfirmDialog,
+    openErrorDialog: this.openErrorDialog,
+    openSuccessDialog: this.openSuccessDialog,
 
     showNotification: this.showNotification,
     hideNotification: this.hideNotification,

@@ -32,7 +32,7 @@ const QueueSummary = styled.div({
 
 class QueueBody extends Component {
   confirmRemove = key => {
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: <Text id="sendReceive.RemoveFromQueue" />,
       yesCallback: () => this.props.removeQueue(key),
     });
@@ -94,7 +94,7 @@ export default class Queue extends Component {
   }
 
   confirmClearQueue = () => {
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: <Text id="sendReceive.ClearQueue" />,
       yesCallback: this.props.clearQueue,
     });
@@ -120,7 +120,7 @@ export default class Queue extends Component {
           })
           .catch(e => {
             this.props.busy();
-            UIController.openErrorModal({ message: e });
+            UIController.openErrorDialog({ message: e });
           });
       } else if (Object.values(this.props.Queue)[0] > 0) {
         if (this.props.Message) {
@@ -144,7 +144,7 @@ export default class Queue extends Component {
             .catch(e => {
               console.log(e);
               this.props.busy();
-              UIController.openErrorModal({ message: e });
+              UIController.openErrorDialog({ message: e });
             });
         } else {
           RPC.PROMISE('sendfrom', [
@@ -166,12 +166,12 @@ export default class Queue extends Component {
             .catch(e => {
               console.log(e);
               this.props.busy();
-              UIController.openErrorModal({ message: e });
+              UIController.openErrorDialog({ message: e });
             });
         }
       }
     } else {
-      UIController.openErrorModal({ message: 'No Account Selected' });
+      UIController.openErrorDialog({ message: 'No Account Selected' });
     }
   }
 
@@ -179,17 +179,17 @@ export default class Queue extends Component {
     const { Queue, encrypted, loggedIn } = this.props;
 
     if (encrypted && !loggedIn) {
-      UIController.openErrorModal('Wallet Locked');
+      UIController.openErrorDialog('Wallet Locked');
       return;
     }
     if (Object.keys(Queue).length === 0) {
-      UIController.openErrorModal({
+      UIController.openErrorDialog({
         message: <Text id="Alert.QueueEmpty" />,
       });
       return;
     }
 
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: (
         <div>
           <Text id="sendReceive.SendAllFrom" />

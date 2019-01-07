@@ -3,11 +3,11 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import Dialog from 'components/Dialog';
 import Modal from 'components/Modal';
 import Icon from 'components/Icon';
 import { color } from 'utils';
 import checkIcon from 'images/check.sprite.svg';
+import Dialog from './Dialog';
 
 const CheckMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 44,
@@ -16,7 +16,7 @@ const CheckMark = styled(Dialog.Icon)(({ theme }) => ({
   filter: `drop-shadow(0 0 5px ${color.fade(theme.primary, 0.5)})`,
 }));
 
-const SuccessModal = ({ message, note, ...rest }) => (
+const SuccessDialog = ({ message, note, ...rest }) => (
   <Dialog {...rest}>
     {closeModal => (
       <>
@@ -35,4 +35,4 @@ const SuccessModal = ({ message, note, ...rest }) => (
   </Dialog>
 );
 
-export default SuccessModal;
+export default SuccessDialog;

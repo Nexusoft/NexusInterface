@@ -75,20 +75,20 @@ export default class EncryptWallet extends Component {
                 }, 5000);
               })
               .catch(e => {
-                UIController.openErrorModal({ message: e });
+                UIController.openErrorDialog({ message: e });
               });
           } else {
-            UIController.openErrorModal({
+            UIController.openErrorDialog({
               message: 'Password cannot start or end with spaces',
             }); // new alert
             passChk.focus();
           }
         } else {
-          UIController.openErrorModal({ message: 'Passwords do not match' }); // new alert
+          UIController.openErrorDialog({ message: 'Passwords do not match' }); // new alert
           passChk.focus();
         }
       } else {
-        UIController.openErrorModal({
+        UIController.openErrorDialog({
           message: 'Passwords cannot contain -$/&*|<>',
         }); // new alert
         passChk.focus();

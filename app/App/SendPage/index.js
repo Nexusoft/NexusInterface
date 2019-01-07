@@ -281,18 +281,18 @@ class SendPage extends Component {
                 amount: parseFloat(this.props.Amount),
               });
             } else {
-              UIController.openErrorModal({
+              UIController.openErrorDialog({
                 message: <Text id="Alert.registeredToThis" />,
               });
             }
           } else {
-            UIController.openErrorModal({
+            UIController.openErrorDialog({
               message: <Text id="Alert.InvalidAddress" />,
             });
           }
         })
         .catch(e => {
-          UIController.openErrorModal({
+          UIController.openErrorDialog({
             message: <Text id="Alert.InvalidAddress" />,
           });
         });
@@ -361,7 +361,7 @@ class SendPage extends Component {
                     .catch(e => {
                       console.log(e);
                       this.props.busy();
-                      UIController.openErrorModal({ message: e });
+                      UIController.openErrorDialog({ message: e });
                     });
                 } else {
                   RPC.PROMISE('sendfrom', [
@@ -382,25 +382,25 @@ class SendPage extends Component {
                     .catch(e => {
                       console.log(e);
                       this.props.busy();
-                      UIController.openErrorModal({ message: e });
+                      UIController.openErrorDialog({ message: e });
                     });
                 }
               } else {
                 this.props.busy();
-                UIController.openErrorModal({
+                UIController.openErrorDialog({
                   message: <Text id="Alert.registeredToThis" />,
                 });
               }
             } else {
               this.props.busy();
-              UIController.openErrorModal({
+              UIController.openErrorDialog({
                 message: <Text id="Alert.InvalidAddress" />,
               });
             }
           })
           .catch(e => {
             this.props.busy();
-            UIController.openErrorModal({
+            UIController.openErrorDialog({
               message: <Text id="Alert.InvalidAddress" />,
             });
           });
@@ -408,7 +408,7 @@ class SendPage extends Component {
         this.props.busy();
       }
     } else {
-      UIController.openErrorModal({ message: 'No Account Selected' });
+      UIController.openErrorDialog({ message: 'No Account Selected' });
     }
   }
 
@@ -416,23 +416,23 @@ class SendPage extends Component {
     const { Address, Amount, encrypted, loggedIn } = this.props;
 
     if (!Address) {
-      UIController.openErrorModal({
+      UIController.openErrorDialog({
         message: <Text id="Alert.InvalidAddress" />,
       });
       return;
     }
     if (Amount <= 0) {
-      UIController.openErrorModal({
+      UIController.openErrorDialog({
         message: <Text id="Alert.InvalidAmount" />,
       });
       return;
     }
     if (encrypted && !loggedIn) {
-      UIController.openErrorModal({ message: 'Wallet Locked' });
+      UIController.openErrorDialog({ message: 'Wallet Locked' });
       return;
     }
 
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: <Text id="sendReceive.SendTransaction" />,
       yesCallback: this.sendOne,
     });

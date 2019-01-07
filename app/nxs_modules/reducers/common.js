@@ -8,7 +8,7 @@ const initialState = {
   openSecondModal: false,
   openThirdModal: false,
   openFourthModal: false,
-  openErrorModal: false,
+  openErrorDialog: false,
   modaltype: '',
   confirmation: false,
   actionItem: '',
@@ -153,7 +153,7 @@ export default (state = initialState, action) => {
     case TYPE.SHOW_ERROR_MODAL:
       return {
         ...state,
-        openErrorModal: true,
+        openErrorDialog: true,
         modaltype: action.payload,
       };
       break;
@@ -161,7 +161,7 @@ export default (state = initialState, action) => {
     case TYPE.HIDE_ERROR_MODAL:
       return {
         ...state,
-        openErrorModal: false,
+        openErrorDialog: false,
       };
       break;
     case TYPE.SET_HIGHEST_PEER_BLOCK:

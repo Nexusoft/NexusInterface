@@ -308,7 +308,7 @@ class SettingsApp extends Component {
         'success'
       );
     } else {
-      UIController.openErrorModal({
+      UIController.openErrorDialog({
         message: <Text id="Alert.InvalidTransactionFee" />,
       });
     }
@@ -439,20 +439,20 @@ class SettingsApp extends Component {
   };
 
   confirmSetTxFee = () => {
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: <Text id="Settings.SetFee" />,
       yesCallback: this.setTxFee,
     });
   };
 
   confirmBackupWallet = () => {
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: <Text id="Settings.BackupWallet" />,
       yesCallback: () => {
         if (this.props.connections !== undefined) {
           this.backupWallet();
         } else {
-          UIController.openErrorModal({
+          UIController.openErrorDialog({
             message: 'Please wait for Daemon to load',
           });
         }
