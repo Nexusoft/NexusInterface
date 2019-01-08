@@ -1,4 +1,4 @@
-import { GetSettings, SaveSettings } from 'api/settings';
+import { GetSettings } from 'api/settings';
 import * as ac from 'actions/headerActionCreators';
 import UIController from 'components/UIController';
 import LicenseAgreementModal from './LicenseAgreementModal';

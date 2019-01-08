@@ -2,8 +2,10 @@ import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/headerActionCreators';
 import EncryptionWarningModal from './EncryptionWarningModal';
+import bootstrap, { checkFreeSpace } from './bootstrap';
 
-export default async function getInfo({ dispatch, getState }) {
+export default async function getInfo(store) {
+  const { dispatch, getState } = store;
   dispatch(ac.AddRPCCall('getInfo'));
   let info = null;
   try {
@@ -56,6 +58,27 @@ export default async function getInfo({ dispatch, getState }) {
     if (!oldInfo.blocks || info.blocks > oldInfo.blocks) {
       let newDate = new Date();
       dispatch(ac.BlockDate(newDate));
+    }
+
+    const {
+      settings: {
+        manualDaemon,
+        settings: { bootstrap: bootstrapSetting },
+      },
+    } = state;
+    // 172800 = (100 * 24 * 60 * 60) / 50
+    // which is the approximate number of blocks produced in 100 days
+    const isFarBehind = highestPeerBlock - info.blocks > 172800;
+    if (
+      isFarBehind &&
+      bootstrapSetting &&
+      !manualDaemon &&
+      info.connections !== undefined
+    ) {
+      (async () => {
+        const enoughSpace = await checkFreeSpace();
+        if (enoughSpace) bootstrap(store);
+      })();
     }
   }
 

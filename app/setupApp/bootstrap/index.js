@@ -1,48 +1,29 @@
-// External
-import React from 'react';
-
 // Internal
 import UIController from 'components/UIController';
-import Text from 'components/Text';
 import * as ac from 'actions/headerActionCreators';
+import { GetSettings, SaveSettings } from 'api/settings';
 import Bootstrapper from './Bootstrapper';
 import BootstrapModal from './BootstrapModal';
 
-let bootstrapper = null;
+let running = false;
 
 export default async function bootstrap(store) {
-  // Skip if already bootstrapping
-  if (bootstrapper) return;
+  // Only one instance at the same time
+  if (running) return;
 
-  const enoughSpace = await Bootstrapper.checkFreeSpace();
-  if (!enoughSpace) {
-    UIController.openErrorDialog({
-      message: <Text id="ToolTip.NotEnoughSpace" />,
-    });
-    return;
-  }
-
+  running = true;
   const state = store.getState();
-  if (
-    state.overview.connections === undefined ||
-    state.settings.settings.manualDaemon
-  ) {
-    UIController.showNotification('Please wait for the daemon to start.');
-    return;
-  }
-
   UIController.openConfirmDialog({
     question: 'Download recent database?',
     note:
       'Downloading a recent version of the database might reduce the time it takes to synchronize your wallet',
     yesLabel: "Yes, let's bootstrap it",
-    noLabel: 'No, let it sync',
     yesCallback: async () => {
-      bootstrapper = new Bootstrapper();
+      const bootstrapper = new Bootstrapper();
       try {
         UIController.openModal(BootstrapModal, { bootstrapper });
       } catch (err) {
-        bootstrapper = null;
+        running = false;
         throw err;
       }
       const startBootstrapping = async () => {
@@ -54,13 +35,22 @@ export default async function bootstrap(store) {
             },
           });
         } finally {
-          bootstrapper = null;
+          running = false;
         }
       };
       // Defer starting bootstrap so that the BootstrapModal can
       // register events in its constructor before the bootstrap starts
       setTimeout(startBootstrapping, 0);
     },
+    noLabel: 'No, let it sync',
+    noCallback: () => {
+      running = false;
+      const settings = GetSettings();
+      SaveSettings({ ...settings, bootstrap: false });
+    },
     style: { width: 530 },
   });
 }
+
+const checkFreeSpace = Bootstrapper.checkFreeSpace;
+export { checkFreeSpace };
