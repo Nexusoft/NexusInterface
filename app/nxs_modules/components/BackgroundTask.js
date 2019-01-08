@@ -9,6 +9,8 @@ import TaskContext from 'context/task';
 import { timing } from 'styles';
 import workIcon from 'images/work.sprite.svg';
 
+const outro = { opacity: [1, 0] };
+
 export default class BackgroundTask extends Component {
   static contextType = TaskContext;
 
@@ -21,15 +23,15 @@ export default class BackgroundTask extends Component {
     props.assignClose && props.assignClose(this.animatedClose);
   }
 
-  state = {
-    closing: false,
-  };
-
   animatedClose = () => {
     const taskID = this.context;
     if (taskID) {
-      this.setState({ closing: true });
-      setTimeout(this.close, parseInt(timing.normal));
+      const duration = parseInt(timing.quick);
+      this.element.animate(outro, {
+        duration,
+        fill: 'both',
+      });
+      setTimeout(this.close, duration);
     }
   };
 
@@ -45,7 +47,6 @@ export default class BackgroundTask extends Component {
         ref={el => {
           this.element = el;
         }}
-        closing={this.state.closing}
         onClick={this.animatedClose}
         {...rest}
       >

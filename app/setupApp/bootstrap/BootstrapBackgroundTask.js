@@ -95,11 +95,11 @@ export default class BootstrapBackgroundTask extends Component {
   };
 
   maximize = () => {
-    this.closeTask();
     UIController.openModal(BootstrapModal, {
       bootstrapper: this.props.bootstrapper,
-      maximizing: true,
+      maximizedFromBackground: true,
     });
+    this.closeTask();
   };
 
   render() {

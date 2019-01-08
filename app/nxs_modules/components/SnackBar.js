@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal
-import { timing, animations } from 'styles';
+import { timing } from 'styles';
 import { color } from 'utils';
 
 const notifHeight = 40;
@@ -40,7 +40,8 @@ const SnackBar = styled.div(
 
   ({ index }) => ({
     transform: `translateY(${index * (notifHeight + notifMargin)}px)`,
-    animation: `${intro(index)} ${timing.normal} ease-out`,
+    animation: `${intro(index)} ${timing.quick} ease-out`,
+    animationFillMode: 'both',
   }),
 
   ({ type, theme }) => {
@@ -79,12 +80,7 @@ const SnackBar = styled.div(
           },
         };
     }
-  },
-
-  ({ closing }) =>
-    closing && {
-      animation: `${animations.fadeOut} ${timing.normal} ease-out`,
-    }
+  }
 );
 
 export default SnackBar;

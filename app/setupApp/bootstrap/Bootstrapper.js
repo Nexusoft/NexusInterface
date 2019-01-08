@@ -52,13 +52,13 @@ export default class Bootstrapper {
 
   async start({ backupFolder, clearOverviewVariables }) {
     try {
-      // this._progress('backing_up');
-      // await this._backupWallet(backupFolder);
-      // if (this._aborted) return;
+      this._progress('backing_up');
+      await this._backupWallet(backupFolder);
+      if (this._aborted) return;
 
-      // this._progress('stopping_core');
-      // await electron.remote.getGlobal('core').stop();
-      // if (this._aborted) return;
+      this._progress('stopping_core');
+      await electron.remote.getGlobal('core').stop();
+      if (this._aborted) return;
 
       clearOverviewVariables();
       // Remove the old file if exists

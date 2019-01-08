@@ -21,16 +21,17 @@ const intro = keyframes`
   }
 `;
 
-const outtro = keyframes`
-  from { 
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1
-  }
-  to { 
-    transform: translate(-50%, -50%) scale(0.9);
-    opacity: 0 
-  }
-`;
+const outro = {
+  transform: [
+    'translate(-50%, -50%) scale(1)',
+    'translate(-50%, -50%) scale(0.9)',
+  ],
+  opacity: [1, 0],
+};
+
+const bgOutro = {
+  opacity: [1, 0],
+};
 
 const fullScreenIntro = keyframes`
   from { 
@@ -43,16 +44,10 @@ const fullScreenIntro = keyframes`
   }
 `;
 
-const fullScreenOuttro = keyframes`
-  from { 
-    transform: scale(1);
-    opacity: 1
-  }
-  to { 
-    transform: scale(0.9);
-    opacity: 0 
-  }
-`;
+const fullScreenOutro = {
+  transform: ['scale(1)', 'scale(0.9)'],
+  opacity: [1, 0],
+};
 
 const modalBorderRadius = 4;
 
@@ -69,6 +64,7 @@ const ModalComponent = styled.div(
     borderRadius: modalBorderRadius,
     boxShadow: '0 0 20px #000',
     animation: `${intro} ${timing.quick} ease-out`,
+    animationFillMode: 'both',
   }),
   ({ fullScreen }) =>
     fullScreen && {
@@ -83,7 +79,7 @@ const ModalComponent = styled.div(
     },
   ({ closing, fullScreen }) =>
     closing && {
-      animation: `${fullScreen ? fullScreenOuttro : outtro} ${
+      animation: `${fullScreen ? fullScreenOutro : outro} ${
         timing.quick
       } ease-in`,
     }
@@ -132,15 +128,19 @@ export default class Modal extends PureComponent {
     props.assignClose && props.assignClose(this.animatedClose);
   }
 
-  state = {
-    closing: false,
-  };
-
   animatedClose = () => {
     const modalID = this.context;
     if (modalID) {
-      this.setState({ closing: true });
-      setTimeout(this.close, parseInt(timing.quick));
+      const duration = parseInt(timing.quick);
+      const animation = this.props.fullScreen ? fullScreenOutro : outro;
+      const options = {
+        duration,
+        easing: 'ease-in',
+        fill: 'both',
+      };
+      this.modalElem.animate(animation, options);
+      this.backgroundElem.animate(bgOutro, options);
+      setTimeout(this.close, duration);
     }
   };
 
@@ -159,18 +159,29 @@ export default class Modal extends PureComponent {
       fullScreen,
       children,
       assignClose,
+      modalRef,
+      backgroundRef,
       ...rest
     } = this.props;
-    const { closing } = this.state;
 
     return (
       <Overlay
         dimBackground={this.props.dimBackground}
         onBackgroundClick={onBackgroundClick}
-        closing={closing}
+        backgroundRef={el => {
+          this.backgroundElem = el;
+          backgroundRef && backgroundRef(el);
+        }}
         style={{ zIndex: fullScreen ? 9001 : undefined }}
       >
-        <ModalComponent closing={closing} fullScreen={fullScreen} {...rest}>
+        <ModalComponent
+          ref={el => {
+            this.modalElem = el;
+            modalRef && modalRef(el);
+          }}
+          fullScreen={fullScreen}
+          {...rest}
+        >
           {typeof children === 'function'
             ? children(this.animatedClose)
             : children}

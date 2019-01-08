@@ -22,14 +22,11 @@ const OverlayBackground = styled.div(
     right: 0,
     bottom: 0,
     animation: `${animations.fadeIn} ${timing.quick} ease-out`,
+    animationFillMode: 'both',
   },
   ({ dimmed }) =>
     dimmed && {
       background: 'rgba(0,0,0,0.5)',
-    },
-  ({ closing }) =>
-    closing && {
-      animation: `${animations.fadeOut} ${timing.quick} ease-out`,
     }
 );
 
@@ -52,16 +49,16 @@ export default class Overlay extends Component {
     const {
       dimBackground,
       onBackgroundClick,
-      closing,
+      backgroundRef,
       children,
       ...rest
     } = this.props;
     return ReactDOM.createPortal(
       <OverlayComponent {...rest}>
         <OverlayBackground
+          ref={backgroundRef}
           dimmed={dimBackground}
           onClick={onBackgroundClick}
-          closing={closing}
         />
         {children}
       </OverlayComponent>,

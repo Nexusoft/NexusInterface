@@ -16,7 +16,7 @@ import { timing } from 'styles';
 import BootstrapBackgroundTask from './BootstrapBackgroundTask';
 import arrowUpLeftIcon from 'images/arrow-up-left.sprite.svg';
 
-const maximizeFromCorner = keyframes`
+const maximizeAnimation = keyframes`
   from { 
     transform: translate(-50%, -50%) scale(0.5);
     opacity: 0;
@@ -31,29 +31,20 @@ const maximizeFromCorner = keyframes`
   }
 `;
 
-const minimizeToCorner = keyframes`
-  from { 
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    top: 50%;
-    left: 50%;
-  }
-  to { 
-    transform: translate(-50%, -50%) scale(0.5);
-    opacity: 0;
-    top: 25%;
-    left: 25%;
-  }
-`;
+const minimizeAnimation = {
+  transform: [
+    'translate(-50%, -50%) scale(1)',
+    'translate(-50%, -50%) scale(0.3)',
+  ],
+  opacity: [1, 0],
+  top: ['50%', '25%'],
+  left: ['50%', '25%'],
+};
 
 const BootstrapModalComponent = styled(Modal)(
-  ({ maximizing }) =>
-    maximizing && {
-      animation: `${maximizeFromCorner} ${timing.normal} ease-out`,
-    },
-  ({ minimizing }) =>
-    minimizing && {
-      animation: `${minimizeToCorner} ${timing.normal} ease-in`,
+  ({ maximizedFromBackground }) =>
+    maximizedFromBackground && {
+      animation: `${maximizeAnimation} ${timing.quick} linear`,
     }
 );
 
@@ -139,7 +130,6 @@ export default class BootstrapModal extends PureComponent {
   state = {
     status: this.statusMessage(this.props.bootstrapper.currentProgress()),
     percentage: 0,
-    minimizing: false,
   };
 
   handleProgress = (step, details) => {
@@ -206,20 +196,30 @@ export default class BootstrapModal extends PureComponent {
       bootstrapper: this.props.bootstrapper,
     });
 
+    const duration = parseInt(timing.quick);
+    const options = { duration, easing: 'linear', fill: 'both' };
+    this.modalElem.animate(minimizeAnimation, options);
+    this.backgroundElem.animate(minimizeAnimation, options);
+    setTimeout(this.remove, duration);
+  };
+
+  remove = () => {
     const modalID = this.context;
-    this.setState({ closing: true });
-    setTimeout(() => {
-      UIController.closeModal(modalID);
-    }, parseInt(timing.normal));
+    UIController.closeModal(modalID);
   };
 
   render() {
     return (
       <BootstrapModalComponent
-        maximizing={this.props.maximizing}
-        minimizing={this.state.minimizing}
+        modalRef={el => {
+          this.modalElem = el;
+        }}
+        backgroundRef={el => {
+          this.backgroundElem = el;
+        }}
         onBackgroundClick={this.minimize}
         assignClose={closeModal => (this.closeModal = closeModal)}
+        {...this.props}
       >
         <Modal.Body>
           <Title>Bootstrap Recent Database</Title>

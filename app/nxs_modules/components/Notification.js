@@ -7,6 +7,8 @@ import UIController from 'components/UIController';
 import SnackBar from 'components/SnackBar';
 import { timing } from 'styles';
 
+const outro = { opacity: [1, 0] };
+
 const NotificationComponent = styled(SnackBar)({
   '&::after': {
     content: '"✕"',
@@ -31,10 +33,6 @@ export default class Notification extends Component {
     autoClose: 3000, // ms
   };
 
-  state = {
-    closing: false,
-  };
-
   componentDidMount() {
     if (this.props.autoClose) {
       this.startAutoClose();
@@ -45,10 +43,16 @@ export default class Notification extends Component {
     this.stopAutoClose();
   }
 
-  startClosing = () => {
+  animatedClose = () => {
     if (this.props.notifID) {
+      const duration = parseInt(timing.quick);
       this.stopAutoClose();
-      this.setState({ closing: true });
+      this.elem.animate(outro, {
+        duration,
+        easing: 'ease-in',
+        fill: 'both',
+      });
+      setTimeout(this.close, duration);
     }
   };
 
@@ -62,15 +66,16 @@ export default class Notification extends Component {
 
   startAutoClose = () => {
     this.stopAutoClose();
-    this.autoClose = setTimeout(this.startClosing, this.props.autoClose);
+    this.autoClose = setTimeout(this.animatedClose, this.props.autoClose);
   };
 
   render() {
     return (
       <NotificationComponent
-        closing={this.state.closing}
-        onClick={this.startClosing}
-        onAnimationEnd={this.state.closing ? this.close : undefined}
+        ref={el => {
+          this.elem = el;
+        }}
+        onClick={this.animatedClose}
         onMouseEnter={this.stopAutoClose}
         onMouseLeave={this.startAutoClose}
         {...this.props}
