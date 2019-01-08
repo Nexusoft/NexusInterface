@@ -210,8 +210,9 @@ class Market extends Component {
               {this.props.binance.candlesticks[0] !== undefined ? (
                 <Candlestick data={this.props.binance.candlesticks} locale={this.props.settings.locale} />
               ) : (
-                this.oneDayinfo('binance')
+                null
               )}
+              {this.oneDayinfo('binance')}
             </div>
           </div>
         )}
@@ -226,8 +227,9 @@ class Market extends Component {
               {this.props.bittrex.candlesticks[0] !== undefined ? (
                 <Candlestick data={this.props.bittrex.candlesticks} locale={this.props.settings.locale} />
               ) : (
-                this.oneDayinfo('bittrex')
+                null
               )}
+              {this.oneDayinfo('bittrex')}
             </div>
           </div>
         )}
@@ -243,8 +245,9 @@ class Market extends Component {
               {this.props.cryptopia.candlesticks[0] !== undefined ? (
                 <Candlestick data={this.props.cryptopia.candlesticks} locale={this.props.settings.locale} />
               ) : (
-                this.oneDayinfo('cryptopia')
+                null
               )}
+              {this.oneDayinfo('cryptopia')}
             </div>
           </div>
         )}
