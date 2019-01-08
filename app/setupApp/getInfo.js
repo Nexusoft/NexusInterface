@@ -77,7 +77,7 @@ export default async function getInfo(store) {
     ) {
       (async () => {
         const enoughSpace = await checkFreeSpace();
-        if (enoughSpace) bootstrap(store);
+        if (enoughSpace) bootstrap(store, { suggesting: true });
       })();
     }
   }

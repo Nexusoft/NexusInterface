@@ -7,7 +7,7 @@ import BootstrapModal from './BootstrapModal';
 
 let running = false;
 
-export default async function bootstrap(store) {
+export default async function bootstrap(store, { suggesting } = {}) {
   // Only one instance at the same time
   if (running) return;
 
@@ -45,8 +45,10 @@ export default async function bootstrap(store) {
     noLabel: 'No, let it sync',
     noCallback: () => {
       running = false;
-      const settings = GetSettings();
-      SaveSettings({ ...settings, bootstrap: false });
+      if (suggesting) {
+        const settings = GetSettings();
+        SaveSettings({ ...settings, bootstrap: false });
+      }
     },
     style: { width: 530 },
   });
