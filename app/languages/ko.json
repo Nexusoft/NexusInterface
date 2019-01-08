@@ -239,7 +239,7 @@
   "Settings.Forkblock": "포크 블록",
   "Settings.ManualDaemonEntry": "수동 데몬 모드로 전환 하시겠습니까?",
   "Settings.ManualDaemonExit": "수동 데몬 모드를 종료 하시겠습니까?",
-  "Settisgs.ManualDaemonWarning": "(이것으로 데몬이 종료됩니다)",
+  "Settings.ManualDaemonWarning": "(이것으로 데몬이 종료됩니다)",
   "Settings.Folder": "백업 디렉토리",
 
   "Console.CoreOutput": "코어 출력",
@@ -326,7 +326,7 @@
   "ToolTip.RenderGlobe": "개요 페이지에서 지구본 렌더링",
   "ToolTip.ForkBlock": "블록의 양을 뒤로 젖히십시오.",
   "ToolTip.ConnectionFailure": "연결 실패",
-
+  "ToolTip.RenderGlobeOpenGLFail": "Your computer does not support OPENGL 2.0",
   "ToolTip.TryAgain": "다시 시도하십시오.",
 
   "ToolTip.DbOption": "최신 버전의 데이터베이스를 다운로드하여 동기화에 소요되는 시간을 단축 하시겠습니까?",
@@ -368,7 +368,7 @@
   "Alert.NoSecondAccountChosen": "두 번째 계정이 선택되지 않았습니다.",
   "Alert.InsufficientFunds": "불충분 한 자금",
   "Alert.nodefaultname": "계정 이름은 * 또는 기본값 일 수 없습니다.",
-
+  "Alert.ManualDaemonDown": "수동 데몬이 다운되었습니다.",
   "Cp.AC1": "악센트 색상 1",
   "Cp.AC2": "악센트 색상 2",
   "Cp.THC": "표 머리글 색",

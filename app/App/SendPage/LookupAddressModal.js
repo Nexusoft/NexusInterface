@@ -1,16 +1,28 @@
 // External
 import React, { Component } from 'react';
 import Text from 'components/Text';
+import TextField from 'components/TextField';
+import { connect } from 'react-redux';
+// Internal Global Dependencies
+import Icon from 'components/Icon';
 
 // Internal
 import UIController from 'components/UIController';
 import Tooltip from 'components/Tooltip';
 import Modal from 'components/Modal';
 
+// Images
+import searchIcon from 'images/search.sprite.svg';
+
+const mapStateToProps = state => ({
+  Search: state.common.Search,
+});
+
 function addressBookToQueue(props, closeModal) {
   let filteredAddress = props.addressbook.filter(e => {
     return e.name.toLowerCase().indexOf(props.Search.toLowerCase()) !== -1;
   });
+
   return filteredAddress.map((e, i) => (
     <tr key={i}>
       <td key={e.name + i}> {e.name}</td>
@@ -34,13 +46,15 @@ function addressBookToQueue(props, closeModal) {
   ));
 }
 
-export default class LookupAddressModal extends Component {
+class LookupAddressModal extends Component {
   render() {
     return (
       <Modal>
         {closeModal => (
           <>
-            <Modal.Header>Lookup Address</Modal.Header>
+            <Modal.Header>
+              <Text id="sendReceive.Lookup" />
+            </Modal.Header>
             <Modal.Body>
               <table id="AddressTable">
                 <thead>
@@ -51,11 +65,16 @@ export default class LookupAddressModal extends Component {
                     <th className="long-column">
                       <Text id="sendReceive.Address" />
                     </th>
-                    <th className="short-column">
+                    <th>
                       <Text id="sendReceive.Lookup">
                         {placeholder => (
-                          <input
-                            className="searchBar"
+                          <TextField
+                            style={{
+                              marginLeft: '1em',
+                              fontSize: '.9375em',
+                              width: 200,
+                            }}
+                            left={<Icon icon={searchIcon} spaceRight />}
                             placeholder={placeholder}
                             value={this.props.Search}
                             onChange={e =>
@@ -85,3 +104,4 @@ export default class LookupAddressModal extends Component {
     );
   }
 }
+export default connect(mapStateToProps)(LookupAddressModal);

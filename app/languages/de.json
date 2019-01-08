@@ -186,7 +186,7 @@
   "Settings.Username": "Nutzername",
   "Settings.ManualDaemonEntry": "In den manuellen Daemon-Modus wechseln?",
   "Settings.ManualDaemonExit": "Manuellen Daemon-Modus verlassen?",
-  "Settisgs.ManualDaemonWarning": "(Dadurch wird Ihr Daemon heruntergefahren)",
+  "Settings.ManualDaemonWarning": "(Dadurch wird Ihr Daemon heruntergefahren)",
   "Settings.Folder": "Sicherungsverzeichnis",
 
   "Settings.IpAddress": "IP Adresse",
@@ -342,7 +342,7 @@
   "ToolTip.RecentDatabaseExtracting": "Letzte Datenbankextraktion",
   "ToolTip.MinimumConfirmations": "Blank",
   "ToolTip.ConnectionFailure": "Verbindungsfehler",
-
+  "ToolTip.RenderGlobeOpenGLFail": "Your computer does not support OPENGL 2.0",
   "ToolTip.TryAgain": "Versuchen Sie es nochmal?",
 
   "Alert.Received": "Transaktion erhalten",
@@ -378,6 +378,7 @@
   "Alert.NoSecondAccountChosen": "Kein zweites Konto ausgewählt",
   "Alert.InsufficientFunds": "Unzureichende Mittel",
   "Alert.nodefaultname": "Das Konto kann nicht * oder Standard sein",
+  "Alert.ManualDaemonDown": "Der manuelle Daemon ist inaktiv",
 
   "Cp.AC1": "Akzentfarbe 1",
   "Cp.AC2": "Akzentfarbe 2",

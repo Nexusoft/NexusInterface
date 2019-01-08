@@ -5,6 +5,7 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import core from 'api/core';
 
 import UIController from 'components/UIController';
+
 import * as ac from 'actions/headerActionCreators';
 
 export default class MenuBuilder {
@@ -88,7 +89,7 @@ export default class MenuBuilder {
       RPC.PROMISE('backupwallet', [
         BackupDir + '/NexusBackup_' + now + '.dat',
       ]).then(() => {
-        UIController.showNotification('Wallet Backup');
+        UIController.showNotification('Wallet Backed Up');
       });
     },
   };
@@ -165,7 +166,7 @@ export default class MenuBuilder {
     click: () => {
       const state = this.store.getState();
       if (
-        state.common.connections !== undefined &&
+        state.overview.connections !== undefined &&
         !GetSettings().manualDaemon
       ) {
         this.store.dispatch(ac.OpenBootstrapModal(true));
@@ -176,17 +177,12 @@ export default class MenuBuilder {
   };
 
   toggleFullScreen = {
-    label: 'Download Recent Database',
+    label: 'Toggle FullScreen',
+    accelerator: 'F11',
     click: () => {
-      const state = this.store.getState();
-      if (
-        state.common.connections !== undefined &&
-        !GetSettings().manualDaemon
-      ) {
-        this.store.dispatch(ac.OpenBootstrapModal(true));
-      } else {
-        UIController.showNotification('Please let the daemon start.');
-      }
+      remote
+        .getCurrentWindow()
+        .setFullScreen(!remote.getCurrentWindow().isFullScreen());
     },
   };
 
@@ -246,8 +242,16 @@ export default class MenuBuilder {
 
     const subMenuWindow = {
       label: 'View',
-      submenu: [this.toggleFullScreen, this.toggleDevTools],
+      submenu: [this.toggleFullScreen],
     };
+    const state = this.store.getState();
+    if (
+      process.env.NODE_ENV === 'development' ||
+      state.settings.settings.devMode
+    ) {
+      subMenuWindow.submenu.push(this.toggleDevTools);
+    }
+
     const subMenuHelp = {
       label: 'Help',
       submenu: [this.websiteLink, this.gitRepoLink],
@@ -264,42 +268,47 @@ export default class MenuBuilder {
   }
 
   buildDefaultTemplate() {
-    const templateDefault = [
-      {
-        label: '&File',
-        submenu: [
-          this.backupWallet,
-          this.viewBackups,
-          this.separator,
-          this.startDaemon,
-          this.stopDaemon,
-          this.separator,
-          this.quitNexus,
-        ],
-      },
+    const subMenuFile = {
+      label: '&File',
+      submenu: [
+        this.backupWallet,
+        this.viewBackups,
+        this.separator,
+        this.startDaemon,
+        this.stopDaemon,
+        this.separator,
+        this.quitNexus,
+      ],
+    };
+    const subMenuSettings = {
+      label: 'Settings',
+      submenu: [
+        this.coreSettings,
+        this.appSettings,
+        this.keyManagement,
+        this.styleSettings,
+        this.separator,
+        this.downloadRecent,
+      ],
+    };
+    const subMenuView = {
+      label: '&View',
+      submenu: [this.toggleFullScreen],
+    };
+    const state = this.store.getState();
+    if (
+      process.env.NODE_ENV === 'development' ||
+      state.settings.settings.devMode
+    ) {
+      subMenuView.submenu.push(this.separator, this.toggleDevTools);
+    }
 
-      {
-        label: 'Settings',
-        submenu: [
-          this.coreSettings,
-          this.appSettings,
-          this.keyManagement,
-          this.styleSettings,
-          this.separator,
-          this.downloadRecent,
-        ],
-      },
-      {
-        label: '&View',
-        submenu: [this.toggleFullScreen, this.separator, this.toggleDevTools],
-      },
-      {
-        label: 'Help',
-        submenu: [this.about, this.websiteLink, this.gitRepoLink],
-      },
-    ];
+    const subMenuHelp = {
+      label: 'Help',
+      submenu: [this.about, this.websiteLink, this.gitRepoLink],
+    };
 
-    return templateDefault;
+    return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
   }
 
   buildMenu() {
