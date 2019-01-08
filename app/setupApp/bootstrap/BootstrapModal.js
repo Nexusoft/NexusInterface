@@ -41,6 +41,10 @@ const minimizeAnimation = {
   left: ['50%', '25%'],
 };
 
+const fadeOut = {
+  opacity: [1, 0],
+};
+
 const BootstrapModalComponent = styled(Modal)(
   ({ maximizedFromBackground }) =>
     maximizedFromBackground && {
@@ -159,6 +163,7 @@ export default class BootstrapModal extends PureComponent {
       'Aborted recent database bootstrapping',
       'error'
     );
+    UIController.showNotification('Daemon is restarting...');
   };
 
   handleError = err => {
@@ -167,6 +172,7 @@ export default class BootstrapModal extends PureComponent {
       message: 'Error bootstrapping recent database',
       note: err.message || 'An unknown error occured',
     });
+    UIController.showNotification('Daemon is restarting...');
     console.error(err);
   };
 
@@ -199,7 +205,7 @@ export default class BootstrapModal extends PureComponent {
     const duration = parseInt(timing.quick);
     const options = { duration, easing: 'linear', fill: 'both' };
     this.modalElem.animate(minimizeAnimation, options);
-    this.backgroundElem.animate(minimizeAnimation, options);
+    this.backgroundElem.animate(fadeOut, options);
     setTimeout(this.remove, duration);
   };
 

@@ -75,6 +75,7 @@ export default class BootstrapBackgroundTask extends Component {
       'Aborted recent database bootstrapping',
       'error'
     );
+    UIController.showNotification('Daemon is restarting...');
   };
 
   handleError = err => {
@@ -83,6 +84,7 @@ export default class BootstrapBackgroundTask extends Component {
       message: 'Error bootstrapping recent database',
       note: err.message || 'An unknown error occured',
     });
+    UIController.showNotification('Daemon is restarting...');
     console.error(err);
   };
 
