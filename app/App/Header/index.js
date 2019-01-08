@@ -14,13 +14,11 @@ import { consts, timing, animations } from 'styles';
 import { color } from 'utils';
 
 // Internal Local
-import BootstrapModal from './BootstrapModal';
 import SignInStatus from './StatusIcons/SignInStatus';
 import StakingStatus from './StatusIcons/StakingStatus';
 import SyncStatus from './StatusIcons/SyncStatus';
 import DaemonStatus from './DaemonStatus';
 import logoFull from './logo-full-beta.sprite.svg';
-import './style.css';
 
 const HeaderComponent = styled.header(({ theme }) => ({
   gridArea: 'header',
@@ -107,8 +105,6 @@ class Header extends Component {
 
     return (
       <HeaderComponent>
-        <BootstrapModal {...this.props} />
-
         <LogoLink to="/">
           <Logo icon={logoFull} />
           <Beta>BETA</Beta>
