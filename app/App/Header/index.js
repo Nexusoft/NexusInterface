@@ -3,11 +3,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import styled from '@emotion/styled';
 
 // Internal Global
-import * as actionsCreators from 'actions/headerActionCreators';
 import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
@@ -87,21 +85,11 @@ const UnderHeader = styled.div(({ theme }) => ({
   color: theme.light,
 }));
 
-// React-Redux mandatory methods
-const mapStateToProps = state => {
-  return {
-    ...state.overview,
-    ...state.common,
-    ...state.settings,
-    ...state.intl,
-  };
-};
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch);
-
-class Header extends Component {
+@withRouter
+@connect(({ overview: { connections } }) => ({ connections }))
+export default class Header extends Component {
   render() {
-    const { connections } = this.props;
+    const { connections, location } = this.props;
 
     return (
       <HeaderComponent>
@@ -119,7 +107,7 @@ class Header extends Component {
           <StatusIcons>
             <SyncStatus {...this.props} />
             <SignInStatus {...this.props} />
-            {this.props.history.location.pathname !== '/' ? (
+            {location.pathname !== '/' ? (
               <StakingStatus {...this.props} />
             ) : (
               <Icon />
@@ -130,10 +118,3 @@ class Header extends Component {
     );
   }
 }
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Header)
-);

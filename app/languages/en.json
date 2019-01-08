@@ -298,7 +298,7 @@
   "Header.UnlockedUntil": "Unlocked until",
   "Header.StakingOnly": "Staking Only",
   "Header.Synced": "Synchronized",
-  "Header.Synching": "Synchronizing...\nBehind\n",
+  "Header.Syncing": "Synchronizing...\n{blocks} blocks behind",
   "Header.Blocks": "Blocks",
   "Header.DaemonNotLoaded": "Daemon Not Loaded",
 

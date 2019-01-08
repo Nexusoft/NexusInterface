@@ -1,12 +1,12 @@
 // @jsx jsx
 // External Dependencies
 import React, { Component } from 'react';
-import styled from '@emotion/styled';
 import { jsx } from '@emotion/core';
-import Text from 'components/Text';
+import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
 
 // Internal Dependencies
+import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from './StatusIcon';
 
@@ -15,6 +15,12 @@ import questionMarkIcon from 'images/question-mark.sprite.svg';
 import lockedIcon from 'images/padlock.sprite.svg';
 import unlockedIcon from 'images/padlock-open.sprite.svg';
 
+@withTheme
+@connect(({ overview: { connections, unlocked_until, staking_only } }) => ({
+  connections,
+  unlocked_until,
+  staking_only,
+}))
 class SignInStatus extends Component {
   signInStatusMessage = () => {
     const { connections, unlocked_until, staking_only } = this.props;
@@ -79,4 +85,4 @@ class SignInStatus extends Component {
   }
 }
 
-export default withTheme(SignInStatus);
+export default SignInStatus;
