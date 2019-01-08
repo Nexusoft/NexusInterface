@@ -77,23 +77,23 @@ export default class MoveBetweenAccountsModal extends Component {
             })
             .catch(e => {
               if (typeof e === 'object') {
-                UIController.openErrorModal({ message: e.Message });
+                UIController.openErrorDialog({ message: e.Message });
               } else {
-                UIController.openErrorModal({ message: e });
+                UIController.openErrorDialog({ message: e });
               }
             });
         } else {
-          UIController.openErrorModal({
+          UIController.openErrorDialog({
             message: <Text id="Alert.InsufficientFunds" />,
           });
         }
       } else {
-        UIController.openErrorModal({
+        UIController.openErrorDialog({
           message: <Text id="Alert.NoSecondAccountChosen" />,
         });
       }
     } else {
-      UIController.openErrorModal({
+      UIController.openErrorDialog({
         message: <Text id="Alert.AccountsAreTheSame" />,
       });
     }

@@ -59,11 +59,8 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.GET_SETTINGS:
-      return {
-        ...state,
-        settings: { ...state.settings, ...action.payload },
-      };
+    case TYPE.SET_SETTINGS:
+      return { ...state, settings: { ...state.settings, ...action.payload } };
       break;
     case TYPE.SWITCH_LOCALES:
       return {
@@ -72,10 +69,7 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.SWITCH_MESSAGES:
-      return {
-        ...state,
-        messages: action.payload,
-      };
+      return { ...state, messages: action.payload };
       break;
     case TYPE.SEE_FOLDER:
       return {
@@ -87,90 +81,54 @@ export default (state = initialState, action) => {
       if (action.payload) {
         return {
           ...state,
-          settings: {
-            ...state.settings,
-            experimentalWarning: false,
-          },
+          settings: { ...state.settings, experimentalWarning: false },
           saveSettingsFlag: true,
         };
       } else {
-        return {
-          ...state,
-          experimentalOpen: false,
-        };
+        return { ...state, experimentalOpen: false };
       }
       break;
     case TYPE.IGNORE_ENCRYPTION_WARNING:
       return {
         ...state,
-        settings: {
-          ...state.settings,
-          ignoreEncryptionWarningFlag: true,
-        },
+        settings: { ...state.settings, ignoreEncryptionWarningFlag: true },
       };
       break;
     case TYPE.OPEN_MANUAL_DAEMON_MODAL:
-      return {
-        ...state,
-        manualDaemonModal: true,
-      };
+      return { ...state, manualDaemonModal: true };
       break;
     case TYPE.UPDATE_MANUAL_DAEMON_SETTINGS:
       return {
         ...state,
-        settings: {
-          ...state.settings,
-          manualDaemon: action.payload,
-        },
+        settings: { ...state.settings, manualDaemon: action.payload },
       };
       break;
     case TYPE.CLOSE_MANUAL_DAEMON_MODAL:
-      return {
-        ...state,
-        manualDaemonModal: false,
-      };
+      return { ...state, manualDaemonModal: false };
       break;
     case TYPE.ACCEPT_MIT:
       return {
         ...state,
-        settings: {
-          ...state.settings,
-          acceptedagreement: true,
-        },
+        settings: { ...state.settings, acceptedagreement: true },
         saveSettingsFlag: true,
       };
       break;
     case TYPE.TOGGLE_SAVE_SETTINGS_FLAG:
-      return {
-        ...state,
-        saveSettingsFlag: false,
-      };
+      return { ...state, saveSettingsFlag: false };
       break;
     case TYPE.SET_WALLPAPER:
       return {
         ...state,
-        settings: {
-          ...state.settings,
-          wallpaper: action.payload,
-        },
+        settings: { ...state.settings, wallpaper: action.payload },
       };
       break;
     case TYPE.CLOSE_BOOTSTRAP_MODAL:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          bootstrap: false,
-        },
-      };
+      return { ...state, settings: { ...state.settings, bootstrap: false } };
       break;
     case TYPE.CUSTOMIZE_STYLING:
       return {
         ...state,
-        settings: {
-          ...state.settings,
-          customStyling: action.payload,
-        },
+        settings: { ...state.settings, customStyling: action.payload },
       };
       break;
     case TYPE.RESET_CUSTOM_STYLING:
@@ -192,27 +150,18 @@ export default (state = initialState, action) => {
       };
       break;
     case TYPE.UNSET_STYLE_FLAG:
-      return {
-        ...state,
-        styleChangeFlag: false,
-      };
+      return { ...state, styleChangeFlag: false };
       break;
     case TYPE.SET_FIAT_CURRENCY:
       return {
         ...state,
-        settings: {
-          ...state.settings,
-          fiatCurrency: action.payload,
-        },
+        settings: { ...state.settings, fiatCurrency: action.payload },
       };
       break;
     case TYPE.SET_MIN_CONFIRMATIONS:
       return {
         ...state,
-        settings: {
-          ...state.settings,
-          minimumconfirmations: action.payload,
-        },
+        settings: { ...state.settings, minimumconfirmations: action.payload },
       };
       break;
     default:

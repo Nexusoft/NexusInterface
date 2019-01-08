@@ -13,7 +13,6 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import * as FlagFile from 'images/LanguageFlags';
-import { SwitchLocale } from 'actions/headerActionCreators';
 import { remote } from 'electron';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -150,7 +149,7 @@ const mapDispatchToProps = dispatch => ({
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
   setSettings: settings =>
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings }),
+    dispatch({ type: TYPE.SET_SETTINGS, payload: settings }),
   setFiatCurrency: inValue => {
     dispatch({ type: TYPE.SET_FIAT_CURRENCY, payload: inValue });
   },
@@ -309,7 +308,7 @@ class SettingsApp extends Component {
         'success'
       );
     } else {
-      UIController.openErrorModal({
+      UIController.openErrorDialog({
         message: <Text id="Alert.InvalidTransactionFee" />,
       });
     }
@@ -440,20 +439,20 @@ class SettingsApp extends Component {
   };
 
   confirmSetTxFee = () => {
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: <Text id="Settings.SetFee" />,
       yesCallback: this.setTxFee,
     });
   };
 
   confirmBackupWallet = () => {
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: <Text id="Settings.BackupWallet" />,
       yesCallback: () => {
         if (this.props.connections !== undefined) {
           this.backupWallet();
         } else {
-          UIController.openErrorModal({
+          UIController.openErrorDialog({
             message: 'Please wait for Daemon to load',
           });
         }

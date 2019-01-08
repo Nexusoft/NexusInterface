@@ -16,50 +16,50 @@ const OverlayComponent = styled.div({
 
 const OverlayBackground = styled.div(
   {
-    position: 'absolute',
+    position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
     animation: `${animations.fadeIn} ${timing.quick} ease-out`,
+    animationFillMode: 'both',
   },
   ({ dimmed }) =>
     dimmed && {
       background: 'rgba(0,0,0,0.5)',
-    },
-  ({ closing }) =>
-    closing && {
-      animation: `${animations.fadeOut} ${timing.quick} ease-out`,
     }
 );
 
 export default class Overlay extends Component {
-  constructor(props) {
-    super(props);
-    this.el = document.createElement('div');
-  }
+  node = document.createElement('div');
 
   componentDidMount() {
-    document.getElementsByTagName('body')[0].appendChild(this.el);
+    document.getElementsByTagName('body')[0].appendChild(this.node);
     this.props.onMount && this.props.onMount();
   }
 
   componentWillUnmount() {
-    document.getElementsByTagName('body')[0].removeChild(this.el);
+    document.getElementsByTagName('body')[0].removeChild(this.node);
   }
 
   render() {
-    const { dimBackground, onBackgroundClick, closing, children } = this.props;
+    const {
+      dimBackground,
+      onBackgroundClick,
+      backgroundRef,
+      children,
+      ...rest
+    } = this.props;
     return ReactDOM.createPortal(
-      <OverlayComponent>
+      <OverlayComponent {...rest}>
         <OverlayBackground
+          ref={backgroundRef}
           dimmed={dimBackground}
           onClick={onBackgroundClick}
-          closing={closing}
         />
-        {this.props.children}
+        {children}
       </OverlayComponent>,
-      this.el
+      this.node
     );
   }
 }

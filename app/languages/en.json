@@ -298,7 +298,7 @@
   "Header.UnlockedUntil": "Unlocked until",
   "Header.StakingOnly": "Staking Only",
   "Header.Synced": "Synchronized",
-  "Header.Synching": "Synchronizing...\nBehind\n",
+  "Header.Syncing": "Synchronizing...\n{blocks} blocks behind",
   "Header.Blocks": "Blocks",
   "Header.DaemonNotLoaded": "Daemon Not Loaded",
 
@@ -330,7 +330,7 @@
   "ToolTip.RenderGlobeOpenGLFail": "Your computer does not support OPENGL 2.0",
   "ToolTip.TryAgain": "Try Again?",
   "ToolTip.DbOption": "Would you like to reduce the time it takes to sync by downloading a recent version of the database?",
-  "ToolTip.NotEnoughSpace": "Not Enough Space, Requires 20gb.",
+  "ToolTip.NotEnoughSpace": "Not enough Disk space! Minimum 20GB of free space is required.",
   "ToolTip.BootStrapIt": "Yes, lets bootstrap it",
   "ToolTip.SyncFromScratch": "No, let it sync from scratch",
   "ToolTip.RecentDatabaseDownloading": "Recent Database Downloading",

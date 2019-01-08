@@ -161,24 +161,7 @@ class Transactions extends Component {
     this.hoveringID = 999999999999;
     this.isHoveringOverTable = false;
     this.state = {
-      walletTransactions: [
-        {
-          transactionnumber: 0,
-          confirmations: 0,
-          time: 0,
-          category: '',
-          amount: 0,
-          txid: 0,
-          account: '',
-          address: '',
-          value: {
-            USD: 0,
-            BTC: 0,
-          },
-          coin: 'Nexus',
-          fee: 0,
-        },
-      ],
+      
       tableColumns: [],
       displayTimeFrame: 'All',
       changeTimeFrame: false,
@@ -315,7 +298,22 @@ class Transactions extends Component {
   // The callback for the on Mount State
   setOnmountTransactionsCallback(incomingData) {
     this.updateChartAndTableDimensions(null);
-    let objectheaders = Object.keys(this.state.walletTransactions[0]);
+    let objectheaders = Object.keys({
+        transactionnumber: 0,
+        confirmations: 0,
+        time: 0,
+        category: '',
+        amount: 0,
+        txid: 0,
+        account: '',
+        address: '',
+        value: {
+          USD: 0,
+          BTC: 0,
+        },
+        coin: 'Nexus',
+        fee: 0,
+    });
     let tabelheaders = [];
     objectheaders.forEach(element => {
       tabelheaders.push({
@@ -391,10 +389,12 @@ class Transactions extends Component {
   // Updates the height and width of the chart and table when you resize the window
   updateChartAndTableDimensions(event) {
     let chart = document.getElementById('transactions-chart');
-    let filters = document.getElementById('transactions-filters');
+    if (chart === undefined || chart === null) {
+      return;
+    }
     let details = document.getElementById('transactions-details');
-    if (chart && filters && details) {
-      let parent = chart.parentNode;
+    let parent = chart.parentNode;
+    if (chart !== null) {
       let parentHeight =
         parseInt(parent.clientHeight) -
         parseInt(
@@ -403,14 +403,7 @@ class Transactions extends Component {
         parseInt(
           window.getComputedStyle(parent, '').getPropertyValue('padding-bottom')
         );
-      let filtersHeight =
-        parseInt(filters.offsetHeight) +
-        parseInt(
-          window.getComputedStyle(filters, '').getPropertyValue('margin-top')
-        ) +
-        parseInt(
-          window.getComputedStyle(filters, '').getPropertyValue('margin-bottom')
-        );
+      
       let chartHeight =
         parseInt(chart.offsetHeight) +
         parseInt(
@@ -419,7 +412,7 @@ class Transactions extends Component {
         parseInt(
           window.getComputedStyle(chart, '').getPropertyValue('margin-bottom')
         );
-      let detailsHeight = parentHeight - filtersHeight - chartHeight;
+      let detailsHeight = parentHeight - chartHeight;
 
       let mainHeight = 150; // fixed height, should match CSS
       let miniHeight = 50 - 8; // right now this is disabled, if re-enabled this needs to be set properly
@@ -524,9 +517,9 @@ class Transactions extends Component {
 
     let sendtoSendPagecallback = function() {
       this.props.SetSendAgainData({
-        address: this.state.walletTransactions[this.hoveringID].address,
-        account: this.state.walletTransactions[this.hoveringID].account,
-        amount: this.state.walletTransactions[this.hoveringID].amount,
+        address: this.props.walletItems[this.hoveringID].address,
+        account: this.props.walletItems[this.hoveringID].account,
+        amount: this.props.walletItems[this.hoveringID].amount,
       });
       this.props.history.push('/SendPage');
     };
@@ -534,7 +527,7 @@ class Transactions extends Component {
 
     let sendtoBlockExplorercallback = function() {
       this.props.SetExploreInfo({
-        transactionId: this.state.walletTransactions[this.hoveringID].txid,
+        transactionId: this.props.walletItems[this.hoveringID].txid,
       });
       this.props.history.push('/BlockExplorer');
     };
@@ -906,7 +899,7 @@ class Transactions extends Component {
   // DEV MODE: Create a fake transaction for testing.
   TEMPaddfaketransaction() {
     let faketrans = {
-      transactionnumber: this.props.walletitems.length,
+      transactionnumber: this.props.walletitems != undefined? this.props.walletitems.length : 0,
       confirmations: 1000,
       time: 3432423,
       category: '',
@@ -1157,6 +1150,7 @@ class Transactions extends Component {
     high = high == 0 ? 1 : high;
     domain.y[0] = -high;
     domain.y[1] = high;
+    console.log(domain);
     this.setState({ zoomDomain: domain });
   }
 
@@ -1427,16 +1421,15 @@ class Transactions extends Component {
   returnVictoryChart() {
     const chartData = this.returnChartData();
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
+    const leftPadding = parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
     return (
       <VictoryChart
         width={this.state.mainChartWidth}
         height={this.state.mainChartHeight}
         scale={{ x: 'time' }}
-        style={{ parent: { overflow: 'visible' } }}
-        // theme={VictoryTheme.material}
+        style={{ overflow: 'visible' }}
         domainPadding={{ x: 90, y: 30 }}
-        // padding={{ top: 0, left: 0, right: 0, bottom: 0 }}
-        padding={{ top: 6, bottom: 6, left: 0, right: 0 }}
+        padding={{ top: 6, bottom: 6, left: leftPadding < 30 ? 30 : leftPadding, right: 0 }}
         domain={this.state.zoomDomain}
         containerComponent={
           <VictoryZoomVoronoiContainer

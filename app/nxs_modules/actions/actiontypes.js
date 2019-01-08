@@ -1,6 +1,5 @@
 // Overview
 export const GET_INFO_DUMP = 'GET_INFO_DUMP';
-export const DAEMON_UNAVAILABLE = 'DAEMON_UNAVAILABLE';
 export const USD_RATE = 'USD_RATE';
 export const BTC_RATE = 'BTC_RATE';
 export const CHANGE_24 = 'CHANGE_24';
@@ -66,6 +65,7 @@ export const SWITCH_LOCALES = 'SWITCH_LOCALES';
 export const SWITCH_MESSAGES = 'SWITCH_MESSAGES';
 export const HIDE_ERROR_MODAL = 'HIDE_ERROR_MODAL';
 export const SHOW_ERROR_MODAL = 'SHOW_ERROR_MODAL';
+export const SHOW_ENCRYPTION_MODAL = 'SHOW_ENCRYPTION_MODAL';
 
 // Send
 export const ADD_TO_QUEUE = 'ADD_TO_QUEUE';
@@ -167,7 +167,7 @@ export const PRINT_TO_CORE = 'PRINT_TO_CORE';
 export const SET_PAUSE_CORE_OUTPUT = 'SET_PAUSE_CORE_OUTPUT';
 
 // Settings
-export const GET_SETTINGS = 'GET_SETTINGS';
+export const SET_SETTINGS = 'SET_SETTINGS';
 export const ACCEPT_MIT = 'ACCEPT_MIT';
 export const SET_MIN_CONFIRMATIONS = 'SET_MIN_CONFIRMATIONS';
 export const TOGGLE_SAVE_SETTINGS_FLAG = 'TOGGLE_SAVE_SETTINGS_FLAG';

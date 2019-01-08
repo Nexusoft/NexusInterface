@@ -1,12 +1,12 @@
 // @jsx jsx
 // External Dependencies
 import React, { Component } from 'react';
-import styled from '@emotion/styled';
 import { jsx } from '@emotion/core';
-import Text from 'components/Text';
+import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
 
 // Internal Dependencies
+import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from './StatusIcon';
 
@@ -15,22 +15,22 @@ import questionMarkIcon from 'images/question-mark.sprite.svg';
 import lockedIcon from 'images/padlock.sprite.svg';
 import unlockedIcon from 'images/padlock-open.sprite.svg';
 
+@withTheme
+@connect(({ overview: { connections, unlocked_until, staking_only } }) => ({
+  connections,
+  unlocked_until,
+  staking_only,
+}))
 class SignInStatus extends Component {
   signInStatusMessage = () => {
-    const {
-      connections,
-      daemonAvailable,
-      unlocked_until,
-      minting_only,
-      staking_only,
-    } = this.props;
+    const { connections, unlocked_until, staking_only } = this.props;
     let unlockDate = new Date(unlocked_until * 1000).toLocaleString('en', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
-    if (connections === undefined || !daemonAvailable) {
+    if (connections === undefined) {
       return (
         <div>
           <div>Unknown Lock Status</div>
@@ -62,8 +62,8 @@ class SignInStatus extends Component {
   };
 
   statusIcon = () => {
-    const { connections, daemonAvailable, unlocked_until, theme } = this.props;
-    if (connections === undefined || !daemonAvailable) {
+    const { connections, unlocked_until, theme } = this.props;
+    if (connections === undefined) {
       return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
     } else {
       if (unlocked_until === undefined) {
@@ -85,4 +85,4 @@ class SignInStatus extends Component {
   }
 }
 
-export default withTheme(SignInStatus);
+export default SignInStatus;

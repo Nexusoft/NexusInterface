@@ -1,12 +1,15 @@
-import { app, Menu, shell, BrowserWindow, remote } from 'electron';
+// External
+import { shell, remote } from 'electron';
 import fs from 'fs';
+
+// Internal
 import * as RPC from 'scripts/rpc';
-import { GetSettings, SaveSettings } from 'api/settings';
+import { GetSettings } from 'api/settings';
 import core from 'api/core';
-
+import Text from 'components/Text';
 import UIController from 'components/UIController';
-
-import * as ac from 'actions/headerActionCreators';
+import * as ac from 'actions/setupAppActionCreators';
+import bootstrap, { checkFreeSpace } from './bootstrap';
 
 export default class MenuBuilder {
   constructor(store, history) {
@@ -163,16 +166,30 @@ export default class MenuBuilder {
 
   downloadRecent = {
     label: 'Download Recent Database',
-    click: () => {
-      const state = this.store.getState();
-      if (
-        state.overview.connections !== undefined &&
-        !GetSettings().manualDaemon
-      ) {
-        this.store.dispatch(ac.OpenBootstrapModal(true));
-      } else {
-        UIController.showNotification('Please let the daemon start.');
+    click: async () => {
+      const enoughSpace = await checkFreeSpace();
+      if (!enoughSpace) {
+        UIController.openErrorDialog({
+          message: <Text id="ToolTip.NotEnoughSpace" />,
+        });
+        return;
       }
+
+      const state = this.store.getState();
+      if (state.settings.settings.manualDaemon) {
+        UIController.showNotification(
+          'Cannot bootstrap recent database in manual mode',
+          'error'
+        );
+        return;
+      }
+
+      if (state.overview.connections === undefined) {
+        UIController.showNotification('Please wait for the daemon to start.');
+        return;
+      }
+
+      bootstrap(this.store);
     },
   };
 

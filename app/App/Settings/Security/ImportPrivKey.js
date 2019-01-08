@@ -36,11 +36,11 @@ export default class ImportPrivKey extends Component {
               this.props.CloseModal();
             })
             .catch(e => {
-              UIController.openErrorModal({ message: e });
+              UIController.openErrorDialog({ message: e });
             });
         })
         .catch(e => {
-          UIController.openErrorModal({ message: e });
+          UIController.openErrorDialog({ message: e });
         });
     } else if (!label) {
       acctname.focus();
