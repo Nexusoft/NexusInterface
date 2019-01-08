@@ -208,7 +208,7 @@ class Market extends Component {
                 chartSellData={this.formatChartData('binanceSell')}
               />
               {this.props.binance.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.binance.candlesticks} />
+                <Candlestick data={this.props.binance.candlesticks} locale={this.props.settings.locale} />
               ) : (
                 this.oneDayinfo('binance')
               )}
@@ -224,7 +224,7 @@ class Market extends Component {
                 chartSellData={this.formatChartData('bittrexSell')}
               />
               {this.props.bittrex.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.bittrex.candlesticks} />
+                <Candlestick data={this.props.bittrex.candlesticks} locale={this.props.settings.locale} />
               ) : (
                 this.oneDayinfo('bittrex')
               )}
@@ -241,7 +241,7 @@ class Market extends Component {
               />
 
               {this.props.cryptopia.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.cryptopia.candlesticks} />
+                <Candlestick data={this.props.cryptopia.candlesticks} locale={this.props.settings.locale} />
               ) : (
                 this.oneDayinfo('cryptopia')
               )}

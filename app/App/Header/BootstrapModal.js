@@ -50,7 +50,7 @@ const downloadSpeedFunction = function(incomingProps)
       let kdkdkkdk = downloadSpeedAverage/3;
       console.log(kdkdkkdk);
       kdkdkkdk = (downloadTotalSize * ((100 - incomingProps.percentDownloaded) / 100)) / kdkdkkdk ;
-      downloadSpeedAverage = (downloadSpeedAverage/1000).toFixed(2) + "kb Finished in:" + kdkdkkdk.toFixed(4) + " Seconds";
+      downloadSpeedAverage = (downloadSpeedAverage/1000).toFixed(2) + "kb Finished in:" + (kdkdkkdk/60).toFixed(2) + " Minutes";
       console.log(downloadSpeedDatapoints);
       console.log(datapoint);
       console.log(lastDataPoint);

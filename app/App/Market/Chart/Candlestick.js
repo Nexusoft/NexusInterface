@@ -55,7 +55,7 @@ export default class Candlestick extends Component {
         >
           <VictoryAxis
             tickFormat={t =>
-              `${new Date(t).getDate()}/${new Date(t).getMonth() + 1}`
+              `${new Date(t).toLocaleDateString(this.props.locale,{month:"short", day:"numeric"})}`
             }
             tickLabelComponent={
               <VictoryPortal>
