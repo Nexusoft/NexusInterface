@@ -8,6 +8,10 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import configuration from 'api/configuration';
 
 var enoughSpace = true;
+var downloadSpeedDatapoints = [];
+var downloadSpeedAverage;
+var downloadTotalSize = 0;
+var downloadSpeedInterval;
 
 const modalOpen = ({
   manualDaemon,
@@ -20,7 +24,59 @@ const modalOpen = ({
   ((settings.bootstrap && connections !== undefined && !isInSync) ||
     BootstrapModal);
 
+let timesld = 0;
+
+const downloadSpeedFunction = function(incomingProps)
+  {
+    console.log(incomingProps);
+    let datapoint = incomingProps.percentDownloaded;
+    const lastDataPoint = downloadSpeedDatapoints[downloadSpeedDatapoints.length - 1] || 0;
+    console.log(datapoint);
+    datapoint = datapoint - timesld;
+    timesld = incomingProps.percentDownloaded;
+    datapoint = Math.abs(datapoint);
+    datapoint = Number.parseFloat(datapoint.toPrecision(4));
+     downloadSpeedDatapoints.push(datapoint);
+      let sum = 0;
+      for (let index = 0; index < downloadSpeedDatapoints.length; index++) {
+        const element = downloadSpeedDatapoints[index];
+        sum += element;
+      }
+      console.log(sum);
+      downloadSpeedAverage  = sum / downloadSpeedDatapoints.length;
+      console.log(downloadSpeedAverage);
+      downloadSpeedAverage = (downloadSpeedAverage/100) * downloadTotalSize;
+      console.log(incomingProps.percentDownloaded);
+      let kdkdkkdk = downloadSpeedAverage/3;
+      console.log(kdkdkkdk);
+      kdkdkkdk = (downloadTotalSize * ((100 - incomingProps.percentDownloaded) / 100)) / kdkdkkdk ;
+      downloadSpeedAverage = (downloadSpeedAverage/1000).toFixed(2) + "kb Finished in:" + kdkdkkdk.toFixed(4) + " Seconds";
+      console.log(downloadSpeedDatapoints);
+      console.log(datapoint);
+      console.log(lastDataPoint);
+      console.log(downloadTotalSize);
+      console.log((downloadSpeedAverage/100) * downloadTotalSize);
+  }
+
 class Prompting extends Component {
+
+  componentDidMount()
+  {
+    this.getDatabaseSize();
+  }
+
+  getDatabaseSize = async function(self) {
+    downloadTotalSize = await configuration.GetBootstrapSize();
+    
+  }
+
+  componentWillUnmount()
+  {
+    downloadSpeedInterval = null;
+  }
+
+  
+
   render() {
     return (
       <>
@@ -43,6 +99,7 @@ class Prompting extends Component {
             this.props.OpenBootstrapModal(true);
             configuration.BootstrapRecentDatabase(this);
             this.props.setPercentDownloaded(0.001);
+           
           }}
         >
           <Text id="ToolTip.BootStrapIt" />
@@ -68,6 +125,12 @@ const Downloading = props => (
     <h3>
       <Text id="ToolTip.RecentDatabaseDownloading" />
     </h3>
+    <h2>
+      <Text id="ToolTip.DatabaseDownloadSpead" />
+      {
+        downloadSpeedAverage
+      }
+    </h2>
     <div className="progress-bar">
       <div
         className="filler"
@@ -112,6 +175,10 @@ const modalContent = props => {
   }
 
   if (props.percentDownloaded < 100) {
+    
+    console.log("before");
+    downloadSpeedFunction(props);
+    console.log("after");
     return <Downloading {...props} />;
   }
 
