@@ -31,13 +31,13 @@ export default class BackgroundTask extends Component {
         duration,
         fill: 'both',
       });
-      setTimeout(this.close, duration);
+      setTimeout(this.remove, duration);
     }
   };
 
-  close = () => {
+  remove = () => {
     const taskID = this.context;
-    UIController.hideBackgroundTask(taskID);
+    UIController.removeBackgroundTask(taskID);
   };
 
   render() {

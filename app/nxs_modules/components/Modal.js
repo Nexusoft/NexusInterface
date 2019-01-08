@@ -140,13 +140,13 @@ export default class Modal extends PureComponent {
       };
       this.modalElem.animate(animation, options);
       this.backgroundElem.animate(bgOutro, options);
-      setTimeout(this.close, duration);
+      setTimeout(this.remove, duration);
     }
   };
 
-  close = () => {
+  remove = () => {
     const modalID = this.context;
-    UIController.closeModal(modalID);
+    UIController.removeModal(modalID);
     this.props.onClose && this.props.onClose();
   };
 

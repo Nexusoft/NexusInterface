@@ -52,12 +52,12 @@ export default class Notification extends Component {
         easing: 'ease-in',
         fill: 'both',
       });
-      setTimeout(this.close, duration);
+      setTimeout(this.remove, duration);
     }
   };
 
-  close = () => {
-    UIController.hideNotification(this.props.notifID);
+  remove = () => {
+    UIController.removeNotification(this.props.notifID);
   };
 
   stopAutoClose = () => {

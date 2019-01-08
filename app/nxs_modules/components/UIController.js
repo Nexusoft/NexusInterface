@@ -91,16 +91,16 @@ export default class UIController extends Component {
 
     // Expose the public UI APIs
     UIController.openModal = this.openModal;
-    UIController.closeModal = this.closeModal;
+    UIController.removeModal = this.removeModal;
     UIController.openConfirmDialog = this.openConfirmDialog;
     UIController.openErrorDialog = this.openErrorDialog;
     UIController.openSuccessDialog = this.openSuccessDialog;
 
     UIController.showNotification = this.showNotification;
-    UIController.hideNotification = this.hideNotification;
+    UIController.removeNotification = this.removeNotification;
 
     UIController.showBackgroundTask = this.showBackgroundTask;
-    UIController.hideBackgroundTask = this.hideBackgroundTask;
+    UIController.removeBackgroundTask = this.removeBackgroundTask;
   }
 
   state = {
@@ -124,7 +124,7 @@ export default class UIController extends Component {
     return modalID;
   };
 
-  closeModal = modalID => {
+  removeModal = modalID => {
     const modals = this.state.modals.filter(m => m.id !== modalID);
     this.setState({ modals });
   };
@@ -150,7 +150,7 @@ export default class UIController extends Component {
     return notifID;
   };
 
-  hideNotification = notifID => {
+  removeNotification = notifID => {
     const notifications = this.state.notifications.filter(
       n => n.id !== notifID
     );
@@ -172,7 +172,7 @@ export default class UIController extends Component {
     return taskID;
   };
 
-  hideBackgroundTask = taskID => {
+  removeBackgroundTask = taskID => {
     const tasks = this.state.tasks.filter(t => t.id !== taskID);
     this.setState({ tasks });
   };

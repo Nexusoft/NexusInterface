@@ -205,7 +205,7 @@ export default class BootstrapModal extends PureComponent {
 
   remove = () => {
     const modalID = this.context;
-    UIController.closeModal(modalID);
+    UIController.removeModal(modalID);
   };
 
   render() {
