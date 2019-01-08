@@ -1,7 +1,7 @@
 // Internal
 import UIController from 'components/UIController';
-import * as ac from 'actions/headerActionCreators';
 import { GetSettings, SaveSettings } from 'api/settings';
+import * as ac from 'actions/setupAppActionCreators';
 import Bootstrapper from './Bootstrapper';
 import BootstrapModal from './BootstrapModal';
 

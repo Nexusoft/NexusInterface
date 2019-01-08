@@ -3,7 +3,7 @@ import path from 'path';
 import { remote } from 'electron';
 
 // Internal
-import * as ac from 'actions/headerActionCreators';
+import * as ac from 'actions/setupAppActionCreators';
 import UIController from 'components/UIController';
 
 export default function setupTray({ dispatch }) {

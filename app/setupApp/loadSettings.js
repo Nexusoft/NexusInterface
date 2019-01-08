@@ -1,6 +1,6 @@
 import { GetSettings } from 'api/settings';
-import * as ac from 'actions/headerActionCreators';
 import UIController from 'components/UIController';
+import * as ac from 'actions/setupAppActionCreators';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 

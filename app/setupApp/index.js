@@ -2,9 +2,9 @@
 import { remote } from 'electron';
 
 // Internal
-import * as ac from 'actions/headerActionCreators';
 import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
+import * as ac from 'actions/setupAppActionCreators';
 import MenuBuilder from './menuBuilder';
 import loadSettings from './loadSettings';
 import getInfo from './getInfo';

@@ -1,7 +1,7 @@
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
-import * as ac from 'actions/headerActionCreators';
 import EncryptionWarningModal from './EncryptionWarningModal';
+import * as ac from 'actions/setupAppActionCreators';
 import bootstrap, { checkFreeSpace } from './bootstrap';
 
 export default async function getInfo(store) {

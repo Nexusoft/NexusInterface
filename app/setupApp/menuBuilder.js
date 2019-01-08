@@ -8,7 +8,7 @@ import { GetSettings } from 'api/settings';
 import core from 'api/core';
 import Text from 'components/Text';
 import UIController from 'components/UIController';
-import * as ac from 'actions/headerActionCreators';
+import * as ac from 'actions/setupAppActionCreators';
 import bootstrap, { checkFreeSpace } from './bootstrap';
 
 export default class MenuBuilder {
