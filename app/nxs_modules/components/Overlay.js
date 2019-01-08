@@ -31,18 +31,15 @@ const OverlayBackground = styled.div(
 );
 
 export default class Overlay extends Component {
-  constructor(props) {
-    super(props);
-    this.el = document.createElement('div');
-  }
+  node = document.createElement('div');
 
   componentDidMount() {
-    document.getElementsByTagName('body')[0].appendChild(this.el);
+    document.getElementsByTagName('body')[0].appendChild(this.node);
     this.props.onMount && this.props.onMount();
   }
 
   componentWillUnmount() {
-    document.getElementsByTagName('body')[0].removeChild(this.el);
+    document.getElementsByTagName('body')[0].removeChild(this.node);
   }
 
   render() {
@@ -62,7 +59,7 @@ export default class Overlay extends Component {
         />
         {children}
       </OverlayComponent>,
-      this.el
+      this.node
     );
   }
 }

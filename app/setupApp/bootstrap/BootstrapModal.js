@@ -93,6 +93,9 @@ const MinimizeIcon = styled(Icon)(({ theme }) => ({
 export default class BootstrapModal extends PureComponent {
   static contextType = ModalContext;
 
+  modalRef = React.createRef();
+  backgroundRef = React.createRef();
+
   constructor(props) {
     super(props);
     props.bootstrapper.registerEvents({
@@ -204,8 +207,8 @@ export default class BootstrapModal extends PureComponent {
 
     const duration = parseInt(timing.quick);
     const options = { duration, easing: 'linear', fill: 'both' };
-    this.modalElem.animate(minimizeAnimation, options);
-    this.backgroundElem.animate(fadeOut, options);
+    this.modalRef.current.animate(minimizeAnimation, options);
+    this.backgroundRef.current.animate(fadeOut, options);
     setTimeout(this.remove, duration);
   };
 
@@ -217,12 +220,8 @@ export default class BootstrapModal extends PureComponent {
   render() {
     return (
       <BootstrapModalComponent
-        modalRef={el => {
-          this.modalElem = el;
-        }}
-        backgroundRef={el => {
-          this.backgroundElem = el;
-        }}
+        modalRef={this.modalRef}
+        backgroundRef={this.backgroundRef}
         onBackgroundClick={this.minimize}
         assignClose={closeModal => (this.closeModal = closeModal)}
         {...this.props}

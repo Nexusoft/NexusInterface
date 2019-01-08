@@ -18,6 +18,8 @@ export default class BackgroundTask extends Component {
     type: 'work',
   };
 
+  snackBarRef = React.createRef();
+
   constructor(props) {
     super(props);
     props.assignClose && props.assignClose(this.animatedClose);
@@ -27,7 +29,7 @@ export default class BackgroundTask extends Component {
     const taskID = this.context;
     if (taskID) {
       const duration = parseInt(timing.quick);
-      this.element.animate(outro, {
+      this.snackBarRef.current.animate(outro, {
         duration,
         fill: 'both',
       });
@@ -43,13 +45,7 @@ export default class BackgroundTask extends Component {
   render() {
     const { children, assignClose, ...rest } = this.props;
     return (
-      <SnackBar
-        ref={el => {
-          this.element = el;
-        }}
-        onClick={this.animatedClose}
-        {...rest}
-      >
+      <SnackBar ref={this.snackBarRef} onClick={this.animatedClose} {...rest}>
         <Icon icon={workIcon} spaceRight />
         {children}
       </SnackBar>

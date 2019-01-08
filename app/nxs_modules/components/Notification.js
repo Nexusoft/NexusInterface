@@ -33,6 +33,8 @@ export default class Notification extends Component {
     autoClose: 3000, // ms
   };
 
+  notifRef = React.createRef();
+
   componentDidMount() {
     if (this.props.autoClose) {
       this.startAutoClose();
@@ -47,7 +49,7 @@ export default class Notification extends Component {
     if (this.props.notifID) {
       const duration = parseInt(timing.quick);
       this.stopAutoClose();
-      this.elem.animate(outro, {
+      this.notifRef.current.animate(outro, {
         duration,
         easing: 'ease-in',
         fill: 'both',
@@ -72,9 +74,7 @@ export default class Notification extends Component {
   render() {
     return (
       <NotificationComponent
-        ref={el => {
-          this.elem = el;
-        }}
+        ref={this.notifRef}
         onClick={this.animatedClose}
         onMouseEnter={this.stopAutoClose}
         onMouseLeave={this.startAutoClose}

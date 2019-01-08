@@ -150,6 +150,26 @@ export default class Modal extends PureComponent {
     this.props.onClose && this.props.onClose();
   };
 
+  modalRef = el => {
+    this.modalElem = el;
+    const { modalRef } = this.props;
+    if (typeof modalRef === 'function') {
+      modalRef(el);
+    } else if (modalRef && typeof modalRef === 'object') {
+      modalRef.current = el;
+    }
+  };
+
+  backgroundRef = el => {
+    this.backgroundElem = el;
+    const { backgroundRef } = this.props;
+    if (typeof backgroundRef === 'function') {
+      backgroundRef(el);
+    } else if (backgroundRef && typeof backgroundRef === 'object') {
+      backgroundRef.current = el;
+    }
+  };
+
   render() {
     const {
       open,
@@ -168,20 +188,10 @@ export default class Modal extends PureComponent {
       <Overlay
         dimBackground={this.props.dimBackground}
         onBackgroundClick={onBackgroundClick}
-        backgroundRef={el => {
-          this.backgroundElem = el;
-          backgroundRef && backgroundRef(el);
-        }}
+        backgroundRef={this.backgroundRef}
         style={{ zIndex: fullScreen ? 9001 : undefined }}
       >
-        <ModalComponent
-          ref={el => {
-            this.modalElem = el;
-            modalRef && modalRef(el);
-          }}
-          fullScreen={fullScreen}
-          {...rest}
-        >
+        <ModalComponent ref={this.modalRef} fullScreen={fullScreen} {...rest}>
           {typeof children === 'function'
             ? children(this.animatedClose)
             : children}
