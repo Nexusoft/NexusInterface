@@ -241,7 +241,7 @@
   "Settings.Forkblock": "Blocs de fourche",
   "Settings.ManualDaemonEntry": "Entrer en mode démon manuel?",
   "Settings.ManualDaemonExit": "Quitter le mode démon manuel?",
-  "Settisgs.ManualDaemonWarning": "(Cela va arrêter votre démon)",
+  "Settings.ManualDaemonWarning": "(Cela va arrêter votre démon)",
   "Settings.Folder": "Répertoire de sauvegarde",
 
   "Console.CoreOutput": "Sortie de base",
@@ -315,7 +315,7 @@
   "ToolTip.Verbose": "Niveau détaillé pour les journaux",
   "ToolTip.MDM": "Activer le mode démon manuel si vous exécutez le démon manuellement en dehors du portefeuille",
   "ToolTip.UserName": "Nom d'utilisateur configuré pour le daémon manuel",
-
+  "ToolTip.RenderGlobeOpenGLFail": "Your computer does not support OPENGL 2.0",
   "ToolTip.Password": "Mot de passe configuré pour le daémon manuel",
   "ToolTip.IP": "Adresse IP configurée pour le daémon manuel",
   "ToolTip.PortConfig": "Port configuré pour le démon manuel",
@@ -371,6 +371,7 @@
   "Alert.NoSecondAccountChosen": "Aucun second compte sélectionné",
   "Alert.InsufficientFunds": "Fonds insuffisants",
   "Alert.nodefaultname": "Le compte ne peut pas être nommé * ou par défaut",
+  "Alert.ManualDaemonDown": "Le démon manuel est en panne",
 
   "Cp.AC1": "Couleur d'accent 1",
   "Cp.AC2": "Couleur d'accent 2",

@@ -107,7 +107,7 @@ class SettingsStyle extends Component {
 
           <SettingsField label="Color scheme">
             <Button skin="hyperlink" onClick={this.resetColors}>
-              Reset to default
+              <Text id="Settings.ResetStyle" />
             </Button>
           </SettingsField>
 

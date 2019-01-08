@@ -240,7 +240,7 @@
   "Settings.Forkblock": "Bloques de horquilla",
   "Settings.ManualDaemonEntry": "¿Entrar en modo daemon manual?",
   "Settings.ManualDaemonExit": "¿Salir del modo daemon manual?",
-  "Settisgs.ManualDaemonWarning": "(Esto cerrará tu Daemon)",
+  "Settings.ManualDaemonWarning": "(Esto cerrará tu Daemon)",
   "Settings.Folder": "directorio de respaldo",
 
   "Console.CoreOutput": "Salida del núcleo",
@@ -334,7 +334,7 @@
   "ToolTip.PleaseWait": "Por favor espera...",
   "ToolTip.RecentDatabaseExtracting": "Extracción reciente de la base de datos",
   "ToolTip.ConnectionFailure": "Fallo de conexión",
-
+  "ToolTip.RenderGlobeOpenGLFail": "Your computer does not support OPENGL 2.0",
   "ToolTip.TryAgain": "¿Inténtalo de nuevo?",
 
   "Alert.Received": "Transacción recibida",
@@ -369,6 +369,7 @@
   "Alert.InsufficientFunds": "Fondos insuficientes",
   "Alert.CoreRestarting": "Reinicio del núcleo",
   "Alert.nodefaultname": "La cuenta no puede ser nombrada * o por defecto",
+  "Alert.ManualDaemonDown": "El daemon manual esta caido",
 
   "Cp.AC1": "Color de Acento 1",
   "Cp.AC2": "Color de acento 2",

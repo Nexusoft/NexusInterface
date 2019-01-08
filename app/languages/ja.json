@@ -197,7 +197,7 @@
   "Settings.Russian": "ロシア",
   "Settings.Spanish": "スペイン語",
   "Settings.German": "ドイツ人",
-  "Settings.Japanese": "日本人",
+  "Settings.Japanese": "日本語",
   "Settings.French": "フランス語",
   "Settings.Korean": "韓国語",
   "Settings.LangButton": "英語",
@@ -242,7 +242,7 @@
   "Settings.Forkblock": "フォークブロック",
   "Settings.ManualDaemonEntry": "手動デーモンモードに入る？",
   "Settings.ManualDaemonExit": "マニュアルデーモンモードを終了しますか？",
-  "Settisgs.ManualDaemonWarning": "（これはデーモンをシャットダウンします）",
+  "Settings.ManualDaemonWarning": "（これはデーモンをシャットダウンします）",
   "Settings.Folder": "バックアップディレクトリ",
 
   "Console.CoreOutput": "コア出力",
@@ -329,7 +329,7 @@
   "ToolTip.PortOfSOCKS4proxyServer": "SOCKS4プロキシサーバーのポート",
   "ToolTip.Detach": "ウォレットをシャットダウンするときにデータベースを切り離す",
   "ToolTip.RenderGlobe": "概要ページで地球儀をレンダリングする",
-
+  "ToolTip.RenderGlobeOpenGLFail": "Your computer does not support OPENGL 2.0",
   "ToolTip.DbOption": "最近のバージョンのデータベースをダウンロードして同期にかかる時間を短縮したいですか？",
   "ToolTip.BootStrapIt": "はい、それをブートストラップしましょう",
   "ToolTip.SyncFromScratch": "いいえ、最初から同期させてください",
@@ -374,7 +374,7 @@
   "Alert.NoSecondAccountChosen": "選択された第2のアカウント",
   "Alert.InsufficientFunds": "残高不足",
   "Alert.nodefaultname": "アカウント名は*またはデフォルトにすることはできません",
-
+  "Alert.ManualDaemonDown": "手動デーモンがダウンしています",
   "Cp.AC1": "アクセントカラー1",
   "Cp.AC2": "アクセントカラー2",
   "Cp.THC": "表ヘッダーの色",
@@ -395,6 +395,6 @@
   "Lang.Spanish": "スペイン語",
   "Lang.Korean": "韓国語",
   "Lang.German": "ドイツ人",
-  "Lang.Japanese": "日本人",
+  "Lang.Japanese": "日本語",
   "Lang.French": "フランス語"
 }
