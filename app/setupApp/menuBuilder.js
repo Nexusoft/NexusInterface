@@ -1,8 +1,8 @@
-import { app, Menu, shell, BrowserWindow, remote } from 'electron';
+import { shell, remote } from 'electron';
 import fs from 'fs';
 
 import * as RPC from 'scripts/rpc';
-import { GetSettings, SaveSettings } from 'api/settings';
+import { GetSettings } from 'api/settings';
 import core from 'api/core';
 import UIController from 'components/UIController';
 import bootstrap from './bootstrap';

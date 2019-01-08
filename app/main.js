@@ -114,6 +114,9 @@ function createWindow() {
     icon: iconPath,
     backgroundColor: '#232c39',
     show: false,
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   // Load the index.html into the new browser window
