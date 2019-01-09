@@ -234,7 +234,6 @@ export default class MenuBuilder {
         this.stopDaemon,
         this.separator,
         this.quitNexus,
-        this.about,
       ],
     };
     const subMenuFile = {
