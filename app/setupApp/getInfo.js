@@ -26,7 +26,6 @@ export default async function getInfo(store) {
       !state.settings.settings.ignoreEncryptionWarningFlag
     ) {
       UIController.openModal(EncryptionWarningModal);
-      dispatch(ac.ShowEncryptionModal());
     }
   } else if (info.unlocked_until === 0) {
     dispatch(ac.Lock());
