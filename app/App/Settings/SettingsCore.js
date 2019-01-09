@@ -102,7 +102,7 @@ class SettingsCore extends Component {
   }
 
   updateEnableMining(event) {
-    var el = even.target;
+    var el = event.target;
     var settingsObj = GetSettings();
 
     settingsObj.enableMining = el.checked;

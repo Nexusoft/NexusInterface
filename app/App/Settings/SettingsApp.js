@@ -13,7 +13,7 @@ import { GetSettings, SaveSettings } from 'api/settings';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import * as FlagFile from 'images/LanguageFlags';
-import { remote as dialog } from 'electron';
+import { remote } from 'electron';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -85,7 +85,7 @@ const languages = [
     display: (
       <span>
         <Flag src={FlagFile.Japan} />
-        <span className="v-align">日本人</span>
+        <span className="v-align">日本語</span>
       </span>
     ),
   },
@@ -300,7 +300,7 @@ class SettingsApp extends Component {
   }
 
   setTxFee() {
-    let TxFee = document.getElementById('optionalTransactionFee').value;
+    let TxFee = document.getElementById('inputId').value;
     if (parseFloat(TxFee) > 0) {
       RPC.PROMISE('settxfee', [parseFloat(TxFee)]);
       UIController.showNotification(
@@ -410,7 +410,7 @@ class SettingsApp extends Component {
   }
 
   getFolder(folderPaths) {
-    dialog.showOpenDialog(
+    remote.dialog.showOpenDialog(
       {
         title: 'Select a folder',
         properties: ['openDirectory'],
@@ -463,6 +463,7 @@ class SettingsApp extends Component {
   // Mandatory React method
   render() {
     var settingsObj = GetSettings();
+
     return (
       <AppSettings>
         <form>
@@ -544,9 +545,9 @@ class SettingsApp extends Component {
             {inputId => (
               <div className="flex stretch">
                 <TextField
-                  id={inputId}
+                  id={'inputId'}
                   type="number"
-                  defaultValue={this.initialValues.txFee}
+                  defaultValue={this.props.paytxfee}
                   step="0.01"
                   min="0"
                   style={{ width: 100 }}

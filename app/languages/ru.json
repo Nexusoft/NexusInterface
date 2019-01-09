@@ -243,7 +243,7 @@
   "Settings.Forkblock": "Вилочные блоки",
   "Settings.ManualDaemonEntry": "Войдите в ручной режим демона?",
   "Settings.ManualDaemonExit": "Выходить из ручного режима демона?",
-  "Settisgs.ManualDaemonWarning": "(Это отключит вашего демона)",
+  "Settings.ManualDaemonWarning": "(Это отключит вашего демона)",
   "Settings.Folder": "Резервный каталог",
 
   "Console.CoreOutput": "Основной выход",
@@ -327,7 +327,7 @@
   "ToolTip.PortOfSOCKS4proxyServer": "Порт прокси-сервера SOCKS4",
   "ToolTip.Detach": "Отсоедините базу данных при выключении кошелька",
   "ToolTip.RenderGlobe": "Отобразить глобус на странице обзора",
-
+  "ToolTip.RenderGlobeOpenGLFail": "Your computer does not support OPENGL 2.0",
   "ToolTip.DbOption": "Вы хотите сократить время, затрачиваемое на синхронизацию, путем загрузки последней версии базы данных?",
   "ToolTip.BootStrapIt": "Да, давайте загрузим его",
   "ToolTip.SyncFromScratch": "Нет, пусть синхронизируется с нуля",
@@ -372,6 +372,7 @@
   "Alert.NoSecondAccountChosen": "Второй аккаунт не выбран",
   "Alert.InsufficientFunds": "Недостаточно средств",
   "Alert.nodefaultname": "Аккаунт не может быть назван * или по умолчанию",
+  "Alert.ManualDaemonDown": "Ручной демон не работает",
 
   "Cp.AC1": "Цвет акцента 1",
   "Cp.AC2": "Цвет акцента 2",
