@@ -274,11 +274,17 @@ textarea {
   margin-top: 10%;
 }
 
+.contactNames {
+  color: var(--color-2);
+  animation: tdd 0.5s;
+}
 .short-column {
   width: 10%;
 }
 .long-column {
-  width: 70%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 .searchBar {
   width: 100%;

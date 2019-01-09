@@ -25,7 +25,10 @@ function addressBookToQueue(props, closeModal) {
 
   return filteredAddress.map((e, i) => (
     <tr key={i}>
-      <td key={e.name + i}> {e.name}</td>
+      <td className="contactNames" key={e.name + i}>
+        {' '}
+        {e.name}
+      </td>
       {e.notMine.map((ele, i) => (
         <Tooltip.Trigger
           position="right"
@@ -33,6 +36,7 @@ function addressBookToQueue(props, closeModal) {
           key={ele.address}
         >
           <td
+            className="tdd"
             onClick={() => {
               closeModal();
               props.updateAddress(ele.address);
@@ -64,8 +68,7 @@ class LookupAddressModal extends Component {
                     </th>
                     <th className="long-column">
                       <Text id="sendReceive.Address" />
-                    </th>
-                    <th>
+
                       <Text id="sendReceive.Lookup">
                         {placeholder => (
                           <TextField

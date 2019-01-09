@@ -458,7 +458,13 @@ class AddressBook extends Component {
                     <Text id="AddressBook.Account" />
                     <Text id="AddressBook.searchC">
                       {sba => (
-                        <input
+                        <TextField
+                          style={{
+                            marginLeft: '1em',
+                            fontSize: '.9375em',
+                            width: 200,
+                          }}
+                          left={<Icon icon={searchIcon} spaceRight />}
                           className="searchaccount"
                           placeholder={sba}
                           value={this.props.Search}
