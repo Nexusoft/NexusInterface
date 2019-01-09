@@ -194,8 +194,9 @@ class Market extends Component {
   render() {
     return (
       <Panel icon={chartIcon} title={<Text id="Market.Information" />}>
-        <a className="refresh" onClick={() => this.refresher()}>
+        <a className="refresh" style={{right:"2em"}} onClick={() => this.refresher()}>
           <Text id="Market.Refreash" />
+
         </a>
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 
