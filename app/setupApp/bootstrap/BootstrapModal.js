@@ -126,7 +126,7 @@ export default class BootstrapModal extends PureComponent {
           : '';
         return `Downloading the database... ${percentage}% ${sizeProgress}`;
       case 'extracting':
-        return 'Uncompressing the database...';
+        return 'Decompressing the database...';
       case 'finalizing':
         return 'Finalizing...';
       default:
