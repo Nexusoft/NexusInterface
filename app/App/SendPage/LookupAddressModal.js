@@ -26,7 +26,6 @@ function addressBookToQueue(props, closeModal) {
   return filteredAddress.map((e, i) => (
     <tr key={i}>
       <td className="contactNames" key={e.name + i}>
-        {' '}
         {e.name}
       </td>
       {e.notMine.map((ele, i) => (
@@ -36,7 +35,7 @@ function addressBookToQueue(props, closeModal) {
           key={ele.address}
         >
           <td
-            className="tdd"
+            className="tda"
             onClick={() => {
               closeModal();
               props.updateAddress(ele.address);
@@ -59,7 +58,7 @@ class LookupAddressModal extends Component {
             <Modal.Header>
               <Text id="sendReceive.Lookup" />
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{ paddingTop: '0px' }}>
               <table id="AddressTable">
                 <thead>
                   <tr>
@@ -68,25 +67,26 @@ class LookupAddressModal extends Component {
                     </th>
                     <th className="long-column">
                       <Text id="sendReceive.Address" />
-
-                      <Text id="sendReceive.Lookup">
-                        {placeholder => (
-                          <TextField
-                            style={{
-                              marginLeft: '1em',
-                              fontSize: '.9375em',
-                              width: 200,
-                            }}
-                            left={<Icon icon={searchIcon} spaceRight />}
-                            placeholder={placeholder}
-                            value={this.props.Search}
-                            onChange={e =>
-                              this.props.SearchName(e.target.value)
-                            }
-                            required
-                          />
-                        )}
-                      </Text>
+                      <span className="searchBar">
+                        <Text id="sendReceive.Lookup">
+                          {placeholder => (
+                            <TextField
+                              style={{
+                                marginLeft: '1em',
+                                fontSize: '.9375em',
+                                width: 200,
+                              }}
+                              left={<Icon icon={searchIcon} spaceRight />}
+                              placeholder={placeholder}
+                              value={this.props.Search}
+                              onChange={e =>
+                                this.props.SearchName(e.target.value)
+                              }
+                              required
+                            />
+                          )}
+                        </Text>
+                      </span>
                     </th>
                   </tr>
                 </thead>

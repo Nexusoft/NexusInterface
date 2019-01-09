@@ -229,6 +229,7 @@ export default class MenuBuilder {
     const subMenuAbout = {
       label: 'Nexus',
       submenu: [
+        this.about,
         this.startDaemon,
         this.stopDaemon,
         this.separator,

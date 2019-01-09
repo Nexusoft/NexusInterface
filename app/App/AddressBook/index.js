@@ -448,10 +448,10 @@ class AddressBook extends Component {
         if (this.props.myAccounts.length > 0) {
           return (
             <div id="Addresstable-wraper">
-              <h2 className="m1">
-                <Icon icon={addressBookIcon} className="hdr-img" />
+              <div className="m1">
+                {/* <Icon icon={addressBookIcon} className="hdr-img" /> */}
                 <Text id="AddressBook.MyAddresses" />
-              </h2>
+              </div>
               <table className="myAddressTable">
                 <thead className="AddressThead">
                   <th className="short-column">
