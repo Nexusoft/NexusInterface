@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { remote } from 'electron';
-import { Link } from 'react-router-dom';
 import Modal from 'react-responsive-modal';
 import csv from 'csvtojson';
 import { callbackify } from 'util';
@@ -15,7 +14,6 @@ import googleanalytics from 'scripts/googleanalytics';
 // Internal Global Dependencies
 import config from 'api/configuration';
 import * as RPC from 'scripts/rpc';
-import * as TYPE from 'actions/actiontypes';
 import * as actionsCreators from 'actions/addressbookActionCreators';
 import Icon from 'components/Icon';
 import Button from 'components/Button';

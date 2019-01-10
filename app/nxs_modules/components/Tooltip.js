@@ -10,7 +10,6 @@ import { arrowStyles } from 'components/Arrow';
 import { timing, animations } from 'styles';
 import { color } from 'utils';
 
-const tooltipBg = theme => color.lighten(theme.dark, 0.2);
 const spacing = 10;
 const arrowPadding = 15;
 const positionToArrowDirection = {
@@ -85,34 +84,49 @@ const arrowAligning = (position, align) => {
   }
 };
 
-const TooltipComponent = styled.div(
-  ({ theme }) => ({
+const Tooltip = styled.div(
+  {
     whiteSpace: 'pre',
     maxWidth: 300,
-    background: tooltipBg(theme),
-    color: theme.light,
     borderRadius: 4,
     filter: 'drop-shadow(0 0 8px rgba(0,0,0,.7))',
     fontSize: 15,
     padding: '.4em .8em',
     animation: `${animations.fadeIn} ${timing.normal} ease-out`,
-    zIndex: 9000,
-    position: 'fixed',
     '&::before': {
       content: '""',
       position: 'absolute',
     },
-  }),
+  },
+  ({ skin, theme }) => {
+    switch (skin) {
+      case 'default':
+        return {
+          background: color.lighten(theme.dark, 0.2),
+          color: theme.light,
+        };
+      case 'error':
+        return {
+          background: theme.error,
+          color: theme.errorContrast,
+        };
+    }
+  },
   ({ position }) =>
     (position === 'top' || position === 'bottom') && {
       textAlign: 'center',
     },
-  ({ position, theme }) => ({
+  ({ position, skin, theme }) => ({
     '&::before': arrowStyles({
       direction: positionToArrowDirection[position],
       width: 15,
       height: 8,
-      color: tooltipBg(theme),
+      color:
+        skin === 'default'
+          ? color.lighten(theme.dark, 0.2)
+          : skin === 'error'
+          ? theme.error
+          : undefined,
     }),
   }),
   ({ position, align }) => ({
@@ -123,7 +137,7 @@ const TooltipComponent = styled.div(
   })
 );
 
-class Tooltip extends Component {
+class TooltipPortal extends Component {
   constructor(props) {
     super(props);
     this.el = document.createElement('div');
@@ -138,7 +152,7 @@ class Tooltip extends Component {
   }
 
   render() {
-    return ReactDOM.createPortal(<TooltipComponent {...this.props} />, this.el);
+    return ReactDOM.createPortal(<Tooltip {...this.props} />, this.el);
   }
 }
 
@@ -160,6 +174,8 @@ class TooltipTrigger extends Component {
     const { position, align } = this.props;
     const rect = trigger.getBoundingClientRect();
     const tooltipStyles = {
+      position: 'fixed',
+      zIndex: 9000,
       ...tooltipPositioning(rect, position),
       ...tooltipAligning(rect, position, align),
     };
@@ -181,15 +197,16 @@ class TooltipTrigger extends Component {
           onMouseLeave: this.hideTooltip,
         })}
         {!!tooltip && this.state.active && (
-          <Tooltip css={this.state.tooltipStyles} {...rest}>
+          <TooltipPortal css={this.state.tooltipStyles} {...rest}>
             {tooltip}
-          </Tooltip>
+          </TooltipPortal>
         )}
       </>
     );
   }
 }
 
+Tooltip.Portal = TooltipPortal;
 Tooltip.Trigger = TooltipTrigger;
 
 export default Tooltip;

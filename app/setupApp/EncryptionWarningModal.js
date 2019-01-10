@@ -8,7 +8,6 @@ import Modal from 'components/Modal';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
 import Button from 'components/Button';
-import * as TYPE from 'actions/actiontypes';
 import { GetSettings, SaveSettings } from 'api/settings';
 import { color } from 'utils';
 import warningIcon from 'images/warning.sprite.svg';
@@ -58,7 +57,7 @@ const EncryptionWarningModal = props => (
           <Button
             as={Link}
             skin="primary"
-            to="/Settings/Unencrypted"
+            to="/Settings/Security"
             onClick={closeModal}
           >
             <Text id="overview.TakeMeThere" />

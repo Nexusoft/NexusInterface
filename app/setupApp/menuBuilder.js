@@ -148,12 +148,7 @@ export default class MenuBuilder {
   keyManagement = {
     label: 'Key Management',
     click: () => {
-      const state = this.store.getState();
-      if (state.common.unlocked_until !== undefined) {
-        this.history.push('/Settings/Security');
-      } else {
-        this.history.push('/Settings/Unencrypted');
-      }
+      this.history.push('/Settings/Security');
     },
   };
 

@@ -30,38 +30,11 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = dispatch => ({
-  setSettings: settings => {
-    dispatch({ type: TYPE.SET_SETTINGS, payload: settings });
-  },
-  OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
-  },
-  OpenModal2: type => {
-    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
-  },
-  OpenModal3: type => {
-    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
-  },
-  CloseModal2: type => {
-    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
-  },
-  CloseModal3: type => {
-    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
+  updateSettings: settings => {
+    dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings });
   },
   clearForRestart: () => {
     dispatch({ type: TYPE.CLEAR_FOR_RESTART });
-  },
-  CloseModal: () => {
-    dispatch({ type: TYPE.HIDE_MODAL });
-  },
-  CloseManualDaemonModal: () => {
-    dispatch({ type: TYPE.CLOSE_MANUAL_DAEMON_MODAL });
-  },
-  OpenManualDaemonModal: () => {
-    dispatch({ type: TYPE.OPEN_MANUAL_DAEMON_MODAL });
-  },
-  updateManualDaemonSetting: bool => {
-    dispatch({ type: TYPE.UPDATE_MANUAL_DAEMON_SETTINGS, payload: bool });
   },
   clearOverviewVariables: () => {
     dispatch({ type: TYPE.CLEAR_FOR_BOOTSTRAPING });
@@ -295,7 +268,7 @@ class SettingsCore extends Component {
       ),
       note: <Text id="Settings.ChangesNexTime" />,
       yesCallback: () => {
-        this.props.setSettings(GetSettings());
+        this.props.updateSettings(GetSettings());
         UIController.showNotification(
           <Text id="Alert.CoreSettingsSaved" />,
           'success'
@@ -336,9 +309,10 @@ class SettingsCore extends Component {
             subLabel={<Text id="ToolTip.Verbose" />}
           >
             <TextField
+              type="number"
               defaultValue={this.initialValues.verboseLevel}
-              size={3}
               onChange={this.updateVerboseLevel}
+              style={{ maxWidth: 50 }}
             />
           </SettingsField>
 

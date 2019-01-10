@@ -43,6 +43,7 @@ export default async function bootstrap(store, { suggesting } = {}) {
       setTimeout(startBootstrapping, 0);
     },
     noLabel: 'No, let it sync',
+    noSkin: suggesting ? 'error' : undefined,
     noCallback: () => {
       running = false;
       if (suggesting) {

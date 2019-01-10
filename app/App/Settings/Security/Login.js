@@ -1,7 +1,6 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
 import styled from '@emotion/styled';
 
 // Internal Dependencies
@@ -42,16 +41,6 @@ const mapDispatchToProps = dispatch => ({
   stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG }),
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
   setTime: time => dispatch({ type: TYPE.SET_TIME, payload: time }),
-  OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
-  },
-  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
-  // OpenErrorModal: type => {
-  //   dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
-  // },
-  // CloseErrorModal: type => {
-  //   dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
-  // },
 });
 
 class Login extends Component {
@@ -160,6 +149,7 @@ class Login extends Component {
       }
     }
   }
+
   setUnlockDate(input) {
     let today = new Date();
     let inputDate = new Date(input);
@@ -169,11 +159,6 @@ class Login extends Component {
 
   // Mandatory React method
   render() {
-    if (this.props.loggedIn) {
-      return (
-        <Redirect to={this.props.match.path.replace('/Login', '/Security')} />
-      );
-    }
     return (
       <div>
         <form>

@@ -68,11 +68,18 @@ const ButtonComponent = styled.button(
       fontSize: '.9em',
     },
 
+  ({ waiting }) =>
+    waiting && {
+      '&, &:disabled': {
+        cursor: 'wait',
+      },
+    },
+
   ({ skin, theme }) => {
     switch (skin) {
       case 'default':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             border: `1px solid ${theme.lightGray}`,
             color: theme.lightGray,
           },
@@ -83,7 +90,7 @@ const ButtonComponent = styled.button(
         };
       case 'primary':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             border: `2px solid ${theme.primary}`,
             color: theme.primary,
             fontWeight: 'bold',
@@ -99,12 +106,13 @@ const ButtonComponent = styled.button(
           '&:hover': {
             borderColor: color.lighten(theme.primary, 0.3),
             color: color.lighten(theme.primary, 0.3),
-            filter: `drop-shadow(0 0 7px ${color.fade(theme.primary, 0.3)})`,
+            boxShadow: `0 0 7px ${color.fade(theme.primary, 0.3)}`,
+            textShadow: `0 0 7px ${color.fade(theme.primary, 0.3)}`,
           },
         };
       case 'error':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             border: `2px solid ${theme.error}`,
             color: theme.error,
             fontWeight: 'bold',
@@ -120,12 +128,13 @@ const ButtonComponent = styled.button(
           '&:hover': {
             borderColor: color.lighten(theme.error, 0.3),
             color: color.lighten(theme.error, 0.3),
-            filter: `drop-shadow(0 0 7px ${color.fade(theme.error, 0.3)})`,
+            boxShadow: `0 0 7px ${color.fade(theme.error, 0.3)}`,
+            textShadow: `0 0 7px ${color.fade(theme.error, 0.3)}`,
           },
         };
       case 'filled-primary':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             background: color.darken(theme.primary, 0.1),
             color: theme.primaryContrast,
             transitionProperty: 'background-color',
@@ -136,7 +145,7 @@ const ButtonComponent = styled.button(
         };
       case 'filled-dark':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             background: theme.dark,
             color: theme.light,
             transitionProperty: 'background-color',
@@ -147,7 +156,7 @@ const ButtonComponent = styled.button(
         };
       case 'filled-light':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             background: theme.lighterGray,
             color: theme.dark,
             transitionProperty: 'background-color',
@@ -158,7 +167,7 @@ const ButtonComponent = styled.button(
         };
       case 'filled-error':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             background: theme.error,
             color: theme.errorContrast,
             transitionProperty: 'background-color',
@@ -169,7 +178,7 @@ const ButtonComponent = styled.button(
         };
       case 'blank-dark':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             padding: '0.5em 1em',
             background: 'transparent',
             color: theme.darkGray,
@@ -181,7 +190,7 @@ const ButtonComponent = styled.button(
         };
       case 'blank-light':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             padding: '0.5em 1em',
             background: 'transparent',
             color: theme.lightGray,
@@ -193,7 +202,7 @@ const ButtonComponent = styled.button(
         };
       case 'hyperlink':
         return {
-          '&, &:active, &&[disabled]': {
+          '&, &:active, &&:disabled': {
             display: 'inline',
             padding: '.2em 0',
             height: 'auto',
@@ -213,7 +222,7 @@ const ButtonComponent = styled.button(
 );
 
 /**
- * Note: the double & in &&[disabled] is a css specificity hack so that the disabled styles take priority over the hover styles
+ * Note: the double & in &&:disabled is a css specificity hack so that the disabled styles take priority over the hover styles
  */
 
 export default class Button extends Component {
