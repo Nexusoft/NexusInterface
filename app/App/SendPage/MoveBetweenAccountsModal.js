@@ -1,9 +1,10 @@
 // External
 import React, { Component } from 'react';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
+import { connect } from 'react-redux';
 
 // Internal
+import Text from 'components/Text';
 import Select from 'components/Select';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
@@ -36,6 +37,22 @@ const Buttons = styled.div({
   justifyContent: 'flex-end',
 });
 
+@connect(
+  ({
+    sendReceive: { MoveFromAccount, MoveToAccount, moveAmount },
+    settings: {
+      settings: { minimumconfirmations, fiatCurrency },
+    },
+    overview: { paytxfee },
+  }) => ({
+    MoveFromAccount,
+    MoveToAccount,
+    moveAmount,
+    minimumconfirmations,
+    fiatCurrency,
+    paytxfee,
+  })
+)
 export default class MoveBetweenAccountsModal extends Component {
   moveAmmountConverter(e, isNxs) {
     if (/^[0-9.]+$/.test(e.target.value) | (e.target.value === '')) {
@@ -67,8 +84,7 @@ export default class MoveBetweenAccountsModal extends Component {
               this.props.MoveToAccount,
               parseFloat(this.props.moveAmount),
             ],
-            parseInt(this.props.settings.minimumconfirmations),
-            this.props.Message
+            parseInt(this.props.minimumconfirmations)
           )
             .then(payload => {
               this.props.getAccountData();
@@ -142,7 +158,7 @@ export default class MoveBetweenAccountsModal extends Component {
               <FormField
                 connectLabel
                 style={{ flex: 1 }}
-                label={this.props.settings.fiatCurrency}
+                label={this.props.fiatCurrency}
               >
                 <TextField
                   placeholder="0.00"
