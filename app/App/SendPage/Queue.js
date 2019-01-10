@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 // Internal
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import Modal from 'components/Modal';
 import UIController from 'components/UIController';
 import trashimg from 'images/trash.svg';
 

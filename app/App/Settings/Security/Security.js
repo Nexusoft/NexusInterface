@@ -5,7 +5,6 @@ import { Redirect } from 'react-router';
 import styled from '@emotion/styled';
 
 // Internal
-import Modal from 'components/Modal';
 import styles from './style.css';
 import * as TYPE from 'actions/actiontypes';
 import ChangePassword from './ChangePassword';
