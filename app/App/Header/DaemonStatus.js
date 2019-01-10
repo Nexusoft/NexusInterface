@@ -1,25 +1,38 @@
-// External Dependencies
+// External
 import React from 'react';
+import { connect } from 'react-redux';
+
+// Internal
 import Text from 'components/Text';
 
-const DaemonStatus = ({ settings, connections, daemonAvailable }) => {
-  if (settings.manualDaemon === false && connections === undefined) {
+@connect(
+  ({
+    overview: { connections },
+    settings: {
+      settings: { manualDaemon },
+    },
+  }) => ({
+    manualDaemon,
+    connections,
+  })
+)
+class DaemonStatus extends React.Component {
+  render() {
+    const { manualDaemon, connections } = this.props;
     return (
-      <span className="dim">
-        <Text id="Alert.DaemonLoadingWait" />
-        ...
-      </span>
+      connections === undefined && (
+        <span className="dim">
+          {manualDaemon && <Text id="Alert.ManualDaemonDown" />}
+          {!manualDaemon && (
+            <>
+              <Text id="Alert.DaemonLoadingWait" />
+              ...
+            </>
+          )}
+        </span>
+      )
     );
   }
-  if (settings.manualDaemon === true && daemonAvailable === false) {
-    return (
-      <span className="dim">
-        <Text id="Alert.ManualDaemonDown" />
-      </span>
-    );
-  }
-
-  return null;
-};
+}
 
 export default DaemonStatus;

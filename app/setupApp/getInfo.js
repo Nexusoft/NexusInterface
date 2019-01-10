@@ -1,111 +1,32 @@
-// External
-import { remote } from 'electron';
-import path from 'path';
-
-// Internal
-import { GetSettings, SaveSettings } from 'api/settings';
-import * as ac from 'actions/headerActionCreators';
-import * as RPC from 'scripts/rpc';
 import UIController from 'components/UIController';
-import MenuBuilder from './menuBuilder';
+import * as RPC from 'scripts/rpc';
+import EncryptionWarningModal from './EncryptionWarningModal';
+import * as ac from 'actions/setupAppActionCreators';
+import bootstrap, { checkFreeSpace } from './bootstrap';
 
-let tray = window.tray || null;
-
-export default function setupApp(store, history) {
-  const { dispatch } = store;
-  const menuBuilder = new MenuBuilder(store, history);
-  menuBuilder.buildMenu();
-
-  if (!tray) setupTray(dispatch);
-
-  setupSettings(dispatch);
-
-  dispatch(ac.LoadAddressBook());
-
-  getInfo(store);
-  setInterval(() => getInfo(store), 20000);
-
-  dispatch(ac.SetMarketAveData());
-  setInterval(function() {
-    dispatch(ac.SetMarketAveData());
-  }, 900000);
-
-  const mainWindow = remote.getCurrentWindow();
-  mainWindow.on('close', e => {
-    e.preventDefault();
-    store.dispatch(ac.clearOverviewVariables());
-    UIController.showNotification('Closing Nexus...');
-  });
-}
-
-function setupTray(dispatch) {
-  const mainWindow = remote.getCurrentWindow();
-
-  const root =
-    process.env.NODE_ENV === 'development'
-      ? __dirname
-      : configuration.GetAppResourceDir();
-  const fileName =
-    process.platform == 'darwin'
-      ? 'Nexus_Tray_Icon_Template_16.png'
-      : 'Nexus_Tray_Icon_32.png';
-  const trayImage = path.join(root, 'images', 'tray', fileName);
-  tray = new remote.Tray(trayImage);
-
-  const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
-  const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
-  tray.setPressedImage(pressedImage);
-
-  const contextMenu = remote.Menu.buildFromTemplate([
-    {
-      label: 'Show Nexus',
-      click: function() {
-        mainWindow.show();
-      },
-    },
-    {
-      label: 'Quit Nexus',
-      click() {
-        dispatch(ac.clearOverviewVariables());
-        UIController.showNotification('Closing Nexus...');
-        mainWindow.close();
-      },
-    },
-  ]);
-  tray.setContextMenu(contextMenu);
-  tray.on('double-click', () => {
-    mainWindow.show();
-  });
-}
-
-function setupSettings(dispatch) {
-  const settings = GetSettings();
-  if (Object.keys(settings).length < 1) {
-    SaveSettings({ ...settings, keepDaemon: false });
-  } else {
-    dispatch(ac.setSettings(settings));
-  }
-}
-
-async function getInfo({ dispatch, getState }) {
+export default async function getInfo(store) {
+  const { dispatch, getState } = store;
   dispatch(ac.AddRPCCall('getInfo'));
   let info = null;
   try {
     info = await RPC.PROMISE('getinfo', []);
   } catch (err) {
     console.log(err);
-    dispatch(ac.DaemonUnavailable());
     return;
   }
 
-  delete info.timestamp;
-  dispatch(ac.DaemonAvailable());
-  dispatch(ac.GetInfo(info));
   const state = getState();
+  const oldInfo = state.overview;
 
   if (info.unlocked_until === undefined) {
     dispatch(ac.Unlock());
     dispatch(ac.Unencrypted());
+    if (
+      !state.common.encryptionModalShown &&
+      !state.settings.settings.ignoreEncryptionWarningFlag
+    ) {
+      UIController.openModal(EncryptionWarningModal);
+    }
   } else if (info.unlocked_until === 0) {
     dispatch(ac.Lock());
     dispatch(ac.Encrypted());
@@ -114,30 +35,53 @@ async function getInfo({ dispatch, getState }) {
     dispatch(ac.Encrypted());
   }
 
-  if (
-    state.overview.connections === undefined &&
-    info.connections !== undefined
-  ) {
-    loadMyAccounts();
+  if (info.connections !== undefined && oldInfo.connections === undefined) {
+    loadMyAccounts(dispatch);
   }
 
-  if (state.overview.blocks !== info.blocks) {
+  if (info.blocks !== oldInfo.blocks) {
     const peerresponse = await RPC.PROMISE('getpeerinfo', []);
-
-    const hpb = peerresponse.reduce(
-      (highest, element) => (element.height >= hpb ? element.height : highest),
+    const highestPeerBlock = peerresponse.reduce(
+      (highest, element) =>
+        element.height >= highest ? element.height : highest,
       0
     );
-    dispatch(ac.SetHighestPeerBlock(hpb));
+
+    dispatch(ac.SetHighestPeerBlock(highestPeerBlock));
+    if (highestPeerBlock > info.blocks) {
+      dispatch(ac.SetSyncStatus(false));
+    } else {
+      dispatch(ac.SetSyncStatus(true));
+    }
+
+    if (!oldInfo.blocks || info.blocks > oldInfo.blocks) {
+      let newDate = new Date();
+      dispatch(ac.BlockDate(newDate));
+    }
+
+    const {
+      settings: {
+        manualDaemon,
+        settings: { bootstrap: bootstrapSetting },
+      },
+    } = state;
+    // 172800 = (100 * 24 * 60 * 60) / 50
+    // which is the approximate number of blocks produced in 100 days
+    const isFarBehind = highestPeerBlock - info.blocks > 172800;
+    if (
+      isFarBehind &&
+      bootstrapSetting &&
+      !manualDaemon &&
+      info.connections !== undefined
+    ) {
+      (async () => {
+        const enoughSpace = await checkFreeSpace();
+        if (enoughSpace) bootstrap(store, { suggesting: true });
+      })();
+    }
   }
 
-  if (state.overview.heighestPeerBlock > info.blocks) {
-    dispatch(ac.SetSyncStatus(false));
-  } else {
-    dispatch(ac.SetSyncStatus(true));
-  }
-
-  if (state.overview.txtotal < info.txtotal) {
+  if (info.txtotal > oldInfo.txtotal) {
     const txList = await RPC.PROMISE('listtransactions');
     const mostRecentTx = txList.reduce((a, b) => (a.time > b.time ? a : b));
 
@@ -163,6 +107,9 @@ async function getInfo({ dispatch, getState }) {
         break;
     }
   }
+
+  delete info.timestamp;
+  dispatch(ac.GetInfo(info));
 }
 
 async function loadMyAccounts(dispatch) {

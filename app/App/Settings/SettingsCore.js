@@ -31,7 +31,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => ({
   setSettings: settings => {
-    dispatch({ type: TYPE.GET_SETTINGS, payload: settings });
+    dispatch({ type: TYPE.SET_SETTINGS, payload: settings });
   },
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
@@ -246,7 +246,7 @@ class SettingsCore extends Component {
 
   confirmSwitchManualDaemon = () => {
     if (this.props.settings.manualDaemon) {
-      UIController.openConfirmModal({
+      UIController.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonExit" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
         yesCallback: () => {
@@ -266,7 +266,7 @@ class SettingsCore extends Component {
         },
       });
     } else {
-      UIController.openConfirmModal({
+      UIController.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonEntry" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
         yesCallback: () => {
@@ -287,10 +287,10 @@ class SettingsCore extends Component {
   };
 
   confirmSaveSettings = () => {
-    UIController.openConfirmModal({
+    UIController.openConfirmDialog({
       question: (
         <>
-          <Text id="SaveSettings" />?
+          <Text id="Settings.SaveSettings" />?
         </>
       ),
       note: <Text id="Settings.ChangesNexTime" />,

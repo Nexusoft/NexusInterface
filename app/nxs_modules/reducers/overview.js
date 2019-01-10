@@ -8,7 +8,6 @@ const initialState = {
   USDpercentChange: 0,
   percentDownloaded: 0,
   webGLEnabled: false,
-  daemonAvailable: false,
 };
 
 export default (state = initialState, action) => {
@@ -17,19 +16,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
-        daemonAvailable: true,
-      };
-      break;
-    case TYPE.DAEMON_UNAVAILABLE:
-      var temp = undefined;
-      if (state.connections !== undefined) {
-        temp = 0;
-      }
-
-      return {
-        ...state,
-        connections: temp,
-        daemonAvailable: action.payload,
       };
       break;
     case TYPE.SET_WEBGL_ENABLED:

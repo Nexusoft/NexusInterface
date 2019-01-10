@@ -8,14 +8,14 @@ const initialState = {
   openSecondModal: false,
   openThirdModal: false,
   openFourthModal: false,
-  openErrorModal: false,
+  openErrorDialog: false,
   modaltype: '',
   confirmation: false,
   actionItem: '',
   modalVisable: false,
   heighestPeerBlock: 0,
   isInSync: false,
-  blockDate: 'Getting Next Block...',
+  blockDate: null,
   portAvailable: false,
   Search: '',
   contactSearch: '',
@@ -25,6 +25,7 @@ const initialState = {
   displayBTCvalues: [],
   displayNXSvalues: [],
   BootstrapModal: false,
+  encryptionModalShown: false,
 };
 
 export default (state = initialState, action) => {
@@ -152,7 +153,7 @@ export default (state = initialState, action) => {
     case TYPE.SHOW_ERROR_MODAL:
       return {
         ...state,
-        openErrorModal: true,
+        openErrorDialog: true,
         modaltype: action.payload,
       };
       break;
@@ -160,7 +161,7 @@ export default (state = initialState, action) => {
     case TYPE.HIDE_ERROR_MODAL:
       return {
         ...state,
-        openErrorModal: false,
+        openErrorDialog: false,
       };
       break;
     case TYPE.SET_HIGHEST_PEER_BLOCK:
@@ -205,6 +206,11 @@ export default (state = initialState, action) => {
         rawNXSvalues: action.payload.rawNXS,
       };
       break;
+    case TYPE.SHOW_ENCRYPTION_MODAL:
+      return {
+        ...state,
+        encryptionModalShown: true,
+      };
     default:
       return state;
   }

@@ -102,6 +102,27 @@ const ButtonComponent = styled.button(
             filter: `drop-shadow(0 0 7px ${color.fade(theme.primary, 0.3)})`,
           },
         };
+      case 'error':
+        return {
+          '&, &:active, &&[disabled]': {
+            border: `2px solid ${theme.error}`,
+            color: theme.error,
+            fontWeight: 'bold',
+            transitionProperty: 'border-color, color, filter',
+            transitionTimingFunction: 'ease-out',
+            boxShadow: 'none',
+            textShadow: 'none',
+
+            '.tooltip': {
+              fontWeight: 'normal',
+            },
+          },
+          '&:hover': {
+            borderColor: color.lighten(theme.error, 0.3),
+            color: color.lighten(theme.error, 0.3),
+            filter: `drop-shadow(0 0 7px ${color.fade(theme.error, 0.3)})`,
+          },
+        };
       case 'filled-primary':
         return {
           '&, &:active, &&[disabled]': {
