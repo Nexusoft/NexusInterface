@@ -21,7 +21,7 @@ const TextFieldComponent = styled.div(
     display: size ? 'inline-flex' : 'flex',
   }),
 
-  ({ skin, focus, theme }) => {
+  ({ skin, focus, error, theme }) => {
     switch (skin) {
       case 'underline':
         return {
@@ -36,21 +36,26 @@ const TextFieldComponent = styled.div(
             right: 0,
             height: 2,
             borderRadius: 1,
-            background: theme.gray,
+            background: error ? theme.error : theme.gray,
             transitionProperty: 'background-color, box-shadow',
             transitionDuration: timing.normal,
           },
           '&:hover': {
             color: theme.light,
             '&::after': {
-              background: theme.lightGray,
+              background: error
+                ? color.lighten(theme.error, 0.3)
+                : theme.lightGray,
             },
           },
           ...(focus
             ? {
                 '&&::after': {
-                  background: color.lighten(theme.primary, 0.3),
-                  boxShadow: `0 0 15px ${theme.primary}`,
+                  background: color.lighten(
+                    error ? theme.error : theme.primary,
+                    0.3
+                  ),
+                  boxShadow: `0 0 15px ${error ? theme.error : theme.primary}`,
                 },
               }
             : null),
@@ -67,9 +72,12 @@ const TextFieldComponent = styled.div(
           },
           ...(focus
             ? {
-                '&&::after': {
-                  background: theme.light,
-                },
+                background: theme.light,
+              }
+            : null),
+          ...(error
+            ? {
+                border: `1px solid ${theme.error}`,
               }
             : null),
         };
@@ -89,6 +97,14 @@ const TextFieldComponent = styled.div(
                 '&, &:hover': {
                   borderColor: theme.primary,
                   boxShadow: `0 0 5px ${theme.primary}`,
+                },
+              }
+            : null),
+          ...(error
+            ? {
+                '&, &:hover': {
+                  borderColor: theme.error,
+                  boxShadow: `0 0 5px ${theme.error}`,
                 },
               }
             : null),
@@ -161,6 +177,11 @@ const Input = styled.input(
     }
 );
 
+const Error = styled.div(({ theme }) => ({
+  fontSize: '.9em',
+  color: theme.error,
+}));
+
 const multilineStyle = css({
   height: 'auto',
   width: '100%',
@@ -168,9 +189,24 @@ const multilineStyle = css({
   paddingBottom: '.5em',
 });
 
+const multilineProps = {
+  as: 'textarea',
+  css: multilineStyle,
+};
+
 export default class TextField extends Component {
   state = {
     focus: false,
+  };
+
+  handleFocus = e => {
+    this.setState({ focus: true });
+    this.props.onFocus && this.props.onFocus(e);
+  };
+
+  handleBlur = e => {
+    this.setState({ focus: false });
+    this.props.onBlur && this.props.onBlur(e);
   };
 
   render() {
@@ -182,32 +218,38 @@ export default class TextField extends Component {
       left,
       right,
       size,
+      error,
       ...rest
     } = this.props;
 
     const inputProps = {
       skin,
       size,
-      onFocus: () => this.setState({ focus: true }),
-      onBlur: () => this.setState({ focus: false }),
-      ...(multiline
-        ? {
-            as: 'textarea',
-            css: multilineStyle,
-          }
-        : null),
+      ...(multiline ? multilineProps : null),
       ...rest,
+      onFocus: this.handleFocus,
+      onBlur: this.handleBlur,
     };
 
     return (
-      <TextFieldComponent
-        {...{ className, style, skin, size }}
-        focus={this.state.focus}
-      >
-        {left}
-        <Input {...inputProps} />
-        {right}
-      </TextFieldComponent>
+      <>
+        <TextFieldComponent
+          {...{ className, style, skin, size, error }}
+          focus={this.state.focus}
+        >
+          {left}
+          <Input {...inputProps} />
+          {right}
+        </TextFieldComponent>
+        {error && <Error>{error}</Error>}
+      </>
     );
   }
 }
+
+// TextField wrapper for redux-form
+const TextFieldReduxFForm = ({ input, meta, ...rest }) => (
+  <TextField error={meta.touched && meta.error} {...input} {...rest} />
+);
+
+TextField.RF = TextFieldReduxFForm;
