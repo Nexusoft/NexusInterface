@@ -210,11 +210,6 @@ class SettingsApp extends Component {
       this.refs.backupInputField.directory = true;
     }
   }
-  // React Method (Life cycle hook)
-  componentWillUnmount() {
-    // Why?
-    this.props.setSettings(GetSettings());
-  }
 
   updateBackupLocation(event) {
     var el = event.target;
