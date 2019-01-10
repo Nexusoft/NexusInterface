@@ -33,35 +33,8 @@ const mapDispatchToProps = dispatch => ({
   updateSettings: settings => {
     dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings });
   },
-  OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
-  },
-  OpenModal2: type => {
-    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
-  },
-  OpenModal3: type => {
-    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
-  },
-  CloseModal2: type => {
-    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
-  },
-  CloseModal3: type => {
-    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
-  },
   clearForRestart: () => {
     dispatch({ type: TYPE.CLEAR_FOR_RESTART });
-  },
-  CloseModal: () => {
-    dispatch({ type: TYPE.HIDE_MODAL });
-  },
-  CloseManualDaemonModal: () => {
-    dispatch({ type: TYPE.CLOSE_MANUAL_DAEMON_MODAL });
-  },
-  OpenManualDaemonModal: () => {
-    dispatch({ type: TYPE.OPEN_MANUAL_DAEMON_MODAL });
-  },
-  updateManualDaemonSetting: bool => {
-    dispatch({ type: TYPE.UPDATE_MANUAL_DAEMON_SETTINGS, payload: bool });
   },
   clearOverviewVariables: () => {
     dispatch({ type: TYPE.CLEAR_FOR_BOOTSTRAPING });

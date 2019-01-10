@@ -1,7 +1,6 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
 import styled from '@emotion/styled';
 
 // Internal
@@ -32,16 +31,11 @@ const mapDispatchToProps = dispatch => ({
   getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
 });
 
-class Security extends Component {
+class Encrypted extends Component {
   componentWillUnmount() {
     this.props.wipe();
   }
   render() {
-    if (!this.props.loggedIn) {
-      return (
-        <Redirect to={this.props.match.path.replace('/Content', '/Security')} />
-      );
-    }
     return (
       <div>
         <SecuritySettings>
@@ -56,4 +50,4 @@ class Security extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Security);
+)(Encrypted);

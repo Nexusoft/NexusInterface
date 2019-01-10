@@ -1,25 +1,21 @@
-// External Dependencies
+// External
 import React, { Component } from 'react';
 import { Route, Redirect, Switch } from 'react-router';
-import { connect } from 'react-redux';
 import { remote } from 'electron';
 import Text from 'components/Text';
 import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 
-// Internal Global Dependencies
+// Internal Global
 import ContextMenuBuilder from 'contextmenu';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
 
-// Internal Local Dependencies
-import styles from './style.css';
+// Internal Local
 import SettingsApp from './SettingsApp';
 import SettingsCore from './SettingsCore';
 import SettingsStyle from './Style';
-import Security from './Security/Security';
-import Login from './Security/Login';
-import Unencrypted from './Security/Unencrypted';
+import Security from './Security';
 
 // Images
 import settingsIcon from 'images/settings.sprite.svg';
@@ -46,27 +42,15 @@ const SettingsContent = styled.div({
   overflow: 'auto',
 });
 
-// React-Redux mandatory methods
-const mapStateToProps = state => {
-  return {
-    ...state.common,
-    ...state.intl,
-  };
-};
-//const mapDispatchToProps = dispatch => {};
-
-class Settings extends Component {
-  // React Method (Life cycle hook)
+export default class Settings extends Component {
   componentDidMount() {
     googleanalytics.SendScreen('Settings');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
-  // React Method (Life cycle hook)
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
-  // Class Methods
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -75,9 +59,8 @@ class Settings extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
-  // Mandatory React method
   render() {
-    const { encrypted, match, loggedIn } = this.props;
+    const { match } = this.props;
 
     return (
       <Panel
@@ -98,14 +81,7 @@ class Settings extends Component {
               text={<Text id="Settings.Core" />}
             />
             <Tab
-              link={`${match.url}/${encrypted ? 'Security' : 'Unencrypted'}`}
-              isActive={(m, location) =>
-                [
-                  `${match.url}/Security`,
-                  `${match.url}/Login`,
-                  `${match.url}/Unencrypted`,
-                ].includes(location.pathname)
-              }
+              link={`${match.url}/Security`}
               icon={lockIcon}
               text={<Text id="Settings.Security" />}
             />
@@ -129,21 +105,7 @@ class Settings extends Component {
               />
               <Route path={`${match.path}/Core`} component={SettingsCore} />
               <Route path={`${match.path}/Style`} component={SettingsStyle} />
-              <Route
-                path={`${match.path}/Security`}
-                render={props =>
-                  loggedIn ? (
-                    <Security {...props} />
-                  ) : (
-                    <Redirect to={`${match.path}/Login`} />
-                  )
-                }
-              />
-              <Route
-                path={`${match.path}/Unencrypted`}
-                component={Unencrypted}
-              />
-              <Route path={`${match.path}/Login`} component={Login} />
+              <Route path={`${match.path}/Security`} component={Security} />
             </Switch>
           </SettingsContent>
         </SettingsComponent>
@@ -151,9 +113,3 @@ class Settings extends Component {
     );
   }
 }
-
-// Mandatory React-Redux method
-export default connect(
-  mapStateToProps
-  //  mapDispatchToProps
-)(Settings);

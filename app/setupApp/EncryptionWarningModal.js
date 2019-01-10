@@ -57,7 +57,7 @@ const EncryptionWarningModal = props => (
           <Button
             as={Link}
             skin="primary"
-            to="/Settings/Unencrypted"
+            to="/Settings/Security"
             onClick={closeModal}
           >
             <Text id="overview.TakeMeThere" />
