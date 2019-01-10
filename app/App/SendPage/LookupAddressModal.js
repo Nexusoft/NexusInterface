@@ -21,21 +21,24 @@ class LookupAddressModal extends Component {
       e => e.name.toLowerCase().indexOf(this.props.Search.toLowerCase()) !== -1
     );
 
-    return filteredAddress.map((e, i) => (
-      <tr key={i}>
-        <td key={e.name + i}> {e.name}</td>
-        {e.notMine.map((ele, i) => (
-          <Tooltip.Trigger
-            position="right"
-            tooltip="Select recipient address"
-            key={ele.address}
+  return filteredAddress.map((e, i) => (
+    <tr key={i}>
+      <td className="contactNames" key={e.name + i}>
+        {e.name}
+      </td>
+      {e.notMine.map((ele, i) => (
+        <Tooltip.Trigger
+          position="right"
+          tooltip="Select recipient address"
+          key={ele.address}
+        >
+          <td
+            className="tda"
+            onClick={() => {
+              closeModal();
+              props.updateAddress(ele.address);
+            }}
           >
-            <td
-              onClick={() => {
-                this.closeModal();
-                this.props.updateAddress(ele.address);
-              }}
-            >
               {ele.address}
             </td>
           </Tooltip.Trigger>
@@ -46,51 +49,57 @@ class LookupAddressModal extends Component {
 
   render() {
     return (
-      <Modal assignClose={close => (this.closeModal = close)}>
-        <Modal.Header>
-          <Text id="sendReceive.Lookup" />
-        </Modal.Header>
-        <Modal.Body>
-          <table id="AddressTable">
-            <thead>
-              <tr>
-                <th className="short-column">
-                  <Text id="sendReceive.Name" />
-                </th>
-                <th className="long-column">
-                  <Text id="sendReceive.Address" />
-                </th>
-                <th>
-                  <Text id="sendReceive.Lookup">
-                    {placeholder => (
-                      <TextField
-                        style={{
-                          marginLeft: '1em',
-                          fontSize: '.9375em',
-                          width: 200,
-                        }}
-                        left={<Icon icon={searchIcon} spaceRight />}
-                        placeholder={placeholder}
-                        value={this.props.Search}
-                        onChange={e => this.props.SearchName(e.target.value)}
-                        required
-                      />
-                    )}
-                  </Text>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.addressbook.length == 0 ? (
-                <h1 style={{ alignSelf: 'center' }}>
-                  <Text id="AddressBook.NoContacts" />
-                </h1>
-              ) : (
-                this.addressBookToQueue()
-              )}
-            </tbody>
-          </table>
-        </Modal.Body>
+      <Modal>
+        {closeModal => (
+          <>
+            <Modal.Header>
+              <Text id="sendReceive.Lookup" />
+            </Modal.Header>
+            <Modal.Body style={{ paddingTop: '0px' }}>
+              <table id="AddressTable">
+                <thead>
+                  <tr>
+                    <th className="short-column">
+                      <Text id="sendReceive.Name" />
+                    </th>
+                    <th className="long-column">
+                      <Text id="sendReceive.Address" />
+                      <span className="searchBar">
+                        <Text id="sendReceive.Lookup">
+                          {placeholder => (
+                            <TextField
+                              style={{
+                                marginLeft: '1em',
+                                fontSize: '.9375em',
+                                width: 200,
+                              }}
+                              left={<Icon icon={searchIcon} spaceRight />}
+                              placeholder={placeholder}
+                              value={this.props.Search}
+                              onChange={e =>
+                                this.props.SearchName(e.target.value)
+                              }
+                              required
+                            />
+                          )}
+                        </Text>
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.props.addressbook.length == 0 ? (
+                    <h1 style={{ alignSelf: 'center' }}>
+                      <Text id="AddressBook.NoContacts" />
+                    </h1>
+                  ) : (
+                    addressBookToQueue(this.props, closeModal)
+                  )}
+                </tbody>
+              </table>
+            </Modal.Body>
+          </>
+        )}
       </Modal>
     );
   }

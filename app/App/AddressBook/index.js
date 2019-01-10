@@ -446,17 +446,23 @@ class AddressBook extends Component {
         if (this.props.myAccounts.length > 0) {
           return (
             <div id="Addresstable-wraper">
-              <h2 className="m1">
-                <Icon icon={addressBookIcon} className="hdr-img" />
+              <div className="m1">
+                {/* <Icon icon={addressBookIcon} className="hdr-img" /> */}
                 <Text id="AddressBook.MyAddresses" />
-              </h2>
+              </div>
               <table className="myAddressTable">
                 <thead className="AddressThead">
                   <th className="short-column">
                     <Text id="AddressBook.Account" />
                     <Text id="AddressBook.searchC">
                       {sba => (
-                        <input
+                        <TextField
+                          style={{
+                            marginLeft: '1em',
+                            fontSize: '.9375em',
+                            width: 200,
+                          }}
+                          left={<Icon icon={searchIcon} spaceRight />}
                           className="searchaccount"
                           placeholder={sba}
                           value={this.props.Search}
