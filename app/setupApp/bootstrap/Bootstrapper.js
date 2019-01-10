@@ -220,7 +220,9 @@ export default class Bootstrapper {
           .filter(child =>
             fs.statSync(path.join(extractDest, child)).isDirectory()
           )
-          .forEach(subFolder => fs.rmdirSync(subFolder));
+          .forEach(subFolder =>
+            fs.rmdirSync(path.join(extractDest, subFolder))
+          );
         fs.rmdirSync(extractDest);
       }
     }, 0);
