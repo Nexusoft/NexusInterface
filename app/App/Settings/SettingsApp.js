@@ -148,8 +148,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
   },
   CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
-  setSettings: settings =>
-    dispatch({ type: TYPE.SET_SETTINGS, payload: settings }),
+  updateSettings: settings =>
+    dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings }),
   setFiatCurrency: inValue => {
     dispatch({ type: TYPE.SET_FIAT_CURRENCY, payload: inValue });
   },
@@ -400,7 +400,7 @@ class SettingsApp extends Component {
     this.props.setFiatCurrency(value);
     let settings = GetSettings();
     settings.fiatCurrency = value;
-    this.props.setSettings(settings);
+    this.props.updateSettings(settings);
     SaveSettings(settings);
   }
 
@@ -419,7 +419,7 @@ class SettingsApp extends Component {
           settings.Folder = folderPaths.toString();
           this.props.SeeFolder(folderPaths[0]);
 
-          this.props.setSettings(settings);
+          this.props.updateSettings(settings);
           SaveSettings(settings);
         }
       }

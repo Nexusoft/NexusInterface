@@ -30,8 +30,8 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = dispatch => ({
-  setSettings: settings => {
-    dispatch({ type: TYPE.SET_SETTINGS, payload: settings });
+  updateSettings: settings => {
+    dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings });
   },
   OpenModal: type => {
     dispatch({ type: TYPE.SHOW_MODAL, payload: type });
@@ -295,7 +295,7 @@ class SettingsCore extends Component {
       ),
       note: <Text id="Settings.ChangesNexTime" />,
       yesCallback: () => {
-        this.props.setSettings(GetSettings());
+        this.props.updateSettings(GetSettings());
         UIController.showNotification(
           <Text id="Alert.CoreSettingsSaved" />,
           'success'
@@ -336,9 +336,10 @@ class SettingsCore extends Component {
             subLabel={<Text id="ToolTip.Verbose" />}
           >
             <TextField
+              type="number"
               defaultValue={this.initialValues.verboseLevel}
-              size={3}
               onChange={this.updateVerboseLevel}
+              style={{ maxWidth: 50 }}
             />
           </SettingsField>
 

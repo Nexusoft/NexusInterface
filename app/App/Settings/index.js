@@ -8,17 +8,14 @@ import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
-import * as RPC from 'scripts/rpc';
 import ContextMenuBuilder from 'contextmenu';
 import Panel from 'components/Panel';
-import Icon from 'components/Icon';
 import Tab from 'components/Tab';
 
 // Internal Local Dependencies
 import styles from './style.css';
 import SettingsApp from './SettingsApp';
 import SettingsCore from './SettingsCore';
-import SettingsMarket from './SettingsMarket';
 import SettingsStyle from './Style';
 import Security from './Security/Security';
 import Login from './Security/Login';
@@ -29,7 +26,6 @@ import settingsIcon from 'images/settings.sprite.svg';
 import coreIcon from 'images/core.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
 import lockIcon from 'images/lock-minting.sprite.svg';
-import marketImg from 'images/marketstats.svg';
 import developerIcon from 'images/developer.sprite.svg';
 
 const SettingsComponent = styled.div({
@@ -132,7 +128,6 @@ class Settings extends Component {
                 render={props => <SettingsApp {...this.props} />}
               />
               <Route path={`${match.path}/Core`} component={SettingsCore} />
-              <Route path={`${match.path}/Market`} component={SettingsMarket} />
               <Route path={`${match.path}/Style`} component={SettingsStyle} />
               <Route
                 path={`${match.path}/Security`}
