@@ -355,7 +355,7 @@
   "Alert.WalletLocked": "Wallet Locked",
   "Alert.WalletBackedUp": "Wallet Backed Up",
   "Alert.InvalidTransactionFee": "Invalid Transaction Fee",
-  "Alert.Copied": "Copied",
+  "Alert.Copied": "Copied to clipboard",
   "Alert.StyleSettingsSaved": "Style Settings Saved",
   "Alert.NoAmmountSet": "No Amount Set",
   "Alert.PleaseFillOutField": "Please Fill Out Field",

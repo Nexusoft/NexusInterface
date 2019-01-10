@@ -5,17 +5,11 @@ import styled from '@emotion/styled';
 
 // Internal
 import styles from './style.css';
+import SecuritySettingsLayout from 'components/SecuritySettingsLayout';
 import * as TYPE from 'actions/actiontypes';
 import ChangePassword from './ChangePassword';
 import ImportPrivKey from './ImportPrivKey';
 import ViewPrivKeyForAddress from './ViewPrivKeyForAddress';
-
-const SecuritySettings = styled.div({
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-});
 
 const mapStateToProps = state => {
   return {
@@ -38,11 +32,11 @@ class Encrypted extends Component {
   render() {
     return (
       <div>
-        <SecuritySettings>
-          <ChangePassword {...this.props} />
-          <ImportPrivKey {...this.props} />
-        </SecuritySettings>
-        <ViewPrivKeyForAddress {...this.props} />
+        <SecuritySettingsLayout>
+          <ChangePassword />
+          <ImportPrivKey />
+        </SecuritySettingsLayout>
+        <ViewPrivKeyForAddress />
       </div>
     );
   }

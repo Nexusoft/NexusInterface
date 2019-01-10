@@ -2,19 +2,38 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { jsx, css } from '@emotion/core';
-import Button from 'components/Button';
-import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
 import { color } from 'utils';
 
 const inputHeightHalf = '1.125em';
-const iconSpace = '3em';
+
+const ErrorMessage = styled(Tooltip)(
+  {
+    position: 'absolute',
+    top: 'calc(100% + 10px)',
+    left: 0,
+    opacity: 0,
+    transition: `opacity ${timing.normal}`,
+    zIndex: 1,
+  },
+  ({ focus }) =>
+    focus && {
+      opacity: 1,
+    }
+);
 
 const TextFieldComponent = styled.div(
   {
     position: 'relative',
     height: consts.inputHeightEm + 'em',
     alignItems: 'center',
+
+    '&:hover': {
+      [ErrorMessage]: {
+        opacity: 1,
+      },
+    },
   },
 
   ({ size }) => ({
@@ -177,11 +196,6 @@ const Input = styled.input(
     }
 );
 
-const Error = styled.div(({ theme }) => ({
-  fontSize: '.9em',
-  color: theme.error,
-}));
-
 const multilineStyle = css({
   height: 'auto',
   width: '100%',
@@ -218,6 +232,7 @@ export default class TextField extends Component {
       left,
       right,
       size,
+      readOnly,
       error,
       ...rest
     } = this.props;
@@ -225,6 +240,7 @@ export default class TextField extends Component {
     const inputProps = {
       skin,
       size,
+      readOnly,
       ...(multiline ? multilineProps : null),
       ...rest,
       onFocus: this.handleFocus,
@@ -232,17 +248,24 @@ export default class TextField extends Component {
     };
 
     return (
-      <>
-        <TextFieldComponent
-          {...{ className, style, skin, size, error }}
-          focus={this.state.focus}
-        >
-          {left}
-          <Input {...inputProps} />
-          {right}
-        </TextFieldComponent>
-        {error && <Error>{error}</Error>}
-      </>
+      <TextFieldComponent
+        {...{ className, style, skin, size, error }}
+        focus={!readOnly && this.state.focus}
+      >
+        {left}
+        <Input {...inputProps} />
+        {right}
+        {!!error && (
+          <ErrorMessage
+            skin="error"
+            position="bottom"
+            align="start"
+            focus={this.state.focus}
+          >
+            {error}
+          </ErrorMessage>
+        )}
+      </TextFieldComponent>
     );
   }
 }

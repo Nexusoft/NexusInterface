@@ -70,7 +70,9 @@ const ButtonComponent = styled.button(
 
   ({ waiting }) =>
     waiting && {
-      cursor: 'wait',
+      '&, &:disabled': {
+        cursor: 'wait',
+      },
     },
 
   ({ skin, theme }) => {

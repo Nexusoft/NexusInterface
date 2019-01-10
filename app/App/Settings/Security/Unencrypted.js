@@ -8,18 +8,12 @@ import styled from '@emotion/styled';
 
 // Internal
 import styles from './style.css';
+import SecuritySettingsLayout from 'components/SecuritySettingsLayout';
 import * as TYPE from 'actions/actiontypes';
 import WaitingMessage from 'components/WaitingMessage';
 import EncryptWallet from './EncryptWallet';
 import ImportPrivKey from './ImportPrivKey';
 import ViewPrivKeyForAddress from './ViewPrivKeyForAddress';
-
-const SecuritySettings = styled.div({
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-});
 
 const mapStateToProps = state => {
   return {
@@ -54,11 +48,11 @@ class Unencrypted extends Component {
     } else {
       return (
         <div>
-          <SecuritySettings>
-            <EncryptWallet {...this.props} />
-            <ImportPrivKey {...this.props} />
-          </SecuritySettings>
-          <ViewPrivKeyForAddress {...this.props} />
+          <SecuritySettingsLayout>
+            <EncryptWallet />
+            <ImportPrivKey />
+          </SecuritySettingsLayout>
+          <ViewPrivKeyForAddress />
         </div>
       );
     }
