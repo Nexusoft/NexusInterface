@@ -231,38 +231,22 @@ class Overview extends Component {
 
   // React Method (Life cycle hook)
   componentDidUpdate(prevProps) {
-    const {
-      blocks,
-      webGLEnabled,
-      settings,
-      connections,
-      percentDownloaded,
-    } = this.props;
+    const { blocks, connections } = this.props;
 
-    if (webGLEnabled && settings.renderGlobe) {
-      if (blocks != prevProps.blocks && blocks && prevProps.blocks) {
+    if (this.showingGlobe()) {
+      if (blocks && prevProps.blocks && blocks != prevProps.blocks) {
         this.redrawCurves();
       }
 
-      if (
-        connections === 0 ||
-        (connections === undefined && percentDownloaded == 0.001)
-      ) {
+      if (prevProps.connections && !connections) {
         this.removeAllPoints();
         this.reDrawEverything();
         return;
       }
 
-      if (settings.acceptedagreement || settings.renderGlobe || webGLEnabled) {
-        if (
-          (!prevProps.connections && connections) ||
-          (connections !== prevProps.connections &&
-            connections !== undefined &&
-            prevProps.connections !== undefined)
-        ) {
-          //Daemon Starting Up
-          this.reDrawEverything();
-        }
+      if (connections && prevProps.connections !== connections) {
+        //Daemon Starting Up
+        this.reDrawEverything();
       }
     }
   }
@@ -311,7 +295,7 @@ class Overview extends Component {
     return blockWeightIcons[bw];
   }
 
-  isGlobeEnabled() {
+  showingGlobe() {
     return (
       this.props.settings.acceptedagreement &&
       this.props.settings.renderGlobe &&
@@ -402,7 +386,7 @@ class Overview extends Component {
     const { connections, balance, stake, displayNXSvalues } = this.props;
     return (
       <OverviewPage>
-        {!!this.isGlobeEnabled() && (
+        {!!this.showingGlobe() && (
           <>
             <NetworkGlobe
               handleOnLineRender={e => (this.redrawCurves = e)}
@@ -422,7 +406,7 @@ class Overview extends Component {
           </>
         )}
 
-        <Stats left compact={!this.isGlobeEnabled()}>
+        <Stats left compact={!this.showingGlobe()}>
           <Stat
             as={connections ? Link : undefined}
             to={connections ? '/Transactions' : undefined}
@@ -533,7 +517,7 @@ class Overview extends Component {
           </Stat>
         </Stats>
 
-        <Stats right compact={!this.isGlobeEnabled()}>
+        <Stats right compact={!this.showingGlobe()}>
           <Stat>
             <StatIcon icon={this.connectionsIcon()} />
             <div>
