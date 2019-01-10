@@ -42,7 +42,7 @@ export default class BootstrapBackgroundTask extends Component {
           : 0;
         return `Downloading... ${percentage}%`;
       case 'extracting':
-        return 'Uncompressing...';
+        return 'Decompressing...';
       case 'finalizing':
         return 'Finalizing...';
       default:
