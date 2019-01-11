@@ -194,8 +194,9 @@ class Market extends Component {
   render() {
     return (
       <Panel icon={chartIcon} title={<Text id="Market.Information" />}>
-        <a className="refresh" onClick={() => this.refresher()}>
+        <a className="refresh" style={{right:"2em"}} onClick={() => this.refresher()}>
           <Text id="Market.Refreash" />
+
         </a>
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 
@@ -208,10 +209,11 @@ class Market extends Component {
                 chartSellData={this.formatChartData('binanceSell')}
               />
               {this.props.binance.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.binance.candlesticks} />
+                <Candlestick data={this.props.binance.candlesticks} locale={this.props.settings.locale} />
               ) : (
-                this.oneDayinfo('binance')
+                null
               )}
+              {this.oneDayinfo('binance')}
             </div>
           </div>
         )}
@@ -224,10 +226,11 @@ class Market extends Component {
                 chartSellData={this.formatChartData('bittrexSell')}
               />
               {this.props.bittrex.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.bittrex.candlesticks} />
+                <Candlestick data={this.props.bittrex.candlesticks} locale={this.props.settings.locale} />
               ) : (
-                this.oneDayinfo('bittrex')
+                null
               )}
+              {this.oneDayinfo('bittrex')}
             </div>
           </div>
         )}
@@ -241,10 +244,11 @@ class Market extends Component {
               />
 
               {this.props.cryptopia.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.cryptopia.candlesticks} />
+                <Candlestick data={this.props.cryptopia.candlesticks} locale={this.props.settings.locale} />
               ) : (
-                this.oneDayinfo('cryptopia')
+                null
               )}
+              {this.oneDayinfo('cryptopia')}
             </div>
           </div>
         )}

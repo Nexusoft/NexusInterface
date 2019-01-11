@@ -231,10 +231,10 @@ class Overview extends Component {
 
   // React Method (Life cycle hook)
   componentDidUpdate(prevProps) {
-    const { blocks, connections } = this.props;
+    const { blocks, webGLEnabled, settings, connections } = this.props;
 
-    if (this.showingGlobe()) {
-      if (blocks && prevProps.blocks && blocks != prevProps.blocks) {
+    if (settings.acceptedagreement && webGLEnabled && settings.renderGlobe) {
+      if (blocks != prevProps.blocks && blocks && prevProps.blocks) {
         this.redrawCurves();
       }
 

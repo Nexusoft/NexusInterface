@@ -12,6 +12,7 @@ export default function getInfo() {
       info = await RPC.PROMISE('getinfo', []);
     } catch (err) {
       console.log(err);
+      dispatch(ac.clearOverviewVariables());
       return;
     }
 
