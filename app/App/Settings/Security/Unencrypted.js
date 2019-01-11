@@ -1,38 +1,15 @@
 // External
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import Text from 'components/Text';
 
 // Internal
+import Text from 'components/Text';
 import SecuritySettingsLayout from 'components/SecuritySettingsLayout';
-import * as TYPE from 'actions/actiontypes';
 import WaitingMessage from 'components/WaitingMessage';
 import EncryptWallet from './EncryptWallet';
 import ImportPrivKey from './ImportPrivKey';
 import ViewPrivKeyForAddress from './ViewPrivKeyForAddress';
 
-const mapStateToProps = state => {
-  return {
-    ...state.common,
-    ...state.login,
-    ...state.overview,
-  };
-};
-const mapDispatchToProps = dispatch => ({
-  wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
-  OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
-  },
-  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
-  ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
-});
-
-class Unencrypted extends Component {
-  componentWillUnmount() {
-    this.props.wipe();
-  }
-
+export default class Unencrypted extends Component {
   render() {
     if (this.props.connections === undefined) {
       return (
@@ -54,8 +31,3 @@ class Unencrypted extends Component {
     }
   }
 }
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Unencrypted);

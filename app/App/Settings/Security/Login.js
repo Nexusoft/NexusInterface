@@ -32,13 +32,16 @@ const Buttons = styled.div({
     password: '',
     stakingOnly: false,
   },
-  validate: ({ date, time }) => {
+  validate: ({ date, time, password }) => {
     const errors = {};
     if (!date) {
       errors.date = 'Date is required';
     }
     if (!time) {
       errors.time = 'Time is required';
+    }
+    if (!password) {
+      errors.password = 'Password is required';
     }
     return errors;
   },
@@ -59,6 +62,7 @@ const Buttons = styled.div({
     ]);
   },
   onSubmitSuccess: async (result, dispatch) => {
+    UIController.showNotification('Wallet unlocked', 'success');
     dispatch(getInfo());
   },
   onSubmitFail: (errors, dispatch, submitError) => {
@@ -73,7 +77,7 @@ const Buttons = styled.div({
       }
       UIController.openErrorDialog({
         message: 'Error unlocking wallet',
-        note: submitError,
+        note: note,
       });
     }
   },
