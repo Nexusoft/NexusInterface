@@ -13,13 +13,18 @@ const ErrorMessage = styled(Tooltip)(
     position: 'absolute',
     top: 'calc(100% + 10px)',
     left: 0,
+    maxWidth: '100%',
     opacity: 0,
-    transition: `opacity ${timing.normal}`,
+    visibility: 'hidden',
+    transition: `opacity ${timing.normal}, visibility ${timing.normal}`,
     zIndex: 1,
+    whiteSpace: 'normal',
+    textAlign: 'left',
   },
   ({ focus }) =>
     focus && {
       opacity: 1,
+      visibility: 'visible',
     }
 );
 
@@ -32,6 +37,7 @@ const TextFieldComponent = styled.div(
     '&:hover': {
       [ErrorMessage]: {
         opacity: 1,
+        visibility: 'visible',
       },
     },
   },

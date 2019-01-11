@@ -5,9 +5,9 @@ import { remote } from 'electron';
 import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
 import * as ac from 'actions/setupAppActionCreators';
+import getInfo from 'actions/getInfo';
 import MenuBuilder from './menuBuilder';
 import loadSettings from './loadSettings';
-import getInfo from './getInfo';
 import setupTray from './setupTray';
 
 export default function setupApp(store, history) {
@@ -21,8 +21,8 @@ export default function setupApp(store, history) {
 
   dispatch(ac.LoadAddressBook());
 
-  getInfo(store);
-  setInterval(() => getInfo(store), 20000);
+  dispatch(getInfo());
+  setInterval(() => dispatch(getInfo()), 20000);
 
   dispatch(ac.SetMarketAveData());
   setInterval(function() {

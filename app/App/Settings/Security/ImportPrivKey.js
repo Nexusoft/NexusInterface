@@ -1,5 +1,6 @@
 // External
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -11,6 +12,7 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
+import * as TYPE from 'actions/actiontypes';
 
 const ImportPrivKeyForm = styled.form({
   flex: 3,
@@ -18,6 +20,12 @@ const ImportPrivKeyForm = styled.form({
 
 const trimValue = value => value && value.trim();
 
+@connect(
+  null,
+  dispatch => ({
+    ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
+  })
+)
 @reduxForm({
   form: 'importPrivateKey',
   initialValues: {
@@ -53,10 +61,12 @@ const trimValue = value => value && value.trim();
     }
   },
   onSubmitFail: (errors, dispatch, submitError) => {
-    UIController.openErrorDialog({
-      message: 'Error importing private key',
-      note: (submitError && submitError.message) || 'An unknown error occurred',
-    });
+    if (!errors || !Object.keys(errors).length) {
+      UIController.openErrorDialog({
+        message: 'Error importing private key',
+        note: submitError || 'An unknown error occurred',
+      });
+    }
   },
 })
 export default class ImportPrivKey extends Component {

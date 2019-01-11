@@ -1,116 +1,110 @@
 // External
 import React, { Component } from 'react';
-import Text from 'components/Text';
-import * as RPC from 'scripts/rpc';
+import { connect } from 'react-redux';
+import { reduxForm, Field, reset } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
+import * as RPC from 'scripts/rpc';
+import getInfo from 'actions/getInfo';
+import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
+import passwordInvalidChars from './passwordInvalidChars';
 
 const ChangePasswordComponent = styled.form({
   flex: 2,
   marginRight: '1em',
 });
 
-export default class ChangePassword extends Component {
-  changePassword(e) {
-    e.preventDefault();
-    let pass, newPass, passChk, passHint;
-    pass = document.getElementById('oldPass');
-    newPass = document.getElementById('newPass');
-    passChk = document.getElementById('passChk');
-    passHint = document.getElementById('passHint');
-    if (pass.value.trim()) {
-      if (/[-$&/*|<>]/.test(newPass.value)) {
-        if (newPass.value === passChk.value) {
-          if (!(newPass.value.endsWith(' ') || newPass.value.startsWith(' '))) {
-            RPC.PROMISE('walletpassphrasechange', [
-              pass.value,
-              newPass.value,
-            ]).then(payload => {
-              if (payload === null) {
-                pass.value = '';
-                newPass.value = '';
-                passChk.value = '';
-                UIController.showNotification(
-                  <Text id="Alert.PasswordHasBeenChanged" />,
-                  'success'
-                );
-              }
-            });
-          } else {
-            passChk.value = '';
-            passHint.innerText = 'Password cannot start or end with spaces';
-            passChk.focus();
-          }
-        } else {
-          passChk.value = '';
-          passHint.innerText = 'Passwords do not match';
-          passChk.focus();
-        }
-      } else {
-        passChk.value = '';
-        passHint.style.visibility = 'visible';
-        passHint.innerText = 'Passwords cannot contain -$&/*|<>';
-        passChk.focus();
-      }
-    } else {
-      passHint.innerText = 'Passwords do not match';
-      pass.focus();
-    }
-  }
+const formName = 'changePassword';
 
-  reEnterValidator(e) {
-    let newPass = document.getElementById('newPass');
-    let passHint = document.getElementById('passHint');
-    if (e.target.value === newPass.value) {
-      e.preventDefault();
-      passHint.style.visibility = 'hidden';
-    } else {
-      passHint.style.visibility = 'visible';
+@connect(
+  null,
+  dispatch => ({
+    getInfo: () => dispatch(getInfo()),
+  })
+)
+@reduxForm({
+  form: formName,
+  initialValues: {
+    password: '',
+    newPassword: '',
+    newPasswordRepeat: '',
+  },
+  validate: ({ password, newPassword, newPasswordRepeat }) => {
+    const errors = {};
+    if (!password) {
+      errors.password = 'Password is required';
     }
-  }
-
-  lockWallet() {
-    this.props.busy();
-    RPC.PROMISE('walletlock', [])
-      .then(payload => {
-        this.props.wipe();
-        this.props.busy();
-        RPC.PROMISE('getinfo', [])
-          .then(payload => {
-            delete payload.timestamp;
-            return payload;
-          })
-          .then(payload => {
-            this.props.getInfo(payload);
-          });
-      })
-      .catch(e => {
-        UIController.openErrorDialog({ message: e });
+    if (passwordInvalidChars.test(newPassword)) {
+      errors.newPassword =
+        'Password cannot contain these characters: - $ / & * | < >';
+    } else if (!newPassword || newPassword.length < 8) {
+      errors.newPassword = 'Password must be at least 8 characters';
+    } else if (newPassword !== newPassword.trim()) {
+      errors.newPassword = 'Password cannot start or end with spaces';
+    }
+    if (newPasswordRepeat !== newPassword) {
+      errors.newPasswordRepeat = 'Passwords do not match';
+    }
+    return errors;
+  },
+  onSubmit: ({ password, newPassword }) =>
+    RPC.PROMISE('walletpassphrasechange', [password, newPassword]),
+  onSubmitSuccess: (result, dispatch) => {
+    UIController.openSuccessDialog({
+      message: <Text id="Alert.PasswordHasBeenChanged" />,
+    });
+    dispatch(reset(formName));
+  },
+  onSubmitFail: (errors, dispatch, submitError) => {
+    if (!errors || !Object.keys(errors).length) {
+      UIController.openErrorDialog({
+        message: 'Error changing password',
+        note: submitError || 'An unknown error occurred',
       });
-  }
+    }
+  },
+})
+export default class ChangePassword extends Component {
+  confirmLockWallet = () => {
+    UIController.openConfirmDialog({
+      question: 'Are you sure you want to lock your wallet?',
+      yesCallback: async () => {
+        try {
+          await RPC.PROMISE('walletlock', []);
+          this.props.getInfo();
+        } catch (err) {
+          const note = (err & err.error && err.error.message) || err;
+          UIController.openErrorDialog({
+            message: 'Error locking wallet',
+            note,
+          });
+        }
+      },
+    });
+  };
 
   render() {
+    const { handleSubmit, submitting } = this.props;
     return (
-      <ChangePasswordComponent>
+      <ChangePasswordComponent onSubmit={handleSubmit}>
         <FieldSet legend={<Text id="Settings.ChangePassword" />}>
           <Text id="Settings.Password">
             {p => (
               <FormField
                 connectLabel
                 label={<Text id="Settings.PreviousPassword" />}
-                hint={<Text id="Settings.PasswordRequired" />}
               >
-                <TextField
+                <Field
+                  component={TextField.RF}
+                  name="password"
                   type="password"
                   placeholder={p}
-                  id="oldPass"
-                  required
                 />
               </FormField>
             )}
@@ -120,58 +114,40 @@ export default class ChangePassword extends Component {
               <FormField
                 connectLabel
                 label={<Text id="Settings.NewPassword" />}
-                hint={<Text id="Settings.PasswordRequired" />}
               >
-                <TextField
+                <Field
+                  component={TextField.RF}
+                  name="newPassword"
                   type="password"
                   placeholder={np}
-                  id="newPass"
-                  required
                 />
               </FormField>
             )}
           </Text>
-          <Text id="Settings.ReEnterPassword">
-            {rep => (
-              <FormField
-                connectLabel
-                label={<Text id="Settings.ReEnterPassword" />}
-                hint={<Text id="Settings.NoMatch" />}
-              >
-                <TextField
-                  type="password"
-                  placeholder={rep}
-                  id="passChk"
-                  onChange={e => this.reEnterValidator(e)}
-                />
-              </FormField>
-            )}
-          </Text>
-          {/* temporary workaround to avoid error */}
-          <span id="passHint" style={{ display: 'none' }} />
-          {/* <span id="passHint" className="err invalid">
-                <Text
-                  id="Settings.NoMatch"
-                />
-              </span> */}
+          <FormField
+            connectLabel
+            label={<Text id="Settings.ReEnterPassword" />}
+          >
+            <Field
+              component={TextField.RF}
+              name="newPasswordRepeat"
+              type="password"
+              placeholder="Confirm your password"
+            />
+          </FormField>
 
           <Button
+            type="submit"
             skin="primary"
             wide
+            disabled={submitting}
             style={{ marginTop: '2em' }}
-            onClick={() => this.changePassword(e)}
           >
-            <Text id="Settings.Submit" />
+            <Text id="Settings.ChangePassword" />
           </Button>
         </FieldSet>
 
-        <Button
-          wide
-          onClick={e => {
-            e.preventDefault();
-            this.lockWallet();
-          }}
-        >
+        <Button wide onClick={this.confirmLockWallet}>
           <Text id="Settings.LockWallet" />
         </Button>
       </ChangePasswordComponent>

@@ -96,4 +96,9 @@ const SwitchInput = styled.input(({ theme }) => {
 
 const Switch = props => <SwitchInput type="checkbox" {...props} />;
 
+const SwitchReduxForm = ({ input, meta, ...rest }) => (
+  <Switch {...input} {...rest} />
+);
+Switch.RF = SwitchReduxForm;
+
 export default Switch;

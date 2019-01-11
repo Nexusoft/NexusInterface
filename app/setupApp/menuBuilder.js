@@ -9,7 +9,7 @@ import core from 'api/core';
 import Text from 'components/Text';
 import UIController from 'components/UIController';
 import * as ac from 'actions/setupAppActionCreators';
-import bootstrap, { checkFreeSpace } from './bootstrap';
+import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 
 export default class MenuBuilder {
   constructor(store, history) {
@@ -184,7 +184,7 @@ export default class MenuBuilder {
         return;
       }
 
-      bootstrap(this.store);
+      this.store.dispatch(bootstrap());
     },
   };
 

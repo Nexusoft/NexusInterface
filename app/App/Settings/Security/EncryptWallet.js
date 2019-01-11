@@ -12,6 +12,7 @@ import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import { consts } from 'styles';
+import passwordInvalidChars from './passwordInvalidChars';
 
 const EncryptWalletForm = styled.form({
   flex: 2,
@@ -29,8 +30,6 @@ const Characters = styled.span({
   letterSpacing: 4,
 });
 
-const passwordRegex = /[-$/&*|<>]/;
-
 @reduxForm({
   form: 'encryptWallet',
   initialValues: {
@@ -39,12 +38,12 @@ const passwordRegex = /[-$/&*|<>]/;
   },
   validate: ({ password, passwordRepeat }) => {
     const errors = {};
-    if (passwordRegex.test(password)) {
+    if (passwordInvalidChars.test(password)) {
       errors.password =
         'Password cannot contain these characters: - $ / & * | < >';
     } else if (!password || password.length < 8) {
       errors.password = 'Password must be at least 8 characters';
-    } else if (password.endsWith(' ') || password.startsWith(' ')) {
+    } else if (password !== password.trim()) {
       errors.password = 'Password cannot start or end with spaces';
     }
     if (passwordRepeat !== password) {
@@ -52,7 +51,7 @@ const passwordRegex = /[-$/&*|<>]/;
     }
     return errors;
   },
-  onSubmit: ({ password }) => RPC.PROMISE('encryptwallet', [newPass.value]),
+  onSubmit: ({ password }) => RPC.PROMISE('encryptwallet', [password]),
   onSubmitSuccess: () => {
     UIController.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
@@ -65,10 +64,12 @@ const passwordRegex = /[-$/&*|<>]/;
     });
   },
   onSubmitFail: (errors, dispatch, submitError) => {
-    UIController.openErrorDialog({
-      message: 'Error encrypting wallet',
-      note: (submitError && submitError.message) || 'An unknown error occurred',
-    });
+    if (!errors || !Object.keys(errors).length) {
+      UIController.openErrorDialog({
+        message: 'Error encrypting wallet',
+        note: submitError || 'An unknown error occurred',
+      });
+    }
   },
 })
 export default class EncryptWallet extends Component {

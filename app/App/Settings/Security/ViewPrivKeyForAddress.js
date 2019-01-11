@@ -34,14 +34,13 @@ const formName = 'viewPrivateKey';
   onSubmitSuccess: (result, dispatch) => {
     dispatch(change(formName, 'privateKey', result));
   },
-  onSubmitFail: (...args) => {
-    console.log(args);
-    UIController.openErrorDialog({
-      message: 'Error getting private key',
-      note:
-        (submitError && submitError.error && submitError.error.message) ||
-        'An unknown error occurred',
-    });
+  onSubmitFail: (errors, dispatch, submitError) => {
+    if (!errors || !Object.keys(errors).length) {
+      UIController.openErrorDialog({
+        message: 'Error getting private key',
+        note: submitError || 'An unknown error occurred',
+      });
+    }
   },
 })
 export default class ViewPrivKeyForAddress extends Component {
