@@ -1,10 +1,8 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from '@emotion/styled';
 
 // Internal
-import styles from './style.css';
 import SecuritySettingsLayout from 'components/SecuritySettingsLayout';
 import * as TYPE from 'actions/actiontypes';
 import ChangePassword from './ChangePassword';

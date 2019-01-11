@@ -1,13 +1,9 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
-import { remote } from 'electron';
 import Text from 'components/Text';
-import styled from '@emotion/styled';
 
 // Internal
-import styles from './style.css';
 import SecuritySettingsLayout from 'components/SecuritySettingsLayout';
 import * as TYPE from 'actions/actiontypes';
 import WaitingMessage from 'components/WaitingMessage';
