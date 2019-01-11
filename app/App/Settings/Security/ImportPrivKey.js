@@ -53,10 +53,12 @@ const trimValue = value => value && value.trim();
     }
   },
   onSubmitFail: (errors, dispatch, submitError) => {
-    UIController.openErrorDialog({
-      message: 'Error importing private key',
-      note: (submitError && submitError.message) || 'An unknown error occurred',
-    });
+    if (!errors || !Object.keys(errors).length) {
+      UIController.openErrorDialog({
+        message: 'Error importing private key',
+        note: submitError || 'An unknown error occurred',
+      });
+    }
   },
 })
 export default class ImportPrivKey extends Component {

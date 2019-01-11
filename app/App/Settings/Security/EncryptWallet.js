@@ -52,7 +52,7 @@ const passwordRegex = /[-$/&*|<>]/;
     }
     return errors;
   },
-  onSubmit: ({ password }) => RPC.PROMISE('encryptwallet', [newPass.value]),
+  onSubmit: ({ password }) => RPC.PROMISE('encryptwallet', [password]),
   onSubmitSuccess: () => {
     UIController.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
@@ -65,10 +65,12 @@ const passwordRegex = /[-$/&*|<>]/;
     });
   },
   onSubmitFail: (errors, dispatch, submitError) => {
-    UIController.openErrorDialog({
-      message: 'Error encrypting wallet',
-      note: (submitError && submitError.message) || 'An unknown error occurred',
-    });
+    if (!errors || !Object.keys(errors).length) {
+      UIController.openErrorDialog({
+        message: 'Error encrypting wallet',
+        note: submitError || 'An unknown error occurred',
+      });
+    }
   },
 })
 export default class EncryptWallet extends Component {
