@@ -332,7 +332,7 @@ class SendPage extends Component {
     UIController.openModal(LookupAddressModal, this.props);
   };
 
-  sendOne() {
+  sendOne = () => {
     console.log('Send');
     this.props.busy();
     if (this.props.SelectedAccount !== '') {
@@ -410,7 +410,7 @@ class SendPage extends Component {
     } else {
       UIController.openErrorDialog({ message: 'No Account Selected' });
     }
-  }
+  };
 
   confirmSendNow = () => {
     const { Address, Amount, encrypted, loggedIn } = this.props;
