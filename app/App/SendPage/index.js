@@ -1,15 +1,15 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Text from 'components/Text';
 import { remote } from 'electron';
 import styled from '@emotion/styled';
-import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
+import googleanalytics from 'scripts/googleanalytics';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
+import Text from 'components/Text';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
@@ -20,6 +20,7 @@ import FormField from 'components/FormField';
 import InputGroup from 'components/InputGroup';
 import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
+import Link from 'components/Link';
 
 // Internal Local Dependencies
 import LookupAddressModal from './LookupAddressModal';
@@ -428,7 +429,19 @@ class SendPage extends Component {
       return;
     }
     if (encrypted && !loggedIn) {
-      UIController.openErrorDialog({ message: 'Wallet Locked' });
+      this.walletLockedErrorId = UIController.openErrorDialog({
+        message: 'Wallet is being locked',
+        note: (
+          <Link
+            to="/Settings/Security"
+            onClick={() => {
+              UIController.removeModal(this.walletLockedErrorId);
+            }}
+          >
+            Unlock your wallet
+          </Link>
+        ),
+      });
       return;
     }
 
