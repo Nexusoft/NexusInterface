@@ -14,11 +14,17 @@ export function resolveValue(input) {
   return input;
 }
 
-export function RPCErrorHandler(errors, dispatch, submitError) {
-  if (!errors || !Object.keys(errors).length) {
-    UIController.openErrorDialog({
-      message: 'Error setting Transaction Fee',
-      note: submitError || 'An unknown error occurred',
-    });
-  }
+export function rpcErrorHandler(message) {
+  return (errors, dispatch, submitError) => {
+    // If errors object has some values it means the form validation failed
+    // In that case, no need to open an error dialog
+    if (!errors || !Object.keys(errors).length) {
+      UIController.openErrorDialog({
+        message,
+        note: submitError || 'An unknown error occurred',
+      });
+    }
+  };
 }
+
+export const trimText = text => text && text.trim();

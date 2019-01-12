@@ -12,6 +12,7 @@ import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import { consts } from 'styles';
+import { rpcErrorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 
 const EncryptWalletForm = styled.form({
@@ -63,14 +64,7 @@ const Characters = styled.span({
       },
     });
   },
-  onSubmitFail: (errors, dispatch, submitError) => {
-    if (!errors || !Object.keys(errors).length) {
-      UIController.openErrorDialog({
-        message: 'Error encrypting wallet',
-        note: submitError || 'An unknown error occurred',
-      });
-    }
-  },
+  onSubmitFail: rpcErrorHandler('Error encrypting wallet'),
 })
 export default class EncryptWallet extends Component {
   render() {

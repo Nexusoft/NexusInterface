@@ -14,6 +14,7 @@ import UIController from 'components/UIController';
 import Text from 'components/Text';
 import * as RPC from 'scripts/rpc';
 import copyIcon from 'images/copy.sprite.svg';
+import { rpcErrorHandler } from 'utils/form';
 
 const formName = 'viewPrivateKey';
 
@@ -34,14 +35,7 @@ const formName = 'viewPrivateKey';
   onSubmitSuccess: (result, dispatch) => {
     dispatch(change(formName, 'privateKey', result));
   },
-  onSubmitFail: (errors, dispatch, submitError) => {
-    if (!errors || !Object.keys(errors).length) {
-      UIController.openErrorDialog({
-        message: 'Error getting private key',
-        note: submitError || 'An unknown error occurred',
-      });
-    }
-  },
+  onSubmitFail: rpcErrorHandler('Error getting private key'),
 })
 export default class ViewPrivKeyForAddress extends Component {
   privKeyRef = React.createRef();

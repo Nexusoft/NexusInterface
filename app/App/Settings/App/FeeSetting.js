@@ -10,6 +10,7 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import UIController from 'components/UIController';
+import { rpcErrorHandler } from 'utils/form';
 
 @connect(state => ({
   initialValues: {
@@ -32,14 +33,7 @@ import UIController from 'components/UIController';
       'success'
     );
   },
-  onSubmitFail: (errors, dispatch, submitError) => {
-    if (!errors || !Object.keys(errors).length) {
-      UIController.openErrorDialog({
-        message: 'Error setting Transaction Fee',
-        note: submitError || 'An unknown error occurred',
-      });
-    }
-  },
+  onSubmitFail: rpcErrorHandler('Error setting Transaction Fee'),
 })
 export default class FeeSetting extends React.Component {
   confirmSetTxFee = () => {

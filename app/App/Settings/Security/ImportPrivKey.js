@@ -13,12 +13,11 @@ import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
+import { rpcErrorHandler, trimText } from 'utils/form';
 
 const ImportPrivKeyForm = styled.form({
   flex: 3,
 });
-
-const trimValue = value => value && value.trim();
 
 @connect(
   null,
@@ -60,14 +59,7 @@ const trimValue = value => value && value.trim();
       });
     }
   },
-  onSubmitFail: (errors, dispatch, submitError) => {
-    if (!errors || !Object.keys(errors).length) {
-      UIController.openErrorDialog({
-        message: 'Error importing private key',
-        note: submitError || 'An unknown error occurred',
-      });
-    }
-  },
+  onSubmitFail: rpcErrorHandler('Error importing private key'),
 })
 export default class ImportPrivKey extends Component {
   render() {
@@ -86,7 +78,7 @@ export default class ImportPrivKey extends Component {
                   name="accountName"
                   type="Text"
                   placeholder={An}
-                  normalize={trimValue}
+                  normalize={trimText}
                 />
               </FormField>
             )}
@@ -99,7 +91,7 @@ export default class ImportPrivKey extends Component {
                   name="privateKey"
                   type="password"
                   placeholder={pk}
-                  normalize={trimValue}
+                  normalize={trimText}
                 />
               </FormField>
             )}
