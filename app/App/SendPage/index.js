@@ -329,7 +329,7 @@ class SendPage extends Component {
   };
 
   lookupAddress = () => {
-    UIController.openModal(LookupAddressModal, this.props);
+    UIController.openModal(LookupAddressModal);
   };
 
   sendOne() {
