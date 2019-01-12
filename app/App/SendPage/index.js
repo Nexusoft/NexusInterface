@@ -62,7 +62,7 @@ const mapStateToProps = state => {
   return {
     ...state.common,
     ...state.transactions,
-    ...state.sendRecieve,
+    ...state.sendReceive,
     ...state.overview,
     ...state.addressbook,
     ...state.settings,
