@@ -1,14 +1,10 @@
-// External Dependencies
+// External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-import { remote } from 'electron';
-import { reduxForm, Field } from 'redux-form';
 
-// Internal Global Dependencies
+// Internal Global
 import Text from 'components/Text';
-import * as RPC from 'scripts/rpc';
-import * as FlagFile from 'images/LanguageFlags';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { backupWallet } from 'api/wallet';
 import SettingsField from 'components/SettingsField';
@@ -19,81 +15,15 @@ import Switch from 'components/Switch';
 import UIController from 'components/UIController';
 import { form } from 'utils';
 
-const Flag = styled.img({
-  marginRight: '.5em',
-  verticalAlign: 'middle',
-});
+// Internal Local
+import LanguageSetting from './LanguageSetting';
+import BackupDirSetting from './BackupDirSetting';
+import FeeSetting from './FeeSetting';
 
 const AppSettings = styled.div({
   maxWidth: 750,
   margin: '0 auto',
 });
-
-const languages = [
-  {
-    value: 'en',
-    display: (
-      <span>
-        <Flag src={FlagFile.America} />
-        <span className="v-align">English (US)</span>
-      </span>
-    ),
-  },
-  {
-    value: 'ru',
-    display: (
-      <span>
-        <Flag src={FlagFile.Russia} />
-        <span className="v-align">Pусский</span>
-      </span>
-    ),
-  },
-  {
-    value: 'es',
-    display: (
-      <span>
-        <Flag src={FlagFile.Spain} />
-        <span className="v-align">Español</span>
-      </span>
-    ),
-  },
-  {
-    value: 'ko',
-    display: (
-      <span>
-        <Flag src={FlagFile.Korea} />
-        <span className="v-align">한국어</span>
-      </span>
-    ),
-  },
-  {
-    value: 'de',
-    display: (
-      <span>
-        <Flag src={FlagFile.Germany} />
-        <span className="v-align">Deutsch</span>
-      </span>
-    ),
-  },
-  {
-    value: 'ja',
-    display: (
-      <span>
-        <Flag src={FlagFile.Japan} />
-        <span className="v-align">日本語</span>
-      </span>
-    ),
-  },
-  {
-    value: 'fr',
-    display: (
-      <span>
-        <Flag src={FlagFile.France} />
-        <span className="v-align">Français</span>
-      </span>
-    ),
-  },
-];
 
 const fiatCurrencies = [
   { value: 'AUD', display: 'Australian Dollar (AUD)' },
@@ -122,77 +52,6 @@ const fiatCurrencies = [
   { value: 'USD', display: 'United States Dollar (USD)' },
 ];
 
-@connect(state => ({
-  initialValues: {
-    txFee: state.overview.paytxfee,
-  },
-}))
-@reduxForm({
-  form: 'setTransactionFee',
-  validate: ({ txFee }) => {
-    const errors = {};
-    if (parseFloat(txFee) > 0) {
-      errors.txFee = <Text id="Alert.InvalidTransactionFee" />;
-    }
-    return errors;
-  },
-  onSubmit: ({ txFee }) => RPC.PROMISE('settxfee', [parseFloat(txFee)]),
-  onSubmitSuccess: () => {
-    UIController.showNotification(
-      <Text id="Alert.TransactionFeeSet" />,
-      'success'
-    );
-  },
-  onSubmitFail: (errors, dispatch, submitError) => {
-    if (!errors || !Object.keys(errors).length) {
-      UIController.openErrorDialog({
-        message: 'Error setting Transaction Fee',
-        note: submitError || 'An unknown error occurred',
-      });
-    }
-  },
-})
-class FeeSetting extends React.Component {
-  confirmSetTxFee = () => {
-    UIController.openConfirmDialog({
-      question: <Text id="Settings.SetFee" />,
-      yesCallback: this.props.handleSubmit,
-    });
-  };
-
-  render() {
-    const { submitting } = this.props;
-    return (
-      <SettingsField
-        connectLabel
-        label={<Text id="Settings.OptionalFee" />}
-        subLabel={<Text id="ToolTip.OptionalFee" />}
-      >
-        {inputId => (
-          <div className="flex stretch">
-            <Field
-              component={TextField.RF}
-              name="txFee"
-              type="number"
-              step="0.01"
-              min="0"
-              style={{ width: 100 }}
-            />
-            <Button
-              disable={submitting}
-              fitHeight
-              onClick={this.confirmSetTxFee}
-              style={{ marginLeft: '1em' }}
-            >
-              Set
-            </Button>
-          </div>
-        )}
-      </SettingsField>
-    );
-  }
-}
-
 const mapStateToProps = state => ({
   connections: state.overview.connections,
   settings: state.settings.settings,
@@ -207,21 +66,6 @@ const mapDispatchToProps = dispatch => ({
   mapDispatchToProps
 )
 export default class SettingsApp extends Component {
-  browseBackupDir = () => {
-    remote.dialog.showOpenDialog(
-      {
-        title: 'Select a folder',
-        defaultPath: this.props.settings.Folder,
-        properties: ['openDirectory'],
-      },
-      folderPaths => {
-        if (folderPaths && folderPaths.length > 0) {
-          this.props.updateSettings({ Folder: folderPaths[0] });
-        }
-      }
-    );
-  };
-
   confirmBackupWallet = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.BackupWallet" />,
@@ -254,13 +98,7 @@ export default class SettingsApp extends Component {
     const { connections, settings } = this.props;
     return (
       <AppSettings>
-        <SettingsField label={<Text id="Settings.Language" />}>
-          <Select
-            options={languages}
-            value={settings.locale}
-            onChange={this.updateHandlers('locale')}
-          />
-        </SettingsField>
+        <LanguageSetting />
 
         <SettingsField
           connectLabel
@@ -311,26 +149,7 @@ export default class SettingsApp extends Component {
           />
         </SettingsField>
 
-        <SettingsField connectLabel label={<Text id="Settings.Folder" />}>
-          {inputId => (
-            <div className="flex stretch">
-              <TextField
-                id={inputId}
-                value={settings.Folder}
-                onChange={this.updateHandlers('Folder')}
-                readOnly
-                style={{ flexGrow: 1 }}
-              />
-              <Button
-                fitHeight
-                onClick={this.browseBackupDir}
-                style={{ marginLeft: '1em' }}
-              >
-                Browse
-              </Button>
-            </div>
-          )}
-        </SettingsField>
+        <BackupDirSetting />
 
         {/* Need to wait for the daemon info to initialize txFee value */}
         {connections !== undefined && <FeeSetting />}

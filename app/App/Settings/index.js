@@ -12,7 +12,7 @@ import Panel from 'components/Panel';
 import Tab from 'components/Tab';
 
 // Internal Local
-import SettingsApp from './SettingsApp';
+import SettingsApp from './App';
 import SettingsCore from './SettingsCore';
 import SettingsStyle from './Style';
 import Security from './Security';
