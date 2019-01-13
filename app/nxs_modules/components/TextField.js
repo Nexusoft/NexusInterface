@@ -257,13 +257,8 @@ export default class TextField extends Component {
 
     return (
       <TextFieldComponent
-<<<<<<< HEAD
-        {...{ className, style, skin, size }}
-       focus={this.state.focus}
-=======
         {...{ className, style, skin, size, error }}
         focus={!readOnly && this.state.focus}
->>>>>>> NW_0_8_5
       >
         {left}
         <Input {...inputProps} ref = {element => (this.inputReference = element)} />
