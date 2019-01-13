@@ -55,6 +55,7 @@ export default class FeeSetting extends React.Component {
           <div className="flex stretch">
             <Field
               component={TextField.RF}
+              id={inputId}
               name="txFee"
               type="number"
               step="0.01"
