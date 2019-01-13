@@ -286,12 +286,12 @@ class Overview extends Component {
   }
 
   trustIcon() {
-    const tw = Math.round(this.props.trustweight / 10);
+    const tw = Math.round((this.props.trustweight || 0) / 10);
     return trustIcons[tw];
   }
 
   blockWeightIcon() {
-    const bw = Math.round(this.props.blockweight / 10);
+    const bw = Math.round((this.props.blockweight || 0) / 10);
     return blockWeightIcons[bw];
   }
 
