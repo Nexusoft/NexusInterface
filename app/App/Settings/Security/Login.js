@@ -1,12 +1,10 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
+import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Dependencies
-import styles from './style.css';
-import * as TYPE from 'actions/actiontypes';
+import getInfo from 'actions/getInfo';
 import * as RPC from 'scripts/rpc';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -26,206 +24,107 @@ const Buttons = styled.div({
   marginTop: '1.5em',
 });
 
-// React-Redux mandatory methods
-const mapStateToProps = state => {
-  return {
-    ...state.common,
-    ...state.login,
-  };
-};
-const mapDispatchToProps = dispatch => ({
-  setDate: date => dispatch({ type: TYPE.SET_DATE, payload: date }),
-  setErrorMessage: message =>
-    dispatch({ type: TYPE.SET_ERROR_MESSAGE, payload: message }),
-  wipe: () => dispatch({ type: TYPE.WIPE_LOGIN_INFO }),
-  busy: setting => dispatch({ type: TYPE.TOGGLE_BUSY_FLAG, payload: setting }),
-  stake: () => dispatch({ type: TYPE.TOGGLE_STAKING_FLAG }),
-  getInfo: payload => dispatch({ type: TYPE.GET_INFO_DUMP, payload: payload }),
-  setTime: time => dispatch({ type: TYPE.SET_TIME, payload: time }),
-  OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
-  },
-  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
-  // OpenErrorModal: type => {
-  //   dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
-  // },
-  // CloseErrorModal: type => {
-  //   dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
-  // },
-});
-
-class Login extends Component {
-  state = {
+@reduxForm({
+  form: 'login',
+  initialValues: {
+    date: null,
+    time: null,
     password: '',
-  };
+    stakingOnly: false,
+  },
+  validate: ({ date, time, password }) => {
+    const errors = {};
+    if (!date) {
+      errors.date = 'Date is required';
+    }
+    if (!time) {
+      errors.time = 'Time is required';
+    }
+    if (!password) {
+      errors.password = 'Password is required';
+    }
+    return errors;
+  },
+  onSubmit: ({ date, time, password, stakingOnly }) => {
+    const now = new Date();
+    let unlockDate = new Date(date);
+    unlockDate = new Date(unlockDate.setMinutes(now.getTimezoneOffset()));
+    unlockDate = new Date(unlockDate.setHours(time.slice(0, 2)));
+    unlockDate = new Date(unlockDate.setMinutes(time.slice(3)));
+    const unlockUntil = Math.round(
+      (unlockDate.getTime() - now.getTime()) / 1000
+    );
 
+    return RPC.PROMISE('walletpassphrase', [
+      password,
+      unlockUntil,
+      stakingOnly,
+    ]);
+  },
+  onSubmitSuccess: async (result, dispatch) => {
+    UIController.showNotification('Wallet unlocked', 'success');
+    dispatch(getInfo());
+  },
+  onSubmitFail: (errors, dispatch, submitError) => {
+    if (!errors || !Object.keys(errors).length) {
+      let note = submitError || 'An unknown error occurred';
+      if (
+        submitError === 'Error: The wallet passphrase entered was incorrect.'
+      ) {
+        note = <Text id="Alert.IncorrectPasssword" />;
+      } else if (submitError === 'value is type null, expected int') {
+        note = <Text id="Alert.FutureDate" />;
+      }
+      UIController.openErrorDialog({
+        message: 'Error unlocking wallet',
+        note: note,
+      });
+    }
+  },
+})
+export default class Login extends Component {
   getMinDate() {
     const today = new Date();
-
     let month = today.getMonth() + 1;
     if (month < 10) {
       month = '0' + month;
     }
-
     return `${today.getFullYear()}-${month}-${today.getDate()}`;
   }
 
-  handleSubmit() {
-    let today = new Date();
-    let unlockDate = new Date(this.props.unlockUntillDate);
-    unlockDate = new Date(unlockDate.setMinutes(today.getTimezoneOffset()));
-    unlockDate = new Date(
-      unlockDate.setHours(this.props.unlockUntillTime.slice(0, 2))
-    );
-    unlockDate = new Date(
-      unlockDate.setMinutes(this.props.unlockUntillTime.slice(3))
-    );
-
-    let unlockUntill = Math.round(
-      (unlockDate.getTime() - today.getTime()) / 1000
-    );
-
-    // this.props.busy(true);
-
-    const { password } = this.state;
-    if (this.props.stakingFlag) {
-      RPC.PROMISE('walletpassphrase', [password, unlockUntill, true])
-        .then(payload => {
-          this.props.wipe();
-          RPC.PROMISE('getinfo', [])
-            .then(payload => {
-              delete payload.timestamp;
-              return payload;
-            })
-            .then(payload => {
-              this.props.busy(false);
-              this.props.getInfo(payload);
-            });
-        })
-        .catch(e => {
-          password = '';
-          if (e === 'Error: The wallet passphrase entered was incorrect.') {
-            this.props.busy(false);
-            UIController.openErrorDialog({
-              message: <Text id="Alert.IncorrectPasssword" />,
-            });
-            // this.passwordRef.focus();
-          } else if (e === 'value is type null, expected int') {
-            this.props.busy(false);
-            UIController.showNotification(
-              <Text id="Alert.FutureDate" />,
-              'error'
-            );
-            this.passwordRef.focus();
-          } else {
-            UIController.openErrorDialog({ message: e });
-          }
-        });
-    } else {
-      if (unlockUntill !== NaN && unlockUntill > 3600) {
-        RPC.PROMISE('walletpassphrase', [password, unlockUntill, false])
-          .then(payload => {
-            this.props.wipe();
-            RPC.PROMISE('getinfo', [])
-              .then(payload => {
-                delete payload.timestamp;
-                return payload;
-              })
-              .then(payload => {
-                this.props.busy(false);
-                this.props.getInfo(payload);
-              });
-          })
-          .catch(e => {
-            password = '';
-            if (e === 'Error: The wallet passphrase entered was incorrect.') {
-              this.props.busy(false);
-              UIController.openErrorDialog({
-                message: <Text id="Alert.IncorrectPasssword" />,
-              });
-              this.passwordRef.focus();
-            } else if (e === 'value is type null, expected int') {
-              this.props.busy(false);
-              UIController.showNotification(
-                <Text id="Alert.FutureDate" />,
-                'error'
-              );
-              this.passwordRef.focus();
-            } else {
-              UIController.openErrorDialog({ message: e });
-            }
-          });
-      } else {
-        UIController.showNotification(<Text id="Alert.FutureDate" />, 'error');
-      }
-    }
-  }
-  setUnlockDate(input) {
-    let today = new Date();
-    let inputDate = new Date(input);
-    inputDate = new Date(inputDate.setMinutes(today.getTimezoneOffset()));
-    this.props.setDate(input);
-  }
-
-  // Mandatory React method
   render() {
-    if (this.props.loggedIn) {
-      return (
-        <Redirect to={this.props.match.path.replace('/Login', '/Security')} />
-      );
-    }
+    const { handleSubmit, submitting } = this.props;
     return (
       <div>
-        <form>
+        <form onSubmit={handleSubmit}>
           <LoginFieldSet legend="Login">
             <FormField connectLabel label="Unlock Until Date">
-              <TextField
+              <Field
+                component={TextField.RF}
+                name="date"
                 type="date"
                 min={this.getMinDate()}
-                value={this.props.unlockUntillDate}
-                onChange={e => this.setUnlockDate(e.target.value)}
-                required
-                hint="Unlock until date is required."
               />
             </FormField>
             <FormField connectLabel label="Unlock Until Time">
-              <TextField
-                type="time"
-                value={this.props.unlockUntillTime}
-                onChange={e => this.props.setTime(e.target.value)}
-                required
-                hint="Unlock until time is required."
-              />
+              <Field component={TextField.RF} name="time" type="time" />
             </FormField>
             <FormField connectLabel label="Password">
-              <TextField
+              <Field
+                component={TextField.RF}
+                name="password"
                 type="password"
-                placeholder="Password"
-                value={this.state.password}
-                onChange={e => {
-                  this.setState({ password: e.target.value });
-                }}
-                required
+                placeholder="Your wallet password"
               />
             </FormField>
 
             {/* STAKING FLAG STUFF  TURNED OFF UNTILL WE HAVE A FLAG COMING BACK FROM THE DAEMON TELLING US THAT ITS UNLOCKED FOR STAKING ONLY */}
-            <FormField inline connectLabel label="Staking Only">
-              <Switch
-                value={this.props.stakingFlag}
-                onChange={() => this.props.stake()}
-              />
+            <FormField inline connectLabel label="Unlock for Staking Only">
+              <Field component={Switch.RF} name="stakingOnly" />
             </FormField>
 
             <Buttons>
-              <Button
-                skin="primary"
-                type="submit"
-                onClick={e => {
-                  e.preventDefault();
-                  this.handleSubmit();
-                }}
-              >
+              <Button type="submit" skin="primary" disabled={submitting}>
                 Unlock Wallet
               </Button>
             </Buttons>
@@ -235,9 +134,3 @@ class Login extends Component {
     );
   }
 }
-
-// Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login);

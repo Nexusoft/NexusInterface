@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
-import Text from 'components/Text';
-import * as RPC from 'scripts/rpc';
+import { reduxForm, Field, change } from 'redux-form';
+import { clipboard } from 'electron';
 
 // Internal
 import Icon from 'components/Icon';
@@ -11,9 +11,41 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
 import UIController from 'components/UIController';
+import Text from 'components/Text';
+import * as RPC from 'scripts/rpc';
 import copyIcon from 'images/copy.sprite.svg';
 
+const formName = 'viewPrivateKey';
+
+@reduxForm({
+  form: formName,
+  initialValues: {
+    address: '',
+    privateKey: '',
+  },
+  validate: ({ address }) => {
+    const errors = {};
+    if (!address) {
+      errors.address = 'Address cannot be empty';
+    }
+    return errors;
+  },
+  onSubmit: ({ address }) => RPC.PROMISE('dumpprivkey', [address]),
+  onSubmitSuccess: (result, dispatch) => {
+    dispatch(change(formName, 'privateKey', result));
+  },
+  onSubmitFail: (errors, dispatch, submitError) => {
+    if (!errors || !Object.keys(errors).length) {
+      UIController.openErrorDialog({
+        message: 'Error getting private key',
+        note: submitError || 'An unknown error occurred',
+      });
+    }
+  },
+})
 export default class ViewPrivKeyForAddress extends Component {
+  privKeyRef = React.createRef();
+
   showPrivKey(e) {
     e.preventDefault();
     let address = this.inputRef.value;
@@ -33,64 +65,59 @@ export default class ViewPrivKeyForAddress extends Component {
     }
   }
 
-  copyPrivkey(e) {
-    e.preventDefault();
-    this.outputRef.type = 'text';
-    this.outputRef.focus();
-    this.outputRef.select();
-    document.execCommand('Copy', false, null);
-    this.outputRef.type = 'password';
+  copyPrivkey = () => {
+    const privKey = this.privKeyRef.current.value;
+    clipboard.writeText(privKey);
     UIController.showNotification(<Text id="Alert.Copied" />, 'success');
-  }
+  };
+
+  resetPrivateKey = () => {
+    this.props.change('privateKey', '');
+  };
 
   render() {
+    const { handleSubmit, submitting } = this.props;
     return (
-      <form>
+      <form onSubmit={handleSubmit}>
         <FieldSet legend={<Text id="Settings.ViewPrivateKeyForAddress" />}>
           <FormField connectLabel label={<Text id="Settings.Address" />}>
             {inputId => (
               <InputGroup>
-                <TextField
+                <Field
+                  component={TextField.RF}
+                  name="address"
                   id={inputId}
-                  ref={el => {
-                    this.inputRef = el;
-                  }}
-                  placeholder="Enter Address Here"
-                  required
+                  placeholder="Enter address here"
+                  onChange={this.resetPrivateKey}
                 />
                 <Button
+                  type="submit"
                   skin="primary"
                   fitHeight
-                  onClick={e => this.showPrivKey(e)}
+                  disabled={submitting}
+                  waiting={submitting}
                 >
-                  Import
+                  View Private Key
                 </Button>
               </InputGroup>
             )}
           </FormField>
 
-          <FormField connectLabel label={<Text id="Settings.PrivateKey" />}>
-            {inputId => (
-              <InputGroup>
-                <TextField
-                  type="password"
-                  id={inputId}
-                  ref={el => {
-                    this.outputRef = el;
-                  }}
-                />
-                <Button
-                  fitHeight
-                  className="relative"
-                  onClick={e => {
-                    this.copyPrivkey(e);
-                  }}
-                >
-                  <Icon icon={copyIcon} spaceRight />
-                  <Text id="Settings.Copy" />
-                </Button>
-              </InputGroup>
-            )}
+          <FormField label={<Text id="Settings.PrivateKey" />}>
+            <InputGroup>
+              <Field
+                component={TextField.RF}
+                name="privateKey"
+                readOnly
+                type="password"
+                placeholder="Private key will be displayed here"
+                ref={this.privKeyRef}
+              />
+              <Button fitHeight className="relative" onClick={this.copyPrivkey}>
+                <Icon icon={copyIcon} spaceRight />
+                <Text id="Settings.Copy" />
+              </Button>
+            </InputGroup>
           </FormField>
         </FieldSet>
       </form>

@@ -1,7 +1,6 @@
 // External
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
@@ -85,11 +84,10 @@ const UnderHeader = styled.div(({ theme }) => ({
   color: theme.light,
 }));
 
-@withRouter
 @connect(({ overview: { connections } }) => ({ connections }))
 export default class Header extends Component {
   render() {
-    const { connections, location } = this.props;
+    const { connections } = this.props;
 
     return (
       <HeaderComponent>
@@ -107,11 +105,7 @@ export default class Header extends Component {
           <StatusIcons>
             <SyncStatus {...this.props} />
             <SignInStatus {...this.props} />
-            {location.pathname !== '/' ? (
-              <StakingStatus {...this.props} />
-            ) : (
-              <Icon />
-            )}
+            <StakingStatus {...this.props} />
           </StatusIcons>
         )}
       </HeaderComponent>

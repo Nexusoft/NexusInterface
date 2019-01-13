@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
+import { reducer as formReducer } from 'redux-form';
 
 import overview from './overview';
 import list from './list';
@@ -49,6 +50,7 @@ export default function createRootReducer(history) {
       addressbook,
       terminal,
       settings,
+      form: formReducer,
     })
   );
 }

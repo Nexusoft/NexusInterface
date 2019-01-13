@@ -93,8 +93,8 @@ export const MyAccountsList = list => ({
   payload: list,
 });
 
-export const setSettings = settings => ({
-  type: TYPE.SET_SETTINGS,
+export const updateSettings = settings => ({
+  type: TYPE.UPDATE_SETTINGS,
   payload: settings,
 });
 

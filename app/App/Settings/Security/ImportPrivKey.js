@@ -1,57 +1,79 @@
 // External
 import React, { Component } from 'react';
-import Text from 'components/Text';
-import * as RPC from 'scripts/rpc';
+import { connect } from 'react-redux';
+import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
+import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
+import * as RPC from 'scripts/rpc';
+import * as TYPE from 'actions/actiontypes';
 
-const ImportPrivKeyComponent = styled.form({
+const ImportPrivKeyForm = styled.form({
   flex: 3,
 });
 
-export default class ImportPrivKey extends Component {
-  importPrivKey(e) {
-    e.preventDefault();
-    let acctname = document.getElementById('acctName');
-    let label = acctname.value.trim();
-    let privateKeyInput = document.getElementById('privateKey');
-    let pk = privateKeyInput.value.trim();
+const trimValue = value => value && value.trim();
 
-    if (label && pk) {
-      RPC.PROMISE('importprivkey', [pk], [label])
-        .then(payload => {
-          this.props.ResetForEncryptionRestart();
-          UIController.showNotification(
-            'Private key imported rescanning now',
-            'success'
-          ); // new alert
-          RPC.PROMISE('rescan')
-            .then(payload => {
-              this.props.CloseModal();
-            })
-            .catch(e => {
-              UIController.openErrorDialog({ message: e });
-            });
-        })
-        .catch(e => {
-          UIController.openErrorDialog({ message: e });
-        });
-    } else if (!label) {
-      acctname.focus();
-    } else if (!pk) {
-      privateKeyInput.focus();
+@connect(
+  null,
+  dispatch => ({
+    ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
+  })
+)
+@reduxForm({
+  form: 'importPrivateKey',
+  initialValues: {
+    accountName: '',
+    privateKey: '',
+  },
+  validate: ({ accountName, privateKey }) => {
+    const errors = {};
+    if (!accountName) {
+      errors.accountName = 'Account name is required';
     }
-  }
-
+    if (!privateKey) {
+      errors.privateKey = 'Private key is required';
+    }
+    return errors;
+  },
+  onSubmit: ({ accountName, privateKey }) =>
+    RPC.PROMISE('importprivkey', [privateKey], [accountName]),
+  onSubmitSuccess: async () => {
+    this.props.ResetForEncryptionRestart();
+    UIController.openSuccessDialog({
+      message: 'Private key imported. Rescanning now',
+    });
+    UIController.showNotification('Rescanning...');
+    try {
+      await RPC.PROMISE('rescan');
+      UIController.showNotification('Rescanning done', 'success');
+    } catch (err) {
+      UIController.openErrorDialog({
+        message: 'Error Rescanning',
+        note: (err && err.message) || 'An unknown error occurred',
+      });
+    }
+  },
+  onSubmitFail: (errors, dispatch, submitError) => {
+    if (!errors || !Object.keys(errors).length) {
+      UIController.openErrorDialog({
+        message: 'Error importing private key',
+        note: submitError || 'An unknown error occurred',
+      });
+    }
+  },
+})
+export default class ImportPrivKey extends Component {
   render() {
+    const { handleSubmit, submitting } = this.props;
     return (
-      <ImportPrivKeyComponent>
+      <ImportPrivKeyForm onSubmit={handleSubmit}>
         <FieldSet legend={<Text id="Settings.ImportPrivateKey" />}>
           <Text id="Settings.AccountName">
             {An => (
@@ -59,11 +81,12 @@ export default class ImportPrivKey extends Component {
                 connectLabel
                 label={<Text id="Settings.AccountName" />}
               >
-                <TextField
+                <Field
+                  component={TextField.RF}
+                  name="accountName"
                   type="Text"
                   placeholder={An}
-                  id="acctName"
-                  required
+                  normalize={trimValue}
                 />
               </FormField>
             )}
@@ -71,28 +94,28 @@ export default class ImportPrivKey extends Component {
           <Text id="Settings.PrivateKey">
             {pk => (
               <FormField connectLabel label={<Text id="Settings.PrivateKey" />}>
-                <TextField
+                <Field
+                  component={TextField.RF}
+                  name="privateKey"
                   type="password"
                   placeholder={pk}
-                  id="privateKey"
-                  required
+                  normalize={trimValue}
                 />
               </FormField>
             )}
           </Text>
           <Button
+            type="submit"
             skin="primary"
             wide
+            disabled={submitting}
+            waiting={submitting}
             style={{ marginTop: '2em' }}
-            disabled={this.props.busyFlag}
-            onClick={e => this.importPrivKey(e)}
           >
-            <Text id="Settings.Submit" />
+            Import
           </Button>
         </FieldSet>
-
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }} />
-      </ImportPrivKeyComponent>
+      </ImportPrivKeyForm>
     );
   }
 }

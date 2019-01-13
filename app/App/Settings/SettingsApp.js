@@ -1,6 +1,5 @@
 // External Dependencies
 import React, { Component } from 'react';
-import config from 'api/configuration';
 import path from 'path';
 import { connect } from 'react-redux';
 import Text from 'components/Text';
@@ -20,9 +19,6 @@ import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import UIController from 'components/UIController';
-
-// Internal Local Dependencies
-import styles from './style.css';
 
 const Flag = styled.img({
   marginRight: '.5em',
@@ -138,38 +134,13 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = dispatch => ({
-  OpenModal2: type => {
-    dispatch({ type: TYPE.SHOW_MODAL2, payload: type });
-  },
-  CloseModal2: type => {
-    dispatch({ type: TYPE.HIDE_MODAL2, payload: type });
-  },
-  OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
-  },
-  CloseModal: () => dispatch({ type: TYPE.HIDE_MODAL }),
-  setSettings: settings =>
-    dispatch({ type: TYPE.SET_SETTINGS, payload: settings }),
+  updateSettings: settings =>
+    dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings }),
   setFiatCurrency: inValue => {
     dispatch({ type: TYPE.SET_FIAT_CURRENCY, payload: inValue });
   },
-  OpenModal3: type => {
-    dispatch({ type: TYPE.SHOW_MODAL3, payload: type });
-  },
-  OpenModal4: type => {
-    dispatch({ type: TYPE.SHOW_MODAL4, payload: type });
-  },
-  CloseModal4: type => {
-    dispatch({ type: TYPE.HIDE_MODAL4, payload: type });
-  },
-  CloseModal3: type => {
-    dispatch({ type: TYPE.HIDE_MODAL3, payload: type });
-  },
   SwitchLocale: locale => {
     dispatch({ type: TYPE.SWITCH_LOCALES, payload: locale });
-  },
-  SwitchMessages: messages => {
-    dispatch({ type: TYPE.SWITCH_MESSAGES, payload: messages });
   },
   SeeFolder: Folder => {
     dispatch({ type: TYPE.SEE_FOLDER, payload: Folder });
@@ -177,12 +148,6 @@ const mapDispatchToProps = dispatch => ({
   SetMinimumConfirmationsNumber: inValue => {
     dispatch({ type: TYPE.SET_MIN_CONFIRMATIONS, payload: inValue });
   },
-  // OpenErrorModal: type => {
-  //   dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: type });
-  // },
-  // CloseErrorModal: type => {
-  //   dispatch({ type: TYPE.HIDE_ERROR_MODAL, payload: type });
-  // },
 });
 
 var currentBackupLocation = ''; //Might redo to use redux but this is only used to replace using json reader every render;
@@ -400,7 +365,7 @@ class SettingsApp extends Component {
     this.props.setFiatCurrency(value);
     let settings = GetSettings();
     settings.fiatCurrency = value;
-    this.props.setSettings(settings);
+    this.props.updateSettings(settings);
     SaveSettings(settings);
   }
 
@@ -419,7 +384,7 @@ class SettingsApp extends Component {
           settings.Folder = folderPaths.toString();
           this.props.SeeFolder(folderPaths[0]);
 
-          this.props.setSettings(settings);
+          this.props.updateSettings(settings);
           SaveSettings(settings);
         }
       }
