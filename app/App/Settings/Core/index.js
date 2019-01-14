@@ -292,7 +292,7 @@ export default class SettingsCore extends Component {
               }
               subLabel={<Text id="ToolTip.IP" />}
             >
-              <Field component={TextField.RF} size="12" />
+              <Field component={TextField.RF} name="manualDaemonIP" size="12" />
             </SettingsField>
 
             <SettingsField
@@ -301,7 +301,11 @@ export default class SettingsCore extends Component {
               label={<Text id="Settings.Port" />}
               subLabel={<Text id="ToolTip.PortConfig" />}
             >
-              <Field component={TextField.RF} size="5" />
+              <Field
+                component={TextField.RF}
+                name="manualDaemonPort"
+                size="5"
+              />
             </SettingsField>
           </div>
 
