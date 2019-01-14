@@ -48,7 +48,7 @@ export default class SyncStatus extends React.Component {
   render() {
     return (
       <Tooltip.Trigger tooltip={this.statusTooltip()}>
-        <StatusIcon.Wrapper>{this.statusIcon()}</StatusIcon.Wrapper>
+        {this.statusIcon()}
       </Tooltip.Trigger>
     );
   }

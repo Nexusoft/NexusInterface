@@ -33,7 +33,6 @@ class StakingStatus extends React.Component {
 
     return (
       <Tooltip.Trigger
-        align="end"
         tooltip={
           location.pathname !== '/' && (
             <div>
@@ -52,10 +51,9 @@ class StakingStatus extends React.Component {
             </div>
           )
         }
+        style={{ textAlign: 'left' }}
       >
-        <StatusIcon.Wrapper>
-          <StatusIcon icon={stakingIcon} />
-        </StatusIcon.Wrapper>
+        <StatusIcon icon={stakingIcon} />
       </Tooltip.Trigger>
     );
   }

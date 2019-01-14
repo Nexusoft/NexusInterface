@@ -79,7 +79,7 @@ class SignInStatus extends Component {
   render() {
     return (
       <Tooltip.Trigger tooltip={this.signInStatusMessage()}>
-        <StatusIcon.Wrapper>{this.statusIcon()}</StatusIcon.Wrapper>
+        {this.statusIcon()}
       </Tooltip.Trigger>
     );
   }
