@@ -173,6 +173,6 @@ async function loadMyAccounts(dispatch) {
 async function showDesktopNotif(title, message) {
   const result = await Notification.requestPermission();
   if (result === 'granted') {
-    new Notification(title, { body: message });
+    const notif = new Notification(title, { body: message });
   }
 }

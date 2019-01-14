@@ -21,6 +21,8 @@ let resizeTimer;
 // Global Objects
 global.core = core;
 
+app.setAppUserModelId(APP_ID);
+
 // Configure Updater
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
