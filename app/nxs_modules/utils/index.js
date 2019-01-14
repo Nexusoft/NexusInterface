@@ -1,5 +1,6 @@
 import * as color from './color';
 import * as language from './language';
+import * as form from './form';
 
 export const newUID = (function() {
   let counter = 1;
@@ -14,4 +15,4 @@ export function normalizePath(path) {
   }
 }
 
-export { color, language };
+export { color, language, form };

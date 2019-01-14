@@ -25,6 +25,8 @@ const resetStyles = theme => ({
 
   a: {
     outline: 'none',
+    color: 'inherit',
+    textDecoration: 'none',
   },
 
   p: {

@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
 // Internal
 import Text from 'components/Text';
 import SecuritySettingsLayout from 'components/SecuritySettingsLayout';
@@ -9,7 +9,10 @@ import EncryptWallet from './EncryptWallet';
 import ImportPrivKey from './ImportPrivKey';
 import ViewPrivKeyForAddress from './ViewPrivKeyForAddress';
 
-export default class Unencrypted extends Component {
+@connect(state => ({
+  connections: state.overview.connections,
+}))
+class Unencrypted extends Component {
   render() {
     if (this.props.connections === undefined) {
       return (
@@ -31,3 +34,4 @@ export default class Unencrypted extends Component {
     }
   }
 }
+export default Unencrypted;

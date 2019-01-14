@@ -8,6 +8,7 @@ import { dependencies as externals } from './app/package.json';
 import packageJson from './package.json';
 
 const appVersion = packageJson.version;
+const appId = packageJson.build.appId;
 
 export default {
   externals: Object.keys(externals || {}),
@@ -78,6 +79,7 @@ export default {
         process.env.NODE_ENV || 'production'
       ),
       APP_VERSION: JSON.stringify(appVersion || ''),
+      APP_ID: JSON.stringify(appId || ''),
     }),
 
     new webpack.NamedModulesPlugin(),

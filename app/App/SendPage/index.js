@@ -1,15 +1,15 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Text from 'components/Text';
 import { remote } from 'electron';
 import styled from '@emotion/styled';
-import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
+import googleanalytics from 'scripts/googleanalytics';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
+import Text from 'components/Text';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
@@ -20,6 +20,7 @@ import FormField from 'components/FormField';
 import InputGroup from 'components/InputGroup';
 import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
+import Link from 'components/Link';
 
 // Internal Local Dependencies
 import LookupAddressModal from './LookupAddressModal';
@@ -60,9 +61,15 @@ const SendFormButtons = styled.div({
 
 const mapStateToProps = state => {
   return {
+    // accountOptions: state.sendReceive.AccountChanger
+    //   ? state.sendReceive.AccountChanger.map(e => ({
+    //       value: e.name,
+    //       display: `${e.name} (${e.val} NXS)`,
+    //     }))
+    //   : [],
     ...state.common,
     ...state.transactions,
-    ...state.sendRecieve,
+    ...state.sendReceive,
     ...state.overview,
     ...state.addressbook,
     ...state.settings,
@@ -175,18 +182,6 @@ class SendPage extends Component {
     this.getAccountData();
     googleanalytics.SendScreen('Send');
   }
-  getAccountData() {
-    RPC.PROMISE('listaccounts').then(payload => {
-      let listOfAccts = Object.entries(payload).map(e => {
-        return {
-          name: e[0],
-          val: e[1],
-        };
-      });
-
-      this.props.changeAccount(listOfAccts);
-    });
-  }
 
   componentDidUpdate(prevProps) {
     if (
@@ -196,8 +191,6 @@ class SendPage extends Component {
       this.getAccountData();
     }
   }
-
-  // React Method (Life cycle hook)
 
   componentWillUnmount() {
     this.props.AccountPicked('');
@@ -211,6 +204,15 @@ class SendPage extends Component {
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
+
+  getAccountData = async () => {
+    const payload = await RPC.PROMISE('listaccounts');
+    const accounts = Object.entries(payload).map(e => ({
+      name: e[0],
+      val: e[1],
+    }));
+    this.props.changeAccount(accounts);
+  };
 
   editQueue() {
     if (Object.keys(this.props.Queue).includes(this.props.Address)) {
@@ -329,7 +331,7 @@ class SendPage extends Component {
   };
 
   lookupAddress = () => {
-    UIController.openModal(LookupAddressModal, this.props);
+    UIController.openModal(LookupAddressModal);
   };
 
   sendOne = () => {
@@ -428,7 +430,19 @@ class SendPage extends Component {
       return;
     }
     if (encrypted && !loggedIn) {
-      UIController.openErrorDialog({ message: 'Wallet Locked' });
+      this.walletLockedErrorId = UIController.openErrorDialog({
+        message: 'Wallet is being locked',
+        note: (
+          <Link
+            to="/Settings/Security"
+            onClick={() => {
+              UIController.removeModal(this.walletLockedErrorId);
+            }}
+          >
+            Unlock your wallet
+          </Link>
+        ),
+      });
       return;
     }
 
@@ -559,7 +573,7 @@ class SendPage extends Component {
             {this.props.Queue && !!Object.keys(this.props.Queue).length && (
               <Queue
                 accHud={this.accHud.bind(this)}
-                getAccountData={this.getAccountData.bind(this)}
+                getAccountData={this.getAccountData}
                 {...this.props}
               />
             )}

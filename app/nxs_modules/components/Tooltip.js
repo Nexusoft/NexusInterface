@@ -160,6 +160,7 @@ class TooltipTrigger extends Component {
   static defaultProps = {
     position: 'bottom',
     align: 'center',
+    skin: 'default',
   };
 
   state = {

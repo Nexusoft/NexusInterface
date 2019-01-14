@@ -280,5 +280,4 @@ export default class TextField extends Component {
 const TextFieldReduxFForm = ({ input, meta, ...rest }) => (
   <TextField error={meta.touched && meta.error} {...input} {...rest} />
 );
-
 TextField.RF = TextFieldReduxFForm;

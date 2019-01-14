@@ -179,11 +179,13 @@ class Exchange extends Component {
             link={`${this.props.match.url}/Precise`}
             icon={bullseyeIcon}
             text={<Text id="Exchange.Precise" />}
+            toolTipText={<Text id="Exchange.PreciseExplanation"/>}
           />
           <Tab
             link={`${this.props.match.url}/Fast`}
             icon={fastIcon}
             text={<Text id="Exchange.Fast" />}
+            toolTipText={<Text id="Exchange.FastExplanation"/>}
           />
         </Tab.Bar>
 

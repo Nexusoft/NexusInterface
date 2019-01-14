@@ -11,7 +11,7 @@ function messageTemplate(rawMessage, data) {
 }
 
 export function translate(id, locale, data) {
-  const rawMessage = getMessages(locale)[id] || en[id];
+  const rawMessage = getMessages(locale)[id] || en[id] || id || '';
   const message = data ? messageTemplate(rawMessage, data) : rawMessage;
   return message;
 }

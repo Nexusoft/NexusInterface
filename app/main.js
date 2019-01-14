@@ -21,6 +21,8 @@ let resizeTimer;
 // Global Objects
 global.core = core;
 
+app.setAppUserModelId(APP_ID);
+
 // Configure Updater
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
@@ -48,7 +50,7 @@ const installExtensions = async () => {
 
 function createWindow() {
   // App self-destruct timer
-  const expiration = 1546926000000;
+  const expiration = 1547926000000;
   var presentTime = new Date().getTime();
   var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
   if (presentTime >= expiration) {

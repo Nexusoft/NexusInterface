@@ -8,16 +8,11 @@ import tarball from 'tarball-extract';
 import moveFile from 'move-file';
 
 // Internal
-import * as RPC from 'scripts/rpc';
 import configuration from 'api/configuration';
-import { normalizePath } from 'utils';
+import { backupWallet } from 'api/wallet';
 
 const recentDbUrl =
   'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
-
-const defaultHomeDir =
-  process.platform === 'win32' ? process.env.USERPROFILE : process.env.HOME;
-const defaultBackupDir = normalizePath(defaultHomeDir + '/NexusBackups');
 
 // Recent database download location
 const fileLocation = path.join(
@@ -53,7 +48,7 @@ export default class Bootstrapper {
   async start({ backupFolder, clearOverviewVariables }) {
     try {
       this._progress('backing_up');
-      await this._backupWallet(backupFolder);
+      await backupWallet(backupFolder);
       if (this._aborted) return;
 
       this._progress('stopping_core');
@@ -112,25 +107,6 @@ export default class Bootstrapper {
   _progress(step, details) {
     this._currentProgress = { step, details };
     this._onProgress(step, details);
-  }
-
-  async _backupWallet(backupFolder) {
-    const backupDir = backupFolder || defaultBackupDir;
-    if (!fs.existsSync(backupDir)) {
-      fs.mkdirSync(backupDir);
-    }
-
-    const now = new Date()
-      .toString()
-      .slice(0, 24)
-      .split(' ')
-      .reduce((a, b) => {
-        return a + '_' + b;
-      })
-      .replace(/:/g, '_');
-    await RPC.PROMISE('backupwallet', [
-      backupDir + '/NexusBackup_' + now + '.dat',
-    ]);
   }
 
   async _downloadCompressedDb() {

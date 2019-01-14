@@ -96,6 +96,8 @@ export default class BootstrapModal extends PureComponent {
   modalRef = React.createRef();
   backgroundRef = React.createRef();
 
+  datapoints = [];
+
   constructor(props) {
     super(props);
     props.bootstrapper.registerEvents({
@@ -124,7 +126,20 @@ export default class BootstrapModal extends PureComponent {
               locale
             )})`
           : '';
-        return `Downloading the database... ${percentage}% ${sizeProgress}`;
+          /*
+          const lastDataPoint = this.datapoints[this.datapoints.length - 1] || 0;
+          const tempdatapoint = (percentage - lastDataPoint).toFixed(4);
+          this.datapoints.push(Number.parseFloat(tempdatapoint));
+          let sum = 0;
+          for (let index = 0; index < this.datapoints.length; index++) {
+          const element = this.datapoints[index];
+          sum += element;
+          }
+          const downloadSpeedAverage  = ((sum / datapoints.length)/100) * totalSize;
+          const timeremain = (totalSize * ((100 - percentage) / 100)) / downloadSpeedAverage ; */
+          const timeremain = '';
+
+        return `Downloading the database... ${percentage}% ${sizeProgress} ${timeremain}`;
       case 'extracting':
         return 'Decompressing the database...';
       case 'finalizing':

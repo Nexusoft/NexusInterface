@@ -163,16 +163,6 @@ h6 {
   color: var(--h6-font-color);
 }
 
-a {
-  color: var(--link-color);
-  text-decoration: var(--link-text-decoration);
-  transition: var(--link-transition);
-}
-
-a:hover {
-  color: var(--link-hover-color);
-}
-
 ul,
 ol,
 dl {

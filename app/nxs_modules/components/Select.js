@@ -7,6 +7,7 @@ import { keyframes } from '@emotion/core';
 import Button from 'components/Button';
 import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
+import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
 import { color } from 'utils';
 
@@ -15,15 +16,36 @@ const minScreenGap = 20;
 // Options's horizontal padding
 const optionHPadding = 12;
 
+const ErrorMessage = styled(Tooltip)({
+  position: 'absolute',
+  top: 'calc(100% + 10px)',
+  left: 0,
+  maxWidth: '100%',
+  opacity: 0,
+  visibility: 'hidden',
+  transition: `opacity ${timing.normal}, visibility ${timing.normal}`,
+  zIndex: 1,
+  whiteSpace: 'normal',
+  textAlign: 'left',
+});
+
 const SelectControl = styled.div(
   {
     display: 'flex',
     alignItems: 'stretch',
     cursor: 'pointer',
     height: consts.inputHeightEm + 'em',
+    position: 'relative',
+
+    '&:hover': {
+      [ErrorMessage]: {
+        opacity: 1,
+        visibility: 'visible',
+      },
+    },
   },
 
-  ({ skin, active, theme }) => {
+  ({ skin, active, theme, error }) => {
     switch (skin) {
       case 'underline':
         return {
@@ -40,7 +62,7 @@ const SelectControl = styled.div(
             right: 0,
             height: 2,
             borderRadius: 1,
-            background: theme.gray,
+            background: error ? theme.error : theme.gray,
             transitionProperty: 'background-color',
             transitionDuration: timing.normal,
           },
@@ -55,7 +77,9 @@ const SelectControl = styled.div(
             ? {
                 color: theme.light,
                 '&&::after': {
-                  background: color.lighten(theme.primary, 0.3),
+                  background: error
+                    ? color.lighten(theme.error, 0.3)
+                    : color.lighten(theme.primary, 0.3),
                 },
               }
             : null),
@@ -172,6 +196,8 @@ const Option = styled.div(
 );
 
 class Options extends Component {
+  selectedRef = React.createRef();
+
   state = {
     ready: false,
     // Apply the same fon-size with the Select control
@@ -183,6 +209,7 @@ class Options extends Component {
   };
 
   positionDropdown = () => {
+    if (!this.selectedRef.current) return;
     const styles = { fontSize: this.state.styles.fontSize };
 
     // Horizontally align Options dropdown with the Select control
@@ -197,7 +224,7 @@ class Options extends Component {
 
     // Vertically align Selected Option with the Select control
     const thisRect = this.el.getBoundingClientRect();
-    const selectedRect = this.selectedRef.getBoundingClientRect();
+    const selectedRect = this.selectedRef.current.getBoundingClientRect();
     const selectedOptTop = selectedRect.top - thisRect.top;
     styles.top = controlRect.top - selectedOptTop;
 
@@ -247,13 +274,7 @@ class Options extends Component {
               skin={skin}
               onClick={() => this.select(option)}
               selected={option.value === value}
-              ref={
-                option.value === value
-                  ? el => {
-                      this.selectedRef = el;
-                    }
-                  : undefined
-              }
+              ref={option.value === value ? this.selectedRef : undefined}
             >
               {option.display}
             </Option>
@@ -265,9 +286,9 @@ class Options extends Component {
 }
 
 export default class Select extends Component {
-  state = {
-    open: false,
-  };
+  controlRef = React.createRef();
+
+  state = { open: false };
 
   option = value => this.props.options.find(o => o.value === value);
 
@@ -284,12 +305,13 @@ export default class Select extends Component {
       skin = 'underline',
       options,
       value,
+      error,
       onChange,
       ...rest
     } = this.props;
     const { open } = this.state;
     if (!options.length) {
-      console.error('Empty options is invalid');
+      console.error('Select options cannot be empty');
       return null;
     }
     const selectedOption = this.option(value);
@@ -303,9 +325,7 @@ export default class Select extends Component {
     return (
       <>
         <SelectControl
-          ref={el => {
-            this.controlRef = el;
-          }}
+          ref={this.controlRef}
           active={open}
           onClick={this.open}
           skin={skin}
@@ -320,16 +340,27 @@ export default class Select extends Component {
           >
             <Arrow direction="down" width={12} height={8} />
           </Button>
+          {!!error && (
+            <ErrorMessage skin="error" position="bottom" align="start">
+              {error}
+            </ErrorMessage>
+          )}
         </SelectControl>
 
         {open && (
           <Options
             {...{ skin, options, value, onChange }}
             close={this.close}
-            controlRef={this.controlRef}
+            controlRef={this.controlRef.current}
           />
         )}
       </>
     );
   }
 }
+
+// Select wrapper for redux-form
+const SelectReduxFForm = ({ input, meta, ...rest }) => (
+  <Select error={meta.touched && meta.error} {...input} {...rest} />
+);
+Select.RF = SelectReduxFForm;

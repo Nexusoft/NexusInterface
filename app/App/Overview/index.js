@@ -231,10 +231,10 @@ class Overview extends Component {
 
   // React Method (Life cycle hook)
   componentDidUpdate(prevProps) {
-    const { blocks, connections } = this.props;
+    const { blocks, webGLEnabled, settings, connections } = this.props;
 
-    if (this.showingGlobe()) {
-      if (blocks && prevProps.blocks && blocks != prevProps.blocks) {
+    if (settings.acceptedagreement && webGLEnabled && settings.renderGlobe) {
+      if (blocks != prevProps.blocks && blocks && prevProps.blocks) {
         this.redrawCurves();
       }
 
@@ -286,12 +286,12 @@ class Overview extends Component {
   }
 
   trustIcon() {
-    const tw = Math.round(this.props.trustweight / 10);
+    const tw = Math.round((this.props.trustweight || 0) / 10);
     return trustIcons[tw];
   }
 
   blockWeightIcon() {
-    const bw = Math.round(this.props.blockweight / 10);
+    const bw = Math.round((this.props.blockweight || 0) / 10);
     return blockWeightIcons[bw];
   }
 
