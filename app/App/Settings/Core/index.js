@@ -10,6 +10,7 @@ import core from 'api/core';
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
+import WaitingMessage from 'components/WaitingMessage';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -192,6 +193,15 @@ export default class SettingsCore extends Component {
       pristine,
       submitting,
     } = this.props;
+    if (connections === undefined) {
+      return (
+        <WaitingMessage>
+          <Text id="transactions.Loading" />
+          ...
+        </WaitingMessage>
+      );
+    }
+
     return (
       <CoreSettings>
         <form onSubmit={handleSubmit}>
@@ -217,8 +227,7 @@ export default class SettingsCore extends Component {
             />
           </SettingsField>
 
-          {/* Need to wait for the daemon info to initialize txFee value */}
-          {connections !== undefined && <FeeSetting />}
+          <FeeSetting />
 
           <SettingsField
             connectLabel
