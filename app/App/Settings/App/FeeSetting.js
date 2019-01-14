@@ -21,7 +21,7 @@ import { rpcErrorHandler } from 'utils/form';
   form: 'setTransactionFee',
   validate: ({ txFee }) => {
     const errors = {};
-    if (parseFloat(txFee) > 0) {
+    if (parseFloat(txFee) <= 0) {
       errors.txFee = <Text id="Alert.InvalidTransactionFee" />;
     }
     return errors;
