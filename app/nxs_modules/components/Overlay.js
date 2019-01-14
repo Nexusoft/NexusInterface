@@ -47,6 +47,7 @@ export default class Overlay extends Component {
       dimBackground,
       onBackgroundClick,
       backgroundRef,
+      onMount,
       children,
       ...rest
     } = this.props;

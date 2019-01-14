@@ -13,6 +13,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
+import { rpcErrorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 
 const ChangePasswordComponent = styled.form({
@@ -61,14 +62,7 @@ const formName = 'changePassword';
     });
     dispatch(reset(formName));
   },
-  onSubmitFail: (errors, dispatch, submitError) => {
-    if (!errors || !Object.keys(errors).length) {
-      UIController.openErrorDialog({
-        message: 'Error changing password',
-        note: submitError || 'An unknown error occurred',
-      });
-    }
-  },
+  onSubmitFail: rpcErrorHandler('Error changing password'),
 })
 export default class ChangePassword extends Component {
   confirmLockWallet = () => {

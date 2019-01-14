@@ -9,7 +9,7 @@ import transactions from './transactions';
 import common from './common';
 import login from './login';
 import exchange from './exchange';
-import sendRecieve from './sendRecieve';
+import sendReceive from './sendReceive';
 import addressbook from './addressbook';
 import terminal from './terminal';
 import settings from './settings';
@@ -43,7 +43,7 @@ export default function createRootReducer(history) {
       list,
       login,
       market,
-      sendRecieve,
+      sendReceive,
       transactions,
       exchange,
       common,

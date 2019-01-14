@@ -118,7 +118,6 @@ export default class Login extends Component {
               />
             </FormField>
 
-            {/* STAKING FLAG STUFF  TURNED OFF UNTILL WE HAVE A FLAG COMING BACK FROM THE DAEMON TELLING US THAT ITS UNLOCKED FOR STAKING ONLY */}
             <FormField inline connectLabel label="Unlock for Staking Only">
               <Field component={Switch.RF} name="stakingOnly" />
             </FormField>

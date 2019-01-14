@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
 import trashimg from 'images/trash.svg';
+import * as RPC from 'scripts/rpc';
 
 const QueueComponent = styled.div(({ theme }) => ({
   marginTop: 50,
@@ -99,7 +100,7 @@ export default class Queue extends Component {
     });
   };
 
-  sendMany() {
+  sendMany = () => {
     this.props.busy();
     let keyCheck = Object.keys(this.props.Queue);
     if (this.props.SelectedAccount !== '') {
@@ -172,7 +173,7 @@ export default class Queue extends Component {
     } else {
       UIController.openErrorDialog({ message: 'No Account Selected' });
     }
-  }
+  };
 
   confirmSendMultiple = () => {
     const { Queue, encrypted, loggedIn } = this.props;
