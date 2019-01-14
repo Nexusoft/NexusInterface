@@ -61,6 +61,12 @@ const SendFormButtons = styled.div({
 
 const mapStateToProps = state => {
   return {
+    accountOptions: state.sendReceive.AccountChanger
+      ? state.sendReceive.AccountChanger.map(e => ({
+          value: e.name,
+          display: `${e.name} (${e.val} NXS)`,
+        }))
+      : [],
     ...state.common,
     ...state.transactions,
     ...state.sendReceive,
@@ -176,18 +182,6 @@ class SendPage extends Component {
     this.getAccountData();
     googleanalytics.SendScreen('Send');
   }
-  getAccountData() {
-    RPC.PROMISE('listaccounts').then(payload => {
-      let listOfAccts = Object.entries(payload).map(e => {
-        return {
-          name: e[0],
-          val: e[1],
-        };
-      });
-
-      this.props.changeAccount(listOfAccts);
-    });
-  }
 
   componentDidUpdate(prevProps) {
     if (
@@ -197,8 +191,6 @@ class SendPage extends Component {
       this.getAccountData();
     }
   }
-
-  // React Method (Life cycle hook)
 
   componentWillUnmount() {
     this.props.AccountPicked('');
@@ -212,6 +204,15 @@ class SendPage extends Component {
     let defaultcontextmenu = remote.Menu.buildFromTemplate(contextmenu);
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
+
+  getAccountData = async () => {
+    const payload = await RPC.PROMISE('listaccounts');
+    const accounts = Object.entries(payload).map(e => ({
+      name: e[0],
+      val: e[1],
+    }));
+    this.props.changeAccount(accounts);
+  };
 
   editQueue() {
     if (Object.keys(this.props.Queue).includes(this.props.Address)) {
@@ -572,7 +573,7 @@ class SendPage extends Component {
             {this.props.Queue && !!Object.keys(this.props.Queue).length && (
               <Queue
                 accHud={this.accHud.bind(this)}
-                getAccountData={this.getAccountData.bind(this)}
+                getAccountData={this.getAccountData}
                 {...this.props}
               />
             )}

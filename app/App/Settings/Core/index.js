@@ -129,33 +129,6 @@ const mapDispatchToProps = dispatch => ({
   onSubmitFail: rpcErrorHandler('Error Saving Settings'),
 })
 export default class SettingsCore extends Component {
-  // // React Method (Life cycle hook)
-  // constructor(props) {
-  //   super(props);
-  //   // Set initial settings
-  //   // This is a temporary fix for the current setting state mechanism
-  //   // Ideally this should be managed via Redux states & actions
-  //   const settings = GetSettings();
-  //   this.initialValues = {
-  //     manualDaemon: !!settings.manualDaemon,
-  //     manualDaemonUser: settings.manualDaemonUser || 'rpcserver',
-  //     manualDaemonPassword: settings.manualDaemonPassword || 'password',
-  //     manualDaemonIP: settings.manualDaemonIP || '127.0.0.1',
-  //     manualDaemonPort: settings.manualDaemonPort || '9336',
-  //     manualDaemonDataDir:
-  //       settings.manualDaemonDataDir || '.Nexus_Core_Data_BETA_v0.8.4',
-  //     enableMining: !!settings.enableMining,
-  //     enableStaking: !!settings.enableStaking,
-  //     verboseLevel: settings.verboseLevel || '2',
-  //     forkblocks: settings.forkblocks || '0',
-  //     mapPortUsingUpnp: !!settings.mapPortUsingUpnp,
-  //     socks4Proxy: !!settings.socks4Proxy,
-  //     socks4ProxyIP: settings.socks4ProxyIP || '127.0.0.1',
-  //     socks4ProxyPort: settings.socks4ProxyPort || '9050',
-  //     detatchDatabaseOnShutdown: !!settings.detatchDatabaseOnShutdown,
-  //   };
-  // }
-
   confirmSwitchManualDaemon = () => {
     if (this.props.settings.manualDaemon) {
       UIController.openConfirmDialog({
