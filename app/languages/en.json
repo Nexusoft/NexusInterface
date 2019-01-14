@@ -95,6 +95,7 @@
 
   "Market.Information": "Market Information",
   "Market.Refreash": "Refresh Market Data",
+  "Market.Refreshing": "Refreshing Market Data...",
   "transactions.PENDINGTR": "PENDING TRANSACTION",
   "Market.All": "All",
   "Market.Receive": "Receive",

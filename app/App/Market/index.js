@@ -6,7 +6,11 @@ import { bindActionCreators } from 'redux';
 import ReactTable from 'react-table';
 import { remote } from 'electron';
 import { VictoryArea, VictoryChart, VictoryAnimation } from 'victory';
+import Tooltip from 'components/Tooltip';
+import Button from 'components/Button';
+import syncingIcon from 'images/syncing.sprite.svg';
 import googleanalytics from 'scripts/googleanalytics';
+import UIController from 'components/UIController';
 
 // Internal Global Dependencies
 import * as TYPE from 'actions/actiontypes';
@@ -189,14 +193,28 @@ class Market extends Component {
       </div>
     );
   }
+  refreshMarket() {
+    this.refresher();
+    UIController.showNotification(<Text id="Market.Refreshing" />, 'success');
+  }
 
   // Mandatory React method
   render() {
     return (
-      <Panel icon={chartIcon} title={<Text id="Market.Information" />}>
-        <a className="refresh" onClick={() => this.refresher()}>
+      <Panel
+        controls={
+          <Tooltip.Trigger tooltip={<Text id="Market.Refreash" />}>
+            <Button square skin="primary" onClick={() => this.refreshMarket()}>
+              <Icon icon={syncingIcon} />
+            </Button>
+          </Tooltip.Trigger>
+        }
+        icon={chartIcon}
+        title={<Text id="Market.Information" />}
+      >
+        {/* <a className="refresh" onClick={() => this.refresher()}>
           <Text id="Market.Refreash" />
-        </a>
+        </a> */}
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 
         {this.props.loaded && this.props.binance.buy[0] && (
@@ -204,11 +222,15 @@ class Market extends Component {
             <img className="exchangeLogo" src={binanceLogo} />
             <div className="marketInfoContainer">
               <MarketDepth
+                locale={this.props.settings.locale}
                 chartData={this.formatChartData('binanceBuy')}
                 chartSellData={this.formatChartData('binanceSell')}
               />
               {this.props.binance.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.binance.candlesticks} />
+                <Candlestick
+                  locale={this.props.settings.locale}
+                  data={this.props.binance.candlesticks}
+                />
               ) : (
                 this.oneDayinfo('binance')
               )}
@@ -220,11 +242,15 @@ class Market extends Component {
             <img className="exchangeLogo" src={bittrexLogo} />
             <div className="marketInfoContainer">
               <MarketDepth
+                locale={this.props.settings.locale}
                 chartData={this.formatChartData('bittrexBuy')}
                 chartSellData={this.formatChartData('bittrexSell')}
               />
               {this.props.bittrex.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.bittrex.candlesticks} />
+                <Candlestick
+                  locale={this.props.settings.locale}
+                  data={this.props.bittrex.candlesticks}
+                />
               ) : (
                 this.oneDayinfo('bittrex')
               )}
@@ -236,12 +262,16 @@ class Market extends Component {
             <img className="exchangeLogo" src={cryptopiaLogo} />
             <div className="marketInfoContainer">
               <MarketDepth
+                locale={this.props.settings.locale}
                 chartData={this.formatChartData('cryptopiaBuy')}
                 chartSellData={this.formatChartData('cryptopiaSell')}
               />
 
               {this.props.cryptopia.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.cryptopia.candlesticks} />
+                <Candlestick
+                  data={this.props.cryptopia.candlesticks}
+                  locale={this.props.settings.locale}
+                />
               ) : (
                 this.oneDayinfo('cryptopia')
               )}

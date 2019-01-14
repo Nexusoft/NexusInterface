@@ -86,7 +86,7 @@ class TransactionDetailsModal extends Component {
             </div>
 
             <div key="modal_TXID">
-              <Text id="transactions.modalTxID" />:
+              <Text id="transactions.TX" />:
               <div className="blockHash" style={{ wordWrap: 'break-word' }}>
                 <span>{tx.txid}</span>
               </div>

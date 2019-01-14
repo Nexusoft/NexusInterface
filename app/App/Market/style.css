@@ -33,8 +33,17 @@
 .marketDepthInner {
   position: relative;
   flex: 1;
+
   min-height: 300px;
   max-width: 50%;
+  margin-left: 5px;
+}
+.candleStickInner {
+  position: relative;
+
+  min-height: 300px;
+  max-width: 40%;
+  margin-left: 20px;
 }
 
 .infobox {
