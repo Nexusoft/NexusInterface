@@ -18,6 +18,7 @@ import UIController from 'components/UIController';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { form } from 'utils';
 import { rpcErrorHandler } from 'utils/form';
+import FeeSetting from './FeeSetting';
 
 const CoreSettings = styled.div({
   maxWidth: 750,
@@ -25,8 +26,12 @@ const CoreSettings = styled.div({
 });
 
 // React-Redux mandatory methods
-const mapStateToProps = ({ settings: { settings } }) => ({
-  settings: settings,
+const mapStateToProps = ({
+  settings: { settings },
+  overview: { connections },
+}) => ({
+  connections,
+  settings,
   initialValues: {
     manualDaemonUser: settings.manualDaemonUser,
     manualDaemonPassword: settings.manualDaemonPassword,
@@ -180,7 +185,13 @@ export default class SettingsCore extends Component {
   })();
 
   render() {
-    const { handleSubmit, settings, pristine, submitting } = this.props;
+    const {
+      connections,
+      handleSubmit,
+      settings,
+      pristine,
+      submitting,
+    } = this.props;
     return (
       <CoreSettings>
         <form onSubmit={handleSubmit}>
@@ -205,6 +216,9 @@ export default class SettingsCore extends Component {
               onChange={this.updateHandlers('enableStaking')}
             />
           </SettingsField>
+
+          {/* Need to wait for the daemon info to initialize txFee value */}
+          {connections !== undefined && <FeeSetting />}
 
           <SettingsField
             connectLabel

@@ -44,7 +44,7 @@ export default class FeeSetting extends React.Component {
   };
 
   render() {
-    const { submitting } = this.props;
+    const { pristine, submitting } = this.props;
     return (
       <SettingsField
         connectLabel
@@ -60,10 +60,11 @@ export default class FeeSetting extends React.Component {
               type="number"
               step="0.01"
               min="0"
+              normalize={parseFloat}
               style={{ width: 100 }}
             />
             <Button
-              disable={submitting}
+              disabled={pristine || submitting}
               fitHeight
               onClick={this.confirmSetTxFee}
               style={{ marginLeft: '1em' }}

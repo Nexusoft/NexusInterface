@@ -18,7 +18,6 @@ import { form } from 'utils';
 // Internal Local
 import LanguageSetting from './LanguageSetting';
 import BackupDirSetting from './BackupDirSetting';
-import FeeSetting from './FeeSetting';
 
 const AppSettings = styled.div({
   maxWidth: 750,
@@ -150,9 +149,6 @@ export default class SettingsApp extends Component {
         </SettingsField>
 
         <BackupDirSetting />
-
-        {/* Need to wait for the daemon info to initialize txFee value */}
-        {connections !== undefined && <FeeSetting />}
 
         <SettingsField
           connectLabel
