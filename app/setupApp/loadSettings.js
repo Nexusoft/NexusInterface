@@ -8,7 +8,7 @@ export default function loadSettings({ dispatch }) {
   const settings = GetSettings();
   dispatch(ac.loadSettings(settings));
 
-  if (settings.acceptedagreement)
+  if (settings.acceptedagreement && settings.experimentalWarning == true)
   {
     UIController.openModal(ExperimentalWarningModal);
   }
