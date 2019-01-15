@@ -7,6 +7,7 @@ if (process.platform === 'win32') {
 }
 const initialState = {
   settings: {
+    autoUpdate: true,
     manualDaemon: false,
     verbose: '2',
     acceptedagreement: false,

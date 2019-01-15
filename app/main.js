@@ -20,12 +20,9 @@ let mainWindow;
 let resizeTimer;
 // Global Objects
 global.core = core;
+global.autoUpdater = autoUpdater;
 
 app.setAppUserModelId(APP_ID);
-
-// Configure Updater
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
 
 // Enable source map support
 if (process.env.NODE_ENV === 'production') {
@@ -164,20 +161,13 @@ function createWindow() {
 
 // Application Startup
 app.on('ready', async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
-    await installExtensions();
-  }
-
   createWindow();
   core.start();
 
   mainWindow.on('close', function(e) {
     e.preventDefault();
 
-    let settings = GetSettings();
+    const settings = GetSettings();
     log.info('close');
 
     if (settings) {
@@ -195,6 +185,54 @@ app.on('ready', async () => {
       });
     }
   });
+
+  const settings = GetSettings();
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true' ||
+    settings.devMode
+  ) {
+    installExtensions();
+  }
+
+  // Configure Updater
+  autoUpdater.logger = log;
+  autoUpdater.logger.transports.file.level = 'info';
+  autoUpdater.currentVersion = APP_VERSION;
+  if (process.env.NODE_ENV === 'development') {
+    autoUpdater.updateConfigPath = path.join(
+      __dirname,
+      '..',
+      'dev-app-update.yml'
+    );
+  }
+  autoUpdater.on('error', (...args) => {
+    console.log('error', args);
+  });
+
+  autoUpdater.on('checking-for-update', (...args) => {
+    console.log('checking-for-update', args);
+  });
+
+  autoUpdater.on('update-available', (...args) => {
+    console.log('update-available', args);
+  });
+
+  autoUpdater.on('update-not-available', (...args) => {
+    console.log('update-not-available', args);
+  });
+
+  autoUpdater.on('download-progress', (...args) => {
+    console.log('download-progress', args);
+  });
+
+  autoUpdater.on('update-downloaded', (...args) => {
+    console.log('update-downloaded', args);
+  });
+
+  // if (settings.autoUpdate) {
+  autoUpdater.checkForUpdatesAndNotify();
+  // }
 });
 
 // Application Shutdown
