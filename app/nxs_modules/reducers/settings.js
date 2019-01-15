@@ -22,7 +22,11 @@ const initialState = {
     Folder: BackupDir,
     verboseLevel: '2',
     mapPortUsingUpnp: true,
-    customStyling: {},
+    customStyling: {
+      globePillarColorRGB: 'rgb(0,255,255)',
+      globeArchColorRGB: 'rgb(0,255,255)',
+      globeMultiColorRGB: 'rgb(0,151,228)',
+    },
     NXSlogoRGB: 'rgb(0,174,239)',
     footerRGB: 'rgb(0,174,239)',
     footerActiveRGB: 'rgb(0,174,239)',

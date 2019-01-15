@@ -271,10 +271,18 @@ textarea {
   height: 325px;
   display: block;
   width: 100%;
+  text-align: center;
 }
 
 .tda {
-  /* width: 79%; */
+  animation: tdd 0.5s;
+
+  display: flex;
+
+  text-align: center;
+
+  border-spacing: 0px;
+  border-collapse: collapse;
 }
 .contactNames {
   color: var(--color-2);

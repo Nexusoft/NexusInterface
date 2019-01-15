@@ -20,6 +20,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   printCoreOutput: data =>
     dispatch({ type: TYPE.PRINT_TO_CORE, payload: data }),
+    setCoreOutputPaused: isPaused =>
+    dispatch({ type: TYPE.SET_PAUSE_CORE_OUTPUT, payload: isPaused }),
 });
 
 const TerminalContent = styled.div({
@@ -39,6 +41,7 @@ const TerminalCoreComponent = styled.div(({ theme }) => ({
 const Output = styled.div(
   ({ theme }) => ({
     overflowY: 'auto',
+    wordBreak:'break-all',
     flexGrow: 1,
     display: 'flex',
     background: theme.dark,

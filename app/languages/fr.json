@@ -95,6 +95,7 @@
   "transactions.PENDINGTR": "TRANSACTION EN COURS",
   "Market.Information": "Information du marché",
   "Market.Refreash": "Actualiser les données du marché",
+  "Market.Refreshing": "Refreshing Market Data",
 
   "Market.All": "Tout",
   "Market.Receive": "Recevoir",

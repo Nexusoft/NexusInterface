@@ -39,7 +39,7 @@ const Buttons = styled.div({
 
 @connect(
   ({
-    sendReceive: { MoveFromAccount, MoveToAccount, moveAmount },
+    sendReceive: { MoveFromAccount, MoveToAccount, moveAmount, moveUSDAmount },
     settings: {
       settings: { minimumconfirmations, fiatCurrency },
     },
@@ -48,6 +48,7 @@ const Buttons = styled.div({
     MoveFromAccount,
     MoveToAccount,
     moveAmount,
+    moveUSDAmount,
     minimumconfirmations,
     fiatCurrency,
     paytxfee,
