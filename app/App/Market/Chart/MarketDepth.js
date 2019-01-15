@@ -5,6 +5,7 @@ Last Modified by: Brian Smith
 */
 // External Dependencies
 import React, { Component } from 'react';
+import Text, { translate } from 'components/Text';
 import {
   VictoryArea,
   VictoryChart,
@@ -31,8 +32,10 @@ export default class MarketDepth extends Component {
                   strokeWidth: 1,
                 },
                 axisLabel: {
-                  textAnchor: 'right',
-                  padding: 25,
+                  stroke: 'white',
+
+                  padding: 40,
+                  fontSize: 10,
                 },
                 grid: {
                   fill: 'none',
@@ -48,6 +51,7 @@ export default class MarketDepth extends Component {
                   padding: 1,
                   fill: 'white',
                   stroke: 'transparent',
+                  fontSize: 10,
                 },
               },
             },
@@ -55,6 +59,7 @@ export default class MarketDepth extends Component {
           containerComponent={<VictoryVoronoiContainer />}
         >
           <VictoryAxis
+            label={translate('Market.Volume', this.props.locale)}
             dependentAxis
             tickFormat={tick => {
               if (tick % 1000000 === 0) {
@@ -86,6 +91,7 @@ export default class MarketDepth extends Component {
             data={[...this.props.chartSellData]}
           />
           <VictoryAxis
+            label={translate('Market.Price', this.props.locale)}
             independentAxis
             style={{ tickLabels: { angle: -15 } }}
             tickLabelComponent={

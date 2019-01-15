@@ -71,6 +71,10 @@ export default class SettingsApp extends Component {
       yesCallback: () => {
         if (this.props.connections !== undefined) {
           backupWallet(this.props.settings.Folder);
+          UIController.showNotification(
+            <Text id="Alert.WalletBackedUp" />,
+            'success'
+          );
         } else {
           UIController.openErrorDialog({
             message: 'Please wait for Daemon to load',

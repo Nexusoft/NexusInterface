@@ -95,6 +95,7 @@
   "transactions.PENDINGTR": "보류중인 거래",
   "Market.Information": "시장 정보",
   "Market.Refreash": "시장 데이터 새로 고침",
+  "Market.Refreshing": "Refreshing Market Data",
 
   "Market.All": "모든",
   "Market.Receive": "받다",
