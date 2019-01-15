@@ -74,6 +74,7 @@ class SettingsStyle extends Component {
     });
     setTimeout(() => {
         this.SaveSettings();
+        googleanalytics.SendEvent('Settings', 'Style', 'UsedCustomFile', 1);
     }, 1000);
   }
 

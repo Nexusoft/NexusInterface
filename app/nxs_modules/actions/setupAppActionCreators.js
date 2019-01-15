@@ -113,6 +113,10 @@ export const SetPortIsAvailable = isAvailable => ({
   payload: isAvailable,
 });
 
+export const SetAcceptLicense = () => ({
+  type: TYPE.ACCEPT_MIT,
+});
+
 export const LoadAddressBook = () => {
   let json = null;
   if (config.Exists('addressbook.json')) {
