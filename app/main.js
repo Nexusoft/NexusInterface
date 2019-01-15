@@ -129,6 +129,8 @@ function createWindow() {
 
     mainWindow.show();
     mainWindow.focus();
+    // UNCOMMENT THIS TO OPEN DEVTOOLS FROM THE MAIN PROCESS
+    // mainWindow.webContents.openDevTools();
 
     //updateApplication(); // if updates are checked in app.on('ready') there is a chance the event doesn't make it to the UI if that hasn't loaded yet, this is safer
   });

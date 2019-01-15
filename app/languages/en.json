@@ -95,6 +95,7 @@
 
   "Market.Information": "Market Information",
   "Market.Refreash": "Refresh Market Data",
+  "Market.Refreshing": "Refreshing Market Data...",
   "transactions.PENDINGTR": "PENDING TRANSACTION",
   "Market.All": "All",
   "Market.Receive": "Receive",
@@ -243,6 +244,7 @@
   "Settings.MinimumConfirmations": "Minimum Confirmations",
   "Settings.Forkblock": "ForkBlocks",
   "Settings.Folder": "Backup Directory",
+  "Settings.PickThemeFile": "Select Theme File",
 
   "Console.CoreOutput": "Core Output",
   "Console.Console": "Console",
@@ -254,7 +256,7 @@
   "TrustList.TrustList": "Trust List",
   "TrustList.Address": "Address",
   "TrustList.InterestRate": "Stake Reward",
-  "TrustList.SyncMsg": "Please let your wallet sync with the network",
+  "TrustList.SyncMsg": "Synching Please Wait",
 
   "Exchange.Exchange": "Exchange",
   "Exchange.ShoutOut": "powered by ShapeShift",
@@ -388,6 +390,10 @@
   "Cp.GC": "Globe Color",
   "Cp.GPC": "Globe Pillar Color",
   "Cp.GAC": "Globe Arch Color",
+  "Cp.PC": "Primary Color",
+  "Cp.PCA": "Primary Color Accent",
+  "Cp.ER": "Error Color",
+  "Cp.ERA": "Error Color Accent",
 
   "Lang.English": "English",
   "Lang.Russian": "Russian",

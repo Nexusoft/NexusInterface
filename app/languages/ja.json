@@ -96,6 +96,7 @@
 
   "Market.Information": "市場情報",
   "Market.Refreash": "マーケットデータをリフレッシュする",
+  "Market.Refreshing": "Refreshing Market Data",
 
   "Market.All": "すべて",
   "Market.Receive": "受信",
