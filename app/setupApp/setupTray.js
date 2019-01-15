@@ -3,6 +3,7 @@ import path from 'path';
 import { remote } from 'electron';
 
 // Internal
+import configuration from 'api/configuration';
 import * as ac from 'actions/setupAppActionCreators';
 import UIController from 'components/UIController';
 

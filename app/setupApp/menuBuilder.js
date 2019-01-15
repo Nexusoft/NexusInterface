@@ -1,4 +1,5 @@
 // External
+import React from 'react';
 import { shell, remote } from 'electron';
 import fs from 'fs';
 
