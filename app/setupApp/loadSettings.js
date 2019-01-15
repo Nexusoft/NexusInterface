@@ -6,7 +6,7 @@ import ExperimentalWarningModal from './ExperimentalWarningModal';
 
 export default function loadSettings({ dispatch }) {
   const settings = GetSettings();
-  dispatch(ac.updateSettings(settings));
+  dispatch(ac.loadSettings(settings));
 
   const showExperimentalWarning = () => {
     if (settings.experimentalWarning) {

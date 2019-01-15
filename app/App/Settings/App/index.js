@@ -160,7 +160,7 @@ export default class SettingsApp extends Component {
           subLabel={<Text id="ToolTip.DevMode" />}
         >
           <Switch
-            checked={settings.devmode}
+            checked={settings.devMode}
             onChange={this.updateHandlers('devMode')}
           />
         </SettingsField>
