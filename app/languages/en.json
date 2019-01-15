@@ -255,7 +255,7 @@
   "TrustList.TrustList": "Trust List",
   "TrustList.Address": "Address",
   "TrustList.InterestRate": "Stake Reward",
-  "TrustList.SyncMsg": "Please let your wallet sync with the network",
+  "TrustList.SyncMsg": "Synching Please Wait",
 
   "Exchange.Exchange": "Exchange",
   "Exchange.ShoutOut": "powered by ShapeShift",
