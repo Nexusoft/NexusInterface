@@ -41,6 +41,7 @@ app/renderer.prod.js.map
 app/style.css
 app/style.css.map
 app/dist
+app/fonts
 dll
 main.js.map
 

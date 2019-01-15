@@ -1,3 +1,4 @@
+import React from 'react';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
