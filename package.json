@@ -54,7 +54,11 @@
       "./app/images/background/**/*",
       "license.txt",
       "installerSidebar.bmp",
-      "./app/languages/*"
+      "./app/languages/*",
+      {
+        "from": "./app/fonts",
+        "to": "fonts"
+      }
     ],
     "publish": {
       "provider": "github"
