@@ -28,44 +28,48 @@ const WarningMessage = styled.div({
   fontSize: 28,
 });
 
-const EncryptionWarningModal = props => (
-  <WarningModal props>
-    {closeModal => (
-      <Modal.Body style={{ fontSize: 18 }}>
-        <WarningIcon icon={warningIcon} />
-        <WarningMessage>
-          <Text id="overview.EncryptedModal" />
-        </WarningMessage>
-        <p>
-          <Text id="overview.Suggestion" />
-        </p>
-        <br />
-        <div className="flex space-between">
-          <Button
-            skin="error"
-            onClick={() => {
-              closeModal();
-              const settings = GetSettings();
-              SaveSettings({
-                ...settings,
-                ignoreEncryptionWarningFlag: true,
-              });
-            }}
-          >
-            <Text id="overview.Ignore" />
-          </Button>
-          <Button
-            as={Link}
-            skin="primary"
-            to="/Settings/Security"
-            onClick={closeModal}
-          >
-            <Text id="overview.TakeMeThere" />
-          </Button>
-        </div>
-      </Modal.Body>
-    )}
-  </WarningModal>
-);
+const EncryptionWarningModal = props => {
+  console.log(props);
+  return (
+    <WarningModal props>
+      {closeModal => (
+        <Modal.Body style={{ fontSize: 18 }}>
+          <WarningIcon icon={warningIcon} />
+          <WarningMessage>
+            <Text id="overview.EncryptedModal" />
+          </WarningMessage>
+          <p>
+            <Text id="overview.Suggestion" />
+          </p>
+          <br />
+          <div className="flex space-between">
+            <Button
+              skin="error"
+              onClick={() => {
+                closeModal();
+                const settings = GetSettings();
+                SaveSettings({
+                  ...settings,
+                  ignoreEncryptionWarningFlag: true,
+                });
+                props.dispatch({ type: 'IGNORE_ENCRYPTION_WARNING' });
+              }}
+            >
+              <Text id="overview.Ignore" />
+            </Button>
+            <Button
+              as={Link}
+              skin="primary"
+              to="/Settings/Security"
+              onClick={closeModal}
+            >
+              <Text id="overview.TakeMeThere" />
+            </Button>
+          </div>
+        </Modal.Body>
+      )}
+    </WarningModal>
+  );
+};
 
 export default EncryptionWarningModal;
