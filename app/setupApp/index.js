@@ -12,12 +12,12 @@ import setupTray from './setupTray';
 
 export default function setupApp(store, history) {
   const { dispatch } = store;
+  loadSettings(store);
+
   const menuBuilder = new MenuBuilder(store, history);
   menuBuilder.buildMenu();
 
   setupTray(store);
-
-  loadSettings(store);
 
   dispatch(ac.LoadAddressBook());
 

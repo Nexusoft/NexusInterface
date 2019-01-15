@@ -394,10 +394,10 @@ class Overview extends Component {
               handleOnAddData={e => (this.reDrawEverything = e)}
               handleRemoveAllPoints={e => (this.removeAllPoints = e)}
               pillarColor={
-                this.props.settings.customStyling.globePillarColorRGB
+                this.props.theme.globePillarColor
               }
-              archColor={this.props.settings.customStyling.globeArchColorRGB}
-              globeColor={this.props.settings.customStyling.globeMultiColorRGB}
+              archColor={this.props.theme.globeArchColor}
+              globeColor={this.props.theme.globeColor}
             />
             <MaxmindCopyright>
               <MaxmindLogo src={maxmindLogo} />
