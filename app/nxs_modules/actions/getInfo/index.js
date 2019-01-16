@@ -64,8 +64,7 @@ export default function getInfo() {
 
       const {
         settings: {
-          manualDaemon,
-          settings: { bootstrap: bootstrapSetting },
+          settings: { manualDaemon, bootstrap: bootstrapSetting },
         },
       } = state;
       // 172800 = (100 * 24 * 60 * 60) / 50
