@@ -12,8 +12,10 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
+import Icon from 'components/Icon';
 import UIController from 'components/UIController';
-import { form } from 'utils';
+import { form, color } from 'utils';
+import warningIcon from 'images/warning.sprite.svg';
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
@@ -23,6 +25,11 @@ const AppSettings = styled.div({
   maxWidth: 750,
   margin: '0 auto',
 });
+
+const WarningIcon = styled(Icon)(({ theme }) => ({
+  color: color.lighten(theme.error, 0.3),
+  fontSize: '1.1em',
+}));
 
 const fiatCurrencies = [
   { value: 'AUD', display: 'Australian Dollar (AUD)' },
@@ -97,6 +104,23 @@ export default class SettingsApp extends Component {
     };
   })();
 
+  handleAutoUpdateChange = e => {
+    if (!e.target.checked) {
+      UIController.openConfirmDialog({
+        question: 'Are you sure you want to disable Auto Update?',
+        note:
+          'Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience',
+        yesLabel: 'Keep Auto Update On',
+        noLabel: 'Turn off Auto Update',
+        noSkin: 'error',
+        noCallback: () => this.props.updateSettings({ autoUpdate: false }),
+        style: { width: 580 },
+      });
+    } else {
+      this.props.updateSettings({ autoUpdate: true });
+    }
+  };
+
   render() {
     const { connections, settings } = this.props;
     return (
@@ -116,12 +140,21 @@ export default class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
-          label="Auto Update (Recommended)"
+          label={
+            <span>
+              <span className="v-align">
+                Auto Update (Recommended){' '}
+                {!settings.autoUpdate && (
+                  <WarningIcon spaceLeft icon={warningIcon} />
+                )}
+              </span>
+            </span>
+          }
           subLabel="Automatically check for new versions and notify if a new version is available"
         >
           <Switch
             checked={settings.autoUpdate}
-            onChange={this.updateHandlers('autoUpdate')}
+            onChange={this.handleAutoUpdateChange}
           />
         </SettingsField>
 
