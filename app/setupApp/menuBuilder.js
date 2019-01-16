@@ -11,7 +11,7 @@ import Text from 'components/Text';
 import UIController from 'components/UIController';
 import * as ac from 'actions/setupAppActionCreators';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
-import updaterState from 'updaterState';
+import updater from 'updater';
 
 const autoUpdater = remote.getGlobal('autoUpdater');
 
@@ -23,7 +23,7 @@ export default class MenuBuilder {
 
     // Update the updater menu item when the updater state changes
     // Changing menu ittem labels directly has no effect so we have to rebuild the whole menu
-    updaterState.events.on('state-change', this.buildMenu);
+    updater.on('state-change', this.buildMenu);
   }
 
   separator = {
@@ -262,7 +262,7 @@ export default class MenuBuilder {
   };
 
   updaterMenuItem = () => {
-    switch (updaterState.current) {
+    switch (updater.state) {
       case 'idle':
         return this.updaterIdle;
       case 'checking':

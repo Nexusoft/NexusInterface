@@ -16,6 +16,7 @@ import Icon from 'components/Icon';
 import UIController from 'components/UIController';
 import { form, color } from 'utils';
 import warningIcon from 'images/warning.sprite.svg';
+import updater from 'updater';
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
@@ -113,11 +114,17 @@ export default class SettingsApp extends Component {
         yesLabel: 'Keep Auto Update On',
         noLabel: 'Turn off Auto Update',
         noSkin: 'error',
-        noCallback: () => this.props.updateSettings({ autoUpdate: false }),
+        noCallback: () => {
+          this.props.updateSettings({ autoUpdate: false });
+          updater.stopAutoUpdate();
+        },
         style: { width: 580 },
       });
     } else {
       this.props.updateSettings({ autoUpdate: true });
+      if (updater.state === 'idle') {
+        updater.autoUpdate();
+      }
     }
   };
 

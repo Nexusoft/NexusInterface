@@ -6,10 +6,10 @@ import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
 import * as ac from 'actions/setupAppActionCreators';
 import getInfo from 'actions/getInfo';
+import updater from 'updater';
 import MenuBuilder from './menuBuilder';
 import loadSettings from './loadSettings';
 import setupTray from './setupTray';
-import setupAutoUpdater from './setupAutoUpdater';
 
 export default function setupApp(store, history) {
   const { dispatch } = store;
@@ -39,7 +39,12 @@ export default function setupApp(store, history) {
     UIController.showNotification('Closing Nexus...');
   });
 
-  setupAutoUpdater(store);
+  const state = store.getState();
+
+  updater.setup();
+  if (state.settings.settings.autoUpdate) {
+    updater.autoUpdate();
+  }
 }
 
 function checkWebGL(dispatch) {
