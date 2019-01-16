@@ -9,6 +9,7 @@ import getInfo from 'actions/getInfo';
 import MenuBuilder from './menuBuilder';
 import loadSettings from './loadSettings';
 import setupTray from './setupTray';
+import setupAutoUpdater from './setupAutoUpdater';
 
 export default function setupApp(store, history) {
   const { dispatch } = store;
@@ -37,6 +38,8 @@ export default function setupApp(store, history) {
     dispatch(ac.clearOverviewVariables());
     UIController.showNotification('Closing Nexus...');
   });
+
+  setupAutoUpdater(store);
 }
 
 function checkWebGL(dispatch) {

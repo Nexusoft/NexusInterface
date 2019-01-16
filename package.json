@@ -1,7 +1,7 @@
 {
   "name": "nexus_wallet_beta",
-  "productName": "Nexus_Wallet_BETA_v0.8.5",
-  "version": "0.8.5",
+  "productName": "Nexus_Wallet_BETA_v0.8.4",
+  "version": "0.8.4",
   "buildDate": "December 27th 2018",
   "description": "Nexus",
   "scripts": {
@@ -35,7 +35,7 @@
   },
   "browserslist": "electron 1.8",
   "build": {
-    "productName": "nexus_wallet_beta",
+    "productName": "Nexus Wallet",
     "appId": "com.nexusearth.NexusTritiumBeta",
     "files": [
       "dist/",
@@ -92,13 +92,13 @@
     "nsis": {
       "oneClick": false,
       "perMachine": false,
-      "runAfterFinish": false,
+      "runAfterFinish": true,
       "allowToChangeInstallationDirectory": true,
       "menuCategory": "Nexus",
       "installerSidebar": "resources/installerSidebar.bmp",
       "license": "resources/license.txt",
       "shortcutName": "Nexus Wallet Beta",
-      "artifactName": "${productName}-setup-${version}.${ext}"
+      "artifactName": "nexus_wallet_beta-setup-${version}.${ext}"
     },
     "linux": {
       "target": [

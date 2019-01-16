@@ -172,15 +172,9 @@ app.on('ready', async () => {
     const settings = GetSettings();
     log.info('close');
 
-    if (settings) {
-      if (settings.minimizeToTray == true) {
-        e.preventDefault();
-        mainWindow.hide();
-      } else {
-        core.stop().then(payload => {
-          app.exit();
-        });
-      }
+    if (settings && settings.minimizeToTray == true) {
+      e.preventDefault();
+      mainWindow.hide();
     } else {
       core.stop().then(payload => {
         app.exit();
@@ -196,45 +190,6 @@ app.on('ready', async () => {
   ) {
     installExtensions();
   }
-
-  // Configure Updater
-  autoUpdater.logger = log;
-  autoUpdater.logger.transports.file.level = 'info';
-  autoUpdater.currentVersion = APP_VERSION;
-  if (process.env.NODE_ENV === 'development') {
-    autoUpdater.updateConfigPath = path.join(
-      __dirname,
-      '..',
-      'dev-app-update.yml'
-    );
-  }
-  autoUpdater.on('error', (...args) => {
-    console.log('error', args);
-  });
-
-  autoUpdater.on('checking-for-update', (...args) => {
-    console.log('checking-for-update', args);
-  });
-
-  autoUpdater.on('update-available', (...args) => {
-    console.log('update-available', args);
-  });
-
-  autoUpdater.on('update-not-available', (...args) => {
-    console.log('update-not-available', args);
-  });
-
-  autoUpdater.on('download-progress', (...args) => {
-    console.log('download-progress', args);
-  });
-
-  autoUpdater.on('update-downloaded', (...args) => {
-    console.log('update-downloaded', args);
-  });
-
-  // if (settings.autoUpdate) {
-  autoUpdater.checkForUpdatesAndNotify();
-  // }
 });
 
 // Application Shutdown
