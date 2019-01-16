@@ -52,7 +52,6 @@ const EncryptionWarningModal = props => {
                   ...settings,
                   ignoreEncryptionWarningFlag: true,
                 });
-                props.dispatch({ type: 'IGNORE_ENCRYPTION_WARNING' });
               }}
             >
               <Text id="overview.Ignore" />
