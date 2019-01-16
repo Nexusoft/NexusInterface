@@ -54,10 +54,6 @@ export default merge.smart(baseConfig, {
           },
           {
             loader: 'css-loader',
-            options: {
-              modules: true,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-            },
           },
         ],
       },

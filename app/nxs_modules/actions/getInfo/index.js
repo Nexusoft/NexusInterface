@@ -27,7 +27,8 @@ export default function getInfo() {
         !state.common.encryptionModalShown &&
         !state.settings.settings.ignoreEncryptionWarningFlag
       ) {
-        UIController.openModal(EncryptionWarningModal, { dispatch: dispatch });
+        UIController.openModal(EncryptionWarningModal);
+        dispatch(ac.showEncryptionWarningModal());
       }
     } else if (info.unlocked_until === 0) {
       dispatch(ac.Lock());
