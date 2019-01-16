@@ -116,6 +116,17 @@ export default class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
+          label="Auto Update (Recommended)"
+          subLabel="Automatically check for new versions and notify if a new version is available"
+        >
+          <Switch
+            checked={settings.autoUpdate}
+            onChange={this.updateHandlers('autoUpdate')}
+          />
+        </SettingsField>
+
+        <SettingsField
+          connectLabel
           label={<Text id="Settings.UsageData" />}
           subLabel={<Text id="ToolTip.Usage" />}
         >
