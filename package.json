@@ -70,7 +70,8 @@
       "category": "public.app-category.utilities"
     },
     "dmg": {
-      "background": "resources/background.jpg",
+      "artifactName": "nexus_wallet_beta-${version}.${ext}",
+      "background": "resources/background@2x.png",
       "contents": [
         {
           "x": 129,
