@@ -1,9 +1,11 @@
-import React from 'react';
+// External
 import { remote } from 'electron';
 import log from 'electron-log';
 import path from 'path';
+
+// Internal
 import UIController from 'components/UIController';
-import BackgroundTask from 'components/BackgroundTask';
+import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 
 const autoUpdater = remote.getGlobal('autoUpdater');
 
@@ -23,20 +25,25 @@ export default async function setupAutoUpdater(store) {
       'dev-app-update.yml'
     );
   }
-  autoUpdater.on('error', (...args) => {
-    console.log('error', args);
+  autoUpdater.on('error', err => {
+    console.error(err);
   });
 
-  autoUpdater.on('update-available', (...args) => {
-    console.log('update-available', args);
+  autoUpdater.on('update-available', updateInfo => {
+    UIController.showNotification(
+      `New wallet version ${updateInfo.version} available. Downloading...`,
+      'success'
+    );
   });
 
-  autoUpdater.on('download-progress', (...args) => {
-    console.log('download-progress', args);
-  });
-
-  autoUpdater.on('update-downloaded', (...args) => {
-    console.log('update-downloaded', args);
+  autoUpdater.on('update-downloaded', updateInfo => {
+    UIController.showBackgroundTask(AutoUpdateBackgroundTask, {
+      version: updateInfo.version,
+      autoUpdater: autoUpdater,
+      stopAutoChecking: () => {
+        autoCheckStopped = true;
+      },
+    });
   });
 
   if (settings.autoUpdate) {
@@ -44,45 +51,14 @@ export default async function setupAutoUpdater(store) {
   }
 }
 
-let stopAutoChecking = false;
+let autoCheckStopped = false;
 
 async function autoCheck() {
-  if (stopAutoChecking) return;
+  if (autoCheckStopped) return;
   const result = await autoUpdater.checkForUpdates();
   if (result.downloadPromise) {
     await result.downloadPromise;
-    UIController.showBackgroundTask(AutoUpdateBackgroundTask, {
-      version: result.updateInfo.version,
-      quitAndInstall: autoUpdater.quitAndInstall,
-    });
   }
   // Check for updates every 2 hours
   setTimeout(autoCheck, 120 * 60 * 1000);
-}
-
-class AutoUpdateBackgroundTask extends React.Component {
-  confirmInstall = () => {
-    this.closeTask();
-    UIController.openConfirmDialog({
-      question: 'Quit and install update now?',
-      yesLabel: 'Quit and install',
-      yesCallback: this.props.quitAndInstall,
-      noLabel: 'Install it later',
-      noCallback: () => {
-        UIController.showBackgroundTask(AutoUpdateBackgroundTask, this.props);
-        stopAutoChecking = true;
-      },
-    });
-  };
-
-  render() {
-    return (
-      <BackgroundTask
-        assignClose={close => (this.closeTask = close)}
-        onClick={this.confirmInstall}
-      >
-        New wallet version v{this.props.version} available!
-      </BackgroundTask>
-    );
-  }
 }
