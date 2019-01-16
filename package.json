@@ -62,8 +62,8 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "Qrysto",
-      "repo": "updater-test"
+      "owner": "Nexusoft",
+      "repo": "Nexus-Interface-React"
     },
     "mac": {
       "target": "dmg",
