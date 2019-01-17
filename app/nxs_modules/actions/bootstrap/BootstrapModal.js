@@ -61,7 +61,10 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
   borderRadius: 10,
   border: `1px solid ${theme.gray}`,
   overflow: 'hidden',
-
+  animation:
+    percentage >= 100
+      ? `pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1)`
+      : null,
   '&::before': {
     content: '""',
     display: 'block',
@@ -126,7 +129,7 @@ export default class BootstrapModal extends PureComponent {
               locale
             )})`
           : '';
-          /*
+        /*
           const lastDataPoint = this.datapoints[this.datapoints.length - 1] || 0;
           const tempdatapoint = (percentage - lastDataPoint).toFixed(4);
           this.datapoints.push(Number.parseFloat(tempdatapoint));
@@ -137,7 +140,7 @@ export default class BootstrapModal extends PureComponent {
           }
           const downloadSpeedAverage  = ((sum / datapoints.length)/100) * totalSize;
           const timeremain = (totalSize * ((100 - percentage) / 100)) / downloadSpeedAverage ; */
-          const timeremain = '';
+        const timeremain = '';
 
         return `Downloading the database... ${percentage}% ${sizeProgress} ${timeremain}`;
       case 'extracting':
