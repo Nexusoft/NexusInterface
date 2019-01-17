@@ -142,7 +142,7 @@ export default class SettingsCore extends Component {
           try {
             await RPC.PROMISE('stop', []);
           } finally {
-            this.updateSettings({ manualDaemon: false });
+            this.props.updateSettings({ manualDaemon: false });
             this.props.clearForRestart();
             remote.getGlobal('core').start();
           }
@@ -191,7 +191,7 @@ export default class SettingsCore extends Component {
       pristine,
       submitting,
     } = this.props;
-    if (connections === undefined) {
+    if (connections === undefined && !this.props.settings.manualDaemon) {
       return (
         <WaitingMessage>
           <Text id="transactions.Loading" />
