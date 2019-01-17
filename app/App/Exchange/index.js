@@ -1,11 +1,10 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+
 import { Route, Redirect, Switch } from 'react-router';
 import { connect } from 'react-redux';
 import Modal from 'react-responsive-modal';
-import { Link } from 'react-router-dom';
-import Request from 'request';
+
 import { remote } from 'electron';
 import Countdown from 'react-countdown-now';
 import googleanalytics from 'scripts/googleanalytics';
@@ -14,14 +13,13 @@ import googleanalytics from 'scripts/googleanalytics';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
 import { GetSettings } from 'api/settings.js';
-import Icon from 'components/Icon';
-import * as RPC from 'scripts/rpc';
+import UIController from 'components/UIController';
 import * as TYPE from 'actions/actiontypes';
 import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
-import styles from './style.css';
+
 import Fast from './Fast';
 import Precise from './Precise';
 
@@ -96,7 +94,7 @@ class Exchange extends Component {
             onComplete={() => this.props.clearTransaction()}
             renderer={({ hours, minutes, seconds, completed }) => {
               if (completed) {
-                alert('Transaction Expired');
+                UIController.showNotification('Transaction Expired');
                 return null;
               } else {
                 return (
@@ -179,13 +177,13 @@ class Exchange extends Component {
             link={`${this.props.match.url}/Precise`}
             icon={bullseyeIcon}
             text={<Text id="Exchange.Precise" />}
-            toolTipText={<Text id="Exchange.PreciseExplanation"/>}
+            toolTipText={<Text id="Exchange.PreciseExplanation" />}
           />
           <Tab
             link={`${this.props.match.url}/Fast`}
             icon={fastIcon}
             text={<Text id="Exchange.Fast" />}
-            toolTipText={<Text id="Exchange.FastExplanation"/>}
+            toolTipText={<Text id="Exchange.FastExplanation" />}
           />
         </Tab.Bar>
 

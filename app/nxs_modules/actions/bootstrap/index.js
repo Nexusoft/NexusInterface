@@ -1,7 +1,7 @@
 // Internal
 import UIController from 'components/UIController';
-import { GetSettings, SaveSettings } from 'api/settings';
 import * as ac from 'actions/setupAppActionCreators';
+import { updateSettings } from 'actions/settingsActionCreators';
 import Bootstrapper from './Bootstrapper';
 import BootstrapModal from './BootstrapModal';
 
@@ -48,8 +48,7 @@ export default function bootstrap({ suggesting } = {}) {
       noCallback: () => {
         running = false;
         if (suggesting) {
-          const settings = GetSettings();
-          SaveSettings({ ...settings, bootstrap: false });
+          dispatch(updateSettings({ bootstrap: false }));
         }
       },
       style: { width: 530 },

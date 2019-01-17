@@ -23,9 +23,9 @@ const initialState = {
     verboseLevel: '2',
     mapPortUsingUpnp: true,
     customStyling: {
-      globePillarColor: "#00ffff",
-      globeArchColor: "#00ffff",
-      globeColor: "#0097e4",
+      globePillarColor: '#00ffff',
+      globeArchColor: '#00ffff',
+      globeColor: '#0097e4',
     },
     NXSlogoRGB: 'rgb(0,174,239)',
     footerRGB: 'rgb(0,174,239)',
@@ -38,20 +38,23 @@ const initialState = {
     styleChangeFlag: false,
     selectedColorProp: 'MC1',
     minimumconfirmations: 3,
-    theme: {}
+    theme: {},
   },
-  theme:
-  {
-    globePillarColor: "#00ffff",
-    globeArchColor: "#00ffff",
-    globeColor: "#0097e4",
+  theme: {
+    globePillarColor: '#00ffff',
+    globeArchColor: '#00ffff',
+    globeColor: '#0097e4',
   },
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.UPDATE_SETTINGS:
-      return { ...state, settings: { ...state.settings, ...action.payload }, theme: {...state.theme, ...action.payload.theme} };
+      return {
+        ...state,
+        settings: { ...state.settings, ...action.payload },
+        theme: { ...state.theme, ...action.payload.theme },
+      };
     case TYPE.SWITCH_LOCALES:
       return {
         ...state,
@@ -101,8 +104,6 @@ export default (state = initialState, action) => {
         ...state,
         theme: { ...state.theme, wallpaper: action.payload },
       };
-    case TYPE.CLOSE_BOOTSTRAP_MODAL:
-      return { ...state, settings: { ...state.settings, bootstrap: false } };
     case TYPE.CUSTOMIZE_STYLING:
       return {
         ...state,
