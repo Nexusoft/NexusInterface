@@ -70,8 +70,8 @@
       "category": "public.app-category.utilities"
     },
     "dmg": {
-      "artifactName": "nexus_wallet_beta-${version}.${ext}",
-      "background": "resources/background@2x.png",
+      "artifactName": "nexus_wallet-${version}.${ext}",
+      "background": "resources/background.jpg",
       "contents": [
         {
           "x": 129,
@@ -99,12 +99,15 @@
       "installerSidebar": "resources/installerSidebar.bmp",
       "license": "resources/license.txt",
       "shortcutName": "Nexus Wallet Beta",
-      "artifactName": "nexus_wallet_beta-setup-${version}.${ext}"
+      "artifactName": "nexus_wallet-setup-${version}.${ext}"
     },
     "linux": {
       "target": [
-        "deb"
+        "AppImage"
       ]
+    },
+    "appImage": {
+      "artifactName": "nexus_wallet-${version}.${ext}"
     },
     "directories": {
       "buildResources": "resources",
