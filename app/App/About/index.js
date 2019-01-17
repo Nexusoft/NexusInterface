@@ -12,6 +12,8 @@ import { shell } from 'electron';
 // Internal Dependencies
 import styles from './style.css';
 import * as TYPE from 'actions/actiontypes';
+import Panel from 'components/Panel';
+import Text from 'components/Text';
 
 // Images
 import nexusLogo from 'images/logo-full.svg';
@@ -41,21 +43,21 @@ class About extends Component {
   // Mandatory React method
   render() {
     return (
-      <div id="About" className="animated fadeIn">
-        <h1> ABOUT NEXUS WALLET </h1>
+      <Panel  title={<Text id="About" />}>
+        <img src={nexusLogo} />
+            <br />
         <row>
           <column>
-            <img src={nexusLogo} />
-            <br />
+            
             <row>
               <column>
                 <b>Interface Version:</b> {this.getInterfaceVersionNumber()}{' '}
                 <br />
-                <b>Build Date: </b> December 27th 2018 <br />
+                <b>Build Date: </b> January 16th 2019 <br />
               </column>
               <column>
                 <b>Daemon Version:</b> {this.getDeamonVersionNumber()} <br />
-                <b>Build Date: </b> December 27th 2018 <br />
+                <b>Build Date: </b> January 3rd 2019 <br />
               </column>
             </row>
             <br />
@@ -70,7 +72,7 @@ class About extends Component {
             </b>
           </column>
           <column>
-            <h2>License Agreement</h2>
+            <h3 style={{ textAlign: 'center' }}>License Agreement</h3>
             <blockquote>
               Copyright {this.getCurrentYear()} Nexus
               <br />
@@ -98,7 +100,7 @@ class About extends Component {
           </column>
         </row>
         <div style={{ textAlign: 'center' }}>
-          <h2>Open Source Credits</h2>
+          <h2 style={{ textAlign: 'center' }}>Open Source Credits</h2>
           <dl>
             <dt>Electron</dt>
             <dd>
@@ -185,7 +187,7 @@ class About extends Component {
             </dd>
           </dl>
         </div>
-      </div>
+        </Panel>
     );
   }
 }

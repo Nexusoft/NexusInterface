@@ -1,6 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { remote } from 'electron';
 import Text from 'components/Text';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
@@ -78,6 +79,23 @@ class SettingsStyle extends Component {
     }, 1000);
   }
 
+  openPickThemeFileDialog = () =>
+  {
+    remote.dialog.showOpenDialog(
+    {
+      title: 'Select Custom Theme File',
+      properties: ["openFile"],
+      filters: [{name: "Theme Json", extensions:["json"]}],
+    },
+      filepath => {
+        if(filepath.length != 0 && filepath[0] != '')
+        {
+          this.setCustomSettingsFile(filepath[0]);
+        }
+      }
+    );
+  }
+
 
   // Mandatory React method
   render() {
@@ -117,29 +135,13 @@ class SettingsStyle extends Component {
             label="Settings File"
             subLabel="Import Custom Settings File"
             
-          ><Button
-          skin="primary"
-          htmlFor="chooseCustomSettingsFile"
-          for="chooseCustomSettingsFile"
-          onClick = {() => {document.getElementById("chooseCustomSettingsFile").click(); }}
-        ><Text id="Settings.PickThemeFile"/>
-       </Button>
-            <input
-              id="chooseCustomSettingsFile"
-              type="file"
-              accept=".json"
-              style={{display: 'none'}}
-              onChange={e => {
-                if (!!e.target.files.length) {
-                  let customFilePath = e.target.files[0].path;
-                  if (process.platform === 'win32') {
-                    customFilePath = customFilePath.replace(/\\/g, '/');
-                  }
-                  this.setCustomSettingsFile(customFilePath);
-                  e.target.value = "";
-                }
-              }}
-            /> 
+          >
+          <Button
+            id="chooseCustomSettingsFile"
+            skin="primary"
+            onClick = {this.openPickThemeFileDialog}
+            ><Text id="Settings.PickThemeFile"/>
+          </Button>
           </SettingsField>
 
           <SettingsField

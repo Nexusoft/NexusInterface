@@ -13,8 +13,8 @@ import { Squares } from 'react-activity';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Dependencies
-import * as TYPE from 'actions/actiontypes';
 import ExchangeForm from './ExchangeForm';
+import UIController from 'components/UIController';
 import styles from './style.css';
 
 import arrow from 'images/arrow.svg';
@@ -76,7 +76,6 @@ class Precise extends Component {
           </div>
         </div>
       );
-      return <div>hello</div>;
     } else return null;
   }
 
@@ -140,19 +139,23 @@ class Precise extends Component {
   }
 
   getQuote() {
+    this.props.ToggleAcyncButtons();
     if (this.props.withinBounds) {
       this.props.ToggleAcyncButtons();
       let pair = this.props.from + '_' + this.props.to;
       this.props.GetQuote(pair, this.props.ammount);
-    } else alert('Outside trade-able ammounts');
+    } else {
+      UIController.showNotification('Outside trade-able ammounts', 'error');
+    }
+    this.props.ToggleAcyncButtons();
   }
 
   executeTransaction() {
+    this.props.ToggleAcyncButtons();
     googleanalytics.SendEvent('Shapeshift', 'Precise', 'Sent', 1);
     let pair = this.props.from + '_' + this.props.to;
     if (this.props.toAddress !== '') {
       if (this.props.refundAddress !== '') {
-        this.props.ToggleAcyncButtons();
         Request(
           {
             method: 'GET',
@@ -164,7 +167,10 @@ class Precise extends Component {
             if (response.statusCode === 200) {
               let res = JSON.parse(response.body);
               if (!res.isvalid) {
-                alert(`${res.error}\n ${this.props.to} Address.`);
+                UIController.showNotification(
+                  `${res.error}\n ${this.props.to} Address.`,
+                  'error'
+                );
               } else {
                 Request(
                   {
@@ -177,7 +183,10 @@ class Precise extends Component {
                     if (response.statusCode === 200) {
                       let res = JSON.parse(response.body);
                       if (!res.isvalid) {
-                        alert(`${res.error}\n ${this.props.from} Address.`);
+                        UIController.showNotification(
+                          `${res.error}\n ${this.props.from} Address.`,
+                          'error'
+                        );
                       } else {
                         this.props.InitiateQuotedTransaction(
                           pair,
@@ -187,14 +196,23 @@ class Precise extends Component {
                         );
                       }
                     }
+                    if (error) {
+                      console.log(error);
+                    }
                   }
                 );
               }
             }
           }
         );
-      } else alert('Refund Address is required');
-    } else alert(`${this.currencylabel()} Address is required`);
+      } else
+        UIController.showNotification('Refund Address is required', 'error');
+    } else
+      UIController.showNotification(
+        `${this.currencylabel()} Address is required`,
+        'error'
+      );
+    this.props.ToggleAcyncButtons();
   }
 
   buttonSwitcher() {
