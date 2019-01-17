@@ -50,6 +50,7 @@ export default function bootstrap({ suggesting } = {}) {
         if (suggesting) {
           const settings = GetSettings();
           SaveSettings({ ...settings, bootstrap: false });
+          dispatch(ac.IgnoreBootstrap());
         }
       },
       style: { width: 530 },

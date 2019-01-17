@@ -125,6 +125,7 @@ export const GetQuote = (pair, ammount, callback) => {
         json: { amount: ammount, pair: pair },
       },
       (error, response, body) => {
+        console.log(response);
         if (response.statusCode === 200) {
           if (!response.body.error) {
             dispatch({ type: TYPE.SET_QUOTE, payload: response.body.success });
@@ -132,9 +133,12 @@ export const GetQuote = (pair, ammount, callback) => {
             dispatch({ type: TYPE.TOGGLE_ACYNC_BUTTONS });
           } else {
             dispatch({ type: TYPE.TOGGLE_ACYNC_BUTTONS });
-            alert(response.body.error);
+            console.log(response.body.error);
           }
-        } else {
+        } else if (response.statusCode === 401) {
+          console.log(body.message);
+        } else if (error) {
+          console.log(error);
         }
       }
     );
