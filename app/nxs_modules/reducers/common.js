@@ -48,12 +48,6 @@ export default (state = initialState, action) => {
         BootstrapModal: action.payload,
       };
       break;
-    case TYPE.CLOSE_BOOTSTRAP_MODAL:
-      return {
-        ...state,
-        BootstrapModal: false,
-      };
-      break;
     case TYPE.SEARCH:
       return {
         ...state,
