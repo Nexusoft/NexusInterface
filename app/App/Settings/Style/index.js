@@ -1,6 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { remote } from 'electron';
 import Text from 'components/Text';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
@@ -14,6 +15,8 @@ import Switch from 'components/Switch';
 import UIController from 'components/UIController';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
+
+import fs from 'fs';
 
 const StyleSettings = styled.div({
   maxWidth: 750,
@@ -38,7 +41,7 @@ const mapDispatchToProps = dispatch => ({
 
 class SettingsStyle extends Component {
   SaveSettings() {
-    SaveSettings(this.props.settings);
+    SaveSettings({...this.props.settings, theme: this.props.theme});
     UIController.showNotification(
       <Text id="Alert.StyleSettingsSaved" />,
       'success'
@@ -49,7 +52,7 @@ class SettingsStyle extends Component {
 
   setColor = (key, value) => {
     this.props.CustomizeStyling({
-      ...this.props.settings.customStyling,
+      ...this.props.theme,
       [key]: value,
     });
   };
@@ -62,9 +65,42 @@ class SettingsStyle extends Component {
     );
   };
 
+  setCustomSettingsFile = (filepath) => {
+    console.log(filepath);
+    const fileOBJ = fs.readFileSync(filepath);
+    const jsonOBJ = JSON.parse(fileOBJ);
+
+    this.props.CustomizeStyling({
+      ...jsonOBJ
+    });
+    setTimeout(() => {
+        this.SaveSettings();
+        googleanalytics.SendEvent('Settings', 'Style', 'UsedCustomFile', 1);
+    }, 1000);
+  }
+
+  openPickThemeFileDialog = () =>
+  {
+    remote.dialog.showOpenDialog(
+    {
+      title: 'Select Custom Theme File',
+      properties: ["openFile"],
+      filters: [{name: "Theme Json", extensions:["json"]}],
+    },
+      filepath => {
+        if(filepath.length != 0 && filepath[0] != '')
+        {
+          this.setCustomSettingsFile(filepath[0]);
+        }
+      }
+    );
+  }
+
+
   // Mandatory React method
   render() {
     const {
+      theme,
       settings,
       webGLEnabled,
       ToggleGlobeRender,
@@ -96,11 +132,24 @@ class SettingsStyle extends Component {
           </SettingsField>
 
           <SettingsField
+            label="Settings File"
+            subLabel="Import Custom Settings File"
+            
+          >
+          <Button
+            id="chooseCustomSettingsFile"
+            skin="primary"
+            onClick = {this.openPickThemeFileDialog}
+            ><Text id="Settings.PickThemeFile"/>
+          </Button>
+          </SettingsField>
+
+          <SettingsField
             label="Background"
             subLabel="Customize your background wallpaper"
           >
             <BackgroundPicker
-              wallpaper={settings.wallpaper}
+              wallpaper={theme.wallpaper}
               onChange={SetWalpaper}
             />
           </SettingsField>
@@ -111,23 +160,32 @@ class SettingsStyle extends Component {
             </Button>
           </SettingsField>
 
-          <SettingsField indent={1} label="Background color">
+          <SettingsField indent={1} label={<Text id="Cp.PBC"/>}>
             <ColorPicker colorName="dark" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Foreground color">
+          <SettingsField indent={1} label={<Text id="Cp.TC"/>}>
             <ColorPicker colorName="light" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Primary color">
+          <SettingsField indent={1} label={<Text id="Cp.PC"/>}>
             <ColorPicker colorName="primary" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Primary contrast color">
+          <SettingsField indent={1} label={<Text id="Cp.PCA"/>}>
             <ColorPicker colorName="primaryContrast" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Error color">
+          <SettingsField indent={1} label={<Text id="Cp.ER"/>}>
             <ColorPicker colorName="error" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label="Error contrast color">
+          <SettingsField indent={1} label={<Text id="Cp.ERA"/>}>
             <ColorPicker colorName="errorContrast" onChange={this.setColor} />
+          </SettingsField>
+          <SettingsField indent={1} label={<Text id="Cp.GC"/>}>
+            <ColorPicker colorName="globeColor" onChange={this.setColor} />
+          </SettingsField>
+          <SettingsField indent={2} label={<Text id="Cp.GPC"/>}>
+            <ColorPicker colorName="globePillarColor" onChange={this.setColor} />
+          </SettingsField>
+          <SettingsField indent={2} label={<Text id="Cp.GAC"/>}>
+            <ColorPicker colorName="globeArchColor" onChange={this.setColor} />
           </SettingsField>
 
           <div className="flex space-between" style={{ marginTop: '2em' }}>

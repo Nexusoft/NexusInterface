@@ -23,7 +23,7 @@ import Terminal from './Terminal';
 import StyleGuide from './StyleGuide';
 import TrustList from './TrustList';
 import About from './About';
-import Exchange from './Exchange';
+// import Exchange from './Exchange';
 import AppBackground from './AppBackground';
 import ThemeController from './ThemeController';
 
@@ -96,7 +96,7 @@ export default class App extends Component {
                       <Route path="/Settings" component={Settings} />
                       <Route path="/Terminal" component={Terminal} />
                       <Route exact path="/StyleGuide" component={StyleGuide} />
-                      <Route path="/Exchange" component={Exchange} />
+                      {/* <Route path="/Exchange" component={Exchange} /> */}
                       <Route exact path="/List" component={TrustList} />
                       <Route exact path="/About" component={About} />
                     </Switch>

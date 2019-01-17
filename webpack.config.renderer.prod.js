@@ -54,10 +54,6 @@ export default merge.smart(baseConfig, {
           },
           {
             loader: 'css-loader',
-            options: {
-              modules: true,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-            },
           },
         ],
       },
@@ -80,6 +76,7 @@ export default merge.smart(baseConfig, {
           options: {
             limit: 10000,
             mimetype: 'font/woff2',
+            outputPath: '../fonts',
           },
         },
       },

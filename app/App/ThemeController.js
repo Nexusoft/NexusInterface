@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { colors } from 'styles';
 
 const mapStateToProps = state => ({
-  customColors: state.settings.settings.customStyling,
+  customColors: state.settings.theme,
 });
 
 class ThemeController extends PureComponent {

@@ -1,4 +1,5 @@
 // External
+import React from 'react';
 import { shell, remote } from 'electron';
 import fs from 'fs';
 
@@ -10,11 +11,19 @@ import Text from 'components/Text';
 import UIController from 'components/UIController';
 import * as ac from 'actions/setupAppActionCreators';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
+import updater from 'updater';
+
+const autoUpdater = remote.getGlobal('autoUpdater');
 
 export default class MenuBuilder {
   constructor(store, history) {
     this.store = store;
     this.history = history;
+    this.menu = null;
+
+    // Update the updater menu item when the updater state changes
+    // Changing menu ittem labels directly has no effect so we have to rebuild the whole menu
+    updater.on('state-change', this.buildMenu);
   }
 
   separator = {
@@ -220,7 +229,52 @@ export default class MenuBuilder {
     },
   };
 
-  buildDarwinTemplate() {
+  updaterIdle = {
+    label: 'Check for Updates...',
+    enabled: true,
+    click: async () => {
+      const result = await autoUpdater.checkForUpdates();
+      // Not sure if this is the best way to check if there's an update
+      // available because autoUpdater.checkForUpdates() doesn't return
+      // any reliable results like a boolean `updateAvailable` property
+      if (result.updateInfo.version === APP_VERSION) {
+        UIController.showNotification(
+          'There are currently no updates available'
+        );
+      }
+    },
+  };
+
+  updaterChecking = {
+    label: 'Checking for Updates...',
+    enabled: false,
+  };
+
+  updaterDownloading = {
+    label: 'Update available! Downloading...',
+    enabled: false,
+  };
+
+  updaterReadyToInstall = {
+    label: 'Quit and install update...',
+    enabled: true,
+    click: autoUpdater.quitAndInstall,
+  };
+
+  updaterMenuItem = () => {
+    switch (updater.state) {
+      case 'idle':
+        return this.updaterIdle;
+      case 'checking':
+        return this.updaterChecking;
+      case 'downloading':
+        return this.updaterDownloading;
+      case 'downloaded':
+        return this.updaterReadyToInstall;
+    }
+  };
+
+  buildDarwinTemplate = () => {
     const subMenuAbout = {
       label: 'Nexus',
       submenu: [
@@ -266,7 +320,12 @@ export default class MenuBuilder {
 
     const subMenuHelp = {
       label: 'Help',
-      submenu: [this.websiteLink, this.gitRepoLink],
+      submenu: [
+        this.websiteLink,
+        this.gitRepoLink,
+        this.separator,
+        this.updaterMenuItem(),
+      ],
     };
 
     return [
@@ -277,9 +336,9 @@ export default class MenuBuilder {
       subMenuWindow,
       subMenuHelp,
     ];
-  }
+  };
 
-  buildDefaultTemplate() {
+  buildDefaultTemplate = () => {
     const subMenuFile = {
       label: '&File',
       submenu: [
@@ -317,13 +376,19 @@ export default class MenuBuilder {
 
     const subMenuHelp = {
       label: 'Help',
-      submenu: [this.about, this.websiteLink, this.gitRepoLink],
+      submenu: [
+        this.about,
+        this.websiteLink,
+        this.gitRepoLink,
+        this.separator,
+        this.updaterMenuItem(),
+      ],
     };
 
     return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
-  }
+  };
 
-  buildMenu() {
+  buildMenu = () => {
     let template;
 
     if (process.platform === 'darwin') {
@@ -332,9 +397,8 @@ export default class MenuBuilder {
       template = this.buildDefaultTemplate();
     }
 
-    const menu = remote.Menu.buildFromTemplate(template);
-    remote.Menu.setApplicationMenu(menu);
-
-    return menu;
-  }
+    this.menu = remote.Menu.buildFromTemplate(template);
+    remote.Menu.setApplicationMenu(this.menu);
+    return this.menu;
+  };
 }

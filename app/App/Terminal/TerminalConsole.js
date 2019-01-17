@@ -92,6 +92,7 @@ const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
   flexBasis: 0,
   overflow: 'auto',
+  wordBreak:'break-all',
   background: theme.dark,
   border: `1px solid ${theme.darkGray}`,
 }));
@@ -314,7 +315,9 @@ class TerminalConsole extends Component {
           onMouseDown={() => {
             setTimeout(() => {
               //I don't like this but the issue is that the click event fires on the output div which breaks the focus, so using a timer
-              this.inputRef.focus();
+              this.inputRef.setState({focus:true});
+              this.inputRef.inputReference.focus();
+              
             }, 100);
             this.props.onAutoCompleteClick(item);
           }}

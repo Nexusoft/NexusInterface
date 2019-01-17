@@ -6,7 +6,11 @@ import { bindActionCreators } from 'redux';
 import ReactTable from 'react-table';
 import { remote } from 'electron';
 import { VictoryArea, VictoryChart, VictoryAnimation } from 'victory';
+import Tooltip from 'components/Tooltip';
+import Button from 'components/Button';
+import syncingIcon from 'images/syncing.sprite.svg';
 import googleanalytics from 'scripts/googleanalytics';
+import UIController from 'components/UIController';
 
 // Internal Global Dependencies
 import * as TYPE from 'actions/actiontypes';
@@ -156,99 +160,127 @@ class Market extends Component {
     }
   }
 
-  oneDayinfo(failedExchange) {
+  oneDayinfo(exchangeName) {
     return (
-      <div>
-        <h3>
-          {failedExchange.charAt(0).toUpperCase() + failedExchange.slice(1)}{' '}
+      <div style={{display:'table-row' }}>
+        <div style={{display:'table-cell' , verticalAlign: "middle"}}>
+        <b>
           24hr Data
-        </h3>
-        {failedExchange === 'cryptopia' ? (
+        </b>
+        </div>
+        
+        <div style={{display:'table-cell', paddingLeft:'1.5em'}}>
+        {exchangeName === 'cryptopia' ? (
           <div>
-            Percent change: {this.props[failedExchange].info24hr.change}
+            <b>Percent change:</b> {this.props[exchangeName].info24hr.change}
             {' %'}
           </div>
         ) : (
           <div>
-            Price Change: {this.props[failedExchange].info24hr.change}
+            <b>Price Change:</b> {this.props[exchangeName].info24hr.change}
             {' BTC'}
           </div>
         )}
         <div>
-          High: {this.props[failedExchange].info24hr.high}
-          {' BTC'}
+          <b>High: </b> {this.props[exchangeName].info24hr.high}
+          {' BTC '}
+          <b>Low: </b> {this.props[exchangeName].info24hr.low}
+          {' BTC '}
+          <b>Volume: </b> {this.props[exchangeName].info24hr.volume}
+          {' NXS '}
         </div>
-        <div>
-          Low: {this.props[failedExchange].info24hr.low}
-          {' BTC'}
-        </div>
-        <div>
-          Volume: {this.props[failedExchange].info24hr.volume}
-          {' NXS'}
         </div>
       </div>
     );
+  }
+  refreshMarket() {
+    this.refresher();
+    UIController.showNotification(<Text id="Market.Refreshing" />, 'success');
   }
 
   // Mandatory React method
   render() {
     return (
-      <Panel icon={chartIcon} title={<Text id="Market.Information" />}>
-        <a className="refresh" style={{right:"2em"}} onClick={() => this.refresher()}>
+      <Panel
+        controls={
+          <Tooltip.Trigger tooltip={<Text id="Market.Refreash" />}>
+            <Button square skin="primary" onClick={() => this.refreshMarket()}>
+              <Icon icon={syncingIcon} />
+            </Button>
+          </Tooltip.Trigger>
+        }
+        icon={chartIcon}
+        title={<Text id="Market.Information" />}
+      >
+        {/* <a className="refresh" onClick={() => this.refresher()}>
           <Text id="Market.Refreash" />
-
-        </a>
+        </a> */}
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 
         {this.props.loaded && this.props.binance.buy[0] && (
           <div className="exchangeUnitContainer">
             <img className="exchangeLogo" src={binanceLogo} />
+              {this.oneDayinfo('binance')}
             <div className="marketInfoContainer">
               <MarketDepth
+                locale={this.props.settings.locale}
                 chartData={this.formatChartData('binanceBuy')}
                 chartSellData={this.formatChartData('binanceSell')}
               />
               {this.props.binance.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.binance.candlesticks} locale={this.props.settings.locale} />
+                <Candlestick
+                  locale={this.props.settings.locale}
+                  data={this.props.binance.candlesticks}
+                />
               ) : (
                 null
               )}
-              {this.oneDayinfo('binance')}
             </div>
           </div>
         )}
         {this.props.loaded && this.props.bittrex.buy[0] && (
           <div className="exchangeUnitContainer">
             <img className="exchangeLogo" src={bittrexLogo} />
+            {this.oneDayinfo('bittrex')}
             <div className="marketInfoContainer">
+             
+             <br/>
               <MarketDepth
+                locale={this.props.settings.locale}
                 chartData={this.formatChartData('bittrexBuy')}
                 chartSellData={this.formatChartData('bittrexSell')}
               />
               {this.props.bittrex.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.bittrex.candlesticks} locale={this.props.settings.locale} />
+                <Candlestick
+                  locale={this.props.settings.locale}
+                  data={this.props.bittrex.candlesticks}
+                />
               ) : (
                 null
               )}
-              {this.oneDayinfo('bittrex')}
+             
             </div>
           </div>
         )}
         {this.props.loaded && this.props.cryptopia.buy[0] && (
           <div className="exchangeUnitContainer">
             <img className="exchangeLogo" src={cryptopiaLogo} />
+              {this.oneDayinfo('cryptopia')}
             <div className="marketInfoContainer">
               <MarketDepth
+                locale={this.props.settings.locale}
                 chartData={this.formatChartData('cryptopiaBuy')}
                 chartSellData={this.formatChartData('cryptopiaSell')}
               />
 
               {this.props.cryptopia.candlesticks[0] !== undefined ? (
-                <Candlestick data={this.props.cryptopia.candlesticks} locale={this.props.settings.locale} />
+                <Candlestick
+                  data={this.props.cryptopia.candlesticks}
+                  locale={this.props.settings.locale}
+                />
               ) : (
                 null
               )}
-              {this.oneDayinfo('cryptopia')}
             </div>
           </div>
         )}

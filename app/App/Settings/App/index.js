@@ -12,18 +12,25 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
+import Icon from 'components/Icon';
 import UIController from 'components/UIController';
-import { form } from 'utils';
+import { form, color } from 'utils';
+import warningIcon from 'images/warning.sprite.svg';
+import updater from 'updater';
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
 import BackupDirSetting from './BackupDirSetting';
-import FeeSetting from './FeeSetting';
 
 const AppSettings = styled.div({
   maxWidth: 750,
   margin: '0 auto',
 });
+
+const WarningIcon = styled(Icon)(({ theme }) => ({
+  color: color.lighten(theme.error, 0.3),
+  fontSize: '1.1em',
+}));
 
 const fiatCurrencies = [
   { value: 'AUD', display: 'Australian Dollar (AUD)' },
@@ -72,6 +79,10 @@ export default class SettingsApp extends Component {
       yesCallback: () => {
         if (this.props.connections !== undefined) {
           backupWallet(this.props.settings.Folder);
+          UIController.showNotification(
+            <Text id="Alert.WalletBackedUp" />,
+            'success'
+          );
         } else {
           UIController.openErrorDialog({
             message: 'Please wait for Daemon to load',
@@ -94,6 +105,29 @@ export default class SettingsApp extends Component {
     };
   })();
 
+  handleAutoUpdateChange = e => {
+    if (!e.target.checked) {
+      UIController.openConfirmDialog({
+        question: 'Are you sure you want to disable Auto Update?',
+        note:
+          'Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience',
+        yesLabel: 'Keep Auto Update On',
+        noLabel: 'Turn off Auto Update',
+        noSkin: 'error',
+        noCallback: () => {
+          this.props.updateSettings({ autoUpdate: false });
+          updater.stopAutoUpdate();
+        },
+        style: { width: 580 },
+      });
+    } else {
+      this.props.updateSettings({ autoUpdate: true });
+      if (updater.state === 'idle') {
+        updater.autoUpdate();
+      }
+    }
+  };
+
   render() {
     const { connections, settings } = this.props;
     return (
@@ -108,6 +142,26 @@ export default class SettingsApp extends Component {
           <Switch
             checked={settings.minimizeToTray}
             onChange={this.updateHandlers('minimizeToTray')}
+          />
+        </SettingsField>
+
+        <SettingsField
+          connectLabel
+          label={
+            <span>
+              <span className="v-align">
+                Auto Update (Recommended){' '}
+                {!settings.autoUpdate && (
+                  <WarningIcon spaceLeft icon={warningIcon} />
+                )}
+              </span>
+            </span>
+          }
+          subLabel="Automatically check for new versions and notify if a new version is available"
+        >
+          <Switch
+            checked={settings.autoUpdate}
+            onChange={this.handleAutoUpdateChange}
           />
         </SettingsField>
 
@@ -151,16 +205,13 @@ export default class SettingsApp extends Component {
 
         <BackupDirSetting />
 
-        {/* Need to wait for the daemon info to initialize txFee value */}
-        {connections !== undefined && <FeeSetting />}
-
         <SettingsField
           connectLabel
           label={<Text id="Settings.DeveloperMode" />}
           subLabel={<Text id="ToolTip.DevMode" />}
         >
           <Switch
-            checked={settings.devmode}
+            checked={settings.devMode}
             onChange={this.updateHandlers('devMode')}
           />
         </SettingsField>

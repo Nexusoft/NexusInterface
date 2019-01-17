@@ -20,12 +20,9 @@ let mainWindow;
 let resizeTimer;
 // Global Objects
 global.core = core;
+global.autoUpdater = autoUpdater;
 
 app.setAppUserModelId(APP_ID);
-
-// Configure Updater
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
 
 // Enable source map support
 if (process.env.NODE_ENV === 'production') {
@@ -50,7 +47,7 @@ const installExtensions = async () => {
 
 function createWindow() {
   // App self-destruct timer
-  const expiration = 1547926000000;
+  const expiration = 1548926000000;
   var presentTime = new Date().getTime();
   var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
   if (presentTime >= expiration) {
@@ -132,6 +129,8 @@ function createWindow() {
 
     mainWindow.show();
     mainWindow.focus();
+    // UNCOMMENT THIS TO OPEN DEVTOOLS FROM THE MAIN PROCESS
+    // mainWindow.webContents.openDevTools();
 
     //updateApplication(); // if updates are checked in app.on('ready') there is a chance the event doesn't make it to the UI if that hasn't loaded yet, this is safer
   });
@@ -164,37 +163,33 @@ function createWindow() {
 
 // Application Startup
 app.on('ready', async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
-    await installExtensions();
-  }
-
   createWindow();
   core.start();
 
   mainWindow.on('close', function(e) {
     e.preventDefault();
 
-    let settings = GetSettings();
+    const settings = GetSettings();
     log.info('close');
 
-    if (settings) {
-      if (settings.minimizeToTray == true) {
-        e.preventDefault();
-        mainWindow.hide();
-      } else {
-        core.stop().then(payload => {
-          app.exit();
-        });
-      }
+    if (settings && settings.minimizeToTray == true) {
+      e.preventDefault();
+      mainWindow.hide();
     } else {
       core.stop().then(payload => {
         app.exit();
       });
     }
   });
+
+  const settings = GetSettings();
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true' ||
+    settings.devMode
+  ) {
+    installExtensions();
+  }
 });
 
 // Application Shutdown

@@ -61,12 +61,12 @@ const SendFormButtons = styled.div({
 
 const mapStateToProps = state => {
   return {
-    accountOptions: state.sendReceive.AccountChanger
-      ? state.sendReceive.AccountChanger.map(e => ({
-          value: e.name,
-          display: `${e.name} (${e.val} NXS)`,
-        }))
-      : [],
+    // accountOptions: state.sendReceive.AccountChanger
+    //   ? state.sendReceive.AccountChanger.map(e => ({
+    //       value: e.name,
+    //       display: `${e.name} (${e.val} NXS)`,
+    //     }))
+    //   : [],
     ...state.common,
     ...state.transactions,
     ...state.sendReceive,

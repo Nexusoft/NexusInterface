@@ -93,7 +93,7 @@ export const MyAccountsList = list => ({
   payload: list,
 });
 
-export const updateSettings = settings => ({
+export const loadSettings = settings => ({
   type: TYPE.UPDATE_SETTINGS,
   payload: settings,
 });
@@ -111,6 +111,10 @@ export const SetHighestPeerBlock = hpb => ({
 export const SetPortIsAvailable = isAvailable => ({
   type: TYPE.PORT_AVAILABLE,
   payload: isAvailable,
+});
+
+export const SetAcceptLicense = () => ({
+  type: TYPE.ACCEPT_MIT,
 });
 
 export const LoadAddressBook = () => {
@@ -135,4 +139,8 @@ export const AddRPCCall = returnCall => ({
 export const setWebGLEnabled = enabled => ({
   type: TYPE.SET_WEBGL_ENABLED,
   payload: enabled,
+});
+
+export const showEncryptionWarningModal = () => ({
+  type: TYPE.SHOW_ENCRYPTION_MODAL,
 });

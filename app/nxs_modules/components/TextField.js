@@ -139,6 +139,7 @@ const TextFieldComponent = styled.div(
 );
 
 const Input = styled.input(
+  
   ({ theme }) => ({
     display: 'block',
     background: 'transparent',
@@ -147,7 +148,7 @@ const Input = styled.input(
     height: '100%',
     transitionProperty: 'color, box-shadow, color',
     transitionDuration: timing.normal,
-
+    
     '&::placeholder': {
       color: theme.gray,
     },
@@ -218,6 +219,7 @@ export default class TextField extends Component {
   state = {
     focus: false,
   };
+  inputReference = null;
 
   handleFocus = e => {
     this.setState({ focus: true });
@@ -259,7 +261,7 @@ export default class TextField extends Component {
         focus={!readOnly && this.state.focus}
       >
         {left}
-        <Input {...inputProps} />
+        <Input {...inputProps} ref = {element => (this.inputReference = element)} />
         {right}
         {!!error && (
           <ErrorMessage

@@ -100,7 +100,8 @@ class List extends Component {
     return (
       <Panel icon={trustIcon} title={<Text id="TrustList.TrustList" />}>
         {this.props.isInSync === false ||
-        this.props.connections === undefined ? (
+        this.props.connections === undefined ||
+        this.props.trustlist === undefined ? (
           <WaitingMessage>
             <Text id="TrustList.SyncMsg" />
             ...

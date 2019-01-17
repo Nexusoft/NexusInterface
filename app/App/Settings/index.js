@@ -21,7 +21,7 @@ import Security from './Security';
 import settingsIcon from 'images/settings.sprite.svg';
 import coreIcon from 'images/core.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
-import lockIcon from 'images/lock-minting.sprite.svg';
+import lockIcon from 'images/padlock.sprite.svg';
 import developerIcon from 'images/developer.sprite.svg';
 
 const SettingsComponent = styled.div({

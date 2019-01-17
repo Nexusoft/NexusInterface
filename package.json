@@ -1,8 +1,8 @@
 {
   "name": "nexus_wallet",
-  "productName": "Nexus_Wallet_BETA_v0.8.4",
-  "version": "0.8.4",
-  "buildDate": "December 27th 2018",
+  "productName": "Nexus_Wallet_BETA_v0.8.5",
+  "version": "0.8.5",
+  "buildDate": "January 16th 2019",
   "description": "Nexus",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -35,7 +35,7 @@
   },
   "browserslist": "electron 1.8",
   "build": {
-    "productName": "Nexus",
+    "productName": "Nexus Wallet",
     "appId": "com.nexusearth.NexusTritiumBeta",
     "files": [
       "dist/",
@@ -54,16 +54,23 @@
       "./app/images/background/**/*",
       "license.txt",
       "installerSidebar.bmp",
-      "./app/languages/*"
+      "./app/languages/*",
+      {
+        "from": "./app/fonts",
+        "to": "fonts"
+      }
     ],
     "publish": {
-      "provider": "github"
+      "provider": "github",
+      "owner": "Nexusoft",
+      "repo": "Nexus-Interface-React"
     },
     "mac": {
       "target": "dmg",
       "category": "public.app-category.utilities"
     },
     "dmg": {
+      "artifactName": "nexus_wallet-${version}.${ext}",
       "background": "resources/background.jpg",
       "contents": [
         {
@@ -86,18 +93,21 @@
     "nsis": {
       "oneClick": false,
       "perMachine": false,
-      "runAfterFinish": false,
+      "runAfterFinish": true,
       "allowToChangeInstallationDirectory": true,
       "menuCategory": "Nexus",
       "installerSidebar": "resources/installerSidebar.bmp",
       "license": "resources/license.txt",
-      "shortcutName": "Tritium Wallet Beta",
-      "artifactName": "Nexus Tritium Wallet Beta Setup.exe"
+      "shortcutName": "Nexus Wallet Beta",
+      "artifactName": "nexus_wallet-setup-${version}.${ext}"
     },
     "linux": {
       "target": [
-        "deb"
+        "AppImage"
       ]
+    },
+    "appImage": {
+      "artifactName": "nexus_wallet-${version}.${ext}"
     },
     "directories": {
       "buildResources": "resources",
@@ -250,7 +260,7 @@
     "electron-directory": "0.0.3",
     "electron-is-dev": "^1.0.1",
     "electron-log": "^2.2.17",
-    "electron-updater": "^4.0.5",
+    "electron-updater": "^4.0.6",
     "emotion-theming": "^10.0.5",
     "fd-slicer": "^1.1.0",
     "find-process": "^1.1.3",

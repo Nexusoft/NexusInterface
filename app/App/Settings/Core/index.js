@@ -10,6 +10,7 @@ import core from 'api/core';
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
+import WaitingMessage from 'components/WaitingMessage';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -18,6 +19,7 @@ import UIController from 'components/UIController';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { form } from 'utils';
 import { rpcErrorHandler } from 'utils/form';
+import FeeSetting from './FeeSetting';
 
 const CoreSettings = styled.div({
   maxWidth: 750,
@@ -25,8 +27,12 @@ const CoreSettings = styled.div({
 });
 
 // React-Redux mandatory methods
-const mapStateToProps = ({ settings: { settings } }) => ({
-  settings: settings,
+const mapStateToProps = ({
+  settings: { settings },
+  overview: { connections },
+}) => ({
+  connections,
+  settings,
   initialValues: {
     manualDaemonUser: settings.manualDaemonUser,
     manualDaemonPassword: settings.manualDaemonPassword,
@@ -76,19 +82,18 @@ const mapDispatchToProps = dispatch => ({
       if (!manualDaemonPort) {
         errors.manualDaemonPort = 'Manual daemon Port is required';
       }
-    } else {
-      if (props.settings.socks4Proxy) {
-        if (!socks4ProxyIP) {
-          errors.socks4ProxyIP = 'SOCKS4 proxy IP is required';
-        }
-        if (!socks4ProxyPort) {
-          errors.socks4ProxyPort = 'SOCKS4 proxy Port is required';
-        }
-      }
       if (!manualDaemonDataDir) {
         errors.manualDaemonDataDir = 'Data directory name is required';
       }
+    } else if (props.settings.socks4Proxy) {
+      if (!socks4ProxyIP) {
+        errors.socks4ProxyIP = 'SOCKS4 proxy IP is required';
+      }
+      if (!socks4ProxyPort) {
+        errors.socks4ProxyPort = 'SOCKS4 proxy Port is required';
+      }
     }
+
     return errors;
   },
   onSubmit: (
@@ -110,14 +115,13 @@ const mapDispatchToProps = dispatch => ({
         manualDaemonPassword,
         manualDaemonIP,
         manualDaemonPort,
+        manualDaemonDataDir,
       });
-    } else {
-      const updates = { manualDaemonDataDir };
-      if (props.settings.socks4Proxy) {
-        (updates.socks4ProxyIP = socks4ProxyIP),
-          (updates.socks4ProxyPort = socks4ProxyPort);
-      }
-      props.updateSettings(updates);
+    } else if (props.settings.socks4Proxy) {
+      props.updateSettings({
+        socks4ProxyIP,
+        socks4ProxyPort,
+      });
     }
   },
   onSubmitSuccess: () => {
@@ -180,7 +184,22 @@ export default class SettingsCore extends Component {
   })();
 
   render() {
-    const { handleSubmit, settings, pristine, submitting } = this.props;
+    const {
+      connections,
+      handleSubmit,
+      settings,
+      pristine,
+      submitting,
+    } = this.props;
+    if (connections === undefined) {
+      return (
+        <WaitingMessage>
+          <Text id="transactions.Loading" />
+          ...
+        </WaitingMessage>
+      );
+    }
+
     return (
       <CoreSettings>
         <form onSubmit={handleSubmit}>
@@ -205,6 +224,8 @@ export default class SettingsCore extends Component {
               onChange={this.updateHandlers('enableStaking')}
             />
           </SettingsField>
+
+          <FeeSetting />
 
           <SettingsField
             connectLabel
@@ -288,6 +309,19 @@ export default class SettingsCore extends Component {
                 size="5"
               />
             </SettingsField>
+
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={<Text id="Settings.DDN" />}
+              subLabel={<Text id="ToolTip.DataDirectory" />}
+            >
+              <Field
+                component={TextField.RF}
+                name="manualDaemonDataDir"
+                size={30}
+              />
+            </SettingsField>
           </div>
 
           <div style={{ display: settings.manualDaemon ? 'none' : 'block' }}>
@@ -360,26 +394,12 @@ export default class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={
-                <Text id="Settings.ProxyIP" defaultMesage="Proxy IP Address" />
-              }
+              label={<Text id="Settings.Detach" />}
               subLabel={<Text id="ToolTip.Detach" />}
             >
               <Switch
                 defaultChecked={settings.detatchDatabaseOnShutdown}
                 onChange={this.updateHandlers('detatchDatabaseOnShutdown')}
-              />
-            </SettingsField>
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={<Text id="Settings.DDN" />}
-              subLabel={<Text id="ToolTip.DataDirectory" />}
-            >
-              <Field
-                component={TextField.RF}
-                name="manualDaemonDataDir"
-                size={30}
               />
             </SettingsField>
           </div>

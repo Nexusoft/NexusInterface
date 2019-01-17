@@ -1,3 +1,4 @@
+import React from 'react';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
@@ -27,6 +28,7 @@ export default function getInfo() {
         !state.settings.settings.ignoreEncryptionWarningFlag
       ) {
         UIController.openModal(EncryptionWarningModal);
+        dispatch(ac.showEncryptionWarningModal());
       }
     } else if (info.unlocked_until === 0) {
       dispatch(ac.Lock());
@@ -62,8 +64,7 @@ export default function getInfo() {
 
       const {
         settings: {
-          manualDaemon,
-          settings: { bootstrap: bootstrapSetting },
+          settings: { manualDaemon, bootstrap: bootstrapSetting },
         },
       } = state;
       // 172800 = (100 * 24 * 60 * 60) / 50

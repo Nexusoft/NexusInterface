@@ -1,5 +1,6 @@
 // External
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
@@ -8,7 +9,7 @@ import Modal from 'components/Modal';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
 import Button from 'components/Button';
-import { GetSettings, SaveSettings } from 'api/settings';
+import { updateSettings } from 'actions/settingsActionCreators';
 import { color } from 'utils';
 import warningIcon from 'images/warning.sprite.svg';
 
@@ -28,44 +29,51 @@ const WarningMessage = styled.div({
   fontSize: 28,
 });
 
-const EncryptionWarningModal = props => (
-  <WarningModal props>
-    {closeModal => (
-      <Modal.Body style={{ fontSize: 18 }}>
-        <WarningIcon icon={warningIcon} />
-        <WarningMessage>
-          <Text id="overview.EncryptedModal" />
-        </WarningMessage>
-        <p>
-          <Text id="overview.Suggestion" />
-        </p>
-        <br />
-        <div className="flex space-between">
-          <Button
-            skin="error"
-            onClick={() => {
-              closeModal();
-              const settings = GetSettings();
-              SaveSettings({
-                ...settings,
-                ignoreEncryptionWarningFlag: true,
-              });
-            }}
-          >
-            <Text id="overview.Ignore" />
-          </Button>
-          <Button
-            as={Link}
-            skin="primary"
-            to="/Settings/Security"
-            onClick={closeModal}
-          >
-            <Text id="overview.TakeMeThere" />
-          </Button>
-        </div>
-      </Modal.Body>
-    )}
-  </WarningModal>
-);
+@connect(
+  null,
+  dispatch => ({
+    updateSettings: updates => dispatch(updateSettings(updates)),
+  })
+)
+class EncryptionWarningModal extends React.Component {
+  ignore = () => {
+    this.closeModal();
+    this.props.updateSettings({ ignoreEncryptionWarningFlag: true });
+  };
+
+  render() {
+    return (
+      <WarningModal
+        assignClose={close => {
+          this.closeModal = close;
+        }}
+      >
+        <Modal.Body style={{ fontSize: 18 }}>
+          <WarningIcon icon={warningIcon} />
+          <WarningMessage>
+            <Text id="overview.EncryptedModal" />
+          </WarningMessage>
+          <p>
+            <Text id="overview.Suggestion" />
+          </p>
+          <br />
+          <div className="flex space-between">
+            <Button skin="error" onClick={this.ignore}>
+              <Text id="overview.Ignore" />
+            </Button>
+            <Button
+              as={Link}
+              skin="primary"
+              to="/Settings/Security"
+              onClick={this.closeModal}
+            >
+              <Text id="overview.TakeMeThere" />
+            </Button>
+          </div>
+        </Modal.Body>
+      </WarningModal>
+    );
+  }
+}
 
 export default EncryptionWarningModal;
