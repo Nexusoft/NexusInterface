@@ -89,10 +89,10 @@ const Navigation = () => (
       <NavItem icon={consoleIcon} to="/Terminal">
         <Text id="Footer.Console" />
       </NavItem>
-
+      {/* 
       <NavItem icon={shapeshiftIcon} to="/Exchange">
         <Text id="Footer.Exchange" />
-      </NavItem>
+      </NavItem> */}
 
       <NavItem icon={trustListIcon} to="/List">
         <Text id="Footer.Trust" />
