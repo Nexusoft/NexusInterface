@@ -82,19 +82,18 @@ const mapDispatchToProps = dispatch => ({
       if (!manualDaemonPort) {
         errors.manualDaemonPort = 'Manual daemon Port is required';
       }
-    } else {
-      if (props.settings.socks4Proxy) {
-        if (!socks4ProxyIP) {
-          errors.socks4ProxyIP = 'SOCKS4 proxy IP is required';
-        }
-        if (!socks4ProxyPort) {
-          errors.socks4ProxyPort = 'SOCKS4 proxy Port is required';
-        }
-      }
       if (!manualDaemonDataDir) {
         errors.manualDaemonDataDir = 'Data directory name is required';
       }
+    } else if (props.settings.socks4Proxy) {
+      if (!socks4ProxyIP) {
+        errors.socks4ProxyIP = 'SOCKS4 proxy IP is required';
+      }
+      if (!socks4ProxyPort) {
+        errors.socks4ProxyPort = 'SOCKS4 proxy Port is required';
+      }
     }
+
     return errors;
   },
   onSubmit: (
@@ -116,14 +115,13 @@ const mapDispatchToProps = dispatch => ({
         manualDaemonPassword,
         manualDaemonIP,
         manualDaemonPort,
+        manualDaemonDataDir,
       });
-    } else {
-      const updates = { manualDaemonDataDir };
-      if (props.settings.socks4Proxy) {
-        (updates.socks4ProxyIP = socks4ProxyIP),
-          (updates.socks4ProxyPort = socks4ProxyPort);
-      }
-      props.updateSettings(updates);
+    } else if (props.settings.socks4Proxy) {
+      props.updateSettings({
+        socks4ProxyIP,
+        socks4ProxyPort,
+      });
     }
   },
   onSubmitSuccess: () => {
@@ -144,7 +142,7 @@ export default class SettingsCore extends Component {
           try {
             await RPC.PROMISE('stop', []);
           } finally {
-            this.updateSettings({ manualDaemon: false });
+            this.props.updateSettings({ manualDaemon: false });
             this.props.clearForRestart();
             remote.getGlobal('core').start();
           }
@@ -193,7 +191,7 @@ export default class SettingsCore extends Component {
       pristine,
       submitting,
     } = this.props;
-    if (connections === undefined) {
+    if (connections === undefined && !this.props.settings.manualDaemon) {
       return (
         <WaitingMessage>
           <Text id="transactions.Loading" />
@@ -311,6 +309,19 @@ export default class SettingsCore extends Component {
                 size="5"
               />
             </SettingsField>
+
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={<Text id="Settings.DDN" />}
+              subLabel={<Text id="ToolTip.DataDirectory" />}
+            >
+              <Field
+                component={TextField.RF}
+                name="manualDaemonDataDir"
+                size={30}
+              />
+            </SettingsField>
           </div>
 
           <div style={{ display: settings.manualDaemon ? 'none' : 'block' }}>
@@ -383,26 +394,12 @@ export default class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={
-                <Text id="Settings.ProxyIP" defaultMesage="Proxy IP Address" />
-              }
+              label={<Text id="Settings.Detach" />}
               subLabel={<Text id="ToolTip.Detach" />}
             >
               <Switch
                 defaultChecked={settings.detatchDatabaseOnShutdown}
                 onChange={this.updateHandlers('detatchDatabaseOnShutdown')}
-              />
-            </SettingsField>
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={<Text id="Settings.DDN" />}
-              subLabel={<Text id="ToolTip.DataDirectory" />}
-            >
-              <Field
-                component={TextField.RF}
-                name="manualDaemonDataDir"
-                size={30}
               />
             </SettingsField>
           </div>
