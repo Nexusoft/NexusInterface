@@ -50,7 +50,7 @@ const installExtensions = async () => {
 
 function createWindow() {
   // App self-destruct timer
-  const expiration = 1548926000000;
+  const expiration = 1548447203000;
   var presentTime = new Date().getTime();
   var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
   if (presentTime >= expiration) {
@@ -58,8 +58,8 @@ function createWindow() {
       'Tritium Wallet Beta Expired',
       'The Tritium Beta testing period has ended. Please use your normal wallet.'
     );
-    // app.exit();
-    // process.abort();
+    app.exit();
+    process.abort();
   } else if (Math.floor(timeLeft) <= 5) {
     dialog.showErrorBox(
       'Tritium Wallet Beta Expiring Soon',
