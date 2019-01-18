@@ -53,8 +53,8 @@ const Suggestion = styled.div(({ theme }) => ({
 
 export default class AutoSuggest extends React.Component {
   static defaultProps = {
-    inputComponent = TextField
-  }
+    inputComponent: TextField,
+  };
 
   static getDerivedStateFromProps({ suggestions, inputProps }) {
     const value = inputProps.value || '';
