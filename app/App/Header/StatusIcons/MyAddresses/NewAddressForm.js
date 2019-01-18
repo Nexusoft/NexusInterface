@@ -1,5 +1,6 @@
 // External
 import React from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, Field, change } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -28,6 +29,9 @@ const Buttons = styled.div({
 
 const formName = 'newAddress';
 
+@connect(state => ({
+  accountNames: (state.addressbook.myAccounts || []).map(acc => acc.account),
+}))
 @reduxForm({
   form: formName,
   initialValues: {
@@ -69,7 +73,8 @@ export default class NewAddressForm extends React.Component {
               suggestions={accountNames}
               onSelect={this.setAccountName}
               inputProps={{
-                placeholder: 'Enter a new name or pick an existing account',
+                placeholder:
+                  'Enter a new account name or pick an existing account',
               }}
             />
           </AccountNameInput>

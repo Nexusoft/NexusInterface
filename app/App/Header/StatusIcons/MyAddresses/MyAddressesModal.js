@@ -53,11 +53,6 @@ export default class MyAddressesModal extends React.Component {
     });
   };
 
-  accountNames = () => {
-    const allAccounts = this.props.myAccounts || [];
-    return allAccounts.map(acc => acc.account);
-  };
-
   startCreating = () => {
     this.setState({
       creatingAddress: true,
@@ -93,10 +88,7 @@ export default class MyAddressesModal extends React.Component {
           ))}
 
           {this.state.creatingAddress ? (
-            <NewAddressForm
-              accountNames={this.accountNames()}
-              finish={this.endCreating}
-            />
+            <NewAddressForm finish={this.endCreating} />
           ) : (
             <Buttons>
               <Button onClick={this.startCreating}>
