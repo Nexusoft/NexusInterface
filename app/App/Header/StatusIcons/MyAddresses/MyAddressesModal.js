@@ -60,7 +60,11 @@ export default class MyAddressesModal extends React.Component {
             />
           </Search>
           {this.filteredAccounts().map(acc => (
-            <Account key={acc.account} account={acc} />
+            <Account
+              key={acc.account}
+              account={acc}
+              searchQuery={this.state.searchQuery}
+            />
           ))}
         </Modal.Body>
       </MyAddressesModalComponent>
