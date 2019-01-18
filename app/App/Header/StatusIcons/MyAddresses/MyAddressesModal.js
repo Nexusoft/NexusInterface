@@ -6,10 +6,13 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import TextField from 'components/TextField';
-import { translate } from 'components/Text';
+import Text, { translate } from 'components/Text';
 import Icon from 'components/Icon';
+import Button from 'components/Button';
 import searchIcon from 'images/search.sprite.svg';
+import plusIcon from 'images/plus.sprite.svg';
 import Account from './Account';
+import NewAddressForm from './NewAddressForm';
 
 const MyAddressesModalComponent = styled(Modal)({
   // set a fixed height so that the modal won't jump when the search query changes
@@ -20,6 +23,10 @@ const Search = styled.div({
   marginBottom: '1em',
 });
 
+const Buttons = styled.div({
+  marginTop: '2em',
+});
+
 @connect(state => ({
   myAccounts: state.addressbook.myAccounts,
   locale: state.settings.settings.locale,
@@ -27,6 +34,7 @@ const Search = styled.div({
 export default class MyAddressesModal extends React.Component {
   state = {
     searchQuery: '',
+    creatingAddress: false,
   };
 
   handleChange = e => {
@@ -42,6 +50,23 @@ export default class MyAddressesModal extends React.Component {
       const searchedName = accName.toLowerCase();
       const query = this.state.searchQuery.toLowerCase();
       return searchedName.indexOf(query) >= 0;
+    });
+  };
+
+  accountNames = () => {
+    const allAccounts = this.props.myAccounts || [];
+    return allAccounts.map(acc => acc.account);
+  };
+
+  startCreating = () => {
+    this.setState({
+      creatingAddress: true,
+    });
+  };
+
+  endCreating = () => {
+    this.setState({
+      creatingAddress: false,
     });
   };
 
@@ -66,6 +91,20 @@ export default class MyAddressesModal extends React.Component {
               searchQuery={this.state.searchQuery}
             />
           ))}
+
+          {this.state.creatingAddress ? (
+            <NewAddressForm
+              accountNames={this.accountNames()}
+              finish={this.endCreating}
+            />
+          ) : (
+            <Buttons>
+              <Button onClick={this.startCreating}>
+                <Icon icon={plusIcon} spaceRight />
+                <Text id="AddressBook.CreateAddress" />
+              </Button>
+            </Buttons>
+          )}
         </Modal.Body>
       </MyAddressesModalComponent>
     );

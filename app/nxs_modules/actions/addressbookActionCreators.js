@@ -1,6 +1,5 @@
 import * as TYPE from './actiontypes';
 import * as RPC from 'scripts/rpc';
-import config from 'api/configuration';
 
 export const ImportContact = contact => {
   return dispatch => {
@@ -93,12 +92,6 @@ export const EditProtoLabel = label => {
 export const SelectedContact = contact => {
   return dispatch => {
     dispatch({ type: TYPE.SELECTED_CONTACT, payload: contact });
-  };
-};
-
-export const MyAccountsList = list => {
-  return dispatch => {
-    dispatch({ type: TYPE.MY_ACCOUNTS_LIST, payload: list });
   };
 };
 

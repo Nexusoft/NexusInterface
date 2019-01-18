@@ -2,6 +2,7 @@ import React from 'react';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
+import { loadMyAccounts } from 'actions/accountActionCreators';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
 
@@ -39,7 +40,7 @@ export default function getInfo() {
     }
 
     if (info.connections !== undefined && oldInfo.connections === undefined) {
-      loadMyAccounts(dispatch);
+      dispatch(loadMyAccounts());
     }
 
     if (info.blocks !== oldInfo.blocks) {
@@ -116,59 +117,6 @@ export default function getInfo() {
     delete info.timestamp;
     dispatch(ac.GetInfo(info));
   };
-}
-
-async function loadMyAccounts(dispatch) {
-  const accList = await RPC.PROMISE('listaccounts', [0]);
-
-  const addrList = await Promise.all(
-    Object.keys(accList).map(account =>
-      RPC.PROMISE('getaddressesbyaccount', [account])
-    )
-  );
-
-  const validateAddressPromises = addrList.reduce(
-    (list, element) => [
-      ...list,
-      ...element.addresses.map(address =>
-        RPC.PROMISE('validateaddress', [address])
-      ),
-    ],
-    []
-  );
-  const validations = await Promise.all(validateAddressPromises);
-
-  const accountList = [];
-  validations.forEach(e => {
-    if (e.ismine && e.isvalid) {
-      const index = accountList.findIndex(ele => ele.account === e.account);
-      const indexDefault = accountList.findIndex(
-        ele => ele.account === '' || ele.account === 'default'
-      );
-
-      if (e.account === '' || e.account === 'default') {
-        if (index === -1 && indexDefault === -1) {
-          accountList.push({
-            account: 'default',
-            addresses: [e.address],
-          });
-        } else {
-          accountList[indexDefault].addresses.push(e.address);
-        }
-      } else {
-        if (index === -1) {
-          accountList.push({
-            account: e.account,
-            addresses: [e.address],
-          });
-        } else {
-          accountList[index].addresses.push(e.address);
-        }
-      }
-    }
-  });
-
-  dispatch(ac.MyAccountsList(accountList));
 }
 
 async function showDesktopNotif(title, message) {

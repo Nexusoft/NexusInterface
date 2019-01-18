@@ -278,7 +278,7 @@ export default class TextField extends Component {
 }
 
 // TextField wrapper for redux-form
-const TextFieldReduxFForm = ({ input, meta, ...rest }) => (
+const TextFieldReduxForm = ({ input, meta, ...rest }) => (
   <TextField error={meta.touched && meta.error} {...input} {...rest} />
 );
-TextField.RF = TextFieldReduxFForm;
+TextField.RF = TextFieldReduxForm;
