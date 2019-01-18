@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // Internal Dependencies
 import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import StatusIcon from './StatusIcon';
+import StatusIcon from 'components/StatusIcon';
 
 import stakingIcon from 'images/staking.sprite.svg';
 

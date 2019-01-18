@@ -5,9 +5,11 @@ import styled from '@emotion/styled';
 // Internal
 import Tooltip from 'components/Tooltip';
 import userIcon from 'images/user.sprite.svg';
+import UIController from 'components/UIController';
+import StatusIcon from 'components/StatusIcon';
 import { timing } from 'styles';
 import { color } from 'utils';
-import StatusIcon from './StatusIcon';
+import MyAddressesModal from './MyAddressesModal';
 
 const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
   cursor: 'pointer',
@@ -27,7 +29,12 @@ const MyAddresses = () => (
     tooltip="My Addresses"
     style={{ transform: 'translateX(12px)' }}
   >
-    <MyAddressesIcon icon={userIcon} />
+    <MyAddressesIcon
+      icon={userIcon}
+      onClick={() => {
+        UIController.openModal(MyAddressesModal);
+      }}
+    />
   </Tooltip.Trigger>
 );
 

@@ -8,7 +8,7 @@ import { withTheme } from 'emotion-theming';
 // Internal Dependencies
 import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import StatusIcon from './StatusIcon';
+import StatusIcon from 'components/StatusIcon';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';

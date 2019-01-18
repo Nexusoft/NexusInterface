@@ -1,14 +1,24 @@
 // External
 import React from 'react';
+import styled from '@emotion/styled';
 
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
 
+const LicenseAgreementModalComponent = styled(Modal)({
+  paddingLeft: 'calc(50vw - 384px)',
+  paddingRight: 'calc(50vw - 384px)',
+  display: 'grid',
+  gridTemplateAreas: '"header" "body"',
+  gridTemplateColumns: '1fr',
+  gridTemplateRows: 'auto 1fr',
+});
+
 const LicenseAgreementModal = props => (
-  <Modal fullScreen {...props}>
+  <LicenseAgreementModalComponent fullScreen {...props}>
     {closeModal => (
-      <Modal.Layout style={{ maxWidth: 768, margin: '0 auto' }}>
+      <>
         <Modal.Header>License Agreement</Modal.Header>
         <Modal.Body>
           <p>The MIT License (MIT)</p>
@@ -48,9 +58,9 @@ const LicenseAgreementModal = props => (
             </Button>
           </p>
         </Modal.Body>
-      </Modal.Layout>
+      </>
     )}
-  </Modal>
+  </LicenseAgreementModalComponent>
 );
 
 export default LicenseAgreementModal;
