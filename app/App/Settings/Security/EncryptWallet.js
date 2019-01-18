@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
+import { remote } from 'electron';
 
 // Internal
 import Text from 'components/Text';
@@ -57,8 +58,8 @@ const Characters = styled.span({
     UIController.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {
-        this.props.history.push('/');
-        this.props.ResetForEncryptionRestart();
+        // this.props.history.push('/');
+        // this.props.ResetForEncryptionRestart();
         remote.getGlobal('core').start();
         UIController.showNotification('Daemon is restarting...');
       },
