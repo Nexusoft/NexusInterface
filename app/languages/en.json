@@ -243,7 +243,7 @@
   "Settings.EncryptRestart": "Encrypt and Restart",
   "Settings.MinimumConfirmations": "Minimum Confirmations",
   "Settings.Forkblock": "ForkBlocks",
-  "Settings.Folder": "Backup Directory",
+  "Settings.Folder": "Select Default Backup Directory",
   "Settings.PickThemeFile": "Select Theme File",
 
   "Console.CoreOutput": "Core Output",

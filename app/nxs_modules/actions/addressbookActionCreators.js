@@ -1,5 +1,7 @@
+import React from 'react';
 import * as TYPE from './actiontypes';
 import * as RPC from 'scripts/rpc';
+import UIController from 'components/UIController';
 
 export const ImportContact = contact => {
   return dispatch => {
@@ -241,7 +243,12 @@ export const AddContact = (name, address, num, notes, TZ) => {
               address: address,
             });
           }
-        } else alert('Invalid address: ', address);
+        } else {
+          UIController.showNotification(
+            <div>Invalid address {address}</div>,
+            'error'
+          );
+        }
         return { mine: mine, notMine: notMine };
       })
       .then(result => {
@@ -260,7 +267,10 @@ export const AddContact = (name, address, num, notes, TZ) => {
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
       })
       .catch(e => {
-        dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: 'Invalid Address' });
+        UIController.showNotification(
+          <div>Invalid address {address}</div>,
+          'error'
+        );
       });
   };
 };
@@ -289,7 +299,12 @@ export const AddAddress = (name, address, index) => {
               address: address,
             };
           }
-        } else alert('Invalid address: ', address);
+        } else {
+          UIController.showNotification(
+            <div>Invalid address {address}</div>,
+            'error'
+          );
+        }
       })
       .then(result => {
         dispatch({
@@ -303,7 +318,7 @@ export const AddAddress = (name, address, index) => {
       .catch(e => {
         dispatch({ type: TYPE.CLEAR_PROTOTYPE });
         dispatch({ type: TYPE.TOGGLE_MODAL_VIS_STATE });
-        dispatch({ type: TYPE.SHOW_ERROR_MODAL, payload: 'Invalid Address' });
+        UIController.showNotification(<div>Invalid address {e}</div>, 'error');
       });
   };
 };
