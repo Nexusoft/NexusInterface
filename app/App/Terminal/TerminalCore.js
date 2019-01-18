@@ -77,9 +77,17 @@ class TerminalCore extends Component {
     } else {
       debugfile = datadir + '/debug.log';
     }
-    fs.watchFile(debugfile, (curr, prev) => {});
     this.debugFileLocation = debugfile;
-    this.processDeamonOutput(debugfile);
+    fs.stat(this.debugFileLocation,this.checkDebugFileExists.bind(this));
+    this.checkIfFileExistsInterval = setInterval(() => {
+      if (this.tail != undefined)
+      {
+        clearInterval(this.checkIfFileExistsInterval);
+        return;
+      }
+      fs.stat(this.debugFileLocation,this.checkDebugFileExists.bind(this));
+      },
+    5000);
   }
 
   // todo finish
@@ -87,8 +95,8 @@ class TerminalCore extends Component {
     if (this.tail != undefined) {
       this.tail.unwatch();
     }
-    fs.unwatchFile(this.debugFileLocation);
     clearInterval(this.printCoreOutputTimer);
+    clearInterval(this.checkIfFileExistsInterval);
   }
 
   // React Method (Life cycle hook)
@@ -98,9 +106,27 @@ class TerminalCore extends Component {
     }
   }
 
+
+  checkDebugFileExists(err,stat)
+  {
+    console.log(this);
+    if (err == null)
+      {
+        this.processDeamonOutput(this.debugFileLocation);
+        clearInterval(this.checkIfFileExistsInterval);
+      }
+      else
+      {
+
+      }
+  }
+
   // Class Methods
   processDeamonOutput(debugfile) {
-    this.tail = new Tail(debugfile);
+    const tailOptions = {
+      useWatchFile:true,
+    };
+    this.tail = new Tail(debugfile,tailOptions);
     let n = 0;
     let batch = [];
     this.tail.on('line', d => {
@@ -108,6 +134,10 @@ class TerminalCore extends Component {
     });
     this.printCoreOutputTimer = setInterval(() => {
       if (this.props.coreOutputPaused) {
+        return;
+      }
+      if (batch.length == 0)
+      {
         return;
       }
       this.props.printCoreOutput(batch);
