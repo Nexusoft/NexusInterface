@@ -38,13 +38,15 @@ const PanelHeader = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  color: theme.dark,
 }));
 
-const PanelTitle = styled.h3({
+const PanelTitle = styled.h3(({ theme }) => ({
   fontSize: 28,
   fontWeight: 'normal',
   margin: 0,
-});
+  color: theme.primary
+}));
 
 const PanelBody = styled.div(
   ({ theme }) => ({
