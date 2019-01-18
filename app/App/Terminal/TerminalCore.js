@@ -121,6 +121,20 @@ class TerminalCore extends Component {
       }
   }
 
+  onScrollEvent() {
+    const bottomPos  = this.outputRef.childNodes[0].scrollHeight - this.outputRef.childNodes[0].clientHeight - 2; // found a issue where the numbers would be plus or minus this do to floating point error. Just stepped back 2 it catch it.
+    const currentPos = parseInt(this.outputRef.childNodes[0].scrollTop);
+    if (currentPos >= bottomPos)
+    {
+      return;
+    }
+    if (!this.props.coreOutputPaused)
+    {
+      this.props.setCoreOutputPaused(true)
+    }
+
+  }
+
   // Class Methods
   processDeamonOutput(debugfile) {
     const tailOptions = {
@@ -142,7 +156,7 @@ class TerminalCore extends Component {
       }
       this.props.printCoreOutput(batch);
       batch = [];
-      this.outputRef.scrollTop = this.outputRef.scrollHeight;
+      this.outputRef.childNodes[0].scrollTop = this.outputRef.childNodes[0].scrollHeight;
     }, 1000);
   }
 
@@ -155,7 +169,7 @@ class TerminalCore extends Component {
             <div className="dim">Core in Manual Mode</div>
           ) : (
             <>
-              <Output reverse={!this.props.settings.manualDaemon}>
+              <Output reverse={!this.props.settings.manualDaemon} onScroll={() => this.onScrollEvent()}>
                 {this.props.coreOutput.map((d, i) => (
                   <OutputLine key={i}>{d}</OutputLine>
                 ))}
