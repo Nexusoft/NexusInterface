@@ -6,6 +6,8 @@ import fs from 'fs';
 // Internal
 import * as RPC from 'scripts/rpc';
 import { GetSettings } from 'api/settings';
+import { updateSettings } from 'actions/settingsActionCreators';
+import { backupWallet } from 'api/wallet';
 import core from 'api/core';
 import Text from 'components/Text';
 import UIController from 'components/UIController';
@@ -90,11 +92,29 @@ export default class MenuBuilder {
       if (!ifBackupDirExists) {
         fs.mkdirSync(BackupDir);
       }
-      RPC.PROMISE('backupwallet', [
-        BackupDir + '/NexusBackup_' + now + '.dat',
-      ]).then(() => {
-        UIController.showNotification('Wallet Backed Up');
-      });
+      if (state.overview.connections) {
+        remote.dialog.showOpenDialog(
+          {
+            title: 'Select a folder',
+            defaultPath: state.settings.settings.Folder,
+            properties: ['openDirectory'],
+          },
+          folderPaths => {
+            if (folderPaths && folderPaths.length > 0) {
+              updateSettings({ Folder: folderPaths[0] });
+
+              backupWallet(folderPaths[0]);
+              UIController.showNotification(
+                <Text id="Alert.WalletBackedUp" />,
+                'success'
+              );
+              console.log(folderPaths[0]);
+            }
+          }
+        );
+      } else {
+        UIController.showNotification('Please wait for the daemon to start.');
+      }
     },
   };
 

@@ -20,6 +20,7 @@ import configuration from 'api/configuration';
 
 var glb;
 var initializedWithData = false;
+var preData;
 let myIP = [];
 const Globe = styled.div({
   position: 'fixed',
@@ -81,7 +82,17 @@ export default class NetworkGlobe extends Component {
               myIP = [
                 parseFloat(body['geoplugin_latitude']),
                 parseFloat(body['geoplugin_longitude']),
-              ];
+                ];
+              if (preData)
+              {
+                glb.addData(preData[0][1], {
+                  format: 'magnitude',
+                  name: preData[0][0],
+                });
+                glb.createPoints();
+                glb.playCurve();
+                preData = null;
+              }
               RPC.PROMISE('getpeerinfo', [])
                 .then(payload => {
                   var tmp = {};
@@ -116,6 +127,7 @@ export default class NetworkGlobe extends Component {
                     format: 'magnitude',
                     name: globeseries[0][0],
                   });
+                  preData = globeseries;
                   glb.createPoints();
                   //  Start the animations on the globe
                   initializedWithData = true;
@@ -135,6 +147,7 @@ export default class NetworkGlobe extends Component {
                     format: 'magnitude',
                     name: globeseries[0][0],
                   });
+                  preData = globeseries;
                   glb.createPoints();
                   //  Start the animations on the globe
                   initializedWithData = true;
