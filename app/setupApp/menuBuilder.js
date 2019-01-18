@@ -113,7 +113,7 @@ export default class MenuBuilder {
           }
         );
       } else {
-        UIController.showNotification('Please wait for the daemon to start.');
+        UIController.showNotification(<Text id="Header.DaemonNotLoaded" />);
       }
     },
   };

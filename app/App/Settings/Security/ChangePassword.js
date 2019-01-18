@@ -122,12 +122,16 @@ export default class ChangePassword extends Component {
             connectLabel
             label={<Text id="Settings.ReEnterPassword" />}
           >
-            <Field
-              component={TextField.RF}
-              name="newPasswordRepeat"
-              type="password"
-              placeholder="Confirm your password"
-            />
+            <Text id="Settings.ConfirmPassword">
+              {placeholder => (
+                <Field
+                  component={TextField.RF}
+                  name="newPasswordRepeat"
+                  type="password"
+                  placeholder={placeholder}
+                />
+              )}
+            </Text>
           </FormField>
 
           <Button

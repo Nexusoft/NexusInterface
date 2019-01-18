@@ -52,6 +52,7 @@
   "sendReceive.ToAccount": "계정에",
   "sendReceive.MoveNXS": "NXS 이동",
   "sendReceive.MoveNxsBetweenAccount": "계정간에 NXS 이동",
+  "sendReceive.Contacts": "Contacts",
 
   "transactions.Details": "상세 거래 내역",
   "transactions.MoreDetails": "자세한 내용은",
@@ -124,6 +125,7 @@
   "Market.High": "높은",
   "Market.Low": "낮은",
   "Market.Date": "날짜",
+  "Market.PriceChange": "가격 변경",
 
   "AddressBook.ThisAddress": "このアドレスを削除してもよろしいですか？",
   "AddressBook.DeleteContact": "연락처 삭제",
@@ -206,7 +208,9 @@
   "Settings.Re-Enter": "비밀번호를 다시 입력하세요",
   "Settings.PasswordsMatch": "비밀번호가 일치하지 않습니다",
 
-  "Settings.ViewPrivateKey": "주소의 비공개 키보기",
+  "Settings.KeyDisplayHere": "개인 키가 여기에 표시됩니다.",
+  "Settings.ViewPrivateKey": "개인 키보기",
+  "Settings.ConfirmPassword": "비밀번호 확인",
   "Settings.Address": "주소",
   "Settings.EnterAddressHere": "여기에 주소 입력",
   "Settings.PrivateKey": "비공개 키",
