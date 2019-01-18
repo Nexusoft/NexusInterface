@@ -9,6 +9,7 @@ import styled from '@emotion/styled';
 // Internal
 import UIController from 'components/UIController';
 import GlobalStyles from './GlobalStyles';
+import Loader from './Loader';
 import Overview from './Overview';
 import Header from './Header';
 import Navigation from './Navigation';
@@ -47,6 +48,15 @@ const Main = styled.main({
   alignItems: 'stretch',
 });
 
+const AppLoader = styled.div({
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  width: 300,
+  height: 300,
+  transform: 'translate(-50%,-50%)',
+});
+
 export default class App extends Component {
   render() {
     const { store, history } = this.props;
@@ -58,6 +68,9 @@ export default class App extends Component {
               <div>
                 <GlobalStyles />
                 <AppBackground />
+                <AppLoader>
+                  <Loader />
+                </AppLoader>
                 <AppWrapper>
                   <Header />
                   <Main>
