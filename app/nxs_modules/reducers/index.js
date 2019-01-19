@@ -13,6 +13,7 @@ import sendReceive from './sendReceive';
 import addressbook from './addressbook';
 import terminal from './terminal';
 import settings from './settings';
+import theme from './theme';
 
 import { addLocaleData } from 'react-intl';
 import ru from 'react-intl/locale-data/ru';
@@ -48,6 +49,7 @@ export default function createRootReducer(history) {
       addressbook,
       terminal,
       settings,
+      theme,
       form: formReducer,
     })
   );

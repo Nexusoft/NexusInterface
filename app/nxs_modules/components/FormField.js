@@ -59,11 +59,11 @@ const Hint = styled.div(({ theme }) => ({
     visibility: 'visible',
     opacity: 1,
     color: '#fff',
-    background: theme.error,
+    background: theme.danger,
   },
 
   'input:invalid:focus + &::before': {
-    borderBottomColor: theme.error,
+    borderBottomColor: theme.danger,
   },
 }));
 

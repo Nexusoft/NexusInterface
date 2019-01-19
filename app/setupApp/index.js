@@ -7,6 +7,7 @@ import WEBGL from 'scripts/WebGLCheck.js';
 import * as ac from 'actions/setupAppActionCreators';
 import getInfo from 'actions/getInfo';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
+import { loadThemeFromFile } from 'actions/themeActionCreators';
 import updater from 'updater';
 import MenuBuilder from './menuBuilder';
 import setupTray from './setupTray';
@@ -16,6 +17,7 @@ import ExperimentalWarningModal from './ExperimentalWarningModal';
 export default function setupApp(store, history) {
   const { dispatch } = store;
   store.dispatch(loadSettingsFromFile());
+  store.dispatch(loadThemeFromFile());
 
   const menuBuilder = new MenuBuilder(store, history);
   menuBuilder.buildMenu();

@@ -67,7 +67,7 @@ class SignInStatus extends Component {
       return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
     } else {
       if (unlocked_until === undefined) {
-        return <StatusIcon icon={unlockedIcon} css={{ color: theme.error }} />;
+        return <StatusIcon icon={unlockedIcon} css={{ color: theme.danger }} />;
       } else if (unlocked_until === 0) {
         return <StatusIcon icon={lockedIcon} />;
       } else if (unlocked_until >= 0) {

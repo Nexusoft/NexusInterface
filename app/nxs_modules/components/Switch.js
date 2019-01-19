@@ -10,7 +10,7 @@ const switchHeight = consts.lineHeight; // em
 const switchWidth = consts.lineHeight * 1.75; // em
 
 const SwitchInput = styled.input(({ theme }) => {
-  const checkedBg = color.mix(theme.dark, theme.primary);
+  const checkedBg = color.mix(theme.background, theme.primary);
 
   return {
     display: 'block',
@@ -38,7 +38,7 @@ const SwitchInput = styled.input(({ theme }) => {
         bottom: 0,
         transform: 'scale(.9)',
         borderRadius: switchHeight / 2 + 'em',
-        background: theme.darkGray,
+        background: theme.mixer(0.25),
         transition: `background-color ${timing.quick} ease-out`,
       },
       // Switch round handle
@@ -50,7 +50,7 @@ const SwitchInput = styled.input(({ theme }) => {
         height: switchHeight + 'em',
         width: switchHeight + 'em',
         borderRadius: '50%',
-        background: theme.gray,
+        background: theme.mixer(0.5),
         boxShadow: '0 0 5px rgba(0,0,0,.7)',
         transitionProperty: 'background-color, transform, box-shadow',
         transitionDuration: timing.quick,
@@ -60,10 +60,10 @@ const SwitchInput = styled.input(({ theme }) => {
 
     '&:hover': {
       '&::before': {
-        background: color.lighten(theme.darkGray, 0.15),
+        background: color.lighten(theme.mixer(0.25), 0.15),
       },
       '&::after': {
-        background: theme.lightGray,
+        background: theme.mixer(0.75),
       },
     },
 

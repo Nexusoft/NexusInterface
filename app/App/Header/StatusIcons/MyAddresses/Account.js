@@ -9,7 +9,7 @@ import Address from './Address';
 
 const AccountComponent = styled.div(({ theme }) => ({
   padding: '1em 0',
-  borderBottom: `1px solid ${theme.darkerGray}`,
+  borderBottom: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 const AccountName = styled.span({

@@ -18,7 +18,7 @@ const AddressTextField = styled(TextField)({
 });
 
 const CopyButton = styled(Button)(({ theme }) => ({
-  borderLeft: `1px solid ${theme.darkerGray}`,
+  borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 export default class Address extends React.Component {

@@ -64,7 +64,7 @@ const Beta = styled.div(({ theme }) => ({
   right: -26,
   letterSpacing: 1,
   textTransform: 'uppercase',
-  color: theme.light,
+  color: theme.foreground,
 }));
 
 const StatusIcons = styled.div({
@@ -83,7 +83,7 @@ const UnderHeader = styled.div(({ theme }) => ({
   left: 0,
   right: 0,
   textAlign: 'center',
-  color: theme.light,
+  color: theme.foreground,
 }));
 
 @connect(({ overview: { connections } }) => ({ connections }))

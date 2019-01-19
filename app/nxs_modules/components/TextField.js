@@ -50,7 +50,7 @@ const TextFieldComponent = styled.div(
     switch (skin) {
       case 'underline':
         return {
-          color: theme.lighterGray,
+          color: theme.mixer(0.875),
           transitionProperty: 'color',
           transitionDuration: timing.normal,
           '&::after': {
@@ -61,26 +61,26 @@ const TextFieldComponent = styled.div(
             right: 0,
             height: 2,
             borderRadius: 1,
-            background: error ? theme.error : theme.gray,
+            background: error ? theme.danger : theme.mixer(0.5),
             transitionProperty: 'background-color, box-shadow',
             transitionDuration: timing.normal,
           },
           '&:hover': {
-            color: theme.light,
+            color: theme.foreground,
             '&::after': {
               background: error
-                ? color.lighten(theme.error, 0.3)
-                : theme.lightGray,
+                ? color.lighten(theme.danger, 0.3)
+                : theme.mixer(0.75),
             },
           },
           ...(focus
             ? {
                 '&&::after': {
                   background: color.lighten(
-                    error ? theme.error : theme.primary,
+                    error ? theme.danger : theme.primary,
                     0.3
                   ),
-                  boxShadow: `0 0 15px ${error ? theme.error : theme.primary}`,
+                  boxShadow: `0 0 15px ${error ? theme.danger : theme.primary}`,
                 },
               }
             : null),
@@ -88,34 +88,34 @@ const TextFieldComponent = styled.div(
       case 'filled-light':
         return {
           borderRadius: 2,
-          background: theme.lighterGray,
-          color: theme.dark,
+          background: theme.mixer(0.875),
+          color: theme.background,
           transitionProperty: 'background-color',
           transitionDuration: timing.normal,
           '&:hover': {
-            background: theme.light,
+            background: theme.foreground,
           },
           ...(focus
             ? {
-                background: theme.light,
+                background: theme.foreground,
               }
             : null),
           ...(error
             ? {
-                border: `1px solid ${theme.error}`,
+                border: `1px solid ${theme.danger}`,
               }
             : null),
         };
       case 'filled-dark':
         return {
-          border: `1px solid ${theme.darkerGray}`,
-          background: theme.dark,
-          color: theme.light,
+          border: `1px solid ${theme.mixer(0.125)}`,
+          background: theme.background,
+          color: theme.foreground,
           borderRadius: 2,
           transitionProperty: 'border-color, box-shadow',
           transitionDuration: timing.normal,
           '&:hover': {
-            borderColor: theme.darkGray,
+            borderColor: theme.mixer(0.25),
           },
           ...(focus
             ? {
@@ -128,8 +128,8 @@ const TextFieldComponent = styled.div(
           ...(error
             ? {
                 '&, &:hover': {
-                  borderColor: theme.error,
-                  boxShadow: `0 0 5px ${theme.error}`,
+                  borderColor: theme.danger,
+                  boxShadow: `0 0 5px ${theme.danger}`,
                 },
               }
             : null),
@@ -149,7 +149,7 @@ const Input = styled.input(
     transitionDuration: timing.normal,
 
     '&::placeholder': {
-      color: theme.gray,
+      color: theme.mixer(0.5),
     },
 
     '&[type="date"], &[type="time"]': {

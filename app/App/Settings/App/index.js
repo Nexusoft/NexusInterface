@@ -28,7 +28,7 @@ const AppSettings = styled.div({
 });
 
 const WarningIcon = styled(Icon)(({ theme }) => ({
-  color: color.lighten(theme.error, 0.3),
+  color: color.lighten(theme.danger, 0.3),
   fontSize: '1.1em',
 }));
 

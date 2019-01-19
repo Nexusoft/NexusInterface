@@ -23,8 +23,8 @@ const EncryptWalletForm = styled.form({
 
 const Note = styled.div(({ theme }) => ({
   padding: '1em',
-  border: `2px dashed ${theme.gray}`,
-  color: theme.gray,
+  border: `2px dashed ${theme.mixer(0.5)}`,
+  color: theme.mixer(0.5),
 }));
 
 const Characters = styled.span({

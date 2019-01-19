@@ -74,17 +74,17 @@ const AutoComplete = styled.div(({ theme }) => ({
   position: 'absolute',
   top: '100%',
   zIndex: 99,
-  background: theme.dark,
+  background: theme.background,
 }));
 
 const AutoCompleteItem = styled.a(({ theme }) => ({
   display: 'block',
   cursor: 'pointer',
   transition: `color ${timing.normal}`,
-  color: theme.lightGray,
+  color: theme.mixer(0.75),
 
   '&:hover': {
-    color: theme.light,
+    color: theme.foreground,
   },
 }));
 
@@ -93,12 +93,12 @@ const ConsoleOutput = styled.code(({ theme }) => ({
   flexBasis: 0,
   overflow: 'auto',
   wordBreak: 'break-all',
-  background: theme.dark,
-  border: `1px solid ${theme.darkGray}`,
+  background: theme.background,
+  border: `1px solid ${theme.mixer(0.25)}`,
 }));
 
 const ExecuteButton = styled(Button)(({ theme }) => ({
-  borderLeft: `1px solid ${theme.darkerGray}`,
+  borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 class TerminalConsole extends Component {

@@ -50,7 +50,7 @@ const SelectControl = styled.div(
       case 'underline':
         return {
           background: 'transparent',
-          color: theme.lighterGray,
+          color: theme.mixer(0.875),
           transitionProperty: 'color, border-bottom-color',
           transitionDuration: timing.normal,
           position: 'relative',
@@ -62,23 +62,23 @@ const SelectControl = styled.div(
             right: 0,
             height: 2,
             borderRadius: 1,
-            background: error ? theme.error : theme.gray,
+            background: error ? theme.danger : theme.mixer(0.5),
             transitionProperty: 'background-color',
             transitionDuration: timing.normal,
           },
           '&:hover': {
-            color: theme.light,
-            borderBottomColor: theme.lightGray,
+            color: theme.foreground,
+            borderBottomColor: theme.mixer(0.75),
             '&::after': {
-              background: theme.lightGray,
+              background: theme.mixer(0.75),
             },
           },
           ...(active
             ? {
-                color: theme.light,
+                color: theme.foreground,
                 '&&::after': {
                   background: error
-                    ? color.lighten(theme.error, 0.3)
+                    ? color.lighten(theme.danger, 0.3)
                     : color.lighten(theme.primary, 0.3),
                 },
               }
@@ -87,16 +87,16 @@ const SelectControl = styled.div(
       case 'filled-light':
         return {
           paddingLeft: '.8em',
-          background: theme.lighterGray,
-          color: theme.dark,
+          background: theme.mixer(0.875),
+          color: theme.background,
           borderRadius: 2,
           transition: `background-color ${timing.normal}`,
           '&:hover': {
-            background: theme.light,
+            background: theme.foreground,
           },
           ...(active
             ? {
-                background: theme.light,
+                background: theme.foreground,
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
               }
@@ -146,13 +146,13 @@ const OptionsComponent = styled.div(
     switch (skin) {
       case 'underline':
         return {
-          background: theme.dark,
-          color: theme.light,
+          background: theme.background,
+          color: theme.foreground,
         };
       case 'filled-light':
         return {
-          background: theme.light,
-          color: theme.dark,
+          background: theme.foreground,
+          color: theme.background,
         };
     }
   },
@@ -180,15 +180,15 @@ const Option = styled.div(
       case 'underline':
         return {
           background: selected ? theme.primary : undefined,
-          color: selected ? theme.primaryContrast : undefined,
+          color: selected ? theme.primaryAccent : undefined,
           '&:hover': {
-            background: selected ? theme.primary : theme.darkerGray,
+            background: selected ? theme.primary : theme.mixer(0.125),
           },
         };
       case 'filled-light':
         return {
           '&:hover': {
-            background: theme.lighterGray,
+            background: theme.mixer(0.875),
           },
         };
     }

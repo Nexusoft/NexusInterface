@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import StarrySky from './StarrySky';
 
 const mapStateToProps = state => ({
-  wallpaper: state.settings.theme.wallpaper,
+  wallpaper: state.theme.wallpaper,
 });
 
 const CustomWallpaper = styled.div(

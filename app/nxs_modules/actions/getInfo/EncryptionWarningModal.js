@@ -20,8 +20,8 @@ const WarningModal = styled(Modal)({
 
 const WarningIcon = styled(Icon)(({ theme }) => ({
   fontSize: 80,
-  color: theme.error,
-  filter: `drop-shadow(0 0 5px ${color.fade(theme.error, 0.5)})`,
+  color: theme.danger,
+  filter: `drop-shadow(0 0 5px ${color.fade(theme.danger, 0.5)})`,
   marginBottom: 20,
 }));
 

@@ -90,6 +90,7 @@ const mapStateToProps = state => {
     ...state.overview,
     ...state.common,
     ...state.settings,
+    theme: state.theme,
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -163,7 +164,7 @@ const Stat = styled.div(
     display: 'flex',
     alignItems: 'center',
     filter: `drop-shadow(0 0 5px #000)`,
-    color: theme.light,
+    color: theme.foreground,
   }),
   ({ to, theme }) =>
     to && {

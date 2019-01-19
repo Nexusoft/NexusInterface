@@ -44,10 +44,10 @@ const Suggestion = styled.div(({ theme }) => ({
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
   height: consts.inputHeightEm + 'em',
-  background: theme.dark,
-  color: theme.light,
+  background: theme.background,
+  color: theme.foreground,
   '&:hover': {
-    background: theme.darkerGray,
+    background: theme.mixer(0.125),
   },
 }));
 

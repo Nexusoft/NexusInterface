@@ -13,7 +13,7 @@ import * as RPC from 'scripts/rpc';
 const QueueComponent = styled.div(({ theme }) => ({
   marginTop: 50,
   paddingTop: 20,
-  borderTop: `1px solid ${theme.lightGray}`,
+  borderTop: `1px solid ${theme.mixer(0.75)}`,
 }));
 
 const QueueHeading = styled.div({

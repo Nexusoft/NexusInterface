@@ -7,11 +7,11 @@ const Link = styled(RouterLink)(({ theme }) => ({
     display: 'inline',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    color: theme.lightGray,
+    color: theme.mixer(0.75),
     transition: `color ${timing.normal}`,
   },
   '&:hover': {
-    color: theme.light,
+    color: theme.foreground,
   },
 }));
 
