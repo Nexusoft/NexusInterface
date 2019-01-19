@@ -8,14 +8,6 @@ export const newUID = (function() {
   return () => `uid-${counter++}`;
 })();
 
-export function normalizePath(path) {
-  if (process.platform === 'win32') {
-    return path.replace(/\\/g, '/');
-  } else {
-    return path;
-  }
-}
-
 // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711
 export function escapeRegExp(s) {
   return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
