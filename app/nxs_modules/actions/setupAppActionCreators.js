@@ -88,11 +88,6 @@ export const BlockDate = stamp => ({ type: TYPE.BLOCK_DATE, payload: stamp });
 
 export const Unencrypted = () => ({ type: TYPE.UNENCRYPTED });
 
-export const loadSettings = settings => ({
-  type: TYPE.UPDATE_SETTINGS,
-  payload: settings,
-});
-
 export const SetSyncStatus = stat => ({
   type: TYPE.SET_SYNC_STATUS,
   payload: stat,

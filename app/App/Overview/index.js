@@ -233,7 +233,7 @@ class Overview extends Component {
   componentDidUpdate(prevProps) {
     const { blocks, webGLEnabled, settings, connections } = this.props;
 
-    if (settings.acceptedagreement && webGLEnabled && settings.renderGlobe) {
+    if (settings.acceptedAgreement && webGLEnabled && settings.renderGlobe) {
       if (blocks != prevProps.blocks && blocks && prevProps.blocks) {
         this.redrawCurves();
       }
@@ -297,7 +297,7 @@ class Overview extends Component {
 
   showingGlobe() {
     return (
-      this.props.settings.acceptedagreement &&
+      this.props.settings.acceptedAgreement &&
       this.props.settings.renderGlobe &&
       this.props.webGLEnabled
     );
@@ -393,9 +393,7 @@ class Overview extends Component {
               // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
               handleOnAddData={e => (this.reDrawEverything = e)}
               handleRemoveAllPoints={e => (this.removeAllPoints = e)}
-              pillarColor={
-                this.props.theme.globePillarColor
-              }
+              pillarColor={this.props.theme.globePillarColor}
               archColor={this.props.theme.globeArchColor}
               globeColor={this.props.theme.globeColor}
             />

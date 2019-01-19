@@ -1,46 +1,7 @@
 import * as TYPE from 'actions/actiontypes';
 
-let BackupDir = process.env.HOME + '/NexusBackups';
-if (process.platform === 'win32') {
-  BackupDir = process.env.USERPROFILE + '/NexusBackups';
-  BackupDir = BackupDir.replace(/\\/g, '/');
-}
 const initialState = {
-  settings: {
-    autoUpdate: true,
-    manualDaemon: false,
-    verbose: '2',
-    acceptedagreement: false,
-    experimentalWarning: true,
-    bootstrap: true,
-    windowWidth: 1600,
-    windowHeight: 1388,
-    devMode: false,
-    wallpaper: '',
-    renderGlobe: true,
-    fiatCurrency: 'USD',
-    locale: 'en',
-    Folder: BackupDir,
-    verboseLevel: '2',
-    mapPortUsingUpnp: true,
-    customStyling: {
-      globePillarColor: '#00ffff',
-      globeArchColor: '#00ffff',
-      globeColor: '#0097e4',
-    },
-    NXSlogoRGB: 'rgb(0,174,239)',
-    footerRGB: 'rgb(0,174,239)',
-    footerActiveRGB: 'rgb(0,174,239)',
-    footerHoverRGB: 'rgb(0,174,239)',
-    iconMenuRGB: 'rgb(0,174,239)',
-    ignoreEncryptionWarningFlag: false,
-    experimentalOpen: true,
-    saveSettings: false,
-    styleChangeFlag: false,
-    selectedColorProp: 'MC1',
-    minimumconfirmations: 3,
-    theme: {},
-  },
+  settings: {},
   theme: {
     globePillarColor: '#00ffff',
     globeArchColor: '#00ffff',
@@ -81,7 +42,7 @@ export default (state = initialState, action) => {
     case TYPE.IGNORE_ENCRYPTION_WARNING:
       return {
         ...state,
-        settings: { ...state.settings, ignoreEncryptionWarningFlag: true },
+        settings: { ...state.settings, encryptionWarningDisabled: true },
       };
     case TYPE.OPEN_MANUAL_DAEMON_MODAL:
       return { ...state, manualDaemonModal: true };
@@ -95,7 +56,7 @@ export default (state = initialState, action) => {
     case TYPE.ACCEPT_MIT:
       return {
         ...state,
-        settings: { ...state.settings, acceptedagreement: true },
+        settings: { ...state.settings, acceptedAgreement: true },
         saveSettingsFlag: true,
       };
     case TYPE.TOGGLE_SAVE_SETTINGS_FLAG:

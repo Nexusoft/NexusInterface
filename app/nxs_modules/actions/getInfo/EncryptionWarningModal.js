@@ -32,13 +32,14 @@ const WarningMessage = styled.div({
 @connect(
   null,
   dispatch => ({
-    updateSettings: updates => dispatch(updateSettings(updates)),
+    ignoreEncryptionWarning: () =>
+      dispatch(updateSettings({ encryptionWarningDisabled: true })),
   })
 )
 class EncryptionWarningModal extends React.Component {
   ignore = () => {
+    this.props.ignoreEncryptionWarning();
     this.closeModal();
-    this.props.updateSettings({ ignoreEncryptionWarningFlag: true });
   };
 
   render() {

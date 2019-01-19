@@ -9,6 +9,8 @@ import macaddress from 'macaddress';
 import config from 'api/configuration';
 import normalizePath from 'utils/normalizePath';
 
+const settingsFileName = 'settings.json';
+
 const defaultBackupDir = normalizePath(config.GetHomeDir() + '/NexusBackups');
 
 const secret =
@@ -52,9 +54,9 @@ const defaultSettings = {
 
   // Hidden settings
   acceptedAgreement: false,
-  noExperimentalWarning: false,
-  noBootstrapSuggestion: false,
-  noEncryptionWarning: false,
+  experimentalWarningDisabled: false,
+  encryptionWarningDisabled: false,
+  bootstrapSuggestionDisabled: false,
   windowWidth: 1280,
   windowHeight: 1024,
 };
@@ -63,18 +65,27 @@ const defaultSettings = {
 // GetSettings: Get the application settings.json file from disk and return it
 //
 export function GetSettings() {
-  return config.ReadJson('settings.json');
+  return config.ReadJson(settingsFileName);
 }
 
 //
 // SaveSettings: Save the application settings.json file
 //
 
-export function SaveSettings(settingsJson) {
-  return config.WriteJson('settings.json', settingsJson);
+export function SaveSettings(settings) {
+  // Ensure only valid settings will be saved to the settings.json
+  const validSettings = Object.keys(settings).filter(key => {
+    if (defaultSettings.hasOwnProperty(key)) {
+      return true;
+    } else {
+      console.error(`Attempt to save invalid setting \`${key}\``);
+      return false;
+    }
+  });
+  return config.WriteJson(settingsFileName, validSettings);
 }
 
-export function GetSettingsWithDefault() {
+export function GetSettingsWithDefaults() {
   const customSettings = GetSettings();
   return { ...defaultSettings, ...customSettings };
 }

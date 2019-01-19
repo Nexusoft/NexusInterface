@@ -48,7 +48,11 @@ export default function bootstrap({ suggesting } = {}) {
       noCallback: () => {
         running = false;
         if (suggesting) {
-          dispatch(updateSettings({ bootstrap: false }));
+          dispatch(
+            updateSettings({
+              bootstrapSuggestionDisabled: true,
+            })
+          );
         }
       },
       style: { width: 530 },

@@ -1,6 +1,11 @@
 import ga from 'scripts/googleanalytics';
-import { GetSettings, SaveSettings } from 'api/settings';
+import { GetSettingsWithDefaults, UpdateSettings } from 'api/settings';
 import * as TYPE from './actiontypes';
+
+export const loadSettingsFromFile = () => dispatch => {
+  const settings = GetSettingsWithDefaults();
+  dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings });
+};
 
 export const updateSettings = updates => (dispatch, getState) => {
   if (updates.googleAnalytics !== undefined) {
@@ -20,6 +25,5 @@ export const updateSettings = updates => (dispatch, getState) => {
   }
 
   dispatch({ type: TYPE.UPDATE_SETTINGS, payload: updates });
-  const settings = GetSettings();
-  SaveSettings({ ...settings, ...updates });
+  UpdateSettings(updates);
 };

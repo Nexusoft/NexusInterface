@@ -26,7 +26,7 @@ export default function getInfo() {
       dispatch(ac.Unencrypted());
       if (
         !state.common.encryptionModalShown &&
-        !state.settings.settings.ignoreEncryptionWarningFlag
+        !state.settings.settings.encryptionWarningDisabled
       ) {
         UIController.openModal(EncryptionWarningModal);
         dispatch(ac.showEncryptionWarningModal());
@@ -65,7 +65,7 @@ export default function getInfo() {
 
       const {
         settings: {
-          settings: { manualDaemon, bootstrap: bootstrapSetting },
+          settings: { manualDaemon, bootstrapSuggestionDisabled },
         },
       } = state;
       // 172800 = (100 * 24 * 60 * 60) / 50
@@ -73,7 +73,7 @@ export default function getInfo() {
       const isFarBehind = highestPeerBlock - info.blocks > 172800;
       if (
         isFarBehind &&
-        bootstrapSetting &&
+        !bootstrapSuggestionDisabled &&
         !manualDaemon &&
         info.connections !== undefined
       ) {

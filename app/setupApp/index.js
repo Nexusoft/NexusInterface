@@ -6,14 +6,16 @@ import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
 import * as ac from 'actions/setupAppActionCreators';
 import getInfo from 'actions/getInfo';
+import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import updater from 'updater';
 import MenuBuilder from './menuBuilder';
-import loadSettings from './loadSettings';
 import setupTray from './setupTray';
+import LicenseAgreementModal from './LicenseAgreementModal';
+import ExperimentalWarningModal from './ExperimentalWarningModal';
 
 export default function setupApp(store, history) {
   const { dispatch } = store;
-  loadSettings(store);
+  store.dispatch(loadSettingsFromFile());
 
   const menuBuilder = new MenuBuilder(store, history);
   menuBuilder.buildMenu();
@@ -45,6 +47,8 @@ export default function setupApp(store, history) {
   if (state.settings.settings.autoUpdate) {
     updater.autoUpdate();
   }
+
+  showInitialModals(state);
 }
 
 function checkWebGL(dispatch) {
@@ -53,5 +57,22 @@ function checkWebGL(dispatch) {
   } else {
     dispatch(ac.setWebGLEnabled(false));
     console.error(WEBGL.getWebGLErrorMessage());
+  }
+}
+
+function showInitialModals({ settings: { settings } }) {
+  const showExperimentalWarning = () => {
+    if (!settings.experimentalWarningDisabled) {
+      UIController.openModal(ExperimentalWarningModal);
+    }
+  };
+
+  if (!settings.acceptedAgreement) {
+    UIController.openModal(LicenseAgreementModal, {
+      fullScreen: true,
+      onClose: showExperimentalWarning,
+    });
+  } else {
+    showExperimentalWarning();
   }
 }
