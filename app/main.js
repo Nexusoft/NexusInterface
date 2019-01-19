@@ -14,7 +14,7 @@ import 'electron-debug';
 // Internal
 import core from 'api/core';
 import configuration from 'api/configuration';
-import { GetSettings, SaveSettings } from 'api/settings';
+import { GetSettingsWithDefaults, UpdateSettings } from 'api/settings';
 
 let mainWindow;
 let resizeTimer;
@@ -80,7 +80,7 @@ function createWindow() {
     );
   }
 
-  let settings = GetSettings();
+  const settings = GetSettingsWithDefaults();
   let iconPath = '';
   if (process.env.NODE_ENV === 'development') {
     iconPath = path.join(
@@ -106,8 +106,8 @@ function createWindow() {
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
-    width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
-    height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
+    width: settings.windowWidth,
+    height: settings.windowHeight,
     minWidth: 1050,
     minHeight: 847,
     icon: iconPath,
@@ -141,18 +141,16 @@ function createWindow() {
 
     resizeTimer = setTimeout(function() {
       // Resize event has been completed
-      let settings = GetSettings();
-
-      settings.windowWidth = mainWindow.getBounds().width;
-      settings.windowHeight = mainWindow.getBounds().height;
-
-      SaveSettings(settings);
+      UpdateSettings({
+        windowWidth: mainWindow.getBounds().width,
+        windowHeight: mainWindow.getBounds().height,
+      });
     }, 250);
   });
 
   // Event when the window is minimized
   mainWindow.on('minimize', function(event) {
-    let settings = GetSettings();
+    const settings = GetSettingsWithDefaults();
 
     if (settings.minimizeOnClose) {
       event.preventDefault();
@@ -169,7 +167,7 @@ app.on('ready', async () => {
   mainWindow.on('close', function(e) {
     e.preventDefault();
 
-    const settings = GetSettings();
+    const settings = GetSettingsWithDefaults();
     log.info('close');
 
     if (settings && settings.minimizeOnClose == true) {
@@ -182,7 +180,7 @@ app.on('ready', async () => {
     }
   });
 
-  const settings = GetSettings();
+  const settings = GetSettingsWithDefaults();
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true' ||
