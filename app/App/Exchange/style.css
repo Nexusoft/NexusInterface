@@ -1,0 +1,126 @@
+#ExchngeContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+}
+#shifty-pannel {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+#line {
+  flex: 1;
+  width: 4px;
+  height: 100%;
+  margin: 0 auto;
+  background: -webkit-linear-gradient(
+    transparent 0%,
+    var(--color-2) 50%,
+    transparent 100%
+  );
+  margin-right: 50px;
+  margin-left: 50px;
+}
+#confirmationContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#confirmation {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+#sendSideConfirm {
+  display: flex;
+}
+
+#recieveSideConfirm {
+  display: flex;
+}
+
+.confirmationWords {
+  display: flex;
+  flex-direction: column;
+}
+
+.confirmationWords h3 {
+  margin-bottom: 0;
+}
+
+#sendSideConfirm .confirmationWords {
+  text-align: right;
+}
+
+#shifty-pannel .field {
+  display: flex;
+  flex-direction: column;
+}
+
+select {
+  flex: 1;
+}
+
+select.soflow-color {
+  background-image: url(http://i62.tinypic.com/15xvbd5.png),
+    -webkit-linear-gradient(#fafafa, #f4f4f4 40%, #e5e5e5);
+  background-position: 97% center;
+  background-repeat: no-repeat;
+  border: 1px solid #aaa;
+  color: #555;
+  font-size: inherit;
+  /* margin: 20px; */
+  overflow: hidden;
+  padding: 5px 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 300px;
+}
+
+select.soflow-color {
+  background-image: url(http://i62.tinypic.com/15xvbd5.png),
+    -webkit-linear-gradient(var(--color-5), var(--color-5) 40%, var(--color-5));
+  background-color: var(--color-5);
+  /* -webkit-border-radius: 20px; */
+  /* -moz-border-radius: 20px; */
+  /* border-radius: 20px; */
+  padding-left: 15px;
+}
+
+#Exchange-container h2 {
+  margin-bottom: 0;
+}
+
+#Exchange-container p {
+  margin-top: 0;
+}
+
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

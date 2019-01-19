@@ -1,0 +1,49 @@
+/*
+Modal
+=================================
+*/
+
+:root {
+    --modal-background-color: var(--color-1);
+    --modal-close-button-color: var(--color-5);
+}
+
+.modal {
+    background: var(--modal-background-color);
+    max-width: 500px;
+    width: 100%;
+}
+
+.modal button {
+    user-select: none;
+    outline: 0;
+}
+
+.modal button svg {
+    fill: var(--modal-close-button-color);
+}
+
+.modal button svg:hover {
+    filter: brightness(150%);
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

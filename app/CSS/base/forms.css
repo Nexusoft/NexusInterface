@@ -1,0 +1,219 @@
+/*
+Forms
+=================================
+*/
+
+/* Default Settings */
+
+:root {
+  --input-border-width: 0;
+  --input-border-style: solid;
+  --input-border-color: var(--color-5);
+  --input-border-radius: 3px;
+  --input-background-color: var(--color-5);
+  --input-color: var(--color-4);
+  --input-focus-color: var(--color-1);
+  --input-invalid-border-color: red;
+  --field-align-label-width: 25%;
+}
+
+/* Element Styles */
+
+fieldset {
+  margin: calc(var(--line-height) * 1em - 1px) 0; /* subtract 1px border */
+  padding: 0 calc(var(--line-height) * 1em);
+  border-color: var(--border-color);
+}
+
+/* input:invalid,
+textarea:invalid {
+  border-color: var(--input-invalid-border-color);
+} */
+
+select {
+  /* unlike other form inputs a select doesn't use line-height, we need to add padding to get it there */
+  padding: calc(2px * 1em) 0 calc(1px * 1em) 0.375em;
+}
+
+.field,
+.block .field,
+fieldset.block .field,
+form div.field.block,
+.inline .field,
+fieldset.inline .field,
+form div.field.inline,
+.aligned .field,
+fieldset.aligned .field,
+form div.field.aligned {
+  position: relative;
+  display: block;
+}
+
+.field label,
+.block .field label,
+form div.field.block label,
+.inline .field label,
+form div.field.inline label,
+.aligned .field label,
+form div.field.aligned label {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.field,
+.block .field,
+fieldset.block .field,
+form div.field.block {
+  float: none;
+  margin: 1.625em 0; /* a field generally is 4 lines including label + field + top margin + bottom margin */
+  padding: 0;
+}
+
+.field label,
+.block .field label,
+form div.field.block label {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: auto;
+}
+
+.inline .field,
+fieldset.inline .field,
+form div.field.inline {
+  float: left;
+  margin: 1.625em 1.625em 0 0; /* a field generally is 4 lines including label + field + top margin + bottom margin */
+  padding: 0;
+}
+
+.inline .field:last-child,
+form div.field.inline:last-child {
+  margin-bottom: 1.625em;
+}
+
+.inline .field label,
+form div.field.inline label {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: auto;
+}
+
+.aligned .field,
+fieldset.aligned .field,
+form div.field.aligned {
+  float: none;
+  margin: 1.625em 0; /* a field generally is 4 lines including label + field + top margin + bottom margin */
+  padding: 0 0 0 320px;
+}
+
+.aligned .field label,
+form div.field.aligned label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--field-align-label-width);
+}
+
+.hint {
+  box-sizing: border-box;
+  position: absolute;
+  display: inline-block;
+  visibility: hidden;
+  opacity: 0;
+  background: #444;
+  color: #fff;
+  padding: 0.25em 0.5em;
+  margin-left: 0.75em;
+  text-align: center;
+  transition: all 0.25s linear;
+  z-index: 1;
+}
+
+.hint:before {
+  content: " ";
+  position: absolute;
+  top: 1em;
+  left: -1em;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin-top: -0.5em;
+  border-width: 0.5em;
+  border-style: solid;
+  border-color: #444;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  transition: all 0.25s linear;
+}
+
+*:invalid + .hint {
+  color: #fff;
+  background: red;
+}
+
+*:invalid + .hint:before {
+  border-right-color: red;
+}
+
+*:focus + .hint {
+  visibility: visible;
+  opacity: 1;
+}
+
+*:focus + .hint:before {
+  opacity: 1;
+}
+
+.hint {
+  top: auto;
+  margin: 0;
+  margin-left: 0.75em;
+}
+
+.hint:before {
+  top: 1em;
+  left: -14px;
+  margin-top: -7px;
+  margin-left: 0;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: #444;
+  border-bottom-color: transparent;
+}
+
+*:invalid + .hint:before {
+  border-right-color: red;
+  border-bottom-color: transparent;
+}
+
+.field.clear {
+  clear: both;
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+  .field {
+    margin: 1.625em 0;
+  }
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

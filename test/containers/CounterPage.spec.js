@@ -19,7 +19,7 @@ function setup(initialState) {
   return {
     app,
     buttons: app.find('button'),
-    p: app.find('.counter')
+    p: app.find('.counter'),
   };
 }
 

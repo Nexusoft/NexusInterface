@@ -1,0 +1,131 @@
+#market {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#market > h2 {
+  flex: 0;
+}
+
+#market > .panel {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.exchangeUnitContainer {
+  width: 100%;
+}
+
+.marketInfoContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin: 1.5em 0;
+  border-top: 1px solid #333;
+}
+
+.exchangeLogo {
+  height: 60px;
+}
+
+.marketDepthInner {
+  position: relative;
+  flex: 1;
+
+  min-height: 300px;
+  max-width: 50%;
+  margin-left: 5px;
+}
+.candleStickInner {
+  position: relative;
+
+  min-height: 300px;
+  max-width: 40%;
+  margin-left: 20px;
+}
+
+.infobox {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.marketSummaryTable {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.marketSummaryTable div {
+  border-bottom: 1px solid white;
+}
+
+.alertbox {
+  display: flex;
+  flex-wrap: wrap;
+  position: fixed;
+  right: 70px;
+  max-height: 125px;
+  max-width: 50%;
+  overflow: hidden;
+}
+
+.arbitrageAlert {
+  position: relative;
+  padding: 5px;
+  margin: 2px;
+  background-color: rgba(13, 145, 18, 0.7);
+}
+.arbitrageAlert img {
+  height: 50px;
+}
+.arbitrageAlert span {
+  position: absolute;
+  top: 0;
+  right: 5px;
+}
+
+/*
+Refresh Button
+--------------------------------
+*/
+
+a.refresh {
+  display: block;
+  position: absolute;
+  top: 4em;
+  right: 0;
+  font-family: var(--mono-font-family);
+  font-size: 0.875em;
+  opacity: 0.75;
+  color: #fff;
+  cursor: pointer;
+}
+
+a.refresh:hover {
+  opacity: 0.95;
+  text-decoration: underline;
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

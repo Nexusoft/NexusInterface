@@ -2,3 +2,12 @@
 *.png binary
 *.ico binary
 *.icns binary
+*.mmdb binary
+*.jpg binary
+*.bmp binary
+*.svg binary
+*.jpeg binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+app/cores/* binary

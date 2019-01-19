@@ -1,0 +1,45 @@
+/*
+Progress Bar
+=================================
+*/
+
+:root {
+	--progress-track-background-color: rgba(0,0,0,0.25);
+	--progress-background-color: var(--color-2);
+	--progress-transition-timing: .4s;
+}
+
+.progress {
+	padding: 4px;
+	border-radius: 4px;
+	background: var(--progress-track-background-color);
+  }
+  
+.progress .bar {
+	height: 16px;
+	width: 0; /* default progress bar to empty */
+	border-radius: 3px;
+	background-color: var(--progress-background-color);
+	transition: width var(--progress-transition-timing) linear;
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

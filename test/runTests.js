@@ -1,15 +1,46 @@
-const spawn = require('cross-spawn');
+const Application = require('spectron').Application;
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const electronPath = require('electron');
 const path = require('path');
 
-const s = `\\${path.sep}`;
-const pattern = process.argv[2] === 'e2e'
-  ? `test${s}e2e${s}.+\\.spec\\.js`
-  : `test${s}(?!e2e${s})[^${s}]+${s}.+\\.spec\\.js$`;
+chai.should();
+chai.use(chaiAsPromised);
 
-const result = spawn.sync(
-  path.normalize('./node_modules/.bin/jest'),
-  [pattern, ...process.argv.slice(2)],
-  { stdio: 'inherit' }
-);
+describe('Application launch', function() {
+  this.timeout(10000);
 
-process.exit(result.status);
+  beforeEach(function() {
+    this.app = new Application({
+      path: electronPath,
+      args: [path.join(__dirname, '..')],
+    });
+    return this.app.start();
+  });
+
+  beforeEach(function() {
+    chaiAsPromised.transferPromiseness = this.app.transferPromiseness;
+  });
+
+  afterEach(function() {
+    if (this.app && this.app.isRunning()) {
+      return this.app.stop();
+    }
+  });
+
+  it('opens a window', function() {
+    return this.app.client
+      .waitUntilWindowLoaded()
+      .getWindowCount()
+      .should.eventually.have.at.least(1)
+      .browserWindow.isMinimized()
+      .should.eventually.be.false.browserWindow.isVisible()
+      .should.eventually.be.true.browserWindow.isFocused()
+      .should.eventually.be.true.browserWindow.getBounds()
+      .should.eventually.have.property('width')
+      .and.be.above(0)
+      .browserWindow.getBounds()
+      .should.eventually.have.property('height')
+      .and.be.above(0);
+  });
+});

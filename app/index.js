@@ -1,27 +1,28 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import Root from './containers/Root';
+import App from './App';
 import { configureStore, history } from './store/configureStore';
-import './app.global.css';
+import setupApp from './setupApp';
+import './CSS/app.global.css';
 
 const store = configureStore();
 
-render(
-  <AppContainer>
-    <Root store={store} history={history} />
-  </AppContainer>,
-  document.getElementById('root')
-);
+setupApp(store, history);
+
+function renderApp(Component) {
+  render(
+    <AppContainer>
+      <Component store={store} history={history} />
+    </AppContainer>,
+    document.getElementById('root')
+  );
+}
+
+renderApp(App);
 
 if (module.hot) {
-  module.hot.accept('./containers/Root', () => {
-    const NextRoot = require('./containers/Root'); // eslint-disable-line global-require
-    render(
-      <AppContainer>
-        <NextRoot store={store} history={history} />
-      </AppContainer>,
-      document.getElementById('root')
-    );
+  module.hot.accept('./App', () => {
+    renderApp(App);
   });
 }

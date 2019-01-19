@@ -1,0 +1,101 @@
+/*
+Tables
+================================
+*/
+
+/* Default Settings */
+
+:root {
+	--table-cell-border-width: 1px;
+	--table-cell-border-style: solid;
+	--table-cell-border-color: var(--color-3);
+	--table-nested-background-color: var(--color-3);
+	--table-padded-padding-horizontal: 0.5em;
+	--table-padded-padding-vertical: 0.375em;
+	--table-striped-background-color: rgba(255,255,255,0.05);
+}
+
+/* Element Styles */
+
+table {
+	max-width: 100%;
+	width: 100%;
+	margin-top: calc(var(--line-height) * 1em);
+	margin-bottom: calc(var(--line-height) * 1em);
+	border-collapse: separate;
+	border-spacing: 0;
+	border-radius: 0;
+
+	/* .bordered styles */
+	margin-top: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
+	margin-bottom: calc(var(--line-height) * 1em - 1px);	/* subtract 1px border */
+	border: 2px solid var(--border-color);
+}
+
+table th,
+table td {
+	padding: 0 calc(var(--line-height) * 0.75em);
+	line-height: calc(var(--line-height) - 1px); /* subtract 1px border */
+	border-top-width: var(--table-cell-border-width);
+	border-top-style: var(--table-cell-border-style);
+	border-top-color: var(--table-cell-border-color);
+	text-align: left;
+	vertical-align: top;
+	padding-top: calc(var(--line-height) * var(--table-padded-padding-vertical));
+	padding-bottom: calc(var(--line-height) * var(--table-padded-padding-vertical));
+	padding-left: calc(var(--line-height) * var(--table-padded-padding-horizontal));
+	padding-right: calc(var(--line-height) * var(--table-padded-padding-horizontal));
+	border-left: 1px solid var(--border-color);
+}
+
+table th {
+	font-weight: bold;
+	vertical-align: bottom;
+	min-width: 10em;
+	background-color: var(--border-color);
+	font-size: .8125em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: normal;
+}
+
+table caption + thead tr:first-child th,
+table caption + thead tr:first-child td,
+table colgroup + thead tr:first-child th,
+table colgroup + thead tr:first-child td,
+table thead:first-child tr:first-child th,
+table thead:first-child tr:first-child td {
+	line-height: var(--line-height);
+	border-top: 0;
+}
+
+table tbody + tbody {
+	border-top-width: calc(vafffr(--table-cell-border-width) * 2);
+	border-top-style: var(--table-cell-border-style);
+	border-top-color: var(--table-cell-border-color);
+}
+
+table table {
+	background-color: var(--table-nested-background-color);
+}
+
+/*------------------------------------------------------------------
+MEDIA QUERIES
+------------------------------------------------------------------*/
+
+@media (min-width: 300px) {
+}
+@media (min-width: 375px) {
+}
+@media (min-width: 480px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 800px) {
+}
+@media (min-width: 1024px) {
+}
+@media (min-width: 1200px) {
+}
+@media (min-width: 1600px) {
+}

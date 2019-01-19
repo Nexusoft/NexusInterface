@@ -1,0 +1,5 @@
+// *** LICENSE *** //
+While we try to create our own icons and images, some images are universally recognized. 
+Some images/icons were sourced from fontawesome.com. In agreement for such use, the 
+license for such images/icons or unmodified versions of these images/icons can be viewed at 
+https://fontawesome.com/license/free
