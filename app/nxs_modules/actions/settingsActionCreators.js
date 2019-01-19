@@ -1,9 +1,9 @@
 import ga from 'scripts/googleanalytics';
-import { GetSettingsWithDefaults, UpdateSettings } from 'api/settings';
+import { LoadSettings, UpdateSettings } from 'api/settings';
 import * as TYPE from './actiontypes';
 
 export const loadSettingsFromFile = () => dispatch => {
-  const settings = GetSettingsWithDefaults();
+  const settings = LoadSettings();
   dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings });
 };
 

@@ -7,7 +7,7 @@ var GA = {};
 let ua = require('universal-analytics');
 GA.visitor = null;
 GA.active = false;
-let settings = require('api/settings').GetSettingsWithDefaults();
+let settings = require('api/settings').LoadSettings();
 if (
   settings.sendUsageData == null ||
   settings.sendUsageData == undefined ||

@@ -14,7 +14,7 @@ import 'electron-debug';
 // Internal
 import core from 'api/core';
 import configuration from 'api/configuration';
-import { GetSettingsWithDefaults, UpdateSettings } from 'api/settings';
+import { LoadSettings, UpdateSettings } from 'api/settings';
 
 let mainWindow;
 let resizeTimer;
@@ -80,7 +80,7 @@ function createWindow() {
     );
   }
 
-  const settings = GetSettingsWithDefaults();
+  const settings = LoadSettings();
   let iconPath = '';
   if (process.env.NODE_ENV === 'development') {
     iconPath = path.join(
@@ -150,7 +150,7 @@ function createWindow() {
 
   // Event when the window is minimized
   mainWindow.on('minimize', function(event) {
-    const settings = GetSettingsWithDefaults();
+    const settings = LoadSettings();
 
     if (settings.minimizeOnClose) {
       event.preventDefault();
@@ -167,7 +167,7 @@ app.on('ready', async () => {
   mainWindow.on('close', function(e) {
     e.preventDefault();
 
-    const settings = GetSettingsWithDefaults();
+    const settings = LoadSettings();
     log.info('close');
 
     if (settings && settings.minimizeOnClose == true) {
@@ -180,7 +180,7 @@ app.on('ready', async () => {
     }
   });
 
-  const settings = GetSettingsWithDefaults();
+  const settings = LoadSettings();
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true' ||

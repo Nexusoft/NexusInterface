@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////
-//
-// Settings Manager
-//
-//////////////////////////////////////////////////////
-
 import crypto from 'crypto';
 import macaddress from 'macaddress';
 import config from 'api/configuration';
@@ -62,18 +56,11 @@ export const defaultSettings = {
   forkBlocks: 0,
 };
 
-//
-// GetSettings: Get the application settings.json file from disk and return it
-//
-export function GetSettings() {
+function readSettings() {
   return config.ReadJson(settingsFileName);
 }
 
-//
-// SaveSettings: Save the application settings.json file
-//
-
-export function SaveSettings(settings) {
+function writeSettings(settings) {
   // Ensure only valid settings will be saved to the settings.json
   const validSettings = {};
   Object.keys(settings).map(key => {
@@ -87,12 +74,12 @@ export function SaveSettings(settings) {
   return config.WriteJson(settingsFileName, validSettings);
 }
 
-export function GetSettingsWithDefaults() {
-  const customSettings = GetSettings();
+export function LoadSettings() {
+  const customSettings = readSettings();
   return { ...defaultSettings, ...customSettings };
 }
 
 export function UpdateSettings(updates) {
-  const settings = GetSettings();
-  return SaveSettings({ ...settings, ...updates });
+  const settings = readSettings();
+  return writeSettings({ ...settings, ...updates });
 }

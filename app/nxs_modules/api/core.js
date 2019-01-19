@@ -11,7 +11,7 @@ import isRunning from 'is-running';
 
 // TODO: Fix circular dependencies core -> configuration -> rpc -> core
 import configuration from 'api/configuration';
-import { GetSettingsWithDefaults, UpdateSettings } from 'api/settings';
+import { LoadSettings, UpdateSettings } from 'api/settings';
 
 const statusdelay = 1000;
 var prevCoreProcess = 0;
@@ -383,7 +383,7 @@ class Core extends EventEmitter {
   // start: Start up the core with necessary parameters and return the spawned process
   start(refToThis) {
     var datadir = configuration.GetCoreDataDir();
-    let settings = GetSettingsWithDefaults();
+    let settings = LoadSettings();
     let parameters = SetCoreParameters(settings);
     let coreBinaryPath = GetCoreBinaryPath();
     let coreBinaryName = GetCoreBinaryName();
@@ -437,7 +437,7 @@ class Core extends EventEmitter {
   stop(callback, refToThis) {
     return new Promise((resolve, reject) => {
       log.info('Core Manager: Stop function called');
-      let settings = GetSettingsWithDefaults();
+      let settings = LoadSettings();
       let coreBinaryName = GetCoreBinaryName();
       let corePID = getCorePID();
       // let coreParentPID = getCoreParentPID();

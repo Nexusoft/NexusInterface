@@ -51,7 +51,7 @@ function readTheme() {
 }
 
 function writeTheme(theme) {
-  // Ensure only valid theme will be saved to the theme.json
+  // Ensure only valid theme properties will be saved to the theme.json
   const validTheme = {};
   Object.keys(theme).map(key => {
     if (defaultTheme.hasOwnProperty(key)) {
