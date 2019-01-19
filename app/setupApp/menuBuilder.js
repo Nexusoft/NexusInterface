@@ -5,7 +5,6 @@ import fs from 'fs';
 
 // Internal
 import * as RPC from 'scripts/rpc';
-import { GetSettings } from 'api/settings';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { backupWallet } from 'api/wallet';
 import core from 'api/core';
@@ -42,18 +41,18 @@ export default class MenuBuilder {
   stopDaemon = {
     label: 'Stop Daemon',
     click: () => {
-      let settings = GetSettings();
-      if (settings.manualDaemon != true) {
+      const state = this.store.getState();
+      if (state.settings.settings.manualDaemon) {
+        RPC.PROMISE('stop', []).then(() => {
+          this.store.dispatch(ac.clearOverviewVariables());
+        });
+      } else {
         remote
           .getGlobal('core')
           .stop()
           .then(payload => {
             console.log(payload);
           });
-      } else {
-        RPC.PROMISE('stop', []).then(() => {
-          this.store.dispatch(ac.clearOverviewVariables());
-        });
       }
     },
   };

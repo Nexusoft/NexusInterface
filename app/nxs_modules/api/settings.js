@@ -59,6 +59,7 @@ export const defaultSettings = {
   bootstrapSuggestionDisabled: false,
   windowWidth: 1280,
   windowHeight: 1024,
+  forkBlocks: 0,
 };
 
 //

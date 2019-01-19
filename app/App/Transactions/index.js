@@ -36,7 +36,6 @@ import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Text, { translate } from 'components/Text';
-import { GetSettings } from 'api/settings.js';
 import Table from 'scripts/utilities-react';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
@@ -592,10 +591,8 @@ class Transactions extends Component {
     }
     let tempWalletTransactions = [];
 
-    let settingsCheckDev = GetSettings();
-
     // If in Dev Mode add some random transactions
-    if (settingsCheckDev.devMode == true) {
+    if (this.props.settings.devMode == true) {
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
