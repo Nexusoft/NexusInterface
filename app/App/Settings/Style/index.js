@@ -8,6 +8,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
+import { updateSettings } from 'actions/settingsActionCreators';
 import { GetSettings, SaveSettings } from 'api/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -36,12 +37,12 @@ const mapDispatchToProps = dispatch => ({
   CustomizeStyling: hex =>
     dispatch({ type: TYPE.CUSTOMIZE_STYLING, payload: hex }),
   ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
-  ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER }),
+  updateSettings: updates => dispatch(updateSettings(updates)),
 });
 
 class SettingsStyle extends Component {
   SaveSettings() {
-    SaveSettings({...this.props.settings, theme: this.props.theme});
+    SaveSettings({ ...this.props.settings, theme: this.props.theme });
     UIController.showNotification(
       <Text id="Alert.StyleSettingsSaved" />,
       'success'
@@ -65,47 +66,44 @@ class SettingsStyle extends Component {
     );
   };
 
-  setCustomSettingsFile = (filepath) => {
+  setCustomSettingsFile = filepath => {
     console.log(filepath);
     const fileOBJ = fs.readFileSync(filepath);
     const jsonOBJ = JSON.parse(fileOBJ);
 
     this.props.CustomizeStyling({
-      ...jsonOBJ
+      ...jsonOBJ,
     });
     setTimeout(() => {
-        this.SaveSettings();
-        googleanalytics.SendEvent('Settings', 'Style', 'UsedCustomFile', 1);
+      this.SaveSettings();
+      googleanalytics.SendEvent('Settings', 'Style', 'UsedCustomFile', 1);
     }, 1000);
-  }
+  };
 
-  openPickThemeFileDialog = () =>
-  {
+  openPickThemeFileDialog = () => {
     remote.dialog.showOpenDialog(
-    {
-      title: 'Select Custom Theme File',
-      properties: ["openFile"],
-      filters: [{name: "Theme Json", extensions:["json"]}],
-    },
+      {
+        title: 'Select Custom Theme File',
+        properties: ['openFile'],
+        filters: [{ name: 'Theme Json', extensions: ['json'] }],
+      },
       filepath => {
-        if(filepath.length != 0 && filepath[0] != '')
-        {
+        if (filepath.length != 0 && filepath[0] != '') {
           this.setCustomSettingsFile(filepath[0]);
         }
       }
     );
-  }
+  };
 
+  toggleGlobeRender = () => {
+    this.props.updateSettings({
+      renderGlobe: !this.props.settings.renderGlobe,
+    });
+  };
 
   // Mandatory React method
   render() {
-    const {
-      theme,
-      settings,
-      webGLEnabled,
-      ToggleGlobeRender,
-      SetWalpaper,
-    } = this.props;
+    const { theme, settings, webGLEnabled, SetWalpaper } = this.props;
 
     return (
       <StyleSettings>
@@ -127,21 +125,21 @@ class SettingsStyle extends Component {
             <Switch
               disabled={!webGLEnabled}
               checked={settings.renderGlobe}
-              onChange={ToggleGlobeRender}
+              onChange={this.toggleGlobeRender}
             />
           </SettingsField>
 
           <SettingsField
             label="Settings File"
             subLabel="Import Custom Settings File"
-            
           >
-          <Button
-            id="chooseCustomSettingsFile"
-            skin="primary"
-            onClick = {this.openPickThemeFileDialog}
-            ><Text id="Settings.PickThemeFile"/>
-          </Button>
+            <Button
+              id="chooseCustomSettingsFile"
+              skin="primary"
+              onClick={this.openPickThemeFileDialog}
+            >
+              <Text id="Settings.PickThemeFile" />
+            </Button>
           </SettingsField>
 
           <SettingsField
@@ -160,31 +158,34 @@ class SettingsStyle extends Component {
             </Button>
           </SettingsField>
 
-          <SettingsField indent={1} label={<Text id="Cp.PBC"/>}>
+          <SettingsField indent={1} label={<Text id="Cp.PBC" />}>
             <ColorPicker colorName="dark" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.TC"/>}>
+          <SettingsField indent={1} label={<Text id="Cp.TC" />}>
             <ColorPicker colorName="light" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.PC"/>}>
+          <SettingsField indent={1} label={<Text id="Cp.PC" />}>
             <ColorPicker colorName="primary" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.PCA"/>}>
+          <SettingsField indent={1} label={<Text id="Cp.PCA" />}>
             <ColorPicker colorName="primaryContrast" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.ER"/>}>
+          <SettingsField indent={1} label={<Text id="Cp.ER" />}>
             <ColorPicker colorName="error" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.ERA"/>}>
+          <SettingsField indent={1} label={<Text id="Cp.ERA" />}>
             <ColorPicker colorName="errorContrast" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.GC"/>}>
+          <SettingsField indent={1} label={<Text id="Cp.GC" />}>
             <ColorPicker colorName="globeColor" onChange={this.setColor} />
           </SettingsField>
-          <SettingsField indent={2} label={<Text id="Cp.GPC"/>}>
-            <ColorPicker colorName="globePillarColor" onChange={this.setColor} />
+          <SettingsField indent={2} label={<Text id="Cp.GPC" />}>
+            <ColorPicker
+              colorName="globePillarColor"
+              onChange={this.setColor}
+            />
           </SettingsField>
-          <SettingsField indent={2} label={<Text id="Cp.GAC"/>}>
+          <SettingsField indent={2} label={<Text id="Cp.GAC" />}>
             <ColorPicker colorName="globeArchColor" onChange={this.setColor} />
           </SettingsField>
 

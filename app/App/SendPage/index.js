@@ -73,7 +73,6 @@ const mapStateToProps = state => {
     ...state.overview,
     ...state.addressbook,
     ...state.settings,
-    ...state.intl,
   };
 };
 

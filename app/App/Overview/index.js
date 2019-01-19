@@ -90,17 +90,10 @@ const mapStateToProps = state => {
     ...state.overview,
     ...state.common,
     ...state.settings,
-    ...state.intl,
   };
 };
 const mapDispatchToProps = dispatch => ({
-  setExperimentalWarning: save =>
-    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
-  acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
-  toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
-  ignoreEncryptionWarning: () =>
-    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING }),
 });
 
 const OverviewPage = styled.div({

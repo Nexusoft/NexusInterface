@@ -73,11 +73,6 @@ export const SetMarketAveData = () => dispatch => {
   );
 };
 
-export const SwitchLocale = locale => ({
-  type: TYPE.SWITCH_LOCALES,
-  payload: locale,
-});
-
 export const Lock = () => ({ type: TYPE.LOCK });
 
 export const Unlock = () => ({ type: TYPE.UNLOCK });
@@ -101,10 +96,6 @@ export const SetHighestPeerBlock = hpb => ({
 export const SetPortIsAvailable = isAvailable => ({
   type: TYPE.PORT_AVAILABLE,
   payload: isAvailable,
-});
-
-export const SetAcceptLicense = () => ({
-  type: TYPE.ACCEPT_MIT,
 });
 
 export const LoadAddressBook = () => {
