@@ -509,7 +509,7 @@ class SendPage extends Component {
                     onClick={this.lookupAddress}
                   >
                     <Icon spaceRight icon={addressBookIcon} />
-                    Lookup
+                    <Text id="sendReceive.Contacts" />
                   </Button>
                 </InputGroup>
               </FormField>

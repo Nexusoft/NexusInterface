@@ -52,6 +52,7 @@
   "sendReceive.ToAccount": "アカウントへ",
   "sendReceive.MoveNXS": "NXS を動かす",
   "sendReceive.MoveNxsBetweenAccount": "アカウント間の移動",
+  "sendReceive.Contacts": "Contacts",
 
   "transactions.Details": "取引の詳細",
   "transactions.MoreDetails": "詳細",
@@ -125,6 +126,7 @@
   "Market.High": "高い",
   "Market.Low": "低い",
   "Market.Date": "日付",
+  "Market.PriceChange": "価格変更",
 
   "AddressBook.ThisAddress": "このアドレスを削除してもよろしいですか？",
   "AddressBook.DeleteContact": "連絡先を削除",
@@ -209,7 +211,9 @@
   "Settings.Re-Enter": "パスワード再入力",
   "Settings.PasswordsMatch": "パスワードが一致していません",
 
-  "Settings.ViewPrivateKey": "アドレスの秘密鍵を表示する",
+  "Settings.KeyDisplayHere": "秘密鍵がここに表示されます",
+  "Settings.ViewPrivateKey": "秘密鍵を表示する",
+  "Settings.ConfirmPassword": "パスワードを認証する",
   "Settings.Address": "住所",
   "Settings.EnterAddressHere": "ここに住所を入力してください",
   "Settings.PrivateKey": "秘密鍵",

@@ -162,33 +162,48 @@ class Market extends Component {
 
   oneDayinfo(exchangeName) {
     return (
-      <div style={{display:'table-row' }}>
-        <div style={{display:'table-cell' , verticalAlign: "middle"}}>
-        <b>
-          24hr Data
-        </b>
+      <div style={{ display: 'table-row' }}>
+        <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+          <b>
+            <Text id="overview.24hrChange" />
+          </b>
         </div>
-        
-        <div style={{display:'table-cell', paddingLeft:'1.5em'}}>
-        {exchangeName === 'cryptopia' ? (
+
+        <div style={{ display: 'table-cell', paddingLeft: '1.5em' }}>
+          {exchangeName === 'cryptopia' ? (
+            <div>
+              <b>Percent change:</b> {this.props[exchangeName].info24hr.change}
+              {' %'}
+            </div>
+          ) : (
+            <div>
+              <b>
+                <Text id="Market.PriceChange" />
+              </b>{' '}
+              {this.props[exchangeName].info24hr.change}
+              {' BTC'}
+            </div>
+          )}
           <div>
-            <b>Percent change:</b> {this.props[exchangeName].info24hr.change}
-            {' %'}
+            <b>
+              {' '}
+              <Text id="Market.High" />:{' '}
+            </b>{' '}
+            {this.props[exchangeName].info24hr.high}
+            {' BTC '}
+            <b>
+              {' '}
+              <Text id="Market.Low" />:{' '}
+            </b>{' '}
+            {this.props[exchangeName].info24hr.low}
+            {' BTC '}
+            <b>
+              {' '}
+              <Text id="Market.Volume" />:{' '}
+            </b>{' '}
+            {this.props[exchangeName].info24hr.volume}
+            {' NXS '}
           </div>
-        ) : (
-          <div>
-            <b>Price Change:</b> {this.props[exchangeName].info24hr.change}
-            {' BTC'}
-          </div>
-        )}
-        <div>
-          <b>High: </b> {this.props[exchangeName].info24hr.high}
-          {' BTC '}
-          <b>Low: </b> {this.props[exchangeName].info24hr.low}
-          {' BTC '}
-          <b>Volume: </b> {this.props[exchangeName].info24hr.volume}
-          {' NXS '}
-        </div>
         </div>
       </div>
     );
@@ -220,7 +235,7 @@ class Market extends Component {
         {this.props.loaded && this.props.binance.buy[0] && (
           <div className="exchangeUnitContainer">
             <img className="exchangeLogo" src={binanceLogo} />
-              {this.oneDayinfo('binance')}
+            {this.oneDayinfo('binance')}
             <div className="marketInfoContainer">
               <MarketDepth
                 locale={this.props.settings.locale}
@@ -232,9 +247,7 @@ class Market extends Component {
                   locale={this.props.settings.locale}
                   data={this.props.binance.candlesticks}
                 />
-              ) : (
-                null
-              )}
+              ) : null}
             </div>
           </div>
         )}
@@ -243,8 +256,7 @@ class Market extends Component {
             <img className="exchangeLogo" src={bittrexLogo} />
             {this.oneDayinfo('bittrex')}
             <div className="marketInfoContainer">
-             
-             <br/>
+              <br />
               <MarketDepth
                 locale={this.props.settings.locale}
                 chartData={this.formatChartData('bittrexBuy')}
@@ -255,17 +267,14 @@ class Market extends Component {
                   locale={this.props.settings.locale}
                   data={this.props.bittrex.candlesticks}
                 />
-              ) : (
-                null
-              )}
-             
+              ) : null}
             </div>
           </div>
         )}
         {this.props.loaded && this.props.cryptopia.buy[0] && (
           <div className="exchangeUnitContainer">
             <img className="exchangeLogo" src={cryptopiaLogo} />
-              {this.oneDayinfo('cryptopia')}
+            {this.oneDayinfo('cryptopia')}
             <div className="marketInfoContainer">
               <MarketDepth
                 locale={this.props.settings.locale}
@@ -278,9 +287,7 @@ class Market extends Component {
                   data={this.props.cryptopia.candlesticks}
                   locale={this.props.settings.locale}
                 />
-              ) : (
-                null
-              )}
+              ) : null}
             </div>
           </div>
         )}

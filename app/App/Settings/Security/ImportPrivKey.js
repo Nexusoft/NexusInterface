@@ -44,7 +44,7 @@ const ImportPrivKeyForm = styled.form({
   onSubmit: ({ accountName, privateKey }) =>
     RPC.PROMISE('importprivkey', [privateKey], [accountName]),
   onSubmitSuccess: async () => {
-    this.props.ResetForEncryptionRestart();
+    // this.props.ResetForEncryptionRestart();
     UIController.openSuccessDialog({
       message: 'Private key imported. Rescanning now',
     });

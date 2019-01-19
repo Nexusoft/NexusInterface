@@ -52,6 +52,7 @@
   "sendReceive.ToAccount": "Estimer",
   "sendReceive.MoveNXS": "DÉPLACEZ NXS",
   "sendReceive.MoveNxsBetweenAccount": "Déplacer NXS entre comptes",
+  "sendReceive.Contacts": "Contacts",
 
   "transactions.MoreDetails": "Plus de détails",
   "transactions.Details": "Détails de la transaction",
@@ -124,6 +125,7 @@
   "Market.High": "Haute",
   "Market.Low": "Faible",
   "Market.Date": "Rendez-vous amoureux",
+  "Market.PriceChange": "changement de prix",
 
   "AddressBook.AreYouSureDelete": "Etes-vous sûr que vous voulez supprimer",
   "AddressBook.ThisAddress": "Êtes-vous sûr de vouloir supprimer cette adresse?",
@@ -209,7 +211,9 @@
   "Settings.Re-Enter": "Retaper le mot de passe",
   "Settings.PasswordsMatch": "Les mots de passe ne correspondent pas",
 
-  "Settings.ViewPrivateKey": "Afficher la clé privée pour l'adresse",
+  "Settings.KeyDisplayHere": "La clé privée sera affichée ici",
+  "Settings.ViewPrivateKey": "Voir clé privée",
+  "Settings.ConfirmPassword": "Confirmez le mot de passe",
   "Settings.Address": "Adresse",
   "Settings.EnterAddressHere": "Entrez l'adresse ici",
   "Settings.PrivateKey": "Clé privée",

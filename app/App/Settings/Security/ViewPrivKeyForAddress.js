@@ -77,13 +77,18 @@ export default class ViewPrivKeyForAddress extends Component {
           <FormField connectLabel label={<Text id="Settings.Address" />}>
             {inputId => (
               <InputGroup>
-                <Field
-                  component={TextField.RF}
-                  name="address"
-                  id={inputId}
-                  placeholder="Enter address here"
-                  onChange={this.resetPrivateKey}
-                />
+                <Text id="Settings.EnterAddressHere">
+                  {placeholder => (
+                    <Field
+                      component={TextField.RF}
+                      name="address"
+                      id={inputId}
+                      placeholder={placeholder}
+                      onChange={this.resetPrivateKey}
+                    />
+                  )}
+                </Text>
+
                 <Button
                   type="submit"
                   skin="primary"
@@ -91,7 +96,7 @@ export default class ViewPrivKeyForAddress extends Component {
                   disabled={submitting}
                   waiting={submitting}
                 >
-                  View Private Key
+                  <Text id="Settings.ViewPrivateKey" />
                 </Button>
               </InputGroup>
             )}
@@ -99,14 +104,18 @@ export default class ViewPrivKeyForAddress extends Component {
 
           <FormField label={<Text id="Settings.PrivateKey" />}>
             <InputGroup>
-              <Field
-                component={TextField.RF}
-                name="privateKey"
-                readOnly
-                type="password"
-                placeholder="Private key will be displayed here"
-                ref={this.privKeyRef}
-              />
+              <Text id="Settings.KeyDisplayHere">
+                {placeholder => (
+                  <Field
+                    component={TextField.RF}
+                    name="privateKey"
+                    readOnly
+                    type="password"
+                    placeholder={placeholder}
+                    ref={this.privKeyRef}
+                  />
+                )}
+              </Text>
               <Button fitHeight className="relative" onClick={this.copyPrivkey}>
                 <Icon icon={copyIcon} spaceRight />
                 <Text id="Settings.Copy" />

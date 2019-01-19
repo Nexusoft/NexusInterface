@@ -52,6 +52,7 @@
   "sendReceive.ToAccount": "ToAccount",
   "sendReceive.MoveNXS": "Move NXS",
   "sendReceive.MoveNxsBetweenAccount": "Move NXS between accounts",
+  "sendReceive.Contacts": "Contacts",
 
   "transactions.MoreDetails": "More Details",
   "transactions.Details": "Transaction Details",
@@ -124,6 +125,8 @@
   "Market.High": "High",
   "Market.Low": "Low",
   "Market.Date": "Date",
+
+  "Market.PriceChange": "Price Change",
 
   "AddressBook.AreYouSureDelete": "Are You Sure You Want To Delete",
   "AddressBook.ThisAddress": "Are You Sure You Want To Delete This Address",
@@ -209,9 +212,11 @@
   "Settings.NewPassword": "New Password",
   "Settings.CannotContain": "Password cannot contain these characters",
   "Settings.Re-Enter": "Re-Enter Password",
+  "Settings.ConfirmPassword": "Confirm Password",
   "Settings.PasswordsMatch": "Passwords do not match",
 
-  "Settings.ViewPrivateKey": "View private key for address",
+  "Settings.KeyDisplayHere": "Private key will be displayed here",
+  "Settings.ViewPrivateKey": "View Private Key",
   "Settings.Address": "Address",
   "Settings.EnterAddressHere": "Enter Address Here",
   "Settings.PrivateKey": "Private Key",

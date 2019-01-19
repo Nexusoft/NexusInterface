@@ -52,6 +52,7 @@
   "sendReceive.ToAccount": "A la cuenta",
   "sendReceive.MoveNXS": "Mover nxs",
   "sendReceive.MoveNxsBetweenAccount": "Mover NXS Entre Cuentas",
+  "sendReceive.Contacts": "Contacts",
 
   "transactions.Details": "Detalles de la transacción",
   "transactions.MoreDetails": "Más detalles",
@@ -125,6 +126,7 @@
   "Market.High": "Alto",
   "Market.Low": "Bajo",
   "Market.Date": "Fecha",
+  "Market.PriceChange": "cambio de precio",
 
   "AddressBook.ThisAddress": "¿Estás seguro de que quieres borrar esta dirección",
   "AddressBook.DeleteContact": "Borrar contacto",
@@ -209,7 +211,9 @@
   "Settings.PasswordsMatch": "Las contraseñas no coinciden",
   "Settings.MinimumConfirmations": "Confirmaciones mínimas",
 
-  "Settings.ViewPrivateKey": "Ver clave privada para la dirección",
+  "Settings.KeyDisplayHere": "La clave privada se mostrará aquí",
+  "Settings.ViewPrivateKey": "Ver clave privada",
+  "Settings.ConfirmPassword": "Confirmar contraseña",
   "Settings.Address": "Dirección",
   "Settings.EnterAddressHere": "Introduzca la dirección aquí",
   "Settings.PrivateKey": "Llave privada",

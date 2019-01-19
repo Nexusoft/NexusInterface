@@ -119,7 +119,9 @@ export default class MoveBetweenAccountsModal extends Component {
   render() {
     return (
       <Modal style={{ maxWidth: 650 }}>
-        <Modal.Header>Move NXS between accounts</Modal.Header>
+        <Modal.Header>
+          <Text id="sendReceive.MoveNxsBetweenAccount" />
+        </Modal.Header>
 
         <Modal.Body>
           <AccountSelectors>
