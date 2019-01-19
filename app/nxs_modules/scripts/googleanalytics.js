@@ -24,7 +24,7 @@ if (
 GA.SendScreen = function(ScreenTitle) {
   if (GA.active == false) return;
 
-  GA.visitor.screenview(ScreenTitle, 'Nexus Wallet', '0.8.5').send();
+  GA.visitor.screenview(ScreenTitle, 'Nexus Wallet', '0.8.6').send();
   console.log('Sent Screen: ' + ScreenTitle);
 };
 
