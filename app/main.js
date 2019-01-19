@@ -154,7 +154,7 @@ function createWindow() {
   mainWindow.on('minimize', function(event) {
     let settings = GetSettings();
 
-    if (settings.minimizeToTray) {
+    if (settings.minimizeOnClose) {
       event.preventDefault();
       mainWindow.hide();
     }
@@ -172,7 +172,7 @@ app.on('ready', async () => {
     const settings = GetSettings();
     log.info('close');
 
-    if (settings && settings.minimizeToTray == true) {
+    if (settings && settings.minimizeOnClose == true) {
       e.preventDefault();
       mainWindow.hide();
     } else {

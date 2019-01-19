@@ -48,7 +48,7 @@ class TransactionDetailsModal extends Component {
         <Modal>
           <Modal.Header>Transaction Details</Modal.Header>
           <Modal.Body>
-            {tx.confirmations <= settings.minimumconfirmations && (
+            {tx.confirmations <= settings.minConfirmations && (
               <div>
                 <a>
                   <Text id="transactions.PendingTransaction" />

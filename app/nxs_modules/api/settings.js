@@ -22,7 +22,7 @@ const defaultPassword = crypto
   .update('pass')
   .digest('hex');
 
-const defaultSettings = {
+export const defaultSettings = {
   // App
   locale: 'en',
   minimizeOnClose: false,

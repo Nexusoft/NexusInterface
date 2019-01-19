@@ -78,7 +78,7 @@ export default class SettingsApp extends Component {
       question: <Text id="Settings.BackupWallet" />,
       yesCallback: () => {
         if (this.props.connections !== undefined) {
-          backupWallet(this.props.settings.Folder);
+          backupWallet(this.props.settings.backupDirectory);
           UIController.showNotification(
             <Text id="Alert.WalletBackedUp" />,
             'success'
@@ -140,8 +140,8 @@ export default class SettingsApp extends Component {
           subLabel={<Text id="ToolTip.MinimizeOnClose" />}
         >
           <Switch
-            checked={settings.minimizeToTray}
-            onChange={this.updateHandlers('minimizeToTray')}
+            checked={settings.minimizeOnClose}
+            onChange={this.updateHandlers('minimizeOnClose')}
           />
         </SettingsField>
 
@@ -171,8 +171,8 @@ export default class SettingsApp extends Component {
           subLabel={<Text id="ToolTip.Usage" />}
         >
           <Switch
-            checked={settings.googleAnalytics}
-            onChange={this.updateHandlers('googleAnalytics')}
+            checked={settings.sendUsageData}
+            onChange={this.updateHandlers('sendUsageData')}
           />
         </SettingsField>
 
@@ -192,10 +192,10 @@ export default class SettingsApp extends Component {
         >
           <TextField
             type="number"
-            value={settings.minimumconfirmations}
+            value={settings.minConfirmations}
             step="1"
             min="1"
-            onChange={this.updateHandlers('minimumconfirmations')}
+            onChange={this.updateHandlers('minConfirmations')}
             onKeyPress={e => {
               e.preventDefault();
             }}

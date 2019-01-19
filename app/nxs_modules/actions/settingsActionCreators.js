@@ -8,17 +8,17 @@ export const loadSettingsFromFile = () => dispatch => {
 };
 
 export const updateSettings = updates => (dispatch, getState) => {
-  if (updates.googleAnalytics !== undefined) {
+  if (updates.sendUsageData !== undefined) {
     const {
       settings: {
-        settings: { googleAnalytics },
+        settings: { sendUsageData },
       },
     } = getState();
-    if (!googleAnalytics && updates.googleAnalytics) {
+    if (!sendUsageData && updates.sendUsageData) {
       ga.EnableAnalytics();
       ga.SendEvent('Settings', 'Analytics', 'Enabled', 1);
     }
-    if (googleAnalytics && !updates.googleAnalytics) {
+    if (sendUsageData && !updates.sendUsageData) {
       ga.DisableAnalytics();
       ga.SendEvent('Settings', 'Analytics', 'Disabled', 1);
     }

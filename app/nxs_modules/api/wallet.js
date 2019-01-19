@@ -1,12 +1,10 @@
 import fs from 'fs';
 
-import config from 'api/configuration';
-import normalizePath from 'utils/normalizePath';
+import { defaultSettings } from 'api/settings';
 import * as RPC from 'scripts/rpc';
 
 export function backupWallet(backupFolder) {
-  const defaultBackupDir = normalizePath(config.GetHomeDir() + '/NexusBackups');
-  const backupDir = backupFolder || defaultBackupDir;
+  const backupDir = backupFolder || defaultSettings.backupDirectory;
 
   if (!fs.existsSync(backupDir)) {
     fs.mkdirSync(backupDir);

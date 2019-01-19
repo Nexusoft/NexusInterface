@@ -41,7 +41,7 @@ const Buttons = styled.div({
   ({
     sendReceive: { MoveFromAccount, MoveToAccount, moveAmount, moveUSDAmount },
     settings: {
-      settings: { minimumconfirmations, fiatCurrency },
+      settings: { minConfirmations, fiatCurrency },
     },
     overview: { paytxfee },
   }) => ({
@@ -49,7 +49,7 @@ const Buttons = styled.div({
     MoveToAccount,
     moveAmount,
     moveUSDAmount,
-    minimumconfirmations,
+    minConfirmations,
     fiatCurrency,
     paytxfee,
   })
@@ -85,7 +85,7 @@ export default class MoveBetweenAccountsModal extends Component {
               this.props.MoveToAccount,
               parseFloat(this.props.moveAmount),
             ],
-            parseInt(this.props.minimumconfirmations)
+            parseInt(this.props.minConfirmations)
           )
             .then(payload => {
               this.props.getAccountData();

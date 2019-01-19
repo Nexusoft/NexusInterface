@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 
 const mapStateToProps = state => ({
-  backupDir: state.settings.settings.Folder,
+  backupDir: state.settings.settings.backupDirectory,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -32,7 +32,9 @@ export default class SettingsApp extends Component {
       },
       folderPaths => {
         if (folderPaths && folderPaths.length > 0) {
-          this.props.updateSettings({ Folder: folderPaths[0] });
+          this.props.updateSettings({
+            backupDirectory: folderPaths[0],
+          });
         }
       }
     );

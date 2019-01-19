@@ -108,7 +108,7 @@ export default class Queue extends Component {
         RPC.PROMISE(
           'sendmany',
           [this.props.SelectedAccount, this.props.Queue],
-          parseInt(this.props.settings.minimumconfirmations),
+          parseInt(this.props.settings.minConfirmations),
           this.props.Message
         )
           .then(payoad => {
@@ -128,7 +128,7 @@ export default class Queue extends Component {
             this.props.SelectedAccount,
             keyCheck[0],
             parseFloat(Object.values(this.props.Queue)[0]),
-            parseInt(this.props.settings.minimumconfirmations),
+            parseInt(this.props.settings.minConfirmations),
             this.props.Message,
           ])
             .then(payload => {
@@ -151,7 +151,7 @@ export default class Queue extends Component {
             this.props.SelectedAccount,
             keyCheck[0],
             parseFloat(Object.values(this.props.Queue)[0]),
-            parseInt(this.props.settings.minimumconfirmations),
+            parseInt(this.props.settings.minConfirmations),
           ])
             .then(payoad => {
               this.props.getAccountData();

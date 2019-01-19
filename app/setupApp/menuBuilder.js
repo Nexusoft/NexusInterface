@@ -78,40 +78,21 @@ export default class MenuBuilder {
   backupWallet = {
     label: 'Backup Wallet',
     click: () => {
-      let now = new Date()
-        .toString()
-        .slice(0, 24)
-        .split(' ')
-        .reduce((a, b) => {
-          return a + '_' + b;
-        })
-        .replace(/:/g, '_');
-      let BackupDir = process.env.HOME + '/NexusBackups';
-      if (process.platform === 'win32') {
-        // BackupDir = app.getPath('documents') + '/NexusBackups';
-        BackupDir = process.env.USERPROFILE + '/NexusBackups';
-        BackupDir = BackupDir.replace(/\\/g, '/');
-      }
       const state = this.store.getState();
-      if (state.settings.settings.Folder !== BackupDir) {
-        BackupDir = state.settings.settings.Folder;
-      }
-      let ifBackupDirExists = fs.existsSync(BackupDir);
-      if (!ifBackupDirExists) {
-        fs.mkdirSync(BackupDir);
-      }
       if (state.overview.connections) {
         remote.dialog.showOpenDialog(
           {
             title: 'Select a folder',
-            defaultPath: state.settings.settings.Folder,
+            defaultPath: state.settings.settings.backupDirectory,
             properties: ['openDirectory'],
           },
-          folderPaths => {
+          async folderPaths => {
             if (folderPaths && folderPaths.length > 0) {
-              updateSettings({ Folder: folderPaths[0] });
+              this.store.dispatch(
+                updateSettings({ backupDirectory: folderPaths[0] })
+              );
 
-              backupWallet(folderPaths[0]);
+              await backupWallet(folderPaths[0]);
               UIController.showNotification(
                 <Text id="Alert.WalletBackedUp" />,
                 'success'

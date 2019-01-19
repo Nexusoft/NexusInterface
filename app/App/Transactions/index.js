@@ -161,7 +161,6 @@ class Transactions extends Component {
     this.hoveringID = 999999999999;
     this.isHoveringOverTable = false;
     this.state = {
-      
       tableColumns: [],
       displayTimeFrame: 'All',
       changeTimeFrame: false,
@@ -299,20 +298,20 @@ class Transactions extends Component {
   setOnmountTransactionsCallback(incomingData) {
     this.updateChartAndTableDimensions(null);
     let objectheaders = Object.keys({
-        transactionnumber: 0,
-        confirmations: 0,
-        time: 0,
-        category: '',
-        amount: 0,
-        txid: 0,
-        account: '',
-        address: '',
-        value: {
-          USD: 0,
-          BTC: 0,
-        },
-        coin: 'Nexus',
-        fee: 0,
+      transactionnumber: 0,
+      confirmations: 0,
+      time: 0,
+      category: '',
+      amount: 0,
+      txid: 0,
+      account: '',
+      address: '',
+      value: {
+        USD: 0,
+        BTC: 0,
+      },
+      coin: 'Nexus',
+      fee: 0,
     });
     let tabelheaders = [];
     objectheaders.forEach(element => {
@@ -403,7 +402,7 @@ class Transactions extends Component {
         parseInt(
           window.getComputedStyle(parent, '').getPropertyValue('padding-bottom')
         );
-      
+
       let chartHeight =
         parseInt(chart.offsetHeight) +
         parseInt(
@@ -899,7 +898,8 @@ class Transactions extends Component {
   // DEV MODE: Create a fake transaction for testing.
   TEMPaddfaketransaction() {
     let faketrans = {
-      transactionnumber: this.props.walletitems != undefined? this.props.walletitems.length : 0,
+      transactionnumber:
+        this.props.walletitems != undefined ? this.props.walletitems.length : 0,
       confirmations: 1000,
       time: 3432423,
       category: '',
@@ -967,7 +967,7 @@ class Transactions extends Component {
     return formatedData.map(ele => {
       txCounter++;
       let isPending = '';
-      if (ele.confirmations <= this.props.settings.minimumconfirmations) {
+      if (ele.confirmations <= this.props.settings.minConfirmations) {
         isPending = '(Pending)';
       }
 
@@ -1421,7 +1421,8 @@ class Transactions extends Component {
   returnVictoryChart() {
     const chartData = this.returnChartData();
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
-    const leftPadding = parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
+    const leftPadding =
+      parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
     return (
       <VictoryChart
         width={this.state.mainChartWidth}
@@ -1429,7 +1430,12 @@ class Transactions extends Component {
         scale={{ x: 'time' }}
         style={{ overflow: 'visible' }}
         domainPadding={{ x: 90, y: 30 }}
-        padding={{ top: 6, bottom: 6, left: leftPadding < 30 ? 30 : leftPadding, right: 0 }}
+        padding={{
+          top: 6,
+          bottom: 6,
+          left: leftPadding < 30 ? 30 : leftPadding,
+          right: 0,
+        }}
         domain={this.state.zoomDomain}
         containerComponent={
           <VictoryZoomVoronoiContainer
