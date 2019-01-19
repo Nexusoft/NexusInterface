@@ -34,8 +34,10 @@ class LicenseAgreementModal extends React.Component {
     return (
       <LicenseAgreementModalComponent
         fullScreen
-        assignClose={close => (this.closeModal = close)}
-        {...props}
+        assignClose={close => {
+          this.closeModal = close;
+        }}
+        {...this.props}
       >
         <Modal.Header>License Agreement</Modal.Header>
         <Modal.Body>

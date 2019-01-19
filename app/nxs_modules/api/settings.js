@@ -74,14 +74,15 @@ export function GetSettings() {
 
 export function SaveSettings(settings) {
   // Ensure only valid settings will be saved to the settings.json
-  const validSettings = Object.keys(settings).filter(key => {
+  const validSettings = {};
+  Object.keys(settings).map(key => {
     if (defaultSettings.hasOwnProperty(key)) {
-      return true;
+      validSettings[key] = settings[key];
     } else {
       console.error(`Attempt to save invalid setting \`${key}\``);
-      return false;
     }
   });
+
   return config.WriteJson(settingsFileName, validSettings);
 }
 

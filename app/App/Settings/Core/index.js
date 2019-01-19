@@ -261,7 +261,6 @@ export default class SettingsCore extends Component {
               <Field
                 component={TextField.RF}
                 name="manualDaemonUser"
-                placeholder="rpcserver"
                 size="12"
               />
             </SettingsField>
@@ -275,7 +274,6 @@ export default class SettingsCore extends Component {
               <Field
                 component={TextField.RF}
                 name="manualDaemonPassword"
-                placeholder="e6c5a66d508e2a31d30ba42c6cdb532da55257a8f72f2b73d0b687ca2a30d041"
                 size="12"
               />
             </SettingsField>
@@ -288,12 +286,7 @@ export default class SettingsCore extends Component {
               }
               subLabel={<Text id="ToolTip.IP" />}
             >
-              <Field
-                component={TextField.RF}
-                name="manualDaemonIP"
-                placeholder="127.0.0.1"
-                size="12"
-              />
+              <Field component={TextField.RF} name="manualDaemonIP" size="12" />
             </SettingsField>
 
             <SettingsField
@@ -305,7 +298,6 @@ export default class SettingsCore extends Component {
               <Field
                 component={TextField.RF}
                 name="manualDaemonPort"
-                placeholder="9336"
                 size="5"
               />
             </SettingsField>
@@ -370,7 +362,6 @@ export default class SettingsCore extends Component {
                 <Field
                   component={TextField.RF}
                   name="socks4ProxyIP"
-                  placeholder="127.0.0.1"
                   size="12"
                 />
               </SettingsField>
@@ -385,7 +376,6 @@ export default class SettingsCore extends Component {
                 <Field
                   component={TextField.RF}
                   name="socks4ProxyPort"
-                  placeholder="9050"
                   size="3"
                 />
               </SettingsField>

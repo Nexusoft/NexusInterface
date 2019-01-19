@@ -72,7 +72,6 @@ const defaultModals = [];
 export default class UIController extends Component {
   // For opening modals before the UIController instance is even created
   static openModal = (component, props) => {
-    console.log(component, props, this);
     const modalID = newModalID();
     defaultModals.push({
       id: modalID,

@@ -30,7 +30,7 @@ export default function bootstrap({ suggesting } = {}) {
         const startBootstrapping = async () => {
           try {
             await bootstrapper.start({
-              backupFolder: state.settings.settings.Folder,
+              backupFolder: state.settings.settings.backupDirectory,
               clearOverviewVariables: () => {
                 dispatch(ac.clearOverviewVariables());
               },

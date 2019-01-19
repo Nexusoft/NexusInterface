@@ -23,9 +23,12 @@ class ExperimentalWarningModal extends React.Component {
   render() {
     return (
       <Modal
-        assignClose={close => (this.closeModal = close)}
+        assignClose={close => {
+          this.closeModal = close;
+          console.log(close);
+        }}
         style={{ maxWidth: 600 }}
-        {...props}
+        {...this.props}
       >
         <Modal.Body style={{ fontSize: 18 }}>
           <p>
@@ -44,7 +47,7 @@ class ExperimentalWarningModal extends React.Component {
           <p>USE THIS SOFTWARE AT YOUR OWN RISK.</p>
           <p className="flex space-between" style={{ marginTop: '2em' }}>
             <Button onClick={this.dontShowAgain}>Don't show this again</Button>
-            <Button skin="primary" onClick={this.closeModal}>
+            <Button skin="primary" onClick={() => this.closeModal()}>
               OK
             </Button>
           </p>
