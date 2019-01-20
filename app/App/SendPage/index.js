@@ -25,6 +25,7 @@ import Link from 'components/Link';
 // Internal Local Dependencies
 import LookupAddressModal from './LookupAddressModal';
 import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
+import SendForm from './SendForm';
 import Queue from './Queue';
 import styles from './style.css';
 
@@ -32,11 +33,6 @@ import styles from './style.css';
 import sendIcon from 'images/send.sprite.svg';
 import swapIcon from 'images/swap.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
-
-const SendForm = styled.div({
-  maxWidth: 620,
-  margin: '0 auto',
-});
 
 const SendAmount = styled.div({
   display: 'flex',
@@ -485,89 +481,7 @@ class SendPage extends Component {
           </WaitingMessage>
         ) : (
           <div>
-            <SendForm>
-              <FormField label="Send From">
-                <Select
-                  value={this.props.SelectedAccount}
-                  onChange={this.props.AccountPicked}
-                  options={this.accountOptions()}
-                />
-              </FormField>
-              <FormField label="Send To">
-                <InputGroup>
-                  <TextField
-                    placeholder="Recipient Address"
-                    value={this.props.Address}
-                    onChange={e => this.props.updateAddress(e.target.value)}
-                    required
-                    style={{ flexGrow: 1 }}
-                  />
-                  <Button
-                    fitHeight
-                    className="relative"
-                    onClick={this.lookupAddress}
-                  >
-                    <Icon spaceRight icon={addressBookIcon} />
-                    <Text id="sendReceive.Contacts" />
-                  </Button>
-                </InputGroup>
-              </FormField>
-              <SendAmount>
-                <SendAmountField>
-                  <FormField
-                    connectLabel
-                    label={<Text id="sendReceive.Amount" />}
-                  >
-                    <TextField
-                      placeholder="0.00000"
-                      value={this.props.Amount}
-                      onChange={e => this.nxsAmount(e, true)}
-                      required
-                    />
-                  </FormField>
-                </SendAmountField>
-                <SendAmountEqual>=</SendAmountEqual>
-                <SendAmountField>
-                  <FormField
-                    connectLabel
-                    label={this.props.settings.fiatCurrency}
-                  >
-                    <TextField
-                      placeholder="0.00"
-                      value={this.props.USDAmount}
-                      onChange={e => {
-                        this.nxsAmount(e);
-                      }}
-                      required
-                    />
-                  </FormField>
-                </SendAmountField>
-              </SendAmount>
-              <Text id="sendReceive.EnterYourMessage">
-                {placeholder => (
-                  <FormField
-                    connectLabel
-                    label={<Text id="sendReceive.Message" />}
-                  >
-                    <TextField
-                      multiline
-                      value={this.props.Message}
-                      onChange={e => this.props.updateMessage(e.target.value)}
-                      name="message"
-                      rows={1}
-                      placeholder={placeholder}
-                    />
-                  </FormField>
-                )}
-              </Text>
-              <SendFormButtons>
-                {this.editQueue()}
-                <Button skin="primary" onClick={this.confirmSendNow}>
-                  <Icon icon={sendIcon} spaceRight />
-                  <Text id="sendReceive.SendNow" />
-                </Button>
-              </SendFormButtons>
-            </SendForm>
+            <SendForm getAccountData={this.getAccountData} />
 
             {this.props.Queue && !!Object.keys(this.props.Queue).length && (
               <Queue

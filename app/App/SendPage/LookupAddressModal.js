@@ -48,7 +48,7 @@ class LookupAddressModal extends Component {
               className="tda"
               onClick={() => {
                 this.closeModal();
-                this.props.updateAddress(ele.address);
+                this.props.updateRecipient(ele.address);
               }}
             >
               {ele.address}
