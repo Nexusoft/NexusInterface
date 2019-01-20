@@ -5,6 +5,7 @@ import { remote } from 'electron';
 import Text from 'components/Text';
 import googleanalytics from 'scripts/googleanalytics';
 import styled from '@emotion/styled';
+import https from 'https';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
@@ -15,6 +16,7 @@ import Switch from 'components/Switch';
 import UIController from 'components/UIController';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
+import configuration from 'api/configuration';
 
 import fs from 'fs';
 
@@ -69,11 +71,38 @@ class SettingsStyle extends Component {
     console.log(filepath);
     const fileOBJ = fs.readFileSync(filepath);
     const jsonOBJ = JSON.parse(fileOBJ);
+    if (jsonOBJ.wallpaper.startsWith('https') || jsonOBJ.wallpaper.startsWith('http'))
+    {
+      const wallpaperPathSplit = jsonOBJ.wallpaper.split('.');
+      const fileEnding = wallpaperPathSplit[wallpaperPathSplit.length - 1];
+      const file = fs.createWriteStream(configuration.GetAppDataDirectory() + "/wallpaper." + fileEnding);
+      this.wallpaperRequest = https.get(jsonOBJ.wallpaper)
+      .setTimeout(10000)
+      .on('response', response => {
+        response.pipe(file);
+        let onFinish = () => {
+          file.close(response =>
+          {
+            this.props.SetWalpaper(file.path);
+          });
+        }
+        onFinish.bind(this);
+        file.on('finish', () => onFinish() );
+      })
+      .on('error', error => {
+        this.props.SetWalpaper("");
+      })
+      .on('timeout', timeout => {
+        this.props.SetWalpaper("");
+      });
+    }
+
 
     this.props.CustomizeStyling({
       ...jsonOBJ
     });
     setTimeout(() => {
+        /// We seem to have a race condition here as we need to wait a cycle for props to finish 
         this.SaveSettings();
         googleanalytics.SendEvent('Settings', 'Style', 'UsedCustomFile', 1);
     }, 1000);
