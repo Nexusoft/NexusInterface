@@ -23,7 +23,7 @@ const CustomWallpaper = styled.div(
   },
   ({ wallpaper }) =>
     !!wallpaper && {
-      backgroundImage: `url(${wallpaper})`,
+      backgroundImage: `url("${wallpaper}")`,
     }
 );
 
