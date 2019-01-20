@@ -22,9 +22,7 @@ const StyleSettings = styled.div({
 });
 
 const mapStateToProps = ({
-  settings: {
-    settings: { renderGlobe },
-  },
+  settings: { renderGlobe },
   overview: { webGLEnabled },
   theme,
 }) => {

@@ -91,7 +91,7 @@ const MinimizeIcon = styled(Icon)(({ theme }) => ({
 }));
 
 @connect(state => ({
-  locale: state.settings.settings.locale,
+  locale: state.settings.locale,
 }))
 export default class BootstrapModal extends PureComponent {
   static contextType = ModalContext;

@@ -15,7 +15,7 @@ import Button from 'components/Button';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common, ...state.settings };
+  return { ...state.terminal, ...state.common, settings: state.settings };
 };
 const mapDispatchToProps = dispatch => ({
   printCoreOutput: data =>

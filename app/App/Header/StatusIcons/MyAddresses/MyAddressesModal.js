@@ -29,7 +29,7 @@ const Buttons = styled.div({
 
 @connect(state => ({
   myAccounts: state.addressbook.myAccounts,
-  locale: state.settings.settings.locale,
+  locale: state.settings.locale,
 }))
 export default class MyAddressesModal extends React.Component {
   state = {

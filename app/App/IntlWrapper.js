@@ -4,7 +4,7 @@ import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => ({
-  locale: state.settings.settings.locale,
+  locale: state.settings.locale,
 });
 
 class IntlWrapper extends Component {

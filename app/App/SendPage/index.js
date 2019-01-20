@@ -72,7 +72,7 @@ const mapStateToProps = state => {
     ...state.sendReceive,
     ...state.overview,
     ...state.addressbook,
-    ...state.settings,
+    settings: state.settings,
   };
 };
 

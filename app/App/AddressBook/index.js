@@ -50,7 +50,7 @@ const mapStateToProps = state => {
     ...state.addressbook,
     ...state.overview,
     ...state.sendReceive,
-    ...state.settings,
+    settings: state.settings,
   };
 };
 const mapDispatchToProps = dispatch => ({

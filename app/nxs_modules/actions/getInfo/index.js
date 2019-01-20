@@ -26,7 +26,7 @@ export default function getInfo() {
       dispatch(ac.Unencrypted());
       if (
         !state.common.encryptionModalShown &&
-        !state.settings.settings.encryptionWarningDisabled
+        !state.settings.encryptionWarningDisabled
       ) {
         UIController.openModal(EncryptionWarningModal);
         dispatch(ac.showEncryptionWarningModal());
@@ -64,9 +64,7 @@ export default function getInfo() {
       }
 
       const {
-        settings: {
-          settings: { manualDaemon, bootstrapSuggestionDisabled },
-        },
+        settings: { manualDaemon, bootstrapSuggestionDisabled },
       } = state;
       // 172800 = (100 * 24 * 60 * 60) / 50
       // which is the approximate number of blocks produced in 100 days

@@ -61,7 +61,7 @@ const fiatCurrencies = [
 
 const mapStateToProps = state => ({
   connections: state.overview.connections,
-  settings: state.settings.settings,
+  settings: state.settings,
 });
 
 const mapDispatchToProps = dispatch => ({

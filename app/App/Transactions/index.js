@@ -121,7 +121,7 @@ const mapStateToProps = state => {
     ...state.common,
     ...state.overview,
     ...state.addressbook,
-    ...state.settings,
+    settings: state.settings,
   };
 };
 const mapDispatchToProps = dispatch => ({

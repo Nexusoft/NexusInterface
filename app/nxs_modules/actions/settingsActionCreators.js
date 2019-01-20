@@ -10,9 +10,7 @@ export const loadSettingsFromFile = () => dispatch => {
 export const updateSettings = updates => (dispatch, getState) => {
   if (updates.sendUsageData !== undefined) {
     const {
-      settings: {
-        settings: { sendUsageData },
-      },
+      settings: { sendUsageData },
     } = getState();
     if (!sendUsageData && updates.sendUsageData) {
       ga.EnableAnalytics();

@@ -27,10 +27,7 @@ const CoreSettings = styled.div({
 });
 
 // React-Redux mandatory methods
-const mapStateToProps = ({
-  settings: { settings },
-  overview: { connections },
-}) => ({
+const mapStateToProps = ({ settings, overview: { connections } }) => ({
   connections,
   settings,
   initialValues: {

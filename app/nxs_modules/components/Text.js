@@ -27,7 +27,7 @@ const Text = ({ id, locale, data, children }) => {
 };
 
 const mapStateToProps = state => ({
-  locale: state.settings.settings.locale,
+  locale: state.settings.locale,
 });
 
 export default connect(mapStateToProps)(Text);

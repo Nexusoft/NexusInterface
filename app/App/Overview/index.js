@@ -89,7 +89,7 @@ const mapStateToProps = state => {
   return {
     ...state.overview,
     ...state.common,
-    ...state.settings,
+    settings: state.settings,
     theme: state.theme,
   };
 };

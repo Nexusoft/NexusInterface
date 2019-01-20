@@ -42,7 +42,7 @@ export default class MenuBuilder {
     label: 'Stop Daemon',
     click: () => {
       const state = this.store.getState();
-      if (state.settings.settings.manualDaemon) {
+      if (state.settings.manualDaemon) {
         RPC.PROMISE('stop', []).then(() => {
           this.store.dispatch(ac.clearOverviewVariables());
         });
@@ -82,7 +82,7 @@ export default class MenuBuilder {
         remote.dialog.showOpenDialog(
           {
             title: 'Select a folder',
-            defaultPath: state.settings.settings.backupDirectory,
+            defaultPath: state.settings.backupDirectory,
             properties: ['openDirectory'],
           },
           async folderPaths => {
@@ -180,7 +180,7 @@ export default class MenuBuilder {
       }
 
       const state = this.store.getState();
-      if (state.settings.settings.manualDaemon) {
+      if (state.settings.manualDaemon) {
         UIController.showNotification(
           'Cannot bootstrap recent database in manual mode',
           'error'
@@ -311,10 +311,7 @@ export default class MenuBuilder {
       submenu: [this.toggleFullScreen],
     };
     const state = this.store.getState();
-    if (
-      process.env.NODE_ENV === 'development' ||
-      state.settings.settings.devMode
-    ) {
+    if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
       subMenuWindow.submenu.push(this.toggleDevTools);
     }
 
@@ -367,10 +364,7 @@ export default class MenuBuilder {
       submenu: [this.toggleFullScreen],
     };
     const state = this.store.getState();
-    if (
-      process.env.NODE_ENV === 'development' ||
-      state.settings.settings.devMode
-    ) {
+    if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
       subMenuView.submenu.push(this.separator, this.toggleDevTools);
     }
 

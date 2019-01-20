@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 
 const mapStateToProps = state => ({
-  backupDir: state.settings.settings.backupDirectory,
+  backupDir: state.settings.backupDirectory,
 });
 
 const mapDispatchToProps = dispatch => ({

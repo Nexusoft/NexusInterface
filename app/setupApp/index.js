@@ -46,7 +46,7 @@ export default function setupApp(store, history) {
   const state = store.getState();
 
   updater.setup();
-  if (state.settings.settings.autoUpdate) {
+  if (state.settings.autoUpdate) {
     updater.autoUpdate();
   }
 
@@ -62,7 +62,7 @@ function checkWebGL(dispatch) {
   }
 }
 
-function showInitialModals({ settings: { settings } }) {
+function showInitialModals({ settings }) {
   const showExperimentalWarning = () => {
     if (!settings.experimentalWarningDisabled) {
       UIController.openModal(ExperimentalWarningModal);
