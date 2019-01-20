@@ -196,7 +196,7 @@ const Option = styled.div(
 );
 
 class Options extends Component {
-  selectedRef = React.createRef();
+  anchorRef = React.createRef();
 
   state = {
     ready: false,
@@ -209,7 +209,7 @@ class Options extends Component {
   };
 
   positionDropdown = () => {
-    if (!this.selectedRef.current) return;
+    if (!this.anchorRef.current) return;
     const styles = { fontSize: this.state.styles.fontSize };
 
     // Horizontally align Options dropdown with the Select control
@@ -224,7 +224,7 @@ class Options extends Component {
 
     // Vertically align Selected Option with the Select control
     const thisRect = this.el.getBoundingClientRect();
-    const selectedRect = this.selectedRef.current.getBoundingClientRect();
+    const selectedRect = this.anchorRef.current.getBoundingClientRect();
     const selectedOptTop = selectedRect.top - thisRect.top;
     styles.top = controlRect.top - selectedOptTop;
 
@@ -251,8 +251,10 @@ class Options extends Component {
   };
 
   render() {
-    const { skin, options, close, onChange, value, ...rest } = this.props;
+    const { skin, options, close, value } = this.props;
     const { ready, styles } = this.state;
+    const selectedIndex = options.findIndex(o => o.value === value);
+    const anchorIndex = selectedIndex !== -1 ? selectedIndex : 0;
 
     return (
       <Overlay onBackgroundClick={close} onMount={this.positionDropdown}>
@@ -268,13 +270,13 @@ class Options extends Component {
           style={styles}
           ready={ready}
         >
-          {options.map(option => (
+          {options.map((option, i) => (
             <Option
               key={option.value}
               skin={skin}
               onClick={() => this.select(option)}
-              selected={option.value === value}
-              ref={option.value === value ? this.selectedRef : undefined}
+              selected={option.value === value && !option.isDummy}
+              ref={i === anchorIndex ? this.anchorRef : undefined}
             >
               {option.display}
             </Option>
@@ -290,7 +292,22 @@ export default class Select extends Component {
 
   state = { open: false };
 
-  option = value => this.props.options.find(o => o.value === value);
+  options = () => {
+    const { options } = this.props;
+    if (options && options.length > 0) {
+      return options;
+    } else {
+      // Default options with a dummy option to make the UI render
+      return [
+        {
+          isDummy: true,
+        },
+      ];
+    }
+  };
+
+  option = value =>
+    this.props.options && this.props.options.find(o => o.value === value);
 
   open = () => {
     this.setState({ open: true });
@@ -301,26 +318,9 @@ export default class Select extends Component {
   };
 
   render() {
-    const {
-      skin = 'underline',
-      options,
-      value,
-      error,
-      onChange,
-      ...rest
-    } = this.props;
+    const { skin = 'underline', value, error, onChange, ...rest } = this.props;
     const { open } = this.state;
-    if (!options.length) {
-      console.error('Select options cannot be empty');
-      return null;
-    }
     const selectedOption = this.option(value);
-    if (!selectedOption) {
-      console.error(
-        `Selected value ${value} is not found among the options: ${options}`
-      );
-      return null;
-    }
 
     return (
       <>
@@ -349,7 +349,8 @@ export default class Select extends Component {
 
         {open && (
           <Options
-            {...{ skin, options, value, onChange }}
+            {...{ skin, value, onChange }}
+            options={this.options()}
             close={this.close}
             controlRef={this.controlRef.current}
           />
