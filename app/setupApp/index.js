@@ -9,7 +9,7 @@ import getInfo from 'actions/getInfo';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
 import updater from 'updater';
-import MenuBuilder from './menuBuilder';
+import appMenu from 'appMenu';
 import setupTray from './setupTray';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
@@ -19,8 +19,8 @@ export default function setupApp(store, history) {
   store.dispatch(loadSettingsFromFile());
   store.dispatch(loadThemeFromFile());
 
-  const menuBuilder = new MenuBuilder(store, history);
-  menuBuilder.buildMenu();
+  appMenu.initialize(store, history);
+  appMenu.build();
 
   setupTray(store);
 

@@ -16,15 +16,14 @@ import updater from 'updater';
 
 const autoUpdater = remote.getGlobal('autoUpdater');
 
-export default class MenuBuilder {
-  constructor(store, history) {
+class AppMenu {
+  initialize(store, history) {
     this.store = store;
     this.history = history;
-    this.menu = null;
 
     // Update the updater menu item when the updater state changes
     // Changing menu ittem labels directly has no effect so we have to rebuild the whole menu
-    updater.on('state-change', this.buildMenu);
+    updater.on('state-change', this.build);
   }
 
   separator = {
@@ -382,7 +381,7 @@ export default class MenuBuilder {
     return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
   };
 
-  buildMenu = () => {
+  build = () => {
     let template;
 
     if (process.platform === 'darwin') {
@@ -391,8 +390,10 @@ export default class MenuBuilder {
       template = this.buildDefaultTemplate();
     }
 
-    this.menu = remote.Menu.buildFromTemplate(template);
-    remote.Menu.setApplicationMenu(this.menu);
-    return this.menu;
+    const menu = remote.Menu.buildFromTemplate(template);
+    remote.Menu.setApplicationMenu(menu);
+    return menu;
   };
 }
+
+export default new AppMenu();
