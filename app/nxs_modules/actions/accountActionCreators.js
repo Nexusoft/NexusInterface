@@ -26,7 +26,7 @@ export const loadMyAccounts = () => async dispatch => {
     if (e.ismine && e.isvalid) {
       const index = accountList.findIndex(ele => ele.account === e.account);
       const indexDefault = accountList.findIndex(
-        ele => ele.account === '' || ele.account === 'default'
+        ele => ele.account === 'default'
       );
 
       if (e.account === '' || e.account === 'default') {
@@ -48,6 +48,16 @@ export const loadMyAccounts = () => async dispatch => {
           accountList[index].addresses.push(e.address);
         }
       }
+    }
+  });
+
+  accountList.forEach(acc => {
+    const accountName = acc.account || 'default';
+    if (accountName === 'default') {
+      acc.balance =
+        accList['default'] !== undefined ? accList['default'] : accList[''];
+    } else {
+      acc.balance = accList[accountName];
     }
   });
 

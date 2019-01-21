@@ -70,7 +70,9 @@ const SelectControl = styled.div(
             color: theme.foreground,
             borderBottomColor: theme.mixer(0.75),
             '&::after': {
-              background: theme.mixer(0.75),
+              background: error
+                ? color.lighten(theme.danger, 0.3)
+                : theme.mixer(0.75),
             },
           },
           ...(active
@@ -114,19 +116,6 @@ const CurrentValue = styled.div({
   alignItems: 'center',
   whiteSpace: 'nowrap',
 });
-
-const startingScaleDown = 2;
-
-const vertExpand = keyframes`
-  0% {
-    opacity: 0; 
-    transform: scaleY(${1 / startingScaleDown});
-  }
-  100% {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-`;
 
 const OptionsComponent = styled.div(
   {
@@ -329,6 +318,7 @@ export default class Select extends Component {
           active={open}
           onClick={this.open}
           skin={skin}
+          error={error}
           {...rest}
         >
           <CurrentValue>
@@ -364,4 +354,5 @@ export default class Select extends Component {
 const SelectReduxFForm = ({ input, meta, ...rest }) => (
   <Select error={meta.touched && meta.error} {...input} {...rest} />
 );
+
 Select.RF = SelectReduxFForm;

@@ -1,11 +1,12 @@
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field, reset, change, touch } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
 import * as RPC from 'scripts/rpc';
+import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
@@ -19,6 +20,7 @@ import { rpcErrorHandler } from 'utils/form';
 
 // Internal Local Dependencies
 import LookupAddressModal from './LookupAddressModal';
+import { getAccountOptions, getNxsFiatPrice } from './selectors';
 
 // Resources
 import sendIcon from 'images/send.sprite.svg';
@@ -53,65 +55,23 @@ const SendFormButtons = styled.div({
   marginTop: '2em',
 });
 
-const getAccountOptions = AccountChanger => {
-  if (AccountChanger) {
-    return AccountChanger.map(e => ({
-      value: e.name,
-      display: `${e.name} (${e.val} NXS)`,
-    }));
-  }
-  return [];
-};
-
-const getNxsFiatPrice = (rawNXSvalues, fiatCurrency) => {
-  if (rawNXSvalues) {
-    const marketInfo = rawNXSvalues.find(e => e.name === fiatCurrency);
-    if (marketInfo) {
-      return marketInfo.price;
-    }
-  }
-  return null;
-};
-
-const getDefaultSendFrom = AccountChanger => {
-  if (AccountChanger && AccountChanger.length > 0) {
-    if (AccountChanger.find(acc => acc.name === 'default')) {
-      return 'default';
-    } else {
-      return AccountChanger[0].name;
-    }
-  }
-  return null;
-};
-
 const mapStateToProps = ({
-  sendReceive: { AccountChanger },
+  addressbook: { myAccounts },
   settings: { fiatCurrency, minConfirmations },
   common: { rawNXSvalues, encrypted, loggedIn },
 }) => {
   return {
-    accountOptions: getAccountOptions(AccountChanger),
+    accountOptions: getAccountOptions(myAccounts),
     fiatCurrency: fiatCurrency,
     minConfirmations: minConfirmations,
     encrypted: encrypted,
     loggedIn: loggedIn,
     nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),
-    initialValues: {
-      sendFrom: getDefaultSendFrom(AccountChanger),
-      sendTo: null,
-      amount: 0,
-      fiatAmount: 0,
-      message: '',
-    },
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  updateRecipient: address => dispatch(change(formName, 'sendTo', address)),
-  updateNxsAmount: amount => dispatch(change(formName, 'amount', amount)),
-  updateFiatAmount: fiatAmount =>
-    dispatch(change(formName, 'fiatAmount', fiatAmount)),
-  touch: () => dispatch(touch()),
+  loadMyAccounts: () => dispatch(loadMyAccounts()),
 });
 
 @connect(
@@ -120,6 +80,13 @@ const mapDispatchToProps = dispatch => ({
 )
 @reduxForm({
   form: formName,
+  initialValues: {
+    sendFrom: null,
+    sendTo: null,
+    amount: '',
+    fiatAmount: '',
+    message: '',
+  },
   validate: ({ sendFrom, sendTo, amount }) => {
     const errors = {};
     if (!sendFrom) {
@@ -164,8 +131,8 @@ const mapDispatchToProps = dispatch => ({
     UIController.openSuccessDialog({
       message: <Text id="Alert.Sent" />,
     });
-    dispatch(reset(formName));
-    props.getAccountData();
+    props.reset();
+    props.loadMyAccounts();
   },
   onSubmitFail: rpcErrorHandler('Error Saving Settings'),
 })
@@ -176,7 +143,7 @@ export default class SendForm extends Component {
       const { nxsFiatPrice } = this.props;
       if (nxsFiatPrice) {
         const fiat = nxs * nxsFiatPrice;
-        this.props.updateFiatAmount(fiat.toFixed(2));
+        this.props.change('fiatAmount', fiat.toFixed(2));
       }
     }
   };
@@ -187,23 +154,28 @@ export default class SendForm extends Component {
       const { nxsFiatPrice } = this.props;
       if (nxsFiatPrice) {
         const nxs = fiat / nxsFiatPrice;
-        this.props.updateNxsAmount(nxs.toFixed(5));
+        this.props.change('amount', nxs.toFixed(5));
       }
     }
   };
 
+  updateRecipient = address => {
+    this.props.change('sendTo', address);
+  };
+
   lookupAddress = () => {
     UIController.openModal(LookupAddressModal, {
-      updateRecipient: this.props.updateRecipient,
+      updateRecipient: this.updateRecipient,
     });
   };
 
-  confirmSend = () => {
+  confirmSend = e => {
+    e.preventDefault();
     const { handleSubmit, invalid, encrypted, loggedIn, touch } = this.props;
 
     if (invalid) {
       // Mark the form touched so that the validation errors will be shown
-      touch();
+      touch('sendFrom', 'sendTo', 'amount', 'fiatAmount', 'message');
       return;
     }
 
