@@ -1,6 +1,6 @@
 import memoize from 'memoize-one';
 
-function getAccountOptions(myAccounts) {
+export const getAccountOptions = memoize(myAccounts => {
   if (myAccounts) {
     return myAccounts.map(acc => ({
       value: acc.account,
@@ -8,11 +8,9 @@ function getAccountOptions(myAccounts) {
     }));
   }
   return [];
-}
-getAccountOptions = memoize(getAccountOptions);
-export { getAccountOptions };
+});
 
-function getNxsFiatPrice(rawNXSvalues, fiatCurrency) {
+export const getNxsFiatPrice = memoize((rawNXSvalues, fiatCurrency) => {
   if (rawNXSvalues) {
     const marketInfo = rawNXSvalues.find(e => e.name === fiatCurrency);
     if (marketInfo) {
@@ -20,6 +18,18 @@ function getNxsFiatPrice(rawNXSvalues, fiatCurrency) {
     }
   }
   return null;
-}
-getNxsFiatPrice = memoize(getNxsFiatPrice);
-export { getNxsFiatPrice };
+});
+
+export const getAddressNameMap = memoize(addressBook => {
+  const map = {};
+  if (addressBook) {
+    addressBook.forEach(entry => {
+      if (entry.notMine) {
+        entry.notMine.forEach(a => {
+          map[a.address] = entry.name;
+        });
+      }
+    });
+  }
+  return map;
+});

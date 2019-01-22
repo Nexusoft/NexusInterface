@@ -22,7 +22,11 @@ import addressBookIcon from 'images/address-book.sprite.svg';
 
 // Internal Local
 import LookupAddressModal from './LookupAddressModal';
-import { getAccountOptions, getNxsFiatPrice } from './selectors';
+import {
+  getAccountOptions,
+  getNxsFiatPrice,
+  getAddressNameMap,
+} from './selectors';
 
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
@@ -52,20 +56,25 @@ const SendFormButtons = styled.div({
   marginTop: '2em',
 });
 
+const RecipientName = styled.span(({ theme }) => ({
+  textTransform: 'none',
+  color: theme.primary,
+  verticalAlign: 'middle',
+}));
+
 const mapStateToProps = ({
-  addressbook: { myAccounts },
+  addressbook: { myAccounts, addressbook },
   settings: { fiatCurrency, minConfirmations },
   common: { rawNXSvalues, encrypted, loggedIn },
-}) => {
-  return {
-    accountOptions: getAccountOptions(myAccounts),
-    fiatCurrency: fiatCurrency,
-    minConfirmations: minConfirmations,
-    encrypted: encrypted,
-    loggedIn: loggedIn,
-    nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),
-  };
-};
+}) => ({
+  accountOptions: getAccountOptions(myAccounts),
+  fiatCurrency: fiatCurrency,
+  minConfirmations: minConfirmations,
+  encrypted: encrypted,
+  loggedIn: loggedIn,
+  nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),
+  addressNameMap: getAddressNameMap(addressbook),
+});
 
 const mapDispatchToProps = dispatch => ({
   loadMyAccounts: () => dispatch(loadMyAccounts()),
@@ -202,8 +211,32 @@ export default class SendForm extends Component {
     });
   };
 
+  recipientField = field => {
+    const recipientName = this.props.addressNameMap[field.input.value];
+
+    return (
+      <FormField
+        label={
+          <span>
+            <span className="v-align">Send To</span>&nbsp;&nbsp;
+            <RecipientName>{recipientName}</RecipientName>
+          </span>
+        }
+      >
+        <InputGroup>
+          <TextField.RF {...field} placeholder="Recipient Address" />
+          <Button fitHeight className="relative" onClick={this.lookupAddress}>
+            <Icon spaceRight icon={addressBookIcon} />
+            <Text id="sendReceive.Contacts" />
+          </Button>
+        </InputGroup>
+      </FormField>
+    );
+  };
+
   render() {
     const { accountOptions, fiatCurrency } = this.props;
+
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
         <FormField label="Send From">
@@ -215,19 +248,7 @@ export default class SendForm extends Component {
           />
         </FormField>
 
-        <FormField label="Send To">
-          <InputGroup>
-            <Field
-              component={TextField.RF}
-              name="sendTo"
-              placeholder="Recipient Address"
-            />
-            <Button fitHeight className="relative" onClick={this.lookupAddress}>
-              <Icon spaceRight icon={addressBookIcon} />
-              <Text id="sendReceive.Contacts" />
-            </Button>
-          </InputGroup>
-        </FormField>
+        <Field name="sendTo" component={this.recipientField} />
 
         <SendAmount>
           <SendAmountField>
