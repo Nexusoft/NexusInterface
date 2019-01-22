@@ -5,17 +5,10 @@ import { connect } from 'react-redux';
 // Internal
 import Text from 'components/Text';
 
-@connect(
-  ({
-    overview: { connections },
-    settings: {
-      settings: { manualDaemon },
-    },
-  }) => ({
-    manualDaemon,
-    connections,
-  })
-)
+@connect(({ overview: { connections }, settings: { manualDaemon } }) => ({
+  manualDaemon,
+  connections,
+}))
 class DaemonStatus extends React.Component {
   render() {
     const { manualDaemon, connections } = this.props;

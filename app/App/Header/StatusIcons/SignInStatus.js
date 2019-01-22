@@ -8,7 +8,7 @@ import { withTheme } from 'emotion-theming';
 // Internal Dependencies
 import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import StatusIcon from './StatusIcon';
+import StatusIcon from 'components/StatusIcon';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';
@@ -67,7 +67,7 @@ class SignInStatus extends Component {
       return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
     } else {
       if (unlocked_until === undefined) {
-        return <StatusIcon icon={unlockedIcon} css={{ color: theme.error }} />;
+        return <StatusIcon icon={unlockedIcon} css={{ color: theme.danger }} />;
       } else if (unlocked_until === 0) {
         return <StatusIcon icon={lockedIcon} />;
       } else if (unlocked_until >= 0) {
@@ -79,7 +79,7 @@ class SignInStatus extends Component {
   render() {
     return (
       <Tooltip.Trigger tooltip={this.signInStatusMessage()}>
-        <StatusIcon.Wrapper>{this.statusIcon()}</StatusIcon.Wrapper>
+        {this.statusIcon()}
       </Tooltip.Trigger>
     );
   }

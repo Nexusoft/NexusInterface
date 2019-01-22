@@ -82,7 +82,7 @@ const languages = [
 ];
 
 const mapStateToProps = state => ({
-  locale: state.settings.settings.locale,
+  locale: state.settings.locale,
 });
 
 const mapDispatchToProps = dispatch => ({

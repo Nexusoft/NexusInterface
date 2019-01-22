@@ -72,8 +72,7 @@ const mapStateToProps = state => {
     ...state.sendReceive,
     ...state.overview,
     ...state.addressbook,
-    ...state.settings,
-    ...state.intl,
+    settings: state.settings,
   };
 };
 
@@ -348,7 +347,7 @@ class SendPage extends Component {
                     this.props.SelectedAccount,
                     this.props.Address,
                     parseFloat(this.props.Amount),
-                    parseInt(this.props.settings.minimumconfirmations),
+                    parseInt(this.props.settings.minConfirmations),
                     this.props.Message,
                   ])
                     .then(payload => {
@@ -370,7 +369,7 @@ class SendPage extends Component {
                     this.props.SelectedAccount,
                     this.props.Address,
                     parseFloat(this.props.Amount),
-                    parseInt(this.props.settings.minimumconfirmations),
+                    parseInt(this.props.settings.minConfirmations),
                   ])
                     .then(payoad => {
                       this.getAccountData();

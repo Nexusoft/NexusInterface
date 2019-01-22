@@ -48,35 +48,35 @@ const SnackBar = styled.div(
     switch (type) {
       case 'info':
         return {
-          background: theme.darkerGray,
-          color: theme.light,
+          background: theme.mixer(0.125),
+          color: theme.foreground,
           '&:hover': {
-            background: color.lighten(theme.darkerGray, 0.2),
+            background: color.lighten(theme.mixer(0.125), 0.2),
           },
         };
       case 'success':
         return {
           background: color.darken(theme.primary, 0.3),
-          color: theme.primaryContrast,
+          color: theme.primaryAccent,
           '&:hover': {
             background: color.darken(theme.primary, 0.1),
           },
         };
       case 'error':
         return {
-          background: color.darken(theme.error, 0.2),
-          color: theme.errorContrast,
+          background: color.darken(theme.danger, 0.2),
+          color: theme.dangerAccent,
           '&:hover': {
-            background: theme.error,
+            background: theme.danger,
           },
         };
       case 'work':
         return {
-          background: theme.dark,
-          border: `1px solid ${theme.gray}`,
-          color: theme.light,
+          background: theme.background,
+          border: `1px solid ${theme.mixer(0.5)}`,
+          color: theme.foreground,
           '&:hover': {
-            background: color.lighten(theme.dark, 0.2),
+            background: color.lighten(theme.background, 0.2),
           },
         };
     }

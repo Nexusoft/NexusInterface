@@ -11,14 +11,23 @@ const Svg = styled.svg(
     width: '1em',
     height: '1em',
   },
+  ({ spaceLeft }) =>
+    spaceLeft && {
+      marginLeft: '.4em',
+    },
   ({ spaceRight }) =>
     spaceRight && {
       marginRight: '.4em',
     }
 );
 
-const Icon = ({ icon = {}, spaceRight, ...rest }) => (
-  <Svg viewBox={icon.viewBox} spaceRight={spaceRight} {...rest}>
+const Icon = ({ icon = {}, spaceLeft, spaceRight, ...rest }) => (
+  <Svg
+    viewBox={icon.viewBox}
+    spaceLeft={spaceLeft}
+    spaceRight={spaceRight}
+    {...rest}
+  >
     <use xlinkHref={`#${icon.id}`} />
   </Svg>
 );

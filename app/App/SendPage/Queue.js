@@ -13,7 +13,7 @@ import * as RPC from 'scripts/rpc';
 const QueueComponent = styled.div(({ theme }) => ({
   marginTop: 50,
   paddingTop: 20,
-  borderTop: `1px solid ${theme.lightGray}`,
+  borderTop: `1px solid ${theme.mixer(0.75)}`,
 }));
 
 const QueueHeading = styled.div({
@@ -108,7 +108,7 @@ export default class Queue extends Component {
         RPC.PROMISE(
           'sendmany',
           [this.props.SelectedAccount, this.props.Queue],
-          parseInt(this.props.settings.minimumconfirmations),
+          parseInt(this.props.settings.minConfirmations),
           this.props.Message
         )
           .then(payoad => {
@@ -128,7 +128,7 @@ export default class Queue extends Component {
             this.props.SelectedAccount,
             keyCheck[0],
             parseFloat(Object.values(this.props.Queue)[0]),
-            parseInt(this.props.settings.minimumconfirmations),
+            parseInt(this.props.settings.minConfirmations),
             this.props.Message,
           ])
             .then(payload => {
@@ -151,7 +151,7 @@ export default class Queue extends Component {
             this.props.SelectedAccount,
             keyCheck[0],
             parseFloat(Object.values(this.props.Queue)[0]),
-            parseInt(this.props.settings.minimumconfirmations),
+            parseInt(this.props.settings.minConfirmations),
           ])
             .then(payoad => {
               this.props.getAccountData();

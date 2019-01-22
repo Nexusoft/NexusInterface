@@ -14,21 +14,20 @@ const TabLi = styled.li({
   flexBasis: 0,
 });
 const TabToolTipText = styled.span({
-  visibility: "hidden",
-  width: "120px",
-  backgroundColor: "#555",
-  color: "#fff",
-  textAlign: "center",
-  padding: "5px 0",
-  borderRadius: "6px",
+  visibility: 'hidden',
+  width: '120px',
+  backgroundColor: '#555',
+  color: '#fff',
+  textAlign: 'center',
+  padding: '5px 0',
+  borderRadius: '6px',
 
   /* Position the tooltip text */
-  position: "absolute",
-  zIndex: "1",
-  bottom: "125%",
-  left: "50%",
-  marginLeft: "-60px",
-
+  position: 'absolute',
+  zIndex: '1',
+  bottom: '125%',
+  left: '50%',
+  marginLeft: '-60px',
 });
 const TabLink = styled(NavLink)(({ theme }) => ({
   display: 'flex',
@@ -36,20 +35,18 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   justifyContent: 'center',
   padding: '0.75em 1.5em',
   fontSize: '1.125em',
-  color: theme.lightGray,
-  borderBottom: `1px solid ${theme.darkGray}`,
+  color: theme.mixer(0.75),
+  borderBottom: `1px solid ${theme.mixer(0.25)}`,
   transitionProperties: 'color, borderBottom',
   transitionDuration: timing.normal,
 
-  '&.TabToolTip':
-    {
-      TabToolTipText
-    },
+  '&.TabToolTip': {
+    TabToolTipText,
+  },
 
   '&:hover': {
-    color: theme.light,
-    '&.TabToolTip':
-    {
+    color: theme.foreground,
+    '&.TabToolTip': {
       TabToolTipText,
       visibility: 'visible',
     },
@@ -59,40 +56,28 @@ const TabLink = styled(NavLink)(({ theme }) => ({
     color: theme.primary,
     borderBottomColor: theme.primary,
   },
-  
 }));
 
-
-
-
-
 const TabToolTip = styled.span({
-  position: "relative",
-  display: "inline-block",
-  '&.TabToolTip':
-    {
-      TabToolTipText
-    },
-  '&:hover' :
-  {
+  position: 'relative',
+  display: 'inline-block',
+  '&.TabToolTip': {
+    TabToolTipText,
+  },
+  '&:hover': {
     TabToolTipText,
     visibility: 'visible',
-
   },
-
-  
 });
-const Tab = ({ link, icon, text,toolTipText, isActive, }) => (
-  
-    <TabLi>
-      <Tooltip.Trigger tooltip={toolTipText} position="top">
-        <TabLink to={link} isActive={isActive}>
-          {!!icon && <Icon spaceRight icon={icon} />}
-          {text}
-        </TabLink>
-      </Tooltip.Trigger>
-    </TabLi>
-  
+const Tab = ({ link, icon, text, toolTipText, isActive }) => (
+  <TabLi>
+    <Tooltip.Trigger tooltip={toolTipText} position="top">
+      <TabLink to={link} isActive={isActive}>
+        {!!icon && <Icon spaceRight icon={icon} />}
+        {text}
+      </TabLink>
+    </Tooltip.Trigger>
+  </TabLi>
 );
 
 const TabBar = styled.ul({

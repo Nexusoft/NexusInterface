@@ -14,18 +14,15 @@ import 'electron-debug';
 // Internal
 import core from 'api/core';
 import configuration from 'api/configuration';
-import { GetSettings, SaveSettings } from 'api/settings';
+import { LoadSettings, UpdateSettings } from 'api/settings';
 
 let mainWindow;
 let resizeTimer;
 // Global Objects
 global.core = core;
+global.autoUpdater = autoUpdater;
 
 app.setAppUserModelId(APP_ID);
-
-// Configure Updater
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
 
 // Enable source map support
 if (process.env.NODE_ENV === 'production') {
@@ -83,7 +80,7 @@ function createWindow() {
     );
   }
 
-  let settings = GetSettings();
+  const settings = LoadSettings();
   let iconPath = '';
   if (process.env.NODE_ENV === 'development') {
     iconPath = path.join(
@@ -109,8 +106,8 @@ function createWindow() {
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
-    width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
-    height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
+    width: settings.windowWidth,
+    height: settings.windowHeight,
     minWidth: 1050,
     minHeight: 847,
     icon: iconPath,
@@ -144,20 +141,18 @@ function createWindow() {
 
     resizeTimer = setTimeout(function() {
       // Resize event has been completed
-      let settings = GetSettings();
-
-      settings.windowWidth = mainWindow.getBounds().width;
-      settings.windowHeight = mainWindow.getBounds().height;
-
-      SaveSettings(settings);
+      UpdateSettings({
+        windowWidth: mainWindow.getBounds().width,
+        windowHeight: mainWindow.getBounds().height,
+      });
     }, 250);
   });
 
   // Event when the window is minimized
   mainWindow.on('minimize', function(event) {
-    let settings = GetSettings();
+    const settings = LoadSettings();
 
-    if (settings.minimizeToTray) {
+    if (settings.minimizeOnClose) {
       event.preventDefault();
       mainWindow.hide();
     }
@@ -166,37 +161,33 @@ function createWindow() {
 
 // Application Startup
 app.on('ready', async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
-    await installExtensions();
-  }
-
   createWindow();
   core.start();
 
   mainWindow.on('close', function(e) {
     e.preventDefault();
 
-    let settings = GetSettings();
+    const settings = LoadSettings();
     log.info('close');
 
-    if (settings) {
-      if (settings.minimizeToTray == true) {
-        e.preventDefault();
-        mainWindow.hide();
-      } else {
-        core.stop().then(payload => {
-          app.exit();
-        });
-      }
+    if (settings && settings.minimizeOnClose == true) {
+      e.preventDefault();
+      mainWindow.hide();
     } else {
       core.stop().then(payload => {
         app.exit();
       });
     }
   });
+
+  const settings = LoadSettings();
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true' ||
+    settings.devMode
+  ) {
+    installExtensions();
+  }
 });
 
 // Application Shutdown

@@ -69,11 +69,11 @@ export const COMMANDS = {};
 export const CALLBACK = {};
 import * as TYPE from 'actions/actiontypes';
 import core from 'api/core';
-import { GetSettings } from 'api/settings';
+import { LoadSettings } from 'api/settings';
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 export const GETHOST = () => {
   // let core = require("electron").remote.getGlobal("core");
-  let settings = GetSettings();
+  let settings = LoadSettings();
   if (settings.manualDaemon == true) {
     let savedport = core.port;
     if (settings.manualDaemonPort != undefined) {
@@ -91,7 +91,7 @@ export const GETHOST = () => {
 
 // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
 export const GETUSER = () => {
-  let settings = GetSettings();
+  let settings = LoadSettings();
   if (settings.manualDaemon == true) {
     let saveduser =
       settings.manualDaemonUser === undefined
@@ -106,7 +106,7 @@ export const GETUSER = () => {
 
 // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
 export const GETPASSWORD = () => {
-  let settings = GetSettings();
+  let settings = LoadSettings();
   if (settings.manualDaemon == true) {
     let savedpassword =
       settings.manualDaemonPassword === undefined

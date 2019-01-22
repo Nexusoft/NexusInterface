@@ -14,6 +14,7 @@ import { color } from 'utils';
 import SignInStatus from './StatusIcons/SignInStatus';
 import StakingStatus from './StatusIcons/StakingStatus';
 import SyncStatus from './StatusIcons/SyncStatus';
+import MyAddresses from './StatusIcons/MyAddresses';
 import DaemonStatus from './DaemonStatus';
 import logoFull from './logo-full-beta.sprite.svg';
 
@@ -63,7 +64,7 @@ const Beta = styled.div(({ theme }) => ({
   right: -26,
   letterSpacing: 1,
   textTransform: 'uppercase',
-  color: theme.light,
+  color: theme.foreground,
 }));
 
 const StatusIcons = styled.div({
@@ -73,6 +74,7 @@ const StatusIcons = styled.div({
   animation: `${animations.fadeIn} ${timing.slow} ${consts.enhancedEaseOut}`,
   display: 'flex',
   alignItems: 'center',
+  fontSize: 20,
 });
 
 const UnderHeader = styled.div(({ theme }) => ({
@@ -81,7 +83,7 @@ const UnderHeader = styled.div(({ theme }) => ({
   left: 0,
   right: 0,
   textAlign: 'center',
-  color: theme.light,
+  color: theme.foreground,
 }));
 
 @connect(({ overview: { connections } }) => ({ connections }))
@@ -106,6 +108,7 @@ export default class Header extends Component {
             <SyncStatus {...this.props} />
             <SignInStatus {...this.props} />
             <StakingStatus {...this.props} />
+            <MyAddresses {...this.props} />
           </StatusIcons>
         )}
       </HeaderComponent>

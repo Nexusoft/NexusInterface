@@ -5,7 +5,9 @@ import styled from '@emotion/styled';
 // Internal
 import UIController from 'components/UIController';
 import BackgroundTask from 'components/BackgroundTask';
+import Icon from 'components/Icon';
 import { animations, timing } from 'styles';
+import workIcon from 'images/work.sprite.svg';
 import BootstrapModal from './BootstrapModal';
 
 const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(
@@ -111,6 +113,7 @@ export default class BootstrapBackgroundTask extends Component {
         onClick={this.maximize}
         index={this.props.index}
       >
+        <Icon icon={workIcon} spaceRight />
         {this.state.status}
       </BootstrapBackgroundTaskComponent>
     );
