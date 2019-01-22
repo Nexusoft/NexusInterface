@@ -33,3 +33,9 @@ export const getAddressNameMap = memoize(addressBook => {
   }
   return map;
 });
+
+export const getRecipientSuggestions = memoize(addressBook =>
+  addressBook.flatMap(entry =>
+    entry.notMine.map(a => `${entry.name}: ${a.address}`)
+  )
+);

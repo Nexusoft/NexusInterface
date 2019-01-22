@@ -10,33 +10,14 @@ import Arrow from 'components/Arrow';
 import { timing, consts } from 'styles';
 import { color } from 'utils';
 
-const AutoSuggestComponent = styled.div({
-  position: 'relative',
-});
+const getValue = suggestion =>
+  typeof suggestion === 'object' ? suggestion && suggestion.value : suggestion;
+const getDisplay = suggestion =>
+  typeof suggestion === 'object'
+    ? suggestion && suggestion.display
+    : suggestion;
 
-const Suggestions = styled.div(
-  {
-    position: 'absolute',
-    top: '100%',
-    left: 0,
-    right: 0,
-    opacity: 0,
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 4,
-    paddingBottom: 4,
-    boxShadow: `0 4px 4px rgba(0,0,0,.7)`,
-    visibility: 'hidden',
-    transition: `opacity ${timing.normal}, visibility ${timing.normal}`,
-    zIndex: 1,
-  },
-  ({ active }) =>
-    active && {
-      opacity: 1,
-      visibility: 'visible',
-    }
-);
-
-const Suggestion = styled.div(
+const SuggestionComponent = styled.div(
   ({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -63,6 +44,50 @@ const Suggestion = styled.div(
     }
 );
 
+class Suggestion extends React.PureComponent {
+  handleSelect = () => {
+    const { suggestion, onSelect } = this.props;
+    onSelect && onSelect(getValue(suggestion));
+  };
+
+  render() {
+    return (
+      <SuggestionComponent
+        selected={this.props.selected}
+        onClick={this.handleSelect}
+      >
+        {getDisplay(this.props.suggestion)}
+      </SuggestionComponent>
+    );
+  }
+}
+
+const AutoSuggestComponent = styled.div({
+  position: 'relative',
+});
+
+const Suggestions = styled.div(
+  {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    opacity: 0,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
+    paddingBottom: 4,
+    boxShadow: `0 4px 4px rgba(0,0,0,.7)`,
+    visibility: 'hidden',
+    transition: `opacity ${timing.normal}, visibility ${timing.normal}`,
+    zIndex: 1,
+  },
+  ({ active }) =>
+    active && {
+      opacity: 1,
+      visibility: 'visible',
+    }
+);
+
 export default class AutoSuggest extends React.Component {
   static defaultProps = {
     inputComponent: TextField,
@@ -75,12 +100,17 @@ export default class AutoSuggest extends React.Component {
 
   inputRef = React.createRef();
 
-  getCurrentSuggestions = memoize((suggestions, inputValue) => {
+  getFilteredSuggestions = memoize((suggestions, inputValue) => {
     if (!suggestions) return [];
-    const value = new String(inputValue || '').toLowerCase();
-    return suggestions.filter(suggestion =>
-      suggestion.toLowerCase().includes(value)
-    );
+    const query = new String(inputValue || '').toLowerCase();
+    return suggestions.filter(suggestion => {
+      const value = getValue(suggestion);
+      return (
+        !!value &&
+        typeof value === 'string' &&
+        value.toLowerCase().includes(query)
+      );
+    });
   });
 
   componentDidUpdate(prevProps) {
@@ -105,7 +135,7 @@ export default class AutoSuggest extends React.Component {
 
   handleKeyDown = e => {
     const { selected } = this.state;
-    const currentSuggestions = this.getCurrentSuggestions(
+    const currentSuggestions = this.getFilteredSuggestions(
       this.props.suggestions,
       this.props.inputProps && this.props.inputProps.value
     );
@@ -135,8 +165,9 @@ export default class AutoSuggest extends React.Component {
       case 'Enter':
         if (selected !== null) {
           e.preventDefault();
-          this.props.inputProps.onChange &&
-            this.props.onSelect(currentSuggestions[selected]);
+          const selectedSuggestion = currentSuggestions[selected];
+          const value = getValue(selectedSuggestion);
+          this.props.onSelect && this.props.onSelect(value);
         }
         break;
     }
@@ -156,7 +187,7 @@ export default class AutoSuggest extends React.Component {
   render() {
     const { onSelect, inputProps, inputComponent: Input, ...rest } = this.props;
     const { active, selected } = this.state;
-    const currentSuggestions = this.getCurrentSuggestions(
+    const currentSuggestions = this.getFilteredSuggestions(
       this.props.suggestions,
       this.props.inputProps && this.props.inputProps.value
     );
@@ -173,14 +204,11 @@ export default class AutoSuggest extends React.Component {
         <Suggestions active={active && currentSuggestions.length > 0}>
           {currentSuggestions.map((suggestion, i) => (
             <Suggestion
-              key={suggestion}
+              key={getValue(suggestion)}
+              suggestion={suggestion}
               selected={selected === i}
-              onClick={() => {
-                onSelect && onSelect(suggestion);
-              }}
-            >
-              {suggestion}
-            </Suggestion>
+              onSelect={onSelect}
+            />
           ))}
         </Suggestions>
       </AutoSuggestComponent>
