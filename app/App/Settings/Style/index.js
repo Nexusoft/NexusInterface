@@ -124,6 +124,34 @@ export default class SettingsStyle extends Component {
     );
   };
 
+  exportThemeFileDialog = () => {
+    remote.dialog.showSaveDialog(
+      null,
+      {
+        title: 'Save Theme File',
+        properties: ['saveFile'],
+        filters: [{ name: 'Theme JSON', extensions: ['json'] }],
+      },
+      (path) => {
+        console.log(path);
+        fs.copyFile(configuration.GetAppDataDirectory() + "/theme.json", path, (err) => {
+          if (err) 
+          {
+            console.error(err);
+            UIController.showNotification(
+              err,
+              'error'
+            );
+          }
+          UIController.showNotification(
+            'Theme Exported',
+            'success'
+          );
+        });
+      }
+    )
+  }
+
   render() {
     const { theme, renderGlobe, webGLEnabled } = this.props;
 
@@ -197,6 +225,9 @@ export default class SettingsStyle extends Component {
         <div style={{ marginTop: '2em' }}>
           <Button onClick={this.openPickThemeFileDialog}>
             <Text id="Settings.PickThemeFile" />
+          </Button>
+          <Button onClick={this.exportThemeFileDialog}>
+            <Text id="Settings.ThemeFileExport" />
           </Button>
         </div>
       </StyleSettings>
