@@ -3,13 +3,10 @@ import Text from 'components/Text';
 
 export function getAccountOptions(myAccounts) {
   if (myAccounts) {
-    return [
-      { value: '', display: <Text id="sendReceive.SelectAnAccount" /> },
-      ...myAccounts.map(acc => ({
-        value: acc.account,
-        display: `${acc.account} (${acc.balance} NXS)`,
-      })),
-    ];
+    return myAccounts.map(acc => ({
+      value: acc.account,
+      display: `${acc.account} (${acc.balance} NXS)`,
+    }));
   }
   return [];
 }

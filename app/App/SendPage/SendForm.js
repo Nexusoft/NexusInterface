@@ -1,10 +1,10 @@
-// External Dependencies
+// External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
-// Internal Global Dependencies
+// Internal Global
 import * as RPC from 'scripts/rpc';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';
@@ -17,16 +17,13 @@ import InputGroup from 'components/InputGroup';
 import UIController from 'components/UIController';
 import Link from 'components/Link';
 import { rpcErrorHandler } from 'utils/form';
-
-// Internal Local Dependencies
-import LookupAddressModal from './LookupAddressModal';
-import { getAccountOptions, getNxsFiatPrice } from './selectors';
-
-// Resources
 import sendIcon from 'images/send.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 
-const formName = 'sendNXS';
+// Internal Local
+import LookupAddressModal from './LookupAddressModal';
+import { getAccountOptions, getNxsFiatPrice } from './selectors';
+
 const floatRegex = /^[0-9]+(.[0-9]*)?$/;
 
 const SendFormComponent = styled.form({
@@ -79,7 +76,7 @@ const mapDispatchToProps = dispatch => ({
   mapDispatchToProps
 )
 @reduxForm({
-  form: formName,
+  form: 'sendNXS',
   initialValues: {
     sendFrom: null,
     sendTo: null,
@@ -213,6 +210,7 @@ export default class SendForm extends Component {
           <Field
             component={Select.RF}
             name="sendFrom"
+            placeholder={<Text id="sendReceive.SelectAnAccount" />}
             options={accountOptions}
           />
         </FormField>

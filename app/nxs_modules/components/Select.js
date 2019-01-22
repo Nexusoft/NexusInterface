@@ -117,6 +117,10 @@ const CurrentValue = styled.div({
   whiteSpace: 'nowrap',
 });
 
+const Placeholder = styled.span(({ theme }) => ({
+  color: theme.mixer(0.5),
+}));
+
 const OptionsComponent = styled.div(
   {
     position: 'absolute',
@@ -236,7 +240,9 @@ class Options extends Component {
 
   select = option => {
     this.props.close();
-    this.props.onChange(option.value);
+    if (!option.isDummy) {
+      this.props.onChange(option.value);
+    }
   };
 
   render() {
@@ -307,7 +313,14 @@ export default class Select extends Component {
   };
 
   render() {
-    const { skin = 'underline', value, error, onChange, ...rest } = this.props;
+    const {
+      skin = 'underline',
+      value,
+      error,
+      onChange,
+      placeholder,
+      ...rest
+    } = this.props;
     const { open } = this.state;
     const selectedOption = this.option(value);
 
@@ -322,7 +335,11 @@ export default class Select extends Component {
           {...rest}
         >
           <CurrentValue>
-            {selectedOption ? selectedOption.display : null}
+            {selectedOption ? (
+              selectedOption.display
+            ) : (
+              <Placeholder>{placeholder}</Placeholder>
+            )}
           </CurrentValue>
           <Button
             fitHeight
