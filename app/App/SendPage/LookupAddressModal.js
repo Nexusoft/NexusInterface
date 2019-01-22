@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import * as TYPE from 'actions/actiontypes';
 import Text from 'components/Text';
 import TextField from 'components/TextField';
 import Icon from 'components/Icon';
@@ -13,24 +12,23 @@ import Modal from 'components/Modal';
 // Images
 import searchIcon from 'images/search.sprite.svg';
 
-@connect(
-  state => ({
-    query: state.common.Search,
-    addressBook: state.addressbook.addressbook,
-  }),
-  dispatch => ({
-    updateAddress: returnAddress => {
-      dispatch({ type: TYPE.UPDATE_ADDRESS, payload: returnAddress });
-    },
-    searchName: returnSearch => {
-      dispatch({ type: TYPE.SEARCH, payload: returnSearch });
-    },
-  })
-)
+@connect(state => ({
+  addressBook: state.addressbook.addressbook,
+}))
 class LookupAddressModal extends Component {
+  state = {
+    searchQuery: '',
+  };
+
+  handleSearchChange = e => {
+    this.setState({ searchQuery: e.target.value });
+  };
+
   addressBookToQueue = () => {
     let filteredAddress = this.props.addressBook.filter(
-      e => e.name.toLowerCase().indexOf(this.props.query.toLowerCase()) !== -1
+      e =>
+        e.name.toLowerCase().indexOf(this.state.searchQuery.toLowerCase()) !==
+        -1
     );
 
     return filteredAddress.map((e, i) => (
@@ -85,9 +83,8 @@ class LookupAddressModal extends Component {
                           }}
                           left={<Icon icon={searchIcon} spaceRight />}
                           placeholder={placeholder}
-                          value={this.props.query}
-                          onChange={e => this.props.searchName(e.target.value)}
-                          required
+                          value={this.state.searchQuery}
+                          onChange={this.handleSearchChange}
                         />
                       )}
                     </Text>
