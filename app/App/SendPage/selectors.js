@@ -1,7 +1,6 @@
-import React from 'react';
-import Text from 'components/Text';
+import memoize from 'memoize-one';
 
-export function getAccountOptions(myAccounts) {
+function getAccountOptions(myAccounts) {
   if (myAccounts) {
     return myAccounts.map(acc => ({
       value: acc.account,
@@ -10,8 +9,10 @@ export function getAccountOptions(myAccounts) {
   }
   return [];
 }
+getAccountOptions = memoize(getAccountOptions);
+export { getAccountOptions };
 
-export function getNxsFiatPrice(rawNXSvalues, fiatCurrency) {
+function getNxsFiatPrice(rawNXSvalues, fiatCurrency) {
   if (rawNXSvalues) {
     const marketInfo = rawNXSvalues.find(e => e.name === fiatCurrency);
     if (marketInfo) {
@@ -20,3 +21,5 @@ export function getNxsFiatPrice(rawNXSvalues, fiatCurrency) {
   }
   return null;
 }
+getNxsFiatPrice = memoize(getNxsFiatPrice);
+export { getNxsFiatPrice };
