@@ -26,6 +26,7 @@ const Buttons = styled.div({
 
 @reduxForm({
   form: 'login',
+  destroyOnUnmount: false,
   initialValues: {
     date: null,
     time: null,
@@ -61,7 +62,8 @@ const Buttons = styled.div({
       stakingOnly,
     ]);
   },
-  onSubmitSuccess: async (result, dispatch) => {
+  onSubmitSuccess: async (result, dispatch, props) => {
+    props.reset();
     UIController.showNotification('Wallet unlocked', 'success');
     dispatch(getInfo());
   },

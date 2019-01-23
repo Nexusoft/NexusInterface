@@ -27,6 +27,7 @@ const ImportPrivKeyForm = styled.form({
 )
 @reduxForm({
   form: 'importPrivateKey',
+  destroyOnUnmount: false,
   initialValues: {
     accountName: '',
     privateKey: '',
@@ -43,7 +44,8 @@ const ImportPrivKeyForm = styled.form({
   },
   onSubmit: ({ accountName, privateKey }) =>
     RPC.PROMISE('importprivkey', [privateKey], [accountName]),
-  onSubmitSuccess: async () => {
+  onSubmitSuccess: async (result, dispatch, props) => {
+    props.reset();
     // this.props.ResetForEncryptionRestart();
     UIController.openSuccessDialog({
       message: 'Private key imported. Rescanning now',

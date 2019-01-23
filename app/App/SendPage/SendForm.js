@@ -63,6 +63,7 @@ const mapDispatchToProps = dispatch => ({
 )
 @reduxForm({
   form: 'sendNXS',
+  destroyOnUnmount: false,
   initialValues: {
     sendFrom: null,
     sendTo: null,
@@ -111,11 +112,11 @@ const mapDispatchToProps = dispatch => ({
     return RPC.PROMISE('sendfrom', params);
   },
   onSubmitSuccess: (result, dispatch, props) => {
+    props.reset();
+    props.loadMyAccounts();
     UIController.openSuccessDialog({
       message: <Text id="Alert.Sent" />,
     });
-    props.reset();
-    props.loadMyAccounts();
   },
   onSubmitFail: rpcErrorHandler('Error Sending NXS'),
 })

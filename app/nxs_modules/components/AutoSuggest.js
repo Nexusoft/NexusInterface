@@ -9,7 +9,6 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import Arrow from 'components/Arrow';
 import { timing, consts } from 'styles';
-import { color } from 'utils';
 
 /**
  * `suggestions` can be an object in `{value: string, display: any}` shape,

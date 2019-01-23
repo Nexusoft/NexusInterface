@@ -46,6 +46,7 @@ const Buttons = styled.div({
 )
 @reduxForm({
   form: 'moveBetweenAccounts',
+  destroyOnUnmount: false,
   initialValues: {
     moveFrom: null,
     moveTo: null,
@@ -90,11 +91,11 @@ const Buttons = styled.div({
   },
   onSubmitSuccess: (result, dispatch, props) => {
     props.closeModal();
+    props.reset();
+    props.loadMyAccounts();
     UIController.openSuccessDialog({
       message: 'NXS moved successfully',
     });
-    props.reset();
-    props.loadMyAccounts();
   },
   onSubmitFail: rpcErrorHandler('Error Moving NXS'),
 })
