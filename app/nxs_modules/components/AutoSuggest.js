@@ -10,6 +10,11 @@ import Arrow from 'components/Arrow';
 import { timing, consts } from 'styles';
 import { color } from 'utils';
 
+/**
+ * `suggestions` can be an object in `{value: string, display: any}` shape,
+ * or a string if value and display are the same
+ */
+
 const getValue = suggestion =>
   typeof suggestion === 'object' ? suggestion && suggestion.value : suggestion;
 const getDisplay = suggestion =>
@@ -100,7 +105,7 @@ export default class AutoSuggest extends React.Component {
 
   inputRef = React.createRef();
 
-  getFilteredSuggestions = memoize((suggestions, inputValue) => {
+  defaultFilterSuggestions = memoize((suggestions, inputValue) => {
     if (!suggestions) return [];
     const query = new String(inputValue || '').toLowerCase();
     return suggestions.filter(suggestion => {
@@ -134,11 +139,15 @@ export default class AutoSuggest extends React.Component {
   };
 
   handleKeyDown = e => {
+    const {
+      filterSuggestions = this.defaultFilterSuggestions,
+      suggestions,
+      inputProps,
+      onSelect,
+    } = this.props;
     const { selected } = this.state;
-    const currentSuggestions = this.getFilteredSuggestions(
-      this.props.suggestions,
-      this.props.inputProps && this.props.inputProps.value
-    );
+    const inputValue = inputProps && inputProps.value;
+    const currentSuggestions = filterSuggestions(suggestions, inputValue);
 
     switch (e.key) {
       case 'ArrowDown':
@@ -154,11 +163,11 @@ export default class AutoSuggest extends React.Component {
       case 'ArrowUp':
         e.preventDefault();
         if (selected === null) {
-          this.setState({ selected: null });
-        } else if (selected === 0) {
           this.setState({ selected: currentSuggestions.length - 1 });
-        } else {
+        } else if (selected !== 0) {
           this.setState({ selected: selected - 1 });
+        } else {
+          this.setState({ selected: null });
         }
         break;
       case 'Tab':
@@ -167,11 +176,11 @@ export default class AutoSuggest extends React.Component {
           e.preventDefault();
           const selectedSuggestion = currentSuggestions[selected];
           const value = getValue(selectedSuggestion);
-          this.props.onSelect && this.props.onSelect(value);
+          onSelect && onSelect(value);
         }
         break;
     }
-    this.props.onKeyDown && this.props.onKeyDown(e);
+    inputProps.onKeyDown && inputProps.onKeyDown(e);
   };
 
   focusInput = () => {
@@ -185,11 +194,18 @@ export default class AutoSuggest extends React.Component {
   );
 
   render() {
-    const { onSelect, inputProps, inputComponent: Input, ...rest } = this.props;
+    const {
+      filterSuggestions = this.defaultFilterSuggestions,
+      suggestions,
+      onSelect,
+      inputProps,
+      inputComponent: Input,
+      ...rest
+    } = this.props;
     const { active, selected } = this.state;
-    const currentSuggestions = this.getFilteredSuggestions(
-      this.props.suggestions,
-      this.props.inputProps && this.props.inputProps.value
+    const currentSuggestions = filterSuggestions(
+      suggestions,
+      inputProps && inputProps.value
     );
     return (
       <AutoSuggestComponent {...rest}>
@@ -204,7 +220,7 @@ export default class AutoSuggest extends React.Component {
         <Suggestions active={active && currentSuggestions.length > 0}>
           {currentSuggestions.map((suggestion, i) => (
             <Suggestion
-              key={getValue(suggestion)}
+              key={i}
               suggestion={suggestion}
               selected={selected === i}
               onSelect={onSelect}
