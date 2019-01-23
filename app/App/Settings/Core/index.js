@@ -53,6 +53,7 @@ const mapDispatchToProps = dispatch => ({
 )
 @reduxForm({
   form: 'coreSettings',
+  destroyOnUnmount: false,
   validate: (
     {
       manualDaemonUser,

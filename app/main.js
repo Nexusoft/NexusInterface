@@ -47,7 +47,7 @@ const installExtensions = async () => {
 
 function createWindow() {
   // App self-destruct timer
-  const expiration = 1548447203000;
+  const expiration = 1549090800000;
   var presentTime = new Date().getTime();
   var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
   if (presentTime >= expiration) {

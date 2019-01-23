@@ -1,7 +1,7 @@
 // External
 import React from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field, change } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
@@ -27,13 +27,11 @@ const Buttons = styled.div({
   justifyContent: 'space-between',
 });
 
-const formName = 'newAddress';
-
 @connect(state => ({
   accountNames: (state.addressbook.myAccounts || []).map(acc => acc.account),
 }))
 @reduxForm({
-  form: formName,
+  form: 'newAddress',
   initialValues: {
     accountName: '',
   },

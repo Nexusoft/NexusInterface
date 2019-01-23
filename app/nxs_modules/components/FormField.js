@@ -18,7 +18,8 @@ const FormFieldComponent = styled.div(
 
 const Label = styled.label(
   {
-    display: 'block',
+    display: 'flex',
+    alignItems: 'center',
     position: 'relative',
     marginBottom: '.2em',
   },

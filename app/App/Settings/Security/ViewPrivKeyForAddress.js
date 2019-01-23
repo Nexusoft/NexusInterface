@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { reduxForm, Field, change } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import { clipboard } from 'electron';
 
 // Internal
@@ -16,10 +16,9 @@ import * as RPC from 'scripts/rpc';
 import copyIcon from 'images/copy.sprite.svg';
 import { rpcErrorHandler } from 'utils/form';
 
-const formName = 'viewPrivateKey';
-
 @reduxForm({
-  form: formName,
+  form: 'viewPrivateKey',
+  destroyOnUnmount: false,
   initialValues: {
     address: '',
     privateKey: '',
@@ -32,8 +31,8 @@ const formName = 'viewPrivateKey';
     return errors;
   },
   onSubmit: ({ address }) => RPC.PROMISE('dumpprivkey', [address]),
-  onSubmitSuccess: (result, dispatch) => {
-    dispatch(change(formName, 'privateKey', result));
+  onSubmitSuccess: (result, dispatch, props) => {
+    props.change('privateKey', result);
   },
   onSubmitFail: rpcErrorHandler('Error getting private key'),
 })

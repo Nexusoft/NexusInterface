@@ -179,7 +179,6 @@ const ButtonComponent = styled.button(
       case 'blank-dark':
         return {
           '&, &:active, &&:disabled': {
-            padding: '0.5em 1em',
             background: 'transparent',
             color: theme.mixer(0.25),
             transitionProperty: 'color',
@@ -191,7 +190,6 @@ const ButtonComponent = styled.button(
       case 'blank-light':
         return {
           '&, &:active, &&:disabled': {
-            padding: '0.5em 1em',
             background: 'transparent',
             color: theme.mixer(0.75),
             transitionProperty: 'color',
