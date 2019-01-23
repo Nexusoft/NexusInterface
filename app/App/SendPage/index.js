@@ -17,8 +17,6 @@ import UIController from 'components/UIController';
 // Internal Local Dependencies
 import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
 import SendForm from './SendForm';
-import Queue from './Queue';
-import styles from './style.css';
 
 // Resources
 import sendIcon from 'images/send.sprite.svg';

@@ -23,9 +23,7 @@ const RemoveButton = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  borderRadius: '50%',
   color: theme.mixer(0.75),
-  // border: '1px solid',
   opacity: 0,
   transition: `color ${timing.normal}, opacity ${timing.normal}`,
   '&:hover': {
@@ -60,7 +58,7 @@ const AmountWrapper = styled.div({
 
 const AddRecipient = styled.div({
   marginTop: '1em',
-  marginBottom: '1em',
+  marginBottom: '1.5em',
 });
 
 const PlusIcon = styled(Icon)({

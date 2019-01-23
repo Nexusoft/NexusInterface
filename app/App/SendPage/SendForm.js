@@ -17,7 +17,6 @@ import UIController from 'components/UIController';
 import Link from 'components/Link';
 import { rpcErrorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
-import plusIcon from 'images/plus.sprite.svg';
 
 // Internal Local
 import Recipients from './Recipients';
