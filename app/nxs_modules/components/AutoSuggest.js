@@ -1,5 +1,6 @@
 // External
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import memoize from 'memoize-one';
 import styled from '@emotion/styled';
 
@@ -33,19 +34,11 @@ const SuggestionComponent = styled.div(
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     height: consts.inputHeightEm + 'em',
-    background: theme.background,
     color: theme.foreground,
-    '&:hover': {
-      background: theme.mixer(0.125),
-    },
   }),
-  ({ selected, theme }) =>
-    selected && {
-      background: theme.primary,
-      color: theme.primaryAccent,
-      '&:hover': {
-        background: color.lighten(theme.primary, 0.3),
-      },
+  ({ active, theme }) =>
+    active && {
+      background: theme.mixer(0.125),
     }
 );
 
@@ -55,13 +48,19 @@ class Suggestion extends React.PureComponent {
     onSelect && onSelect(getValue(suggestion));
   };
 
+  handleMouseEnter = () => {
+    this.props.activate(this.props.index);
+  };
+
   render() {
+    const { index, activeIndex, suggestion } = this.props;
     return (
       <SuggestionComponent
-        selected={this.props.selected}
+        active={index === activeIndex}
         onClick={this.handleSelect}
+        onMouseEnter={this.handleMouseEnter}
       >
-        {getDisplay(this.props.suggestion)}
+        {getDisplay(suggestion)}
       </SuggestionComponent>
     );
   }
@@ -72,22 +71,25 @@ const AutoSuggestComponent = styled.div({
 });
 
 const Suggestions = styled.div(
-  {
+  ({ theme }) => ({
     position: 'absolute',
     top: '100%',
     left: 0,
     right: 0,
     opacity: 0,
+    maxHeight: 184,
+    overflowY: 'auto',
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
     paddingBottom: 4,
+    background: theme.background,
     boxShadow: `0 4px 4px rgba(0,0,0,.7)`,
     visibility: 'hidden',
     transition: `opacity ${timing.normal}, visibility ${timing.normal}`,
     zIndex: 1,
-  },
-  ({ active }) =>
-    active && {
+  }),
+  ({ open }) =>
+    open && {
       opacity: 1,
       visibility: 'visible',
     }
@@ -110,11 +112,12 @@ export default class AutoSuggest extends React.Component {
   };
 
   state = {
-    active: false,
-    selected: null,
+    open: false,
+    activeIndex: null,
   };
 
   inputRef = React.createRef();
+  suggestionsRef = React.createRef();
 
   defaultFilterSuggestions = memoize((suggestions, inputValue) => {
     if (!suggestions) return [];
@@ -135,18 +138,31 @@ export default class AutoSuggest extends React.Component {
       this.props.inputProps &&
       prevProps.inputProps.value !== this.props.inputProps.value
     ) {
-      this.setState({ selected: null });
+      this.setState({ activeIndex: null });
     }
   }
 
   handleInputFocus = e => {
-    this.setState({ active: true });
+    this.setState({ open: true });
     this.props.inputProps.onFocus && this.props.inputProps.onFocus(e);
   };
 
   handleInputBlur = e => {
-    this.setState({ active: false });
+    this.setState({ open: false });
     this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
+  };
+
+  scrollToNewSelection = index => {
+    this.setState({ activeIndex: index });
+    if (index !== null) {
+      const suggestionsEl = findDOMNode(this.suggestionsRef.current);
+      const suggestionEl = suggestionsEl.children[index];
+      suggestionEl.scrollIntoView({
+        block: 'nearest',
+        inline: 'nearest',
+        behavior: 'smooth',
+      });
+    }
   };
 
   handleKeyDown = e => {
@@ -156,37 +172,37 @@ export default class AutoSuggest extends React.Component {
       inputProps,
       onSelect,
     } = this.props;
-    const { selected } = this.state;
+    const { activeIndex } = this.state;
     const inputValue = inputProps && inputProps.value;
     const currentSuggestions = filterSuggestions(suggestions, inputValue);
 
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        if (selected === null) {
-          this.setState({ selected: 0 });
-        } else if (selected < currentSuggestions.length - 1) {
-          this.setState({ selected: selected + 1 });
+        if (activeIndex === null) {
+          this.scrollToNewSelection(0);
+        } else if (activeIndex < currentSuggestions.length - 1) {
+          this.scrollToNewSelection(activeIndex + 1);
         } else {
-          this.setState({ selected: null });
+          this.scrollToNewSelection(null);
         }
         break;
       case 'ArrowUp':
         e.preventDefault();
-        if (selected === null) {
-          this.setState({ selected: currentSuggestions.length - 1 });
-        } else if (selected !== 0) {
-          this.setState({ selected: selected - 1 });
+        if (activeIndex === null) {
+          this.scrollToNewSelection(currentSuggestions.length - 1);
+        } else if (activeIndex !== 0) {
+          this.scrollToNewSelection(activeIndex - 1);
         } else {
-          this.setState({ selected: null });
+          this.scrollToNewSelection(null);
         }
         break;
       case 'Tab':
       case 'Enter':
-        if (selected !== null) {
+        if (activeIndex !== null) {
           e.preventDefault();
-          const selectedSuggestion = currentSuggestions[selected];
-          const value = getValue(selectedSuggestion);
+          const activeSuggestion = currentSuggestions[activeIndex];
+          const value = getValue(activeSuggestion);
           onSelect && onSelect(value);
         }
         break;
@@ -196,6 +212,7 @@ export default class AutoSuggest extends React.Component {
 
   clearInput = () => {
     this.props.onSelect && this.props.onSelect('');
+    this.focusInput();
   };
 
   focusInput = () => {
@@ -218,6 +235,10 @@ export default class AutoSuggest extends React.Component {
     </div>
   );
 
+  activate = index => {
+    this.setState({ activeIndex: index });
+  };
+
   render() {
     const {
       filterSuggestions = this.defaultFilterSuggestions,
@@ -227,7 +248,7 @@ export default class AutoSuggest extends React.Component {
       inputComponent: Input,
       ...rest
     } = this.props;
-    const { active, selected } = this.state;
+    const { open, activeIndex } = this.state;
     const currentSuggestions = filterSuggestions(
       suggestions,
       inputProps && inputProps.value
@@ -242,12 +263,17 @@ export default class AutoSuggest extends React.Component {
           onBlur={this.handleInputBlur}
           onKeyDown={this.handleKeyDown}
         />
-        <Suggestions active={active && currentSuggestions.length > 0}>
+        <Suggestions
+          ref={this.suggestionsRef}
+          open={open && currentSuggestions.length > 0}
+        >
           {currentSuggestions.map((suggestion, i) => (
             <Suggestion
               key={i}
+              index={i}
+              activeIndex={activeIndex}
+              activate={this.activate}
               suggestion={suggestion}
-              selected={selected === i}
               onSelect={onSelect}
             />
           ))}
