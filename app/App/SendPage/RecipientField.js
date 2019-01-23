@@ -33,6 +33,10 @@ const mapStateToProps = ({ addressbook: { addressbook } }) => ({
 
 @connect(mapStateToProps)
 export default class RecipientField extends Component {
+  handleSelect = address => {
+    this.props.change(this.props.input.name, address);
+  };
+
   render() {
     const recipientName = this.props.addressNameMap[this.props.input.value];
 
@@ -50,7 +54,7 @@ export default class RecipientField extends Component {
           meta={this.props.meta}
           inputProps={{ placeholder: 'Recipient Address' }}
           suggestions={this.props.suggestions}
-          onSelect={this.props.updateRecipient}
+          onSelect={this.handleSelect}
           filterSuggestions={filterRecipients}
         />
       </FormField>

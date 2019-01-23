@@ -43,7 +43,7 @@ export default class AmountField extends Component {
       const { nxsFiatPrice } = this.props;
       if (nxsFiatPrice) {
         const fiat = nxs * nxsFiatPrice;
-        this.props.change('fiatAmount', fiat.toFixed(2));
+        this.props.change(this.fiatAmountFieldName(), fiat.toFixed(2));
       }
     }
   };
@@ -54,10 +54,13 @@ export default class AmountField extends Component {
       const { nxsFiatPrice } = this.props;
       if (nxsFiatPrice) {
         const nxs = fiat / nxsFiatPrice;
-        this.props.change('amount', nxs.toFixed(5));
+        this.props.change(this.amountFieldName(), nxs.toFixed(5));
       }
     }
   };
+
+  amountFieldName = () => `${this.props.parentFieldName}.amount`;
+  fiatAmountFieldName = () => `${this.props.parentFieldName}.fiatAmount`;
 
   render() {
     return (
@@ -66,7 +69,7 @@ export default class AmountField extends Component {
           <FormField connectLabel label={<Text id="sendReceive.Amount" />}>
             <Field
               component={TextField.RF}
-              name="amount"
+              name={this.amountFieldName()}
               placeholder="0.00000"
               onChange={this.nxsToFiat}
             />
@@ -79,7 +82,7 @@ export default class AmountField extends Component {
           <FormField connectLabel label={this.props.fiatCurrency}>
             <Field
               component={TextField.RF}
-              name="fiatAmount"
+              name={this.fiatAmountFieldName()}
               placeholder="0.00"
               onChange={this.fiatToNxs}
             />

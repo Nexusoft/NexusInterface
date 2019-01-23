@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, FieldArray } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
@@ -19,12 +19,15 @@ import { rpcErrorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
 
 // Internal Local
-import RecipientField from './RecipientField';
-import AmountField from './AmountField';
-import { getAccountOptions, getAddressNameMap } from './selectors';
+import Recipients from './Recipients';
+import {
+  getAccountOptions,
+  getAddressNameMap,
+  getRegisteredFieldNames,
+} from './selectors';
 
 const SendFormComponent = styled.form({
-  maxWidth: 620,
+  maxWidth: 700,
   margin: '0 auto',
 });
 
@@ -44,6 +47,7 @@ const mapStateToProps = ({
   settings: { minConfirmations },
   common: { encrypted, loggedIn },
   overview: { paytxfee },
+  form,
 }) => ({
   minConfirmations,
   encrypted,
@@ -51,65 +55,103 @@ const mapStateToProps = ({
   paytxfee,
   accountOptions: getAccountOptions(myAccounts),
   addressNameMap: getAddressNameMap(addressbook),
+  fieldNames: getRegisteredFieldNames(
+    form.sendNXS && form.sendNXS.registeredFields
+  ),
 });
 
 const mapDispatchToProps = dispatch => ({
   loadMyAccounts: () => dispatch(loadMyAccounts()),
 });
 
-@connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
 @reduxForm({
   form: 'sendNXS',
   destroyOnUnmount: false,
   initialValues: {
     sendFrom: null,
-    sendTo: null,
-    amount: '',
-    fiatAmount: '',
+    recipients: [
+      {
+        address: null,
+        amount: '',
+        fiatAmount: '',
+      },
+    ],
     message: '',
   },
-  validate: ({ sendFrom, sendTo, amount }) => {
+  validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
       errors.sendFrom = 'No accounts selected';
     }
-    if (!sendTo) {
-      errors.sendTo = <Text id="Alert.InvalidAddress" />;
+
+    if (!recipients || !recipients.length) {
+      errors.recipients = { _error: 'There must be at least one recipient' };
+    } else {
+      const recipientsErrors = [];
+
+      recipients.forEach(({ address, amount }, i) => {
+        const recipientErrors = {};
+        if (!address) {
+          recipientErrors.address = <Text id="Alert.InvalidAddress" />;
+        }
+        if (!amount || parseFloat(amount) <= 0) {
+          recipientErrors.amount = <Text id="Alert.InvalidAmount" />;
+        }
+        if (Object.keys(recipientErrors).length) {
+          recipientsErrors.push(recipientErrors);
+        }
+      });
+
+      if (recipientsErrors.length) {
+        errors.recipients = recipientsErrors;
+      }
     }
-    if (!amount || parseFloat(amount) <= 0) {
-      errors.amount = <Text id="Alert.InvalidAmount" />;
-    }
+
     return errors;
   },
-  asyncBlurFields: ['sendTo'],
-  asyncValidate: async ({ sendTo }) => {
-    if (sendTo) {
-      try {
-        const result = await RPC.PROMISE('validateaddress', [sendTo]);
-        if (!result.isvalid) {
-          throw { sendTo: <Text id="Alert.InvalidAddress" /> };
-        }
-        if (result.ismine) {
-          throw { sendTo: <Text id="Alert.registeredToThis" /> };
-        }
-      } catch (err) {
-        throw { sendTo: <Text id="Alert.InvalidAddress" /> };
+  asyncBlurFields: ['recipients'],
+  asyncValidate: async ({ recipients }) => {
+    if (recipients && recipients.length) {
+      const recipientsErrors = [];
+      await recipients.map(({ address }, i) =>
+        (async () => {
+          try {
+            const result = await RPC.PROMISE('validateaddress', [address]);
+            if (!result.isvalid) {
+              recipientsErrors[i] = {
+                address: <Text id="Alert.InvalidAddress" />,
+              };
+            }
+            if (result.ismine) {
+              recipientsErrors[i] = {
+                address: <Text id="Alert.registeredToThis" />,
+              };
+            }
+          } catch (err) {
+            recipientsErrors[i] = {
+              address: <Text id="Alert.InvalidAddress" />,
+            };
+          }
+        })()
+      );
+      if (recipientsErrors.length) {
+        throw { recipients: recipientsErrors };
       }
     }
     return null;
   },
-  onSubmit: ({ sendFrom, sendTo, amount, message }, dispatch, props) => {
-    const params = [
-      sendFrom,
-      sendTo,
-      parseFloat(amount),
-      parseInt(props.minConfirmations),
-    ];
-    if (message) params.push(message);
-    return RPC.PROMISE('sendfrom', params);
+  onSubmit: ({ sendFrom, recipients, message }, dispatch, props) => {
+    if (recipients.length === 1) {
+      const recipient = recipients[0];
+      const params = [
+        sendFrom,
+        recipient.address,
+        parseFloat(recipient.amount),
+        parseInt(props.minConfirmations),
+      ];
+      if (message) params.push(message);
+      return RPC.PROMISE('sendfrom', params);
+    }
   },
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
@@ -120,18 +162,27 @@ const mapDispatchToProps = dispatch => ({
   },
   onSubmitFail: rpcErrorHandler('Error Sending NXS'),
 })
+@connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
 export default class SendForm extends Component {
-  updateRecipient = address => {
-    this.props.change('sendTo', address);
-  };
-
   confirmSend = e => {
     e.preventDefault();
-    const { handleSubmit, invalid, encrypted, loggedIn, touch } = this.props;
+    const {
+      handleSubmit,
+      invalid,
+      encrypted,
+      loggedIn,
+      touch,
+      fieldNames,
+    } = this.props;
 
     if (invalid) {
-      // Mark the form touched so that the validation errors will be shown
-      touch('sendFrom', 'sendTo', 'amount', 'fiatAmount', 'message');
+      // Mark the form touched so that the validation errors will be shown.
+      // redux-form doesn't have the `touchAll` feature yet so we have to list all fields manually.
+      // redux-form also doesn't have the API to get all the field names yet so we have to connect to the store to retrieve it manually
+      touch(...fieldNames);
       return;
     }
 
@@ -163,6 +214,7 @@ export default class SendForm extends Component {
 
   render() {
     const { accountOptions, change, paytxfee } = this.props;
+    console.log(this.fieldNames);
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
@@ -175,13 +227,7 @@ export default class SendForm extends Component {
           />
         </FormField>
 
-        <Field
-          name="sendTo"
-          component={RecipientField}
-          updateRecipient={this.updateRecipient}
-        />
-
-        <AmountField change={change} />
+        <FieldArray component={Recipients} name="recipients" change={change} />
 
         {paytxfee && (
           <TransactionFee>

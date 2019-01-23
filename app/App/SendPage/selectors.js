@@ -61,3 +61,7 @@ export const getRecipientSuggestions = memoize(addressBook => {
   }
   return suggestions;
 });
+
+export const getRegisteredFieldNames = memoize(registeredFields =>
+  Object.keys(registeredFields || {})
+);
