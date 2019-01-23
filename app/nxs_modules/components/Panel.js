@@ -24,13 +24,13 @@ const PanelComponent = styled.div(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'stretch',
-  color: theme.light,
+  color: theme.foreground,
   width: '100%',
   animation: `${intro} .2s ease-out`,
 }));
 
 const PanelHeader = styled.div(({ theme }) => ({
-  background: theme.dark,
+  background: theme.background,
   borderTopLeftRadius: borderRadius,
   borderTopRightRadius: borderRadius,
   flexShrink: 0,
@@ -38,23 +38,23 @@ const PanelHeader = styled.div(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  color: theme.dark,
+  color: theme.background,
 }));
 
 const PanelTitle = styled.h3(({ theme }) => ({
   fontSize: 28,
   fontWeight: 'normal',
   margin: 0,
-  color: theme.primary
+  color: theme.primary,
 }));
 
 const PanelBody = styled.div(
   ({ theme }) => ({
-    background: color.darken(theme.dark, 0.3),
+    background: color.darken(theme.background, 0.3),
     borderBottomLeftRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
     flexGrow: 1,
-    padding: '10px 20px',
+    padding: '20px 30px',
     position: 'relative',
   }),
   ({ scrollable }) => ({

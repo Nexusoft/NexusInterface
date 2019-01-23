@@ -15,7 +15,7 @@ import Button from 'components/Button';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common, ...state.settings };
+  return { ...state.terminal, ...state.common, settings: state.settings };
 };
 const mapDispatchToProps = dispatch => ({
   printCoreOutput: data =>
@@ -35,7 +35,7 @@ const TerminalCoreComponent = styled.div(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  border: `1px solid ${theme.darkerGray}`,
+  border: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 const Output = styled.div(
@@ -44,8 +44,8 @@ const Output = styled.div(
     wordBreak: 'break-all',
     flexGrow: 1,
     display: 'flex',
-    background: theme.dark,
-    borderBottom: `1px solid ${theme.darkerGray}`,
+    background: theme.background,
+    borderBottom: `1px solid ${theme.mixer(0.125)}`,
   }),
   ({ reverse }) => ({
     flexDirection: reverse ? 'column-reverse' : 'column',
@@ -53,8 +53,8 @@ const Output = styled.div(
 );
 
 const OutputLine = styled.code(({ theme }) => ({
-  background: theme.dark,
-  borderColor: theme.dark,
+  background: theme.background,
+  borderColor: theme.background,
 }));
 
 class TerminalCore extends Component {
@@ -78,16 +78,14 @@ class TerminalCore extends Component {
       debugfile = datadir + '/debug.log';
     }
     this.debugFileLocation = debugfile;
-    fs.stat(this.debugFileLocation,this.checkDebugFileExists.bind(this));
+    fs.stat(this.debugFileLocation, this.checkDebugFileExists.bind(this));
     this.checkIfFileExistsInterval = setInterval(() => {
-      if (this.tail != undefined)
-      {
+      if (this.tail != undefined) {
         clearInterval(this.checkIfFileExistsInterval);
         return;
       }
-      fs.stat(this.debugFileLocation,this.checkDebugFileExists.bind(this));
-      },
-    5000);
+      fs.stat(this.debugFileLocation, this.checkDebugFileExists.bind(this));
+    }, 5000);
   }
 
   // todo finish
@@ -106,41 +104,35 @@ class TerminalCore extends Component {
     }
   }
 
-
-  checkDebugFileExists(err,stat)
-  {
+  checkDebugFileExists(err, stat) {
     console.log(this);
-    if (err == null)
-      {
-        this.processDeamonOutput(this.debugFileLocation);
-        clearInterval(this.checkIfFileExistsInterval);
-      }
-      else
-      {
-
-      }
+    if (err == null) {
+      this.processDeamonOutput(this.debugFileLocation);
+      clearInterval(this.checkIfFileExistsInterval);
+    } else {
+    }
   }
 
   onScrollEvent() {
-    const bottomPos  = this.outputRef.childNodes[0].scrollHeight - this.outputRef.childNodes[0].clientHeight - 2; // found a issue where the numbers would be plus or minus this do to floating point error. Just stepped back 2 it catch it.
+    const bottomPos =
+      this.outputRef.childNodes[0].scrollHeight -
+      this.outputRef.childNodes[0].clientHeight -
+      2; // found a issue where the numbers would be plus or minus this do to floating point error. Just stepped back 2 it catch it.
     const currentPos = parseInt(this.outputRef.childNodes[0].scrollTop);
-    if (currentPos >= bottomPos)
-    {
+    if (currentPos >= bottomPos) {
       return;
     }
-    if (!this.props.coreOutputPaused)
-    {
-      this.props.setCoreOutputPaused(true)
+    if (!this.props.coreOutputPaused) {
+      this.props.setCoreOutputPaused(true);
     }
-
   }
 
   // Class Methods
   processDeamonOutput(debugfile) {
     const tailOptions = {
-      useWatchFile:true,
+      useWatchFile: true,
     };
-    this.tail = new Tail(debugfile,tailOptions);
+    this.tail = new Tail(debugfile, tailOptions);
     let n = 0;
     let batch = [];
     this.tail.on('line', d => {
@@ -150,8 +142,7 @@ class TerminalCore extends Component {
       if (this.props.coreOutputPaused) {
         return;
       }
-      if (batch.length == 0)
-      {
+      if (batch.length == 0) {
         return;
       }
       this.props.printCoreOutput(batch);
@@ -169,7 +160,10 @@ class TerminalCore extends Component {
             <div className="dim">Core in Manual Mode</div>
           ) : (
             <>
-              <Output reverse={!this.props.settings.manualDaemon} onScroll={() => this.onScrollEvent()}>
+              <Output
+                reverse={!this.props.settings.manualDaemon}
+                onScroll={() => this.onScrollEvent()}
+              >
                 {this.props.coreOutput.map((d, i) => (
                   <OutputLine key={i}>{d}</OutputLine>
                 ))}

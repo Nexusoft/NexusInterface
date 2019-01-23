@@ -102,13 +102,13 @@ const Tooltip = styled.div(
     switch (skin) {
       case 'default':
         return {
-          background: color.lighten(theme.dark, 0.2),
-          color: theme.light,
+          background: color.lighten(theme.background, 0.2),
+          color: theme.foreground,
         };
       case 'error':
         return {
-          background: theme.error,
-          color: theme.errorContrast,
+          background: theme.danger,
+          color: theme.dangerAccent,
         };
     }
   },
@@ -123,9 +123,9 @@ const Tooltip = styled.div(
       height: 8,
       color:
         skin === 'default'
-          ? color.lighten(theme.dark, 0.2)
+          ? color.lighten(theme.background, 0.2)
           : skin === 'error'
-          ? theme.error
+          ? theme.danger
           : undefined,
     }),
   }),

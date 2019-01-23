@@ -23,8 +23,8 @@ const EncryptWalletForm = styled.form({
 
 const Note = styled.div(({ theme }) => ({
   padding: '1em',
-  border: `2px dashed ${theme.gray}`,
-  color: theme.gray,
+  border: `2px dashed ${theme.mixer(0.5)}`,
+  color: theme.mixer(0.5),
 }));
 
 const Characters = styled.span({
@@ -34,6 +34,7 @@ const Characters = styled.span({
 
 @reduxForm({
   form: 'encryptWallet',
+  destroyOnUnmount: false,
   initialValues: {
     password: '',
     passwordRepeat: '',
@@ -54,7 +55,8 @@ const Characters = styled.span({
     return errors;
   },
   onSubmit: ({ password }) => RPC.PROMISE('encryptwallet', [password]),
-  onSubmitSuccess: () => {
+  onSubmitSuccess: (result, dispatch, props) => {
+    props.reset();
     UIController.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {

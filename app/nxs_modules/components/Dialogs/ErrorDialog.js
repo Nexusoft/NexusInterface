@@ -9,9 +9,9 @@ import Dialog from './Dialog';
 
 const XMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 56,
-  color: theme.error,
+  color: theme.danger,
   borderWidth: 3,
-  filter: `drop-shadow(0 0 5px ${color.fade(theme.error, 0.5)})`,
+  filter: `drop-shadow(0 0 5px ${color.fade(theme.danger, 0.5)})`,
 }));
 
 const ErrorDialog = ({ message, note, ...rest }) => (

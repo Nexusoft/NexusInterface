@@ -59,7 +59,7 @@ const Title = styled.div({
 const ProgressBar = styled.div(({ percentage, theme }) => ({
   height: 20,
   borderRadius: 10,
-  border: `1px solid ${theme.gray}`,
+  border: `1px solid ${theme.mixer(0.5)}`,
   overflow: 'hidden',
   animation:
     percentage >= 100
@@ -83,15 +83,15 @@ const MinimizeIcon = styled(Icon)(({ theme }) => ({
   left: 10,
   fontSize: 10,
   cursor: 'pointer',
-  color: theme.gray,
+  color: theme.mixer(0.5),
   transition: `color ${timing.normal}`,
   '&:hover': {
-    color: theme.lightGray,
+    color: theme.mixer(0.75),
   },
 }));
 
 @connect(state => ({
-  locale: state.settings.settings.locale,
+  locale: state.settings.locale,
 }))
 export default class BootstrapModal extends PureComponent {
   static contextType = ModalContext;

@@ -11,8 +11,8 @@ import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
 import { color } from 'utils';
 
-// Minimum gap from the dropdown to the bottom edge of the screen
-const minScreenGap = 20;
+// Minimum gap from the dropdown to the edges of the screen
+const minScreenGap = 10;
 // Options's horizontal padding
 const optionHPadding = 12;
 
@@ -50,7 +50,7 @@ const SelectControl = styled.div(
       case 'underline':
         return {
           background: 'transparent',
-          color: theme.lighterGray,
+          color: theme.mixer(0.875),
           transitionProperty: 'color, border-bottom-color',
           transitionDuration: timing.normal,
           position: 'relative',
@@ -62,23 +62,25 @@ const SelectControl = styled.div(
             right: 0,
             height: 2,
             borderRadius: 1,
-            background: error ? theme.error : theme.gray,
+            background: error ? theme.danger : theme.mixer(0.5),
             transitionProperty: 'background-color',
             transitionDuration: timing.normal,
           },
           '&:hover': {
-            color: theme.light,
-            borderBottomColor: theme.lightGray,
+            color: theme.foreground,
+            borderBottomColor: theme.mixer(0.75),
             '&::after': {
-              background: theme.lightGray,
+              background: error
+                ? color.lighten(theme.danger, 0.3)
+                : theme.mixer(0.75),
             },
           },
           ...(active
             ? {
-                color: theme.light,
+                color: theme.foreground,
                 '&&::after': {
                   background: error
-                    ? color.lighten(theme.error, 0.3)
+                    ? color.lighten(theme.danger, 0.3)
                     : color.lighten(theme.primary, 0.3),
                 },
               }
@@ -87,16 +89,16 @@ const SelectControl = styled.div(
       case 'filled-light':
         return {
           paddingLeft: '.8em',
-          background: theme.lighterGray,
-          color: theme.dark,
+          background: theme.mixer(0.875),
+          color: theme.background,
           borderRadius: 2,
           transition: `background-color ${timing.normal}`,
           '&:hover': {
-            background: theme.light,
+            background: theme.foreground,
           },
           ...(active
             ? {
-                background: theme.light,
+                background: theme.foreground,
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
               }
@@ -115,18 +117,9 @@ const CurrentValue = styled.div({
   whiteSpace: 'nowrap',
 });
 
-const startingScaleDown = 2;
-
-const vertExpand = keyframes`
-  0% {
-    opacity: 0; 
-    transform: scaleY(${1 / startingScaleDown});
-  }
-  100% {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-`;
+const Placeholder = styled.span(({ theme }) => ({
+  color: theme.mixer(0.5),
+}));
 
 const OptionsComponent = styled.div(
   {
@@ -146,13 +139,13 @@ const OptionsComponent = styled.div(
     switch (skin) {
       case 'underline':
         return {
-          background: theme.dark,
-          color: theme.light,
+          background: theme.background,
+          color: theme.foreground,
         };
       case 'filled-light':
         return {
-          background: theme.light,
-          color: theme.dark,
+          background: theme.foreground,
+          color: theme.background,
         };
     }
   },
@@ -180,15 +173,15 @@ const Option = styled.div(
       case 'underline':
         return {
           background: selected ? theme.primary : undefined,
-          color: selected ? theme.primaryContrast : undefined,
+          color: selected ? theme.primaryAccent : undefined,
           '&:hover': {
-            background: selected ? theme.primary : theme.darkerGray,
+            background: selected ? theme.primary : theme.mixer(0.125),
           },
         };
       case 'filled-light':
         return {
           '&:hover': {
-            background: theme.lighterGray,
+            background: theme.mixer(0.875),
           },
         };
     }
@@ -196,24 +189,28 @@ const Option = styled.div(
 );
 
 class Options extends Component {
-  selectedRef = React.createRef();
+  anchorRef = React.createRef();
 
   state = {
     ready: false,
-    // Apply the same fon-size with the Select control
+    // Apply the same font-size with the Select control
     styles: {
       fontSize: window
-        .getComputedStyle(this.props.controlRef)
+        .getComputedStyle(this.props.controlRef.current)
         .getPropertyValue('font-size'),
     },
   };
 
+  componentDidMount() {
+    this.positionDropdown();
+  }
+
   positionDropdown = () => {
-    if (!this.selectedRef.current) return;
+    if (!this.anchorRef.current) return;
     const styles = { fontSize: this.state.styles.fontSize };
 
     // Horizontally align Options dropdown with the Select control
-    const controlRect = this.props.controlRef.getBoundingClientRect();
+    const controlRect = this.props.controlRef.current.getBoundingClientRect();
     if (this.props.skin === 'underline') {
       styles.left = controlRect.left - optionHPadding;
       styles.width = controlRect.width + optionHPadding;
@@ -224,7 +221,7 @@ class Options extends Component {
 
     // Vertically align Selected Option with the Select control
     const thisRect = this.el.getBoundingClientRect();
-    const selectedRect = this.selectedRef.current.getBoundingClientRect();
+    const selectedRect = this.anchorRef.current.getBoundingClientRect();
     const selectedOptTop = selectedRect.top - thisRect.top;
     styles.top = controlRect.top - selectedOptTop;
 
@@ -247,15 +244,19 @@ class Options extends Component {
 
   select = option => {
     this.props.close();
-    this.props.onChange(option.value);
+    if (!option.isDummy) {
+      this.props.onChange(option.value);
+    }
   };
 
   render() {
-    const { skin, options, close, onChange, value, ...rest } = this.props;
+    const { skin, options, close, value } = this.props;
     const { ready, styles } = this.state;
+    const selectedIndex = options.findIndex(o => o.value === value);
+    const anchorIndex = selectedIndex !== -1 ? selectedIndex : 0;
 
     return (
-      <Overlay onBackgroundClick={close} onMount={this.positionDropdown}>
+      <Overlay onBackgroundClick={close}>
         <OptionsComponent
           skin={skin}
           ref={el => {
@@ -268,13 +269,13 @@ class Options extends Component {
           style={styles}
           ready={ready}
         >
-          {options.map(option => (
+          {options.map((option, i) => (
             <Option
               key={option.value}
               skin={skin}
               onClick={() => this.select(option)}
-              selected={option.value === value}
-              ref={option.value === value ? this.selectedRef : undefined}
+              selected={option.value === value && !option.isDummy}
+              ref={i === anchorIndex ? this.anchorRef : undefined}
             >
               {option.display}
             </Option>
@@ -290,7 +291,22 @@ export default class Select extends Component {
 
   state = { open: false };
 
-  option = value => this.props.options.find(o => o.value === value);
+  options = () => {
+    const { options } = this.props;
+    if (options && options.length > 0) {
+      return options;
+    } else {
+      // Default options with a dummy option to make the UI render
+      return [
+        {
+          isDummy: true,
+        },
+      ];
+    }
+  };
+
+  option = value =>
+    this.props.options && this.props.options.find(o => o.value === value);
 
   open = () => {
     this.setState({ open: true });
@@ -303,24 +319,14 @@ export default class Select extends Component {
   render() {
     const {
       skin = 'underline',
-      options,
       value,
       error,
       onChange,
+      placeholder,
       ...rest
     } = this.props;
     const { open } = this.state;
-    if (!options.length) {
-      console.error('Select options cannot be empty');
-      return null;
-    }
     const selectedOption = this.option(value);
-    if (!selectedOption) {
-      console.error(
-        `Selected value ${value} is not found among the options: ${options}`
-      );
-      return null;
-    }
 
     return (
       <>
@@ -329,10 +335,15 @@ export default class Select extends Component {
           active={open}
           onClick={this.open}
           skin={skin}
+          error={error}
           {...rest}
         >
           <CurrentValue>
-            {selectedOption ? selectedOption.display : null}
+            {selectedOption ? (
+              selectedOption.display
+            ) : (
+              <Placeholder>{placeholder}</Placeholder>
+            )}
           </CurrentValue>
           <Button
             fitHeight
@@ -349,9 +360,10 @@ export default class Select extends Component {
 
         {open && (
           <Options
-            {...{ skin, options, value, onChange }}
+            {...{ skin, value, onChange }}
+            options={this.options()}
             close={this.close}
-            controlRef={this.controlRef.current}
+            controlRef={this.controlRef}
           />
         )}
       </>
@@ -360,7 +372,8 @@ export default class Select extends Component {
 }
 
 // Select wrapper for redux-form
-const SelectReduxFForm = ({ input, meta, ...rest }) => (
+const SelectReduxForm = ({ input, meta, ...rest }) => (
   <Select error={meta.touched && meta.error} {...input} {...rest} />
 );
-Select.RF = SelectReduxFForm;
+
+Select.RF = SelectReduxForm;

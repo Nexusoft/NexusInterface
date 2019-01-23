@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field, reset } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
@@ -21,8 +21,6 @@ const ChangePasswordComponent = styled.form({
   marginRight: '1em',
 });
 
-const formName = 'changePassword';
-
 @connect(
   null,
   dispatch => ({
@@ -30,7 +28,8 @@ const formName = 'changePassword';
   })
 )
 @reduxForm({
-  form: formName,
+  form: 'changePassword',
+  destroyOnUnmount: false,
   initialValues: {
     password: '',
     newPassword: '',
@@ -56,11 +55,11 @@ const formName = 'changePassword';
   },
   onSubmit: ({ password, newPassword }) =>
     RPC.PROMISE('walletpassphrasechange', [password, newPassword]),
-  onSubmitSuccess: (result, dispatch) => {
+  onSubmitSuccess: (result, dispatch, props) => {
+    props.reset();
     UIController.openSuccessDialog({
       message: <Text id="Alert.PasswordHasBeenChanged" />,
     });
-    dispatch(reset(formName));
   },
   onSubmitFail: rpcErrorHandler('Error changing password'),
 })

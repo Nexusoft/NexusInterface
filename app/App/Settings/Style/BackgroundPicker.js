@@ -13,7 +13,7 @@ const Option = styled.label(
     cursor: 'pointer',
 
     '&:hover': {
-      background: theme.dark,
+      background: theme.background,
     },
   }),
   ({ selected, theme }) =>
@@ -27,12 +27,27 @@ const Option = styled.label(
 class BackgroundPicker extends Component {
   fileInputID = newUID();
 
+  setDefault = () => {
+    this.props.onChange(null);
+  };
+
+  handleFilePick = e => {
+    if (!!e.target.files.length) {
+      let imagePath = e.target.files[0].path;
+      if (process.platform === 'win32') {
+        imagePath = imagePath.replace(/\\/g, '/');
+      }
+      console.log(imagePath);
+      this.props.onChange(imagePath);
+    }
+  };
+
   render() {
-    const { wallpaper, onChange } = this.props;
+    const { wallpaper } = this.props;
     return (
       <div>
         <Option
-          onClick={() => onChange('')}
+          onClick={this.setDefault}
           selected={!wallpaper}
           style={{ marginBottom: '.5em' }}
         >
@@ -48,16 +63,7 @@ class BackgroundPicker extends Component {
           type="file"
           accept="image/*"
           style={{ display: 'none' }}
-          onChange={e => {
-            if (!!e.target.files.length) {
-              let imagePath = e.target.files[0].path;
-              if (process.platform === 'win32') {
-                imagePath = imagePath.replace(/\\/g, '/');
-              }
-              console.log(imagePath);
-              onChange(imagePath);
-            }
-          }}
+          onChange={this.handleFilePick}
         />
       </div>
     );

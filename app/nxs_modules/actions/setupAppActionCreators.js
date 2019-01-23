@@ -73,11 +73,6 @@ export const SetMarketAveData = () => dispatch => {
   );
 };
 
-export const SwitchLocale = locale => ({
-  type: TYPE.SWITCH_LOCALES,
-  payload: locale,
-});
-
 export const Lock = () => ({ type: TYPE.LOCK });
 
 export const Unlock = () => ({ type: TYPE.UNLOCK });
@@ -87,16 +82,6 @@ export const Encrypted = () => ({ type: TYPE.ENCRYPTED });
 export const BlockDate = stamp => ({ type: TYPE.BLOCK_DATE, payload: stamp });
 
 export const Unencrypted = () => ({ type: TYPE.UNENCRYPTED });
-
-export const MyAccountsList = list => ({
-  type: TYPE.MY_ACCOUNTS_LIST,
-  payload: list,
-});
-
-export const loadSettings = settings => ({
-  type: TYPE.UPDATE_SETTINGS,
-  payload: settings,
-});
 
 export const SetSyncStatus = stat => ({
   type: TYPE.SET_SYNC_STATUS,
@@ -111,10 +96,6 @@ export const SetHighestPeerBlock = hpb => ({
 export const SetPortIsAvailable = isAvailable => ({
   type: TYPE.PORT_AVAILABLE,
   payload: isAvailable,
-});
-
-export const SetAcceptLicense = () => ({
-  type: TYPE.ACCEPT_MIT,
 });
 
 export const LoadAddressBook = () => {

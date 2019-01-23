@@ -19,6 +19,7 @@ import { rpcErrorHandler } from 'utils/form';
 }))
 @reduxForm({
   form: 'setTransactionFee',
+  destroyOnUnmount: false,
   validate: ({ txFee }) => {
     const errors = {};
     if (parseFloat(txFee) <= 0) {

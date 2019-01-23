@@ -191,6 +191,14 @@ const configuration = {
       return path.normalize(rawPath);
     }
   },
+
+  GetHomeDir() {
+    if (process.platform === 'win32') {
+      return process.env.USERPROFILE;
+    } else {
+      return process.env.HOME;
+    }
+  },
 };
 
 configuration.Start();
