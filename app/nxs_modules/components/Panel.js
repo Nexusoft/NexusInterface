@@ -54,7 +54,7 @@ const PanelBody = styled.div(
     borderBottomLeftRadius: borderRadius,
     borderBottomRightRadius: borderRadius,
     flexGrow: 1,
-    padding: '10px 20px',
+    padding: '20px 30px',
     position: 'relative',
   }),
   ({ scrollable }) => ({
