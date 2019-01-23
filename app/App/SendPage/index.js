@@ -49,12 +49,7 @@ export default class SendPage extends Component {
   }
 
   moveBetweenAccounts = () => {
-    UIController.openModal(MoveBetweenAccountsModal, {
-      calculateUSDvalue: this.calculateUSDvalue.bind(this),
-      getAccountData: this.getAccountData.bind(this),
-      accountOptions: this.accountOptions(),
-      ...this.props,
-    });
+    UIController.openModal(MoveBetweenAccountsModal);
   };
 
   render() {

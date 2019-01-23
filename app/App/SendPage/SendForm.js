@@ -40,7 +40,6 @@ const mapStateToProps = ({
   common: { encrypted, loggedIn },
 }) => ({
   accountOptions: getAccountOptions(myAccounts),
-
   minConfirmations: minConfirmations,
   encrypted: encrypted,
   loggedIn: loggedIn,
@@ -79,6 +78,7 @@ const mapDispatchToProps = dispatch => ({
   },
   asyncBlurFields: ['sendTo'],
   asyncValidate: async ({ sendTo }) => {
+    console.log('validate', sendTo);
     if (sendTo) {
       try {
         const result = await RPC.PROMISE('validateaddress', [sendTo]);
@@ -89,7 +89,7 @@ const mapDispatchToProps = dispatch => ({
           throw { sendTo: <Text id="Alert.registeredToThis" /> };
         }
       } catch (err) {
-        throw { sendTo: err };
+        throw { sendTo: <Text id="Alert.InvalidAddress" /> };
       }
     }
     return null;
@@ -111,7 +111,7 @@ const mapDispatchToProps = dispatch => ({
     props.reset();
     props.loadMyAccounts();
   },
-  onSubmitFail: rpcErrorHandler('Error Saving Settings'),
+  onSubmitFail: rpcErrorHandler('Error Sending NXS'),
 })
 export default class SendForm extends Component {
   updateRecipient = address => {
