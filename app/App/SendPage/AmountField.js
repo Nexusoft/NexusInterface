@@ -66,7 +66,14 @@ export default class AmountField extends Component {
     return (
       <SendAmount>
         <SendAmountField>
-          <FormField connectLabel label={<Text id="sendReceive.Amount" />}>
+          <FormField
+            connectLabel
+            label={
+              <span className="v-align">
+                <Text id="sendReceive.Amount" />
+              </span>
+            }
+          >
             <Field
               component={TextField.RF}
               name={this.amountFieldName()}

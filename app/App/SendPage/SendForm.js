@@ -27,7 +27,7 @@ import {
 } from './selectors';
 
 const SendFormComponent = styled.form({
-  maxWidth: 700,
+  maxWidth: 800,
   margin: '0 auto',
 });
 
@@ -212,9 +212,16 @@ export default class SendForm extends Component {
     });
   };
 
+  addRecipient = () => {
+    this.props.array.push('recipients', {
+      address: null,
+      amount: '',
+      fiatAmount: '',
+    });
+  };
+
   render() {
     const { accountOptions, change, paytxfee } = this.props;
-    console.log(this.fieldNames);
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
@@ -250,7 +257,9 @@ export default class SendForm extends Component {
         </Text>
 
         <SendFormButtons>
-          <div />
+          <Button onClick={this.addRecipient}>
+            Send to multiple recipients
+          </Button>
           <Button type="submit" skin="primary">
             <Icon icon={sendIcon} spaceRight />
             <Text id="sendReceive.SendNow" />

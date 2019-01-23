@@ -97,6 +97,7 @@ const Suggestions = styled.div(
 const ClearButton = styled(Button)(
   {
     padding: '0 .2em',
+    marginLeft: '.5em',
     fontSize: '.8em',
   },
   ({ shown }) =>

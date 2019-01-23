@@ -12,7 +12,6 @@ import { getAddressNameMap, getRecipientSuggestions } from './selectors';
 const RecipientName = styled.span(({ theme }) => ({
   textTransform: 'none',
   color: theme.primary,
-  verticalAlign: 'middle',
 }));
 
 const filterRecipients = memoize((suggestions, inputValue) => {
@@ -43,10 +42,10 @@ export default class RecipientField extends Component {
     return (
       <FormField
         label={
-          <span>
-            <span className="v-align">Send To</span>&nbsp;&nbsp;
+          <>
+            <span>Send To&nbsp;&nbsp;</span>
             <RecipientName>{recipientName}</RecipientName>
-          </span>
+          </>
         }
       >
         <AutoSuggest.RF
