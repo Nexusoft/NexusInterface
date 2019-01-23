@@ -1,0 +1,13 @@
+{
+    "defaultStyle": "Light",
+    "background": "#ebebe6",
+    "danger": "#8f240e",
+    "dangerAccent": "#ffffff",
+    "foreground": "#1c1d1f",
+    "globeArchColor": "#00ffff",
+    "globeColor": "#0097e4",
+    "globePillarColor": "#00ffff",
+    "primary": "#00b7fa",
+    "primaryAccent": "#ffffff",
+    "wallpaper": ""
+}

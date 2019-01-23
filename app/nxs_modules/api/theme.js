@@ -4,6 +4,7 @@ import { color } from 'utils';
 const themeFileName = 'theme.json';
 
 export const defaultTheme = {
+  defaultStyle: "Dark",
   wallpaper: null,
   background: '#1c1d1f',
   foreground: '#ebebe6',

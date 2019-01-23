@@ -17,6 +17,10 @@ import UIController from 'components/UIController';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
 import configuration from 'api/configuration';
+import ThemePicker from './ThemePicker';
+
+import DarkTheme from './Dark.json';
+import LightTheme from './Light.json';
 
 const StyleSettings = styled.div({
   maxWidth: 750,
@@ -45,17 +49,57 @@ const mapDispatchToProps = dispatch => ({
   mapDispatchToProps
 )
 export default class SettingsStyle extends Component {
+  state ={
+    previousCustom: {},
+    DarkTheme: DarkTheme,
+    LightTheme: LightTheme,
+  }
+
+  componentDidMount(){
+    console.log(this.props);
+    //console.log(DarkTheme);
+    if (this.props.theme != {}){
+
+    }
+
+    console.log(this.props.theme);
+    console.log(DarkTheme);
+    console.log(LightTheme);
+
+    if (this.props.theme.defaultStyle == "Dark")
+    {
+      console.log("Dark");
+      this.setThemeSelector(0);
+    }
+    else if (this.props.theme.defaultStyle == "Light")
+    {
+      console.log("Light");
+      this.setThemeSelector(1);
+    }
+    else
+    {
+      this.setThemeSelector(2);
+    }
+  }
+
   toggleGlobeRender = e => {
     this.props.setRenderGlobe(e.target.checked);
   };
 
   setWalpaper = path => {
-    this.props.updateTheme({ wallpaper: path });
+    this.props.updateTheme({ wallpaper: path,});
+    if (path != '')
+    {
+      this.setThemeSelector(2);
+      this.props.updateTheme({ defaultStyle: "Custom",});
+    }
   };
 
   setColor = (key, value) => {
+    this.setToCustom();
     this.props.updateTheme({
       [key]: value,
+      defaultStyle:"Custom",
     });
   };
 
@@ -152,6 +196,42 @@ export default class SettingsStyle extends Component {
     )
   }
 
+  pressDarkTheme = () =>{
+    console.log("Dark");
+    this.setWalpaper('');
+    this.resetColors();
+  }
+  pressLightTheme = () =>{
+    console.log("Light");
+    this.props.updateTheme(LightTheme);
+    this.setWalpaper('');
+  }
+  pressCustomTheme = () =>{
+    console.log("Custom");
+    console.log("SAdsd");
+    if (this.state.previousCustom != {} )
+    {
+      this.props.updateTheme(this.state.previousCustom);
+    }
+  }
+  pressResetTheme = () =>{
+    console.log("Reset");
+    this.setWalpaper('');
+    this.resetColors();
+  }
+
+  savePreviousCustomTheme = () => {
+    this.setState({previousCustom: this.props.theme}, () => {console.log(this.state);});
+  }
+
+  setToCustom = () =>{
+    console.log("Set To Custom");
+  }
+
+  setThemeSelector = (selectorIndex) => {
+
+  }
+
   render() {
     const { theme, renderGlobe, webGLEnabled } = this.props;
 
@@ -176,6 +256,25 @@ export default class SettingsStyle extends Component {
             checked={renderGlobe}
             onChange={this.toggleGlobeRender}
           />
+        </SettingsField>
+
+        <SettingsField
+          label="Theme"
+          subLabel="Select Wallet Theme"
+
+        >
+          <ThemePicker
+            parentTheme = {theme}
+            darkCallback={this.pressDarkTheme}
+            lightCallback={this.pressLightTheme}
+            customCallback={this.pressCustomTheme}
+            resetCallback={this.pressResetTheme}
+            saveCustomCallback = {this.savePreviousCustomTheme}
+            handleOnSetCustom={e => (this.setToCustom = e)}
+            handleSetSelector={e => (this.setThemeSelector = e)}
+            >
+
+          </ThemePicker>
         </SettingsField>
 
         <SettingsField
@@ -215,10 +314,10 @@ export default class SettingsStyle extends Component {
         <SettingsField indent={1} label={<Text id="Cp.GC" />}>
           <ColorPicker colorName="globeColor" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={<Text id="Cp.GPC" />}>
+        <SettingsField indent={2} label={<Text id="Cp.GPC" />}>
           <ColorPicker colorName="globePillarColor" onChange={this.setColor} />
         </SettingsField>
-        <SettingsField indent={1} label={<Text id="Cp.GAC" />}>
+        <SettingsField indent={2} label={<Text id="Cp.GAC" />}>
           <ColorPicker colorName="globeArchColor" onChange={this.setColor} />
         </SettingsField>
 
