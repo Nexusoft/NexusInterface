@@ -93,6 +93,17 @@ const Suggestions = styled.div(
     }
 );
 
+const ClearButton = styled(Button)(
+  {
+    padding: '0 .2em',
+    fontSize: '.8em',
+  },
+  ({ shown }) =>
+    !shown && {
+      display: 'none',
+    }
+);
+
 export default class AutoSuggest extends React.Component {
   static defaultProps = {
     inputComponent: TextField,
@@ -130,12 +141,12 @@ export default class AutoSuggest extends React.Component {
 
   handleInputFocus = e => {
     this.setState({ active: true });
-    this.props.onFocus && this.props.onFocus(e);
+    this.props.inputProps.onFocus && this.props.inputProps.onFocus(e);
   };
 
-  handleInputBlur = () => {
+  handleInputBlur = e => {
     this.setState({ active: false });
-    this.props.onBlur && this.props.onBlur(e);
+    this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
   };
 
   handleKeyDown = e => {
@@ -183,14 +194,28 @@ export default class AutoSuggest extends React.Component {
     inputProps.onKeyDown && inputProps.onKeyDown(e);
   };
 
+  clearInput = () => {
+    this.props.onSelect && this.props.onSelect('');
+  };
+
   focusInput = () => {
     this.inputRef.current.focus();
   };
 
-  arrowButton = (
-    <Button square skin="blank-light" onClick={this.focusInput}>
-      <Arrow direction="down" width={12} height={8} />
-    </Button>
+  controls = () => (
+    <div className="flex center" style={{ alignSelf: 'stretch' }}>
+      <ClearButton
+        fitHeight
+        skin="blank-light"
+        onClick={this.clearInput}
+        shown={this.props.inputProps && this.props.inputProps.value}
+      >
+        ✕
+      </ClearButton>
+      <Button fitHeight skin="blank-light" onClick={this.focusInput}>
+        <Arrow direction="down" width={12} height={8} />
+      </Button>
+    </div>
   );
 
   render() {
@@ -211,7 +236,7 @@ export default class AutoSuggest extends React.Component {
       <AutoSuggestComponent {...rest}>
         <Input
           inputRef={this.inputRef}
-          right={this.arrowButton}
+          right={this.controls()}
           {...inputProps}
           onFocus={this.handleInputFocus}
           onBlur={this.handleInputBlur}
