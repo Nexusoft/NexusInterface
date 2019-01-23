@@ -1,28 +1,12 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
 import memoize from 'memoize-one';
 import styled from '@emotion/styled';
 
-// Internal Global
-import * as RPC from 'scripts/rpc';
-import { loadMyAccounts } from 'actions/accountActionCreators';
-import Text from 'components/Text';
-import Icon from 'components/Icon';
-import Button from 'components/Button';
-import TextField from 'components/TextField';
+// Internal
 import AutoSuggest from 'components/AutoSuggest';
-import Select from 'components/Select';
 import FormField from 'components/FormField';
-import InputGroup from 'components/InputGroup';
-import UIController from 'components/UIController';
-import Link from 'components/Link';
-import { rpcErrorHandler } from 'utils/form';
-import sendIcon from 'images/send.sprite.svg';
-import addressBookIcon from 'images/address-book.sprite.svg';
-
-// Internal Local
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
 
 const RecipientName = styled.span(({ theme }) => ({

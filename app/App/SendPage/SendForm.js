@@ -20,32 +20,12 @@ import sendIcon from 'images/send.sprite.svg';
 
 // Internal Local
 import RecipientField from './RecipientField';
-import {
-  getAccountOptions,
-  getNxsFiatPrice,
-  getAddressNameMap,
-} from './selectors';
-
-const floatRegex = /^[0-9]+(.[0-9]*)?$/;
+import AmountField from './AmountField';
+import { getAccountOptions, getAddressNameMap } from './selectors';
 
 const SendFormComponent = styled.form({
   maxWidth: 620,
   margin: '0 auto',
-});
-
-const SendAmount = styled.div({
-  display: 'flex',
-});
-
-const SendAmountField = styled.div({
-  flex: 1,
-});
-
-const SendAmountEqual = styled.div({
-  display: 'flex',
-  alignItems: 'flex-end',
-  padding: '.1em .6em',
-  fontSize: '1.2em',
 });
 
 const SendFormButtons = styled.div({
@@ -56,15 +36,14 @@ const SendFormButtons = styled.div({
 
 const mapStateToProps = ({
   addressbook: { myAccounts, addressbook },
-  settings: { fiatCurrency, minConfirmations },
-  common: { rawNXSvalues, encrypted, loggedIn },
+  settings: { minConfirmations },
+  common: { encrypted, loggedIn },
 }) => ({
   accountOptions: getAccountOptions(myAccounts),
-  fiatCurrency: fiatCurrency,
+
   minConfirmations: minConfirmations,
   encrypted: encrypted,
   loggedIn: loggedIn,
-  nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),
   addressNameMap: getAddressNameMap(addressbook),
 });
 
@@ -135,28 +114,6 @@ const mapDispatchToProps = dispatch => ({
   onSubmitFail: rpcErrorHandler('Error Saving Settings'),
 })
 export default class SendForm extends Component {
-  nxsToFiat = (e, value) => {
-    if (floatRegex.test(value)) {
-      const nxs = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const fiat = nxs * nxsFiatPrice;
-        this.props.change('fiatAmount', fiat.toFixed(2));
-      }
-    }
-  };
-
-  fiatToNxs = (e, value) => {
-    if (floatRegex.test(value)) {
-      const fiat = parseFloat(value);
-      const { nxsFiatPrice } = this.props;
-      if (nxsFiatPrice) {
-        const nxs = fiat / nxsFiatPrice;
-        this.props.change('amount', nxs.toFixed(5));
-      }
-    }
-  };
-
   updateRecipient = address => {
     this.props.change('sendTo', address);
   };
@@ -198,7 +155,7 @@ export default class SendForm extends Component {
   };
 
   render() {
-    const { accountOptions, fiatCurrency } = this.props;
+    const { accountOptions, change } = this.props;
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
@@ -217,31 +174,7 @@ export default class SendForm extends Component {
           updateRecipient={this.updateRecipient}
         />
 
-        <SendAmount>
-          <SendAmountField>
-            <FormField connectLabel label={<Text id="sendReceive.Amount" />}>
-              <Field
-                component={TextField.RF}
-                name="amount"
-                placeholder="0.00000"
-                onChange={this.nxsToFiat}
-              />
-            </FormField>
-          </SendAmountField>
-
-          <SendAmountEqual>=</SendAmountEqual>
-
-          <SendAmountField>
-            <FormField connectLabel label={fiatCurrency}>
-              <Field
-                component={TextField.RF}
-                name="fiatAmount"
-                placeholder="0.00"
-                onChange={this.fiatToNxs}
-              />
-            </FormField>
-          </SendAmountField>
-        </SendAmount>
+        <AmountField change={change} />
 
         <Text id="sendReceive.EnterYourMessage">
           {placeholder => (
