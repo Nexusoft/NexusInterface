@@ -85,7 +85,6 @@ const mapDispatchToProps = dispatch => ({
   },
   asyncBlurFields: ['sendTo'],
   asyncValidate: async ({ sendTo }) => {
-    console.log('validate', sendTo);
     if (sendTo) {
       try {
         const result = await RPC.PROMISE('validateaddress', [sendTo]);

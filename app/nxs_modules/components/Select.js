@@ -11,8 +11,8 @@ import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
 import { color } from 'utils';
 
-// Minimum gap from the dropdown to the bottom edge of the screen
-const minScreenGap = 20;
+// Minimum gap from the dropdown to the edges of the screen
+const minScreenGap = 10;
 // Options's horizontal padding
 const optionHPadding = 12;
 
@@ -193,20 +193,24 @@ class Options extends Component {
 
   state = {
     ready: false,
-    // Apply the same fon-size with the Select control
+    // Apply the same font-size with the Select control
     styles: {
       fontSize: window
-        .getComputedStyle(this.props.controlRef)
+        .getComputedStyle(this.props.controlRef.current)
         .getPropertyValue('font-size'),
     },
   };
+
+  componentDidMount() {
+    this.positionDropdown();
+  }
 
   positionDropdown = () => {
     if (!this.anchorRef.current) return;
     const styles = { fontSize: this.state.styles.fontSize };
 
     // Horizontally align Options dropdown with the Select control
-    const controlRect = this.props.controlRef.getBoundingClientRect();
+    const controlRect = this.props.controlRef.current.getBoundingClientRect();
     if (this.props.skin === 'underline') {
       styles.left = controlRect.left - optionHPadding;
       styles.width = controlRect.width + optionHPadding;
@@ -252,7 +256,7 @@ class Options extends Component {
     const anchorIndex = selectedIndex !== -1 ? selectedIndex : 0;
 
     return (
-      <Overlay onBackgroundClick={close} onMount={this.positionDropdown}>
+      <Overlay onBackgroundClick={close}>
         <OptionsComponent
           skin={skin}
           ref={el => {
@@ -359,7 +363,7 @@ export default class Select extends Component {
             {...{ skin, value, onChange }}
             options={this.options()}
             close={this.close}
-            controlRef={this.controlRef.current}
+            controlRef={this.controlRef}
           />
         )}
       </>
@@ -368,8 +372,8 @@ export default class Select extends Component {
 }
 
 // Select wrapper for redux-form
-const SelectReduxFForm = ({ input, meta, ...rest }) => (
+const SelectReduxForm = ({ input, meta, ...rest }) => (
   <Select error={meta.touched && meta.error} {...input} {...rest} />
 );
 
-Select.RF = SelectReduxFForm;
+Select.RF = SelectReduxForm;
