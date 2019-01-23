@@ -17,6 +17,7 @@ import UIController from 'components/UIController';
 import Link from 'components/Link';
 import { rpcErrorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
+import plusIcon from 'images/plus.sprite.svg';
 
 // Internal Local
 import Recipients from './Recipients';
@@ -151,6 +152,17 @@ const mapDispatchToProps = dispatch => ({
       ];
       if (message) params.push(message);
       return RPC.PROMISE('sendfrom', params);
+    } else {
+      const queue = recipients.reduce(
+        (queue, r) => ({ ...queue, [r.address]: parseFloat(r.amount) }),
+        {}
+      );
+      return RPC.PROMISE(
+        'sendmany',
+        [sendFrom, queue],
+        parseInt(props.minConfirmations),
+        message
+      );
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
@@ -220,6 +232,13 @@ export default class SendForm extends Component {
     });
   };
 
+  renderAddRecipientButton = ({ fields }) =>
+    fields.length === 1 ? (
+      <Button onClick={this.addRecipient}>Send to Multiple Recipients</Button>
+    ) : (
+      <div />
+    );
+
   render() {
     const { accountOptions, change, paytxfee } = this.props;
 
@@ -234,7 +253,12 @@ export default class SendForm extends Component {
           />
         </FormField>
 
-        <FieldArray component={Recipients} name="recipients" change={change} />
+        <FieldArray
+          component={Recipients}
+          name="recipients"
+          change={change}
+          addRecipient={this.addRecipient}
+        />
 
         {paytxfee && (
           <TransactionFee>
@@ -257,9 +281,11 @@ export default class SendForm extends Component {
         </Text>
 
         <SendFormButtons>
-          <Button onClick={this.addRecipient}>
-            Send to multiple recipients
-          </Button>
+          <FieldArray
+            component={this.renderAddRecipientButton}
+            name="recipients"
+          />
+
           <Button type="submit" skin="primary">
             <Icon icon={sendIcon} spaceRight />
             <Text id="sendReceive.SendNow" />

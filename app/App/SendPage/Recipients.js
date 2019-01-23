@@ -5,7 +5,10 @@ import styled from '@emotion/styled';
 
 // Internal
 import Tooltip from 'components/Tooltip';
+import Button from 'components/Button';
+import Icon from 'components/Icon';
 import { timing } from 'styles';
+import plusIcon from 'images/plus.sprite.svg';
 import RecipientField from './RecipientField';
 import AmountField from './AmountField';
 
@@ -55,13 +58,22 @@ const AmountWrapper = styled.div({
   flexBasis: 0,
 });
 
+const AddRecipient = styled.div({
+  marginTop: '1em',
+  marginBottom: '1em',
+});
+
+const PlusIcon = styled(Icon)({
+  fontSize: '.8em',
+});
+
 export default class Recipients extends React.Component {
   updateAddress = address => {
     this.props.change();
   };
 
   render() {
-    const { fields, change } = this.props;
+    const { fields, change, addRecipient } = this.props;
 
     if (!fields || !fields.length) return null;
 
@@ -77,29 +89,42 @@ export default class Recipients extends React.Component {
         </>
       );
     } else {
-      return fields.map((fieldName, i) => (
-        <Recipient key={i}>
-          <Tooltip.Trigger tooltip="Remove recipient">
-            <RemoveButton
-              onClick={() => {
-                fields.remove(i);
-              }}
-            >
-              ✕
-            </RemoveButton>
-          </Tooltip.Trigger>
-          <AddressWrapper>
-            <Field
-              name={`${fieldName}.address`}
-              component={RecipientField}
-              change={change}
-            />
-          </AddressWrapper>
-          <AmountWrapper>
-            <AmountField parentFieldName={fieldName} change={change} />
-          </AmountWrapper>
-        </Recipient>
-      ));
+      return (
+        <>
+          {fields.map((fieldName, i) => (
+            <Recipient key={i}>
+              <Tooltip.Trigger tooltip="Remove recipient">
+                <RemoveButton
+                  onClick={() => {
+                    fields.remove(i);
+                  }}
+                >
+                  ✕
+                </RemoveButton>
+              </Tooltip.Trigger>
+
+              <AddressWrapper>
+                <Field
+                  name={`${fieldName}.address`}
+                  component={RecipientField}
+                  change={change}
+                />
+              </AddressWrapper>
+
+              <AmountWrapper>
+                <AmountField parentFieldName={fieldName} change={change} />
+              </AmountWrapper>
+            </Recipient>
+          ))}
+
+          <AddRecipient>
+            <Button skin="hyperlink" onClick={addRecipient}>
+              <PlusIcon icon={plusIcon} spaceRight />
+              <span className="v-align">Add Recipient</span>
+            </Button>
+          </AddRecipient>
+        </>
+      );
     }
   }
 }
