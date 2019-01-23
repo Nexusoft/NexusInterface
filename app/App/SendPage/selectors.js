@@ -1,3 +1,5 @@
+import React from 'react';
+import styled from '@emotion/styled';
 import memoize from 'memoize-one';
 
 export const getAccountOptions = memoize(myAccounts => {
@@ -34,8 +36,28 @@ export const getAddressNameMap = memoize(addressBook => {
   return map;
 });
 
-export const getRecipientSuggestions = memoize(addressBook =>
-  addressBook.flatMap(entry =>
-    entry.notMine.map(a => `${entry.name}: ${a.address}`)
-  )
-);
+const Address = styled.span(({ theme }) => ({
+  color: theme.mixer(0.75),
+}));
+
+export const getRecipientSuggestions = memoize(addressBook => {
+  const suggestions = [];
+  if (addressBook) {
+    addressBook.forEach(entry => {
+      if (entry.notMine) {
+        entry.notMine.forEach(a => {
+          suggestions.push({
+            name: entry.name,
+            value: a.address,
+            display: (
+              <span>
+                {entry.name} <Address>{a.address}</Address>
+              </span>
+            ),
+          });
+        });
+      }
+    });
+  }
+  return suggestions;
+});

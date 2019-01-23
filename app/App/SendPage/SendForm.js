@@ -13,15 +13,13 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
-import InputGroup from 'components/InputGroup';
 import UIController from 'components/UIController';
 import Link from 'components/Link';
 import { rpcErrorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
-import addressBookIcon from 'images/address-book.sprite.svg';
 
 // Internal Local
-import LookupAddressModal from './LookupAddressModal';
+import RecipientField from './RecipientField';
 import {
   getAccountOptions,
   getNxsFiatPrice,
@@ -55,12 +53,6 @@ const SendFormButtons = styled.div({
   justifyContent: 'space-between',
   marginTop: '2em',
 });
-
-const RecipientName = styled.span(({ theme }) => ({
-  textTransform: 'none',
-  color: theme.primary,
-  verticalAlign: 'middle',
-}));
 
 const mapStateToProps = ({
   addressbook: { myAccounts, addressbook },
@@ -169,12 +161,6 @@ export default class SendForm extends Component {
     this.props.change('sendTo', address);
   };
 
-  lookupAddress = () => {
-    UIController.openModal(LookupAddressModal, {
-      updateRecipient: this.updateRecipient,
-    });
-  };
-
   confirmSend = e => {
     e.preventDefault();
     const { handleSubmit, invalid, encrypted, loggedIn, touch } = this.props;
@@ -211,29 +197,6 @@ export default class SendForm extends Component {
     });
   };
 
-  recipientField = field => {
-    const recipientName = this.props.addressNameMap[field.input.value];
-
-    return (
-      <FormField
-        label={
-          <span>
-            <span className="v-align">Send To</span>&nbsp;&nbsp;
-            <RecipientName>{recipientName}</RecipientName>
-          </span>
-        }
-      >
-        <InputGroup>
-          <TextField.RF {...field} placeholder="Recipient Address" />
-          <Button fitHeight className="relative" onClick={this.lookupAddress}>
-            <Icon spaceRight icon={addressBookIcon} />
-            <Text id="sendReceive.Contacts" />
-          </Button>
-        </InputGroup>
-      </FormField>
-    );
-  };
-
   render() {
     const { accountOptions, fiatCurrency } = this.props;
 
@@ -248,7 +211,11 @@ export default class SendForm extends Component {
           />
         </FormField>
 
-        <Field name="sendTo" component={this.recipientField} />
+        <Field
+          name="sendTo"
+          component={RecipientField}
+          updateRecipient={this.updateRecipient}
+        />
 
         <SendAmount>
           <SendAmountField>
