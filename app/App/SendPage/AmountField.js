@@ -59,8 +59,12 @@ export default class AmountField extends Component {
     }
   };
 
-  amountFieldName = () => `${this.props.parentFieldName}.amount`;
-  fiatAmountFieldName = () => `${this.props.parentFieldName}.fiatAmount`;
+  amountFieldName = () =>
+    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
+    'amount';
+  fiatAmountFieldName = () =>
+    (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
+    'fiatAmount';
 
   render() {
     return (
