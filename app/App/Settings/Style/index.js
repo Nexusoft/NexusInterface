@@ -49,35 +49,21 @@ const mapDispatchToProps = dispatch => ({
   mapDispatchToProps
 )
 export default class SettingsStyle extends Component {
-  state ={
+  state = {
     previousCustom: {},
     DarkTheme: DarkTheme,
     LightTheme: LightTheme,
   }
 
-  componentDidMount(){
-    console.log(this.props);
-    //console.log(DarkTheme);
-    if (this.props.theme != {}){
+  componentDidMount() {
 
-    }
-
-    console.log(this.props.theme);
-    console.log(DarkTheme);
-    console.log(LightTheme);
-
-    if (this.props.theme.defaultStyle == "Dark")
-    {
-      console.log("Dark");
+    if (this.props.theme.defaultStyle == "Dark") {
       this.setThemeSelector(0);
     }
-    else if (this.props.theme.defaultStyle == "Light")
-    {
-      console.log("Light");
+    else if (this.props.theme.defaultStyle == "Light") {
       this.setThemeSelector(1);
     }
-    else
-    {
+    else {
       this.setThemeSelector(2);
     }
   }
@@ -86,15 +72,15 @@ export default class SettingsStyle extends Component {
     this.props.setRenderGlobe(e.target.checked);
   };
 
-  setWalpaper = (path,defaultStyle) => {
-    
+  setWalpaper = (path, defaultStyle) => {
+
     defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
-    console.log(defaultStyle);
-    this.props.updateTheme({ defaultStyle:defaultStyle, wallpaper: path,});
-    if (path)
-    {
+    this.props.updateTheme({ defaultStyle: defaultStyle, wallpaper: path, });
+    if (path || defaultStyle.endsWith('Custom')) {
       this.setThemeSelector(2);
-      this.props.updateTheme({ defaultStyle: "Custom",});
+      if (path) {
+        this.props.updateTheme({ defaultStyle: "Custom", });
+      }
     }
   };
 
@@ -102,11 +88,12 @@ export default class SettingsStyle extends Component {
     this.setToCustom();
     this.props.updateTheme({
       [key]: value,
-      defaultStyle:"Custom",
+      defaultStyle: "Custom",
     });
   };
 
   resetColors = () => {
+    //Dont think we need this anymore 
     this.props.resetColors();
     UIController.showNotification(
       'Color scheme has been reset to default',
@@ -119,33 +106,30 @@ export default class SettingsStyle extends Component {
     let customTheme;
     try {
       customTheme = JSON.parse(content);
-      console.log(customTheme);
-      if (customTheme.wallpaper.startsWith('https') || customTheme.wallpaper.startsWith('http'))
-      {
+      if (customTheme.wallpaper.startsWith('https') || customTheme.wallpaper.startsWith('http')) {
         const wallpaperPathSplit = customTheme.wallpaper.split('.');
         const fileEnding = wallpaperPathSplit[wallpaperPathSplit.length - 1];
         const file = fs.createWriteStream(configuration.GetAppDataDirectory() + "/wallpaper." + fileEnding);
         this.wallpaperRequest = https.get(customTheme.wallpaper)
-        .setTimeout(10000)
-        .on('response', response => {
-          response.pipe(file);
-          let onFinish = () => {
-            file.close(response =>
-            {
-              console.log(this);
-              console.log("FInished DOwnloading");
-              this.setWalpaper(file.path);
-            });
-          }
-          onFinish.bind(this);
-          file.on('finish', () => onFinish() );
-        })
-        .on('error', error => {
-          this.setWalpaper("");
-        })
-        .on('timeout', timeout => {
-          this.setWalpaper("");
-        });
+          .setTimeout(10000)
+          .on('response', response => {
+            response.pipe(file);
+            let onFinish = () => {
+              file.close(response => {
+                console.log(this);
+                console.log("FInished DOwnloading");
+                this.setWalpaper(file.path);
+              });
+            }
+            onFinish.bind(this);
+            file.on('finish', () => onFinish());
+          })
+          .on('error', error => {
+            this.setWalpaper("");
+          })
+          .on('timeout', timeout => {
+            this.setWalpaper("");
+          });
       }
     } catch (err) {
       UIController.showNotification(
@@ -183,8 +167,7 @@ export default class SettingsStyle extends Component {
       (path) => {
         console.log(path);
         fs.copyFile(configuration.GetAppDataDirectory() + "/theme.json", path, (err) => {
-          if (err) 
-          {
+          if (err) {
             console.error(err);
             UIController.showNotification(
               err,
@@ -200,37 +183,31 @@ export default class SettingsStyle extends Component {
     )
   }
 
-  pressDarkTheme = () =>{
-    console.log("Dark");
+  pressDarkTheme = () => {
     this.props.updateTheme(DarkTheme);
-    //this.setWalpaper('');
   }
-  pressLightTheme = () =>{
-    console.log("Light");
+  pressLightTheme = () => {
     this.props.updateTheme(LightTheme);
-    //this.setWalpaper('');
   }
-  pressCustomTheme = () =>{
-    console.log("Custom");
-    console.log("SAdsd");
-    if (this.state.previousCustom != {} )
-    {
+  pressCustomTheme = () => {
+    if (this.state.previousCustom != {}) {
       this.props.updateTheme(this.state.previousCustom);
     }
   }
-  pressResetTheme = () =>{
-    console.log("Reset");
-    this.setWalpaper(null);
-    this.resetColors();
+  pressResetTheme = () => {
     this.props.updateTheme(DarkTheme);
     this.setThemeSelector(0);
+    UIController.showNotification(
+      'Color scheme has been reset to default',
+      'success'
+    );
   }
 
   savePreviousCustomTheme = () => {
-    this.setState({previousCustom: this.props.theme}, () => {console.log(this.state);});
+    this.setState({ previousCustom: this.props.theme }, () => { console.log(this.state); });
   }
 
-  setToCustom = () =>{
+  setToCustom = () => {
     console.log("Set To Custom")
   }
 
@@ -270,15 +247,15 @@ export default class SettingsStyle extends Component {
 
         >
           <ThemePicker
-            parentTheme = {theme}
+            parentTheme={theme}
             darkCallback={this.pressDarkTheme}
             lightCallback={this.pressLightTheme}
             customCallback={this.pressCustomTheme}
             resetCallback={this.pressResetTheme}
-            saveCustomCallback = {this.savePreviousCustomTheme}
+            saveCustomCallback={this.savePreviousCustomTheme}
             handleOnSetCustom={e => (this.setToCustom = e)}
             handleSetSelector={e => (this.setThemeSelector = e)}
-            >
+          >
 
           </ThemePicker>
         </SettingsField>
@@ -289,7 +266,7 @@ export default class SettingsStyle extends Component {
         >
           <BackgroundPicker
             wallpaper={theme.wallpaper}
-            defaultStyle = {theme.defaultStyle}
+            defaultStyle={theme.defaultStyle}
             onChange={this.setWalpaper}
           />
         </SettingsField>

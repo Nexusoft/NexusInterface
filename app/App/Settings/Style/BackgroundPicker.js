@@ -1,7 +1,7 @@
 // External
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
-
+// Internal
 import { timing } from 'styles';
 import { color, newUID } from 'utils';
 
@@ -28,11 +28,9 @@ class BackgroundPicker extends Component {
   fileInputID = newUID();
 
   setDefault = (version) => {
-    if (this.props.defaultStyle != version)
-    {
-      version = 'Custom';
+    if (this.props.defaultStyle != version) {
+      version = version + 'Custom';
     }
-    console.log(version);
     this.props.onChange(null, version);
   };
 
@@ -49,19 +47,18 @@ class BackgroundPicker extends Component {
 
   render() {
     const { wallpaper, defaultStyle } = this.props;
-    console.log(this.props);
     return (
       <div>
         <Option
           onClick={() => this.setDefault('Dark')}
-          selected={!wallpaper && defaultStyle == 'Dark'}
+          selected={!wallpaper && defaultStyle.startsWith('Dark')}
           style={{ display: 'inline', marginBottom: '.5em' }}
         >
           Twinkling Starry Sky
         </Option>
         <Option
-          onClick={() =>this.setDefault('Light')}
-          selected={!wallpaper && defaultStyle == 'Light'}
+          onClick={() => this.setDefault('Light')}
+          selected={!wallpaper && defaultStyle.startsWith('Light')}
           style={{ display: 'inline', marginBottom: '.5em' }}
         >
           Light Space Abstract

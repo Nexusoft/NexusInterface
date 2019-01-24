@@ -31,12 +31,11 @@ const CustomWallpaper = styled.div(
 
 class AppBackground extends Component {
   render() {
-    console.log(this.props);
     const { wallpaper, defaultStyle } = this.props;
     return !!wallpaper && existsSync(wallpaper) ? (
       <CustomWallpaper wallpaper={wallpaper} />
     ) : (
-      defaultStyle == 'Dark'? <StarrySky /> : <CosmicLight />
+      defaultStyle.startsWith('Dark') ? <StarrySky /> : <CosmicLight />
     );
   }
 }

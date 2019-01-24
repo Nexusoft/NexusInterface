@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
+//Internal
 import { timing } from 'styles';
 import { color, newUID } from 'utils';
-import Button from 'components/Button';
 
 const OptionButton = styled.button(
     ({ theme }) => ({
@@ -27,21 +27,21 @@ const OptionButton = styled.button(
         '&:disabled': {
             opacity: 0.5,
             cursor: 'not-allowed',
-            },
-        transition: `background-color ${timing.normal}`,
-    
-        '&:hover': {
-          background: theme.background,
         },
-      }),
-      ({ selected, theme }) =>
+        transition: `background-color ${timing.normal}`,
+
+        '&:hover': {
+            background: theme.background,
+        },
+    }),
+    ({ selected, theme }) =>
         selected && {
-          '&, &:hover': {
-            background: color.darken(theme.primary, 0.2),
-            color: theme.background,
-          },
+            '&, &:hover': {
+                background: color.darken(theme.primary, 0.2),
+                color: theme.background,
+            },
         }
-    );
+);
 
 
 class ThemePicker extends Component {
@@ -49,33 +49,26 @@ class ThemePicker extends Component {
         themeOn: 0
     }
     componentDidMount() {
-        this.props.handleOnSetCustom( () => {this.setToCustomTheme()});
-        this.props.handleSetSelector( (selectorIndex) => {this.setSelector(selectorIndex)});
-        if (this.props.parentTheme != {}){
-            //this.setState({themeOn:2});
-        }
+        this.props.handleOnSetCustom(() => { this.setToCustomTheme() });
+        this.props.handleSetSelector((selectorIndex) => { this.setSelector(selectorIndex) });
     }
 
-    setToCustomTheme()
-    {
+    setToCustomTheme() {
         console.log("Set To Custom");
-        this.setState({themeOn:2}, () => {console.log(this);});
+        this.setState({ themeOn: 2 }, () => { console.log(this); });
     }
 
-    setSelector(selectorIndex)
-    {
-        this.setState({themeOn:selectorIndex}); 
+    setSelector(selectorIndex) {
+        this.setState({ themeOn: selectorIndex });
     }
 
     render() {
-        console.log(this);
         return (
             <div>
                 <OptionButton
                     selected={this.state.themeOn == 0 ? true : false}
                     onClick={() => {
-                        if (this.state.themeOn == 2)
-                        {
+                        if (this.state.themeOn == 2) {
                             this.props.saveCustomCallback();
                         }
                         this.setState({ themeOn: 0 });
@@ -87,8 +80,7 @@ class ThemePicker extends Component {
                 <OptionButton
                     selected={this.state.themeOn == 1 ? true : false}
                     onClick={() => {
-                        if (this.state.themeOn == 2)
-                        {
+                        if (this.state.themeOn == 2) {
                             this.props.saveCustomCallback();
                         }
                         this.setState({ themeOn: 1 });
@@ -109,8 +101,7 @@ class ThemePicker extends Component {
                 <OptionButton
                     selected={this.state.themeOn == 3 ? true : false}
                     onClick={() => {
-                        if (this.state.themeOn == 2)
-                        {
+                        if (this.state.themeOn == 2) {
                             this.props.saveCustomCallback();
                         }
                         this.setState({ themeOn: 3 });
