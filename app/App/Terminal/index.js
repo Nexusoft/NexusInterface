@@ -36,7 +36,7 @@ const TerminalTabBar = styled(Tab.Bar)({
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common, ...state.settings };
+  return { ...state.terminal, ...state.common };
 };
 const mapDispatchToProps = dispatch => ({
   setCoreOutputPaused: isPaused =>

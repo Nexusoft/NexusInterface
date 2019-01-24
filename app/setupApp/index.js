@@ -7,11 +7,15 @@ import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
 import * as ac from 'actions/setupAppActionCreators';
 import getInfo from 'actions/getInfo';
-import MenuBuilder from './menuBuilder';
-import loadSettings from './loadSettings';
+import { loadSettingsFromFile } from 'actions/settingsActionCreators';
+import { loadThemeFromFile } from 'actions/themeActionCreators';
+import updater from 'updater';
+import appMenu from 'appMenu';
 import setupTray from './setupTray';
 import configuration from 'api/configuration';
 import { Tail } from 'utils/tail';
+import LicenseAgreementModal from './LicenseAgreementModal';
+import ExperimentalWarningModal from './ExperimentalWarningModal';
 
 var tail;
 var debugFileLocation;
@@ -20,10 +24,11 @@ var printCoreOutputTimer;
 
 export default function setupApp(store, history) {
   const { dispatch } = store;
-  loadSettings(store);
+  store.dispatch(loadSettingsFromFile());
+  store.dispatch(loadThemeFromFile());
 
-  const menuBuilder = new MenuBuilder(store, history);
-  menuBuilder.buildMenu();
+  appMenu.initialize(store, history);
+  appMenu.build();
 
   setupTray(store);
 
@@ -52,6 +57,14 @@ export default function setupApp(store, history) {
   });
 
   startCoreOuputeWatch(store)
+  const state = store.getState();
+
+  updater.setup();
+  if (state.settings.autoUpdate) {
+    updater.autoUpdate();
+  }
+
+  showInitialModals(state);
 }
 
 function checkWebGL(dispatch) {
@@ -65,7 +78,7 @@ function checkWebGL(dispatch) {
 
 function startCoreOuputeWatch(store)
 {
-  if (store.getState().settings.settings.manualDaemon)
+  if (store.getState().settings.manualDaemon)
   {
     return;
   }
@@ -122,3 +135,19 @@ function checkDebugFileExists(err,stat, store)
       batch = [];
     }, 1000);
   }
+function showInitialModals({ settings }) {
+  const showExperimentalWarning = () => {
+    if (!settings.experimentalWarningDisabled) {
+      UIController.openModal(ExperimentalWarningModal);
+    }
+  };
+
+  if (!settings.acceptedAgreement) {
+    UIController.openModal(LicenseAgreementModal, {
+      fullScreen: true,
+      onClose: showExperimentalWarning,
+    });
+  } else {
+    showExperimentalWarning();
+  }
+}

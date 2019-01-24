@@ -59,12 +59,16 @@ const ModalComponent = styled.div(
     transform: 'translate(-50%, -50%)',
     width: '60%',
     maxHeight: '80%',
-    background: color.darken(theme.dark, 0.2),
-    color: theme.lightGray,
+    background: color.darken(theme.background, 0.2),
+    color: theme.mixer(0.75),
     borderRadius: modalBorderRadius,
     boxShadow: '0 0 20px #000',
     animation: `${intro} ${timing.quick} ease-out`,
     animationFillMode: 'both',
+    display: 'grid',
+    gridTemplateAreas: '"header" "body" "footer"',
+    gridTemplateColumns: '1fr',
+    gridTemplateRows: 'auto 1fr auto',
   }),
   ({ fullScreen }) =>
     fullScreen && {
@@ -85,14 +89,6 @@ const ModalComponent = styled.div(
     }
 );
 
-const ModalLayout = styled.div({
-  height: '100%',
-  display: 'grid',
-  gridTemplateAreas: '"header" "body" "footer"',
-  gridTemplateColumns: '1fr',
-  gridTemplateRows: 'auto 1fr',
-});
-
 const ModalHeader = styled.div(({ theme }) => ({
   borderTopLeftRadius: modalBorderRadius,
   borderTopRightRadius: modalBorderRadius,
@@ -107,7 +103,8 @@ const ModalHeader = styled.div(({ theme }) => ({
 }));
 
 const ModalBody = styled.div({
-  padding: '30px 50px',
+  padding: '0 50px',
+  margin: '30px 0',
   overflow: 'auto',
   gridArea: 'body',
 });
@@ -201,7 +198,6 @@ export default class Modal extends PureComponent {
   }
 }
 
-Modal.Layout = ModalLayout;
 Modal.Header = ModalHeader;
 Modal.Body = ModalBody;
 Modal.Footer = ModalFooter;

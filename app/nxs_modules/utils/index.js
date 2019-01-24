@@ -1,3 +1,4 @@
+import React from 'react';
 import * as color from './color';
 import * as language from './language';
 import * as form from './form';
@@ -7,12 +8,22 @@ export const newUID = (function() {
   return () => `uid-${counter++}`;
 })();
 
-export function normalizePath(path) {
-  if (process.platform === 'win32') {
-    return path.replace(/\\/g, '/');
-  } else {
-    return path;
-  }
+// https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711
+export function escapeRegExp(s) {
+  return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
+export function highlightMatchingText(text, query, HighlightComponent) {
+  if (!query) return text;
+  const regex = new RegExp(`(${escapeRegExp(query)})`, 'i');
+  const segments = text.split(regex).map((segment, i) => {
+    if (regex.test(segment)) {
+      return <HighlightComponent key={i}>{segment}</HighlightComponent>;
+    } else {
+      return <span key={i}>{segment}</span>;
+    }
+  });
+  return segments;
 }
 
 export { color, language, form };

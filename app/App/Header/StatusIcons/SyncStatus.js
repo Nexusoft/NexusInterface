@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Text from 'components/Text';
 import { animations } from 'styles';
 import Tooltip from 'components/Tooltip';
-import StatusIcon from './StatusIcon';
+import StatusIcon from 'components/StatusIcon';
 
 import checkIcon from 'images/check.sprite.svg';
 import syncingIcon from 'images/syncing.sprite.svg';
@@ -48,7 +48,7 @@ export default class SyncStatus extends React.Component {
   render() {
     return (
       <Tooltip.Trigger tooltip={this.statusTooltip()}>
-        <StatusIcon.Wrapper>{this.statusIcon()}</StatusIcon.Wrapper>
+        {this.statusIcon()}
       </Tooltip.Trigger>
     );
   }

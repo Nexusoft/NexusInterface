@@ -13,8 +13,8 @@ import sendReceive from './sendReceive';
 import addressbook from './addressbook';
 import terminal from './terminal';
 import settings from './settings';
+import theme from './theme';
 
-import intl from './intl';
 import { addLocaleData } from 'react-intl';
 import ru from 'react-intl/locale-data/ru';
 import ja from 'react-intl/locale-data/ja';
@@ -37,7 +37,6 @@ export default function createRootReducer(history) {
 
   return connectRouter(history)(
     combineReducers({
-      intl,
       overview,
       router: routerReducer,
       list,
@@ -50,6 +49,7 @@ export default function createRootReducer(history) {
       addressbook,
       terminal,
       settings,
+      theme,
       form: formReducer,
     })
   );

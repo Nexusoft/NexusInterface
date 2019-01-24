@@ -36,6 +36,7 @@ Dialog.Buttons = styled.div({
 });
 
 Dialog.Button = styled(Button)({
+  gridArea: 'footer',
   width: '100%',
   marginTop: 20,
   fontSize: 22,

@@ -42,12 +42,6 @@ export default (state = initialState, action) => {
         percentDownloaded: 0.001,
       };
       break;
-    case TYPE.SET_EXPERIMENTAL_WARNING:
-      return {
-        ...state,
-        experimentalOpen: action.payload,
-      };
-      break;
     case TYPE.USD_RATE:
       return {
         ...state,
