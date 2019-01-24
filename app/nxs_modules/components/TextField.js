@@ -135,7 +135,13 @@ const TextFieldComponent = styled.div(
             : null),
         };
     }
-  }
+  },
+
+  ({ multiline }) =>
+    multiline && {
+      height: 'auto',
+      minHeight: consts.inputHeightEm + 'em',
+    }
 );
 
 const Input = styled.input(
@@ -214,6 +220,35 @@ const multilineProps = {
   css: multilineStyle,
 };
 
+class TextArea extends Component {
+  componentDidUpdate() {
+    const { scrollHeight } = this.inputElem;
+    this.inputElem.style.height =
+      (scrollHeight > 104 ? 104 : scrollHeight) + 'px';
+  }
+
+  inputRef = el => {
+    this.inputElem = el;
+    const { inputRef } = this.props;
+    if (typeof inputRef === 'function') {
+      inputRef(el);
+    } else if (inputRef && typeof inputRef === 'object') {
+      inputRef.current = el;
+    }
+  };
+
+  render() {
+    return (
+      <Input
+        ref={this.inputRef}
+        as="textarea"
+        css={multilineStyle}
+        {...this.props}
+      />
+    );
+  }
+}
+
 export default class TextField extends Component {
   state = {
     focus: false,
@@ -248,7 +283,6 @@ export default class TextField extends Component {
       skin,
       size,
       readOnly,
-      ...(multiline ? multilineProps : null),
       ...rest,
       onFocus: this.handleFocus,
       onBlur: this.handleBlur,
@@ -256,11 +290,15 @@ export default class TextField extends Component {
 
     return (
       <TextFieldComponent
-        {...{ className, style, skin, size, error }}
+        {...{ className, style, skin, size, error, multiline }}
         focus={!readOnly && this.state.focus}
       >
         {left}
-        <Input {...inputProps} ref={inputRef} />
+        {multiline ? (
+          <TextArea {...inputProps} inputRef={inputRef} />
+        ) : (
+          <Input {...inputProps} ref={inputRef} />
+        )}
         {right}
         {!!error && (
           <ErrorMessage
