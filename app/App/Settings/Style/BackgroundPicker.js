@@ -27,8 +27,13 @@ const Option = styled.label(
 class BackgroundPicker extends Component {
   fileInputID = newUID();
 
-  setDefault = () => {
-    this.props.onChange(null);
+  setDefault = (version) => {
+    if (this.props.defaultStyle != version)
+    {
+      version = 'Custom';
+    }
+    console.log(version);
+    this.props.onChange(null, version);
   };
 
   handleFilePick = e => {
@@ -38,20 +43,28 @@ class BackgroundPicker extends Component {
         imagePath = imagePath.replace(/\\/g, '/');
       }
       console.log(imagePath);
-      this.props.onChange(imagePath);
+      this.props.onChange(imagePath, 'Custom');
     }
   };
 
   render() {
-    const { wallpaper } = this.props;
+    const { wallpaper, defaultStyle } = this.props;
+    console.log(this.props);
     return (
       <div>
         <Option
-          onClick={this.setDefault}
-          selected={!wallpaper}
-          style={{ marginBottom: '.5em' }}
+          onClick={() => this.setDefault('Dark')}
+          selected={!wallpaper && defaultStyle == 'Dark'}
+          style={{ display: 'inline', marginBottom: '.5em' }}
         >
-          Twinkling Starry Sky background
+          Twinkling Starry Sky
+        </Option>
+        <Option
+          onClick={() =>this.setDefault('Light')}
+          selected={!wallpaper && defaultStyle == 'Light'}
+          style={{ display: 'inline', marginBottom: '.5em' }}
+        >
+          Light Space Abstract
         </Option>
         <Option htmlFor={this.fileInputID} selected={!!wallpaper}>
           {wallpaper

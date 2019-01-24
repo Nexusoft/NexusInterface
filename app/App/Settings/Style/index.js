@@ -86,9 +86,12 @@ export default class SettingsStyle extends Component {
     this.props.setRenderGlobe(e.target.checked);
   };
 
-  setWalpaper = path => {
-    this.props.updateTheme({ wallpaper: path,});
-    if (path != '')
+  setWalpaper = (path,defaultStyle) => {
+    
+    defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
+    console.log(defaultStyle);
+    this.props.updateTheme({ defaultStyle:defaultStyle, wallpaper: path,});
+    if (path)
     {
       this.setThemeSelector(2);
       this.props.updateTheme({ defaultStyle: "Custom",});
@@ -150,6 +153,7 @@ export default class SettingsStyle extends Component {
         'error'
       );
     }
+    customTheme.defaultStyle = 'Custom';
     this.props.updateTheme(customTheme);
   };
 
@@ -198,13 +202,13 @@ export default class SettingsStyle extends Component {
 
   pressDarkTheme = () =>{
     console.log("Dark");
-    this.setWalpaper('');
-    this.resetColors();
+    this.props.updateTheme(DarkTheme);
+    //this.setWalpaper('');
   }
   pressLightTheme = () =>{
     console.log("Light");
     this.props.updateTheme(LightTheme);
-    this.setWalpaper('');
+    //this.setWalpaper('');
   }
   pressCustomTheme = () =>{
     console.log("Custom");
@@ -216,8 +220,10 @@ export default class SettingsStyle extends Component {
   }
   pressResetTheme = () =>{
     console.log("Reset");
-    this.setWalpaper('');
+    this.setWalpaper(null);
     this.resetColors();
+    this.props.updateTheme(DarkTheme);
+    this.setThemeSelector(0);
   }
 
   savePreviousCustomTheme = () => {
@@ -225,7 +231,7 @@ export default class SettingsStyle extends Component {
   }
 
   setToCustom = () =>{
-    console.log("Set To Custom");
+    console.log("Set To Custom")
   }
 
   setThemeSelector = (selectorIndex) => {
@@ -283,14 +289,12 @@ export default class SettingsStyle extends Component {
         >
           <BackgroundPicker
             wallpaper={theme.wallpaper}
+            defaultStyle = {theme.defaultStyle}
             onChange={this.setWalpaper}
           />
         </SettingsField>
 
         <SettingsField label="Color scheme">
-          <Button skin="hyperlink" onClick={this.resetColors}>
-            <Text id="Settings.ResetStyle" />
-          </Button>
         </SettingsField>
 
         <SettingsField indent={1} label={<Text id="Cp.PBC" />}>
