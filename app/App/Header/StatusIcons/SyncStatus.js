@@ -31,7 +31,7 @@ export default class SyncStatus extends React.Component {
   };
 
   statusTooltip = () => {
-    const { heighestPeerBlock, blocks, messages } = this.props;
+    const { heighestPeerBlock, blocks } = this.props;
 
     if (heighestPeerBlock > blocks) {
       return (

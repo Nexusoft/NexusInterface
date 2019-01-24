@@ -100,7 +100,7 @@ export default class Login extends Component {
       <div>
         <form onSubmit={handleSubmit}>
           <LoginFieldSet legend="Login">
-            <FormField connectLabel label="Unlock Until Date">
+            <FormField connectLabel label="Login Until Date">
               <Field
                 component={TextField.RF}
                 name="date"
@@ -108,7 +108,7 @@ export default class Login extends Component {
                 min={this.getMinDate()}
               />
             </FormField>
-            <FormField connectLabel label="Unlock Until Time">
+            <FormField connectLabel label="Login Until Time">
               <Field component={TextField.RF} name="time" type="time" />
             </FormField>
             <FormField connectLabel label="Password">
@@ -120,13 +120,13 @@ export default class Login extends Component {
               />
             </FormField>
 
-            <FormField inline connectLabel label="Unlock for Staking Only">
+            <FormField inline connectLabel label="Login for Staking Only">
               <Field component={Switch.RF} name="stakingOnly" />
             </FormField>
 
             <Buttons>
               <Button type="submit" skin="primary" disabled={submitting}>
-                Unlock Wallet
+                Log in
               </Button>
             </Buttons>
           </LoginFieldSet>
