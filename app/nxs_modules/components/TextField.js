@@ -70,7 +70,7 @@ const TextFieldComponent = styled.div(
             '&::after': {
               background: error
                 ? color.lighten(theme.danger, 0.3)
-                : color.lighten(theme.primary, 0.3),
+                : theme.mixer(0.75),
             },
           },
           ...(focus
