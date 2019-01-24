@@ -57,7 +57,7 @@ const actionCreators = { push };
   mapStateToProps,
   actionCreators
 )
-class SignInStatus extends Component {
+export default class LogInStatus extends Component {
   signInStatusMessage = () => {
     const { connections, unlocked_until, staking_only } = this.props;
     let unlockDate = new Date(unlocked_until * 1000).toLocaleString('en', {
@@ -133,5 +133,3 @@ class SignInStatus extends Component {
     );
   }
 }
-
-export default SignInStatus;
