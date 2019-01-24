@@ -10,7 +10,6 @@ import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
 import updater from 'updater';
 import appMenu from 'appMenu';
-import setupTray from './setupTray';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 
@@ -21,8 +20,6 @@ export default function setupApp(store, history) {
 
   appMenu.initialize(store, history);
   appMenu.build();
-
-  setupTray(store);
 
   dispatch(ac.LoadAddressBook());
 

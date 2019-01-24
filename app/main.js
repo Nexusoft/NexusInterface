@@ -1,5 +1,5 @@
 // External
-import { app, BrowserWindow, dialog } from 'electron';
+import { app, BrowserWindow, Tray, Menu, dialog } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
@@ -40,6 +40,44 @@ const installExtensions = async () => {
     devToolsInstall(REDUX_DEVTOOLS, forceDownload),
   ]).catch();
 };
+
+function setupTray(mainWindow) {
+  const root =
+    process.env.NODE_ENV === 'development'
+      ? __dirname
+      : configuration.GetAppResourceDir();
+  const fileName =
+    process.platform == 'darwin'
+      ? 'Nexus_Tray_Icon_Template_16.png'
+      : 'Nexus_Tray_Icon_32.png';
+  const trayImage = path.join(root, 'images', 'tray', fileName);
+  const tray = new Tray(trayImage);
+
+  const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
+  const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
+  tray.setPressedImage(pressedImage);
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show Nexus',
+      click: function() {
+        mainWindow.show();
+      },
+    },
+    {
+      label: 'Quit Nexus',
+      click() {
+        mainWindow.close();
+      },
+    },
+  ]);
+  tray.setContextMenu(contextMenu);
+  tray.on('double-click', () => {
+    mainWindow.show();
+  });
+
+  return tray;
+}
 
 //
 // Create Application Window
@@ -117,6 +155,7 @@ function createWindow() {
       nodeIntegration: true,
     },
   });
+  global.tray = setupTray(mainWindow);
 
   // Load the index.html into the new browser window
   mainWindow.loadURL(`file://${__dirname}/app.html`);
