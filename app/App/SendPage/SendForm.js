@@ -37,22 +37,15 @@ const SendFormButtons = styled.div({
   marginTop: '2em',
 });
 
-const TransactionFee = styled.div(({ theme }) => ({
-  marginTop: '1em',
-  color: theme.mixer(0.75),
-}));
-
 const mapStateToProps = ({
   addressbook: { myAccounts, addressbook },
   settings: { minConfirmations },
   common: { encrypted, loggedIn },
-  overview: { paytxfee },
   form,
 }) => ({
   minConfirmations,
   encrypted,
   loggedIn,
-  paytxfee,
   accountOptions: getAccountOptions(myAccounts),
   addressNameMap: getAddressNameMap(addressbook),
   fieldNames: getRegisteredFieldNames(
@@ -239,7 +232,7 @@ export default class SendForm extends Component {
     );
 
   render() {
-    const { accountOptions, change, paytxfee } = this.props;
+    const { accountOptions, change } = this.props;
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
@@ -258,12 +251,6 @@ export default class SendForm extends Component {
           change={change}
           addRecipient={this.addRecipient}
         />
-
-        {paytxfee && (
-          <TransactionFee>
-            <Text id="sendReceive.FEE" />: {paytxfee.toFixed(5)} NXS
-          </TransactionFee>
-        )}
 
         <Text id="sendReceive.EnterYourMessage">
           {placeholder => (

@@ -149,14 +149,14 @@ function createWindow() {
   });
 
   // Event when the window is minimized
-  mainWindow.on('minimize', function(event) {
-    const settings = LoadSettings();
+  // mainWindow.on('minimize', function(event) {
+  //   const settings = LoadSettings();
 
-    if (settings.minimizeOnClose) {
-      event.preventDefault();
-      mainWindow.hide();
-    }
-  });
+  //   if (settings.minimizeOnClose) {
+  //     event.preventDefault();
+  //     mainWindow.hide();
+  //   }
+  // });
 }
 
 // Application Startup

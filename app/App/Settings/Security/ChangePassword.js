@@ -117,21 +117,21 @@ export default class ChangePassword extends Component {
               </FormField>
             )}
           </Text>
-          <FormField
-            connectLabel
-            label={<Text id="Settings.ReEnterPassword" />}
-          >
-            <Text id="Settings.ConfirmPassword">
-              {placeholder => (
+          <Text id="Settings.ConfirmPassword">
+            {placeholder => (
+              <FormField
+                connectLabel
+                label={<Text id="Settings.ReEnterPassword" />}
+              >
                 <Field
                   component={TextField.RF}
                   name="newPasswordRepeat"
                   type="password"
                   placeholder={placeholder}
                 />
-              )}
-            </Text>
-          </FormField>
+              </FormField>
+            )}
+          </Text>
 
           <Button
             type="submit"
@@ -145,7 +145,7 @@ export default class ChangePassword extends Component {
         </FieldSet>
 
         <Button wide onClick={this.confirmLockWallet}>
-          <Text id="Settings.LockWallet" />
+          Log out
         </Button>
       </ChangePasswordComponent>
     );

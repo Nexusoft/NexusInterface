@@ -11,7 +11,7 @@ import { consts, timing, animations } from 'styles';
 import { color } from 'utils';
 
 // Internal Local
-import SignInStatus from './StatusIcons/SignInStatus';
+import LogInStatus from './StatusIcons/LogInStatus';
 import StakingStatus from './StatusIcons/StakingStatus';
 import SyncStatus from './StatusIcons/SyncStatus';
 import MyAddresses from './StatusIcons/MyAddresses';
@@ -106,7 +106,7 @@ export default class Header extends Component {
         {connections !== undefined && (
           <StatusIcons>
             <SyncStatus {...this.props} />
-            <SignInStatus {...this.props} />
+            <LogInStatus {...this.props} />
             <StakingStatus {...this.props} />
             <MyAddresses {...this.props} />
           </StatusIcons>
