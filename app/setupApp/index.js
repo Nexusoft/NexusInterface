@@ -10,8 +10,11 @@ import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
 import updater from 'updater';
 import appMenu from 'appMenu';
+import core from 'api/core';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
+
+window.remote = remote;
 
 export default function setupApp(store, history) {
   const { dispatch } = store;
@@ -35,9 +38,20 @@ export default function setupApp(store, history) {
 
   const mainWindow = remote.getCurrentWindow();
   mainWindow.on('close', e => {
-    e.preventDefault();
-    dispatch(ac.clearOverviewVariables());
-    UIController.showNotification('Closing Nexus...');
+    const {
+      settings: { minimizeOnClose },
+    } = store.getState();
+
+    // forceQuit is set when user clicks Quit option in the Tray context menu
+    if (minimizeOnClose && !remote.getGlobal('forceQuit')) {
+      mainWindow.hide();
+    } else {
+      UIController.showNotification('Closing Nexus...');
+      dispatch(ac.clearOverviewVariables());
+      core.stop().then(() => {
+        remote.app.exit();
+      });
+    }
   });
 
   const state = store.getState();

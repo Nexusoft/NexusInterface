@@ -21,6 +21,7 @@ let resizeTimer;
 // Global Objects
 global.core = core;
 global.autoUpdater = autoUpdater;
+global.forceQuit = false;
 
 app.setAppUserModelId(APP_ID);
 
@@ -57,6 +58,9 @@ function setupTray(mainWindow) {
   const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
   tray.setPressedImage(pressedImage);
 
+  app.on('before-quit', () => {
+    global.forceQuit = true;
+  });
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Show Nexus',
@@ -67,7 +71,7 @@ function setupTray(mainWindow) {
     {
       label: 'Quit Nexus',
       click() {
-        mainWindow.close();
+        app.quit();
       },
     },
   ]);
@@ -187,37 +191,17 @@ function createWindow() {
     }, 250);
   });
 
-  // Event when the window is minimized
-  // mainWindow.on('minimize', function(event) {
-  //   const settings = LoadSettings();
-
-  //   if (settings.minimizeOnClose) {
-  //     event.preventDefault();
-  //     mainWindow.hide();
-  //   }
-  // });
+  // e.preventDefault doesn't work on renderer process so leave it in the main process
+  // https://github.com/electron/electron/issues/4473
+  mainWindow.on('close', e => {
+    e.preventDefault();
+  });
 }
 
 // Application Startup
 app.on('ready', async () => {
   createWindow();
   core.start();
-
-  mainWindow.on('close', function(e) {
-    e.preventDefault();
-
-    const settings = LoadSettings();
-    log.info('close');
-
-    if (settings && settings.minimizeOnClose == true) {
-      e.preventDefault();
-      mainWindow.hide();
-    } else {
-      core.stop().then(payload => {
-        app.exit();
-      });
-    }
-  });
 
   const settings = LoadSettings();
   if (
