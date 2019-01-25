@@ -96,7 +96,7 @@ const mapDispatchToProps = dispatch => ({
           recipientErrors.amount = <Text id="Alert.InvalidAmount" />;
         }
         if (Object.keys(recipientErrors).length) {
-          recipientsErrors.push(recipientErrors);
+          recipientsErrors[i] = recipientErrors;
         }
       });
 
