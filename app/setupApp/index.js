@@ -37,9 +37,9 @@ export default function setupApp(store, history) {
   checkWebGL(dispatch);
 
   const mainWindow = remote.getCurrentWindow();
-  mainWindow.on('close', e => {
+  mainWindow.on('close', async e => {
     const {
-      settings: { minimizeOnClose },
+      settings: { minimizeOnClose, manualDaemon },
     } = store.getState();
 
     // forceQuit is set when user clicks Quit option in the Tray context menu
@@ -48,9 +48,15 @@ export default function setupApp(store, history) {
     } else {
       UIController.showNotification('Closing Nexus...');
       dispatch(ac.clearOverviewVariables());
-      core.stop().then(() => {
+
+      if (manualDaemon) {
+        await RPC.PROMISE('stop', []);
         remote.app.exit();
-      });
+      } else {
+        core.stop().then(() => {
+          remote.app.exit();
+        });
+      }
     }
   });
 
