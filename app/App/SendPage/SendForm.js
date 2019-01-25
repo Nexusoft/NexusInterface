@@ -92,7 +92,8 @@ const mapDispatchToProps = dispatch => ({
         if (!address) {
           recipientErrors.address = <Text id="Alert.InvalidAddress" />;
         }
-        if (!amount || parseFloat(amount) <= 0) {
+        const floatAmount = parseFloat(amount);
+        if (!floatAmount || floatAmount < 0) {
           recipientErrors.amount = <Text id="Alert.InvalidAmount" />;
         }
         if (Object.keys(recipientErrors).length) {
