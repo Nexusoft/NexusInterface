@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import * as RPC from 'scripts/rpc';
+import { defaultSettings } from 'api/settings';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';
 import Icon from 'components/Icon';
@@ -57,6 +58,10 @@ const mapDispatchToProps = dispatch => ({
   loadMyAccounts: () => dispatch(loadMyAccounts()),
 });
 
+@connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
 @reduxForm({
   form: 'sendNXS',
   destroyOnUnmount: false,
@@ -134,13 +139,18 @@ const mapDispatchToProps = dispatch => ({
     return null;
   },
   onSubmit: ({ sendFrom, recipients, message }, dispatch, props) => {
+    let minConfirmations = parseInt(props.minConfirmations);
+    if (isNaN(minConfirmations)) {
+      minConfirmations = defaultSettings.minConfirmations;
+    }
+
     if (recipients.length === 1) {
       const recipient = recipients[0];
       const params = [
         sendFrom,
         recipient.address,
         parseFloat(recipient.amount),
-        parseInt(props.minConfirmations),
+        minConfirmations,
       ];
       if (message) params.push(message);
       return RPC.PROMISE('sendfrom', params);
@@ -152,7 +162,7 @@ const mapDispatchToProps = dispatch => ({
       return RPC.PROMISE(
         'sendmany',
         [sendFrom, queue],
-        parseInt(props.minConfirmations),
+        minConfirmations,
         message
       );
     }
@@ -166,10 +176,6 @@ const mapDispatchToProps = dispatch => ({
   },
   onSubmitFail: rpcErrorHandler('Error Sending NXS'),
 })
-@connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
 export default class SendForm extends Component {
   confirmSend = e => {
     e.preventDefault();
