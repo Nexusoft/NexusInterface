@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
+import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
 import Select from 'components/Select';
 import Button from 'components/Button';
