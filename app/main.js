@@ -1,5 +1,5 @@
 // External
-import { app, BrowserWindow, dialog } from 'electron';
+import { app, BrowserWindow, Tray, Menu, dialog } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
@@ -21,6 +21,7 @@ let resizeTimer;
 // Global Objects
 global.core = core;
 global.autoUpdater = autoUpdater;
+global.forceQuit = false;
 
 app.setAppUserModelId(APP_ID);
 
@@ -40,6 +41,47 @@ const installExtensions = async () => {
     devToolsInstall(REDUX_DEVTOOLS, forceDownload),
   ]).catch();
 };
+
+function setupTray(mainWindow) {
+  const root =
+    process.env.NODE_ENV === 'development'
+      ? __dirname
+      : configuration.GetAppResourceDir();
+  const fileName =
+    process.platform == 'darwin'
+      ? 'Nexus_Tray_Icon_Template_16.png'
+      : 'Nexus_Tray_Icon_32.png';
+  const trayImage = path.join(root, 'images', 'tray', fileName);
+  const tray = new Tray(trayImage);
+
+  const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
+  const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
+  tray.setPressedImage(pressedImage);
+
+  app.on('before-quit', () => {
+    global.forceQuit = true;
+  });
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show Nexus',
+      click: function() {
+        mainWindow.show();
+      },
+    },
+    {
+      label: 'Quit Nexus',
+      click() {
+        app.quit();
+      },
+    },
+  ]);
+  tray.setContextMenu(contextMenu);
+  tray.on('double-click', () => {
+    mainWindow.show();
+  });
+
+  return tray;
+}
 
 //
 // Create Application Window
@@ -117,6 +159,7 @@ function createWindow() {
       nodeIntegration: true,
     },
   });
+  global.tray = setupTray(mainWindow);
 
   // Load the index.html into the new browser window
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -148,37 +191,17 @@ function createWindow() {
     }, 250);
   });
 
-  // Event when the window is minimized
-  // mainWindow.on('minimize', function(event) {
-  //   const settings = LoadSettings();
-
-  //   if (settings.minimizeOnClose) {
-  //     event.preventDefault();
-  //     mainWindow.hide();
-  //   }
-  // });
+  // e.preventDefault doesn't work on renderer process so leave it in the main process
+  // https://github.com/electron/electron/issues/4473
+  mainWindow.on('close', e => {
+    e.preventDefault();
+  });
 }
 
 // Application Startup
 app.on('ready', async () => {
   createWindow();
   core.start();
-
-  mainWindow.on('close', function(e) {
-    e.preventDefault();
-
-    const settings = LoadSettings();
-    log.info('close');
-
-    if (settings && settings.minimizeOnClose == true) {
-      e.preventDefault();
-      mainWindow.hide();
-    } else {
-      core.stop().then(payload => {
-        app.exit();
-      });
-    }
-  });
 
   const settings = LoadSettings();
   if (

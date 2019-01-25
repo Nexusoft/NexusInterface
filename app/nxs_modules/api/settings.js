@@ -19,7 +19,7 @@ const defaultPassword = crypto
 export const defaultSettings = {
   // App
   locale: 'en',
-  minimizeOnClose: false,
+  minimizeOnClose: true,
   autoUpdate: true,
   sendUsageData: true,
   fiatCurrency: 'USD',
@@ -61,17 +61,19 @@ function readSettings() {
 }
 
 function writeSettings(settings) {
-  // Ensure only valid settings will be saved to the settings.json
+  return config.WriteJson(settingsFileName, filterValidSettings(settings));
+}
+
+export function filterValidSettings(settings) {
   const validSettings = {};
-  Object.keys(settings).map(key => {
+  Object.keys(settings || {}).map(key => {
     if (defaultSettings.hasOwnProperty(key)) {
       validSettings[key] = settings[key];
     } else {
-      console.error(`Attempt to save invalid setting \`${key}\``);
+      console.error(`Invalid setting \`${key}\``);
     }
   });
-
-  return config.WriteJson(settingsFileName, validSettings);
+  return validSettings;
 }
 
 export function LoadSettings() {
