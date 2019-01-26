@@ -50,7 +50,7 @@
   "sendReceive.SelectAnAccount": "Select An Account",
   "sendReceive.FromAccount": "From Account",
   "sendReceive.ToAccount": "ToAccount",
-  "sendReceive.MoveNXS": "Move NXS",
+  "sendReceive.MoveNXS": "Move NXS?",
   "sendReceive.MoveNxsBetweenAccount": "Move NXS between accounts",
   "sendReceive.Contacts": "Contacts",
 

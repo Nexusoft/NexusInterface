@@ -10,9 +10,11 @@ import Text from 'components/Text';
 import Select from 'components/Select';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
+import Link from 'components/Link';
 import UIController from 'components/UIController';
+import { loadMyAccounts } from 'actions/accountActionCreators';
 import { rpcErrorHandler } from 'utils/form';
-import { getAccountOptions } from './selectors';
+import { getAccountOptions, getRegisteredFieldNames } from './selectors';
 import AmountField from './AmountField';
 
 const AccountSelectors = styled.div({
@@ -33,17 +35,31 @@ const Buttons = styled.div({
   justifyContent: 'flex-end',
 });
 
+const mapStateToProps = ({
+  settings: { minConfirmations, fiatCurrency },
+  overview: { paytxfee },
+  addressbook: { myAccounts },
+  common: { encrypted, loggedIn },
+  form,
+}) => ({
+  minConfirmations,
+  fiatCurrency,
+  paytxfee,
+  encrypted,
+  loggedIn,
+  accountOptions: getAccountOptions(myAccounts),
+  fieldNames: getRegisteredFieldNames(
+    form.moveBetweenAccounts && form.moveBetweenAccounts.registeredFields
+  ),
+});
+
+const mapDispatchToProps = dispatch => ({
+  loadMyAccounts: () => dispatch(loadMyAccounts()),
+});
+
 @connect(
-  ({
-    settings: { minConfirmations, fiatCurrency },
-    overview: { paytxfee },
-    addressbook: { myAccounts },
-  }) => ({
-    accountOptions: getAccountOptions(myAccounts),
-    minConfirmations,
-    fiatCurrency,
-    paytxfee,
-  })
+  mapStateToProps,
+  mapDispatchToProps
 )
 @reduxForm({
   form: 'moveBetweenAccounts',
@@ -87,6 +103,11 @@ const Buttons = styled.div({
     return null;
   },
   onSubmit: ({ moveFrom, moveTo, amount }, dispatch, props) => {
+    let minConfirmations = parseInt(props.minConfirmations);
+    if (isNaN(minConfirmations)) {
+      minConfirmations = defaultSettings.minConfirmations;
+    }
+
     const params = [moveFrom, moveTo, parseFloat(amount)];
     return RPC.PROMISE('move', params, parseInt(props.minConfirmations));
   },
@@ -101,9 +122,55 @@ const Buttons = styled.div({
   onSubmitFail: rpcErrorHandler('Error Moving NXS'),
 })
 class MoveBetweenAccountsForm extends Component {
+  confirmMove = e => {
+    e.preventDefault();
+    const {
+      handleSubmit,
+      invalid,
+      encrypted,
+      loggedIn,
+      touch,
+      fieldNames,
+    } = this.props;
+
+    if (invalid) {
+      // Mark the form touched so that the validation errors will be shown.
+      // redux-form doesn't have the `touchAll` feature yet so we have to list all fields manually.
+      // redux-form also doesn't have the API to get all the field names yet so we have to connect to the store to retrieve it manually
+      touch(...fieldNames);
+      return;
+    }
+
+    if (encrypted && !loggedIn) {
+      const modalId = UIController.openErrorDialog({
+        message: 'You are not logged in',
+        note: (
+          <>
+            <p>You need to log in to your wallet before sending transactions</p>
+            <Link
+              to="/Settings/Security"
+              onClick={() => {
+                UIController.removeModal(modalId);
+                this.props.closeModal();
+              }}
+            >
+              Log in now
+            </Link>
+          </>
+        ),
+      });
+      return;
+    }
+
+    UIController.openConfirmDialog({
+      question: <Text id="sendReceive.MoveNXS" />,
+      yesCallback: handleSubmit,
+    });
+  };
+
   render() {
     return (
-      <form onSubmit={this.props.handleSubmit}>
+      <form onSubmit={this.confirmMove}>
         <AccountSelectors>
           <Label>
             <Text id="sendReceive.FromAccount" />
