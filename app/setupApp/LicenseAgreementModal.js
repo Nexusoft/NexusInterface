@@ -11,10 +11,6 @@ import { updateSettings } from 'actions/settingsActionCreators';
 const LicenseAgreementModalComponent = styled(Modal)({
   paddingLeft: 'calc(50vw - 384px)',
   paddingRight: 'calc(50vw - 384px)',
-  display: 'grid',
-  gridTemplateAreas: '"header" "body"',
-  gridTemplateColumns: '1fr',
-  gridTemplateRows: 'auto 1fr',
 });
 
 @connect(

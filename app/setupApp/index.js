@@ -14,6 +14,7 @@ import appMenu from 'appMenu';
 import core from 'api/core';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
+import ClosingModal from './ClosingModal';
 
 window.remote = remote;
 
@@ -47,16 +48,14 @@ export default function setupApp(store, history) {
     if (minimizeOnClose && !remote.getGlobal('forceQuit')) {
       mainWindow.hide();
     } else {
-      UIController.showNotification('Closing Nexus...');
-      dispatch(ac.clearOverviewVariables());
+      UIController.openModal(ClosingModal);
 
       if (manualDaemon) {
         await RPC.PROMISE('stop', []);
         remote.app.exit();
       } else {
-        core.stop().then(() => {
-          remote.app.exit();
-        });
+        await core.stop();
+        remote.app.exit();
       }
     }
   });
