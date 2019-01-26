@@ -82,6 +82,7 @@ const blockWeightIcons = [
   blockweight7,
   blockweight8,
   blockweight9,
+  blockweight9,
 ];
 
 // React-Redux mandatory methods
