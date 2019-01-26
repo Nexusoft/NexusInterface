@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 // Internal
 import AutoSuggest from 'components/AutoSuggest';
 import FormField from 'components/FormField';
+import Text, { translate } from 'components/Text';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
 
 const RecipientName = styled.span(({ theme }) => ({
@@ -25,9 +26,13 @@ const filterRecipients = memoize((suggestions, inputValue) => {
   });
 });
 
-const mapStateToProps = ({ addressbook: { addressbook } }) => ({
+const mapStateToProps = ({
+  addressbook: { addressbook },
+  settings: { locale },
+}) => ({
   suggestions: getRecipientSuggestions(addressbook),
   addressNameMap: getAddressNameMap(addressbook),
+  locale,
 });
 
 @connect(mapStateToProps)
@@ -37,22 +42,28 @@ export default class RecipientField extends Component {
   };
 
   render() {
-    const recipientName = this.props.addressNameMap[this.props.input.value];
+    const { addressNameMap, input, meta, locale, suggestions } = this.props;
+    const recipientName = addressNameMap[input.value];
 
     return (
       <FormField
         label={
           <>
-            <span>Send To&nbsp;&nbsp;</span>
+            <span>
+              <Text id="sendReceive.SendTo" />
+              &nbsp;&nbsp;
+            </span>
             <RecipientName>{recipientName}</RecipientName>
           </>
         }
       >
         <AutoSuggest.RF
-          input={this.props.input}
-          meta={this.props.meta}
-          inputProps={{ placeholder: 'Recipient Address' }}
-          suggestions={this.props.suggestions}
+          input={input}
+          meta={meta}
+          inputProps={{
+            placeholder: translate('sendReceive.RecipientAddress', locale),
+          }}
+          suggestions={suggestions}
           onSelect={this.handleSelect}
           filterSuggestions={filterRecipients}
         />

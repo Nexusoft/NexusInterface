@@ -73,12 +73,12 @@ const mapDispatchToProps = dispatch => ({
   validate: ({ moveFrom, moveTo, amount }) => {
     const errors = {};
     if (!moveFrom) {
-      errors.moveFrom = 'No accounts selected';
+      errors.moveFrom = <Text id="sendReceive.Messages.NoAccounts" />;
     }
     if (!moveTo) {
-      errors.moveTo = 'No accounts selected';
+      errors.moveTo = <Text id="sendReceive.Messages.NoAccounts" />;
     } else if (moveTo === moveFrom) {
-      errors.moveTo = 'Cannot move to the same account';
+      errors.moveTo = <Text id="sendReceive.Messages.SameAccount" />;
     }
     if (!amount || parseFloat(amount) <= 0) {
       errors.amount = <Text id="Alert.InvalidAmount" />;
@@ -116,10 +116,10 @@ const mapDispatchToProps = dispatch => ({
     props.reset();
     props.loadMyAccounts();
     UIController.openSuccessDialog({
-      message: 'NXS moved successfully',
+      message: <Text id="sendReceive.Messages.Success" />,
     });
   },
-  onSubmitFail: rpcErrorHandler('Error Moving NXS'),
+  onSubmitFail: rpcErrorHandler(<Text id="sendReceive.Messages.ErrorMoving" />),
 })
 class MoveBetweenAccountsForm extends Component {
   confirmMove = e => {
@@ -143,10 +143,12 @@ class MoveBetweenAccountsForm extends Component {
 
     if (encrypted && !loggedIn) {
       const modalId = UIController.openErrorDialog({
-        message: 'You are not logged in',
+        message: <Text id="sendReceive.Messages.NotLoggedIn" />,
         note: (
           <>
-            <p>You need to log in to your wallet before sending transactions</p>
+            <p>
+              <Text id="sendReceive.Messages.NotLoggedInNote" />
+            </p>
             <Link
               to="/Settings/Security"
               onClick={() => {
@@ -154,7 +156,7 @@ class MoveBetweenAccountsForm extends Component {
                 this.props.closeModal();
               }}
             >
-              Log in now
+              <Text id="sendReceive.Messages.LogInNow" />
             </Link>
           </>
         ),

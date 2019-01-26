@@ -79,10 +79,6 @@ const mapStateToProps = ({ overview: { paytxfee } }) => ({
 
 @connect(mapStateToProps)
 export default class Recipients extends React.Component {
-  updateAddress = address => {
-    this.props.change();
-  };
-
   renderTxFee = () =>
     !!this.props.paytxfee && (
       <TransactionFee>
@@ -113,7 +109,9 @@ export default class Recipients extends React.Component {
         <>
           {fields.map((fieldName, i) => (
             <Recipient key={i}>
-              <Tooltip.Trigger tooltip="Remove recipient">
+              <Tooltip.Trigger
+                tooltip={<Text id="sendReceive.RemoveRecipient" />}
+              >
                 <RemoveButton
                   onClick={() => {
                     fields.remove(i);
@@ -140,7 +138,9 @@ export default class Recipients extends React.Component {
           <MoreInfo>
             <Button skin="hyperlink" onClick={addRecipient}>
               <PlusIcon icon={plusIcon} spaceRight />
-              <span className="v-align">Add Recipient</span>
+              <span className="v-align">
+                <Text id="sendReceive.AddRecipient" />
+              </span>
             </Button>
 
             {this.renderTxFee()}
