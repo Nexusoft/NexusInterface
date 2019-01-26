@@ -1,6 +1,7 @@
 // External
 import React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
@@ -34,12 +35,18 @@ const WarningMessage = styled.div({
   dispatch => ({
     ignoreEncryptionWarning: () =>
       dispatch(updateSettings({ encryptionWarningDisabled: true })),
+    goTo: url => dispatch(push(url)),
   })
 )
 class EncryptionWarningModal extends React.Component {
   ignore = () => {
     this.props.ignoreEncryptionWarning();
     this.closeModal();
+  };
+
+  goToSecuritySettings = () => {
+    this.closeModal();
+    this.props.goTo('/Settings/Security');
   };
 
   render() {
@@ -62,12 +69,7 @@ class EncryptionWarningModal extends React.Component {
             <Button skin="error" onClick={this.ignore}>
               <Text id="overview.Ignore" />
             </Button>
-            <Button
-              as={Link}
-              skin="primary"
-              to="/Settings/Security"
-              onClick={this.closeModal}
-            >
+            <Button skin="primary" onClick={this.goToSecuritySettings}>
               <Text id="overview.TakeMeThere" />
             </Button>
           </div>

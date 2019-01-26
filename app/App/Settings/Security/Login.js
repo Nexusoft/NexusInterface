@@ -36,13 +36,13 @@ const Buttons = styled.div({
   validate: ({ date, time, password }) => {
     const errors = {};
     if (!date) {
-      errors.date = 'Date is required';
+      errors.date = <Text id="Settings.Errors.LoginDate" />;
     }
     if (!time) {
-      errors.time = 'Time is required';
+      errors.time = <Text id="Settings.Errors.LoginTime" />;
     }
     if (!password) {
-      errors.password = 'Password is required';
+      errors.password = <Text id="Settings.Errors.LoginPassword" />;
     }
     return errors;
   },
@@ -64,12 +64,12 @@ const Buttons = styled.div({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    UIController.showNotification('Wallet unlocked', 'success');
+    UIController.showNotification(<Text id="Settings.LoggedIn" />, 'success');
     dispatch(getInfo());
   },
   onSubmitFail: (errors, dispatch, submitError) => {
     if (!errors || !Object.keys(errors).length) {
-      let note = submitError || 'An unknown error occurred';
+      let note = submitError || <Text id="Common.UnknownError" />;
       if (
         submitError === 'Error: The wallet passphrase entered was incorrect.'
       ) {
@@ -78,7 +78,7 @@ const Buttons = styled.div({
         note = <Text id="Alert.FutureDate" />;
       }
       UIController.openErrorDialog({
-        message: 'Error unlocking wallet',
+        message: <Text id="Settings.Errors.LoggingIn" />,
         note: note,
       });
     }
@@ -100,7 +100,7 @@ export default class Login extends Component {
       <div>
         <form onSubmit={handleSubmit}>
           <LoginFieldSet legend="Login">
-            <FormField connectLabel label="Login Until Date">
+            <FormField connectLabel label={<Text id="Settings.LoginDate" />}>
               <Field
                 component={TextField.RF}
                 name="date"
@@ -108,19 +108,27 @@ export default class Login extends Component {
                 min={this.getMinDate()}
               />
             </FormField>
-            <FormField connectLabel label="Login Until Time">
+            <FormField connectLabel label={<Text id="Settings.LoginTime" />}>
               <Field component={TextField.RF} name="time" type="time" />
             </FormField>
-            <FormField connectLabel label="Password">
-              <Field
-                component={TextField.RF}
-                name="password"
-                type="password"
-                placeholder="Your wallet password"
-              />
-            </FormField>
+            <Text id="Settings.PasswordPlaceholder">
+              {text => (
+                <FormField connectLabel label={<Text id="Settings.Password" />}>
+                  <Field
+                    component={TextField.RF}
+                    name="password"
+                    type="password"
+                    placeholder={text}
+                  />
+                </FormField>
+              )}
+            </Text>
 
-            <FormField inline connectLabel label="Login for Staking Only">
+            <FormField
+              inline
+              connectLabel
+              label={<Text id="Settings.StakingOnly" />}
+            >
               <Field component={Switch.RF} name="stakingOnly" />
             </FormField>
 

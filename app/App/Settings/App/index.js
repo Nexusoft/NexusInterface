@@ -85,7 +85,7 @@ export default class SettingsApp extends Component {
           );
         } else {
           UIController.openErrorDialog({
-            message: 'Please wait for Daemon to load',
+            message: <Text id="Settings.DaemonLoading" />,
           });
         }
       },
@@ -108,11 +108,10 @@ export default class SettingsApp extends Component {
   handleAutoUpdateChange = e => {
     if (!e.target.checked) {
       UIController.openConfirmDialog({
-        question: 'Are you sure you want to disable Auto Update?',
-        note:
-          'Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience',
-        yesLabel: 'Keep Auto Update On',
-        noLabel: 'Turn off Auto Update',
+        question: <Text id="Settings.DisableAutoUpdate" />,
+        note: <Text id="Settings.DisableAutoUpdateNote" />,
+        yesLabel: <Text id="Settings.KeepAutoUpdate" />,
+        noLabel: <Text id="Settings.TurnOffAutoUpdate" />,
         noSkin: 'error',
         noCallback: () => {
           this.props.updateSettings({ autoUpdate: false });
@@ -150,14 +149,14 @@ export default class SettingsApp extends Component {
           label={
             <span>
               <span className="v-align">
-                Auto Update (Recommended){' '}
+                <Text id="Settings.AutoUpdate" />{' '}
                 {!settings.autoUpdate && (
                   <WarningIcon spaceLeft icon={warningIcon} />
                 )}
               </span>
             </span>
           }
-          subLabel="Automatically check for new versions and notify if a new version is available"
+          subLabel={<Text id="Settings.AutoUpdateNote" />}
         >
           <Switch
             checked={settings.autoUpdate}

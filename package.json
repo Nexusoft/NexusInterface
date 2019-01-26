@@ -31,7 +31,9 @@
     "test-e2e": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js e2e",
     "test-watch": "npm test -- --watch",
     "test:e2e": "./node_modules/mocha/bin/mocha tests/test.js",
-    "version2": "node ./internals/scripts/UpdateBuildDate.js"
+    "version2": "node ./internals/scripts/UpdateBuildDate.js",
+    "extract-changes": "node ./internals/scripts/extractTranslationChanges.js",
+    "update-translations": "node ./internals/scripts/updateTranslations.js"
   },
   "browserslist": "electron 1.8",
   "build": {

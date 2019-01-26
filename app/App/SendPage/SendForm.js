@@ -79,11 +79,13 @@ const mapDispatchToProps = dispatch => ({
   validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
-      errors.sendFrom = 'No accounts selected';
+      errors.sendFrom = <Text id="sendReceive.Messages.NoAccounts" />;
     }
 
     if (!recipients || !recipients.length) {
-      errors.recipients = { _error: 'There must be at least one recipient' };
+      errors.recipients = {
+        _error: <Text id="sendReceive.Messages.NoRecipient" />,
+      };
     } else {
       const recipientsErrors = [];
 
@@ -175,7 +177,9 @@ const mapDispatchToProps = dispatch => ({
       message: <Text id="Alert.Sent" />,
     });
   },
-  onSubmitFail: rpcErrorHandler('Error Sending NXS'),
+  onSubmitFail: rpcErrorHandler(
+    <Text id="sendReceive.Messages.ErrorSending" />
+  ),
 })
 export default class SendForm extends Component {
   confirmSend = e => {
@@ -233,7 +237,9 @@ export default class SendForm extends Component {
 
   renderAddRecipientButton = ({ fields }) =>
     fields.length === 1 ? (
-      <Button onClick={this.addRecipient}>Send to Multiple Recipients</Button>
+      <Button onClick={this.addRecipient}>
+        <Text id="sendReceive.MultipleRecipients" />
+      </Button>
     ) : (
       <div />
     );
@@ -243,7 +249,7 @@ export default class SendForm extends Component {
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
-        <FormField label="Send From">
+        <FormField label={<Text id="sendReceive.SendFrom" />}>
           <Field
             component={Select.RF}
             name="sendFrom"
