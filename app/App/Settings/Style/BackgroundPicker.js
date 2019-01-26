@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
+// Internal
+import Text from 'components/Text';
 import { timing } from 'styles';
 import { color, newUID } from 'utils';
 
@@ -51,12 +53,16 @@ class BackgroundPicker extends Component {
           selected={!wallpaper}
           style={{ marginBottom: '.5em' }}
         >
-          Twinkling Starry Sky background
+          <Text id="Settings.StarryBackground" />
         </Option>
         <Option htmlFor={this.fileInputID} selected={!!wallpaper}>
-          {wallpaper
-            ? `Custom Wallpaper: ${wallpaper}`
-            : 'Select a Custom Wallpaper'}
+          {wallpaper ? (
+            <span>
+              <Text id="Settings.CustomWallpaper" />: {wallpaper}
+            </span>
+          ) : (
+            <Text id="Settings.SelectCustomWallpaper" />
+          )}
         </Option>
         <input
           id={this.fileInputID}

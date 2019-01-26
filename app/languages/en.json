@@ -219,6 +219,7 @@
   "Settings.Rescanning": "Rescanning...",
   "Settings.RescanningDone": "Rescanning done",
   "Settings.Import": "Import",
+  "Settings.LoggedIn": "Logged In Successfully",
 
   "Settings.Errors.ManualDaemonUser": "Manual daemon Username is required",
   "Settings.Errors.ManualDaemonPassword": "Manual daemon Password is required",
@@ -240,6 +241,18 @@
   "Settings.Errors.PrivateKey": "Private key is required",
   "Settings.Errors.Rescanning": "Error rescanning",
   "Settings.Errors.ImportingPrivKey": "Error importing private key",
+  "Settings.Errors.LoginDate": "Date is required",
+  "Settings.Errors.LoginTime": "Time is required",
+  "Settings.Errors.LoginPassword": "Password is required",
+  "Settings.Errors.LoggingIn": "Error logging in",
+  "Settings.Errors.AddressEmpty": "Address cannot be empty",
+  "Settings.Errors.ViewPrivKey": "Error getting private key",
+  "Settings.Errors.InvalidJSON": "Invalid file format! Custom theme file must be in JSON",
+
+  "Settings.LoginDate": "Login Until Date",
+  "Settings.LoginTime": "Login Until Time",
+  "Settings.PasswordPlaceholder": "Your wallet password",
+  "Settings.StakingOnly": "Login for Staking Only",
 
   "Settings.IpAddress": "IP Address",
   "Settings.Port": "Port",
@@ -267,6 +280,10 @@
   "Settings.PasswordsMatch": "Passwords do not match",
   "Settings.LogOut": "Log Out",
   "Settings.ConfirmLogOut": "Are you sure you want to log out?",
+  "Settings.ResetThemeNoti": "Color scheme has been reset to default",
+  "Settings.StarryBackground": "Twinkling Starry Sky background",
+  "Settings.CustomWallpaper": "Custom Wallpaper",
+  "Settings.SelectCustomWallpaper": "Select a Custom Wallpaper",
 
   "Settings.KeyDisplayHere": "Private key will be displayed here",
   "Settings.ViewPrivateKey": "View Private Key",
@@ -303,6 +320,10 @@
   "Settings.BackupDir": "Backup Directory",
   "Settings.SelectBackupDirectory": "Select Backup Directory",
   "Settings.PickThemeFile": "Import Custom Theme",
+  "Settings.Background": "Background",
+  "Settings.BackgroundSubLabel": "Customize your background wallpaper",
+  "Settings.ColorScheme": "Color scheme",
+  "Settings.SelectCustomTheme": "Select Custom Theme File",
 
   "Console.CoreOutput": "Core Output",
   "Console.Console": "Console",

@@ -26,7 +26,7 @@ import { rpcErrorHandler } from 'utils/form';
   validate: ({ address }) => {
     const errors = {};
     if (!address) {
-      errors.address = 'Address cannot be empty';
+      errors.address = <Text id="Settings.Errors.AddressEmpty" />;
     }
     return errors;
   },
@@ -34,7 +34,7 @@ import { rpcErrorHandler } from 'utils/form';
   onSubmitSuccess: (result, dispatch, props) => {
     props.change('privateKey', result);
   },
-  onSubmitFail: rpcErrorHandler('Error getting private key'),
+  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ViewPrivKey" />),
 })
 export default class ViewPrivKeyForAddress extends Component {
   privKeyRef = React.createRef();
