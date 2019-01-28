@@ -19,7 +19,7 @@ const defaultPassword = crypto
 export const defaultSettings = {
   // App
   locale: 'en',
-  minimizeOnClose: true,
+  minimizeOnClose: false,
   autoUpdate: true,
   sendUsageData: true,
   fiatCurrency: 'USD',
