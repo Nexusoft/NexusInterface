@@ -68,7 +68,10 @@
       "repo": "Nexus-Interface-React"
     },
     "mac": {
-      "target": "dmg",
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "category": "public.app-category.utilities"
     },
     "dmg": {
