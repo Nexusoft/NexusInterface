@@ -27,13 +27,13 @@ export default class Security extends React.Component {
     }
 
     if (!loggedIn) {
-      return <Login {...this.props} />;
+      return <Login />;
     }
 
     if (encrypted) {
-      return <Encrypted {...this.props} />;
+      return <Encrypted />;
     } else {
-      return <Unencrypted {...this.props} />;
+      return <Unencrypted />;
     }
   }
 }
