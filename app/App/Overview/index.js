@@ -14,6 +14,7 @@ import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 import * as helpers from 'scripts/helper.js';
+import * as RPC from 'scripts/rpc';
 import { timing, consts } from 'styles';
 import NetworkGlobe from './NetworkGlobe';
 
@@ -85,6 +86,8 @@ const blockWeightIcons = [
   blockweight9,
 ];
 
+const formatDiff = diff => (diff || 0).toFixed(3);
+
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
@@ -96,6 +99,10 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => ({
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
+  getDifficulty: async () => {
+    const diff = await RPC.PROMISE('getdifficulty', []);
+    dispatch({ type: TYPE.SET_DIFFICULTY, payload: diff });
+  },
 });
 
 const OverviewPage = styled.div({
@@ -212,6 +219,11 @@ const MaxmindLogo = styled.img({
 });
 
 class Overview extends Component {
+  constructor(props) {
+    super(props);
+    this.fetchDifficulty();
+  }
+
   // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
@@ -221,6 +233,7 @@ class Overview extends Component {
   reDrawEverything() {}
   // React Method (Life cycle hook)
   componentWillUnmount() {
+    clearTimeout(this.diffFetcher);
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
@@ -245,6 +258,11 @@ class Overview extends Component {
       }
     }
   }
+
+  fetchDifficulty = async () => {
+    await this.props.getDifficulty();
+    this.diffFetcher = setTimeout(this.fetchDifficulty, 50000);
+  };
 
   // Class methods
   setupcontextmenu(e) {
@@ -378,14 +396,19 @@ class Overview extends Component {
 
   // Mandatory React method
   render() {
-    const { connections, balance, stake, displayNXSvalues } = this.props;
+    const {
+      connections,
+      balance,
+      stake,
+      displayNXSvalues,
+      difficulty,
+    } = this.props;
     return (
       <OverviewPage>
         {!!this.showingGlobe() && (
           <>
             <NetworkGlobe
-              handleOnLineRender={e => (this.redrawCurves = e)}
-              // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
+              handleOnLineRender={e => (this.redrawCurves = e)} // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
               handleOnAddData={e => (this.reDrawEverything = e)}
               handleRemoveAllPoints={e => (this.removeAllPoints = e)}
               pillarColor={this.props.theme.globePillarColor}
@@ -551,25 +574,17 @@ class Overview extends Component {
           </Tooltip.Trigger>
 
           <Stat>
-            <StatIcon icon={this.blockWeightIcon()} />
-            <div>
-              <StatLabel>
-                <Text id="overview.BlockWeightt" />
-              </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(this.props.blockweight)}
-              </StatValue>
-            </div>
-          </Stat>
-
-          <Stat>
             <StatIcon icon={this.trustIcon()} />
             <div>
               <StatLabel>
-                <Text id="overview.TrustWeight" />
+                <Text id="overview.PrimeDiff" />
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.props.trustweight)}
+                {!!difficulty ? (
+                  formatDiff(difficulty.prime)
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
           </Stat>
@@ -578,10 +593,30 @@ class Overview extends Component {
             <StatIcon icon={stakeIcon} />
             <div>
               <StatLabel>
-                <Text id="overview.StakeWeight" />
+                <Text id="overview.HashDiff" />
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.props.stakeweight)}
+                {!!difficulty ? (
+                  formatDiff(difficulty.hash)
+                ) : (
+                  <span className="dim">-</span>
+                )}
+              </StatValue>
+            </div>
+          </Stat>
+
+          <Stat>
+            <StatIcon icon={this.blockWeightIcon()} />
+            <div>
+              <StatLabel>
+                <Text id="overview.StakeDiff" />
+              </StatLabel>
+              <StatValue>
+                {!!difficulty ? (
+                  formatDiff(difficulty.stake)
+                ) : (
+                  <span className="dim">-</span>
+                )}
               </StatValue>
             </div>
           </Stat>

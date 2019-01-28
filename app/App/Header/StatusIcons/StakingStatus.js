@@ -34,22 +34,20 @@ class StakingStatus extends React.Component {
     return (
       <Tooltip.Trigger
         tooltip={
-          location.pathname !== '/' && (
+          <div>
             <div>
-              <div>
-                <Text id="Header.StakeWeight" />: {stakeweight}%
-              </div>
-              <div>
-                <Text id="Header.InterestRate" />: {interestweight}%
-              </div>
-              <div>
-                <Text id="Header.TrustWeight" />: {trustweight}%
-              </div>
-              <div>
-                <Text id="Header.BlockWeight" />: {blockweight}
-              </div>
+              <Text id="Header.StakeWeight" />: {stakeweight}%
             </div>
-          )
+            <div>
+              <Text id="Header.InterestRate" />: {interestweight}%
+            </div>
+            <div>
+              <Text id="Header.TrustWeight" />: {trustweight}%
+            </div>
+            <div>
+              <Text id="Header.BlockWeight" />: {blockweight}
+            </div>
+          </div>
         }
         style={{ textAlign: 'left' }}
       >
