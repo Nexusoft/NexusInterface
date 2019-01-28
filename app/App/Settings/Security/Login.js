@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 // Internal Dependencies
 import getInfo from 'actions/getInfo';
 import * as RPC from 'scripts/rpc';
+import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
