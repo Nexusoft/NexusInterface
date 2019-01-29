@@ -281,7 +281,8 @@
   "Settings.LogOut": "Log Out",
   "Settings.ConfirmLogOut": "Are you sure you want to log out?",
   "Settings.ResetThemeNoti": "Color scheme has been reset to default",
-  "Settings.StarryBackground": "Twinkling Starry Sky background",
+  "Settings.StarryBackground": "Twinkling Starry Sky",
+  "Settings.LightBackground": "Cosmic Light",
   "Settings.CustomWallpaper": "Custom Wallpaper",
   "Settings.SelectCustomWallpaper": "Select a Custom Wallpaper",
 
@@ -320,6 +321,7 @@
   "Settings.BackupDir": "Backup Directory",
   "Settings.SelectBackupDirectory": "Select Backup Directory",
   "Settings.PickThemeFile": "Import Custom Theme",
+  "Settings.ThemeFileExport": "Export Custom Theme",
   "Settings.Background": "Background",
   "Settings.BackgroundSubLabel": "Customize your background wallpaper",
   "Settings.ColorScheme": "Color scheme",
@@ -471,8 +473,8 @@
   "Cp.GAC": "Globe Arch Color",
   "Cp.PC": "Primary Color",
   "Cp.PCA": "Primary Color Accent",
-  "Cp.ER": "Danger Color",
-  "Cp.ERA": "Danger Color Accent",
+  "Cp.ER": "Error Color",
+  "Cp.ERA": "Error Color Accent",
 
   "Lang.English": "English",
   "Lang.Russian": "Russian",

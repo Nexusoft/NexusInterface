@@ -125,3 +125,11 @@ export const setWebGLEnabled = enabled => ({
 export const showEncryptionWarningModal = () => ({
   type: TYPE.SHOW_ENCRYPTION_MODAL,
 });
+
+export const setCoreDebugLogFile = (path) => ({
+  type: TYPE.SET_CORE_DEBUG_LOG_FILE,
+  payload: path,
+})
+
+export const printCoreOutput = data => ({
+    type: TYPE.PRINT_TO_CORE, payload: data })
