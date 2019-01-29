@@ -108,8 +108,12 @@
     },
     "linux": {
       "target": [
+        "deb",
         "AppImage"
       ]
+    },
+    "deb": {
+      "artifactName": "nexus_wallet-${version}.${ext}"
     },
     "appImage": {
       "artifactName": "nexus_wallet-${version}.${ext}"
