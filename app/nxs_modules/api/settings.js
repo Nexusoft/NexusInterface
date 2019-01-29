@@ -51,8 +51,8 @@ export const defaultSettings = {
   experimentalWarningDisabled: false,
   encryptionWarningDisabled: false,
   bootstrapSuggestionDisabled: false,
-  windowWidth: 1280,
-  windowHeight: 1024,
+  windowWidth: 1020,
+  windowHeight: 700,
   forkBlocks: 0,
 };
 

@@ -209,7 +209,7 @@ export default class SettingsStyle extends Component {
   }
 
   setToCustom = () => {
-    console.log("Set To Custom")
+    //console.log("Set To Custom")
   }
 
   setThemeSelector = (selectorIndex) => {
@@ -307,7 +307,7 @@ export default class SettingsStyle extends Component {
           <Button onClick={this.openPickThemeFileDialog}>
             <Text id="Settings.PickThemeFile" />
           </Button>
-          <Button onClick={this.exportThemeFileDialog}>
+          <Button style={{ marginLeft: '1em' }} onClick={this.exportThemeFileDialog}>
             <Text id="Settings.ThemeFileExport" />
           </Button>
         </div>
