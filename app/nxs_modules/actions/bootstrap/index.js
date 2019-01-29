@@ -30,7 +30,7 @@ export default function bootstrap({ suggesting } = {}) {
         const startBootstrapping = async () => {
           try {
             await bootstrapper.start({
-              backupFolder: state.settings.settings.Folder,
+              backupFolder: state.settings.backupDirectory,
               clearOverviewVariables: () => {
                 dispatch(ac.clearOverviewVariables());
               },
@@ -48,7 +48,11 @@ export default function bootstrap({ suggesting } = {}) {
       noCallback: () => {
         running = false;
         if (suggesting) {
-          dispatch(updateSettings({ bootstrap: false }));
+          dispatch(
+            updateSettings({
+              bootstrapSuggestionDisabled: true,
+            })
+          );
         }
       },
       style: { width: 530 },

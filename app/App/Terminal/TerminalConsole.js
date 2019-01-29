@@ -74,17 +74,17 @@ const AutoComplete = styled.div(({ theme }) => ({
   position: 'absolute',
   top: '100%',
   zIndex: 99,
-  background: theme.dark,
+  background: theme.background,
 }));
 
 const AutoCompleteItem = styled.a(({ theme }) => ({
   display: 'block',
   cursor: 'pointer',
   transition: `color ${timing.normal}`,
-  color: theme.lightGray,
+  color: theme.mixer(0.75),
 
   '&:hover': {
-    color: theme.light,
+    color: theme.foreground,
   },
 }));
 
@@ -92,19 +92,19 @@ const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
   flexBasis: 0,
   overflow: 'auto',
-  wordBreak:'break-all',
-  background: theme.dark,
-  border: `1px solid ${theme.darkGray}`,
+  wordBreak: 'break-all',
+  background: theme.background,
+  border: `1px solid ${theme.mixer(0.25)}`,
 }));
 
 const ExecuteButton = styled(Button)(({ theme }) => ({
-  borderLeft: `1px solid ${theme.darkerGray}`,
+  borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
 class TerminalConsole extends Component {
   constructor(props) {
     super(props);
-    this.inputRef = null;
+    this.inputRef = React.createRef();
     this.outputRef = React.createRef();
   }
   // React Method (Life cycle hook)
@@ -314,11 +314,8 @@ class TerminalConsole extends Component {
           key={key}
           onMouseDown={() => {
             setTimeout(() => {
-              //I don't like this but the issue is that the click event fires on the output div which breaks the focus, so using a timer
-              this.inputRef.setState({focus:true});
-              this.inputRef.inputReference.focus();
-              
-            }, 100);
+              this.inputRef.current.focus();
+            }, 0);
             this.props.onAutoCompleteClick(item);
           }}
         >
@@ -346,7 +343,7 @@ class TerminalConsole extends Component {
               <Text id="Console.CommandsHere">
                 {cch => (
                   <TextField
-                    ref={element => (this.inputRef = element)}
+                    inputRef={this.inputRef}
                     autoFocus
                     skin="filled-dark"
                     value={this.props.currentInput}
@@ -356,7 +353,6 @@ class TerminalConsole extends Component {
                     }
                     onKeyPress={e => this.handleKeyboardInput(e)}
                     onKeyDown={e => this.handleKeyboardArrows(e)}
-                    grouped="left"
                     style={{ flexGrow: 1 }}
                     right={
                       <ExecuteButton

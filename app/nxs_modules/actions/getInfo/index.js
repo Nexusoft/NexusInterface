@@ -2,6 +2,7 @@ import React from 'react';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
+import { loadMyAccounts } from 'actions/accountActionCreators';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
 
@@ -25,7 +26,7 @@ export default function getInfo() {
       dispatch(ac.Unencrypted());
       if (
         !state.common.encryptionModalShown &&
-        !state.settings.settings.ignoreEncryptionWarningFlag
+        !state.settings.encryptionWarningDisabled
       ) {
         UIController.openModal(EncryptionWarningModal);
         dispatch(ac.showEncryptionWarningModal());
@@ -39,7 +40,7 @@ export default function getInfo() {
     }
 
     if (info.connections !== undefined && oldInfo.connections === undefined) {
-      loadMyAccounts(dispatch);
+      dispatch(loadMyAccounts());
     }
 
     if (info.blocks !== oldInfo.blocks) {
@@ -63,16 +64,14 @@ export default function getInfo() {
       }
 
       const {
-        settings: {
-          settings: { manualDaemon, bootstrap: bootstrapSetting },
-        },
+        settings: { manualDaemon, bootstrapSuggestionDisabled },
       } = state;
       // 172800 = (100 * 24 * 60 * 60) / 50
       // which is the approximate number of blocks produced in 100 days
       const isFarBehind = highestPeerBlock - info.blocks > 172800;
       if (
         isFarBehind &&
-        bootstrapSetting &&
+        !bootstrapSuggestionDisabled &&
         !manualDaemon &&
         info.connections !== undefined
       ) {
@@ -116,59 +115,6 @@ export default function getInfo() {
     delete info.timestamp;
     dispatch(ac.GetInfo(info));
   };
-}
-
-async function loadMyAccounts(dispatch) {
-  const accList = await RPC.PROMISE('listaccounts', [0]);
-
-  const addrList = await Promise.all(
-    Object.keys(accList).map(account =>
-      RPC.PROMISE('getaddressesbyaccount', [account])
-    )
-  );
-
-  const validateAddressPromises = addrList.reduce(
-    (list, element) => [
-      ...list,
-      ...element.addresses.map(address =>
-        RPC.PROMISE('validateaddress', [address])
-      ),
-    ],
-    []
-  );
-  const validations = await Promise.all(validateAddressPromises);
-
-  const accountList = [];
-  validations.forEach(e => {
-    if (e.ismine && e.isvalid) {
-      const index = accountList.findIndex(ele => ele.account === e.account);
-      const indexDefault = accountList.findIndex(
-        ele => ele.account === '' || ele.account === 'default'
-      );
-
-      if (e.account === '' || e.account === 'default') {
-        if (index === -1 && indexDefault === -1) {
-          accountList.push({
-            account: 'default',
-            addresses: [e.address],
-          });
-        } else {
-          accountList[indexDefault].addresses.push(e.address);
-        }
-      } else {
-        if (index === -1) {
-          accountList.push({
-            account: e.account,
-            addresses: [e.address],
-          });
-        } else {
-          accountList[index].addresses.push(e.address);
-        }
-      }
-    }
-  });
-
-  dispatch(ac.MyAccountsList(accountList));
 }
 
 async function showDesktopNotif(title, message) {

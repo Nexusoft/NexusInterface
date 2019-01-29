@@ -15,6 +15,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import config from 'api/configuration';
 import * as RPC from 'scripts/rpc';
 import * as actionsCreators from 'actions/addressbookActionCreators';
+import { loadMyAccounts } from 'actions/accountActionCreators';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -49,16 +50,18 @@ const mapStateToProps = state => {
     ...state.addressbook,
     ...state.overview,
     ...state.sendReceive,
-    ...state.settings,
+    settings: state.settings,
   };
 };
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch);
+const mapDispatchToProps = dispatch => ({
+  ...bindActionCreators(actionsCreators, dispatch),
+  loadMyAccounts: () => dispatch(loadMyAccounts()),
+});
 
 class AddressBook extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    this.loadMyAccounts();
+    this.props.loadMyAccounts();
     window.addEventListener('contextmenu', this.addressbookContextMenu, false);
     googleanalytics.SendScreen('AddressBook');
   }
@@ -179,65 +182,6 @@ class AddressBook extends Component {
         break;
     }
   };
-
-  loadMyAccounts() {
-    RPC.PROMISE('listaccounts', [0]).then(payload => {
-      Promise.all(
-        Object.keys(payload).map(account =>
-          RPC.PROMISE('getaddressesbyaccount', [account])
-        )
-      ).then(payload => {
-        let validateAddressPromises = [];
-
-        payload.map(element => {
-          element.addresses.map(address => {
-            validateAddressPromises.push(
-              RPC.PROMISE('validateaddress', [address])
-            );
-          });
-        });
-
-        Promise.all(validateAddressPromises).then(payload => {
-          let accountsList = [];
-          let myaccts = payload.map(e => {
-            if (e.ismine && e.isvalid) {
-              let index = accountsList.findIndex(ele => {
-                if (ele.account === e.account) {
-                  return ele;
-                }
-              });
-              let indexDefault = accountsList.findIndex(ele => {
-                if (ele.account == '' || ele.account == 'default') {
-                  return ele;
-                }
-              });
-
-              if (e.account === '' || e.account === 'default') {
-                if (index === -1 && indexDefault === -1) {
-                  accountsList.push({
-                    account: 'default',
-                    addresses: [e.address],
-                  });
-                } else {
-                  accountsList[indexDefault].addresses.push(e.address);
-                }
-              } else {
-                if (index === -1) {
-                  accountsList.push({
-                    account: e.account,
-                    addresses: [e.address],
-                  });
-                } else {
-                  accountsList[index].addresses.push(e.address);
-                }
-              }
-            }
-          });
-          this.props.MyAccountsList(accountsList);
-        });
-      });
-    });
-  }
 
   getinitial(name) {
     if (name && name.length >= 1) return name.charAt(0);
@@ -442,54 +386,7 @@ class AddressBook extends Component {
           </div>
         );
         break;
-      case 'MY_ADDRESSES':
-        if (this.props.myAccounts.length > 0) {
-          return (
-            <div id="Addresstable-wraper">
-              <div className="m1">
-                {/* <Icon icon={addressBookIcon} className="hdr-img" /> */}
-                <Text id="AddressBook.MyAddresses" />
-              </div>
-              <table className="myAddressTable">
-                <thead className="AddressThead">
-                  <th className="short-column">
-                    <Text id="AddressBook.Account" />
-                    <Text id="AddressBook.searchC">
-                      {sba => (
-                        <TextField
-                          style={{
-                            marginLeft: '1em',
-                            fontSize: '.9375em',
-                            width: 200,
-                          }}
-                          left={<Icon icon={searchIcon} spaceRight />}
-                          className="searchaccount"
-                          placeholder={sba}
-                          value={this.props.Search}
-                          onChange={e => this.props.SearchName(e.target.value)}
-                          required
-                        />
-                      )}
-                    </Text>
-                  </th>
-                </thead>
-                {this.MyAddressesTable()}
-              </table>
-              <button
-                className="button primary"
-                onClick={() => this.props.SetModalType('NEW_MY_ADDRESS')}
-              >
-                <Text id="AddressBook.CreateAddress" />
-              </button>
-            </div>
-          );
-        } else
-          return (
-            <h2>
-              <Text id="AddressBook.Loading" />
-            </h2>
-          );
-        break;
+
       case 'ADD_ADDRESS':
         return (
           <div>
@@ -539,78 +436,9 @@ class AddressBook extends Component {
           </div>
         );
         break;
-      case 'NEW_MY_ADDRESS':
-        return (
-          <div>
-            <h2 className="m1">
-              <Icon icon={addressBookIcon} className="hdr-img" />
-              <Text id="AddressBook.Create" />
-            </h2>
-            <div className="create">
-              <label htmlFor="new-account-name">
-                <Text id="AddressBook.NameOption" />
-              </label>
-              <Text id="AddressBook.Name">
-                {ean => (
-                  <input
-                    id="new-account-name"
-                    value={this.props.prototypeName}
-                    onChange={e => this.props.EditProtoName(e.target.value)}
-                    placeholder={ean}
-                    required
-                  />
-                )}
-              </Text>
-            </div>{' '}
-            <button
-              id="Add"
-              className="ghost button"
-              onClick={() => this.createAddress()}
-            >
-              <Text id="AddressBook.CreateAddress" />
-            </button>
-            <button
-              id="back"
-              className="button ghost"
-              onClick={() => this.props.SetModalType('MY_ADDRESSES')}
-            >
-              <Text id="AddressBook.Back" />
-            </button>
-          </div>
-        );
-        break;
+
       default:
         break;
-    }
-  }
-
-  createAddress() {
-    let name = this.props.prototypeName.trim();
-    if (name !== '') {
-      if (name !== '*' && name !== 'default') {
-        RPC.PROMISE('getnewaddress', [name])
-          .then(success => {
-            this.props.ToggleModal();
-            this.loadMyAccounts();
-          })
-          .catch(e => {
-            UIController.openErrorDialog({ message: e });
-          });
-      } else {
-        UIController.showNotification(
-          <Text id="Alert.nodefaultname" />,
-          'error'
-        );
-      }
-    } else {
-      RPC.PROMISE('getnewaddress', [''])
-        .then(success => {
-          this.props.ToggleModal();
-          this.loadMyAccounts();
-        })
-        .catch(e => {
-          UIController.openErrorDialog({ message: e });
-        });
     }
   }
 
@@ -1098,20 +926,6 @@ class AddressBook extends Component {
                   onClick={this.exportAddressBook.bind(this)}
                 >
                   <ControlIcon icon={exportIcon} />
-                </Button>
-              </Tooltip.Trigger>
-
-              <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
-                <Button
-                  skin="blank-light"
-                  className="relative"
-                  onClick={() => {
-                    this.props.clearSearch();
-                    this.loadMyAccounts();
-                    this.showMyAddresses();
-                  }}
-                >
-                  <ControlIcon icon={userIcon} />
                 </Button>
               </Tooltip.Trigger>
 

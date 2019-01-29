@@ -18,7 +18,8 @@ const FormFieldComponent = styled.div(
 
 const Label = styled.label(
   {
-    display: 'block',
+    display: 'flex',
+    alignItems: 'center',
     position: 'relative',
     marginBottom: '.2em',
   },
@@ -59,11 +60,11 @@ const Hint = styled.div(({ theme }) => ({
     visibility: 'visible',
     opacity: 1,
     color: '#fff',
-    background: theme.error,
+    background: theme.danger,
   },
 
   'input:invalid:focus + &::before': {
-    borderBottomColor: theme.error,
+    borderBottomColor: theme.danger,
   },
 }));
 

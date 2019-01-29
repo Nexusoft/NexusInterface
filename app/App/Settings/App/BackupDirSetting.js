@@ -4,14 +4,15 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 
 // Internal
-import Text from 'components/Text';
+import Text, { translate } from 'components/Text';
 import { updateSettings } from 'actions/settingsActionCreators';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 
 const mapStateToProps = state => ({
-  backupDir: state.settings.settings.Folder,
+  backupDir: state.settings.backupDirectory,
+  locale: state.settings.locale,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -26,13 +27,15 @@ export default class SettingsApp extends Component {
   browseBackupDir = () => {
     remote.dialog.showOpenDialog(
       {
-        title: 'Select a folder',
+        title: translate('Settings.SelectBackupDirectory', this.props.locale),
         defaultPath: this.props.backupDir,
         properties: ['openDirectory'],
       },
       folderPaths => {
         if (folderPaths && folderPaths.length > 0) {
-          this.props.updateSettings({ Folder: folderPaths[0] });
+          this.props.updateSettings({
+            backupDirectory: folderPaths[0],
+          });
         }
       }
     );
@@ -40,7 +43,7 @@ export default class SettingsApp extends Component {
 
   render() {
     return (
-      <SettingsField connectLabel label={<Text id="Settings.Folder" />}>
+      <SettingsField connectLabel label={<Text id="Settings.BackupDir" />}>
         {inputId => (
           <div className="flex stretch">
             <TextField

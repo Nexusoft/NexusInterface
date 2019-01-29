@@ -37,7 +37,12 @@ import arrow from 'images/arrow.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.market, ...state.common, ...state.intl, ...state.settings };
+  return {
+    ...state.market,
+    ...state.common,
+    ...state.intl,
+    settings: state.settings,
+  };
 };
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);

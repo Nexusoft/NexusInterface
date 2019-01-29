@@ -1,13 +1,10 @@
 import fs from 'fs';
 
-import { normalizePath } from 'utils';
+import { defaultSettings } from 'api/settings';
 import * as RPC from 'scripts/rpc';
 
 export function backupWallet(backupFolder) {
-  const defaultHomeDir =
-    process.platform === 'win32' ? process.env.USERPROFILE : process.env.HOME;
-  const defaultBackupDir = normalizePath(defaultHomeDir + '/NexusBackups');
-  const backupDir = backupFolder || defaultBackupDir;
+  const backupDir = backupFolder || defaultSettings.backupDirectory;
 
   if (!fs.existsSync(backupDir)) {
     fs.mkdirSync(backupDir);

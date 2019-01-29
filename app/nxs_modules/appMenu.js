@@ -5,7 +5,6 @@ import fs from 'fs';
 
 // Internal
 import * as RPC from 'scripts/rpc';
-import { GetSettings } from 'api/settings';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { backupWallet } from 'api/wallet';
 import core from 'api/core';
@@ -13,11 +12,18 @@ import Text from 'components/Text';
 import UIController from 'components/UIController';
 import * as ac from 'actions/setupAppActionCreators';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
+import updater from 'updater';
 
-export default class MenuBuilder {
-  constructor(store, history) {
+const autoUpdater = remote.getGlobal('autoUpdater');
+
+class AppMenu {
+  initialize(store, history) {
     this.store = store;
     this.history = history;
+
+    // Update the updater menu item when the updater state changes
+    // Changing menu ittem labels directly has no effect so we have to rebuild the whole menu
+    updater.on('state-change', this.build);
   }
 
   separator = {
@@ -34,18 +40,18 @@ export default class MenuBuilder {
   stopDaemon = {
     label: 'Stop Daemon',
     click: () => {
-      let settings = GetSettings();
-      if (settings.manualDaemon != true) {
+      const state = this.store.getState();
+      if (state.settings.manualDaemon) {
+        RPC.PROMISE('stop', []).then(() => {
+          this.store.dispatch(ac.clearOverviewVariables());
+        });
+      } else {
         remote
           .getGlobal('core')
           .stop()
           .then(payload => {
             console.log(payload);
           });
-      } else {
-        RPC.PROMISE('stop', []).then(() => {
-          this.store.dispatch(ac.clearOverviewVariables());
-        });
       }
     },
   };
@@ -70,40 +76,21 @@ export default class MenuBuilder {
   backupWallet = {
     label: 'Backup Wallet',
     click: () => {
-      let now = new Date()
-        .toString()
-        .slice(0, 24)
-        .split(' ')
-        .reduce((a, b) => {
-          return a + '_' + b;
-        })
-        .replace(/:/g, '_');
-      let BackupDir = process.env.HOME + '/NexusBackups';
-      if (process.platform === 'win32') {
-        // BackupDir = app.getPath('documents') + '/NexusBackups';
-        BackupDir = process.env.USERPROFILE + '/NexusBackups';
-        BackupDir = BackupDir.replace(/\\/g, '/');
-      }
       const state = this.store.getState();
-      if (state.settings.settings.Folder !== BackupDir) {
-        BackupDir = state.settings.settings.Folder;
-      }
-      let ifBackupDirExists = fs.existsSync(BackupDir);
-      if (!ifBackupDirExists) {
-        fs.mkdirSync(BackupDir);
-      }
       if (state.overview.connections) {
         remote.dialog.showOpenDialog(
           {
             title: 'Select a folder',
-            defaultPath: state.settings.settings.Folder,
+            defaultPath: state.settings.backupDirectory,
             properties: ['openDirectory'],
           },
-          folderPaths => {
+          async folderPaths => {
             if (folderPaths && folderPaths.length > 0) {
-              updateSettings({ Folder: folderPaths[0] });
+              this.store.dispatch(
+                updateSettings({ backupDirectory: folderPaths[0] })
+              );
 
-              backupWallet(folderPaths[0]);
+              await backupWallet(folderPaths[0]);
               UIController.showNotification(
                 <Text id="Alert.WalletBackedUp" />,
                 'success'
@@ -192,7 +179,7 @@ export default class MenuBuilder {
       }
 
       const state = this.store.getState();
-      if (state.settings.settings.manualDaemon) {
+      if (state.settings.manualDaemon) {
         UIController.showNotification(
           'Cannot bootstrap recent database in manual mode',
           'error'
@@ -241,7 +228,52 @@ export default class MenuBuilder {
     },
   };
 
-  buildDarwinTemplate() {
+  updaterIdle = {
+    label: 'Check for Updates...',
+    enabled: true,
+    click: async () => {
+      const result = await autoUpdater.checkForUpdates();
+      // Not sure if this is the best way to check if there's an update
+      // available because autoUpdater.checkForUpdates() doesn't return
+      // any reliable results like a boolean `updateAvailable` property
+      if (result.updateInfo.version === APP_VERSION) {
+        UIController.showNotification(
+          'There are currently no updates available'
+        );
+      }
+    },
+  };
+
+  updaterChecking = {
+    label: 'Checking for Updates...',
+    enabled: false,
+  };
+
+  updaterDownloading = {
+    label: 'Update available! Downloading...',
+    enabled: false,
+  };
+
+  updaterReadyToInstall = {
+    label: 'Quit and install update...',
+    enabled: true,
+    click: autoUpdater.quitAndInstall,
+  };
+
+  updaterMenuItem = () => {
+    switch (updater.state) {
+      case 'idle':
+        return this.updaterIdle;
+      case 'checking':
+        return this.updaterChecking;
+      case 'downloading':
+        return this.updaterDownloading;
+      case 'downloaded':
+        return this.updaterReadyToInstall;
+    }
+  };
+
+  buildDarwinTemplate = () => {
     const subMenuAbout = {
       label: 'Nexus',
       submenu: [
@@ -278,16 +310,18 @@ export default class MenuBuilder {
       submenu: [this.toggleFullScreen],
     };
     const state = this.store.getState();
-    if (
-      process.env.NODE_ENV === 'development' ||
-      state.settings.settings.devMode
-    ) {
+    if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
       subMenuWindow.submenu.push(this.toggleDevTools);
     }
 
     const subMenuHelp = {
       label: 'Help',
-      submenu: [this.websiteLink, this.gitRepoLink],
+      submenu: [
+        this.websiteLink,
+        this.gitRepoLink,
+        this.separator,
+        this.updaterMenuItem(),
+      ],
     };
 
     return [
@@ -298,9 +332,9 @@ export default class MenuBuilder {
       subMenuWindow,
       subMenuHelp,
     ];
-  }
+  };
 
-  buildDefaultTemplate() {
+  buildDefaultTemplate = () => {
     const subMenuFile = {
       label: '&File',
       submenu: [
@@ -329,22 +363,25 @@ export default class MenuBuilder {
       submenu: [this.toggleFullScreen],
     };
     const state = this.store.getState();
-    if (
-      process.env.NODE_ENV === 'development' ||
-      state.settings.settings.devMode
-    ) {
+    if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
       subMenuView.submenu.push(this.separator, this.toggleDevTools);
     }
 
     const subMenuHelp = {
       label: 'Help',
-      submenu: [this.about, this.websiteLink, this.gitRepoLink],
+      submenu: [
+        this.about,
+        this.websiteLink,
+        this.gitRepoLink,
+        this.separator,
+        this.updaterMenuItem(),
+      ],
     };
 
     return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
-  }
+  };
 
-  buildMenu() {
+  build = () => {
     let template;
 
     if (process.platform === 'darwin') {
@@ -355,7 +392,8 @@ export default class MenuBuilder {
 
     const menu = remote.Menu.buildFromTemplate(template);
     remote.Menu.setApplicationMenu(menu);
-
     return menu;
-  }
+  };
 }
+
+export default new AppMenu();

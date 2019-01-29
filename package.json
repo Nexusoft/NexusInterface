@@ -31,11 +31,13 @@
     "test-e2e": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js e2e",
     "test-watch": "npm test -- --watch",
     "test:e2e": "./node_modules/mocha/bin/mocha tests/test.js",
-    "version2": "node ./internals/scripts/UpdateBuildDate.js"
+    "version2": "node ./internals/scripts/UpdateBuildDate.js",
+    "extract-changes": "node ./internals/scripts/extractTranslationChanges.js",
+    "update-translations": "node ./internals/scripts/updateTranslations.js"
   },
   "browserslist": "electron 1.8",
   "build": {
-    "productName": "Nexus",
+    "productName": "Nexus Wallet",
     "appId": "com.nexusearth.NexusTritiumBeta",
     "files": [
       "dist/",
@@ -61,13 +63,19 @@
       }
     ],
     "publish": {
-      "provider": "github"
+      "provider": "github",
+      "owner": "Nexusoft",
+      "repo": "Nexus-Interface-React"
     },
     "mac": {
-      "target": "dmg",
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "category": "public.app-category.utilities"
     },
     "dmg": {
+      "artifactName": "nexus_wallet-${version}.${ext}",
       "background": "resources/background.jpg",
       "contents": [
         {
@@ -90,18 +98,25 @@
     "nsis": {
       "oneClick": false,
       "perMachine": false,
-      "runAfterFinish": false,
+      "runAfterFinish": true,
       "allowToChangeInstallationDirectory": true,
       "menuCategory": "Nexus",
       "installerSidebar": "resources/installerSidebar.bmp",
       "license": "resources/license.txt",
-      "shortcutName": "Tritium Wallet Beta",
-      "artifactName": "Nexus Tritium Wallet Beta Setup.exe"
+      "shortcutName": "Nexus Wallet Beta",
+      "artifactName": "nexus_wallet-setup-${version}.${ext}"
     },
     "linux": {
       "target": [
-        "deb"
+        "deb",
+        "AppImage"
       ]
+    },
+    "deb": {
+      "artifactName": "nexus_wallet-${version}.${ext}"
+    },
+    "appImage": {
+      "artifactName": "nexus_wallet-${version}.${ext}"
     },
     "directories": {
       "buildResources": "resources",
@@ -254,7 +269,7 @@
     "electron-directory": "0.0.3",
     "electron-is-dev": "^1.0.1",
     "electron-log": "^2.2.17",
-    "electron-updater": "^4.0.5",
+    "electron-updater": "^4.0.6",
     "emotion-theming": "^10.0.5",
     "fd-slicer": "^1.1.0",
     "find-process": "^1.1.3",
@@ -263,6 +278,7 @@
     "is-running": "^2.1.0",
     "macaddress": "^0.2.9",
     "maxmind": "^2.6.0",
+    "memoize-one": "^5.0.0",
     "mocha": "^5.2.0",
     "move-file": "^1.0.0",
     "node-stream-zip": "^1.7.0",

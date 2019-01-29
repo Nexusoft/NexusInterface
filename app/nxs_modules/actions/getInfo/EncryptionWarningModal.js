@@ -1,6 +1,7 @@
 // External
 import React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
@@ -20,8 +21,8 @@ const WarningModal = styled(Modal)({
 
 const WarningIcon = styled(Icon)(({ theme }) => ({
   fontSize: 80,
-  color: theme.error,
-  filter: `drop-shadow(0 0 5px ${color.fade(theme.error, 0.5)})`,
+  color: theme.danger,
+  filter: `drop-shadow(0 0 5px ${color.fade(theme.danger, 0.5)})`,
   marginBottom: 20,
 }));
 
@@ -32,13 +33,20 @@ const WarningMessage = styled.div({
 @connect(
   null,
   dispatch => ({
-    updateSettings: updates => dispatch(updateSettings(updates)),
+    ignoreEncryptionWarning: () =>
+      dispatch(updateSettings({ encryptionWarningDisabled: true })),
+    goTo: url => dispatch(push(url)),
   })
 )
 class EncryptionWarningModal extends React.Component {
   ignore = () => {
+    this.props.ignoreEncryptionWarning();
     this.closeModal();
-    this.props.updateSettings({ ignoreEncryptionWarningFlag: true });
+  };
+
+  goToSecuritySettings = () => {
+    this.closeModal();
+    this.props.goTo('/Settings/Security');
   };
 
   render() {
@@ -61,12 +69,7 @@ class EncryptionWarningModal extends React.Component {
             <Button skin="error" onClick={this.ignore}>
               <Text id="overview.Ignore" />
             </Button>
-            <Button
-              as={Link}
-              skin="primary"
-              to="/Settings/Security"
-              onClick={this.closeModal}
-            >
+            <Button skin="primary" onClick={this.goToSecuritySettings}>
               <Text id="overview.TakeMeThere" />
             </Button>
           </div>

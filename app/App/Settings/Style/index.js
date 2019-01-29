@@ -2,212 +2,316 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
-import Text from 'components/Text';
-import googleanalytics from 'scripts/googleanalytics';
+import fs from 'fs';
 import styled from '@emotion/styled';
+import https from 'https';
 
 // Internal
-import * as TYPE from 'actions/actiontypes';
-import { GetSettings, SaveSettings } from 'api/settings';
+import { updateSettings } from 'actions/settingsActionCreators';
+import { updateTheme, resetColors } from 'actions/themeActionCreators';
+import Text, { translate } from 'components/Text';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import UIController from 'components/UIController';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
+import configuration from 'api/configuration';
+import ThemePicker from './ThemePicker';
 
-import fs from 'fs';
+import DarkTheme from './Dark.json';
+import LightTheme from './Light.json';
 
 const StyleSettings = styled.div({
   maxWidth: 750,
   margin: '0 auto',
 });
 
-// React-Redux mandatory methods
-const mapStateToProps = state => {
+const mapStateToProps = ({
+  settings: { renderGlobe, locale },
+  overview: { webGLEnabled },
+  theme,
+}) => {
   return {
-    ...state.common,
-    ...state.settings,
-    ...state.overview,
+    renderGlobe,
+    webGLEnabled,
+    theme,
+    locale,
   };
 };
 const mapDispatchToProps = dispatch => ({
-  SetWalpaper: path => dispatch({ type: TYPE.SET_WALLPAPER, payload: path }),
-  CustomizeStyling: hex =>
-    dispatch({ type: TYPE.CUSTOMIZE_STYLING, payload: hex }),
-  ResetStyle: () => dispatch({ type: TYPE.RESET_CUSTOM_STYLING }),
-  ToggleGlobeRender: () => dispatch({ type: TYPE.TOGGLE_GLOBE_RENDER }),
+  setRenderGlobe: renderGlobe => dispatch(updateSettings({ renderGlobe })),
+  updateTheme: updates => dispatch(updateTheme(updates)),
+  resetColors: () => dispatch(resetColors()),
 });
 
-class SettingsStyle extends Component {
-  SaveSettings() {
-    SaveSettings({...this.props.settings, theme: this.props.theme});
-    UIController.showNotification(
-      <Text id="Alert.StyleSettingsSaved" />,
-      'success'
-    );
-
-    googleanalytics.SendEvent('Settings', 'Style', 'Saved', 1);
+@connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+export default class SettingsStyle extends Component {
+  state = {
+    previousCustom: {},
+    DarkTheme: DarkTheme,
+    LightTheme: LightTheme,
   }
 
+  componentDidMount() {
+
+    if (this.props.theme.defaultStyle == "Dark") {
+      this.setThemeSelector(0);
+    }
+    else if (this.props.theme.defaultStyle == "Light") {
+      this.setThemeSelector(1);
+    }
+    else {
+      this.setThemeSelector(2);
+    }
+  }
+
+  toggleGlobeRender = e => {
+    this.props.setRenderGlobe(e.target.checked);
+  };
+
+  setWalpaper = (path, defaultStyle) => {
+
+    defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
+    this.props.updateTheme({ defaultStyle: defaultStyle, wallpaper: path, });
+    if (path || defaultStyle.endsWith('Custom')) {
+      this.setThemeSelector(2);
+      if (path) {
+        this.props.updateTheme({ defaultStyle: "Custom", });
+      }
+    }
+  };
+
   setColor = (key, value) => {
-    this.props.CustomizeStyling({
-      ...this.props.theme,
+    this.setToCustom();
+    this.props.updateTheme({
       [key]: value,
+      defaultStyle: "Custom",
     });
   };
 
   resetColors = () => {
-    this.props.ResetStyle();
+    //Dont think we need this anymore 
+    this.props.resetColors();
     UIController.showNotification(
-      'Color scheme has been reset to default',
+      <Text id="Settings.ResetThemeNoti" />,
       'success'
     );
   };
 
-  setCustomSettingsFile = (filepath) => {
-    console.log(filepath);
-    const fileOBJ = fs.readFileSync(filepath);
-    const jsonOBJ = JSON.parse(fileOBJ);
+  loadCustomTheme = filepath => {
+    const content = fs.readFileSync(filepath);
+    let customTheme;
+    try {
+      customTheme = JSON.parse(content);
+      if (customTheme.wallpaper.startsWith('https') || customTheme.wallpaper.startsWith('http')) {
+        const wallpaperPathSplit = customTheme.wallpaper.split('.');
+        const fileEnding = wallpaperPathSplit[wallpaperPathSplit.length - 1];
+        const file = fs.createWriteStream(configuration.GetAppDataDirectory() + "/wallpaper." + fileEnding);
+        this.wallpaperRequest = https.get(customTheme.wallpaper)
+          .setTimeout(10000)
+          .on('response', response => {
+            response.pipe(file);
+            let onFinish = () => {
+              file.close(response => {
+                console.log(this);
+                console.log("FInished DOwnloading");
+                this.setWalpaper(file.path);
+              });
+            }
+            onFinish.bind(this);
+            file.on('finish', () => onFinish());
+          })
+          .on('error', error => {
+            this.setWalpaper("");
+          })
+          .on('timeout', timeout => {
+            this.setWalpaper("");
+          });
+      }
+    } catch (err) {
+      UIController.showNotification(
+        <Text id="Settings.Errors.InvalidJSON" />,
+        'error'
+      );
+    }
+    customTheme.defaultStyle = 'Custom';
+    this.props.updateTheme(customTheme);
+  };
 
-    this.props.CustomizeStyling({
-      ...jsonOBJ
-    });
-    setTimeout(() => {
-        this.SaveSettings();
-        googleanalytics.SendEvent('Settings', 'Style', 'UsedCustomFile', 1);
-    }, 1000);
-  }
-
-  openPickThemeFileDialog = () =>
-  {
+  openPickThemeFileDialog = () => {
     remote.dialog.showOpenDialog(
-    {
-      title: 'Select Custom Theme File',
-      properties: ["openFile"],
-      filters: [{name: "Theme Json", extensions:["json"]}],
-    },
-      filepath => {
-        if(filepath.length != 0 && filepath[0] != '')
-        {
-          this.setCustomSettingsFile(filepath[0]);
+      {
+        title: translate('Settings.SelectCustomTheme', this.props.locale),
+        properties: ['openFile'],
+        filters: [{ name: 'Theme JSON', extensions: ['json'] }],
+      },
+      files => {
+        if (files && files.length > 0) {
+          this.loadCustomTheme(files[0]);
         }
       }
     );
+  };
+
+  exportThemeFileDialog = () => {
+    remote.dialog.showSaveDialog(
+      null,
+      {
+        title: 'Save Theme File',
+        properties: ['saveFile'],
+        filters: [{ name: 'Theme JSON', extensions: ['json'] }],
+      },
+      (path) => {
+        console.log(path);
+        fs.copyFile(configuration.GetAppDataDirectory() + "/theme.json", path, (err) => {
+          if (err) {
+            console.error(err);
+            UIController.showNotification(
+              err,
+              'error'
+            );
+          }
+          UIController.showNotification(
+            'Theme Exported',
+            'success'
+          );
+        });
+      }
+    )
   }
 
+  pressDarkTheme = () => {
+    this.props.updateTheme(DarkTheme);
+  }
+  pressLightTheme = () => {
+    this.props.updateTheme(LightTheme);
+  }
+  pressCustomTheme = () => {
+    if (this.state.previousCustom != {}) {
+      this.props.updateTheme(this.state.previousCustom);
+    }
+  }
+  pressResetTheme = () => {
+    this.props.updateTheme(DarkTheme);
+    this.setThemeSelector(0);
+    UIController.showNotification(
+      'Color scheme has been reset to default',
+      'success'
+    );
+  }
 
-  // Mandatory React method
+  savePreviousCustomTheme = () => {
+    this.setState({ previousCustom: this.props.theme }, () => { console.log(this.state); });
+  }
+
+  setToCustom = () => {
+    //console.log("Set To Custom")
+  }
+
+  setThemeSelector = (selectorIndex) => {
+
+  }
+
   render() {
-    const {
-      theme,
-      settings,
-      webGLEnabled,
-      ToggleGlobeRender,
-      SetWalpaper,
-    } = this.props;
+    const { theme, renderGlobe, webGLEnabled } = this.props;
 
     return (
       <StyleSettings>
-        <form>
-          <SettingsField
-            connectLabel
-            label={<Text id="Settings.RenderGlobe" />}
-            subLabel={
-              <div>
-                <Text id="ToolTip.RenderGlobe" />
-                {!webGLEnabled && (
-                  <div className="error">
-                    <Text id="ToolTip.RenderGlobeOpenGLFail" />
-                  </div>
-                )}
-              </div>
-            }
-          >
-            <Switch
-              disabled={!webGLEnabled}
-              checked={settings.renderGlobe}
-              onChange={ToggleGlobeRender}
-            />
-          </SettingsField>
+        <SettingsField
+          connectLabel
+          label={<Text id="Settings.RenderGlobe" />}
+          subLabel={
+            <div>
+              <Text id="ToolTip.RenderGlobe" />
+              {!webGLEnabled && (
+                <div className="error">
+                  <Text id="ToolTip.RenderGlobeOpenGLFail" />
+                </div>
+              )}
+            </div>
+          }
+        >
+          <Switch
+            disabled={!webGLEnabled}
+            checked={renderGlobe}
+            onChange={this.toggleGlobeRender}
+          />
+        </SettingsField>
 
-          <SettingsField
-            label="Settings File"
-            subLabel="Import Custom Settings File"
-            
+        <SettingsField
+          label="Theme"
+          subLabel="Select Wallet Theme"
+
+        >
+          <ThemePicker
+            parentTheme={theme}
+            darkCallback={this.pressDarkTheme}
+            lightCallback={this.pressLightTheme}
+            customCallback={this.pressCustomTheme}
+            resetCallback={this.pressResetTheme}
+            saveCustomCallback={this.savePreviousCustomTheme}
+            handleOnSetCustom={e => (this.setToCustom = e)}
+            handleSetSelector={e => (this.setThemeSelector = e)}
           >
-          <Button
-            id="chooseCustomSettingsFile"
-            skin="primary"
-            onClick = {this.openPickThemeFileDialog}
-            ><Text id="Settings.PickThemeFile"/>
+
+          </ThemePicker>
+        </SettingsField>
+
+        <SettingsField
+          label={<Text id="Settings.Background" />}
+          subLabel={<Text id="Settings.BackgroundSubLabel" />}
+        >
+          <BackgroundPicker
+            wallpaper={theme.wallpaper}
+            defaultStyle={theme.defaultStyle}
+            onChange={this.setWalpaper}
+          />
+        </SettingsField>
+
+        <SettingsField label={<Text id="Settings.ColorScheme" />}>
+        </SettingsField>
+
+        <SettingsField indent={1} label={<Text id="Cp.PBC" />}>
+          <ColorPicker colorName="background" onChange={this.setColor} />
+        </SettingsField>
+        <SettingsField indent={1} label={<Text id="Cp.TC" />}>
+          <ColorPicker colorName="foreground" onChange={this.setColor} />
+        </SettingsField>
+        <SettingsField indent={1} label={<Text id="Cp.PC" />}>
+          <ColorPicker colorName="primary" onChange={this.setColor} />
+        </SettingsField>
+        <SettingsField indent={1} label={<Text id="Cp.PCA" />}>
+          <ColorPicker colorName="primaryAccent" onChange={this.setColor} />
+        </SettingsField>
+        <SettingsField indent={1} label={<Text id="Cp.ER" />}>
+          <ColorPicker colorName="danger" onChange={this.setColor} />
+        </SettingsField>
+        <SettingsField indent={1} label={<Text id="Cp.ERA" />}>
+          <ColorPicker colorName="dangerAccent" onChange={this.setColor} />
+        </SettingsField>
+        <SettingsField indent={1} label={<Text id="Cp.GC" />}>
+          <ColorPicker colorName="globeColor" onChange={this.setColor} />
+        </SettingsField>
+        <SettingsField indent={2} label={<Text id="Cp.GPC" />}>
+          <ColorPicker colorName="globePillarColor" onChange={this.setColor} />
+        </SettingsField>
+        <SettingsField indent={2} label={<Text id="Cp.GAC" />}>
+          <ColorPicker colorName="globeArchColor" onChange={this.setColor} />
+        </SettingsField>
+
+        <div style={{ marginTop: '2em' }}>
+          <Button onClick={this.openPickThemeFileDialog}>
+            <Text id="Settings.PickThemeFile" />
           </Button>
-          </SettingsField>
-
-          <SettingsField
-            label="Background"
-            subLabel="Customize your background wallpaper"
-          >
-            <BackgroundPicker
-              wallpaper={theme.wallpaper}
-              onChange={SetWalpaper}
-            />
-          </SettingsField>
-
-          <SettingsField label="Color scheme">
-            <Button skin="hyperlink" onClick={this.resetColors}>
-              <Text id="Settings.ResetStyle" />
-            </Button>
-          </SettingsField>
-
-          <SettingsField indent={1} label={<Text id="Cp.PBC"/>}>
-            <ColorPicker colorName="dark" onChange={this.setColor} />
-          </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.TC"/>}>
-            <ColorPicker colorName="light" onChange={this.setColor} />
-          </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.PC"/>}>
-            <ColorPicker colorName="primary" onChange={this.setColor} />
-          </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.PCA"/>}>
-            <ColorPicker colorName="primaryContrast" onChange={this.setColor} />
-          </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.ER"/>}>
-            <ColorPicker colorName="error" onChange={this.setColor} />
-          </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.ERA"/>}>
-            <ColorPicker colorName="errorContrast" onChange={this.setColor} />
-          </SettingsField>
-          <SettingsField indent={1} label={<Text id="Cp.GC"/>}>
-            <ColorPicker colorName="globeColor" onChange={this.setColor} />
-          </SettingsField>
-          <SettingsField indent={2} label={<Text id="Cp.GPC"/>}>
-            <ColorPicker colorName="globePillarColor" onChange={this.setColor} />
-          </SettingsField>
-          <SettingsField indent={2} label={<Text id="Cp.GAC"/>}>
-            <ColorPicker colorName="globeArchColor" onChange={this.setColor} />
-          </SettingsField>
-
-          <div className="flex space-between" style={{ marginTop: '2em' }}>
-            <div />
-            <Button
-              skin="primary"
-              onClick={e => {
-                e.preventDefault();
-                this.SaveSettings();
-              }}
-            >
-              <Text id="Settings.SaveSettings" />
-            </Button>
-          </div>
-        </form>
+          <Button style={{ marginLeft: '1em' }} onClick={this.exportThemeFileDialog}>
+            <Text id="Settings.ThemeFileExport" />
+          </Button>
+        </div>
       </StyleSettings>
     );
   }
 }
-
-// Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingsStyle);

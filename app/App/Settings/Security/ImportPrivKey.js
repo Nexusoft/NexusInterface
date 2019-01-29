@@ -27,6 +27,7 @@ const ImportPrivKeyForm = styled.form({
 )
 @reduxForm({
   form: 'importPrivateKey',
+  destroyOnUnmount: false,
   initialValues: {
     accountName: '',
     privateKey: '',
@@ -34,32 +35,36 @@ const ImportPrivKeyForm = styled.form({
   validate: ({ accountName, privateKey }) => {
     const errors = {};
     if (!accountName) {
-      errors.accountName = 'Account name is required';
+      errors.accountName = <Text id="Settings.Errors.AccountName" />;
     }
     if (!privateKey) {
-      errors.privateKey = 'Private key is required';
+      errors.privateKey = <Text id="Settings.Errors.PrivateKey" />;
     }
     return errors;
   },
   onSubmit: ({ accountName, privateKey }) =>
     RPC.PROMISE('importprivkey', [privateKey], [accountName]),
-  onSubmitSuccess: async () => {
+  onSubmitSuccess: async (result, dispatch, props) => {
+    props.reset();
     // this.props.ResetForEncryptionRestart();
     UIController.openSuccessDialog({
-      message: 'Private key imported. Rescanning now',
+      message: <Text id="Settings.PrivKeyImported" />,
     });
-    UIController.showNotification('Rescanning...');
+    UIController.showNotification(<Text id="Settings.Rescanning" />);
     try {
       await RPC.PROMISE('rescan');
-      UIController.showNotification('Rescanning done', 'success');
+      UIController.showNotification(
+        <Text id="Settings.RescanningDone" />,
+        'success'
+      );
     } catch (err) {
       UIController.openErrorDialog({
-        message: 'Error Rescanning',
-        note: (err && err.message) || 'An unknown error occurred',
+        message: <Text id="Settings.Errors.Rescanning" />,
+        note: (err && err.message) || <Text id="Common.UnknownError" />,
       });
     }
   },
-  onSubmitFail: rpcErrorHandler('Error importing private key'),
+  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ImportingPrivKey" />),
 })
 export default class ImportPrivKey extends Component {
   render() {
@@ -104,7 +109,7 @@ export default class ImportPrivKey extends Component {
             waiting={submitting}
             style={{ marginTop: '2em' }}
           >
-            Import
+            <Text id="Settings.Import" />
           </Button>
         </FieldSet>
       </ImportPrivKeyForm>

@@ -80,12 +80,12 @@ const ButtonComponent = styled.button(
       case 'default':
         return {
           '&, &:active, &&:disabled': {
-            border: `1px solid ${theme.lightGray}`,
-            color: theme.lightGray,
+            border: `1px solid ${theme.mixer(0.75)}`,
+            color: theme.mixer(0.75),
           },
           '&:hover': {
-            borderColor: theme.light,
-            color: theme.light,
+            borderColor: theme.foreground,
+            color: theme.foreground,
           },
         };
       case 'primary':
@@ -113,8 +113,8 @@ const ButtonComponent = styled.button(
       case 'error':
         return {
           '&, &:active, &&:disabled': {
-            border: `2px solid ${theme.error}`,
-            color: theme.error,
+            border: `2px solid ${theme.danger}`,
+            color: theme.danger,
             fontWeight: 'bold',
             transitionProperty: 'border-color, color, filter',
             transitionTimingFunction: 'ease-out',
@@ -126,17 +126,17 @@ const ButtonComponent = styled.button(
             },
           },
           '&:hover': {
-            borderColor: color.lighten(theme.error, 0.3),
-            color: color.lighten(theme.error, 0.3),
-            boxShadow: `0 0 7px ${color.fade(theme.error, 0.3)}`,
-            textShadow: `0 0 7px ${color.fade(theme.error, 0.3)}`,
+            borderColor: color.lighten(theme.danger, 0.3),
+            color: color.lighten(theme.danger, 0.3),
+            boxShadow: `0 0 7px ${color.fade(theme.danger, 0.3)}`,
+            textShadow: `0 0 7px ${color.fade(theme.danger, 0.3)}`,
           },
         };
       case 'filled-primary':
         return {
           '&, &:active, &&:disabled': {
             background: color.darken(theme.primary, 0.1),
-            color: theme.primaryContrast,
+            color: theme.primaryAccent,
             transitionProperty: 'background-color',
           },
           '&:hover': {
@@ -146,58 +146,56 @@ const ButtonComponent = styled.button(
       case 'filled-dark':
         return {
           '&, &:active, &&:disabled': {
-            background: theme.dark,
-            color: theme.light,
+            background: theme.background,
+            color: theme.foreground,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            background: theme.darkerGray,
+            background: theme.mixer(0.125),
           },
         };
       case 'filled-light':
         return {
           '&, &:active, &&:disabled': {
-            background: theme.lighterGray,
-            color: theme.dark,
+            background: theme.mixer(0.875),
+            color: theme.background,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            background: theme.light,
+            background: theme.foreground,
           },
         };
       case 'filled-error':
         return {
           '&, &:active, &&:disabled': {
-            background: theme.error,
-            color: theme.errorContrast,
+            background: theme.danger,
+            color: theme.dangerAccent,
             transitionProperty: 'background-color',
           },
           '&:hover': {
-            background: color.lighten(theme.error, 0.2),
+            background: color.lighten(theme.danger, 0.2),
           },
         };
       case 'blank-dark':
         return {
           '&, &:active, &&:disabled': {
-            padding: '0.5em 1em',
             background: 'transparent',
-            color: theme.darkGray,
+            color: theme.mixer(0.25),
             transitionProperty: 'color',
           },
           '&:hover': {
-            color: theme.dark,
+            color: theme.background,
           },
         };
       case 'blank-light':
         return {
           '&, &:active, &&:disabled': {
-            padding: '0.5em 1em',
             background: 'transparent',
-            color: theme.lightGray,
+            color: theme.mixer(0.75),
             transitionProperty: 'color',
           },
           '&:hover': {
-            color: theme.light,
+            color: theme.foreground,
           },
         };
       case 'hyperlink':
@@ -210,11 +208,11 @@ const ButtonComponent = styled.button(
             borderBottomWidth: 1,
             borderBottomStyle: 'solid',
             borderRadius: 0,
-            color: theme.lightGray,
+            color: theme.mixer(0.75),
             transitionProperty: 'color',
           },
           '&:hover': {
-            color: theme.light,
+            color: theme.foreground,
           },
         };
     }

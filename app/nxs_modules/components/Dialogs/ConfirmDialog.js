@@ -10,8 +10,8 @@ import Dialog from './Dialog';
 
 const QuestionMark = styled(Dialog.Icon)(({ theme }) => ({
   fontSize: 56,
-  color: theme.light,
-  filter: `drop-shadow(0 0 5px ${color.fade(theme.light, 0.5)})`,
+  color: theme.foreground,
+  filter: `drop-shadow(0 0 5px ${color.fade(theme.foreground, 0.5)})`,
 }));
 
 const ConfirmationButton = styled(Button)({

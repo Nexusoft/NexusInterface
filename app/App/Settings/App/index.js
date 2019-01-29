@@ -12,8 +12,11 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
+import Icon from 'components/Icon';
 import UIController from 'components/UIController';
-import { form } from 'utils';
+import { form, color } from 'utils';
+import warningIcon from 'images/warning.sprite.svg';
+import updater from 'updater';
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
@@ -23,6 +26,11 @@ const AppSettings = styled.div({
   maxWidth: 750,
   margin: '0 auto',
 });
+
+const WarningIcon = styled(Icon)(({ theme }) => ({
+  color: color.lighten(theme.danger, 0.3),
+  fontSize: '1.1em',
+}));
 
 const fiatCurrencies = [
   { value: 'AUD', display: 'Australian Dollar (AUD)' },
@@ -53,7 +61,7 @@ const fiatCurrencies = [
 
 const mapStateToProps = state => ({
   connections: state.overview.connections,
-  settings: state.settings.settings,
+  settings: state.settings,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -70,14 +78,14 @@ export default class SettingsApp extends Component {
       question: <Text id="Settings.BackupWallet" />,
       yesCallback: () => {
         if (this.props.connections !== undefined) {
-          backupWallet(this.props.settings.Folder);
+          backupWallet(this.props.settings.backupDirectory);
           UIController.showNotification(
             <Text id="Alert.WalletBackedUp" />,
             'success'
           );
         } else {
           UIController.openErrorDialog({
-            message: 'Please wait for Daemon to load',
+            message: <Text id="Settings.DaemonLoading" />,
           });
         }
       },
@@ -97,6 +105,28 @@ export default class SettingsApp extends Component {
     };
   })();
 
+  handleAutoUpdateChange = e => {
+    if (!e.target.checked) {
+      UIController.openConfirmDialog({
+        question: <Text id="Settings.DisableAutoUpdate" />,
+        note: <Text id="Settings.DisableAutoUpdateNote" />,
+        yesLabel: <Text id="Settings.KeepAutoUpdate" />,
+        noLabel: <Text id="Settings.TurnOffAutoUpdate" />,
+        noSkin: 'error',
+        noCallback: () => {
+          this.props.updateSettings({ autoUpdate: false });
+          updater.stopAutoUpdate();
+        },
+        style: { width: 580 },
+      });
+    } else {
+      this.props.updateSettings({ autoUpdate: true });
+      if (updater.state === 'idle') {
+        updater.autoUpdate();
+      }
+    }
+  };
+
   render() {
     const { connections, settings } = this.props;
     return (
@@ -109,8 +139,28 @@ export default class SettingsApp extends Component {
           subLabel={<Text id="ToolTip.MinimizeOnClose" />}
         >
           <Switch
-            checked={settings.minimizeToTray}
-            onChange={this.updateHandlers('minimizeToTray')}
+            checked={settings.minimizeOnClose}
+            onChange={this.updateHandlers('minimizeOnClose')}
+          />
+        </SettingsField>
+
+        <SettingsField
+          connectLabel
+          label={
+            <span>
+              <span className="v-align">
+                <Text id="Settings.AutoUpdate" />{' '}
+                {!settings.autoUpdate && (
+                  <WarningIcon spaceLeft icon={warningIcon} />
+                )}
+              </span>
+            </span>
+          }
+          subLabel={<Text id="Settings.AutoUpdateNote" />}
+        >
+          <Switch
+            checked={settings.autoUpdate}
+            onChange={this.handleAutoUpdateChange}
           />
         </SettingsField>
 
@@ -120,8 +170,8 @@ export default class SettingsApp extends Component {
           subLabel={<Text id="ToolTip.Usage" />}
         >
           <Switch
-            checked={settings.googleAnalytics}
-            onChange={this.updateHandlers('googleAnalytics')}
+            checked={settings.sendUsageData}
+            onChange={this.updateHandlers('sendUsageData')}
           />
         </SettingsField>
 
@@ -141,10 +191,10 @@ export default class SettingsApp extends Component {
         >
           <TextField
             type="number"
-            value={settings.minimumconfirmations}
+            value={settings.minConfirmations}
             step="1"
             min="1"
-            onChange={this.updateHandlers('minimumconfirmations')}
+            onChange={this.updateHandlers('minConfirmations')}
             onKeyPress={e => {
               e.preventDefault();
             }}

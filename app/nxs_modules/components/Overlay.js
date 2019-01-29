@@ -35,7 +35,6 @@ export default class Overlay extends Component {
 
   componentDidMount() {
     document.getElementsByTagName('body')[0].appendChild(this.node);
-    this.props.onMount && this.props.onMount();
   }
 
   componentWillUnmount() {
@@ -47,7 +46,6 @@ export default class Overlay extends Component {
       dimBackground,
       onBackgroundClick,
       backgroundRef,
-      onMount,
       children,
       ...rest
     } = this.props;

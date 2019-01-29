@@ -19,6 +19,7 @@ import { rpcErrorHandler } from 'utils/form';
 }))
 @reduxForm({
   form: 'setTransactionFee',
+  destroyOnUnmount: false,
   validate: ({ txFee }) => {
     const errors = {};
     if (parseFloat(txFee) <= 0) {
@@ -33,7 +34,7 @@ import { rpcErrorHandler } from 'utils/form';
       'success'
     );
   },
-  onSubmitFail: rpcErrorHandler('Error setting Transaction Fee'),
+  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.SettingTxFee" />),
 })
 export default class FeeSetting extends React.Component {
   confirmSetTxFee = () => {

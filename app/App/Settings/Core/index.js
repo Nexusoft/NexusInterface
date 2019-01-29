@@ -27,10 +27,7 @@ const CoreSettings = styled.div({
 });
 
 // React-Redux mandatory methods
-const mapStateToProps = ({
-  settings: { settings },
-  overview: { connections },
-}) => ({
+const mapStateToProps = ({ settings, overview: { connections } }) => ({
   connections,
   settings,
   initialValues: {
@@ -56,6 +53,7 @@ const mapDispatchToProps = dispatch => ({
 )
 @reduxForm({
   form: 'coreSettings',
+  destroyOnUnmount: false,
   validate: (
     {
       manualDaemonUser,
@@ -71,26 +69,34 @@ const mapDispatchToProps = dispatch => ({
     const errors = {};
     if (props.settings.manualDaemon) {
       if (!manualDaemonUser) {
-        errors.manualDaemonUser = 'Manual daemon Username is required';
+        errors.manualDaemonUser = (
+          <Text id="Settings.Errors.ManualDaemonUser" />
+        );
       }
       if (!manualDaemonPassword) {
-        errors.manualDaemonPassword = 'Manual daemon Password is required';
+        errors.manualDaemonPassword = (
+          <Text id="Settings.Errors.ManualDaemonPassword" />
+        );
       }
       if (!manualDaemonIP) {
-        errors.manualDaemonIP = 'Manual daemon IP is required';
+        errors.manualDaemonIP = <Text id="Settings.Errors.ManualDaemonIP" />;
       }
       if (!manualDaemonPort) {
-        errors.manualDaemonPort = 'Manual daemon Port is required';
+        errors.manualDaemonPort = (
+          <Text id="Settings.Errors.ManualDaemonPort" />
+        );
       }
       if (!manualDaemonDataDir) {
-        errors.manualDaemonDataDir = 'Data directory name is required';
+        errors.manualDaemonDataDir = (
+          <Text id="Settings.Errors.ManualDaemonDataDir" />
+        );
       }
     } else if (props.settings.socks4Proxy) {
       if (!socks4ProxyIP) {
-        errors.socks4ProxyIP = 'SOCKS4 proxy IP is required';
+        errors.socks4ProxyIP = <Text id="Settings.Errors.Socks4PoxyIP" />;
       }
       if (!socks4ProxyPort) {
-        errors.socks4ProxyPort = 'SOCKS4 proxy Port is required';
+        errors.socks4ProxyPort = <Text id="Settings.Errors.Socks4PoxyPort" />;
       }
     }
 
@@ -191,7 +197,7 @@ export default class SettingsCore extends Component {
       pristine,
       submitting,
     } = this.props;
-    if (connections === undefined && !this.props.settings.manualDaemon) {
+    if (connections === undefined && !settings.manualDaemon) {
       return (
         <WaitingMessage>
           <Text id="transactions.Loading" />
@@ -255,13 +261,12 @@ export default class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={<Text id="Settings.Username" defaultMesage="Username" />}
+              label={<Text id="Settings.Username" />}
               subLabel={<Text id="ToolTip.UserName" />}
             >
               <Field
                 component={TextField.RF}
                 name="manualDaemonUser"
-                placeholder="rpcserver"
                 size="12"
               />
             </SettingsField>
@@ -269,13 +274,12 @@ export default class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={<Text id="Settings.Password" defaultMesage="Password" />}
+              label={<Text id="Settings.Password" />}
               subLabel={<Text id="ToolTip.Password" />}
             >
               <Field
                 component={TextField.RF}
                 name="manualDaemonPassword"
-                placeholder="e6c5a66d508e2a31d30ba42c6cdb532da55257a8f72f2b73d0b687ca2a30d041"
                 size="12"
               />
             </SettingsField>
@@ -283,17 +287,10 @@ export default class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={
-                <Text id="Settings.IpAddress" defaultMesage="IP Address" />
-              }
+              label={<Text id="Settings.IpAddress" />}
               subLabel={<Text id="ToolTip.IP" />}
             >
-              <Field
-                component={TextField.RF}
-                name="manualDaemonIP"
-                placeholder="127.0.0.1"
-                size="12"
-              />
+              <Field component={TextField.RF} name="manualDaemonIP" size="12" />
             </SettingsField>
 
             <SettingsField
@@ -305,7 +302,6 @@ export default class SettingsCore extends Component {
               <Field
                 component={TextField.RF}
                 name="manualDaemonPort"
-                placeholder="9336"
                 size="5"
               />
             </SettingsField>
@@ -328,9 +324,7 @@ export default class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={
-                <Text id="Settings.UPnp" defaultMesage="Map port using UPnP" />
-              }
+              label={<Text id="Settings.UPnp" />}
               subLabel={<Text id="ToolTip.UPnP" />}
             >
               <Switch
@@ -341,12 +335,7 @@ export default class SettingsCore extends Component {
             <SettingsField
               indent={1}
               connectLabel
-              label={
-                <Text
-                  id="Settings.Socks4proxy"
-                  defaultMesage="Connect through SOCKS4 proxy"
-                />
-              }
+              label={<Text id="Settings.Socks4proxy" />}
               subLabel={<Text id="ToolTip.Socks4" />}
             >
               <Switch
@@ -359,33 +348,24 @@ export default class SettingsCore extends Component {
               <SettingsField
                 indent={2}
                 connectLabel
-                label={
-                  <Text
-                    id="Settings.ProxyIP"
-                    defaultMesage="Proxy IP Address"
-                  />
-                }
+                label={<Text id="Settings.ProxyIP" />}
                 subLabel={<Text id="ToolTip.IPAddressofSOCKS4proxy" />}
               >
                 <Field
                   component={TextField.RF}
                   name="socks4ProxyIP"
-                  placeholder="127.0.0.1"
                   size="12"
                 />
               </SettingsField>
               <SettingsField
                 indent={2}
                 connectLabel
-                label={
-                  <Text id="Settings.ProxyPort" defaultMesage="Proxy Port" />
-                }
+                label={<Text id="Settings.ProxyPort" />}
                 subLabel={<Text id="ToolTip.PortOfSOCKS4proxyServer" />}
               >
                 <Field
                   component={TextField.RF}
                   name="socks4ProxyPort"
-                  placeholder="9050"
                   size="3"
                 />
               </SettingsField>
@@ -406,7 +386,7 @@ export default class SettingsCore extends Component {
 
           <div className="flex space-between" style={{ marginTop: '2em' }}>
             <Button onClick={this.restartCore}>
-              <Text id="Settings.RestartCore" defaultMesage="Restart Core" />
+              <Text id="Settings.RestartCore" />
             </Button>
 
             <Button
@@ -414,11 +394,13 @@ export default class SettingsCore extends Component {
               skin="primary"
               disabled={pristine || submitting}
             >
-              {pristine
-                ? 'Settings Saved'
-                : submitting
-                ? 'Saving Settings...'
-                : 'Save Settings'}
+              {pristine ? (
+                <Text id="Settings.SettingsSaved" />
+              ) : submitting ? (
+                <Text id="SavingSettings" />
+              ) : (
+                <Text id="SaveSettings" />
+              )}
             </Button>
           </div>
         </form>

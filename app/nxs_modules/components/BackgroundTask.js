@@ -4,10 +4,8 @@ import React, { Component } from 'react';
 // Internal
 import UIController from 'components/UIController';
 import SnackBar from 'components/SnackBar';
-import Icon from 'components/Icon';
 import TaskContext from 'context/task';
 import { timing } from 'styles';
-import workIcon from 'images/work.sprite.svg';
 
 const outro = { opacity: [1, 0] };
 
@@ -46,7 +44,6 @@ export default class BackgroundTask extends Component {
     const { children, assignClose, ...rest } = this.props;
     return (
       <SnackBar ref={this.snackBarRef} onClick={this.animatedClose} {...rest}>
-        <Icon icon={workIcon} spaceRight />
         {children}
       </SnackBar>
     );

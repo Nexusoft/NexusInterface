@@ -12,7 +12,6 @@ import googleanalytics from 'scripts/googleanalytics';
 // Internal Global Dependencies
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
-import { GetSettings } from 'api/settings.js';
 import UIController from 'components/UIController';
 import * as TYPE from 'actions/actiontypes';
 import Text from 'components/Text';
@@ -39,9 +38,6 @@ const mapDispatchToProps = dispatch => ({
   clearTransaction: () => {
     dispatch({ type: TYPE.CLEAR_TRANSACTION });
   },
-  emailForRecipt: email => {
-    dispatch({ type: TYPE.SET_EMAIL, payload: email });
-  },
 });
 
 class Exchange extends Component {
@@ -49,10 +45,6 @@ class Exchange extends Component {
   componentDidMount() {
     googleanalytics.SendScreen('Exchange');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    var settingsObj = GetSettings();
-    if (settingsObj.email) {
-      this.props.emailForRecipt(settingsObj.email);
-    }
   }
   // React Method (Life cycle hook)
   componentWillUnmount() {

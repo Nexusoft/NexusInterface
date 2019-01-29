@@ -12,7 +12,7 @@ const Field = styled.div(({ indent = 0, theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '1em 0',
-  borderBottom: `1px solid ${theme.darkerGray}`,
+  borderBottom: `1px solid ${theme.mixer(0.125)}`,
   marginLeft: indent * indentSpace,
 }));
 
@@ -29,7 +29,7 @@ const Label = styled.label(
 
 const SubLabel = styled.div(({ theme }) => ({
   fontSize: '.9em',
-  color: theme.lightGray,
+  color: theme.mixer(0.75),
 }));
 
 const Input = styled.div({
