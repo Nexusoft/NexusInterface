@@ -19,7 +19,7 @@ const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
 
   '&:hover': {
     color: color.lighten(theme.primary, 0.2),
-    filter: `drop-shadow(0 0 3px ${theme.primary})`,
+    filter: `drop-shadow(0 0 3px ${color.fade(theme.primary, 0.5)})`,
   },
 }));
 

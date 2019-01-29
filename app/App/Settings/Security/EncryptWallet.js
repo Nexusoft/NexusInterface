@@ -41,16 +41,18 @@ const Characters = styled.span({
   },
   validate: ({ password, passwordRepeat }) => {
     const errors = {};
+    if (!password) {
+      errors.password = <Text id="Settings.Errors.PasswordRequired" />;
+    }
     if (passwordInvalidChars.test(password)) {
-      errors.password =
-        'Password cannot contain these characters: - $ / & * | < >';
+      errors.password = <Text id="Settings.Errors.PasswordInvalidChars" />;
     } else if (!password || password.length < 8) {
-      errors.password = 'Password must be at least 8 characters';
+      errors.password = <Text id="Settings.Errors.PasswordMinLength" />;
     } else if (password !== password.trim()) {
-      errors.password = 'Password cannot start or end with spaces';
+      errors.password = <Text id="Settings.Errors.PasswordSpaces" />;
     }
     if (passwordRepeat !== password) {
-      errors.passwordRepeat = 'Passwords do not match';
+      errors.passwordRepeat = <Text id="Settings.Errors.PasswordsNoMatch" />;
     }
     return errors;
   },
@@ -63,11 +65,11 @@ const Characters = styled.span({
         // this.props.history.push('/');
         // this.props.ResetForEncryptionRestart();
         remote.getGlobal('core').start();
-        UIController.showNotification('Daemon is restarting...');
+        UIController.showNotification(<Text id="Settings.RestartingDaemon" />);
       },
     });
   },
-  onSubmitFail: rpcErrorHandler('Error encrypting wallet'),
+  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.EncryptingWallet" />),
 })
 export default class EncryptWallet extends Component {
   render() {
@@ -92,14 +94,18 @@ export default class EncryptWallet extends Component {
               </FormField>
             )}
           </Text>
-          <FormField connectLabel label={<Text id="Settings.Re-Enter" />}>
-            <Field
-              component={TextField.RF}
-              name="passwordRepeat"
-              type="password"
-              placeholder="Confirm your password"
-            />
-          </FormField>
+          <Text id="Settings.ConfirmPassword">
+            {text => (
+              <FormField connectLabel label={<Text id="Settings.Re-Enter" />}>
+                <Field
+                  component={TextField.RF}
+                  name="passwordRepeat"
+                  type="password"
+                  placeholder={text}
+                />
+              </FormField>
+            )}
+          </Text>
 
           <Button
             type="submit"

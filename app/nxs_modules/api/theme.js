@@ -52,17 +52,19 @@ function readTheme() {
 }
 
 function writeTheme(theme) {
-  // Ensure only valid theme properties will be saved to the theme.json
+  return config.WriteJson(themeFileName, filterValidTheme(theme));
+}
+
+export function filterValidTheme(theme) {
   const validTheme = {};
-  Object.keys(theme).map(key => {
+  Object.keys(theme || {}).map(key => {
     if (defaultTheme.hasOwnProperty(key)) {
       validTheme[key] = theme[key];
     } else {
-      console.error(`Attempt to save invalid setting \`${key}\``);
+      console.error(`Invalid theme propery \`${key}\``);
     }
   });
-
-  return config.WriteJson(themeFileName, validTheme);
+  return validTheme;
 }
 
 export function LoadTheme() {

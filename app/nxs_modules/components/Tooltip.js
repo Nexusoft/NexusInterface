@@ -86,8 +86,9 @@ const arrowAligning = (position, align) => {
 
 const Tooltip = styled.div(
   {
-    whiteSpace: 'pre',
+    whiteSpace: 'pre-wrap',
     maxWidth: 300,
+    width: 'max-content',
     borderRadius: 4,
     filter: 'drop-shadow(0 0 8px rgba(0,0,0,.7))',
     fontSize: 15,

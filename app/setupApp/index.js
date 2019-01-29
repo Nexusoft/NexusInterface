@@ -5,17 +5,21 @@ import fs from 'fs';
 // Internal
 import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
+import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
 import getInfo from 'actions/getInfo';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
 import updater from 'updater';
 import appMenu from 'appMenu';
-import setupTray from './setupTray';
 import configuration from 'api/configuration';
 import { Tail } from 'utils/tail';
+import core from 'api/core';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
+import ClosingModal from './ClosingModal';
+
+window.remote = remote;
 
 var tail;
 var debugFileLocation;
@@ -30,8 +34,6 @@ export default function setupApp(store, history) {
   appMenu.initialize(store, history);
   appMenu.build();
 
-  setupTray(store);
-
   dispatch(ac.LoadAddressBook());
 
   dispatch(getInfo());
@@ -45,15 +47,31 @@ export default function setupApp(store, history) {
   checkWebGL(dispatch);
 
   const mainWindow = remote.getCurrentWindow();
-  mainWindow.on('close', e => {
-    e.preventDefault();
-    if (tail != undefined) {
-      tail.unwatch();
+  
+  mainWindow.on('close', async e => {
+    const {
+      settings: { minimizeOnClose, manualDaemon },
+    } = store.getState();
+
+    // forceQuit is set when user clicks Quit option in the Tray context menu
+    if (minimizeOnClose && !remote.getGlobal('forceQuit')) {
+      mainWindow.hide();
+    } else {
+      if (tail != undefined) {
+        tail.unwatch();
+      }
+      clearInterval(printCoreOutputTimer);
+      clearInterval(checkIfFileExistsInterval);
+      UIController.openModal(ClosingModal);
+
+      if (manualDaemon) {
+        await RPC.PROMISE('stop', []);
+        remote.app.exit();
+      } else {
+        await core.stop();
+        remote.app.exit();
+      }
     }
-    clearInterval(printCoreOutputTimer);
-    clearInterval(checkIfFileExistsInterval);
-    dispatch(ac.clearOverviewVariables());
-    UIController.showNotification('Closing Nexus...');
   });
 
   startCoreOuputeWatch(store)

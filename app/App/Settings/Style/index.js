@@ -9,7 +9,7 @@ import https from 'https';
 // Internal
 import { updateSettings } from 'actions/settingsActionCreators';
 import { updateTheme, resetColors } from 'actions/themeActionCreators';
-import Text from 'components/Text';
+import Text, { translate } from 'components/Text';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
@@ -28,7 +28,7 @@ const StyleSettings = styled.div({
 });
 
 const mapStateToProps = ({
-  settings: { renderGlobe },
+  settings: { renderGlobe, locale },
   overview: { webGLEnabled },
   theme,
 }) => {
@@ -36,6 +36,7 @@ const mapStateToProps = ({
     renderGlobe,
     webGLEnabled,
     theme,
+    locale,
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -96,7 +97,7 @@ export default class SettingsStyle extends Component {
     //Dont think we need this anymore 
     this.props.resetColors();
     UIController.showNotification(
-      'Color scheme has been reset to default',
+      <Text id="Settings.ResetThemeNoti" />,
       'success'
     );
   };
@@ -133,7 +134,7 @@ export default class SettingsStyle extends Component {
       }
     } catch (err) {
       UIController.showNotification(
-        'Invalid file format! Custom theme file must be in JSON',
+        <Text id="Settings.Errors.InvalidJSON" />,
         'error'
       );
     }
@@ -144,7 +145,7 @@ export default class SettingsStyle extends Component {
   openPickThemeFileDialog = () => {
     remote.dialog.showOpenDialog(
       {
-        title: 'Select Custom Theme File',
+        title: translate('Settings.SelectCustomTheme', this.props.locale),
         properties: ['openFile'],
         filters: [{ name: 'Theme JSON', extensions: ['json'] }],
       },
@@ -261,8 +262,8 @@ export default class SettingsStyle extends Component {
         </SettingsField>
 
         <SettingsField
-          label="Background"
-          subLabel="Customize your background wallpaper"
+          label={<Text id="Settings.Background" />}
+          subLabel={<Text id="Settings.BackgroundSubLabel" />}
         >
           <BackgroundPicker
             wallpaper={theme.wallpaper}
@@ -271,7 +272,7 @@ export default class SettingsStyle extends Component {
           />
         </SettingsField>
 
-        <SettingsField label="Color scheme">
+        <SettingsField label={<Text id="Settings.ColorScheme" />}>
         </SettingsField>
 
         <SettingsField indent={1} label={<Text id="Cp.PBC" />}>

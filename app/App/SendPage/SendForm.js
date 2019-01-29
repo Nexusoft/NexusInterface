@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import * as RPC from 'scripts/rpc';
+import { defaultSettings } from 'api/settings';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';
 import Icon from 'components/Icon';
@@ -37,22 +38,15 @@ const SendFormButtons = styled.div({
   marginTop: '2em',
 });
 
-const TransactionFee = styled.div(({ theme }) => ({
-  marginTop: '1em',
-  color: theme.mixer(0.75),
-}));
-
 const mapStateToProps = ({
   addressbook: { myAccounts, addressbook },
   settings: { minConfirmations },
   common: { encrypted, loggedIn },
-  overview: { paytxfee },
   form,
 }) => ({
   minConfirmations,
   encrypted,
   loggedIn,
-  paytxfee,
   accountOptions: getAccountOptions(myAccounts),
   addressNameMap: getAddressNameMap(addressbook),
   fieldNames: getRegisteredFieldNames(
@@ -64,6 +58,10 @@ const mapDispatchToProps = dispatch => ({
   loadMyAccounts: () => dispatch(loadMyAccounts()),
 });
 
+@connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
 @reduxForm({
   form: 'sendNXS',
   destroyOnUnmount: false,
@@ -81,11 +79,13 @@ const mapDispatchToProps = dispatch => ({
   validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
-      errors.sendFrom = 'No accounts selected';
+      errors.sendFrom = <Text id="sendReceive.Messages.NoAccounts" />;
     }
 
     if (!recipients || !recipients.length) {
-      errors.recipients = { _error: 'There must be at least one recipient' };
+      errors.recipients = {
+        _error: <Text id="sendReceive.Messages.NoRecipient" />,
+      };
     } else {
       const recipientsErrors = [];
 
@@ -94,11 +94,12 @@ const mapDispatchToProps = dispatch => ({
         if (!address) {
           recipientErrors.address = <Text id="Alert.InvalidAddress" />;
         }
-        if (!amount || parseFloat(amount) <= 0) {
+        const floatAmount = parseFloat(amount);
+        if (!floatAmount || floatAmount < 0) {
           recipientErrors.amount = <Text id="Alert.InvalidAmount" />;
         }
         if (Object.keys(recipientErrors).length) {
-          recipientsErrors.push(recipientErrors);
+          recipientsErrors[i] = recipientErrors;
         }
       });
 
@@ -141,13 +142,18 @@ const mapDispatchToProps = dispatch => ({
     return null;
   },
   onSubmit: ({ sendFrom, recipients, message }, dispatch, props) => {
+    let minConfirmations = parseInt(props.minConfirmations);
+    if (isNaN(minConfirmations)) {
+      minConfirmations = defaultSettings.minConfirmations;
+    }
+
     if (recipients.length === 1) {
       const recipient = recipients[0];
       const params = [
         sendFrom,
         recipient.address,
         parseFloat(recipient.amount),
-        parseInt(props.minConfirmations),
+        minConfirmations,
       ];
       if (message) params.push(message);
       return RPC.PROMISE('sendfrom', params);
@@ -159,7 +165,7 @@ const mapDispatchToProps = dispatch => ({
       return RPC.PROMISE(
         'sendmany',
         [sendFrom, queue],
-        parseInt(props.minConfirmations),
+        minConfirmations,
         message
       );
     }
@@ -171,12 +177,10 @@ const mapDispatchToProps = dispatch => ({
       message: <Text id="Alert.Sent" />,
     });
   },
-  onSubmitFail: rpcErrorHandler('Error Sending NXS'),
+  onSubmitFail: rpcErrorHandler(
+    <Text id="sendReceive.Messages.ErrorSending" />
+  ),
 })
-@connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
 export default class SendForm extends Component {
   confirmSend = e => {
     e.preventDefault();
@@ -233,17 +237,19 @@ export default class SendForm extends Component {
 
   renderAddRecipientButton = ({ fields }) =>
     fields.length === 1 ? (
-      <Button onClick={this.addRecipient}>Send to Multiple Recipients</Button>
+      <Button onClick={this.addRecipient}>
+        <Text id="sendReceive.MultipleRecipients" />
+      </Button>
     ) : (
       <div />
     );
 
   render() {
-    const { accountOptions, change, paytxfee } = this.props;
+    const { accountOptions, change } = this.props;
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
-        <FormField label="Send From">
+        <FormField label={<Text id="sendReceive.SendFrom" />}>
           <Field
             component={Select.RF}
             name="sendFrom"
@@ -258,12 +264,6 @@ export default class SendForm extends Component {
           change={change}
           addRecipient={this.addRecipient}
         />
-
-        {paytxfee && (
-          <TransactionFee>
-            <Text id="sendReceive.FEE" />: {paytxfee.toFixed(5)} NXS
-          </TransactionFee>
-        )}
 
         <Text id="sendReceive.EnterYourMessage">
           {placeholder => (

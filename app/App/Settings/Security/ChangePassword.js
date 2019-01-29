@@ -38,18 +38,17 @@ const ChangePasswordComponent = styled.form({
   validate: ({ password, newPassword, newPasswordRepeat }) => {
     const errors = {};
     if (!password) {
-      errors.password = 'Password is required';
+      errors.password = <Text id="Settings.Errors.PasswordRequired" />;
     }
     if (passwordInvalidChars.test(newPassword)) {
-      errors.newPassword =
-        'Password cannot contain these characters: - $ / & * | < >';
+      errors.newPassword = <Text id="Settings.Errors.PasswordInvalidChars" />;
     } else if (!newPassword || newPassword.length < 8) {
-      errors.newPassword = 'Password must be at least 8 characters';
+      errors.newPassword = <Text id="Settings.Errors.PasswordMinLength" />;
     } else if (newPassword !== newPassword.trim()) {
-      errors.newPassword = 'Password cannot start or end with spaces';
+      errors.newPassword = <Text id="Settings.Errors.PasswordSpaces" />;
     }
     if (newPasswordRepeat !== newPassword) {
-      errors.newPasswordRepeat = 'Passwords do not match';
+      errors.newPasswordRepeat = <Text id="Settings.Errors.PasswordsNoMatch" />;
     }
     return errors;
   },
@@ -61,12 +60,12 @@ const ChangePasswordComponent = styled.form({
       message: <Text id="Alert.PasswordHasBeenChanged" />,
     });
   },
-  onSubmitFail: rpcErrorHandler('Error changing password'),
+  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ChangingPassword" />),
 })
 export default class ChangePassword extends Component {
-  confirmLockWallet = () => {
+  confirmLogout = () => {
     UIController.openConfirmDialog({
-      question: 'Are you sure you want to lock your wallet?',
+      question: <Text id="Settings.ConfirmLogOut" />,
       yesCallback: async () => {
         try {
           await RPC.PROMISE('walletlock', []);
@@ -74,7 +73,7 @@ export default class ChangePassword extends Component {
         } catch (err) {
           const note = (err & err.error && err.error.message) || err;
           UIController.openErrorDialog({
-            message: 'Error locking wallet',
+            message: <Text id="Settings.Errors.LoggingOut" />,
             note,
           });
         }
@@ -117,21 +116,21 @@ export default class ChangePassword extends Component {
               </FormField>
             )}
           </Text>
-          <FormField
-            connectLabel
-            label={<Text id="Settings.ReEnterPassword" />}
-          >
-            <Text id="Settings.ConfirmPassword">
-              {placeholder => (
+          <Text id="Settings.ConfirmPassword">
+            {placeholder => (
+              <FormField
+                connectLabel
+                label={<Text id="Settings.ReEnterPassword" />}
+              >
                 <Field
                   component={TextField.RF}
                   name="newPasswordRepeat"
                   type="password"
                   placeholder={placeholder}
                 />
-              )}
-            </Text>
-          </FormField>
+              </FormField>
+            )}
+          </Text>
 
           <Button
             type="submit"
@@ -144,8 +143,8 @@ export default class ChangePassword extends Component {
           </Button>
         </FieldSet>
 
-        <Button wide onClick={this.confirmLockWallet}>
-          <Text id="Settings.LockWallet" />
+        <Button wide onClick={this.confirmLogout}>
+          <Text id="Settings.LogOut" />
         </Button>
       </ChangePasswordComponent>
     );

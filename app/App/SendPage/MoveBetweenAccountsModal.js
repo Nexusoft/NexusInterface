@@ -5,13 +5,16 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
+import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
 import Select from 'components/Select';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
+import Link from 'components/Link';
 import UIController from 'components/UIController';
+import { loadMyAccounts } from 'actions/accountActionCreators';
 import { rpcErrorHandler } from 'utils/form';
-import { getAccountOptions } from './selectors';
+import { getAccountOptions, getRegisteredFieldNames } from './selectors';
 import AmountField from './AmountField';
 
 const AccountSelectors = styled.div({
@@ -32,17 +35,31 @@ const Buttons = styled.div({
   justifyContent: 'flex-end',
 });
 
+const mapStateToProps = ({
+  settings: { minConfirmations, fiatCurrency },
+  overview: { paytxfee },
+  addressbook: { myAccounts },
+  common: { encrypted, loggedIn },
+  form,
+}) => ({
+  minConfirmations,
+  fiatCurrency,
+  paytxfee,
+  encrypted,
+  loggedIn,
+  accountOptions: getAccountOptions(myAccounts),
+  fieldNames: getRegisteredFieldNames(
+    form.moveBetweenAccounts && form.moveBetweenAccounts.registeredFields
+  ),
+});
+
+const mapDispatchToProps = dispatch => ({
+  loadMyAccounts: () => dispatch(loadMyAccounts()),
+});
+
 @connect(
-  ({
-    settings: { minConfirmations, fiatCurrency },
-    overview: { paytxfee },
-    addressbook: { myAccounts },
-  }) => ({
-    accountOptions: getAccountOptions(myAccounts),
-    minConfirmations,
-    fiatCurrency,
-    paytxfee,
-  })
+  mapStateToProps,
+  mapDispatchToProps
 )
 @reduxForm({
   form: 'moveBetweenAccounts',
@@ -56,12 +73,12 @@ const Buttons = styled.div({
   validate: ({ moveFrom, moveTo, amount }) => {
     const errors = {};
     if (!moveFrom) {
-      errors.moveFrom = 'No accounts selected';
+      errors.moveFrom = <Text id="sendReceive.Messages.NoAccounts" />;
     }
     if (!moveTo) {
-      errors.moveTo = 'No accounts selected';
+      errors.moveTo = <Text id="sendReceive.Messages.NoAccounts" />;
     } else if (moveTo === moveFrom) {
-      errors.moveTo = 'Cannot move to the same account';
+      errors.moveTo = <Text id="sendReceive.Messages.SameAccount" />;
     }
     if (!amount || parseFloat(amount) <= 0) {
       errors.amount = <Text id="Alert.InvalidAmount" />;
@@ -86,6 +103,11 @@ const Buttons = styled.div({
     return null;
   },
   onSubmit: ({ moveFrom, moveTo, amount }, dispatch, props) => {
+    let minConfirmations = parseInt(props.minConfirmations);
+    if (isNaN(minConfirmations)) {
+      minConfirmations = defaultSettings.minConfirmations;
+    }
+
     const params = [moveFrom, moveTo, parseFloat(amount)];
     return RPC.PROMISE('move', params, parseInt(props.minConfirmations));
   },
@@ -94,15 +116,63 @@ const Buttons = styled.div({
     props.reset();
     props.loadMyAccounts();
     UIController.openSuccessDialog({
-      message: 'NXS moved successfully',
+      message: <Text id="sendReceive.Messages.Success" />,
     });
   },
-  onSubmitFail: rpcErrorHandler('Error Moving NXS'),
+  onSubmitFail: rpcErrorHandler(<Text id="sendReceive.Messages.ErrorMoving" />),
 })
 class MoveBetweenAccountsForm extends Component {
+  confirmMove = e => {
+    e.preventDefault();
+    const {
+      handleSubmit,
+      invalid,
+      encrypted,
+      loggedIn,
+      touch,
+      fieldNames,
+    } = this.props;
+
+    if (invalid) {
+      // Mark the form touched so that the validation errors will be shown.
+      // redux-form doesn't have the `touchAll` feature yet so we have to list all fields manually.
+      // redux-form also doesn't have the API to get all the field names yet so we have to connect to the store to retrieve it manually
+      touch(...fieldNames);
+      return;
+    }
+
+    if (encrypted && !loggedIn) {
+      const modalId = UIController.openErrorDialog({
+        message: <Text id="sendReceive.Messages.NotLoggedIn" />,
+        note: (
+          <>
+            <p>
+              <Text id="sendReceive.Messages.NotLoggedInNote" />
+            </p>
+            <Link
+              to="/Settings/Security"
+              onClick={() => {
+                UIController.removeModal(modalId);
+                this.props.closeModal();
+              }}
+            >
+              <Text id="sendReceive.Messages.LogInNow" />
+            </Link>
+          </>
+        ),
+      });
+      return;
+    }
+
+    UIController.openConfirmDialog({
+      question: <Text id="sendReceive.MoveNXS" />,
+      yesCallback: handleSubmit,
+    });
+  };
+
   render() {
     return (
-      <form onSubmit={this.props.handleSubmit}>
+      <form onSubmit={this.confirmMove}>
         <AccountSelectors>
           <Label>
             <Text id="sendReceive.FromAccount" />

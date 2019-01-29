@@ -29,15 +29,46 @@ const SuggestionComponent = styled.div(
     padding: '0 12px',
     overflow: 'hidden',
     cursor: 'pointer',
-    transition: `background-color ${timing.normal}, color ${timing.normal}`,
+    transition: `background-color ${timing.normal}`,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     height: consts.inputHeightEm + 'em',
     color: theme.foreground,
+    position: 'relative',
+
+    '&::before, &::after': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      right: 0,
+      width: 12,
+      transition: `opacity ${timing.normal}`,
+      zIndex: 1,
+    },
+    '&::before': {
+      background: `linear-gradient(to right, transparent, ${
+        theme.background
+      } 50%, ${theme.background})`,
+      opacity: 1,
+    },
+    '&::after': {
+      background: `linear-gradient(to right, transparent, ${theme.mixer(
+        0.125
+      )} 50%, ${theme.mixer(0.125)})`,
+      opacity: 0,
+    },
   }),
   ({ active, theme }) =>
     active && {
       background: theme.mixer(0.125),
+
+      '&::before': {
+        opacity: 0,
+      },
+      '&::after': {
+        opacity: 1,
+      },
     }
 );
 

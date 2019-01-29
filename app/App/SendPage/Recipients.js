@@ -1,5 +1,6 @@
 // External
 import React from 'react';
+import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -7,6 +8,7 @@ import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
+import Text from 'components/Text';
 import { timing } from 'styles';
 import plusIcon from 'images/plus.sprite.svg';
 import RecipientField from './RecipientField';
@@ -56,22 +58,36 @@ const AmountWrapper = styled.div({
   flexBasis: 0,
 });
 
-const AddRecipient = styled.div({
+const MoreInfo = styled.div({
   marginTop: '1em',
   marginBottom: '1.5em',
+  display: 'flex',
+  justifyContent: 'space-between',
 });
 
 const PlusIcon = styled(Icon)({
   fontSize: '.8em',
 });
 
+const TransactionFee = styled.div(({ theme }) => ({
+  color: theme.mixer(0.75),
+}));
+
+const mapStateToProps = ({ overview: { paytxfee } }) => ({
+  paytxfee,
+});
+
+@connect(mapStateToProps)
 export default class Recipients extends React.Component {
-  updateAddress = address => {
-    this.props.change();
-  };
+  renderTxFee = () =>
+    !!this.props.paytxfee && (
+      <TransactionFee>
+        <Text id="sendReceive.FEE" />: {this.props.paytxfee.toFixed(5)} NXS
+      </TransactionFee>
+    );
 
   render() {
-    const { fields, change, addRecipient } = this.props;
+    const { fields, change, addRecipient, paytxfee } = this.props;
 
     if (!fields || !fields.length) return null;
 
@@ -84,6 +100,8 @@ export default class Recipients extends React.Component {
             change={change}
           />
           <AmountField parentFieldName={`${fields.name}[0]`} change={change} />
+
+          <MoreInfo>{this.renderTxFee()}</MoreInfo>
         </>
       );
     } else {
@@ -91,7 +109,9 @@ export default class Recipients extends React.Component {
         <>
           {fields.map((fieldName, i) => (
             <Recipient key={i}>
-              <Tooltip.Trigger tooltip="Remove recipient">
+              <Tooltip.Trigger
+                tooltip={<Text id="sendReceive.RemoveRecipient" />}
+              >
                 <RemoveButton
                   onClick={() => {
                     fields.remove(i);
@@ -115,12 +135,16 @@ export default class Recipients extends React.Component {
             </Recipient>
           ))}
 
-          <AddRecipient>
+          <MoreInfo>
             <Button skin="hyperlink" onClick={addRecipient}>
               <PlusIcon icon={plusIcon} spaceRight />
-              <span className="v-align">Add Recipient</span>
+              <span className="v-align">
+                <Text id="sendReceive.AddRecipient" />
+              </span>
             </Button>
-          </AddRecipient>
+
+            {this.renderTxFee()}
+          </MoreInfo>
         </>
       );
     }

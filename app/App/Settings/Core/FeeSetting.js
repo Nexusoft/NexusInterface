@@ -34,7 +34,7 @@ import { rpcErrorHandler } from 'utils/form';
       'success'
     );
   },
-  onSubmitFail: rpcErrorHandler('Error setting Transaction Fee'),
+  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.SettingTxFee" />),
 })
 export default class FeeSetting extends React.Component {
   confirmSetTxFee = () => {
