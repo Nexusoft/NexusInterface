@@ -1,7 +1,7 @@
 {
   "name": "nexus_wallet",
-  "productName": "Nexus_Wallet_BETA_v0.8.5",
-  "version": "0.8.5",
+  "productName": "Nexus_Wallet_BETA_v0.8.6",
+  "version": "0.8.6",
   "description": "Nexus",
   "main": "./main.prod.js",
   "author": {
