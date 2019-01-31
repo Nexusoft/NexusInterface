@@ -40,10 +40,17 @@ export default class Bootstrapper {
   /**
    * PUBLIC METHODS
    */
-  static async checkFreeSpace() {
+  
+  static async checkFreeSpace(gigsToCheck) {
     const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
-    return diskSpace.free >= 20000000000; // 20GB
+    return diskSpace.free >= (gigsToCheck * 1000000000);
   }
+  static async checkBootStrapFreeSpace() {
+    const freeSpaceForBootStrap = 20000000000; //20gb
+    const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
+    return diskSpace.free >= freeSpaceForBootStrap;
+  }
+
 
   async start({ backupFolder, clearOverviewVariables }) {
     try {

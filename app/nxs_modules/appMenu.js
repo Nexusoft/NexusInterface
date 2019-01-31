@@ -11,7 +11,7 @@ import core from 'api/core';
 import Text from 'components/Text';
 import UIController from 'components/UIController';
 import * as ac from 'actions/setupAppActionCreators';
-import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
+import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import updater from 'updater';
 
 const autoUpdater = remote.getGlobal('autoUpdater');
@@ -170,7 +170,7 @@ class AppMenu {
   downloadRecent = {
     label: 'Download Recent Database',
     click: async () => {
-      const enoughSpace = await checkFreeSpace();
+      const enoughSpace = await checkBootStrapFreeSpace();
       if (!enoughSpace) {
         UIController.openErrorDialog({
           message: <Text id="ToolTip.NotEnoughSpace" />,
