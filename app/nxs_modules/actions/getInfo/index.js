@@ -3,7 +3,7 @@ import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
 import { loadMyAccounts } from 'actions/accountActionCreators';
-import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
+import bootstrap, { checkBootStrapFreeSpace, checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
 
 export default function getInfo() {
@@ -76,7 +76,7 @@ export default function getInfo() {
         info.connections !== undefined
       ) {
         (async () => {
-          const enoughSpace = await checkFreeSpace();
+          const enoughSpace = await checkBootStrapFreeSpace();
           if (enoughSpace) dispatch(bootstrap({ suggesting: true }));
         })();
       }
@@ -112,8 +112,17 @@ export default function getInfo() {
       }
     }
 
+    const enoughSpace = await checkFreeSpace(15);
+    if (!enoughSpace) {
+      UIController.showNotification(
+        "WARNING LOW SPACE",
+        'error'
+      );
+    }
+
     delete info.timestamp;
     dispatch(ac.GetInfo(info));
+
   };
 }
 

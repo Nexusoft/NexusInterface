@@ -61,4 +61,5 @@ export default function bootstrap({ suggesting } = {}) {
 }
 
 const checkFreeSpace = Bootstrapper.checkFreeSpace;
-export { checkFreeSpace };
+const checkBootStrapFreeSpace = Bootstrapper.checkBootStrapFreeSpace;
+export { checkFreeSpace, checkBootStrapFreeSpace };
