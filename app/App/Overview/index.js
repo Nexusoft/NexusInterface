@@ -233,7 +233,7 @@ class Overview extends Component {
         this.redrawCurves();
       }
 
-      if (prevProps.connections && !connections) {
+      if (prevProps.connections && connections == 0) {
         this.removeAllPoints();
         this.reDrawEverything();
         return;
@@ -299,7 +299,8 @@ class Overview extends Component {
   }
 
   numberWithCommas(x) {
-    if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    if (typeof x === 'number')
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   calculateUSDvalue() {
@@ -386,6 +387,7 @@ class Overview extends Component {
             <NetworkGlobe
               handleOnLineRender={e => (this.redrawCurves = e)}
               // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
+              connections={this.props.connections}
               handleOnAddData={e => (this.reDrawEverything = e)}
               handleRemoveAllPoints={e => (this.removeAllPoints = e)}
               pillarColor={this.props.theme.globePillarColor}
@@ -530,7 +532,9 @@ class Overview extends Component {
                 <Text id="overview.InterestRate" />
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.props.interestweight + '%')}
+                {this.waitForDaemon(
+                  this.props.interestweight || this.props.stakerate + '%'
+                )}
               </StatValue>
             </div>
           </Stat>

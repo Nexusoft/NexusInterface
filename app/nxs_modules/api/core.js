@@ -84,6 +84,7 @@ function SetCoreParameters(settings) {
   parameters.push('-datadir=' + datadir);
   parameters.push('-daemon');
   parameters.push('-avatar');
+  // parameters.push('-fastsync');
   parameters.push('-server');
   parameters.push('-beta');
   parameters.push('-verbose=' + verbose); // <-- Make a setting for this

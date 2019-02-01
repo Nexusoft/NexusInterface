@@ -44,11 +44,12 @@ const LoginStatusIcon = styled(StatusIcon)(
 );
 
 const mapStateToProps = ({
-  overview: { connections, unlocked_until, staking_only },
+  overview: { connections, unlocked_until, staking_only, locked },
 }) => ({
   connections,
   unlocked_until,
   staking_only,
+  locked,
 });
 
 const actionCreators = { push };
@@ -59,7 +60,7 @@ const actionCreators = { push };
 )
 export default class LogInStatus extends Component {
   signInStatusMessage = () => {
-    const { connections, unlocked_until, staking_only } = this.props;
+    const { connections, unlocked_until, staking_only, locked } = this.props;
     let unlockDate = new Date(unlocked_until * 1000).toLocaleString('en', {
       weekday: 'long',
       year: 'numeric',
@@ -74,12 +75,18 @@ export default class LogInStatus extends Component {
         </div>
       );
     }
-
-    if (unlocked_until === undefined) {
+    console.log(locked);
+    if (unlocked_until === undefined && locked === undefined) {
       return <Text id="Header.WalletUnencrypted" />;
-    } else if (unlocked_until === 0) {
+    } else if (
+      unlocked_until === 0 ||
+      (unlocked_until === undefined && locked === true)
+    ) {
       return <Text id="Header.WalletLocked" />;
-    } else if (unlocked_until >= 0) {
+    } else if (
+      unlocked_until >= 0 ||
+      (unlocked_until === undefined && locked === false)
+    ) {
       return (
         <>
           <Text id="Header.UnlockedUntil" data={{ unlockDate }} />{' '}
@@ -90,11 +97,11 @@ export default class LogInStatus extends Component {
   };
 
   statusIcon = () => {
-    const { connections, unlocked_until } = this.props;
+    const { connections, unlocked_until, locked } = this.props;
     if (connections === undefined) {
       return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
     } else {
-      if (unlocked_until === undefined) {
+      if (unlocked_until === undefined && locked === undefined) {
         return (
           <LoginStatusIcon
             icon={unlockedIcon}
@@ -102,11 +109,17 @@ export default class LogInStatus extends Component {
             danger
           />
         );
-      } else if (unlocked_until === 0) {
+      } else if (
+        unlocked_until === 0 ||
+        (unlocked_until === undefined && locked === true)
+      ) {
         return (
           <LoginStatusIcon icon={lockedIcon} onClick={this.goToSecurity} />
         );
-      } else if (unlocked_until >= 0) {
+      } else if (
+        unlocked_until >= 0 ||
+        (unlocked_until === undefined && locked === false)
+      ) {
         return (
           <LoginStatusIcon
             icon={unlockedIcon}

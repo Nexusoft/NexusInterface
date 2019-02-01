@@ -6,12 +6,12 @@ import https from 'https';
 import electron from 'electron';
 import tarball from 'tarball-extract';
 import moveFile from 'move-file';
-
+import rimraf from 'rimraf';
 // Internal
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
 
-const recentDbUrl = 'http://nexusearth.com/bootstrap/tritium/tritium.tar.gz';
+const recentDbUrl = 'https://nexusearth.com/bootstrap/tritium/tritium.tar.gz';
 // 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
 
 // Recent database download location
@@ -19,6 +19,7 @@ const fileLocation = path.join(
   configuration.GetAppDataDirectory(),
   'recent.tar.gz'
 );
+
 const dataDir = configuration.GetCoreDataDir();
 const extractDest = path.join(dataDir, 'recent');
 
@@ -57,10 +58,17 @@ export default class Bootstrapper {
 
       clearOverviewVariables();
       // Remove the old file if exists
+
       if (fs.existsSync(fileLocation)) {
         fs.unlinkSync(fileLocation, err => {
           if (err) throw err;
         });
+      }
+
+      if (fs.existsSync(extractDest)) {
+        console.log('removing the old file');
+        rimraf.sync(extractDest);
+        this._cleanUp();
       }
 
       this._progress('downloading', {});
@@ -190,17 +198,27 @@ export default class Bootstrapper {
         });
       }
 
-      if (fs.existsSync(extractDest)) {
-        const recentContents = fs.readdirSync(extractDest);
-        recentContents
-          .filter(child =>
-            fs.statSync(path.join(extractDest, child)).isDirectory()
-          )
-          .forEach(subFolder =>
-            fs.rmdirSync(path.join(extractDest, subFolder))
-          );
-        fs.rmdirSync(extractDest);
-      }
+      // if (fs.existsSync(extractDest)) {
+      //   rimraf.sync(extractDest);
+      //   // const recentContents = fs.readdirSync(extractDest);
+      //   // recentContents
+      //   //   .filter(child =>
+      //   //     fs.statSync(path.join(extractDest, child)).isDirectory()
+      //   //   )
+      //   //   .forEach(subFolder => {
+      //   //     fs.readdirSync(path.join(extractDest, subFolder))
+      //   //       .filter(grandchild =>
+      //   //         fs
+      //   //           .statSync(path.join(extractDest, subFolder, grandchild))
+      //   //           .isDirectory()
+      //   //       )
+      //   //       .forEach(subSubFolder => {
+      //   //         rimraf.sync(path.join(extractDest, subFolder, subSubFolder));
+      //   //       });
+      //   //     rimraf.sync(path.join(extractDest, subFolder));
+      //   //   });
+      //   // rimraf.sync(extractDest);
+      // }
     }, 0);
   }
 }

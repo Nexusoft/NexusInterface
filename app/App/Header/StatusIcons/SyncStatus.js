@@ -23,6 +23,7 @@ const SpinningIcon = styled(StatusIcon)({
 export default class SyncStatus extends React.Component {
   statusIcon = () => {
     const { heighestPeerBlock, blocks } = this.props;
+
     if (heighestPeerBlock > blocks) {
       return <SpinningIcon icon={syncingIcon} />;
     } else {
