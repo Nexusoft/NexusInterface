@@ -86,8 +86,20 @@ const UnderHeader = styled.div(({ theme }) => ({
   color: theme.foreground,
 }));
 
+/**
+ * Handles the App Header
+ *
+ * @class Header
+ * @extends {Component}
+ */
 @connect(({ overview: { connections } }) => ({ connections }))
-export default class Header extends Component {
+class Header extends Component {
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Header
+   */
   render() {
     const { connections } = this.props;
 
@@ -115,3 +127,5 @@ export default class Header extends Component {
     );
   }
 }
+
+export default Header

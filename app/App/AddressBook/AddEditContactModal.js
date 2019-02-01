@@ -87,6 +87,12 @@ const timeZones = [
   { value: '60', display: '(UTC + 1.00 hr) Berlin, Lagos, Madrid' },
 ];
 
+/**
+ * The Add or Edit Contact Modal
+ *
+ * @class AddEditContactModal
+ * @extends {Component}
+ */
 class AddEditContactModal extends Component {
   render() {
     const { editEntry } = this.props;

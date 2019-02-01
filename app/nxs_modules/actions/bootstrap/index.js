@@ -7,6 +7,13 @@ import BootstrapModal from './BootstrapModal';
 
 let running = false;
 
+/**
+ * Bootstrap Modal element
+ *
+ * @export
+ * @param {*} [{ suggesting }={}]
+ * @returns
+ */
 export default function bootstrap({ suggesting } = {}) {
   return async (dispatch, getState) => {
     // Only one instance at the same time

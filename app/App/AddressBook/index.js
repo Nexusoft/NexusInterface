@@ -1,3 +1,7 @@
+///
+///   ADDRESS BOOK
+///
+
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -58,6 +62,12 @@ const mapDispatchToProps = dispatch => ({
   loadMyAccounts: () => dispatch(loadMyAccounts()),
 });
 
+/**
+ * The Address Book Page
+ *
+ * @class AddressBook
+ * @extends {Component}
+ */
 class AddressBook extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -80,6 +90,11 @@ class AddressBook extends Component {
   }
 
   // Class methods
+  /**
+   * Context Menu builder for the Address Book Page
+   *
+   * @memberof AddressBook
+   */
   addressbookContextMenu = () => {
     const { locale } = this.props.settings;
 
@@ -183,11 +198,24 @@ class AddressBook extends Component {
     }
   };
 
+  /**
+   * Get the contact's initial
+   *
+   * @param {*} name
+   * @returns
+   * @memberof AddressBook
+   */
   getinitial(name) {
     if (name && name.length >= 1) return name.charAt(0);
     return 'M';
   }
 
+  /**
+   * Copy the address into the clipboard
+   *
+   * @param {*} event
+   * @memberof AddressBook
+   */
   copyaddress(event) {
     event.preventDefault();
     let target = event.currentTarget;
@@ -214,6 +242,11 @@ class AddressBook extends Component {
     UIController.showNotification(<Text id="Alert.Copied" />, 'success');
   }
 
+  /**
+   * Internal JSX for the My Address Table
+   *
+   * @memberof AddressBook
+   */
   MyAddressesTable = () => {
     const { locale } = this.props.settings;
     let filteredAddress = this.props.myAccounts.filter(acct => {
@@ -263,6 +296,12 @@ class AddressBook extends Component {
     );
   };
 
+  /**
+   * Internal JSX to build out a modal 
+   *
+   * @returns
+   * @memberof AddressBook
+   */
   modalInternalBuilder() {
     let index = this.props.addressbook.findIndex(ele => {
       if (ele.name === this.props.prototypeName) {
@@ -442,6 +481,11 @@ class AddressBook extends Component {
     }
   }
 
+  /**
+   * Internal JSX for a Contact
+   *
+   * @memberof AddressBook
+   */
   contactLister = () => {
     const { locale } = this.props.settings;
     let filteredAddress = this.props.addressbook.map((contact, i) => {
@@ -498,6 +542,12 @@ class AddressBook extends Component {
     }
   };
 
+  /**
+   * Format Phone number string to display correctly
+   *
+   * @returns
+   * @memberof AddressBook
+   */
   phoneFormatter() {
     let num = this.props.addressbook[this.props.selected].phoneNumber;
     if (num.length === 12) {
@@ -513,6 +563,12 @@ class AddressBook extends Component {
     } else return num;
   }
 
+  /**
+   * Format time to display in the contact's local time
+   *
+   * @returns
+   * @memberof AddressBook
+   */
   localTimeFormater() {
     let d = new Date();
     let utc = new Date().getTimezoneOffset();
@@ -581,6 +637,11 @@ class AddressBook extends Component {
     );
   }
 
+  /**
+   * Internal JSX for a contact's Address
+   *
+   * @memberof AddressBook
+   */
   theirAddressLister = () => {
     const { locale } = this.props.settings;
     return (
@@ -661,6 +722,12 @@ class AddressBook extends Component {
     );
   };
 
+  /**
+   * The Internal JSX for the My Address Modal
+   *
+   * @returns
+   * @memberof AddressBook
+   */
   myAddressLister() {
     return (
       <Tooltip.Trigger tooltip={<Text id="AddressBook.Copy" />}>
@@ -738,21 +805,43 @@ class AddressBook extends Component {
     );
   }
 
+  /**
+   * Handles Add Address Modal
+   *
+   * @memberof AddressBook
+   */
   addAddressHandler() {
     this.props.SetModalType('ADD_ADDRESS');
     this.props.ToggleModal();
   }
 
+  /**
+   * Show Add Contact Modal
+   *
+   * @memberof AddressBook
+   */
   showAddContactModal() {
     this.props.SetModalType('ADD_CONTACT');
     this.props.ToggleModal();
   }
 
+  /**
+   * Show My Address Modal
+   *
+   * @memberof AddressBook
+   */
   showMyAddresses() {
     this.props.SetModalType('MY_ADDRESSES');
     this.props.ToggleModal();
   }
 
+  /**
+   * Handle Phone Number Inputs
+   *
+   * @param {*} value
+   * @returns
+   * @memberof AddressBook
+   */
   phoneNumberHandler(value) {
     if (/^[0-9.]+$/.test(value) | (value === '')) {
       this.props.EditProtoPhone(value);
@@ -761,6 +850,11 @@ class AddressBook extends Component {
     }
   }
 
+  /**
+   * Export the Address Book to a CSV File
+   *
+   * @memberof AddressBook
+   */
   exportAddressBook() {
     googleanalytics.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
 
@@ -833,6 +927,12 @@ class AddressBook extends Component {
     document.body.removeChild(link);
   }
 
+  /**
+   * Import the Address Book from a filepath
+   *
+   * @param {*} path
+   * @memberof AddressBook
+   */
   importAddressBook(path) {
     googleanalytics.SendEvent('AddressBook', 'IOAddress', 'Import', 1);
     console.log(csv().fromFile(path));
@@ -870,6 +970,12 @@ class AddressBook extends Component {
       });
   }
 
+  /**
+   * Closes the Edit Modal
+   *
+   * @param {*} e
+   * @memberof AddressBook
+   */
   closeEdit(e) {
     if (e.target.className !== 'editFeildDoNotClose') {
       if (this.props.editName) {

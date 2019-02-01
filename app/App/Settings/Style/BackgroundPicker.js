@@ -26,9 +26,20 @@ const Option = styled.label(
     }
 );
 
+/**
+ * The Background Picker Element
+ *
+ * @class BackgroundPicker
+ * @extends {Component}
+ */
 class BackgroundPicker extends Component {
   fileInputID = newUID();
 
+  /**
+   * Set a Default background
+   *
+   * @memberof BackgroundPicker
+   */
   setDefault = (version) => {
     if (this.props.defaultStyle != version) {
       version = version + 'Custom';
@@ -36,6 +47,11 @@ class BackgroundPicker extends Component {
     this.props.onChange(null, version);
   };
 
+  /**
+   * Handle Picking a file
+   *
+   * @memberof BackgroundPicker
+   */
   handleFilePick = e => {
     if (!!e.target.files.length) {
       let imagePath = e.target.files[0].path;
@@ -47,6 +63,12 @@ class BackgroundPicker extends Component {
     }
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof BackgroundPicker
+   */
   render() {
     const { wallpaper, defaultStyle } = this.props;
     return (

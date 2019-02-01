@@ -16,7 +16,14 @@ import ContextMenuBuilder from 'contextmenu';
 // Images
 import developerIcon from 'images/developer.sprite.svg';
 
-export default class StyleGuide extends Component {
+/**
+ * Style Page
+ *
+ * @export
+ * @class StyleGuide
+ * @extends {Component}
+ */
+export default class   extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);

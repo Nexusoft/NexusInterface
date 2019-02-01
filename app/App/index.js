@@ -47,7 +47,20 @@ const Main = styled.main({
   alignItems: 'stretch',
 });
 
+/**
+ * Main App Page
+ *
+ * @export
+ * @class App
+ * @extends {Component}
+ */
 export default class App extends Component {
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof App
+   */
   render() {
     const { store, history } = this.props;
     return (

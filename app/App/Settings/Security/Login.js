@@ -25,6 +25,12 @@ const Buttons = styled.div({
   marginTop: '1.5em',
 });
 
+/**
+ * Login JSX
+ *
+ * @class Login
+ * @extends {Component}
+ */
 @reduxForm({
   form: 'login',
   destroyOnUnmount: false,
@@ -85,7 +91,13 @@ const Buttons = styled.div({
     }
   },
 })
-export default class Login extends Component {
+class Login extends Component {
+  /**
+   * Get min date to lock
+   *
+   * @returns
+   * @memberof Login
+   */
   getMinDate() {
     const today = new Date();
     let month = today.getMonth() + 1;
@@ -95,6 +107,12 @@ export default class Login extends Component {
     return `${today.getFullYear()}-${month}-${today.getDate()}`;
   }
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Login
+   */
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -144,3 +162,4 @@ export default class Login extends Component {
     );
   }
 }
+export default Login;

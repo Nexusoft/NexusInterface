@@ -16,11 +16,17 @@ const SpinningIcon = styled(StatusIcon)({
   animation: `${animations.spin} 2s linear infinite`,
 });
 
+/**
+ * Handles the Sync Status
+ *
+ * @class SyncStatus
+ * @extends {React.Component}
+ */
 @connect(({ overview: { blocks }, common: { heighestPeerBlock } }) => ({
   heighestPeerBlock,
   blocks,
 }))
-export default class SyncStatus extends React.Component {
+class SyncStatus extends React.Component {
   statusIcon = () => {
     const { heighestPeerBlock, blocks } = this.props;
     if (heighestPeerBlock > blocks) {
@@ -53,3 +59,4 @@ export default class SyncStatus extends React.Component {
     );
   }
 }
+export default SyncStatus;

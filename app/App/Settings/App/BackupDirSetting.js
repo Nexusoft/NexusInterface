@@ -19,11 +19,22 @@ const mapDispatchToProps = dispatch => ({
   updateSettings: updates => dispatch(updateSettings(updates)),
 });
 
+/**
+ * Backup Directory in Settings Page
+ *
+ * @class SettingsApp
+ * @extends {Component}
+ */
 @connect(
   mapStateToProps,
   mapDispatchToProps
 )
-export default class SettingsApp extends Component {
+class SettingsApp extends Component {
+  /**
+   * Open up Dialoge
+   *
+   * @memberof SettingsApp
+   */
   browseBackupDir = () => {
     remote.dialog.showOpenDialog(
       {
@@ -41,6 +52,12 @@ export default class SettingsApp extends Component {
     );
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof SettingsApp
+   */
   render() {
     return (
       <SettingsField connectLabel label={<Text id="Settings.BackupDir" />}>
@@ -65,3 +82,4 @@ export default class SettingsApp extends Component {
     );
   }
 }
+export default SettingsApp;

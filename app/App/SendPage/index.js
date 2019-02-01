@@ -27,8 +27,14 @@ const mapStateToProps = state => ({
   isInSync: state.common.isInSync,
 });
 
+/**
+ * Send Page
+ *
+ * @class SendPage
+ * @extends {Component}
+ */
 @connect(mapStateToProps)
-export default class SendPage extends Component {
+class SendPage extends Component {
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     googleanalytics.SendScreen('Send');
@@ -38,6 +44,12 @@ export default class SendPage extends Component {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
+  /**
+   * Set up the context menu
+   *
+   * @param {*} e
+   * @memberof SendPage
+   */
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -46,10 +58,21 @@ export default class SendPage extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  /**
+   * Opens the Move NXS between account modal  
+   *
+   * @memberof SendPage
+   */
   moveBetweenAccounts = () => {
     UIController.openModal(MoveBetweenAccountsModal);
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof SendPage
+   */
   render() {
     return (
       <Panel
@@ -94,3 +117,4 @@ export default class SendPage extends Component {
     );
   }
 }
+export default SendPage;

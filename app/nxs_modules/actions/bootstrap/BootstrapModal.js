@@ -90,10 +90,16 @@ const MinimizeIcon = styled(Icon)(({ theme }) => ({
   },
 }));
 
+/**
+ * Bootstrap Modal
+ *
+ * @class BootstrapModal
+ * @extends {PureComponent}
+ */
 @connect(state => ({
   locale: state.settings.locale,
 }))
-export default class BootstrapModal extends PureComponent {
+class BootstrapModal extends PureComponent {
   static contextType = ModalContext;
 
   modalRef = React.createRef();
@@ -111,6 +117,11 @@ export default class BootstrapModal extends PureComponent {
     });
   }
 
+  /**
+   * Set Status Message
+   *
+   * @memberof BootstrapModal
+   */
   statusMessage = ({ step, details }) => {
     switch (step) {
       case 'backing_up':
@@ -157,6 +168,11 @@ export default class BootstrapModal extends PureComponent {
     percentage: 0,
   };
 
+  /**
+   * Handle Progress
+   *
+   * @memberof BootstrapModal
+   */
   handleProgress = (step, details) => {
     const status = this.statusMessage({ step, details });
     this.setState({ status });
@@ -178,6 +194,11 @@ export default class BootstrapModal extends PureComponent {
     }
   };
 
+  /**
+   * Handle Abort
+   *
+   * @memberof BootstrapModal
+   */
   handleAbort = () => {
     this.closeModal();
     UIController.showNotification(
@@ -187,6 +208,11 @@ export default class BootstrapModal extends PureComponent {
     UIController.showNotification('Daemon is restarting...');
   };
 
+  /**
+   * Handle Error
+   *
+   * @memberof BootstrapModal
+   */
   handleError = err => {
     this.closeModal();
     UIController.openErrorDialog({
@@ -197,6 +223,11 @@ export default class BootstrapModal extends PureComponent {
     console.error(err);
   };
 
+  /**
+   * Handle Finish
+   *
+   * @memberof BootstrapModal
+   */
   handleFinish = () => {
     this.closeModal();
     UIController.openSuccessDialog({
@@ -205,6 +236,11 @@ export default class BootstrapModal extends PureComponent {
     UIController.showNotification('Daemon is restarting...');
   };
 
+  /**
+   * Handle Confrim Abort
+   *
+   * @memberof BootstrapModal
+   */
   confirmAbort = () => {
     UIController.openConfirmDialog({
       question: 'Are you sure you want to abort the process?',
@@ -218,6 +254,11 @@ export default class BootstrapModal extends PureComponent {
     });
   };
 
+  /**
+   * Handle Minimize
+   *
+   * @memberof BootstrapModal
+   */
   minimize = () => {
     UIController.showBackgroundTask(BootstrapBackgroundTask, {
       bootstrapper: this.props.bootstrapper,
@@ -230,11 +271,22 @@ export default class BootstrapModal extends PureComponent {
     setTimeout(this.remove, duration);
   };
 
+  /**
+   * Handle Remove
+   *
+   * @memberof BootstrapModal
+   */
   remove = () => {
     const modalID = this.context;
     UIController.removeModal(modalID);
   };
 
+  /**
+   * React React
+   *
+   * @returns
+   * @memberof BootstrapModal
+   */
   render() {
     return (
       <BootstrapModalComponent
@@ -262,3 +314,4 @@ export default class BootstrapModal extends PureComponent {
     );
   }
 }
+export default BootstrapModal;

@@ -37,6 +37,12 @@ const mapDispatchToProps = dispatch => ({
   ToggleSortDir: () => dispatch({ type: TYPE.TOGGLE_SORT_DIRECTION }),
 });
 
+/**
+ * Trust List Page
+ *
+ * @class List
+ * @extends {Component}
+ */
 class List extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -63,6 +69,12 @@ class List extends Component {
   }
 
   // Class methods
+  /**
+   * Set up Context Menu
+   *
+   * @param {*} e
+   * @memberof List
+   */
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -71,6 +83,12 @@ class List extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  /**
+   * Build List
+   *
+   * @returns
+   * @memberof List
+   */
   buildList() {
     if (this.props.trustlist) {
       let sortableList = [...this.props.trustlist];
@@ -96,6 +114,12 @@ class List extends Component {
   }
 
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof List
+   */
   render() {
     return (
       <Panel icon={trustIcon} title={<Text id="TrustList.TrustList" />}>

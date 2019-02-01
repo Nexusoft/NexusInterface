@@ -101,6 +101,12 @@ const ExecuteButton = styled(Button)(({ theme }) => ({
   borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
+/**
+ * Console Page in the Terminal Page
+ *
+ * @class TerminalConsole
+ * @extends {Component}
+ */
 class TerminalConsole extends Component {
   constructor(props) {
     super(props);
@@ -116,6 +122,12 @@ class TerminalConsole extends Component {
   }
 
   // Pass before update values to componentDidUpdate
+  /**
+   * Before component Did Update
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   getSnapshotBeforeUpdate() {
     if (!this.outputRef) return null;
     const { clientHeight, scrollTop, scrollHeight } = this.outputRef;
@@ -134,12 +146,24 @@ class TerminalConsole extends Component {
   }
 
   // Class Methods
+  /**
+   * Process Output
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   processOutput() {
     return this.props.consoleOutput.map((item, key) => {
       return <div key={key}>{item}</div>;
     });
   }
 
+  /**
+   * Process Input
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   processInput() {
     if (this.props.currentInput == '') {
       return;
@@ -273,6 +297,11 @@ class TerminalConsole extends Component {
     }
   }
 
+  /**
+   * Handle keyboard input
+   *
+   * @memberof TerminalConsole
+   */
   handleKeyboardInput = e => {
     if (e.key === 'Enter') {
       this.props.removeAutoCompleteDiv();
@@ -281,6 +310,11 @@ class TerminalConsole extends Component {
     }
   };
 
+  /**
+   * Handle arrow keys
+   *
+   * @memberof TerminalConsole
+   */
   handleKeyboardArrows = e => {
     if (e.key === 'ArrowUp') {
       currentHistoryIndex++;
@@ -307,6 +341,12 @@ class TerminalConsole extends Component {
     }
   };
 
+  /**
+   * Return Autocomplete
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   autoComplete() {
     return this.props.filteredCmdList.map((item, key) => {
       return (
@@ -327,6 +367,12 @@ class TerminalConsole extends Component {
   }
 
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   render() {
     if (this.props.connections === undefined) {
       return (

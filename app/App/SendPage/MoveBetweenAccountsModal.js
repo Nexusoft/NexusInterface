@@ -57,6 +57,12 @@ const mapDispatchToProps = dispatch => ({
   loadMyAccounts: () => dispatch(loadMyAccounts()),
 });
 
+/**
+ * Internal JXS for the Move Between Accounts Modal
+ *
+ * @class MoveBetweenAccountsForm
+ * @extends {Component}
+ */
 @connect(
   mapStateToProps,
   mapDispatchToProps
@@ -122,6 +128,11 @@ const mapDispatchToProps = dispatch => ({
   onSubmitFail: rpcErrorHandler(<Text id="sendReceive.Messages.ErrorMoving" />),
 })
 class MoveBetweenAccountsForm extends Component {
+  /**
+   * Confirm Move
+   *
+   * @memberof MoveBetweenAccountsForm
+   */
   confirmMove = e => {
     e.preventDefault();
     const {
@@ -170,6 +181,12 @@ class MoveBetweenAccountsForm extends Component {
     });
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof MoveBetweenAccountsForm
+   */
   render() {
     return (
       <form onSubmit={this.confirmMove}>
@@ -215,6 +232,10 @@ class MoveBetweenAccountsForm extends Component {
   }
 }
 
+/**
+ * JSX
+ *
+ */
 const MoveBetweenAccountsModal = () => (
   <Modal style={{ maxWidth: 650 }}>
     {closeModal => (
