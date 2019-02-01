@@ -142,7 +142,8 @@ export const PROMISE = (cmd, args) => {
       params: args,
     });
     var ResponseObject;
-
+    console.log(PostData);
+    console.log(GETUSER(), GETPASSWORD());
     /** Opera 8.0+, Firefox, Safari **/
     try {
       ResponseObject = new XMLHttpRequest();
@@ -169,8 +170,8 @@ export const PROMISE = (cmd, args) => {
         reject('RPC Command {' + cmd + '} Not Found');
       }
       if (ResponseObject.status == 401) {
-        // console.error(ResponseObject.response)
-        reject('Bad Usernam and Password');
+        console.error(ResponseObject);
+        reject('Bad Username and Password');
       }
       if (ResponseObject.status == 500) {
         console.log(JSON.parse(ResponseObject.responseText));
@@ -198,9 +199,13 @@ export const PROMISE = (cmd, args) => {
     if (GETUSER() == undefined && GETPASSWORD() == undefined)
       ResponseObject.open('POST', GETHOST(), true);
     else ResponseObject.open('POST', GETHOST(), true, GETUSER(), GETPASSWORD());
-
+    console.log(ResponseObject);
     /** Send off the Post Data. **/
-
+    ResponseObject.withCredentials = true;
+    ResponseObject.setRequestHeader(
+      'Authorization',
+      'Basic ' + btoa(GETUSER() + ':' + GETPASSWORD())
+    );
     ResponseObject.onerror = function(e) {
       e.preventDefault();
       if (ResponseObject.status == 401) {

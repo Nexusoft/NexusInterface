@@ -197,7 +197,8 @@ export default class SettingsCore extends Component {
       pristine,
       submitting,
     } = this.props;
-    if (connections === undefined && !settings.manualDaemon) {
+    // && !settings.manualDaemon
+    if (connections !== undefined) {
       return (
         <WaitingMessage>
           <Text id="transactions.Loading" />

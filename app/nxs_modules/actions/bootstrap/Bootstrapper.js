@@ -11,8 +11,8 @@ import moveFile from 'move-file';
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
 
-const recentDbUrl =
-  'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
+const recentDbUrl = 'http://nexusearth.com/bootstrap/tritium/tritium.tar.gz';
+// 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
 
 // Recent database download location
 const fileLocation = path.join(
