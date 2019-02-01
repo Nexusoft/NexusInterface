@@ -119,6 +119,7 @@ export default class Bootstrapper {
 
   async _downloadCompressedDb() {
     const promise = new Promise((resolve, reject) => {
+      console.log(fileLocation);
       const file = fs.createWriteStream(fileLocation);
       this.request = https
         .get(recentDbUrl)
@@ -171,21 +172,41 @@ export default class Bootstrapper {
 
   async _moveExtractedContent() {
     const recentContents = fs.readdirSync(extractDest);
-    for (let element of recentContents) {
-      if (fs.statSync(path.join(extractDest, element)).isDirectory()) {
-        const newcontents = fs.readdirSync(path.join(extractDest, element));
-        for (let deeperEle of newcontents) {
+    try {
+      for (let element of recentContents) {
+        if (fs.statSync(path.join(extractDest, element)).isDirectory()) {
+          const newcontents = fs.readdirSync(path.join(extractDest, element));
+          for (let deeperEle of newcontents) {
+            if (
+              fs
+                .statSync(path.join(extractDest, element, deeperEle))
+                .isDirectory()
+            ) {
+              const newerContents = fs.readdirSync(
+                path.join(extractDest, element, deeperEle)
+              );
+              for (let evenDeeperEle of newerContents) {
+                moveFile.sync(
+                  path.join(extractDest, element, deeperEle, evenDeeperEle),
+                  path.join(dataDir, element, deeperEle, evenDeeperEle)
+                );
+              }
+            } else {
+              moveFile.sync(
+                path.join(extractDest, element, deeperEle),
+                path.join(dataDir, element, deeperEle)
+              );
+            }
+          }
+        } else {
           moveFile.sync(
-            path.join(extractDest, element, deeperEle),
-            path.join(dataDir, element, deeperEle)
+            path.join(extractDest, element),
+            path.join(dataDir, element)
           );
         }
-      } else {
-        moveFile.sync(
-          path.join(extractDest, element),
-          path.join(dataDir, element)
-        );
       }
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -198,27 +219,27 @@ export default class Bootstrapper {
         });
       }
 
-      // if (fs.existsSync(extractDest)) {
-      //   rimraf.sync(extractDest);
-      //   // const recentContents = fs.readdirSync(extractDest);
-      //   // recentContents
-      //   //   .filter(child =>
-      //   //     fs.statSync(path.join(extractDest, child)).isDirectory()
-      //   //   )
-      //   //   .forEach(subFolder => {
-      //   //     fs.readdirSync(path.join(extractDest, subFolder))
-      //   //       .filter(grandchild =>
-      //   //         fs
-      //   //           .statSync(path.join(extractDest, subFolder, grandchild))
-      //   //           .isDirectory()
-      //   //       )
-      //   //       .forEach(subSubFolder => {
-      //   //         rimraf.sync(path.join(extractDest, subFolder, subSubFolder));
-      //   //       });
-      //   //     rimraf.sync(path.join(extractDest, subFolder));
-      //   //   });
-      //   // rimraf.sync(extractDest);
-      // }
+      if (fs.existsSync(extractDest)) {
+        rimraf.sync(extractDest);
+        //   // const recentContents = fs.readdirSync(extractDest);
+        //   // recentContents
+        //   //   .filter(child =>
+        //   //     fs.statSync(path.join(extractDest, child)).isDirectory()
+        //   //   )
+        //   //   .forEach(subFolder => {
+        //   //     fs.readdirSync(path.join(extractDest, subFolder))
+        //   //       .filter(grandchild =>
+        //   //         fs
+        //   //           .statSync(path.join(extractDest, subFolder, grandchild))
+        //   //           .isDirectory()
+        //   //       )
+        //   //       .forEach(subSubFolder => {
+        //   //         rimraf.sync(path.join(extractDest, subFolder, subSubFolder));
+        //   //       });
+        //   //     rimraf.sync(path.join(extractDest, subFolder));
+        //   //   });
+        //   // rimraf.sync(extractDest);
+      }
     }, 0);
   }
 }
