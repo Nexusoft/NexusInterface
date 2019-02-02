@@ -51,7 +51,7 @@ export default function getInfo() {
 
     if (info.blocks !== oldInfo.blocks) {
       const connectioncount = await RPC.PROMISE('getconnectioncount', []);
-      console.log(connectioncount);
+
       if (connectioncount > 0) {
         const peerresponse = await RPC.PROMISE('getpeerinfo', []);
 
@@ -94,31 +94,36 @@ export default function getInfo() {
     }
     if (info.txtotal > oldInfo.txtotal) {
       const txList = await RPC.PROMISE('listtransactions');
-      const mostRecentTx = txList.reduce((a, b) => (a.time > b.time ? a : b));
+      if (txList) {
+        const mostRecentTx = txList.reduce((a, b) => (a.time > b.time ? a : b));
 
-      switch (mostRecentTx.category) {
-        case 'receive':
-          showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
-          UIController.showNotification(
-            <Text id="Alert.Received" />,
-            'success'
-          );
-          break;
-        case 'send':
-          showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
-          UIController.showNotification(<Text id="Alert.Sent" />, 'success');
-          break;
-        case 'genesis':
-          showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
-          UIController.showNotification(<Text id="Alert.Genesis" />, 'success');
-          break;
-        case 'trust':
-          showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
-          UIController.showNotification(
-            <Text id="Alert.TrustTransaction" />,
-            'success'
-          );
-          break;
+        switch (mostRecentTx.category) {
+          case 'receive':
+            showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
+            UIController.showNotification(
+              <Text id="Alert.Received" />,
+              'success'
+            );
+            break;
+          case 'send':
+            showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
+            UIController.showNotification(<Text id="Alert.Sent" />, 'success');
+            break;
+          case 'genesis':
+            showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
+            UIController.showNotification(
+              <Text id="Alert.Genesis" />,
+              'success'
+            );
+            break;
+          case 'trust':
+            showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
+            UIController.showNotification(
+              <Text id="Alert.TrustTransaction" />,
+              'success'
+            );
+            break;
+        }
       }
     }
 

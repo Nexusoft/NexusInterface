@@ -75,7 +75,7 @@ export default class LogInStatus extends Component {
         </div>
       );
     }
-    console.log(locked);
+
     if (unlocked_until === undefined && locked === undefined) {
       return <Text id="Header.WalletUnencrypted" />;
     } else if (
