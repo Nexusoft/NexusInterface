@@ -1,5 +1,5 @@
 #Theme Guide
-This guide will discribe how to develope themes to be used in the Nexus Interface.\
+This guide will describe how to develop themes to be used in the Nexus Interface.\
 Theme files are Json files that are read by the system and apply changes to the interface's theme.\
 Theme files use standard Json syntax.\
 Example\
@@ -17,7 +17,7 @@ This guide may change and the internal systems may change which will require rew
 |:----------------------------- |:--------------------:|:---------------------------------:|
 | Background Image              | `"wallpaper"`        | String: Local or Remote File Path |
 | Background Color              | `"background"`       | String: Hex                       |
-| Forground/Text Color          | `"foreground"`       | String: Hex                       |
+| Foreground/Text Color         | `"foreground"`       | String: Hex                       |
 | Primary Color                 | `"primary"`          | String: Hex                       |
 | Primary Accent Color          | `"primaryAccent"`    | String: Hex                       |
 | Error Color                   | `"danger"`           | String: Hex                       |
@@ -31,7 +31,7 @@ This guide may change and the internal systems may change which will require rew
 ## Table of Contents
 -   [Background Image][1]
 -   [Background Color][2]
--   [Forground Color][3]
+-   [Foreground Color][3]
 -   [Primary Color][4]
 -   [Primary Accent Color][5]
 -   [Error Color][6]
@@ -45,16 +45,16 @@ The background image to use as the background for the app.
 #### Input
 `String`\
 Can be a local file path, `c:/Users/User/Pictures/bg.jpg` or remote `https://google.com/banner.jpg`.
-Remote images will automaticly downloaded into the app's app data folder.
+Remote images will automatically downloaded into the app's app data folder.
 Acceptable file formats are `.jpg`,`.png`,`.bmp`,`.tiff`,or `.gif`.
 
 ### Background Color
-The background color to be used by the background panels that contain the content. The app will automaticly make a modification color to be used as contrast in the header and center fill. 
+The background color to be used by the background panels that contain the content. The app will automatically make a modification color to be used as contrast in the header and center fill. 
 #### Input
 `String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
-### Forground Color
+### Foreground Color
 Sets the color of the text as well as footer buttons.
 #### Input
 `String`\
@@ -107,7 +107,7 @@ This theme format is up to date and there is no changes necessary
 
 [1]: #background-image
 [2]: #background-color
-[3]: #forground-color
+[3]: #foreground-color
 [4]: #primary-color
 [5]: #primary-accent-color
 [6]: #error-color
