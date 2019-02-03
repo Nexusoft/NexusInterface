@@ -94,11 +94,11 @@ const Navigation = () => (
         <Text id="Footer.Exchange" />
       </NavItem> */}
 
-      <NavItem icon={trustListIcon} to="/List">
+      {/* <NavItem icon={trustListIcon} to="/List">
         <Text id="Footer.Trust" />
         &nbsp;
         <Text id="Footer.List" />
-      </NavItem>
+      </NavItem> */}
     </NavBar>
   </Nav>
 );
