@@ -1,7 +1,6 @@
 #Theme Guide
 This guide will discribe how to develope themes to be used in the Nexus Interface.\
-
-Theme files are Json files that are read by the system and apply changes to the interface's theme.\ 
+Theme files are Json files that are read by the system and apply changes to the interface's theme.\
 Theme files use standard Json syntax.\
 Example\
 `
@@ -11,7 +10,6 @@ Example\
 }
 `\
 You may use any text editor you like, save as a `.json` file and import that file using the import function in the style settings.\
-
 This guide may change and the internal systems may change which will require reworking your theme file.  See Upgrading for details. 
 
 ## Quick Guide
