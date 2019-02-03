@@ -1,16 +1,16 @@
 #Theme Guide
-This guide will discribe how to develope themes to be used in the Nexus Interface
+This guide will discribe how to develope themes to be used in the Nexus Interface.\
 
-Theme files are Json files that are read by the system and apply changes to the interface's theme. 
-Theme files use standard Json syntax. 
-Example
+Theme files are Json files that are read by the system and apply changes to the interface's theme.\ 
+Theme files use standard Json syntax.\
+Example\
 `
 {
     "background" : "#ffffff",
     "forground" : "#000000"
 }
-`
-You may use any text editor you like, save as a `.json` file and import that file using the import function in the style settings.
+`\
+You may use any text editor you like, save as a `.json` file and import that file using the import function in the style settings.\
 
 This guide may change and the internal systems may change which will require reworking your theme file.  See Upgrading for details. 
 
@@ -18,15 +18,15 @@ This guide may change and the internal systems may change which will require rew
 | Descriptor                    | Code                 | Valid Input                       |
 |:----------------------------- |:--------------------:|:---------------------------------:|
 | Background Image              | `"wallpaper"`        | String: Local or Remote File Path |
-| Background Color              | `"background"`       | Hex                               |
-| Forground/Text Color          | `"foreground"`       | Hex                               |
-| Primary Color                 | `"primary"`          | Hex                               |
-| Primary Accent Color          | `"primaryAccent"`    | Hex                               |
-| Error Color                   | `"danger"`           | Hex                               |
-| Error Accent Color            | `"dangerAccent"`     | Hex                               |
-| Globe Color                   | `"globeColor"`       | Hex                               |
-| Globe Pillar Color            | `"globePillarColor"` | Hex                               |
-| Globe Arch Color              | `"globeArchColor"`   | Hex                               |
+| Background Color              | `"background"`       | String: Hex                       |
+| Forground/Text Color          | `"foreground"`       | String: Hex                       |
+| Primary Color                 | `"primary"`          | String: Hex                       |
+| Primary Accent Color          | `"primaryAccent"`    | String: Hex                       |
+| Error Color                   | `"danger"`           | String: Hex                       |
+| Error Accent Color            | `"dangerAccent"`     | String: Hex                       |
+| Globe Color                   | `"globeColor"`       | String: Hex                       |
+| Globe Pillar Color            | `"globePillarColor"` | String: Hex                       |
+| Globe Arch Color              | `"globeArchColor"`   | String: Hex                       |
 
 # Documentation
 
@@ -45,7 +45,7 @@ This guide may change and the internal systems may change which will require rew
 ### Background Image
 The background image to use as the background for the app.
 #### Input
-`String`
+`String`\
 Can be a local file path, `c:/Users/User/Pictures/bg.jpg` or remote `https://google.com/banner.jpg`.
 Remote images will automaticly downloaded into the app's app data folder.
 Acceptable file formats are `.jpg`,`.png`,`.bmp`,`.tiff`,or `.gif`.
@@ -53,55 +53,55 @@ Acceptable file formats are `.jpg`,`.png`,`.bmp`,`.tiff`,or `.gif`.
 ### Background Color
 The background color to be used by the background panels that contain the content. The app will automaticly make a modification color to be used as contrast in the header and center fill. 
 #### Input
-`String`
+`String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
 ### Forground Color
 Sets the color of the text as well as footer buttons.
 #### Input
-`String`
+`String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
 ### Primary Color
 The color of the header titles, overview buttons, and header buttons.
 #### Input
-`String`
+`String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
 ### Primary Accent Color
 Color to accent the Primary color.
 #### Input
-`String`
+`String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
 ### Error Color
 Color for showing errors or error/danger pop ups.
 #### Input
-`String`
+`String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
 ### Error Accent Color
 Color that accents the Error color. 
 #### Input
-`String`
+`String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
 ### Globe Color
 The Color of the globe. This color will be used to fill in the ocean areas. 
 #### Input
-`String`
+`String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
 ### Globe Pillar Color
 The color of the pillars that represent your connections on the globe.
 #### Input
-`String`
+`String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
 ### Globe Arch Color
 the color of the arches that represent the connection between you and the node you are connected to. 
 #### Input
-`String`
+`String`\
 Must be a HEX value, a `#` followed by 6 numbers or characters.
 
 ## Upgrading
