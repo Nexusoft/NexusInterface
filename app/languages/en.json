@@ -383,7 +383,7 @@
   "Header.UnlockedUntil": "Logged in until {unlockDate}",
   "Header.StakingOnly": "for staking only",
   "Header.Synced": "Synchronized",
-  "Header.Syncing": "Synchronizing...\n{blocks} blocks behind",
+  "Header.Syncing": "Synchronizing...",
   "Header.Blocks": "Blocks",
   "Header.DaemonNotLoaded": "Daemon Not Loaded",
 
