@@ -17,6 +17,12 @@ const mapStateToProps = state => {
 };
 //const mapDispatchToProps = dispatch => {};
 
+/**
+ * Page loader that displays the Tritium Logo
+ *
+ * @class Loader
+ * @extends {Component}
+ */
 class Loader extends Component {
   state = {
     loading: true,

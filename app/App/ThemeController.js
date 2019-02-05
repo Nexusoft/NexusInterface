@@ -9,7 +9,7 @@ import { getMixer } from 'api/theme';
 @connect(state => ({
   theme: state.theme,
 }))
-export default class ThemeController extends PureComponent {
+class ThemeController extends PureComponent {
   render() {
     const { theme } = this.props;
     const themeWithMixer = {
@@ -23,3 +23,4 @@ export default class ThemeController extends PureComponent {
     );
   }
 }
+export default ThemeController;

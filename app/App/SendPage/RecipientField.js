@@ -35,12 +35,29 @@ const mapStateToProps = ({
   locale,
 });
 
+/**
+ * The Recipient Field in the Send Page
+ *
+ * @class RecipientField
+ * @extends {Component}
+ */
 @connect(mapStateToProps)
-export default class RecipientField extends Component {
+class RecipientField extends Component {
+  /**
+   *Handle Select Address
+   *
+   * @memberof RecipientField
+   */
   handleSelect = address => {
     this.props.change(this.props.input.name, address);
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof RecipientField
+   */
   render() {
     const { addressNameMap, input, meta, locale, suggestions } = this.props;
     const recipientName = addressNameMap[input.value];
@@ -71,3 +88,4 @@ export default class RecipientField extends Component {
     );
   }
 }
+export default RecipientField;

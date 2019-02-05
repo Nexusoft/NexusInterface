@@ -17,9 +17,22 @@ import {
   VictoryTooltip,
 } from 'victory';
 
+/**
+ * Creates a Victory Chart that uses CandleSticks
+ *
+ * @export
+ * @class Candlestick
+ * @extends {Component}
+ */
 export default class Candlestick extends Component {
   // Mandatory React method
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Candlestick
+   */
   render() {
     return (
       <div className="marketDepthInner">

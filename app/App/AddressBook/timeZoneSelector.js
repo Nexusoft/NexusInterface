@@ -19,6 +19,12 @@ const mapStateToProps = state => {
   return { ...state.common, ...state.addressbook };
 };
 
+/**
+ * Creates a Time Zone Selector Element
+ *
+ * @class TimeZoneSelector
+ * @extends {Component}
+ */
 class TimeZoneSelector extends Component {
   // Mandatory React method
   render() {

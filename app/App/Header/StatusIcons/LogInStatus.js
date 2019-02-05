@@ -54,11 +54,22 @@ const mapStateToProps = ({
 
 const actionCreators = { push };
 
+/**
+ * Handles the Login Status
+ *
+ * @class LogInStatus
+ * @extends {Component}
+ */
 @connect(
   mapStateToProps,
   actionCreators
 )
-export default class LogInStatus extends Component {
+class LogInStatus extends Component {
+  /**
+   * Sign in Message
+   *
+   * @memberof LogInStatus
+   */
   signInStatusMessage = () => {
     const { connections, unlocked_until, staking_only, locked } = this.props;
     let unlockDate = new Date(unlocked_until * 1000).toLocaleString('en', {
@@ -97,6 +108,11 @@ export default class LogInStatus extends Component {
     }
   };
 
+  /**
+   * Return the correct status icon
+   *
+   * @memberof LogInStatus
+   */
   statusIcon = () => {
     const { connections, unlocked_until, locked } = this.props;
     if (connections === undefined) {
@@ -132,10 +148,21 @@ export default class LogInStatus extends Component {
     }
   };
 
+  /**
+   * Go to the Security Page
+   *
+   * @memberof LogInStatus
+   */
   goToSecurity = () => {
     this.props.push('/Settings/Security');
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof LogInStatus
+   */
   render() {
     return (
       <Tooltip.Trigger
@@ -147,3 +174,4 @@ export default class LogInStatus extends Component {
     );
   }
 }
+export default LogInStatus;

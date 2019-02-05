@@ -45,11 +45,17 @@ const mapDispatchToProps = dispatch => ({
   resetColors: () => dispatch(resetColors()),
 });
 
+/**
+ * Style Settings in the Style Page
+ *
+ * @class SettingsStyle
+ * @extends {Component}
+ */
 @connect(
   mapStateToProps,
   mapDispatchToProps
 )
-export default class SettingsStyle extends Component {
+class SettingsStyle extends Component {
   state = {
     previousCustom: {},
     DarkTheme: DarkTheme,
@@ -69,10 +75,20 @@ export default class SettingsStyle extends Component {
     }
   }
 
+  /**
+   * Toggle The Globe
+   *
+   * @memberof SettingsStyle
+   */
   toggleGlobeRender = e => {
     this.props.setRenderGlobe(e.target.checked);
   };
 
+  /**
+   * Set New Wallpaper
+   *
+   * @memberof SettingsStyle
+   */
   setWalpaper = (path, defaultStyle) => {
 
     defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
@@ -85,6 +101,11 @@ export default class SettingsStyle extends Component {
     }
   };
 
+  /**
+   * Set Color
+   *
+   * @memberof SettingsStyle
+   */
   setColor = (key, value) => {
     this.setToCustom();
     this.props.updateTheme({
@@ -93,6 +114,11 @@ export default class SettingsStyle extends Component {
     });
   };
 
+  /**
+   * Reset Colors
+   *
+   * @memberof SettingsStyle
+   */
   resetColors = () => {
     //Dont think we need this anymore 
     this.props.resetColors();
@@ -102,6 +128,11 @@ export default class SettingsStyle extends Component {
     );
   };
 
+  /**
+   * Load Custom Theme from json File
+   *
+   * @memberof SettingsStyle
+   */
   loadCustomTheme = filepath => {
     const content = fs.readFileSync(filepath);
     let customTheme;
@@ -142,6 +173,11 @@ export default class SettingsStyle extends Component {
     this.props.updateTheme(customTheme);
   };
 
+  /**
+   * Open Dialog for Picking Theme
+   *
+   * @memberof SettingsStyle
+   */
   openPickThemeFileDialog = () => {
     remote.dialog.showOpenDialog(
       {
@@ -157,6 +193,11 @@ export default class SettingsStyle extends Component {
     );
   };
 
+  /**
+   * Export Theme File
+   *
+   * @memberof SettingsStyle
+   */
   exportThemeFileDialog = () => {
     remote.dialog.showSaveDialog(
       null,
@@ -184,17 +225,37 @@ export default class SettingsStyle extends Component {
     )
   }
 
+  /**
+   * Press Dark Theme Button
+   *
+   * @memberof SettingsStyle
+   */
   pressDarkTheme = () => {
     this.props.updateTheme(DarkTheme);
   }
+  /**
+   * Press Light Theme Button
+   *
+   * @memberof SettingsStyle
+   */
   pressLightTheme = () => {
     this.props.updateTheme(LightTheme);
   }
+  /**
+   * Press Custom theme button
+   *
+   * @memberof SettingsStyle
+   */
   pressCustomTheme = () => {
     if (this.state.previousCustom != {}) {
       this.props.updateTheme(this.state.previousCustom);
     }
   }
+  /**
+   * Press Reset Button
+   *
+   * @memberof SettingsStyle
+   */
   pressResetTheme = () => {
     this.props.updateTheme(DarkTheme);
     this.setThemeSelector(0);
@@ -204,18 +265,39 @@ export default class SettingsStyle extends Component {
     );
   }
 
+  /**
+   * Save Previous Custom Theme to state
+   *
+   * @memberof SettingsStyle
+   */
   savePreviousCustomTheme = () => {
     this.setState({ previousCustom: this.props.theme }, () => { console.log(this.state); });
   }
 
+  /**
+   * Set To Custom, this is used by background picker
+   *
+   * @memberof SettingsStyle
+   */
   setToCustom = () => {
     //console.log("Set To Custom")
   }
 
+  /**
+   * Set theme button, used by theme slector
+   *
+   * @memberof SettingsStyle
+   */
   setThemeSelector = (selectorIndex) => {
 
   }
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof SettingsStyle
+   */
   render() {
     const { theme, renderGlobe, webGLEnabled } = this.props;
 
@@ -315,3 +397,4 @@ export default class SettingsStyle extends Component {
     );
   }
 }
+export default SettingsStyle;

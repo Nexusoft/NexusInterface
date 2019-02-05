@@ -27,6 +27,12 @@ const Buttons = styled.div({
   justifyContent: 'space-between',
 });
 
+/**
+ * Handles the new address form from the header
+ *
+ * @class NewAddressForm
+ * @extends {React.Component}
+ */
 @connect(state => ({
   accountNames: (state.addressbook.myAccounts || []).map(acc => acc.account),
 }))
@@ -53,11 +59,22 @@ const Buttons = styled.div({
   },
   onSubmitFail: rpcErrorHandler('Error creating new address'),
 })
-export default class NewAddressForm extends React.Component {
+class NewAddressForm extends React.Component {
+  /**
+   * Sets the account name
+   *
+   * @memberof NewAddressForm
+   */
   setAccountName = name => {
     this.props.change('accountName', name);
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof NewAddressForm
+   */
   render() {
     const { handleSubmit, submitting, accountNames, finish } = this.props;
     return (
@@ -87,3 +104,4 @@ export default class NewAddressForm extends React.Component {
     );
   }
 }
+export default NewAddressForm;

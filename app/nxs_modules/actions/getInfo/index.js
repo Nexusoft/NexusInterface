@@ -3,7 +3,7 @@ import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
 import { loadMyAccounts } from 'actions/accountActionCreators';
-import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
+import bootstrap, { checkBootStrapFreeSpace, checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
 import Text from 'components/Text';
 
@@ -128,8 +128,17 @@ export default function getInfo() {
       }
     }
 
+    const enoughSpace = await checkFreeSpace(10);
+    if (!enoughSpace) {
+      UIController.showNotification(
+        {content: "WARNING LOW DISK SPACE",
+        type:'error',autoClose: false}
+      );
+    }
+
     delete info.timestamp;
     dispatch(ac.GetInfo(info));
+
   };
 }
 

@@ -16,10 +16,16 @@ const SpinningIcon = styled(StatusIcon)({
   animation: `${animations.spin} 2s linear infinite`,
 });
 
+/**
+ * Handles the Sync Status
+ *
+ * @class SyncStatus
+ * @extends {React.Component}
+ */
 @connect(({ overview: { synchronizing } }) => ({
   synchronizing,
 }))
-export default class SyncStatus extends React.Component {
+class SyncStatus extends React.Component {
   statusIcon = () => {
     const { synchronizing } = this.props;
 
@@ -53,3 +59,4 @@ export default class SyncStatus extends React.Component {
     );
   }
 }
+export default SyncStatus;

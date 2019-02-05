@@ -21,6 +21,12 @@ const ChangePasswordComponent = styled.form({
   marginRight: '1em',
 });
 
+/**
+ * Change Password JSX
+ *
+ * @class ChangePassword
+ * @extends {Component}
+ */
 @connect(
   null,
   dispatch => ({
@@ -62,7 +68,12 @@ const ChangePasswordComponent = styled.form({
   },
   onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ChangingPassword" />),
 })
-export default class ChangePassword extends Component {
+class ChangePassword extends Component {
+  /**
+   * Confirm Logout
+   *
+   * @memberof ChangePassword
+   */
   confirmLogout = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.ConfirmLogOut" />,
@@ -81,6 +92,12 @@ export default class ChangePassword extends Component {
     });
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof ChangePassword
+   */
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -150,3 +167,4 @@ export default class ChangePassword extends Component {
     );
   }
 }
+export default ChangePassword;

@@ -47,6 +47,12 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
+/**
+ * Core Settings page that is inside Settings
+ *
+ * @class SettingsCore
+ * @extends {Component}
+ */
 @connect(
   mapStateToProps,
   mapDispatchToProps
@@ -138,7 +144,12 @@ const mapDispatchToProps = dispatch => ({
   },
   onSubmitFail: rpcErrorHandler('Error Saving Settings'),
 })
-export default class SettingsCore extends Component {
+class SettingsCore extends Component {
+  /**
+   * Confirms Switch to Manual Daemon
+   *
+   * @memberof SettingsCore
+   */
   confirmSwitchManualDaemon = () => {
     if (this.props.settings.manualDaemon) {
       UIController.openConfirmDialog({
@@ -170,6 +181,11 @@ export default class SettingsCore extends Component {
     }
   };
 
+  /**
+   * Restarts Core
+   *
+   * @memberof SettingsCore
+   */
   restartCore = () => {
     this.props.clearForRestart();
     core.restart();
@@ -189,6 +205,12 @@ export default class SettingsCore extends Component {
     };
   })();
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof SettingsCore
+   */
   render() {
     const {
       connections,
@@ -409,3 +431,4 @@ export default class SettingsCore extends Component {
     );
   }
 }
+export default SettingsCore;

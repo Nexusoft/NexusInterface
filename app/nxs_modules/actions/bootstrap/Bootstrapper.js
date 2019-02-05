@@ -23,6 +23,12 @@ const fileLocation = path.join(
 const dataDir = configuration.GetCoreDataDir();
 const extractDest = path.join(dataDir, 'recent');
 
+/**
+ * Low Level Functions for the Bootstrapper
+ *
+ * @export
+ * @class Bootstrapper
+ */
 export default class Bootstrapper {
   /**
    * PRIVATE PROPERTIES
@@ -41,11 +47,40 @@ export default class Bootstrapper {
   /**
    * PUBLIC METHODS
    */
-  static async checkFreeSpace() {
+  
+  /**
+   * Check If the User has enough space
+   *
+   * @static
+   * @param {*} gigsToCheck
+   * @returns
+   * @memberof Bootstrapper
+   */
+  static async checkFreeSpace(gigsToCheck) {
     const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
-    return diskSpace.free >= 20000000000; // 20GB
+    return diskSpace.free >= (gigsToCheck * 1000000000);
+  }
+  /**
+   * Check if the user has enough space for bootstrapping
+   *
+   * @static
+   * @returns
+   * @memberof Bootstrapper
+   */
+  static async checkBootStrapFreeSpace() {
+    const freeSpaceForBootStrap = 20000000000; //20gb
+    const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
+    return diskSpace.free >= freeSpaceForBootStrap;
   }
 
+
+  /**
+   * Start the bootstrapper
+   *
+   * @param {*} { backupFolder, clearOverviewVariables }
+   * @returns
+   * @memberof Bootstrapper
+   */
   async start({ backupFolder, clearOverviewVariables }) {
     try {
       this._progress('backing_up');
@@ -92,6 +127,12 @@ export default class Bootstrapper {
     }
   }
 
+  /**
+   * Register Events to the bootstrapper
+   *
+   * @param {*} events
+   * @memberof Bootstrapper
+   */
   registerEvents(events) {
     this._onProgress = events.onProgress || this._onProgress;
     this._onAbort = events.onAbort || this._onAbort;
@@ -99,12 +140,23 @@ export default class Bootstrapper {
     this._onFinish = events.onFinish || this._onFinish;
   }
 
+  /**
+   * Abort the Bootstrapper
+   *
+   * @memberof Bootstrapper
+   */
   abort() {
     this._aborted = true;
     if (this.request) this.request.abort();
     this._onAbort();
   }
 
+  /**
+   * Return Current Progress
+   *
+   * @returns
+   * @memberof Bootstrapper
+   */
   currentProgress() {
     return this._currentProgress;
   }
@@ -112,11 +164,24 @@ export default class Bootstrapper {
   /**
    * PRIVATE METHODS
    */
+  /**
+   * Show progress
+   *
+   * @param {*} step
+   * @param {*} details
+   * @memberof Bootstrapper
+   */
   _progress(step, details) {
     this._currentProgress = { step, details };
     this._onProgress(step, details);
   }
 
+  /**
+   * Download The Database
+   *
+   * @returns
+   * @memberof Bootstrapper
+   */
   async _downloadCompressedDb() {
     const promise = new Promise((resolve, reject) => {
       console.log(fileLocation);
@@ -161,6 +226,12 @@ export default class Bootstrapper {
     }
   }
 
+  /**
+   * Extract the Database
+   *
+   * @returns
+   * @memberof Bootstrapper
+   */
   async _extractDb() {
     return new Promise((resolve, reject) => {
       tarball.extractTarball(fileLocation, extractDest, err => {
@@ -170,6 +241,11 @@ export default class Bootstrapper {
     });
   }
 
+  /**
+   * Move the Extracted Database
+   *
+   * @memberof Bootstrapper
+   */
   async _moveExtractedContent() {
     const recentContents = fs.readdirSync(extractDest);
     try {
@@ -210,6 +286,11 @@ export default class Bootstrapper {
     }
   }
 
+  /**
+   * Clean Up
+   *
+   * @memberof Bootstrapper
+   */
   _cleanUp() {
     // Clean up asynchornously
     setTimeout(() => {

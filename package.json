@@ -282,6 +282,7 @@
     "mocha": "^5.2.0",
     "move-file": "^1.0.0",
     "node-stream-zip": "^1.7.0",
+    "patch-package": "^6.0.2",
     "pretty-bytes": "^5.1.0",
     "process-exists": "^3.1.0",
     "prop-types": "^15.6.2",

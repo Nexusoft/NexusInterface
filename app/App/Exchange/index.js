@@ -40,6 +40,12 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
+/**
+ * The Exchange Page
+ *
+ * @class Exchange
+ * @extends {Component}
+ */
 class Exchange extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -52,6 +58,12 @@ class Exchange extends Component {
   }
 
   // Class methods
+  /**
+   * Sets up the context menu on the page
+   *
+   * @param {*} e
+   * @memberof Exchange
+   */
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -60,6 +72,12 @@ class Exchange extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  /**
+   * Builds out the modal contents
+   *
+   * @returns
+   * @memberof Exchange
+   */
   modalContents() {
     if (this.props.transaction.expiration) {
       return (

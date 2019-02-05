@@ -27,22 +27,38 @@ const Buttons = styled.div({
   marginTop: '2em',
 });
 
+/**
+ * Handles the My Address from header
+ *
+ * @class MyAddressesModal
+ * @extends {React.Component}
+ */
 @connect(state => ({
   myAccounts: state.addressbook.myAccounts,
   locale: state.settings.locale,
 }))
-export default class MyAddressesModal extends React.Component {
+class MyAddressesModal extends React.Component {
   state = {
     searchQuery: '',
     creatingAddress: false,
   };
 
+  /**
+   * Handle search changes
+   *
+   * @memberof MyAddressesModal
+   */
   handleChange = e => {
     this.setState({
       searchQuery: e.target.value,
     });
   };
 
+  /**
+   * Filter the Accounts
+   *
+   * @memberof MyAddressesModal
+   */
   filteredAccounts = () => {
     const allAccounts = this.props.myAccounts || [];
     return allAccounts.filter(acc => {
@@ -53,18 +69,34 @@ export default class MyAddressesModal extends React.Component {
     });
   };
 
+  /**
+   * Start Creating
+   *
+   * @memberof MyAddressesModal
+   */
   startCreating = () => {
     this.setState({
       creatingAddress: true,
     });
   };
 
+  /**
+   * End Creating
+   *
+   * @memberof MyAddressesModal
+   */
   endCreating = () => {
     this.setState({
       creatingAddress: false,
     });
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof MyAddressesModal
+   */
   render() {
     return (
       <MyAddressesModalComponent>
@@ -102,3 +134,5 @@ export default class MyAddressesModal extends React.Component {
     );
   }
 }
+
+export default MyAddressesModal;
