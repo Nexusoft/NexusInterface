@@ -186,4 +186,19 @@ class Login extends Component {
     );
   }
 }
+
+const selector = formValueSelector('login');
+Login = connect(state => {
+  let showTimeInputs = selector(state, 'setLoginTimeOut');
+
+  if (!state.overview.version.includes('0.3')) {
+    showTimeInputs = true;
+    tritium = false;
+  }
+  return {
+    showTimeInputs,
+    tritium,
+  };
+})(Login);
+
 export default Login;
