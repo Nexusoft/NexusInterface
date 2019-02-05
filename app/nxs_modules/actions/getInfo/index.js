@@ -5,6 +5,7 @@ import * as ac from 'actions/setupAppActionCreators';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
+import Text from 'components/Text';
 
 export default function getInfo() {
   return async (dispatch, getState) => {
@@ -17,7 +18,7 @@ export default function getInfo() {
       dispatch(ac.clearOverviewVariables());
       return;
     }
-
+    // console.log(info);
     const state = getState();
     const oldInfo = state.overview;
 

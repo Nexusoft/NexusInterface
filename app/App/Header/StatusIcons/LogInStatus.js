@@ -80,7 +80,8 @@ export default class LogInStatus extends Component {
       return <Text id="Header.WalletUnencrypted" />;
     } else if (
       unlocked_until === 0 ||
-      (unlocked_until === undefined && locked === true)
+      ((unlocked_until === undefined && locked === true) ||
+        (typeof unlocked_until === 'number' && locked === true))
     ) {
       return <Text id="Header.WalletLocked" />;
     } else if (
