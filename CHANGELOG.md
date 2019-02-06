@@ -1,5 +1,14 @@
 # 0.8.6 (2019.2.1)
 [Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.6)
+#### Additions
+- Theme file now accepts a URL and will auto download and store in App Data
+- Theme is now in its own file named Theme.json
+- You can now have a select a Light Theme
+- You can now use custom colors but use a built in background
+- The Send Queue has been revamped
+- Now checks to see if you have 10gb of free space and will warn you each time you get a new block
+- Closing nexus now performs better
+
 
 # 0.8.5 (2019.1.18)
 [Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.5)
