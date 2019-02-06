@@ -2,7 +2,7 @@ import * as RPC from 'scripts/rpc';
 import * as TYPE from './actiontypes';
 
 export const loadMyAccounts = () => async dispatch => {
-  const accList = await RPC.PROMISE('listaccounts', [0]);
+  const accList = await RPC.PROMISE('listaccounts', []);
 
   const addrList = await Promise.all(
     Object.keys(accList).map(account =>

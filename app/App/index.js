@@ -97,7 +97,7 @@ export default class App extends Component {
                       <Route path="/Terminal" component={Terminal} />
                       <Route exact path="/StyleGuide" component={StyleGuide} />
                       {/* <Route path="/Exchange" component={Exchange} /> */}
-                      <Route exact path="/List" component={TrustList} />
+                      {/* <Route exact path="/List" component={TrustList} /> */}
                       <Route exact path="/About" component={About} />
                     </Switch>
                   </Main>

@@ -47,6 +47,7 @@ class List extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     RPC.PROMISE('getnetworktrustkeys', []).then(payload => {
+      console.log(payload);
       this.props.GetListDump(payload.keys);
     });
     googleanalytics.SendScreen('TrustList');

@@ -22,9 +22,9 @@ var user = 'rpcserver';
 //Generate automatic daemon password from machines hardware info
 var secret = 'secret';
 if (process.platform === 'darwin') {
-  const secret = process.env.USER + process.env.HOME + process.env.SHELL;
+  secret = process.env.USER + process.env.HOME + process.env.SHELL;
 } else {
-  const secret = JSON.stringify(macaddress.networkInterfaces(), null, 2);
+  secret = JSON.stringify(macaddress.networkInterfaces(), null, 2);
 }
 var password = crypto
   .createHmac('sha256', secret)
@@ -84,7 +84,9 @@ function SetCoreParameters(settings) {
   parameters.push('-datadir=' + datadir);
   parameters.push('-daemon');
   parameters.push('-avatar');
+  // parameters.push('-fastsync');
   parameters.push('-server');
+  parameters.push('-beta');
   parameters.push('-verbose=' + verbose); // <-- Make a setting for this
   parameters.push('-rpcallowip=' + ip);
   // Disable upnp (default is 1)

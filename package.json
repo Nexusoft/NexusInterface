@@ -228,7 +228,7 @@
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^15.6.1",
     "redux-logger": "^3.0.6",
-    "rimraf": "^2.6.2",
+    "rimraf": "^2.6.3",
     "sinon": "^2.3.5",
     "spectron": "^3.8.0",
     "style-loader": "^0.23.1",

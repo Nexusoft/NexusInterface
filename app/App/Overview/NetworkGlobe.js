@@ -89,9 +89,8 @@ export default class NetworkGlobe extends Component {
               myIP = [
                 parseFloat(body['geoplugin_latitude']),
                 parseFloat(body['geoplugin_longitude']),
-                ];
-              if (preData)
-              {
+              ];
+              if (preData) {
                 glb.addData(preData[0][1], {
                   format: 'magnitude',
                   name: preData[0][0],
@@ -105,8 +104,8 @@ export default class NetworkGlobe extends Component {
                   var tmp = {};
                   var ip = {};
                   let maxnodestoadd = payload.length;
-                  if (maxnodestoadd > 20) {
-                    maxnodestoadd = 20;
+                  if (maxnodestoadd > 40) {
+                    maxnodestoadd = 40;
                   }
                   for (var i = 0; i < maxnodestoadd; i++) {
                     ip = payload[i].addr;
@@ -194,7 +193,7 @@ export default class NetworkGlobe extends Component {
         )
       );
     }
-    console.log('update');
+
     RPC.PROMISE('getpeerinfo', []).then(payload => {
       var tmp = {};
       var ip = {};
