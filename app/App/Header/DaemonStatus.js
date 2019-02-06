@@ -5,6 +5,12 @@ import { connect } from 'react-redux';
 // Internal
 import Text from 'components/Text';
 
+/**
+ * Handels the Daemon Status
+ *
+ * @class DaemonStatus
+ * @extends {React.Component}
+ */
 @connect(({ overview: { connections }, settings: { manualDaemon } }) => ({
   manualDaemon,
   connections,

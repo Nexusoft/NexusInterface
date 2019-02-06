@@ -137,6 +137,13 @@ const ClearButton = styled(Button)(
     }
 );
 
+/**
+ * Auto Suggest Element
+ *
+ * @export
+ * @class AutoSuggest
+ * @extends {React.Component}
+ */
 export default class AutoSuggest extends React.Component {
   static defaultProps = {
     inputComponent: TextField,

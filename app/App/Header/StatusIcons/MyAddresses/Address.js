@@ -21,15 +21,33 @@ const CopyButton = styled(Button)(({ theme }) => ({
   borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
+/**
+ * Handels Address in Header
+ *
+ * @export
+ * @class Address
+ * @extends {React.Component}
+ */
 export default class Address extends React.Component {
   inputRef = React.createRef();
 
+  /**
+   * Copy address to clipboard
+   *
+   * @memberof Address
+   */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
     this.inputRef.current.select();
     UIController.showNotification(<Text id="Alert.Copied" />, 'success');
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Address
+   */
   render() {
     const { address } = this.props;
     return (

@@ -9,6 +9,12 @@ import StatusIcon from 'components/StatusIcon';
 
 import stakingIcon from 'images/staking.sprite.svg';
 
+/**
+ * Handles the Staking Status
+ *
+ * @class StakingStatus
+ * @extends {React.Component}
+ */
 @connect(
   ({
     overview: { stakeweight, interestweight, trustweight, blockweight },

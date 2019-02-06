@@ -77,8 +77,19 @@ const mapStateToProps = ({ overview: { paytxfee } }) => ({
   paytxfee,
 });
 
+/**
+ * Recipients Field from the Send Page
+ *
+ * @class Recipients
+ * @extends {React.Component}
+ */
 @connect(mapStateToProps)
-export default class Recipients extends React.Component {
+class Recipients extends React.Component {
+  /**
+   * Return Tx Fee
+   *
+   * @memberof Recipients
+   */
   renderTxFee = () =>
     !!this.props.paytxfee && (
       <TransactionFee>
@@ -86,6 +97,12 @@ export default class Recipients extends React.Component {
       </TransactionFee>
     );
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Recipients
+   */
   render() {
     const { fields, change, addRecipient, paytxfee } = this.props;
 
@@ -150,3 +167,4 @@ export default class Recipients extends React.Component {
     }
   }
 }
+export default Recipients;

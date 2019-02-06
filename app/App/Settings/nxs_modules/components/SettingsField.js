@@ -36,9 +36,20 @@ const Input = styled.div({
   flexGrow: 1,
 });
 
+/**
+ * A Field on the Settings Page
+ *
+ * @class SettingsField
+ * @extends {Component}
+ */
 class SettingsField extends Component {
   inputId = newUID();
 
+  /**
+   *  Handles input to a settingsfield
+   *
+   * @memberof SettingsField
+   */
   settingsInput = () => {
     const { connectLabel, children } = this.props;
     if (connectLabel) {
@@ -54,6 +65,12 @@ class SettingsField extends Component {
     return children;
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof SettingsField
+   */
   render() {
     const {
       label,

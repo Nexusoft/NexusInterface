@@ -44,6 +44,12 @@ const OptionButton = styled.button(
 );
 
 
+/**
+ * Theme Picker Element
+ *
+ * @class ThemePicker
+ * @extends {Component}
+ */
 class ThemePicker extends Component {
     state = {
         themeOn: 0
@@ -53,15 +59,32 @@ class ThemePicker extends Component {
         this.props.handleSetSelector((selectorIndex) => { this.setSelector(selectorIndex) });
     }
 
+    /**
+     * Set to Custom Theme
+     *
+     * @memberof ThemePicker
+     */
     setToCustomTheme() {
         console.log("Set To Custom");
         this.setState({ themeOn: 2 }, () => { console.log(this); });
     }
 
+    /**
+     * Set the Theme button selector
+     *
+     * @param {*} selectorIndex
+     * @memberof ThemePicker
+     */
     setSelector(selectorIndex) {
         this.setState({ themeOn: selectorIndex });
     }
 
+    /**
+     * React Render
+     *
+     * @returns
+     * @memberof ThemePicker
+     */
     render() {
         return (
             <div>

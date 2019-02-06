@@ -55,6 +55,12 @@ const OutputLine = styled.code(({ theme }) => ({
   borderColor: theme.background,
 }));
 
+/**
+ * Terminal Core page in the Terminal Page
+ *
+ * @class TerminalCore
+ * @extends {Component}
+ */
 class TerminalCore extends Component {
   constructor(props) {
     super(props);
@@ -78,6 +84,12 @@ class TerminalCore extends Component {
     }
   }
 
+  /**
+   * Handle on Scroll
+   *
+   * @returns
+   * @memberof TerminalCore
+   */
   onScrollEvent() {
     const bottomPos =
       this.outputRef.childNodes[0].scrollHeight -
@@ -94,6 +106,12 @@ class TerminalCore extends Component {
 
   
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof TerminalCore
+   */
   render() {
     return (
       <TerminalContent>

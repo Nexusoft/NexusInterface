@@ -29,6 +29,12 @@ const CustomWallpaper = styled.div(
     }
 );
 
+/**
+ * Controls the background of the app
+ *
+ * @class AppBackground
+ * @extends {Component}
+ */
 class AppBackground extends Component {
   render() {
     const { wallpaper, defaultStyle } = this.props;

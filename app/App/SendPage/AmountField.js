@@ -35,8 +35,19 @@ const mapStateToProps = ({
   nxsFiatPrice: getNxsFiatPrice(rawNXSvalues, fiatCurrency),
 });
 
+/**
+ * The Amount Feild on the Send Page
+ *
+ * @class AmountField
+ * @extends {Component}
+ */
 @connect(mapStateToProps)
-export default class AmountField extends Component {
+class AmountField extends Component {
+  /**
+   * Convert the NXS to the User's currency
+   *
+   * @memberof AmountField
+   */
   nxsToFiat = (e, value) => {
     if (floatRegex.test(value)) {
       const nxs = parseFloat(value);
@@ -48,6 +59,11 @@ export default class AmountField extends Component {
     }
   };
 
+  /**
+   * Returns the fiat from NXS
+   *
+   * @memberof AmountField
+   */
   fiatToNxs = (e, value) => {
     if (floatRegex.test(value)) {
       const fiat = parseFloat(value);
@@ -59,13 +75,29 @@ export default class AmountField extends Component {
     }
   };
 
+  /**
+   * Returns the Amount Feild Name
+   *
+   * @memberof AmountField
+   */
   amountFieldName = () =>
     (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
     'amount';
+  /**
+   * Returns the Fiat Amount Name
+   *
+   * @memberof AmountField
+   */
   fiatAmountFieldName = () =>
     (this.props.parentFieldName ? this.props.parentFieldName + '.' : '') +
     'fiatAmount';
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof AmountField
+   */
   render() {
     return (
       <SendAmount>
@@ -103,3 +135,4 @@ export default class AmountField extends Component {
     );
   }
 }
+export default AmountField;

@@ -20,6 +20,13 @@ const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(
     }
 );
 
+/**
+ * Background Tasks for the Bootstrap
+ *
+ * @export
+ * @class BootstrapBackgroundTask
+ * @extends {Component}
+ */
 export default class BootstrapBackgroundTask extends Component {
   constructor(props) {
     super(props);
@@ -31,6 +38,11 @@ export default class BootstrapBackgroundTask extends Component {
     });
   }
 
+  /**
+   * Set Status Message
+   *
+   * @memberof BootstrapBackgroundTask
+   */
   statusMessage = ({ step, details }) => {
     switch (step) {
       case 'backing_up':
@@ -56,6 +68,11 @@ export default class BootstrapBackgroundTask extends Component {
     status: this.statusMessage(this.props.bootstrapper.currentProgress()),
   };
 
+  /**
+   * Handle progress
+   *
+   * @memberof BootstrapBackgroundTask
+   */
   handleProgress = (step, details) => {
     const status = this.statusMessage({
       step,
@@ -71,6 +88,11 @@ export default class BootstrapBackgroundTask extends Component {
     }
   };
 
+  /**
+   * Handle Abort
+   *
+   * @memberof BootstrapBackgroundTask
+   */
   handleAbort = () => {
     this.closeTask();
     UIController.showNotification(
@@ -80,6 +102,11 @@ export default class BootstrapBackgroundTask extends Component {
     UIController.showNotification('Daemon is restarting...');
   };
 
+  /**
+   * Handle Error
+   *
+   * @memberof BootstrapBackgroundTask
+   */
   handleError = err => {
     this.closeTask();
     UIController.openErrorDialog({
@@ -90,6 +117,11 @@ export default class BootstrapBackgroundTask extends Component {
     console.error(err);
   };
 
+  /**
+   * Handle Finish
+   *
+   * @memberof BootstrapBackgroundTask
+   */
   handleFinish = () => {
     this.closeTask();
     UIController.openSuccessDialog({
@@ -98,6 +130,11 @@ export default class BootstrapBackgroundTask extends Component {
     UIController.showNotification('Daemon is restarting...');
   };
 
+  /**
+   * Handle Minimize
+   *
+   * @memberof BootstrapBackgroundTask
+   */
   maximize = () => {
     UIController.openModal(BootstrapModal, {
       bootstrapper: this.props.bootstrapper,
@@ -106,6 +143,12 @@ export default class BootstrapBackgroundTask extends Component {
     this.closeTask();
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof BootstrapBackgroundTask
+   */
   render() {
     return (
       <BootstrapBackgroundTaskComponent

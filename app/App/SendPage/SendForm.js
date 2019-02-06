@@ -58,6 +58,12 @@ const mapDispatchToProps = dispatch => ({
   loadMyAccounts: () => dispatch(loadMyAccounts()),
 });
 
+/**
+ * The Internal Send Form in the Send Page
+ *
+ * @class SendForm
+ * @extends {Component}
+ */
 @connect(
   mapStateToProps,
   mapDispatchToProps
@@ -181,7 +187,12 @@ const mapDispatchToProps = dispatch => ({
     <Text id="sendReceive.Messages.ErrorSending" />
   ),
 })
-export default class SendForm extends Component {
+class SendForm extends Component {
+  /**
+   * Confirm the Send
+   *
+   * @memberof SendForm
+   */
   confirmSend = e => {
     e.preventDefault();
     const {
@@ -227,6 +238,11 @@ export default class SendForm extends Component {
     });
   };
 
+  /**
+   * Add Recipient to the queue
+   *
+   * @memberof SendForm
+   */
   addRecipient = () => {
     this.props.array.push('recipients', {
       address: null,
@@ -235,6 +251,11 @@ export default class SendForm extends Component {
     });
   };
 
+  /**
+   * Return JSX for the Add Recipient Button
+   *
+   * @memberof SendForm
+   */
   renderAddRecipientButton = ({ fields }) =>
     fields.length === 1 ? (
       <Button onClick={this.addRecipient}>
@@ -244,6 +265,12 @@ export default class SendForm extends Component {
       <div />
     );
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof SendForm
+   */
   render() {
     const { accountOptions, change } = this.props;
 
@@ -294,3 +321,5 @@ export default class SendForm extends Component {
     );
   }
 }
+
+export default SendForm;

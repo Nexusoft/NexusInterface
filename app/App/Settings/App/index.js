@@ -68,11 +68,22 @@ const mapDispatchToProps = dispatch => ({
   updateSettings: updates => dispatch(updateSettings(updates)),
 });
 
+/**
+ * App Page in the Setting Page
+ *
+ * @class SettingsApp
+ * @extends {Component}
+ */
 @connect(
   mapStateToProps,
   mapDispatchToProps
 )
-export default class SettingsApp extends Component {
+class SettingsApp extends Component {
+  /**
+   *  Confirm Wallet Back up
+   *
+   * @memberof SettingsApp
+   */
   confirmBackupWallet = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.BackupWallet" />,
@@ -105,6 +116,11 @@ export default class SettingsApp extends Component {
     };
   })();
 
+  /**
+   * Handles update Change
+   *
+   * @memberof SettingsApp
+   */
   handleAutoUpdateChange = e => {
     if (!e.target.checked) {
       UIController.openConfirmDialog({
@@ -127,6 +143,12 @@ export default class SettingsApp extends Component {
     }
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof SettingsApp
+   */
   render() {
     const { connections, settings } = this.props;
     return (
@@ -226,3 +248,4 @@ export default class SettingsApp extends Component {
     );
   }
 }
+export default SettingsApp;

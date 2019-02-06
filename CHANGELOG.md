@@ -1,8 +1,17 @@
 # 0.8.6 (2019.2.1)
+[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.6)
+#### Additions
+- Theme file now accepts a URL and will auto download and store in App Data
+- Theme is now in its own file named Theme.json
+- You can now have a select a Light Theme
+- You can now use custom colors but use a built in background
+- The Send Queue has been revamped
+- Now checks to see if you have 10gb of free space and will warn you each time you get a new block
+- Closing nexus now performs better
 
 
 # 0.8.5 (2019.1.18)
-
+[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.5)
 #### Additions
 - New Css and layout all over the app
 - Includes new 2.5.5 backend
@@ -17,7 +26,6 @@
 - Fixed issues with the settings page not saving
 
 # 0.8.4 (2018.12.27)
-
 #### Additions
 - UI Improvments
 - You can now change your Language
@@ -43,17 +51,13 @@
 - Fixed issue with the app when switch between internal and manual daemon mode
 
 # 0.8.3 (2018.10.1)
-
 #### Private Internal Release
 
 # 0.8.2 (2018.9.15)
-
 #### Private Internal Release
 
 # 0.8.1 (2018.9.1)
-
 #### Private Internal Release
 
 # 0.8.0 (2018.8.1)
-
 #### First Private Internal Release
