@@ -11,9 +11,10 @@ import rimraf from 'rimraf';
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
 
-const recentDbUrl = 'https://nexusearth.com/bootstrap/tritium/tritium.tar.gz';
-// 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
-
+const recentDbUrl =
+  'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
+//
+//    'https://nexusearth.com/bootstrap/tritium/tritium.tar.gz';  // Tritium Bootstrap URL
 // Recent database download location
 const fileLocation = path.join(
   configuration.GetAppDataDirectory(),
@@ -47,7 +48,7 @@ export default class Bootstrapper {
   /**
    * PUBLIC METHODS
    */
-  
+
   /**
    * Check If the User has enough space
    *
@@ -58,7 +59,7 @@ export default class Bootstrapper {
    */
   static async checkFreeSpace(gigsToCheck) {
     const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
-    return diskSpace.free >= (gigsToCheck * 1000000000);
+    return diskSpace.free >= gigsToCheck * 1000000000;
   }
   /**
    * Check if the user has enough space for bootstrapping
@@ -72,7 +73,6 @@ export default class Bootstrapper {
     const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
     return diskSpace.free >= freeSpaceForBootStrap;
   }
-
 
   /**
    * Start the bootstrapper
