@@ -12,6 +12,16 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case TYPE.LOCK:
+      if (state.unlocked_until) {
+        return {
+          ...state,
+          unlocked_until: 0,
+        };
+      } else {
+        return state;
+      }
+      break;
     case TYPE.GET_INFO_DUMP:
       return {
         ...state,
