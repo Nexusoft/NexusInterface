@@ -1,6 +1,6 @@
 // External
 import React, { Component } from 'react';
-import { reduxForm, Field, change } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import { clipboard } from 'electron';
 
 // Internal
@@ -16,10 +16,15 @@ import * as RPC from 'scripts/rpc';
 import copyIcon from 'images/copy.sprite.svg';
 import { rpcErrorHandler } from 'utils/form';
 
-const formName = 'viewPrivateKey';
-
+/**
+ * View Private Keys for Address JSX
+ *
+ * @class ViewPrivKeyForAddress
+ * @extends {Component}
+ */
 @reduxForm({
-  form: formName,
+  form: 'viewPrivateKey',
+  destroyOnUnmount: false,
   initialValues: {
     address: '',
     privateKey: '',
@@ -27,19 +32,25 @@ const formName = 'viewPrivateKey';
   validate: ({ address }) => {
     const errors = {};
     if (!address) {
-      errors.address = 'Address cannot be empty';
+      errors.address = <Text id="Settings.Errors.AddressEmpty" />;
     }
     return errors;
   },
   onSubmit: ({ address }) => RPC.PROMISE('dumpprivkey', [address]),
-  onSubmitSuccess: (result, dispatch) => {
-    dispatch(change(formName, 'privateKey', result));
+  onSubmitSuccess: (result, dispatch, props) => {
+    props.change('privateKey', result);
   },
-  onSubmitFail: rpcErrorHandler('Error getting private key'),
+  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ViewPrivKey" />),
 })
-export default class ViewPrivKeyForAddress extends Component {
+class ViewPrivKeyForAddress extends Component {
   privKeyRef = React.createRef();
 
+  /**
+   * Show Private Keys
+   *
+   * @param {*} e
+   * @memberof ViewPrivKeyForAddress
+   */
   showPrivKey(e) {
     e.preventDefault();
     let address = this.inputRef.value;
@@ -59,16 +70,32 @@ export default class ViewPrivKeyForAddress extends Component {
     }
   }
 
+  /**
+   * Copy Private Keys
+   *
+   * @memberof ViewPrivKeyForAddress
+   */
   copyPrivkey = () => {
     const privKey = this.privKeyRef.current.value;
     clipboard.writeText(privKey);
     UIController.showNotification(<Text id="Alert.Copied" />, 'success');
   };
 
+  /**
+   * Reset Private Keys
+   *
+   * @memberof ViewPrivKeyForAddress
+   */
   resetPrivateKey = () => {
     this.props.change('privateKey', '');
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof ViewPrivKeyForAddress
+   */
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -127,3 +154,4 @@ export default class ViewPrivKeyForAddress extends Component {
     );
   }
 }
+export default ViewPrivKeyForAddress;

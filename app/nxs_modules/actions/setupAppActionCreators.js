@@ -73,11 +73,6 @@ export const SetMarketAveData = () => dispatch => {
   );
 };
 
-export const SwitchLocale = locale => ({
-  type: TYPE.SWITCH_LOCALES,
-  payload: locale,
-});
-
 export const Lock = () => ({ type: TYPE.LOCK });
 
 export const Unlock = () => ({ type: TYPE.UNLOCK });
@@ -87,16 +82,6 @@ export const Encrypted = () => ({ type: TYPE.ENCRYPTED });
 export const BlockDate = stamp => ({ type: TYPE.BLOCK_DATE, payload: stamp });
 
 export const Unencrypted = () => ({ type: TYPE.UNENCRYPTED });
-
-export const MyAccountsList = list => ({
-  type: TYPE.MY_ACCOUNTS_LIST,
-  payload: list,
-});
-
-export const loadSettings = settings => ({
-  type: TYPE.UPDATE_SETTINGS,
-  payload: settings,
-});
 
 export const SetSyncStatus = stat => ({
   type: TYPE.SET_SYNC_STATUS,
@@ -111,10 +96,6 @@ export const SetHighestPeerBlock = hpb => ({
 export const SetPortIsAvailable = isAvailable => ({
   type: TYPE.PORT_AVAILABLE,
   payload: isAvailable,
-});
-
-export const SetAcceptLicense = () => ({
-  type: TYPE.ACCEPT_MIT,
 });
 
 export const LoadAddressBook = () => {
@@ -144,3 +125,11 @@ export const setWebGLEnabled = enabled => ({
 export const showEncryptionWarningModal = () => ({
   type: TYPE.SHOW_ENCRYPTION_MODAL,
 });
+
+export const setCoreDebugLogFile = (path) => ({
+  type: TYPE.SET_CORE_DEBUG_LOG_FILE,
+  payload: path,
+})
+
+export const printCoreOutput = data => ({
+    type: TYPE.PRINT_TO_CORE, payload: data })

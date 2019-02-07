@@ -36,13 +36,19 @@ const TerminalTabBar = styled(Tab.Bar)({
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common, ...state.settings };
+  return { ...state.terminal, ...state.common };
 };
 const mapDispatchToProps = dispatch => ({
   setCoreOutputPaused: isPaused =>
     dispatch({ type: TYPE.SET_PAUSE_CORE_OUTPUT, payload: isPaused }),
 });
 
+/**
+ * Terminal Page
+ *
+ * @class Terminal
+ * @extends {Component}
+ */
 class Terminal extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -54,6 +60,12 @@ class Terminal extends Component {
   }
 
   // Class Methods
+  /**
+   * Set up context menu
+   *
+   * @param {*} e
+   * @memberof Terminal
+   */
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -63,6 +75,12 @@ class Terminal extends Component {
   }
 
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Terminal
+   */
   render() {
     return (
       <Panel

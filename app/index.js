@@ -8,8 +8,15 @@ import './CSS/app.global.css';
 
 const store = configureStore();
 
+
 setupApp(store, history);
 
+
+/**
+ *
+ *
+ * @param {*} Component
+ */
 function renderApp(Component) {
   render(
     <AppContainer>

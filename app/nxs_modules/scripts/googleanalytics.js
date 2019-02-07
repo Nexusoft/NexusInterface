@@ -7,11 +7,11 @@ var GA = {};
 let ua = require('universal-analytics');
 GA.visitor = null;
 GA.active = false;
-let settings = require('api/settings').GetSettings();
+let settings = require('api/settings').LoadSettings();
 if (
-  settings.googleAnalytics == null ||
-  settings.googleAnalytics == undefined ||
-  Boolean(settings.googleAnalytics) == true
+  settings.sendUsageData == null ||
+  settings.sendUsageData == undefined ||
+  Boolean(settings.sendUsageData) == true
 ) {
   GA.visitor = ua('UA-117808839-1');
   GA.active = true;
@@ -24,7 +24,7 @@ if (
 GA.SendScreen = function(ScreenTitle) {
   if (GA.active == false) return;
 
-  GA.visitor.screenview(ScreenTitle, 'Nexus Wallet', '0.8.5').send();
+  GA.visitor.screenview(ScreenTitle, 'Nexus Wallet', '0.8.6').send();
   console.log('Sent Screen: ' + ScreenTitle);
 };
 

@@ -5,10 +5,16 @@ import { connect } from 'react-redux';
 // Internal Dependencies
 import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import StatusIcon from './StatusIcon';
+import StatusIcon from 'components/StatusIcon';
 
 import stakingIcon from 'images/staking.sprite.svg';
 
+/**
+ * Handles the Staking Status
+ *
+ * @class StakingStatus
+ * @extends {React.Component}
+ */
 @connect(
   ({
     overview: { stakeweight, interestweight, trustweight, blockweight },
@@ -33,7 +39,6 @@ class StakingStatus extends React.Component {
 
     return (
       <Tooltip.Trigger
-        align="end"
         tooltip={
           location.pathname !== '/' && (
             <div>
@@ -52,10 +57,9 @@ class StakingStatus extends React.Component {
             </div>
           )
         }
+        style={{ textAlign: 'left' }}
       >
-        <StatusIcon.Wrapper>
-          <StatusIcon icon={stakingIcon} />
-        </StatusIcon.Wrapper>
+        <StatusIcon icon={stakingIcon} />
       </Tooltip.Trigger>
     );
   }

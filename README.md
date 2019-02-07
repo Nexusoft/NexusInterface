@@ -10,6 +10,8 @@ To get started clone into this repository, cd in to the NexusInterface dir, run 
 
 To test a production build run `npm run package` and navigate to the relese directory in the root of the project and install as you would any other program.
 
+Or use the BuildStandalone-{platform}.sh files that include clearning out old builds.
+
 ## License
 Nexus is released under the terms of the MIT license. See [COPYING](COPYING.MD) for more
 information or see https://opensource.org/licenses/MIT.

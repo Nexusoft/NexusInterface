@@ -17,8 +17,21 @@ import {
   VictoryVoronoiContainer,
 } from 'victory';
 
+/**
+ * Creates a Victory Chart that displays the market depth
+ *
+ * @export
+ * @class MarketDepth
+ * @extends {Component}
+ */
 export default class MarketDepth extends Component {
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof MarketDepth
+   */
   render() {
     return (
       <div className="marketDepthInner">

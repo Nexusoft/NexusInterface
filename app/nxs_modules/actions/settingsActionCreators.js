@@ -1,25 +1,35 @@
 import ga from 'scripts/googleanalytics';
-import { GetSettings, SaveSettings } from 'api/settings';
+import { LoadSettings, UpdateSettings } from 'api/settings';
 import * as TYPE from './actiontypes';
 
+import appMenu from 'appMenu';
+
+export const loadSettingsFromFile = () => dispatch => {
+  const settings = LoadSettings();
+  dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings });
+};
+
 export const updateSettings = updates => (dispatch, getState) => {
-  if (updates.googleAnalytics !== undefined) {
+  const oldState = getState();
+  dispatch({ type: TYPE.UPDATE_SETTINGS, payload: updates });
+  UpdateSettings(updates);
+
+  if (updates.sendUsageData !== undefined) {
     const {
-      settings: {
-        settings: { googleAnalytics },
-      },
-    } = getState();
-    if (!googleAnalytics && updates.googleAnalytics) {
+      settings: { sendUsageData },
+    } = oldState;
+    if (!sendUsageData && updates.sendUsageData) {
       ga.EnableAnalytics();
       ga.SendEvent('Settings', 'Analytics', 'Enabled', 1);
     }
-    if (googleAnalytics && !updates.googleAnalytics) {
+    if (sendUsageData && !updates.sendUsageData) {
       ga.DisableAnalytics();
       ga.SendEvent('Settings', 'Analytics', 'Disabled', 1);
     }
   }
 
-  dispatch({ type: TYPE.UPDATE_SETTINGS, payload: updates });
-  const settings = GetSettings();
-  SaveSettings({ ...settings, ...updates });
+  // Rebuild menu for Toggle Developer Tools when devMode setting changes
+  if (updates.devMode !== undefined) {
+    appMenu.build();
+  }
 };

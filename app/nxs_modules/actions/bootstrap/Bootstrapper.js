@@ -6,22 +6,30 @@ import https from 'https';
 import electron from 'electron';
 import tarball from 'tarball-extract';
 import moveFile from 'move-file';
-
+import rimraf from 'rimraf';
 // Internal
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
 
 const recentDbUrl =
   'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
-
+//
+//    'https://nexusearth.com/bootstrap/tritium/tritium.tar.gz';  // Tritium Bootstrap URL
 // Recent database download location
 const fileLocation = path.join(
   configuration.GetAppDataDirectory(),
   'recent.tar.gz'
 );
+
 const dataDir = configuration.GetCoreDataDir();
 const extractDest = path.join(dataDir, 'recent');
 
+/**
+ * Low Level Functions for the Bootstrapper
+ *
+ * @export
+ * @class Bootstrapper
+ */
 export default class Bootstrapper {
   /**
    * PRIVATE PROPERTIES
@@ -40,11 +48,39 @@ export default class Bootstrapper {
   /**
    * PUBLIC METHODS
    */
-  static async checkFreeSpace() {
+
+  /**
+   * Check If the User has enough space
+   *
+   * @static
+   * @param {*} gigsToCheck
+   * @returns
+   * @memberof Bootstrapper
+   */
+  static async checkFreeSpace(gigsToCheck) {
     const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
-    return diskSpace.free >= 20000000000; // 20GB
+    return diskSpace.free >= gigsToCheck * 1000000000;
+  }
+  /**
+   * Check if the user has enough space for bootstrapping
+   *
+   * @static
+   * @returns
+   * @memberof Bootstrapper
+   */
+  static async checkBootStrapFreeSpace() {
+    const freeSpaceForBootStrap = 20000000000; //20gb
+    const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
+    return diskSpace.free >= freeSpaceForBootStrap;
   }
 
+  /**
+   * Start the bootstrapper
+   *
+   * @param {*} { backupFolder, clearOverviewVariables }
+   * @returns
+   * @memberof Bootstrapper
+   */
   async start({ backupFolder, clearOverviewVariables }) {
     try {
       this._progress('backing_up');
@@ -57,10 +93,17 @@ export default class Bootstrapper {
 
       clearOverviewVariables();
       // Remove the old file if exists
+
       if (fs.existsSync(fileLocation)) {
         fs.unlinkSync(fileLocation, err => {
           if (err) throw err;
         });
+      }
+
+      if (fs.existsSync(extractDest)) {
+        console.log('removing the old file');
+        rimraf.sync(extractDest);
+        this._cleanUp();
       }
 
       this._progress('downloading', {});
@@ -84,6 +127,12 @@ export default class Bootstrapper {
     }
   }
 
+  /**
+   * Register Events to the bootstrapper
+   *
+   * @param {*} events
+   * @memberof Bootstrapper
+   */
   registerEvents(events) {
     this._onProgress = events.onProgress || this._onProgress;
     this._onAbort = events.onAbort || this._onAbort;
@@ -91,12 +140,23 @@ export default class Bootstrapper {
     this._onFinish = events.onFinish || this._onFinish;
   }
 
+  /**
+   * Abort the Bootstrapper
+   *
+   * @memberof Bootstrapper
+   */
   abort() {
     this._aborted = true;
     if (this.request) this.request.abort();
     this._onAbort();
   }
 
+  /**
+   * Return Current Progress
+   *
+   * @returns
+   * @memberof Bootstrapper
+   */
   currentProgress() {
     return this._currentProgress;
   }
@@ -104,13 +164,27 @@ export default class Bootstrapper {
   /**
    * PRIVATE METHODS
    */
+  /**
+   * Show progress
+   *
+   * @param {*} step
+   * @param {*} details
+   * @memberof Bootstrapper
+   */
   _progress(step, details) {
     this._currentProgress = { step, details };
     this._onProgress(step, details);
   }
 
+  /**
+   * Download The Database
+   *
+   * @returns
+   * @memberof Bootstrapper
+   */
   async _downloadCompressedDb() {
     const promise = new Promise((resolve, reject) => {
+      console.log(fileLocation);
       const file = fs.createWriteStream(fileLocation);
       this.request = https
         .get(recentDbUrl)
@@ -152,6 +226,12 @@ export default class Bootstrapper {
     }
   }
 
+  /**
+   * Extract the Database
+   *
+   * @returns
+   * @memberof Bootstrapper
+   */
   async _extractDb() {
     return new Promise((resolve, reject) => {
       tarball.extractTarball(fileLocation, extractDest, err => {
@@ -161,26 +241,56 @@ export default class Bootstrapper {
     });
   }
 
+  /**
+   * Move the Extracted Database
+   *
+   * @memberof Bootstrapper
+   */
   async _moveExtractedContent() {
     const recentContents = fs.readdirSync(extractDest);
-    for (let element of recentContents) {
-      if (fs.statSync(path.join(extractDest, element)).isDirectory()) {
-        const newcontents = fs.readdirSync(path.join(extractDest, element));
-        for (let deeperEle of newcontents) {
+    try {
+      for (let element of recentContents) {
+        if (fs.statSync(path.join(extractDest, element)).isDirectory()) {
+          const newcontents = fs.readdirSync(path.join(extractDest, element));
+          for (let deeperEle of newcontents) {
+            if (
+              fs
+                .statSync(path.join(extractDest, element, deeperEle))
+                .isDirectory()
+            ) {
+              const newerContents = fs.readdirSync(
+                path.join(extractDest, element, deeperEle)
+              );
+              for (let evenDeeperEle of newerContents) {
+                moveFile.sync(
+                  path.join(extractDest, element, deeperEle, evenDeeperEle),
+                  path.join(dataDir, element, deeperEle, evenDeeperEle)
+                );
+              }
+            } else {
+              moveFile.sync(
+                path.join(extractDest, element, deeperEle),
+                path.join(dataDir, element, deeperEle)
+              );
+            }
+          }
+        } else {
           moveFile.sync(
-            path.join(extractDest, element, deeperEle),
-            path.join(dataDir, element, deeperEle)
+            path.join(extractDest, element),
+            path.join(dataDir, element)
           );
         }
-      } else {
-        moveFile.sync(
-          path.join(extractDest, element),
-          path.join(dataDir, element)
-        );
       }
+    } catch (e) {
+      console.log(e);
     }
   }
 
+  /**
+   * Clean Up
+   *
+   * @memberof Bootstrapper
+   */
   _cleanUp() {
     // Clean up asynchornously
     setTimeout(() => {
@@ -191,15 +301,25 @@ export default class Bootstrapper {
       }
 
       if (fs.existsSync(extractDest)) {
-        const recentContents = fs.readdirSync(extractDest);
-        recentContents
-          .filter(child =>
-            fs.statSync(path.join(extractDest, child)).isDirectory()
-          )
-          .forEach(subFolder =>
-            fs.rmdirSync(path.join(extractDest, subFolder))
-          );
-        fs.rmdirSync(extractDest);
+        rimraf.sync(extractDest);
+        //   // const recentContents = fs.readdirSync(extractDest);
+        //   // recentContents
+        //   //   .filter(child =>
+        //   //     fs.statSync(path.join(extractDest, child)).isDirectory()
+        //   //   )
+        //   //   .forEach(subFolder => {
+        //   //     fs.readdirSync(path.join(extractDest, subFolder))
+        //   //       .filter(grandchild =>
+        //   //         fs
+        //   //           .statSync(path.join(extractDest, subFolder, grandchild))
+        //   //           .isDirectory()
+        //   //       )
+        //   //       .forEach(subSubFolder => {
+        //   //         rimraf.sync(path.join(extractDest, subFolder, subSubFolder));
+        //   //       });
+        //   //     rimraf.sync(path.join(extractDest, subFolder));
+        //   //   });
+        //   // rimraf.sync(extractDest);
       }
     }, 0);
   }

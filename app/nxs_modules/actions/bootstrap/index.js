@@ -7,6 +7,13 @@ import BootstrapModal from './BootstrapModal';
 
 let running = false;
 
+/**
+ * Bootstrap Modal element
+ *
+ * @export
+ * @param {*} [{ suggesting }={}]
+ * @returns
+ */
 export default function bootstrap({ suggesting } = {}) {
   return async (dispatch, getState) => {
     // Only one instance at the same time
@@ -30,7 +37,7 @@ export default function bootstrap({ suggesting } = {}) {
         const startBootstrapping = async () => {
           try {
             await bootstrapper.start({
-              backupFolder: state.settings.settings.Folder,
+              backupFolder: state.settings.backupDirectory,
               clearOverviewVariables: () => {
                 dispatch(ac.clearOverviewVariables());
               },
@@ -48,7 +55,11 @@ export default function bootstrap({ suggesting } = {}) {
       noCallback: () => {
         running = false;
         if (suggesting) {
-          dispatch(updateSettings({ bootstrap: false }));
+          dispatch(
+            updateSettings({
+              bootstrapSuggestionDisabled: true,
+            })
+          );
         }
       },
       style: { width: 530 },
@@ -57,4 +68,5 @@ export default function bootstrap({ suggesting } = {}) {
 }
 
 const checkFreeSpace = Bootstrapper.checkFreeSpace;
-export { checkFreeSpace };
+const checkBootStrapFreeSpace = Bootstrapper.checkBootStrapFreeSpace;
+export { checkFreeSpace, checkBootStrapFreeSpace };

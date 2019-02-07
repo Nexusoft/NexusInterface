@@ -31,11 +31,18 @@ const Globe = styled.div({
   overflow: 'hidden',
 });
 
+/**
+ * The Overview Globe
+ *
+ * @export
+ * @class NetworkGlobe
+ * @extends {Component}
+ */
 export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     // console.log('Hello From the Network Globe Component!');
-    this.props.handleOnLineRender(this.testRestartLines);
+    this.props.handleOnLineRender(this.reDrawArchs);
     // this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw); // casues issues
     this.props.handleOnAddData(this.updatePointsOnGlobe);
     this.props.handleRemoveAllPoints(this.removeAllPoints);
@@ -82,9 +89,8 @@ export default class NetworkGlobe extends Component {
               myIP = [
                 parseFloat(body['geoplugin_latitude']),
                 parseFloat(body['geoplugin_longitude']),
-                ];
-              if (preData)
-              {
+              ];
+              if (preData) {
                 glb.addData(preData[0][1], {
                   format: 'magnitude',
                   name: preData[0][0],
@@ -98,8 +104,8 @@ export default class NetworkGlobe extends Component {
                   var tmp = {};
                   var ip = {};
                   let maxnodestoadd = payload.length;
-                  if (maxnodestoadd > 20) {
-                    maxnodestoadd = 20;
+                  if (maxnodestoadd > 40) {
+                    maxnodestoadd = 40;
                   }
                   for (var i = 0; i < maxnodestoadd; i++) {
                     ip = payload[i].addr;
@@ -165,6 +171,11 @@ export default class NetworkGlobe extends Component {
     glb.removePoints();
   }
   // Class Methods
+  /**
+   * Updates the pillars on the globe based on connect change
+   *
+   * @memberof NetworkGlobe
+   */
   updatePointsOnGlobe() {
     const globeseries = [['peers', []]];
     let geoiplookup = '';
@@ -182,7 +193,7 @@ export default class NetworkGlobe extends Component {
         )
       );
     }
-    console.log('update');
+
     RPC.PROMISE('getpeerinfo', []).then(payload => {
       var tmp = {};
       var ip = {};
@@ -214,11 +225,22 @@ export default class NetworkGlobe extends Component {
     });
   }
 
-  testRestartLines() {
+  /**
+   * Redraw all the Archs
+   *
+   * @memberof NetworkGlobe
+   */
+  reDrawArchs() {
     if (glb != null && glb != undefined) {
       glb.playCurve();
     }
   }
+  /**
+   * Remove all the Pillars and Archs on the globe
+   *
+   * @returns
+   * @memberof NetworkGlobe
+   */
   removeAllPoints() {
     if (glb == null || glb == undefined) {
       return;
@@ -226,19 +248,29 @@ export default class NetworkGlobe extends Component {
     glb.removePoints();
   }
 
+  /**
+   * Remove the old data and redraw with new 
+   *
+   * @returns
+   * @memberof NetworkGlobe
+   */
   RemoveOldPointsAndReDraw() {
     if (glb == null || glb == undefined) {
       return;
     }
 
     glb.removePoints();
-    //console.log("RemovedPoints");
     setTimeout(() => {
       glb.createPoints();
-      //console.log("CreatedNewOnes");
     }, 1000);
   }
 
+  /**
+   * Get the Resources Directory
+   *
+   * @returns
+   * @memberof NetworkGlobe
+   */
   getResourcesDirectory() {
     let appPath = remote.app.getAppPath();
 
@@ -247,6 +279,12 @@ export default class NetworkGlobe extends Component {
   }
 
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof NetworkGlobe
+   */
   render() {
     return (
       <Globe>

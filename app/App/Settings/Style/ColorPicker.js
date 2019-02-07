@@ -28,12 +28,23 @@ const ColorButton = styled(Button)(({ color: c, open }) => {
   };
 });
 
+/**
+ * Pick Color Element
+ *
+ * @class ColorPicker
+ * @extends {Component}
+ */
 class ColorPicker extends Component {
   state = {
     open: false,
     pickerStyles: {},
   };
 
+  /**
+   * Open Color Modal
+   *
+   * @memberof ColorPicker
+   */
   openPicker = () => {
     const btnRect = ReactDOM.findDOMNode(this.btnRef).getBoundingClientRect();
     const styles = {
@@ -45,14 +56,30 @@ class ColorPicker extends Component {
     this.setState({ open: true, pickerStyles: styles });
   };
 
+  /**
+   * Close Modal
+   *
+   * @memberof ColorPicker
+   */
   closePicker = () => {
     this.setState({ open: false, pickerStyles: {} });
   };
 
+  /**
+   * Handle Color Change
+   *
+   * @memberof ColorPicker
+   */
   handleColorChange = pickedColor => {
     this.props.onChange(this.props.colorName, pickedColor.hex);
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof ColorPicker
+   */
   render() {
     const currentColor = this.props.theme[this.props.colorName];
 

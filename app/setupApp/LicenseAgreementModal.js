@@ -1,14 +1,40 @@
 // External
 import React from 'react';
+import { connect } from 'react-redux';
+import styled from '@emotion/styled';
 
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
+import { updateSettings } from 'actions/settingsActionCreators';
 
-const LicenseAgreementModal = props => (
-  <Modal fullScreen {...props}>
-    {closeModal => (
-      <Modal.Layout style={{ maxWidth: 768, margin: '0 auto' }}>
+const LicenseAgreementModalComponent = styled(Modal)({
+  paddingLeft: 'calc(50vw - 384px)',
+  paddingRight: 'calc(50vw - 384px)',
+});
+
+@connect(
+  null,
+  dispatch => ({
+    acceptAgreement: () =>
+      dispatch(updateSettings({ acceptedAgreement: true })),
+  })
+)
+class LicenseAgreementModal extends React.Component {
+  close = () => {
+    this.props.acceptAgreement();
+    this.closeModal();
+  };
+
+  render() {
+    return (
+      <LicenseAgreementModalComponent
+        fullScreen
+        assignClose={close => {
+          this.closeModal = close;
+        }}
+        {...this.props}
+      >
         <Modal.Header>License Agreement</Modal.Header>
         <Modal.Body>
           <p>The MIT License (MIT)</p>
@@ -41,16 +67,16 @@ const LicenseAgreementModal = props => (
             <Button
               skin="primary"
               wide
-              onClick={closeModal}
+              onClick={this.close}
               style={{ fontSize: 17 }}
             >
               I have read and Accept the Agreement
             </Button>
           </p>
         </Modal.Body>
-      </Modal.Layout>
-    )}
-  </Modal>
-);
+      </LicenseAgreementModalComponent>
+    );
+  }
+}
 
 export default LicenseAgreementModal;

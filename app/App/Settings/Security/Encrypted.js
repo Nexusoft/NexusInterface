@@ -7,7 +7,19 @@ import ChangePassword from './ChangePassword';
 import ImportPrivKey from './ImportPrivKey';
 import ViewPrivKeyForAddress from './ViewPrivKeyForAddress';
 
+/**
+ * If JSX is Encryped
+ *
+ * @class Encrypted
+ * @extends {Component}
+ */
 class Encrypted extends Component {
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Encrypted
+   */
   render() {
     return (
       <div>

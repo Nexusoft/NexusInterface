@@ -4,14 +4,25 @@ import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => ({
-  locale: state.settings.settings.locale,
+  locale: state.settings.locale,
 });
 
-class IntlWrapper extends Component {
+/**
+ * Local Wrapper 
+ *
+ * @class IntlWrapper
+ * @extends {Component}
+ */
+class   extends Component {
   static defaultProps = {
     locale: 'en',
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   */
   render() {
     return (
       <IntlProvider locale={this.props.locale} defaultLocale="en">

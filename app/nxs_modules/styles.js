@@ -2,12 +2,12 @@ import { css, keyframes } from '@emotion/core';
 import { color } from 'utils';
 
 const defaultColors = {
-  dark: '#1c1d1f',
-  light: '#ebebe6',
+  background: '#1c1d1f',
+  foreground: '#ebebe6',
   primary: '#00b7fa',
-  primaryContrast: '#ffffff',
-  error: '#8f240e',
-  errorContrast: '#ffffff',
+  primaryAccent: '#ffffff',
+  danger: '#8f240e',
+  dangerAccent: '#ffffff',
 };
 
 function deriveColors(colors) {

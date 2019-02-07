@@ -7,6 +7,12 @@ import styled from '@emotion/styled';
 import Modal from 'components/Modal';
 import * as RPC from 'scripts/rpc';
 
+/**
+ * Transaction More Detail Modal
+ *
+ * @class TransactionDetailsModal
+ * @extends {Component}
+ */
 class TransactionDetailsModal extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +24,12 @@ class TransactionDetailsModal extends Component {
     highlightedBlockNum: 'Loading',
   };
 
+  /**
+   * Load Data
+   *
+   * @param {*} { walletItems, hoveringID }
+   * @memberof TransactionDetailsModal
+   */
   async loadData({ walletItems, hoveringID }) {
     if (
       walletItems &&
@@ -34,6 +46,12 @@ class TransactionDetailsModal extends Component {
     }
   }
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof TransactionDetailsModal
+   */
   render() {
     const { hoveringID, walletItems, settings } = this.props;
     const { highlightedBlockNum, highlightedBlockHash } = this.state;
@@ -48,7 +66,7 @@ class TransactionDetailsModal extends Component {
         <Modal>
           <Modal.Header>Transaction Details</Modal.Header>
           <Modal.Body>
-            {tx.confirmations <= settings.minimumconfirmations && (
+            {tx.confirmations <= settings.minConfirmations && (
               <div>
                 <a>
                   <Text id="transactions.PendingTransaction" />

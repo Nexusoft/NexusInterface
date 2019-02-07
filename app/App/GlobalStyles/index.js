@@ -14,7 +14,7 @@ const resetStyles = theme => ({
   },
 
   body: {
-    color: theme.light,
+    color: theme.foreground,
     height: '100vh',
     backgroundColor: '#232c39',
     fontFamily: '"Noto Sans", sans-serif',
@@ -115,7 +115,7 @@ const utilityClasses = theme => css`
   }
 
   .error {
-    color: ${theme.error};
+    color: ${theme.danger};
   }
 `;
 

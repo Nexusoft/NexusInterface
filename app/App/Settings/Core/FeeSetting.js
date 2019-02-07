@@ -12,6 +12,12 @@ import TextField from 'components/TextField';
 import UIController from 'components/UIController';
 import { rpcErrorHandler } from 'utils/form';
 
+/**
+ * Returns JSX For Fee Settings
+ *
+ * @class FeeSetting
+ * @extends {React.Component}
+ */
 @connect(state => ({
   initialValues: {
     txFee: state.overview.paytxfee,
@@ -19,6 +25,7 @@ import { rpcErrorHandler } from 'utils/form';
 }))
 @reduxForm({
   form: 'setTransactionFee',
+  destroyOnUnmount: false,
   validate: ({ txFee }) => {
     const errors = {};
     if (parseFloat(txFee) <= 0) {
@@ -33,9 +40,14 @@ import { rpcErrorHandler } from 'utils/form';
       'success'
     );
   },
-  onSubmitFail: rpcErrorHandler('Error setting Transaction Fee'),
+  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.SettingTxFee" />),
 })
-export default class FeeSetting extends React.Component {
+class FeeSetting extends React.Component {
+  /**
+   * Confirms Set TX fee
+   *
+   * @memberof FeeSetting
+   */
   confirmSetTxFee = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.SetFee" />,
@@ -43,6 +55,12 @@ export default class FeeSetting extends React.Component {
     });
   };
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof FeeSetting
+   */
   render() {
     const { pristine, submitting } = this.props;
     return (
@@ -77,3 +95,4 @@ export default class FeeSetting extends React.Component {
     );
   }
 }
+export default FeeSetting;

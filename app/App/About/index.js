@@ -25,18 +25,42 @@ const mapStateToProps = state => {
 };
 //const mapDispatchToProps = dispatch => {};
 
+/**
+ * About Page
+ *
+ * @class About
+ * @extends {Component}
+ */
 class About extends Component {
   // Class Methods
+  /**
+   * Get Current Year
+   *
+   * @returns
+   * @memberof About
+   */
   getCurrentYear() {
     let temp = new Date();
     return temp.getFullYear();
   }
 
+  /**
+   * Get App Version
+   *
+   * @returns
+   * @memberof About
+   */
   getInterfaceVersionNumber() {
     return APP_VERSION;
   }
 
-  getDeamonVersionNumber() {
+  /**
+   *
+   * Gets Version number of the Daemon
+   * @returns
+   * @memberof About
+   */
+  getDaemonVersionNumber() {
     return this.props.version;
   }
 
@@ -56,7 +80,7 @@ class About extends Component {
                 <b>Build Date: </b> January 16th 2019 <br />
               </column>
               <column>
-                <b>Daemon Version:</b> {this.getDeamonVersionNumber()} <br />
+                <b>Daemon Version:</b> {this.getDaemonVersionNumber()} <br />
                 <b>Build Date: </b> January 3rd 2019 <br />
               </column>
             </row>

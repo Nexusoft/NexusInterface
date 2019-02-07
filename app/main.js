@@ -1,5 +1,5 @@
 // External
-import { app, BrowserWindow, dialog } from 'electron';
+import { app, BrowserWindow, Tray, Menu, dialog } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
@@ -14,18 +14,16 @@ import 'electron-debug';
 // Internal
 import core from 'api/core';
 import configuration from 'api/configuration';
-import { GetSettings, SaveSettings } from 'api/settings';
+import { LoadSettings, UpdateSettings } from 'api/settings';
 
 let mainWindow;
 let resizeTimer;
 // Global Objects
 global.core = core;
+global.autoUpdater = autoUpdater;
+global.forceQuit = false;
 
 app.setAppUserModelId(APP_ID);
-
-// Configure Updater
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
 
 // Enable source map support
 if (process.env.NODE_ENV === 'production') {
@@ -44,46 +42,53 @@ const installExtensions = async () => {
   ]).catch();
 };
 
+function setupTray(mainWindow) {
+  const root =
+    process.env.NODE_ENV === 'development'
+      ? __dirname
+      : configuration.GetAppResourceDir();
+  const fileName =
+    process.platform == 'darwin'
+      ? 'Nexus_Tray_Icon_Template_16.png'
+      : 'Nexus_Tray_Icon_32.png';
+  const trayImage = path.join(root, 'images', 'tray', fileName);
+  const tray = new Tray(trayImage);
+
+  const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
+  const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
+  tray.setPressedImage(pressedImage);
+
+  app.on('before-quit', () => {
+    global.forceQuit = true;
+  });
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show Nexus',
+      click: function() {
+        mainWindow.show();
+      },
+    },
+    {
+      label: 'Quit Nexus',
+      click() {
+        app.quit();
+      },
+    },
+  ]);
+  tray.setContextMenu(contextMenu);
+  tray.on('double-click', () => {
+    mainWindow.show();
+  });
+
+  return tray;
+}
+
 //
 // Create Application Window
 //
 
 function createWindow() {
-  // App self-destruct timer
-  const expiration = 1548447203000;
-  var presentTime = new Date().getTime();
-  var timeLeft = (expiration - presentTime) / 1000 / 60 / 60 / 24;
-  if (presentTime >= expiration) {
-    dialog.showErrorBox(
-      'Tritium Wallet Beta Expired',
-      'The Tritium Beta testing period has ended. Please use your normal wallet.'
-    );
-    app.exit();
-    process.abort();
-  } else if (Math.floor(timeLeft) <= 5) {
-    dialog.showErrorBox(
-      'Tritium Wallet Beta Expiring Soon',
-      'There are ' +
-        Math.floor(timeLeft).toString() +
-        ' days left in the Beta Testing period.'
-    );
-  } else if (Math.floor(timeLeft) < 1) {
-    dialog.showErrorBox(
-      'Tritium Wallet Beta Expiring Soon',
-      'Beta test ending. This application will no longer work in ' +
-        Math.floor(timeLeft * 24).toString() +
-        ' hours.'
-    );
-  } else if (Math.floor(timeLeft * 24) < 1) {
-    dialog.showErrorBox(
-      'Tritium Wallet Beta Expiring Soon',
-      'Beta test ending. This application will no longer work in ' +
-        Math.floor(timeLeft * 24 * 60).toString() +
-        ' minutes.'
-    );
-  }
-
-  let settings = GetSettings();
+  const settings = LoadSettings();
   let iconPath = '';
   if (process.env.NODE_ENV === 'development') {
     iconPath = path.join(
@@ -109,8 +114,8 @@ function createWindow() {
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
-    width: settings.windowWidth === undefined ? 1600 : settings.windowWidth,
-    height: settings.windowHeight === undefined ? 1650 : settings.windowHeight,
+    width: settings.windowWidth,
+    height: settings.windowHeight,
     minWidth: 1050,
     minHeight: 847,
     icon: iconPath,
@@ -120,6 +125,7 @@ function createWindow() {
       nodeIntegration: true,
     },
   });
+  global.tray = setupTray(mainWindow);
 
   // Load the index.html into the new browser window
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -144,59 +150,33 @@ function createWindow() {
 
     resizeTimer = setTimeout(function() {
       // Resize event has been completed
-      let settings = GetSettings();
-
-      settings.windowWidth = mainWindow.getBounds().width;
-      settings.windowHeight = mainWindow.getBounds().height;
-
-      SaveSettings(settings);
+      UpdateSettings({
+        windowWidth: mainWindow.getBounds().width,
+        windowHeight: mainWindow.getBounds().height,
+      });
     }, 250);
   });
 
-  // Event when the window is minimized
-  mainWindow.on('minimize', function(event) {
-    let settings = GetSettings();
-
-    if (settings.minimizeToTray) {
-      event.preventDefault();
-      mainWindow.hide();
-    }
+  // e.preventDefault doesn't work on renderer process so leave it in the main process
+  // https://github.com/electron/electron/issues/4473
+  mainWindow.on('close', e => {
+    e.preventDefault();
   });
 }
 
 // Application Startup
 app.on('ready', async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
-    await installExtensions();
-  }
-
   createWindow();
   core.start();
 
-  mainWindow.on('close', function(e) {
-    e.preventDefault();
-
-    let settings = GetSettings();
-    log.info('close');
-
-    if (settings) {
-      if (settings.minimizeToTray == true) {
-        e.preventDefault();
-        mainWindow.hide();
-      } else {
-        core.stop().then(payload => {
-          app.exit();
-        });
-      }
-    } else {
-      core.stop().then(payload => {
-        app.exit();
-      });
-    }
-  });
+  const settings = LoadSettings();
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true' ||
+    settings.devMode
+  ) {
+    installExtensions();
+  }
 });
 
 // Application Shutdown

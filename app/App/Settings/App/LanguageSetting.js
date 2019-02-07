@@ -82,20 +82,37 @@ const languages = [
 ];
 
 const mapStateToProps = state => ({
-  locale: state.settings.settings.locale,
+  locale: state.settings.locale,
 });
 
 const mapDispatchToProps = dispatch => ({
   updateSettings: updates => dispatch(updateSettings(updates)),
 });
 
+/**
+ * Internal JSX for Language Settings
+ *
+ * @class LanguageSetting
+ * @extends {Component}
+ */
 @connect(
   mapStateToProps,
   mapDispatchToProps
 )
-export default class LanguageSetting extends Component {
+class LanguageSetting extends Component {
+  /**
+   * Handle Change
+   *
+   * @memberof LanguageSetting
+   */
   handleChange = locale => this.props.updateSettings({ locale });
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof LanguageSetting
+   */
   render() {
     return (
       <SettingsField label={<Text id="Settings.Language" />}>
@@ -108,3 +125,4 @@ export default class LanguageSetting extends Component {
     );
   }
 }
+export default LanguageSetting;

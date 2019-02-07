@@ -37,11 +37,22 @@ import arrow from 'images/arrow.svg';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.market, ...state.common, ...state.intl, ...state.settings };
+  return {
+    ...state.market,
+    ...state.common,
+    ...state.intl,
+    settings: state.settings,
+  };
 };
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
+/**
+ * The Market Page
+ *
+ * @class Market
+ * @extends {Component}
+ */
 class Market extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -55,6 +66,12 @@ class Market extends Component {
   }
 
   // Class Methods
+  /**
+   * Sets up the page's context menu
+   *
+   * @param {*} e
+   * @memberof Market
+   */
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -63,6 +80,11 @@ class Market extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  /**
+   * Refreshes the data from the markets
+   *
+   * @memberof Market
+   */
   refresher() {
     let any = this;
     this.props.binanceDepthLoader();
@@ -76,6 +98,11 @@ class Market extends Component {
     this.props.cryptopia24hrInfo();
   }
 
+  /**
+   * Formats the buy data and returns it
+   *
+   * @memberof Market
+   */
   formatBuyData = array => {
     const { locale } = this.props.settings;
     let newQuantity = 0;
@@ -105,6 +132,13 @@ class Market extends Component {
     return finnishedArray;
   };
 
+  /**
+   * Formats the sell data and returns it
+   *
+   * @param {*} array
+   * @returns
+   * @memberof Market
+   */
   formatSellData(array) {
     let newQuantity = 0;
     let prevQuantity = 0;
@@ -133,6 +167,13 @@ class Market extends Component {
     return finnishedArray;
   }
 
+  /**
+   * Formats the Exchange Data
+   *
+   * @param {*} exchange
+   * @returns
+   * @memberof Market
+   */
   formatChartData(exchange) {
     const dataSetArray = [];
     switch (exchange) {
@@ -160,6 +201,13 @@ class Market extends Component {
     }
   }
 
+  /**
+   * Returns a Div of various market data from the Exchange Name
+   *
+   * @param {*} exchangeName
+   * @returns
+   * @memberof Market
+   */
   oneDayinfo(exchangeName) {
     return (
       <div style={{ display: 'table-row' }}>
@@ -208,12 +256,23 @@ class Market extends Component {
       </div>
     );
   }
+  /**
+   * Refreshes the market data and shows a notification
+   *
+   * @memberof Market
+   */
   refreshMarket() {
     this.refresher();
     UIController.showNotification(<Text id="Market.Refreshing" />, 'success');
   }
 
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Market
+   */
   render() {
     return (
       <Panel

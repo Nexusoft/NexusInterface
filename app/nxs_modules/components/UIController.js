@@ -54,9 +54,15 @@ const BackgroundTasks = ({ tasks }) => (
 
 const Notifications = ({ notifications, taskCount }) => (
   <SnackBars>
-    {notifications.map(({ id, type, content }, i) => (
-      <Notification key={id} notifID={id} type={type} index={taskCount + i}>
-        {content}
+    {notifications.map(({ id, type, children, content, ...props }, i) => (
+      <Notification
+        key={id}
+        notifID={id}
+        type={type}
+        index={taskCount + i}
+        {...props}
+      >
+        {children || content}
       </Notification>
     ))}
   </SnackBars>
@@ -72,7 +78,6 @@ const defaultModals = [];
 export default class UIController extends Component {
   // For opening modals before the UIController instance is even created
   static openModal = (component, props) => {
-    console.log(component, props, this);
     const modalID = newModalID();
     defaultModals.push({
       id: modalID,
@@ -136,17 +141,27 @@ export default class UIController extends Component {
 
   openSuccessDialog = props => this.openModal(SuccessDialog, props);
 
+  // showNotification(options: object), or
+  // showNotification(content: any, type: string)
   showNotification = (content, type) => {
     const notifID = newNotifID();
+    let notif = {};
+    if (typeof content === 'string') {
+      notif = {
+        id: notifID,
+        type,
+        content,
+      };
+    } else {
+      const options = content;
+      notif = {
+        id: notifID,
+        ...options,
+      };
+    }
+
     this.setState({
-      notifications: [
-        {
-          id: notifID,
-          type,
-          content,
-        },
-        ...this.state.notifications,
-      ],
+      notifications: [notif, ...this.state.notifications],
     });
     return notifID;
   };

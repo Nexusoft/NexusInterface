@@ -74,17 +74,17 @@ const AutoComplete = styled.div(({ theme }) => ({
   position: 'absolute',
   top: '100%',
   zIndex: 99,
-  background: theme.dark,
+  background: theme.background,
 }));
 
 const AutoCompleteItem = styled.a(({ theme }) => ({
   display: 'block',
   cursor: 'pointer',
   transition: `color ${timing.normal}`,
-  color: theme.lightGray,
+  color: theme.mixer(0.75),
 
   '&:hover': {
-    color: theme.light,
+    color: theme.foreground,
   },
 }));
 
@@ -92,19 +92,25 @@ const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
   flexBasis: 0,
   overflow: 'auto',
-  wordBreak:'break-all',
-  background: theme.dark,
-  border: `1px solid ${theme.darkGray}`,
+  wordBreak: 'break-all',
+  background: theme.background,
+  border: `1px solid ${theme.mixer(0.25)}`,
 }));
 
 const ExecuteButton = styled(Button)(({ theme }) => ({
-  borderLeft: `1px solid ${theme.darkerGray}`,
+  borderLeft: `1px solid ${theme.mixer(0.125)}`,
 }));
 
+/**
+ * Console Page in the Terminal Page
+ *
+ * @class TerminalConsole
+ * @extends {Component}
+ */
 class TerminalConsole extends Component {
   constructor(props) {
     super(props);
-    this.inputRef = null;
+    this.inputRef = React.createRef();
     this.outputRef = React.createRef();
   }
   // React Method (Life cycle hook)
@@ -116,6 +122,12 @@ class TerminalConsole extends Component {
   }
 
   // Pass before update values to componentDidUpdate
+  /**
+   * Before component Did Update
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   getSnapshotBeforeUpdate() {
     if (!this.outputRef) return null;
     const { clientHeight, scrollTop, scrollHeight } = this.outputRef;
@@ -134,12 +146,24 @@ class TerminalConsole extends Component {
   }
 
   // Class Methods
+  /**
+   * Process Output
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   processOutput() {
     return this.props.consoleOutput.map((item, key) => {
       return <div key={key}>{item}</div>;
     });
   }
 
+  /**
+   * Process Input
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   processInput() {
     if (this.props.currentInput == '') {
       return;
@@ -273,6 +297,11 @@ class TerminalConsole extends Component {
     }
   }
 
+  /**
+   * Handle keyboard input
+   *
+   * @memberof TerminalConsole
+   */
   handleKeyboardInput = e => {
     if (e.key === 'Enter') {
       this.props.removeAutoCompleteDiv();
@@ -281,6 +310,11 @@ class TerminalConsole extends Component {
     }
   };
 
+  /**
+   * Handle arrow keys
+   *
+   * @memberof TerminalConsole
+   */
   handleKeyboardArrows = e => {
     if (e.key === 'ArrowUp') {
       currentHistoryIndex++;
@@ -307,6 +341,12 @@ class TerminalConsole extends Component {
     }
   };
 
+  /**
+   * Return Autocomplete
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   autoComplete() {
     return this.props.filteredCmdList.map((item, key) => {
       return (
@@ -314,11 +354,8 @@ class TerminalConsole extends Component {
           key={key}
           onMouseDown={() => {
             setTimeout(() => {
-              //I don't like this but the issue is that the click event fires on the output div which breaks the focus, so using a timer
-              this.inputRef.setState({focus:true});
-              this.inputRef.inputReference.focus();
-              
-            }, 100);
+              this.inputRef.current.focus();
+            }, 0);
             this.props.onAutoCompleteClick(item);
           }}
         >
@@ -330,6 +367,12 @@ class TerminalConsole extends Component {
   }
 
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof TerminalConsole
+   */
   render() {
     if (this.props.connections === undefined) {
       return (
@@ -346,7 +389,7 @@ class TerminalConsole extends Component {
               <Text id="Console.CommandsHere">
                 {cch => (
                   <TextField
-                    ref={element => (this.inputRef = element)}
+                    inputRef={this.inputRef}
                     autoFocus
                     skin="filled-dark"
                     value={this.props.currentInput}
@@ -356,7 +399,6 @@ class TerminalConsole extends Component {
                     }
                     onKeyPress={e => this.handleKeyboardInput(e)}
                     onKeyDown={e => this.handleKeyboardArrows(e)}
-                    grouped="left"
                     style={{ flexGrow: 1 }}
                     right={
                       <ExecuteButton

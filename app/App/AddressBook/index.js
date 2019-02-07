@@ -1,3 +1,7 @@
+///
+///   ADDRESS BOOK
+///
+
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -15,6 +19,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import config from 'api/configuration';
 import * as RPC from 'scripts/rpc';
 import * as actionsCreators from 'actions/addressbookActionCreators';
+import { loadMyAccounts } from 'actions/accountActionCreators';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -49,16 +54,24 @@ const mapStateToProps = state => {
     ...state.addressbook,
     ...state.overview,
     ...state.sendReceive,
-    ...state.settings,
+    settings: state.settings,
   };
 };
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch);
+const mapDispatchToProps = dispatch => ({
+  ...bindActionCreators(actionsCreators, dispatch),
+  loadMyAccounts: () => dispatch(loadMyAccounts()),
+});
 
+/**
+ * The Address Book Page
+ *
+ * @class AddressBook
+ * @extends {Component}
+ */
 class AddressBook extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    this.loadMyAccounts();
+    this.props.loadMyAccounts();
     window.addEventListener('contextmenu', this.addressbookContextMenu, false);
     googleanalytics.SendScreen('AddressBook');
   }
@@ -77,6 +90,11 @@ class AddressBook extends Component {
   }
 
   // Class methods
+  /**
+   * Context Menu builder for the Address Book Page
+   *
+   * @memberof AddressBook
+   */
   addressbookContextMenu = () => {
     const { locale } = this.props.settings;
 
@@ -180,70 +198,24 @@ class AddressBook extends Component {
     }
   };
 
-  loadMyAccounts() {
-    RPC.PROMISE('listaccounts', [0]).then(payload => {
-      Promise.all(
-        Object.keys(payload).map(account =>
-          RPC.PROMISE('getaddressesbyaccount', [account])
-        )
-      ).then(payload => {
-        let validateAddressPromises = [];
-
-        payload.map(element => {
-          element.addresses.map(address => {
-            validateAddressPromises.push(
-              RPC.PROMISE('validateaddress', [address])
-            );
-          });
-        });
-
-        Promise.all(validateAddressPromises).then(payload => {
-          let accountsList = [];
-          let myaccts = payload.map(e => {
-            if (e.ismine && e.isvalid) {
-              let index = accountsList.findIndex(ele => {
-                if (ele.account === e.account) {
-                  return ele;
-                }
-              });
-              let indexDefault = accountsList.findIndex(ele => {
-                if (ele.account == '' || ele.account == 'default') {
-                  return ele;
-                }
-              });
-
-              if (e.account === '' || e.account === 'default') {
-                if (index === -1 && indexDefault === -1) {
-                  accountsList.push({
-                    account: 'default',
-                    addresses: [e.address],
-                  });
-                } else {
-                  accountsList[indexDefault].addresses.push(e.address);
-                }
-              } else {
-                if (index === -1) {
-                  accountsList.push({
-                    account: e.account,
-                    addresses: [e.address],
-                  });
-                } else {
-                  accountsList[index].addresses.push(e.address);
-                }
-              }
-            }
-          });
-          this.props.MyAccountsList(accountsList);
-        });
-      });
-    });
-  }
-
+  /**
+   * Get the contact's initial
+   *
+   * @param {*} name
+   * @returns
+   * @memberof AddressBook
+   */
   getinitial(name) {
     if (name && name.length >= 1) return name.charAt(0);
     return 'M';
   }
 
+  /**
+   * Copy the address into the clipboard
+   *
+   * @param {*} event
+   * @memberof AddressBook
+   */
   copyaddress(event) {
     event.preventDefault();
     let target = event.currentTarget;
@@ -270,6 +242,11 @@ class AddressBook extends Component {
     UIController.showNotification(<Text id="Alert.Copied" />, 'success');
   }
 
+  /**
+   * Internal JSX for the My Address Table
+   *
+   * @memberof AddressBook
+   */
   MyAddressesTable = () => {
     const { locale } = this.props.settings;
     let filteredAddress = this.props.myAccounts.filter(acct => {
@@ -319,6 +296,12 @@ class AddressBook extends Component {
     );
   };
 
+  /**
+   * Internal JSX to build out a modal 
+   *
+   * @returns
+   * @memberof AddressBook
+   */
   modalInternalBuilder() {
     let index = this.props.addressbook.findIndex(ele => {
       if (ele.name === this.props.prototypeName) {
@@ -442,54 +425,7 @@ class AddressBook extends Component {
           </div>
         );
         break;
-      case 'MY_ADDRESSES':
-        if (this.props.myAccounts.length > 0) {
-          return (
-            <div id="Addresstable-wraper">
-              <div className="m1">
-                {/* <Icon icon={addressBookIcon} className="hdr-img" /> */}
-                <Text id="AddressBook.MyAddresses" />
-              </div>
-              <table className="myAddressTable">
-                <thead className="AddressThead">
-                  <th className="short-column">
-                    <Text id="AddressBook.Account" />
-                    <Text id="AddressBook.searchC">
-                      {sba => (
-                        <TextField
-                          style={{
-                            marginLeft: '1em',
-                            fontSize: '.9375em',
-                            width: 200,
-                          }}
-                          left={<Icon icon={searchIcon} spaceRight />}
-                          className="searchaccount"
-                          placeholder={sba}
-                          value={this.props.Search}
-                          onChange={e => this.props.SearchName(e.target.value)}
-                          required
-                        />
-                      )}
-                    </Text>
-                  </th>
-                </thead>
-                {this.MyAddressesTable()}
-              </table>
-              <button
-                className="button primary"
-                onClick={() => this.props.SetModalType('NEW_MY_ADDRESS')}
-              >
-                <Text id="AddressBook.CreateAddress" />
-              </button>
-            </div>
-          );
-        } else
-          return (
-            <h2>
-              <Text id="AddressBook.Loading" />
-            </h2>
-          );
-        break;
+
       case 'ADD_ADDRESS':
         return (
           <div>
@@ -539,81 +475,17 @@ class AddressBook extends Component {
           </div>
         );
         break;
-      case 'NEW_MY_ADDRESS':
-        return (
-          <div>
-            <h2 className="m1">
-              <Icon icon={addressBookIcon} className="hdr-img" />
-              <Text id="AddressBook.Create" />
-            </h2>
-            <div className="create">
-              <label htmlFor="new-account-name">
-                <Text id="AddressBook.NameOption" />
-              </label>
-              <Text id="AddressBook.Name">
-                {ean => (
-                  <input
-                    id="new-account-name"
-                    value={this.props.prototypeName}
-                    onChange={e => this.props.EditProtoName(e.target.value)}
-                    placeholder={ean}
-                    required
-                  />
-                )}
-              </Text>
-            </div>{' '}
-            <button
-              id="Add"
-              className="ghost button"
-              onClick={() => this.createAddress()}
-            >
-              <Text id="AddressBook.CreateAddress" />
-            </button>
-            <button
-              id="back"
-              className="button ghost"
-              onClick={() => this.props.SetModalType('MY_ADDRESSES')}
-            >
-              <Text id="AddressBook.Back" />
-            </button>
-          </div>
-        );
-        break;
+
       default:
         break;
     }
   }
 
-  createAddress() {
-    let name = this.props.prototypeName.trim();
-    if (name !== '') {
-      if (name !== '*' && name !== 'default') {
-        RPC.PROMISE('getnewaddress', [name])
-          .then(success => {
-            this.props.ToggleModal();
-            this.loadMyAccounts();
-          })
-          .catch(e => {
-            UIController.openErrorDialog({ message: e });
-          });
-      } else {
-        UIController.showNotification(
-          <Text id="Alert.nodefaultname" />,
-          'error'
-        );
-      }
-    } else {
-      RPC.PROMISE('getnewaddress', [''])
-        .then(success => {
-          this.props.ToggleModal();
-          this.loadMyAccounts();
-        })
-        .catch(e => {
-          UIController.openErrorDialog({ message: e });
-        });
-    }
-  }
-
+  /**
+   * Internal JSX for a Contact
+   *
+   * @memberof AddressBook
+   */
   contactLister = () => {
     const { locale } = this.props.settings;
     let filteredAddress = this.props.addressbook.map((contact, i) => {
@@ -670,6 +542,12 @@ class AddressBook extends Component {
     }
   };
 
+  /**
+   * Format Phone number string to display correctly
+   *
+   * @returns
+   * @memberof AddressBook
+   */
   phoneFormatter() {
     let num = this.props.addressbook[this.props.selected].phoneNumber;
     if (num.length === 12) {
@@ -685,6 +563,12 @@ class AddressBook extends Component {
     } else return num;
   }
 
+  /**
+   * Format time to display in the contact's local time
+   *
+   * @returns
+   * @memberof AddressBook
+   */
   localTimeFormater() {
     let d = new Date();
     let utc = new Date().getTimezoneOffset();
@@ -753,6 +637,11 @@ class AddressBook extends Component {
     );
   }
 
+  /**
+   * Internal JSX for a contact's Address
+   *
+   * @memberof AddressBook
+   */
   theirAddressLister = () => {
     const { locale } = this.props.settings;
     return (
@@ -833,6 +722,12 @@ class AddressBook extends Component {
     );
   };
 
+  /**
+   * The Internal JSX for the My Address Modal
+   *
+   * @returns
+   * @memberof AddressBook
+   */
   myAddressLister() {
     return (
       <Tooltip.Trigger tooltip={<Text id="AddressBook.Copy" />}>
@@ -910,21 +805,43 @@ class AddressBook extends Component {
     );
   }
 
+  /**
+   * Handles Add Address Modal
+   *
+   * @memberof AddressBook
+   */
   addAddressHandler() {
     this.props.SetModalType('ADD_ADDRESS');
     this.props.ToggleModal();
   }
 
+  /**
+   * Show Add Contact Modal
+   *
+   * @memberof AddressBook
+   */
   showAddContactModal() {
     this.props.SetModalType('ADD_CONTACT');
     this.props.ToggleModal();
   }
 
+  /**
+   * Show My Address Modal
+   *
+   * @memberof AddressBook
+   */
   showMyAddresses() {
     this.props.SetModalType('MY_ADDRESSES');
     this.props.ToggleModal();
   }
 
+  /**
+   * Handle Phone Number Inputs
+   *
+   * @param {*} value
+   * @returns
+   * @memberof AddressBook
+   */
   phoneNumberHandler(value) {
     if (/^[0-9.]+$/.test(value) | (value === '')) {
       this.props.EditProtoPhone(value);
@@ -933,6 +850,11 @@ class AddressBook extends Component {
     }
   }
 
+  /**
+   * Export the Address Book to a CSV File
+   *
+   * @memberof AddressBook
+   */
   exportAddressBook() {
     googleanalytics.SendEvent('AddressBook', 'IOAddress', 'Export', 1);
 
@@ -1005,6 +927,12 @@ class AddressBook extends Component {
     document.body.removeChild(link);
   }
 
+  /**
+   * Import the Address Book from a filepath
+   *
+   * @param {*} path
+   * @memberof AddressBook
+   */
   importAddressBook(path) {
     googleanalytics.SendEvent('AddressBook', 'IOAddress', 'Import', 1);
     console.log(csv().fromFile(path));
@@ -1042,6 +970,12 @@ class AddressBook extends Component {
       });
   }
 
+  /**
+   * Closes the Edit Modal
+   *
+   * @param {*} e
+   * @memberof AddressBook
+   */
   closeEdit(e) {
     if (e.target.className !== 'editFeildDoNotClose') {
       if (this.props.editName) {
@@ -1098,20 +1032,6 @@ class AddressBook extends Component {
                   onClick={this.exportAddressBook.bind(this)}
                 >
                   <ControlIcon icon={exportIcon} />
-                </Button>
-              </Tooltip.Trigger>
-
-              <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
-                <Button
-                  skin="blank-light"
-                  className="relative"
-                  onClick={() => {
-                    this.props.clearSearch();
-                    this.loadMyAccounts();
-                    this.showMyAddresses();
-                  }}
-                >
-                  <ControlIcon icon={userIcon} />
                 </Button>
               </Tooltip.Trigger>
 

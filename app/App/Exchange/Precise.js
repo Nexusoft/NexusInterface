@@ -28,6 +28,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
+/**
+ * The Internal Page to use the Precise function on Shapeshift
+ *
+ * @class Precise
+ * @extends {Component}
+ */
 class Precise extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -60,6 +66,12 @@ class Precise extends Component {
   }
 
   // Class methods
+  /**
+   * Calculates the gross and final trade amount
+   *
+   * @returns
+   * @memberof Precise
+   */
   transferCalculator() {
     let tradeAmmt = parseFloat(this.props.ammount);
     if (this.props.quote) {
@@ -79,6 +91,12 @@ class Precise extends Component {
     } else return null;
   }
 
+  /**
+   * Generates the available coins to transfer
+   *
+   * @returns
+   * @memberof Precise
+   */
   optionbuilder() {
     return Object.values(this.props.availableCoins).map(e => {
       if (e.status === 'available') {
@@ -91,24 +109,49 @@ class Precise extends Component {
     });
   }
 
+  /**
+   * Returns the min amount a User must send
+   *
+   * @returns
+   * @memberof Precise
+   */
   minAmmount() {
     if (this.props.marketPairData.minimum) {
       return this.props.marketPairData.minimum;
     } else return 0;
   }
 
+  /**
+   * Return the max amount a User can send
+   *
+   * @returns
+   * @memberof Precise
+   */
   maxAmmount() {
     if (this.props.marketPairData.maxLimit) {
       return this.props.marketPairData.maxLimit;
     } else return 1;
   }
 
+  /**
+   * Returns the currency lable
+   *
+   * @returns
+   * @memberof Precise
+   */
   currencylabel() {
     if (this.props.to) {
       return this.props.availableCoins[this.props.to].name;
     } else return null;
   }
 
+  /**
+   * Handles the amount field
+   *
+   * @param {*} value
+   * @returns
+   * @memberof Precise
+   */
   ammountHandler(value) {
     if (/^[0-9.]+$/.test(value) | (value === '')) {
       this.props.ammountUpdater(value);
@@ -120,6 +163,13 @@ class Precise extends Component {
     }
   }
 
+  /**
+   * Handles the to and from switcher
+   *
+   * @param {*} e
+   * @param {*} switcher
+   * @memberof Precise
+   */
   toFromHandler(e, switcher) {
     if (switcher === 'to') {
       if (e.target.value !== this.props.from) {
@@ -138,6 +188,11 @@ class Precise extends Component {
     }
   }
 
+  /**
+   * Handles the get Quote button
+   *
+   * @memberof Precise
+   */
   getQuote() {
     this.props.ToggleAcyncButtons();
     if (this.props.withinBounds) {
@@ -150,6 +205,11 @@ class Precise extends Component {
     this.props.ToggleAcyncButtons();
   }
 
+  /**
+   * Handles the execution of the trade
+   *
+   * @memberof Precise
+   */
   executeTransaction() {
     this.props.ToggleAcyncButtons();
     googleanalytics.SendEvent('Shapeshift', 'Precise', 'Sent', 1);
@@ -215,6 +275,12 @@ class Precise extends Component {
     this.props.ToggleAcyncButtons();
   }
 
+  /**
+   * Handles switching the button to enable the user to execute the trade
+   *
+   * @returns
+   * @memberof Precise
+   */
   buttonSwitcher() {
     if (this.props.withinBounds) {
       if (this.props.greenLight) {
@@ -253,6 +319,12 @@ class Precise extends Component {
     }
   }
 
+  /**
+   * Build the confirmation modal
+   *
+   * @returns
+   * @memberof Precise
+   */
   buildConfermation() {
     if (
       this.props.to &&

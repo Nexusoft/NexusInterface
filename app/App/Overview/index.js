@@ -82,6 +82,7 @@ const blockWeightIcons = [
   blockweight7,
   blockweight8,
   blockweight9,
+  blockweight9,
 ];
 
 // React-Redux mandatory methods
@@ -89,18 +90,12 @@ const mapStateToProps = state => {
   return {
     ...state.overview,
     ...state.common,
-    ...state.settings,
-    ...state.intl,
+    settings: state.settings,
+    theme: state.theme,
   };
 };
 const mapDispatchToProps = dispatch => ({
-  setExperimentalWarning: save =>
-    dispatch({ type: TYPE.SET_EXPERIMENTAL_WARNING, payload: save }),
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
-  acceptMITAgreement: () => dispatch({ type: TYPE.ACCEPT_MIT }),
-  toggleSave: () => dispatch({ type: TYPE.TOGGLE_SAVE_SETTINGS_FLAG }),
-  ignoreEncryptionWarning: () =>
-    dispatch({ type: TYPE.IGNORE_ENCRYPTION_WARNING }),
 });
 
 const OverviewPage = styled.div({
@@ -170,7 +165,7 @@ const Stat = styled.div(
     display: 'flex',
     alignItems: 'center',
     filter: `drop-shadow(0 0 5px #000)`,
-    color: theme.light,
+    color: theme.foreground,
   }),
   ({ to, theme }) =>
     to && {
@@ -216,6 +211,12 @@ const MaxmindLogo = styled.img({
   width: 181,
 });
 
+/**
+ * Overview Page, The main page
+ *
+ * @class Overview
+ * @extends {Component}
+ */
 class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -223,6 +224,11 @@ class Overview extends Component {
 
     googleanalytics.SendScreen('Overview');
   }
+  /**
+   * Set by {NetworkGlobe}, ReDraws all Pillars and Archs
+   *
+   * @memberof Overview
+   */
   reDrawEverything() {}
   // React Method (Life cycle hook)
   componentWillUnmount() {
@@ -233,12 +239,12 @@ class Overview extends Component {
   componentDidUpdate(prevProps) {
     const { blocks, webGLEnabled, settings, connections } = this.props;
 
-    if (settings.acceptedagreement && webGLEnabled && settings.renderGlobe) {
+    if (settings.acceptedAgreement && webGLEnabled && settings.renderGlobe) {
       if (blocks != prevProps.blocks && blocks && prevProps.blocks) {
         this.redrawCurves();
       }
 
-      if (prevProps.connections && !connections) {
+      if (prevProps.connections && connections == 0) {
         this.removeAllPoints();
         this.reDrawEverything();
         return;
@@ -252,6 +258,12 @@ class Overview extends Component {
   }
 
   // Class methods
+  /**
+   * Sets up the context menu
+   *
+   * @param {*} e
+   * @memberof Overview
+   */
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -260,6 +272,12 @@ class Overview extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  /**
+   * Returns the Block Date of the last given block
+   *
+   * @returns
+   * @memberof Overview
+   */
   blockDate() {
     if (!this.props.blockDate) {
       return <Text id="ToolTip.GettingNextBlock" />;
@@ -268,6 +286,12 @@ class Overview extends Component {
     }
   }
 
+  /**
+   * Returns the Connections icon based on how many connections the user has
+   *
+   * @returns
+   * @memberof Overview
+   */
   connectionsIcon() {
     const con = this.props.connections;
     if (con > 4 && con <= 6) {
@@ -285,28 +309,60 @@ class Overview extends Component {
     }
   }
 
+  /**
+   * Returns the trust icon
+   *
+   * @returns
+   * @memberof Overview
+   */
   trustIcon() {
     const tw = Math.round((this.props.trustweight || 0) / 10);
     return trustIcons[tw];
   }
 
+  /**
+   * Returns the block weight icon
+   *
+   * @returns
+   * @memberof Overview
+   */
   blockWeightIcon() {
     const bw = Math.round((this.props.blockweight || 0) / 10);
     return blockWeightIcons[bw];
   }
 
+  /**
+   * Returns if the Globe should be rendered
+   *
+   * @returns
+   * @memberof Overview
+   */
   showingGlobe() {
     return (
-      this.props.settings.acceptedagreement &&
+      this.props.settings.acceptedAgreement &&
       this.props.settings.renderGlobe &&
       this.props.webGLEnabled
     );
   }
 
+  /**
+   * Add in Commas to a number
+   *
+   * @param {*} x
+   * @returns
+   * @memberof Overview
+   */
   numberWithCommas(x) {
-    if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    if (typeof x === 'number')
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  /**
+   * Calculate the value based on the User's Currency
+   *
+   * @returns
+   * @memberof Overview
+   */
   calculateUSDvalue() {
     if (this.props.rawNXSvalues[0]) {
       let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
@@ -330,6 +386,12 @@ class Overview extends Component {
     }
   }
 
+  /**
+   * Formats the Market Price
+   *
+   * @returns
+   * @memberof Overview
+   */
   marketPriceFormatter() {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
@@ -343,6 +405,12 @@ class Overview extends Component {
     }
   }
 
+  /**
+   * Formats the Market Cap
+   *
+   * @returns
+   * @memberof Overview
+   */
   marketCapFormatter() {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
@@ -356,6 +424,12 @@ class Overview extends Component {
     }
   }
 
+  /**
+   * Returns the percentile changed in 24 hrs
+   *
+   * @returns
+   * @memberof Overview
+   */
   pctChange24hrFormatter() {
     if (this.props.displayNXSvalues[0]) {
       let selectedCurrancyValue = this.props.displayNXSvalues.filter(ele => {
@@ -374,6 +448,11 @@ class Overview extends Component {
     }
   }
 
+  /**
+   * Displays Wait for Daemon
+   *
+   * @memberof Overview
+   */
   waitForDaemon = stat =>
     this.props.connections !== undefined ? (
       stat
@@ -382,6 +461,12 @@ class Overview extends Component {
     );
 
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Overview
+   */
   render() {
     const { connections, balance, stake, displayNXSvalues } = this.props;
     return (
@@ -391,11 +476,10 @@ class Overview extends Component {
             <NetworkGlobe
               handleOnLineRender={e => (this.redrawCurves = e)}
               // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
+              connections={this.props.connections}
               handleOnAddData={e => (this.reDrawEverything = e)}
               handleRemoveAllPoints={e => (this.removeAllPoints = e)}
-              pillarColor={
-                this.props.theme.globePillarColor
-              }
+              pillarColor={this.props.theme.globePillarColor}
               archColor={this.props.theme.globeArchColor}
               globeColor={this.props.theme.globeColor}
             />
@@ -537,7 +621,9 @@ class Overview extends Component {
                 <Text id="overview.InterestRate" />
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.props.interestweight + '%')}
+                {this.waitForDaemon(
+                  this.props.interestweight || this.props.stakerate + '%'
+                )}
               </StatValue>
             </div>
           </Stat>

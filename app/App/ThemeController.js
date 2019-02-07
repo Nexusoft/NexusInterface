@@ -4,22 +4,23 @@ import { ThemeProvider } from 'emotion-theming';
 import { connect } from 'react-redux';
 
 // Internal
-import { colors } from 'styles';
+import { getMixer } from 'api/theme';
 
-const mapStateToProps = state => ({
-  customColors: state.settings.theme,
-});
-
+@connect(state => ({
+  theme: state.theme,
+}))
 class ThemeController extends PureComponent {
   render() {
-    const newColors = colors.derive({
-      ...colors.default,
-      ...this.props.customColors,
-    });
+    const { theme } = this.props;
+    const themeWithMixer = {
+      ...theme,
+      mixer: getMixer(theme.background, theme.foreground),
+    };
     return (
-      <ThemeProvider theme={newColors}>{this.props.children}</ThemeProvider>
+      <ThemeProvider theme={themeWithMixer}>
+        {this.props.children}
+      </ThemeProvider>
     );
   }
 }
-
-export default connect(mapStateToProps)(ThemeController);
+export default ThemeController;

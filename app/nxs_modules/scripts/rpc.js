@@ -69,11 +69,11 @@ export const COMMANDS = {};
 export const CALLBACK = {};
 import * as TYPE from 'actions/actiontypes';
 import core from 'api/core';
-import { GetSettings } from 'api/settings';
+import { LoadSettings } from 'api/settings';
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 export const GETHOST = () => {
   // let core = require("electron").remote.getGlobal("core");
-  let settings = GetSettings();
+  let settings = LoadSettings();
   if (settings.manualDaemon == true) {
     let savedport = core.port;
     if (settings.manualDaemonPort != undefined) {
@@ -91,7 +91,7 @@ export const GETHOST = () => {
 
 // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
 export const GETUSER = () => {
-  let settings = GetSettings();
+  let settings = LoadSettings();
   if (settings.manualDaemon == true) {
     let saveduser =
       settings.manualDaemonUser === undefined
@@ -106,7 +106,7 @@ export const GETUSER = () => {
 
 // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
 export const GETPASSWORD = () => {
-  let settings = GetSettings();
+  let settings = LoadSettings();
   if (settings.manualDaemon == true) {
     let savedpassword =
       settings.manualDaemonPassword === undefined
@@ -142,7 +142,8 @@ export const PROMISE = (cmd, args) => {
       params: args,
     });
     var ResponseObject;
-
+    // console.log(PostData);
+    // console.log(GETUSER(), GETPASSWORD());
     /** Opera 8.0+, Firefox, Safari **/
     try {
       ResponseObject = new XMLHttpRequest();
@@ -169,11 +170,11 @@ export const PROMISE = (cmd, args) => {
         reject('RPC Command {' + cmd + '} Not Found');
       }
       if (ResponseObject.status == 401) {
-        // console.error(ResponseObject.response)
-        reject('Bad Usernam and Password');
+        // console.error(ResponseObject);
+        reject('Bad Username and Password');
       }
       if (ResponseObject.status == 500) {
-        console.log(JSON.parse(ResponseObject.responseText));
+        // console.log(JSON.parse(ResponseObject.responseText));
         reject(JSON.parse(ResponseObject.responseText).error.message);
       }
       if (cmd === 'validateaddress') {
@@ -191,6 +192,7 @@ export const PROMISE = (cmd, args) => {
       } else {
         payload = JSON.parse(ResponseObject.response).result;
       }
+
       resolve(payload);
     };
 
@@ -198,9 +200,13 @@ export const PROMISE = (cmd, args) => {
     if (GETUSER() == undefined && GETPASSWORD() == undefined)
       ResponseObject.open('POST', GETHOST(), true);
     else ResponseObject.open('POST', GETHOST(), true, GETUSER(), GETPASSWORD());
-
+    // console.log(ResponseObject);
     /** Send off the Post Data. **/
-
+    ResponseObject.withCredentials = true;
+    ResponseObject.setRequestHeader(
+      'Authorization',
+      'Basic ' + btoa(GETUSER() + ':' + GETPASSWORD())
+    );
     ResponseObject.onerror = function(e) {
       e.preventDefault();
       if (ResponseObject.status == 401) {
