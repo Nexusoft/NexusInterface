@@ -9,12 +9,24 @@ import Login from './Login';
 import Encrypted from './Encrypted';
 import Unencrypted from './Unencrypted';
 
+/**
+ * Security Page on Settings Page
+ *
+ * @class Security
+ * @extends {React.Component}
+ */
 @connect(({ common: { encrypted, loggedIn }, overview: { connections } }) => ({
   encrypted,
   loggedIn,
   connections,
 }))
-export default class Security extends React.Component {
+class Security extends React.Component {
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Security
+   */
   render() {
     const { loggedIn, encrypted, connections } = this.props;
     if (connections === undefined) {
@@ -37,3 +49,4 @@ export default class Security extends React.Component {
     }
   }
 }
+export default Security;

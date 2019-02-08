@@ -20,12 +20,27 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-class SettingsMarket extends Component {
+/**
+ * Settings for Market in the Settings Page
+ *
+ * @class SettingsMarket
+ * @extends {Component}
+ */
+class   extends Component {
   // Class methods
+  /**
+   * Set Feedback
+   *
+   */
   feedback() {
     UIController.showNotification(<Text id="Alert.SettingsSaved" />, 'success');
   }
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   */
   render() {
     return (
       <div id="SettingsMarket">

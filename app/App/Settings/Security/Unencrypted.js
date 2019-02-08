@@ -7,7 +7,19 @@ import EncryptWallet from './EncryptWallet';
 import ImportPrivKey from './ImportPrivKey';
 import ViewPrivKeyForAddress from './ViewPrivKeyForAddress';
 
+/**
+ * Unencrypter JSX
+ *
+ * @class Unencrypted
+ * @extends {Component}
+ */
 class Unencrypted extends Component {
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Unencrypted
+   */
   render() {
     return (
       <div>

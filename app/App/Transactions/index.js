@@ -151,6 +151,12 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
+/**
+ * Transactions Page
+ *
+ * @class Transactions
+ * @extends {Component}
+ */
 class Transactions extends Component {
   constructor(props) {
     super(props);
@@ -288,12 +294,24 @@ class Transactions extends Component {
     window.removeEventListener('contextmenu', this.transactioncontextfunction);
   }
 
-  // The callback for when we want to update just the confirmations
+  // 
+  /**
+   * The callback for when we want to update just the confirmations
+   *
+   * @param {*} incomingData
+   * @memberof Transactions
+   */
   setConfirmationsCallback(incomingData) {
     this.props.UpdateConfirmationsOnTransactions(incomingData);
   }
 
-  // The callback for the on Mount State
+  // 
+  /**
+   * The callback for the on Mount State
+   *
+   * @param {*} incomingData
+   * @memberof Transactions
+   */
   setOnmountTransactionsCallback(incomingData) {
     this.updateChartAndTableDimensions(null);
     let objectheaders = Object.keys({
@@ -384,7 +402,14 @@ class Transactions extends Component {
     }, 1000);
   }
 
-  // Updates the height and width of the chart and table when you resize the window
+  //
+  /**
+   * Updates the height and width of the chart and table when you resize the window
+   *
+   * @param {*} event
+   * @returns
+   * @memberof Transactions
+   */
   updateChartAndTableDimensions(event) {
     let chart = document.getElementById('transactions-chart');
     if (chart === undefined || chart === null) {
@@ -426,6 +451,11 @@ class Transactions extends Component {
     }
   }
 
+  /**
+   * Open Tx Detail modal
+   *
+   * @memberof Transactions
+   */
   openTxDetailsModal = () => {
     UIController.openModal(TransactionDetailsModal, {
       hoveringID: this.hoveringID,
@@ -434,9 +464,14 @@ class Transactions extends Component {
     });
   };
 
-  // This is the method that is called when the user pressed the right click
+  //
   // Input:
   //   e || Event || Default Events given by the system for right click
+  /**
+   * This is the method that is called when the user pressed the right click
+   *
+   * @memberof Transactions
+   */
   transactioncontextfunction = e => {
     const { locale } = this.props.settings;
     // Prevent default action of right click
@@ -565,11 +600,24 @@ class Transactions extends Component {
 
   // Input :
   //   instringtocopy      || String || String to copy
+  /**
+   * Copy to Clipboard
+   *
+   * @param {*} instringtocopy
+   * @memberof Transactions
+   */
   copysomethingtotheclipboard(instringtocopy) {
     copy(instringtocopy);
   }
 
-  // Gets all the data from each account held by the wallet
+  //
+  /**
+   * Gets all the data from each account held by the wallet
+   *
+   * @param {*} finishingCallback
+   * @returns
+   * @memberof Transactions
+   */
   getTransactionData(finishingCallback) {
     let incomingMyAccounts;
     let listedaccounts = [];
@@ -662,7 +710,13 @@ class Transactions extends Component {
     });
   }
 
-  // Set the display property in state from the dropdown element
+  //
+  /**
+   * Set the display property in state from the dropdown element
+   *
+   * @param {*} value
+   * @memberof Transactions
+   */
   transactionTimeframeChange(value) {
     this.setState({
       displayTimeFrame: value,
@@ -670,14 +724,25 @@ class Transactions extends Component {
     });
   }
 
+  /**
+   * Download CSV
+   *
+   * @memberof Transactions
+   */
   DownloadCSV() {
     googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
     this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
   }
 
-  // creates a CSV file then prompts the user to save that file
+  //
   // Input :
   //   DataToSave  || Object Array || Transactions to save
+  /**
+   * creates a CSV file then prompts the user to save that file
+   *
+   * @param {*} DataToSave
+   * @memberof Transactions
+   */
   saveCSV(DataToSave) {
     const rows = []; //Set up a blank array for each row
 
@@ -737,14 +802,24 @@ class Transactions extends Component {
     document.body.removeChild(link);
   }
 
-  // Callback for when you change the category filter
+  //
+  /**
+   * Callback for when you change the category filter
+   *
+   * @memberof Transactions
+   */
   transactiontypefiltercallback = categoryFilter => {
     this.setState({
       categoryFilter,
     });
   };
 
-  // Callback for when you change the amount filter
+  //
+  /**
+   * Callback for when you change the amount filter
+   *
+   * @memberof Transactions
+   */
   transactionamountfiltercallback = e => {
     const amountFilterValue = e.target.value;
     this.setState({
@@ -752,7 +827,12 @@ class Transactions extends Component {
     });
   };
 
-  // Callback for when you change the address filter
+  //
+  /**
+   * Callback for when you change the address filter
+   *
+   * @memberof Transactions
+   */
   transactionaddressfiltercallback = e => {
     const addressfiltervalue = e.target.value;
     this.setState({
@@ -760,9 +840,15 @@ class Transactions extends Component {
     });
   };
 
-  // Taken From address page
+  //
   // Return:
   //   json || address in json format
+  /**
+   * Taken From address page
+   *
+   * @returns
+   * @memberof Transactions
+   */
   readAddressBook() {
     let json = null;
     try {
@@ -773,7 +859,14 @@ class Transactions extends Component {
     return json;
   }
 
-  // Filter the transactions based on the CategoryFilter
+  //
+  /**
+   * Filter the transactions based on the CategoryFilter
+   *
+   * @param {*} inTransactions
+   * @returns
+   * @memberof Transactions
+   */
   filterByCategory(inTransactions) {
     let tempTrans = [];
     const categoryFilterValue = this.state.categoryFilter;
@@ -791,7 +884,14 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  // Filter the transactions based on the AmountFilter
+  //
+  /**
+   * Filter the transactions based on the AmountFilter
+   *
+   * @param {*} inTransactions
+   * @returns
+   * @memberof Transactions
+   */
   filterbyAmount(inTransactions) {
     let tempTrans = [];
     const amountFilterValue = this.state.amountFilter;
@@ -806,7 +906,14 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  // Filter the transactions based on the AddressFilter
+  //
+  /**
+   * Filter the transactions based on the AddressFilter
+   *
+   * @param {*} inTransactions
+   * @returns
+   * @memberof Transactions
+   */
   filterByAddress(inTransactions) {
     const addressFilter = this.state.addressFilter.toLowerCase();
     return inTransactions.filter(
@@ -814,7 +921,14 @@ class Transactions extends Component {
     );
   }
 
-  // Filter the transactions based on the DisplayTimeFrame
+  //
+  /**
+   * Filter the transactions based on the DisplayTimeFrame
+   *
+   * @param {*} inTransactions
+   * @returns
+   * @memberof Transactions
+   */
   filterByTime(inTransactions) {
     let tempTrans = [];
     const timeFilterValue = this.state.displayTimeFrame;
@@ -882,7 +996,14 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  // Returns all the transaction that have been filtered by the filter
+  //
+  /**
+   * Returns all the transaction that have been filtered by the filter
+   *
+   * @param {*} inTransactions
+   * @returns
+   * @memberof Transactions
+   */
   returnAllFilters(inTransactions) {
     let tempTrans = inTransactions;
     tempTrans = this.filterByTime(tempTrans);
@@ -892,7 +1013,13 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  // DEV MODE: Create a fake transaction for testing.
+  //
+  /**
+   * DEV MODE: Create a fake transaction for testing.
+   *
+   * @returns
+   * @memberof Transactions
+   */
   TEMPaddfaketransaction() {
     let faketrans = {
       transactionnumber:
@@ -944,7 +1071,14 @@ class Transactions extends Component {
     return faketrans;
   }
 
-  // What happens when you select something in the table
+  //
+  /**
+   * What happens when you select something in the table
+   *
+   * @param {*} e
+   * @param {*} indata
+   * @memberof Transactions
+   */
   tableSelectCallback(e, indata) {
     //e.target.select();
     //document.execCommand('copy');
@@ -954,7 +1088,13 @@ class Transactions extends Component {
     this.hoveringID = indata.index;
   }
 
-  // Return the data to be placed into the Table
+  //
+  /**
+   * Return the data to be placed into the Table
+   *
+   * @returns
+   * @memberof Transactions
+   */
   returnFormatedTableData() {
     if (this.props.walletitems == undefined) {
       return [];
@@ -979,9 +1119,15 @@ class Transactions extends Component {
     });
   }
 
-  // Returns the columns and their rules/formats for the Table
+  //
   // Output:
   //   Array || Table Column array
+  /**
+   * Returns the columns and their rules/formats for the Table
+   *
+   * @returns
+   * @memberof Transactions
+   */
   returnTableColumns() {
     var options = {
       month: 'short',
@@ -1052,9 +1198,15 @@ class Transactions extends Component {
     return tempColumns;
   }
 
-  // Returns formated data for the Victory Chart
+  //
   // Output:
   //    Array || Data Array
+  /**
+   * Returns formated data for the Victory Chart
+   *
+   * @returns
+   * @memberof Transactions
+   */
   returnChartData() {
     if (this.props.walletitems == undefined) {
       return [];
@@ -1070,7 +1222,14 @@ class Transactions extends Component {
     });
   }
 
-  // returns the correct fill color based on the category
+  //
+  /**
+   * returns the correct fill color based on the category
+   *
+   * @param {*} inData
+   * @returns
+   * @memberof Transactions
+   */
   returnCorrectFillColor(inData) {
     if (inData.category == 'credit') {
       return '#0ca4fb';
@@ -1081,7 +1240,14 @@ class Transactions extends Component {
     }
   }
 
-  // Returns the Correct color based on the category
+  //
+  /**
+   * Returns the Correct color based on the category
+   *
+   * @param {*} inData
+   * @returns
+   * @memberof Transactions
+   */
   returnCorrectStokeColor(inData) {
     if (inData.category == 'credit') {
       return '#0ca4fb';
@@ -1092,7 +1258,12 @@ class Transactions extends Component {
     }
   }
 
-  // Returns the tooltip lable for the chart
+  //
+  /**
+   * Returns the tooltip lable for the chart
+   *
+   * @memberof Transactions
+   */
   returnToolTipLable = inData => {
     const { locale } = this.props.settings;
     var options = {
@@ -1120,7 +1291,13 @@ class Transactions extends Component {
     );
   };
 
-  // The event listener for when you zoom in and out
+  //
+  /**
+   * The event listener for when you zoom in and out
+   *
+   * @param {*} domain
+   * @memberof Transactions
+   */
   handleZoom(domain) {
     //console.log(domain);
     domain.x[0] = new Date(domain.x[0]);
@@ -1151,17 +1328,35 @@ class Transactions extends Component {
     this.setState({ zoomDomain: domain });
   }
 
-  // the callback for when you mouse over a transaction on the table.
+  //
+  /**
+   * the callback for when you mouse over a transaction on the table.
+   *
+   * @param {*} e
+   * @param {*} inData
+   * @memberof Transactions
+   */
   mouseOverCallback(e, inData) {
     this.isHoveringOverTable = true;
   }
 
-  // The call back for when the mouse moves out of the table div.
+  //
+  /**
+   * The call back for when the mouse moves out of the table div.
+   *
+   * @param {*} e
+   * @memberof Transactions
+   */
   mouseOutCallback(e) {
     this.isHoveringOverTable = false;
   }
 
-  // Either load in the file from local or start downloading more data and make a new one.
+  //
+  /**
+   * Either load in the file from local or start downloading more data and make a new one.
+   *
+   * @memberof Transactions
+   */
   gethistorydatajson() {
     try {
       const electronapp =
@@ -1171,7 +1366,7 @@ class Transactions extends Component {
         (process.platform == 'darwin'
           ? electronapp.getPath('appData')
           : process.env.HOME);
-      appdataloc = appdataloc + '/Nexus_Wallet_BETA_v0.8.5/';
+      appdataloc = appdataloc + '/Nexus_Wallet_BETA_v0.8.6/';
       let incominghistoryfile = JSON.parse(
         fs.readFileSync(appdataloc + 'historydata.json', 'utf8')
       );
@@ -1186,10 +1381,18 @@ class Transactions extends Component {
     } catch (err) {}
   }
 
-  // Helper method to create URL's quickly
+  // 
   // Input :
   //   coinsym         || String || The symbol for the coin/fiat we are looking for MUST BE IN CAPS
   //   timestamptolook || String || timestamp string ( in seconds) that will be the to var in looking up data
+  /**
+   * Helper method to create URL's quickly
+   *
+   * @param {*} coinsym
+   * @param {*} timestamptolook
+   * @returns
+   * @memberof Transactions
+   */
   createcryptocompareurl(coinsym, timestamptolook) {
     let tempurl =
       'https://min-api.cryptocompare.com/data/pricehistorical?fsym=NXS&tsyms=' +
@@ -1199,11 +1402,19 @@ class Transactions extends Component {
     return tempurl;
   }
 
-  // Build a object from incoming data then dispatch that to redux to populate that transaction
+  //
   // Input:
   //     timeID    || String || Timestamp
   //     USDValue  || Float  || The value in USD
   //     BTCValue  || Float  || The value in BTC
+  /**
+   * Build a object from incoming data then dispatch that to redux to populate that transaction
+   *
+   * @param {*} timeID
+   * @param {*} USDvalue
+   * @param {*} BTCValue
+   * @memberof Transactions
+   */
   setHistoryValuesOnTransaction(timeID, USDvalue, BTCValue) {
     let dataToChange = {
       time: timeID,
@@ -1216,16 +1427,29 @@ class Transactions extends Component {
   }
 
   /// Set Fee Values On Transaction
-  /// Build a object from incoming data then dispatch that to redux to populate that transaction
+  ///
   /// Input:
   ///     incomingChangeData    || Array || Data that needs to be changed.
+  /**
+   * Build a object from incoming data then dispatch that to redux to populate that transaction
+   *
+   * @param {*} incomingChangeData
+   * @memberof Transactions
+   */
   setFeeValuesOnTransaction(incomingChangeData) {
     this.props.UpdateFeeOnTransaction(incomingChangeData);
   }
 
-  // Download both USD and BTC history on the incoming transaction
+  //
   // Input:
   //     inEle   || String || the timestamp of the transaction
+  /**
+   * Download both USD and BTC history on the incoming transaction
+   *
+   * @param {*} inEle
+   * @returns
+   * @memberof Transactions
+   */
   downloadHistoryOnTransaction(inEle) {
     if (this._isMounted == false) {
       return;
@@ -1275,7 +1499,12 @@ class Transactions extends Component {
     });
   }
 
-  // Go through all the data points that need to download new data a execute that promise
+  //
+  /**
+   * Go through all the data points that need to download new data a execute that promise
+   *
+   * @memberof Transactions
+   */
   gothroughdatathatneedsit() {
     let historyPromiseList = [];
     for (
@@ -1300,7 +1529,13 @@ class Transactions extends Component {
     }
   }
 
-  // Save the history data to a json file
+  //
+  /**
+   * Save the history data to a json file
+   *
+   * @returns
+   * @memberof Transactions
+   */
   SaveHistoryDataToJson() {
     if (
       this.state.historyData.size == 0 ||
@@ -1319,7 +1554,7 @@ class Transactions extends Component {
       (process.platform == 'darwin'
         ? electronapp.getPath('appData')
         : process.env.HOME);
-    appdataloc = appdataloc + '/Nexus_Wallet_BETA_v0.8.5/';
+    appdataloc = appdataloc + '/Nexus_Wallet_BETA_v0.8.6/';
 
     fs.writeFile(
       appdataloc + 'historydata.json',
@@ -1332,13 +1567,20 @@ class Transactions extends Component {
     );
   }
 
-  // Used to transform a Map to a Object so that we can save it to a json file
-  // http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
-  // Based on code from http://2ality.com/2015/08/es6-map-json.html
+  // 
   // Input :
   //   aMap    || Map || A map of the data
   // Output :
   //   Object  || A object that replaces the map but contains the same data.
+  /**
+   * Used to transform a Map to a Object so that we can save it to a json file
+   * http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
+   * Based on code from http://2ality.com/2015/08/es6-map-json.html
+   *
+   * @param {*} aMap
+   * @returns
+   * @memberof Transactions
+   */
   mapToObject(aMap) {
     let obj = Object.create(null);
 
@@ -1353,11 +1595,18 @@ class Transactions extends Component {
     return obj;
   }
 
-  // If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC
+  //
   // Input :
   //   intimestamp || String || Timestamp to look up
   // Output :
   //     Object || A object that contains priceUSD and priceBTC
+  /**
+   * If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC
+   *
+   * @param {*} intimestamp
+   * @returns
+   * @memberof Transactions
+   */
   findclosestdatapoint(intimestamp) {
     let datatograb = this.state.historyData.get(Number(intimestamp));
     if (datatograb == undefined) {
@@ -1371,13 +1620,22 @@ class Transactions extends Component {
     }
   }
 
-  // Compares a Data to a from Data and a To Data and returns a Bool
+  //
   // Input :
   //   indate    || Date || Date to check
   //   starttime || Date || Date from
   //   endtime   || Date || Date to
   // Output :
   //   Bool || Is this true or not
+  /**
+   * Compares a Data to a from Data and a To Data and returns a Bool
+   *
+   * @param {*} indate
+   * @param {*} starttime
+   * @param {*} endtime
+   * @returns
+   * @memberof Transactions
+   */
   comparedate(indate, starttime, endtime) {
     if (starttime <= indate && indate <= endtime) {
       return true;
@@ -1386,6 +1644,12 @@ class Transactions extends Component {
     }
   }
 
+  /**
+   * Return Default Page Size
+   *
+   * @returns
+   * @memberof Transactions
+   */
   returnDefaultPageSize() {
     let defPagesize = 10;
     if (this.props.walletitems != undefined) {
@@ -1396,6 +1660,11 @@ class Transactions extends Component {
     return defPagesize;
   }
 
+  /**
+   * Change Account
+   *
+   * @memberof Transactions
+   */
   accountChanger = () => {
     const { locale } = this.props.settings;
     if (this.props.myAccounts) {
@@ -1411,10 +1680,22 @@ class Transactions extends Component {
     return [];
   };
 
+  /**
+   * Select Account
+   *
+   * @param {*} inAccount
+   * @memberof Transactions
+   */
   selectAccount(inAccount) {
     this.props.SetSelectedMyAccount(inAccount);
   }
 
+  /**
+   * Return Victory Chart
+   *
+   * @returns
+   * @memberof Transactions
+   */
   returnVictoryChart() {
     const chartData = this.returnChartData();
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
@@ -1518,6 +1799,12 @@ class Transactions extends Component {
   }
 
   // Mandatory React method
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Transactions
+   */
   render() {
     const data = this.returnFormatedTableData();
     const columns = this.returnTableColumns();

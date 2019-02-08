@@ -1,7 +1,7 @@
 {
   "name": "nexus_wallet",
-  "productName": "Nexus_Wallet_BETA_v0.8.5",
-  "version": "0.8.5",
+  "productName": "Nexus_Wallet_BETA_v0.8.6",
+  "version": "0.8.6",
   "buildDate": "January 16th 2019",
   "description": "Nexus",
   "scripts": {
@@ -228,7 +228,7 @@
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^15.6.1",
     "redux-logger": "^3.0.6",
-    "rimraf": "^2.6.2",
+    "rimraf": "^2.6.3",
     "sinon": "^2.3.5",
     "spectron": "^3.8.0",
     "style-loader": "^0.23.1",
@@ -282,6 +282,7 @@
     "mocha": "^5.2.0",
     "move-file": "^1.0.0",
     "node-stream-zip": "^1.7.0",
+    "patch-package": "^6.0.2",
     "pretty-bytes": "^5.1.0",
     "process-exists": "^3.1.0",
     "prop-types": "^15.6.2",

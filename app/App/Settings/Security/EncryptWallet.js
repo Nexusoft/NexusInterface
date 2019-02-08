@@ -32,6 +32,12 @@ const Characters = styled.span({
   letterSpacing: 4,
 });
 
+/**
+ * Encrypted Wallet
+ *
+ * @class EncryptWallet
+ * @extends {Component}
+ */
 @reduxForm({
   form: 'encryptWallet',
   destroyOnUnmount: false,
@@ -64,14 +70,22 @@ const Characters = styled.span({
       onClose: () => {
         // this.props.history.push('/');
         // this.props.ResetForEncryptionRestart();
-        remote.getGlobal('core').start();
+        setTimeout(() => {
+          remote.getGlobal('core').start();
+        }, 10000);
         UIController.showNotification(<Text id="Settings.RestartingDaemon" />);
       },
     });
   },
   onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.EncryptingWallet" />),
 })
-export default class EncryptWallet extends Component {
+class EncryptWallet extends Component {
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof EncryptWallet
+   */
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -122,3 +136,4 @@ export default class EncryptWallet extends Component {
     );
   }
 }
+export default EncryptWallet;

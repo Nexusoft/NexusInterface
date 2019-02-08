@@ -16,14 +16,25 @@ const SpinningIcon = styled(StatusIcon)({
   animation: `${animations.spin} 2s linear infinite`,
 });
 
-@connect(({ overview: { blocks }, common: { heighestPeerBlock } }) => ({
-  heighestPeerBlock,
-  blocks,
-}))
-export default class SyncStatus extends React.Component {
+/**
+ * Handles the Sync Status
+ *
+ * @class SyncStatus
+ * @extends {React.Component}
+ */
+@connect(
+  ({ overview: { synchronizing, blocks }, common: { heighestPeerBlock } }) => ({
+    synchronizing,
+    heighestPeerBlock,
+    blocks,
+  })
+)
+class SyncStatus extends React.Component {
   statusIcon = () => {
-    const { heighestPeerBlock, blocks } = this.props;
-    if (heighestPeerBlock > blocks) {
+    const { synchronizing, heighestPeerBlock, blocks } = this.props;
+    const outOfSyncLegacy = heighestPeerBlock > blocks;
+
+    if (synchronizing || outOfSyncLegacy) {
       return <SpinningIcon icon={syncingIcon} />;
     } else {
       return <StatusIcon icon={checkIcon} />;
@@ -31,13 +42,14 @@ export default class SyncStatus extends React.Component {
   };
 
   statusTooltip = () => {
-    const { heighestPeerBlock, blocks } = this.props;
+    const { synchronizing, heighestPeerBlock, blocks } = this.props;
+    const outOfSyncLegacy = heighestPeerBlock > blocks;
 
-    if (heighestPeerBlock > blocks) {
+    if (synchronizing || outOfSyncLegacy) {
       return (
         <Text
           id="Header.Syncing"
-          data={{ blocks: heighestPeerBlock - blocks }}
+          // data={{ blocks: heighestPeerBlock - blocks }}
         />
       );
     } else {
@@ -53,3 +65,4 @@ export default class SyncStatus extends React.Component {
     );
   }
 }
+export default SyncStatus;

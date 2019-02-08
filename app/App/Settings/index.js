@@ -42,6 +42,13 @@ const SettingsContent = styled.div({
   overflow: 'auto',
 });
 
+/**
+ * Settings Page
+ *
+ * @export
+ * @class Settings
+ * @extends {Component}
+ */
 export default class Settings extends Component {
   componentDidMount() {
     googleanalytics.SendScreen('Settings');
@@ -51,6 +58,12 @@ export default class Settings extends Component {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
+  /**
+   * Set up context menu
+   *
+   * @param {*} e
+   * @memberof Settings
+   */
   setupcontextmenu(e) {
     e.preventDefault();
     const contextmenu = new ContextMenuBuilder().defaultContext;
@@ -59,6 +72,12 @@ export default class Settings extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
+  /**
+   * React Render
+   *
+   * @returns
+   * @memberof Settings
+   */
   render() {
     const { match } = this.props;
 

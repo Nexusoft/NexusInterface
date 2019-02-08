@@ -23,6 +23,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(actionsCreators, dispatch);
 
+/**
+ * The internal page to use the Fast method on Shapeshift
+ *
+ * @class Fast
+ * @extends {Component}
+ */
 class Fast extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
@@ -56,6 +62,12 @@ class Fast extends Component {
   }
 
   // Class methods
+  /**
+   * Calculate the transfer
+   *
+   * @returns
+   * @memberof Fast
+   */
   transferCalculator() {
     let tradeAmmt = parseFloat(this.props.ammount);
     if (tradeAmmt > this.props.marketPairData.minimum) {
@@ -83,6 +95,12 @@ class Fast extends Component {
     }
   }
 
+  /**
+   * Build the confirmation modal
+   *
+   * @returns
+   * @memberof Fast
+   */
   buildConfermation() {
     if (
       this.props.to &&
@@ -137,6 +155,12 @@ class Fast extends Component {
     } else return null;
   }
 
+  /**
+   * Build out the button to allow the user to trade
+   *
+   * @returns
+   * @memberof Fast
+   */
   buttonOrNoButton() {
     if (
       true
@@ -162,10 +186,21 @@ class Fast extends Component {
     } else return null;
   }
 
+  /**
+   * Return the currency lable
+   *
+   * @returns
+   * @memberof Fast
+   */
   currencylabel() {
     return this.props.to ? this.props.availableCoins[this.props.to].name : null;
   }
 
+  /**
+   * Execute the trade
+   *
+   * @memberof Fast
+   */
   executeTrade() {
     this.props.ToggleAcyncButtons();
     // if (this.props.loggedIn && this.props.from === "NXS") {

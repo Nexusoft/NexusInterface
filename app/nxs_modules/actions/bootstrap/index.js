@@ -7,6 +7,13 @@ import BootstrapModal from './BootstrapModal';
 
 let running = false;
 
+/**
+ * Bootstrap Modal element
+ *
+ * @export
+ * @param {*} [{ suggesting }={}]
+ * @returns
+ */
 export default function bootstrap({ suggesting } = {}) {
   return async (dispatch, getState) => {
     // Only one instance at the same time
@@ -61,4 +68,5 @@ export default function bootstrap({ suggesting } = {}) {
 }
 
 const checkFreeSpace = Bootstrapper.checkFreeSpace;
-export { checkFreeSpace };
+const checkBootStrapFreeSpace = Bootstrapper.checkBootStrapFreeSpace;
+export { checkFreeSpace, checkBootStrapFreeSpace };

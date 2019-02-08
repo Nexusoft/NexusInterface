@@ -17,7 +17,21 @@ const ExchangeFormComponent = styled.div({
   padding: '0 calc(20% - 150px)',
 });
 
+/**
+ * Internal form for use in the Exchange page
+ *
+ * @export
+ * @class ExchangeForm
+ * @extends {Component}
+ */
 export default class ExchangeForm extends Component {
+  /**
+   * Sets the To and From Values
+   *
+   * @param {*} value
+   * @param {*} switcher
+   * @memberof ExchangeForm
+   */
   toFromHandler(value, switcher) {
     if (switcher === 'to') {
       if (value !== this.props.from) {
@@ -36,18 +50,37 @@ export default class ExchangeForm extends Component {
     }
   }
 
+  /**
+   * Build out the array of available 
+   *
+   * @returns
+   * @memberof ExchangeForm
+   */
   optionbuilder() {
     return Object.values(this.props.availableCoins)
       .filter(e => e.status === 'available')
       .map(e => ({ value: e.symbol, display: e.name }));
   }
 
+  /**
+   * Returns the min amount a user has to send
+   *
+   * @returns
+   * @memberof ExchangeForm
+   */
   minAmount() {
     if (this.props.marketPairData.minimum) {
       return this.props.marketPairData.minimum;
     } else return 0;
   }
 
+  /**
+   * Handle the amount 
+   *
+   * @param {*} value
+   * @returns
+   * @memberof ExchangeForm
+   */
   amountHandler(value) {
     if (/^[0-9.]+$/.test(value) | (value === '')) {
       this.props.ammountUpdater(value);
@@ -56,6 +89,12 @@ export default class ExchangeForm extends Component {
     }
   }
 
+  /**
+   * Return the Currency lable 
+   *
+   * @returns
+   * @memberof ExchangeForm
+   */
   currencylabel() {
     return this.props.to ? this.props.availableCoins[this.props.to].name : null;
   }

@@ -19,6 +19,12 @@ const ImportPrivKeyForm = styled.form({
   flex: 3,
 });
 
+/**
+ * Import Private Keys
+ *
+ * @class ImportPrivKey
+ * @extends {Component}
+ */
 @connect(
   null,
   dispatch => ({
@@ -66,7 +72,13 @@ const ImportPrivKeyForm = styled.form({
   },
   onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ImportingPrivKey" />),
 })
-export default class ImportPrivKey extends Component {
+class ImportPrivKey extends Component {
+  /**
+   *  React Render
+   *
+   * @returns
+   * @memberof ImportPrivKey
+   */
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
@@ -116,3 +128,4 @@ export default class ImportPrivKey extends Component {
     );
   }
 }
+export default ImportPrivKey;
