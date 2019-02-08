@@ -376,7 +376,7 @@
   "Header.UnlockedUntil": "Entsperrt bis {unlockDate}",
   "Header.StakingOnly": "Nur zum Staken entsperrt",
   "Header.Synced": "Synchronisiert",
-  "Header.Synching": "Synchronisiere...\n Blöcke fehlen noch\n",
+  "Header.Syncing": "Synchronisiere...\n Blöcke fehlen noch\n",
   "Header.Blocks": "Blöcke",
   "Header.DaemonNotLoaded": "Daemon nicht geladen",
 
