@@ -371,6 +371,14 @@ class Overview extends Component {
         }
       });
 
+      if (selectedCurrancyValue[0] === undefined) {
+        selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
+          if (ele.name === 'USD') {
+            return ele;
+          }
+        });
+      }
+
       let currencyValue = this.props.balance * selectedCurrancyValue[0].price;
       if (currencyValue === 0) {
         currencyValue = `${currencyValue}.00`;
