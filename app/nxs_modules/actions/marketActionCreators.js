@@ -80,15 +80,17 @@ export const cryptopia24hrInfo = () => {
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
-          if (response.body) {
-            let data = body.Data;
-            let res = {
-              change: data.Change,
-              high: data.High,
-              low: data.Low,
-              volume: data.Volume,
-            };
-            dispatch({ type: TYPE.CRYPTOPIA_24, payload: res });
+          if (response.headers['content-type'] !== 'text/html') {
+            if (response.body) {
+              let data = body.Data;
+              let res = {
+                change: data.Change,
+                high: data.High,
+                low: data.Low,
+                volume: data.Volume,
+              };
+              dispatch({ type: TYPE.CRYPTOPIA_24, payload: res });
+            }
           }
         }
       }
@@ -144,18 +146,20 @@ export const cryptopiaDepthLoader = () => {
       },
       (error, response, body) => {
         if (response.statusCode === 200) {
-          let res = {
-            buy: body.Data.Buy.sort((a, b) => b.Price - a.Price).map(e => {
-              return { Volume: e.Volume, Price: e.Price };
-            }),
-            sell: body.Data.Sell.sort((a, b) => b.Price - a.Price)
-              .map(e => {
+          if (response.headers['content-type'] !== 'text/html') {
+            let res = {
+              buy: body.Data.Buy.sort((a, b) => b.Price - a.Price).map(e => {
                 return { Volume: e.Volume, Price: e.Price };
-              })
-              .reverse(),
-          };
-          dispatch({ type: TYPE.CRYPTOPIA_ORDERBOOK, payload: res });
-          dispatch(marketDataLoaded());
+              }),
+              sell: body.Data.Sell.sort((a, b) => b.Price - a.Price)
+                .map(e => {
+                  return { Volume: e.Volume, Price: e.Price };
+                })
+                .reverse(),
+            };
+            dispatch({ type: TYPE.CRYPTOPIA_ORDERBOOK, payload: res });
+            dispatch(marketDataLoaded());
+          }
         }
       }
     );
