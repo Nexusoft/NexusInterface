@@ -1,3 +1,11 @@
+# 0.8.7 (2019.2.xx)
+[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.7)
+#### Additions
+- Theme file now accepts a URL and will auto download and store in App Data
+
+#### Fixes
+- Language translation improvments
+
 # 0.8.6 (2019.2.1)
 [Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.6)
 #### Additions
