@@ -1,4 +1,4 @@
-#Theme Guide
+# Theme Guide
 This guide will describe how to develop themes to be used in the Nexus Interface.\
 Theme files are Json files that are read by the system and apply changes to the interface's theme.\
 Theme files use standard Json syntax.\
