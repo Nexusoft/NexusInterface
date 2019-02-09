@@ -303,7 +303,7 @@
   "Header.UnlockedUntil": "Débloqué jusqu'au",
   "Header.StakingOnly": "Piquetage seulement",
   "Header.Synced": "Synchronisé",
-  "Header.Synching": "Synchronisation...\nDerrière\n",
+  "Header.Syncing": "Synchronisation...\nDerrière\n",
   "Header.Blocks": "Des blocs",
   "Header.DaemonNotLoaded": "Daémon non chargé",
 

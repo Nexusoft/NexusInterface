@@ -35,7 +35,7 @@ const WarningIcon = styled(Icon)(({ theme }) => ({
 const fiatCurrencies = [
   { value: 'AUD', display: 'Australian Dollar (AUD)' },
   { value: 'BRL', display: 'Brazilian Real (BRL)' },
-  { value: 'GPB', display: 'British Pound (GBP)' },
+  { value: 'GBP', display: 'British Pound (GBP)' },
   { value: 'CAD', display: 'Canadian Dollar (CAD)' },
   { value: 'CLP', display: 'Chilean Peso (CLP)' },
   { value: 'CNY', display: 'Chinese Yuan (CNY)' },
@@ -59,10 +59,13 @@ const fiatCurrencies = [
   { value: 'USD', display: 'United States Dollar (USD)' },
 ];
 
-const mapStateToProps = state => ({
-  connections: state.overview.connections,
-  settings: state.settings,
-});
+const mapStateToProps = state => {
+  console.log(state);
+  return {
+    connections: state.overview.connections,
+    settings: state.settings,
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   updateSettings: updates => dispatch(updateSettings(updates)),

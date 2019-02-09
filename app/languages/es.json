@@ -302,7 +302,7 @@
   "Header.UnlockedUntil": "Desbloqueado hasta",
   "Header.StakingOnly": "Solo en juego",
   "Header.Synced": "Sincronizado",
-  "Header.Synching": "Sincronizando ...\nDetrás\n",
+  "Header.Syncing": "Sincronizando ...\nDetrás\n",
   "Header.Blocks": "Bloques",
   "Header.DaemonNotLoaded": "Daemon no cargado",
 
