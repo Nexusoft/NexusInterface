@@ -59,6 +59,13 @@ const fiatCurrencies = [
   { value: 'USD', display: 'United States Dollar (USD)' },
 ];
 
+const overviewDisplays = [
+  {value: 'standard', display: 'Standard'},
+  {value: 'miner', display: 'Miner'},
+  {value: 'minimalist', display: 'Minimalist'},
+  {value: 'none', display: 'None'}
+];
+
 const mapStateToProps = state => {
   console.log(state);
   return {
@@ -158,6 +165,15 @@ class SettingsApp extends Component {
       <AppSettings>
         <LanguageSetting />
 
+        <SettingsField
+          label={<Text id="Settings.OverviewDisplay" />}>
+          <Select
+            value={settings.overviewDisplay}
+            onChange={this.updateHandlers('overviewDisplay')}
+            options={overviewDisplays}
+            style={{ maxWidth: 260 }}
+          />
+        </SettingsField>
         <SettingsField
           connectLabel
           label={<Text id="Settings.MinimizeClose" />}

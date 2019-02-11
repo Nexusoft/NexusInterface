@@ -477,6 +477,22 @@ class Overview extends Component {
    */
   render() {
     const { connections, balance, stake, displayNXSvalues } = this.props;
+    if (this.props.settings.overviewDisplay === 'none')
+    {
+      return (
+        <OverviewPage>
+
+        </OverviewPage>
+      )
+    }
+    if (this.props.settings.overviewDisplay === 'minimalist')
+    {
+      return (
+        <OverviewPage>
+          minimalist
+        </OverviewPage>
+      )
+    }
     return (
       <OverviewPage>
         {!!this.showingGlobe() && (
