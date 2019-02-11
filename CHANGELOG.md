@@ -5,6 +5,9 @@
 
 #### Fixes
 - Language translation improvments
+- Fixed fiat selection bug
+- Fixed typo with GBP where the app would not start up
+
 
 # 0.8.6 (2019.2.1)
 [Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.6)
