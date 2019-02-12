@@ -1292,6 +1292,12 @@ class Transactions extends Component {
       inData.category = translate('transactions.Receive', locale);
     } else if (inData.category == 'debit') {
       inData.category = translate('transactions.Sent', locale);
+    }else if (inData.category == 'genesis') {
+      inData.category = translate('transactions.Genesis', locale);
+    }else if (inData.category == 'trust') {
+      inData.category = translate('transactions.Trust', locale);
+    }else{
+      inData.category = translate('transactions.UnknownCategory', locale);
     }
     return (
       inData.category +
