@@ -1,6 +1,6 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { reduxForm, Field, formValueSelector } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
@@ -14,8 +14,6 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
 import UIController from 'components/UIController';
-
-let tritium = true;
 
 const LoginFieldSet = styled(FieldSet)({
   maxWidth: 400,
@@ -34,6 +32,9 @@ const Buttons = styled.div({
  * @class Login
  * @extends {Component}
  */
+@connect(state => ({
+  tritium: state.overview.version.includes('0.3'),
+}))
 @reduxForm({
   form: 'login',
   destroyOnUnmount: false,
@@ -44,9 +45,9 @@ const Buttons = styled.div({
     stakingOnly: false,
     setLoginTimeOut: false,
   },
-  validate: ({ date, time, password }) => {
+  validate: ({ date, time, password, setLoginTimeOut }, props) => {
     const errors = {};
-    if (!tritium) {
+    if (!props.tritium || setLoginTimeOut) {
       if (!date) {
         errors.date = <Text id="Settings.Errors.LoginDate" />;
       }
@@ -117,13 +118,36 @@ class Login extends Component {
   }
 
   /**
+   * Render the date & time pickers
+   *
+   * @param {*} props
+   * @memberof Login
+   */
+  renderTimeInputs = ({ input }) =>
+    !this.props.tritium || input.value ? (
+      <div>
+        <FormField connectLabel label={<Text id="Settings.LoginDate" />}>
+          <Field
+            component={TextField.RF}
+            name="date"
+            type="date"
+            min={this.getMinDate()}
+          />
+        </FormField>
+        <FormField connectLabel label={<Text id="Settings.LoginTime" />}>
+          <Field component={TextField.RF} name="time" type="time" />
+        </FormField>
+      </div>
+    ) : null;
+
+  /**
    * React Render
    *
    * @returns
    * @memberof Login
    */
   render() {
-    const { handleSubmit, submitting } = this.props;
+    const { handleSubmit, submitting, tritium } = this.props;
 
     return (
       <div>
@@ -148,32 +172,12 @@ class Login extends Component {
             >
               <Field component={Switch.RF} name="stakingOnly" />
             </FormField>
-            {this.props.tritium && (
+            {tritium && (
               <FormField inline connectLabel label={'SET TIMEOUT FOR LOGIN'}>
                 <Field component={Switch.RF} name="setLoginTimeOut" />
               </FormField>
             )}
-            {this.props.showTimeInputs && (
-              <div>
-                <FormField
-                  connectLabel
-                  label={<Text id="Settings.LoginDate" />}
-                >
-                  <Field
-                    component={TextField.RF}
-                    name="date"
-                    type="date"
-                    min={this.getMinDate()}
-                  />
-                </FormField>
-                <FormField
-                  connectLabel
-                  label={<Text id="Settings.LoginTime" />}
-                >
-                  <Field component={TextField.RF} name="time" type="time" />
-                </FormField>
-              </div>
-            )}
+            <Field name="setLoginTimeOut" component={this.renderTimeInputs} />
 
             <Buttons>
               <Button type="submit" skin="primary" disabled={submitting}>
@@ -186,19 +190,5 @@ class Login extends Component {
     );
   }
 }
-
-const selector = formValueSelector('login');
-Login = connect(state => {
-  let showTimeInputs = selector(state, 'setLoginTimeOut');
-
-  if (!state.overview.version.includes('0.3')) {
-    showTimeInputs = true;
-    tritium = false;
-  }
-  return {
-    showTimeInputs,
-    tritium,
-  };
-})(Login);
 
 export default Login;
