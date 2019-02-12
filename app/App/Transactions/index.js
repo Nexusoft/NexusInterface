@@ -1105,6 +1105,7 @@ class Transactions extends Component {
     }
     const formatedData = this.returnAllFilters([...this.props.walletitems]);
     let txCounter = 0; // This is just to list out the transactions in order this is not apart of a transaction.
+    
     return formatedData.map(ele => {
       txCounter++;
       let isPending = '';
@@ -1173,8 +1174,14 @@ class Transactions extends Component {
           return <Text id="transactions.Sent" />;
         } else if (q.value === 'credit') {
           return <Text id="transactions.Receive" />;
-        } else {
+        } else if (q.value === 'genesis'){
+          return <Text id="transactions.Genesis" />;
+        } else if (q.value === 'trust'){
+          return <Text id="transactions.Trust" />;
+        } else if (q.value.endsWith('(Pending)')){
           return <Text id="transactions.Pending" />;
+        } else{
+          return <Text id="transactions.UnknownCategory"/>;
         }
       },
       Header: <Text id="transactions.Category" />,
