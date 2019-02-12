@@ -1005,6 +1005,10 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   returnAllFilters(inTransactions) {
+    if (!inTransactions || !inTransactions.length)
+    {
+      return inTransactions;
+    }
     let tempTrans = inTransactions;
     tempTrans = this.filterByTime(tempTrans);
     tempTrans = this.filterByCategory(tempTrans);
