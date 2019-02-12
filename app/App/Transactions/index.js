@@ -294,7 +294,7 @@ class Transactions extends Component {
     window.removeEventListener('contextmenu', this.transactioncontextfunction);
   }
 
-  // 
+  //
   /**
    * The callback for when we want to update just the confirmations
    *
@@ -305,7 +305,7 @@ class Transactions extends Component {
     this.props.UpdateConfirmationsOnTransactions(incomingData);
   }
 
-  // 
+  //
   /**
    * The callback for the on Mount State
    *
@@ -1005,6 +1005,10 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   returnAllFilters(inTransactions) {
+    if (!inTransactions || !inTransactions.length)
+    {
+      return inTransactions;
+    }
     let tempTrans = inTransactions;
     tempTrans = this.filterByTime(tempTrans);
     tempTrans = this.filterByCategory(tempTrans);
@@ -1366,7 +1370,7 @@ class Transactions extends Component {
         (process.platform == 'darwin'
           ? electronapp.getPath('appData')
           : process.env.HOME);
-      appdataloc = appdataloc + '/Nexus_Wallet_BETA_v0.8.6/';
+      appdataloc = appdataloc + `/Nexus_Wallet_BETA_v${APP_VERSION}/`;
       let incominghistoryfile = JSON.parse(
         fs.readFileSync(appdataloc + 'historydata.json', 'utf8')
       );
@@ -1381,7 +1385,7 @@ class Transactions extends Component {
     } catch (err) {}
   }
 
-  // 
+  //
   // Input :
   //   coinsym         || String || The symbol for the coin/fiat we are looking for MUST BE IN CAPS
   //   timestamptolook || String || timestamp string ( in seconds) that will be the to var in looking up data
@@ -1554,7 +1558,7 @@ class Transactions extends Component {
       (process.platform == 'darwin'
         ? electronapp.getPath('appData')
         : process.env.HOME);
-    appdataloc = appdataloc + '/Nexus_Wallet_BETA_v0.8.6/';
+    appdataloc = appdataloc + `/Nexus_Wallet_BETA_v${APP_VERSION}/`;
 
     fs.writeFile(
       appdataloc + 'historydata.json',
@@ -1567,7 +1571,7 @@ class Transactions extends Component {
     );
   }
 
-  // 
+  //
   // Input :
   //   aMap    || Map || A map of the data
   // Output :

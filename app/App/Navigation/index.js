@@ -1,13 +1,11 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
 import Text from 'components/Text';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal Global Depnedencies
 import HorizontalLine from 'components/HorizontalLine';
-import Icon from 'components/Icon';
 import { consts, timing } from 'styles';
 
 // Internal Local Dependencies
@@ -21,8 +19,8 @@ import transactionsIcon from 'images/transaction.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 import settingsIcon from 'images/settings.sprite.svg';
 import consoleIcon from 'images/console.sprite.svg';
-import shapeshiftIcon from 'images/shapeshift.sprite.svg';
-import trustListIcon from 'images/trust-list.sprite.svg';
+// import shapeshiftIcon from 'images/shapeshift.sprite.svg';
+// import trustListIcon from 'images/trust-list.sprite.svg';
 
 const slideUp = keyframes`
   from { opacity: 0; transform: translateY(70%) }
