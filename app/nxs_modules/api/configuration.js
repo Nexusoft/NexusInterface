@@ -148,12 +148,12 @@ const configuration = {
           .getPath('appData')
           .replace(' ', `\ `)
           .replace('/Electron/', ''),
-        'Nexus_Wallet_BETA_v0.8.6'
+        'Nexus_Wallet_BETA_v' + APP_VERSION
       );
     } else {
       AppDataDirPath = path.join(
         app.getPath('appData').replace('/Electron/', ''),
-        'Nexus_Wallet_BETA_v0.8.6'
+        'Nexus_Wallet_BETA_v' + APP_VERSION
       );
     }
 
@@ -165,11 +165,12 @@ const configuration = {
 
     //Set data directory by OS for automatic daemon mode
     if (process.platform === 'win32') {
-      var datadir = process.env.APPDATA + '\\Nexus_Core_Data_BETA_v0.8.6';
+      var datadir =
+        process.env.APPDATA + '\\Nexus_Core_Data_BETA_v' + APP_VERSION;
     } else if (process.platform === 'darwin') {
-      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v0.8.6';
+      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v' + APP_VERSION;
     } else {
-      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v0.8.6';
+      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v' + APP_VERSION;
     }
     return datadir;
   },
