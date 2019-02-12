@@ -1,11 +1,10 @@
 // External Dependencies
-import React, { Component } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal Global Depnedencies
-import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
@@ -60,7 +59,7 @@ const NavLinkItem = styled(NavLink)(({ theme }) => ({
       background: theme.primary,
       borderRadius: 45,
       position: 'absolute',
-      bottom: 0,
+      bottom: 5,
       left: '50%',
       transform: 'translate(-50%,50%)',
       animation: `${pulseRing} 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite`,
@@ -73,7 +72,7 @@ const NavLinkItem = styled(NavLink)(({ theme }) => ({
       background: theme.foreground,
       borderRadius: '50%',
       position: 'absolute',
-      bottom: 0,
+      bottom: 5,
       left: '50%',
       transform: 'translate(-50%,50%)',
       animation: `${pulseDot} 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite`,
