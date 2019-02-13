@@ -217,7 +217,7 @@ class SettingsStyle extends Component {
             );
           }
           UIController.showNotification(
-            'Theme Exported',
+            <Text id="Settings.ExportTheme" />,
             'success'
           );
         });
@@ -260,7 +260,7 @@ class SettingsStyle extends Component {
     this.props.updateTheme(DarkTheme);
     this.setThemeSelector(0);
     UIController.showNotification(
-      'Color scheme has been reset to default',
+      <Text id="Settings.ResetTheme" />'Color scheme has been reset to default',
       'success'
     );
   }
