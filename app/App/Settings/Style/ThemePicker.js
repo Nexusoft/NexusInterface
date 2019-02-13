@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
 //Internal
+import Text from 'components/Text';
 import { timing } from 'styles';
 import { color, newUID } from 'utils';
 
