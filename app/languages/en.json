@@ -227,7 +227,6 @@
   "Settings.CustomTheme": "Custom",
   "Settings.ResetTheme": "Reset",
   "Settings.ExportTheme": "Theme Exported",
-  "Settings.ResetTheme": "Theme has been reset to default",
 
   "Settings.Errors.ManualDaemonUser": "Manual daemon Username is required",
   "Settings.Errors.ManualDaemonPassword": "Manual daemon Password is required",
@@ -288,7 +287,8 @@
   "Settings.PasswordsMatch": "Passwords do not match",
   "Settings.LogOut": "Log Out",
   "Settings.ConfirmLogOut": "Are you sure you want to log out?",
-  "Settings.ResetThemeNoti": "Color scheme has been reset to default",
+  "Settings.ResetThemeNoti": "Theme has been reset to default",
+  "Settings.ResetColorNoti": "Color scheme has been reset to default",
   "Settings.StarryBackground": "Twinkling Starry Sky",
   "Settings.LightBackground": "Cosmic Light",
   "Settings.CustomWallpaper": "Custom Wallpaper",
