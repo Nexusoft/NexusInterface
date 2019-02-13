@@ -312,7 +312,8 @@
   "Settings.StakingOnly": "Nur zum Staken freigeben",
   "Settings.LogOut": "Ausloggen",
   "Settings.ConfirmLogOut": "Sind Sie sicher dass Sie ausloggen wollen?",
-  "Settings.ResetThemeNoti": "Das Farbschema wurde zurückgesetzt",
+  "Settings.ResetColorNoti": "Das Farbschema wurde zurückgesetzt",
+  "Settings.ResetThemeNoti": "Das Design wurde zurückgesetzt",
   "Settings.StarryBackground": "Sternenhimmel",
   "Settings.LightBackground": "Kosmisches Licht",
   "Settings.CustomWallpaper": "Benutzerdefiniertes Hintergrundbild",
@@ -355,7 +356,6 @@
   "Settings.CustomTheme": "Erweitert",
   "Settings.ResetTheme": "Zurücksetzen",
   "Settings.ExportTheme": "Design exportiert",
-  "Settings.ResetTheme": "Design wurde zurückgesetzt",
   
   "Settings.Errors.ManualDaemonUser": "Benutzername des Daemon Username erforderlich",
   "Settings.Errors.ManualDaemonPassword": "Passwort des Daemon erforderlich",
