@@ -87,7 +87,7 @@ class FeeSetting extends React.Component {
               onClick={this.confirmSetTxFee}
               style={{ marginLeft: '1em' }}
             >
-              Set
+              <Text id="Settings.Set" />
             </Button>
           </div>
         )}
