@@ -123,7 +123,7 @@ class SettingsStyle extends Component {
     //Dont think we need this anymore 
     this.props.resetColors();
     UIController.showNotification(
-      <Text id="Settings.ResetThemeNoti" />,
+      <Text id="Settings.ResetColorNoti" />,
       'success'
     );
   };
@@ -260,7 +260,7 @@ class SettingsStyle extends Component {
     this.props.updateTheme(DarkTheme);
     this.setThemeSelector(0);
     UIController.showNotification(
-      <Text id="Settings.ResetTheme" />,
+      <Text id="Settings.ResetThemeNoti" />,
       'success'
     );
   }
