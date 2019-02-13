@@ -260,7 +260,7 @@ class SettingsStyle extends Component {
     this.props.updateTheme(DarkTheme);
     this.setThemeSelector(0);
     UIController.showNotification(
-      <Text id="Settings.ResetTheme" />'Color scheme has been reset to default',
+      <Text id="Settings.ResetTheme" />,
       'success'
     );
   }
