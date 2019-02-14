@@ -298,7 +298,7 @@ class Transactions extends Component {
   /**
    * The callback for when we want to update just the confirmations
    *
-   * @param {*} incomingData
+   * @param {*} incomingData The data provided by the daemon to be used to update the confirmations
    * @memberof Transactions
    */
   setConfirmationsCallback(incomingData) {
@@ -309,7 +309,7 @@ class Transactions extends Component {
   /**
    * The callback for the on Mount State
    *
-   * @param {*} incomingData
+   * @param {*} incomingData the data provided by the daemon to be used to update the chart
    * @memberof Transactions
    */
   setOnmountTransactionsCallback(incomingData) {
@@ -356,7 +356,6 @@ class Transactions extends Component {
         y: [-1, 1],
       };
     }
-    //console.log(tempZoomDomain);
     this.setState(
       {
         tableColumns: tabelheaders,
@@ -406,8 +405,8 @@ class Transactions extends Component {
   /**
    * Updates the height and width of the chart and table when you resize the window
    *
-   * @param {*} event
-   * @returns
+   * @param {*} event The event hook for changing the window dimentions
+   * @returns can return null if chart is udefined
    * @memberof Transactions
    */
   updateChartAndTableDimensions(event) {
@@ -464,13 +463,11 @@ class Transactions extends Component {
     });
   };
 
-  //
-  // Input:
-  //   e || Event || Default Events given by the system for right click
   /**
    * This is the method that is called when the user pressed the right click
    *
    * @memberof Transactions
+   * @param {*} e event hook for html for right click
    */
   transactioncontextfunction = e => {
     const { locale } = this.props.settings;
@@ -598,24 +595,21 @@ class Transactions extends Component {
     }
   };
 
-  // Input :
-  //   instringtocopy      || String || String to copy
   /**
    * Copy to Clipboard
    *
-   * @param {*} instringtocopy
+   * @param {*} instringtocopy The string to copy to the clipboard
    * @memberof Transactions
    */
   copysomethingtotheclipboard(instringtocopy) {
     copy(instringtocopy);
   }
 
-  //
   /**
    * Gets all the data from each account held by the wallet
    *
-   * @param {*} finishingCallback
-   * @returns
+   * @param {*} finishingCallback The Method to use after all the data is processed from the daemon
+   * @returns {null} Cen return null if no data is retreived, exit for this method is finishingCallback
    * @memberof Transactions
    */
   getTransactionData(finishingCallback) {
@@ -714,7 +708,7 @@ class Transactions extends Component {
   /**
    * Set the display property in state from the dropdown element
    *
-   * @param {*} value
+   * @param {*} value The Value of the selected item in the dropdown menu
    * @memberof Transactions
    */
   transactionTimeframeChange(value) {
@@ -734,13 +728,10 @@ class Transactions extends Component {
     this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
   }
 
-  //
-  // Input :
-  //   DataToSave  || Object Array || Transactions to save
   /**
    * creates a CSV file then prompts the user to save that file
    *
-   * @param {*} DataToSave
+   * @param {[*]} DataToSave Transactions to save
    * @memberof Transactions
    */
   saveCSV(DataToSave) {
@@ -840,13 +831,11 @@ class Transactions extends Component {
     });
   };
 
-  //
-  // Return:
-  //   json || address in json format
+
   /**
    * Taken From address page
    *
-   * @returns
+   * @returns address in Json format
    * @memberof Transactions
    */
   readAddressBook() {
@@ -863,8 +852,8 @@ class Transactions extends Component {
   /**
    * Filter the transactions based on the CategoryFilter
    *
-   * @param {*} inTransactions
-   * @returns
+   * @param {[*]} inTransactions Current list of transactions to filter
+   * @returns {[*]} List of transactions after the filtering
    * @memberof Transactions
    */
   filterByCategory(inTransactions) {
@@ -888,8 +877,8 @@ class Transactions extends Component {
   /**
    * Filter the transactions based on the AmountFilter
    *
-   * @param {*} inTransactions
-   * @returns
+   * @param {[*]} inTransactions Current list of transactions to filter
+   * @returns {[*]} List of transactions after the filtering
    * @memberof Transactions
    */
   filterbyAmount(inTransactions) {
@@ -910,8 +899,8 @@ class Transactions extends Component {
   /**
    * Filter the transactions based on the AddressFilter
    *
-   * @param {*} inTransactions
-   * @returns
+   * @param {[*]} inTransactions Current list of transactions to filter
+   * @returns {[*]} List of transactions after the filtering
    * @memberof Transactions
    */
   filterByAddress(inTransactions) {
@@ -925,8 +914,8 @@ class Transactions extends Component {
   /**
    * Filter the transactions based on the DisplayTimeFrame
    *
-   * @param {*} inTransactions
-   * @returns
+   * @param {[*]} inTransactions Current list of transactions to filter
+   * @returns {[*]} List of transactions after the filtering
    * @memberof Transactions
    */
   filterByTime(inTransactions) {
@@ -996,12 +985,11 @@ class Transactions extends Component {
     return tempTrans;
   }
 
-  //
   /**
    * Returns all the transaction that have been filtered by the filter
    *
-   * @param {*} inTransactions
-   * @returns
+   * @param {[*]} inTransactions Current list of transactions to filter
+   * @returns {[*]} List of transactions after all the filtering is complete
    * @memberof Transactions
    */
   returnAllFilters(inTransactions) {
@@ -1021,7 +1009,7 @@ class Transactions extends Component {
   /**
    * DEV MODE: Create a fake transaction for testing.
    *
-   * @returns
+   * @returns a fake transaction
    * @memberof Transactions
    */
   TEMPaddfaketransaction() {
@@ -1079,8 +1067,8 @@ class Transactions extends Component {
   /**
    * What happens when you select something in the table
    *
-   * @param {*} e
-   * @param {*} indata
+   * @param {*} e HTML event
+   * @param {*} indata The datapoint that the cursor has clicked
    * @memberof Transactions
    */
   tableSelectCallback(e, indata) {
@@ -1096,7 +1084,7 @@ class Transactions extends Component {
   /**
    * Return the data to be placed into the Table
    *
-   * @returns
+   * @returns The transaction datas as filtered and formated to be placed in the table
    * @memberof Transactions
    */
   returnFormatedTableData() {
@@ -1105,6 +1093,7 @@ class Transactions extends Component {
     }
     const formatedData = this.returnAllFilters([...this.props.walletitems]);
     let txCounter = 0; // This is just to list out the transactions in order this is not apart of a transaction.
+    
     return formatedData.map(ele => {
       txCounter++;
       let isPending = '';
@@ -1123,13 +1112,10 @@ class Transactions extends Component {
     });
   }
 
-  //
-  // Output:
-  //   Array || Table Column array
   /**
    * Returns the columns and their rules/formats for the Table
    *
-   * @returns
+   * @returns {[*]} The columns for the table 
    * @memberof Transactions
    */
   returnTableColumns() {
@@ -1173,8 +1159,14 @@ class Transactions extends Component {
           return <Text id="transactions.Sent" />;
         } else if (q.value === 'credit') {
           return <Text id="transactions.Receive" />;
-        } else {
+        } else if (q.value === 'genesis'){
+          return <Text id="transactions.Genesis" />;
+        } else if (q.value === 'trust'){
+          return <Text id="transactions.Trust" />;
+        } else if (q.value.endsWith('(Pending)')){
           return <Text id="transactions.Pending" />;
+        } else{
+          return <Text id="transactions.UnknownCategory"/>;
         }
       },
       Header: <Text id="transactions.Category" />,
@@ -1202,13 +1194,11 @@ class Transactions extends Component {
     return tempColumns;
   }
 
-  //
-  // Output:
-  //    Array || Data Array
+  
   /**
    * Returns formated data for the Victory Chart
    *
-   * @returns
+   * @returns {[*]} The transaction data as filtered and formated to be placed in the Victory Chart
    * @memberof Transactions
    */
   returnChartData() {
@@ -1230,8 +1220,8 @@ class Transactions extends Component {
   /**
    * returns the correct fill color based on the category
    *
-   * @param {*} inData
-   * @returns
+   * @param {*} inData A Given Transaction
+   * @returns A Color in string HEX format
    * @memberof Transactions
    */
   returnCorrectFillColor(inData) {
@@ -1248,8 +1238,8 @@ class Transactions extends Component {
   /**
    * Returns the Correct color based on the category
    *
-   * @param {*} inData
-   * @returns
+   * @param {*} inData A given transaction
+   * @returns A color in string HEX format 
    * @memberof Transactions
    */
   returnCorrectStokeColor(inData) {
@@ -1285,6 +1275,12 @@ class Transactions extends Component {
       inData.category = translate('transactions.Receive', locale);
     } else if (inData.category == 'debit') {
       inData.category = translate('transactions.Sent', locale);
+    }else if (inData.category == 'genesis') {
+      inData.category = translate('transactions.Genesis', locale);
+    }else if (inData.category == 'trust') {
+      inData.category = translate('transactions.Trust', locale);
+    }else{
+      inData.category = translate('transactions.UnknownCategory', locale);
     }
     return (
       inData.category +
@@ -1299,7 +1295,7 @@ class Transactions extends Component {
   /**
    * The event listener for when you zoom in and out
    *
-   * @param {*} domain
+   * @param {*} domain A object that contains 2 arrys, x and y, x/y are arrays that are [minx,maxy] format
    * @memberof Transactions
    */
   handleZoom(domain) {
@@ -1336,8 +1332,8 @@ class Transactions extends Component {
   /**
    * the callback for when you mouse over a transaction on the table.
    *
-   * @param {*} e
-   * @param {*} inData
+   * @param {*} e HTML event
+   * @param {*} inData The data that the mouse is over
    * @memberof Transactions
    */
   mouseOverCallback(e, inData) {
@@ -1348,7 +1344,7 @@ class Transactions extends Component {
   /**
    * The call back for when the mouse moves out of the table div.
    *
-   * @param {*} e
+   * @param {*} e HTML Event
    * @memberof Transactions
    */
   mouseOutCallback(e) {
@@ -1385,15 +1381,11 @@ class Transactions extends Component {
     } catch (err) {}
   }
 
-  //
-  // Input :
-  //   coinsym         || String || The symbol for the coin/fiat we are looking for MUST BE IN CAPS
-  //   timestamptolook || String || timestamp string ( in seconds) that will be the to var in looking up data
   /**
    * Helper method to create URL's quickly
    *
-   * @param {*} coinsym
-   * @param {*} timestamptolook
+   * @param {*} coinsym The symbol for the coin/fiat we are looking for MUST BE IN CAPS
+   * @param {*} timestamptolook timestamp string ( in seconds) that will be the to var in looking up data
    * @returns
    * @memberof Transactions
    */
@@ -1406,17 +1398,13 @@ class Transactions extends Component {
     return tempurl;
   }
 
-  //
-  // Input:
-  //     timeID    || String || Timestamp
-  //     USDValue  || Float  || The value in USD
-  //     BTCValue  || Float  || The value in BTC
+
   /**
    * Build a object from incoming data then dispatch that to redux to populate that transaction
    *
-   * @param {*} timeID
-   * @param {*} USDvalue
-   * @param {*} BTCValue
+   * @param {*} timeID Timestamp
+   * @param {*} USDvalue the value in FIAT
+   * @param {*} BTCValue the value in BTC
    * @memberof Transactions
    */
   setHistoryValuesOnTransaction(timeID, USDvalue, BTCValue) {
@@ -1430,27 +1418,22 @@ class Transactions extends Component {
     this.props.UpdateCoinValueOnTransaction(dataToChange);
   }
 
-  /// Set Fee Values On Transaction
-  ///
-  /// Input:
-  ///     incomingChangeData    || Array || Data that needs to be changed.
+
   /**
    * Build a object from incoming data then dispatch that to redux to populate that transaction
    *
-   * @param {*} incomingChangeData
+   * @param {*} incomingChangeData Data that needs to be changed.
    * @memberof Transactions
    */
   setFeeValuesOnTransaction(incomingChangeData) {
     this.props.UpdateFeeOnTransaction(incomingChangeData);
   }
 
-  //
-  // Input:
-  //     inEle   || String || the timestamp of the transaction
+
   /**
    * Download both USD and BTC history on the incoming transaction
    *
-   * @param {*} inEle
+   * @param {*} inEle the timestamp of the transaction
    * @returns
    * @memberof Transactions
    */
@@ -1571,18 +1554,13 @@ class Transactions extends Component {
     );
   }
 
-  //
-  // Input :
-  //   aMap    || Map || A map of the data
-  // Output :
-  //   Object  || A object that replaces the map but contains the same data.
   /**
    * Used to transform a Map to a Object so that we can save it to a json file
    * http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
    * Based on code from http://2ality.com/2015/08/es6-map-json.html
    *
-   * @param {*} aMap
-   * @returns
+   * @param {*} aMap A map of the data
+   * @returns A object that replaces the map but contains the same data.
    * @memberof Transactions
    */
   mapToObject(aMap) {
@@ -1599,16 +1577,11 @@ class Transactions extends Component {
     return obj;
   }
 
-  //
-  // Input :
-  //   intimestamp || String || Timestamp to look up
-  // Output :
-  //     Object || A object that contains priceUSD and priceBTC
   /**
    * If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC
    *
-   * @param {*} intimestamp
-   * @returns
+   * @param {*} intimestamp Timestamp to look up
+   * @returns A object that contains priceUSD and priceBTC
    * @memberof Transactions
    */
   findclosestdatapoint(intimestamp) {
@@ -1624,20 +1597,14 @@ class Transactions extends Component {
     }
   }
 
-  //
-  // Input :
-  //   indate    || Date || Date to check
-  //   starttime || Date || Date from
-  //   endtime   || Date || Date to
-  // Output :
-  //   Bool || Is this true or not
+  
   /**
    * Compares a Data to a from Data and a To Data and returns a Bool
    *
-   * @param {*} indate
-   * @param {*} starttime
-   * @param {*} endtime
-   * @returns
+   * @param {*} indate Date to check
+   * @param {*} starttime Date from
+   * @param {*} endtime Date to
+   * @returns Is this true or not
    * @memberof Transactions
    */
   comparedate(indate, starttime, endtime) {
@@ -1697,7 +1664,7 @@ class Transactions extends Component {
   /**
    * Return Victory Chart
    *
-   * @returns
+   * @returns Victory Chart JSX
    * @memberof Transactions
    */
   returnVictoryChart() {
@@ -1806,7 +1773,7 @@ class Transactions extends Component {
   /**
    * React Render
    *
-   * @returns
+   * @returns JSX for Element
    * @memberof Transactions
    */
   render() {

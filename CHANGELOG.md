@@ -1,10 +1,18 @@
 # 0.8.7 (2019.2.xx)
 [Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.7)
 #### Additions
-- Theme file now accepts a URL and will auto download and store in App Data
+- There are now additional display options for the overview page, see Settings/App
+
+#### Ajustments
+- Low disk warning has been reduced to 1gb for manual syncing
 
 #### Fixes
 - Language translation improvments
+- Fixed fiat selection bug
+- Fixed typo with GBP where the app would not start up
+- Fixed an issue where using the filters in the transactions page would cause the app to gray screen
+- Fixed an Issue werer the Nav Icon pulse was being cut off
+
 
 # 0.8.6 (2019.2.1)
 [Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.6)

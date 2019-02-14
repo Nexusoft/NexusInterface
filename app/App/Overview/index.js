@@ -14,7 +14,8 @@ import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 import * as helpers from 'scripts/helper.js';
-import { timing, consts } from 'styles';
+import * as RPC from 'scripts/rpc';
+import { timing, consts, animations } from 'styles';
 import NetworkGlobe from './NetworkGlobe';
 
 // Images
@@ -85,6 +86,8 @@ const blockWeightIcons = [
   blockweight9,
 ];
 
+const formatDiff = diff => (diff || 0).toFixed(3);
+
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
@@ -96,6 +99,10 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => ({
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
+  getDifficulty: async () => {
+    const diff = await RPC.PROMISE('getdifficulty', []);
+    dispatch({ type: TYPE.SET_DIFFICULTY, payload: diff });
+  },
 });
 
 const OverviewPage = styled.div({
@@ -158,6 +165,18 @@ const Stats = styled.div(
     }
 );
 
+const MinimalStats = styled.div(
+  {
+    fontSize: '45%',
+    textAlign: 'center',
+    display: 'flex',
+    margin: '0 auto',
+    marginTop: '-1em',
+    animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideRight}`,
+    justifyContent: 'center',
+  }
+)
+
 const Stat = styled.div(
   ({ theme }) => ({
     display: 'block',
@@ -176,7 +195,42 @@ const Stat = styled.div(
       '&:hover': {
         filter: `drop-shadow(0 0 8px ${theme.primary}) brightness(120%)`,
       },
-    }
+    },
+);
+
+const HorizontalLine = styled.div(({ theme }) => ({
+  height: '2em',
+  
+  margin: '0 auto',
+  backgroundImage: `linear-gradient(to right, transparent 10%, transparent 20%, ${
+    theme.primary
+  } 50%, transparent 80%, transparent 100%)`,
+  animation: `${animations.expand} ${timing.slow} ${consts.enhancedEaseOut}`,
+}));
+
+const MinimalStat = styled.div(
+  ({theme}) =>
+     theme && {
+      display: 'flex',
+      alignItems: 'center',
+      background: 'rgb(0,0,0,0.5)',
+      filter: `drop-shadow(0 0 2px ` + theme.primaryAccent + `)`,
+      marginLeft: '1.5em',
+      [StatValue]:
+        {
+          marginLeft: '0.5em',
+          height: '50%',
+          lineHeight: '50%',
+          whiteSpace: 'nowrap',
+        },
+      [StatLabel]:
+      {
+        height: '50%',
+        marginTop: '0.50em',
+        whiteSpace: 'nowrap',
+        lineHeight: '50%',
+      },
+    },
 );
 
 const StatLabel = styled.div(({ theme }) => ({
@@ -218,6 +272,11 @@ const MaxmindLogo = styled.img({
  * @extends {Component}
  */
 class Overview extends Component {
+  constructor(props) {
+    super(props);
+    this.fetchDifficulty();
+  }
+
   // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
@@ -232,6 +291,7 @@ class Overview extends Component {
   reDrawEverything() {}
   // React Method (Life cycle hook)
   componentWillUnmount() {
+    clearTimeout(this.diffFetcher);
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
@@ -256,6 +316,11 @@ class Overview extends Component {
       }
     }
   }
+
+  fetchDifficulty = async () => {
+    await this.props.getDifficulty();
+    this.diffFetcher = setTimeout(this.fetchDifficulty, 50000);
+  };
 
   // Class methods
   /**
@@ -468,6 +533,114 @@ class Overview extends Component {
       <span className="dim">-</span>
     );
 
+  /**
+   * Returns the weight stats for the overview page
+   *
+   * @memberof Overview
+   */
+  returnWeightStats = () =>
+  {
+    return (
+      <React.Fragment>
+        <Stat>
+          <StatIcon icon={this.blockWeightIcon()} />
+          <div>
+            <StatLabel>
+              <Text id="overview.BlockWeightt" />
+            </StatLabel>
+            <StatValue>
+              {this.waitForDaemon(this.props.blockweight)}
+            </StatValue>
+          </div>
+        </Stat>
+
+        <Stat>
+          <StatIcon icon={this.trustIcon()} />
+          <div>
+            <StatLabel>
+              <Text id="overview.TrustWeight" />
+            </StatLabel>
+            <StatValue>
+              {this.waitForDaemon(this.props.trustweight)}
+            </StatValue>
+          </div>
+        </Stat>
+
+        <Stat>
+          <StatIcon icon={stakeIcon} />
+          <div>
+            <StatLabel>
+              <Text id="overview.StakeWeight" />
+            </StatLabel>
+            <StatValue>
+              {this.waitForDaemon(this.props.stakeweight)}
+            </StatValue>
+          </div>
+        </Stat>
+        
+        
+      </React.Fragment>
+    );
+  }
+ /**
+   * Returns the Difficulty Stats for the Overview page when it is in Miner View
+   *
+   * @memberof Overview
+   */
+  returnDifficultyStats = difficulty =>
+  {
+    return (
+    <React.Fragment>
+      <Stat>
+          <StatIcon icon={this.trustIcon()} />
+          <div>
+            <StatLabel>
+              <Text id="overview.PrimeDiff" />
+            </StatLabel>
+            <StatValue>
+              {!!difficulty ? (
+                formatDiff(difficulty.prime)
+              ) : (
+                <span className="dim">-</span>
+              )}
+            </StatValue>
+          </div>
+        </Stat>
+      <Stat>
+        <StatIcon icon={stakeIcon} />
+        <div>
+          <StatLabel>
+            <Text id="overview.HashDiff" />
+          </StatLabel>
+          <StatValue>
+            {!!difficulty ? (
+              formatDiff(difficulty.hash)
+            ) : (
+              <span className="dim">-</span>
+            )}
+          </StatValue>
+        </div>
+      </Stat>
+
+      <Stat>
+        <StatIcon icon={this.blockWeightIcon()} />
+        <div>
+          <StatLabel>
+            <Text id="overview.StakeDiff" />
+          </StatLabel>
+          <StatValue>
+            {!!difficulty ? (
+              formatDiff(difficulty.stake)
+            ) : (
+              <span className="dim">-</span>
+            )}
+          </StatValue>
+        </div>
+      </Stat>
+    </React.Fragment>
+    )
+  }
+
   // Mandatory React method
   /**
    * React Render
@@ -475,8 +648,115 @@ class Overview extends Component {
    * @returns
    * @memberof Overview
    */
-  render() {
-    const { connections, balance, stake, displayNXSvalues } = this.props;
+  render() { 
+    const {connections,balance,stake,displayNXSvalues,difficulty} = this.props;
+    if (this.props.settings.overviewDisplay === 'none')
+    {
+      return (
+        <OverviewPage>
+
+        </OverviewPage>
+      )
+    }
+    if (this.props.settings.overviewDisplay === 'minimalist')
+    {
+      return (
+        <OverviewPage>
+          <MinimalStats >
+          <MinimalStat >
+            
+              <StatLabel>
+                {stake > 0 ? (
+                  <span>Balance and Stake</span>
+                ) : (
+                  <Text id="overview.Balance" />
+                )}{' '}
+                (NXS) : 
+              </StatLabel>
+              <StatValue>
+                {this.waitForDaemon(balance + (stake || 0))}
+              </StatValue>
+            
+          </MinimalStat>
+
+          <MinimalStat>
+              <StatLabel>
+                <Text id="overview.Balance" /> (
+                {this.props.settings.fiatCurrency})
+              </StatLabel>
+              <StatValue>
+                {this.waitForDaemon(this.calculateUSDvalue())}
+              </StatValue>
+          </MinimalStat>
+
+          <MinimalStat>
+              <StatLabel>
+                <Text id="overview.Transactions" />
+              </StatLabel>
+              <StatValue>{this.waitForDaemon(this.props.txtotal)}</StatValue>
+          </MinimalStat>
+
+          <MinimalStat>
+              <StatLabel>
+                <Text id="overview.MarketPrice" /> (
+                {this.props.settings.fiatCurrency})
+              </StatLabel>
+              <StatValue>
+                {!!displayNXSvalues[0] ? (
+                  this.marketPriceFormatter()
+                ) : (
+                  <span className="dim">-</span>
+                )}
+              </StatValue>
+          </MinimalStat>
+
+          <MinimalStat>
+              <StatLabel>
+                <Text id="overview.24hrChange" /> (
+                {this.props.settings.fiatCurrency} %)
+              </StatLabel>
+              <StatValue>
+                {!!displayNXSvalues[0] ? (
+                  this.pctChange24hrFormatter() + '%'
+                ) : (
+                  <span className="dim">-</span>
+                )}
+              </StatValue>
+          </MinimalStat>
+          <MinimalStat>
+              <StatLabel>
+                <Text id="overview.Connections" />
+              </StatLabel>
+              <StatValue>
+                {this.waitForDaemon(this.props.connections)}
+              </StatValue>
+          </MinimalStat>
+
+          <MinimalStat>
+              <StatLabel>
+                <Text id="overview.InterestRate" />
+              </StatLabel>
+              <StatValue>
+                {this.waitForDaemon(
+                  this.props.interestweight || this.props.stakerate + '%'
+                )}
+              </StatValue>
+          </MinimalStat>
+
+            <MinimalStat className="relative">
+                <StatLabel>
+                  <Text id="overview.BlockCount" />
+                </StatLabel>
+
+                <StatValue>
+                  {this.waitForDaemon(this.numberWithCommas(this.props.blocks))}
+                </StatValue>
+            </MinimalStat>
+          </MinimalStats>
+        </OverviewPage>
+      )
+    }
+   
     return (
       <OverviewPage>
         {!!this.showingGlobe() && (
@@ -651,41 +931,11 @@ class Overview extends Component {
             </Stat>
           </Tooltip.Trigger>
 
-          <Stat>
-            <StatIcon icon={this.blockWeightIcon()} />
-            <div>
-              <StatLabel>
-                <Text id="overview.BlockWeightt" />
-              </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(this.props.blockweight)}
-              </StatValue>
-            </div>
-          </Stat>
-
-          <Stat>
-            <StatIcon icon={this.trustIcon()} />
-            <div>
-              <StatLabel>
-                <Text id="overview.TrustWeight" />
-              </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(this.props.trustweight)}
-              </StatValue>
-            </div>
-          </Stat>
-
-          <Stat>
-            <StatIcon icon={stakeIcon} />
-            <div>
-              <StatLabel>
-                <Text id="overview.StakeWeight" />
-              </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(this.props.stakeweight)}
-              </StatValue>
-            </div>
-          </Stat>
+          {this.props.settings.overviewDisplay === 'miner' ? 
+            this.returnDifficultyStats(difficulty)
+          :
+            this.returnWeightStats()
+          }
         </Stats>
       </OverviewPage>
     );

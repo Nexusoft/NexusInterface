@@ -128,7 +128,7 @@ export default function getInfo() {
       }
     }
 
-    const enoughSpace = await checkFreeSpace(10);
+    const enoughSpace = await checkFreeSpace(1);
     if (!enoughSpace) {
       UIController.showNotification(
         {content: "WARNING LOW DISK SPACE",
