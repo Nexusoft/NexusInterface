@@ -59,13 +59,10 @@ const fiatCurrencies = [
   { value: 'USD', display: 'United States Dollar (USD)' },
 ];
 
-const mapStateToProps = state => {
-  console.log(state);
-  return {
-    connections: state.overview.connections,
-    settings: state.settings,
-  };
-};
+const mapStateToProps = state => ({
+  connections: state.overview.connections,
+  settings: state.settings,
+});
 
 const mapDispatchToProps = dispatch => ({
   updateSettings: updates => dispatch(updateSettings(updates)),
@@ -181,11 +178,21 @@ class SettingsApp extends Component {
               </span>
             </span>
           }
-          subLabel={<Text id="Settings.AutoUpdateNote" />}
+          subLabel={
+            <div>
+              <Text id="Settings.AutoUpdateNote" />
+              {process.platform === 'darwin' && (
+                <div className="error">
+                  <Text id="Settings.AutoUpdateDisabled" />
+                </div>
+              )}
+            </div>
+          }
         >
           <Switch
-            checked={settings.autoUpdate}
+            checked={settings.autoUpdate && process.platform !== 'darwin'}
             onChange={this.handleAutoUpdateChange}
+            disabled={process.platform === 'darwin'}
           />
         </SettingsField>
 
