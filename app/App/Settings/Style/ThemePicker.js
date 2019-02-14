@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
 //Internal
+import Text from 'components/Text';
 import { timing } from 'styles';
 import { color, newUID } from 'utils';
 
@@ -98,7 +99,7 @@ class ThemePicker extends Component {
                         this.props.darkCallback();
                     }}
                 >
-                    Dark
+                    <Text id="Settings.DarkTheme" />
             </OptionButton>
                 <OptionButton
                     selected={this.state.themeOn == 1 ? true : false}
@@ -110,7 +111,7 @@ class ThemePicker extends Component {
                         this.props.lightCallback();
                     }}
                 >
-                    Light
+                    <Text id="Settings.LightTheme" />
             </OptionButton>
                 <OptionButton
                     selected={this.state.themeOn == 2 ? true : false}
@@ -119,7 +120,7 @@ class ThemePicker extends Component {
                         this.props.customCallback();
                     }}
                 >
-                    Custom
+                    <Text id="Settings.CustomTheme" />
             </OptionButton>
                 <OptionButton
                     selected={this.state.themeOn == 3 ? true : false}
@@ -131,7 +132,7 @@ class ThemePicker extends Component {
                         this.props.resetCallback();
                     }}
                 >
-                    Reset
+                    <Text id="Settings.ResetTheme" />
             </OptionButton>
 
             </div>

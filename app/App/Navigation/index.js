@@ -61,7 +61,7 @@ const Navigation = () => (
       </NavItem>
 
       <NavItem icon={sendIcon} to="/SendPage">
-        Send NXS
+        <Text id="Footer.SendNXS" />
       </NavItem>
 
       <NavItem icon={transactionsIcon} to="/Transactions">
@@ -69,15 +69,11 @@ const Navigation = () => (
       </NavItem>
 
       <NavItem icon={chartIcon} to="/Market">
-        <Text id="Footer.Market" />
-        &nbsp;
-        <Text id="Footer.Data" />
+        <Text id="Footer.MarketData" />
       </NavItem>
 
       <NavItem icon={addressBookIcon} to="/AddressBook">
-        <Text id="Footer.Address" />
-        &nbsp;
-        <Text id="Footer.Book" />
+        <Text id="Footer.AddressBook" />
       </NavItem>
 
       <NavItem icon={settingsIcon} to="/Settings">
