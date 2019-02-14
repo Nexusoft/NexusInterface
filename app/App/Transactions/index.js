@@ -1271,9 +1271,9 @@ class Transactions extends Component {
       timeZoneName: 'short',
     };
 
-    if (inData.category == 'credit' || indata.category === 'receive') {
+    if (inData.category == 'credit' || inData.category === 'receive') {
       inData.category = translate('transactions.Receive', locale);
-    } else if (inData.category == 'debit'|| indata.category === 'send') {
+    } else if (inData.category == 'debit'|| inData.category === 'send') {
       inData.category = translate('transactions.Sent', locale);
     }else if (inData.category == 'genesis') {
       inData.category = translate('transactions.Genesis', locale);
