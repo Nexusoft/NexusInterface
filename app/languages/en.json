@@ -220,6 +220,7 @@
   "Settings.RescanningDone": "Rescanning done",
   "Settings.Import": "Import",
   "Settings.LoggedIn": "Logged In Successfully",
+  "Settings.AutoUpdateDisabled": "Auto Update is not yet available on Mac, please update the wallet manually for the time being",
 
   "Settings.Errors.ManualDaemonUser": "Manual daemon Username is required",
   "Settings.Errors.ManualDaemonPassword": "Manual daemon Password is required",

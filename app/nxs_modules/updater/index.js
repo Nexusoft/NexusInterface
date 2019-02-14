@@ -72,7 +72,9 @@ class Updater extends EventEmitter {
   };
 
   autoUpdate = async () => {
+    if (process.platform === 'darwin') return;
     if (this._autoUpdateStopped) return;
+
     const result = await this._autoUpdater.checkForUpdates();
     if (result.downloadPromise) {
       await result.downloadPromise;
