@@ -348,3 +348,8 @@ export const ToggleCreateModal = () => {
     });
   };
 };
+
+export const addNewContact = contact => ({
+  type: TYPE.ADD_NEW_CONTACT,
+  payload: contact,
+});

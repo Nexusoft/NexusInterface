@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 // Internal
 import * as RPC from 'scripts/rpc';
+import * as actionCreators from 'actions/addressbookActionCreators';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -23,13 +24,6 @@ const tzOptions = timeZones.map(tz => ({
 const mapStateToProps = state => ({
   addressBook: state.addressbook.addressbook,
 });
-
-const actionCreators = {
-  addNewContact: contact => ({
-    type: TYPE.ADD_NEW_CONTACT,
-    payload: contact,
-  }),
-};
 
 function validateAddresses(addresses) {
   const addressesErrors = [];
