@@ -65,7 +65,7 @@
     "publish": {
       "provider": "github",
       "owner": "Nexusoft",
-      "repo": "Nexus-Interface-React"
+      "repo": "NexusInterface"
     },
     "mac": {
       "target": [
