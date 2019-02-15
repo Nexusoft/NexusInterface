@@ -319,8 +319,9 @@ class AppMenu {
       submenu: [
         this.websiteLink,
         this.gitRepoLink,
-        this.separator,
-        this.updaterMenuItem(),
+        // this.separator,
+        // Disable checking for updates on Mac until we have the developer key
+        // this.updaterMenuItem(),
       ],
     };
 

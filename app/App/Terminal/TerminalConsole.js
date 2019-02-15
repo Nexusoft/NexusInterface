@@ -140,8 +140,10 @@ class TerminalConsole extends Component {
     // If the scroll was at the bottom before the DOM is updated
     if (beforeUpdate && beforeUpdate.scrollAtBottom) {
       // Scroll to bottom
-      const { clientHeight, scrollHeight } = this.outputRef;
-      this.outputRef.scrollTop = scrollHeight - clientHeight;
+      if (this.outputRef) {
+        const { clientHeight, scrollHeight } = this.outputRef;
+        this.outputRef.scrollTop = scrollHeight - clientHeight;
+      }
     }
   }
 

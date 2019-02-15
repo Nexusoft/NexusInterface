@@ -1155,9 +1155,9 @@ class Transactions extends Component {
     tempColumns.push({
       id: 'category',
       Cell: q => {
-        if (q.value === 'debit') {
+        if (q.value === 'debit' || q.value === 'send') {
           return <Text id="transactions.Sent" />;
-        } else if (q.value === 'credit') {
+        } else if (q.value === 'credit' || q.value === 'receive') {
           return <Text id="transactions.Receive" />;
         } else if (q.value === 'genesis'){
           return <Text id="transactions.Genesis" />;
@@ -1271,9 +1271,9 @@ class Transactions extends Component {
       timeZoneName: 'short',
     };
 
-    if (inData.category == 'credit') {
+    if (inData.category == 'credit' || inData.category === 'receive') {
       inData.category = translate('transactions.Receive', locale);
-    } else if (inData.category == 'debit') {
+    } else if (inData.category == 'debit'|| inData.category === 'send') {
       inData.category = translate('transactions.Sent', locale);
     }else if (inData.category == 'genesis') {
       inData.category = translate('transactions.Genesis', locale);
