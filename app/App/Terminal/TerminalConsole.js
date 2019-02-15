@@ -91,6 +91,7 @@ const AutoCompleteItem = styled.a(({ theme }) => ({
 const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
   flexBasis: 0,
+  fontSize: "75%",
   overflow: 'auto',
   wordBreak: 'break-all',
   background: theme.background,
@@ -376,7 +377,7 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   render() {
-    if (this.props.connections === undefined) {
+    if (false) {
       return (
         <WaitingMessage>
           <Text id="transactions.Loading" />
