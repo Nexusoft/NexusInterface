@@ -41,6 +41,7 @@ const mapStateToProps = state => {
     ...state.market,
     ...state.common,
     ...state.intl,
+    theme: state.theme,
     settings: state.settings,
   };
 };
@@ -274,6 +275,7 @@ class Market extends Component {
    * @memberof Market
    */
   render() {
+    console.log(this);
     return (
       <Panel
         controls={
@@ -300,11 +302,13 @@ class Market extends Component {
                 locale={this.props.settings.locale}
                 chartData={this.formatChartData('binanceBuy')}
                 chartSellData={this.formatChartData('binanceSell')}
+                theme={this.props.theme}
               />
               {this.props.binance.candlesticks[0] !== undefined ? (
                 <Candlestick
                   locale={this.props.settings.locale}
                   data={this.props.binance.candlesticks}
+                  theme={this.props.theme}
                 />
               ) : null}
             </div>
@@ -320,11 +324,13 @@ class Market extends Component {
                 locale={this.props.settings.locale}
                 chartData={this.formatChartData('bittrexBuy')}
                 chartSellData={this.formatChartData('bittrexSell')}
+                theme={this.props.theme}
               />
               {this.props.bittrex.candlesticks[0] !== undefined ? (
                 <Candlestick
                   locale={this.props.settings.locale}
                   data={this.props.bittrex.candlesticks}
+                  theme={this.props.theme}
                 />
               ) : null}
             </div>
@@ -339,12 +345,14 @@ class Market extends Component {
                 locale={this.props.settings.locale}
                 chartData={this.formatChartData('cryptopiaBuy')}
                 chartSellData={this.formatChartData('cryptopiaSell')}
+                theme={this.props.theme}
               />
 
               {this.props.cryptopia.candlesticks[0] !== undefined ? (
                 <Candlestick
                   data={this.props.cryptopia.candlesticks}
                   locale={this.props.settings.locale}
+                  theme={this.props.theme}
                 />
               ) : null}
             </div>
