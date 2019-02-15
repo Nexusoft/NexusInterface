@@ -5,6 +5,7 @@ import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import createRootReducer from 'reducers';
 
+import changesWatcherMiddleware from 'middlewares/changesWatcher';
 import { addLocaleData } from 'react-intl';
 import itLocaleData from 'react-intl/locale-data/it';
 import enLocaleData from 'react-intl/locale-data/en';
@@ -32,6 +33,8 @@ const configureStore = () => {
   // Router Middleware
   const router = routerMiddleware(history);
   middleware.push(router);
+
+  middleware.push(changesWatcherMiddleware);
 
   // Redux DevTools Configuration
   // const actionCreators = {
