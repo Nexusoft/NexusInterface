@@ -146,7 +146,7 @@ export default class UIController extends Component {
   showNotification = (content, type) => {
     const notifID = newNotifID();
     let notif = {};
-    if (typeof content === 'string') {
+    if (typeof type !== 'undefined') {
       notif = {
         id: notifID,
         type,
