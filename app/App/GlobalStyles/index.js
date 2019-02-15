@@ -117,6 +117,13 @@ const utilityClasses = theme => css`
   .error {
     color: ${theme.danger};
   }
+
+  .mt1 {
+    margin-top: 1em;
+  }
+  .mt2 {
+    margin-top: 2em;
+  }
 `;
 
 const GlobalStyles = () => (

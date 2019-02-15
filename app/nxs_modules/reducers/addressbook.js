@@ -23,133 +23,25 @@ const initialState = {
   createAddress: false,
 };
 
+const compareNames = (a, b) => {
+  let nameA = a.name.toUpperCase();
+  let nameB = b.name.toUpperCase();
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+  return 0;
+};
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.ADD_NEW_CONTACT:
-      let index = state.addressbook.findIndex(ele => {
-        if (ele.name === action.payload.name) {
-          return ele;
-        }
-      });
-
-      if (index === -1) {
-        return {
-          ...state,
-          addressbook: [
-            ...state.addressbook,
-            {
-              name: action.payload.name,
-              mine: action.payload.mine,
-              notMine: action.payload.notMine,
-              notes: action.payload.notes,
-              timezone: action.payload.timezone,
-              phoneNumber: action.payload.phoneNumber,
-            },
-          ].sort((a, b) => {
-            let nameA = a.name.toUpperCase();
-            let nameB = b.name.toUpperCase();
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
-            return 0;
-          }),
-          save: true,
-        };
-      } else if (action.payload.mine[0]) {
-        if (
-          state.addressbook[index].mine.findIndex(ele => {
-            if (ele.address === action.payload.mine[0].address) {
-              return ele;
-            }
-          }) === -1
-        ) {
-          return {
-            ...state,
-            addressbook: state.addressbook.map((ele, i) => {
-              if (i === index) {
-                return {
-                  ...state.addressbook[index],
-                  mine: [
-                    ...state.addressbook[index].mine,
-                    action.payload.mine[0],
-                  ],
-                  notes: action.payload.notes,
-                  timezone: action.payload.timezone,
-                  phoneNumber: action.payload.phoneNumber,
-                };
-              } else {
-                return ele;
-              }
-            }),
-            save: true,
-          };
-        } else {
-          return {
-            ...state,
-            addressbook: state.addressbook.map((ele, i) => {
-              if (i === index) {
-                return {
-                  ...state.addressbook[index],
-                  notes: action.payload.notes,
-                  timezone: action.payload.timezone,
-                  phoneNumber: action.payload.phoneNumber,
-                };
-              } else {
-                return ele;
-              }
-            }),
-            save: true,
-          };
-        }
-      } else if (
-        state.addressbook[index].notMine.findIndex(ele => {
-          if (ele.address === action.payload.notMine[0].address) {
-            return ele;
-          }
-        }) === -1
-      ) {
-        return {
-          ...state,
-          addressbook: state.addressbook.map((ele, i) => {
-            if (i === index) {
-              return {
-                ...state.addressbook[index],
-                notMine: [
-                  ...state.addressbook[index].notMine,
-                  action.payload.notMine[0],
-                ],
-                notes: action.payload.notes,
-                timezone: action.payload.timezone,
-                phoneNumber: action.payload.phoneNumber,
-              };
-            } else {
-              return ele;
-            }
-          }),
-          save: true,
-        };
-      } else {
-        return {
-          ...state,
-          addressbook: state.addressbook.map((ele, i) => {
-            if (i === index) {
-              return {
-                ...state.addressbook[index],
-                notes: action.payload.notes,
-                timezone: action.payload.timezone,
-                phoneNumber: action.payload.phoneNumber,
-              };
-            } else {
-              return ele;
-            }
-          }),
-          save: true,
-        };
-      }
-      break;
+      return {
+        ...state,
+        addressbook: [...state.addressbook, action.payload].sort(compareNames),
+      };
 
     case TYPE.CONTACT_IMAGE:
       return {

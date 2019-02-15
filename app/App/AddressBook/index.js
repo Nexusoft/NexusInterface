@@ -31,6 +31,7 @@ import UIController from 'components/UIController';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local Dependencies
+import AddEditContactModal from './AddEditContactModal';
 import TimeZoneSelector from './timeZoneSelector';
 import styles from './style.css';
 
@@ -297,7 +298,7 @@ class AddressBook extends Component {
   };
 
   /**
-   * Internal JSX to build out a modal 
+   * Internal JSX to build out a modal
    *
    * @returns
    * @memberof AddressBook
@@ -1006,6 +1007,10 @@ class AddressBook extends Component {
     }
   }
 
+  createContact = () => {
+    UIController.openModal(AddEditContactModal);
+  };
+
   // Mandatory React method
   render() {
     return (
@@ -1019,7 +1024,7 @@ class AddressBook extends Component {
                 <Button
                   skin="blank-light"
                   className="relative"
-                  onClick={this.showAddContactModal.bind(this)}
+                  onClick={this.createContact}
                 >
                   <ControlIcon icon={addContactIcon} />
                 </Button>
