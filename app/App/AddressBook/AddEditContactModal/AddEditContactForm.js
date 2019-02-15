@@ -154,6 +154,17 @@ function asyncValidateAddresses(isMine, addresses, errors) {
   },
 })
 class AddEditContactForm extends Component {
+  inputRef = React.createRef();
+
+  componentDidMount() {
+    console.log('didMount');
+    // Not sure why but calling focus directly doesn't work
+    setTimeout(() => {
+      console.log('timeout');
+      this.inputRef.current.focus();
+    }, 0);
+  }
+
   render() {
     const { handleSubmit, error, closeModal, reset, pristine } = this.props;
 
@@ -166,7 +177,7 @@ class AddEditContactForm extends Component {
                 name="name"
                 component={TextField.RF}
                 placeholder={text}
-                autoFocus
+                inputRef={this.inputRef}
               />
             </FormField>
           )}

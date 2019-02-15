@@ -77,6 +77,17 @@ const PlusIcon = styled(Icon)({
  * @extends {React.Component}
  */
 class Addresses extends React.Component {
+  lastInputRef = React.createRef();
+  justAdded = false;
+
+  componentDidUpdate() {
+    // Focus the address input after it has just been added
+    if (this.justAdded) {
+      this.justAdded = false;
+      this.lastInputRef.current.focus();
+    }
+  }
+
   renderFieldLabel = ({ input, ...rest }) => {
     const id = this.props.isMine
       ? input.value
@@ -90,6 +101,7 @@ class Addresses extends React.Component {
 
   addNewAddress = () => {
     this.props.fields.push({ address: '', label: '' });
+    this.justAdded = true;
   };
 
   /**
@@ -124,7 +136,9 @@ class Addresses extends React.Component {
                     name={`${fieldName}.address`}
                     component={TextField.RF}
                     placeholder={text}
-                    autoFocus
+                    inputRef={
+                      i === fields.length - 1 ? this.lastInputRef : undefined
+                    }
                   />
                 )}
               </Field>
