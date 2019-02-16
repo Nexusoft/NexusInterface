@@ -377,7 +377,7 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   render() {
-    if (false) {
+    if (this.props.connections === undefined) {
       return (
         <WaitingMessage>
           <Text id="transactions.Loading" />
