@@ -74,7 +74,7 @@ class SettingsApp extends Component {
               onClick={this.browseBackupDir}
               style={{ marginLeft: '1em' }}
             >
-              Browse
+              <Text id="Settings.Browse" />
             </Button>
           </div>
         )}

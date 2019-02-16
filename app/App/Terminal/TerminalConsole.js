@@ -91,6 +91,7 @@ const AutoCompleteItem = styled.a(({ theme }) => ({
 const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
   flexBasis: 0,
+  fontSize: "75%",
   overflow: 'auto',
   wordBreak: 'break-all',
   background: theme.background,
@@ -140,8 +141,10 @@ class TerminalConsole extends Component {
     // If the scroll was at the bottom before the DOM is updated
     if (beforeUpdate && beforeUpdate.scrollAtBottom) {
       // Scroll to bottom
-      const { clientHeight, scrollHeight } = this.outputRef;
-      this.outputRef.scrollTop = scrollHeight - clientHeight;
+      if (this.outputRef) {
+        const { clientHeight, scrollHeight } = this.outputRef;
+        this.outputRef.scrollTop = scrollHeight - clientHeight;
+      }
     }
   }
 
@@ -374,7 +377,7 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   render() {
-    if (this.props.connections === undefined) {
+    if (false) {
       return (
         <WaitingMessage>
           <Text id="transactions.Loading" />

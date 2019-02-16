@@ -1,8 +1,8 @@
 {
   "name": "nexus_wallet",
-  "productName": "Nexus_Wallet_BETA_v0.8.6",
-  "version": "0.8.6",
-  "buildDate": "January 16th 2019",
+  "productName": "Nexus_Wallet_BETA_v0.8.7",
+  "version": "0.8.7",
+  "buildDate": "Febuary 15th 2019",
   "description": "Nexus",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -65,7 +65,7 @@
     "publish": {
       "provider": "github",
       "owner": "Nexusoft",
-      "repo": "Nexus-Interface-React"
+      "repo": "NexusInterface"
     },
     "mac": {
       "target": [

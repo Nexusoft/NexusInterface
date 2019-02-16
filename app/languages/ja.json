@@ -306,7 +306,7 @@
   "Header.UnlockedUntil": "までロック解除",
   "Header.StakingOnly": "ステイキングのみ",
   "Header.Synced": "同期された",
-  "Header.Synching": "同期...後ろに\n",
+  "Header.Syncing": "同期...後ろに\n",
   "Header.Blocks": "Blocks",
   "Header.DaemonNotLoaded": "デーモンがロードされていない",
 
