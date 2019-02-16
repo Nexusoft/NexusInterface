@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>nexus_wallet 0.8.6 | Documentation</title>
+  <title>nexus_wallet 0.8.7 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -15,7 +15,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>nexus_wallet</h3>
-          <div class='mb1'><code>0.8.6</code></div>
+          <div class='mb1'><code>0.8.7</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -151,6 +151,18 @@
                         href='#overviewwaitfordaemon'
                         class='regular pre-open'>
                         .waitForDaemon
+                      </a></li>
+                    
+                      <li><a
+                        href='#overviewreturnweightstats'
+                        class='regular pre-open'>
+                        .returnWeightStats
+                      </a></li>
+                    
+                      <li><a
+                        href='#overviewreturndifficultystats'
+                        class='regular pre-open'>
+                        .returnDifficultyStats
                       </a></li>
                     
                       <li><a
@@ -1818,6 +1830,12 @@
                       </a></li>
                     
                       <li><a
+                        href='#loginrendertimeinputs'
+                        class='regular pre-open'>
+                        .renderTimeInputs
+                      </a></li>
+                    
+                      <li><a
                         href='#loginrender'
                         class='regular pre-open'>
                         .render
@@ -3210,6 +3228,115 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>stat</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='overviewreturnweightstats'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>returnWeightStats</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Returns the weight stats for the overview page</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>returnWeightStats</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='overviewreturndifficultystats'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>returnDifficultyStats</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Returns the Difficulty Stats for the Overview page when it is in Miner View</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>returnDifficultyStats</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>difficulty</span> <code class='quiet'>(any)</code>
 	    
           </div>
           
@@ -6434,7 +6561,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>incomingData</span> <code class='quiet'>(any)</code>
-	    
+	    The data provided by the daemon to be used to update the confirmations
+
           </div>
           
         </div>
@@ -6495,7 +6623,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>incomingData</span> <code class='quiet'>(any)</code>
-	    
+	    the data provided by the daemon to be used to update the chart
+
           </div>
           
         </div>
@@ -6556,7 +6685,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>event</span> <code class='quiet'>(any)</code>
-	    
+	    The event hook for changing the window dimentions
+
           </div>
           
         </div>
@@ -6570,7 +6700,7 @@
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        can return null if chart is udefined
 
       
     
@@ -6673,7 +6803,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>e</span> <code class='quiet'>(any)</code>
-	    
+	    event hook for html for right click
+
           </div>
           
         </div>
@@ -6734,7 +6865,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>instringtocopy</span> <code class='quiet'>(any)</code>
-	    
+	    The string to copy to the clipboard
+
           </div>
           
         </div>
@@ -6776,7 +6908,7 @@
 
  
   
-    <div class='pre p1 fill-light mt0'>getTransactionData(finishingCallback: any): any</div>
+    <div class='pre p1 fill-light mt0'>getTransactionData(finishingCallback: any): null</div>
    
   
   
@@ -6795,7 +6927,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>finishingCallback</span> <code class='quiet'>(any)</code>
-	    
+	    The Method to use after all the data is processed from the daemon
+
           </div>
           
         </div>
@@ -6808,8 +6941,8 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code>null</code>:
+        Cen return null if no data is retreived, exit for this method is finishingCallback
 
       
     
@@ -6864,7 +6997,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>value</span> <code class='quiet'>(any)</code>
-	    
+	    The Value of the selected item in the dropdown menu
+
           </div>
           
         </div>
@@ -6954,7 +7088,7 @@
 
  
   
-    <div class='pre p1 fill-light mt0'>saveCSV(DataToSave: any)</div>
+    <div class='pre p1 fill-light mt0'>saveCSV(DataToSave: [any])</div>
    
   
   
@@ -6972,8 +7106,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>DataToSave</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>DataToSave</span> <code class='quiet'>([any])</code>
+	    Transactions to save
+
           </div>
           
         </div>
@@ -7218,7 +7353,7 @@
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        address in Json format
 
       
     
@@ -7254,7 +7389,7 @@
 
  
   
-    <div class='pre p1 fill-light mt0'>filterByCategory(inTransactions: any): any</div>
+    <div class='pre p1 fill-light mt0'>filterByCategory(inTransactions: [any]): [any]</div>
    
   
   
@@ -7272,8 +7407,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>inTransactions</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>inTransactions</span> <code class='quiet'>([any])</code>
+	    Current list of transactions to filter
+
           </div>
           
         </div>
@@ -7286,8 +7422,8 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code>[any]</code>:
+        List of transactions after the filtering
 
       
     
@@ -7323,7 +7459,7 @@
 
  
   
-    <div class='pre p1 fill-light mt0'>filterbyAmount(inTransactions: any): any</div>
+    <div class='pre p1 fill-light mt0'>filterbyAmount(inTransactions: [any]): [any]</div>
    
   
   
@@ -7341,8 +7477,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>inTransactions</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>inTransactions</span> <code class='quiet'>([any])</code>
+	    Current list of transactions to filter
+
           </div>
           
         </div>
@@ -7355,8 +7492,8 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code>[any]</code>:
+        List of transactions after the filtering
 
       
     
@@ -7392,7 +7529,7 @@
 
  
   
-    <div class='pre p1 fill-light mt0'>filterByAddress(inTransactions: any): any</div>
+    <div class='pre p1 fill-light mt0'>filterByAddress(inTransactions: [any]): [any]</div>
    
   
   
@@ -7410,8 +7547,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>inTransactions</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>inTransactions</span> <code class='quiet'>([any])</code>
+	    Current list of transactions to filter
+
           </div>
           
         </div>
@@ -7424,8 +7562,8 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code>[any]</code>:
+        List of transactions after the filtering
 
       
     
@@ -7461,7 +7599,7 @@
 
  
   
-    <div class='pre p1 fill-light mt0'>filterByTime(inTransactions: any): any</div>
+    <div class='pre p1 fill-light mt0'>filterByTime(inTransactions: [any]): [any]</div>
    
   
   
@@ -7479,8 +7617,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>inTransactions</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>inTransactions</span> <code class='quiet'>([any])</code>
+	    Current list of transactions to filter
+
           </div>
           
         </div>
@@ -7493,8 +7632,8 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code>[any]</code>:
+        List of transactions after the filtering
 
       
     
@@ -7530,7 +7669,7 @@
 
  
   
-    <div class='pre p1 fill-light mt0'>returnAllFilters(inTransactions: any): any</div>
+    <div class='pre p1 fill-light mt0'>returnAllFilters(inTransactions: [any]): [any]</div>
    
   
   
@@ -7548,8 +7687,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>inTransactions</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>inTransactions</span> <code class='quiet'>([any])</code>
+	    Current list of transactions to filter
+
           </div>
           
         </div>
@@ -7562,8 +7702,8 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code>[any]</code>:
+        List of transactions after all the filtering is complete
 
       
     
@@ -7619,7 +7759,7 @@
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        a fake transaction
 
       
     
@@ -7674,7 +7814,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>e</span> <code class='quiet'>(any)</code>
-	    
+	    HTML event
+
           </div>
           
         </div>
@@ -7682,7 +7823,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>indata</span> <code class='quiet'>(any)</code>
-	    
+	    The datapoint that the cursor has clicked
+
           </div>
           
         </div>
@@ -7744,7 +7886,7 @@
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        The transaction datas as filtered and formated to be placed in the table
 
       
     
@@ -7780,7 +7922,7 @@
 
  
   
-    <div class='pre p1 fill-light mt0'>returnTableColumns(): any</div>
+    <div class='pre p1 fill-light mt0'>returnTableColumns(): [any]</div>
    
   
   
@@ -7799,8 +7941,8 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code>[any]</code>:
+        The columns for the table
 
       
     
@@ -7836,7 +7978,7 @@
 
  
   
-    <div class='pre p1 fill-light mt0'>returnChartData(): any</div>
+    <div class='pre p1 fill-light mt0'>returnChartData(): [any]</div>
    
   
   
@@ -7855,8 +7997,8 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code>[any]</code>:
+        The transaction data as filtered and formated to be placed in the Victory Chart
 
       
     
@@ -7911,7 +8053,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>inData</span> <code class='quiet'>(any)</code>
-	    
+	    A Given Transaction
+
           </div>
           
         </div>
@@ -7925,7 +8068,7 @@
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        A Color in string HEX format
 
       
     
@@ -7980,7 +8123,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>inData</span> <code class='quiet'>(any)</code>
-	    
+	    A given transaction
+
           </div>
           
         </div>
@@ -7994,7 +8138,7 @@
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        A color in string HEX format
 
       
     
@@ -8110,7 +8254,10 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>domain</span> <code class='quiet'>(any)</code>
-	    
+	    A object that contains 2 arrys, x and y, x/y are arrays that are 
+[minx,maxy]
+ format
+
           </div>
           
         </div>
@@ -8171,7 +8318,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>e</span> <code class='quiet'>(any)</code>
-	    
+	    HTML event
+
           </div>
           
         </div>
@@ -8179,7 +8327,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>inData</span> <code class='quiet'>(any)</code>
-	    
+	    The data that the mouse is over
+
           </div>
           
         </div>
@@ -8240,7 +8389,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>e</span> <code class='quiet'>(any)</code>
-	    
+	    HTML Event
+
           </div>
           
         </div>
@@ -8349,7 +8499,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>coinsym</span> <code class='quiet'>(any)</code>
-	    
+	    The symbol for the coin/fiat we are looking for MUST BE IN CAPS
+
           </div>
           
         </div>
@@ -8357,7 +8508,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>timestamptolook</span> <code class='quiet'>(any)</code>
-	    
+	    timestamp string ( in seconds) that will be the to var in looking up data
+
           </div>
           
         </div>
@@ -8426,7 +8578,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>timeID</span> <code class='quiet'>(any)</code>
-	    
+	    Timestamp
+
           </div>
           
         </div>
@@ -8434,7 +8587,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>USDvalue</span> <code class='quiet'>(any)</code>
-	    
+	    the value in FIAT
+
           </div>
           
         </div>
@@ -8442,7 +8596,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>BTCValue</span> <code class='quiet'>(any)</code>
-	    
+	    the value in BTC
+
           </div>
           
         </div>
@@ -8503,7 +8658,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>incomingChangeData</span> <code class='quiet'>(any)</code>
-	    
+	    Data that needs to be changed.
+
           </div>
           
         </div>
@@ -8564,7 +8720,8 @@
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>inEle</span> <code class='quiet'>(any)</code>
-	    
+	    the timestamp of the transaction
+
           </div>
           
         </div>
@@ -8739,7 +8896,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>aMap</span> <code class='quiet'>(any)</code>
-	    
+	    A map of the data
+
           </div>
           
         </div>
@@ -8753,7 +8911,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        A object that replaces the map but contains the same data.
 
       
     
@@ -8808,7 +8966,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>intimestamp</span> <code class='quiet'>(any)</code>
-	    
+	    Timestamp to look up
+
           </div>
           
         </div>
@@ -8822,7 +8981,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        A object that contains priceUSD and priceBTC
 
       
     
@@ -8877,7 +9036,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>indate</span> <code class='quiet'>(any)</code>
-	    
+	    Date to check
+
           </div>
           
         </div>
@@ -8885,7 +9045,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>starttime</span> <code class='quiet'>(any)</code>
-	    
+	    Date from
+
           </div>
           
         </div>
@@ -8893,7 +9054,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>endtime</span> <code class='quiet'>(any)</code>
-	    
+	    Date to
+
           </div>
           
         </div>
@@ -8907,7 +9069,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        Is this true or not
 
       
     
@@ -9128,7 +9290,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        Victory Chart JSX
 
       
     
@@ -9184,7 +9346,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
-        
+        JSX for Element
 
       
     
@@ -14457,6 +14619,91 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
       
     
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='loginrendertimeinputs'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>renderTimeInputs</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Render the date &#x26; time pickers</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>renderTimeInputs</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>props</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>props.input</span> <code class='quiet'>any</code>
+  </td>
+  <td class='break-word'><span></span></td>
+</tr>
+
+
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
   
 
   

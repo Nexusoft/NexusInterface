@@ -23,310 +23,315 @@
     -   [pctChange24hrFormatter][19]
     -   [waitForDaemon][20]
         -   [Parameters][21]
-    -   [render][22]
--   [NetworkGlobe][23]
-    -   [updatePointsOnGlobe][24]
-    -   [reDrawArchs][25]
-    -   [removeAllPoints][26]
-    -   [RemoveOldPointsAndReDraw][27]
-    -   [getResourcesDirectory][28]
-    -   [render][29]
--   [Header][30]
-    -   [render][31]
--   [LogInStatus][32]
-    -   [signInStatusMessage][33]
-    -   [statusIcon][34]
-    -   [goToSecurity][35]
-    -   [render][36]
--   [StakingStatus][37]
--   [SyncStatus][38]
--   [MyAddressesModal][39]
-    -   [handleChange][40]
-        -   [Parameters][41]
-    -   [filteredAccounts][42]
-    -   [startCreating][43]
-    -   [endCreating][44]
-    -   [render][45]
--   [Address][46]
-    -   [copyAddress][47]
+    -   [returnWeightStats][22]
+    -   [returnDifficultyStats][23]
+        -   [Parameters][24]
+    -   [render][25]
+-   [NetworkGlobe][26]
+    -   [updatePointsOnGlobe][27]
+    -   [reDrawArchs][28]
+    -   [removeAllPoints][29]
+    -   [RemoveOldPointsAndReDraw][30]
+    -   [getResourcesDirectory][31]
+    -   [render][32]
+-   [Header][33]
+    -   [render][34]
+-   [LogInStatus][35]
+    -   [signInStatusMessage][36]
+    -   [statusIcon][37]
+    -   [goToSecurity][38]
+    -   [render][39]
+-   [StakingStatus][40]
+-   [SyncStatus][41]
+-   [MyAddressesModal][42]
+    -   [handleChange][43]
+        -   [Parameters][44]
+    -   [filteredAccounts][45]
+    -   [startCreating][46]
+    -   [endCreating][47]
     -   [render][48]
--   [NewAddressForm][49]
-    -   [setAccountName][50]
-        -   [Parameters][51]
-    -   [render][52]
--   [DaemonStatus][53]
--   [SendPage][54]
-    -   [setupcontextmenu][55]
-        -   [Parameters][56]
-    -   [moveBetweenAccounts][57]
-    -   [render][58]
--   [MoveBetweenAccountsForm][59]
-    -   [confirmMove][60]
-        -   [Parameters][61]
-    -   [render][62]
--   [MoveBetweenAccountsModal][63]
--   [AmountField][64]
-    -   [nxsToFiat][65]
-        -   [Parameters][66]
-    -   [fiatToNxs][67]
-        -   [Parameters][68]
-    -   [amountFieldName][69]
-    -   [fiatAmountFieldName][70]
-    -   [render][71]
--   [SendForm][72]
-    -   [confirmSend][73]
-        -   [Parameters][74]
-    -   [addRecipient][75]
-    -   [renderAddRecipientButton][76]
+-   [Address][49]
+    -   [copyAddress][50]
+    -   [render][51]
+-   [NewAddressForm][52]
+    -   [setAccountName][53]
+        -   [Parameters][54]
+    -   [render][55]
+-   [DaemonStatus][56]
+-   [SendPage][57]
+    -   [setupcontextmenu][58]
+        -   [Parameters][59]
+    -   [moveBetweenAccounts][60]
+    -   [render][61]
+-   [MoveBetweenAccountsForm][62]
+    -   [confirmMove][63]
+        -   [Parameters][64]
+    -   [render][65]
+-   [MoveBetweenAccountsModal][66]
+-   [AmountField][67]
+    -   [nxsToFiat][68]
+        -   [Parameters][69]
+    -   [fiatToNxs][70]
+        -   [Parameters][71]
+    -   [amountFieldName][72]
+    -   [fiatAmountFieldName][73]
+    -   [render][74]
+-   [SendForm][75]
+    -   [confirmSend][76]
         -   [Parameters][77]
-    -   [render][78]
--   [Recipients][79]
-    -   [renderTxFee][80]
+    -   [addRecipient][78]
+    -   [renderAddRecipientButton][79]
+        -   [Parameters][80]
     -   [render][81]
--   [RecipientField][82]
-    -   [handleSelect][83]
-        -   [Parameters][84]
-    -   [render][85]
--   [Transactions][86]
-    -   [setConfirmationsCallback][87]
-        -   [Parameters][88]
-    -   [setOnmountTransactionsCallback][89]
-        -   [Parameters][90]
-    -   [updateChartAndTableDimensions][91]
-        -   [Parameters][92]
-    -   [openTxDetailsModal][93]
-    -   [transactioncontextfunction][94]
+-   [Recipients][82]
+    -   [renderTxFee][83]
+    -   [render][84]
+-   [RecipientField][85]
+    -   [handleSelect][86]
+        -   [Parameters][87]
+    -   [render][88]
+-   [Transactions][89]
+    -   [setConfirmationsCallback][90]
+        -   [Parameters][91]
+    -   [setOnmountTransactionsCallback][92]
+        -   [Parameters][93]
+    -   [updateChartAndTableDimensions][94]
         -   [Parameters][95]
-    -   [copysomethingtotheclipboard][96]
-        -   [Parameters][97]
-    -   [getTransactionData][98]
-        -   [Parameters][99]
-    -   [transactionTimeframeChange][100]
-        -   [Parameters][101]
-    -   [DownloadCSV][102]
-    -   [saveCSV][103]
+    -   [openTxDetailsModal][96]
+    -   [transactioncontextfunction][97]
+        -   [Parameters][98]
+    -   [copysomethingtotheclipboard][99]
+        -   [Parameters][100]
+    -   [getTransactionData][101]
+        -   [Parameters][102]
+    -   [transactionTimeframeChange][103]
         -   [Parameters][104]
-    -   [transactiontypefiltercallback][105]
-        -   [Parameters][106]
-    -   [transactionamountfiltercallback][107]
-        -   [Parameters][108]
-    -   [transactionaddressfiltercallback][109]
-        -   [Parameters][110]
-    -   [readAddressBook][111]
-    -   [filterByCategory][112]
+    -   [DownloadCSV][105]
+    -   [saveCSV][106]
+        -   [Parameters][107]
+    -   [transactiontypefiltercallback][108]
+        -   [Parameters][109]
+    -   [transactionamountfiltercallback][110]
+        -   [Parameters][111]
+    -   [transactionaddressfiltercallback][112]
         -   [Parameters][113]
-    -   [filterbyAmount][114]
-        -   [Parameters][115]
-    -   [filterByAddress][116]
-        -   [Parameters][117]
-    -   [filterByTime][118]
-        -   [Parameters][119]
-    -   [returnAllFilters][120]
-        -   [Parameters][121]
-    -   [TEMPaddfaketransaction][122]
-    -   [tableSelectCallback][123]
+    -   [readAddressBook][114]
+    -   [filterByCategory][115]
+        -   [Parameters][116]
+    -   [filterbyAmount][117]
+        -   [Parameters][118]
+    -   [filterByAddress][119]
+        -   [Parameters][120]
+    -   [filterByTime][121]
+        -   [Parameters][122]
+    -   [returnAllFilters][123]
         -   [Parameters][124]
-    -   [returnFormatedTableData][125]
-    -   [returnTableColumns][126]
-    -   [returnChartData][127]
-    -   [returnCorrectFillColor][128]
-        -   [Parameters][129]
-    -   [returnCorrectStokeColor][130]
-        -   [Parameters][131]
-    -   [returnToolTipLable][132]
-        -   [Parameters][133]
-    -   [handleZoom][134]
-        -   [Parameters][135]
-    -   [mouseOverCallback][136]
-        -   [Parameters][137]
-    -   [mouseOutCallback][138]
-        -   [Parameters][139]
-    -   [gethistorydatajson][140]
-    -   [createcryptocompareurl][141]
+    -   [TEMPaddfaketransaction][125]
+    -   [tableSelectCallback][126]
+        -   [Parameters][127]
+    -   [returnFormatedTableData][128]
+    -   [returnTableColumns][129]
+    -   [returnChartData][130]
+    -   [returnCorrectFillColor][131]
+        -   [Parameters][132]
+    -   [returnCorrectStokeColor][133]
+        -   [Parameters][134]
+    -   [returnToolTipLable][135]
+        -   [Parameters][136]
+    -   [handleZoom][137]
+        -   [Parameters][138]
+    -   [mouseOverCallback][139]
+        -   [Parameters][140]
+    -   [mouseOutCallback][141]
         -   [Parameters][142]
-    -   [setHistoryValuesOnTransaction][143]
-        -   [Parameters][144]
-    -   [setFeeValuesOnTransaction][145]
-        -   [Parameters][146]
-    -   [downloadHistoryOnTransaction][147]
-        -   [Parameters][148]
-    -   [gothroughdatathatneedsit][149]
-    -   [SaveHistoryDataToJson][150]
-    -   [mapToObject][151]
-        -   [Parameters][152]
-    -   [findclosestdatapoint][153]
-        -   [Parameters][154]
-    -   [comparedate][155]
-        -   [Parameters][156]
-    -   [returnDefaultPageSize][157]
-    -   [accountChanger][158]
-    -   [selectAccount][159]
-        -   [Parameters][160]
-    -   [returnVictoryChart][161]
-    -   [render][162]
--   [TransactionDetailsModal][163]
-    -   [loadData][164]
-        -   [Parameters][165]
-    -   [render][166]
--   [Market][167]
-    -   [setupcontextmenu][168]
-        -   [Parameters][169]
-    -   [refresher][170]
-    -   [formatBuyData][171]
+    -   [gethistorydatajson][143]
+    -   [createcryptocompareurl][144]
+        -   [Parameters][145]
+    -   [setHistoryValuesOnTransaction][146]
+        -   [Parameters][147]
+    -   [setFeeValuesOnTransaction][148]
+        -   [Parameters][149]
+    -   [downloadHistoryOnTransaction][150]
+        -   [Parameters][151]
+    -   [gothroughdatathatneedsit][152]
+    -   [SaveHistoryDataToJson][153]
+    -   [mapToObject][154]
+        -   [Parameters][155]
+    -   [findclosestdatapoint][156]
+        -   [Parameters][157]
+    -   [comparedate][158]
+        -   [Parameters][159]
+    -   [returnDefaultPageSize][160]
+    -   [accountChanger][161]
+    -   [selectAccount][162]
+        -   [Parameters][163]
+    -   [returnVictoryChart][164]
+    -   [render][165]
+-   [TransactionDetailsModal][166]
+    -   [loadData][167]
+        -   [Parameters][168]
+    -   [render][169]
+-   [Market][170]
+    -   [setupcontextmenu][171]
         -   [Parameters][172]
-    -   [formatSellData][173]
-        -   [Parameters][174]
-    -   [formatChartData][175]
-        -   [Parameters][176]
-    -   [oneDayinfo][177]
-        -   [Parameters][178]
-    -   [refreshMarket][179]
-    -   [render][180]
--   [MarketDepth][181]
-    -   [render][182]
--   [Candlestick][183]
-    -   [render][184]
--   [AddressBook][185]
-    -   [addressbookContextMenu][186]
-    -   [getinitial][187]
-        -   [Parameters][188]
-    -   [copyaddress][189]
-        -   [Parameters][190]
-    -   [MyAddressesTable][191]
-    -   [modalInternalBuilder][192]
-    -   [contactLister][193]
-    -   [phoneFormatter][194]
-    -   [localTimeFormater][195]
-    -   [theirAddressLister][196]
-    -   [myAddressLister][197]
-    -   [addAddressHandler][198]
-    -   [showAddContactModal][199]
-    -   [showMyAddresses][200]
-    -   [phoneNumberHandler][201]
-        -   [Parameters][202]
-    -   [exportAddressBook][203]
-    -   [importAddressBook][204]
+    -   [refresher][173]
+    -   [formatBuyData][174]
+        -   [Parameters][175]
+    -   [formatSellData][176]
+        -   [Parameters][177]
+    -   [formatChartData][178]
+        -   [Parameters][179]
+    -   [oneDayinfo][180]
+        -   [Parameters][181]
+    -   [refreshMarket][182]
+    -   [render][183]
+-   [MarketDepth][184]
+    -   [render][185]
+-   [Candlestick][186]
+    -   [render][187]
+-   [AddressBook][188]
+    -   [addressbookContextMenu][189]
+    -   [getinitial][190]
+        -   [Parameters][191]
+    -   [copyaddress][192]
+        -   [Parameters][193]
+    -   [MyAddressesTable][194]
+    -   [modalInternalBuilder][195]
+    -   [contactLister][196]
+    -   [phoneFormatter][197]
+    -   [localTimeFormater][198]
+    -   [theirAddressLister][199]
+    -   [myAddressLister][200]
+    -   [addAddressHandler][201]
+    -   [showAddContactModal][202]
+    -   [showMyAddresses][203]
+    -   [phoneNumberHandler][204]
         -   [Parameters][205]
-    -   [closeEdit][206]
-        -   [Parameters][207]
--   [TimeZoneSelector][208]
--   [Settings][209]
-    -   [setupcontextmenu][210]
-        -   [Parameters][211]
-    -   [render][212]
--   [SettingsApp][213]
-    -   [confirmBackupWallet][214]
-    -   [handleAutoUpdateChange][215]
-        -   [Parameters][216]
-    -   [render][217]
-    -   [render][218]
-    -   [browseBackupDir][219]
--   [SettingsApp][220]
-    -   [confirmBackupWallet][221]
-    -   [handleAutoUpdateChange][222]
-        -   [Parameters][223]
-    -   [render][224]
-    -   [render][225]
-    -   [browseBackupDir][226]
--   [LanguageSetting][227]
-    -   [handleChange][228]
-        -   [Parameters][229]
-    -   [render][230]
--   [SettingsCore][231]
-    -   [confirmSwitchManualDaemon][232]
-    -   [restartCore][233]
-    -   [render][234]
--   [FeeSetting][235]
-    -   [confirmSetTxFee][236]
+    -   [exportAddressBook][206]
+    -   [importAddressBook][207]
+        -   [Parameters][208]
+    -   [closeEdit][209]
+        -   [Parameters][210]
+-   [TimeZoneSelector][211]
+-   [Settings][212]
+    -   [setupcontextmenu][213]
+        -   [Parameters][214]
+    -   [render][215]
+-   [SettingsApp][216]
+    -   [confirmBackupWallet][217]
+    -   [handleAutoUpdateChange][218]
+        -   [Parameters][219]
+    -   [render][220]
+    -   [render][221]
+    -   [browseBackupDir][222]
+-   [SettingsApp][223]
+    -   [confirmBackupWallet][224]
+    -   [handleAutoUpdateChange][225]
+        -   [Parameters][226]
+    -   [render][227]
+    -   [render][228]
+    -   [browseBackupDir][229]
+-   [LanguageSetting][230]
+    -   [handleChange][231]
+        -   [Parameters][232]
+    -   [render][233]
+-   [SettingsCore][234]
+    -   [confirmSwitchManualDaemon][235]
+    -   [restartCore][236]
     -   [render][237]
--   [SettingsStyle][238]
-    -   [toggleGlobeRender][239]
-        -   [Parameters][240]
-    -   [setWalpaper][241]
-        -   [Parameters][242]
-    -   [setColor][243]
-        -   [Parameters][244]
-    -   [resetColors][245]
-    -   [loadCustomTheme][246]
+-   [FeeSetting][238]
+    -   [confirmSetTxFee][239]
+    -   [render][240]
+-   [SettingsStyle][241]
+    -   [toggleGlobeRender][242]
+        -   [Parameters][243]
+    -   [setWalpaper][244]
+        -   [Parameters][245]
+    -   [setColor][246]
         -   [Parameters][247]
-    -   [openPickThemeFileDialog][248]
-    -   [exportThemeFileDialog][249]
-    -   [pressDarkTheme][250]
-    -   [pressLightTheme][251]
-    -   [pressCustomTheme][252]
-    -   [pressResetTheme][253]
-    -   [savePreviousCustomTheme][254]
-    -   [setToCustom][255]
-    -   [setThemeSelector][256]
-        -   [Parameters][257]
-    -   [render][258]
--   [ColorPicker][259]
-    -   [openPicker][260]
-    -   [closePicker][261]
-    -   [handleColorChange][262]
-        -   [Parameters][263]
-    -   [render][264]
--   [BackgroundPicker][265]
-    -   [setDefault][266]
-        -   [Parameters][267]
-    -   [handleFilePick][268]
-        -   [Parameters][269]
-    -   [render][270]
--   [ThemePicker][271]
-    -   [setToCustomTheme][272]
-    -   [setSelector][273]
-        -   [Parameters][274]
-    -   [render][275]
--   [Security][276]
-    -   [render][277]
--   [Login][278]
-    -   [getMinDate][279]
+    -   [resetColors][248]
+    -   [loadCustomTheme][249]
+        -   [Parameters][250]
+    -   [openPickThemeFileDialog][251]
+    -   [exportThemeFileDialog][252]
+    -   [pressDarkTheme][253]
+    -   [pressLightTheme][254]
+    -   [pressCustomTheme][255]
+    -   [pressResetTheme][256]
+    -   [savePreviousCustomTheme][257]
+    -   [setToCustom][258]
+    -   [setThemeSelector][259]
+        -   [Parameters][260]
+    -   [render][261]
+-   [ColorPicker][262]
+    -   [openPicker][263]
+    -   [closePicker][264]
+    -   [handleColorChange][265]
+        -   [Parameters][266]
+    -   [render][267]
+-   [BackgroundPicker][268]
+    -   [setDefault][269]
+        -   [Parameters][270]
+    -   [handleFilePick][271]
+        -   [Parameters][272]
+    -   [render][273]
+-   [ThemePicker][274]
+    -   [setToCustomTheme][275]
+    -   [setSelector][276]
+        -   [Parameters][277]
+    -   [render][278]
+-   [Security][279]
     -   [render][280]
--   [Encrypted][281]
-    -   [render][282]
--   [ChangePassword][283]
-    -   [confirmLogout][284]
+-   [Login][281]
+    -   [getMinDate][282]
+    -   [renderTimeInputs][283]
+        -   [Parameters][284]
     -   [render][285]
--   [Unencrypted][286]
+-   [Encrypted][286]
     -   [render][287]
--   [EncryptWallet][288]
-    -   [render][289]
--   [ImportPrivKey][290]
-    -   [render][291]
--   [ViewPrivKeyForAddress][292]
-    -   [showPrivKey][293]
-        -   [Parameters][294]
-    -   [copyPrivkey][295]
-    -   [resetPrivateKey][296]
-    -   [render][297]
--   [Terminal][298]
-    -   [setupcontextmenu][299]
-        -   [Parameters][300]
-    -   [render][301]
--   [TerminalConsole][302]
-    -   [getSnapshotBeforeUpdate][303]
-    -   [processOutput][304]
-    -   [processInput][305]
-    -   [handleKeyboardInput][306]
-        -   [Parameters][307]
-    -   [handleKeyboardArrows][308]
-        -   [Parameters][309]
-    -   [autoComplete][310]
-    -   [render][311]
--   [TerminalCore][312]
-    -   [onScrollEvent][313]
-    -   [render][314]
--   [StyleGuide][315]
--   [List][316]
-    -   [setupcontextmenu][317]
-        -   [Parameters][318]
-    -   [buildList][319]
-    -   [render][320]
--   [About][321]
-    -   [getCurrentYear][322]
-    -   [getInterfaceVersionNumber][323]
-    -   [getDaemonVersionNumber][324]
--   [AppBackground][325]
+-   [ChangePassword][288]
+    -   [confirmLogout][289]
+    -   [render][290]
+-   [Unencrypted][291]
+    -   [render][292]
+-   [EncryptWallet][293]
+    -   [render][294]
+-   [ImportPrivKey][295]
+    -   [render][296]
+-   [ViewPrivKeyForAddress][297]
+    -   [showPrivKey][298]
+        -   [Parameters][299]
+    -   [copyPrivkey][300]
+    -   [resetPrivateKey][301]
+    -   [render][302]
+-   [Terminal][303]
+    -   [setupcontextmenu][304]
+        -   [Parameters][305]
+    -   [render][306]
+-   [TerminalConsole][307]
+    -   [getSnapshotBeforeUpdate][308]
+    -   [processOutput][309]
+    -   [processInput][310]
+    -   [handleKeyboardInput][311]
+        -   [Parameters][312]
+    -   [handleKeyboardArrows][313]
+        -   [Parameters][314]
+    -   [autoComplete][315]
+    -   [render][316]
+-   [TerminalCore][317]
+    -   [onScrollEvent][318]
+    -   [render][319]
+-   [StyleGuide][320]
+-   [List][321]
+    -   [setupcontextmenu][322]
+        -   [Parameters][323]
+    -   [buildList][324]
+    -   [render][325]
+-   [About][326]
+    -   [getCurrentYear][327]
+    -   [getInterfaceVersionNumber][328]
+    -   [getDaemonVersionNumber][329]
+-   [AppBackground][330]
 
 ## renderApp
 
@@ -435,6 +440,18 @@ Displays Wait for Daemon
 #### Parameters
 
 -   `stat`  
+
+### returnWeightStats
+
+Returns the weight stats for the overview page
+
+### returnDifficultyStats
+
+Returns the Difficulty Stats for the Overview page when it is in Miner View
+
+#### Parameters
+
+-   `difficulty`  
 
 ### render
 
@@ -712,7 +729,7 @@ Return JSX for the Add Recipient Button
 
 #### Parameters
 
--   `$0` **[Object][326]** 
+-   `$0` **[Object][331]** 
     -   `$0.fields`  
 
 ### render
@@ -769,7 +786,7 @@ The callback for when we want to update just the confirmations
 
 #### Parameters
 
--   `incomingData` **any** 
+-   `incomingData` **any** The data provided by the daemon to be used to update the confirmations
 
 ### setOnmountTransactionsCallback
 
@@ -777,7 +794,7 @@ The callback for the on Mount State
 
 #### Parameters
 
--   `incomingData` **any** 
+-   `incomingData` **any** the data provided by the daemon to be used to update the chart
 
 ### updateChartAndTableDimensions
 
@@ -785,9 +802,9 @@ Updates the height and width of the chart and table when you resize the window
 
 #### Parameters
 
--   `event` **any** 
+-   `event` **any** The event hook for changing the window dimentions
 
-Returns **any** 
+Returns **any** can return null if chart is udefined
 
 ### openTxDetailsModal
 
@@ -799,7 +816,7 @@ This is the method that is called when the user pressed the right click
 
 #### Parameters
 
--   `e`  
+-   `e` **any** event hook for html for right click
 
 ### copysomethingtotheclipboard
 
@@ -807,7 +824,7 @@ Copy to Clipboard
 
 #### Parameters
 
--   `instringtocopy` **any** 
+-   `instringtocopy` **any** The string to copy to the clipboard
 
 ### getTransactionData
 
@@ -815,9 +832,9 @@ Gets all the data from each account held by the wallet
 
 #### Parameters
 
--   `finishingCallback` **any** 
+-   `finishingCallback` **any** The Method to use after all the data is processed from the daemon
 
-Returns **any** 
+Returns **null** Cen return null if no data is retreived, exit for this method is finishingCallback
 
 ### transactionTimeframeChange
 
@@ -825,7 +842,7 @@ Set the display property in state from the dropdown element
 
 #### Parameters
 
--   `value` **any** 
+-   `value` **any** The Value of the selected item in the dropdown menu
 
 ### DownloadCSV
 
@@ -837,7 +854,7 @@ creates a CSV file then prompts the user to save that file
 
 #### Parameters
 
--   `DataToSave` **any** 
+-   `DataToSave` **\[any]** Transactions to save
 
 ### transactiontypefiltercallback
 
@@ -867,7 +884,7 @@ Callback for when you change the address filter
 
 Taken From address page
 
-Returns **any** 
+Returns **any** address in Json format
 
 ### filterByCategory
 
@@ -875,9 +892,9 @@ Filter the transactions based on the CategoryFilter
 
 #### Parameters
 
--   `inTransactions` **any** 
+-   `inTransactions` **\[any]** Current list of transactions to filter
 
-Returns **any** 
+Returns **\[any]** List of transactions after the filtering
 
 ### filterbyAmount
 
@@ -885,9 +902,9 @@ Filter the transactions based on the AmountFilter
 
 #### Parameters
 
--   `inTransactions` **any** 
+-   `inTransactions` **\[any]** Current list of transactions to filter
 
-Returns **any** 
+Returns **\[any]** List of transactions after the filtering
 
 ### filterByAddress
 
@@ -895,9 +912,9 @@ Filter the transactions based on the AddressFilter
 
 #### Parameters
 
--   `inTransactions` **any** 
+-   `inTransactions` **\[any]** Current list of transactions to filter
 
-Returns **any** 
+Returns **\[any]** List of transactions after the filtering
 
 ### filterByTime
 
@@ -905,9 +922,9 @@ Filter the transactions based on the DisplayTimeFrame
 
 #### Parameters
 
--   `inTransactions` **any** 
+-   `inTransactions` **\[any]** Current list of transactions to filter
 
-Returns **any** 
+Returns **\[any]** List of transactions after the filtering
 
 ### returnAllFilters
 
@@ -915,15 +932,15 @@ Returns all the transaction that have been filtered by the filter
 
 #### Parameters
 
--   `inTransactions` **any** 
+-   `inTransactions` **\[any]** Current list of transactions to filter
 
-Returns **any** 
+Returns **\[any]** List of transactions after all the filtering is complete
 
 ### TEMPaddfaketransaction
 
 DEV MODE: Create a fake transaction for testing.
 
-Returns **any** 
+Returns **any** a fake transaction
 
 ### tableSelectCallback
 
@@ -931,26 +948,26 @@ What happens when you select something in the table
 
 #### Parameters
 
--   `e` **any** 
--   `indata` **any** 
+-   `e` **any** HTML event
+-   `indata` **any** The datapoint that the cursor has clicked
 
 ### returnFormatedTableData
 
 Return the data to be placed into the Table
 
-Returns **any** 
+Returns **any** The transaction datas as filtered and formated to be placed in the table
 
 ### returnTableColumns
 
 Returns the columns and their rules/formats for the Table
 
-Returns **any** 
+Returns **\[any]** The columns for the table
 
 ### returnChartData
 
 Returns formated data for the Victory Chart
 
-Returns **any** 
+Returns **\[any]** The transaction data as filtered and formated to be placed in the Victory Chart
 
 ### returnCorrectFillColor
 
@@ -958,9 +975,9 @@ returns the correct fill color based on the category
 
 #### Parameters
 
--   `inData` **any** 
+-   `inData` **any** A Given Transaction
 
-Returns **any** 
+Returns **any** A Color in string HEX format
 
 ### returnCorrectStokeColor
 
@@ -968,9 +985,9 @@ Returns the Correct color based on the category
 
 #### Parameters
 
--   `inData` **any** 
+-   `inData` **any** A given transaction
 
-Returns **any** 
+Returns **any** A color in string HEX format
 
 ### returnToolTipLable
 
@@ -986,7 +1003,7 @@ The event listener for when you zoom in and out
 
 #### Parameters
 
--   `domain` **any** 
+-   `domain` **any** A object that contains 2 arrys, x and y, x/y are arrays that are [minx,maxy] format
 
 ### mouseOverCallback
 
@@ -994,8 +1011,8 @@ the callback for when you mouse over a transaction on the table.
 
 #### Parameters
 
--   `e` **any** 
--   `inData` **any** 
+-   `e` **any** HTML event
+-   `inData` **any** The data that the mouse is over
 
 ### mouseOutCallback
 
@@ -1003,7 +1020,7 @@ The call back for when the mouse moves out of the table div.
 
 #### Parameters
 
--   `e` **any** 
+-   `e` **any** HTML Event
 
 ### gethistorydatajson
 
@@ -1015,8 +1032,8 @@ Helper method to create URL's quickly
 
 #### Parameters
 
--   `coinsym` **any** 
--   `timestamptolook` **any** 
+-   `coinsym` **any** The symbol for the coin/fiat we are looking for MUST BE IN CAPS
+-   `timestamptolook` **any** timestamp string ( in seconds) that will be the to var in looking up data
 
 Returns **any** 
 
@@ -1026,9 +1043,9 @@ Build a object from incoming data then dispatch that to redux to populate that t
 
 #### Parameters
 
--   `timeID` **any** 
--   `USDvalue` **any** 
--   `BTCValue` **any** 
+-   `timeID` **any** Timestamp
+-   `USDvalue` **any** the value in FIAT
+-   `BTCValue` **any** the value in BTC
 
 ### setFeeValuesOnTransaction
 
@@ -1036,7 +1053,7 @@ Build a object from incoming data then dispatch that to redux to populate that t
 
 #### Parameters
 
--   `incomingChangeData` **any** 
+-   `incomingChangeData` **any** Data that needs to be changed.
 
 ### downloadHistoryOnTransaction
 
@@ -1044,7 +1061,7 @@ Download both USD and BTC history on the incoming transaction
 
 #### Parameters
 
--   `inEle` **any** 
+-   `inEle` **any** the timestamp of the transaction
 
 Returns **any** 
 
@@ -1061,14 +1078,14 @@ Returns **any**
 ### mapToObject
 
 Used to transform a Map to a Object so that we can save it to a json file
-[http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/][327]
-Based on code from [http://2ality.com/2015/08/es6-map-json.html][328]
+[http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/][332]
+Based on code from [http://2ality.com/2015/08/es6-map-json.html][333]
 
 #### Parameters
 
--   `aMap` **any** 
+-   `aMap` **any** A map of the data
 
-Returns **any** 
+Returns **any** A object that replaces the map but contains the same data.
 
 ### findclosestdatapoint
 
@@ -1076,9 +1093,9 @@ If you give this a timestamp it will find the closes timestamp to the nearest ho
 
 #### Parameters
 
--   `intimestamp` **any** 
+-   `intimestamp` **any** Timestamp to look up
 
-Returns **any** 
+Returns **any** A object that contains priceUSD and priceBTC
 
 ### comparedate
 
@@ -1086,11 +1103,11 @@ Compares a Data to a from Data and a To Data and returns a Bool
 
 #### Parameters
 
--   `indate` **any** 
--   `starttime` **any** 
--   `endtime` **any** 
+-   `indate` **any** Date to check
+-   `starttime` **any** Date from
+-   `endtime` **any** Date to
 
-Returns **any** 
+Returns **any** Is this true or not
 
 ### returnDefaultPageSize
 
@@ -1114,13 +1131,13 @@ Select Account
 
 Return Victory Chart
 
-Returns **any** 
+Returns **any** Victory Chart JSX
 
 ### render
 
 React Render
 
-Returns **any** 
+Returns **any** JSX for Element
 
 ## TransactionDetailsModal
 
@@ -1684,6 +1701,15 @@ Get min date to lock
 
 Returns **any** 
 
+### renderTimeInputs
+
+Render the date & time pickers
+
+#### Parameters
+
+-   `props` **any** 
+    -   `props.input`  
+
 ### render
 
 React Render
@@ -1976,616 +2002,626 @@ Controls the background of the app
 
 [21]: #parameters-3
 
-[22]: #render-1
+[22]: #returnweightstats
 
-[23]: #networkglobe
+[23]: #returndifficultystats
 
-[24]: #updatepointsonglobe
+[24]: #parameters-4
 
-[25]: #redrawarchs
+[25]: #render-1
 
-[26]: #removeallpoints
+[26]: #networkglobe
 
-[27]: #removeoldpointsandredraw
+[27]: #updatepointsonglobe
 
-[28]: #getresourcesdirectory
+[28]: #redrawarchs
 
-[29]: #render-2
+[29]: #removeallpoints
 
-[30]: #header
+[30]: #removeoldpointsandredraw
 
-[31]: #render-3
+[31]: #getresourcesdirectory
 
-[32]: #loginstatus
+[32]: #render-2
 
-[33]: #signinstatusmessage
+[33]: #header
 
-[34]: #statusicon
+[34]: #render-3
 
-[35]: #gotosecurity
+[35]: #loginstatus
 
-[36]: #render-4
+[36]: #signinstatusmessage
 
-[37]: #stakingstatus
+[37]: #statusicon
 
-[38]: #syncstatus
+[38]: #gotosecurity
 
-[39]: #myaddressesmodal
+[39]: #render-4
 
-[40]: #handlechange
+[40]: #stakingstatus
 
-[41]: #parameters-4
+[41]: #syncstatus
 
-[42]: #filteredaccounts
+[42]: #myaddressesmodal
 
-[43]: #startcreating
+[43]: #handlechange
 
-[44]: #endcreating
+[44]: #parameters-5
 
-[45]: #render-5
+[45]: #filteredaccounts
 
-[46]: #address
+[46]: #startcreating
 
-[47]: #copyaddress
+[47]: #endcreating
 
-[48]: #render-6
+[48]: #render-5
 
-[49]: #newaddressform
+[49]: #address
 
-[50]: #setaccountname
+[50]: #copyaddress
 
-[51]: #parameters-5
+[51]: #render-6
 
-[52]: #render-7
+[52]: #newaddressform
 
-[53]: #daemonstatus
+[53]: #setaccountname
 
-[54]: #sendpage
+[54]: #parameters-6
 
-[55]: #setupcontextmenu-1
+[55]: #render-7
 
-[56]: #parameters-6
+[56]: #daemonstatus
 
-[57]: #movebetweenaccounts
+[57]: #sendpage
 
-[58]: #render-8
+[58]: #setupcontextmenu-1
 
-[59]: #movebetweenaccountsform
+[59]: #parameters-7
 
-[60]: #confirmmove
+[60]: #movebetweenaccounts
 
-[61]: #parameters-7
+[61]: #render-8
 
-[62]: #render-9
+[62]: #movebetweenaccountsform
 
-[63]: #movebetweenaccountsmodal
+[63]: #confirmmove
 
-[64]: #amountfield
+[64]: #parameters-8
 
-[65]: #nxstofiat
+[65]: #render-9
 
-[66]: #parameters-8
+[66]: #movebetweenaccountsmodal
 
-[67]: #fiattonxs
+[67]: #amountfield
 
-[68]: #parameters-9
+[68]: #nxstofiat
 
-[69]: #amountfieldname
+[69]: #parameters-9
 
-[70]: #fiatamountfieldname
+[70]: #fiattonxs
 
-[71]: #render-10
+[71]: #parameters-10
 
-[72]: #sendform
+[72]: #amountfieldname
 
-[73]: #confirmsend
+[73]: #fiatamountfieldname
 
-[74]: #parameters-10
+[74]: #render-10
 
-[75]: #addrecipient
+[75]: #sendform
 
-[76]: #renderaddrecipientbutton
+[76]: #confirmsend
 
 [77]: #parameters-11
 
-[78]: #render-11
+[78]: #addrecipient
 
-[79]: #recipients
+[79]: #renderaddrecipientbutton
 
-[80]: #rendertxfee
+[80]: #parameters-12
 
-[81]: #render-12
+[81]: #render-11
 
-[82]: #recipientfield
+[82]: #recipients
 
-[83]: #handleselect
+[83]: #rendertxfee
 
-[84]: #parameters-12
+[84]: #render-12
 
-[85]: #render-13
+[85]: #recipientfield
 
-[86]: #transactions
+[86]: #handleselect
 
-[87]: #setconfirmationscallback
+[87]: #parameters-13
 
-[88]: #parameters-13
+[88]: #render-13
 
-[89]: #setonmounttransactionscallback
+[89]: #transactions
 
-[90]: #parameters-14
+[90]: #setconfirmationscallback
 
-[91]: #updatechartandtabledimensions
+[91]: #parameters-14
 
-[92]: #parameters-15
+[92]: #setonmounttransactionscallback
 
-[93]: #opentxdetailsmodal
+[93]: #parameters-15
 
-[94]: #transactioncontextfunction
+[94]: #updatechartandtabledimensions
 
 [95]: #parameters-16
 
-[96]: #copysomethingtotheclipboard
+[96]: #opentxdetailsmodal
 
-[97]: #parameters-17
+[97]: #transactioncontextfunction
 
-[98]: #gettransactiondata
+[98]: #parameters-17
 
-[99]: #parameters-18
+[99]: #copysomethingtotheclipboard
 
-[100]: #transactiontimeframechange
+[100]: #parameters-18
 
-[101]: #parameters-19
+[101]: #gettransactiondata
 
-[102]: #downloadcsv
+[102]: #parameters-19
 
-[103]: #savecsv
+[103]: #transactiontimeframechange
 
 [104]: #parameters-20
 
-[105]: #transactiontypefiltercallback
+[105]: #downloadcsv
 
-[106]: #parameters-21
+[106]: #savecsv
 
-[107]: #transactionamountfiltercallback
+[107]: #parameters-21
 
-[108]: #parameters-22
+[108]: #transactiontypefiltercallback
 
-[109]: #transactionaddressfiltercallback
+[109]: #parameters-22
 
-[110]: #parameters-23
+[110]: #transactionamountfiltercallback
 
-[111]: #readaddressbook
+[111]: #parameters-23
 
-[112]: #filterbycategory
+[112]: #transactionaddressfiltercallback
 
 [113]: #parameters-24
 
-[114]: #filterbyamount
+[114]: #readaddressbook
 
-[115]: #parameters-25
+[115]: #filterbycategory
 
-[116]: #filterbyaddress
+[116]: #parameters-25
 
-[117]: #parameters-26
+[117]: #filterbyamount
 
-[118]: #filterbytime
+[118]: #parameters-26
 
-[119]: #parameters-27
+[119]: #filterbyaddress
 
-[120]: #returnallfilters
+[120]: #parameters-27
 
-[121]: #parameters-28
+[121]: #filterbytime
 
-[122]: #tempaddfaketransaction
+[122]: #parameters-28
 
-[123]: #tableselectcallback
+[123]: #returnallfilters
 
 [124]: #parameters-29
 
-[125]: #returnformatedtabledata
+[125]: #tempaddfaketransaction
 
-[126]: #returntablecolumns
+[126]: #tableselectcallback
 
-[127]: #returnchartdata
+[127]: #parameters-30
 
-[128]: #returncorrectfillcolor
+[128]: #returnformatedtabledata
 
-[129]: #parameters-30
+[129]: #returntablecolumns
 
-[130]: #returncorrectstokecolor
+[130]: #returnchartdata
 
-[131]: #parameters-31
+[131]: #returncorrectfillcolor
 
-[132]: #returntooltiplable
+[132]: #parameters-31
 
-[133]: #parameters-32
+[133]: #returncorrectstokecolor
 
-[134]: #handlezoom
+[134]: #parameters-32
 
-[135]: #parameters-33
+[135]: #returntooltiplable
 
-[136]: #mouseovercallback
+[136]: #parameters-33
 
-[137]: #parameters-34
+[137]: #handlezoom
 
-[138]: #mouseoutcallback
+[138]: #parameters-34
 
-[139]: #parameters-35
+[139]: #mouseovercallback
 
-[140]: #gethistorydatajson
+[140]: #parameters-35
 
-[141]: #createcryptocompareurl
+[141]: #mouseoutcallback
 
 [142]: #parameters-36
 
-[143]: #sethistoryvaluesontransaction
+[143]: #gethistorydatajson
 
-[144]: #parameters-37
+[144]: #createcryptocompareurl
 
-[145]: #setfeevaluesontransaction
+[145]: #parameters-37
 
-[146]: #parameters-38
+[146]: #sethistoryvaluesontransaction
 
-[147]: #downloadhistoryontransaction
+[147]: #parameters-38
 
-[148]: #parameters-39
+[148]: #setfeevaluesontransaction
 
-[149]: #gothroughdatathatneedsit
+[149]: #parameters-39
 
-[150]: #savehistorydatatojson
+[150]: #downloadhistoryontransaction
 
-[151]: #maptoobject
+[151]: #parameters-40
 
-[152]: #parameters-40
+[152]: #gothroughdatathatneedsit
 
-[153]: #findclosestdatapoint
+[153]: #savehistorydatatojson
 
-[154]: #parameters-41
+[154]: #maptoobject
 
-[155]: #comparedate
+[155]: #parameters-41
 
-[156]: #parameters-42
+[156]: #findclosestdatapoint
 
-[157]: #returndefaultpagesize
+[157]: #parameters-42
 
-[158]: #accountchanger
+[158]: #comparedate
 
-[159]: #selectaccount
+[159]: #parameters-43
 
-[160]: #parameters-43
+[160]: #returndefaultpagesize
 
-[161]: #returnvictorychart
+[161]: #accountchanger
 
-[162]: #render-14
+[162]: #selectaccount
 
-[163]: #transactiondetailsmodal
+[163]: #parameters-44
 
-[164]: #loaddata
+[164]: #returnvictorychart
 
-[165]: #parameters-44
+[165]: #render-14
 
-[166]: #render-15
+[166]: #transactiondetailsmodal
 
-[167]: #market
+[167]: #loaddata
 
-[168]: #setupcontextmenu-2
+[168]: #parameters-45
 
-[169]: #parameters-45
+[169]: #render-15
 
-[170]: #refresher
+[170]: #market
 
-[171]: #formatbuydata
+[171]: #setupcontextmenu-2
 
 [172]: #parameters-46
 
-[173]: #formatselldata
+[173]: #refresher
 
-[174]: #parameters-47
+[174]: #formatbuydata
 
-[175]: #formatchartdata
+[175]: #parameters-47
 
-[176]: #parameters-48
+[176]: #formatselldata
 
-[177]: #onedayinfo
+[177]: #parameters-48
 
-[178]: #parameters-49
+[178]: #formatchartdata
 
-[179]: #refreshmarket
+[179]: #parameters-49
 
-[180]: #render-16
+[180]: #onedayinfo
 
-[181]: #marketdepth
+[181]: #parameters-50
 
-[182]: #render-17
+[182]: #refreshmarket
 
-[183]: #candlestick
+[183]: #render-16
 
-[184]: #render-18
+[184]: #marketdepth
 
-[185]: #addressbook
+[185]: #render-17
 
-[186]: #addressbookcontextmenu
+[186]: #candlestick
 
-[187]: #getinitial
+[187]: #render-18
 
-[188]: #parameters-50
+[188]: #addressbook
 
-[189]: #copyaddress-1
+[189]: #addressbookcontextmenu
 
-[190]: #parameters-51
+[190]: #getinitial
 
-[191]: #myaddressestable
+[191]: #parameters-51
 
-[192]: #modalinternalbuilder
+[192]: #copyaddress-1
 
-[193]: #contactlister
+[193]: #parameters-52
 
-[194]: #phoneformatter
+[194]: #myaddressestable
 
-[195]: #localtimeformater
+[195]: #modalinternalbuilder
 
-[196]: #theiraddresslister
+[196]: #contactlister
 
-[197]: #myaddresslister
+[197]: #phoneformatter
 
-[198]: #addaddresshandler
+[198]: #localtimeformater
 
-[199]: #showaddcontactmodal
+[199]: #theiraddresslister
 
-[200]: #showmyaddresses
+[200]: #myaddresslister
 
-[201]: #phonenumberhandler
+[201]: #addaddresshandler
 
-[202]: #parameters-52
+[202]: #showaddcontactmodal
 
-[203]: #exportaddressbook
+[203]: #showmyaddresses
 
-[204]: #importaddressbook
+[204]: #phonenumberhandler
 
 [205]: #parameters-53
 
-[206]: #closeedit
+[206]: #exportaddressbook
 
-[207]: #parameters-54
+[207]: #importaddressbook
 
-[208]: #timezoneselector
+[208]: #parameters-54
 
-[209]: #settings
+[209]: #closeedit
 
-[210]: #setupcontextmenu-3
+[210]: #parameters-55
 
-[211]: #parameters-55
+[211]: #timezoneselector
 
-[212]: #render-19
+[212]: #settings
 
-[213]: #settingsapp
+[213]: #setupcontextmenu-3
 
-[214]: #confirmbackupwallet
+[214]: #parameters-56
 
-[215]: #handleautoupdatechange
+[215]: #render-19
 
-[216]: #parameters-56
+[216]: #settingsapp
 
-[217]: #render-20
+[217]: #confirmbackupwallet
 
-[218]: #render-21
+[218]: #handleautoupdatechange
 
-[219]: #browsebackupdir
+[219]: #parameters-57
 
-[220]: #settingsapp-1
+[220]: #render-20
 
-[221]: #confirmbackupwallet-1
+[221]: #render-21
 
-[222]: #handleautoupdatechange-1
+[222]: #browsebackupdir
 
-[223]: #parameters-57
+[223]: #settingsapp-1
 
-[224]: #render-22
+[224]: #confirmbackupwallet-1
 
-[225]: #render-23
+[225]: #handleautoupdatechange-1
 
-[226]: #browsebackupdir-1
+[226]: #parameters-58
 
-[227]: #languagesetting
+[227]: #render-22
 
-[228]: #handlechange-1
+[228]: #render-23
 
-[229]: #parameters-58
+[229]: #browsebackupdir-1
 
-[230]: #render-24
+[230]: #languagesetting
 
-[231]: #settingscore
+[231]: #handlechange-1
 
-[232]: #confirmswitchmanualdaemon
+[232]: #parameters-59
 
-[233]: #restartcore
+[233]: #render-24
 
-[234]: #render-25
+[234]: #settingscore
 
-[235]: #feesetting
+[235]: #confirmswitchmanualdaemon
 
-[236]: #confirmsettxfee
+[236]: #restartcore
 
-[237]: #render-26
+[237]: #render-25
 
-[238]: #settingsstyle
+[238]: #feesetting
 
-[239]: #togglegloberender
+[239]: #confirmsettxfee
 
-[240]: #parameters-59
+[240]: #render-26
 
-[241]: #setwalpaper
+[241]: #settingsstyle
 
-[242]: #parameters-60
+[242]: #togglegloberender
 
-[243]: #setcolor
+[243]: #parameters-60
 
-[244]: #parameters-61
+[244]: #setwalpaper
 
-[245]: #resetcolors
+[245]: #parameters-61
 
-[246]: #loadcustomtheme
+[246]: #setcolor
 
 [247]: #parameters-62
 
-[248]: #openpickthemefiledialog
+[248]: #resetcolors
 
-[249]: #exportthemefiledialog
+[249]: #loadcustomtheme
 
-[250]: #pressdarktheme
+[250]: #parameters-63
 
-[251]: #presslighttheme
+[251]: #openpickthemefiledialog
 
-[252]: #presscustomtheme
+[252]: #exportthemefiledialog
 
-[253]: #pressresettheme
+[253]: #pressdarktheme
 
-[254]: #savepreviouscustomtheme
+[254]: #presslighttheme
 
-[255]: #settocustom
+[255]: #presscustomtheme
 
-[256]: #setthemeselector
+[256]: #pressresettheme
 
-[257]: #parameters-63
+[257]: #savepreviouscustomtheme
 
-[258]: #render-27
+[258]: #settocustom
 
-[259]: #colorpicker
+[259]: #setthemeselector
 
-[260]: #openpicker
+[260]: #parameters-64
 
-[261]: #closepicker
+[261]: #render-27
 
-[262]: #handlecolorchange
+[262]: #colorpicker
 
-[263]: #parameters-64
+[263]: #openpicker
 
-[264]: #render-28
+[264]: #closepicker
 
-[265]: #backgroundpicker
+[265]: #handlecolorchange
 
-[266]: #setdefault
+[266]: #parameters-65
 
-[267]: #parameters-65
+[267]: #render-28
 
-[268]: #handlefilepick
+[268]: #backgroundpicker
 
-[269]: #parameters-66
+[269]: #setdefault
 
-[270]: #render-29
+[270]: #parameters-66
 
-[271]: #themepicker
+[271]: #handlefilepick
 
-[272]: #settocustomtheme
+[272]: #parameters-67
 
-[273]: #setselector
+[273]: #render-29
 
-[274]: #parameters-67
+[274]: #themepicker
 
-[275]: #render-30
+[275]: #settocustomtheme
 
-[276]: #security
+[276]: #setselector
 
-[277]: #render-31
+[277]: #parameters-68
 
-[278]: #login
+[278]: #render-30
 
-[279]: #getmindate
+[279]: #security
 
-[280]: #render-32
+[280]: #render-31
 
-[281]: #encrypted
+[281]: #login
 
-[282]: #render-33
+[282]: #getmindate
 
-[283]: #changepassword
+[283]: #rendertimeinputs
 
-[284]: #confirmlogout
+[284]: #parameters-69
 
-[285]: #render-34
+[285]: #render-32
 
-[286]: #unencrypted
+[286]: #encrypted
 
-[287]: #render-35
+[287]: #render-33
 
-[288]: #encryptwallet
+[288]: #changepassword
 
-[289]: #render-36
+[289]: #confirmlogout
 
-[290]: #importprivkey
+[290]: #render-34
 
-[291]: #render-37
+[291]: #unencrypted
 
-[292]: #viewprivkeyforaddress
+[292]: #render-35
 
-[293]: #showprivkey
+[293]: #encryptwallet
 
-[294]: #parameters-68
+[294]: #render-36
 
-[295]: #copyprivkey
+[295]: #importprivkey
 
-[296]: #resetprivatekey
+[296]: #render-37
 
-[297]: #render-38
+[297]: #viewprivkeyforaddress
 
-[298]: #terminal
+[298]: #showprivkey
 
-[299]: #setupcontextmenu-4
+[299]: #parameters-70
 
-[300]: #parameters-69
+[300]: #copyprivkey
 
-[301]: #render-39
+[301]: #resetprivatekey
 
-[302]: #terminalconsole
+[302]: #render-38
 
-[303]: #getsnapshotbeforeupdate
+[303]: #terminal
 
-[304]: #processoutput
+[304]: #setupcontextmenu-4
 
-[305]: #processinput
+[305]: #parameters-71
 
-[306]: #handlekeyboardinput
+[306]: #render-39
 
-[307]: #parameters-70
+[307]: #terminalconsole
 
-[308]: #handlekeyboardarrows
+[308]: #getsnapshotbeforeupdate
 
-[309]: #parameters-71
+[309]: #processoutput
 
-[310]: #autocomplete
+[310]: #processinput
 
-[311]: #render-40
+[311]: #handlekeyboardinput
 
-[312]: #terminalcore
+[312]: #parameters-72
 
-[313]: #onscrollevent
+[313]: #handlekeyboardarrows
 
-[314]: #render-41
+[314]: #parameters-73
 
-[315]: #styleguide
+[315]: #autocomplete
 
-[316]: #list
+[316]: #render-40
 
-[317]: #setupcontextmenu-5
+[317]: #terminalcore
 
-[318]: #parameters-72
+[318]: #onscrollevent
 
-[319]: #buildlist
+[319]: #render-41
 
-[320]: #render-42
+[320]: #styleguide
 
-[321]: #about
+[321]: #list
 
-[322]: #getcurrentyear
+[322]: #setupcontextmenu-5
 
-[323]: #getinterfaceversionnumber
+[323]: #parameters-74
 
-[324]: #getdaemonversionnumber
+[324]: #buildlist
 
-[325]: #appbackground
+[325]: #render-42
 
-[326]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[326]: #about
 
-[327]: http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
+[327]: #getcurrentyear
 
-[328]: http://2ality.com/2015/08/es6-map-json.html
+[328]: #getinterfaceversionnumber
+
+[329]: #getdaemonversionnumber
+
+[330]: #appbackground
+
+[331]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[332]: http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
+
+[333]: http://2ality.com/2015/08/es6-map-json.html
