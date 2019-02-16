@@ -302,7 +302,7 @@
   "Header.UnlockedUntil": "까지 잠금 해제 됨",
   "Header.StakingOnly": "이삿짐 만",
   "Header.Synced": "동기화 됨",
-  "Header.Synching": "동기화 중...\n뒤에\n",
+  "Header.Syncing": "동기화 중...\n뒤에\n",
   "Header.Blocks": "블록",
   "Header.DaemonNotLoaded": "데몬이로드되지 않음",
 

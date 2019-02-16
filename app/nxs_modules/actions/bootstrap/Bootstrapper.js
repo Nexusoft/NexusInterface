@@ -102,7 +102,7 @@ export default class Bootstrapper {
 
       if (fs.existsSync(extractDest)) {
         console.log('removing the old file');
-        rimraf.sync(extractDest);
+        rimraf.sync(extractDest, {}, () => console.log('done'));
         this._cleanUp();
       }
 
@@ -301,7 +301,7 @@ export default class Bootstrapper {
       }
 
       if (fs.existsSync(extractDest)) {
-        rimraf.sync(extractDest);
+        rimraf.sync(extractDest, {}, () => console.log('done'));
         //   // const recentContents = fs.readdirSync(extractDest);
         //   // recentContents
         //   //   .filter(child =>
@@ -315,11 +315,14 @@ export default class Bootstrapper {
         //   //           .isDirectory()
         //   //       )
         //   //       .forEach(subSubFolder => {
-        //   //         rimraf.sync(path.join(extractDest, subFolder, subSubFolder));
+        //   //         rimraf.sync(path.join(extractDest, subFolder, subSubFolder), {}, () =>
+        // console.log('done'));
         //   //       });
-        //   //     rimraf.sync(path.join(extractDest, subFolder));
+        //   //     rimraf.sync(path.join(extractDest, subFolder), {}, () =>
+        // console.log('done'));
         //   //   });
-        //   // rimraf.sync(extractDest);
+        //   // rimraf.sync(extractDest, {}, () =>
+        // console.log('done'));
       }
     }, 0);
   }

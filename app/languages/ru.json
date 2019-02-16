@@ -305,7 +305,7 @@
   "Header.UnlockedUntil": "Разблокировано до",
   "Header.StakingOnly": "Только для ставок",
   "Header.Synced": "синхронизируется",
-  "Header.Synching": "Синхронизации...\nЗа\n",
+  "Header.Syncing": "Синхронизации...\nЗа\n",
   "Header.Blocks": "Блоки",
   "Header.DaemonNotLoaded": "Демон не загружен",
 

@@ -70,7 +70,9 @@ const Characters = styled.span({
       onClose: () => {
         // this.props.history.push('/');
         // this.props.ResetForEncryptionRestart();
-        remote.getGlobal('core').start();
+        setTimeout(() => {
+          remote.getGlobal('core').start();
+        }, 10000);
         UIController.showNotification(<Text id="Settings.RestartingDaemon" />);
       },
     });
