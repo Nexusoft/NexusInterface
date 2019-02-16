@@ -17,6 +17,17 @@ import {
   VictoryTooltip,
 } from 'victory';
 
+import styled from '@emotion/styled';
+const TerminalCoreComponent = styled.div(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  border: `1px solid ${theme.mixer(0.125)}`,
+}));
+
+const asdas = styled()
+
+
 /**
  * Creates a Victory Chart that uses CandleSticks
  *
@@ -43,31 +54,30 @@ export default class Candlestick extends Component {
               style: {
                 axis: {
                   fill: 'transparent',
-                  stroke: 'white',
+                  stroke: this.props.theme.foreground,
                   strokeWidth: 1,
                 },
                 axisLabel: {
-                  stroke: 'white',
+                  stroke: 'transparent',
                   fontweight: 'normal',
-
-                  padding: 40,
-                  fontSize: 10,
+                  fill: this.props.theme.foreground,
+                  padding: 35,
+                  fontSize: 14,
                 },
-
                 grid: {
                   fill: 'none',
                   stroke: 'none',
                   pointerEvents: 'painted',
                 },
                 ticks: {
-                  fill: 'white',
+                  fill: this.props.theme.foreground,
                   size: 5,
-                  stroke: 'white',
+                  stroke: this.props.theme.foreground,
                 },
                 tickLabels: {
                   fontSize: 10,
                   padding: 1,
-                  fill: 'white',
+                  fill: this.props.theme.foreground,
                   stroke: 'transparent',
                 },
               },
@@ -76,6 +86,7 @@ export default class Candlestick extends Component {
         >
           <VictoryAxis
             label={translate('Market.Date', this.props.locale)}
+            style={{color:'#000'}}
             tickFormat={t =>
               `${new Date(t).toLocaleDateString(this.props.locale,{month:"short", day:"numeric"})}`
             }
@@ -93,7 +104,7 @@ export default class Candlestick extends Component {
           />
 
           <VictoryCandlestick
-            style={{ data: { stroke: 'white' } }}
+            style={{ data: { stroke: this.props.theme.foreground } }}
             candleColors={{
               positive: 'rgba(38, 230, 0, 1)',
               negative: 'rgba(255, 15, 15, 1)',

@@ -1,17 +1,24 @@
-# 0.8.7 (2019.2.xx)
+# 0.8.7 (2019.2.15)
 [Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.7)
 #### Additions
 - There are now additional display options for the overview page, see Settings/App
 
-#### Ajustments
+#### Adjustments
 - Low disk warning has been reduced to 1gb for manual syncing
+- Market page charts now respond to Theme adjustments
+- Terminal page font has shrunk for both terminal and console output
+- Renamed Dark theme background
+- Removed `?` from the move NXS button
+- Reordered the languages and replaced the US flag with a US/GB flag for English
+- Adjusted some padding on the footer
 
 #### Fixes
-- Language translation improvments
+- Language translation improvements
 - Fixed fiat selection bug
 - Fixed typo with GBP where the app would not start up
 - Fixed an issue where using the filters in the transactions page would cause the app to gray screen
-- Fixed an Issue werer the Nav Icon pulse was being cut off
+- Fixed an Issue where the Nav Icon pulse was being cut off
+- Fixed issues where transactions would still be labeled as 'Pending'
 
 
 # 0.8.6 (2019.2.1)
