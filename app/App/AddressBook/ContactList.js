@@ -6,11 +6,12 @@ import styled from '@emotion/styled';
 // Internal
 import Contact from './Contact';
 
-const ContactListComponent = styled.div({
+const ContactListComponent = styled.div(({ theme }) => ({
   gridArea: 'list',
   maxHeight: '100%',
   overflowY: 'auto',
-});
+  borderRight: `1px solid ${theme.mixer(0.125)}`,
+}));
 
 const mapStateToProps = ({ addressbook: { addressbook, searchQuery } }) => ({
   contacts: addressbook,
@@ -18,13 +19,13 @@ const mapStateToProps = ({ addressbook: { addressbook, searchQuery } }) => ({
 });
 
 /**
- * The Address Book Page
+ * List of contacts
  *
  * @class ContactList
- * @extends {PureComponent}
+ * @extends {Component}
  */
 @connect(mapStateToProps)
-class ContactList extends React.PureComponent {
+class ContactList extends React.Component {
   /**
    * render
    *
@@ -33,22 +34,18 @@ class ContactList extends React.PureComponent {
    */
   render() {
     const { contacts, searchQuery } = this.props;
-    const filteredContacts = !searchQuery
-      ? contacts
-      : contacts.filter(
-          contact =>
-            (contact.name && contact.name.includes(searchQuery)) ||
-            (contact.mine &&
-              contact.mine.find(address => address === searchQuery)) ||
-            (contact.notMine &&
-              contact.notMine.find(address => address === searchQuery))
-        );
 
     return (
       <ContactListComponent>
-        {filteredContacts.map((contact, i) => (
-          <Contact key={contact.name} contact={contact} index={i} />
-        ))}
+        {contacts.map((contact, i) =>
+          (contact.name && contact.name.includes(searchQuery)) ||
+          (contact.mine &&
+            contact.mine.find(address => address === searchQuery)) ||
+          (contact.notMine &&
+            contact.notMine.find(address => address === searchQuery)) ? (
+            <Contact key={contact.name} contact={contact} index={i} />
+          ) : null
+        )}
       </ContactListComponent>
     );
   }

@@ -68,7 +68,7 @@ const PanelBodyOverlay = styled.div({
   left: 0,
   right: 0,
   bottom: 0,
-  padding: '10px 20px',
+  padding: '20px 30px',
 });
 
 const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (

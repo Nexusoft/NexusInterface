@@ -22,7 +22,7 @@ const initialState = {
   hoveredOver: '',
   createAddress: false,
   searchQuery: '',
-  activeContactIndex: -1, // nothing selected
+  selectedContactIndex: -1, // nothing selected
 };
 
 const compareNames = (a, b) => {
@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
     case TYPE.SELECT_CONTACT:
       return {
         ...state,
-        activeContactIndex: action.payload,
+        selectedContactIndex: action.payload,
       };
 
     case TYPE.CONTACT_IMAGE:

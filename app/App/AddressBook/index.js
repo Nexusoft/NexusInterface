@@ -30,6 +30,7 @@ import ContextMenuBuilder from 'contextmenu';
 import AddEditContactModal from './AddEditContactModal';
 import PanelControls from './PanelControls';
 import ContactList from './ContactList';
+import ContactDetails from './ContactDetails';
 import TimeZoneSelector from './timeZoneSelector';
 import styles from './style.css';
 
@@ -45,7 +46,7 @@ const AddressBookLayout = styled.div({
   display: 'grid',
   gridTemplateAreas: '"list details"',
   gridTemplateColumns: '1fr 2fr',
-  columnGap: '1em',
+  columnGap: 30,
   height: '100%',
 });
 
@@ -117,6 +118,7 @@ class AddressBook extends Component {
         {addressBook && addressBook.length > 0 ? (
           <AddressBookLayout>
             <ContactList />
+            <ContactDetails />
           </AddressBookLayout>
         ) : (
           <div style={{ marginTop: 50, textAlign: 'center' }}>

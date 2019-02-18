@@ -12,7 +12,7 @@ const ContactComponent = styled.div(
   ({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    padding: '.4em',
+    padding: '.4em .6em',
     transitionProperty: 'background, color',
     transitionDuration: timing.normal,
     cursor: 'pointer',
@@ -34,7 +34,7 @@ const ContactAvatar = styled.div(({ theme }) => ({
   width: '2em',
   height: '2em',
   borderRadius: '50%',
-  background: theme.mixer(0.5),
+  background: theme.mixer(0.25),
   color: theme.foreground,
   display: 'flex',
   justifyContent: 'center',
@@ -49,7 +49,7 @@ const ContactName = styled.div({
 });
 
 const mapStateToProps = state => ({
-  activeIndex: state.addressbook.activeContactIndex,
+  activeIndex: state.addressbook.selectedContactIndex,
 });
 
 const actionCreators = {

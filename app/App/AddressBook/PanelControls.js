@@ -66,6 +66,9 @@ class SearchBox extends Component {
  * @class PanelControls
  * @extends {Component}
  */
+@connect(state => ({
+  addressBook: state.addressbook.addressbook,
+}))
 class PanelControls extends Component {
   /**
    * Export the Address Book to a CSV File
@@ -85,7 +88,7 @@ class PanelControls extends Component {
       'Notes', //d
     ];
     rows.push(NameEntry); //how we get our header line
-    this.props.addressbook.map(e => {
+    this.props.addressBook.map(e => {
       let tempentry = [];
       tempentry.push(e.name);
       tempentry.push(e.phoneNumber);
