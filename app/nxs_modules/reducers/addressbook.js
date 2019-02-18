@@ -21,6 +21,8 @@ const initialState = {
   actionItem: '',
   hoveredOver: '',
   createAddress: false,
+  searchQuery: '',
+  activeContactIndex: -1, // nothing selected
 };
 
 const compareNames = (a, b) => {
@@ -41,6 +43,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         addressbook: [...state.addressbook, action.payload].sort(compareNames),
+      };
+
+    case TYPE.CONTACT_SEARCH:
+      return {
+        ...state,
+        searchQuery: action.payload,
+      };
+
+    case TYPE.SELECT_CONTACT:
+      return {
+        ...state,
+        activeContactIndex: action.payload,
       };
 
     case TYPE.CONTACT_IMAGE:

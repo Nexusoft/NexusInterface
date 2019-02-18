@@ -90,6 +90,7 @@ export const SHOW_MODAL4 = 'SHOW_MODAL4';
 export const CONFIRM = 'CONFIRM';
 export const SEARCH = 'SEARCH';
 export const CONTACT_SEARCH = 'CONTACT_SEARCH';
+export const SELECT_CONTACT = 'SELECT_CONTACT';
 export const OPEN_MOVE_MODAL = 'OPEN_MOVE_MODAL';
 export const CLOSE_MOVE_MODAL = 'CLOSE_MOVE_MODAL';
 export const MOVE_TO_ACCOUNT = 'MOVE_TO_ACCOUNT';
