@@ -5,6 +5,8 @@ import kr from './kr.png';
 import de from './de.png';
 import ja from './jp.png';
 import fr from './fr.png';
+import nl from './nl.png';
+import usuk from './US-UK.png';
 
 export const America = us;
 export const Russia = ru;
@@ -13,3 +15,5 @@ export const Korea = kr;
 export const Germany = de;
 export const Japan = ja;
 export const France = fr;
+export const Netherlands = nl;
+export const USAUK = usuk;

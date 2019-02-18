@@ -41,6 +41,7 @@ const Output = styled.div(
     overflowY: 'auto',
     wordBreak: 'break-all',
     flexGrow: 1,
+    fontSize: "75%",
     display: 'flex',
     background: theme.background,
     borderBottom: `1px solid ${theme.mixer(0.125)}`,

@@ -459,6 +459,7 @@ class Core extends EventEmitter {
             if (getCorePID() > '1') {
               setTimeout(() => {
                 log.info('Core Manager: Killing process ' + corePID);
+
                 if (isRunning(corePID)) {
                   if (process.platform == 'win32') {
                     execSync('taskkill /F /PID %KILL_PID%', [], {
@@ -466,6 +467,7 @@ class Core extends EventEmitter {
                     });
                   } else {
                     execSync('kill -9 $KILL_PID', [], { env: modEnv });
+                    resolve('Stopping');
                   }
 
                   if (callback) {
@@ -473,6 +475,8 @@ class Core extends EventEmitter {
                       callback(refToThis);
                     }, 3000);
                   }
+                  resolve('Stopping');
+                } else {
                   resolve('Stopping');
                 }
               }, 5000);

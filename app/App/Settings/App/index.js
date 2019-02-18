@@ -59,13 +59,17 @@ const fiatCurrencies = [
   { value: 'USD', display: 'United States Dollar (USD)' },
 ];
 
-const mapStateToProps = state => {
-  console.log(state);
-  return {
-    connections: state.overview.connections,
-    settings: state.settings,
-  };
-};
+const overviewDisplays = [
+  { value: 'standard', display: 'Standard' },
+  { value: 'miner', display: 'Miner' },
+  { value: 'minimalist', display: 'Minimalist' },
+  { value: 'none', display: 'None' },
+];
+
+const mapStateToProps = state => ({
+  connections: state.overview.connections,
+  settings: state.settings,
+});
 
 const mapDispatchToProps = dispatch => ({
   updateSettings: updates => dispatch(updateSettings(updates)),
@@ -158,6 +162,14 @@ class SettingsApp extends Component {
       <AppSettings>
         <LanguageSetting />
 
+        <SettingsField label={<Text id="Settings.OverviewDisplay" />}>
+          <Select
+            value={settings.overviewDisplay}
+            onChange={this.updateHandlers('overviewDisplay')}
+            options={overviewDisplays}
+            style={{ maxWidth: 260 }}
+          />
+        </SettingsField>
         <SettingsField
           connectLabel
           label={<Text id="Settings.MinimizeClose" />}
@@ -181,11 +193,21 @@ class SettingsApp extends Component {
               </span>
             </span>
           }
-          subLabel={<Text id="Settings.AutoUpdateNote" />}
+          subLabel={
+            <div>
+              <Text id="Settings.AutoUpdateNote" />
+              {process.platform === 'darwin' && (
+                <div className="error">
+                  <Text id="Settings.AutoUpdateDisabled" />
+                </div>
+              )}
+            </div>
+          }
         >
           <Switch
-            checked={settings.autoUpdate}
+            checked={settings.autoUpdate && process.platform !== 'darwin'}
             onChange={this.handleAutoUpdateChange}
+            disabled={process.platform === 'darwin'}
           />
         </SettingsField>
 

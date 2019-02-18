@@ -8,6 +8,7 @@ const initialState = {
   USDpercentChange: 0,
   percentDownloaded: 0,
   webGLEnabled: false,
+  difficulty: null,
 };
 
 export default (state = initialState, action) => {
@@ -76,6 +77,11 @@ export default (state = initialState, action) => {
         circulatingSupply: action.payload,
       };
       break;
+    case TYPE.SET_DIFFICULTY:
+      return {
+        ...state,
+        difficulty: action.payload,
+      };
     default:
       return state;
   }

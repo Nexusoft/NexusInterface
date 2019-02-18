@@ -40,15 +40,13 @@ export default class MarketDepth extends Component {
             axis: {
               style: {
                 axis: {
-                  fill: 'transparent',
-                  stroke: 'white',
+                  fill: 'this.props.theme.foreground',
                   strokeWidth: 1,
                 },
                 axisLabel: {
-                  stroke: 'white',
-
-                  padding: 40,
-                  fontSize: 10,
+                  fill: 'this.props.theme.foreground',
+                  padding: 35,
+                  fontSize: 14,
                 },
                 grid: {
                   fill: 'none',
@@ -56,14 +54,13 @@ export default class MarketDepth extends Component {
                   pointerEvents: 'painted',
                 },
                 ticks: {
-                  fill: 'white',
+                  fill: 'this.props.theme.foreground',
                   size: 5,
-                  stroke: 'white',
+                  stroke: 'this.props.theme.foreground',
                 },
                 tickLabels: {
                   padding: 1,
-                  fill: 'white',
-                  stroke: 'transparent',
+                  fill: 'this.props.theme.foreground',
                   fontSize: 10,
                 },
               },
