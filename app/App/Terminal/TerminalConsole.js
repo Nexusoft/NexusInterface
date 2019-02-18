@@ -91,6 +91,7 @@ const AutoCompleteItem = styled.a(({ theme }) => ({
 const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
   flexBasis: 0,
+  fontSize: "75%",
   overflow: 'auto',
   wordBreak: 'break-all',
   background: theme.background,

@@ -20,35 +20,8 @@ const languages = [
     value: 'en',
     display: (
       <span>
-        <Flag src={FlagFile.America} />
-        <span className="v-align">English (US)</span>
-      </span>
-    ),
-  },
-  {
-    value: 'ru',
-    display: (
-      <span>
-        <Flag src={FlagFile.Russia} />
-        <span className="v-align">Pусский</span>
-      </span>
-    ),
-  },
-  {
-    value: 'es',
-    display: (
-      <span>
-        <Flag src={FlagFile.Spain} />
-        <span className="v-align">Español</span>
-      </span>
-    ),
-  },
-  {
-    value: 'ko',
-    display: (
-      <span>
-        <Flag src={FlagFile.Korea} />
-        <span className="v-align">한국어</span>
+        <Flag src={FlagFile.USAUK} />
+        <span className="v-align">English</span>
       </span>
     ),
   },
@@ -62,11 +35,11 @@ const languages = [
     ),
   },
   {
-    value: 'ja',
+    value: 'es',
     display: (
       <span>
-        <Flag src={FlagFile.Japan} />
-        <span className="v-align">日本語</span>
+        <Flag src={FlagFile.Spain} />
+        <span className="v-align">Español</span>
       </span>
     ),
   },
@@ -76,6 +49,33 @@ const languages = [
       <span>
         <Flag src={FlagFile.France} />
         <span className="v-align">Français</span>
+      </span>
+    ),
+  },
+  {
+    value: 'ko',
+    display: (
+      <span>
+        <Flag src={FlagFile.Korea} />
+        <span className="v-align">한국어</span>
+      </span>
+    ),
+  },
+  {
+    value: 'ja',
+    display: (
+      <span>
+        <Flag src={FlagFile.Japan} />
+        <span className="v-align">日本語</span>
+      </span>
+    ),
+  },
+  {
+    value: 'ru',
+    display: (
+      <span>
+        <Flag src={FlagFile.Russia} />
+        <span className="v-align">Pусский</span>
       </span>
     ),
   },
