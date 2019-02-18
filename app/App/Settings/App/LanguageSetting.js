@@ -71,6 +71,15 @@ const languages = [
     ),
   },
   {
+    value: 'nl',
+    display: (
+      <span>
+        <Flag src={FlagFile.Netherlands} />
+        <span className="v-align">Nederlands</span>
+      </span>
+    ),
+  },
+  {
     value: 'ru',
     display: (
       <span>
