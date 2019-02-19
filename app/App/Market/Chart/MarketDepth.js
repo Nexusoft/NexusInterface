@@ -88,7 +88,22 @@ export default class MarketDepth extends Component {
                 fill: 'url(#green)',
               },
             }}
-            labelComponent={<VictoryTooltip />}
+            labelComponent={
+              <VictoryTooltip
+                orientation={index => {
+                  if (
+                    [...this.props.chartData].findIndex(e => {
+                      if (e.x === index.x) {
+                        return e;
+                      }
+                    }) >
+                    [...this.props.chartData].length / 2
+                  ) {
+                    return 'right';
+                  } else return 'top';
+                }}
+              />
+            }
             data={[...this.props.chartData]}
           />
           <VictoryArea
@@ -97,7 +112,22 @@ export default class MarketDepth extends Component {
                 fill: 'url(#red)',
               },
             }}
-            labelComponent={<VictoryTooltip />}
+            labelComponent={
+              <VictoryTooltip
+                orientation={index => {
+                  if (
+                    [...this.props.chartSellData].findIndex(e => {
+                      if (e.x === index.x) {
+                        return e;
+                      }
+                    }) >
+                    [...this.props.chartSellData].length / 2
+                  ) {
+                    return 'left';
+                  } else return 'top';
+                }}
+              />
+            }
             data={[...this.props.chartSellData]}
           />
           <VictoryAxis
