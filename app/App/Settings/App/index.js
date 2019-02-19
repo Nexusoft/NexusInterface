@@ -135,7 +135,7 @@ class SettingsApp extends Component {
         note: <Text id="Settings.DisableAutoUpdateNote" />,
         yesLabel: <Text id="Settings.KeepAutoUpdate" />,
         noLabel: <Text id="Settings.TurnOffAutoUpdate" />,
-        noSkin: 'error',
+        noSkin: 'danger',
         noCallback: () => {
           this.props.updateSettings({ autoUpdate: false });
           updater.stopAutoUpdate();
