@@ -25,8 +25,7 @@ const TerminalCoreComponent = styled.div(({ theme }) => ({
   border: `1px solid ${theme.mixer(0.125)}`,
 }));
 
-const asdas = styled()
-
+const asdas = styled();
 
 /**
  * Creates a Victory Chart that uses CandleSticks
@@ -86,9 +85,12 @@ export default class Candlestick extends Component {
         >
           <VictoryAxis
             label={translate('Market.Date', this.props.locale)}
-            style={{color:'#000'}}
+            style={{ color: '#000' }}
             tickFormat={t =>
-              `${new Date(t).toLocaleDateString(this.props.locale,{month:"short", day:"numeric"})}`
+              `${new Date(t).toLocaleDateString(this.props.locale, {
+                month: 'short',
+                day: 'numeric',
+              })}`
             }
             tickLabelComponent={
               <VictoryPortal>
@@ -110,7 +112,22 @@ export default class Candlestick extends Component {
               negative: 'rgba(255, 15, 15, 1)',
             }}
             data={this.props.data}
-            labelComponent={<VictoryTooltip />}
+            labelComponent={
+              <VictoryTooltip
+                orientation={index => {
+                  if (
+                    [...this.props.data].findIndex(e => {
+                      if (e.x === index.x) {
+                        return e;
+                      }
+                    }) >
+                    [...this.props.data].length / 2
+                  ) {
+                    return 'right';
+                  } else return 'left';
+                }}
+              />
+            }
           />
         </VictoryChart>
       </div>
