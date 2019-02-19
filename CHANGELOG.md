@@ -7,6 +7,7 @@
 - Language Improvments
 - Nexus Data folder now will be marked with `Beta` instead of the version number so users do not need to rebootstrap, the app data will remain the same schema
 - Removed unused packages from dependecy list
+- Market Data tooltips now with shift left or right inorder for them to display center to the graph
 
 #### Fixes
 - 
