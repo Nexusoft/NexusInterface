@@ -67,16 +67,18 @@ export default class Candlestick extends Component {
                 grid: {
                   fill: 'none',
                   stroke: 'none',
+                  padding: 10,
                   pointerEvents: 'painted',
                 },
                 ticks: {
                   fill: this.props.theme.foreground,
                   size: 5,
+                  padding: 1,
                   stroke: this.props.theme.foreground,
                 },
                 tickLabels: {
                   fontSize: 10,
-                  padding: 1,
+                  padding: 2,
                   fill: this.props.theme.foreground,
                   stroke: 'transparent',
                 },
@@ -86,7 +88,7 @@ export default class Candlestick extends Component {
         >
           <VictoryAxis
             label={translate('Market.Date', this.props.locale)}
-            style={{color:'#000'}}
+            style={{color:'#000', padding: 10}}
             tickFormat={t =>
               `${new Date(t).toLocaleDateString(this.props.locale,{month:"short", day:"numeric"})}`
             }
@@ -100,7 +102,7 @@ export default class Candlestick extends Component {
           <VictoryAxis
             label={translate('Market.Price', this.props.locale)}
             dependentAxis
-            style={{ tickLabels: { angle: -45 } }}
+            style={{ tickLabels: { angle: -60 } , axisLabel: { padding :35}}}
           />
 
           <VictoryCandlestick
