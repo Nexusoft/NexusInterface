@@ -11,6 +11,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
+import MyAddressesModal from 'components/MyAddressesModal';
 import UIController from 'components/UIController';
 
 // Internal Local
@@ -20,6 +21,7 @@ import AddEditContactModal from './AddEditContactModal';
 import exportIcon from 'images/export.sprite.svg';
 import addContactIcon from 'images/add-contact.sprite.svg';
 import searchIcon from 'images/search.sprite.svg';
+import userIcon from 'images/user.sprite.svg';
 
 const ControlIcon = styled(Icon)({
   width: 20,
@@ -146,9 +148,23 @@ class PanelControls extends Component {
     UIController.openModal(AddEditContactModal);
   };
 
+  showMyAddresses = () => {
+    UIController.openModal(MyAddressesModal);
+  };
+
   render() {
     return (
       <div className="flex center">
+        <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
+          <Button
+            skin="blank-light"
+            className="relative"
+            onClick={this.showMyAddresses}
+          >
+            <ControlIcon icon={userIcon} />
+          </Button>
+        </Tooltip.Trigger>
+
         <Tooltip.Trigger tooltip={<Text id="AddressBook.NewContact" />}>
           <Button
             skin="blank-light"
