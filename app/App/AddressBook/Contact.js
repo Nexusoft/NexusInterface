@@ -55,7 +55,9 @@ const ContactAvatar = styled.div(({ theme }) => ({
 
 const ContactName = styled.div({
   flexGrow: 1,
-  wordBreak: 'break-word',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 });
 
 const AddressesCount = styled.div(({ theme }) => ({
