@@ -90,7 +90,6 @@ function asyncValidateAddresses(isMine, addresses, errors) {
 )
 @reduxForm({
   form: 'addEditContact',
-  destroyOnUnmount: false,
   validate: ({ name, mine, notMine, email }, props) => {
     const errors = {};
 
@@ -168,15 +167,24 @@ function asyncValidateAddresses(isMine, addresses, errors) {
 class AddEditContactForm extends Component {
   inputRef = React.createRef();
 
+  /**
+   * componentDidMount
+   *
+   * @memberof AddEditContactForm
+   */
   componentDidMount() {
-    console.log('didMount');
     // Not sure why but calling focus directly doesn't work
     setTimeout(() => {
-      console.log('timeout');
       this.inputRef.current.focus();
     }, 0);
   }
 
+  /**
+   * render
+   *
+   * @returns
+   * @memberof AddEditContactForm
+   */
   render() {
     const {
       edit,

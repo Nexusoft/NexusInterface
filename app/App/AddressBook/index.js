@@ -1,46 +1,25 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { remote } from 'electron';
-import Modal from 'react-responsive-modal';
-import csv from 'csvtojson';
-import { callbackify } from 'util';
 import Text from 'components/Text';
 import styled from '@emotion/styled';
-import fs from 'fs';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global
-import config from 'api/configuration';
-import * as RPC from 'scripts/rpc';
-import * as actionsCreators from 'actions/addressbookActionCreators';
-import { loadMyAccounts } from 'actions/accountActionCreators';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
-import { translate } from 'components/Text';
 import Panel from 'components/Panel';
-import WaitingMessage from 'components/WaitingMessage';
-import Tooltip from 'components/Tooltip';
-import UIController from 'components/UIController';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
-import AddEditContactModal from './AddEditContactModal';
 import PanelControls from './PanelControls';
 import ContactList from './ContactList';
 import ContactDetails from './ContactDetails';
-import TimeZoneSelector from './timeZoneSelector';
-import styles from './style.css';
 
 // Icons
-import profilePlaceholder from 'images/Profile_Placeholder.png';
 import addressBookIcon from 'images/address-book.sprite.svg';
-import exportIcon from 'images/export.sprite.svg';
 import addContactIcon from 'images/add-contact.sprite.svg';
-import searchIcon from 'images/search.sprite.svg';
-import userIcon from 'images/user.sprite.svg';
 
 const AddressBookLayout = styled.div({
   display: 'grid',
