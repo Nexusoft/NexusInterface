@@ -16,13 +16,17 @@ const AccountName = styled.span({
   fontWeight: 'bold',
 });
 
-const Account = ({ account: { account, addresses = [] }, searchQuery }) => (
+const Account = ({
+  account: { account, balance, addresses = [] },
+  searchQuery,
+}) => (
   <AccountComponent>
     <div>
       Account{' '}
       <AccountName>
         {highlightMatchingText(account, searchQuery, Highlight)}
-      </AccountName>
+      </AccountName>{' '}
+      ({balance} NXS)
     </div>
     {addresses.map(addr => (
       <NexusAddress key={addr} address={addr} />
