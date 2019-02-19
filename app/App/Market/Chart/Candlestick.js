@@ -66,7 +66,6 @@ export default class Candlestick extends Component {
                 grid: {
                   fill: 'none',
                   stroke: 'none',
-                  padding: 10,
                   pointerEvents: 'painted',
                 },
                 ticks: {

@@ -40,7 +40,8 @@ export default class MarketDepth extends Component {
             axis: {
               style: {
                 axis: {
-                  fill: this.props.theme.foreground,
+                  fill: 'transparent',
+                  stroke: this.props.theme.foreground,
                   strokeWidth: 1,
                 },
                 axisLabel: {
