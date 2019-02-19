@@ -178,6 +178,8 @@
   "AddressBook.Back": "Back",
   "AddressBook.TheirAddresses": "Their Addresses",
   "AddressBook.Address": "Address",
+  "AddressBook.AddressesCountSingular": "{count} Address",
+  "AddressBook.AddressesCountPlural": "{count} Addresses",
   "AddressBook.Addresses": "Addresses",
   "AddressBook.MyAccount": "My Account",
   "AddressBook.EnterAddressName": "Enter Address Name",

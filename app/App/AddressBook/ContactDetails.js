@@ -9,9 +9,11 @@ import Text from 'components/Text';
 import Link from 'components/Link';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
 import UIController from 'components/UIController';
 import timeZones from 'data/timeZones';
+import { timing } from 'styles';
 import trashIcon from 'images/trash.sprite.svg';
 import editIcon from 'images/edit.sprite.svg';
 
@@ -30,12 +32,28 @@ const SectionHeader = styled.div({
   marginTop: '1.5em',
 });
 
-const ContactName = styled.div(({ theme }) => ({
+const Header = styled.div(({ theme }) => ({
   paddingBottom: 10,
   borderBottom: `1px solid ${theme.primary}`,
+  display: 'flex',
+  alignItems: 'center',
+}));
+
+const ContactName = styled.div(({ theme }) => ({
   color: theme.primary,
   fontSize: 20,
   textAlign: 'center',
+  flexGrow: 1,
+}));
+
+const HeaderAction = styled.div(({ theme, danger }) => ({
+  cursor: 'pointer',
+  flexShrink: 0,
+  color: theme.mixer(0.25),
+  transition: `color ${timing.normal}`,
+  '&:hover': {
+    color: danger ? theme.danger : theme.foreground,
+  },
 }));
 
 const DefaultLabel = styled.span({
@@ -167,7 +185,19 @@ class ContactDetails extends React.Component {
 
     return (
       <ContactDetailsComponent>
-        <ContactName>{contact.name}</ContactName>
+        <Header>
+          <Tooltip.Trigger tooltip={<Text id="AddressBook.Delete" />}>
+            <HeaderAction danger onClick={this.confirmDelete}>
+              <Icon icon={trashIcon} />
+            </HeaderAction>
+          </Tooltip.Trigger>
+          <ContactName>{contact.name}</ContactName>
+          <Tooltip.Trigger tooltip={<Text id="AddressBook.Edit" />}>
+            <HeaderAction onClick={this.editContact}>
+              <Icon icon={editIcon} />
+            </HeaderAction>
+          </Tooltip.Trigger>
+        </Header>
 
         <SectionHeader>
           <Text id="AddressBook.NexusAddresses" />
@@ -203,17 +233,6 @@ class ContactDetails extends React.Component {
           label={<Text id="AddressBook.Notes" />}
           content={contact.notes}
         />
-
-        <div className="flex space-between mt2">
-          <Button skin="danger" onClick={this.confirmDelete}>
-            <Icon icon={trashIcon} spaceRight />
-            <Text id="AddressBook.Delete" />
-          </Button>
-          <Button onClick={this.editContact}>
-            <Icon icon={editIcon} spaceRight />
-            <Text id="AddressBook.Edit" />
-          </Button>
-        </div>
       </ContactDetailsComponent>
     );
   }

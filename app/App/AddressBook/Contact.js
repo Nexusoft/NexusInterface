@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import { selectContact } from 'actions/addressbookActionCreators';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
+import Tooltip from 'components/Tooltip';
 import { timing } from 'styles';
 import { color } from 'utils';
 import plusIcon from 'images/plus.sprite.svg';
@@ -21,13 +22,13 @@ const ContactComponent = styled.div(
     cursor: 'pointer',
 
     '&:hover': {
-      background: theme.mixer(0.125),
+      background: theme.mixer(0.05),
     },
   }),
   ({ active, theme }) =>
     active && {
       '&, &:hover': {
-        background: color.fade(theme.primary, 0.3),
+        background: color.fade(theme.primary, 0.4),
         color: theme.primaryAccent,
       },
     }
@@ -50,6 +51,15 @@ const ContactName = styled.div({
   flexGrow: 1,
   wordBreak: 'break-word',
 });
+
+const AddressesCount = styled.div(({ theme }) => ({
+  fontSize: '.75em',
+  padding: '0 6px',
+  borderRadius: 2,
+  background: theme.mixer(0.125),
+  color: theme.mixer(0.875),
+  flexShrink: 0,
+}));
 
 /**
  * Contact Item
@@ -85,11 +95,26 @@ class Contact extends React.PureComponent {
    */
   render() {
     const { contact, index, activeIndex } = this.props;
+    const addressesCount = contact.mine.length + contact.notMine.length;
 
     return (
       <ContactComponent onClick={this.select} active={index === activeIndex}>
         <ContactAvatar>{this.getinitial(contact.name)}</ContactAvatar>
         <ContactName>{contact.name}</ContactName>
+        <Tooltip.Trigger
+          tooltip={
+            <Text
+              id={
+                addressesCount === 1
+                  ? 'AddressBook.AddressesCountSingular'
+                  : 'AddressBook.AddressesCountPlural'
+              }
+              data={{ count: addressesCount }}
+            />
+          }
+        >
+          <AddressesCount>{addressesCount}</AddressesCount>
+        </Tooltip.Trigger>
       </ContactComponent>
     );
   }
