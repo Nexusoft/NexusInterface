@@ -51,7 +51,7 @@ class AddressBook extends Component {
    * @memberof AddressBook
    */
   componentDidMount() {
-    window.addEventListener('contextmenu', this.addressbookContextMenu, false);
+    window.addEventListener('contextmenu', this.setupcontextmenu, false);
     googleanalytics.SendScreen('AddressBook');
   }
 
@@ -61,7 +61,7 @@ class AddressBook extends Component {
    * @memberof AddressBook
    */
   componentWillUnmount() {
-    window.removeEventListener('contextmenu', this.addressbookContextMenu);
+    window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
   /**

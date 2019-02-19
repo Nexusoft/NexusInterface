@@ -2,14 +2,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
+import { remote } from 'electron';
 
 // Internal Global
-import { selectContact } from 'actions/addressbookActionCreators';
+import {
+  selectContact,
+  deleteContact,
+} from 'actions/addressbookActionCreators';
 import Icon from 'components/Icon';
-import Text from 'components/Text';
+import Text, { translate } from 'components/Text';
 import Tooltip from 'components/Tooltip';
+import UIController from 'components/UIController';
 import { timing } from 'styles';
 import { color } from 'utils';
+import ContextMenuBuilder from 'contextmenu';
 import plusIcon from 'images/plus.sprite.svg';
 
 const ContactComponent = styled.div(
@@ -70,10 +76,50 @@ const AddressesCount = styled.div(({ theme }) => ({
 @connect(
   state => ({
     activeIndex: state.addressbook.selectedContactIndex,
+    locale: state.settings.locale,
   }),
-  { selectContact }
+  { selectContact, deleteContact }
 )
 class Contact extends React.PureComponent {
+  /**
+   *
+   *
+   * @memberof Contact
+   */
+  confirmDelete = () => {
+    UIController.openConfirmDialog({
+      question: (
+        <Text
+          id="AddressBook.DeleteQuestion"
+          data={{ name: this.props.contact.name }}
+        />
+      ),
+      yesSkin: 'danger',
+      yesCallback: () => {
+        this.props.deleteContact(this.props.contact.name);
+      },
+    });
+  };
+
+  /**
+   *
+   *
+   * @memberof Contact
+   */
+  showContextMenu = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const template = [
+      ...new ContextMenuBuilder().defaultContext,
+      {
+        label: translate('AddressBook.DeleteContact', this.props.locale),
+        click: this.confirmDelete,
+      },
+    ];
+    let contextMenu = remote.Menu.buildFromTemplate(template);
+    contextMenu.popup(remote.getCurrentWindow());
+  };
+
   /**
    * Get the contact's initial
    *
@@ -98,7 +144,11 @@ class Contact extends React.PureComponent {
     const addressesCount = contact.mine.length + contact.notMine.length;
 
     return (
-      <ContactComponent onClick={this.select} active={index === activeIndex}>
+      <ContactComponent
+        onClick={this.select}
+        active={index === activeIndex}
+        onContextMenu={this.showContextMenu}
+      >
         <ContactAvatar>{this.getinitial(contact.name)}</ContactAvatar>
         <ContactName>{contact.name}</ContactName>
         <Tooltip.Trigger

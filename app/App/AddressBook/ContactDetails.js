@@ -147,6 +147,11 @@ class ContactDetails extends React.Component {
       />
     ));
 
+  /**
+   *
+   *
+   * @memberof ContactDetails
+   */
   confirmDelete = () => {
     UIController.openConfirmDialog({
       question: (
@@ -162,6 +167,11 @@ class ContactDetails extends React.Component {
     });
   };
 
+  /**
+   *
+   *
+   * @memberof ContactDetails
+   */
   editContact = () => {
     UIController.openModal(AddEditContactModal, {
       edit: true,
