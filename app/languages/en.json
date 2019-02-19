@@ -153,6 +153,8 @@
   "AddressBook.DeleteAddress": "Delete Address",
 
   "AddressBook.AddressBook": "Address Book",
+  "AddressBook.Empty": "Your Address Book is empty",
+  "AddressBook.CreateNewContact": "Create New Contact",
   "AddressBook.searchC": "Search Account",
   "AddressBook.Export": "Export Contacts",
   "AddressBook.Import": "Import Contacts",

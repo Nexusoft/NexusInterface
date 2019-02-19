@@ -10,12 +10,14 @@ import googleanalytics from 'scripts/googleanalytics';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
+import UIController from 'components/UIController';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
 import PanelControls from './PanelControls';
 import ContactList from './ContactList';
 import ContactDetails from './ContactDetails';
+import AddEditContactModal from './AddEditContactModal';
 
 // Icons
 import addressBookIcon from 'images/address-book.sprite.svg';
@@ -79,6 +81,15 @@ class AddressBook extends Component {
   }
 
   /**
+   *
+   *
+   * @memberof AddressBook
+   */
+  showAddContact = () => {
+    UIController.openModal(AddEditContactModal);
+  };
+
+  /**
    * render
    *
    * @returns
@@ -101,14 +112,16 @@ class AddressBook extends Component {
           </AddressBookLayout>
         ) : (
           <div style={{ marginTop: 50, textAlign: 'center' }}>
-            <div className="dim">Your Address Book is empty!</div>
+            <div className="dim">
+              <Text id="AddressBook.Empty" />
+            </div>
             <Button
               skin="blank-light"
               onClick={this.showAddContact}
               className="mt1"
             >
-              <Icon icon={addContactIcon} />
-              &nbsp; Add Contact
+              <Icon icon={addContactIcon} spaceRight />
+              <Text id="AddressBook.CreateNewContact" />
             </Button>
           </div>
         )}
