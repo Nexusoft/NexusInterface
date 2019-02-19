@@ -38,7 +38,8 @@ class ContactList extends React.Component {
     return (
       <ContactListComponent>
         {contacts.map((contact, i) =>
-          (contact.name && contact.name.includes(searchQuery)) ||
+          (contact.name &&
+            contact.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
           (contact.mine &&
             contact.mine.find(address => address === searchQuery)) ||
           (contact.notMine &&

@@ -4,15 +4,22 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
+import * as TYPE from 'actions/actiontypes';
 import Text from 'components/Text';
 import Link from 'components/Link';
+import Button from 'components/Button';
 import NexusAddress from 'components/NexusAddress';
+import UIController from 'components/UIController';
 import timeZones from 'data/timeZones';
+
+import AddEditContactModal from './AddEditContactModal';
 
 const ContactDetailsComponent = styled.div({
   gridArea: 'details',
   maxHeight: '100%',
   overflowY: 'auto',
+  marginRight: -30,
+  paddingRight: 30,
 });
 
 const SectionHeader = styled.div({
@@ -85,10 +92,23 @@ const getLocalTime = tz => {
  * @class ContactDetails
  * @extends {Component}
  */
-@connect(({ addressbook: { addressbook, selectedContactIndex } }) => ({
-  contact: addressbook[selectedContactIndex] || null,
-}))
+@connect(
+  ({ addressbook: { addressbook, selectedContactIndex } }) => ({
+    contact: addressbook[selectedContactIndex] || null,
+  }),
+  {
+    deleteContact: name => ({
+      type: TYPE.DELETE_CONTACT,
+      payload: name,
+    }),
+  }
+)
 class ContactDetails extends React.Component {
+  /**
+   * render Addresses
+   *
+   * @memberof ContactDetails
+   */
   renderAddresses = (addresses, name, isMine) =>
     addresses.map(({ address, label }, i) => (
       <NexusAddress
@@ -110,6 +130,28 @@ class ContactDetails extends React.Component {
         }
       />
     ));
+
+  confirmDelete = () => {
+    UIController.openConfirmDialog({
+      question: (
+        <Text
+          id="AddressBook.DeleteQuestion"
+          data={{ name: this.props.contact.name }}
+        />
+      ),
+      yesSkin: 'danger',
+      yesCallback: () => {
+        this.props.deleteContact(this.props.contact.name);
+      },
+    });
+  };
+
+  editContact = () => {
+    UIController.openModal(AddEditContactModal, {
+      edit: true,
+      contact: this.props.contact,
+    });
+  };
 
   /**
    * render
@@ -159,6 +201,19 @@ class ContactDetails extends React.Component {
           label={<Text id="AddressBook.LocalTime" />}
           content={tz && `${getLocalTime(tz.value)} (${tz.offset})`}
         />
+        <Field
+          label={<Text id="AddressBook.Notes" />}
+          content={contact.notes}
+        />
+
+        <div className="flex space-between mt2">
+          <Button skin="danger" onClick={this.confirmDelete}>
+            <Text id="AddressBook.Delete" />
+          </Button>
+          <Button onClick={this.editContact}>
+            <Text id="AddressBook.Edit" />
+          </Button>
+        </div>
       </ContactDetailsComponent>
     );
   }

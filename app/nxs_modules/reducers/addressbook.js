@@ -57,6 +57,21 @@ export default (state = initialState, action) => {
         selectedContactIndex: action.payload,
       };
 
+    case TYPE.UPDATE_CONTACT:
+      const index = state.addressbook.findIndex(
+        c => c.name === action.payload.name
+      );
+      if (index === -1) {
+        return state;
+      } else {
+        const addressbook = [...state.addressbook];
+        addressbook.splice(index, 1, action.payload.contact);
+        return {
+          ...state,
+          addressbook,
+        };
+      }
+
     case TYPE.CONTACT_IMAGE:
       return {
         ...state,
@@ -394,10 +409,10 @@ export default (state = initialState, action) => {
     case TYPE.DELETE_CONTACT:
       return {
         ...state,
-        addressbook: state.addressbook.filter((ele, i) => i !== action.payload),
-        save: true,
+        addressbook: state.addressbook.filter(
+          contact => contact.name !== action.payload
+        ),
       };
-      break;
     //   dispatch 9
     case TYPE.DELETE_ADDRESS_FROM_CONTACT:
       return {

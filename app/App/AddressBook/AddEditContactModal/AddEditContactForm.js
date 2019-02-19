@@ -4,8 +4,8 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
 
 // Internal
+import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
-import * as actionCreators from 'actions/addressbookActionCreators';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -24,6 +24,17 @@ const tzOptions = timeZones.map(tz => ({
 const mapStateToProps = state => ({
   addressBook: state.addressbook.addressbook,
 });
+
+const actionCreators = {
+  addNewContact: contact => ({
+    type: TYPE.ADD_NEW_CONTACT,
+    payload: contact,
+  }),
+  updateContact: (name, contact) => ({
+    type: TYPE.UPDATE_CONTACT,
+    payload: { name, contact },
+  }),
+};
 
 function validateAddresses(addresses) {
   const addressesErrors = [];
@@ -133,6 +144,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
   },
   onSubmit: (values, dispatch, props) => {
     if (props.edit) {
+      props.updateContact(props.oldName, values);
     } else {
       props.addNewContact(values);
     }
@@ -166,7 +178,14 @@ class AddEditContactForm extends Component {
   }
 
   render() {
-    const { handleSubmit, error, closeModal, reset, pristine } = this.props;
+    const {
+      edit,
+      handleSubmit,
+      error,
+      closeModal,
+      reset,
+      pristine,
+    } = this.props;
 
     return (
       <form onSubmit={handleSubmit}>
@@ -248,7 +267,7 @@ class AddEditContactForm extends Component {
           </Text>
         </div>
 
-        <div className="mt2 flex space-between">
+        <div className="mt2 flex space-between" style={{ marginBottom: '1em' }}>
           <div>
             <Button onClick={closeModal}>
               <Text id="AddEditContact.Cancel" />
@@ -262,7 +281,11 @@ class AddEditContactForm extends Component {
             </Button>
           </div>
           <Button skin="primary" type="submit">
-            <Text id="AddEditContact.CreateContact" />
+            {edit ? (
+              <Text id="AddEditContact.Update" />
+            ) : (
+              <Text id="AddEditContact.Create" />
+            )}
           </Button>
         </div>
       </form>

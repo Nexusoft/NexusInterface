@@ -110,7 +110,7 @@ const ButtonComponent = styled.button(
             textShadow: `0 0 7px ${color.fade(theme.primary, 0.3)}`,
           },
         };
-      case 'error':
+      case 'danger':
         return {
           '&, &:active, &&:disabled': {
             border: `2px solid ${theme.danger}`,
@@ -165,7 +165,7 @@ const ButtonComponent = styled.button(
             background: theme.foreground,
           },
         };
-      case 'filled-error':
+      case 'filled-danger':
         return {
           '&, &:active, &&:disabled': {
             background: theme.danger,

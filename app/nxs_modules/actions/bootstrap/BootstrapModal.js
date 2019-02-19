@@ -302,7 +302,7 @@ class BootstrapModal extends PureComponent {
           <ProgressBar percentage={this.state.percentage} />
           <div className="flex space-between" style={{ marginTop: '2em' }}>
             <div />
-            <Button skin="error" onClick={this.confirmAbort}>
+            <Button skin="danger" onClick={this.confirmAbort}>
               Abort
             </Button>
           </div>
