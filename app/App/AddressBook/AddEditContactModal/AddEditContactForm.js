@@ -4,7 +4,10 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
 
 // Internal
-import * as TYPE from 'actions/actiontypes';
+import {
+  addNewContact,
+  updateContact,
+} from 'actions/addressbookActionCreators';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
@@ -26,14 +29,8 @@ const mapStateToProps = state => ({
 });
 
 const actionCreators = {
-  addNewContact: contact => ({
-    type: TYPE.ADD_NEW_CONTACT,
-    payload: contact,
-  }),
-  updateContact: (name, contact) => ({
-    type: TYPE.UPDATE_CONTACT,
-    payload: { name, contact },
-  }),
+  addNewContact,
+  updateContact,
 };
 
 function validateAddresses(addresses) {

@@ -39,7 +39,7 @@ class AddEditContactModal extends Component {
               {edit ? (
                 <Text id="AddEditContact.EditContact" />
               ) : (
-                <Text id="AddEditContact.CreateContact" />
+                <Text id="AddEditContact.CreateNewContact" />
               )}
             </Modal.Header>
             <Modal.Body>

@@ -4,13 +4,16 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import * as TYPE from 'actions/actiontypes';
+import { deleteContact } from 'actions/addressbookActionCreators';
 import Text from 'components/Text';
 import Link from 'components/Link';
 import Button from 'components/Button';
+import Icon from 'components/Icon';
 import NexusAddress from 'components/NexusAddress';
 import UIController from 'components/UIController';
 import timeZones from 'data/timeZones';
+import trashIcon from 'images/trash.sprite.svg';
+import editIcon from 'images/edit.sprite.svg';
 
 import AddEditContactModal from './AddEditContactModal';
 
@@ -96,12 +99,7 @@ const getLocalTime = tz => {
   ({ addressbook: { addressbook, selectedContactIndex } }) => ({
     contact: addressbook[selectedContactIndex] || null,
   }),
-  {
-    deleteContact: name => ({
-      type: TYPE.DELETE_CONTACT,
-      payload: name,
-    }),
-  }
+  { deleteContact }
 )
 class ContactDetails extends React.Component {
   /**
@@ -208,9 +206,11 @@ class ContactDetails extends React.Component {
 
         <div className="flex space-between mt2">
           <Button skin="danger" onClick={this.confirmDelete}>
+            <Icon icon={trashIcon} spaceRight />
             <Text id="AddressBook.Delete" />
           </Button>
           <Button onClick={this.editContact}>
+            <Icon icon={editIcon} spaceRight />
             <Text id="AddressBook.Edit" />
           </Button>
         </div>

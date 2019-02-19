@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global
-import * as TYPE from 'actions/actiontypes';
+import { searchContact } from 'actions/addressbookActionCreators';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -36,12 +36,7 @@ const SearchInput = styled(TextField)({
   state => ({
     searchQuery: state.addressbook.searchQuery,
   }),
-  {
-    searchContact: query => ({
-      type: TYPE.CONTACT_SEARCH,
-      payload: query,
-    }),
-  }
+  { searchContact }
 )
 class SearchBox extends Component {
   render() {
@@ -154,7 +149,7 @@ class PanelControls extends Component {
   render() {
     return (
       <div className="flex center">
-        <Tooltip.Trigger tooltip={<Text id="AddressBook.addContact" />}>
+        <Tooltip.Trigger tooltip={<Text id="AddressBook.NewContact" />}>
           <Button
             skin="blank-light"
             className="relative"

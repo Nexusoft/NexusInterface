@@ -4,15 +4,18 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global
-import * as TYPE from 'actions/actiontypes';
+import { selectContact } from 'actions/addressbookActionCreators';
+import Icon from 'components/Icon';
+import Text from 'components/Text';
 import { timing } from 'styles';
 import { color } from 'utils';
+import plusIcon from 'images/plus.sprite.svg';
 
 const ContactComponent = styled.div(
   ({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    padding: '.4em .6em',
+    padding: '.4em 30px',
     transitionProperty: 'background, color',
     transitionDuration: timing.normal,
     cursor: 'pointer',
@@ -48,17 +51,6 @@ const ContactName = styled.div({
   wordBreak: 'break-word',
 });
 
-const mapStateToProps = state => ({
-  activeIndex: state.addressbook.selectedContactIndex,
-});
-
-const actionCreators = {
-  selectContact: index => ({
-    type: TYPE.SELECT_CONTACT,
-    payload: index,
-  }),
-};
-
 /**
  * Contact Item
  *
@@ -66,8 +58,10 @@ const actionCreators = {
  * @extends {PureComponent}
  */
 @connect(
-  mapStateToProps,
-  actionCreators
+  state => ({
+    activeIndex: state.addressbook.selectedContactIndex,
+  }),
+  { selectContact }
 )
 class Contact extends React.PureComponent {
   /**
@@ -102,3 +96,16 @@ class Contact extends React.PureComponent {
 }
 
 export default Contact;
+
+const NewContactButton = props => (
+  <ContactComponent {...props}>
+    <ContactAvatar>
+      <Icon icon={plusIcon} style={{ fontSize: '.8em', opacity: 0.7 }} />
+    </ContactAvatar>
+    <ContactName style={{ opacity: 0.7 }}>
+      <Text id="AddressBook.NewContact" />
+    </ContactName>
+  </ContactComponent>
+);
+
+export { NewContactButton };
