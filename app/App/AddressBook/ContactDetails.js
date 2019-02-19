@@ -218,7 +218,7 @@ class ContactDetails extends React.Component {
         {this.renderAddresses(contact.mine, contact.name, true)}
 
         <SectionHeader>
-          <Text id="AddressBook.OtherInfo" />
+          <Text id="AddressBook.ContactInfo" />
         </SectionHeader>
 
         <Field
