@@ -5,6 +5,13 @@ const initialState = {
   myAccounts: [],
 };
 
+function fromArray(contacts) {
+  return contacts.reduce(
+    (obj, contact) => ({ ...obj, [contact.name]: contact }),
+    {}
+  );
+}
+
 const compareNames = (a, b) => {
   let nameA = a.name.toUpperCase();
   let nameB = b.name.toUpperCase();
@@ -25,26 +32,33 @@ export default (state = initialState, action) => {
         addressbook: action.payload,
       };
 
-    case TYPE.ADD_NEW_CONTACT:
+    case TYPE.ADD_NEW_CONTACT: {
+      const contacts = [...Object.values(state.addressbook), action.payload];
+      contacts.sort(compareNames);
       return {
         ...state,
-        addressbook: [...state.addressbook, action.payload].sort(compareNames),
+        addressbook: fromArray(contacts),
       };
+    }
 
-    case TYPE.UPDATE_CONTACT:
-      const index = state.addressbook.findIndex(
-        c => c.name === action.payload.name
-      );
-      if (index === -1) {
-        return state;
+    case TYPE.UPDATE_CONTACT: {
+      let addressbook;
+      const { name, contact } = action.payload;
+
+      if (name === contact.name) {
+        addressbook = { ...state.addressbook, [name]: contact };
       } else {
-        const addressbook = [...state.addressbook];
-        addressbook.splice(index, 1, action.payload.contact);
-        return {
-          ...state,
-          addressbook,
-        };
+        const contacts = [...Object.values(state.addressbook), contact]
+          .filter(c => c.name !== action.payload.name)
+          .sort(compareNames);
+        addressbook = fromArray(contacts);
       }
+
+      return {
+        ...state,
+        addressbook,
+      };
+    }
 
     case TYPE.MY_ACCOUNTS_LIST:
       return {
@@ -52,13 +66,14 @@ export default (state = initialState, action) => {
         myAccounts: action.payload,
       };
 
-    case TYPE.DELETE_CONTACT:
+    case TYPE.DELETE_CONTACT: {
+      const addressbook = { ...state.addressbook };
+      delete addressbook[action.payload];
       return {
         ...state,
-        addressbook: state.addressbook.filter(
-          contact => contact.name !== action.payload
-        ),
+        addressbook,
       };
+    }
 
     default:
       return state;

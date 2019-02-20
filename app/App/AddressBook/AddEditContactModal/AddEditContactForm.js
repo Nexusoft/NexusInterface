@@ -94,7 +94,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
       errors.name = <Text id="AddEditContact.Errors.NameRequired" />;
     } else if (
       (!props.edit || name !== props.oldName) &&
-      props.addressBook.find(contact => contact.name === name)
+      props.addressBook[name]
     ) {
       errors.name = <Text id="AddEditContact.Errors.NameExists" />;
     }
