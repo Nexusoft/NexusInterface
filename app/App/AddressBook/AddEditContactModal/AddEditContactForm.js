@@ -190,6 +190,7 @@ class AddEditContactForm extends Component {
       closeModal,
       reset,
       pristine,
+      submitting,
     } = this.props;
 
     return (
@@ -285,7 +286,7 @@ class AddEditContactForm extends Component {
               <Text id="AddEditContact.Reset" />
             </Button>
           </div>
-          <Button skin="primary" type="submit">
+          <Button skin="primary" type="submit" disabled={submitting}>
             {edit ? (
               <Text id="AddEditContact.SaveChanges" />
             ) : (

@@ -1,7 +1,4 @@
-import React from 'react';
 import * as TYPE from './actiontypes';
-import * as RPC from 'scripts/rpc';
-import UIController from 'components/UIController';
 
 export const addNewContact = contact => ({
   type: TYPE.ADD_NEW_CONTACT,
