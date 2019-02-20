@@ -19,6 +19,19 @@ export default (state = initialState, action) => {
         selectedContactName: action.payload,
       };
 
+    case TYPE.UPDATE_CONTACT:
+      if (
+        action.payload.name === state.selectedContactName &&
+        action.payload.name !== action.payload.contact.name
+      ) {
+        return {
+          ...state,
+          selectedContactName: action.payload.contact.name,
+        };
+      } else {
+        return state;
+      }
+
     default:
       return state;
   }
