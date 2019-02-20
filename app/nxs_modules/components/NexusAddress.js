@@ -4,19 +4,34 @@ import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
 // Internal
-import TextField from 'components/TextField';
 import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import Icon from 'components/Icon';
-import Button from 'components/Button';
 import UIController from 'components/UIController';
-import copyIcon from 'images/copy.sprite.svg';
+import { consts, timing } from 'styles';
 
 const NexusAddressComponent = styled.div({
   marginTop: '1em',
 });
 
-const AddressTextField = styled(TextField)(
+const Address = styled.textarea(
+  ({ theme }) => ({
+    width: '100%',
+    background: theme.background,
+    color: theme.foreground,
+    border: `1px solid ${theme.mixer(0.125)}`,
+    borderRadius: 2,
+    fontFamily: consts.monoFontFamily,
+    padding: '.5em 1em',
+    textAlign: 'center',
+    whiteSpace: 'pre',
+    cursor: 'pointer',
+    resize: 'none',
+    transition: `background ${timing.normal}`,
+
+    '&:hover': {
+      background: theme.mixer(0.05),
+    },
+  }),
   ({ hasLabel }) =>
     hasLabel && {
       borderTopLeftRadius: 0,
@@ -32,10 +47,6 @@ const Label = styled.div(({ theme }) => ({
   padding: '.1em .4em',
 }));
 
-const CopyButton = styled(Button)(({ theme }) => ({
-  borderLeft: `1px solid ${theme.mixer(0.125)}`,
-}));
-
 /**
  * Nexus Address with Copy functionality
  *
@@ -44,7 +55,7 @@ const CopyButton = styled(Button)(({ theme }) => ({
  * @extends {React.Component}
  */
 export default class NexusAddress extends React.Component {
-  inputRef = React.createRef();
+  addressRef = React.createRef();
 
   /**
    * Copy address to clipboard
@@ -53,8 +64,32 @@ export default class NexusAddress extends React.Component {
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
-    this.inputRef.current.select();
+    this.addressRef.current.select();
     UIController.showNotification(<Text id="Alert.Copied" />, 'success');
+  };
+
+  /**
+   *
+   *
+   * @memberof NexusAddress
+   */
+  renderAddress = () => {
+    const { address } = this.props;
+    const line1 = [
+      address.substring(0, 6),
+      address.substring(6, 11),
+      address.substring(11, 16),
+      address.substring(16, 21),
+      address.substring(21, 26),
+    ];
+    const line2 = [
+      ' ' + address.substring(26, 31),
+      address.substring(31, 36),
+      address.substring(36, 41),
+      address.substring(41, 46),
+      address.substring(46, 51),
+    ];
+    return `${line1.join(' ')}\n${line2.join(' ')}`;
   };
 
   /**
@@ -68,25 +103,17 @@ export default class NexusAddress extends React.Component {
     return (
       <NexusAddressComponent {...rest}>
         {!!label && <Label>{label}</Label>}
-        <AddressTextField
-          readOnly
-          skin="filled-dark"
-          value={address}
-          inputRef={this.inputRef}
-          right={
-            <Tooltip.Trigger tooltip="Copy to clipboard">
-              <CopyButton
-                skin="filled-dark"
-                fitHeight
-                grouped="right"
-                onClick={this.copyAddress}
-              >
-                <Icon icon={copyIcon} spaceRight />
-              </CopyButton>
-            </Tooltip.Trigger>
-          }
-          hasLabel={!!label}
-        />
+
+        <Tooltip.Trigger tooltip="Click to copy to clipboard">
+          <Address
+            readOnly
+            rows={2}
+            ref={this.addressRef}
+            hasLabel={!!label}
+            onClick={this.copyAddress}
+            value={this.renderAddress()}
+          />
+        </Tooltip.Trigger>
       </NexusAddressComponent>
     );
   }
