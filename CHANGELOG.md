@@ -8,9 +8,10 @@
 - Nexus Data folder now will be marked with `Beta` instead of the version number so users do not need to rebootstrap, the app data will remain the same schema
 - Removed unused packages from dependecy list
 - Market Data tooltips now with shift left or right inorder for them to display center to the graph
+- Transaction Chart in Transaction page now responds to Theme
 
 #### Fixes
-- 
+-  
 
 # 0.8.7 (2019.2.15)
 [Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.7)

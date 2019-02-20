@@ -122,6 +122,7 @@ const mapStateToProps = state => {
     ...state.overview,
     ...state.addressbook,
     settings: state.settings,
+    theme: state.theme,
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -1863,6 +1864,7 @@ class Transactions extends Component {
             </Filters>
             <div id="transactions-details">
               <Table
+                style = {this.props.theme}
                 key="table-top"
                 data={data}
                 columns={columns}
