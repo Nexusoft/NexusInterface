@@ -8,7 +8,7 @@ const fileName = 'addressbook.json';
  * =============================================================================
  */
 function convertOldAddressBook(addressbook) {
-  addressbook.reduce(
+  return addressbook.reduce(
     (obj, contact) => ({
       ...obj,
       [contact.name]: contact && convertOldContact(contact),

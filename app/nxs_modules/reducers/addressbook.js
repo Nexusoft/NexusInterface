@@ -21,6 +21,12 @@ const compareNames = (a, b) => {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case TYPE.LOAD_ADDRESS_BOOK:
+      return {
+        ...state,
+        addressbook: action.payload,
+      };
+
     case TYPE.ADD_NEW_CONTACT:
       return {
         ...state,
@@ -66,12 +72,6 @@ export default (state = initialState, action) => {
         addressbook: state.addressbook.filter(
           contact => contact.name !== action.payload
         ),
-      };
-
-    case TYPE.LOAD_ADDRESS_BOOK:
-      return {
-        ...state,
-        addressbook: [...action.payload],
       };
 
     default:
