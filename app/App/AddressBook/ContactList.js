@@ -55,14 +55,10 @@ class ContactList extends React.Component {
 
     return (
       <ContactListComponent>
-        {contacts.map((contact, i) =>
-          (contact.name &&
-            contact.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-          (contact.mine &&
-            contact.mine.find(address => address === searchQuery)) ||
-          (contact.notMine &&
-            contact.notMine.find(address => address === searchQuery)) ? (
-            <Contact key={contact.name} contact={contact} index={i} />
+        {Object.values(contacts).map(contact =>
+          contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          contact.addresses.find(({ address }) => address === searchQuery) ? (
+            <Contact key={contact.name} contact={contact} />
           ) : null
         )}
         {connections !== undefined && (

@@ -105,7 +105,7 @@ function validateEntry([entryName, contact]) {
   }
 
   if (timeZone) {
-    if (typeof timeZone !== 'string' || !Number.isNaN(parseInt(timeZone))) {
+    if (typeof timeZone !== 'string' || Number.isNaN(parseInt(timeZone))) {
       console.error('Invalid time zone: ', timeZone);
     } else {
       validContact.timeZone = timeZone;

@@ -33,8 +33,8 @@ const ContactComponent = styled.div(
       background: theme.mixer(0.05),
     },
   }),
-  ({ active, theme }) =>
-    active && {
+  ({ selected, theme }) =>
+    selected && {
       '&, &:hover': {
         background: color.fade(theme.primary, 0.4),
         color: theme.primaryAccent,
@@ -79,7 +79,7 @@ const AddressesCount = styled.div(({ theme }) => ({
  */
 @connect(
   state => ({
-    activeIndex: state.addressbook.selectedContactIndex,
+    selectedContactName: state.addressbook.selectedContactName,
     locale: state.settings.locale,
     connections: state.overview.connections,
   }),
@@ -151,7 +151,7 @@ class Contact extends React.PureComponent {
   getinitial = name => (name && name.length >= 1 ? name.charAt(0) : '');
 
   select = () => {
-    this.props.selectContact(this.props.index);
+    this.props.selectContact(this.props.contact.name);
   };
 
   /**
@@ -161,13 +161,12 @@ class Contact extends React.PureComponent {
    * @memberof Contact
    */
   render() {
-    const { contact, index, activeIndex } = this.props;
-    const addressesCount = contact.mine.length + contact.notMine.length;
+    const { contact, selectedContactName } = this.props;
 
     return (
       <ContactComponent
         onClick={this.select}
-        active={index === activeIndex}
+        selected={contact.name === selectedContactName}
         onContextMenu={this.showContextMenu}
       >
         <ContactAvatar>{this.getinitial(contact.name)}</ContactAvatar>
@@ -176,15 +175,15 @@ class Contact extends React.PureComponent {
           tooltip={
             <Text
               id={
-                addressesCount === 1
+                contact.addresses.length === 1
                   ? 'AddressBook.AddressesCountSingular'
                   : 'AddressBook.AddressesCountPlural'
               }
-              data={{ count: addressesCount }}
+              data={{ count: contact.addresses.length }}
             />
           }
         >
-          <AddressesCount>{addressesCount}</AddressesCount>
+          <AddressesCount>{contact.addresses.length}</AddressesCount>
         </Tooltip.Trigger>
       </ContactComponent>
     );

@@ -4,7 +4,7 @@ const initialState = {
   addressbook: [],
   myAccounts: [],
   searchQuery: '',
-  selectedContactIndex: -1, // nothing selected
+  selectedContactName: null,
 };
 
 const compareNames = (a, b) => {
@@ -42,7 +42,7 @@ export default (state = initialState, action) => {
     case TYPE.SELECT_CONTACT:
       return {
         ...state,
-        selectedContactIndex: action.payload,
+        selectedContactName: action.payload,
       };
 
     case TYPE.UPDATE_CONTACT:

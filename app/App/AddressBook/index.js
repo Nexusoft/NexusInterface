@@ -106,7 +106,7 @@ class AddressBook extends Component {
         controls={<PanelControls />}
         bodyScrollable={false}
       >
-        {addressBook && addressBook.length > 0 ? (
+        {addressBook && Object.values(addressBook).length > 0 ? (
           <AddressBookLayout>
             <ContactList />
             <ContactDetails />

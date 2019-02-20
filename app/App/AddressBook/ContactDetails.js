@@ -60,10 +60,6 @@ const DefaultLabel = styled.span({
   opacity: 0.66,
 });
 
-const SpaceSeparator = styled.div({
-  height: '1em',
-});
-
 const FieldLabel = styled.div({
   width: '40%',
 });
@@ -115,42 +111,15 @@ const getLocalTime = tz => {
  */
 @connect(
   ({
-    addressbook: { addressbook, selectedContactIndex },
+    addressbook: { addressbook, selectedContactName },
     overview: { connections },
   }) => ({
-    contact: addressbook[selectedContactIndex] || null,
+    contact: addressbook[selectedContactName] || null,
     connections,
   }),
   { deleteContact }
 )
 class ContactDetails extends React.Component {
-  /**
-   * render Addresses
-   *
-   * @memberof ContactDetails
-   */
-  renderAddresses = (addresses, name, isMine) =>
-    addresses.map(({ address, label }, i) => (
-      <NexusAddress
-        key={i}
-        address={address}
-        label={
-          label || (
-            <DefaultLabel>
-              <Text
-                id={
-                  isMine
-                    ? 'AddressBook.MyAddressFor'
-                    : 'AddressBook.TheirAddressWithName'
-                }
-                data={{ name }}
-              />
-            </DefaultLabel>
-          )
-        }
-      />
-    ));
-
   /**
    *
    *
@@ -221,9 +190,26 @@ class ContactDetails extends React.Component {
           <Text id="AddressBook.NexusAddresses" />
         </SectionHeader>
 
-        {this.renderAddresses(contact.notMine, contact.name, false)}
-        <SpaceSeparator />
-        {this.renderAddresses(contact.mine, contact.name, true)}
+        {contact.addresses.map(({ address, label }, i) => (
+          <NexusAddress
+            key={i}
+            address={address}
+            label={
+              label || (
+                <DefaultLabel>
+                  <Text
+                    id={
+                      contact.isMine
+                        ? 'AddressBook.MyAddressFor'
+                        : 'AddressBook.TheirAddressWithName'
+                    }
+                    data={{ name: contact.name }}
+                  />
+                </DefaultLabel>
+              )
+            }
+          />
+        ))}
 
         <SectionHeader>
           <Text id="AddressBook.ContactInfo" />
