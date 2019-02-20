@@ -17,11 +17,11 @@ const RecipientName = styled.span(({ theme }) => ({
 
 const filterRecipients = memoize((suggestions, inputValue) => {
   if (!suggestions) return [];
-  const query = new String(inputValue || '').toLowerCase();
+  const query = inputValue || '';
   return suggestions.filter(({ value, name }) => {
     return (
-      (!!value && value.toLowerCase().includes(query)) ||
-      (!!name && name.toLowerCase().includes(query))
+      value === query ||
+      (!!name && name.toLowerCase().includes(query.toLowerCase()))
     );
   });
 });
