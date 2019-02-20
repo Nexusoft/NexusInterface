@@ -36,7 +36,7 @@ const SearchInput = styled(TextField)({
 
 @connect(
   state => ({
-    searchQuery: state.addressbook.searchQuery,
+    searchQuery: state.ui.addressBook.searchQuery,
   }),
   { searchContact }
 )

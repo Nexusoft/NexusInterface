@@ -23,7 +23,10 @@ const Separator = styled.div(({ theme }) => ({
 }));
 
 const mapStateToProps = ({
-  addressbook: { addressbook, searchQuery },
+  addressbook: { addressbook },
+  ui: {
+    addressBook: { searchQuery },
+  },
   overview: { connections },
 }) => ({
   contacts: addressbook,

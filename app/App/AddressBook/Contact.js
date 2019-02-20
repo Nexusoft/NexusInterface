@@ -79,7 +79,7 @@ const AddressesCount = styled.div(({ theme }) => ({
  */
 @connect(
   state => ({
-    selectedContactName: state.addressbook.selectedContactName,
+    selectedContactName: state.ui.addressBook.selectedContactName,
     locale: state.settings.locale,
     connections: state.overview.connections,
   }),
@@ -150,6 +150,11 @@ class Contact extends React.PureComponent {
    */
   getinitial = name => (name && name.length >= 1 ? name.charAt(0) : '');
 
+  /**
+   *
+   *
+   * @memberof Contact
+   */
   select = () => {
     this.props.selectContact(this.props.contact.name);
   };

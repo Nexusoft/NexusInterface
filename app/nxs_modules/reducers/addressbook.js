@@ -1,10 +1,8 @@
 import * as TYPE from 'actions/actiontypes';
 
 const initialState = {
-  addressbook: [],
+  addressbook: {},
   myAccounts: [],
-  searchQuery: '',
-  selectedContactName: null,
 };
 
 const compareNames = (a, b) => {
@@ -31,18 +29,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         addressbook: [...state.addressbook, action.payload].sort(compareNames),
-      };
-
-    case TYPE.CONTACT_SEARCH:
-      return {
-        ...state,
-        searchQuery: action.payload,
-      };
-
-    case TYPE.SELECT_CONTACT:
-      return {
-        ...state,
-        selectedContactName: action.payload,
       };
 
     case TYPE.UPDATE_CONTACT:
