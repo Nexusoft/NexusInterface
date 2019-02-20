@@ -21,6 +21,12 @@ const initialContact = {
   notes: '',
 };
 
+function getInitialValues(contact) {
+  const mine = contact.addresses.filter(c => c.isMine);
+  const notMine = contact.addresses.filter(c => !c.isMine);
+  return { ...contact, mine, notMine };
+}
+
 /**
  * The Add or Edit Contact Modal
  *
@@ -46,7 +52,9 @@ class AddEditContactModal extends Component {
               <AddEditContactForm
                 edit={edit}
                 oldName={contact && contact.name}
-                initialValues={edit ? contact : initialContact}
+                initialValues={
+                  edit ? getInitialValues(contact) : initialContact
+                }
                 closeModal={closeModal}
               />
             </Modal.Body>

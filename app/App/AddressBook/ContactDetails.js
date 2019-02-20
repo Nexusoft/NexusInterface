@@ -190,7 +190,7 @@ class ContactDetails extends React.Component {
           <Text id="AddressBook.NexusAddresses" />
         </SectionHeader>
 
-        {contact.addresses.map(({ address, label }, i) => (
+        {contact.addresses.map(({ address, label, isMine }, i) => (
           <NexusAddress
             key={i}
             address={address}
@@ -199,7 +199,7 @@ class ContactDetails extends React.Component {
                 <DefaultLabel>
                   <Text
                     id={
-                      contact.isMine
+                      isMine
                         ? 'AddressBook.MyAddressFor'
                         : 'AddressBook.TheirAddressWithName'
                     }

@@ -139,10 +139,19 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     return null;
   },
   onSubmit: (values, dispatch, props) => {
+    const contact = { ...values };
+    const addresses = [
+      ...contact.notMine.map(addr => ({ ...addr, isMine: false })),
+      ...contact.mine.map(addr => ({ ...addr, isMine: true })),
+    ];
+    delete contact.mine;
+    delete contact.notMine;
+    contact.addresses = addresses;
+
     if (props.edit) {
-      props.updateContact(props.oldName, values);
+      props.updateContact(props.oldName, contact);
     } else {
-      props.addNewContact(values);
+      props.addNewContact(contact);
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {

@@ -27,9 +27,14 @@ function convertOldContact({
 }) {
   return {
     name,
-    addresses: [...notMine, ...mine].map(
-      info => info && convertOldAddressInfo(info)
-    ),
+    addresses: [
+      ...notMine.map(
+        info => info && convertOldAddressInfo({ ...info, isMine: false })
+      ),
+      ...mine.map(
+        info => info && convertOldAddressInfo({ ...info, isMine: true })
+      ),
+    ],
     phoneNumber,
     timeZone: timezone,
     notes,
@@ -157,7 +162,11 @@ export function LoadAddressBook() {
     // `addressbook` (all lowercase) signals the old schema
     // New schema uses camel case `addressBook`
     if (json.addressbook) {
-      return validateAddressBook(convertOldAddressBook(json.addressbook));
+      const addressBook = validateAddressBook(
+        convertOldAddressBook(json.addressbook)
+      );
+      SaveAddressBook(addressBook);
+      return addressBook;
     } else {
       return validateAddressBook(json.addressBook);
     }
