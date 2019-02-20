@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import { deleteContact } from 'actions/addressbookActionCreators';
+import { deleteContact } from 'actions/addressBookActionCreators';
 import Text from 'components/Text';
 import Link from 'components/Link';
 import Button from 'components/Button';

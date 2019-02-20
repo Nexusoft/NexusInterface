@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import {
   addNewContact,
   updateContact,
-} from 'actions/addressbookActionCreators';
+} from 'actions/addressBookActionCreators';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';

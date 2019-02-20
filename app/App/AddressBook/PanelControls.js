@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global
-import { searchContact } from 'actions/addressbookActionCreators';
+import { searchContact } from 'actions/addressBookActionCreators';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';

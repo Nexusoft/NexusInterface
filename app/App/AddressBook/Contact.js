@@ -8,7 +8,7 @@ import { remote } from 'electron';
 import {
   selectContact,
   deleteContact,
-} from 'actions/addressbookActionCreators';
+} from 'actions/addressBookActionCreators';
 import Icon from 'components/Icon';
 import Text, { translate } from 'components/Text';
 import Tooltip from 'components/Tooltip';
