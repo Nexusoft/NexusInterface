@@ -114,8 +114,12 @@ const getLocalTime = tz => {
  * @extends {Component}
  */
 @connect(
-  ({ addressbook: { addressbook, selectedContactIndex } }) => ({
+  ({
+    addressbook: { addressbook, selectedContactIndex },
+    overview: { connections },
+  }) => ({
     contact: addressbook[selectedContactIndex] || null,
+    connections,
   }),
   { deleteContact }
 )
@@ -186,7 +190,7 @@ class ContactDetails extends React.Component {
    * @memberof ContactDetails
    */
   render() {
-    const { contact } = this.props;
+    const { contact, connections } = this.props;
     if (!contact) return null;
 
     const tz = contact.timezone
@@ -202,11 +206,15 @@ class ContactDetails extends React.Component {
             </HeaderAction>
           </Tooltip.Trigger>
           <ContactName>{contact.name}</ContactName>
-          <Tooltip.Trigger tooltip={<Text id="AddressBook.Edit" />}>
-            <HeaderAction onClick={this.editContact}>
-              <Icon icon={editIcon} />
-            </HeaderAction>
-          </Tooltip.Trigger>
+          {connections !== undefined ? (
+            <Tooltip.Trigger tooltip={<Text id="AddressBook.Edit" />}>
+              <HeaderAction onClick={this.editContact}>
+                <Icon icon={editIcon} />
+              </HeaderAction>
+            </Tooltip.Trigger>
+          ) : (
+            <div style={{ width: '1em' }} />
+          )}
         </Header>
 
         <SectionHeader>

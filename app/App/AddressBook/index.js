@@ -33,6 +33,7 @@ const AddressBookLayout = styled.div({
 
 const mapStateToProps = state => ({
   addressBook: state.addressbook.addressbook,
+  connections: state.overview.connections,
 });
 
 /**
@@ -96,7 +97,7 @@ class AddressBook extends Component {
    * @memberof AddressBook
    */
   render() {
-    const { addressBook } = this.props;
+    const { addressBook, connections } = this.props;
 
     return (
       <Panel
@@ -115,14 +116,16 @@ class AddressBook extends Component {
             <div className="dim">
               <Text id="AddressBook.Empty" />
             </div>
-            <Button
-              skin="blank-light"
-              onClick={this.showAddContact}
-              className="mt1"
-            >
-              <Icon icon={addContactIcon} spaceRight />
-              <Text id="AddressBook.CreateNewContact" />
-            </Button>
+            {connections !== undefined && (
+              <Button
+                skin="blank-light"
+                onClick={this.showAddContact}
+                className="mt1"
+              >
+                <Icon icon={addContactIcon} spaceRight />
+                <Text id="AddressBook.CreateNewContact" />
+              </Button>
+            )}
           </div>
         )}
       </Panel>

@@ -65,6 +65,7 @@ class SearchBox extends Component {
  */
 @connect(state => ({
   addressBook: state.addressbook.addressbook,
+  connections: state.overview.connections,
 }))
 class PanelControls extends Component {
   /**
@@ -155,25 +156,29 @@ class PanelControls extends Component {
   render() {
     return (
       <div className="flex center">
-        <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
-          <Button
-            skin="blank-light"
-            className="relative"
-            onClick={this.showMyAddresses}
-          >
-            <ControlIcon icon={userIcon} />
-          </Button>
-        </Tooltip.Trigger>
+        {this.props.connections !== undefined && (
+          <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
+            <Button
+              skin="blank-light"
+              className="relative"
+              onClick={this.showMyAddresses}
+            >
+              <ControlIcon icon={userIcon} />
+            </Button>
+          </Tooltip.Trigger>
+        )}
 
-        <Tooltip.Trigger tooltip={<Text id="AddressBook.NewContact" />}>
-          <Button
-            skin="blank-light"
-            className="relative"
-            onClick={this.showAddContact}
-          >
-            <ControlIcon icon={addContactIcon} />
-          </Button>
-        </Tooltip.Trigger>
+        {this.props.connections !== undefined && (
+          <Tooltip.Trigger tooltip={<Text id="AddressBook.NewContact" />}>
+            <Button
+              skin="blank-light"
+              className="relative"
+              onClick={this.showAddContact}
+            >
+              <ControlIcon icon={addContactIcon} />
+            </Button>
+          </Tooltip.Trigger>
+        )}
 
         <Tooltip.Trigger tooltip={<Text id="AddressBook.Export" />}>
           <Button

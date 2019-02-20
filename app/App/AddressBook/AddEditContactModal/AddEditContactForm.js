@@ -287,7 +287,7 @@ class AddEditContactForm extends Component {
           </div>
           <Button skin="primary" type="submit">
             {edit ? (
-              <Text id="AddEditContact.Update" />
+              <Text id="AddEditContact.SaveChanges" />
             ) : (
               <Text id="AddEditContact.Create" />
             )}

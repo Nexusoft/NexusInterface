@@ -22,9 +22,13 @@ const Separator = styled.div(({ theme }) => ({
   background: theme.mixer(0.125),
 }));
 
-const mapStateToProps = ({ addressbook: { addressbook, searchQuery } }) => ({
+const mapStateToProps = ({
+  addressbook: { addressbook, searchQuery },
+  overview: { connections },
+}) => ({
   contacts: addressbook,
   searchQuery,
+  connections,
 });
 
 /**
@@ -47,7 +51,7 @@ class ContactList extends React.Component {
    * @memberof ContactList
    */
   render() {
-    const { contacts, searchQuery } = this.props;
+    const { contacts, searchQuery, connections } = this.props;
 
     return (
       <ContactListComponent>
@@ -61,8 +65,12 @@ class ContactList extends React.Component {
             <Contact key={contact.name} contact={contact} index={i} />
           ) : null
         )}
-        <Separator />
-        <NewContactButton onClick={this.createContact} />
+        {connections !== undefined && (
+          <>
+            <Separator />
+            <NewContactButton onClick={this.createContact} />
+          </>
+        )}
       </ContactListComponent>
     );
   }

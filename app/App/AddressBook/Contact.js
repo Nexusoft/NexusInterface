@@ -18,6 +18,8 @@ import { color } from 'utils';
 import ContextMenuBuilder from 'contextmenu';
 import plusIcon from 'images/plus.sprite.svg';
 
+import AddEditContactModal from './AddEditContactModal';
+
 const ContactComponent = styled.div(
   ({ theme }) => ({
     display: 'flex',
@@ -79,6 +81,7 @@ const AddressesCount = styled.div(({ theme }) => ({
   state => ({
     activeIndex: state.addressbook.selectedContactIndex,
     locale: state.settings.locale,
+    connections: state.overview.connections,
   }),
   { selectContact, deleteContact }
 )
@@ -108,16 +111,32 @@ class Contact extends React.PureComponent {
    *
    * @memberof Contact
    */
+  editContact = () => {
+    UIController.openModal(AddEditContactModal, {
+      edit: true,
+      contact: this.props.contact,
+    });
+  };
+
+  /**
+   *
+   *
+   * @memberof Contact
+   */
   showContextMenu = e => {
     e.preventDefault();
     e.stopPropagation();
-    const template = [
-      ...new ContextMenuBuilder().defaultContext,
-      {
-        label: translate('AddressBook.DeleteContact', this.props.locale),
-        click: this.confirmDelete,
-      },
-    ];
+    const template = [...new ContextMenuBuilder().defaultContext];
+    if (this.props.connections !== undefined) {
+      template.push({
+        label: translate('AddressBook.EditContact', this.props.locale),
+        click: this.editContact,
+      });
+    }
+    template.push({
+      label: translate('AddressBook.DeleteContact', this.props.locale),
+      click: this.confirmDelete,
+    });
     let contextMenu = remote.Menu.buildFromTemplate(template);
     contextMenu.popup(remote.getCurrentWindow());
   };

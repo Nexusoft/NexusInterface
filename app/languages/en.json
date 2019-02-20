@@ -227,7 +227,7 @@
   "AddEditContact.CreateNewContact": "Create New Contact",
   "AddEditContact.EditContact": "Edit Contact",
   "AddEditContact.Create": "Create",
-  "AddEditContact.Update": "Update",
+  "AddEditContact.SaveChanges": "Save Changes",
   "AddEditContact.Cancel": "Cancel",
   "AddEditContact.Reset": "Reset",
   "AddEditContact.CreateSuccess": "New contact has been added to Address Book",
