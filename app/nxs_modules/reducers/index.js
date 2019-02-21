@@ -10,7 +10,8 @@ import common from './common';
 import login from './login';
 import exchange from './exchange';
 import sendReceive from './sendReceive';
-import addressbook from './addressbook';
+import addressBook from './addressBook';
+import myAccounts from './myAccounts';
 import terminal from './terminal';
 import settings from './settings';
 import theme from './theme';
@@ -47,7 +48,8 @@ export default function createRootReducer(history) {
       transactions,
       exchange,
       common,
-      addressbook,
+      addressBook,
+      myAccounts,
       terminal,
       settings,
       theme,

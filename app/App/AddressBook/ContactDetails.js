@@ -111,13 +111,13 @@ const getLocalTime = tz => {
  */
 @connect(
   ({
-    addressbook: { addressbook },
+    addressBook,
     ui: {
       addressBook: { selectedContactName },
     },
     overview: { connections },
   }) => ({
-    contact: addressbook[selectedContactName] || null,
+    contact: addressBook[selectedContactName] || null,
     connections,
   }),
   { deleteContact }

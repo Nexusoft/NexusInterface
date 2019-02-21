@@ -32,7 +32,7 @@ const AddressBookLayout = styled.div({
 });
 
 const mapStateToProps = state => ({
-  addressBook: state.addressbook.addressbook,
+  addressBook: state.addressBook,
   connections: state.overview.connections,
 });
 

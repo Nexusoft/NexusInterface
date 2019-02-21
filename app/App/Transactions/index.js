@@ -120,7 +120,7 @@ const mapStateToProps = state => {
     ...state.transactions,
     ...state.common,
     ...state.overview,
-    ...state.addressbook,
+    addressBook: state.addressBook,
     settings: state.settings,
   };
 };
@@ -216,7 +216,7 @@ class Transactions extends Component {
     googleanalytics.SendScreen('Transactions');
 
     this.gethistorydatajson();
-    let myaddresbook = this.props.addressbook;
+    let myaddresbook = this.props.addressBook;
     if (myaddresbook != undefined) {
       for (let key in Object.values(myaddresbook)) {
         const eachAddress = Object.values(myaddresbook)[key];
@@ -832,22 +832,6 @@ class Transactions extends Component {
       addressFilter: addressfiltervalue,
     });
   };
-
-  /**
-   * Taken From address page
-   *
-   * @returns address in Json format
-   * @memberof Transactions
-   */
-  readAddressBook() {
-    let json = null;
-    try {
-      json = config.ReadJson('addressbook.json');
-    } catch (err) {
-      json = {};
-    }
-    return json;
-  }
 
   //
   /**

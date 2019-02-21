@@ -1,6 +1,5 @@
 import Ajv from 'ajv';
 import config from 'api/configuration';
-import { emailRegex } from 'utils/form';
 
 const fileName = 'addressbook.json';
 
@@ -8,9 +7,9 @@ const fileName = 'addressbook.json';
  * Convert the old addressbook.json schema
  * =============================================================================
  */
-function convertOldAddressBook(addressbook) {
-  if (!Array.isArray(addressbook)) return [];
-  return addressbook.reduce(
+function convertOldAddressBook(addressBook) {
+  if (!Array.isArray(addressBook)) return [];
+  return addressBook.reduce(
     (obj, contact) => ({
       ...obj,
       [contact.name]: contact && convertOldContact(contact),

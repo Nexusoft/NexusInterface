@@ -26,12 +26,9 @@ const filterRecipients = memoize((suggestions, inputValue) => {
   });
 });
 
-const mapStateToProps = ({
-  addressbook: { addressbook },
-  settings: { locale },
-}) => ({
-  suggestions: getRecipientSuggestions(addressbook),
-  addressNameMap: getAddressNameMap(addressbook),
+const mapStateToProps = ({ addressBook, settings: { locale } }) => ({
+  suggestions: getRecipientSuggestions(addressBook),
+  addressNameMap: getAddressNameMap(addressBook),
   locale,
 });
 

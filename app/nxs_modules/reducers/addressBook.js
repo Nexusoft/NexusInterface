@@ -1,9 +1,6 @@
 import * as TYPE from 'actions/actiontypes';
 
-const initialState = {
-  addressbook: {},
-  myAccounts: [],
-};
+const initialState = {};
 
 function fromArray(contacts) {
   return contacts.reduce(
@@ -27,18 +24,12 @@ const compareNames = (a, b) => {
 export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.LOAD_ADDRESS_BOOK:
-      return {
-        ...state,
-        addressbook: action.payload,
-      };
+      return action.payload;
 
     case TYPE.ADD_NEW_CONTACT: {
-      const contacts = [...Object.values(state.addressbook), action.payload];
+      const contacts = [...Object.values(state), action.payload];
       contacts.sort(compareNames);
-      return {
-        ...state,
-        addressbook: fromArray(contacts),
-      };
+      return fromArray(contacts);
     }
 
     case TYPE.UPDATE_CONTACT: {
@@ -46,33 +37,21 @@ export default (state = initialState, action) => {
       const { name, contact } = action.payload;
 
       if (name === contact.name) {
-        addressbook = { ...state.addressbook, [name]: contact };
+        addressbook = { ...state, [name]: contact };
       } else {
-        const contacts = [...Object.values(state.addressbook), contact]
+        const contacts = [...Object.values(state), contact]
           .filter(c => c.name !== action.payload.name)
           .sort(compareNames);
         addressbook = fromArray(contacts);
       }
 
-      return {
-        ...state,
-        addressbook,
-      };
+      return addressbook;
     }
 
-    case TYPE.MY_ACCOUNTS_LIST:
-      return {
-        ...state,
-        myAccounts: action.payload,
-      };
-
     case TYPE.DELETE_CONTACT: {
-      const addressbook = { ...state.addressbook };
+      const addressbook = { ...state };
       delete addressbook[action.payload];
-      return {
-        ...state,
-        addressbook,
-      };
+      return addressbook;
     }
 
     default:

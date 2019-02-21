@@ -25,7 +25,7 @@ const tzOptions = timeZones.map(tz => ({
 }));
 
 const mapStateToProps = state => ({
-  addressBook: state.addressbook.addressbook,
+  addressBook: state.addressBook,
 });
 
 const actionCreators = {

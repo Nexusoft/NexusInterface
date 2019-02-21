@@ -23,13 +23,13 @@ const Separator = styled.div(({ theme }) => ({
 }));
 
 const mapStateToProps = ({
-  addressbook: { addressbook },
+  addressBook,
   ui: {
     addressBook: { searchQuery },
   },
   overview: { connections },
 }) => ({
-  contacts: addressbook,
+  addressBook,
   searchQuery,
   connections,
 });
@@ -54,11 +54,11 @@ class ContactList extends React.Component {
    * @memberof ContactList
    */
   render() {
-    const { contacts, searchQuery, connections } = this.props;
+    const { addressBook, searchQuery, connections } = this.props;
 
     return (
       <ContactListComponent>
-        {Object.values(contacts).map(contact =>
+        {Object.values(addressBook).map(contact =>
           contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           contact.addresses.find(({ address }) => address === searchQuery) ? (
             <Contact key={contact.name} contact={contact} />

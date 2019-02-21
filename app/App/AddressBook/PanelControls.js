@@ -64,7 +64,7 @@ class SearchBox extends Component {
  * @extends {Component}
  */
 @connect(state => ({
-  addressBook: state.addressbook.addressbook,
+  addressBook: state.addressBook,
   connections: state.overview.connections,
 }))
 class PanelControls extends Component {
