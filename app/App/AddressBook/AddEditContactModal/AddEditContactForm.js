@@ -257,7 +257,7 @@ class AddEditContactForm extends Component {
 
           <FormField connectLabel label={<Text id="AddEditContact.TimeZone" />}>
             <Field
-              name="timezone"
+              name="timeZone"
               component={Select.RF}
               options={tzOptions}
               placeholder={<Text id="AddEditContact.TimeZonePlaceholder" />}
