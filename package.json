@@ -249,7 +249,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.6",
     "@emotion/styled": "^10.0.6",
-    "ajv": "^6.5.4",
+    "ajv": "^6.9.1",
     "alert-node": "^1.2.2",
     "async": "^2.6.1",
     "auto-launch": "^5.0.5",
