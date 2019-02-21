@@ -12,7 +12,7 @@
 - Transaction Graph now responds to Theme, transaction bar colors remain fixed. 
 
 #### Fixes
--  
+-  Closing the app while in Manual mode no longer tries to stop the manual Daemon
 
 # 0.8.7 (2019.2.15)
 [Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.7)

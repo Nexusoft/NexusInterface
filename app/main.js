@@ -178,17 +178,3 @@ app.on('ready', async () => {
     installExtensions();
   }
 });
-
-// Application Shutdown
-// app.on('window-all-closed', function() {
-//   if (process.platform !== 'darwin') {
-//     app.quit();
-//   }
-//   log.info('all');
-//   setTimeout(setTimeout(process.abort(), 3000), 3000);
-// });
-
-// app.on('will-quit', function() {
-//   log.info('will');
-//   app.exit();
-// });
