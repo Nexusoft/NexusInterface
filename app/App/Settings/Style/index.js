@@ -15,6 +15,8 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
 import UIController from 'components/UIController';
+import NexusAddress from 'components/NexusAddress';
+import SettingsContainer from 'components/SettingsContainer';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
 import configuration from 'api/configuration';
@@ -22,11 +24,6 @@ import ThemePicker from './ThemePicker';
 
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
-
-const StyleSettings = styled.div({
-  maxWidth: 750,
-  margin: '0 auto',
-});
 
 const mapStateToProps = ({
   settings: { renderGlobe, locale, addressStyle },
@@ -53,6 +50,8 @@ const addressStyleOptions = [
   { value: 'truncateMiddle', display: 'Truncate middle' },
   { value: 'raw', display: 'Raw' },
 ];
+
+const sampleAddress = '2R9SJ4jyyU1WYrsR7Je83WLMaUx2YMRURH2Z6Qro6n46SNLufUc';
 
 /**
  * Style Settings in the Style Page
@@ -320,7 +319,7 @@ class SettingsStyle extends Component {
     } = this.props;
 
     return (
-      <StyleSettings>
+      <SettingsContainer>
         <SettingsField
           connectLabel
           label={<Text id="Settings.RenderGlobe" />}
@@ -346,11 +345,16 @@ class SettingsStyle extends Component {
           label="Display Nexus Addresses"
           subLabel="Choose which format Nexus Addresses should be displayed in"
         >
-          <Select
-            value={addressStyle}
-            onChange={setAddressStyle}
-            options={addressStyleOptions}
-          />
+          <div>
+            <Select
+              value={addressStyle}
+              onChange={setAddressStyle}
+              options={addressStyleOptions}
+            />
+          </div>
+          <div className="mt2">
+            <NexusAddress address={sampleAddress} label="Sample Address" />
+          </div>
         </SettingsField>
 
         <SettingsField label="Theme" subLabel="Select Wallet Theme">
@@ -418,7 +422,7 @@ class SettingsStyle extends Component {
             <Text id="Settings.ThemeFileExport" />
           </Button>
         </div>
-      </StyleSettings>
+      </SettingsContainer>
     );
   }
 }

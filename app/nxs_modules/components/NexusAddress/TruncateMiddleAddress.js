@@ -106,8 +106,8 @@ const Label = styled.div(({ theme }) => ({
  * @extends {React.Component}
  */
 export default class TruncateMiddleAddress extends React.Component {
-  wrapperRef = React.createRef();
   addressRef = React.createRef();
+  contentRef = React.createRef();
 
   state = { overflow: false };
 
@@ -117,13 +117,13 @@ export default class TruncateMiddleAddress extends React.Component {
    * @memberof TruncateMiddleAddress
    */
   checkOverflow = () => {
-    const addressWidth = this.addressRef.current.offsetWidth;
-    const wrapperWidth = this.wrapperRef.current.clientWidth;
+    const containerWidth = this.addressRef.current.clientWidth;
+    const contentWidth = this.contentRef.current.offsetWidth;
 
-    if (addressWidth > wrapperWidth && !this.state.overflow) {
+    if (contentWidth > containerWidth && !this.state.overflow) {
       this.setState({ overflow: true });
     }
-    if (addressWidth <= wrapperWidth && this.state.overflow) {
+    if (contentWidth <= containerWidth && this.state.overflow) {
       this.setState({ overflow: false });
     }
   };
@@ -137,7 +137,7 @@ export default class TruncateMiddleAddress extends React.Component {
    */
   componentDidMount() {
     this.checkOverflow();
-    this.resizeObserver.observe(this.wrapperRef.current);
+    this.resizeObserver.observe(this.addressRef.current);
   }
 
   /**
@@ -155,7 +155,7 @@ export default class TruncateMiddleAddress extends React.Component {
    * @memberof TruncateMiddleAddress
    */
   componentWillUnmount() {
-    this.resizeObserver.unobserve(this.wrapperRef.current);
+    this.resizeObserver.unobserve(this.addressRef.current);
   }
 
   /**
@@ -189,9 +189,9 @@ export default class TruncateMiddleAddress extends React.Component {
             }}
             onClick={this.copyAddress}
           >
-            <Address ref={this.wrapperRef}>
+            <Address ref={this.addressRef}>
               <AddressCopy left overflow={overflow}>
-                <AddressContent ref={this.addressRef}>{address}</AddressContent>
+                <AddressContent ref={this.contentRef}>{address}</AddressContent>
               </AddressCopy>
               <Ellipsis hidden={!overflow}>...</Ellipsis>
               <AddressCopy right overflow={overflow}>

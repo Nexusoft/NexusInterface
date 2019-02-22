@@ -16,16 +16,12 @@ const Field = styled.div(({ indent = 0, theme }) => ({
   marginLeft: indent * indentSpace,
 }));
 
-const Label = styled.label(
-  {
-    position: 'relative',
-    paddingRight: '3em',
-    flexShrink: 0,
-  },
-  ({ indent = 0 }) => ({
-    width: 400 - indent * indentSpace,
-  })
-);
+const Label = styled.label({
+  position: 'relative',
+  paddingRight: '3em',
+  flexShrink: 1,
+  flexGrow: 1,
+});
 
 const SubLabel = styled.div(({ theme }) => ({
   fontSize: '.9em',
@@ -33,7 +29,8 @@ const SubLabel = styled.div(({ theme }) => ({
 }));
 
 const Input = styled.div({
-  flexGrow: 1,
+  flexShrink: 0,
+  width: 350,
 });
 
 /**
@@ -82,10 +79,7 @@ class SettingsField extends Component {
     } = this.props;
     return (
       <Field indent={indent} {...rest}>
-        <Label
-          htmlFor={connectLabel ? this.inputId : undefined}
-          indent={indent}
-        >
+        <Label htmlFor={connectLabel ? this.inputId : undefined}>
           <div>{label}</div>
           {subLabel && <SubLabel>{subLabel}</SubLabel>}
         </Label>
