@@ -40,6 +40,8 @@ const SettingsContent = styled.div({
   flexShrink: 1,
   flexBasis: 0,
   overflow: 'auto',
+  margin: '0 -30px',
+  padding: '0 30px',
 });
 
 /**

@@ -12,7 +12,7 @@ import Button from 'components/Button';
 import UIController from 'components/UIController';
 import copyIcon from 'images/copy.sprite.svg';
 
-const NexusAddressComponent = styled.div({
+const RawAddressComponent = styled.div({
   marginTop: '1em',
 });
 
@@ -40,33 +40,33 @@ const CopyButton = styled(Button)(({ theme }) => ({
  * Nexus Address with Copy functionality
  *
  * @export
- * @class NexusAddress
+ * @class RawAddress
  * @extends {React.Component}
  */
-export default class NexusAddress extends React.Component {
+export default class RawAddress extends React.Component {
   inputRef = React.createRef();
 
   /**
    * Copy address to clipboard
    *
-   * @memberof NexusAddress
+   * @memberof RawAddress
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
     this.inputRef.current.select();
-    UIController.showNotification(<Text id="Alert.Copied" />, 'success');
+    UIController.showNotification(<Text id="Alert.AddressCopied" />, 'success');
   };
 
   /**
    * React Render
    *
    * @returns
-   * @memberof NexusAddress
+   * @memberof RawAddress
    */
   render() {
     const { address, label, ...rest } = this.props;
     return (
-      <NexusAddressComponent {...rest}>
+      <RawAddressComponent {...rest}>
         {!!label && <Label>{label}</Label>}
         <AddressTextField
           readOnly
@@ -87,7 +87,7 @@ export default class NexusAddress extends React.Component {
           }
           hasLabel={!!label}
         />
-      </NexusAddressComponent>
+      </RawAddressComponent>
     );
   }
 }

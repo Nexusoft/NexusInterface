@@ -16,15 +16,11 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import UIController from 'components/UIController';
+import SettingsContainer from 'components/SettingsContainer';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { form } from 'utils';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
-
-const CoreSettings = styled.div({
-  maxWidth: 750,
-  margin: '0 auto',
-});
 
 // React-Redux mandatory methods
 const mapStateToProps = ({ settings, overview: { connections } }) => ({
@@ -230,7 +226,7 @@ class SettingsCore extends Component {
     }
 
     return (
-      <CoreSettings>
+      <SettingsContainer>
         <form onSubmit={handleSubmit}>
           <SettingsField
             connectLabel
@@ -427,7 +423,7 @@ class SettingsCore extends Component {
             </Button>
           </div>
         </form>
-      </CoreSettings>
+      </SettingsContainer>
     );
   }
 }

@@ -46,6 +46,7 @@ export const defaultSettings = {
 
   // Style
   renderGlobe: true,
+  addressStyle: 'segmented',
 
   // Hidden settings
   acceptedAgreement: false,
