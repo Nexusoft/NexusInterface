@@ -57,6 +57,7 @@ export default function setupApp(store, history) {
     // forceQuit is set when user clicks Quit option in the Tray context menu
     if (minimizeOnClose && !remote.getGlobal('forceQuit')) {
       mainWindow.hide();
+      console.log(remote.app.dock);
     } else {
       if (tail != undefined) {
         tail.unwatch();
