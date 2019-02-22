@@ -39,7 +39,9 @@ const AddressWrapper = styled.div(
 
 const Address = styled.div({
   width: '100%',
+  height: '100%',
   display: 'flex',
+  alignItems: 'center',
 });
 
 const AddressCopy = styled.div(
@@ -163,7 +165,7 @@ export default class TruncateMiddleAddress extends React.Component {
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
-    UIController.showNotification(<Text id="Alert.Copied" />, 'success');
+    UIController.showNotification(<Text id="Alert.AddressCopied" />, 'success');
   };
 
   /**

@@ -51,7 +51,7 @@ const mapDispatchToProps = dispatch => ({
 const addressStyleOptions = [
   { value: 'segmented', display: 'Segmented' },
   { value: 'truncateMiddle', display: 'Truncate middle' },
-  { value: 'simple', display: 'Simple' },
+  { value: 'raw', display: 'Raw' },
 ];
 
 /**
