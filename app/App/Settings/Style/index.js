@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import https from 'https';
 
 // Internal
+import googleanalytics from 'scripts/googleanalytics';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { updateTheme, resetColors } from 'actions/themeActionCreators';
 import Text, { translate } from 'components/Text';
@@ -43,7 +44,15 @@ const mapStateToProps = ({
 };
 const mapDispatchToProps = dispatch => ({
   setRenderGlobe: renderGlobe => dispatch(updateSettings({ renderGlobe })),
-  setAddressStyle: addressStyle => dispatch(updateSettings({ addressStyle })),
+  setAddressStyle: addressStyle => {
+    googleanalytics.SendEvent(
+      'Settings',
+      'Style',
+      'setAddressStyle',
+      addressStyle
+    );
+    dispatch(updateSettings({ addressStyle }));
+  },
   updateTheme: updates => dispatch(updateTheme(updates)),
   resetColors: () => dispatch(resetColors()),
 });
