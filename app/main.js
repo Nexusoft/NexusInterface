@@ -66,6 +66,7 @@ function setupTray(mainWindow) {
       label: 'Show Nexus',
       click: function() {
         mainWindow.show();
+        app.dock.show();
       },
     },
     {
