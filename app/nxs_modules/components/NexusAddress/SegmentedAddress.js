@@ -9,11 +9,11 @@ import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
 import { consts, timing } from 'styles';
 
-const NexusAddressComponent = styled.div({
+const SegmentedAddressComponent = styled.div({
   marginTop: '1em',
 });
 
-const Address = styled.textarea(
+const Address = styled.div(
   ({ theme }) => ({
     width: '100%',
     background: theme.background,
@@ -21,7 +21,8 @@ const Address = styled.textarea(
     border: `1px solid ${theme.mixer(0.125)}`,
     borderRadius: 2,
     fontFamily: consts.monoFontFamily,
-    padding: '.5em 1em',
+    lineHeight: 1.3,
+    padding: '.3em 1em',
     textAlign: 'center',
     whiteSpace: 'pre',
     cursor: 'pointer',
@@ -51,27 +52,26 @@ const Label = styled.div(({ theme }) => ({
  * Nexus Address with Copy functionality
  *
  * @export
- * @class NexusAddress
+ * @class SegmentedAddress
  * @extends {React.Component}
  */
-export default class NexusAddress extends React.Component {
+export default class SegmentedAddress extends React.Component {
   addressRef = React.createRef();
 
   /**
    * Copy address to clipboard
    *
-   * @memberof NexusAddress
+   * @memberof SegmentedAddress
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
-    this.addressRef.current.select();
     UIController.showNotification(<Text id="Alert.Copied" />, 'success');
   };
 
   /**
    *
    *
-   * @memberof NexusAddress
+   * @memberof SegmentedAddress
    */
   renderAddress = () => {
     const { address } = this.props;
@@ -96,25 +96,25 @@ export default class NexusAddress extends React.Component {
    * React Render
    *
    * @returns
-   * @memberof NexusAddress
+   * @memberof SegmentedAddress
    */
   render() {
     const { address, label, ...rest } = this.props;
     return (
-      <NexusAddressComponent {...rest}>
+      <SegmentedAddressComponent {...rest}>
         {!!label && <Label>{label}</Label>}
 
         <Tooltip.Trigger tooltip="Click to copy to clipboard">
           <Address
             readOnly
-            rows={2}
             ref={this.addressRef}
             hasLabel={!!label}
             onClick={this.copyAddress}
-            value={this.renderAddress()}
-          />
+          >
+            {this.renderAddress()}
+          </Address>
         </Tooltip.Trigger>
-      </NexusAddressComponent>
+      </SegmentedAddressComponent>
     );
   }
 }
