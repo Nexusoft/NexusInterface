@@ -10,6 +10,7 @@ import * as ac from 'actions/setupAppActionCreators';
 import getInfo from 'actions/getInfo';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
+import { loadAddressBookFromFile } from 'actions/addressBookActionCreators';
 import updater from 'updater';
 import appMenu from 'appMenu';
 import configuration from 'api/configuration';
@@ -34,7 +35,7 @@ export default function setupApp(store, history) {
   appMenu.initialize(store, history);
   appMenu.build();
 
-  dispatch(ac.LoadAddressBook());
+  dispatch(loadAddressBookFromFile());
 
   dispatch(getInfo());
   setInterval(() => dispatch(getInfo()), 5000);

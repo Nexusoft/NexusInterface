@@ -34,7 +34,7 @@ const Buttons = styled.div({
  * @extends {React.Component}
  */
 @connect(state => ({
-  accountNames: (state.addressbook.myAccounts || []).map(acc => acc.account),
+  accountNames: (state.myAccounts || []).map(acc => acc.account),
 }))
 @reduxForm({
   form: 'newAddress',
