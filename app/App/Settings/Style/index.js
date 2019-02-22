@@ -14,9 +14,12 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
+import Icon from 'components/Icon';
 import UIController from 'components/UIController';
 import NexusAddress from 'components/NexusAddress';
 import SettingsContainer from 'components/SettingsContainer';
+import warningIcon from 'images/warning.sprite.svg';
+
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
 import configuration from 'api/configuration';
@@ -52,6 +55,12 @@ const addressStyleOptions = [
 ];
 
 const sampleAddress = '2R9SJ4jyyU1WYrsR7Je83WLMaUx2YMRURH2Z6Qro6n46SNLufUc';
+
+const AddressStyleNote = styled.div(({ theme }) => ({
+  fontSize: '.8em',
+  color: theme.mixer(0.5),
+  marginTop: '1em',
+}));
 
 /**
  * Style Settings in the Style Page
@@ -342,7 +351,7 @@ class SettingsStyle extends Component {
         </SettingsField>
 
         <SettingsField
-          label="Display Nexus Addresses"
+          label="Nexus Addresses format"
           subLabel="Choose which format Nexus Addresses should be displayed in"
         >
           <div>
@@ -352,8 +361,15 @@ class SettingsStyle extends Component {
               options={addressStyleOptions}
             />
           </div>
-          <div className="mt2">
+          <div className="mt1">
             <NexusAddress address={sampleAddress} label="Sample Address" />
+            <AddressStyleNote>
+              <Icon icon={warningIcon} spaceRight />
+              <span className="v-align">
+                This address is just a sample one, please do NOT send your NXS
+                to it
+              </span>
+            </AddressStyleNote>
           </div>
         </SettingsField>
 
