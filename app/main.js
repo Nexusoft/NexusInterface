@@ -66,6 +66,9 @@ function setupTray(mainWindow) {
       label: 'Show Nexus',
       click: function() {
         mainWindow.show();
+        if (process.platform === 'darwin') {
+          app.dock.show();
+        }
       },
     },
     {
@@ -76,9 +79,6 @@ function setupTray(mainWindow) {
     },
   ]);
   tray.setContextMenu(contextMenu);
-  tray.on('double-click', () => {
-    mainWindow.show();
-  });
 
   return tray;
 }
