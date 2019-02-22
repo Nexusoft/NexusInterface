@@ -116,8 +116,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: settings.windowWidth,
     height: settings.windowHeight,
-    minWidth: 1010,
-    minHeight: 687,
+    minWidth: 1022,
+    minHeight: 618,
     icon: iconPath,
     backgroundColor: '#232c39',
     show: false,
