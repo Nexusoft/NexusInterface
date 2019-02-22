@@ -13,6 +13,7 @@ import Text, { translate } from 'components/Text';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
+import Select from 'components/Select';
 import UIController from 'components/UIController';
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
@@ -28,7 +29,7 @@ const StyleSettings = styled.div({
 });
 
 const mapStateToProps = ({
-  settings: { renderGlobe, locale },
+  settings: { renderGlobe, locale, addressStyle },
   overview: { webGLEnabled },
   theme,
 }) => {
@@ -37,13 +38,21 @@ const mapStateToProps = ({
     webGLEnabled,
     theme,
     locale,
+    addressStyle,
   };
 };
 const mapDispatchToProps = dispatch => ({
   setRenderGlobe: renderGlobe => dispatch(updateSettings({ renderGlobe })),
+  setAddressStyle: addressStyle => dispatch(updateSettings({ addressStyle })),
   updateTheme: updates => dispatch(updateTheme(updates)),
   resetColors: () => dispatch(resetColors()),
 });
+
+const addressStyleOptions = [
+  { value: 'segmented', display: 'Segmented' },
+  { value: 'truncateMiddle', display: 'Truncate middle' },
+  { value: 'simple', display: 'Simple' },
+];
 
 /**
  * Style Settings in the Style Page
@@ -60,17 +69,14 @@ class SettingsStyle extends Component {
     previousCustom: {},
     DarkTheme: DarkTheme,
     LightTheme: LightTheme,
-  }
+  };
 
   componentDidMount() {
-
-    if (this.props.theme.defaultStyle == "Dark") {
+    if (this.props.theme.defaultStyle == 'Dark') {
       this.setThemeSelector(0);
-    }
-    else if (this.props.theme.defaultStyle == "Light") {
+    } else if (this.props.theme.defaultStyle == 'Light') {
       this.setThemeSelector(1);
-    }
-    else {
+    } else {
       this.setThemeSelector(2);
     }
   }
@@ -90,13 +96,12 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   setWalpaper = (path, defaultStyle) => {
-
     defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
-    this.props.updateTheme({ defaultStyle: defaultStyle, wallpaper: path, });
+    this.props.updateTheme({ defaultStyle: defaultStyle, wallpaper: path });
     if (path || defaultStyle.endsWith('Custom')) {
       this.setThemeSelector(2);
       if (path) {
-        this.props.updateTheme({ defaultStyle: "Custom", });
+        this.props.updateTheme({ defaultStyle: 'Custom' });
       }
     }
   };
@@ -110,7 +115,7 @@ class SettingsStyle extends Component {
     this.setToCustom();
     this.props.updateTheme({
       [key]: value,
-      defaultStyle: "Custom",
+      defaultStyle: 'Custom',
     });
   };
 
@@ -120,7 +125,7 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   resetColors = () => {
-    //Dont think we need this anymore 
+    //Dont think we need this anymore
     this.props.resetColors();
     UIController.showNotification(
       <Text id="Settings.ResetColorNoti" />,
@@ -138,29 +143,35 @@ class SettingsStyle extends Component {
     let customTheme;
     try {
       customTheme = JSON.parse(content);
-      if (customTheme.wallpaper.startsWith('https') || customTheme.wallpaper.startsWith('http')) {
+      if (
+        customTheme.wallpaper.startsWith('https') ||
+        customTheme.wallpaper.startsWith('http')
+      ) {
         const wallpaperPathSplit = customTheme.wallpaper.split('.');
         const fileEnding = wallpaperPathSplit[wallpaperPathSplit.length - 1];
-        const file = fs.createWriteStream(configuration.GetAppDataDirectory() + "/wallpaper." + fileEnding);
-        this.wallpaperRequest = https.get(customTheme.wallpaper)
+        const file = fs.createWriteStream(
+          configuration.GetAppDataDirectory() + '/wallpaper.' + fileEnding
+        );
+        this.wallpaperRequest = https
+          .get(customTheme.wallpaper)
           .setTimeout(10000)
           .on('response', response => {
             response.pipe(file);
             let onFinish = () => {
               file.close(response => {
                 console.log(this);
-                console.log("FInished DOwnloading");
+                console.log('FInished DOwnloading');
                 this.setWalpaper(file.path);
               });
-            }
+            };
             onFinish.bind(this);
             file.on('finish', () => onFinish());
           })
           .on('error', error => {
-            this.setWalpaper("");
+            this.setWalpaper('');
           })
           .on('timeout', timeout => {
-            this.setWalpaper("");
+            this.setWalpaper('');
           });
       }
     } catch (err) {
@@ -206,24 +217,25 @@ class SettingsStyle extends Component {
         properties: ['saveFile'],
         filters: [{ name: 'Theme JSON', extensions: ['json'] }],
       },
-      (path) => {
+      path => {
         console.log(path);
-        fs.copyFile(configuration.GetAppDataDirectory() + "/theme.json", path, (err) => {
-          if (err) {
-            console.error(err);
+        fs.copyFile(
+          configuration.GetAppDataDirectory() + '/theme.json',
+          path,
+          err => {
+            if (err) {
+              console.error(err);
+              UIController.showNotification(err, 'error');
+            }
             UIController.showNotification(
-              err,
-              'error'
+              <Text id="Settings.ExportTheme" />,
+              'success'
             );
           }
-          UIController.showNotification(
-            <Text id="Settings.ExportTheme" />,
-            'success'
-          );
-        });
+        );
       }
-    )
-  }
+    );
+  };
 
   /**
    * Press Dark Theme Button
@@ -232,7 +244,7 @@ class SettingsStyle extends Component {
    */
   pressDarkTheme = () => {
     this.props.updateTheme(DarkTheme);
-  }
+  };
   /**
    * Press Light Theme Button
    *
@@ -240,7 +252,7 @@ class SettingsStyle extends Component {
    */
   pressLightTheme = () => {
     this.props.updateTheme(LightTheme);
-  }
+  };
   /**
    * Press Custom theme button
    *
@@ -250,7 +262,7 @@ class SettingsStyle extends Component {
     if (this.state.previousCustom != {}) {
       this.props.updateTheme(this.state.previousCustom);
     }
-  }
+  };
   /**
    * Press Reset Button
    *
@@ -263,7 +275,7 @@ class SettingsStyle extends Component {
       <Text id="Settings.ResetThemeNoti" />,
       'success'
     );
-  }
+  };
 
   /**
    * Save Previous Custom Theme to state
@@ -271,8 +283,10 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   savePreviousCustomTheme = () => {
-    this.setState({ previousCustom: this.props.theme }, () => { console.log(this.state); });
-  }
+    this.setState({ previousCustom: this.props.theme }, () => {
+      console.log(this.state);
+    });
+  };
 
   /**
    * Set To Custom, this is used by background picker
@@ -281,16 +295,14 @@ class SettingsStyle extends Component {
    */
   setToCustom = () => {
     //console.log("Set To Custom")
-  }
+  };
 
   /**
    * Set theme button, used by theme slector
    *
    * @memberof SettingsStyle
    */
-  setThemeSelector = (selectorIndex) => {
-
-  }
+  setThemeSelector = selectorIndex => {};
 
   /**
    * React Render
@@ -299,7 +311,13 @@ class SettingsStyle extends Component {
    * @memberof SettingsStyle
    */
   render() {
-    const { theme, renderGlobe, webGLEnabled } = this.props;
+    const {
+      theme,
+      renderGlobe,
+      webGLEnabled,
+      addressStyle,
+      setAddressStyle,
+    } = this.props;
 
     return (
       <StyleSettings>
@@ -325,10 +343,17 @@ class SettingsStyle extends Component {
         </SettingsField>
 
         <SettingsField
-          label="Theme"
-          subLabel="Select Wallet Theme"
-
+          label="Display Nexus Addresses"
+          subLabel="Choose which format Nexus Addresses should be displayed in"
         >
+          <Select
+            value={addressStyle}
+            onChange={setAddressStyle}
+            options={addressStyleOptions}
+          />
+        </SettingsField>
+
+        <SettingsField label="Theme" subLabel="Select Wallet Theme">
           <ThemePicker
             parentTheme={theme}
             darkCallback={this.pressDarkTheme}
@@ -338,9 +363,7 @@ class SettingsStyle extends Component {
             saveCustomCallback={this.savePreviousCustomTheme}
             handleOnSetCustom={e => (this.setToCustom = e)}
             handleSetSelector={e => (this.setThemeSelector = e)}
-          >
-
-          </ThemePicker>
+          />
         </SettingsField>
 
         <SettingsField
@@ -354,8 +377,7 @@ class SettingsStyle extends Component {
           />
         </SettingsField>
 
-        <SettingsField label={<Text id="Settings.ColorScheme" />}>
-        </SettingsField>
+        <SettingsField label={<Text id="Settings.ColorScheme" />} />
 
         <SettingsField indent={1} label={<Text id="Cp.PBC" />}>
           <ColorPicker colorName="background" onChange={this.setColor} />
@@ -389,7 +411,10 @@ class SettingsStyle extends Component {
           <Button onClick={this.openPickThemeFileDialog}>
             <Text id="Settings.PickThemeFile" />
           </Button>
-          <Button style={{ marginLeft: '1em' }} onClick={this.exportThemeFileDialog}>
+          <Button
+            style={{ marginLeft: '1em' }}
+            onClick={this.exportThemeFileDialog}
+          >
             <Text id="Settings.ThemeFileExport" />
           </Button>
         </div>

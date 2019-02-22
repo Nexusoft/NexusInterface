@@ -9,7 +9,7 @@ import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
 import { timing, consts } from 'styles';
 
-const HideMiddleAddressComponent = styled.div({
+const TruncateMiddleAddressComponent = styled.div({
   marginTop: '1em',
 });
 
@@ -100,20 +100,24 @@ const Label = styled.div(({ theme }) => ({
  * Nexus Address with Copy functionality
  *
  * @export
- * @class HideMiddleAddress
+ * @class TruncateMiddleAddress
  * @extends {React.Component}
  */
-export default class HideMiddleAddress extends React.Component {
+export default class TruncateMiddleAddress extends React.Component {
   wrapperRef = React.createRef();
   addressRef = React.createRef();
 
   state = { overflow: false };
 
+  /**
+   *
+   *
+   * @memberof TruncateMiddleAddress
+   */
   checkOverflow = () => {
     const addressWidth = this.addressRef.current.offsetWidth;
     const wrapperWidth = this.wrapperRef.current.clientWidth;
 
-    console.log(addressWidth, wrapperWidth);
     if (addressWidth > wrapperWidth && !this.state.overflow) {
       this.setState({ overflow: true });
     }
@@ -124,15 +128,30 @@ export default class HideMiddleAddress extends React.Component {
 
   resizeObserver = new ResizeObserver(this.checkOverflow);
 
+  /**
+   *
+   *
+   * @memberof TruncateMiddleAddress
+   */
   componentDidMount() {
     this.checkOverflow();
     this.resizeObserver.observe(this.wrapperRef.current);
   }
 
+  /**
+   *
+   *
+   * @memberof TruncateMiddleAddress
+   */
   componentDidUpdate() {
     this.checkOverflow();
   }
 
+  /**
+   *
+   *
+   * @memberof TruncateMiddleAddress
+   */
   componentWillUnmount() {
     this.resizeObserver.unobserve(this.wrapperRef.current);
   }
@@ -140,7 +159,7 @@ export default class HideMiddleAddress extends React.Component {
   /**
    * Copy address to clipboard
    *
-   * @memberof HideMiddleAddress
+   * @memberof TruncateMiddleAddress
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
@@ -151,13 +170,13 @@ export default class HideMiddleAddress extends React.Component {
    * React Render
    *
    * @returns
-   * @memberof HideMiddleAddress
+   * @memberof TruncateMiddleAddress
    */
   render() {
     const { address, label, ...rest } = this.props;
     const { overflow } = this.state;
     return (
-      <HideMiddleAddressComponent {...rest}>
+      <TruncateMiddleAddressComponent {...rest}>
         {!!label && <Label>{label}</Label>}
 
         <Tooltip.Trigger tooltip="Click to copy to clipboard">
@@ -179,7 +198,7 @@ export default class HideMiddleAddress extends React.Component {
             </Address>
           </AddressWrapper>
         </Tooltip.Trigger>
-      </HideMiddleAddressComponent>
+      </TruncateMiddleAddressComponent>
     );
   }
 }

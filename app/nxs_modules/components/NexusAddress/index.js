@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal
 import SegmentedAddress from './SegmentedAddress';
-import HideMiddleAddress from './HideMiddleAddress';
+import TruncateMiddleAddress from './TruncateMiddleAddress';
 import SimpleAddress from './SimpleAddress';
 
 @connect(({ settings: { addressStyle } }) => ({
@@ -13,11 +13,14 @@ import SimpleAddress from './SimpleAddress';
 class NexusAddress extends React.Component {
   render() {
     const { addressStyle, ...rest } = this.props;
+    console.log(addressStyle);
     switch (addressStyle) {
       case 'simple':
+        console.log(1);
         return <SimpleAddress {...rest} />;
-      case 'hideMiddle':
-        return <HideMiddleAddress {...rest} />;
+      case 'truncateMiddle':
+        console.log(2);
+        return <TruncateMiddleAddress {...rest} />;
       default:
         return <SegmentedAddress {...rest} />;
     }
