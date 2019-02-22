@@ -83,7 +83,7 @@ export default class Table extends Component {
               };
             }}
             style={{
-              height: '400px','--colorPrimary':this.props.style.background, '--colorAccent': this.props.style.primary,
+              height: '400px','--colorPrimary':this.props.style.background, '--colorAccent': this.props.style.primary, '--colorSecondary' : this.props.style.foreground,
             }}
           />
         )}

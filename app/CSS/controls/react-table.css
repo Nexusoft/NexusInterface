@@ -8,7 +8,7 @@
   -ms-flex-direction: column;
   flex-direction: column;
   --colorPrimary: pink;
-  --colorSeconday: white;
+  --colorSecondary: white;
   --colorAccent: white;
 }
 
@@ -337,13 +337,32 @@
 }
 .ReactTable .-pagination input,
 .ReactTable .-pagination select {
-  /* border: 1px solid rgba(0, 0, 0, 0.1);
-  background: #fff;
+   border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0);
   padding: 5px 7px;
   font-size: inherit;
+  color: var(--colorSecondary);
   border-radius: 3px;
   font-weight: normal;
-  outline: none; */
+  outline: none; 
+  
+}
+
+.ReactTable .-pagination span::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 4px;
+  height: 2px;
+  width: 100px;
+  background: var(--colorPrimary);
+}
+.ReactTable .-pagination option {
+ background: var(--colorPrimary);
+ background-blend-mode: difference;
+ filter: invert(1);
+ font-weight: normal;
+ outline: none; 
 }
 .ReactTable .-pagination .-btn {
   -webkit-appearance: none;
