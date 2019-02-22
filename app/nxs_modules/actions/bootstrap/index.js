@@ -51,7 +51,7 @@ export default function bootstrap({ suggesting } = {}) {
         setTimeout(startBootstrapping, 0);
       },
       noLabel: 'No, let it sync',
-      noSkin: suggesting ? 'error' : undefined,
+      noSkin: suggesting ? 'danger' : undefined,
       noCallback: () => {
         running = false;
         if (suggesting) {
