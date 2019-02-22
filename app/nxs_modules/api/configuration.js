@@ -166,11 +166,11 @@ const configuration = {
     //Set data directory by OS for automatic daemon mode
     if (process.platform === 'win32') {
       var datadir =
-        process.env.APPDATA + '\\Nexus_Core_Data_BETA_v' + APP_VERSION;
+        process.env.APPDATA + '\\Nexus_Core_Data_BETA';
     } else if (process.platform === 'darwin') {
-      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v' + APP_VERSION;
+      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA';
     } else {
-      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA_v' + APP_VERSION;
+      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA';
     }
     return datadir;
   },

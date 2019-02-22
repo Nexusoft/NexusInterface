@@ -14,6 +14,7 @@ import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
 import UIController from 'components/UIController';
+import SettingsContainer from 'components/SettingsContainer';
 import { form, color } from 'utils';
 import warningIcon from 'images/warning.sprite.svg';
 import updater from 'updater';
@@ -21,11 +22,6 @@ import updater from 'updater';
 // Internal Local
 import LanguageSetting from './LanguageSetting';
 import BackupDirSetting from './BackupDirSetting';
-
-const AppSettings = styled.div({
-  maxWidth: 750,
-  margin: '0 auto',
-});
 
 const WarningIcon = styled(Icon)(({ theme }) => ({
   color: color.lighten(theme.danger, 0.3),
@@ -135,7 +131,7 @@ class SettingsApp extends Component {
         note: <Text id="Settings.DisableAutoUpdateNote" />,
         yesLabel: <Text id="Settings.KeepAutoUpdate" />,
         noLabel: <Text id="Settings.TurnOffAutoUpdate" />,
-        noSkin: 'error',
+        noSkin: 'danger',
         noCallback: () => {
           this.props.updateSettings({ autoUpdate: false });
           updater.stopAutoUpdate();
@@ -159,7 +155,7 @@ class SettingsApp extends Component {
   render() {
     const { connections, settings } = this.props;
     return (
-      <AppSettings>
+      <SettingsContainer>
         <LanguageSetting />
 
         <SettingsField label={<Text id="Settings.OverviewDisplay" />}>
@@ -269,7 +265,7 @@ class SettingsApp extends Component {
         >
           <Text id="Settings.BackupWallet" />
         </Button>
-      </AppSettings>
+      </SettingsContainer>
     );
   }
 }

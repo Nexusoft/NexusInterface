@@ -120,7 +120,7 @@ const mapStateToProps = state => {
     ...state.transactions,
     ...state.common,
     ...state.overview,
-    ...state.addressbook,
+    addressBook: state.addressBook,
     settings: state.settings,
   };
 };
@@ -216,22 +216,24 @@ class Transactions extends Component {
     googleanalytics.SendScreen('Transactions');
 
     this.gethistorydatajson();
-    let myaddresbook = this.readAddressBook();
+    let myaddresbook = this.props.addressBook;
     if (myaddresbook != undefined) {
-      for (let key in myaddresbook.addressbook) {
-        const eachAddress = myaddresbook.addressbook[key];
-        const primaryadd = eachAddress['notMine']['Primary'];
+      for (let key in Object.values(myaddresbook)) {
+        const eachAddress = Object.values(myaddresbook)[key];
+        const primaryadd = eachAddress.addresses['Primary'];
         if (primaryadd != undefined) {
           tempaddpress.set(primaryadd, key);
         }
-        for (let addressname in eachAddress['notMine']) {
-          tempaddpress.set(
-            eachAddress['notMine'][addressname].address,
-            eachAddress.name +
-              "'s" +
-              `${' '}` +
-              translate('Footer.Address', locale)
-          );
+        for (let addressname in eachAddress.addresses) {
+          if (!eachAddress.addresses[addressname].isMine) {
+            tempaddpress.set(
+              eachAddress.addresses[addressname].address,
+              eachAddress.name +
+                "'s" +
+                `${' '}` +
+                translate('Footer.Address', locale)
+            );
+          }
         }
       }
     }
@@ -831,23 +833,6 @@ class Transactions extends Component {
     });
   };
 
-
-  /**
-   * Taken From address page
-   *
-   * @returns address in Json format
-   * @memberof Transactions
-   */
-  readAddressBook() {
-    let json = null;
-    try {
-      json = config.ReadJson('addressbook.json');
-    } catch (err) {
-      json = {};
-    }
-    return json;
-  }
-
   //
   /**
    * Filter the transactions based on the CategoryFilter
@@ -993,8 +978,7 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   returnAllFilters(inTransactions) {
-    if (!inTransactions || !inTransactions.length)
-    {
+    if (!inTransactions || !inTransactions.length) {
       return inTransactions;
     }
     let tempTrans = inTransactions;
@@ -1093,7 +1077,7 @@ class Transactions extends Component {
     }
     const formatedData = this.returnAllFilters([...this.props.walletitems]);
     let txCounter = 0; // This is just to list out the transactions in order this is not apart of a transaction.
-    
+
     return formatedData.map(ele => {
       txCounter++;
       let isPending = '';
@@ -1115,7 +1099,7 @@ class Transactions extends Component {
   /**
    * Returns the columns and their rules/formats for the Table
    *
-   * @returns {[*]} The columns for the table 
+   * @returns {[*]} The columns for the table
    * @memberof Transactions
    */
   returnTableColumns() {
@@ -1159,14 +1143,14 @@ class Transactions extends Component {
           return <Text id="transactions.Sent" />;
         } else if (q.value === 'credit' || q.value === 'receive') {
           return <Text id="transactions.Receive" />;
-        } else if (q.value === 'genesis'){
+        } else if (q.value === 'genesis') {
           return <Text id="transactions.Genesis" />;
-        } else if (q.value === 'trust'){
+        } else if (q.value === 'trust') {
           return <Text id="transactions.Trust" />;
-        } else if (q.value.endsWith('(Pending)')){
+        } else if (q.value.endsWith('(Pending)')) {
           return <Text id="transactions.Pending" />;
-        } else{
-          return <Text id="transactions.UnknownCategory"/>;
+        } else {
+          return <Text id="transactions.UnknownCategory" />;
         }
       },
       Header: <Text id="transactions.Category" />,
@@ -1194,7 +1178,6 @@ class Transactions extends Component {
     return tempColumns;
   }
 
-  
   /**
    * Returns formated data for the Victory Chart
    *
@@ -1239,7 +1222,7 @@ class Transactions extends Component {
    * Returns the Correct color based on the category
    *
    * @param {*} inData A given transaction
-   * @returns A color in string HEX format 
+   * @returns A color in string HEX format
    * @memberof Transactions
    */
   returnCorrectStokeColor(inData) {
@@ -1273,13 +1256,13 @@ class Transactions extends Component {
 
     if (inData.category == 'credit' || inData.category === 'receive') {
       inData.category = translate('transactions.Receive', locale);
-    } else if (inData.category == 'debit'|| inData.category === 'send') {
+    } else if (inData.category == 'debit' || inData.category === 'send') {
       inData.category = translate('transactions.Sent', locale);
-    }else if (inData.category == 'genesis') {
+    } else if (inData.category == 'genesis') {
       inData.category = translate('transactions.Genesis', locale);
-    }else if (inData.category == 'trust') {
+    } else if (inData.category == 'trust') {
       inData.category = translate('transactions.Trust', locale);
-    }else{
+    } else {
       inData.category = translate('transactions.UnknownCategory', locale);
     }
     return (
@@ -1398,7 +1381,6 @@ class Transactions extends Component {
     return tempurl;
   }
 
-
   /**
    * Build a object from incoming data then dispatch that to redux to populate that transaction
    *
@@ -1418,7 +1400,6 @@ class Transactions extends Component {
     this.props.UpdateCoinValueOnTransaction(dataToChange);
   }
 
-
   /**
    * Build a object from incoming data then dispatch that to redux to populate that transaction
    *
@@ -1428,7 +1409,6 @@ class Transactions extends Component {
   setFeeValuesOnTransaction(incomingChangeData) {
     this.props.UpdateFeeOnTransaction(incomingChangeData);
   }
-
 
   /**
    * Download both USD and BTC history on the incoming transaction
@@ -1597,7 +1577,6 @@ class Transactions extends Component {
     }
   }
 
-  
   /**
    * Compares a Data to a from Data and a To Data and returns a Bool
    *

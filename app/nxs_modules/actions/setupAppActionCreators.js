@@ -99,20 +99,6 @@ export const SetPortIsAvailable = isAvailable => ({
   payload: isAvailable,
 });
 
-export const LoadAddressBook = () => {
-  let json = null;
-  if (config.Exists('addressbook.json')) {
-    json = config.ReadJson('addressbook.json');
-  } else {
-    json = {
-      addressbook: [],
-    };
-    config.WriteJson('addressbook.json', json);
-  }
-
-  return { type: TYPE.LOAD_ADDRESS_BOOK, payload: json.addressbook };
-};
-
 export const AddRPCCall = returnCall => ({
   type: TYPE.ADD_RPC_CALL,
   payload: returnCall,

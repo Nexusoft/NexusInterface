@@ -90,8 +90,6 @@ const ModalComponent = styled.div(
 );
 
 const ModalHeader = styled.div(({ theme }) => ({
-  borderTopLeftRadius: modalBorderRadius,
-  borderTopRightRadius: modalBorderRadius,
   padding: '20px 0',
   margin: '0 50px',
   borderBottom: `2px solid ${theme.primary}`,
