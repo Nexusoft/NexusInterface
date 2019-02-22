@@ -64,7 +64,7 @@ class SearchBox extends Component {
  * @extends {Component}
  */
 @connect(state => ({
-  addressBook: state.addressbook.addressbook,
+  addressBook: state.addressBook,
   connections: state.overview.connections,
 }))
 class PanelControls extends Component {
@@ -86,45 +86,24 @@ class PanelControls extends Component {
       'Notes', //d
     ];
     rows.push(NameEntry); //how we get our header line
-    this.props.addressBook.map(e => {
+    Object.values(this.props.addressBook).map(e => {
       let tempentry = [];
       tempentry.push(e.name);
       tempentry.push(e.phoneNumber);
 
-      tempentry.push(e.timezone);
+      tempentry.push(e.timeZone);
       tempentry.push(e.notes);
       // rows.push(tempentry); // moving down.
-      let tempMine = [];
+      let tempAddresses = [];
 
-      let tempNotMine = [];
-      if (e.mine.length > 0) {
-        e.mine.map(add => {
-          let label = '';
-          if (add.label === 'My Address for ') {
-            label = add.label + e.name;
-          } else {
-            label = add.label;
-          }
-          tempMine.push([label, add.address]);
+      if (e.addresses.length > 0) {
+        e.addresses.map(add => {
+          const label =
+            add.label ||
+            (add.isMine ? 'My Address for ' + e.name : e.name + "'s Address");
+          tempAddresses.push([label, add.address]);
         });
-        // rows.push(["", `My addresses for ${e.name}`, "", "", ""]);
-        // rows.push(tempMine);
-        tempentry.push(tempMine);
-      }
-      if (e.notMine.length > 0) {
-        e.notMine.map(add => {
-          let label = '';
-
-          if (add.label === "'s Address") {
-            label = e.name + add.label;
-          } else {
-            label = add.label;
-          }
-          tempNotMine.push([label, add.address]);
-        });
-        // rows.push(["", `${e.name}'s addresses`, "", "", ""]);
-        // rows.push(tempNotMine);
-        tempentry.push(tempNotMine);
+        tempentry.push(tempAddresses);
       }
       rows.push(tempentry);
     });

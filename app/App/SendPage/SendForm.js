@@ -39,7 +39,8 @@ const SendFormButtons = styled.div({
 });
 
 const mapStateToProps = ({
-  addressbook: { myAccounts, addressbook },
+  addressBook,
+  myAccounts,
   settings: { minConfirmations },
   common: { encrypted, loggedIn },
   form,
@@ -48,7 +49,7 @@ const mapStateToProps = ({
   encrypted,
   loggedIn,
   accountOptions: getAccountOptions(myAccounts),
-  addressNameMap: getAddressNameMap(addressbook),
+  addressNameMap: getAddressNameMap(addressBook),
   fieldNames: getRegisteredFieldNames(
     form.sendNXS && form.sendNXS.registeredFields
   ),

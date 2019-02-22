@@ -111,13 +111,13 @@ const getLocalTime = tz => {
  */
 @connect(
   ({
-    addressbook: { addressbook },
+    addressBook,
     ui: {
       addressBook: { selectedContactName },
     },
     overview: { connections },
   }) => ({
-    contact: addressbook[selectedContactName] || null,
+    contact: addressBook[selectedContactName] || null,
     connections,
   }),
   { deleteContact }
@@ -165,8 +165,8 @@ class ContactDetails extends React.Component {
     const { contact, connections } = this.props;
     if (!contact) return null;
 
-    const tz = contact.timezone
-      ? timeZones.find(t => t.value === contact.timezone)
+    const tz = contact.timeZone
+      ? timeZones.find(t => t.value === contact.timeZone)
       : null;
 
     return (

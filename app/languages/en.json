@@ -241,6 +241,7 @@
   "Settings.SetFee": "Set Transaction Fee?",
   "Settings.Yes": "Yes",
   "Settings.No": "No",
+  "Settings.OverviewDisplay": "Overview Display",
   "Settings.MinimizeTray": "Minimize to tray",
   "Settings.MinimizeClose": "Minimize on close",
   "Settings.InformationPop": "Information Popups",
@@ -425,6 +426,7 @@
   "Footer.Transactions": "Transactions",
   "Footer.MarketData": "Market Data",
   "Footer.AddressBook": "Address Book",
+  "Footer.Address": "Address",
   "Footer.Settings": "Settings",
   "Footer.Console": "Console",
   "Footer.Exchange": "Exchange",
@@ -540,6 +542,7 @@
   "Lang.German": "German",
   "Lang.Japanese": "Japanese",
   "Lang.French": "French",
+  "Lang.Dutch": "Dutch",
 
   "Common.UnknownError": "An unknown error occurred"
 }

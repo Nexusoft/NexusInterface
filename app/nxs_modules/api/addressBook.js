@@ -1,5 +1,5 @@
+import Ajv from 'ajv';
 import config from 'api/configuration';
-import { emailRegex } from 'utils/form';
 
 const fileName = 'addressbook.json';
 
@@ -7,8 +7,9 @@ const fileName = 'addressbook.json';
  * Convert the old addressbook.json schema
  * =============================================================================
  */
-function convertOldAddressBook(addressbook) {
-  return addressbook.reduce(
+function convertOldAddressBook(addressBook) {
+  if (!Array.isArray(addressBook)) return [];
+  return addressBook.reduce(
     (obj, contact) => ({
       ...obj,
       [contact.name]: contact && convertOldContact(contact),
@@ -28,15 +29,15 @@ function convertOldContact({
   return {
     name,
     addresses: [
-      ...notMine.map(
+      ...(notMine || []).map(
         info => info && convertOldAddressInfo({ ...info, isMine: false })
       ),
-      ...mine.map(
+      ...(mine || []).map(
         info => info && convertOldAddressInfo({ ...info, isMine: true })
       ),
     ],
     phoneNumber,
-    timeZone: timezone,
+    timeZone: parseInt(timezone),
     notes,
   };
 }
@@ -51,124 +52,71 @@ function convertOldAddressInfo({ label, address, isMine }) {
 }
 
 /**
- * Validate Address Book
- * =============================================================================
- */
-function validateAddressBook(addressBook) {
-  if (!addressBook || typeof addressBook !== 'object') {
-    console.error('Invalid AddressBook: ', addressBook);
-    return {};
-  }
-
-  const validAddressBook = Object.entries(addressBook)
-    .map(validateEntry)
-    .filter(e => e)
-    .reduce((obj, contact) => ({ ...obj, [contact.name]: contact }), {});
-
-  return validAddressBook;
-}
-
-function validateEntry([entryName, contact]) {
-  if (!entryName || typeof entryName !== 'string' || !entryName.trim()) {
-    console.error('Invalid AddressBook entry name: ', entryName);
-    return;
-  }
-  if (!contact || typeof contact !== 'object') {
-    console.error('Invalid AddressBook contact: ', contact);
-    return;
-  }
-
-  let { name, addresses, email, phoneNumber, timeZone, notes } = contact;
-  if (name !== entryName) {
-    console.error('AddressBook name mismatch: ', name, entryName);
-    return;
-  }
-  if (!addresses || !Array.isArray(addresses) || addresses.length === 0) {
-    console.error('Invalid AddressBook addresses: ', addresses);
-    return;
-  }
-  const validAddresses = addresses.map(validateAddressInfo).filter(a => a);
-  if (validAddresses.length === 0) {
-    return;
-  }
-
-  const validContact = { name, addresses: validAddresses };
-  if (email) {
-    if (typeof email !== 'string' || !emailRegex.test(email)) {
-      console.error('Invalid email: ', email);
-    } else {
-      validContact.email = email;
-    }
-  }
-
-  if (phoneNumber) {
-    if (typeof phoneNumber !== 'string') {
-      console.error('Invalid phone number: ', phoneNumber);
-    } else {
-      validContact.phoneNumber = phoneNumber;
-    }
-  }
-
-  if (timeZone) {
-    if (typeof timeZone !== 'string' || Number.isNaN(parseInt(timeZone))) {
-      console.error('Invalid time zone: ', timeZone);
-    } else {
-      validContact.timeZone = timeZone;
-    }
-  }
-
-  if (notes) {
-    if (typeof notes !== 'string') {
-      console.error('Invalid notes: ', notes);
-    } else {
-      validContact.notes = notes;
-    }
-  }
-
-  return validContact;
-}
-
-function validateAddressInfo(addressInfo) {
-  if (!addressInfo || typeof addressInfo !== 'object') {
-    console.error('Invalid address info: ', addressInfo);
-    return;
-  }
-
-  const { address, label, isMine } = addressInfo;
-  if (!address || typeof address !== 'string' || !address.trim()) {
-    console.error('Invalid address: ', address);
-    return;
-  }
-
-  const validAddressInfo = { address, isMine: !!isMine };
-  if (label) {
-    if (typeof label !== 'string') {
-      console.error('Invalid label: ', label);
-    } else {
-      validAddressInfo.label = label;
-    }
-  }
-
-  return validAddressInfo;
-}
-
-/**
  * Public API
  * =============================================================================
  */
 export function LoadAddressBook() {
+  const schema = {
+    patternProperties: {
+      '^.+$': {
+        required: ['name', 'addresses'],
+        properties: {
+          name: { type: 'string' },
+          addresses: {
+            type: 'array',
+            items: {
+              required: ['address', 'isMine'],
+              properties: {
+                address: {
+                  type: 'string',
+                  minLength: 51,
+                  maxLength: 51,
+                },
+                isMine: { type: 'boolean' },
+                label: { type: 'string' },
+              },
+            },
+          },
+          email: {
+            type: 'string',
+            format: 'email',
+          },
+          phoneNumber: { type: 'string' },
+          timeZone: {
+            type: 'number',
+            minimum: -720,
+            maximum: 840,
+            multipleOf: 1,
+          },
+          notes: { type: 'string' },
+        },
+      },
+    },
+  };
+  const ajv = new Ajv();
+  const validate = ajv.compile(schema);
+
   if (config.Exists(fileName)) {
     const json = config.ReadJson(fileName);
+    let addressBook, valid;
     // `addressbook` (all lowercase) signals the old schema
     // New schema uses camel case `addressBook`
-    if (json.addressbook) {
-      const addressBook = validateAddressBook(
-        convertOldAddressBook(json.addressbook)
-      );
-      SaveAddressBook(addressBook);
+    if (json && json.addressbook) {
+      addressBook = convertOldAddressBook(json.addressbook);
+      valid = validate(addressBook);
+      if (valid) SaveAddressBook(addressBook);
+    } else {
+      addressBook = json.addressBook;
+      valid = validate(addressBook);
+    }
+
+    if (valid) {
       return addressBook;
     } else {
-      return validateAddressBook(json.addressBook);
+      console.error(
+        'Address Book validation error: ' + ajv.errorsText(validate.errors)
+      );
+      return {};
     }
   } else {
     config.WriteJson(fileName, {
