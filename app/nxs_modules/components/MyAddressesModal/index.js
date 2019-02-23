@@ -34,7 +34,7 @@ const Buttons = styled.div({
  * @extends {React.Component}
  */
 @connect(state => ({
-  myAccounts: state.addressbook.myAccounts,
+  myAccounts: state.myAccounts,
   locale: state.settings.locale,
 }))
 class MyAddressesModal extends React.Component {

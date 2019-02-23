@@ -141,24 +141,16 @@ export default class UIController extends Component {
 
   openSuccessDialog = props => this.openModal(SuccessDialog, props);
 
-  // showNotification(options: object), or
-  // showNotification(content: any, type: string)
-  showNotification = (content, type) => {
+  // showNotification(content: any, type: String), or
+  // showNotification(content: any, options: object)
+  showNotification = (content, param) => {
     const notifID = newNotifID();
-    let notif = {};
-    if (typeof content === 'string') {
-      notif = {
-        id: notifID,
-        type,
-        content,
-      };
-    } else {
-      const options = content;
-      notif = {
-        id: notifID,
-        ...options,
-      };
-    }
+    const options = typeof param === 'string' ? { type: param } : param;
+    const notif = {
+      id: notifID,
+      content,
+      ...options,
+    };
 
     this.setState({
       notifications: [notif, ...this.state.notifications],

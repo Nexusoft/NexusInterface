@@ -275,7 +275,6 @@ class Market extends Component {
    * @memberof Market
    */
   render() {
-    console.log(this);
     return (
       <Panel
         controls={

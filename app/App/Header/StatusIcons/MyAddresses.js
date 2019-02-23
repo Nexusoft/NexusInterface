@@ -7,9 +7,9 @@ import Tooltip from 'components/Tooltip';
 import userIcon from 'images/user.sprite.svg';
 import UIController from 'components/UIController';
 import StatusIcon from 'components/StatusIcon';
+import MyAddressesModal from 'components/MyAddressesModal';
 import { timing } from 'styles';
 import { color } from 'utils';
-import MyAddressesModal from './MyAddressesModal';
 
 const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
   cursor: 'pointer',
