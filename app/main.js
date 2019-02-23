@@ -66,6 +66,9 @@ function setupTray(mainWindow) {
       label: 'Show Nexus',
       click: function() {
         mainWindow.show();
+        if (process.platform === 'darwin') {
+          app.dock.show();
+        }
       },
     },
     {
@@ -76,9 +79,6 @@ function setupTray(mainWindow) {
     },
   ]);
   tray.setContextMenu(contextMenu);
-  tray.on('double-click', () => {
-    mainWindow.show();
-  });
 
   return tray;
 }
@@ -116,8 +116,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: settings.windowWidth,
     height: settings.windowHeight,
-    minWidth: 1050,
-    minHeight: 847,
+    minWidth: 1022,
+    minHeight: 760,
     icon: iconPath,
     backgroundColor: '#232c39',
     show: false,
