@@ -5,27 +5,41 @@ import { connect } from 'react-redux';
 // Internal
 import Text from 'components/Text';
 import WaitingMessage from 'components/WaitingMessage';
+import { switchSettingsTab } from 'actions/uiActionCreators';
 import Login from './Login';
 import Encrypted from './Encrypted';
 import Unencrypted from './Unencrypted';
 
 /**
- * Security Page on Settings Page
+ * SettingsSecurity Page on Settings Page
  *
- * @class Security
+ * @class SettingsSecurity
  * @extends {React.Component}
  */
-@connect(({ common: { encrypted, loggedIn }, overview: { connections } }) => ({
-  encrypted,
-  loggedIn,
-  connections,
-}))
-class Security extends React.Component {
+@connect(
+  ({ common: { encrypted, loggedIn }, overview: { connections } }) => ({
+    encrypted,
+    loggedIn,
+    connections,
+  }),
+  { switchSettingsTab }
+)
+class SettingsSecurity extends React.Component {
+  /**
+   *Creates an instance of SettingsSecurity.
+   * @param {*} props
+   * @memberof SettingsSecurity
+   */
+  constructor(props) {
+    super(props);
+    props.switchSettingsTab('Security');
+  }
+
   /**
    * React Render
    *
    * @returns
-   * @memberof Security
+   * @memberof SettingsSecurity
    */
   render() {
     const { loggedIn, encrypted, connections } = this.props;
@@ -49,4 +63,4 @@ class Security extends React.Component {
     }
   }
 }
-export default Security;
+export default SettingsSecurity;

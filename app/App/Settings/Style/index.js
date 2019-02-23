@@ -10,6 +10,7 @@ import https from 'https';
 import googleanalytics from 'scripts/googleanalytics';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { updateTheme, resetColors } from 'actions/themeActionCreators';
+import { switchSettingsTab } from 'actions/uiActionCreators';
 import Text, { translate } from 'components/Text';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -55,6 +56,7 @@ const mapDispatchToProps = dispatch => ({
   },
   updateTheme: updates => dispatch(updateTheme(updates)),
   resetColors: () => dispatch(resetColors()),
+  switchSettingsTab: tab => dispatch(switchSettingsTab(tab)),
 });
 
 const addressStyleOptions = [
@@ -82,6 +84,16 @@ const AddressStyleNote = styled.div(({ theme }) => ({
   mapDispatchToProps
 )
 class SettingsStyle extends Component {
+  /**
+   *Creates an instance of SettingsStyle.
+   * @param {*} props
+   * @memberof SettingsStyle
+   */
+  constructor(props) {
+    super(props);
+    props.switchSettingsTab('Style');
+  }
+
   state = {
     previousCustom: {},
     DarkTheme: DarkTheme,
