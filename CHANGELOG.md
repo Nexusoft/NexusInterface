@@ -12,6 +12,7 @@
 - Market Data tooltips now with shift left or right inorder for them to display center to the graph
 - Transaction Chart in Transaction page now responds to Theme
 - Transaction Graph now responds to Theme, transaction bar colors remain fixed. 
+- On the send page the `X` to remove recipients from a send many now displays at all time
 
 #### Fixes
 - Closing the app while in Manual mode no longer tries to stop the manual Daemon
