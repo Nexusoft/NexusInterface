@@ -117,7 +117,7 @@ function createWindow() {
     width: settings.windowWidth,
     height: settings.windowHeight,
     minWidth: 1022,
-    minHeight: 618,
+    minHeight: 760,
     icon: iconPath,
     backgroundColor: '#232c39',
     show: false,
