@@ -39,7 +39,8 @@ const SendFormButtons = styled.div({
 });
 
 const mapStateToProps = ({
-  addressbook: { myAccounts, addressbook },
+  addressBook,
+  myAccounts,
   settings: { minConfirmations },
   common: { encrypted, loggedIn },
   form,
@@ -48,7 +49,7 @@ const mapStateToProps = ({
   encrypted,
   loggedIn,
   accountOptions: getAccountOptions(myAccounts),
-  addressNameMap: getAddressNameMap(addressbook),
+  addressNameMap: getAddressNameMap(addressBook),
   fieldNames: getRegisteredFieldNames(
     form.sendNXS && form.sendNXS.registeredFields
   ),
@@ -116,34 +117,32 @@ const mapDispatchToProps = dispatch => ({
 
     return errors;
   },
-  asyncBlurFields: ['recipients'],
+  asyncBlurFields: ['recipients[].address'],
   asyncValidate: async ({ recipients }) => {
-    if (recipients && recipients.length) {
-      const recipientsErrors = [];
-      await recipients.map(({ address }, i) =>
-        (async () => {
-          try {
-            const result = await RPC.PROMISE('validateaddress', [address]);
+    const recipientsErrors = [];
+    await Promise.all(
+      recipients.map(({ address }, i) =>
+        RPC.PROMISE('validateaddress', [address])
+          .then(result => {
             if (!result.isvalid) {
               recipientsErrors[i] = {
                 address: <Text id="Alert.InvalidAddress" />,
               };
-            }
-            if (result.ismine) {
+            } else if (result.ismine) {
               recipientsErrors[i] = {
                 address: <Text id="Alert.registeredToThis" />,
               };
             }
-          } catch (err) {
+          })
+          .catch(err => {
             recipientsErrors[i] = {
               address: <Text id="Alert.InvalidAddress" />,
             };
-          }
-        })()
-      );
-      if (recipientsErrors.length) {
-        throw { recipients: recipientsErrors };
-      }
+          })
+      )
+    );
+    if (recipientsErrors.length) {
+      throw { recipients: recipientsErrors };
     }
     return null;
   },

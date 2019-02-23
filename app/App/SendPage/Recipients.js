@@ -19,14 +19,14 @@ const RemoveButton = styled.div(({ theme }) => ({
   left: 3,
   bottom: 8,
   cursor: 'pointer',
-  width: '1.2em',
-  height: '1.2em',
-  fontSize: '.8em',
+  width: '1.5em',
+  height: '1.5em',
+  fontSize: '1em',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   color: theme.mixer(0.75),
-  opacity: 0,
+  opacity: 1,
   transition: `color ${timing.normal}, opacity ${timing.normal}`,
   '&:hover': {
     color: theme.mixer(0.875),
@@ -40,11 +40,6 @@ const Recipient = styled.div({
   padding: '0 30px',
   position: 'relative',
 
-  '&:hover': {
-    [RemoveButton]: {
-      opacity: 1,
-    },
-  },
 });
 
 const AddressWrapper = styled.div({

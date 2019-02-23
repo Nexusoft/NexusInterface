@@ -1,4 +1,4 @@
-import { css, keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/core';
 import { color } from 'utils';
 
 const defaultColors = {

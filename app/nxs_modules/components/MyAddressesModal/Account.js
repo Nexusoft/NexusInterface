@@ -4,8 +4,8 @@ import styled from '@emotion/styled';
 
 // Internal
 import Highlight from 'components/Highlight';
+import NexusAddress from 'components/NexusAddress';
 import { highlightMatchingText } from 'utils';
-import Address from './Address';
 
 const AccountComponent = styled.div(({ theme }) => ({
   padding: '1em 0',
@@ -16,16 +16,20 @@ const AccountName = styled.span({
   fontWeight: 'bold',
 });
 
-const Account = ({ account: { account, addresses = [] }, searchQuery }) => (
+const Account = ({
+  account: { account, balance, addresses = [] },
+  searchQuery,
+}) => (
   <AccountComponent>
     <div>
       Account{' '}
       <AccountName>
         {highlightMatchingText(account, searchQuery, Highlight)}
-      </AccountName>
+      </AccountName>{' '}
+      ({balance} NXS)
     </div>
     {addresses.map(addr => (
-      <Address key={addr} address={addr} />
+      <NexusAddress key={addr} address={addr} />
     ))}
   </AccountComponent>
 );

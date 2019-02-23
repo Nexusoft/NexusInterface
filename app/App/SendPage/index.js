@@ -59,7 +59,7 @@ class SendPage extends Component {
   }
 
   /**
-   * Opens the Move NXS between account modal  
+   * Opens the Move NXS between account modal
    *
    * @memberof SendPage
    */
@@ -95,7 +95,7 @@ class SendPage extends Component {
           )
         }
       >
-        {!this.props.isInSync || this.props.connections === undefined ? (
+        {!true || this.props.connections === undefined ? (
           <WaitingMessage>
             <Text id="TrustList.SyncMsg" />
             ...

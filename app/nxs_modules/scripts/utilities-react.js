@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
-import 'react-table/react-table.css';
+import '../../CSS/controls/react-table.css'
 import Text from 'components/Text';
 
+/**
+ * Table for the transaction page
+ *
+ * @export Table Returns Table Component
+ * @class Table
+ * @extends {Component}
+ */
 export default class Table extends Component {
   constructor(props) {
     super(props);
@@ -16,19 +23,13 @@ export default class Table extends Component {
     };
   }
 
-  ReturnTableRows() {
-    let rows = [];
-    for (let index = 0; index < 5; index++) {
-      rows.push(
-        <tr key={index} id={'row' + index}>
-          <td key={'item1-' + index}>{'ROW ' + index}</td>
-          <td key={'item2-' + index}>{'ROW ' + index}</td>
-        </tr>
-      );
-    }
-    return rows;
-  }
 
+  /**
+   * React Render Function
+   *
+   * @returns JSX
+   * @memberof Table
+   */
   render() {
     const data = this.props.data;
     const columns = this.props.columns;
@@ -42,13 +43,13 @@ export default class Table extends Component {
         },
       ];
     }
-
     return (
       <Text id="transactions.Rows">
         {R => (
           <ReactTable
+            className = '-striped -highlight'
             noDataText={<Text id="transactions.NoRowsFound" />}
-            key="table-child"
+            key='ReactTable'
             data={data}
             pageText={<Text id="transactions.Page" />}
             columns={columns}
@@ -79,36 +80,14 @@ export default class Table extends Component {
                 onMouseOut: e => {
                   this.props.onMouseOutCallback(e);
                 },
-                // style: {
-                //     background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
-                //     color: rowInfo.index === this.state.selected ? 'white' : 'black'
-                // }
               };
             }}
             style={{
-              height: '400px',
+              height: '400px','--colorPrimary':this.props.style.background, '--colorAccent': this.props.style.primary, '--colorSecondary' : this.props.style.foreground,
             }}
           />
         )}
       </Text>
     );
-
-    /*
-        return(
-            <div id="table-div">
-                <table id="table" className='table'>
-                    <thread>
-                        <tr>
-                         <th key={"COL1"}>{"ONE"}</th>
-                         <th key={"COL2"}>{"TWO"}</th>
-                       </tr>
-                    </thread>
-                    <tbody>
-                        {this.ReturnTableRows()}
-                    </tbody>
-                </table>
-            </div>
-        );
-        */
   }
 }
