@@ -7,6 +7,9 @@
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+  --colorPrimary: pink;
+  --colorSecondary: white;
+  --colorAccent: white;
 }
 
 .ReactTable * {
@@ -32,7 +35,7 @@
   overflow: auto;
 
   /* custom styles */
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--colorPrimary);
   border-radius: .125em;
 }
 
@@ -88,22 +91,22 @@
 .ReactTable .rt-thead .rt-td {
   line-height: normal;
   position: relative;
-  background-color: var(--border-color);
+  background-color: var(--colorPrimary);
 
   padding-top: calc(var(--line-height) * var(--table-padded-padding-vertical));
   padding-bottom: calc(var(--line-height) * var(--table-padded-padding-vertical));
   padding-left: calc(var(--line-height) * var(--table-padded-padding-horizontal));
   padding-right: calc(var(--line-height) * var(--table-padded-padding-horizontal));
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--colorPrimary);
 }
 
 .ReactTable .rt-thead .rt-th.-sort-asc,
 .ReactTable .rt-thead .rt-td.-sort-asc {
-  box-shadow: inset 0 3px 0 0 var(--color-2);
+  box-shadow: inset 0 3px 0 0 var(--colorAccent);
 }
 .ReactTable .rt-thead .rt-th.-sort-desc,
 .ReactTable .rt-thead .rt-td.-sort-desc {
-  box-shadow: inset 0 -3px 0 0 var(--color-2);
+  box-shadow: inset 0 -3px 0 0 var(--colorAccent);
 }
 
 .ReactTable .rt-thead .rt-th.-cursor-pointer,
@@ -147,14 +150,14 @@
 }
 
 .ReactTable .rt-thead .rt-header-pivot:after {
-  border-color: rgba(255, 255, 255, 0);
+  border-color: rgba(243, 170, 170, 0.342);
   border-left-color: #fff;
   border-width: 8px;
   margin-top: -8px;
 }
 
 .ReactTable .rt-thead .rt-header-pivot:before {
-  border-color: rgba(102, 102, 102, 0);
+  border-color: rgba(255, 175, 175, 0.65);
   border-left-color: #f7f7f7;
   border-width: 10px;
   margin-top: -10px;
@@ -175,7 +178,7 @@
 }
 
 .ReactTable .rt-tbody .rt-tr-group {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--colorPrimary);
 }
 
 .ReactTable .rt-tbody .rt-tr-group:last-child {
@@ -187,7 +190,7 @@
   padding-bottom: calc(var(--line-height) * var(--table-padded-padding-vertical));
   padding-left: calc(var(--line-height) * var(--table-padded-padding-horizontal));
   padding-right: calc(var(--line-height) * var(--table-padded-padding-horizontal));
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--colorPrimary);
 }
 
 .ReactTable .rt-tbody .rt-td:first-child {
@@ -309,10 +312,10 @@
   border-right: 0;
 }
 .ReactTable.-striped .rt-tr.-odd {
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.1);
 }
 .ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
 .ReactTable .-pagination {
   z-index: 1;
@@ -334,13 +337,32 @@
 }
 .ReactTable .-pagination input,
 .ReactTable .-pagination select {
-  /* border: 1px solid rgba(0, 0, 0, 0.1);
-  background: #fff;
+   border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0);
   padding: 5px 7px;
   font-size: inherit;
+  color: var(--colorSecondary);
   border-radius: 3px;
   font-weight: normal;
-  outline: none; */
+  outline: none; 
+  
+}
+
+.ReactTable .-pagination span::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 4px;
+  height: 2px;
+  width: 100px;
+  background: var(--colorPrimary);
+}
+.ReactTable .-pagination option {
+ background: var(--colorPrimary);
+ background-blend-mode: difference;
+ filter: invert(1);
+ font-weight: normal;
+ outline: none; 
 }
 .ReactTable .-pagination .-btn {
   -webkit-appearance: none;
@@ -354,17 +376,18 @@
   padding: 6px;
   font-size: 1em;
   color: var(--color-5);
-  background: rgba(0, 0, 0, 0.1);
+  background:  rgba(255, 255, 255, 0.1);
   transition: all 0.1s ease;
   cursor: pointer;
   outline: none;
 }
 .ReactTable .-pagination .-btn[disabled] {
   opacity: 0.5;
+  background:  rgba(0, 0, 0, 0.1);
   cursor: default;
 }
 .ReactTable .-pagination .-btn:not([disabled]):hover {
-  background: rgba(0, 0, 0, 0.3);
+  background:  rgba(255, 255, 255, 0.2);
   color: #fff;
 }
 .ReactTable .-pagination .-previous,
@@ -409,6 +432,8 @@
 }
 .ReactTable .-pagination .-pageSizeOptions {
   margin: 3px 10px;
+  color: var(--colorPrimary);
+  background: rgba(0, 0, 0, 0.02)
 }
 .ReactTable .rt-noData {
   display: block;

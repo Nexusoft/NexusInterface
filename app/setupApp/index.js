@@ -69,7 +69,6 @@ export default function setupApp(store, history) {
       UIController.openModal(ClosingModal);
 
       if (manualDaemon) {
-        await RPC.PROMISE('stop', []);
         remote.app.exit();
       } else {
         await core.stop();
