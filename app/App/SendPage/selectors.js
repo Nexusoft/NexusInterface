@@ -27,8 +27,8 @@ export const getAddressNameMap = memoize(addressBook => {
   if (addressBook) {
     Object.values(addressBook).forEach(contact => {
       if (contact.addresses) {
-        contact.addresses.forEach(({ address }) => {
-          map[address] = contact.name;
+        contact.addresses.forEach(({ address, label }) => {
+          map[address] = contact.name + (label ? ' - ' + label : '');
         });
       }
     });
@@ -53,7 +53,7 @@ export const getRecipientSuggestions = memoize(addressBook => {
               display: (
                 <span>
                   {contact.name}
-                  {label ? ` - ${label}` : ''} <Address>{address}</Address>
+                  {label ? ' - ' + label : ''} <Address>{address}</Address>
                 </span>
               ),
             });
