@@ -14,3 +14,8 @@ export const switchSettingsTab = tab => ({
   type: TYPE.SWITCH_SETTINGS_TAB,
   payload: tab,
 });
+
+export const switchConsoleTab = tab => ({
+  type: TYPE.SWITCH_CONSOLE_TAB,
+  payload: tab,
+});
