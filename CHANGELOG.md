@@ -6,10 +6,10 @@
 - New setting to set Nexus address format
 
 #### Adjustments
-- Language Improvments
+- Language Improvements
 - Nexus Data and App folder now will be marked with `Beta` instead of the version number so users do not need to rebootstrap or lose settings
-- Removed unused packages from dependecy list
-- Market Data tooltips now with shift left or right inorder for them to display center to the graph
+- Removed unused packages from dependency list
+- Market Data tooltips now with shift left or right in order for them to display center to the graph
 - Transaction Chart in Transaction page now responds to Theme
 - Transaction Graph now responds to Theme, transaction bar colors remain fixed. 
 - On the send page the `X` to remove recipients from a send many now displays at all time
