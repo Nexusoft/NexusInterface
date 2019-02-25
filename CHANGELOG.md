@@ -1,5 +1,5 @@
 # 0.8.9 (2019.2.XX)
-[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)
 #### Additions
 - 
 
@@ -9,8 +9,8 @@
 #### Fixes
 - Fixed Issue with auto updates, The app will now look for updates and ask the user if they want to upgrade
 
-# 0.8.8 (2019.2.XX)
-[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.8)
+# 0.8.8 (2019.2.22)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.8)
 #### Additions
 - Added Dutch/Nederlands Language
 - Brand new Address Book interface\
@@ -30,7 +30,7 @@
 - Dock now properly hides and shows on Mac OSX if minimize on close is active
 
 # 0.8.7 (2019.2.15)
-[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.7)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.7)
 #### Additions
 - There are now additional display options for the overview page, see Settings/App
 
@@ -53,7 +53,7 @@
 
 
 # 0.8.6 (2019.2.1)
-[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.6)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.6)
 #### Additions
 - Theme file now accepts a URL and will auto download and store in App Data
 - Theme is now in its own file named Theme.json
@@ -65,7 +65,7 @@
 
 
 # 0.8.5 (2019.1.18)
-[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.5)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.5)
 #### Additions
 - New Css and layout all over the app
 - Includes new 2.5.5 backend
