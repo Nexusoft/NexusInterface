@@ -1350,7 +1350,7 @@ class Transactions extends Component {
         (process.platform == 'darwin'
           ? electronapp.getPath('appData')
           : process.env.HOME);
-      appdataloc = appdataloc + `/Nexus_Wallet_BETA_v${APP_VERSION}/`;
+      appdataloc = appdataloc + `/Nexus_Wallet_BETA/`;
       let incominghistoryfile = JSON.parse(
         fs.readFileSync(appdataloc + 'historydata.json', 'utf8')
       );
@@ -1522,7 +1522,7 @@ class Transactions extends Component {
       (process.platform == 'darwin'
         ? electronapp.getPath('appData')
         : process.env.HOME);
-    appdataloc = appdataloc + `/Nexus_Wallet_BETA_v${APP_VERSION}/`;
+    appdataloc = appdataloc + `/Nexus_Wallet_BETA/`;
 
     fs.writeFile(
       appdataloc + 'historydata.json',

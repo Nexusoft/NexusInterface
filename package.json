@@ -1,6 +1,6 @@
 {
   "name": "nexus_wallet",
-  "productName": "Nexus_Wallet_BETA_v0.8.8",
+  "productName": "Nexus_Wallet_BETA",
   "version": "0.8.8",
   "buildDate": "Febuary 22nd 2019",
   "description": "Nexus",
@@ -65,7 +65,8 @@
     "publish": {
       "provider": "github",
       "owner": "Nexusoft",
-      "repo": "NexusInterface"
+      "repo": "NexusInterface",
+      "vPrefixedTagName": false
     },
     "mac": {
       "target": [
@@ -75,7 +76,7 @@
       "category": "public.app-category.utilities"
     },
     "dmg": {
-      "artifactName": "nexus_wallet-${version}.${ext}",
+      "artifactName": "nexus_wallet-MacOSX-${version}.${ext}",
       "background": "resources/background.jpg",
       "contents": [
         {
@@ -104,7 +105,7 @@
       "installerSidebar": "resources/installerSidebar.bmp",
       "license": "resources/license.txt",
       "shortcutName": "Nexus Wallet Beta",
-      "artifactName": "nexus_wallet-setup-${version}.${ext}"
+      "artifactName": "nexus_wallet-setup-Win-${version}.${ext}"
     },
     "linux": {
       "target": [
@@ -113,10 +114,10 @@
       ]
     },
     "deb": {
-      "artifactName": "nexus_wallet-${version}.${ext}"
+      "artifactName": "nexus_wallet-Linux-${version}.${ext}"
     },
     "appImage": {
-      "artifactName": "nexus_wallet-${version}.${ext}"
+      "artifactName": "nexus_wallet-Linux-${version}.${ext}"
     },
     "directories": {
       "buildResources": "resources",
@@ -125,7 +126,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Nexusoft/Nexus-Interface-React.git"
+    "url": "git+https://github.com/Nexusoft/NexusInterface.git"
   },
   "author": {
     "name": "The Nexus Embassy",
@@ -134,7 +135,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Nexusoft/Nexus-Interface-React/issues"
+    "url": "https://github.com/Nexusoft/NexusInterface/issues"
   },
   "keywords": [
     "electron",
@@ -143,7 +144,7 @@
     "sass",
     "webpack"
   ],
-  "homepage": "https://github.com/Nexusoft/Nexus-Interface-React/#readme",
+  "homepage": "https://github.com/Nexusoft/NexusInterface/#readme",
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
