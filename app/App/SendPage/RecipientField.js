@@ -18,12 +18,11 @@ const RecipientName = styled.span(({ theme }) => ({
 const filterRecipients = memoize((suggestions, inputValue) => {
   if (!suggestions) return [];
   const query = inputValue || '';
-  return suggestions.filter(({ value, name }) => {
-    return (
+  return suggestions.filter(
+    ({ value, name }) =>
       value === query ||
       (!!name && name.toLowerCase().includes(query.toLowerCase()))
-    );
-  });
+  );
 });
 
 const mapStateToProps = ({ addressBook, settings: { locale } }) => ({

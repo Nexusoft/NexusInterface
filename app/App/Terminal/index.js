@@ -1,6 +1,5 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
 import { remote } from 'electron';
 import { Route, Redirect, Switch } from 'react-router';
 import styled from '@emotion/styled';
@@ -9,7 +8,6 @@ import * as TYPE from 'actions/actiontypes';
 
 // Internal Global Dependencies
 import ContextMenuBuilder from 'contextmenu';
-import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
 
@@ -33,6 +31,17 @@ const TerminalComponent = styled.div({
 const TerminalTabBar = styled(Tab.Bar)({
   flexShrink: 0,
 });
+
+let ConsoleRedirect = ({ lastActiveTab, match }) => (
+  <Redirect
+    exact
+    from={`${match.path}/`}
+    to={`${match.path}/${lastActiveTab}`}
+  />
+);
+ConsoleRedirect = connect(({ ui: { console: { lastActiveTab } } }) => ({
+  lastActiveTab,
+}))(ConsoleRedirect);
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -82,6 +91,7 @@ class Terminal extends Component {
    * @memberof Terminal
    */
   render() {
+    const { match } = this.props;
     return (
       <Panel
         icon={consoleIcon}
@@ -91,31 +101,21 @@ class Terminal extends Component {
         <TerminalComponent>
           <TerminalTabBar>
             <Tab
-              link={`${this.props.match.url}/Console`}
+              link={`${match.url}/Console`}
               icon={logoIcon}
               text={<Text id="Console.Console" />}
             />
             <Tab
-              link={`${this.props.match.url}/Core`}
+              link={`${match.url}/Core`}
               icon={coreIcon}
               text={<Text id="Console.CoreOutput" />}
             />
           </TerminalTabBar>
 
           <Switch>
-            <Redirect
-              exact
-              from={`${this.props.match.path}/`}
-              to={`${this.props.match.path}/Console`}
-            />
-            <Route
-              path={`${this.props.match.path}/Console`}
-              component={TerminalConsole}
-            />
-            <Route
-              path={`${this.props.match.path}/Core`}
-              component={TerminalCore}
-            />
+            <Route path={`${match.path}/Console`} component={TerminalConsole} />
+            <Route path={`${match.path}/Core`} component={TerminalCore} />
+            <ConsoleRedirect match={match} />
           </Switch>
         </TerminalComponent>
       </Panel>

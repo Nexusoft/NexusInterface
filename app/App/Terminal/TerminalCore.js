@@ -1,26 +1,24 @@
 // External Dependencies
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { timingSafeEqual } from 'crypto';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-import fs from 'fs';
 
 // Internal Global Dependencies
-import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
-import { Tail } from 'utils/tail';
-import configuration from 'api/configuration';
+import { switchConsoleTab } from 'actions/uiActionCreators';
 import Button from 'components/Button';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.terminal, ...state.common, settings: state.settings };
 };
-const mapDispatchToProps = dispatch => ({
-  setCoreOutputPaused: isPaused =>
-    dispatch({ type: TYPE.SET_PAUSE_CORE_OUTPUT, payload: isPaused }),
-});
+const actionCreators = {
+  switchConsoleTab,
+  setCoreOutputPaused: isPaused => ({
+    type: TYPE.SET_PAUSE_CORE_OUTPUT,
+    payload: isPaused,
+  }),
+};
 
 const TerminalContent = styled.div({
   flexGrow: 1,
@@ -41,7 +39,7 @@ const Output = styled.div(
     overflowY: 'auto',
     wordBreak: 'break-all',
     flexGrow: 1,
-    fontSize: "75%",
+    fontSize: '75%',
     display: 'flex',
     background: theme.background,
     borderBottom: `1px solid ${theme.mixer(0.125)}`,
@@ -65,22 +63,20 @@ const OutputLine = styled.code(({ theme }) => ({
 class TerminalCore extends Component {
   constructor(props) {
     super(props);
+    props.switchConsoleTab('Core');
   }
   // React Method (Life cycle hook)
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   // todo finish
-  componentWillUnmount() {
-  }
+  componentWillUnmount() {}
 
   // React Method (Life cycle hook)
   componentWillReceiveProps(nextProps) {
     if (this.props.rpcCallList.length != nextProps.rpcCallList.length) {
       this.forceUpdate();
     }
-    if (this.props.coreOutput.length != nextProps.coreOutput.length)
-    {
+    if (this.props.coreOutput.length != nextProps.coreOutput.length) {
       this.outputRef.childNodes[0].scrollTop = this.outputRef.childNodes[0].scrollHeight;
     }
   }
@@ -105,7 +101,6 @@ class TerminalCore extends Component {
     }
   }
 
-  
   // Mandatory React method
   /**
    * React Render
@@ -150,5 +145,5 @@ class TerminalCore extends Component {
 // Mandatory React-Redux method
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  actionCreators
 )(TerminalCore);
