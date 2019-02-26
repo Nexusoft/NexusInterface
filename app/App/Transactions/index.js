@@ -275,12 +275,12 @@ class Transactions extends Component {
       this.transactioncontextfunction,
       false
     );
-
+    this._Onprogress = () => {};
   setInterval(() => {
     this.setState(
       {
         CSVProgress: this.state.CSVProgress + 1,
-      }
+      }, () => {this.updateProgress();}
     )
   }, 250);
   }
@@ -736,11 +736,21 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   DownloadCSV() {
-    UIController.openModal(CSVDownloadModal,{progress: this.state.CSVProgress});
-    if (this.state.CSVProgress){
+    UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
+    if (this.state.CSVProgress >= 100){
       googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
       this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
     }
+  }
+
+  setEvents(events)
+  {
+    this._Onprogress = events.progress;
+  }
+
+  updateProgress()
+  {
+    this._Onprogress(this.state.CSVProgress);
   }
 
   /**

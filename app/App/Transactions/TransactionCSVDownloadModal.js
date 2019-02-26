@@ -30,10 +30,7 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
     borderRadius: 10,
     border: `1px solid ${theme.mixer(0.5)}`,
     overflow: 'hidden',
-    animation:
-      percentage >= 100
-        ? `pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1)`
-        : null,
+    
     '&::before': {
       content: '""',
       display: 'block',
@@ -42,7 +39,6 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
       width: '100%',
       transformOrigin: 'left center',
       transform: `scaleX(${percentage / 100})`,
-      transition: `transform ${timing.normal}`,
     },
   }));
 
@@ -53,19 +49,33 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
  * @extends {PureComponent}
  */
   class CSVDownloadModal extends PureComponent {
-     
+
+    constructor(props) {
+      super(props);
+      this.props.parent({progress: this.updateProgress.bind(this)})
+    }
+    state = {
+        processProgress: 0,
+      }
+
+    updateProgress(inNum)
+    {
+      this.setState(
+        {
+          processProgress: inNum,
+        }
+      );
+    }
 
     render() {
-        console.log(this.props);
         return(
         <CSVDownloadModalComponent
-        modalRef={this.modalRef}
         assignClose={closeModal => (this.closeModal = closeModal)}
         {...this.props}
         >
             <Modal.Body>
             <Title><Text id="Transactions.CSVDownloadModalTitle"/></Title>
-            <ProgressBar percentage={this.props.progress} />
+            <ProgressBar percentage={this.state.processProgress} />
             <Button
                 skin="danger" onClick={() => this.closeModal()}>
               <Text id="Transactions.CSVDownloadModalCancel"/>
