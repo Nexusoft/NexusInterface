@@ -44,6 +44,7 @@ import config from 'api/configuration';
 import UIController from 'components/UIController';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
+import CSVDownloadModal from './TransactionCSVDownloadModal';
 
 // Images
 import transactionIcon from 'images/transaction.sprite.svg';
@@ -206,6 +207,7 @@ class Transactions extends Component {
       highlightedBlockHash: 'Loading',
       needsHistorySave: false,
       copyBuffer: '',
+      CSVProgress: 0,
     };
   }
 
@@ -273,6 +275,14 @@ class Transactions extends Component {
       this.transactioncontextfunction,
       false
     );
+
+  setInterval(() => {
+    this.setState(
+      {
+        CSVProgress: this.state.CSVProgress + 1,
+      }
+    )
+  }, 250);
   }
 
   // React Method (Life cycle hook)
@@ -658,7 +668,6 @@ class Transactions extends Component {
     }
 
     Promise.all(promisList).then(payload => {
-      console.log(payload);
       payload.forEach(element => {
         for (let index = 0; index < element.length; index++) {
           const element2 = element[index];
@@ -727,8 +736,11 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   DownloadCSV() {
-    googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
-    this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
+    UIController.openModal(CSVDownloadModal,{progress: this.state.CSVProgress});
+    if (this.state.CSVProgress){
+      googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
+      this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
+    }
   }
 
   /**
@@ -1652,7 +1664,6 @@ class Transactions extends Component {
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
     const leftPadding =
       parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
-      console.log(this.props.theme.primary);
     return (
       <VictoryChart
         width={this.state.mainChartWidth}

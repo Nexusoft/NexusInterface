@@ -13,7 +13,7 @@
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.8)
 #### Additions
 - Added Dutch/Nederlands Language
-- Brand new Address Book interface\
+- Brand new Address Book interface
 - New setting to set Nexus address format
 
 #### Adjustments
