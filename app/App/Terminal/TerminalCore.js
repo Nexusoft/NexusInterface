@@ -75,6 +75,8 @@ const OutputLine = styled.code(({ theme }) => ({
  * @extends {Component}
  */
 class TerminalCore extends Component {
+  outputRef = React.createRef();
+
   constructor(props) {
     super(props);
     props.switchConsoleTab('Core');
@@ -86,7 +88,7 @@ class TerminalCore extends Component {
       this.forceUpdate();
     }
     if (this.props.output.length != nextProps.output.length) {
-      this.outputRef.childNodes[0].scrollTop = this.outputRef.childNodes[0].scrollHeight;
+      this.outputRef.current.childNodes[0].scrollTop = this.outputRef.current.childNodes[0].scrollHeight;
     }
   }
 
@@ -98,10 +100,10 @@ class TerminalCore extends Component {
    */
   onScrollEvent() {
     const bottomPos =
-      this.outputRef.childNodes[0].scrollHeight -
-      this.outputRef.childNodes[0].clientHeight -
+      this.outputRef.current.childNodes[0].scrollHeight -
+      this.outputRef.current.childNodes[0].clientHeight -
       2; // found a issue where the numbers would be plus or minus this do to floating point error. Just stepped back 2 it catch it.
-    const currentPos = parseInt(this.outputRef.childNodes[0].scrollTop);
+    const currentPos = parseInt(this.outputRef.current.childNodes[0].scrollTop);
     if (currentPos >= bottomPos) {
       return;
     }
@@ -127,7 +129,7 @@ class TerminalCore extends Component {
     } = this.props;
     return (
       <TerminalContent>
-        <TerminalCoreComponent ref={el => (this.outputRef = el)}>
+        <TerminalCoreComponent ref={this.outputRef}>
           {settings.manualDaemon ? (
             <div className="dim">Core in Manual Mode</div>
           ) : (
