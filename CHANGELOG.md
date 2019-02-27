@@ -8,6 +8,7 @@
 
 #### Fixes
 - Fixed Issue with auto updates, The app will now look for updates and ask the user if they want to upgrade
+- Fixed Issue with a crash using `minimalist` or `none` view
 
 # 0.8.8 (2019.2.22)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.8)
