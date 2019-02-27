@@ -9,10 +9,8 @@ import memoize from 'memoize-one';
 // Internal Global Dependencies
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
-import TextField from 'components/TextField';
 import AutoSuggest from 'components/AutoSuggest';
 import * as RPC from 'scripts/rpc';
-import * as TYPE from 'actions/actiontypes';
 import {
   switchConsoleTab,
   updateConsoleInput,
@@ -24,76 +22,47 @@ import {
   printCommandError,
   resetConsoleOutput,
 } from 'actions/uiActionCreators';
-import { consts, timing } from 'styles';
 
 const consoleInputSelector = memoize(
   (currentCommand, commandHistory, historyIndex) =>
     historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
 );
 
-const mapStateToProps = state => {
-  const {
-    ui: {
+const mapStateToProps = ({
+  ui: {
+    console: {
       console: {
-        console: {
-          currentCommand,
-          commandHistory,
-          historyIndex,
-          commandList,
-          output,
-        },
+        currentCommand,
+        commandHistory,
+        historyIndex,
+        commandList,
+        output,
       },
     },
-  } = state;
-  return {
-    ...state.terminal,
-    ...state.common,
-    ...state.overview,
-    consoleInput: consoleInputSelector(
-      currentCommand,
-      commandHistory,
-      historyIndex
-    ),
-    commandList,
-    output,
-  };
-};
-const mapDispatchToProps = dispatch => ({
-  setCommandList: commandList => dispatch(setCommandList(commandList)),
-  updateConsoleInput: value => dispatch(updateConsoleInput(value)),
-  commandHistoryUp: () => dispatch(commandHistoryUp()),
-  commandHistoryDown: () => dispatch(commandHistoryDown()),
-  executeCommand: cmd => dispatch(executeCommand(cmd)),
-  printCommandOutput: output => dispatch(printCommandOutput(output)),
-  printCommandError: msg => dispatch(printCommandError(msg)),
-  resetConsoleOutput: () => dispatch(resetConsoleOutput()),
-  printToConsole: consoleOutput =>
-    dispatch({ type: TYPE.PRINT_TO_CONSOLE, payload: consoleOutput }),
-  resetMyConsole: () => dispatch({ type: TYPE.RESET_MY_CONSOLE }),
-  onInputfieldChange: consoleInput =>
-    dispatch({ type: TYPE.ON_INPUT_FIELD_CHANGE, payload: consoleInput }),
-  setInputFeild: input =>
-    dispatch({ type: TYPE.SET_INPUT_FEILD, payload: input }),
-  onAutoCompleteClick: inItem =>
-    dispatch({ type: TYPE.ON_AUTO_COMPLETE_CLICK, payload: inItem }),
-  //returnAutocomplete: (currentInput) => dispatch({type:TYPE.RETURN_AUTO_COMPLETE, payload: currentInput}), //No longer using
-  removeAutoCompleteDiv: () =>
-    dispatch({ type: TYPE.REMOVE_AUTO_COMPLETE_DIV }),
-  recallPreviousCommand: currentCommandItem =>
-    dispatch({
-      type: TYPE.RECALL_PREVIOUS_COMMAND,
-      payload: currentCommandItem,
-    }),
-  recallNextCommandOrClear: currentCommandItem =>
-    dispatch({
-      type: TYPE.RECALL_NEXT_COMMAND_OR_CLEAR,
-      payload: currentCommandItem,
-    }),
-  addToHistory: currentCommandItem =>
-    dispatch({ type: TYPE.ADD_TO_HISTORY, payload: currentCommandItem }),
-  switchConsoleTab: tab => dispatch(switchConsoleTab(tab)),
-  // handleKeyboardInput: (key) => dispatch({type:TYPE.HANDLE_KEYBOARD_INPUT, payload: key})
+  },
+  overview: { connections },
+}) => ({
+  consoleInput: consoleInputSelector(
+    currentCommand,
+    commandHistory,
+    historyIndex
+  ),
+  commandList,
+  output,
+  connections,
 });
+
+const actionCreators = {
+  switchConsoleTab,
+  setCommandList,
+  updateConsoleInput,
+  commandHistoryUp,
+  commandHistoryDown,
+  executeCommand,
+  printCommandOutput,
+  printCommandError,
+  resetConsoleOutput,
+};
 
 const TerminalContent = styled.div({
   flexGrow: 1,
@@ -112,24 +81,6 @@ const ConsoleInput = styled.div({
   marginBottom: '1em',
   position: 'relative',
 });
-
-const AutoComplete = styled.div(({ theme }) => ({
-  position: 'absolute',
-  top: '100%',
-  zIndex: 99,
-  background: theme.background,
-}));
-
-const AutoCompleteItem = styled.a(({ theme }) => ({
-  display: 'block',
-  cursor: 'pointer',
-  transition: `color ${timing.normal}`,
-  color: theme.mixer(0.75),
-
-  '&:hover': {
-    color: theme.foreground,
-  },
-}));
 
 const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
@@ -151,6 +102,10 @@ const ExecuteButton = styled(Button)(({ theme }) => ({
  * @class TerminalConsole
  * @extends {Component}
  */
+@connect(
+  mapStateToProps,
+  actionCreators
+)
 class TerminalConsole extends Component {
   /**
    *Creates an instance of TerminalConsole.
@@ -187,45 +142,31 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   getSnapshotBeforeUpdate() {
-    if (!this.outputRef) return null;
-    const { clientHeight, scrollTop, scrollHeight } = this.outputRef;
+    if (!this.outputRef.current) return null;
+    const { clientHeight, scrollTop, scrollHeight } = this.outputRef.current;
     return {
       scrollAtBottom: clientHeight + scrollTop === scrollHeight,
     };
   }
 
+  /**
+   *
+   *
+   * @param {*} prevProps
+   * @param {*} PrevState
+   * @param {*} beforeUpdate
+   * @memberof TerminalConsole
+   */
   componentDidUpdate(prevProps, PrevState, beforeUpdate) {
     // If the scroll was at the bottom before the DOM is updated
     if (beforeUpdate && beforeUpdate.scrollAtBottom) {
       // Scroll to bottom
-      if (this.outputRef) {
-        const { clientHeight, scrollHeight } = this.outputRef;
-        this.outputRef.scrollTop = scrollHeight - clientHeight;
+      if (this.outputRef.current) {
+        const { clientHeight, scrollHeight } = this.outputRef.current;
+        this.outputRef.current.scrollTop = scrollHeight - clientHeight;
       }
     }
   }
-
-  // Class Methods
-  /**
-   * Process Output
-   *
-   * @returns
-   * @memberof TerminalConsole
-   */
-  processOutput() {
-    return this.props.consoleOutput.map((item, key) => {
-      return <div key={key}>{item}</div>;
-    });
-  }
-
-  renderOutputCommand = command => (
-    <span>
-      <span style={{ color: '#0ca4fb' }}>{'Nexus-Core'}</span>
-      <span style={{ color: '#00d850' }}>{'$ '}</span>
-      {command}
-      <span style={{ color: '#0ca4fb' }}>{' >'}</span>
-    </span>
-  );
 
   /**
    *
@@ -243,13 +184,12 @@ class TerminalConsole extends Component {
     if (!consoleInput || !consoleInput.trim()) return;
 
     const [cmd, ...chunks] = consoleInput.split(' ');
+    executeCommand(consoleInput);
+    googleanalytics.SendEvent('Terminal', 'Console', 'UseCommand', 1);
     if (!commandList.some(c => c.includes(cmd))) {
       printCommandError(`\`${cmd}\` is not a valid command`);
       return;
     }
-
-    executeCommand(consoleInput);
-    googleanalytics.SendEvent('Terminal', 'Console', 'UseCommand', 1);
 
     const args = [];
     chunks.forEach(arg => {
@@ -307,19 +247,6 @@ class TerminalConsole extends Component {
   };
 
   /**
-   * Handle keyboard input
-   *
-   * @memberof TerminalConsole
-   */
-  handleKeyboardInput = e => {
-    if (e.key === 'Enter') {
-      this.props.removeAutoCompleteDiv();
-      this.processInput();
-      currentHistoryIndex = -1;
-    }
-  };
-
-  /**
    *
    *
    * @memberof TerminalConsole
@@ -340,32 +267,6 @@ class TerminalConsole extends Component {
     }
   };
 
-  /**
-   * Return Autocomplete
-   *
-   * @returns
-   * @memberof TerminalConsole
-   */
-  autoComplete() {
-    return this.props.filteredCmdList.map((item, key) => {
-      return (
-        <AutoCompleteItem
-          key={key}
-          onMouseDown={() => {
-            setTimeout(() => {
-              this.inputRef.current.focus();
-            }, 0);
-            this.props.onAutoCompleteClick(item);
-          }}
-        >
-          {item}
-          <br />
-        </AutoCompleteItem>
-      );
-    });
-  }
-
-  // Mandatory React method
   /**
    * React Render
    *
@@ -427,12 +328,12 @@ class TerminalConsole extends Component {
               </Text>
             </ConsoleInput>
 
-            <ConsoleOutput ref={el => (this.outputRef = el)}>
-              {output.map(({ type, content }) => {
+            <ConsoleOutput ref={this.outputRef}>
+              {output.map(({ type, content }, i) => {
                 switch (type) {
                   case 'command':
                     return (
-                      <div>
+                      <div key={i}>
                         <span>
                           <span style={{ color: '#0ca4fb' }}>Nexus-Core</span>
                           <span style={{ color: '#00d850' }}>$ </span>
@@ -442,9 +343,13 @@ class TerminalConsole extends Component {
                       </div>
                     );
                   case 'text':
-                    return <div>{content}</div>;
+                    return <div key={i}>{content}</div>;
                   case 'error':
-                    return <div className="error">{content}</div>;
+                    return (
+                      <div key={i} className="error">
+                        {content}
+                      </div>
+                    );
                 }
               })}
             </ConsoleOutput>
@@ -463,8 +368,4 @@ class TerminalConsole extends Component {
   }
 }
 
-// Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TerminalConsole);
+export default TerminalConsole;
