@@ -8,9 +8,7 @@ import './CSS/app.global.css';
 
 const store = configureStore();
 
-
 setupApp(store, history);
-
 
 /**
  *
