@@ -9,20 +9,31 @@ import googleanalytics from 'scripts/googleanalytics';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
+import AutoSuggest from 'components/AutoSuggest';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
-import { switchConsoleTab } from 'actions/uiActionCreators';
+import {
+  switchConsoleTab,
+  updateConsoleInput,
+  setCommandList,
+} from 'actions/uiActionCreators';
 import { consts, timing } from 'styles';
 
 let currentHistoryIndex = -1;
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common, ...state.overview };
+  return {
+    ...state.terminal,
+    ...state.common,
+    ...state.overview,
+    consoleInput: state.ui.console.console.input,
+    commandList: state.ui.console.console.commandList,
+  };
 };
 const mapDispatchToProps = dispatch => ({
-  setCommandList: commandList =>
-    dispatch({ type: TYPE.SET_COMMAND_LIST, payload: commandList }),
+  setCommandList: commandList => dispatch(setCommandList(commandList)),
+  updateConsoleInput: value => dispatch(updateConsoleInput(value)),
   printToConsole: consoleOutput =>
     dispatch({ type: TYPE.PRINT_TO_CONSOLE, payload: consoleOutput }),
   resetMyConsole: () => dispatch({ type: TYPE.RESET_MY_CONSOLE }),
@@ -108,19 +119,32 @@ const ExecuteButton = styled(Button)(({ theme }) => ({
  * @extends {Component}
  */
 class TerminalConsole extends Component {
+  /**
+   *Creates an instance of TerminalConsole.
+   * @param {*} props
+   * @memberof TerminalConsole
+   */
   constructor(props) {
     super(props);
-    props.switchConsoleTab('Console');
     this.inputRef = React.createRef();
     this.outputRef = React.createRef();
+    props.switchConsoleTab('Console');
+
+    if (!this.props.commandList.length) {
+      this.loadCommandList();
+    }
   }
-  // React Method (Life cycle hook)
-  componentDidMount() {
-    RPC.PROMISE('help', []).then(payload => {
-      let CommandList = payload.split('\n');
-      this.props.setCommandList(CommandList);
-    });
-  }
+
+  /**
+   *
+   *
+   * @memberof TerminalConsole
+   */
+  loadCommandList = async () => {
+    const result = await RPC.PROMISE('help', []);
+    const commandList = result.split('\n');
+    this.props.setCommandList(commandList);
+  };
 
   // Pass before update values to componentDidUpdate
   /**
@@ -377,7 +401,14 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   render() {
-    if (this.props.connections === undefined) {
+    const {
+      connections,
+      commandList,
+      consoleInput,
+      updateConsoleInput,
+    } = this.props;
+
+    if (connections === undefined) {
       return (
         <WaitingMessage>
           <Text id="transactions.Loading" />
@@ -391,38 +422,36 @@ class TerminalConsole extends Component {
             <ConsoleInput>
               <Text id="Console.CommandsHere">
                 {cch => (
-                  <TextField
+                  <AutoSuggest
+                    suggestions={commandList}
+                    onSelect={updateConsoleInput}
+                    arrowKeysControl={false}
                     inputRef={this.inputRef}
-                    autoFocus
-                    skin="filled-dark"
-                    value={this.props.currentInput}
-                    placeholder={cch}
-                    onChange={e =>
-                      this.props.onInputfieldChange(e.target.value)
-                    }
-                    onKeyPress={e => this.handleKeyboardInput(e)}
-                    onKeyDown={e => this.handleKeyboardArrows(e)}
-                    style={{ flexGrow: 1 }}
-                    right={
-                      <ExecuteButton
-                        skin="filled-dark"
-                        fitHeight
-                        grouped="right"
-                        onClick={() => {
-                          this.props.removeAutoCompleteDiv();
-                          this.processInput();
-                        }}
-                      >
-                        <Text id="Console.Exe" />
-                      </ExecuteButton>
-                    }
+                    inputProps={{
+                      autoFocus: true,
+                      skin: 'filled-dark',
+                      value: consoleInput,
+                      placeholder: cch,
+                      onChange: e => {
+                        updateConsoleInput(e.target.value);
+                      },
+                      right: (
+                        <ExecuteButton
+                          skin="filled-dark"
+                          fitHeight
+                          grouped="right"
+                          onClick={() => {
+                            this.props.removeAutoCompleteDiv();
+                            this.processInput();
+                          }}
+                        >
+                          <Text id="Console.Exe" />
+                        </ExecuteButton>
+                      ),
+                    }}
                   />
                 )}
               </Text>
-
-              <AutoComplete key="autocomplete">
-                {this.autoComplete()}
-              </AutoComplete>
             </ConsoleInput>
 
             <ConsoleOutput ref={el => (this.outputRef = el)}>
