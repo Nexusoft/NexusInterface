@@ -68,3 +68,7 @@ export const printCommandError = msg => ({
   type: TYPE.PRINT_COMMAND_ERROR,
   payload: msg,
 });
+
+export const resetConsoleOutput = () => ({
+  type: TYPE.RESET_CONSOLE_OUTPUT,
+});

@@ -22,6 +22,7 @@ import {
   executeCommand,
   printCommandOutput,
   printCommandError,
+  resetConsoleOutput,
 } from 'actions/uiActionCreators';
 import { consts, timing } from 'styles';
 
@@ -64,7 +65,8 @@ const mapDispatchToProps = dispatch => ({
   commandHistoryDown: () => dispatch(commandHistoryDown()),
   executeCommand: cmd => dispatch(executeCommand(cmd)),
   printCommandOutput: output => dispatch(printCommandOutput(output)),
-  printCommandOutput: msg => dispatch(printCommandOutput(msg)),
+  printCommandError: msg => dispatch(printCommandError(msg)),
+  resetConsoleOutput: () => dispatch(resetConsoleOutput()),
   printToConsole: consoleOutput =>
     dispatch({ type: TYPE.PRINT_TO_CONSOLE, payload: consoleOutput }),
   resetMyConsole: () => dispatch({ type: TYPE.RESET_MY_CONSOLE }),
@@ -377,6 +379,7 @@ class TerminalConsole extends Component {
       consoleInput,
       updateConsoleInput,
       output,
+      resetConsoleOutput,
     } = this.props;
 
     if (connections === undefined) {
@@ -449,7 +452,7 @@ class TerminalConsole extends Component {
             <Button
               skin="filled-dark"
               grouped="bottom"
-              onClick={this.props.resetMyConsole}
+              onClick={resetConsoleOutput}
             >
               <Text id="Console.ClearConsole" />
             </Button>

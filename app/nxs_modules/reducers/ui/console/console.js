@@ -68,6 +68,12 @@ export default (state = initialState, action) => {
       };
     }
 
+    case TYPE.RESET_CONSOLE_OUTPUT:
+      return {
+        ...state,
+        output: initialState.output,
+      };
+
     default:
       return state;
   }
