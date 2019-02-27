@@ -72,3 +72,20 @@ export const printCommandError = msg => ({
 export const resetConsoleOutput = () => ({
   type: TYPE.RESET_CONSOLE_OUTPUT,
 });
+
+/**
+ * Console/Core
+ * ===========================
+ */
+export const printCoreOutput = output => ({
+  type: TYPE.PRINT_CORE_OUTPUT,
+  payload: output,
+});
+
+export const pauseCoreOutput = () => ({
+  type: TYPE.PAUSE_CORE_OUTPUT,
+});
+
+export const unpauseCoreOutput = () => ({
+  type: TYPE.UNPAUSE_CORE_OUTPUT,
+});

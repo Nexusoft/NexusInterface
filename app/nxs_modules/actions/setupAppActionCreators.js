@@ -114,6 +114,6 @@ export const showEncryptionWarningModal = () => ({
 });
 
 export const printCoreOutput = data => ({
-  type: TYPE.PRINT_TO_CORE,
+  type: TYPE.PRINT_CORE_OUTPUT,
   payload: data,
 });

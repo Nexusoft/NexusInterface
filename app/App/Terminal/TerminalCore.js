@@ -4,20 +4,34 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
-import * as TYPE from 'actions/actiontypes';
-import { switchConsoleTab } from 'actions/uiActionCreators';
+import {
+  switchConsoleTab,
+  printCoreOutput,
+  pauseCoreOutput,
+  unpauseCoreOutput,
+} from 'actions/uiActionCreators';
 import Button from 'components/Button';
 
 // React-Redux mandatory methods
-const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common, settings: state.settings };
-};
+const mapStateToProps = ({
+  settings,
+  common: { rpcCallList },
+  ui: {
+    console: {
+      core: { output, paused },
+    },
+  },
+}) => ({
+  settings,
+  rpcCallList,
+  output,
+  paused,
+});
 const actionCreators = {
   switchConsoleTab,
-  setCoreOutputPaused: isPaused => ({
-    type: TYPE.SET_PAUSE_CORE_OUTPUT,
-    payload: isPaused,
-  }),
+  printCoreOutput,
+  pauseCoreOutput,
+  unpauseCoreOutput,
 };
 
 const TerminalContent = styled.div({
@@ -65,18 +79,13 @@ class TerminalCore extends Component {
     super(props);
     props.switchConsoleTab('Core');
   }
-  // React Method (Life cycle hook)
-  componentDidMount() {}
-
-  // todo finish
-  componentWillUnmount() {}
 
   // React Method (Life cycle hook)
   componentWillReceiveProps(nextProps) {
     if (this.props.rpcCallList.length != nextProps.rpcCallList.length) {
       this.forceUpdate();
     }
-    if (this.props.coreOutput.length != nextProps.coreOutput.length) {
+    if (this.props.output.length != nextProps.output.length) {
       this.outputRef.childNodes[0].scrollTop = this.outputRef.childNodes[0].scrollHeight;
     }
   }
@@ -96,8 +105,8 @@ class TerminalCore extends Component {
     if (currentPos >= bottomPos) {
       return;
     }
-    if (!this.props.coreOutputPaused) {
-      this.props.setCoreOutputPaused(true);
+    if (!this.props.paused) {
+      this.props.pauseCoreOutput(true);
     }
   }
 
@@ -109,30 +118,35 @@ class TerminalCore extends Component {
    * @memberof TerminalCore
    */
   render() {
+    const {
+      output,
+      paused,
+      pauseCoreOutput,
+      unpauseCoreOutput,
+      settings,
+    } = this.props;
     return (
       <TerminalContent>
         <TerminalCoreComponent ref={el => (this.outputRef = el)}>
-          {this.props.settings.manualDaemon ? (
+          {settings.manualDaemon ? (
             <div className="dim">Core in Manual Mode</div>
           ) : (
             <>
               <Output
-                reverse={!this.props.settings.manualDaemon}
+                reverse={!settings.manualDaemon}
                 onScroll={() => this.onScrollEvent()}
               >
-                {this.props.coreOutput.map((d, i) => (
+                {output.map((d, i) => (
                   <OutputLine key={i}>{d}</OutputLine>
                 ))}
               </Output>
               <Button
                 skin="filled-dark"
                 fullWidth
-                onClick={() => {
-                  this.props.setCoreOutputPaused(!this.props.coreOutputPaused);
-                }}
+                onClick={paused ? unpauseCoreOutput : pauseCoreOutput}
                 style={{ flexShrink: 0 }}
               >
-                {this.props.coreOutputPaused ? 'Unpause' : 'Pause'}
+                {paused ? 'Unpause' : 'Pause'}
               </Button>
             </>
           )}

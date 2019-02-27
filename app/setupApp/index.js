@@ -142,7 +142,7 @@ function processDeamonOutput(debugfile, store) {
     batch.push(d);
   });
   printCoreOutputTimer = setInterval(() => {
-    if (store.getState().terminal.coreOutputPaused) {
+    if (store.getState().ui.console.core.paused) {
       return;
     }
     if (batch.length == 0) {
