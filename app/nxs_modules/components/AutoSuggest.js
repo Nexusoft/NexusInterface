@@ -147,7 +147,8 @@ const ClearButton = styled(Button)(
 export default class AutoSuggest extends React.Component {
   static defaultProps = {
     inputComponent: TextField,
-    arrowKeysControl: true,
+    keyControl: true,
+    suggestOn: 'focus',
   };
 
   state = {
@@ -182,13 +183,22 @@ export default class AutoSuggest extends React.Component {
   }
 
   handleInputFocus = e => {
-    this.setState({ open: true });
+    if (this.props.suggestOn === 'focus') {
+      this.setState({ open: true });
+    }
     this.props.inputProps.onFocus && this.props.inputProps.onFocus(e);
   };
 
   handleInputBlur = e => {
     this.setState({ open: false });
     this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
+  };
+
+  handleInputChange = e => {
+    if (this.props.suggestOn === 'change') {
+      this.setState({ open: true });
+    }
+    this.props.inputProps.onChange && this.props.inputProps.onChange(e);
   };
 
   scrollToNewSelection = index => {
@@ -210,7 +220,6 @@ export default class AutoSuggest extends React.Component {
       suggestions,
       inputProps,
       onSelect,
-      arrowKeysControl,
     } = this.props;
     const { activeIndex } = this.state;
     const inputValue = inputProps && inputProps.value;
@@ -218,27 +227,23 @@ export default class AutoSuggest extends React.Component {
 
     switch (e.key) {
       case 'ArrowDown':
-        if (arrowKeysControl) {
-          e.preventDefault();
-          if (activeIndex === null) {
-            this.scrollToNewSelection(0);
-          } else if (activeIndex < currentSuggestions.length - 1) {
-            this.scrollToNewSelection(activeIndex + 1);
-          } else {
-            this.scrollToNewSelection(null);
-          }
+        e.preventDefault();
+        if (activeIndex === null) {
+          this.scrollToNewSelection(0);
+        } else if (activeIndex < currentSuggestions.length - 1) {
+          this.scrollToNewSelection(activeIndex + 1);
+        } else {
+          this.scrollToNewSelection(null);
         }
         break;
       case 'ArrowUp':
-        if (arrowKeysControl) {
-          e.preventDefault();
-          if (activeIndex === null) {
-            this.scrollToNewSelection(currentSuggestions.length - 1);
-          } else if (activeIndex !== 0) {
-            this.scrollToNewSelection(activeIndex - 1);
-          } else {
-            this.scrollToNewSelection(null);
-          }
+        e.preventDefault();
+        if (activeIndex === null) {
+          this.scrollToNewSelection(currentSuggestions.length - 1);
+        } else if (activeIndex !== 0) {
+          this.scrollToNewSelection(activeIndex - 1);
+        } else {
+          this.scrollToNewSelection(null);
         }
         break;
       case 'Tab':
@@ -290,6 +295,7 @@ export default class AutoSuggest extends React.Component {
       onSelect,
       inputProps,
       inputComponent: Input,
+      keyControl,
       ...rest
     } = this.props;
     const { open, activeIndex } = this.state;
@@ -305,7 +311,10 @@ export default class AutoSuggest extends React.Component {
           {...inputProps}
           onFocus={this.handleInputFocus}
           onBlur={this.handleInputBlur}
-          onKeyDown={this.handleKeyDown}
+          onKeyDown={
+            keyControl ? this.handleKeyDown : inputProps && inputProps.onKeyDown
+          }
+          onChange={this.handleInputChange}
         />
         <Suggestions
           ref={this.suggestionsRef}

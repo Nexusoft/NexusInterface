@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import Text from 'components/Text';
 import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
+import memoize from 'memoize-one';
 
 // Internal Global Dependencies
 import WaitingMessage from 'components/WaitingMessage';
@@ -16,24 +17,54 @@ import {
   switchConsoleTab,
   updateConsoleInput,
   setCommandList,
+  commandHistoryUp,
+  commandHistoryDown,
+  executeCommand,
+  printCommandOutput,
+  printCommandError,
 } from 'actions/uiActionCreators';
 import { consts, timing } from 'styles';
 
-let currentHistoryIndex = -1;
+const consoleInputSelector = memoize(
+  (currentCommand, commandHistory, historyIndex) =>
+    historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
+);
 
-// React-Redux mandatory methods
 const mapStateToProps = state => {
+  const {
+    ui: {
+      console: {
+        console: {
+          currentCommand,
+          commandHistory,
+          historyIndex,
+          commandList,
+          output,
+        },
+      },
+    },
+  } = state;
   return {
     ...state.terminal,
     ...state.common,
     ...state.overview,
-    consoleInput: state.ui.console.console.input,
-    commandList: state.ui.console.console.commandList,
+    consoleInput: consoleInputSelector(
+      currentCommand,
+      commandHistory,
+      historyIndex
+    ),
+    commandList,
+    output,
   };
 };
 const mapDispatchToProps = dispatch => ({
   setCommandList: commandList => dispatch(setCommandList(commandList)),
   updateConsoleInput: value => dispatch(updateConsoleInput(value)),
+  commandHistoryUp: () => dispatch(commandHistoryUp()),
+  commandHistoryDown: () => dispatch(commandHistoryDown()),
+  executeCommand: cmd => dispatch(executeCommand(cmd)),
+  printCommandOutput: output => dispatch(printCommandOutput(output)),
+  printCommandOutput: msg => dispatch(printCommandOutput(msg)),
   printToConsole: consoleOutput =>
     dispatch({ type: TYPE.PRINT_TO_CONSOLE, payload: consoleOutput }),
   resetMyConsole: () => dispatch({ type: TYPE.RESET_MY_CONSOLE }),
@@ -185,144 +216,93 @@ class TerminalConsole extends Component {
     });
   }
 
+  renderOutputCommand = command => (
+    <span>
+      <span style={{ color: '#0ca4fb' }}>{'Nexus-Core'}</span>
+      <span style={{ color: '#00d850' }}>{'$ '}</span>
+      {command}
+      <span style={{ color: '#0ca4fb' }}>{' >'}</span>
+    </span>
+  );
+
   /**
-   * Process Input
    *
-   * @returns
+   *
    * @memberof TerminalConsole
    */
-  processInput() {
-    if (this.props.currentInput == '') {
-      return;
-    }
-    if (this.props.currentInput.toLowerCase() == 'clear') {
-      this.props.resetMyConsole();
-      this.props.setInputFeild('');
+  execute = async () => {
+    const {
+      consoleInput,
+      executeCommand,
+      commandList,
+      printCommandOutput,
+      printCommandError,
+    } = this.props;
+    if (!consoleInput || !consoleInput.trim()) return;
+
+    const [cmd, ...chunks] = consoleInput.split(' ');
+    if (!commandList.some(c => c.includes(cmd))) {
+      printCommandError(`\`${cmd}\` is not a valid command`);
       return;
     }
 
+    executeCommand(consoleInput);
     googleanalytics.SendEvent('Terminal', 'Console', 'UseCommand', 1);
-    //
-    let tempConsoleOutput = [...this.props.consoleOutput];
-    let splitInput = this.props.currentInput.split(' ');
 
-    let daemonInputMessage = (
-      <span>
-        <span style={{ color: '#0ca4fb' }}>{'Nexus-Core'}</span>
-        <span style={{ color: '#00d850' }}>{'$ '}</span>
-        {this.props.currentInput}
-        <span style={{ color: '#0ca4fb' }}>{' >'}</span>
-      </span>
-    );
-    tempConsoleOutput.push(daemonInputMessage);
-
-    /// this is the argument array
-    let RPCArguments = [];
-    this.props.addToHistory(this.props.currentInput);
-    this.props.setInputFeild('');
-
-    for (let tempindex = 1; tempindex < splitInput.length; tempindex++) {
-      let element = splitInput[tempindex];
-      /// If this is a number we need to format it an int
-      if (element != '' && isNaN(Number(element)) === false) {
-        element = parseFloat(element);
+    const args = [];
+    chunks.forEach(arg => {
+      if (arg) {
+        if (!isNaN(parseFloat(arg))) {
+          args.push(parseFloat(arg));
+        } else {
+          args.push(arg);
+        }
       }
-      RPCArguments.push(element);
+    });
+
+    const tab = ' '.repeat(7);
+    let result = null;
+    try {
+      result = await RPC.PROMISE(cmd, args);
+    } catch (err) {
+      console.error(err);
+      if (err.message !== undefined) {
+        printCommandError(
+          `Error: ${err.err.message}(errorcode ${err.err.code})`
+        );
+      } else {
+        // This is the error if the rpc is unavailable
+        try {
+          printCommandError(tab + err.err.message);
+        } catch (e) {
+          printCommandError(tab + err);
+        }
+      }
+      return;
     }
 
-    // let termConOut = document.getElementById('terminal-console-output');
-    /// Execute the command with the given args
-    if (
-      this.props.commandList.some(function(v) {
-        return v.indexOf(splitInput[0]) >= 0;
-      })
-    ) {
-      RPC.PROMISE(splitInput[0], RPCArguments)
-        .then(payload => {
-          console.log(payload);
-          if (typeof payload === 'string' || typeof payload === 'number') {
-            if (typeof payload === 'string') {
-              let temppayload = payload;
-
-              temppayload.split('\n').map((item, key) => {
-                return tempConsoleOutput.push('       ' + item);
-              });
-
-              this.props.printToConsole(tempConsoleOutput);
-              // // termConOut.scrollTop = termConOut.scrollHeight;
-            } else {
-              tempConsoleOutput.push(payload);
-              this.props.printToConsole(tempConsoleOutput);
-              // // termConOut.scrollTop = termConOut.scrollHeight;
-            }
+    if (typeof result === 'object') {
+      const output = [];
+      const traverseOutput = (obj, depth) => {
+        const tabs = tab.repeat(depth);
+        Object.entries(obj).forEach(([key, value]) => {
+          if (typeof value === 'object') {
+            output.push(`${tabs}${key}:`);
+            traverseOutput(value, depth + 1);
           } else {
-            function tabMaker(y) {
-              let count = y;
-              let tempTab = '';
-              while (count != 0) {
-                tempTab += '       ';
-                count--;
-              }
-              return tempTab;
-            }
-            function outputLoop(incomingObj, numOfTabs) {
-              var keys = Object.keys(incomingObj);
-              if (true) {
-                if (keys.length) {
-                  return keys.forEach(aElement => {
-                    if (typeof incomingObj[aElement] === 'object') {
-                      tempConsoleOutput.push(
-                        tabMaker(numOfTabs) + aElement + ':'
-                      );
-                      outputLoop(incomingObj[aElement], numOfTabs + 1);
-                    } else {
-                      tempConsoleOutput.push(
-                        tabMaker(numOfTabs) +
-                          aElement +
-                          ':' +
-                          incomingObj[aElement]
-                      );
-                    }
-                  });
-                }
-              }
-            }
-            outputLoop(payload, 1);
-
-            this.props.printToConsole(tempConsoleOutput);
-            // // termConOut.scrollTop = termConOut.scrollHeight;
+            output.push(`${tabs}${key}: ${value}`);
           }
-        })
-        .catch(error => {
-          console.log(error);
-          if (error.message !== undefined) {
-            tempConsoleOutput.push(
-              'Error: ' +
-                [error.error.message] +
-                '(errorcode ' +
-                error.error.code +
-                ')'
-            );
-          } else {
-            //This is the error if the rpc is unavailable
-            try {
-              tempConsoleOutput.push('       ' + error.error.message);
-            } catch (e) {
-              tempConsoleOutput.push('       ' + error);
-            }
-          }
-          this.props.printToConsole(tempConsoleOutput);
-          // // termConOut.scrollTop = termConOut.scrollHeight;
         });
+      };
+
+      traverseOutput(result, 1);
+      printCommandOutput(output);
+    } else if (typeof result === 'string') {
+      printCommandOutput(result.split('\n').map(text => tab + text));
     } else {
-      tempConsoleOutput.push([
-        '       ' + this.props.currentInput + ' is a invalid Command',
-      ]);
-      // tempConsoleOutput.push(['\n  '])
-      this.props.printToConsole(tempConsoleOutput);
-      // // termConOut.scrollTop = termConOut.scrollHeight;
+      printCommandOutput(result);
     }
-  }
+  };
 
   /**
    * Handle keyboard input
@@ -338,33 +318,23 @@ class TerminalConsole extends Component {
   };
 
   /**
-   * Handle arrow keys
+   *
    *
    * @memberof TerminalConsole
    */
-  handleKeyboardArrows = e => {
-    if (e.key === 'ArrowUp') {
-      currentHistoryIndex++;
-
-      if (this.props.commandHistory[currentHistoryIndex]) {
-        this.props.setInputFeild(
-          this.props.commandHistory[currentHistoryIndex]
-        );
-      } else {
-        this.props.setInputFeild('');
-        currentHistoryIndex = -1;
-      }
-    } else if (e.key === 'ArrowDown') {
-      currentHistoryIndex--;
-      if (currentHistoryIndex <= -1) {
-        currentHistoryIndex = -1;
-        this.props.setInputFeild('');
-      } else {
-        this.props.setInputFeild(
-          this.props.commandHistory[currentHistoryIndex]
-        );
-      }
-    } else if (e.key === 'ArrowRight') {
+  handleKeyDown = e => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        this.props.commandHistoryDown();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        this.props.commandHistoryUp();
+        break;
+      case 'Enter':
+        this.execute();
+        break;
     }
   };
 
@@ -406,6 +376,7 @@ class TerminalConsole extends Component {
       commandList,
       consoleInput,
       updateConsoleInput,
+      output,
     } = this.props;
 
     if (connections === undefined) {
@@ -425,7 +396,8 @@ class TerminalConsole extends Component {
                   <AutoSuggest
                     suggestions={commandList}
                     onSelect={updateConsoleInput}
-                    arrowKeysControl={false}
+                    keyControl={false}
+                    suggestOn="change"
                     inputRef={this.inputRef}
                     inputProps={{
                       autoFocus: true,
@@ -435,15 +407,13 @@ class TerminalConsole extends Component {
                       onChange: e => {
                         updateConsoleInput(e.target.value);
                       },
+                      onKeyDown: this.handleKeyDown,
                       right: (
                         <ExecuteButton
                           skin="filled-dark"
                           fitHeight
                           grouped="right"
-                          onClick={() => {
-                            this.props.removeAutoCompleteDiv();
-                            this.processInput();
-                          }}
+                          onClick={this.execute}
                         >
                           <Text id="Console.Exe" />
                         </ExecuteButton>
@@ -455,7 +425,25 @@ class TerminalConsole extends Component {
             </ConsoleInput>
 
             <ConsoleOutput ref={el => (this.outputRef = el)}>
-              {this.processOutput()}
+              {output.map(({ type, content }) => {
+                switch (type) {
+                  case 'command':
+                    return (
+                      <div>
+                        <span>
+                          <span style={{ color: '#0ca4fb' }}>Nexus-Core</span>
+                          <span style={{ color: '#00d850' }}>$ </span>
+                          {content}
+                          <span style={{ color: '#0ca4fb' }}> ></span>
+                        </span>
+                      </div>
+                    );
+                  case 'text':
+                    return <div>{content}</div>;
+                  case 'error':
+                    return <div className="error">{content}</div>;
+                }
+              })}
             </ConsoleOutput>
 
             <Button
