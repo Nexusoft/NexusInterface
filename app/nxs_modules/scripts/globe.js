@@ -85,6 +85,7 @@ export default (DAT.Globe = function(container, opts) {
   var camera, scene, renderer, w, h;
   var mesh, atmosphere, point;
 
+  var animationid = null;
   var overRenderer;
 
   var curZoomSpeed = 0;
@@ -167,7 +168,6 @@ export default (DAT.Globe = function(container, opts) {
       new THREE.Vector3(0, 0, 0),
       new THREE.Vector3(99, 99, 99),
     ]);
-
     var points = curve.getPoints(50);
     var geometry = new THREE.BufferGeometry().setFromPoints(points);
 
@@ -197,7 +197,15 @@ export default (DAT.Globe = function(container, opts) {
     alpha: true;
     renderer.setSize(w, h);
     renderer.setClearColor(0x000000, 0); // set background color to transparent
-
+    renderer.context.canvas.addEventListener("webglcontextlost", function(event) {
+      event.preventDefault();
+      cancelAnimationFrame(animationid); 
+    }, false);
+    
+    renderer.context.canvas.addEventListener("webglcontextrestored", function(event) {
+      init(); 
+    }, false);
+  
     // renderer.domElement.style.position = "absolute";
 
     container.appendChild(renderer.domElement);
@@ -518,7 +526,7 @@ export default (DAT.Globe = function(container, opts) {
   }
 
   function animate() {
-    requestAnimationFrame(animate);
+    animationid = requestAnimationFrame(animate);
     render();
   }
 
