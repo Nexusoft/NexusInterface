@@ -1,15 +1,22 @@
 import * as TYPE from 'actions/actiontypes';
 
 const initialState = {
-  lastActiveTab: 'Console',
+  input: '',
+  commandList: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SWITCH_CONSOLE_TAB:
+    case TYPE.SET_CONSOLE_INPUT:
       return {
         ...state,
-        lastActiveTab: action.payload,
+        input: action.payload,
+      };
+
+    case TYPE.SET_COMMAND_LIST:
+      return {
+        ...state,
+        commandList: action.payload,
       };
 
     default:
