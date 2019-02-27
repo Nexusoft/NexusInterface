@@ -4,7 +4,6 @@ import { remote } from 'electron';
 import { Route, Redirect, Switch } from 'react-router';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
-import * as TYPE from 'actions/actiontypes';
 
 // Internal Global Dependencies
 import ContextMenuBuilder from 'contextmenu';
@@ -42,15 +41,6 @@ let ConsoleRedirect = ({ lastActiveTab, match }) => (
 ConsoleRedirect = connect(({ ui: { console: { lastActiveTab } } }) => ({
   lastActiveTab,
 }))(ConsoleRedirect);
-
-// React-Redux mandatory methods
-const mapStateToProps = state => {
-  return { ...state.terminal, ...state.common };
-};
-const mapDispatchToProps = dispatch => ({
-  setCoreOutputPaused: isPaused =>
-    dispatch({ type: TYPE.SET_PAUSE_CORE_OUTPUT, payload: isPaused }),
-});
 
 /**
  * Terminal Page
@@ -124,7 +114,4 @@ class Terminal extends Component {
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Terminal);
+export default Terminal;

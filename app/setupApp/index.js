@@ -5,7 +5,6 @@ import fs from 'fs';
 // Internal
 import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
-import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
 import getInfo from 'actions/getInfo';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
