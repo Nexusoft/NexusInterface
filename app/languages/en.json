@@ -425,7 +425,7 @@
   "MyAddressesModal.Rescanning": "Rescanning...",
   "MyAddressesModal.RescanSuccess": "Rescanned successfully",
   "MyAddressesModal.RescanError": "Error Rescanning",
-  "MyAddressesModal.RescanTooltip": "In some rare cases, the balance shown on the interface might be incorrect, rescanning can help you correct it",
+  "MyAddressesModal.RescanTooltip": "The balances shown here could be incorrect in some rare cases, rescanning will help you correct them",
 
   "Footer.Overview": "Overview",
   "Footer.SendNXS": "Send NXS",
