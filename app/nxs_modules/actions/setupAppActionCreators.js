@@ -3,7 +3,6 @@ import Request from 'request';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
-import config from 'api/configuration';
 
 // Header Action Creators
 export const GetInfo = info => ({ type: TYPE.GET_INFO_DUMP, payload: info });
