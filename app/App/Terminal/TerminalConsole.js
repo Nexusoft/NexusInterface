@@ -1,11 +1,8 @@
 // External Dependencies
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { timingSafeEqual } from 'crypto';
 import Text from 'components/Text';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Global Dependencies
@@ -14,6 +11,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
+import { switchConsoleTab } from 'actions/uiActionCreators';
 import { consts, timing } from 'styles';
 
 let currentHistoryIndex = -1;
@@ -49,6 +47,7 @@ const mapDispatchToProps = dispatch => ({
     }),
   addToHistory: currentCommandItem =>
     dispatch({ type: TYPE.ADD_TO_HISTORY, payload: currentCommandItem }),
+  switchConsoleTab: tab => dispatch(switchConsoleTab(tab)),
   // handleKeyboardInput: (key) => dispatch({type:TYPE.HANDLE_KEYBOARD_INPUT, payload: key})
 });
 
@@ -91,7 +90,7 @@ const AutoCompleteItem = styled.a(({ theme }) => ({
 const ConsoleOutput = styled.code(({ theme }) => ({
   flexGrow: 1,
   flexBasis: 0,
-  fontSize: "75%",
+  fontSize: '75%',
   overflow: 'auto',
   wordBreak: 'break-all',
   background: theme.background,
@@ -111,6 +110,7 @@ const ExecuteButton = styled(Button)(({ theme }) => ({
 class TerminalConsole extends Component {
   constructor(props) {
     super(props);
+    props.switchConsoleTab('Console');
     this.inputRef = React.createRef();
     this.outputRef = React.createRef();
   }

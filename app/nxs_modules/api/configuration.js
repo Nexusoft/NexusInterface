@@ -148,12 +148,12 @@ const configuration = {
           .getPath('appData')
           .replace(' ', `\ `)
           .replace('/Electron/', ''),
-        'Nexus_Wallet_BETA_v' + APP_VERSION
+        'Nexus_Wallet_BETA'
       );
     } else {
       AppDataDirPath = path.join(
         app.getPath('appData').replace('/Electron/', ''),
-        'Nexus_Wallet_BETA_v' + APP_VERSION
+        'Nexus_Wallet_BETA'
       );
     }
 

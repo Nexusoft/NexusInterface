@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 // Internal Global
 import Text from 'components/Text';
 import { updateSettings } from 'actions/settingsActionCreators';
+import { switchSettingsTab } from 'actions/uiActionCreators';
 import { backupWallet } from 'api/wallet';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -67,9 +68,10 @@ const mapStateToProps = state => ({
   settings: state.settings,
 });
 
-const mapDispatchToProps = dispatch => ({
-  updateSettings: updates => dispatch(updateSettings(updates)),
-});
+const actionCreators = {
+  updateSettings,
+  switchSettingsTab,
+};
 
 /**
  * App Page in the Setting Page
@@ -79,9 +81,19 @@ const mapDispatchToProps = dispatch => ({
  */
 @connect(
   mapStateToProps,
-  mapDispatchToProps
+  actionCreators
 )
 class SettingsApp extends Component {
+  /**
+   *Creates an instance of SettingsApp.
+   * @param {*} props
+   * @memberof SettingsApp
+   */
+  constructor(props) {
+    super(props);
+    props.switchSettingsTab('App');
+  }
+
   /**
    *  Confirm Wallet Back up
    *

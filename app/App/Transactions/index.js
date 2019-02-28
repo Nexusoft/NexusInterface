@@ -122,6 +122,7 @@ const mapStateToProps = state => {
     ...state.overview,
     addressBook: state.addressBook,
     settings: state.settings,
+    theme: state.theme,
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -1349,7 +1350,7 @@ class Transactions extends Component {
         (process.platform == 'darwin'
           ? electronapp.getPath('appData')
           : process.env.HOME);
-      appdataloc = appdataloc + `/Nexus_Wallet_BETA_v${APP_VERSION}/`;
+      appdataloc = appdataloc + `/Nexus_Wallet_BETA/`;
       let incominghistoryfile = JSON.parse(
         fs.readFileSync(appdataloc + 'historydata.json', 'utf8')
       );
@@ -1521,7 +1522,7 @@ class Transactions extends Component {
       (process.platform == 'darwin'
         ? electronapp.getPath('appData')
         : process.env.HOME);
-    appdataloc = appdataloc + `/Nexus_Wallet_BETA_v${APP_VERSION}/`;
+    appdataloc = appdataloc + `/Nexus_Wallet_BETA/`;
 
     fs.writeFile(
       appdataloc + 'historydata.json',
@@ -1651,12 +1652,13 @@ class Transactions extends Component {
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
     const leftPadding =
       parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
+      console.log(this.props.theme.primary);
     return (
       <VictoryChart
         width={this.state.mainChartWidth}
         height={this.state.mainChartHeight}
         scale={{ x: 'time' }}
-        style={{ overflow: 'visible' }}
+        style={{ overflow: 'visible' , border: '1px solid ' + this.props.theme.primary,}}
         domainPadding={{ x: 90, y: 30 }}
         padding={{
           top: 6,
@@ -1711,14 +1713,14 @@ class Transactions extends Component {
           // label="Time"
           independentAxis
           style={{
-            axis: { stroke: 'var(--border-color)', strokeOpacity: 1 },
+            axis: { stroke: this.props.theme.primary, strokeOpacity: 1 },
             axisLabel: { fontSize: 16 },
             grid: {
-              stroke: 'var(--border-color)',
+              stroke: this.props.theme.primary,
               strokeOpacity: 0.25,
             },
             ticks: {
-              stroke: 'var(--border-color)',
+              stroke: this.props.theme.primary,
               strokeOpacity: 0.75,
               size: 10,
             },
@@ -1730,14 +1732,14 @@ class Transactions extends Component {
           // label="Amount"
           dependentAxis
           style={{
-            axis: { stroke: 'var(--border-color)', strokeOpacity: 1 },
+            axis: { stroke: this.props.theme.primary, strokeOpacity: 1 },
             axisLabel: { fontSize: 16 },
             grid: {
-              stroke: 'var(--border-color)',
+              stroke: this.props.theme.primary,
               strokeOpacity: 0.25,
             },
             ticks: {
-              stroke: 'var(--border-color)',
+              stroke: this.props.theme.primary,
               strokeOpacity: 0.75,
               size: 10,
             },
@@ -1782,7 +1784,7 @@ class Transactions extends Component {
           <div>
             <div
               id="transactions-chart"
-              style={{ display: data.length === 0 ? 'none' : 'block' }}
+              style={{ display: data.length === 0 ? 'none' : 'block', border: '2px solid ' + this.props.theme.background, }}
             >
               {data.length === 0 ? null : this.returnVictoryChart()}
             </div>
@@ -1842,6 +1844,7 @@ class Transactions extends Component {
             </Filters>
             <div id="transactions-details">
               <Table
+                style = {this.props.theme}
                 key="table-top"
                 data={data}
                 columns={columns}

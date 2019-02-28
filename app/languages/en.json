@@ -312,7 +312,7 @@
   "Settings.LoginDate": "Login Until Date",
   "Settings.LoginTime": "Login Until Time",
   "Settings.PasswordPlaceholder": "Your wallet password",
-  "Settings.StakingOnly": "Login for Staking Only",
+  "Settings.StakingOnly": "Login for Staking & Mining Only",
 
   "Settings.IpAddress": "IP Address",
   "Settings.Port": "Port",
