@@ -13,12 +13,17 @@
 
 import * as THREE from 'three';
 import world from 'images/world-light-white.jpg';
+import worldSmall from 'images/world-light-white-small.jpg';
+
+import sysinfo from 'systeminformation';
 
 import { geoInterpolate } from 'd3-geo';
 var DAT = DAT || {};
 
 var CurveMeshs = null;
 var PillarMeshs = null;
+var useSamll = false;
+
 
 export default (DAT.Globe = function(container, opts) {
   opts = opts || {};
@@ -85,6 +90,7 @@ export default (DAT.Globe = function(container, opts) {
   var camera, scene, renderer, w, h;
   var mesh, atmosphere, point;
 
+  var animationid = null;
   var overRenderer;
 
   var curZoomSpeed = 0;
@@ -129,6 +135,15 @@ export default (DAT.Globe = function(container, opts) {
     let globeG = colormoddd.g / 1;
     let globeB = colormoddd.b / 1;
 
+
+    let worldimage = world 
+    
+    if (useSamll)
+    {
+      console.log("UsedSmallImage");
+      worldimage = worldSmall;
+    }
+
     //uniforms["texture"].value = new THREE.TextureLoader().load(world);
     uniforms['_texture'] = {
       type: 't',
@@ -167,7 +182,6 @@ export default (DAT.Globe = function(container, opts) {
       new THREE.Vector3(0, 0, 0),
       new THREE.Vector3(99, 99, 99),
     ]);
-
     var points = curve.getPoints(50);
     var geometry = new THREE.BufferGeometry().setFromPoints(points);
 
@@ -197,7 +211,18 @@ export default (DAT.Globe = function(container, opts) {
     alpha: true;
     renderer.setSize(w, h);
     renderer.setClearColor(0x000000, 0); // set background color to transparent
-
+    renderer.context.canvas.addEventListener("webglcontextlost", function(event) {
+      event.preventDefault();
+      console.error("CONTEXT LOST!!");
+      cancelAnimationFrame(animationid); 
+    }, false);
+    
+    renderer.context.canvas.addEventListener("webglcontextrestored", function(event) {
+      console.error("CONTEXT RESTORED");
+      init(); 
+      console.error("RESTORED GLOBE");
+    }, false);
+  
     // renderer.domElement.style.position = "absolute";
 
     container.appendChild(renderer.domElement);
@@ -518,7 +543,7 @@ export default (DAT.Globe = function(container, opts) {
   }
 
   function animate() {
-    requestAnimationFrame(animate);
+    animationid = requestAnimationFrame(animate);
     render();
   }
 
@@ -705,6 +730,18 @@ export default (DAT.Globe = function(container, opts) {
   }
 
   init();
+/*
+  sysinfo.graphics()
+.then(data => {
+  console.log(data.controllers);
+  if (data.controllers[1].vram <= 1024)
+  {
+    console.log("USE SMALL");
+    useSamll = true;
+  }
+})
+.catch(error => console.error(error));
+*/
   this.animate = animate;
 
   this.__defineGetter__('time', function() {

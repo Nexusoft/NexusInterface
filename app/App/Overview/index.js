@@ -298,8 +298,8 @@ class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidUpdate(prevProps) {
     const { blocks, webGLEnabled, settings, connections } = this.props;
-
-    if (settings.acceptedAgreement && webGLEnabled && settings.renderGlobe) {
+    const correctView = settings.overviewDisplay !== ('minimalist') && settings.overviewDisplay !== ( 'none');
+    if (settings.acceptedAgreement && webGLEnabled && settings.renderGlobe && correctView) {
       if (blocks != prevProps.blocks && blocks && prevProps.blocks) {
         this.redrawCurves();
       }
