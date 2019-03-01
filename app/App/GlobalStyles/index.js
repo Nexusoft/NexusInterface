@@ -64,7 +64,7 @@ const resetStyles = theme => ({
 
 const customizedScrollbar = theme => ({
   '::-webkit-scrollbar': {
-    background: 'rgba(0, 0, 0, 0.15)',
+    background: 'transparent',
     zIndex: 10000000,
     '&:vertical': {
       width: 6,
@@ -72,15 +72,12 @@ const customizedScrollbar = theme => ({
     '&:horizontal': {
       height: 6,
     },
-    '&:hover': {
-      background: 'rgba(0, 0, 0, 0.3)',
-    },
     '&-thumb': {
       background: color.fade(theme.primary, 0.25),
       borderRadius: 2,
-    },
-    '&-thumb:hover': {
-      background: color.fade(theme.primary, 0.1),
+      '&:hover': {
+        background: color.fade(theme.primary, 0.1),
+      },
     },
     '&-corner': {
       background: 'rgba(0, 0, 0, 0.5)',
