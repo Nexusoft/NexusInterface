@@ -37,6 +37,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
+import { loadMyAccounts } from 'actions/accountActionCreators';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
@@ -127,6 +128,7 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = dispatch => ({
+  loadMyAccounts: () => dispatch(loadMyAccounts()),
   SetWalletTransactionArray: returnData => {
     dispatch({ type: TYPE.SET_WALL_TRANS, payload: returnData });
   },
@@ -211,7 +213,7 @@ class Transactions extends Component {
   }
 
   // React Method (Life cycle hook)
-  componentDidMount() {
+  async componentDidMount() {
     const { locale } = this.props.settings;
     this._isMounted = true;
     this.updateChartAndTableDimensions();
@@ -220,25 +222,24 @@ class Transactions extends Component {
     this.gethistorydatajson();
     let myaddresbook = this.props.addressBook;
     if (myaddresbook != undefined) {
-      for (let key in Object.values(myaddresbook)) {
-        const eachAddress = Object.values(myaddresbook)[key];
+      for (let key in myaddresbook) {
+        const eachAddress = myaddresbook[key];
         const primaryadd = eachAddress.addresses['Primary'];
         if (primaryadd != undefined) {
           tempaddpress.set(primaryadd, key);
         }
-        for (let addressname in eachAddress.addresses) {
-          if (!eachAddress.addresses[addressname].isMine) {
+        for (let addr of eachAddress.addresses) {
+          if (!addr.isMine) {
             tempaddpress.set(
-              eachAddress.addresses[addressname].address,
-              eachAddress.name +
-                "'s" +
-                `${' '}` +
-                translate('Footer.Address', locale)
+              addr.address,
+              eachAddress.name + (addr.label ? ` (${addr.label})` : '')
             );
           }
         }
       }
     }
+
+    await this.props.loadMyAccounts();
     for (let key in this.props.myAccounts) {
       for (let eachaddress in this.props.myAccounts[key].addresses) {
         tempaddpress.set(
