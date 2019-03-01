@@ -85,7 +85,7 @@ export function LoadAddressBook() {
           },
           phoneNumber: { type: 'string' },
           timeZone: {
-            type: 'number',
+            type: ['number', 'null'],
             minimum: -720,
             maximum: 840,
             multipleOf: 1,
