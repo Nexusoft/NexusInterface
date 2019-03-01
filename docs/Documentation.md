@@ -158,156 +158,156 @@
     -   [loadData][154]
         -   [Parameters][155]
     -   [render][156]
--   [Market][157]
-    -   [setupcontextmenu][158]
-        -   [Parameters][159]
-    -   [refresher][160]
-    -   [formatBuyData][161]
-        -   [Parameters][162]
-    -   [formatSellData][163]
-        -   [Parameters][164]
-    -   [formatChartData][165]
-        -   [Parameters][166]
-    -   [oneDayinfo][167]
-        -   [Parameters][168]
-    -   [refreshMarket][169]
-    -   [render][170]
--   [MarketDepth][171]
-    -   [render][172]
--   [Candlestick][173]
-    -   [render][174]
--   [AddressBook][175]
-    -   [componentDidMount][176]
-    -   [componentWillUnmount][177]
-    -   [showAddContact][178]
-    -   [render][179]
--   [PanelControls][180]
-    -   [exportAddressBook][181]
--   [ContactList][182]
-    -   [render][183]
--   [Contact][184]
-    -   [confirmDelete][185]
-    -   [editContact][186]
-    -   [showContextMenu][187]
-        -   [Parameters][188]
-    -   [getinitial][189]
-        -   [Parameters][190]
-    -   [select][191]
-    -   [render][192]
--   [ContactDetails][193]
-    -   [confirmDelete][194]
-    -   [editContact][195]
-    -   [render][196]
--   [AddEditContactModal][197]
--   [AddEditContactForm][198]
-    -   [componentDidMount][199]
-    -   [render][200]
--   [Addresses][201]
-    -   [render][202]
--   [Settings][203]
-    -   [setupcontextmenu][204]
-        -   [Parameters][205]
-    -   [render][206]
--   [SettingsApp][207]
-    -   [confirmBackupWallet][208]
-    -   [handleAutoUpdateChange][209]
-        -   [Parameters][210]
-    -   [render][211]
+-   [CSVDownloadModal][157]
+-   [Market][158]
+    -   [setupcontextmenu][159]
+        -   [Parameters][160]
+    -   [refresher][161]
+    -   [formatBuyData][162]
+        -   [Parameters][163]
+    -   [formatSellData][164]
+        -   [Parameters][165]
+    -   [formatChartData][166]
+        -   [Parameters][167]
+    -   [oneDayinfo][168]
+        -   [Parameters][169]
+    -   [refreshMarket][170]
+    -   [render][171]
+-   [MarketDepth][172]
+    -   [render][173]
+-   [Candlestick][174]
+    -   [render][175]
+-   [AddressBook][176]
+    -   [componentDidMount][177]
+    -   [componentWillUnmount][178]
+    -   [showAddContact][179]
+    -   [render][180]
+-   [PanelControls][181]
+    -   [exportAddressBook][182]
+-   [ContactList][183]
+    -   [render][184]
+-   [Contact][185]
+    -   [confirmDelete][186]
+    -   [editContact][187]
+    -   [showContextMenu][188]
+        -   [Parameters][189]
+    -   [getinitial][190]
+        -   [Parameters][191]
+    -   [select][192]
+    -   [render][193]
+-   [ContactDetails][194]
+    -   [confirmDelete][195]
+    -   [editContact][196]
+    -   [render][197]
+-   [AddEditContactModal][198]
+-   [AddEditContactForm][199]
+    -   [componentDidMount][200]
+    -   [render][201]
+-   [Addresses][202]
+    -   [render][203]
+-   [Settings][204]
+    -   [setupcontextmenu][205]
+        -   [Parameters][206]
+    -   [render][207]
+-   [SettingsApp][208]
+    -   [confirmBackupWallet][209]
+    -   [handleAutoUpdateChange][210]
+        -   [Parameters][211]
     -   [render][212]
-    -   [browseBackupDir][213]
--   [SettingsApp][214]
-    -   [confirmBackupWallet][215]
-    -   [handleAutoUpdateChange][216]
-        -   [Parameters][217]
-    -   [render][218]
+    -   [render][213]
+    -   [browseBackupDir][214]
+-   [SettingsApp][215]
+    -   [confirmBackupWallet][216]
+    -   [handleAutoUpdateChange][217]
+        -   [Parameters][218]
     -   [render][219]
-    -   [browseBackupDir][220]
--   [LanguageSetting][221]
-    -   [handleChange][222]
-        -   [Parameters][223]
-    -   [render][224]
--   [SettingsCore][225]
-    -   [confirmSwitchManualDaemon][226]
-    -   [restartCore][227]
-    -   [render][228]
--   [FeeSetting][229]
-    -   [confirmSetTxFee][230]
-    -   [render][231]
--   [SettingsStyle][232]
-    -   [toggleGlobeRender][233]
-        -   [Parameters][234]
-    -   [setWalpaper][235]
-        -   [Parameters][236]
-    -   [setColor][237]
-        -   [Parameters][238]
-    -   [resetColors][239]
-    -   [loadCustomTheme][240]
-        -   [Parameters][241]
-    -   [openPickThemeFileDialog][242]
-    -   [exportThemeFileDialog][243]
-    -   [pressDarkTheme][244]
-    -   [pressLightTheme][245]
-    -   [pressCustomTheme][246]
-    -   [pressResetTheme][247]
-    -   [savePreviousCustomTheme][248]
-    -   [setToCustom][249]
-    -   [setThemeSelector][250]
-        -   [Parameters][251]
-    -   [render][252]
--   [ColorPicker][253]
-    -   [openPicker][254]
-    -   [closePicker][255]
-    -   [handleColorChange][256]
-        -   [Parameters][257]
-    -   [render][258]
--   [BackgroundPicker][259]
-    -   [setDefault][260]
-        -   [Parameters][261]
-    -   [handleFilePick][262]
-        -   [Parameters][263]
-    -   [render][264]
--   [ThemePicker][265]
-    -   [setToCustomTheme][266]
-    -   [setSelector][267]
-        -   [Parameters][268]
-    -   [render][269]
--   [Security][270]
-    -   [render][271]
--   [Login][272]
-    -   [getMinDate][273]
-    -   [renderTimeInputs][274]
-        -   [Parameters][275]
-    -   [render][276]
--   [Encrypted][277]
-    -   [render][278]
--   [ChangePassword][279]
-    -   [confirmLogout][280]
-    -   [render][281]
--   [ImportPrivKey][282]
-    -   [render][283]
--   [ViewPrivKeyForAddress][284]
-    -   [showPrivKey][285]
-        -   [Parameters][286]
-    -   [copyPrivkey][287]
-    -   [resetPrivateKey][288]
-    -   [render][289]
--   [Unencrypted][290]
-    -   [render][291]
--   [EncryptWallet][292]
-    -   [render][293]
--   [Terminal][294]
-    -   [setupcontextmenu][295]
-        -   [Parameters][296]
-    -   [render][297]
--   [TerminalConsole][298]
-    -   [getSnapshotBeforeUpdate][299]
-    -   [processOutput][300]
-    -   [processInput][301]
-    -   [handleKeyboardInput][302]
+    -   [render][220]
+    -   [browseBackupDir][221]
+-   [LanguageSetting][222]
+    -   [handleChange][223]
+        -   [Parameters][224]
+    -   [render][225]
+-   [SettingsCore][226]
+    -   [confirmSwitchManualDaemon][227]
+    -   [restartCore][228]
+    -   [render][229]
+-   [FeeSetting][230]
+    -   [confirmSetTxFee][231]
+    -   [render][232]
+-   [SettingsStyle][233]
+    -   [toggleGlobeRender][234]
+        -   [Parameters][235]
+    -   [setWallpaper][236]
+        -   [Parameters][237]
+    -   [setColor][238]
+        -   [Parameters][239]
+    -   [resetColors][240]
+    -   [loadCustomTheme][241]
+        -   [Parameters][242]
+    -   [openPickThemeFileDialog][243]
+    -   [exportThemeFileDialog][244]
+    -   [pressDarkTheme][245]
+    -   [pressLightTheme][246]
+    -   [pressCustomTheme][247]
+    -   [pressResetTheme][248]
+    -   [savePreviousCustomTheme][249]
+    -   [setToCustom][250]
+    -   [setThemeSelector][251]
+        -   [Parameters][252]
+    -   [render][253]
+-   [ColorPicker][254]
+    -   [openPicker][255]
+    -   [closePicker][256]
+    -   [handleColorChange][257]
+        -   [Parameters][258]
+    -   [render][259]
+-   [BackgroundPicker][260]
+    -   [setDefault][261]
+        -   [Parameters][262]
+    -   [handleFilePick][263]
+        -   [Parameters][264]
+    -   [render][265]
+-   [ThemePicker][266]
+    -   [setToCustomTheme][267]
+    -   [setSelector][268]
+        -   [Parameters][269]
+    -   [render][270]
+-   [SettingsSecurity][271]
+    -   [render][272]
+-   [Login][273]
+    -   [getMinDate][274]
+    -   [renderTimeInputs][275]
+        -   [Parameters][276]
+    -   [render][277]
+-   [Encrypted][278]
+    -   [render][279]
+-   [ChangePassword][280]
+    -   [confirmLogout][281]
+    -   [render][282]
+-   [ViewPrivKeyForAddress][283]
+    -   [showPrivKey][284]
+        -   [Parameters][285]
+    -   [copyPrivkey][286]
+    -   [resetPrivateKey][287]
+    -   [render][288]
+-   [Unencrypted][289]
+    -   [render][290]
+-   [EncryptWallet][291]
+    -   [render][292]
+-   [ImportPrivKey][293]
+    -   [render][294]
+-   [Terminal][295]
+    -   [setupcontextmenu][296]
+        -   [Parameters][297]
+    -   [render][298]
+-   [TerminalConsole][299]
+    -   [loadCommandList][300]
+    -   [getSnapshotBeforeUpdate][301]
+    -   [componentDidUpdate][302]
         -   [Parameters][303]
-    -   [handleKeyboardArrows][304]
-        -   [Parameters][305]
-    -   [autoComplete][306]
+    -   [execute][304]
+    -   [handleKeyDown][305]
+        -   [Parameters][306]
     -   [render][307]
 -   [TerminalCore][308]
     -   [onScrollEvent][309]
@@ -1086,6 +1086,12 @@ React Render
 
 Returns **any** 
 
+## CSVDownloadModal
+
+**Extends PureComponent**
+
+CSV Download Modal
+
 ## Market
 
 **Extends Component**
@@ -1462,7 +1468,7 @@ Toggle The Globe
 
 -   `e`  
 
-### setWalpaper
+### setWallpaper
 
 Set New Wallpaper
 
@@ -1618,11 +1624,11 @@ React Render
 
 Returns **any** 
 
-## Security
+## SettingsSecurity
 
 **Extends React.Component**
 
-Security Page on Settings Page
+SettingsSecurity Page on Settings Page
 
 ### render
 
@@ -1685,18 +1691,6 @@ React Render
 
 Returns **any** 
 
-## ImportPrivKey
-
-**Extends Component**
-
-Import Private Keys
-
-### render
-
-React Render
-
-Returns **any** 
-
 ## ViewPrivKeyForAddress
 
 **Extends Component**
@@ -1749,6 +1743,18 @@ React Render
 
 Returns **any** 
 
+## ImportPrivKey
+
+**Extends Component**
+
+Import Private Keys
+
+### render
+
+React Render
+
+Returns **any** 
+
 ## Terminal
 
 **Extends Component**
@@ -1775,45 +1781,29 @@ Returns **any**
 
 Console Page in the Terminal Page
 
+### loadCommandList
+
 ### getSnapshotBeforeUpdate
 
 Before component Did Update
 
 Returns **any** 
 
-### processOutput
+### componentDidUpdate
 
-Process Output
+#### Parameters
 
-Returns **any** 
+-   `prevProps` **any** 
+-   `PrevState` **any** 
+-   `beforeUpdate` **any** 
 
-### processInput
+### execute
 
-Process Input
-
-Returns **any** 
-
-### handleKeyboardInput
-
-Handle keyboard input
+### handleKeyDown
 
 #### Parameters
 
 -   `e`  
-
-### handleKeyboardArrows
-
-Handle arrow keys
-
-#### Parameters
-
--   `e`  
-
-### autoComplete
-
-Return Autocomplete
-
-Returns **any** 
 
 ### render
 
@@ -2213,305 +2203,305 @@ Controls the background of the app
 
 [156]: #render-12
 
-[157]: #market
+[157]: #csvdownloadmodal
 
-[158]: #setupcontextmenu-3
+[158]: #market
 
-[159]: #parameters-45
+[159]: #setupcontextmenu-3
 
-[160]: #refresher
+[160]: #parameters-45
 
-[161]: #formatbuydata
+[161]: #refresher
 
-[162]: #parameters-46
+[162]: #formatbuydata
 
-[163]: #formatselldata
+[163]: #parameters-46
 
-[164]: #parameters-47
+[164]: #formatselldata
 
-[165]: #formatchartdata
+[165]: #parameters-47
 
-[166]: #parameters-48
+[166]: #formatchartdata
 
-[167]: #onedayinfo
+[167]: #parameters-48
 
-[168]: #parameters-49
+[168]: #onedayinfo
 
-[169]: #refreshmarket
+[169]: #parameters-49
 
-[170]: #render-13
+[170]: #refreshmarket
 
-[171]: #marketdepth
+[171]: #render-13
 
-[172]: #render-14
+[172]: #marketdepth
 
-[173]: #candlestick
+[173]: #render-14
 
-[174]: #render-15
+[174]: #candlestick
 
-[175]: #addressbook
+[175]: #render-15
 
-[176]: #componentdidmount
+[176]: #addressbook
 
-[177]: #componentwillunmount
+[177]: #componentdidmount
 
-[178]: #showaddcontact
+[178]: #componentwillunmount
 
-[179]: #render-16
+[179]: #showaddcontact
 
-[180]: #panelcontrols
+[180]: #render-16
 
-[181]: #exportaddressbook
+[181]: #panelcontrols
 
-[182]: #contactlist
+[182]: #exportaddressbook
 
-[183]: #render-17
+[183]: #contactlist
 
-[184]: #contact
+[184]: #render-17
 
-[185]: #confirmdelete
+[185]: #contact
 
-[186]: #editcontact
+[186]: #confirmdelete
 
-[187]: #showcontextmenu
+[187]: #editcontact
 
-[188]: #parameters-50
+[188]: #showcontextmenu
 
-[189]: #getinitial
+[189]: #parameters-50
 
-[190]: #parameters-51
+[190]: #getinitial
 
-[191]: #select
+[191]: #parameters-51
 
-[192]: #render-18
+[192]: #select
 
-[193]: #contactdetails
+[193]: #render-18
 
-[194]: #confirmdelete-1
+[194]: #contactdetails
 
-[195]: #editcontact-1
+[195]: #confirmdelete-1
 
-[196]: #render-19
+[196]: #editcontact-1
 
-[197]: #addeditcontactmodal
+[197]: #render-19
 
-[198]: #addeditcontactform
+[198]: #addeditcontactmodal
 
-[199]: #componentdidmount-1
+[199]: #addeditcontactform
 
-[200]: #render-20
+[200]: #componentdidmount-1
 
-[201]: #addresses
+[201]: #render-20
 
-[202]: #render-21
+[202]: #addresses
 
-[203]: #settings
+[203]: #render-21
 
-[204]: #setupcontextmenu-4
+[204]: #settings
 
-[205]: #parameters-52
+[205]: #setupcontextmenu-4
 
-[206]: #render-22
+[206]: #parameters-52
 
-[207]: #settingsapp
+[207]: #render-22
 
-[208]: #confirmbackupwallet
+[208]: #settingsapp
 
-[209]: #handleautoupdatechange
+[209]: #confirmbackupwallet
 
-[210]: #parameters-53
+[210]: #handleautoupdatechange
 
-[211]: #render-23
+[211]: #parameters-53
 
-[212]: #render-24
+[212]: #render-23
 
-[213]: #browsebackupdir
+[213]: #render-24
 
-[214]: #settingsapp-1
+[214]: #browsebackupdir
 
-[215]: #confirmbackupwallet-1
+[215]: #settingsapp-1
 
-[216]: #handleautoupdatechange-1
+[216]: #confirmbackupwallet-1
 
-[217]: #parameters-54
+[217]: #handleautoupdatechange-1
 
-[218]: #render-25
+[218]: #parameters-54
 
-[219]: #render-26
+[219]: #render-25
 
-[220]: #browsebackupdir-1
+[220]: #render-26
 
-[221]: #languagesetting
+[221]: #browsebackupdir-1
 
-[222]: #handlechange
+[222]: #languagesetting
 
-[223]: #parameters-55
+[223]: #handlechange
 
-[224]: #render-27
+[224]: #parameters-55
 
-[225]: #settingscore
+[225]: #render-27
 
-[226]: #confirmswitchmanualdaemon
+[226]: #settingscore
 
-[227]: #restartcore
+[227]: #confirmswitchmanualdaemon
 
-[228]: #render-28
+[228]: #restartcore
 
-[229]: #feesetting
+[229]: #render-28
 
-[230]: #confirmsettxfee
+[230]: #feesetting
 
-[231]: #render-29
+[231]: #confirmsettxfee
 
-[232]: #settingsstyle
+[232]: #render-29
 
-[233]: #togglegloberender
+[233]: #settingsstyle
 
-[234]: #parameters-56
+[234]: #togglegloberender
 
-[235]: #setwalpaper
+[235]: #parameters-56
 
-[236]: #parameters-57
+[236]: #setwallpaper
 
-[237]: #setcolor
+[237]: #parameters-57
 
-[238]: #parameters-58
+[238]: #setcolor
 
-[239]: #resetcolors
+[239]: #parameters-58
 
-[240]: #loadcustomtheme
+[240]: #resetcolors
 
-[241]: #parameters-59
+[241]: #loadcustomtheme
 
-[242]: #openpickthemefiledialog
+[242]: #parameters-59
 
-[243]: #exportthemefiledialog
+[243]: #openpickthemefiledialog
 
-[244]: #pressdarktheme
+[244]: #exportthemefiledialog
 
-[245]: #presslighttheme
+[245]: #pressdarktheme
 
-[246]: #presscustomtheme
+[246]: #presslighttheme
 
-[247]: #pressresettheme
+[247]: #presscustomtheme
 
-[248]: #savepreviouscustomtheme
+[248]: #pressresettheme
 
-[249]: #settocustom
+[249]: #savepreviouscustomtheme
 
-[250]: #setthemeselector
+[250]: #settocustom
 
-[251]: #parameters-60
+[251]: #setthemeselector
 
-[252]: #render-30
+[252]: #parameters-60
 
-[253]: #colorpicker
+[253]: #render-30
 
-[254]: #openpicker
+[254]: #colorpicker
 
-[255]: #closepicker
+[255]: #openpicker
 
-[256]: #handlecolorchange
+[256]: #closepicker
 
-[257]: #parameters-61
+[257]: #handlecolorchange
 
-[258]: #render-31
+[258]: #parameters-61
 
-[259]: #backgroundpicker
+[259]: #render-31
 
-[260]: #setdefault
+[260]: #backgroundpicker
 
-[261]: #parameters-62
+[261]: #setdefault
 
-[262]: #handlefilepick
+[262]: #parameters-62
 
-[263]: #parameters-63
+[263]: #handlefilepick
 
-[264]: #render-32
+[264]: #parameters-63
 
-[265]: #themepicker
+[265]: #render-32
 
-[266]: #settocustomtheme
+[266]: #themepicker
 
-[267]: #setselector
+[267]: #settocustomtheme
 
-[268]: #parameters-64
+[268]: #setselector
 
-[269]: #render-33
+[269]: #parameters-64
 
-[270]: #security
+[270]: #render-33
 
-[271]: #render-34
+[271]: #settingssecurity
 
-[272]: #login
+[272]: #render-34
 
-[273]: #getmindate
+[273]: #login
 
-[274]: #rendertimeinputs
+[274]: #getmindate
 
-[275]: #parameters-65
+[275]: #rendertimeinputs
 
-[276]: #render-35
+[276]: #parameters-65
 
-[277]: #encrypted
+[277]: #render-35
 
-[278]: #render-36
+[278]: #encrypted
 
-[279]: #changepassword
+[279]: #render-36
 
-[280]: #confirmlogout
+[280]: #changepassword
 
-[281]: #render-37
+[281]: #confirmlogout
 
-[282]: #importprivkey
+[282]: #render-37
 
-[283]: #render-38
+[283]: #viewprivkeyforaddress
 
-[284]: #viewprivkeyforaddress
+[284]: #showprivkey
 
-[285]: #showprivkey
+[285]: #parameters-66
 
-[286]: #parameters-66
+[286]: #copyprivkey
 
-[287]: #copyprivkey
+[287]: #resetprivatekey
 
-[288]: #resetprivatekey
+[288]: #render-38
 
-[289]: #render-39
+[289]: #unencrypted
 
-[290]: #unencrypted
+[290]: #render-39
 
-[291]: #render-40
+[291]: #encryptwallet
 
-[292]: #encryptwallet
+[292]: #render-40
 
-[293]: #render-41
+[293]: #importprivkey
 
-[294]: #terminal
+[294]: #render-41
 
-[295]: #setupcontextmenu-5
+[295]: #terminal
 
-[296]: #parameters-67
+[296]: #setupcontextmenu-5
 
-[297]: #render-42
+[297]: #parameters-67
 
-[298]: #terminalconsole
+[298]: #render-42
 
-[299]: #getsnapshotbeforeupdate
+[299]: #terminalconsole
 
-[300]: #processoutput
+[300]: #loadcommandlist
 
-[301]: #processinput
+[301]: #getsnapshotbeforeupdate
 
-[302]: #handlekeyboardinput
+[302]: #componentdidupdate
 
 [303]: #parameters-68
 
-[304]: #handlekeyboardarrows
+[304]: #execute
 
-[305]: #parameters-69
+[305]: #handlekeydown
 
-[306]: #autocomplete
+[306]: #parameters-69
 
 [307]: #render-43
 

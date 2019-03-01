@@ -45,6 +45,7 @@ import config from 'api/configuration';
 import UIController from 'components/UIController';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
+import CSVDownloadModal from './TransactionCSVDownloadModal';
 
 // Images
 import transactionIcon from 'images/transaction.sprite.svg';
@@ -209,6 +210,7 @@ class Transactions extends Component {
       highlightedBlockHash: 'Loading',
       needsHistorySave: false,
       copyBuffer: '',
+      CSVProgress: 0,
     };
   }
 
@@ -275,6 +277,14 @@ class Transactions extends Component {
       this.transactioncontextfunction,
       false
     );
+    this._Onprogress = () => {};
+  /*setInterval(() => {
+    this.setState(
+      {
+        CSVProgress: this.state.CSVProgress + 1,
+      }, () => {this.updateProgress();}
+    )
+  }, 250); */
   }
 
   // React Method (Life cycle hook)
@@ -660,7 +670,6 @@ class Transactions extends Component {
     }
 
     Promise.all(promisList).then(payload => {
-      console.log(payload);
       payload.forEach(element => {
         for (let index = 0; index < element.length; index++) {
           const element2 = element[index];
@@ -729,8 +738,21 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   DownloadCSV() {
-    googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
-    this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
+    //UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
+    //if (this.state.CSVProgress >= 100){
+      googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
+      this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
+    //}
+  }
+
+  setEvents(events)
+  {
+    this._Onprogress = events.progress;
+  }
+
+  updateProgress()
+  {
+    this._Onprogress(this.state.CSVProgress);
   }
 
   /**
@@ -1653,8 +1675,7 @@ class Transactions extends Component {
     const chartData = this.returnChartData();
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
     const leftPadding =
-      parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
-    console.log(this.props.theme.primary);
+    parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
     return (
       <VictoryChart
         width={this.state.mainChartWidth}
