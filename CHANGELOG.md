@@ -1,15 +1,21 @@
-# 0.8.9 (2019.2.XX)
+# 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)
 #### Additions
-- 
+- Added rescan buttons to allow for easy rescan of the wallet
+- Addresses now on the add recipient
 
 #### Adjustments
-- 
+- Bootstrap only stops the core when it is finished downloading
+- Improved Terminal Page
+- App now remembers the last setting tab selected
+- Improved auto suggestions
 
 #### Fixes
 - Fixed issue with auto updates, The app will now look for updates and ask the user if they want to upgrade
 - Fixed issue with a crash using `minimalist` or `none` view
 - Fixed issue were changing a color made the background turn to the light theme
+- Fixed issue with account names in the Transaction page
+
 
 # 0.8.8 (2019.2.22)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.8)

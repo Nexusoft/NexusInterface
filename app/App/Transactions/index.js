@@ -278,13 +278,13 @@ class Transactions extends Component {
       false
     );
     this._Onprogress = () => {};
-  setInterval(() => {
+  /*setInterval(() => {
     this.setState(
       {
         CSVProgress: this.state.CSVProgress + 1,
       }, () => {this.updateProgress();}
     )
-  }, 250);
+  }, 250); */
   }
 
   // React Method (Life cycle hook)
