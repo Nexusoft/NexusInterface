@@ -1,5 +1,6 @@
 import Ajv from 'ajv';
 import config from 'api/configuration';
+import { emailRegex } from 'utils/form';
 
 const fileName = 'addressbook.json';
 
@@ -79,7 +80,8 @@ export function LoadAddressBook() {
           },
           email: {
             type: 'string',
-            format: 'email',
+            // also accept empty strings
+            pattern: `${emailRegex.source}|^$`,
           },
           phoneNumber: { type: 'string' },
           timeZone: {
