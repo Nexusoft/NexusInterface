@@ -10,6 +10,7 @@ import rimraf from 'rimraf';
 // Internal
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
+import * as RPC from 'scripts/rpc';
 
 const recentDbUrl =
   'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
@@ -87,10 +88,6 @@ export default class Bootstrapper {
       await backupWallet(backupFolder);
       if (this._aborted) return;
 
-      this._progress('stopping_core');
-      await electron.remote.getGlobal('core').stop();
-      if (this._aborted) return;
-
       clearOverviewVariables();
       // Remove the old file if exists
 
@@ -114,8 +111,18 @@ export default class Bootstrapper {
       await this._extractDb();
       if (this._aborted) return;
 
-      this._progress('finalizing');
+      this._progress('stopping_core');
+      await electron.remote.getGlobal('core').stop();
+      if (this._aborted) return;
+
+      this._progress('moving_db');
       await this._moveExtractedContent();
+
+      this._progress('restarting_core');
+      await this._restartCore();
+
+      this._progress('rescanning');
+      await RPC.PROMISE('rescan');
 
       this._cleanUp();
 
@@ -284,6 +291,18 @@ export default class Bootstrapper {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async _restartCore() {
+    electron.remote.getGlobal('core').start();
+    const getInfo = async () => {
+      try {
+        return await RPC.PROMISE('getinfo', []);
+      } catch (err) {
+        return await getInfo();
+      }
+    };
+    return await getInfo();
   }
 
   /**

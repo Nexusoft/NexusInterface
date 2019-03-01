@@ -35,6 +35,8 @@ const ColorButton = styled(Button)(({ color: c, open }) => {
  * @extends {Component}
  */
 class ColorPicker extends Component {
+  btnRef = React.createRef();
+
   state = {
     open: false,
     pickerStyles: {},
@@ -46,7 +48,9 @@ class ColorPicker extends Component {
    * @memberof ColorPicker
    */
   openPicker = () => {
-    const btnRect = ReactDOM.findDOMNode(this.btnRef).getBoundingClientRect();
+    const btnRect = ReactDOM.findDOMNode(
+      this.btnRef.current
+    ).getBoundingClientRect();
     const styles = {
       position: 'fixed',
       left: btnRect.right + 10,
@@ -86,9 +90,7 @@ class ColorPicker extends Component {
     return (
       <>
         <ColorButton
-          ref={el => {
-            this.btnRef = el;
-          }}
+          ref={this.btnRef}
           uppercase
           color={currentColor}
           open={this.state.open}

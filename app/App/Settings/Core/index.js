@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { remote } from 'electron';
 import { connect } from 'react-redux';
-import styled from '@emotion/styled';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
@@ -10,6 +9,7 @@ import core from 'api/core';
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
+import { switchSettingsTab } from 'actions/uiActionCreators';
 import WaitingMessage from 'components/WaitingMessage';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -36,12 +36,11 @@ const mapStateToProps = ({ settings, overview: { connections } }) => ({
     socks4ProxyPort: settings.socks4ProxyPort,
   },
 });
-const mapDispatchToProps = dispatch => ({
-  updateSettings: updates => dispatch(updateSettings(updates)),
-  clearForRestart: () => {
-    dispatch({ type: TYPE.CLEAR_FOR_RESTART });
-  },
-});
+const actionCreators = {
+  updateSettings,
+  switchSettingsTab,
+  clearForRestart: () => ({ type: TYPE.CLEAR_FOR_RESTART }),
+};
 
 /**
  * Core Settings page that is inside Settings
@@ -51,7 +50,7 @@ const mapDispatchToProps = dispatch => ({
  */
 @connect(
   mapStateToProps,
-  mapDispatchToProps
+  actionCreators
 )
 @reduxForm({
   form: 'coreSettings',
@@ -141,6 +140,16 @@ const mapDispatchToProps = dispatch => ({
   onSubmitFail: rpcErrorHandler('Error Saving Settings'),
 })
 class SettingsCore extends Component {
+  /**
+   *Creates an instance of SettingsCore.
+   * @param {*} props
+   * @memberof SettingsCore
+   */
+  constructor(props) {
+    super(props);
+    props.switchSettingsTab('Core');
+  }
+
   /**
    * Confirms Switch to Manual Daemon
    *

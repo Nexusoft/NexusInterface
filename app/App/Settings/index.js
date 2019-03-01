@@ -1,5 +1,6 @@
 // External
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router';
 import { remote } from 'electron';
 import Text from 'components/Text';
@@ -15,7 +16,7 @@ import Tab from 'components/Tab';
 import SettingsApp from './App';
 import SettingsCore from './Core';
 import SettingsStyle from './Style';
-import Security from './Security';
+import SettingsSecurity from './Security';
 
 // Images
 import settingsIcon from 'images/settings.sprite.svg';
@@ -43,6 +44,17 @@ const SettingsContent = styled.div({
   margin: '0 -30px',
   padding: '0 30px',
 });
+
+let SettingsRedirect = ({ lastActiveTab, match }) => (
+  <Redirect
+    exact
+    from={`${match.path}/`}
+    to={`${match.path}/${lastActiveTab}`}
+  />
+);
+SettingsRedirect = connect(({ ui: { settings: { lastActiveTab } } }) => ({
+  lastActiveTab,
+}))(SettingsRedirect);
 
 /**
  * Settings Page
@@ -82,6 +94,7 @@ export default class Settings extends Component {
    */
   render() {
     const { match } = this.props;
+    console.log(`${match.path}/App`);
 
     return (
       <Panel
@@ -115,18 +128,14 @@ export default class Settings extends Component {
 
           <SettingsContent>
             <Switch>
-              <Redirect
-                exact
-                from={`${match.path}/`}
-                to={`${match.path}/App`}
-              />
-              <Route
-                path={`${match.path}/App`}
-                render={props => <SettingsApp {...this.props} />}
-              />
+              <Route path={`${match.path}/App`} component={SettingsApp} />
               <Route path={`${match.path}/Core`} component={SettingsCore} />
+              <Route
+                path={`${match.path}/Security`}
+                component={SettingsSecurity}
+              />
               <Route path={`${match.path}/Style`} component={SettingsStyle} />
-              <Route path={`${match.path}/Security`} component={Security} />
+              <SettingsRedirect match={match} />
             </Switch>
           </SettingsContent>
         </SettingsComponent>
