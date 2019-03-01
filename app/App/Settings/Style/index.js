@@ -10,6 +10,7 @@ import https from 'https';
 import googleanalytics from 'scripts/googleanalytics';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { updateTheme, resetColors } from 'actions/themeActionCreators';
+import { switchSettingsTab } from 'actions/uiActionCreators';
 import Text, { translate } from 'components/Text';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -55,6 +56,7 @@ const mapDispatchToProps = dispatch => ({
   },
   updateTheme: updates => dispatch(updateTheme(updates)),
   resetColors: () => dispatch(resetColors()),
+  switchSettingsTab: tab => dispatch(switchSettingsTab(tab)),
 });
 
 const addressStyleOptions = [
@@ -82,6 +84,16 @@ const AddressStyleNote = styled.div(({ theme }) => ({
   mapDispatchToProps
 )
 class SettingsStyle extends Component {
+  /**
+   *Creates an instance of SettingsStyle.
+   * @param {*} props
+   * @memberof SettingsStyle
+   */
+  constructor(props) {
+    super(props);
+    props.switchSettingsTab('Style');
+  }
+
   state = {
     previousCustom: {},
     DarkTheme: DarkTheme,
@@ -112,7 +124,7 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  setWalpaper = (path, defaultStyle) => {
+  setWallpaper = (path, defaultStyle) => {
     defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
     this.props.updateTheme({ defaultStyle: defaultStyle, wallpaper: path });
     if (path || defaultStyle.endsWith('Custom')) {
@@ -130,9 +142,13 @@ class SettingsStyle extends Component {
    */
   setColor = (key, value) => {
     this.setToCustom();
+    const defaultStyle = this.props.theme.defaultStyle;
+    const wasOnDefault = defaultStyle === 'Dark'
+     || defaultStyle === 'Light'
+     || defaultStyle.endsWith('Custom');
     this.props.updateTheme({
       [key]: value,
-      defaultStyle: 'Custom',
+      defaultStyle: wasOnDefault? ( defaultStyle.endsWith('Custom')? defaultStyle : defaultStyle + 'Custom') : 'Custom',
     });
   };
 
@@ -178,17 +194,17 @@ class SettingsStyle extends Component {
               file.close(response => {
                 console.log(this);
                 console.log('FInished DOwnloading');
-                this.setWalpaper(file.path);
+                this.setWallpaper(file.path);
               });
             };
             onFinish.bind(this);
             file.on('finish', () => onFinish());
           })
           .on('error', error => {
-            this.setWalpaper('');
+            this.setWallpaper('');
           })
           .on('timeout', timeout => {
-            this.setWalpaper('');
+            this.setWallpaper('');
           });
       }
     } catch (err) {
@@ -402,7 +418,7 @@ class SettingsStyle extends Component {
           <BackgroundPicker
             wallpaper={theme.wallpaper}
             defaultStyle={theme.defaultStyle}
-            onChange={this.setWalpaper}
+            onChange={this.setWallpaper}
           />
         </SettingsField>
 

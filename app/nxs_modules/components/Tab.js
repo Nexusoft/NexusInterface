@@ -33,7 +33,7 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: '0.75em 1.5em',
+  padding: '0 1.5em 0.75em',
   fontSize: '1.125em',
   color: theme.mixer(0.75),
   borderBottom: `1px solid ${theme.mixer(0.25)}`,
