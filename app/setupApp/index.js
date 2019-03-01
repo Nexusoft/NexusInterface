@@ -5,7 +5,6 @@ import fs from 'fs';
 // Internal
 import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
-import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
 import getInfo from 'actions/getInfo';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
@@ -142,7 +141,7 @@ function processDeamonOutput(debugfile, store) {
     batch.push(d);
   });
   printCoreOutputTimer = setInterval(() => {
-    if (store.getState().terminal.coreOutputPaused) {
+    if (store.getState().ui.console.core.paused) {
       return;
     }
     if (batch.length == 0) {

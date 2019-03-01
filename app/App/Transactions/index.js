@@ -37,6 +37,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
+import { loadMyAccounts } from 'actions/accountActionCreators';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
@@ -120,12 +121,14 @@ const mapStateToProps = state => {
     ...state.transactions,
     ...state.common,
     ...state.overview,
+    myAccounts: state.myAccounts,
     addressBook: state.addressBook,
     settings: state.settings,
     theme: state.theme,
   };
 };
 const mapDispatchToProps = dispatch => ({
+  loadMyAccounts: () => dispatch(loadMyAccounts()),
   SetWalletTransactionArray: returnData => {
     dispatch({ type: TYPE.SET_WALL_TRANS, payload: returnData });
   },
@@ -210,7 +213,7 @@ class Transactions extends Component {
   }
 
   // React Method (Life cycle hook)
-  componentDidMount() {
+  async componentDidMount() {
     const { locale } = this.props.settings;
     this._isMounted = true;
     this.updateChartAndTableDimensions();
@@ -219,25 +222,24 @@ class Transactions extends Component {
     this.gethistorydatajson();
     let myaddresbook = this.props.addressBook;
     if (myaddresbook != undefined) {
-      for (let key in Object.values(myaddresbook)) {
-        const eachAddress = Object.values(myaddresbook)[key];
+      for (let key in myaddresbook) {
+        const eachAddress = myaddresbook[key];
         const primaryadd = eachAddress.addresses['Primary'];
         if (primaryadd != undefined) {
           tempaddpress.set(primaryadd, key);
         }
-        for (let addressname in eachAddress.addresses) {
-          if (!eachAddress.addresses[addressname].isMine) {
+        for (let addr of eachAddress.addresses) {
+          if (!addr.isMine) {
             tempaddpress.set(
-              eachAddress.addresses[addressname].address,
-              eachAddress.name +
-                "'s" +
-                `${' '}` +
-                translate('Footer.Address', locale)
+              addr.address,
+              eachAddress.name + (addr.label ? ` (${addr.label})` : '')
             );
           }
         }
       }
     }
+
+    await this.props.loadMyAccounts();
     for (let key in this.props.myAccounts) {
       for (let eachaddress in this.props.myAccounts[key].addresses) {
         tempaddpress.set(
@@ -1652,13 +1654,16 @@ class Transactions extends Component {
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
     const leftPadding =
       parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
-      console.log(this.props.theme.primary);
+    console.log(this.props.theme.primary);
     return (
       <VictoryChart
         width={this.state.mainChartWidth}
         height={this.state.mainChartHeight}
         scale={{ x: 'time' }}
-        style={{ overflow: 'visible' , border: '1px solid ' + this.props.theme.primary,}}
+        style={{
+          overflow: 'visible',
+          border: '1px solid ' + this.props.theme.primary,
+        }}
         domainPadding={{ x: 90, y: 30 }}
         padding={{
           top: 6,
@@ -1784,7 +1789,10 @@ class Transactions extends Component {
           <div>
             <div
               id="transactions-chart"
-              style={{ display: data.length === 0 ? 'none' : 'block', border: '2px solid ' + this.props.theme.background, }}
+              style={{
+                display: data.length === 0 ? 'none' : 'block',
+                border: '2px solid ' + this.props.theme.background,
+              }}
             >
               {data.length === 0 ? null : this.returnVictoryChart()}
             </div>
@@ -1844,7 +1852,7 @@ class Transactions extends Component {
             </Filters>
             <div id="transactions-details">
               <Table
-                style = {this.props.theme}
+                style={this.props.theme}
                 key="table-top"
                 data={data}
                 columns={columns}
