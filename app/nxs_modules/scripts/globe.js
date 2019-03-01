@@ -192,9 +192,9 @@ export default (DAT.Globe = function(container, opts) {
 
     point = new THREE.Mesh(geometry);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    // renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    alpha: true;
+
     renderer.setSize(w, h);
     renderer.setClearColor(0x000000, 0); // set background color to transparent
 
