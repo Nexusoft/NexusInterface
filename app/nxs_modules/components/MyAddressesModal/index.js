@@ -11,8 +11,10 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import searchIcon from 'images/search.sprite.svg';
 import plusIcon from 'images/plus.sprite.svg';
+
 import Account from './Account';
 import NewAddressForm from './NewAddressForm';
+import RescanButton from './RescanButton';
 
 const MyAddressesModalComponent = styled(Modal)({
   // set a fixed height so that the modal won't jump when the search query changes
@@ -21,6 +23,9 @@ const MyAddressesModalComponent = styled(Modal)({
 
 const Search = styled.div({
   marginBottom: '1em',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'stretch',
 });
 
 const Buttons = styled.div({
@@ -110,6 +115,7 @@ class MyAddressesModal extends React.Component {
               onChange={this.handleChange}
               style={{ width: 300 }}
             />
+            <RescanButton />
           </Search>
           {this.filteredAccounts().map(acc => (
             <Account

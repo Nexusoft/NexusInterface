@@ -1,16 +1,11 @@
 import * as TYPE from 'actions/actiontypes';
 
-const initialState = {
-  lastActiveTab: 'Console',
-};
+const initialState = 'Console';
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case TYPE.SWITCH_CONSOLE_TAB:
-      return {
-        ...state,
-        lastActiveTab: action.payload,
-      };
+      return action.payload;
 
     default:
       return state;

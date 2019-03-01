@@ -421,6 +421,12 @@
   "Exchange.TradeUnMet": "Trade Minimum Unmet",
   "Exchange.Addresss": "Address",
 
+  "MyAddressesModal.Rescan": "Rescan wallet",
+  "MyAddressesModal.Rescanning": "Rescanning...",
+  "MyAddressesModal.RescanSuccess": "Rescanned successfully",
+  "MyAddressesModal.RescanError": "Error Rescanning",
+  "MyAddressesModal.RescanTooltip": "The balances shown here could be incorrect in some rare cases, rescanning will help you correct them",
+
   "Footer.Overview": "Overview",
   "Footer.SendNXS": "Send NXS",
   "Footer.Transactions": "Transactions",

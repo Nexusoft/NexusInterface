@@ -47,8 +47,6 @@ export default class BootstrapBackgroundTask extends Component {
     switch (step) {
       case 'backing_up':
         return 'Backing up...';
-      case 'stopping_core':
-        return 'Stopping daemon...';
       case 'downloading':
         const { downloaded, totalSize } = details || {};
         const percentage = totalSize
@@ -57,8 +55,14 @@ export default class BootstrapBackgroundTask extends Component {
         return `Downloading... ${percentage}%`;
       case 'extracting':
         return 'Decompressing...';
-      case 'finalizing':
-        return 'Finalizing...';
+      case 'stopping_core':
+        return 'Stopping daemon...';
+      case 'moving_db':
+        return 'Moving...';
+      case 'restarting_core':
+        return 'Restarting daemon...';
+      case 'rescanning':
+        return 'Rescanning wallet...';
       default:
         return '';
     }
