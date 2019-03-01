@@ -105,7 +105,7 @@ function SetCoreParameters(settings) {
   }
 
   // Enable staking (default is 0)
-  if (settings.enableStaking == true) parameters.push('-stake=1');
+  if (settings.enableStaking !== false) parameters.push('-stake=1');
 
   // Enable detach database on shutdown (default is 0)
   if (settings.detatchDatabaseOnShutdown == true)
