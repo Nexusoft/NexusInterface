@@ -7,7 +7,7 @@ import { jsx } from '@emotion/core';
 
 // Internal
 import { arrowStyles } from 'components/Arrow';
-import { timing, animations } from 'styles';
+import { timing, animations, zIndex } from 'styles';
 import { color } from 'utils';
 
 const spacing = 10;
@@ -177,7 +177,7 @@ class TooltipTrigger extends Component {
     const rect = trigger.getBoundingClientRect();
     const tooltipStyles = {
       position: 'fixed',
-      zIndex: 9000,
+      zIndex: zIndex.tooltips,
       ...tooltipPositioning(rect, position),
       ...tooltipAligning(rect, position, align),
     };

@@ -65,7 +65,7 @@ const resetStyles = theme => ({
 const customizedScrollbar = theme => ({
   '::-webkit-scrollbar': {
     background: 'transparent',
-    zIndex: 10000000,
+    zIndex: 1,
     '&:vertical': {
       width: 6,
     },
