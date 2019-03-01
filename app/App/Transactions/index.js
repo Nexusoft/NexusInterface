@@ -736,11 +736,11 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   DownloadCSV() {
-    UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
-    if (this.state.CSVProgress >= 100){
+    //UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
+    //if (this.state.CSVProgress >= 100){
       googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
       this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
-    }
+    //}
   }
 
   setEvents(events)
