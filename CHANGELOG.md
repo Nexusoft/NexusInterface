@@ -1,15 +1,34 @@
-# 0.8.8 (2019.2.XX)
-[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.8)
+# 0.8.9 (2019.3.01)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)
+#### Additions
+- Added rescan buttons to allow for easy rescan of the wallet
+- Addresses now on the add recipient
+
+#### Adjustments
+- Bootstrap only stops the core when it is finished downloading
+- Improved Terminal Page
+- App now remembers the last setting tab selected
+- Improved auto suggestions
+
+#### Fixes
+- Fixed issue with auto updates, The app will now look for updates and ask the user if they want to upgrade
+- Fixed issue with a crash using `minimalist` or `none` view
+- Fixed issue were changing a color made the background turn to the light theme
+- Fixed issue with account names in the Transaction page
+
+
+# 0.8.8 (2019.2.22)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.8)
 #### Additions
 - Added Dutch/Nederlands Language
-- Brand new Address Book interface\
+- Brand new Address Book interface
 - New setting to set Nexus address format
 
 #### Adjustments
-- Language Improvments
+- Language Improvements
 - Nexus Data and App folder now will be marked with `Beta` instead of the version number so users do not need to rebootstrap or lose settings
-- Removed unused packages from dependecy list
-- Market Data tooltips now with shift left or right inorder for them to display center to the graph
+- Removed unused packages from dependency list
+- Market Data tooltips now with shift left or right in order for them to display center to the graph
 - Transaction Chart in Transaction page now responds to Theme
 - Transaction Graph now responds to Theme, transaction bar colors remain fixed. 
 - On the send page the `X` to remove recipients from a send many now displays at all time
@@ -19,7 +38,7 @@
 - Dock now properly hides and shows on Mac OSX if minimize on close is active
 
 # 0.8.7 (2019.2.15)
-[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.7)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.7)
 #### Additions
 - There are now additional display options for the overview page, see Settings/App
 
@@ -42,7 +61,7 @@
 
 
 # 0.8.6 (2019.2.1)
-[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.6)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.6)
 #### Additions
 - Theme file now accepts a URL and will auto download and store in App Data
 - Theme is now in its own file named Theme.json
@@ -54,7 +73,7 @@
 
 
 # 0.8.5 (2019.1.18)
-[Realease Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.5)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.5)
 #### Additions
 - New Css and layout all over the app
 - Includes new 2.5.5 backend

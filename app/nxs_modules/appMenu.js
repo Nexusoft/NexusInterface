@@ -295,8 +295,8 @@ class AppMenu {
     const subMenuView = {
       label: 'Settings',
       submenu: [
-        this.coreSettings,
         this.appSettings,
+        this.coreSettings,
         this.keyManagement,
         this.styleSettings,
         this.separator,
@@ -351,8 +351,8 @@ class AppMenu {
     const subMenuSettings = {
       label: 'Settings',
       submenu: [
-        this.coreSettings,
         this.appSettings,
+        this.coreSettings,
         this.keyManagement,
         this.styleSettings,
         this.separator,

@@ -126,8 +126,6 @@ class BootstrapModal extends PureComponent {
     switch (step) {
       case 'backing_up':
         return 'Backing up your wallet...';
-      case 'stopping_core':
-        return 'Stopping daemon...';
       case 'downloading':
         const { locale } = this.props;
         const { downloaded, totalSize } = details || {};
@@ -146,8 +144,8 @@ class BootstrapModal extends PureComponent {
           this.datapoints.push(Number.parseFloat(tempdatapoint));
           let sum = 0;
           for (let index = 0; index < this.datapoints.length; index++) {
-          const element = this.datapoints[index];
-          sum += element;
+            const element = this.datapoints[index];
+            sum += element;
           }
           const downloadSpeedAverage  = ((sum / datapoints.length)/100) * totalSize;
           const timeremain = (totalSize * ((100 - percentage) / 100)) / downloadSpeedAverage ; */
@@ -156,8 +154,14 @@ class BootstrapModal extends PureComponent {
         return `Downloading the database... ${percentage}% ${sizeProgress} ${timeremain}`;
       case 'extracting':
         return 'Decompressing the database...';
-      case 'finalizing':
-        return 'Finalizing...';
+      case 'stopping_core':
+        return 'Stopping daemon...';
+      case 'moving_db':
+        return 'Moving the database...';
+      case 'restarting_core':
+        return 'Restarting daemon...';
+      case 'rescanning':
+        return 'Rescanning wallet...';
       default:
         return '';
     }

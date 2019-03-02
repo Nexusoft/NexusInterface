@@ -26,7 +26,7 @@ const Address = styled.div(
     textAlign: 'center',
     whiteSpace: 'pre',
     cursor: 'pointer',
-    resize: 'none',
+    userSelect: 'none',
     transition: `background ${timing.normal}`,
 
     '&:hover': {

@@ -312,7 +312,7 @@
   "Settings.LoginDate": "Login Until Date",
   "Settings.LoginTime": "Login Until Time",
   "Settings.PasswordPlaceholder": "Your wallet password",
-  "Settings.StakingOnly": "Login for Staking Only",
+  "Settings.StakingOnly": "Login for Staking & Mining Only",
 
   "Settings.IpAddress": "IP Address",
   "Settings.Port": "Port",
@@ -420,6 +420,12 @@
   "Exchange.TradeExceed": "Trade Maximum Exceeded",
   "Exchange.TradeUnMet": "Trade Minimum Unmet",
   "Exchange.Addresss": "Address",
+
+  "MyAddressesModal.Rescan": "Rescan wallet",
+  "MyAddressesModal.Rescanning": "Rescanning...",
+  "MyAddressesModal.RescanSuccess": "Rescanned successfully",
+  "MyAddressesModal.RescanError": "Error Rescanning",
+  "MyAddressesModal.RescanTooltip": "The balances shown here could be incorrect in some rare cases, rescanning will help you correct them",
 
   "Footer.Overview": "Overview",
   "Footer.SendNXS": "Send NXS",
