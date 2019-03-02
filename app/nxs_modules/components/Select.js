@@ -271,7 +271,7 @@ class Options extends Component {
         >
           {options.map((option, i) => (
             <Option
-              key={option.value}
+              key={option.isDummy ? i : option.value}
               skin={skin}
               onClick={() => this.select(option)}
               selected={option.value === value && !option.isDummy}

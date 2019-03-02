@@ -66,7 +66,7 @@ class EncryptionWarningModal extends React.Component {
           </p>
           <br />
           <div className="flex space-between">
-            <Button skin="error" onClick={this.ignore}>
+            <Button skin="danger" onClick={this.ignore}>
               <Text id="overview.Ignore" />
             </Button>
             <Button skin="primary" onClick={this.goToSecuritySettings}>

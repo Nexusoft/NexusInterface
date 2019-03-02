@@ -30,7 +30,7 @@ export const defaultSettings = {
 
   // Core
   enableMining: false,
-  enableStaking: false,
+  enableStaking: true,
   verboseLevel: 2,
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',
@@ -46,6 +46,7 @@ export const defaultSettings = {
 
   // Style
   renderGlobe: true,
+  addressStyle: 'segmented',
 
   // Hidden settings
   acceptedAgreement: false,

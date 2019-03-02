@@ -5,11 +5,11 @@ import fs from 'fs';
 // Internal
 import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
-import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
 import getInfo from 'actions/getInfo';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
+import { loadAddressBookFromFile } from 'actions/addressBookActionCreators';
 import updater from 'updater';
 import appMenu from 'appMenu';
 import configuration from 'api/configuration';
@@ -34,7 +34,7 @@ export default function setupApp(store, history) {
   appMenu.initialize(store, history);
   appMenu.build();
 
-  dispatch(ac.LoadAddressBook());
+  dispatch(loadAddressBookFromFile());
 
   dispatch(getInfo());
   setInterval(() => dispatch(getInfo()), 5000);
@@ -56,6 +56,9 @@ export default function setupApp(store, history) {
     // forceQuit is set when user clicks Quit option in the Tray context menu
     if (minimizeOnClose && !remote.getGlobal('forceQuit')) {
       mainWindow.hide();
+      if (process.platform === 'darwin') {
+        remote.app.dock.hide();
+      }
     } else {
       if (tail != undefined) {
         tail.unwatch();
@@ -65,7 +68,6 @@ export default function setupApp(store, history) {
       UIController.openModal(ClosingModal);
 
       if (manualDaemon) {
-        await RPC.PROMISE('stop', []);
         remote.app.exit();
       } else {
         await core.stop();
@@ -139,7 +141,7 @@ function processDeamonOutput(debugfile, store) {
     batch.push(d);
   });
   printCoreOutputTimer = setInterval(() => {
-    if (store.getState().terminal.coreOutputPaused) {
+    if (store.getState().ui.console.core.paused) {
       return;
     }
     if (batch.length == 0) {

@@ -68,7 +68,6 @@
   flex: 0;
   height: 150px;
   margin-bottom: 1em;
-  border: 1px solid var(--border-color);
   order: 2;
 }
 

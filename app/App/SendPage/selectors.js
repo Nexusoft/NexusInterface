@@ -25,10 +25,10 @@ export const getNxsFiatPrice = memoize((rawNXSvalues, fiatCurrency) => {
 export const getAddressNameMap = memoize(addressBook => {
   const map = {};
   if (addressBook) {
-    addressBook.forEach(entry => {
-      if (entry.notMine) {
-        entry.notMine.forEach(a => {
-          map[a.address] = entry.name;
+    Object.values(addressBook).forEach(contact => {
+      if (contact.addresses) {
+        contact.addresses.forEach(({ address, label }) => {
+          map[address] = contact.name + (label ? ' - ' + label : '');
         });
       }
     });
@@ -43,18 +43,21 @@ const Address = styled.span(({ theme }) => ({
 export const getRecipientSuggestions = memoize(addressBook => {
   const suggestions = [];
   if (addressBook) {
-    addressBook.forEach(entry => {
-      if (entry.notMine) {
-        entry.notMine.forEach(a => {
-          suggestions.push({
-            name: entry.name,
-            value: a.address,
-            display: (
-              <span>
-                {entry.name} <Address>{a.address}</Address>
-              </span>
-            ),
-          });
+    Object.values(addressBook).forEach(contact => {
+      if (contact.addresses) {
+        contact.addresses.forEach(({ address, label, isMine }) => {
+          if (!isMine) {
+            suggestions.push({
+              name: contact.name,
+              value: address,
+              display: (
+                <span>
+                  {contact.name}
+                  {label ? ' - ' + label : ''} <Address>{address}</Address>
+                </span>
+              ),
+            });
+          }
         });
       }
     });

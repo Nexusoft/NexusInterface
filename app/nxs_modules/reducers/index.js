@@ -7,13 +7,12 @@ import list from './list';
 import market from './market';
 import transactions from './transactions';
 import common from './common';
-import login from './login';
 import exchange from './exchange';
-import sendReceive from './sendReceive';
-import addressbook from './addressbook';
-import terminal from './terminal';
+import addressBook from './addressBook';
+import myAccounts from './myAccounts';
 import settings from './settings';
 import theme from './theme';
+import ui from './ui';
 
 import { addLocaleData } from 'react-intl';
 import ru from 'react-intl/locale-data/ru';
@@ -40,16 +39,15 @@ export default function createRootReducer(history) {
       overview,
       router: routerReducer,
       list,
-      login,
       market,
-      sendReceive,
       transactions,
       exchange,
       common,
-      addressbook,
-      terminal,
+      addressBook,
+      myAccounts,
       settings,
       theme,
+      ui,
       form: formReducer,
     })
   );

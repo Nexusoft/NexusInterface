@@ -3,7 +3,6 @@ import Request from 'request';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
-import config from 'api/configuration';
 
 // Header Action Creators
 export const GetInfo = info => ({ type: TYPE.GET_INFO_DUMP, payload: info });
@@ -99,20 +98,6 @@ export const SetPortIsAvailable = isAvailable => ({
   payload: isAvailable,
 });
 
-export const LoadAddressBook = () => {
-  let json = null;
-  if (config.Exists('addressbook.json')) {
-    json = config.ReadJson('addressbook.json');
-  } else {
-    json = {
-      addressbook: [],
-    };
-    config.WriteJson('addressbook.json', json);
-  }
-
-  return { type: TYPE.LOAD_ADDRESS_BOOK, payload: json.addressbook };
-};
-
 export const AddRPCCall = returnCall => ({
   type: TYPE.ADD_RPC_CALL,
   payload: returnCall,
@@ -128,6 +113,6 @@ export const showEncryptionWarningModal = () => ({
 });
 
 export const printCoreOutput = data => ({
-  type: TYPE.PRINT_TO_CORE,
+  type: TYPE.PRINT_CORE_OUTPUT,
   payload: data,
 });
