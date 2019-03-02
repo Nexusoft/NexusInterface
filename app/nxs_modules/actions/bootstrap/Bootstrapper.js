@@ -13,9 +13,8 @@ import { backupWallet } from 'api/wallet';
 import * as RPC from 'scripts/rpc';
 
 const recentDbUrl = 'https://nexusearth.com/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL
-// 'https://nexusearth.com/bootstrap/LLD-Databa/se/recent.tar.gz';
+// 'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
 //
-
 // Recent database download location
 const fileLocation = path.join(
   configuration.GetAppDataDirectory(),
