@@ -1,3 +1,8 @@
+# 0.9.0.1 (2019.3.XX)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)
+#### Additions
+- Tritium Cores
+
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)
 #### Additions
