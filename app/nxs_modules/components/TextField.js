@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { jsx, css } from '@emotion/core';
 import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
-import { color } from 'utils';
+import { color, passRef } from 'utils';
 
 const inputHeightHalf = '1.125em';
 
@@ -229,11 +229,8 @@ class TextArea extends Component {
 
   inputRef = el => {
     this.inputElem = el;
-    const { inputRef } = this.props;
-    if (typeof inputRef === 'function') {
-      inputRef(el);
-    } else if (inputRef && typeof inputRef === 'object') {
-      inputRef.current = el;
+    if (this.props.inputRef) {
+      passRef(el, this.props.inputRef);
     }
   };
 
