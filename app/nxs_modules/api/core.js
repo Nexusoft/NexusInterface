@@ -78,8 +78,8 @@ function SetCoreParameters(settings) {
     settings.forkBlocks === undefined ? 0 : settings.forkBlocks;
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
-  parameters.push('-rpcuser=' + user);
-  parameters.push('-rpcpassword=' + password);
+  // parameters.push('-rpcuser=' + user);  // do not use security risk
+  // parameters.push('-rpcpassword=' + password);// do not use security risk
   parameters.push('-rpcport=' + port);
   parameters.push('-datadir=' + datadir);
   parameters.push('-daemon');
@@ -408,6 +408,12 @@ class Core extends EventEmitter {
               datadir
           );
           fs.mkdirSync(datadir);
+        }
+        if (!fs.existsSync(path.join(datadir, 'nexus.conf'))) {
+          fs.writeFileSync(
+            path.join(datadir, 'nexus.conf'),
+            `rpcuser=${user}\nrpcpassword=${password}`
+          );
         }
         log.info('Core Manager: Starting core');
         var coreprocess = spawn(GetCoreBinaryPath(), parameters, {
