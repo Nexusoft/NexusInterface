@@ -49,27 +49,19 @@ const AddressCopy = styled.div(
     flexGrow: 1,
     overflow: 'hidden',
   },
-  ({ left }) =>
+  ({ left, overflown }) =>
     left && {
       maskImage:
         'linear-gradient(to left, transparent 0%, black 10%, black 100%)',
+      maskImage: overflown ? undefined : 'none',
     },
-  ({ left, overflow }) =>
-    left &&
-    !overflow && {
-      maskImage: 'none',
-    },
-  ({ right }) =>
+  ({ right, overflown }) =>
     right && {
       display: 'flex',
       justifyContent: 'flex-end',
       maskImage:
         'linear-gradient(to right, transparent 0%, black 10%, black 100%)',
-    },
-  ({ right, overflow }) =>
-    right &&
-    !overflow && {
-      display: 'none',
+      display: overflown ? undefined : 'none',
     }
 );
 
@@ -109,7 +101,7 @@ export default class TruncateMiddleAddress extends React.Component {
   addressRef = React.createRef();
   contentRef = React.createRef();
 
-  state = { overflow: false };
+  state = { overflown: false };
 
   /**
    *
@@ -120,11 +112,11 @@ export default class TruncateMiddleAddress extends React.Component {
     const containerWidth = this.addressRef.current.clientWidth;
     const contentWidth = this.contentRef.current.offsetWidth;
 
-    if (contentWidth > containerWidth && !this.state.overflow) {
-      this.setState({ overflow: true });
+    if (contentWidth > containerWidth && !this.state.overflown) {
+      this.setState({ overflown: true });
     }
-    if (contentWidth <= containerWidth && this.state.overflow) {
-      this.setState({ overflow: false });
+    if (contentWidth <= containerWidth && this.state.overflown) {
+      this.setState({ overflown: false });
     }
   };
 
@@ -176,7 +168,7 @@ export default class TruncateMiddleAddress extends React.Component {
    */
   render() {
     const { address, label, ...rest } = this.props;
-    const { overflow } = this.state;
+    const { overflown } = this.state;
     return (
       <TruncateMiddleAddressComponent {...rest}>
         {!!label && <Label>{label}</Label>}
@@ -190,11 +182,11 @@ export default class TruncateMiddleAddress extends React.Component {
             onClick={this.copyAddress}
           >
             <Address ref={this.addressRef}>
-              <AddressCopy left overflow={overflow}>
+              <AddressCopy left overflown={overflown}>
                 <AddressContent ref={this.contentRef}>{address}</AddressContent>
               </AddressCopy>
-              <Ellipsis hidden={!overflow}>...</Ellipsis>
-              <AddressCopy right overflow={overflow}>
+              <Ellipsis hidden={!overflown}>...</Ellipsis>
+              <AddressCopy right overflown={overflown}>
                 {address}
               </AddressCopy>
             </Address>

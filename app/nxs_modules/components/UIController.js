@@ -9,6 +9,7 @@ import SuccessDialog from 'components/Dialogs/SuccessDialog';
 import Notification from 'components/Notification';
 import ModalContext from 'context/modal';
 import TaskContext from 'context/task';
+import { zIndex } from 'styles';
 
 const newModalID = (function() {
   let counter = 1;
@@ -29,7 +30,7 @@ const SnackBars = styled.div({
   position: 'fixed',
   top: 20,
   left: 20,
-  zIndex: 9002,
+  zIndex: zIndex.snackBars,
 });
 
 const Modals = ({ modals }) => (

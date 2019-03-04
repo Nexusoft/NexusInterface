@@ -94,7 +94,6 @@ export default class Settings extends Component {
    */
   render() {
     const { match } = this.props;
-    console.log(`${match.path}/App`);
 
     return (
       <Panel
