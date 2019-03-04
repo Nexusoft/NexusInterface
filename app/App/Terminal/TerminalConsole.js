@@ -193,16 +193,9 @@ class TerminalConsole extends Component {
       return;
     }
 
-    const args = [];
-    chunks.forEach(arg => {
-      if (arg) {
-        if (!isNaN(parseFloat(arg))) {
-          args.push(parseFloat(arg));
-        } else {
-          args.push(arg);
-        }
-      }
-    });
+    const args = chunks
+      .filter(arg => arg)
+      .map(arg => (isNaN(parseFloat(arg)) ? arg : parseFloat(arg)));
 
     const tab = ' '.repeat(7);
     let result = null;
