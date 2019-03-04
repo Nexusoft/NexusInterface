@@ -36,7 +36,7 @@
   "sendReceive.Queue": "Queue",
   "sendReceive.ClearQueue": "Clear Queue",
   "sendReceive.SendAll": "Send All",
-  "sendReceive.SendNow": "Send Now",
+  "sendReceive.SendNow": "Send",
   "sendReceive.AddToQueue": "Add To Queue",
   "sendReceive.EditQueue": "Edit Queue",
   "sendReceive.MyAccount": "My Account",
