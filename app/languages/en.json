@@ -448,7 +448,7 @@
   "Header.UnlockedUntil": "Logged in until {unlockDate}",
   "Header.StakingOnly": "for staking only",
   "Header.Synced": "Synchronized",
-  "Header.Syncing": "Synchronizing...",
+  "Header.Syncing": "Synchronizing... {percent}%",
   "Header.Blocks": "Blocks",
   "Header.DaemonNotLoaded": "Daemon Not Loaded",
 
