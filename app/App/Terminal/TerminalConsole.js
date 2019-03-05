@@ -23,6 +23,14 @@ import {
   resetConsoleOutput,
 } from 'actions/uiActionCreators';
 
+const filterCommands = memoize((commandList, inputValue) => {
+  if (!commandList) return [];
+  const query = inputValue || '';
+  return commandList.filter(
+    cmd => !!cmd && cmd.toLowerCase().startsWith(query.toLowerCase())
+  );
+});
+
 const consoleInputSelector = memoize(
   (currentCommand, commandHistory, historyIndex) =>
     historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
@@ -294,6 +302,7 @@ class TerminalConsole extends Component {
                 {cch => (
                   <AutoSuggest
                     suggestions={commandList}
+                    filterSuggestions={filterCommands}
                     onSelect={updateConsoleInput}
                     keyControl={false}
                     suggestOn="change"
