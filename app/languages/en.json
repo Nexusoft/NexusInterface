@@ -36,7 +36,7 @@
   "sendReceive.Queue": "Queue",
   "sendReceive.ClearQueue": "Clear Queue",
   "sendReceive.SendAll": "Send All",
-  "sendReceive.SendNow": "Send Now",
+  "sendReceive.SendNow": "Send",
   "sendReceive.AddToQueue": "Add To Queue",
   "sendReceive.EditQueue": "Edit Queue",
   "sendReceive.MyAccount": "My Account",
@@ -522,6 +522,7 @@
   "Alert.NoSecondAccountChosen": "No second account chosen",
   "Alert.InsufficientFunds": "Insufficient funds",
   "Alert.ManualDaemonDown": "Manual Daemon Is Down",
+  "Alert.ClosingNexus": "Closing Nexus Wallet",
 
   "Cp.AC1": "Accent Color 1",
   "Cp.AC2": "Accent Color 2",
