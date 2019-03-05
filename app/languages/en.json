@@ -43,6 +43,8 @@
   "sendReceive.EnterYourMessage": "Enter Your Message",
   "sendReceive.Lookup": "Lookup Address",
   "sendReceive.Name": "Name",
+  "sendReceive.AddressBookEmpty": "Your address book is empty",
+  "sendReceive.CreateNewContact": "Create new contact",
   "sendReceive.Cancel": "Cancel",
   "sendReceive.Yes": "Yes",
   "sendReceive.SendTransaction": "Send Transaction?",
