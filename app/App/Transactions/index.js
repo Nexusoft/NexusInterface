@@ -1181,7 +1181,7 @@ class Transactions extends Component {
       Header: <Text id="transactions.Category" />,
       accessor: 'category',
 
-      maxWidth: 80,
+      maxWidth: 85,
     });
 
     tempColumns.push({

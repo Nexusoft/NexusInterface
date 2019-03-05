@@ -286,7 +286,9 @@ class AppMenu {
     };
     const subMenuFile = {
       label: 'File',
-      submenu: [this.backupWallet, this.viewBackups],
+      submenu: [this.backupWallet, this.viewBackups,
+        this.separator,
+        this.downloadRecent,],
     };
     const subMenuEdit = {
       label: 'Edit',
@@ -299,8 +301,6 @@ class AppMenu {
         this.coreSettings,
         this.keyManagement,
         this.styleSettings,
-        this.separator,
-        this.downloadRecent,
         //TODO: take this out before 1.0
       ],
     };
@@ -342,6 +342,8 @@ class AppMenu {
         this.backupWallet,
         this.viewBackups,
         this.separator,
+        this.downloadRecent,
+        this.separator,
         this.startDaemon,
         this.stopDaemon,
         this.separator,
@@ -355,8 +357,6 @@ class AppMenu {
         this.coreSettings,
         this.keyManagement,
         this.styleSettings,
-        this.separator,
-        this.downloadRecent,
       ],
     };
     const subMenuView = {
