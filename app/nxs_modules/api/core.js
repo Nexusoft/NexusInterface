@@ -410,7 +410,7 @@ class Core extends EventEmitter {
         if (!fs.existsSync(path.join(datadir, 'nexus.conf'))) {
           fs.writeFileSync(
             path.join(datadir, 'nexus.conf'),
-            `rpcuser=${user}\nrpcpassword=${password}`
+            `rpcuser=${user}\nrpcpassword=${password}\n`
           );
         }
         log.info('Core Manager: Starting core');
