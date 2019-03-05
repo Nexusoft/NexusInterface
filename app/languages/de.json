@@ -58,10 +58,8 @@
   "sendReceive.SendFrom": "Sende von",
   "sendReceive.SendTo": "Send nach",
 
-  "sendReceive.AddRecipient": "Empfänger hinzufügen",
   "sendReceive.NotLoggedIn": "Sie sind nicht eingeloggt",
   "sendReceive.NeedToLogin": "Um Transaktionen zu tätigen müssen Sie sich einloggen",
-  "sendReceive.MultipleRecipients": "An mehrere Empfänger senden",
 
   "sendReceive.RecipientAddress": "Empfängeradresse",
   "sendReceive.AddRecipient": "Empfänger hinzufügen",
@@ -76,7 +74,7 @@
   "sendReceive.Messages.NotLoggedInNote": "Sie müssen sich einloggen, bevor Sie etwas überweisen können",
   "sendReceive.Messages.LogInNow": "Jetzt einloggen",
   "sendReceive.Messages.Success": "NXS erfolgreich überwiesen",
-  
+
   "transactions.MoreDetails": "Mehr Details",
   "transactions.Details": "Details zu den Transaktionen",
   "transactions.fee": "Gebühr",
@@ -149,7 +147,7 @@
   "Market.High": "Hoch",
   "Market.Low": "Tief",
   "Market.Date": "Datum",
-  
+
   "Market.PriceChange": "Preisänderung",
 
   "AddressBook.ThisAddress": "Sind Sie sicher, dass Sie diese Adresse löschen möchten?",
@@ -243,7 +241,7 @@
   "Settings.Re-Enter": "Passwort erneut eingeben",
   "Settings.ConfirmPassword": "Passwort bestätigen",
   "Settings.PasswordsMatch": "Passwörter stimmen nicht überein",
-  
+
   "Settings.8Characters": "Das Passwort muss aus mindestens 8 Zeichen bestehen",
   "Settings.NoSpaces": "Das Passwort darf nicht mit einem Leerzeichen beginnen oder enden",
 
@@ -324,8 +322,7 @@
   "Settings.Background": "Hintergrund",
   "Settings.BackgroundSubLabel": "Hintergrundbild anpassen",
   "Settings.ColorScheme": "Farbschema",
-  "Settings.SelectCustomTheme": "Benutzerdefiniertes Design wählen",
-  
+
   "Settings.DisableAutoUpdate": "Sind Sie sich sicher, dass Sie das automatische Update deaktivieren wollen?",
   "Settings.UpdateSuggestion": "Für das beste Nutzererlebnis und zu Ihrer eigenen Sicherheit ist es notwendig immer die neueste Version der Wallet zu verwenden.",
   "Settings.KeepAutoUpdate": "Automatisches Update aktiviert lassen",
@@ -340,15 +337,12 @@
   "Settings.SavingSettings": "Einstellung speichern...",
   "Settings.RestartingDaemon": "Starte Daemon neu...",
   "Settings.PrivKeyImported": "Private Key importiert. Überprüfung läuft",
-  "Settings.Rescanning": "Überprüfe...",
-  "Settings.RescanningDone": "Überprüfung abgeschlossen",
-  "Settings.Import": "Importiere",
   "Settings.LoggedIn": "Erfolgreich eingeloggt",
-  
+
   "Settings.DownloadRecentDatabase": "Neueste Datenbankversion herunterladen?",
   "Settings.DownloadDBInfo": "'Wenn Sie die aktuellste Datenbank herunterladen, ist Ihre Wallet schneller synchronisiert'",
   "Settings.SelectCustomTheme": "Benutzerdefiniertes Design auswählen",
-  
+
   "Settings.SetFeeButton": "Übernehmen",
   "Settings.Browse": "Suchen",
   "Settings.DarkTheme": "Dark",
@@ -356,7 +350,7 @@
   "Settings.CustomTheme": "Erweitert",
   "Settings.ResetTheme": "Zurücksetzen",
   "Settings.ExportTheme": "Design exportiert",
-  
+
   "Settings.Errors.ManualDaemonUser": "Benutzername des Daemon Username erforderlich",
   "Settings.Errors.ManualDaemonPassword": "Passwort des Daemon erforderlich",
   "Settings.Errors.ManualDaemonIP": "IP des Daemon erforderlich",
@@ -369,7 +363,7 @@
   "Settings.Errors.ChangingPassword": "Fehler beim ändern des Passwort",
   "Settings.Errors.PasswordRequired": "Passwort erforderlich",
   "Settings.Errors.PasswordInvalidChars": "Passwort darf folgende Zeichen nicht enthalten: - $ / & * | < >",
-  "Settings.Errors.PasswordMinLength": "!! Passwort muss mindestens 8 Zeichen enthalten !!", 
+  "Settings.Errors.PasswordMinLength": "!! Passwort muss mindestens 8 Zeichen enthalten !!",
   "Settings.Errors.PasswordsNoMatch": "Passwörter stimmen nicht überein",
   "Settings.Errors.PasswordSpaces": "Das Passwort darf nicht mit einem Leerzeichen beginnen oder enden",
   "Settings.Errors.EncryptingWallet": "Fehler beim entsperren der Wallet",
@@ -384,7 +378,7 @@
   "Settings.Errors.AddressEmpty": "Adressfeld darf nicht leer sein",
   "Settings.Errors.ViewPrivKey": "Fehler den Private Key anzuzeigen",
   "Settings.Errors.InvalidJSON": "Ungültiges Dateiformat! Das benutzerdefinierte Design muss im JSON Format vorliegen",
-  
+
   "BootStrap.Abort": "Abbrechen",
   "BootStrap.DownloadingTheDatabase": "Datenbank wird heruntergeladen",
   "BootStrap.extracting": "Extrahieren",
@@ -435,10 +429,10 @@
   "Exchange.TradeUnMet": "Handelsminimum unterschritten",
   "Exchange.AddressRequired": "Adresse wird benötigt",
 
-  "Exchange.PreciseExplanation": "Trade zum exakten Wechselkurs", 
+  "Exchange.PreciseExplanation": "Trade zum exakten Wechselkurs",
   "Exchange.FastExplanation": "Jetzt traden",
   "Exchange.BCAddress": "Adresse",
-  
+
   "Footer.Overview": "Überblick",
   "Footer.SendNXS": "Nexus Senden",
   "Footer.Transactions": "Transaktionen",
@@ -499,8 +493,8 @@
 
   "ToolTip.ForkBlock": "Einige Blöcke zurück gehen",
   "ToolTip.NotEnoughSpace": "Nicht genug Speicherplatz! Minimum von 20GB freiem Speicherplatz erforderlich",
-  "ToolTip.DatabaseDownloadSpead": "Download Geschwindigkeit: ",  
-  
+  "ToolTip.DatabaseDownloadSpead": "Download Geschwindigkeit: ",
+
   "Alert.Received": "Transaktion empfangen",
   "Alert.Sent": "Transaktion gesendet",
   "Alert.Genesis": "Genesis Transaktion",
@@ -538,9 +532,9 @@
   "Alert.ColorSchemeDefault": "Farbschema wurde auf Standardeinstellungen zurückgesetzt",
   "Alert.InvalidFileFormat": "Ungültiges Dateiformat! Das benutzerdefinierte Design muss im JSON Format vorliegen",
   "Alert.ClosingNexus": "Nexus schließen",
-    
+
   "Common.UnknownError": "Ein unbekannter Fehler ist aufgetreten",
-  
+
   "Cp.AC1": "Akzentfarbe 1",
   "Cp.AC2": "Akzentfarbe 2",
   "Cp.THC": "Farbe der Tabellenkopfzeile",
@@ -548,7 +542,7 @@
   "Cp.TC": "Textfarbe",
   "Cp.PBC": "Hintergrundfarbe des Panels",
   "Cp.NLC": "Farbe des Nexus Logo",
-  "Cp.SIC": "Farbe des Statussymbols", 
+  "Cp.SIC": "Farbe des Statussymbols",
   "Cp.FBC": "Grundfarbe der Fußzeilen",
   "Cp.FHC": "Fußzeilenfarbe beim hervorheben",
   "Cp.FAC": "Aktive Fußzeilenfarbe",

@@ -86,7 +86,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
   actionCreators
 )
 @reduxForm({
-  form: 'addEditContact',
+  destroyOnUnmount: false,
   validate: ({ name, mine, notMine, email }, props) => {
     const errors = {};
 
@@ -155,7 +155,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {
-    props.reset();
+    props.destroy();
     props.closeModal();
     if (props.edit) {
       UIController.showNotification(

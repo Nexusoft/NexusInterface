@@ -184,7 +184,7 @@ export default class Modal extends PureComponent {
         dimBackground={this.props.dimBackground}
         onBackgroundClick={onBackgroundClick}
         backgroundRef={this.backgroundRef}
-        style={{ zIndex: fullScreen ? 9001 : undefined }}
+        zPriority={fullScreen ? 1 : 0}
       >
         <ModalComponent ref={this.modalRef} fullScreen={fullScreen} {...rest}>
           {typeof children === 'function'

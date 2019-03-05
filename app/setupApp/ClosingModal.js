@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
+import Text from 'components/Text';
 import Modal from 'components/Modal';
 import { timing, consts } from 'styles';
 
@@ -44,7 +45,9 @@ const ClosingMessage = styled.div(({ theme }) => ({
 const ClosingModal = () => (
   <ClosingModalComponent fullScreen>
     <ModalBody>
-      <ClosingMessage>Closing Nexus...</ClosingMessage>
+      <ClosingMessage>
+        <Text id="Alert.ClosingNexus" />
+      </ClosingMessage>
     </ModalBody>
   </ClosingModalComponent>
 );

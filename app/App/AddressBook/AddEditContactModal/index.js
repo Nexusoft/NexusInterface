@@ -50,6 +50,7 @@ class AddEditContactModal extends Component {
             </Modal.Header>
             <Modal.Body>
               <AddEditContactForm
+                form={edit ? `editContact:${contact.name}` : 'createContact'}
                 edit={edit}
                 oldName={contact && contact.name}
                 initialValues={

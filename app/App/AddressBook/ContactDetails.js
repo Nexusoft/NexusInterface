@@ -165,9 +165,10 @@ class ContactDetails extends React.Component {
     const { contact, connections } = this.props;
     if (!contact) return null;
 
-    const tz = contact.timeZone
-      ? timeZones.find(t => t.value === contact.timeZone)
-      : null;
+    const tz =
+      typeof contact.timeZone === 'number'
+        ? timeZones.find(t => t.value === contact.timeZone)
+        : null;
 
     return (
       <ContactDetailsComponent>

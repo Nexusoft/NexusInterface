@@ -28,7 +28,7 @@ const HeaderComponent = styled.header(({ theme }) => ({
   justifyContent: 'center',
   background: 'linear-gradient(to bottom, rgba(0,0,0,.6), transparent)',
   color: theme.primary,
-  zIndex: 999,
+  zIndex: 1,
 }));
 
 const LogoLink = styled(Link)(({ theme }) => ({
@@ -128,4 +128,4 @@ class Header extends Component {
   }
 }
 
-export default Header
+export default Header;

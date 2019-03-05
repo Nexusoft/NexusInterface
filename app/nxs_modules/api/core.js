@@ -78,8 +78,6 @@ function SetCoreParameters(settings) {
     settings.forkBlocks === undefined ? 0 : settings.forkBlocks;
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
-  // parameters.push('-rpcuser=' + user);  // do not use security risk
-  // parameters.push('-rpcpassword=' + password);// do not use security risk
   parameters.push('-rpcport=' + port);
   parameters.push('-datadir=' + datadir);
   parameters.push('-daemon');

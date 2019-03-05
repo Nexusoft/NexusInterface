@@ -130,7 +130,9 @@ class TerminalConsole extends Component {
    */
   loadCommandList = async () => {
     const result = await RPC.PROMISE('help', []);
-    const commandList = result.split('\n');
+    const commandList = result
+      .split('\n')
+      .filter(c => c !== 'please enable -richlist to use this command');
     this.props.setCommandList(commandList);
   };
 
