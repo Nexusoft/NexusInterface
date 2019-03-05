@@ -18,6 +18,8 @@ import DAT from 'scripts/globe';
 import * as RPC from 'scripts/rpc';
 import configuration from 'api/configuration';
 
+import sysinfo from 'systeminformation';
+
 var glb;
 var initializedWithData = false;
 var preData;
@@ -41,6 +43,9 @@ const Globe = styled.div({
 export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
+
+
+
     // console.log('Hello From the Network Globe Component!');
     this.props.handleOnLineRender(this.reDrawArchs);
     // this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw); // casues issues

@@ -79,7 +79,10 @@ class SettingsField extends Component {
     } = this.props;
     return (
       <Field indent={indent} {...rest}>
-        <Label htmlFor={connectLabel ? this.inputId : undefined}>
+        <Label
+          htmlFor={connectLabel ? this.inputId : undefined}
+          onClick={e => e.preventDefault()}
+        >
           <div>{label}</div>
           {subLabel && <SubLabel>{subLabel}</SubLabel>}
         </Label>

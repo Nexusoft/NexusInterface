@@ -124,7 +124,7 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  setWalpaper = (path, defaultStyle) => {
+  setWallpaper = (path, defaultStyle) => {
     defaultStyle = defaultStyle ? defaultStyle : this.props.theme.defaultStyle;
     this.props.updateTheme({ defaultStyle: defaultStyle, wallpaper: path });
     if (path || defaultStyle.endsWith('Custom')) {
@@ -142,9 +142,18 @@ class SettingsStyle extends Component {
    */
   setColor = (key, value) => {
     this.setToCustom();
+    const defaultStyle = this.props.theme.defaultStyle;
+    const wasOnDefault =
+      defaultStyle === 'Dark' ||
+      defaultStyle === 'Light' ||
+      defaultStyle.endsWith('Custom');
     this.props.updateTheme({
       [key]: value,
-      defaultStyle: 'Custom',
+      defaultStyle: wasOnDefault
+        ? defaultStyle.endsWith('Custom')
+          ? defaultStyle
+          : defaultStyle + 'Custom'
+        : 'Custom',
     });
   };
 
@@ -190,17 +199,17 @@ class SettingsStyle extends Component {
               file.close(response => {
                 console.log(this);
                 console.log('FInished DOwnloading');
-                this.setWalpaper(file.path);
+                this.setWallpaper(file.path);
               });
             };
             onFinish.bind(this);
             file.on('finish', () => onFinish());
           })
           .on('error', error => {
-            this.setWalpaper('');
+            this.setWallpaper('');
           })
           .on('timeout', timeout => {
-            this.setWalpaper('');
+            this.setWallpaper('');
           });
       }
     } catch (err) {
@@ -373,7 +382,7 @@ class SettingsStyle extends Component {
 
         <SettingsField
           label="Nexus Addresses format"
-          subLabel="Choose which format Nexus Addresses should be displayed in"
+          subLabel="Choose your Nexus Address display preference"
         >
           <div>
             <Select
@@ -414,7 +423,7 @@ class SettingsStyle extends Component {
           <BackgroundPicker
             wallpaper={theme.wallpaper}
             defaultStyle={theme.defaultStyle}
-            onChange={this.setWalpaper}
+            onChange={this.setWallpaper}
           />
         </SettingsField>
 

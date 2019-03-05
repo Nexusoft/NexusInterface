@@ -11,11 +11,12 @@ import rimraf from 'rimraf';
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
 import * as RPC from 'scripts/rpc';
-
-const recentDbUrl =
+let recentDbUrl = '';
+const recentDbUrlLegacy =
   'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
 //
-//    'https://nexusearth.com/bootstrap/tritium/tritium.tar.gz';  // Tritium Bootstrap URL
+const recentDbUrlTritium =
+  'https://nexusearth.com/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL
 // Recent database download location
 const fileLocation = path.join(
   configuration.GetAppDataDirectory(),
@@ -84,6 +85,14 @@ export default class Bootstrapper {
    */
   async start({ backupFolder, clearOverviewVariables }) {
     try {
+      const getinfo = await RPC.PROMISE('getinfo');
+      if (getinfo.version.includes('0.3')) {
+        recentDbUrl = recentDbUrlTritium;
+      } else {
+        recentDbUrl = recentDbUrlLegacy;
+      }
+      if (this._aborted) return;
+
       this._progress('backing_up');
       await backupWallet(backupFolder);
       if (this._aborted) return;
@@ -191,7 +200,6 @@ export default class Bootstrapper {
    */
   async _downloadCompressedDb() {
     const promise = new Promise((resolve, reject) => {
-      console.log(fileLocation);
       const file = fs.createWriteStream(fileLocation);
       this.request = https
         .get(recentDbUrl)

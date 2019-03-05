@@ -78,8 +78,6 @@ function SetCoreParameters(settings) {
     settings.forkBlocks === undefined ? 0 : settings.forkBlocks;
 
   // Set up parameters for calling the core executable (manual daemon mode simply won't use them)
-  parameters.push('-rpcuser=' + user);
-  parameters.push('-rpcpassword=' + password);
   parameters.push('-rpcport=' + port);
   parameters.push('-datadir=' + datadir);
   parameters.push('-daemon');
@@ -105,7 +103,7 @@ function SetCoreParameters(settings) {
   }
 
   // Enable staking (default is 0)
-  if (settings.enableStaking == true) parameters.push('-stake=1');
+  if (settings.enableStaking !== false) parameters.push('-stake=1');
 
   // Enable detach database on shutdown (default is 0)
   if (settings.detatchDatabaseOnShutdown == true)
@@ -408,6 +406,12 @@ class Core extends EventEmitter {
               datadir
           );
           fs.mkdirSync(datadir);
+        }
+        if (!fs.existsSync(path.join(datadir, 'nexus.conf'))) {
+          fs.writeFileSync(
+            path.join(datadir, 'nexus.conf'),
+            `rpcuser=${user}\nrpcpassword=${password}`
+          );
         }
         log.info('Core Manager: Starting core');
         var coreprocess = spawn(GetCoreBinaryPath(), parameters, {
