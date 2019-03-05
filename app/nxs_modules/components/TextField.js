@@ -295,7 +295,11 @@ export default class TextField extends Component {
       >
         {left}
         {multiline ? (
-          <TextArea {...inputProps} inputRef={inputRef} />
+          <TextArea
+            {...inputProps}
+            style={{ resize: 'vertical' }}
+            inputRef={inputRef}
+          />
         ) : (
           <Input {...inputProps} ref={inputRef} />
         )}

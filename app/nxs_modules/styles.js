@@ -67,3 +67,9 @@ export const animations = {
     }
   `,
 };
+
+export const zIndex = {
+  overlays: 10,
+  snackbars: 20,
+  tooltips: 30,
+};

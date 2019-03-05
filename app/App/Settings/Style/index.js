@@ -143,12 +143,17 @@ class SettingsStyle extends Component {
   setColor = (key, value) => {
     this.setToCustom();
     const defaultStyle = this.props.theme.defaultStyle;
-    const wasOnDefault = defaultStyle === 'Dark'
-     || defaultStyle === 'Light'
-     || defaultStyle.endsWith('Custom');
+    const wasOnDefault =
+      defaultStyle === 'Dark' ||
+      defaultStyle === 'Light' ||
+      defaultStyle.endsWith('Custom');
     this.props.updateTheme({
       [key]: value,
-      defaultStyle: wasOnDefault? ( defaultStyle.endsWith('Custom')? defaultStyle : defaultStyle + 'Custom') : 'Custom',
+      defaultStyle: wasOnDefault
+        ? defaultStyle.endsWith('Custom')
+          ? defaultStyle
+          : defaultStyle + 'Custom'
+        : 'Custom',
     });
   };
 
@@ -377,7 +382,7 @@ class SettingsStyle extends Component {
 
         <SettingsField
           label="Nexus Addresses format"
-          subLabel="Choose which format Nexus Addresses should be displayed in"
+          subLabel="Choose your Nexus Address display preference"
         >
           <div>
             <Select
