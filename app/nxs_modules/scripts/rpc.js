@@ -141,6 +141,7 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args,
     });
+    // console.log(cmd, args); // keep here for debugging
     var ResponseObject;
     // console.log(PostData);
     // console.log(GETUSER(), GETPASSWORD());
@@ -207,6 +208,7 @@ export const PROMISE = (cmd, args) => {
       'Authorization',
       'Basic ' + btoa(GETUSER() + ':' + GETPASSWORD())
     );
+    console.log(GETUSER() + ':' + GETPASSWORD());
     ResponseObject.onerror = function(e) {
       e.preventDefault();
       if (ResponseObject.status == 401) {

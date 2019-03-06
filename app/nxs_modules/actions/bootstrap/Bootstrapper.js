@@ -85,7 +85,7 @@ export default class Bootstrapper {
    */
   async start({ backupFolder, clearOverviewVariables }) {
     try {
-      const getinfo = await RPC.PROMISE('getinfo');
+      const getinfo = await RPC.PROMISE('getinfo', []);
       if (getinfo.version.includes('0.3')) {
         recentDbUrl = recentDbUrlTritium;
       } else {
@@ -97,7 +97,6 @@ export default class Bootstrapper {
       await backupWallet(backupFolder);
       if (this._aborted) return;
 
-      clearOverviewVariables();
       // Remove the old file if exists
 
       if (fs.existsSync(fileLocation)) {
@@ -120,6 +119,7 @@ export default class Bootstrapper {
       await this._extractDb();
       if (this._aborted) return;
 
+      clearOverviewVariables();
       this._progress('stopping_core');
       await electron.remote.getGlobal('core').stop();
       if (this._aborted) return;

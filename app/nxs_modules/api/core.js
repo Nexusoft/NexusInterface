@@ -83,7 +83,7 @@ function SetCoreParameters(settings) {
   parameters.push('-daemon');
   parameters.push('-avatar');
   // parameters.push('-fastsync');
-  parameters.push('-server');
+
   parameters.push('-beta');
   parameters.push('-verbose=' + verbose); // <-- Make a setting for this
   parameters.push('-rpcallowip=' + ip);
@@ -410,7 +410,7 @@ class Core extends EventEmitter {
         if (!fs.existsSync(path.join(datadir, 'nexus.conf'))) {
           fs.writeFileSync(
             path.join(datadir, 'nexus.conf'),
-            `rpcuser=${user}\nrpcpassword=${password}`
+            `rpcuser=${user}\nrpcpassword=${password}\n`
           );
         }
         log.info('Core Manager: Starting core');
