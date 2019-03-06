@@ -28,7 +28,7 @@ import { rpcErrorHandler } from 'utils/form';
   destroyOnUnmount: false,
   validate: ({ txFee }) => {
     const errors = {};
-    if (parseFloat(txFee) <= 0) {
+    if (parseFloat(txFee) <= 0 || parseFloat(txFee) > 0.1) {
       errors.txFee = <Text id="Alert.InvalidTransactionFee" />;
     }
     return errors;
@@ -78,6 +78,7 @@ class FeeSetting extends React.Component {
               type="number"
               step="0.01"
               min="0"
+              max="0.1"
               normalize={parseFloat}
               style={{ width: 100 }}
             />

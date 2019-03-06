@@ -1,3 +1,14 @@
+# 0.9.0-alpha2 (2019.3.XX)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.9.0)
+#### Additions
+- Tritium Cores
+
+#### Adjustments
+- There is now a max of `0.1` Nexus for the transaction fee setting
+- Moved `Download Recent Database` to file dropdown
+
+#### Fixes
+
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)
 #### Additions
