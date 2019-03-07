@@ -441,7 +441,7 @@
   "Alert.IncorrectPasssword": "Foutief Wachtwoord",
   "Alert.CoreSettingsSaved": "Basis Instellingen Opgeslagen",
   "Alert.ContactsExported": "Contacts Geëxporteerd",
-  "Alert.DaemonLoadingWait": "Daemon laden, een ogenblik geduld",
+  "Alert.DaemonLoadingWait": "Portemonnee laden, een ogenblik geduld",
   "Alert.nodefaultname": "Account kan geen naam * of standaard hebben",
   "Alert.CoreRestarting": "Daemon Herstarten...",
   "Alert.AccountsAreTheSame": "Accounts zijn dezelfde",

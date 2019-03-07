@@ -367,7 +367,7 @@
   "Alert.IncorrectPasssword": "Contraseña incorrecta",
   "Alert.CoreSettingsSaved": "Configuraciones básicas guardadas",
   "Alert.ContactsExported": "Contactos exportados",
-  "Alert.DaemonLoadingWait": "Cargando Daemon, Por favor Espere",
+  "Alert.DaemonLoadingWait": "Cargando Billetera, Por favor Espere",
   "Alert.InvalidAmount": "Monto invalido",
   "Alert.AccountsAreTheSame": "Las cuentas son las mismas",
   "Alert.NoSecondAccountChosen": "Ninguna segunda cuenta elegida",

@@ -254,7 +254,7 @@
   "Settings.DisableAutoUpdateNote": "La mise à jour de votre portefeuille est importante pour votre sécurité et vous garantira la meilleure expérience utilisateur possible",
   "Settings.KeepAutoUpdate": "Maintenir activée la mise à jour automatique",
   "Settings.TurnOffAutoUpdate": "Désactiver la mise à jour automatique",
-  "Settings.DaemonLoading": "Veuillez attendre le chargement du daemon",
+  "Settings.DaemonLoading": "Veuillez attendre le chargement du portefeuille",
   "Settings.SettingsSaved": "Paramètres sauvegardés",
   "Settings.SavingSettings": "Sauvegarde des paramètres...",
   "Settings.SaveSettings": "Enregistrer les paramètres",
