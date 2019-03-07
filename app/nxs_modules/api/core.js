@@ -14,36 +14,51 @@ import configuration from 'api/configuration';
 import { LoadSettings, UpdateSettings } from 'api/settings';
 
 const statusdelay = 1000;
-var prevCoreProcess = 0;
 
-var coreprocess = null;
-var responding = false;
-var user = 'rpcserver';
+let coreprocess = null;
+let responding = false;
+let user = 'rpcserver';
+
 //Generate automatic daemon password from machines hardware info
-var secret = 'secret';
+let secret = 'secret';
 if (process.platform === 'darwin') {
   secret = process.env.USER + process.env.HOME + process.env.SHELL;
 } else {
   secret = JSON.stringify(macaddress.networkInterfaces(), null, 2);
 }
-var password = crypto
+let password = crypto
   .createHmac('sha256', secret)
   .update('pass')
   .digest('hex');
 
-var port = '9336';
-var ip = '127.0.0.1';
-var host = 'http://' + ip + ':' + port;
-var verbose = '2'; // <--Lower to 0 after beta ends
+let port = '9336';
+let ip = '127.0.0.1';
+let host = 'http://' + ip + ':' + port;
+let verbose = '2'; // <--Lower to 0 after beta ends
 
-// console.log(process.env.APPDATA);configuration.GetAppDataDirectory();
-console.log('core', process.env.HOME);
 //Set data directory by OS for automatic daemon mode
 
 // SetCoreParameters: Get the path to local resources for the application (depending on running packaged vs via npm start)
 function SetCoreParameters(settings) {
   var datadir = configuration.GetCoreDataDir();
   var parameters = [];
+
+  if (!fs.existsSync(path.join(datadir, 'nexus.conf'))) {
+    log.info('nexus.conf does not exist. Creating...');
+    fs.writeFileSync(
+      path.join(datadir, 'nexus.conf'),
+      `rpcuser=${user}\nrpcpassword=${password}\n`
+    );
+  } else {
+    log.info('nexus.conf exists. Importing username and password.');
+    let nexusConfiguratiions = fs
+      .readFileSync(path.join(datadir, 'nexus.conf'))
+      .toString()
+      .split(`\n`);
+    user = nexusConfiguratiions[0].replace('rpcuser=', '');
+    password = nexusConfiguratiions[1].replace('rpcpassword=', '');
+  }
+
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
     ip =
@@ -83,7 +98,6 @@ function SetCoreParameters(settings) {
   parameters.push('-daemon');
   parameters.push('-avatar');
   // parameters.push('-fastsync');
-
   parameters.push('-beta');
   parameters.push('-verbose=' + verbose); // <-- Make a setting for this
   parameters.push('-rpcallowip=' + ip);
@@ -117,11 +131,6 @@ function SetCoreParameters(settings) {
 
   log.info('Core Parameters: ' + parameters.toString());
   return parameters;
-}
-
-// GetResourcesDirectory: Get the path to local resources for the application (depending on running packaged vs via npm start)
-function GetResourcesDirectory() {
-  return 'app/';
 }
 
 // GetCoreBinaryName: Gets the name of the executable.
@@ -269,33 +278,6 @@ function CoreBinaryExists() {
   }
 }
 
-/*// isCoreRunning: Determine if core is running and return it's PID.
-function isCoreRunning() {
-  var ps = require('ps-node');
-  var runningPID = ps.lookup({
-    command: 'nexus-linux-x64',
-  }, function(err, resultList ) {
-    if (err) {
-      log.info( 'findPID error: ' + (err) );
-    }
-
-//    resultList.forEach(function( process ){
-//      if(process) {
-//        log.info( 'PID: %s, COMMAND: %s, ARGUMENTS: %s, process.pid, process.command, process.arguments );
-//      }
-
-    if (resultList.length > 0) {
-      var output = resultList[ 0 ];
-    } else {
-      var output = null;
-    }
-    log.info('ps.node output: ' + output);
-    return output;
-  });
-  log.info('runningPID inside function: ' + runningPID);
-  return runningPID;
-}
-*/
 // rpcGet: Send a message to the RPC
 function rpcGet(command, args, callback) {
   var postdata = JSON.stringify({
@@ -385,10 +367,7 @@ class Core extends EventEmitter {
     var datadir = configuration.GetCoreDataDir();
     let settings = LoadSettings();
     let parameters = SetCoreParameters(settings);
-    let coreBinaryPath = GetCoreBinaryPath();
-    let coreBinaryName = GetCoreBinaryName();
     let corePID = getCorePID();
-    // let daemonProcs = utils.findPID("nexus-linux-x64");
 
     if (settings.manualDaemon == true) {
       log.info('Core Manager: Manual daemon mode, skipping starting core');
@@ -396,9 +375,8 @@ class Core extends EventEmitter {
       log.info(
         'Core Manager: Daemon Process already running. Skipping starting core'
       );
-      var prevCoreProcess = corePID;
     } else {
-      log.info('isCoreRunning() output: ' + corePID);
+      log.info('PID: ' + corePID);
       if (CoreBinaryExists()) {
         if (!fs.existsSync(datadir)) {
           log.info(
@@ -444,9 +422,7 @@ class Core extends EventEmitter {
     return new Promise((resolve, reject) => {
       log.info('Core Manager: Stop function called');
       let settings = LoadSettings();
-      let coreBinaryName = GetCoreBinaryName();
       let corePID = getCorePID();
-      // let coreParentPID = getCoreParentPID();
       var execSync = childProcess.execSync;
       var modEnv = process.env;
       modEnv.KILL_PID = corePID;

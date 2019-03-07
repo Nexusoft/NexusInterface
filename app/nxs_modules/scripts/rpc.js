@@ -208,7 +208,7 @@ export const PROMISE = (cmd, args) => {
       'Authorization',
       'Basic ' + btoa(GETUSER() + ':' + GETPASSWORD())
     );
-    console.log(GETUSER() + ':' + GETPASSWORD());
+
     ResponseObject.onerror = function(e) {
       e.preventDefault();
       if (ResponseObject.status == 401) {
