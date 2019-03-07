@@ -44,6 +44,23 @@ console.log('core', process.env.HOME);
 function SetCoreParameters(settings) {
   var datadir = configuration.GetCoreDataDir();
   var parameters = [];
+
+  if (!fs.existsSync(path.join(datadir, 'nexus.conf'))) {
+    log.info('nexus.conf does not exist. Creating...');
+    fs.writeFileSync(
+      path.join(datadir, 'nexus.conf'),
+      `rpcuser=${user}\nrpcpassword=${password}\n`
+    );
+  } else {
+    log.info('nexus.conf exists. Importing username and password.');
+    let nexusConfiguratiions = fs
+      .readFileSync(path.join(datadir, 'nexus.conf'))
+      .toString()
+      .split(`\n`);
+    user = nexusConfiguratiions[0].replace('rpcuser=', '');
+    password = nexusConfiguratiions[1].replace('rpcpassword=', '');
+  }
+
   // set up the user/password/host for RPC communication
   if (settings.manualDaemon == true) {
     ip =
@@ -407,12 +424,7 @@ class Core extends EventEmitter {
           );
           fs.mkdirSync(datadir);
         }
-        if (!fs.existsSync(path.join(datadir, 'nexus.conf'))) {
-          fs.writeFileSync(
-            path.join(datadir, 'nexus.conf'),
-            `rpcuser=${user}\nrpcpassword=${password}\n`
-          );
-        }
+
         log.info('Core Manager: Starting core');
         var coreprocess = spawn(GetCoreBinaryPath(), parameters, {
           shell: false,
