@@ -96,6 +96,7 @@ const ConsoleOutput = styled.code(({ theme }) => ({
   fontSize: '75%',
   overflow: 'auto',
   wordBreak: 'break-all',
+  whiteSpace: 'pre-wrap',
   background: theme.background,
   border: `1px solid ${theme.mixer(0.25)}`,
 }));
@@ -205,7 +206,7 @@ class TerminalConsole extends Component {
       .filter(arg => arg)
       .map(arg => (isNaN(parseFloat(arg)) ? arg : parseFloat(arg)));
 
-    const tab = ' '.repeat(7);
+    const tab = ' '.repeat(2);
     let result = null;
     try {
       result = await RPC.PROMISE(cmd, args);
@@ -245,7 +246,7 @@ class TerminalConsole extends Component {
     } else if (typeof result === 'string') {
       printCommandOutput(result.split('\n').map(text => tab + text));
     } else {
-      printCommandOutput(result);
+      printCommandOutput(tab + result);
     }
   };
 
