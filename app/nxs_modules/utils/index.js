@@ -26,4 +26,12 @@ export function highlightMatchingText(text, query, HighlightComponent) {
   return segments;
 }
 
+export function passRef(el, ref) {
+  if (typeof ref === 'function') {
+    ref(el);
+  } else {
+    ref.current = el;
+  }
+}
+
 export { color, language, form };

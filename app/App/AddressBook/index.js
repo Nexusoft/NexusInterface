@@ -11,13 +11,13 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import UIController from 'components/UIController';
+import AddEditContactModal from 'components/AddEditContactModal';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
 import PanelControls from './PanelControls';
 import ContactList from './ContactList';
 import ContactDetails from './ContactDetails';
-import AddEditContactModal from './AddEditContactModal';
 
 // Icons
 import addressBookIcon from 'images/address-book.sprite.svg';

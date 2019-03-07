@@ -99,7 +99,7 @@ const mapDispatchToProps = dispatch => ({
       recipients.forEach(({ address, amount }, i) => {
         const recipientErrors = {};
         if (!address) {
-          recipientErrors.address = <Text id="Alert.InvalidAddress" />;
+          recipientErrors.address = <Text id="Alert.AddressEmpty" />;
         }
         const floatAmount = parseFloat(amount);
         if (!floatAmount || floatAmount < 0) {
