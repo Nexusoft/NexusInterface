@@ -16,7 +16,7 @@ import 'electron-debug';
 
 import configuration from 'api/configuration';
 import { LoadSettings, UpdateSettings } from 'api/settings';
-import core from 'api/core2';
+import core from 'api/core';
 
 let mainWindow;
 let resizeTimer;
