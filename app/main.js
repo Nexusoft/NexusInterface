@@ -12,14 +12,16 @@ import devToolsInstall, {
 import 'electron-debug';
 
 // Internal
-import core from 'api/core';
+// import core from 'api/core';
+
 import configuration from 'api/configuration';
 import { LoadSettings, UpdateSettings } from 'api/settings';
+import core from 'api/core2';
 
 let mainWindow;
 let resizeTimer;
 // Global Objects
-global.core = core;
+global.core = new core();
 global.autoUpdater = autoUpdater;
 global.forceQuit = false;
 
@@ -167,7 +169,7 @@ function createWindow() {
 // Application Startup
 app.on('ready', async () => {
   createWindow();
-  core.start();
+  global.core.start();
 
   const settings = LoadSettings();
   if (
