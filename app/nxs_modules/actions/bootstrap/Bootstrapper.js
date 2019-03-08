@@ -329,27 +329,6 @@ export default class Bootstrapper {
 
       if (fs.existsSync(extractDest)) {
         rimraf.sync(extractDest, {}, () => console.log('done'));
-        //   // const recentContents = fs.readdirSync(extractDest);
-        //   // recentContents
-        //   //   .filter(child =>
-        //   //     fs.statSync(path.join(extractDest, child)).isDirectory()
-        //   //   )
-        //   //   .forEach(subFolder => {
-        //   //     fs.readdirSync(path.join(extractDest, subFolder))
-        //   //       .filter(grandchild =>
-        //   //         fs
-        //   //           .statSync(path.join(extractDest, subFolder, grandchild))
-        //   //           .isDirectory()
-        //   //       )
-        //   //       .forEach(subSubFolder => {
-        //   //         rimraf.sync(path.join(extractDest, subFolder, subSubFolder), {}, () =>
-        // console.log('done'));
-        //   //       });
-        //   //     rimraf.sync(path.join(extractDest, subFolder), {}, () =>
-        // console.log('done'));
-        //   //   });
-        //   // rimraf.sync(extractDest, {}, () =>
-        // console.log('done'));
       }
     }, 0);
   }

@@ -143,7 +143,7 @@ export const PROMISE = (cmd, args) => {
     // console.log(cmd, args); // keep here for debugging
     var ResponseObject;
     // console.log(PostData);
-    console.log(GETUSER(), GETPASSWORD());
+    // console.log(GETUSER(), GETPASSWORD());
 
     /** Opera 8.0+, Firefox, Safari **/
     try {
