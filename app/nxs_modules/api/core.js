@@ -90,7 +90,7 @@ function getCorePID() {
     if (PID) {
       PID = PID.replace(/"/gm, '');
     }
-    log.info('PID: ' + PID);
+
     if (Number(PID) == 'NaN' || Number(PID) < '2') {
       return 1;
     } else {
@@ -114,7 +114,7 @@ function getCorePID() {
     }
 
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, '');
-    log.info('PID: ' + PID);
+
     if (Number(PID) == 'NaN' || Number(PID) < '2') {
       return 1;
     } else {
@@ -130,7 +130,7 @@ function getCorePID() {
       .replace(/^\s*/gm, '')
       .split(' ')[0];
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, '');
-    log.info('PID: ' + PID);
+
     if (Number(PID) == 'NaN' || Number(PID) < '2') {
       return 1;
     } else {
@@ -210,7 +210,6 @@ export default class Core {
   start() {
     var datadir = configuration.GetCoreDataDir();
     let settings = LoadSettings();
-    // let parameters = SetCoreParameters(settings);
     let corePID = getCorePID();
 
     if (settings.manualDaemon == true) {
@@ -222,7 +221,6 @@ export default class Core {
 
       log.info('Core Manager: Manual daemon mode, skipping starting core');
     } else if (corePID > 1) {
-      log.info('PID: ' + corePID);
       log.info(
         'Core Manager: Daemon Process already running. Skipping starting core'
       );
@@ -249,6 +247,7 @@ export default class Core {
           '-daemon',
           '-avatar',
           '-server',
+          '-rpcthreads=4',
           '-beta',
           `-verbose=${this.verbose}`,
           `-rpcallowip=${this.ip}`,
