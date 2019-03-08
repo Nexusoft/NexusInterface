@@ -43,286 +43,283 @@
     -   [render][39]
 -   [StakingStatus][40]
 -   [SyncStatus][41]
--   [DaemonStatus][42]
--   [SendPage][43]
-    -   [setupcontextmenu][44]
-        -   [Parameters][45]
-    -   [setupcontextmenu][46]
-        -   [Parameters][47]
-    -   [moveBetweenAccounts][48]
-    -   [render][49]
--   [MoveBetweenAccountsForm][50]
-    -   [confirmMove][51]
-        -   [Parameters][52]
-    -   [render][53]
--   [MoveBetweenAccountsModal][54]
--   [AmountField][55]
-    -   [nxsToFiat][56]
-        -   [Parameters][57]
-    -   [fiatToNxs][58]
-        -   [Parameters][59]
-    -   [amountFieldName][60]
-    -   [fiatAmountFieldName][61]
-    -   [render][62]
--   [SendForm][63]
-    -   [confirmSend][64]
-        -   [Parameters][65]
-    -   [addRecipient][66]
-    -   [renderAddRecipientButton][67]
+    -   [statusIcon][42]
+    -   [statusTooltip][43]
+    -   [render][44]
+-   [DaemonStatus][45]
+-   [SendPage][46]
+    -   [setupcontextmenu][47]
+        -   [Parameters][48]
+    -   [setupcontextmenu][49]
+        -   [Parameters][50]
+    -   [moveBetweenAccounts][51]
+    -   [render][52]
+-   [MoveBetweenAccountsForm][53]
+    -   [confirmMove][54]
+        -   [Parameters][55]
+    -   [render][56]
+-   [MoveBetweenAccountsModal][57]
+-   [AmountField][58]
+    -   [nxsToFiat][59]
+        -   [Parameters][60]
+    -   [fiatToNxs][61]
+        -   [Parameters][62]
+    -   [amountFieldName][63]
+    -   [fiatAmountFieldName][64]
+    -   [render][65]
+-   [SendForm][66]
+    -   [confirmSend][67]
         -   [Parameters][68]
-    -   [render][69]
--   [Recipients][70]
-    -   [renderTxFee][71]
+    -   [addRecipient][69]
+    -   [renderAddRecipientButton][70]
+        -   [Parameters][71]
     -   [render][72]
--   [RecipientField][73]
-    -   [handleSelect][74]
-        -   [Parameters][75]
-    -   [render][76]
--   [Transactions][77]
-    -   [setConfirmationsCallback][78]
-        -   [Parameters][79]
-    -   [setOnmountTransactionsCallback][80]
-        -   [Parameters][81]
-    -   [updateChartAndTableDimensions][82]
-        -   [Parameters][83]
-    -   [openTxDetailsModal][84]
-    -   [transactioncontextfunction][85]
+-   [Recipients][73]
+    -   [renderTxFee][74]
+    -   [render][75]
+-   [RecipientField][76]
+    -   [handleSelect][77]
+        -   [Parameters][78]
+    -   [render][79]
+-   [Transactions][80]
+    -   [setConfirmationsCallback][81]
+        -   [Parameters][82]
+    -   [setOnmountTransactionsCallback][83]
+        -   [Parameters][84]
+    -   [updateChartAndTableDimensions][85]
         -   [Parameters][86]
-    -   [copysomethingtotheclipboard][87]
-        -   [Parameters][88]
-    -   [getTransactionData][89]
-        -   [Parameters][90]
-    -   [transactionTimeframeChange][91]
-        -   [Parameters][92]
-    -   [DownloadCSV][93]
-    -   [saveCSV][94]
+    -   [openTxDetailsModal][87]
+    -   [transactioncontextfunction][88]
+        -   [Parameters][89]
+    -   [copysomethingtotheclipboard][90]
+        -   [Parameters][91]
+    -   [getTransactionData][92]
+        -   [Parameters][93]
+    -   [transactionTimeframeChange][94]
         -   [Parameters][95]
-    -   [transactiontypefiltercallback][96]
-        -   [Parameters][97]
-    -   [transactionamountfiltercallback][98]
-        -   [Parameters][99]
-    -   [transactionaddressfiltercallback][100]
-        -   [Parameters][101]
-    -   [filterByCategory][102]
-        -   [Parameters][103]
-    -   [filterbyAmount][104]
-        -   [Parameters][105]
-    -   [filterByAddress][106]
-        -   [Parameters][107]
-    -   [filterByTime][108]
-        -   [Parameters][109]
-    -   [returnAllFilters][110]
-        -   [Parameters][111]
-    -   [TEMPaddfaketransaction][112]
-    -   [tableSelectCallback][113]
+    -   [DownloadCSV][96]
+    -   [saveCSV][97]
+        -   [Parameters][98]
+    -   [transactiontypefiltercallback][99]
+        -   [Parameters][100]
+    -   [transactionamountfiltercallback][101]
+        -   [Parameters][102]
+    -   [transactionaddressfiltercallback][103]
+        -   [Parameters][104]
+    -   [filterByCategory][105]
+        -   [Parameters][106]
+    -   [filterbyAmount][107]
+        -   [Parameters][108]
+    -   [filterByAddress][109]
+        -   [Parameters][110]
+    -   [filterByTime][111]
+        -   [Parameters][112]
+    -   [returnAllFilters][113]
         -   [Parameters][114]
-    -   [returnFormatedTableData][115]
-    -   [returnTableColumns][116]
-    -   [returnChartData][117]
-    -   [returnCorrectFillColor][118]
-        -   [Parameters][119]
-    -   [returnCorrectStokeColor][120]
-        -   [Parameters][121]
-    -   [returnToolTipLable][122]
-        -   [Parameters][123]
-    -   [handleZoom][124]
-        -   [Parameters][125]
-    -   [mouseOverCallback][126]
-        -   [Parameters][127]
-    -   [mouseOutCallback][128]
-        -   [Parameters][129]
-    -   [gethistorydatajson][130]
-    -   [createcryptocompareurl][131]
+    -   [TEMPaddfaketransaction][115]
+    -   [tableSelectCallback][116]
+        -   [Parameters][117]
+    -   [returnFormatedTableData][118]
+    -   [returnTableColumns][119]
+    -   [returnChartData][120]
+    -   [returnCorrectFillColor][121]
+        -   [Parameters][122]
+    -   [returnCorrectStokeColor][123]
+        -   [Parameters][124]
+    -   [returnToolTipLable][125]
+        -   [Parameters][126]
+    -   [handleZoom][127]
+        -   [Parameters][128]
+    -   [mouseOverCallback][129]
+        -   [Parameters][130]
+    -   [mouseOutCallback][131]
         -   [Parameters][132]
-    -   [setHistoryValuesOnTransaction][133]
-        -   [Parameters][134]
-    -   [setFeeValuesOnTransaction][135]
-        -   [Parameters][136]
-    -   [downloadHistoryOnTransaction][137]
-        -   [Parameters][138]
-    -   [gothroughdatathatneedsit][139]
-    -   [SaveHistoryDataToJson][140]
-    -   [mapToObject][141]
-        -   [Parameters][142]
-    -   [findclosestdatapoint][143]
-        -   [Parameters][144]
-    -   [comparedate][145]
-        -   [Parameters][146]
-    -   [returnDefaultPageSize][147]
-    -   [accountChanger][148]
-    -   [selectAccount][149]
-        -   [Parameters][150]
-    -   [returnVictoryChart][151]
-    -   [render][152]
--   [TransactionDetailsModal][153]
-    -   [loadData][154]
-        -   [Parameters][155]
-    -   [render][156]
--   [CSVDownloadModal][157]
--   [Market][158]
-    -   [setupcontextmenu][159]
-        -   [Parameters][160]
-    -   [refresher][161]
-    -   [formatBuyData][162]
+    -   [gethistorydatajson][133]
+    -   [createcryptocompareurl][134]
+        -   [Parameters][135]
+    -   [setHistoryValuesOnTransaction][136]
+        -   [Parameters][137]
+    -   [setFeeValuesOnTransaction][138]
+        -   [Parameters][139]
+    -   [downloadHistoryOnTransaction][140]
+        -   [Parameters][141]
+    -   [gothroughdatathatneedsit][142]
+    -   [SaveHistoryDataToJson][143]
+    -   [mapToObject][144]
+        -   [Parameters][145]
+    -   [findclosestdatapoint][146]
+        -   [Parameters][147]
+    -   [comparedate][148]
+        -   [Parameters][149]
+    -   [returnDefaultPageSize][150]
+    -   [accountChanger][151]
+    -   [selectAccount][152]
+        -   [Parameters][153]
+    -   [returnVictoryChart][154]
+    -   [render][155]
+-   [TransactionDetailsModal][156]
+    -   [loadData][157]
+        -   [Parameters][158]
+    -   [render][159]
+-   [CSVDownloadModal][160]
+-   [Market][161]
+    -   [setupcontextmenu][162]
         -   [Parameters][163]
-    -   [formatSellData][164]
-        -   [Parameters][165]
-    -   [formatChartData][166]
-        -   [Parameters][167]
-    -   [oneDayinfo][168]
-        -   [Parameters][169]
-    -   [refreshMarket][170]
-    -   [render][171]
--   [MarketDepth][172]
-    -   [render][173]
--   [Candlestick][174]
-    -   [render][175]
--   [AddressBook][176]
-    -   [componentDidMount][177]
-    -   [componentWillUnmount][178]
-    -   [showAddContact][179]
-    -   [render][180]
--   [PanelControls][181]
-    -   [exportAddressBook][182]
--   [ContactList][183]
-    -   [render][184]
--   [Contact][185]
-    -   [confirmDelete][186]
-    -   [editContact][187]
-    -   [showContextMenu][188]
-        -   [Parameters][189]
-    -   [getinitial][190]
-        -   [Parameters][191]
-    -   [select][192]
-    -   [render][193]
--   [ContactDetails][194]
-    -   [confirmDelete][195]
-    -   [editContact][196]
-    -   [render][197]
--   [AddEditContactModal][198]
--   [AddEditContactForm][199]
-    -   [componentDidMount][200]
-    -   [render][201]
--   [Addresses][202]
-    -   [render][203]
--   [Settings][204]
-    -   [setupcontextmenu][205]
-        -   [Parameters][206]
-    -   [render][207]
--   [SettingsApp][208]
-    -   [confirmBackupWallet][209]
-    -   [handleAutoUpdateChange][210]
-        -   [Parameters][211]
-    -   [render][212]
-    -   [render][213]
-    -   [browseBackupDir][214]
--   [SettingsApp][215]
-    -   [confirmBackupWallet][216]
-    -   [handleAutoUpdateChange][217]
-        -   [Parameters][218]
-    -   [render][219]
-    -   [render][220]
-    -   [browseBackupDir][221]
--   [LanguageSetting][222]
-    -   [handleChange][223]
-        -   [Parameters][224]
-    -   [render][225]
--   [SettingsCore][226]
-    -   [confirmSwitchManualDaemon][227]
-    -   [restartCore][228]
+    -   [refresher][164]
+    -   [formatBuyData][165]
+        -   [Parameters][166]
+    -   [formatSellData][167]
+        -   [Parameters][168]
+    -   [formatChartData][169]
+        -   [Parameters][170]
+    -   [oneDayinfo][171]
+        -   [Parameters][172]
+    -   [refreshMarket][173]
+    -   [render][174]
+-   [MarketDepth][175]
+    -   [render][176]
+-   [Candlestick][177]
+    -   [render][178]
+-   [AddressBook][179]
+    -   [componentDidMount][180]
+    -   [componentWillUnmount][181]
+    -   [showAddContact][182]
+    -   [render][183]
+-   [PanelControls][184]
+    -   [exportAddressBook][185]
+-   [ContactList][186]
+    -   [render][187]
+-   [Contact][188]
+    -   [confirmDelete][189]
+    -   [editContact][190]
+    -   [showContextMenu][191]
+        -   [Parameters][192]
+    -   [getinitial][193]
+        -   [Parameters][194]
+    -   [select][195]
+    -   [render][196]
+-   [ContactDetails][197]
+    -   [confirmDelete][198]
+    -   [editContact][199]
+    -   [render][200]
+-   [Settings][201]
+    -   [setupcontextmenu][202]
+        -   [Parameters][203]
+    -   [render][204]
+-   [SettingsApp][205]
+    -   [confirmBackupWallet][206]
+    -   [handleAutoUpdateChange][207]
+        -   [Parameters][208]
+    -   [render][209]
+    -   [render][210]
+    -   [browseBackupDir][211]
+-   [SettingsApp][212]
+    -   [confirmBackupWallet][213]
+    -   [handleAutoUpdateChange][214]
+        -   [Parameters][215]
+    -   [render][216]
+    -   [render][217]
+    -   [browseBackupDir][218]
+-   [LanguageSetting][219]
+    -   [handleChange][220]
+        -   [Parameters][221]
+    -   [render][222]
+-   [SettingsCore][223]
+    -   [confirmSwitchManualDaemon][224]
+    -   [restartCore][225]
+    -   [render][226]
+-   [FeeSetting][227]
+    -   [confirmSetTxFee][228]
     -   [render][229]
--   [FeeSetting][230]
-    -   [confirmSetTxFee][231]
-    -   [render][232]
--   [SettingsStyle][233]
-    -   [toggleGlobeRender][234]
-        -   [Parameters][235]
-    -   [setWallpaper][236]
-        -   [Parameters][237]
-    -   [setColor][238]
+-   [SettingsStyle][230]
+    -   [toggleGlobeRender][231]
+        -   [Parameters][232]
+    -   [setWallpaper][233]
+        -   [Parameters][234]
+    -   [setColor][235]
+        -   [Parameters][236]
+    -   [resetColors][237]
+    -   [loadCustomTheme][238]
         -   [Parameters][239]
-    -   [resetColors][240]
-    -   [loadCustomTheme][241]
-        -   [Parameters][242]
-    -   [openPickThemeFileDialog][243]
-    -   [exportThemeFileDialog][244]
-    -   [pressDarkTheme][245]
-    -   [pressLightTheme][246]
-    -   [pressCustomTheme][247]
-    -   [pressResetTheme][248]
-    -   [savePreviousCustomTheme][249]
-    -   [setToCustom][250]
-    -   [setThemeSelector][251]
-        -   [Parameters][252]
-    -   [render][253]
--   [ColorPicker][254]
-    -   [openPicker][255]
-    -   [closePicker][256]
-    -   [handleColorChange][257]
-        -   [Parameters][258]
-    -   [render][259]
--   [BackgroundPicker][260]
-    -   [setDefault][261]
-        -   [Parameters][262]
-    -   [handleFilePick][263]
-        -   [Parameters][264]
-    -   [render][265]
--   [ThemePicker][266]
-    -   [setToCustomTheme][267]
-    -   [setSelector][268]
-        -   [Parameters][269]
-    -   [render][270]
--   [SettingsSecurity][271]
-    -   [render][272]
--   [Login][273]
-    -   [getMinDate][274]
-    -   [renderTimeInputs][275]
-        -   [Parameters][276]
-    -   [render][277]
--   [Encrypted][278]
+    -   [openPickThemeFileDialog][240]
+    -   [exportThemeFileDialog][241]
+    -   [pressDarkTheme][242]
+    -   [pressLightTheme][243]
+    -   [pressCustomTheme][244]
+    -   [pressResetTheme][245]
+    -   [savePreviousCustomTheme][246]
+    -   [setToCustom][247]
+    -   [setThemeSelector][248]
+        -   [Parameters][249]
+    -   [render][250]
+-   [ColorPicker][251]
+    -   [openPicker][252]
+    -   [closePicker][253]
+    -   [handleColorChange][254]
+        -   [Parameters][255]
+    -   [render][256]
+-   [BackgroundPicker][257]
+    -   [setDefault][258]
+        -   [Parameters][259]
+    -   [handleFilePick][260]
+        -   [Parameters][261]
+    -   [render][262]
+-   [ThemePicker][263]
+    -   [setToCustomTheme][264]
+    -   [setSelector][265]
+        -   [Parameters][266]
+    -   [render][267]
+-   [SettingsSecurity][268]
+    -   [render][269]
+-   [Login][270]
+    -   [getMinDate][271]
+    -   [renderTimeInputs][272]
+        -   [Parameters][273]
+    -   [render][274]
+-   [Encrypted][275]
+    -   [render][276]
+-   [ChangePassword][277]
+    -   [confirmLogout][278]
     -   [render][279]
--   [ChangePassword][280]
-    -   [confirmLogout][281]
-    -   [render][282]
--   [ViewPrivKeyForAddress][283]
-    -   [showPrivKey][284]
-        -   [Parameters][285]
-    -   [copyPrivkey][286]
-    -   [resetPrivateKey][287]
-    -   [render][288]
--   [Unencrypted][289]
-    -   [render][290]
--   [EncryptWallet][291]
-    -   [render][292]
--   [ImportPrivKey][293]
-    -   [render][294]
--   [Terminal][295]
-    -   [setupcontextmenu][296]
-        -   [Parameters][297]
-    -   [render][298]
--   [TerminalConsole][299]
-    -   [loadCommandList][300]
-    -   [getSnapshotBeforeUpdate][301]
-    -   [componentDidUpdate][302]
+-   [ViewPrivKeyForAddress][280]
+    -   [showPrivKey][281]
+        -   [Parameters][282]
+    -   [copyPrivkey][283]
+    -   [resetPrivateKey][284]
+    -   [render][285]
+-   [Unencrypted][286]
+    -   [render][287]
+-   [EncryptWallet][288]
+    -   [render][289]
+-   [ImportPrivKey][290]
+    -   [render][291]
+-   [Terminal][292]
+    -   [setupcontextmenu][293]
+        -   [Parameters][294]
+    -   [render][295]
+-   [TerminalConsole][296]
+    -   [loadCommandList][297]
+    -   [getSnapshotBeforeUpdate][298]
+    -   [componentDidUpdate][299]
+        -   [Parameters][300]
+    -   [execute][301]
+    -   [handleKeyDown][302]
         -   [Parameters][303]
-    -   [execute][304]
-    -   [handleKeyDown][305]
-        -   [Parameters][306]
+    -   [render][304]
+-   [TerminalCore][305]
+    -   [onScrollEvent][306]
     -   [render][307]
--   [TerminalCore][308]
-    -   [onScrollEvent][309]
-    -   [render][310]
--   [StyleGuide][311]
--   [List][312]
-    -   [setupcontextmenu][313]
-        -   [Parameters][314]
-    -   [buildList][315]
-    -   [render][316]
--   [About][317]
-    -   [getCurrentYear][318]
-    -   [getInterfaceVersionNumber][319]
-    -   [getDaemonVersionNumber][320]
--   [AppBackground][321]
+-   [StyleGuide][308]
+-   [List][309]
+    -   [setupcontextmenu][310]
+        -   [Parameters][311]
+    -   [buildList][312]
+    -   [render][313]
+-   [About][314]
+    -   [getCurrentYear][315]
+    -   [getInterfaceVersionNumber][316]
+    -   [getDaemonVersionNumber][317]
+-   [AppBackground][318]
 
 ## renderApp
 
@@ -536,6 +533,24 @@ Handles the Staking Status
 
 Handles the Sync Status
 
+### statusIcon
+
+Returns JSX of either Spinning Icon or Status Icon depending on if wallet is in sync
+
+Returns **JSX** JSX
+
+### statusTooltip
+
+Returns JSX of tooltip depending on if wallet is in sync or not
+
+Returns **JSX** JSX
+
+### render
+
+React Render Method
+
+Returns **JSX** JSX
+
 ## DaemonStatus
 
 **Extends React.Component**
@@ -660,7 +675,7 @@ Return JSX for the Add Recipient Button
 
 #### Parameters
 
--   `$0` **[Object][322]** 
+-   `$0` **[Object][319]** 
     -   `$0.fields`  
 
 ### render
@@ -1003,8 +1018,8 @@ Returns **any**
 ### mapToObject
 
 Used to transform a Map to a Object so that we can save it to a json file
-[http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/][323]
-Based on code from [http://2ality.com/2015/08/es6-map-json.html][324]
+[http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/][320]
+Based on code from [http://2ality.com/2015/08/es6-map-json.html][321]
 
 #### Parameters
 
@@ -1273,40 +1288,6 @@ Contact details
 ### render
 
 render
-
-Returns **any** 
-
-## AddEditContactModal
-
-**Extends Component**
-
-The Add or Edit Contact Modal
-
-## AddEditContactForm
-
-**Extends Component**
-
-The form for adding or editing a Contact
-
-### componentDidMount
-
-componentDidMount
-
-### render
-
-render
-
-Returns **any** 
-
-## Addresses
-
-**Extends React.Component**
-
-Input list for addresses
-
-### render
-
-React Render
 
 Returns **any** 
 
@@ -1973,568 +1954,562 @@ Controls the background of the app
 
 [41]: #syncstatus
 
-[42]: #daemonstatus
+[42]: #statusicon-1
 
-[43]: #sendpage
+[43]: #statustooltip
 
-[44]: #setupcontextmenu-1
+[44]: #render-5
 
-[45]: #parameters-5
+[45]: #daemonstatus
 
-[46]: #setupcontextmenu-2
+[46]: #sendpage
 
-[47]: #parameters-6
+[47]: #setupcontextmenu-1
 
-[48]: #movebetweenaccounts
+[48]: #parameters-5
 
-[49]: #render-5
+[49]: #setupcontextmenu-2
 
-[50]: #movebetweenaccountsform
+[50]: #parameters-6
 
-[51]: #confirmmove
+[51]: #movebetweenaccounts
 
-[52]: #parameters-7
+[52]: #render-6
 
-[53]: #render-6
+[53]: #movebetweenaccountsform
 
-[54]: #movebetweenaccountsmodal
+[54]: #confirmmove
 
-[55]: #amountfield
+[55]: #parameters-7
 
-[56]: #nxstofiat
+[56]: #render-7
 
-[57]: #parameters-8
+[57]: #movebetweenaccountsmodal
 
-[58]: #fiattonxs
+[58]: #amountfield
 
-[59]: #parameters-9
+[59]: #nxstofiat
 
-[60]: #amountfieldname
+[60]: #parameters-8
 
-[61]: #fiatamountfieldname
+[61]: #fiattonxs
 
-[62]: #render-7
+[62]: #parameters-9
 
-[63]: #sendform
+[63]: #amountfieldname
 
-[64]: #confirmsend
+[64]: #fiatamountfieldname
 
-[65]: #parameters-10
+[65]: #render-8
 
-[66]: #addrecipient
+[66]: #sendform
 
-[67]: #renderaddrecipientbutton
+[67]: #confirmsend
 
-[68]: #parameters-11
+[68]: #parameters-10
 
-[69]: #render-8
+[69]: #addrecipient
 
-[70]: #recipients
+[70]: #renderaddrecipientbutton
 
-[71]: #rendertxfee
+[71]: #parameters-11
 
 [72]: #render-9
 
-[73]: #recipientfield
+[73]: #recipients
 
-[74]: #handleselect
+[74]: #rendertxfee
 
-[75]: #parameters-12
+[75]: #render-10
 
-[76]: #render-10
+[76]: #recipientfield
 
-[77]: #transactions
+[77]: #handleselect
 
-[78]: #setconfirmationscallback
+[78]: #parameters-12
 
-[79]: #parameters-13
+[79]: #render-11
 
-[80]: #setonmounttransactionscallback
+[80]: #transactions
 
-[81]: #parameters-14
+[81]: #setconfirmationscallback
 
-[82]: #updatechartandtabledimensions
+[82]: #parameters-13
 
-[83]: #parameters-15
+[83]: #setonmounttransactionscallback
 
-[84]: #opentxdetailsmodal
+[84]: #parameters-14
 
-[85]: #transactioncontextfunction
+[85]: #updatechartandtabledimensions
 
-[86]: #parameters-16
+[86]: #parameters-15
 
-[87]: #copysomethingtotheclipboard
+[87]: #opentxdetailsmodal
 
-[88]: #parameters-17
+[88]: #transactioncontextfunction
 
-[89]: #gettransactiondata
+[89]: #parameters-16
 
-[90]: #parameters-18
+[90]: #copysomethingtotheclipboard
 
-[91]: #transactiontimeframechange
+[91]: #parameters-17
 
-[92]: #parameters-19
+[92]: #gettransactiondata
 
-[93]: #downloadcsv
+[93]: #parameters-18
 
-[94]: #savecsv
+[94]: #transactiontimeframechange
 
-[95]: #parameters-20
+[95]: #parameters-19
 
-[96]: #transactiontypefiltercallback
+[96]: #downloadcsv
 
-[97]: #parameters-21
+[97]: #savecsv
 
-[98]: #transactionamountfiltercallback
+[98]: #parameters-20
 
-[99]: #parameters-22
+[99]: #transactiontypefiltercallback
 
-[100]: #transactionaddressfiltercallback
+[100]: #parameters-21
 
-[101]: #parameters-23
+[101]: #transactionamountfiltercallback
 
-[102]: #filterbycategory
+[102]: #parameters-22
 
-[103]: #parameters-24
+[103]: #transactionaddressfiltercallback
 
-[104]: #filterbyamount
+[104]: #parameters-23
 
-[105]: #parameters-25
+[105]: #filterbycategory
 
-[106]: #filterbyaddress
+[106]: #parameters-24
 
-[107]: #parameters-26
+[107]: #filterbyamount
 
-[108]: #filterbytime
+[108]: #parameters-25
 
-[109]: #parameters-27
+[109]: #filterbyaddress
 
-[110]: #returnallfilters
+[110]: #parameters-26
 
-[111]: #parameters-28
+[111]: #filterbytime
 
-[112]: #tempaddfaketransaction
+[112]: #parameters-27
 
-[113]: #tableselectcallback
+[113]: #returnallfilters
 
-[114]: #parameters-29
+[114]: #parameters-28
 
-[115]: #returnformatedtabledata
+[115]: #tempaddfaketransaction
 
-[116]: #returntablecolumns
+[116]: #tableselectcallback
 
-[117]: #returnchartdata
+[117]: #parameters-29
 
-[118]: #returncorrectfillcolor
+[118]: #returnformatedtabledata
 
-[119]: #parameters-30
+[119]: #returntablecolumns
 
-[120]: #returncorrectstokecolor
+[120]: #returnchartdata
 
-[121]: #parameters-31
+[121]: #returncorrectfillcolor
 
-[122]: #returntooltiplable
+[122]: #parameters-30
 
-[123]: #parameters-32
+[123]: #returncorrectstokecolor
 
-[124]: #handlezoom
+[124]: #parameters-31
 
-[125]: #parameters-33
+[125]: #returntooltiplable
 
-[126]: #mouseovercallback
+[126]: #parameters-32
 
-[127]: #parameters-34
+[127]: #handlezoom
 
-[128]: #mouseoutcallback
+[128]: #parameters-33
 
-[129]: #parameters-35
+[129]: #mouseovercallback
 
-[130]: #gethistorydatajson
+[130]: #parameters-34
 
-[131]: #createcryptocompareurl
+[131]: #mouseoutcallback
 
-[132]: #parameters-36
+[132]: #parameters-35
 
-[133]: #sethistoryvaluesontransaction
+[133]: #gethistorydatajson
 
-[134]: #parameters-37
+[134]: #createcryptocompareurl
 
-[135]: #setfeevaluesontransaction
+[135]: #parameters-36
 
-[136]: #parameters-38
+[136]: #sethistoryvaluesontransaction
 
-[137]: #downloadhistoryontransaction
+[137]: #parameters-37
 
-[138]: #parameters-39
+[138]: #setfeevaluesontransaction
 
-[139]: #gothroughdatathatneedsit
+[139]: #parameters-38
 
-[140]: #savehistorydatatojson
+[140]: #downloadhistoryontransaction
 
-[141]: #maptoobject
+[141]: #parameters-39
 
-[142]: #parameters-40
+[142]: #gothroughdatathatneedsit
 
-[143]: #findclosestdatapoint
+[143]: #savehistorydatatojson
 
-[144]: #parameters-41
+[144]: #maptoobject
 
-[145]: #comparedate
+[145]: #parameters-40
 
-[146]: #parameters-42
+[146]: #findclosestdatapoint
 
-[147]: #returndefaultpagesize
+[147]: #parameters-41
 
-[148]: #accountchanger
+[148]: #comparedate
 
-[149]: #selectaccount
+[149]: #parameters-42
 
-[150]: #parameters-43
+[150]: #returndefaultpagesize
 
-[151]: #returnvictorychart
+[151]: #accountchanger
 
-[152]: #render-11
+[152]: #selectaccount
 
-[153]: #transactiondetailsmodal
+[153]: #parameters-43
 
-[154]: #loaddata
+[154]: #returnvictorychart
 
-[155]: #parameters-44
+[155]: #render-12
 
-[156]: #render-12
+[156]: #transactiondetailsmodal
 
-[157]: #csvdownloadmodal
+[157]: #loaddata
 
-[158]: #market
+[158]: #parameters-44
 
-[159]: #setupcontextmenu-3
+[159]: #render-13
 
-[160]: #parameters-45
+[160]: #csvdownloadmodal
 
-[161]: #refresher
+[161]: #market
 
-[162]: #formatbuydata
+[162]: #setupcontextmenu-3
 
-[163]: #parameters-46
+[163]: #parameters-45
 
-[164]: #formatselldata
+[164]: #refresher
 
-[165]: #parameters-47
+[165]: #formatbuydata
 
-[166]: #formatchartdata
+[166]: #parameters-46
 
-[167]: #parameters-48
+[167]: #formatselldata
 
-[168]: #onedayinfo
+[168]: #parameters-47
 
-[169]: #parameters-49
+[169]: #formatchartdata
 
-[170]: #refreshmarket
+[170]: #parameters-48
 
-[171]: #render-13
+[171]: #onedayinfo
 
-[172]: #marketdepth
+[172]: #parameters-49
 
-[173]: #render-14
+[173]: #refreshmarket
 
-[174]: #candlestick
+[174]: #render-14
 
-[175]: #render-15
+[175]: #marketdepth
 
-[176]: #addressbook
+[176]: #render-15
 
-[177]: #componentdidmount
+[177]: #candlestick
 
-[178]: #componentwillunmount
+[178]: #render-16
 
-[179]: #showaddcontact
+[179]: #addressbook
 
-[180]: #render-16
+[180]: #componentdidmount
 
-[181]: #panelcontrols
+[181]: #componentwillunmount
 
-[182]: #exportaddressbook
+[182]: #showaddcontact
 
-[183]: #contactlist
+[183]: #render-17
 
-[184]: #render-17
+[184]: #panelcontrols
 
-[185]: #contact
+[185]: #exportaddressbook
 
-[186]: #confirmdelete
+[186]: #contactlist
 
-[187]: #editcontact
+[187]: #render-18
 
-[188]: #showcontextmenu
+[188]: #contact
 
-[189]: #parameters-50
+[189]: #confirmdelete
 
-[190]: #getinitial
+[190]: #editcontact
 
-[191]: #parameters-51
+[191]: #showcontextmenu
 
-[192]: #select
+[192]: #parameters-50
 
-[193]: #render-18
+[193]: #getinitial
 
-[194]: #contactdetails
+[194]: #parameters-51
 
-[195]: #confirmdelete-1
+[195]: #select
 
-[196]: #editcontact-1
+[196]: #render-19
 
-[197]: #render-19
+[197]: #contactdetails
 
-[198]: #addeditcontactmodal
+[198]: #confirmdelete-1
 
-[199]: #addeditcontactform
+[199]: #editcontact-1
 
-[200]: #componentdidmount-1
+[200]: #render-20
 
-[201]: #render-20
+[201]: #settings
 
-[202]: #addresses
+[202]: #setupcontextmenu-4
 
-[203]: #render-21
+[203]: #parameters-52
 
-[204]: #settings
+[204]: #render-21
 
-[205]: #setupcontextmenu-4
+[205]: #settingsapp
 
-[206]: #parameters-52
+[206]: #confirmbackupwallet
 
-[207]: #render-22
+[207]: #handleautoupdatechange
 
-[208]: #settingsapp
+[208]: #parameters-53
 
-[209]: #confirmbackupwallet
+[209]: #render-22
 
-[210]: #handleautoupdatechange
+[210]: #render-23
 
-[211]: #parameters-53
+[211]: #browsebackupdir
 
-[212]: #render-23
+[212]: #settingsapp-1
 
-[213]: #render-24
+[213]: #confirmbackupwallet-1
 
-[214]: #browsebackupdir
+[214]: #handleautoupdatechange-1
 
-[215]: #settingsapp-1
+[215]: #parameters-54
 
-[216]: #confirmbackupwallet-1
+[216]: #render-24
 
-[217]: #handleautoupdatechange-1
+[217]: #render-25
 
-[218]: #parameters-54
+[218]: #browsebackupdir-1
 
-[219]: #render-25
+[219]: #languagesetting
 
-[220]: #render-26
+[220]: #handlechange
 
-[221]: #browsebackupdir-1
+[221]: #parameters-55
 
-[222]: #languagesetting
+[222]: #render-26
 
-[223]: #handlechange
+[223]: #settingscore
 
-[224]: #parameters-55
+[224]: #confirmswitchmanualdaemon
 
-[225]: #render-27
+[225]: #restartcore
 
-[226]: #settingscore
+[226]: #render-27
 
-[227]: #confirmswitchmanualdaemon
+[227]: #feesetting
 
-[228]: #restartcore
+[228]: #confirmsettxfee
 
 [229]: #render-28
 
-[230]: #feesetting
+[230]: #settingsstyle
 
-[231]: #confirmsettxfee
+[231]: #togglegloberender
 
-[232]: #render-29
+[232]: #parameters-56
 
-[233]: #settingsstyle
+[233]: #setwallpaper
 
-[234]: #togglegloberender
+[234]: #parameters-57
 
-[235]: #parameters-56
+[235]: #setcolor
 
-[236]: #setwallpaper
+[236]: #parameters-58
 
-[237]: #parameters-57
+[237]: #resetcolors
 
-[238]: #setcolor
+[238]: #loadcustomtheme
 
-[239]: #parameters-58
+[239]: #parameters-59
 
-[240]: #resetcolors
+[240]: #openpickthemefiledialog
 
-[241]: #loadcustomtheme
+[241]: #exportthemefiledialog
 
-[242]: #parameters-59
+[242]: #pressdarktheme
 
-[243]: #openpickthemefiledialog
+[243]: #presslighttheme
 
-[244]: #exportthemefiledialog
+[244]: #presscustomtheme
 
-[245]: #pressdarktheme
+[245]: #pressresettheme
 
-[246]: #presslighttheme
+[246]: #savepreviouscustomtheme
 
-[247]: #presscustomtheme
+[247]: #settocustom
 
-[248]: #pressresettheme
+[248]: #setthemeselector
 
-[249]: #savepreviouscustomtheme
+[249]: #parameters-60
 
-[250]: #settocustom
+[250]: #render-29
 
-[251]: #setthemeselector
+[251]: #colorpicker
 
-[252]: #parameters-60
+[252]: #openpicker
 
-[253]: #render-30
+[253]: #closepicker
 
-[254]: #colorpicker
+[254]: #handlecolorchange
 
-[255]: #openpicker
+[255]: #parameters-61
 
-[256]: #closepicker
+[256]: #render-30
 
-[257]: #handlecolorchange
+[257]: #backgroundpicker
 
-[258]: #parameters-61
+[258]: #setdefault
 
-[259]: #render-31
+[259]: #parameters-62
 
-[260]: #backgroundpicker
+[260]: #handlefilepick
 
-[261]: #setdefault
+[261]: #parameters-63
 
-[262]: #parameters-62
+[262]: #render-31
 
-[263]: #handlefilepick
+[263]: #themepicker
 
-[264]: #parameters-63
+[264]: #settocustomtheme
 
-[265]: #render-32
+[265]: #setselector
 
-[266]: #themepicker
+[266]: #parameters-64
 
-[267]: #settocustomtheme
+[267]: #render-32
 
-[268]: #setselector
+[268]: #settingssecurity
 
-[269]: #parameters-64
+[269]: #render-33
 
-[270]: #render-33
+[270]: #login
 
-[271]: #settingssecurity
+[271]: #getmindate
 
-[272]: #render-34
+[272]: #rendertimeinputs
 
-[273]: #login
+[273]: #parameters-65
 
-[274]: #getmindate
+[274]: #render-34
 
-[275]: #rendertimeinputs
+[275]: #encrypted
 
-[276]: #parameters-65
+[276]: #render-35
 
-[277]: #render-35
+[277]: #changepassword
 
-[278]: #encrypted
+[278]: #confirmlogout
 
 [279]: #render-36
 
-[280]: #changepassword
+[280]: #viewprivkeyforaddress
 
-[281]: #confirmlogout
+[281]: #showprivkey
 
-[282]: #render-37
+[282]: #parameters-66
 
-[283]: #viewprivkeyforaddress
+[283]: #copyprivkey
 
-[284]: #showprivkey
+[284]: #resetprivatekey
 
-[285]: #parameters-66
+[285]: #render-37
 
-[286]: #copyprivkey
+[286]: #unencrypted
 
-[287]: #resetprivatekey
+[287]: #render-38
 
-[288]: #render-38
+[288]: #encryptwallet
 
-[289]: #unencrypted
+[289]: #render-39
 
-[290]: #render-39
+[290]: #importprivkey
 
-[291]: #encryptwallet
+[291]: #render-40
 
-[292]: #render-40
+[292]: #terminal
 
-[293]: #importprivkey
+[293]: #setupcontextmenu-5
 
-[294]: #render-41
+[294]: #parameters-67
 
-[295]: #terminal
+[295]: #render-41
 
-[296]: #setupcontextmenu-5
+[296]: #terminalconsole
 
-[297]: #parameters-67
+[297]: #loadcommandlist
 
-[298]: #render-42
+[298]: #getsnapshotbeforeupdate
 
-[299]: #terminalconsole
+[299]: #componentdidupdate
 
-[300]: #loadcommandlist
+[300]: #parameters-68
 
-[301]: #getsnapshotbeforeupdate
+[301]: #execute
 
-[302]: #componentdidupdate
+[302]: #handlekeydown
 
-[303]: #parameters-68
+[303]: #parameters-69
 
-[304]: #execute
+[304]: #render-42
 
-[305]: #handlekeydown
+[305]: #terminalcore
 
-[306]: #parameters-69
+[306]: #onscrollevent
 
 [307]: #render-43
 
-[308]: #terminalcore
+[308]: #styleguide
 
-[309]: #onscrollevent
+[309]: #list
 
-[310]: #render-44
+[310]: #setupcontextmenu-6
 
-[311]: #styleguide
+[311]: #parameters-70
 
-[312]: #list
+[312]: #buildlist
 
-[313]: #setupcontextmenu-6
+[313]: #render-44
 
-[314]: #parameters-70
+[314]: #about
 
-[315]: #buildlist
+[315]: #getcurrentyear
 
-[316]: #render-45
+[316]: #getinterfaceversionnumber
 
-[317]: #about
+[317]: #getdaemonversionnumber
 
-[318]: #getcurrentyear
+[318]: #appbackground
 
-[319]: #getinterfaceversionnumber
+[319]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[320]: #getdaemonversionnumber
+[320]: http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
 
-[321]: #appbackground
-
-[322]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
-
-[323]: http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
-
-[324]: http://2ality.com/2015/08/es6-map-json.html
+[321]: http://2ality.com/2015/08/es6-map-json.html

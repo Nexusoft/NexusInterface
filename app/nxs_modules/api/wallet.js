@@ -3,6 +3,13 @@ import fs from 'fs';
 import { defaultSettings } from 'api/settings';
 import * as RPC from 'scripts/rpc';
 
+/**
+ * Backs up wallet
+ *
+ * @export {function} The function
+ * @param {string} backupFolder The folder to backup too. 
+ * @returns {Promise} RPC Promise of backup function. 
+ */
 export function backupWallet(backupFolder) {
   const backupDir = backupFolder || defaultSettings.backupDirectory;
 

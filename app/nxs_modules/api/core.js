@@ -132,6 +132,7 @@ function SetCoreParameters(settings) {
     console.log('Saved New Settings');
   }
 
+  parameters.push('-rpcthreads=4');
   log.info('Core Parameters: ' + parameters.toString());
   return parameters;
 }
