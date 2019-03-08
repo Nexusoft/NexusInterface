@@ -23,6 +23,14 @@ import {
   resetConsoleOutput,
 } from 'actions/uiActionCreators';
 
+const filterCommands = memoize((commandList, inputValue) => {
+  if (!commandList) return [];
+  const query = inputValue || '';
+  return commandList.filter(
+    cmd => !!cmd && cmd.toLowerCase().startsWith(query.toLowerCase())
+  );
+});
+
 const consoleInputSelector = memoize(
   (currentCommand, commandHistory, historyIndex) =>
     historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
@@ -88,6 +96,7 @@ const ConsoleOutput = styled.code(({ theme }) => ({
   fontSize: '75%',
   overflow: 'auto',
   wordBreak: 'break-all',
+  whiteSpace: 'pre-wrap',
   background: theme.background,
   border: `1px solid ${theme.mixer(0.25)}`,
 }));
@@ -193,18 +202,11 @@ class TerminalConsole extends Component {
       return;
     }
 
-    const args = [];
-    chunks.forEach(arg => {
-      if (arg) {
-        if (!isNaN(parseFloat(arg))) {
-          args.push(parseFloat(arg));
-        } else {
-          args.push(arg);
-        }
-      }
-    });
+    const args = chunks
+      .filter(arg => arg)
+      .map(arg => (isNaN(parseFloat(arg)) ? arg : parseFloat(arg)));
 
-    const tab = ' '.repeat(7);
+    const tab = ' '.repeat(2);
     let result = null;
     try {
       result = await RPC.PROMISE(cmd, args);
@@ -244,7 +246,7 @@ class TerminalConsole extends Component {
     } else if (typeof result === 'string') {
       printCommandOutput(result.split('\n').map(text => tab + text));
     } else {
-      printCommandOutput(result);
+      printCommandOutput(tab + result);
     }
   };
 
@@ -301,6 +303,7 @@ class TerminalConsole extends Component {
                 {cch => (
                   <AutoSuggest
                     suggestions={commandList}
+                    filterSuggestions={filterCommands}
                     onSelect={updateConsoleInput}
                     keyControl={false}
                     suggestOn="change"

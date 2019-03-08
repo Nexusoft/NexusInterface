@@ -7,17 +7,15 @@ import styled from '@emotion/styled';
 import { deleteContact } from 'actions/addressBookActionCreators';
 import Text from 'components/Text';
 import Link from 'components/Link';
-import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
 import UIController from 'components/UIController';
+import AddEditContactModal from 'components/AddEditContactModal';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';
 import trashIcon from 'images/trash.sprite.svg';
 import editIcon from 'images/edit.sprite.svg';
-
-import AddEditContactModal from './AddEditContactModal';
 
 const ContactDetailsComponent = styled.div({
   gridArea: 'details',

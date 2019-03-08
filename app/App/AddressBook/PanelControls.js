@@ -13,9 +13,7 @@ import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
 import UIController from 'components/UIController';
-
-// Internal Local
-import AddEditContactModal from './AddEditContactModal';
+import AddEditContactModal from 'components/AddEditContactModal';
 
 // Icons
 import exportIcon from 'images/export.sprite.svg';

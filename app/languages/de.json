@@ -520,7 +520,7 @@
   "Alert.IncorrectPasssword": "Falsches Passwort",
   "Alert.CoreSettingsSaved": "Core Einstellungen gespeichert",
   "Alert.ContactsExported": "Kontakte exportiert",
-  "Alert.DaemonLoadingWait": "Daemon wird geladen, bitte warten",
+  "Alert.DaemonLoadingWait": "Wallet wird geladen, bitte warten",
   "Alert.InvalidAmount": "Unglültiger Betrag",
   "Alert.CoreRestarting": "Daemon Neustart...",
   "Alert.AccountsAreTheSame": "Die Konten sind identisch",

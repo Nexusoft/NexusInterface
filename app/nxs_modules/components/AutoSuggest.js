@@ -296,6 +296,7 @@ export default class AutoSuggest extends React.Component {
       inputProps,
       inputComponent: Input,
       keyControl,
+      emptyFiller,
       ...rest
     } = this.props;
     const { open, activeIndex } = this.state;
@@ -318,7 +319,7 @@ export default class AutoSuggest extends React.Component {
         />
         <Suggestions
           ref={this.suggestionsRef}
-          open={open && currentSuggestions.length > 0}
+          open={open && (!!emptyFiller || currentSuggestions.length > 0)}
         >
           {currentSuggestions.map((suggestion, i) => (
             <Suggestion
@@ -330,6 +331,9 @@ export default class AutoSuggest extends React.Component {
               onSelect={onSelect}
             />
           ))}
+          {currentSuggestions.length === 0 && !!emptyFiller && (
+            <SuggestionComponent>{emptyFiller}</SuggestionComponent>
+          )}
         </Suggestions>
       </AutoSuggestComponent>
     );
