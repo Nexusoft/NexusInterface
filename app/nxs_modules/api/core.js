@@ -311,15 +311,15 @@ export default class Core {
 
       var execSync = childProcess.execSync;
       var modEnv = process.env;
-      modEnv.KILL_PID = getCorePID();
-      var _this = this;
+      // modEnv.KILL_PID = getCorePID();
+      // var _this = this;
 
       if (settings.keepDaemon != true) {
         rpcStop(this.host, this.user, this.password);
         let seconds = 0;
         let stopFailsafe = setInterval(() => {
           let corePID = getCorePID();
-
+          modEnv.KILL_PID = corePID;
           if (corePID > 1 && seconds < 30) {
             seconds++;
             log.info(
