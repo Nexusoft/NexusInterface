@@ -37,7 +37,7 @@ export default function setupApp(store, history) {
   dispatch(loadAddressBookFromFile());
 
   dispatch(getInfo());
-  setInterval(() => dispatch(getInfo()), 30000);
+  setInterval(() => dispatch(getInfo()), 10000);
 
   dispatch(ac.SetMarketAveData());
   setInterval(function() {
