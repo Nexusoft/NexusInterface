@@ -7,8 +7,8 @@ import { keyframes } from '@emotion/core';
 import ModalContext from 'context/modal';
 import UIController from 'components/UIController';
 import Overlay from 'components/Overlay';
-import { timing, animations } from 'styles';
-import { color } from 'utils';
+import { timing } from 'styles';
+import { color, passRef } from 'utils';
 
 const intro = keyframes`
   from { 
@@ -147,21 +147,15 @@ export default class Modal extends PureComponent {
 
   modalRef = el => {
     this.modalElem = el;
-    const { modalRef } = this.props;
-    if (typeof modalRef === 'function') {
-      modalRef(el);
-    } else if (modalRef && typeof modalRef === 'object') {
-      modalRef.current = el;
+    if (this.props.modalRef) {
+      passRef(el, this.props.modalRef);
     }
   };
 
   backgroundRef = el => {
     this.backgroundElem = el;
-    const { backgroundRef } = this.props;
-    if (typeof backgroundRef === 'function') {
-      backgroundRef(el);
-    } else if (backgroundRef && typeof backgroundRef === 'object') {
-      backgroundRef.current = el;
+    if (this.props.backgroundRef) {
+      passRef(el, this.props.backgroundRef);
     }
   };
 
@@ -184,7 +178,7 @@ export default class Modal extends PureComponent {
         dimBackground={this.props.dimBackground}
         onBackgroundClick={onBackgroundClick}
         backgroundRef={this.backgroundRef}
-        style={{ zIndex: fullScreen ? 9001 : undefined }}
+        zPriority={fullScreen ? 1 : 0}
       >
         <ModalComponent ref={this.modalRef} fullScreen={fullScreen} {...rest}>
           {typeof children === 'function'

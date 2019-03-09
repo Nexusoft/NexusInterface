@@ -1,8 +1,8 @@
 {
   "name": "nexus_wallet",
   "productName": "Nexus_Wallet_BETA",
-  "version": "0.8.9",
-  "buildDate": "March 01st 2019",
+  "version": "0.9.0-alpha2",
+  "buildDate": "March 8th 2019",
   "description": "Nexus",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -232,6 +232,7 @@
     "async": "^2.6.1",
     "auto-launch": "^5.0.5",
     "browserslist": "^4.3.5",
+    "btoa": "^1.2.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "check-disk-space": "^1.5.0",

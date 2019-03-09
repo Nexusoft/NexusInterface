@@ -23,6 +23,11 @@ const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
   },
 }));
 
+/**
+ * Returns JSX of My Addresses
+ * 
+ *@returns {JSX} JSX
+ */
 const MyAddresses = () => (
   <Tooltip.Trigger
     align="end"

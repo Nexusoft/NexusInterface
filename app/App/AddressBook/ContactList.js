@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import UIController from 'components/UIController';
-import AddEditContactModal from './AddEditContactModal';
+import AddEditContactModal from 'components/AddEditContactModal';
 import Contact, { NewContactButton } from './Contact';
 
 const ContactListComponent = styled.div(({ theme }) => ({

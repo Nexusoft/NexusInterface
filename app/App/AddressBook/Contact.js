@@ -13,12 +13,11 @@ import Icon from 'components/Icon';
 import Text, { translate } from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
+import AddEditContactModal from 'components/AddEditContactModal';
 import { timing } from 'styles';
 import { color } from 'utils';
 import ContextMenuBuilder from 'contextmenu';
 import plusIcon from 'images/plus.sprite.svg';
-
-import AddEditContactModal from './AddEditContactModal';
 
 const ContactComponent = styled.div(
   ({ theme }) => ({
