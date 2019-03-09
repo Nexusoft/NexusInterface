@@ -44,12 +44,14 @@ function setpassword() {
 
 // rpcStop: Send a stop message through the RPC
 function rpcStop(host, user, password) {
+  log.info('stopcommand2');
   return new Promise((resolve, reject) => {
     var XMLHttpRequest = xmlhttprequest.XMLHttpRequest;
     var response = new XMLHttpRequest();
 
     /** Establish the Callback Function. **/
     response.onload = function() {
+      log.info(response);
       if (response.status == 200) {
         resolve(true);
       } else {
@@ -315,11 +317,13 @@ export default class Core {
       // var _this = this;
 
       if (settings.keepDaemon != true) {
+        log.info('stopcommand');
         rpcStop(this.host, this.user, this.password);
         let seconds = 0;
         let stopFailsafe = setInterval(() => {
           let corePID = getCorePID();
           modEnv.KILL_PID = corePID;
+          log.info('corepid in stop' + corePID);
           if (corePID > 1 && seconds < 30) {
             seconds++;
             log.info(

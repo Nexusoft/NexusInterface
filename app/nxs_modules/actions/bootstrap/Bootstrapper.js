@@ -86,6 +86,7 @@ export default class Bootstrapper {
   async start({ backupFolder, clearOverviewVariables }) {
     try {
       const getinfo = await RPC.PROMISE('getinfo', []);
+      console.log(getinfo.version);
       if (getinfo.version.includes('0.3')) {
         recentDbUrl = recentDbUrlTritium;
       } else {
