@@ -94,7 +94,7 @@ function getCorePID() {
       PID = PID.replace(/"/gm, '');
     }
     log.info('pid in getpid:', PID);
-    if (Number(PID) == 'NaN' || Number(PID) < '2') {
+    if (Number(PID) == 'NaN' || Number(PID) < '2' || PID === undefined) {
       return 1;
     } else {
       return Number(PID);
