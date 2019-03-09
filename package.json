@@ -232,6 +232,7 @@
     "async": "^2.6.1",
     "auto-launch": "^5.0.5",
     "browserslist": "^4.3.5",
+    "btoa": "^1.2.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "check-disk-space": "^1.5.0",

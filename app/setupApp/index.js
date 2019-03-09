@@ -14,7 +14,7 @@ import updater from 'updater';
 import appMenu from 'appMenu';
 import configuration from 'api/configuration';
 import { Tail } from 'utils/tail';
-import core from 'api/core';
+
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';
@@ -37,7 +37,7 @@ export default function setupApp(store, history) {
   dispatch(loadAddressBookFromFile());
 
   dispatch(getInfo());
-  setInterval(() => dispatch(getInfo()), 30000);
+  setInterval(() => dispatch(getInfo()), 10000);
 
   dispatch(ac.SetMarketAveData());
   setInterval(function() {
@@ -70,7 +70,7 @@ export default function setupApp(store, history) {
       if (manualDaemon) {
         remote.app.exit();
       } else {
-        await core.stop();
+        await remote.getGlobal('core').stop();
         remote.app.exit();
       }
     }
