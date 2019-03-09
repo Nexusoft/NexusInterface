@@ -85,7 +85,7 @@ function getCorePID() {
   if (process.platform == 'win32') {
     var PID = (
       execSync(
-        'tasklist /NH /v /fi "IMAGENAME eq %Nexus_Daemon%" /fo CSV',
+        `tasklist /NH /v /fi "IMAGENAME eq ${modEnv.Nexus_Daemon}" /fo CSV`,
         [],
         { env: modEnv }
       ) + ''
@@ -93,7 +93,7 @@ function getCorePID() {
     if (PID) {
       PID = PID.replace(/"/gm, '');
     }
-
+    log.info('pid in getpid:', PID);
     if (Number(PID) == 'NaN' || Number(PID) < '2') {
       return 1;
     } else {
