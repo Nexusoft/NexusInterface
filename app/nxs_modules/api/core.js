@@ -315,7 +315,6 @@ export default class Core {
       var execSync = childProcess.execSync;
       var modEnv = process.env;
       modEnv.KILL_PID = getCorePID();
-      modEnv.KILL_PID = corePID;
 
       if (settings.keepDaemon != true) {
         log.info('stopcommand');
