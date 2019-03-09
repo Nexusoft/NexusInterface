@@ -51,7 +51,7 @@ function rpcStop(host, user, password) {
 
     /** Establish the Callback Function. **/
     response.onload = function() {
-      log.info(response);
+      // log.info(response);
       if (response.status == 200) {
         resolve(true);
       } else {
@@ -81,6 +81,7 @@ function getCorePID() {
   var execSync = childProcess.execSync;
   var modEnv = process.env;
   modEnv.Nexus_Daemon = GetCoreBinaryName();
+  log.info(modEnv.Nexus_Daemon);
   if (process.platform == 'win32') {
     var PID = (
       execSync(
@@ -313,8 +314,8 @@ export default class Core {
 
       var execSync = childProcess.execSync;
       var modEnv = process.env;
-      // modEnv.KILL_PID = getCorePID();
-      // var _this = this;
+      modEnv.KILL_PID = getCorePID();
+      modEnv.KILL_PID = corePID;
 
       if (settings.keepDaemon != true) {
         log.info('stopcommand');
@@ -322,7 +323,7 @@ export default class Core {
         let seconds = 0;
         let stopFailsafe = setInterval(() => {
           let corePID = getCorePID();
-          modEnv.KILL_PID = corePID;
+
           log.info('corepid in stop' + corePID);
           if (corePID > 1 && seconds < 30) {
             seconds++;
@@ -341,7 +342,7 @@ export default class Core {
             log.info('Core Manager: Killing process ' + corePID);
 
             if (process.platform == 'win32') {
-              execSync('taskkill /F /PID %KILL_PID%', [], {
+              execSync(`taskkill /F /PID ${corePID}`, [], {
                 env: modEnv,
               });
             } else {
