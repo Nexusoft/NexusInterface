@@ -44,14 +44,12 @@ function setpassword() {
 
 // rpcStop: Send a stop message through the RPC
 function rpcStop(host, user, password) {
-  log.info('stopcommand2');
   return new Promise((resolve, reject) => {
     var XMLHttpRequest = xmlhttprequest.XMLHttpRequest;
     var response = new XMLHttpRequest();
 
     /** Establish the Callback Function. **/
     response.onload = function() {
-      // log.info(response);
       if (response.status == 200) {
         resolve(true);
       } else {
@@ -81,7 +79,7 @@ function getCorePID() {
   var execSync = childProcess.execSync;
   var modEnv = process.env;
   modEnv.Nexus_Daemon = GetCoreBinaryName();
-  log.info(modEnv.Nexus_Daemon);
+
   if (process.platform == 'win32') {
     var PID = (
       execSync(
@@ -93,7 +91,7 @@ function getCorePID() {
     if (PID) {
       PID = PID.replace(/"/gm, '');
     }
-    log.info('pid in getpid:', PID);
+
     if (Number(PID) == 'NaN' || Number(PID) < '2' || PID === undefined) {
       return 1;
     } else {
@@ -118,7 +116,7 @@ function getCorePID() {
 
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, '');
 
-    if (Number(PID) == 'NaN' || Number(PID) < '2') {
+    if (Number(PID) == 'NaN' || Number(PID) < '2' || PID === undefined) {
       return 1;
     } else {
       return Number(PID);
@@ -134,7 +132,7 @@ function getCorePID() {
       .split(' ')[0];
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, '');
 
-    if (Number(PID) == 'NaN' || Number(PID) < '2') {
+    if (Number(PID) == 'NaN' || Number(PID) < '2' || PID === undefined) {
       return 1;
     } else {
       return Number(PID);
@@ -317,13 +315,11 @@ export default class Core {
       modEnv.KILL_PID = getCorePID();
 
       if (settings.keepDaemon != true) {
-        log.info('stopcommand');
         rpcStop(this.host, this.user, this.password);
         let seconds = 0;
         let stopFailsafe = setInterval(() => {
           let corePID = getCorePID();
 
-          log.info('corepid in stop' + corePID);
           if (corePID > 1 && seconds < 30) {
             seconds++;
             log.info(
