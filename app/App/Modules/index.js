@@ -20,6 +20,8 @@ import config from 'api/configuration';
   modules: state.modules,
 }))
 class Modules extends React.Component {
+  webviewRef = React.createRef();
+
   /**
    *
    *
@@ -28,6 +30,14 @@ class Modules extends React.Component {
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     googleanalytics.SendScreen('Module');
+  }
+
+  componentDidUpdate() {
+    if (this.webviewRef.current) {
+      this.webviewRef.current.addEventListener('dom-ready', () => {
+        this.webviewRef.current.openDevTools();
+      });
+    }
   }
 
   /**
@@ -70,13 +80,10 @@ class Modules extends React.Component {
 
     return (
       <webview
+        ref={this.webviewRef}
         key={module.name}
         src={entryPath}
         preload={`file://${__dirname}/module_preload.js`}
-        nodeintegration="false"
-        enableremotemodule="false"
-        plugins="false"
-        disablewebsecurity="false"
         style={{ width: '100%', height: '100%' }}
       />
     );

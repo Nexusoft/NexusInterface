@@ -7,8 +7,10 @@ const styled = require('@emotion/styled');
 const victory = require('victory');
 const { ipcRenderer, clipboard } = require('electron');
 
-global.Nexus = {
-  version: MODULE_API_VERSION,
+const packageJson = require('../package.json');
+
+global.nexus = {
+  version: packageJson.moduleApi.currentVersion,
   libraries: {
     React,
     ReactDOM,
