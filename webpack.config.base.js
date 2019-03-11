@@ -8,6 +8,8 @@ import { dependencies as externals } from './app/package.json';
 import packageJson from './package.json';
 
 const appVersion = packageJson.version;
+const moduleApiVersion = packageJson.moduleApi.currentVersion;
+const supportedModuleApiVersion = packageJson.moduleApi.lowestSupportedVersion;
 const appId = packageJson.build.appId;
 
 export default {
@@ -79,6 +81,10 @@ export default {
         process.env.NODE_ENV || 'production'
       ),
       APP_VERSION: JSON.stringify(appVersion || ''),
+      MODULE_API_VERSION: JSON.stringify(moduleApiVersion || ''),
+      SUPPORTED_MODULE_API_VERSION: JSON.stringify(
+        supportedModuleApiVersion || ''
+      ),
       APP_ID: JSON.stringify(appId || ''),
     }),
 

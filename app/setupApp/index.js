@@ -1,6 +1,7 @@
 // External
 import { remote } from 'electron';
 import fs from 'fs';
+import path from 'path';
 
 // Internal
 import UIController from 'components/UIController';
@@ -10,10 +11,12 @@ import getInfo from 'actions/getInfo';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
 import { loadAddressBookFromFile } from 'actions/addressBookActionCreators';
+import { loadModules } from 'actions/moduleActionCreators';
 import updater from 'updater';
 import appMenu from 'appMenu';
 import configuration from 'api/configuration';
 import { Tail } from 'utils/tail';
+import normalizePath from 'utils/normalizePath';
 import core from 'api/core';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
@@ -85,6 +88,20 @@ export default function setupApp(store, history) {
   }
 
   showInitialModals(state);
+
+  console.log(
+    normalizePath(path.join(configuration.GetAppDataDirectory(), 'test.js'))
+  );
+  // import(normalizePath(
+  //   path.join(configuration.GetAppDataDirectory(), 'test.js')
+  // ))
+  //   .then(result => console.log('imported', result))
+  //   .catch(err => console.error('Error', err));
+  const test = global.require(
+    normalizePath(path.join(configuration.GetAppDataDirectory(), 'test.js'))
+  );
+
+  dispatch(loadModules());
 }
 
 function checkWebGL(dispatch) {
