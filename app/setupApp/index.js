@@ -88,18 +88,6 @@ export default function setupApp(store, history) {
 
   showInitialModals(state);
 
-  console.log(
-    normalizePath(path.join(configuration.GetAppDataDirectory(), 'test.js'))
-  );
-  // import(normalizePath(
-  //   path.join(configuration.GetAppDataDirectory(), 'test.js')
-  // ))
-  //   .then(result => console.log('imported', result))
-  //   .catch(err => console.error('Error', err));
-  const test = global.require(
-    normalizePath(path.join(configuration.GetAppDataDirectory(), 'test.js'))
-  );
-
   dispatch(loadModules());
 }
 

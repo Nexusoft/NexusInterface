@@ -1,6 +1,8 @@
+// @jsx jsx
 // External Dependencies
 import React from 'react';
 import { connect } from 'react-redux';
+import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 import { existsSync } from 'fs';
@@ -25,7 +27,7 @@ import transactionsIcon from 'images/transaction.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 import settingsIcon from 'images/settings.sprite.svg';
 import consoleIcon from 'images/console.sprite.svg';
-import legoBlockIcon from 'images/lego-block-sprite.svg';
+import legoBlockIcon from 'images/lego-block.sprite.svg';
 // import shapeshiftIcon from 'images/shapeshift.sprite.svg';
 // import trustListIcon from 'images/trust-list.sprite.svg';
 
@@ -56,12 +58,15 @@ const AboveNav = styled.div({
   right: 0,
 });
 
-const iconSize = 36;
+const iconSize = {
+  width: 36,
+  height: 36,
+};
 
 const NavItem = ({ icon, children, ...rest }) => (
   <Tooltip.Trigger tooltip={children} position="top">
     <NavLinkItem {...rest}>
-      <Icon width={iconSize} height={iconSize} icon={icon} />
+      <Icon css={iconSize} icon={icon} />
     </NavLinkItem>
   </Tooltip.Trigger>
 );
@@ -71,9 +76,9 @@ const ModuleIcon = ({ module }) => {
   const iconPath = path.join(config.GetModulesDir(), module.dirName, icon);
 
   if (existsSync(iconPath)) {
-    return <img width={iconSize} height={iconSize} src={iconPath} />;
+    return <img css={iconSize} src={iconPath} />;
   } else {
-    return <Icon width={iconSize} height={iconSize} icon={legoBlockIcon} />;
+    return <Icon css={iconSize} icon={legoBlockIcon} />;
   }
 };
 
