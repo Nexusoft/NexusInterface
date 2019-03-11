@@ -518,7 +518,7 @@
   "Alert.IncorrectPasssword": "Incorrect Passsword",
   "Alert.CoreSettingsSaved": "Core Settings Saved",
   "Alert.ContactsExported": "Contacts Exported",
-  "Alert.DaemonLoadingWait": "Loading Daemon, Please Wait",
+  "Alert.DaemonLoadingWait": "Loading Wallet, Please Wait",
   "Alert.nodefaultname": "Account cannot be named * or default",
   "Alert.CoreRestarting": "Core Restarting",
   "Alert.AccountsAreTheSame": "Accounts are the same",

@@ -28,6 +28,12 @@ import stakingIcon from 'images/staking.sprite.svg';
   })
 )
 class StakingStatus extends React.Component {
+  /**
+   * React Render
+   *
+   * @returns {JSX} JSX
+   * @memberof StakingStatus
+   */
   render() {
     const {
       stakeweight,

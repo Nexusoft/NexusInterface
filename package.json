@@ -6,7 +6,7 @@
     "currentVersion": "0.1.0",
     "lowestSupportedVersion": "0.1.0"
   },
-  "buildDate": "March 5th 2019",
+  "buildDate": "March 8th 2019",
   "description": "Nexus",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -237,6 +237,7 @@
     "auto-launch": "^5.0.5",
     "axios": "^0.18.0",
     "browserslist": "^4.3.5",
+    "btoa": "^1.2.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "check-disk-space": "^1.5.0",
