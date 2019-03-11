@@ -139,7 +139,7 @@ export async function loadModules() {
 
     const modules = results.reduce((map, result, i) => {
       if (result) {
-        const module = { ...result, dirName };
+        const module = { ...result, dirName: dirNames[i] };
         // If 2 modules have the same name, keep the one with the higher version
         if (
           !map[module.name] ||

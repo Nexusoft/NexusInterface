@@ -73,10 +73,11 @@ class Modules extends React.Component {
         key={module.name}
         src={entryPath}
         preload={`file://${__dirname}/module_preload.js`}
-        nodeintegration={false}
-        enableremotemodule={false}
-        plugins={false}
-        disablewebsecurity={false}
+        nodeintegration="false"
+        enableremotemodule="false"
+        plugins="false"
+        disablewebsecurity="false"
+        style={{ width: '100%', height: '100%' }}
       />
     );
   }
