@@ -90,7 +90,7 @@ export default function getInfo() {
           info.connections !== undefined
         ) {
           (async () => {
-            const enoughSpace = await checkFreeSpace();
+            const enoughSpace = await checkFreeSpace(1);
             if (enoughSpace) dispatch(bootstrap({ suggesting: true }));
           })();
         }

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
-import core from 'api/core';
+
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
@@ -193,7 +193,7 @@ class SettingsCore extends Component {
    */
   restartCore = () => {
     this.props.clearForRestart();
-    core.restart();
+    remote.getGlobal('core').restart();
     UIController.showNotification(<Text id="Alert.CoreRestarting" />);
   };
 

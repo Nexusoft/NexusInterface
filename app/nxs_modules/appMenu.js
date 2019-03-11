@@ -7,7 +7,6 @@ import fs from 'fs';
 import * as RPC from 'scripts/rpc';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { backupWallet } from 'api/wallet';
-import core from 'api/core';
 import Text from 'components/Text';
 import UIController from 'components/UIController';
 import * as ac from 'actions/setupAppActionCreators';
@@ -33,7 +32,7 @@ class AppMenu {
   startDaemon = {
     label: 'Start Daemon',
     click: () => {
-      core.start();
+      remote.getGlobal('core').start();
     },
   };
 
@@ -286,9 +285,12 @@ class AppMenu {
     };
     const subMenuFile = {
       label: 'File',
-      submenu: [this.backupWallet, this.viewBackups,
+      submenu: [
+        this.backupWallet,
+        this.viewBackups,
         this.separator,
-        this.downloadRecent,],
+        this.downloadRecent,
+      ],
     };
     const subMenuEdit = {
       label: 'Edit',

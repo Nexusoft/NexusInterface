@@ -8,11 +8,25 @@ import styled from '@emotion/styled';
 import AutoSuggest from 'components/AutoSuggest';
 import FormField from 'components/FormField';
 import Text, { translate } from 'components/Text';
+import Button from 'components/Button';
+import Icon from 'components/Icon';
+import UIController from 'components/UIController';
+import AddEditContactModal from 'components/AddEditContactModal';
+import plusIcon from 'images/plus.sprite.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';
 
 const RecipientName = styled.span(({ theme }) => ({
   textTransform: 'none',
   color: theme.primary,
+}));
+
+const EmptyMessage = styled.div(({ theme }) => ({
+  fontSize: '.9em',
+  color: theme.mixer(0.625),
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
 }));
 
 const filterRecipients = memoize((suggestions, inputValue) => {
@@ -48,6 +62,10 @@ class RecipientField extends Component {
     this.props.change(this.props.input.name, address);
   };
 
+  createContact = () => {
+    UIController.openModal(AddEditContactModal);
+  };
+
   /**
    * React Render
    *
@@ -79,6 +97,21 @@ class RecipientField extends Component {
           suggestions={suggestions}
           onSelect={this.handleSelect}
           filterSuggestions={filterRecipients}
+          emptyFiller={
+            suggestions.length === 0 && (
+              <EmptyMessage>
+                <Text id="sendReceive.AddressBookEmpty" />
+                <Button as="a" skin="hyperlink" onClick={this.createContact}>
+                  <Icon
+                    icon={plusIcon}
+                    spaceRight
+                    style={{ fontSize: '.8em' }}
+                  />
+                  <Text id="sendReceive.CreateNewContact" />
+                </Button>
+              </EmptyMessage>
+            )
+          }
         />
       </FormField>
     );
