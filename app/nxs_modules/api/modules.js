@@ -30,7 +30,7 @@ const nxsPackageSchema = {
     },
     description: { type: 'string' },
     type: { type: 'string', enum: ['page'] },
-    // Relative path to the main file
+    // Relative path to the entry file
     // Main file could be html or js depending on module's type
     // If not specified, app will look for index.html or index.js depending on module type
     entry: {
@@ -103,6 +103,13 @@ export async function validateModule(dirPath) {
     const module = JSON.parse(content);
     if (!validateSchema(module)) return null;
 
+    // Manually check entry extension corresponding to module type
+    if (module.entry) {
+      if (module.type === 'page' && !module.entry.endsWidth('.html')) {
+        return null;
+      }
+    }
+
     module.validation = {
       // Check if the Module API this module was built upon is still supported
       apiVersionSupported: semver.gte(
@@ -133,6 +140,7 @@ export async function loadModules() {
     const modules = results.reduce((map, result, i) => {
       if (result) {
         const module = { ...result, dirName };
+        // If 2 modules have the same name, keep the one with the higher version
         if (
           !map[module.name] ||
           semver.gt(module.version, map[module.name].version)

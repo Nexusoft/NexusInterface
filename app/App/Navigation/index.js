@@ -71,16 +71,18 @@ const NavItem = ({ icon, children, ...rest }) => (
   </Tooltip.Trigger>
 );
 
-const ModuleIcon = ({ module }) => {
-  const icon = module.icon || 'icon.svg' || 'icon.png';
+function tryModuleIcon(icon) {
   const iconPath = path.join(config.GetModulesDir(), module.dirName, icon);
+  return existsSync(iconPath) ? <img css={iconSize} src={iconPath} /> : null;
+}
 
-  if (existsSync(iconPath)) {
-    return <img css={iconSize} src={iconPath} />;
-  } else {
-    return <Icon css={iconSize} icon={legoBlockIcon} />;
-  }
-};
+const defaultModuleIcon = <Icon css={iconSize} icon={legoBlockIcon} />;
+
+const ModuleIcon = ({ module }) =>
+  (module.icon
+    ? tryModuleIcon(module.icon)
+    : tryModuleIcon('icon.svg') || tryModuleIcon('icon.png')) ||
+  defaultModuleIcon;
 
 const ModuleNavItem = ({ module }) => (
   <Tooltip.Trigger tooltip={module.displayName || module.name} position="top">

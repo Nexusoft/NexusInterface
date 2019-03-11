@@ -20,9 +20,10 @@ import BlockExplorer from './BlockExplorer';
 import Settings from './Settings';
 import Terminal from './Terminal';
 import StyleGuide from './StyleGuide';
-import TrustList from './TrustList';
 import About from './About';
+import Modules from './Modules';
 // import Exchange from './Exchange';
+// import TrustList from './TrustList';
 import AppBackground from './AppBackground';
 import ThemeController from './ThemeController';
 
@@ -99,6 +100,7 @@ export default class App extends Component {
                       {/* <Route path="/Exchange" component={Exchange} /> */}
                       {/* <Route exact path="/List" component={TrustList} /> */}
                       <Route exact path="/About" component={About} />
+                      <Route path="/Modules/:name" component={Modules} />
                     </Switch>
                   </Main>
                   <Navigation />
