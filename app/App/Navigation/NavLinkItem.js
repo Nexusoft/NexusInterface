@@ -1,12 +1,8 @@
 // External Dependencies
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
-// Internal Global Depnedencies
-import Icon from 'components/Icon';
-import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
 
 const pulseRing = keyframes`
@@ -80,17 +76,4 @@ const NavLinkItem = styled(NavLink)(({ theme }) => ({
   },
 }));
 
-const NavIcon = styled(Icon)({
-  width: 36,
-  height: 36,
-});
-
-const NavItem = ({ icon, children, ...rest }) => (
-  <Tooltip.Trigger tooltip={children} position="top">
-    <NavLinkItem {...rest}>
-      <NavIcon icon={icon} />
-    </NavLinkItem>
-  </Tooltip.Trigger>
-);
-
-export default NavItem;
+export default NavLinkItem;

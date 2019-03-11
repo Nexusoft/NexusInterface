@@ -1,15 +1,21 @@
 // External Dependencies
-import React, { Component } from 'react';
-import Text from 'components/Text';
+import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
+import { existsSync } from 'fs';
+import path from 'path';
 
 // Internal Global Depnedencies
+import Text from 'components/Text';
 import HorizontalLine from 'components/HorizontalLine';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
+import config from 'api/configuration';
 import { consts, timing } from 'styles';
 
 // Internal Local Dependencies
-import NavItem from './NavItem';
+import NavLinkItem from './NavLinkItem';
 
 // Images
 import logoIcon from 'images/logo.sprite.svg';
@@ -19,6 +25,7 @@ import transactionsIcon from 'images/transaction.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 import settingsIcon from 'images/settings.sprite.svg';
 import consoleIcon from 'images/console.sprite.svg';
+import legoBlockIcon from 'images/lego-block-sprite.svg';
 // import shapeshiftIcon from 'images/shapeshift.sprite.svg';
 // import trustListIcon from 'images/trust-list.sprite.svg';
 
@@ -48,6 +55,52 @@ const AboveNav = styled.div({
   left: 0,
   right: 0,
 });
+
+const iconSize = 36;
+
+const NavItem = ({ icon, children, ...rest }) => (
+  <Tooltip.Trigger tooltip={children} position="top">
+    <NavLinkItem {...rest}>
+      <Icon width={iconSize} height={iconSize} icon={icon} />
+    </NavLinkItem>
+  </Tooltip.Trigger>
+);
+
+const ModuleIcon = ({ module }) => {
+  const icon = module.icon || 'icon.svg' || 'icon.png';
+  const iconPath = path.join(config.GetModulesDir(), module.dirName, icon);
+
+  if (existsSync(iconPath)) {
+    return <img width={iconSize} height={iconSize} src={iconPath} />;
+  } else {
+    return <Icon width={iconSize} height={iconSize} icon={legoBlockIcon} />;
+  }
+};
+
+const ModuleNavItem = ({ module }) => (
+  <Tooltip.Trigger tooltip={module.displayName || module.name} position="top">
+    <NavLinkItem to={`/modules/${module.name}`}>
+      <ModuleIcon module={module} />
+    </NavLinkItem>
+  </Tooltip.Trigger>
+);
+
+@connect(state => ({
+  modules: state.modules,
+}))
+class ModuleNavItems extends React.Component {
+  render() {
+    return (
+      <>
+        {Object.values(this.props.modules)
+          .filter(m => m.type === 'page')
+          .map(module => (
+            <ModuleNavItem key={module.name} module={module} />
+          ))}
+      </>
+    );
+  }
+}
 
 const Navigation = () => (
   <Nav>
@@ -93,6 +146,8 @@ const Navigation = () => (
         &nbsp;
         <Text id="Footer.List" />
       </NavItem> */}
+
+      <ModuleNavItems />
     </NavBar>
   </Nav>
 );
