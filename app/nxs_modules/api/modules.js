@@ -33,11 +33,19 @@ const nxsPackageSchema = {
     // Relative path to the main file
     // Main file could be html or js depending on module's type
     // If not specified, app will look for index.html or index.js depending on module type
-    entry: { type: 'string' },
+    entry: {
+      type: 'string',
+      // Allows empty strings, disallows ../ and ..\
+      pattern: /^(.(?<!\.\.\/|\.\.\\))+$|^$/.source,
+    },
     // Relative path to the icon file
     // Currently svg and png formats are supported
     // If not specified, app will look for icon.svg and icon.png
-    icon: { type: 'string', pattern: /^.+\.(svg|png)$|^$/.source },
+    icon: {
+      type: 'string',
+      // Checks for file extension, allows empty strings, disallows ../ and ..\
+      pattern: /^(.(?<!\.\.\/|\.\.\\))+\.(svg|png)$|^$/.source,
+    },
     repository: {
       type: 'object',
       required: ['type', 'host', 'owner', 'repo'],
