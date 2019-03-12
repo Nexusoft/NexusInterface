@@ -29,7 +29,7 @@ const nxsPackageSchema = {
       pattern: semverRegex().source,
     },
     description: { type: 'string' },
-    type: { type: 'string', enum: ['page'] },
+    type: { type: 'string', enum: ['page', 'page-panel'] },
     // Relative path to the entry file
     // Main file could be html or js depending on module's type
     // If not specified, app will look for index.html or index.js depending on module type

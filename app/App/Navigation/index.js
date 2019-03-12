@@ -86,7 +86,7 @@ const ModuleIcon = ({ module }) =>
 
 const ModuleNavItem = ({ module }) => (
   <Tooltip.Trigger tooltip={module.displayName || module.name} position="top">
-    <NavLinkItem to={`/modules/${module.name}`}>
+    <NavLinkItem to={`/Modules/${module.name}`}>
       <ModuleIcon module={module} />
     </NavLinkItem>
   </Tooltip.Trigger>
@@ -100,7 +100,7 @@ class ModuleNavItems extends React.Component {
     return (
       <>
         {Object.values(this.props.modules)
-          .filter(m => m.type === 'page')
+          .filter(m => m.type === 'page' || m.type === 'page-panel')
           .map(module => (
             <ModuleNavItem key={module.name} module={module} />
           ))}
