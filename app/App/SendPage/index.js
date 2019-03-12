@@ -76,7 +76,7 @@ class SendPage extends Component {
   render() {
     return (
       <Panel
-        icon={sendIcon}
+        iconSprite={sendIcon}
         title={<Text id="sendReceive.SendNexus" />}
         controls={
           this.props.connections !== undefined && (

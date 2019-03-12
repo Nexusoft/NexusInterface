@@ -121,6 +121,13 @@ const utilityClasses = theme => css`
   .mt2 {
     margin-top: 2em;
   }
+
+  .space-left {
+    margin-left: 0.4em;
+  }
+  .space-right {
+    margin-right: 0.4em;
+  }
 `;
 
 const GlobalStyles = () => (

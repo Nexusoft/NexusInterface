@@ -71,11 +71,25 @@ const PanelBodyOverlay = styled.div({
   padding: '20px 30px',
 });
 
-const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
+const IconImg = styled.img({
+  width: '1em',
+  height: '1em',
+  verticalAlign: 'middle',
+});
+
+const Panel = ({
+  iconSprite,
+  iconSrc,
+  title,
+  controls,
+  children,
+  bodyScrollable = true,
+}) => (
   <PanelComponent>
     <PanelHeader>
       <PanelTitle>
-        {!!icon && <Icon spaceRight icon={icon} />}
+        {!!iconSprite && <Icon spaceRight icon={iconSprite} />}
+        {!!iconSrc && <IconImg className="space-right" src={iconSrc} />}
         <span className="v-align">{title}</span>
       </PanelTitle>
       {controls}

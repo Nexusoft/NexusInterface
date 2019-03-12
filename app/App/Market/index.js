@@ -284,7 +284,7 @@ class Market extends Component {
             </Button>
           </Tooltip.Trigger>
         }
-        icon={chartIcon}
+        iconSprite={chartIcon}
         title={<Text id="Market.Information" />}
       >
         {/* <a className="refresh" onClick={() => this.refresher()}>

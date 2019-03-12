@@ -123,7 +123,7 @@ class List extends Component {
    */
   render() {
     return (
-      <Panel icon={trustIcon} title={<Text id="TrustList.TrustList" />}>
+      <Panel iconSprite={trustIcon} title={<Text id="TrustList.TrustList" />}>
         {this.props.isInSync === false ||
         this.props.connections === undefined ||
         this.props.trustlist === undefined ? (

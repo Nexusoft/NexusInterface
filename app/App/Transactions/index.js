@@ -278,7 +278,7 @@ class Transactions extends Component {
       false
     );
     this._Onprogress = () => {};
-  /*setInterval(() => {
+    /*setInterval(() => {
     this.setState(
       {
         CSVProgress: this.state.CSVProgress + 1,
@@ -740,18 +740,16 @@ class Transactions extends Component {
   DownloadCSV() {
     //UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
     //if (this.state.CSVProgress >= 100){
-      googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
-      this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
+    googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
+    this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
     //}
   }
 
-  setEvents(events)
-  {
+  setEvents(events) {
     this._Onprogress = events.progress;
   }
 
-  updateProgress()
-  {
+  updateProgress() {
     this._Onprogress(this.state.CSVProgress);
   }
 
@@ -1675,7 +1673,7 @@ class Transactions extends Component {
     const chartData = this.returnChartData();
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
     const leftPadding =
-    parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
+      parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
     return (
       <VictoryChart
         width={this.state.mainChartWidth}
@@ -1790,7 +1788,7 @@ class Transactions extends Component {
     const pageSize = this.returnDefaultPageSize();
     return (
       <Panel
-        icon={transactionIcon}
+        iconSprite={transactionIcon}
         title={<Text id="transactions.Details" />}
         controls={
           <Select
