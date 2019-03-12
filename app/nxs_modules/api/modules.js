@@ -87,6 +87,21 @@ async function checkRepo({ host, owner, repo, commit }) {
   }
 }
 
+function getIconPath(iconName, dirName, modulesDir) {
+  const iconPath = join(modulesDir, dirName, iconName);
+  return existsSync(iconPath) ? iconPath : null;
+}
+
+function prepareModule(module, modulesDir) {
+  // Prepare module icon
+  module.iconPath = module.icon
+    ? getIconPath(module.icon, module.dirName, modulesDir)
+    : getIconPath('icon.svg', module.dirName, modulesDir) ||
+      getIconPath('icon.png', module.dirName, modulesDir);
+
+  return module;
+}
+
 /**
  * Public API
  * =============================================================================
@@ -105,7 +120,7 @@ export async function validateModule(dirPath) {
 
     // Manually check entry extension corresponding to module type
     if (module.entry) {
-      if (module.type === 'page' && !module.entry.endsWidth('.html')) {
+      if (isPageModule(module) && !module.entry.endsWidth('.html')) {
         return null;
       }
     }
@@ -145,7 +160,7 @@ export async function loadModules() {
           !map[module.name] ||
           semver.gt(module.version, map[module.name].version)
         ) {
-          map[module.name] = module;
+          map[module.name] = prepareModule(module, modulesDir);
         }
       }
       return map;
@@ -160,3 +175,6 @@ export const isModuleValid = (module, state) =>
   module.validation.apiVersionSupported &&
   (module.validation.repoFound ||
     (state.settings.devMode && state.settings.allowedModules === 'all'));
+
+export const isPageModule = module =>
+  module.type === 'page' || module.type === 'page-panel';

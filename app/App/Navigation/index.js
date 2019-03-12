@@ -5,15 +5,13 @@ import { connect } from 'react-redux';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
-import { existsSync } from 'fs';
-import path from 'path';
 
 // Internal Global Depnedencies
 import Text from 'components/Text';
 import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
-import config from 'api/configuration';
+import { isPageModule } from 'api/modules';
 import { consts, timing } from 'styles';
 
 // Internal Local Dependencies
@@ -71,23 +69,14 @@ const NavItem = ({ icon, children, ...rest }) => (
   </Tooltip.Trigger>
 );
 
-function tryModuleIcon(icon, dirName) {
-  const iconPath = path.join(config.GetModulesDir(), dirName, icon);
-  return existsSync(iconPath) ? <img css={iconSize} src={iconPath} /> : null;
-}
-
-const defaultModuleIcon = <Icon css={iconSize} icon={legoBlockIcon} />;
-
-const ModuleIcon = ({ module }) =>
-  (module.icon
-    ? tryModuleIcon(module.icon, module.dirName)
-    : tryModuleIcon('icon.svg', module.dirName) ||
-      tryModuleIcon('icon.png', module.dirName)) || defaultModuleIcon;
-
 const ModuleNavItem = ({ module }) => (
   <Tooltip.Trigger tooltip={module.displayName || module.name} position="top">
     <NavLinkItem to={`/Modules/${module.name}`}>
-      <ModuleIcon module={module} />
+      {module.iconPath ? (
+        <img css={iconSize} src={module.iconPath} />
+      ) : (
+        <Icon css={iconSize} icon={legoBlockIcon} />
+      )}
     </NavLinkItem>
   </Tooltip.Trigger>
 );
@@ -100,7 +89,7 @@ class ModuleNavItems extends React.Component {
     return (
       <>
         {Object.values(this.props.modules)
-          .filter(m => m.type === 'page' || m.type === 'page-panel')
+          .filter(module => isPageModule(module))
           .map(module => (
             <ModuleNavItem key={module.name} module={module} />
           ))}

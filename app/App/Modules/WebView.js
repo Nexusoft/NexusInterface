@@ -42,14 +42,15 @@ class WebView extends React.Component {
    * @memberof WebView
    */
   render() {
-    const { module, ...rest } = this.props;
+    const { module, className, style } = this.props;
     const entry = module.entry || 'index.html';
     const entryPath = join(config.GetModulesDir(), module.dirName, entry);
     if (!existsSync(entryPath)) return null;
 
     return (
       <webview
-        {...rest}
+        className={className}
+        style={style}
         ref={this.webviewRef}
         src={entryPath}
         preload={`file://${__dirname}/module_preload.js`}
