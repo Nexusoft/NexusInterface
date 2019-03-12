@@ -34,6 +34,7 @@ export const binance24hrInfo = () => {
       (error, response, body) => {
         if (response.statusCode === 200) {
           // let data= body.result[0];
+          console.log(response);
           let res = {
             change: body.priceChange,
             high: body.highPrice,
@@ -58,8 +59,9 @@ export const bittrex24hrInfo = () => {
       (error, response, body) => {
         if (response.statusCode === 200) {
           let data = body.result[0];
+          console.log(response);
           let res = {
-            change: (data.Last - data.PrevDay) / data.Last,
+            change: parseFloat((data.Last - data.PrevDay).toFixed(8)),
             high: data.High,
             low: data.Low,
             volume: data.Volume,
