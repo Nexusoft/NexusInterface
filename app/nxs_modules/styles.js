@@ -1,5 +1,5 @@
 import { keyframes } from '@emotion/core';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 const defaultColors = {
   background: '#1c1d1f',

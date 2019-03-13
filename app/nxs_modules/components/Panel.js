@@ -26,6 +26,7 @@ const PanelComponent = styled.div(({ theme }) => ({
   alignItems: 'stretch',
   color: theme.foreground,
   width: '100%',
+  height: '100%',
   animation: `${intro} .2s ease-out`,
 }));
 

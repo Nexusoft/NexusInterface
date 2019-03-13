@@ -4,7 +4,7 @@ import { ThemeProvider } from 'emotion-theming';
 import { connect } from 'react-redux';
 
 // Internal
-import { getMixer } from 'api/theme';
+import { getMixer } from 'utils/color';
 
 @connect(state => ({
   theme: state.theme,

@@ -15,25 +15,21 @@ import config from 'api/configuration';
  */
 @connect(state => ({
   modules: state.modules,
+  theme: state.theme,
 }))
 class WebView extends React.Component {
   webviewRef = React.createRef();
 
   componentDidMount() {
-    this.openDevTools();
-  }
-
-  componentDidUpdate() {
-    this.openDevTools();
-  }
-
-  openDevTools = () => {
     if (this.webviewRef.current) {
       this.webviewRef.current.addEventListener('dom-ready', () => {
+        this.webviewRef.current.send('initialize', {
+          theme: this.props.theme,
+        });
         this.webviewRef.current.openDevTools();
       });
     }
-  };
+  }
 
   /**
    *
