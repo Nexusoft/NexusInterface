@@ -1,7 +1,6 @@
 // External Dependencies
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
 
 // Internal Dependencies
 import Button from 'components/Button';

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactRouterDOM from 'react-router-dom';
 import * as redux from 'redux';
 import * as reactRedux from 'react-redux';
 import createCache from '@emotion/cache';
@@ -14,6 +15,9 @@ import Panel from 'components/Panel';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import TextField from 'components/TextField';
+import Switch from 'components/Switch';
+import Select from 'components/Select';
+import Link from 'components/Link';
 import * as color from 'utils/color';
 
 global.nexus = {
@@ -21,6 +25,7 @@ global.nexus = {
   libraries: {
     React,
     ReactDOM,
+    ReactRouterDOM,
     redux,
     reactRedux,
     emotion: { core, styled, theming, createCache },
@@ -36,6 +41,9 @@ global.nexus = {
     Button,
     Tooltip,
     TextField,
+    Switch,
+    Select,
+    Link,
   },
   sendMessage: (...args) => ipcRenderer.sendToHost(...args),
   onMessage: (...args) => ipcRenderer.on(...args),
