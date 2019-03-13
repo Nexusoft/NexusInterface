@@ -4,7 +4,8 @@ import styled from '@emotion/styled';
 import { jsx, css } from '@emotion/core';
 import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
-import { color, passRef } from 'utils';
+import { passRef } from 'utils';
+import * as color from 'utils/color';
 
 const inputHeightHalf = '1.125em';
 

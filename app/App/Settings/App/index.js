@@ -16,7 +16,8 @@ import Switch from 'components/Switch';
 import Icon from 'components/Icon';
 import UIController from 'components/UIController';
 import SettingsContainer from 'components/SettingsContainer';
-import { form, color } from 'utils';
+import * as color from 'utils/color';
+import * as form from 'utils/form';
 import warningIcon from 'images/warning.sprite.svg';
 import updater from 'updater';
 

@@ -18,7 +18,7 @@ import Switch from 'components/Switch';
 import UIController from 'components/UIController';
 import SettingsContainer from 'components/SettingsContainer';
 import { updateSettings } from 'actions/settingsActionCreators';
-import { form } from 'utils';
+import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
 

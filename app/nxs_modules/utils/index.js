@@ -1,8 +1,3 @@
-import React from 'react';
-import * as color from './color';
-import * as language from './language';
-import * as form from './form';
-
 export const newUID = (function() {
   let counter = 1;
   return () => `uid-${counter++}`;
@@ -13,19 +8,6 @@ export function escapeRegExp(s) {
   return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
-export function highlightMatchingText(text, query, HighlightComponent) {
-  if (!query) return text;
-  const regex = new RegExp(`(${escapeRegExp(query)})`, 'i');
-  const segments = text.split(regex).map((segment, i) => {
-    if (regex.test(segment)) {
-      return <HighlightComponent key={i}>{segment}</HighlightComponent>;
-    } else {
-      return <span key={i}>{segment}</span>;
-    }
-  });
-  return segments;
-}
-
 export function passRef(el, ref) {
   if (typeof ref === 'function') {
     ref(el);
@@ -33,5 +15,3 @@ export function passRef(el, ref) {
     ref.current = el;
   }
 }
-
-export { color, language, form };

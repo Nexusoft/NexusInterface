@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { timing } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 const ButtonComponent = styled.button(
   {

@@ -8,7 +8,7 @@ import { jsx } from '@emotion/core';
 // Internal
 import { arrowStyles } from 'components/Arrow';
 import { timing, animations, zIndex } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 const spacing = 10;
 const arrowPadding = 15;

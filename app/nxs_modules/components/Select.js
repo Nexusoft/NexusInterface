@@ -9,7 +9,7 @@ import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
 import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 // Minimum gap from the dropdown to the edges of the screen
 const minScreenGap = 10;

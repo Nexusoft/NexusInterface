@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import { timing, consts } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 const switchHeight = consts.lineHeight; // em
 const switchWidth = consts.lineHeight * 1.75; // em
