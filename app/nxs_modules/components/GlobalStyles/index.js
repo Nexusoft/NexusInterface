@@ -15,10 +15,15 @@ const resetStyles = theme => ({
   body: {
     color: theme.foreground,
     height: '100vh',
+    margin: 0,
     fontFamily: '"Noto Sans", sans-serif',
     fontSize: 16,
     lineHeight: consts.lineHeight,
     overflow: 'hidden',
+  },
+
+  '#root': {
+    height: '100%',
   },
 
   a: {
