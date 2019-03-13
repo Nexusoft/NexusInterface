@@ -53,7 +53,7 @@ class WebView extends React.Component {
         style={style}
         ref={this.webviewRef}
         src={entryPath}
-        preload={`file://${__dirname}/module_preload.js`}
+        preload={`file://${__dirname}/dist/module_preload.dev.js`}
       />
     );
   }

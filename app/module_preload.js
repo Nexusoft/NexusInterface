@@ -1,17 +1,18 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const redux = require('redux');
-const reactRedux = require('react-redux');
-const createCache = require('@emotion/cache')['default'];
-const core = require('@emotion/core');
-const styled = require('@emotion/styled')['default'];
-const victory = require('victory');
-const { ipcRenderer, clipboard } = require('electron');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import * as redux from 'redux';
+import * as reactRedux from 'react-redux';
+import createCache from '@emotion/cache';
+import * as core from '@emotion/core';
+import styled from '@emotion/styled';
+import * as victory from 'victory';
+import { ipcRenderer, clipboard } from 'electron';
 
-const packageJson = require('../package.json');
+import Panel from './nxs_modules/components/Panel';
+import * as color from './nxs_modules/utils/color';
 
 global.nexus = {
-  version: packageJson.moduleApi.currentVersion,
+  apiVersion: MODULE_API_VERSION,
   libraries: {
     React,
     ReactDOM,
@@ -21,7 +22,11 @@ global.nexus = {
     victory,
   },
   utilities: {
+    color,
     copyToClipboard: (...args) => clipboard.writeText(...args),
+  },
+  components: {
+    Panel,
   },
   sendMessage: (...args) => ipcRenderer.sendToHost(...args),
   listenToMessage: (...args) => ipcRenderer.on(...args),

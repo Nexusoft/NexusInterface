@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
