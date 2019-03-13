@@ -33,7 +33,6 @@ export default merge.smart(baseConfig, {
         use: {
           loader: 'url-loader',
           options: {
-            limit: 10000,
             mimetype: 'font/woff2',
             outputPath: '../fonts',
           },
