@@ -2,8 +2,9 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const redux = require('redux');
 const reactRedux = require('react-redux');
+const createCache = require('@emotion/cache')['default'];
 const core = require('@emotion/core');
-const styled = require('@emotion/styled');
+const styled = require('@emotion/styled')['default'];
 const victory = require('victory');
 const { ipcRenderer, clipboard } = require('electron');
 
@@ -16,7 +17,7 @@ global.nexus = {
     ReactDOM,
     redux,
     reactRedux,
-    emotion: { core, styled },
+    emotion: { core, styled, createCache },
     victory,
   },
   utilities: {
