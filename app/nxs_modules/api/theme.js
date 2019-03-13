@@ -1,5 +1,4 @@
 import config from 'api/configuration';
-import { color } from 'utils';
 
 const themeFileName = 'theme.json';
 
