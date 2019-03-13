@@ -9,8 +9,11 @@ import * as theming from 'emotion-theming';
 import * as victory from 'victory';
 import { ipcRenderer, clipboard } from 'electron';
 
-import Panel from 'components/Panel';
 import GlobalStyles from 'components/GlobalStyles';
+import Panel from 'components/Panel';
+import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
+import TextField from 'components/TextField';
 import * as color from 'utils/color';
 
 global.nexus = {
@@ -30,6 +33,9 @@ global.nexus = {
   components: {
     GlobalStyles,
     Panel,
+    Button,
+    Tooltip,
+    TextField,
   },
   sendMessage: (...args) => ipcRenderer.sendToHost(...args),
   onMessage: (...args) => ipcRenderer.on(...args),

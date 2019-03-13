@@ -32,6 +32,12 @@ const resetStyles = theme => ({
     textDecoration: 'none',
   },
 
+  'button, input, textarea, select, optgroup': {
+    fontFamily: 'inherit',
+    fontSize: '1em',
+    lineHeight: 1.15,
+  },
+
   p: {
     marginTop: '1em',
     marginBottom: '1em',

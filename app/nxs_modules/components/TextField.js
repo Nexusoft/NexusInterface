@@ -1,13 +1,14 @@
 // @jsx jsx
+// External
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { jsx, css } from '@emotion/core';
+
+// Internal
 import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
 import { passRef } from 'utils';
 import * as color from 'utils/color';
-
-const inputHeightHalf = '1.125em';
 
 const ErrorMessage = styled(Tooltip)(
   {
@@ -162,7 +163,7 @@ const Input = styled.input(
     '&[type="date"], &[type="time"]': {
       '&::-webkit-inner-spin-button': {
         position: 'relative',
-        top: inputHeightHalf,
+        top: consts.inputHeightEm / 2 + 'em',
         transform: 'translateY(-50%)',
       },
     },
