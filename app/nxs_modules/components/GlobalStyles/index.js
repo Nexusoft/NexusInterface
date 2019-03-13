@@ -1,10 +1,9 @@
 // External
 import React from 'react';
 import { Global, css } from '@emotion/core';
-import { withTheme } from 'emotion-theming';
 
 // Internal
-import { color } from 'utils';
+import * as color from 'utils/color';
 import { consts } from 'styles';
 import fontStyles from './fonts';
 
@@ -16,7 +15,6 @@ const resetStyles = theme => ({
   body: {
     color: theme.foreground,
     height: '100vh',
-    backgroundColor: '#232c39',
     fontFamily: '"Noto Sans", sans-serif',
     fontSize: 16,
     lineHeight: consts.lineHeight,

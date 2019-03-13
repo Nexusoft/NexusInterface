@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import UIController from 'components/UIController';
-import GlobalStyles from './GlobalStyles';
+import GlobalStyles from 'components/GlobalStyles';
 import Overview from './Overview';
 import Header from './Header';
 import Navigation from './Navigation';
