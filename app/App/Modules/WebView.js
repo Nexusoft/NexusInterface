@@ -65,6 +65,33 @@ class WebView extends React.Component {
             UIController.openErrorDialog({ message, note });
             break;
           }
+          case 'confirm': {
+            const [options = {}] = event.args;
+            const {
+              id,
+              question,
+              note,
+              yesLabel,
+              yesSkin,
+              noLabel,
+              noSkin,
+            } = options;
+            UIController.openConfirmDialog({
+              question,
+              note,
+              yesLabel,
+              yesSkin,
+              yesCallback: () => {
+                webview.send(`confirm-yes${id ? `:${id}` : ''}`);
+              },
+              noLabel,
+              noSkin,
+              noCallback: () => {
+                webview.send(`confirm-no${id ? `:${id}` : ''}`);
+              },
+            });
+            break;
+          }
         }
       });
       webview.addEventListener('dom-ready', () => {
