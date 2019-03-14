@@ -48,7 +48,9 @@ const mapStateToProps = ({
       },
     },
   },
-  overview: { connections },
+  core: {
+    info: { connections },
+  },
 }) => ({
   consoleInput: consoleInputSelector(
     currentCommand,

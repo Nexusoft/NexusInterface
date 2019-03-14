@@ -9,7 +9,7 @@ import { updateSettings } from 'actions/settingsActionCreators';
 import { backupWallet } from 'api/wallet';
 import Text from 'components/Text';
 import UIController from 'components/UIController';
-import * as ac from 'actions/setupAppActionCreators';
+import { clearCoreInfo } from 'actions/coreActionCreators';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import updater from 'updater';
 
@@ -42,7 +42,7 @@ class AppMenu {
       const state = this.store.getState();
       if (state.settings.manualDaemon) {
         RPC.PROMISE('stop', []).then(() => {
-          this.store.dispatch(ac.clearOverviewVariables());
+          this.store.dispatch(clearCoreInfo());
         });
       } else {
         remote
@@ -59,7 +59,7 @@ class AppMenu {
     label: 'Quit Nexus',
     accelerator: 'CmdOrCtrl+Q',
     click: () => {
-      this.store.dispatch(ac.clearOverviewVariables());
+      this.store.dispatch(clearCoreInfo());
       UIController.showNotification('Closing Nexus');
       remote.getCurrentWindow().close();
     },
@@ -76,7 +76,7 @@ class AppMenu {
     label: 'Backup Wallet',
     click: () => {
       const state = this.store.getState();
-      if (state.overview.connections) {
+      if (state.core.info.connections) {
         remote.dialog.showOpenDialog(
           {
             title: 'Select a folder',
@@ -186,7 +186,7 @@ class AppMenu {
         return;
       }
 
-      if (state.overview.connections === undefined) {
+      if (state.core.info.connections === undefined) {
         UIController.showNotification('Please wait for the daemon to start.');
         return;
       }

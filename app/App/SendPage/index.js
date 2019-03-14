@@ -23,7 +23,7 @@ import sendIcon from 'images/send.sprite.svg';
 import swapIcon from 'images/swap.sprite.svg';
 
 const mapStateToProps = state => ({
-  connections: state.overview.connections,
+  connections: state.core.info.connections,
   isInSync: state.common.isInSync,
 });
 

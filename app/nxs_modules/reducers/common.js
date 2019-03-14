@@ -26,6 +26,7 @@ const initialState = {
   displayNXSvalues: [],
   BootstrapModal: false,
   encryptionModalShown: false,
+  webGLEnabled: false,
 };
 
 export default (state = initialState, action) => {
@@ -204,6 +205,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         encryptionModalShown: true,
+      };
+    case TYPE.SET_WEBGL_ENABLED:
+      return {
+        ...state,
+        webGLEnabled: action.payload,
       };
     default:
       return state;
