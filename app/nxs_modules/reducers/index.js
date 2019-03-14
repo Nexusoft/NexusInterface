@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import { reducer as formReducer } from 'redux-form';
 
-import overview from './overview';
 import list from './list';
 import market from './market';
 import transactions from './transactions';
@@ -38,7 +37,6 @@ export default function createRootReducer(history) {
   return connectRouter(history)(
     combineReducers({
       core,
-      overview,
       router: routerReducer,
       list,
       market,
