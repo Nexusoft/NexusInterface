@@ -44,6 +44,25 @@ class WebView extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const webview = this.webviewRef.current;
+    if (webview && !webview.isLoading()) {
+      const { theme, settings, coreInfo, difficulty } = this.props;
+      if (prevProps.theme !== theme) {
+        webview.send('theme-updated', theme);
+      }
+      if (prevProps.settings !== settings) {
+        webview.send('settings-updated', settings);
+      }
+      if (prevProps.coreInfo !== coreInfo) {
+        webview.send('core-info-updated', coreInfo);
+      }
+      if (prevProps.difficulty !== difficulty) {
+        webview.send('difficulty-updated', difficulty);
+      }
+    }
+  }
+
   /**
    *
    *

@@ -46,5 +46,7 @@ global.nexus = {
     Link,
   },
   sendMessage: (...args) => ipcRenderer.sendToHost(...args),
-  onMessage: (...args) => ipcRenderer.on(...args),
+  on: (...args) => ipcRenderer.on(...args),
+  once: (...args) => ipcRenderer.once(...args),
+  off: (...args) => ipcRenderer.removeListener(...args),
 };

@@ -217,11 +217,6 @@ const multilineStyle = css({
   paddingBottom: '.5em',
 });
 
-const multilineProps = {
-  as: 'textarea',
-  css: multilineStyle,
-};
-
 class TextArea extends Component {
   componentDidUpdate() {
     const { scrollHeight } = this.inputElem;
