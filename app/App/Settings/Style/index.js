@@ -32,7 +32,7 @@ import LightTheme from './Light.json';
 
 const mapStateToProps = ({
   settings: { renderGlobe, locale, addressStyle },
-  overview: { webGLEnabled },
+  common: { webGLEnabled },
   theme,
 }) => {
   return {

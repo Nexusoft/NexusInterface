@@ -79,11 +79,11 @@ export default class Bootstrapper {
   /**
    * Start the bootstrapper
    *
-   * @param {*} { backupFolder, clearOverviewVariables }
+   * @param {*} { backupFolder, clearCoreInfo }
    * @returns
    * @memberof Bootstrapper
    */
-  async start({ backupFolder, clearOverviewVariables }) {
+  async start({ backupFolder, clearCoreInfo }) {
     try {
       const getinfo = await RPC.PROMISE('getinfo', []);
       console.log(getinfo.version);
@@ -120,7 +120,7 @@ export default class Bootstrapper {
       await this._extractDb();
       if (this._aborted) return;
 
-      clearOverviewVariables();
+      clearCoreInfo();
       this._progress('stopping_core');
       await electron.remote.getGlobal('core').stop();
       if (this._aborted) return;

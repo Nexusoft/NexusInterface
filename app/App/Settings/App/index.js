@@ -65,7 +65,7 @@ const overviewDisplays = [
 ];
 
 const mapStateToProps = state => ({
-  connections: state.overview.connections,
+  connections: state.core.info.connections,
   settings: state.settings,
 });
 

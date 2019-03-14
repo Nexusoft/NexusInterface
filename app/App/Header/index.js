@@ -92,7 +92,7 @@ const UnderHeader = styled.div(({ theme }) => ({
  * @class Header
  * @extends {Component}
  */
-@connect(({ overview: { connections } }) => ({ connections }))
+@connect(({ core: { info: { connections } } }) => ({ connections }))
 class Header extends Component {
   /**
    * React Render

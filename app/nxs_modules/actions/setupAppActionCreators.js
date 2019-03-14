@@ -4,13 +4,6 @@ import Request from 'request';
 // Internal
 import * as TYPE from 'actions/actiontypes';
 
-// Header Action Creators
-export const GetInfo = info => ({ type: TYPE.GET_INFO_DUMP, payload: info });
-
-export const clearOverviewVariables = () => ({
-  type: TYPE.CLEAR_FOR_BOOTSTRAPING,
-});
-
 export const SetMarketAveData = () => dispatch => {
   Request(
     {

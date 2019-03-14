@@ -7,7 +7,7 @@ import path from 'path';
 import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
 import * as ac from 'actions/setupAppActionCreators';
-import getInfo from 'actions/getInfo';
+import { getInfo } from 'actions/coreActionCreators';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
 import { loadAddressBookFromFile } from 'actions/addressBookActionCreators';

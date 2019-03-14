@@ -121,7 +121,7 @@ const mapStateToProps = state => {
   return {
     ...state.transactions,
     ...state.common,
-    ...state.overview,
+    ...state.core.info,
     myAccounts: state.myAccounts,
     addressBook: state.addressBook,
     settings: state.settings,
