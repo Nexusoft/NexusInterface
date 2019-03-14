@@ -4,7 +4,7 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SET_DIFFICULTY:
+    case TYPE.GET_DIFFICULTY:
       return action.payload;
 
     case TYPE.CLEAR_CORE_INFO:

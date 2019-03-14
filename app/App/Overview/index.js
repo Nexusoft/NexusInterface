@@ -13,6 +13,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
+import { getDifficulty } from 'actions/coreActionCreators';
 import * as helpers from 'scripts/helper.js';
 import * as RPC from 'scripts/rpc';
 import { timing, consts, animations } from 'styles';
@@ -103,10 +104,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => ({
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
-  getDifficulty: async () => {
-    const diff = await RPC.PROMISE('getdifficulty', []);
-    dispatch({ type: TYPE.SET_DIFFICULTY, payload: diff });
-  },
+  getDifficulty: dispatch(getDifficulty()),
 });
 
 const OverviewPage = styled.div({

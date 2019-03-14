@@ -152,3 +152,8 @@ async function showDesktopNotif(title, message) {
 export const clearCoreInfo = () => ({
   type: TYPE.CLEAR_CORE_INFO,
 });
+
+export const getDifficulty = () => async dispatch => {
+  const diff = await RPC.PROMISE('getdifficulty', []);
+  dispatch({ type: TYPE.GET_DIFFICULTY, payload: diff });
+};
