@@ -6,6 +6,7 @@ import { join } from 'path';
 
 // Internal Global
 import config from 'api/configuration';
+import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 
 /**
@@ -29,17 +30,41 @@ class WebView extends React.Component {
     if (webview) {
       webview.addEventListener('ipc-message', async event => {
         switch (event.channel) {
-          case 'rpc-call':
-            if (!event.args || !event.args.length) return;
+          case 'rpc-call': {
             const [{ command, params, id }] = event.args;
             try {
-              console.log(command, params);
               const response = await RPC.PROMISE(command, ...(params || []));
               webview.send(`rpc-response${id ? `:${id}` : ''}`, response);
             } catch (err) {
               console.error(err);
               webview.send(`rpc-error${id ? `:${id}` : ''}`, err);
             }
+            break;
+          }
+          case 'show-notification': {
+            const [content, param = {}] = event.args;
+            const options =
+              typeof param === 'string'
+                ? { type: param }
+                : {
+                    type: param.type,
+                    autoClose: param.autoClose,
+                  };
+            UIController.showNotification(content, options);
+            break;
+          }
+          case 'show-error-dialog': {
+            const [options = {}] = event.args;
+            const { message, note } = options;
+            UIController.openErrorDialog({ message, note });
+            break;
+          }
+          case 'show-success-dialog': {
+            const [options = {}] = event.args;
+            const { message, note } = options;
+            UIController.openErrorDialog({ message, note });
+            break;
+          }
         }
       });
       webview.addEventListener('dom-ready', () => {
