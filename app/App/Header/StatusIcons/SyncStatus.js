@@ -24,7 +24,9 @@ const SpinningIcon = styled(StatusIcon)({
  */
 @connect(
   ({
-    coreInfo: { synchronizing, blocks, synccomplete },
+    core: {
+      info: { synchronizing, blocks, synccomplete },
+    },
     common: { heighestPeerBlock },
   }) => ({
     synchronizing,

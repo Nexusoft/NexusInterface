@@ -113,7 +113,9 @@ const getLocalTime = tz => {
     ui: {
       addressBook: { selectedContactName },
     },
-    coreInfo: { connections },
+    core: {
+      info: { connections },
+    },
   }) => ({
     contact: addressBook[selectedContactName] || null,
     connections,

@@ -11,7 +11,7 @@ import Text from 'components/Text';
  * @class DaemonStatus
  * @extends {React.Component}
  */
-@connect(({ coreInfo: { connections }, settings: { manualDaemon } }) => ({
+@connect(({ core: { info: { connections } }, settings: { manualDaemon } }) => ({
   manualDaemon,
   connections,
 }))

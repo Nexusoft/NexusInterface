@@ -23,7 +23,12 @@ import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
 
 // React-Redux mandatory methods
-const mapStateToProps = ({ settings, coreInfo: { connections } }) => ({
+const mapStateToProps = ({
+  settings,
+  core: {
+    info: { connections },
+  },
+}) => ({
   connections,
   settings,
   initialValues: {
@@ -39,7 +44,7 @@ const mapStateToProps = ({ settings, coreInfo: { connections } }) => ({
 const actionCreators = {
   updateSettings,
   switchSettingsTab,
-  clearForRestart: () => ({ type: TYPE.CLEAR_FOR_RESTART }),
+  clearForRestart: () => ({ type: TYPE.CLEAR_CORE_INFO }),
 };
 
 /**

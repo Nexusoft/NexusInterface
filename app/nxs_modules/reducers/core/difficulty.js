@@ -4,8 +4,11 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.GET_INFO_DUMP:
+    case TYPE.SET_DIFFICULTY:
       return action.payload;
+
+    case TYPE.CLEAR_CORE_INFO:
+      return initialState;
 
     default:
       return state;

@@ -20,7 +20,7 @@ import { rpcErrorHandler } from 'utils/form';
  */
 @connect(state => ({
   initialValues: {
-    txFee: state.coreInfo.paytxfee,
+    txFee: state.core.info.paytxfee,
   },
 }))
 @reduxForm({

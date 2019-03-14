@@ -1,6 +1,6 @@
 // Internal
 import UIController from 'components/UIController';
-import * as ac from 'actions/setupAppActionCreators';
+import { clearCoreInfo } from 'actions/coreActionCreators';
 import { updateSettings } from 'actions/settingsActionCreators';
 import Bootstrapper from './Bootstrapper';
 import BootstrapModal from './BootstrapModal';
@@ -38,8 +38,8 @@ export default function bootstrap({ suggesting } = {}) {
           try {
             await bootstrapper.start({
               backupFolder: state.settings.backupDirectory,
-              clearOverviewVariables: () => {
-                dispatch(ac.clearOverviewVariables());
+              clearCoreInfo: () => {
+                dispatch(clearCoreInfo());
               },
             });
           } finally {

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import getInfo from 'actions/getInfo';
+import { getInfo } from 'actions/coreActionCreators';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
@@ -33,7 +33,7 @@ const Buttons = styled.div({
  * @extends {Component}
  */
 @connect(state => ({
-  tritium: state.coreInfo.version.includes('0.3'),
+  tritium: state.core.info.version.includes('0.3'),
 }))
 @reduxForm({
   form: 'login',

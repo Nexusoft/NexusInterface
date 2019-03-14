@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
         return state;
       }
       break;
-    case TYPE.GET_INFO_DUMP:
+    case TYPE.GET_INFO:
       return {
         ...state,
         ...action.payload,
@@ -40,7 +40,7 @@ export default (state = initialState, action) => {
         ...state,
         percentDownloaded: action.payload,
       };
-    case TYPE.CLEAR_FOR_RESTART:
+    case TYPE.CLEAR_CORE_INFO:
       return {
         ...initialState,
         webGLEnabled: state.webGLEnabled,

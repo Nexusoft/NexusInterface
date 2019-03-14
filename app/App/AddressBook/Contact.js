@@ -80,7 +80,7 @@ const AddressesCount = styled.div(({ theme }) => ({
   state => ({
     selectedContactName: state.ui.addressBook.selectedContactName,
     locale: state.settings.locale,
-    connections: state.coreInfo.connections,
+    connections: state.core.info.connections,
   }),
   { selectContact, deleteContact }
 )

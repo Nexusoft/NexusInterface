@@ -4,10 +4,6 @@ import Request from 'request';
 // Internal
 import * as TYPE from 'actions/actiontypes';
 
-export const clearOverviewVariables = () => ({
-  type: TYPE.CLEAR_FOR_BOOTSTRAPING,
-});
-
 export const SetMarketAveData = () => dispatch => {
   Request(
     {

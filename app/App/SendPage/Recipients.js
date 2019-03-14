@@ -67,7 +67,11 @@ const TransactionFee = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
 }));
 
-const mapStateToProps = ({ coreInfo: { paytxfee } }) => ({
+const mapStateToProps = ({
+  core: {
+    info: { paytxfee },
+  },
+}) => ({
   paytxfee,
 });
 

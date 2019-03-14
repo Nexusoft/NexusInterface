@@ -91,8 +91,12 @@ const formatDiff = diff => (diff || 0).toFixed(3);
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
-    ...state.overview,
-    ...state.common,
+    ...state.core.info,
+    difficulty: state.core.difficulty,
+    webGLEnabled: state.common.webGLEnabled,
+    blockDate: state.common.blockDate,
+    rawNXSvalues: state.common.rawNXSvalues,
+    displayNXSvalues: state.common.displayNXSvalues,
     settings: state.settings,
     theme: state.theme,
   };
@@ -294,8 +298,15 @@ class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidUpdate(prevProps) {
     const { blocks, webGLEnabled, settings, connections } = this.props;
-    const correctView = settings.overviewDisplay !== ('minimalist') && settings.overviewDisplay !== ( 'none');
-    if (settings.acceptedAgreement && webGLEnabled && settings.renderGlobe && correctView) {
+    const correctView =
+      settings.overviewDisplay !== 'minimalist' &&
+      settings.overviewDisplay !== 'none';
+    if (
+      settings.acceptedAgreement &&
+      webGLEnabled &&
+      settings.renderGlobe &&
+      correctView
+    ) {
       if (blocks != prevProps.blocks && blocks && prevProps.blocks) {
         this.redrawCurves();
       }

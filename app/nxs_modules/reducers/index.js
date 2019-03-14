@@ -13,7 +13,7 @@ import myAccounts from './myAccounts';
 import settings from './settings';
 import theme from './theme';
 import ui from './ui';
-import coreInfo from './coreInfo';
+import core from './core';
 
 import { addLocaleData } from 'react-intl';
 import ru from 'react-intl/locale-data/ru';
@@ -37,7 +37,7 @@ export default function createRootReducer(history) {
 
   return connectRouter(history)(
     combineReducers({
-      coreInfo,
+      core,
       overview,
       router: routerReducer,
       list,

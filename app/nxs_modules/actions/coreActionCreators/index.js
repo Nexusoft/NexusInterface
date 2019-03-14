@@ -8,20 +8,20 @@ import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
 import Text from 'components/Text';
 
-export default function getInfo() {
+export function getInfo() {
   return async (dispatch, getState) => {
     dispatch(ac.AddRPCCall('getInfo'));
     let info = null;
     try {
       info = await RPC.PROMISE('getinfo', []);
     } catch (err) {
-      console.log(err);
-      dispatch(ac.clearOverviewVariables());
+      console.error(err);
+      dispatch(clearCoreInfo());
       return;
     }
     // console.log(info);
     const state = getState();
-    const oldInfo = state.coreInfo;
+    const oldInfo = state.core.info;
 
     if (info.unlocked_until === undefined && info.locked === undefined) {
       dispatch(ac.Unlock());
@@ -138,7 +138,7 @@ export default function getInfo() {
     }
 
     delete info.timestamp;
-    dispatch({ type: TYPE.GET_INFO_DUMP, payload: info });
+    dispatch({ type: TYPE.GET_INFO, payload: info });
   };
 }
 
@@ -148,3 +148,7 @@ async function showDesktopNotif(title, message) {
     const notif = new Notification(title, { body: message });
   }
 }
+
+export const clearCoreInfo = () => ({
+  type: TYPE.CLEAR_CORE_INFO,
+});

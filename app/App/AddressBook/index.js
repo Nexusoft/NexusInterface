@@ -33,7 +33,7 @@ const AddressBookLayout = styled.div({
 
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
-  connections: state.coreInfo.connections,
+  connections: state.core.info.connections,
 });
 
 /**

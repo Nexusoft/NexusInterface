@@ -28,7 +28,7 @@ const ImportPrivKeyForm = styled.form({
 @connect(
   null,
   dispatch => ({
-    ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
+    ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_CORE_INFO }),
   })
 )
 @reduxForm({
