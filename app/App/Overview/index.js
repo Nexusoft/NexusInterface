@@ -91,7 +91,7 @@ const formatDiff = diff => (diff || 0).toFixed(3);
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
-    ...state.core.info,
+    coreInfo: state.core.info,
     difficulty: state.core.difficulty,
     webGLEnabled: state.common.webGLEnabled,
     blockDate: state.common.blockDate,
@@ -200,16 +200,6 @@ const Stat = styled.div(
     }
 );
 
-const HorizontalLine = styled.div(({ theme }) => ({
-  height: '2em',
-
-  margin: '0 auto',
-  backgroundImage: `linear-gradient(to right, transparent 10%, transparent 20%, ${
-    theme.primary
-  } 50%, transparent 80%, transparent 100%)`,
-  animation: `${animations.expand} ${timing.slow} ${consts.enhancedEaseOut}`,
-}));
-
 const MinimalStat = styled.div(
   ({ theme }) =>
     theme && {
@@ -297,7 +287,11 @@ class Overview extends Component {
 
   // React Method (Life cycle hook)
   componentDidUpdate(prevProps) {
-    const { blocks, webGLEnabled, settings, connections } = this.props;
+    const {
+      webGLEnabled,
+      settings,
+      coreInfo: { blocks, connections },
+    } = this.props;
     const correctView =
       settings.overviewDisplay !== 'minimalist' &&
       settings.overviewDisplay !== 'none';
@@ -388,7 +382,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   trustIcon() {
-    const tw = Math.round((this.props.trustweight || 0) / 10);
+    const tw = Math.round((this.props.coreInfo.trustweight || 0) / 10);
     return trustIcons[tw];
   }
 
@@ -399,7 +393,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   blockWeightIcon() {
-    const bw = Math.round((this.props.blockweight || 0) / 10);
+    const bw = Math.round((this.props.coreInfo.blockweight || 0) / 10);
     return blockWeightIcons[bw];
   }
 
@@ -451,7 +445,8 @@ class Overview extends Component {
         });
       }
 
-      let currencyValue = this.props.balance * selectedCurrancyValue[0].price;
+      let currencyValue =
+        this.props.coreInfo.balance * selectedCurrancyValue[0].price;
       if (currencyValue === 0) {
         currencyValue = `${currencyValue}.00`;
       } else {
@@ -534,7 +529,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   waitForDaemon = stat =>
-    this.props.connections !== undefined ? (
+    this.props.coreInfo.connections !== undefined ? (
       stat
     ) : (
       <span className="dim">-</span>
@@ -554,7 +549,9 @@ class Overview extends Component {
             <StatLabel>
               <Text id="overview.BlockWeightt" />
             </StatLabel>
-            <StatValue>{this.waitForDaemon(this.props.blockweight)}</StatValue>
+            <StatValue>
+              {this.waitForDaemon(this.props.coreInfo.blockweight)}
+            </StatValue>
           </div>
         </Stat>
 
@@ -564,7 +561,9 @@ class Overview extends Component {
             <StatLabel>
               <Text id="overview.TrustWeight" />
             </StatLabel>
-            <StatValue>{this.waitForDaemon(this.props.trustweight)}</StatValue>
+            <StatValue>
+              {this.waitForDaemon(this.props.coreInfo.trustweight)}
+            </StatValue>
           </div>
         </Stat>
 
@@ -574,7 +573,9 @@ class Overview extends Component {
             <StatLabel>
               <Text id="overview.StakeWeight" />
             </StatLabel>
-            <StatValue>{this.waitForDaemon(this.props.stakeweight)}</StatValue>
+            <StatValue>
+              {this.waitForDaemon(this.props.coreInfo.stakeweight)}
+            </StatValue>
           </div>
         </Stat>
       </React.Fragment>
@@ -647,16 +648,24 @@ class Overview extends Component {
    */
   render() {
     const {
-      connections,
-      balance,
-      stake,
+      coreInfo: {
+        connections,
+        balance,
+        stake,
+        txtotal,
+        interestweight,
+        stakerate,
+        blocks,
+      },
       displayNXSvalues,
       difficulty,
+      settings,
+      theme,
     } = this.props;
-    if (this.props.settings.overviewDisplay === 'none') {
+    if (settings.overviewDisplay === 'none') {
       return <OverviewPage />;
     }
-    if (this.props.settings.overviewDisplay === 'minimalist') {
+    if (settings.overviewDisplay === 'minimalist') {
       return (
         <OverviewPage>
           <MinimalStats>
@@ -676,8 +685,7 @@ class Overview extends Component {
 
             <MinimalStat>
               <StatLabel>
-                <Text id="overview.Balance" /> (
-                {this.props.settings.fiatCurrency})
+                <Text id="overview.Balance" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {this.waitForDaemon(this.calculateUSDvalue())}
@@ -688,13 +696,12 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.Transactions" />
               </StatLabel>
-              <StatValue>{this.waitForDaemon(this.props.txtotal)}</StatValue>
+              <StatValue>{this.waitForDaemon(txtotal)}</StatValue>
             </MinimalStat>
 
             <MinimalStat>
               <StatLabel>
-                <Text id="overview.MarketPrice" /> (
-                {this.props.settings.fiatCurrency})
+                <Text id="overview.MarketPrice" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -707,8 +714,7 @@ class Overview extends Component {
 
             <MinimalStat>
               <StatLabel>
-                <Text id="overview.24hrChange" /> (
-                {this.props.settings.fiatCurrency} %)
+                <Text id="overview.24hrChange" /> ({settings.fiatCurrency} %)
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -722,9 +728,7 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.Connections" />
               </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(this.props.connections)}
-              </StatValue>
+              <StatValue>{this.waitForDaemon(connections)}</StatValue>
             </MinimalStat>
 
             <MinimalStat>
@@ -732,9 +736,7 @@ class Overview extends Component {
                 <Text id="overview.InterestRate" />
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(
-                  this.props.interestweight || this.props.stakerate + '%'
-                )}
+                {this.waitForDaemon(interestweight || stakerate + '%')}
               </StatValue>
             </MinimalStat>
 
@@ -744,7 +746,7 @@ class Overview extends Component {
               </StatLabel>
 
               <StatValue>
-                {this.waitForDaemon(this.numberWithCommas(this.props.blocks))}
+                {this.waitForDaemon(this.numberWithCommas(blocks))}
               </StatValue>
             </MinimalStat>
           </MinimalStats>
@@ -759,12 +761,12 @@ class Overview extends Component {
             <NetworkGlobe
               handleOnLineRender={e => (this.redrawCurves = e)}
               // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
-              connections={this.props.connections}
+              connections={connections}
               handleOnAddData={e => (this.reDrawEverything = e)}
               handleRemoveAllPoints={e => (this.removeAllPoints = e)}
-              pillarColor={this.props.theme.globePillarColor}
-              archColor={this.props.theme.globeArchColor}
-              globeColor={this.props.theme.globeColor}
+              pillarColor={theme.globePillarColor}
+              archColor={theme.globeArchColor}
+              globeColor={theme.globeColor}
             />
             <MaxmindCopyright>
               <MaxmindLogo src={maxmindLogo} />
@@ -800,8 +802,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.Balance" /> (
-                {this.props.settings.fiatCurrency})
+                <Text id="overview.Balance" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {this.waitForDaemon(this.calculateUSDvalue())}
@@ -818,7 +819,7 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.Transactions" />
               </StatLabel>
-              <StatValue>{this.waitForDaemon(this.props.txtotal)}</StatValue>
+              <StatValue>{this.waitForDaemon(txtotal)}</StatValue>
             </div>
             <StatIcon icon={transactionIcon} />
           </Stat>
@@ -829,8 +830,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.MarketPrice" /> (
-                {this.props.settings.fiatCurrency})
+                <Text id="overview.MarketPrice" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -849,8 +849,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.MarketCap" /> (
-                {this.props.settings.fiatCurrency})
+                <Text id="overview.MarketCap" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -869,8 +868,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.24hrChange" /> (
-                {this.props.settings.fiatCurrency} %)
+                <Text id="overview.24hrChange" /> ({settings.fiatCurrency} %)
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -891,9 +889,7 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.Connections" />
               </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(this.props.connections)}
-              </StatValue>
+              <StatValue>{this.waitForDaemon(connections)}</StatValue>
             </div>
           </Stat>
 
@@ -904,9 +900,7 @@ class Overview extends Component {
                 <Text id="overview.InterestRate" />
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(
-                  this.props.interestweight || this.props.stakerate + '%'
-                )}
+                {this.waitForDaemon(interestweight || stakerate + '%')}
               </StatValue>
             </div>
           </Stat>
@@ -920,13 +914,13 @@ class Overview extends Component {
                 </StatLabel>
 
                 <StatValue>
-                  {this.waitForDaemon(this.numberWithCommas(this.props.blocks))}
+                  {this.waitForDaemon(this.numberWithCommas(blocks))}
                 </StatValue>
               </div>
             </Stat>
           </Tooltip.Trigger>
 
-          {this.props.settings.overviewDisplay === 'miner'
+          {settings.overviewDisplay === 'miner'
             ? this.returnDifficultyStats(difficulty)
             : this.returnWeightStats()}
         </Stats>
