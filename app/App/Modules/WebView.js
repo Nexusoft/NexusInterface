@@ -9,6 +9,76 @@ import config from 'api/configuration';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 
+async function rpcCall([{ command, params, id }]) {
+  try {
+    const response = await RPC.PROMISE(command, ...(params || []));
+    webview.send(`rpc-response${id ? `:${id}` : ''}`, response);
+  } catch (err) {
+    console.error(err);
+    webview.send(`rpc-error${id ? `:${id}` : ''}`, err);
+  }
+}
+
+function showNotif([content, param = {}]) {
+  const options =
+    typeof param === 'string'
+      ? { type: param }
+      : {
+          type: param.type,
+          autoClose: param.autoClose,
+        };
+  UIController.showNotification(content, options);
+}
+
+function showErrorDialog([options = {}]) {
+  const { message, note } = options;
+  UIController.openErrorDialog({ message, note });
+}
+
+function showSuccessDialog([options = {}]) {
+  const { message, note } = options;
+  UIController.openSuccessDialog({ message, note });
+}
+
+function confirm([options = {}]) {
+  const { id, question, note, yesLabel, yesSkin, noLabel, noSkin } = options;
+  UIController.openConfirmDialog({
+    question,
+    note,
+    yesLabel,
+    yesSkin,
+    yesCallback: () => {
+      webview.send(`confirm-yes${id ? `:${id}` : ''}`);
+    },
+    noLabel,
+    noSkin,
+    noCallback: () => {
+      webview.send(`confirm-no${id ? `:${id}` : ''}`);
+    },
+  });
+}
+
+function handleIpcMessage(event) {
+  switch (event.channel) {
+    case 'rpc-call':
+      rpcCall(event.args);
+      break;
+    case 'show-notification':
+      showNotif(event.args);
+      break;
+    case 'show-error-dialog':
+      showErrorDialog(event.args);
+      break;
+    case 'show-success-dialog':
+      showSuccessDialog(event.args);
+      break;
+    case 'confirm': {
+      confirm(event.args);
+      break;
+    }
+  }
+}
+
 /**
  * WebView
  *
@@ -28,72 +98,7 @@ class WebView extends React.Component {
   componentDidMount() {
     const webview = this.webviewRef.current;
     if (webview) {
-      webview.addEventListener('ipc-message', async event => {
-        switch (event.channel) {
-          case 'rpc-call': {
-            const [{ command, params, id }] = event.args;
-            try {
-              const response = await RPC.PROMISE(command, ...(params || []));
-              webview.send(`rpc-response${id ? `:${id}` : ''}`, response);
-            } catch (err) {
-              console.error(err);
-              webview.send(`rpc-error${id ? `:${id}` : ''}`, err);
-            }
-            break;
-          }
-          case 'show-notification': {
-            const [content, param = {}] = event.args;
-            const options =
-              typeof param === 'string'
-                ? { type: param }
-                : {
-                    type: param.type,
-                    autoClose: param.autoClose,
-                  };
-            UIController.showNotification(content, options);
-            break;
-          }
-          case 'show-error-dialog': {
-            const [options = {}] = event.args;
-            const { message, note } = options;
-            UIController.openErrorDialog({ message, note });
-            break;
-          }
-          case 'show-success-dialog': {
-            const [options = {}] = event.args;
-            const { message, note } = options;
-            UIController.openErrorDialog({ message, note });
-            break;
-          }
-          case 'confirm': {
-            const [options = {}] = event.args;
-            const {
-              id,
-              question,
-              note,
-              yesLabel,
-              yesSkin,
-              noLabel,
-              noSkin,
-            } = options;
-            UIController.openConfirmDialog({
-              question,
-              note,
-              yesLabel,
-              yesSkin,
-              yesCallback: () => {
-                webview.send(`confirm-yes${id ? `:${id}` : ''}`);
-              },
-              noLabel,
-              noSkin,
-              noCallback: () => {
-                webview.send(`confirm-no${id ? `:${id}` : ''}`);
-              },
-            });
-            break;
-          }
-        }
-      });
+      webview.addEventListener('ipc-message', handleIpcMessage);
       webview.addEventListener('dom-ready', () => {
         const {
           theme,
