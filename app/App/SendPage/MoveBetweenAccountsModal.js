@@ -37,7 +37,7 @@ const Buttons = styled.div({
 
 const mapStateToProps = ({
   settings: { minConfirmations, fiatCurrency },
-  overview: { paytxfee },
+  coreInfo: { paytxfee },
   myAccounts,
   common: { encrypted, loggedIn },
   form,

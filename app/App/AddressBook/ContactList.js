@@ -27,7 +27,7 @@ const mapStateToProps = ({
   ui: {
     addressBook: { searchQuery },
   },
-  overview: { connections },
+  coreInfo: { connections },
 }) => ({
   addressBook,
   searchQuery,

@@ -44,7 +44,7 @@ const LoginStatusIcon = styled(StatusIcon)(
 );
 
 const mapStateToProps = ({
-  overview: { connections, unlocked_until, staking_only, locked },
+  coreInfo: { connections, unlocked_until, staking_only, locked },
 }) => ({
   connections,
   unlocked_until,

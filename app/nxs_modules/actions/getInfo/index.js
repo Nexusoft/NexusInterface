@@ -2,11 +2,9 @@ import React from 'react';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
+import * as TYPE from 'actions/actiontypes';
 import { loadMyAccounts } from 'actions/accountActionCreators';
-import bootstrap, {
-  checkBootStrapFreeSpace,
-  checkFreeSpace,
-} from 'actions/bootstrap';
+import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
 import Text from 'components/Text';
 
@@ -23,7 +21,7 @@ export default function getInfo() {
     }
     // console.log(info);
     const state = getState();
-    const oldInfo = state.overview;
+    const oldInfo = state.coreInfo;
 
     if (info.unlocked_until === undefined && info.locked === undefined) {
       dispatch(ac.Unlock());
@@ -140,7 +138,7 @@ export default function getInfo() {
     }
 
     delete info.timestamp;
-    dispatch(ac.GetInfo(info));
+    dispatch({ type: TYPE.GET_INFO_DUMP, payload: info });
   };
 }
 

@@ -23,7 +23,7 @@ import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
 
 // React-Redux mandatory methods
-const mapStateToProps = ({ settings, overview: { connections } }) => ({
+const mapStateToProps = ({ settings, coreInfo: { connections } }) => ({
   connections,
   settings,
   initialValues: {

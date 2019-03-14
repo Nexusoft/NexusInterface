@@ -76,7 +76,7 @@ class AppMenu {
     label: 'Backup Wallet',
     click: () => {
       const state = this.store.getState();
-      if (state.overview.connections) {
+      if (state.coreInfo.connections) {
         remote.dialog.showOpenDialog(
           {
             title: 'Select a folder',
@@ -186,7 +186,7 @@ class AppMenu {
         return;
       }
 
-      if (state.overview.connections === undefined) {
+      if (state.coreInfo.connections === undefined) {
         UIController.showNotification('Please wait for the daemon to start.');
         return;
       }

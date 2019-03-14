@@ -17,7 +17,7 @@ import Unencrypted from './Unencrypted';
  * @extends {React.Component}
  */
 @connect(
-  ({ common: { encrypted, loggedIn }, overview: { connections } }) => ({
+  ({ common: { encrypted, loggedIn }, coreInfo: { connections } }) => ({
     encrypted,
     loggedIn,
     connections,
