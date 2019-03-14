@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactRouterDOM from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import * as redux from 'redux';
 import * as reactRedux from 'react-redux';
 import createCache from '@emotion/cache';

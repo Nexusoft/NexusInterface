@@ -9,7 +9,7 @@
   "buildDate": "March 8th 2019",
   "description": "Nexus",
   "scripts": {
-    "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
+    "build": "concurrently \"npm run build-main\" \"npm run build-renderer\" \"npm run build-preload\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r @babel/register ./node_modules/webpack/bin/webpack --mode=development --config webpack.config.renderer.dev.dll.js --color",
     "build-main": "cross-env NODE_ENV=production node --trace-warnings -r @babel/register ./node_modules/webpack/bin/webpack --mode=production --config webpack.config.main.prod.js --color",
     "build-main-dev": "cross-env NODE_ENV=development node --trace-warnings -r @babel/register ./node_modules/webpack/bin/webpack --mode=development --config webpack.config.main.dev.js --color",
