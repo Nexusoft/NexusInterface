@@ -13,20 +13,33 @@ import config from 'api/configuration';
  * @class WebView
  * @extends {Component}
  */
-@connect(state => ({
-  modules: state.modules,
-  theme: state.theme,
+@connect(({ modules, theme, core, settings }) => ({
+  modules,
+  theme,
+  settings,
+  coreInfo: core.info,
+  difficulty: core.difficulty,
 }))
 class WebView extends React.Component {
   webviewRef = React.createRef();
 
   componentDidMount() {
-    if (this.webviewRef.current) {
-      this.webviewRef.current.addEventListener('dom-ready', () => {
-        this.webviewRef.current.send('initialize', {
-          theme: this.props.theme,
+    const webview = this.webviewRef.current;
+    if (webview) {
+      webview.addEventListener('dom-ready', () => {
+        const {
+          theme,
+          coreInfo,
+          difficulty,
+          settings: { locale, fiatCurrency, addressStyle },
+        } = this.props;
+        webview.send('initialize', {
+          theme,
+          coreInfo,
+          difficulty,
+          settings: { locale, fiatCurrency, addressStyle },
         });
-        this.webviewRef.current.openDevTools();
+        webview.openDevTools();
       });
     }
   }
