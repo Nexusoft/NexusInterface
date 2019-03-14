@@ -39,7 +39,7 @@ const fiatCurrencies = [
   { value: 'CZK', display: 'Czeck Koruna (CZK)' },
   { value: 'EUR', display: 'Euro (EUR)' },
   { value: 'HKD', display: 'Hong Kong Dollar (HKD)' },
-  { value: 'INR', display: 'Israeli Shekel (INR)' },
+  { value: 'ILS', display: 'Israeli Shekel (ILS)' },
   { value: 'JPY', display: 'Japanese Yen (JPY)' },
   { value: 'KRW', display: 'Korean Won (KRW)' },
   { value: 'MYR', display: 'Malaysian Ringgit (MYR)' },

@@ -399,20 +399,6 @@ class Transactions extends Component {
         });
         this.gothroughdatathatneedsit();
       });
-
-      let feePromises = [];
-      incomingData.forEach(element => {
-        if (element.category == 'debit') {
-          feePromises.push(RPC.PROMISE('gettransaction', [element.txid]));
-        }
-      });
-      Promise.all(feePromises).then(payload => {
-        let feeData = new Map();
-        payload.map(element => {
-          feeData.set(element.time, element.fee);
-        });
-        this.setFeeValuesOnTransaction(feeData);
-      });
     }, 1000);
   }
 
@@ -738,21 +724,54 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   DownloadCSV() {
-    //UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
-    //if (this.state.CSVProgress >= 100){
-      googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
-      this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
-    //}
+    if (this.state.CSVProgress > 0){
+      return;
+    }
+
+    UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
+    this.gatherAllFeeData();
+    
+  }
+
+  async gatherAllFeeData()
+  {
+    let feePromises = [];
+    let numberOfSends = 0;
+        let feeData = new Map();
+
+
+      this.props.walletItems.forEach(element => {
+        if (element.category == 'debit') {
+          
+          feePromises.push(RPC.PROMISE('gettransaction', [element.txid]).then(
+            payload => {
+              feeData.set(payload.time, payload.fee);
+              numberOfSends++;
+              this.setState({
+                CSVProgress: numberOfSends / feePromises.length
+              });
+            }
+          ));
+        }
+      });
+      await Promise.all(feePromises);
+      this.setFeeValuesOnTransaction(feeData);
   }
 
   setEvents(events)
   {
     this._Onprogress = events.progress;
+    this._OnCSVFinished = events.finished;
   }
 
   updateProgress()
   {
     this._Onprogress(this.state.CSVProgress);
+    if (this.state.CSVProgress >= 100){
+      googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
+      this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
+      this._OnCSVFinished();
+    }
   }
 
   /**

@@ -248,6 +248,7 @@ export default class Core {
           '-daemon',
           '-avatar',
           '-server',
+          '-fastsync',
           '-rpcthreads=4',
           '-beta',
           `-verbose=${this.verbose}`,

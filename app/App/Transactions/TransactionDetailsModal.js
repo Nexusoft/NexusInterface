@@ -20,6 +20,7 @@ class TransactionDetailsModal extends Component {
   }
 
   state = {
+    highlightedTxFee: 'Loading',
     highlightedBlockHash: 'Loading',
     highlightedBlockNum: 'Loading',
   };
@@ -40,6 +41,21 @@ class TransactionDetailsModal extends Component {
         walletItems[hoveringID].txid,
       ]);
       this.setState({ highlightedBlockHash: tx.blockhash });
+
+
+ /*
+      feePromises.push(RPC.PROMISE('gettransaction', [element.txid]));
+      payload.map(element => {
+        let feeData = new Map();
+              feeData.set(element.time, element.fee);
+            });
+            this.setFeeValuesOnTransaction(feeData);
+      Promise.all(feePromises).then(payload => {
+*/
+
+      const feeAmount = await RPC.PROMISE('gettransaction', [tx.txid]);
+      //let feeData = new Map([tx.time,feeAmount.fee])
+      this.default.setState({highlightedTxFee: feeAmount.fee});
 
       const block = await RPC.PROMISE('getblock', [tx.blockhash]);
       this.setState({ highlightedBlockNum: block.height });
