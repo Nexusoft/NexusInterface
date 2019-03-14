@@ -6,6 +6,7 @@ import { join } from 'path';
 
 // Internal Global
 import config from 'api/configuration';
+import * as RPC from 'scripts/rpc';
 
 /**
  * WebView
@@ -26,6 +27,21 @@ class WebView extends React.Component {
   componentDidMount() {
     const webview = this.webviewRef.current;
     if (webview) {
+      webview.addEventListener('ipc-message', async event => {
+        switch (event.channel) {
+          case 'rpc-call':
+            if (!event.args || !event.args.length) return;
+            const [{ command, params, id }] = event.args;
+            try {
+              console.log(command, params);
+              const response = await RPC.PROMISE(command, ...(params || []));
+              webview.send(`rpc-response${id ? `:${id}` : ''}`, response);
+            } catch (err) {
+              console.error(err);
+              webview.send(`rpc-error${id ? `:${id}` : ''}`, err);
+            }
+        }
+      });
       webview.addEventListener('dom-ready', () => {
         const {
           theme,
