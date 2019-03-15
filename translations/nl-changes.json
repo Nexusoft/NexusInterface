@@ -134,5 +134,7 @@
   "Footer.AddressBook": "Address Book",
   "Alert.AddressCopied": "Address has been copied to clipboard",
   "Lang.Dutch": "Dutch",
-  "Common.UnknownError": "An unknown error occurred"
+  "Common.UnknownError": "An unknown error occurred",
+  "transactions.CSVDownloadModalCancel": "Cancel",
+  "transactions.CSVDownloadModalTitle": "Processing CSV"
 }

@@ -115,6 +115,8 @@
   "transactions.NoRowsFound": "No Rows Found",
   "transactions.AllAccounts": "All Accounts",
   "transactions.PENDINGTR": "PENDING TRANSACTION",
+  "transactions.CSVDownloadModalCancel": "Cancel",
+  "transactions.CSVDownloadModalTitle": "Processing CSV",
 
   "Market.Information": "Market Information",
   "Market.Refreash": "Refresh Market Data",

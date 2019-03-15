@@ -20,7 +20,7 @@ import { timing, consts, animations } from 'styles';
 import NetworkGlobe from './NetworkGlobe';
 
 // Images
-import usdIcon from 'images/USD.sprite.svg';
+import {CurrencyIcon} from 'images/CurrencyIcons';
 import transactionIcon from 'images/transaction.sprite.svg';
 import chartIcon from 'images/chart.sprite.svg';
 import supplyIcon from 'images/supply.sprite.svg';
@@ -799,7 +799,7 @@ class Overview extends Component {
                 {this.waitForDaemon(this.calculateUSDvalue())}
               </StatValue>
             </div>
-            <StatIcon icon={usdIcon} />
+            <StatIcon icon={CurrencyIcon(this.props.settings.fiatCurrency)} />
           </Stat>
 
           <Stat
