@@ -394,7 +394,7 @@ class SettingsStyle extends Component {
           <div className="mt1">
             <NexusAddress address={sampleAddress} label="Sample Address" />
             <AddressStyleNote>
-              <Icon icon={warningIcon} spaceRight />
+              <Icon icon={warningIcon} className="space-right" />
               <span className="v-align">
                 This address is just a sample one, please do NOT send your NXS
                 to it

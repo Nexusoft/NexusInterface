@@ -89,7 +89,7 @@ const Panel = ({
   <PanelComponent>
     <PanelHeader>
       <PanelTitle>
-        {!!iconSprite && <Icon spaceRight icon={iconSprite} />}
+        {!!iconSprite && <Icon className="space-right" icon={iconSprite} />}
         {!!iconSrc && <IconImg className="space-right" src={iconSrc} />}
         <span className="v-align">{title}</span>
       </PanelTitle>

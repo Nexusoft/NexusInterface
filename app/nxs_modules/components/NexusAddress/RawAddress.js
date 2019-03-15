@@ -81,7 +81,7 @@ export default class RawAddress extends React.Component {
                 grouped="right"
                 onClick={this.copyAddress}
               >
-                <Icon icon={copyIcon} spaceRight />
+                <Icon icon={copyIcon} className="space-right" />
               </CopyButton>
             </Tooltip.Trigger>
           }

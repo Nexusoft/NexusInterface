@@ -118,9 +118,9 @@ export async function validateModule(dirPath) {
     const module = JSON.parse(content);
     if (!validateSchema(module)) return null;
 
-    if (module.entry) {
+    if (isPageModule(module)) {
       // Manually check entry extension corresponding to module type
-      if (isPageModule(module) && !module.entry.endsWith('.html')) {
+      if (module.entry && !module.entry.endsWith('.html')) {
         return null;
       }
     }

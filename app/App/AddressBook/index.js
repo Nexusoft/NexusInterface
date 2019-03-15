@@ -122,7 +122,7 @@ class AddressBook extends Component {
                 onClick={this.showAddContact}
                 className="mt1"
               >
-                <Icon icon={addContactIcon} spaceRight />
+                <Icon icon={addContactIcon} className="space-right" />
                 <Text id="AddressBook.CreateNewContact" />
               </Button>
             )}

@@ -73,7 +73,7 @@ const Tab = ({ link, icon, text, toolTipText, isActive }) => (
   <TabLi>
     <Tooltip.Trigger tooltip={toolTipText} position="top">
       <TabLink to={link} isActive={isActive}>
-        {!!icon && <Icon spaceRight icon={icon} />}
+        {!!icon && <Icon className="space-right" icon={icon} />}
         {text}
       </TabLink>
     </Tooltip.Trigger>

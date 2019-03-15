@@ -160,7 +160,7 @@ class Addresses extends React.Component {
 
         <div className="mt1">
           <AddButton skin="hyperlink" onClick={this.addNewAddress}>
-            <PlusIcon icon={plusIcon} spaceRight />
+            <PlusIcon icon={plusIcon} className="space-right" />
             <span className="v-align">
               <Field name="name" component={this.renderFieldLabel} />
             </span>

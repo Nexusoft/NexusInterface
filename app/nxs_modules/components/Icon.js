@@ -2,8 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 const Svg = styled.svg({
-  fill: 'currentColor',
-  stroke: 'currentColor',
   verticalAlign: 'middle',
   transitionProperty: 'fill, stroke',
   transitionDuration: '.2s',
@@ -11,15 +9,9 @@ const Svg = styled.svg({
   height: '1em',
 });
 
-const Icon = ({ icon = {}, spaceLeft, spaceRight, ...rest }) => (
-  <Svg
-    viewBox={icon.viewBox}
-    className={`${spaceLeft ? 'space-left' : ''} ${
-      spaceRight ? 'space-right' : ''
-    }`}
-    {...rest}
-  >
-    <use xlinkHref={`#${icon.id}`} />
+const Icon = ({ icon = {}, ...rest }) => (
+  <Svg viewBox={icon.viewBox} {...rest}>
+    <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
   </Svg>
 );
 

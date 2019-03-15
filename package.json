@@ -250,6 +250,7 @@
     "core-js": "^2.6.0",
     "csvtojson": "^2.0.8",
     "devtron": "^1.4.0",
+    "dompurify": "^1.0.10",
     "download": "^7.1.0",
     "electron": "^4.0.1",
     "electron-debug": "^2.0.0",

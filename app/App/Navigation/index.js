@@ -1,8 +1,6 @@
-// @jsx jsx
 // External Dependencies
 import React from 'react';
 import { connect } from 'react-redux';
-import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
@@ -11,6 +9,7 @@ import Text from 'components/Text';
 import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
+import ModuleIcon from 'components/ModuleIcon';
 import { isPageModule } from 'api/modules';
 import { consts, timing } from 'styles';
 
@@ -25,7 +24,6 @@ import transactionsIcon from 'images/transaction.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 import settingsIcon from 'images/settings.sprite.svg';
 import consoleIcon from 'images/console.sprite.svg';
-import legoBlockIcon from 'images/lego-block.sprite.svg';
 // import shapeshiftIcon from 'images/shapeshift.sprite.svg';
 // import trustListIcon from 'images/trust-list.sprite.svg';
 
@@ -56,15 +54,10 @@ const AboveNav = styled.div({
   right: 0,
 });
 
-const iconSize = {
-  width: 36,
-  height: 36,
-};
-
 const NavItem = ({ icon, children, ...rest }) => (
   <Tooltip.Trigger tooltip={children} position="top">
     <NavLinkItem {...rest}>
-      <Icon css={iconSize} icon={icon} />
+      <Icon icon={icon} />
     </NavLinkItem>
   </Tooltip.Trigger>
 );
@@ -72,11 +65,7 @@ const NavItem = ({ icon, children, ...rest }) => (
 const ModuleNavItem = ({ module }) => (
   <Tooltip.Trigger tooltip={module.displayName || module.name} position="top">
     <NavLinkItem to={`/Modules/${module.name}`}>
-      {module.iconPath ? (
-        <img css={iconSize} src={module.iconPath} />
-      ) : (
-        <Icon css={iconSize} icon={legoBlockIcon} />
-      )}
+      <ModuleIcon module={module} />
     </NavLinkItem>
   </Tooltip.Trigger>
 );

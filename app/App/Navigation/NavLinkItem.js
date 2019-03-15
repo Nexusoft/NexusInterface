@@ -37,6 +37,7 @@ const NavLinkItem = styled(NavLink)(({ theme }) => ({
   transitionTimingFunction: consts.enhancedEaseOut,
   color: theme.foreground,
   opacity: 0.45,
+  fontSize: 36,
 
   '&:hover': {
     opacity: 0.6,

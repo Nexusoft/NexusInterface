@@ -45,6 +45,7 @@ const resetStyles = theme => ({
 
   svg: {
     fill: 'currentColor',
+    stroke: 'currentColor',
   },
 
   li: {
