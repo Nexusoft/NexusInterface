@@ -143,7 +143,7 @@ class TerminalCore extends Component {
                 ))}
               </Output>
               <Button
-                skin="filled-dark"
+                skin="filled-inverted"
                 fullWidth
                 onClick={paused ? unpauseCoreOutput : pauseCoreOutput}
                 style={{ flexShrink: 0 }}

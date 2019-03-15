@@ -70,13 +70,13 @@ export default class RawAddress extends React.Component {
         {!!label && <Label>{label}</Label>}
         <AddressTextField
           readOnly
-          skin="filled-dark"
+          skin="filled-inverted"
           value={address}
           inputRef={this.inputRef}
           right={
             <Tooltip.Trigger tooltip="Copy to clipboard">
               <CopyButton
-                skin="filled-dark"
+                skin="filled-inverted"
                 fitHeight
                 grouped="right"
                 onClick={this.copyAddress}

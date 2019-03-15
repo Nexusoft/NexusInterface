@@ -85,7 +85,7 @@ const SelectControl = styled.div(
               }
             : null),
         };
-      case 'filled-light':
+      case 'filled':
         return {
           paddingLeft: '.8em',
           background: theme.mixer(0.875),
@@ -141,7 +141,7 @@ const OptionsComponent = styled.div(
           background: theme.background,
           color: theme.foreground,
         };
-      case 'filled-light':
+      case 'filled':
         return {
           background: theme.foreground,
           color: theme.background,
@@ -177,7 +177,7 @@ const Option = styled.div(
             background: selected ? theme.primary : theme.mixer(0.125),
           },
         };
-      case 'filled-light':
+      case 'filled':
         return {
           '&:hover': {
             background: theme.mixer(0.875),
@@ -346,7 +346,7 @@ export default class Select extends Component {
           </CurrentValue>
           <Button
             fitHeight
-            skin={skin === 'filled-light' ? 'blank-dark' : 'blank-light'}
+            skin={skin === 'filled' ? 'plain-inverted' : 'plain'}
           >
             <Arrow direction="down" width={12} height={8} />
           </Button>

@@ -312,7 +312,7 @@ class TerminalConsole extends Component {
                     inputRef={this.inputRef}
                     inputProps={{
                       autoFocus: true,
-                      skin: 'filled-dark',
+                      skin: 'filled-inverted',
                       value: consoleInput,
                       placeholder: cch,
                       onChange: e => {
@@ -321,7 +321,7 @@ class TerminalConsole extends Component {
                       onKeyDown: this.handleKeyDown,
                       right: (
                         <ExecuteButton
-                          skin="filled-dark"
+                          skin="filled-inverted"
                           fitHeight
                           grouped="right"
                           onClick={this.execute}
@@ -362,7 +362,7 @@ class TerminalConsole extends Component {
             </ConsoleOutput>
 
             <Button
-              skin="filled-dark"
+              skin="filled-inverted"
               grouped="bottom"
               onClick={resetConsoleOutput}
             >

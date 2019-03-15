@@ -87,7 +87,7 @@ const TextFieldComponent = styled.div(
               }
             : null),
         };
-      case 'filled-light':
+      case 'filled':
         return {
           borderRadius: 2,
           background: theme.mixer(0.875),
@@ -108,7 +108,7 @@ const TextFieldComponent = styled.div(
               }
             : null),
         };
-      case 'filled-dark':
+      case 'filled-inverted':
         return {
           border: `1px solid ${theme.mixer(0.125)}`,
           background: theme.background,
@@ -205,7 +205,7 @@ const Input = styled.input(
   },
 
   ({ skin }) =>
-    (skin === 'filled-light' || skin === 'filled-dark') && {
+    (skin === 'filled' || skin === 'filled-inverted') && {
       padding: '0 .8em',
     }
 );

@@ -143,7 +143,7 @@ const ButtonComponent = styled.button(
             background: theme.primary,
           },
         };
-      case 'filled-dark':
+      case 'filled-inverted':
         return {
           '&, &:active, &&:disabled': {
             background: theme.background,
@@ -154,7 +154,7 @@ const ButtonComponent = styled.button(
             background: theme.mixer(0.125),
           },
         };
-      case 'filled-light':
+      case 'filled':
         return {
           '&, &:active, &&:disabled': {
             background: theme.mixer(0.875),
@@ -176,7 +176,7 @@ const ButtonComponent = styled.button(
             background: color.lighten(theme.danger, 0.2),
           },
         };
-      case 'blank-dark':
+      case 'plain-inverted':
         return {
           '&, &:active, &&:disabled': {
             background: 'transparent',
@@ -187,7 +187,7 @@ const ButtonComponent = styled.button(
             color: theme.background,
           },
         };
-      case 'blank-light':
+      case 'plain':
         return {
           '&, &:active, &&:disabled': {
             background: 'transparent',

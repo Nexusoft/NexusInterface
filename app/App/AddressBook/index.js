@@ -118,7 +118,7 @@ class AddressBook extends Component {
             </div>
             {connections !== undefined && (
               <Button
-                skin="blank-light"
+                skin="plain"
                 onClick={this.showAddContact}
                 className="mt1"
               >
