@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import { reducer as formReducer } from 'redux-form';
 
-import overview from './overview';
 import list from './list';
 import market from './market';
 import transactions from './transactions';
@@ -13,6 +12,7 @@ import myAccounts from './myAccounts';
 import settings from './settings';
 import theme from './theme';
 import ui from './ui';
+import core from './core';
 
 import { addLocaleData } from 'react-intl';
 import ru from 'react-intl/locale-data/ru';
@@ -36,7 +36,7 @@ export default function createRootReducer(history) {
 
   return connectRouter(history)(
     combineReducers({
-      overview,
+      core,
       router: routerReducer,
       list,
       market,

@@ -121,7 +121,7 @@ const mapStateToProps = state => {
   return {
     ...state.transactions,
     ...state.common,
-    ...state.overview,
+    ...state.core.info,
     myAccounts: state.myAccounts,
     addressBook: state.addressBook,
     settings: state.settings,
@@ -278,7 +278,7 @@ class Transactions extends Component {
       false
     );
     this._Onprogress = () => {};
-  /*setInterval(() => {
+    /*setInterval(() => {
     this.setState(
       {
         CSVProgress: this.state.CSVProgress + 1,
@@ -739,14 +739,12 @@ class Transactions extends Component {
     let numberOfSends = 0;
         let feeData = new Map();
 
-    console.log(this);
       this.props.walletitems.forEach(element => {
         if (element.category == 'debit' || element.category == 'send') {
           
           feePromises.push(RPC.PROMISE('gettransaction', [element.txid]).then(
             payload => {
               feeData.set(payload.time, payload.fee);
-              console.log(payload);
               numberOfSends++;
               this.setState({
                 CSVProgress: numberOfSends / feePromises.length
@@ -759,8 +757,7 @@ class Transactions extends Component {
       this.setFeeValuesOnTransaction(feeData);
   }
 
-  setEvents(events)
-  {
+  setEvents(events) {
     this._Onprogress = events.progress;
     this._OnCSVFinished = events.finished;
   }
@@ -1334,7 +1331,6 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   handleZoom(domain) {
-    //console.log(domain);
     domain.x[0] = new Date(domain.x[0]);
     domain.x[1] = new Date(domain.x[1]);
 
@@ -1359,7 +1355,6 @@ class Transactions extends Component {
     high = high == 0 ? 1 : high;
     domain.y[0] = -high;
     domain.y[1] = high;
-    console.log(domain);
     this.setState({ zoomDomain: domain });
   }
 
@@ -1687,7 +1682,7 @@ class Transactions extends Component {
     const chartData = this.returnChartData();
     const VictoryZoomVoronoiContainer = createContainer('voronoi', 'zoom');
     const leftPadding =
-    parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
+      parseInt(this.state.zoomDomain.y[0]).toString().length * 10;
     return (
       <VictoryChart
         width={this.state.mainChartWidth}

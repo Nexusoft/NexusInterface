@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import * as RPC from 'scripts/rpc';
-import getInfo from 'actions/getInfo';
+import { getInfo } from 'actions/coreActionCreators';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';

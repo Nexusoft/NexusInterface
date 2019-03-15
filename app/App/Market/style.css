@@ -30,6 +30,10 @@
   height: 60px;
 }
 
+.exchangeLogo:hover {
+  box-shadow: 0px 0px 5px #fff;
+}
+
 .marketDepthInner {
   position: relative;
   flex: 1;
