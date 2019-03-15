@@ -26,6 +26,8 @@ import About from './About';
 import AppBackground from './AppBackground';
 import ThemeController from './ThemeController';
 
+import globe from 'scripts/tester';
+
 const AppWrapper = styled.div({
   position: 'fixed',
   top: 0,
@@ -98,6 +100,7 @@ export default class App extends Component {
                       <Route exact path="/StyleGuide" component={StyleGuide} />
                       {/* <Route path="/Exchange" component={Exchange} /> */}
                       {/* <Route exact path="/List" component={TrustList} /> */}
+                      <Route exact path="/TEST" component={globe} />
                       <Route exact path="/About" component={About} />
                     </Switch>
                   </Main>

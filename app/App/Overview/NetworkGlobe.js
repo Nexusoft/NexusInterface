@@ -43,9 +43,6 @@ const Globe = styled.div({
 export default class NetworkGlobe extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-
-
-
     // console.log('Hello From the Network Globe Component!');
     this.props.handleOnLineRender(this.reDrawArchs);
     // this.props.handleOnRemoveOldPoints(this.RemoveOldPointsAndReDraw); // casues issues
@@ -254,7 +251,7 @@ export default class NetworkGlobe extends Component {
   }
 
   /**
-   * Remove the old data and redraw with new 
+   * Remove the old data and redraw with new
    *
    * @returns
    * @memberof NetworkGlobe

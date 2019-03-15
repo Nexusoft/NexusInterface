@@ -19,7 +19,7 @@ import transactionsIcon from 'images/transaction.sprite.svg';
 import addressBookIcon from 'images/address-book.sprite.svg';
 import settingsIcon from 'images/settings.sprite.svg';
 import consoleIcon from 'images/console.sprite.svg';
-// import shapeshiftIcon from 'images/shapeshift.sprite.svg';
+import shapeshiftIcon from 'images/shapeshift.sprite.svg';
 // import trustListIcon from 'images/trust-list.sprite.svg';
 
 const slideUp = keyframes`
@@ -88,6 +88,9 @@ const Navigation = () => (
         <Text id="Footer.Exchange" />
       </NavItem> */}
 
+      <NavItem icon={shapeshiftIcon} to="/TEST">
+        <Text id="Footer.Exchange" />
+      </NavItem>
       {/* <NavItem icon={trustListIcon} to="/List">
         <Text id="Footer.Trust" />
         &nbsp;

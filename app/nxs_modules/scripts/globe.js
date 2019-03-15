@@ -24,7 +24,6 @@ var CurveMeshs = null;
 var PillarMeshs = null;
 var useSamll = false;
 
-
 export default (DAT.Globe = function(container, opts) {
   opts = opts || {};
 
@@ -135,12 +134,10 @@ export default (DAT.Globe = function(container, opts) {
     let globeG = colormoddd.g / 1;
     let globeB = colormoddd.b / 1;
 
+    let worldimage = world;
 
-    let worldimage = world 
-    
-    if (useSamll)
-    {
-      console.log("UsedSmallImage");
+    if (useSamll) {
+      console.log('UsedSmallImage');
       worldimage = worldSmall;
     }
 
@@ -211,18 +208,26 @@ export default (DAT.Globe = function(container, opts) {
 
     renderer.setSize(w, h);
     renderer.setClearColor(0x000000, 0); // set background color to transparent
-    renderer.context.canvas.addEventListener("webglcontextlost", function(event) {
-      event.preventDefault();
-      console.error("CONTEXT LOST!!");
-      cancelAnimationFrame(animationid); 
-    }, false);
-    
-    renderer.context.canvas.addEventListener("webglcontextrestored", function(event) {
-      console.error("CONTEXT RESTORED");
-      init(); 
-      console.error("RESTORED GLOBE");
-    }, false);
-  
+    renderer.context.canvas.addEventListener(
+      'webglcontextlost',
+      function(event) {
+        event.preventDefault();
+        console.error('CONTEXT LOST!!');
+        cancelAnimationFrame(animationid);
+      },
+      false
+    );
+
+    renderer.context.canvas.addEventListener(
+      'webglcontextrestored',
+      function(event) {
+        console.error('CONTEXT RESTORED');
+        init();
+        console.error('RESTORED GLOBE');
+      },
+      false
+    );
+
     // renderer.domElement.style.position = "absolute";
 
     container.appendChild(renderer.domElement);
@@ -507,30 +512,7 @@ export default (DAT.Globe = function(container, opts) {
     }
   }
 
-  // var prevW = 0;
-  // var prevH = 0;
-  // var scale = 1;
   function onWindowResize(event) {
-    // if(prevH == 0 || prevW == 0)
-    // {
-    //   prevH = event.target.innerHeight;
-    //   prevW = event.target.innerWidth;
-    // }
-    // else {
-    //   scale = (event.target.innerHeight / prevH)*(event.target.innerWidth / prevW);
-    //   prevH = event.target.innerHeight;
-    //   prevW = event.target.innerWidth;
-    // }
-
-    // var glb = scene.getObjectByName("globeObj");
-    // glb.scale(.5,.5);
-
-    // glb.scale.x = scale;
-    // glb.scale.y = scale;
-    // glb.scale.z = scale;
-
-    // scene.scale = new Vector3(.9,.9,.9); // vector3 undefined might revisit.
-
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -598,7 +580,7 @@ export default (DAT.Globe = function(container, opts) {
     camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y);
     camera.position.y = distance * Math.sin(rotation.y);
     camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y);
-
+    // console.log(camera.position);
     camera.lookAt(mesh.position);
 
     renderer.render(scene, camera);
@@ -692,7 +674,7 @@ export default (DAT.Globe = function(container, opts) {
     // spline vertices
     const start = coordinateToPosition(startLat, startLng, globeradius);
     const end = coordinateToPosition(endLat, endLng, globeradius);
-    const altitude = clamp(start.distanceTo(end) * 0.75, 10, globeradius);
+    const altitude = clamp(start.distanceTo(end) * 0.35, 10, globeradius);
     const interpolate = geoInterpolate([startLng, startLat], [endLng, endLat]);
     const midCoord1 = interpolate(0.25);
     const midCoord2 = interpolate(0.75);
@@ -730,7 +712,7 @@ export default (DAT.Globe = function(container, opts) {
   }
 
   init();
-/*
+  /*
   sysinfo.graphics()
 .then(data => {
   console.log(data.controllers);
