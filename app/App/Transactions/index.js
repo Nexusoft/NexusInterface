@@ -1394,16 +1394,9 @@ class Transactions extends Component {
    */
   gethistorydatajson() {
     try {
-      const electronapp =
-        require('electron').app || require('electron').remote.app;
-      let appdataloc =
-        process.env.APPDATA ||
-        (process.platform == 'darwin'
-          ? electronapp.getPath('appData')
-          : process.env.HOME);
-      appdataloc = appdataloc + `/Nexus_Wallet_BETA/`;
+      const appdataloc = config.GetAppDataDirectory() + '/historydata.json';
       let incominghistoryfile = JSON.parse(
-        fs.readFileSync(appdataloc + 'historydata.json', 'utf8')
+        fs.readFileSync(appdataloc, 'utf8')
       );
       let keys = Object.keys(incominghistoryfile);
       let newTempMap = new Map();
@@ -1566,17 +1559,9 @@ class Transactions extends Component {
       needsHistorySave: false,
     });
 
-    const electronapp =
-      require('electron').app || require('electron').remote.app;
-    let appdataloc =
-      process.env.APPDATA ||
-      (process.platform == 'darwin'
-        ? electronapp.getPath('appData')
-        : process.env.HOME);
-    appdataloc = appdataloc + `/Nexus_Wallet_BETA/`;
-
+    const appdataloc = config.GetAppDataDirectory() + '/historydata.json';
     fs.writeFile(
-      appdataloc + 'historydata.json',
+      appdataloc,
       JSON.stringify(this.mapToObject(this.state.historyData)),
       err => {
         if (err != null) {

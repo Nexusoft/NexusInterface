@@ -156,5 +156,7 @@
   "Cp.ER": "Error Color",
   "Cp.ERA": "Error Color Accent",
   "Lang.Dutch": "Dutch",
-  "Common.UnknownError": "An unknown error occurred"
+  "Common.UnknownError": "An unknown error occurred",
+  "transactions.CSVDownloadModalCancel": "Cancel",
+  "transactions.CSVDownloadModalTitle": "Processing CSV"
 }
