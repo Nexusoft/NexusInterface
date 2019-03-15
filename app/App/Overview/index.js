@@ -104,7 +104,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => ({
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
-  getDifficulty: dispatch(getDifficulty()),
+  getDifficulty: () => dispatch(getDifficulty()),
 });
 
 const OverviewPage = styled.div({
