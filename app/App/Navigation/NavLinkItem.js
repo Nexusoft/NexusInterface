@@ -40,11 +40,12 @@ const NavLinkItem = styled(NavLink)(({ theme }) => ({
   fontSize: 36,
 
   '&:hover': {
-    opacity: 0.6,
+    opacity: 0.9,
     transform: 'scale(1.15)',
   },
   '&.active': {
     opacity: 1,
+    color: theme.primary,
     transform: 'scale(1.15)',
 
     '&::before': {
