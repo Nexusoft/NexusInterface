@@ -17,7 +17,9 @@ import stakingIcon from 'images/staking.sprite.svg';
  */
 @connect(
   ({
-    overview: { stakeweight, interestweight, trustweight, blockweight },
+    core: {
+      info: { stakeweight, interestweight, trustweight, blockweight },
+    },
     router: { location },
   }) => ({
     stakeweight,

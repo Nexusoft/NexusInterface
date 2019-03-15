@@ -1,14 +1,14 @@
 // Overview
-export const GET_INFO_DUMP = 'GET_INFO_DUMP';
+export const GET_INFO = 'GET_INFO';
 export const USD_RATE = 'USD_RATE';
 export const BTC_RATE = 'BTC_RATE';
 export const CHANGE_24 = 'CHANGE_24';
 export const SET_SUPPLY = 'SET_SUPPLY';
 export const CLEAR_FOR_BOOTSTRAPING = 'CLEAR_FOR_BOOTSTRAPING';
-export const CLEAR_FOR_RESTART = 'CLEAR_FOR_RESTART';
+export const CLEAR_CORE_INFO = 'CLEAR_CORE_INFO';
 export const SET_PERCENT_DOWNLOADED = 'SET_PERCENT_DOWNLOADED';
 export const SET_WEBGL_ENABLED = 'SET_WEBGL_ENABLED';
-export const SET_DIFFICULTY = 'SET_DIFFICULTY';
+export const GET_DIFFICULTY = 'GET_DIFFICULTY';
 
 // Trust
 export const GET_TRUST_LIST = 'GET_TRUST_LIST';

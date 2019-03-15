@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactTable from 'react-table';
-import { remote } from 'electron';
+import { remote, shell } from 'electron';
 import { VictoryArea, VictoryChart, VictoryAnimation } from 'victory';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
@@ -294,7 +294,13 @@ class Market extends Component {
 
         {this.props.loaded && this.props.binance.buy[0] && (
           <div className="exchangeUnitContainer">
-            <img className="exchangeLogo" src={binanceLogo} />
+            <img
+              className="exchangeLogo"
+              src={binanceLogo}
+              onClick={() => {
+                shell.openExternal('https://www.binance.com/en/trade/NXS_BTC');
+              }}
+            />
             {this.oneDayinfo('binance')}
             <div className="marketInfoContainer">
               <MarketDepth
@@ -315,7 +321,15 @@ class Market extends Component {
         )}
         {this.props.loaded && this.props.bittrex.buy[0] && (
           <div className="exchangeUnitContainer">
-            <img className="exchangeLogo" src={bittrexLogo} />
+            <img
+              className="exchangeLogo"
+              src={bittrexLogo}
+              onClick={() => {
+                shell.openExternal(
+                  'https://bittrex.com/Market/Index?MarketName=BTC-NXS'
+                );
+              }}
+            />
             {this.oneDayinfo('bittrex')}
             <div className="marketInfoContainer">
               <br />
