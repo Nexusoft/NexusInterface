@@ -13,22 +13,6 @@ const TabLi = styled.li({
   flexGrow: 1,
   flexBasis: 0,
 });
-const TabToolTipText = styled.span({
-  visibility: 'hidden',
-  width: '120px',
-  backgroundColor: '#555',
-  color: '#fff',
-  textAlign: 'center',
-  padding: '5px 0',
-  borderRadius: '6px',
-
-  /* Position the tooltip text */
-  position: 'absolute',
-  zIndex: '1',
-  bottom: '125%',
-  left: '50%',
-  marginLeft: '-60px',
-});
 const TabLink = styled(NavLink)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -40,16 +24,8 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   transitionProperties: 'color, borderBottom',
   transitionDuration: timing.normal,
 
-  '&.TabToolTip': {
-    TabToolTipText,
-  },
-
   '&:hover': {
     color: theme.foreground,
-    '&.TabToolTip': {
-      TabToolTipText,
-      visibility: 'visible',
-    },
   },
 
   '&.active': {
@@ -58,17 +34,6 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   },
 }));
 
-const TabToolTip = styled.span({
-  position: 'relative',
-  display: 'inline-block',
-  '&.TabToolTip': {
-    TabToolTipText,
-  },
-  '&:hover': {
-    TabToolTipText,
-    visibility: 'visible',
-  },
-});
 const Tab = ({ link, icon, text, toolTipText, isActive }) => (
   <TabLi>
     <Tooltip.Trigger tooltip={toolTipText} position="top">

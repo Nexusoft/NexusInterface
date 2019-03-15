@@ -6,7 +6,6 @@ import * as color from 'utils/color';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
-import ModuleIcon from 'components/ModuleIcon';
 
 const intro = keyframes`
   from { 
@@ -71,12 +70,6 @@ const PanelBodyOverlay = styled.div({
   right: 0,
   bottom: 0,
   padding: '20px 30px',
-});
-
-const IconImg = styled.img({
-  width: '1em',
-  height: '1em',
-  verticalAlign: 'middle',
 });
 
 const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
