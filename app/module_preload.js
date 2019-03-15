@@ -19,6 +19,8 @@ import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Link from 'components/Link';
 import Icon from 'components/Icon';
+import Tab from 'components/Tab';
+import FieldSet from 'components/FieldSet';
 import * as color from 'utils/color';
 
 global.nexus = {
@@ -46,6 +48,8 @@ global.nexus = {
     Select,
     Link,
     Icon,
+    Tab,
+    FieldSet,
   },
   sendMessage: (...args) => ipcRenderer.sendToHost(...args),
   on: (...args) => ipcRenderer.on(...args),
