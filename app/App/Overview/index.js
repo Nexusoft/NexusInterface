@@ -57,7 +57,6 @@ import trust100 from 'images/trust00.sprite.svg';
 import nxsblocksIcon from 'images/blockexplorer-invert-white.sprite.svg';
 import interestIcon from 'images/interest.sprite.svg';
 import stakeIcon from 'images/staking-white.sprite.svg';
-import maxmindLogo from 'images/maxmind-header-logo-compact.svg';
 
 const trustIcons = [
   trust00,
@@ -755,22 +754,16 @@ class Overview extends Component {
     return (
       <OverviewPage>
         {!!this.showingGlobe() && (
-          <>
-            <NetworkGlobe
-              handleOnLineRender={e => (this.redrawCurves = e)}
-              // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
-              connections={connections}
-              handleOnAddData={e => (this.reDrawEverything = e)}
-              handleRemoveAllPoints={e => (this.removeAllPoints = e)}
-              pillarColor={theme.globePillarColor}
-              archColor={theme.globeArchColor}
-              globeColor={theme.globeColor}
-            />
-            <MaxmindCopyright>
-              <MaxmindLogo src={maxmindLogo} />
-              Globe includes GeoLite2
-            </MaxmindCopyright>
-          </>
+          <NetworkGlobe
+            handleOnLineRender={e => (this.redrawCurves = e)}
+            // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
+            connections={connections}
+            handleOnAddData={e => (this.reDrawEverything = e)}
+            handleRemoveAllPoints={e => (this.removeAllPoints = e)}
+            pillarColor={theme.globePillarColor}
+            archColor={theme.globeArchColor}
+            globeColor={theme.globeColor}
+          />
         )}
 
         <Stats left compact={!this.showingGlobe()}>
