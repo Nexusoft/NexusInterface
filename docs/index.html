@@ -2,20 +2,20 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>nexus_wallet 0.9.0-alpha2 | Documentation</title>
-  <meta name='description' content='Nexus'>
+  <title>nexus_wallet 0.9.0-alpha3 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <link href='assets/bass.css' rel='stylesheet' />
-  <link href='assets/style.css' rel='stylesheet' />
-  <link href='assets/github.css' rel='stylesheet' />
-  <link href='assets/split.css' rel='stylesheet' />
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+  <link href='assets/split.css' type='text/css' rel='stylesheet' />
+  <meta name='description' content='Nexus'>
 </head>
 <body class='documentation m0'>
     <div class='flex'>
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>nexus_wallet</h3>
-          <div class='mb1'><code>0.9.0-alpha2</code></div>
+          <div class='mb1'><code>0.9.0-alpha3</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -315,10 +315,28 @@
                 
                 <li><a
                   href='#stakingstatus'
-                  class="">
+                  class=" toggle-sibling">
                   StakingStatus
-                  
+                  <span class='icon'>▸</span>
                 </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#stakingstatusrender'
+                        class='regular pre-open'>
+                        .render
+                      </a></li>
+                    
+                    </ul>
+                  
+                  
+                  
+                  
+                </div>
                 
                 </li>
               
@@ -359,6 +377,16 @@
                   
                   
                 </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#myaddresses'
+                  class="">
+                  MyAddresses
+                  
+                </a>
                 
                 </li>
               
@@ -2235,6 +2263,12 @@
                         .getDaemonVersionNumber
                       </a></li>
                     
+                      <li><a
+                        href='#aboutrender'
+                        class='regular pre-open'>
+                        .render
+                      </a></li>
+                    
                     </ul>
                   
                   
@@ -2278,7 +2312,10 @@
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>renderApp(Component: any)</div>
+   
   
   
 
@@ -2319,7 +2356,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -2337,7 +2373,10 @@
 
   <p>Main App Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new App()</div>
+   
   
   
     <p>
@@ -2383,7 +2422,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -2431,7 +2473,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -2449,7 +2490,10 @@
 
   <p>Overview Page, The main page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Overview()</div>
+   
   
   
     <p>
@@ -2495,7 +2539,10 @@
 
   <p>Set by {NetworkGlobe}, ReDraws all Pillars and Archs</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>reDrawEverything()</div>
+   
   
   
 
@@ -2540,7 +2587,10 @@
 
   <p>Sets up the context menu</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
+   
   
   
 
@@ -2598,7 +2648,10 @@
 
   <p>Returns the Block Date of the last given block</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>blockDate(): any</div>
+   
   
   
 
@@ -2651,7 +2704,10 @@
 
   <p>Returns the Connections icon based on how many connections the user has</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>connectionsIcon(): any</div>
+   
   
   
 
@@ -2704,7 +2760,10 @@
 
   <p>Returns the trust icon</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>trustIcon(): any</div>
+   
   
   
 
@@ -2757,7 +2816,10 @@
 
   <p>Returns the block weight icon</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>blockWeightIcon(): any</div>
+   
   
   
 
@@ -2810,7 +2872,10 @@
 
   <p>Returns if the Globe should be rendered</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>showingGlobe(): any</div>
+   
   
   
 
@@ -2863,7 +2928,10 @@
 
   <p>Add in Commas to a number</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>numberWithCommas(x: any): any</div>
+   
   
   
 
@@ -2929,7 +2997,10 @@
 
   <p>Calculate the value based on the User's Currency</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>calculateUSDvalue(): any</div>
+   
   
   
 
@@ -2982,7 +3053,10 @@
 
   <p>Formats the Market Price</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>marketPriceFormatter(): any</div>
+   
   
   
 
@@ -3035,7 +3109,10 @@
 
   <p>Formats the Market Cap</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>marketCapFormatter(): any</div>
+   
   
   
 
@@ -3088,7 +3165,10 @@
 
   <p>Returns the percentile changed in 24 hrs</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>pctChange24hrFormatter(): any</div>
+   
   
   
 
@@ -3141,7 +3221,10 @@
 
   <p>Displays Wait for Daemon</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>waitForDaemon</div>
+   
   
   
 
@@ -3199,7 +3282,10 @@
 
   <p>Returns the weight stats for the overview page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnWeightStats</div>
+   
   
   
 
@@ -3244,7 +3330,10 @@
 
   <p>Returns the Difficulty Stats for the Overview page when it is in Miner View</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnDifficultyStats</div>
+   
   
   
 
@@ -3302,7 +3391,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -3350,7 +3442,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -3368,7 +3459,10 @@
 
   <p>The Overview Globe</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new NetworkGlobe()</div>
+   
   
   
     <p>
@@ -3414,7 +3508,10 @@
 
   <p>Updates the pillars on the globe based on connect change</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>updatePointsOnGlobe()</div>
+   
   
   
 
@@ -3459,7 +3556,10 @@
 
   <p>Redraw all the Archs</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>reDrawArchs()</div>
+   
   
   
 
@@ -3504,7 +3604,10 @@
 
   <p>Remove all the Pillars and Archs on the globe</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>removeAllPoints(): any</div>
+   
   
   
 
@@ -3557,7 +3660,10 @@
 
   <p>Remove the old data and redraw with new</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>RemoveOldPointsAndReDraw(): any</div>
+   
   
   
 
@@ -3610,7 +3716,10 @@
 
   <p>Get the Resources Directory</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>getResourcesDirectory(): any</div>
+   
   
   
 
@@ -3663,7 +3772,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -3711,7 +3823,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -3729,7 +3840,10 @@
 
   <p>Handles the App Header</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Header()</div>
+   
   
   
     <p>
@@ -3775,7 +3889,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -3823,7 +3940,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -3841,7 +3957,10 @@
 
   <p>Handles the Login Status</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new LogInStatus()</div>
+   
   
   
     <p>
@@ -3887,7 +4006,10 @@
 
   <p>Sign in Message</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>signInStatusMessage</div>
+   
   
   
 
@@ -3932,7 +4054,10 @@
 
   <p>Return the correct status icon</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>statusIcon</div>
+   
   
   
 
@@ -3977,7 +4102,10 @@
 
   <p>Go to the Security Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>goToSecurity</div>
+   
   
   
 
@@ -4022,7 +4150,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -4070,7 +4201,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -4088,7 +4218,10 @@
 
   <p>Handles the Staking Status</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new StakingStatus()</div>
+   
   
   
     <p>
@@ -4117,13 +4250,74 @@
   
 
   
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='stakingstatusrender'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>render()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>React Render</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>render(): JSX</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>JSX</code>:
+        JSX
+
+      
+    
+  
+
+  
+
+  
+
+  
 
   
 
   
 </section>
 
-          
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+
+  
+</section>
+
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -4141,7 +4335,10 @@
 
   <p>Handles the Sync Status</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new SyncStatus()</div>
+   
   
   
     <p>
@@ -4187,7 +4384,10 @@
 
   <p>Returns JSX of either Spinning Icon or Status Icon depending on if wallet is in sync</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>statusIcon</div>
+   
   
   
 
@@ -4240,7 +4440,10 @@
 
   <p>Returns JSX of tooltip depending on if wallet is in sync or not</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>statusTooltip</div>
+   
   
   
 
@@ -4293,7 +4496,10 @@
 
   <p>React Render Method</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
+   
   
   
 
@@ -4341,7 +4547,62 @@
   
 </section>
 
+        
           
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='myaddresses'>
+      MyAddresses
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Returns JSX of My Addresses</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>MyAddresses</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>JSX</code>:
+        JSX
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -4359,7 +4620,10 @@
 
   <p>Handels the Daemon Status</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new DaemonStatus()</div>
+   
   
   
     <p>
@@ -4394,7 +4658,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -4412,7 +4675,10 @@
 
   <p>Send Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new SendPage()</div>
+   
   
   
     <p>
@@ -4458,7 +4724,10 @@
 
   <p>Set up the context menu</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
+   
   
   
 
@@ -4516,7 +4785,10 @@
 
   <p>Set up the context menu</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
+   
   
   
 
@@ -4574,7 +4846,10 @@
 
   <p>Opens the Move NXS between account modal</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>moveBetweenAccounts</div>
+   
   
   
 
@@ -4619,7 +4894,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -4667,7 +4945,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -4685,7 +4962,10 @@
 
   <p>Internal JXS for the Move Between Accounts Modal</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new MoveBetweenAccountsForm()</div>
+   
   
   
     <p>
@@ -4731,7 +5011,10 @@
 
   <p>Confirm Move</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>confirmMove</div>
+   
   
   
 
@@ -4789,7 +5072,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -4837,7 +5123,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -4855,7 +5140,10 @@
 
   <p>JSX</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>MoveBetweenAccountsModal</div>
+   
   
   
 
@@ -4883,7 +5171,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -4901,7 +5188,10 @@
 
   <p>The Amount Feild on the Send Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new AmountField()</div>
+   
   
   
     <p>
@@ -4947,7 +5237,10 @@
 
   <p>Convert the NXS to the User's currency</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>nxsToFiat</div>
+   
   
   
 
@@ -5013,7 +5306,10 @@
 
   <p>Returns the fiat from NXS</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>fiatToNxs</div>
+   
   
   
 
@@ -5079,7 +5375,10 @@
 
   <p>Returns the Amount Feild Name</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>amountFieldName</div>
+   
   
   
 
@@ -5124,7 +5423,10 @@
 
   <p>Returns the Fiat Amount Name</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>fiatAmountFieldName</div>
+   
   
   
 
@@ -5169,7 +5471,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -5217,7 +5522,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -5235,7 +5539,10 @@
 
   <p>The Internal Send Form in the Send Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new SendForm()</div>
+   
   
   
     <p>
@@ -5281,7 +5588,10 @@
 
   <p>Confirm the Send</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>confirmSend</div>
+   
   
   
 
@@ -5339,7 +5649,10 @@
 
   <p>Add Recipient to the queue</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>addRecipient</div>
+   
   
   
 
@@ -5384,7 +5697,10 @@
 
   <p>Return JSX for the Add Recipient Button</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>renderAddRecipientButton</div>
+   
   
   
 
@@ -5466,7 +5782,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -5514,7 +5833,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -5532,7 +5850,10 @@
 
   <p>Recipients Field from the Send Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Recipients()</div>
+   
   
   
     <p>
@@ -5578,7 +5899,10 @@
 
   <p>Return Tx Fee</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>renderTxFee</div>
+   
   
   
 
@@ -5623,7 +5947,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -5671,7 +5998,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -5689,7 +6015,10 @@
 
   <p>The Recipient Field in the Send Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new RecipientField()</div>
+   
   
   
     <p>
@@ -5735,7 +6064,10 @@
 
   <p>Handle Select Address</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>handleSelect</div>
+   
   
   
 
@@ -5793,7 +6125,10 @@
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -5841,7 +6176,6 @@
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -5859,7 +6193,10 @@
 
   <p>Transactions Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Transactions()</div>
+   
   
   
     <p>
@@ -5905,7 +6242,10 @@
 
   <p>The callback for when we want to update just the confirmations</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setConfirmationsCallback(incomingData: any)</div>
+   
   
   
 
@@ -5964,7 +6304,10 @@
 
   <p>The callback for the on Mount State</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setOnmountTransactionsCallback(incomingData: any)</div>
+   
   
   
 
@@ -6023,7 +6366,10 @@
 
   <p>Updates the height and width of the chart and table when you resize the window</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>updateChartAndTableDimensions(event: any): any</div>
+   
   
   
 
@@ -6090,7 +6436,10 @@
 
   <p>Open Tx Detail modal</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>openTxDetailsModal</div>
+   
   
   
 
@@ -6135,7 +6484,10 @@
 
   <p>This is the method that is called when the user pressed the right click</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>transactioncontextfunction</div>
+   
   
   
 
@@ -6194,7 +6546,10 @@
 
   <p>Copy to Clipboard</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>copysomethingtotheclipboard(instringtocopy: any)</div>
+   
   
   
 
@@ -6253,7 +6608,10 @@
 
   <p>Gets all the data from each account held by the wallet</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>getTransactionData(finishingCallback: any): null</div>
+   
   
   
 
@@ -6320,7 +6678,10 @@
 
   <p>Set the display property in state from the dropdown element</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>transactionTimeframeChange(value: any)</div>
+   
   
   
 
@@ -6379,7 +6740,10 @@
 
   <p>Download CSV</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>DownloadCSV()</div>
+   
   
   
 
@@ -6424,7 +6788,10 @@
 
   <p>creates a CSV file then prompts the user to save that file</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>saveCSV(DataToSave: [any])</div>
+   
   
   
 
@@ -6483,7 +6850,10 @@
 
   <p>Callback for when you change the category filter</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>transactiontypefiltercallback</div>
+   
   
   
 
@@ -6541,7 +6911,10 @@
 
   <p>Callback for when you change the amount filter</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>transactionamountfiltercallback</div>
+   
   
   
 
@@ -6599,7 +6972,10 @@
 
   <p>Callback for when you change the address filter</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>transactionaddressfiltercallback</div>
+   
   
   
 
@@ -6657,7 +7033,10 @@
 
   <p>Filter the transactions based on the CategoryFilter</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>filterByCategory(inTransactions: [any]): [any]</div>
+   
   
   
 
@@ -6724,7 +7103,10 @@
 
   <p>Filter the transactions based on the AmountFilter</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>filterbyAmount(inTransactions: [any]): [any]</div>
+   
   
   
 
@@ -6791,7 +7173,10 @@
 
   <p>Filter the transactions based on the AddressFilter</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>filterByAddress(inTransactions: [any]): [any]</div>
+   
   
   
 
@@ -6858,7 +7243,10 @@
 
   <p>Filter the transactions based on the DisplayTimeFrame</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>filterByTime(inTransactions: [any]): [any]</div>
+   
   
   
 
@@ -6925,7 +7313,10 @@
 
   <p>Returns all the transaction that have been filtered by the filter</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnAllFilters(inTransactions: [any]): [any]</div>
+   
   
   
 
@@ -6992,7 +7383,10 @@
 
   <p>DEV MODE: Create a fake transaction for testing.</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>TEMPaddfaketransaction(): any</div>
+   
   
   
 
@@ -7045,7 +7439,10 @@
 
   <p>What happens when you select something in the table</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>tableSelectCallback(e: any, indata: any)</div>
+   
   
   
 
@@ -7113,7 +7510,10 @@
 
   <p>Return the data to be placed into the Table</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnFormatedTableData(): any</div>
+   
   
   
 
@@ -7166,7 +7566,10 @@
 
   <p>Returns the columns and their rules/formats for the Table</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnTableColumns(): [any]</div>
+   
   
   
 
@@ -7219,7 +7622,10 @@
 
   <p>Returns formated data for the Victory Chart</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnChartData(): [any]</div>
+   
   
   
 
@@ -7272,7 +7678,10 @@
 
   <p>returns the correct fill color based on the category</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnCorrectFillColor(inData: any): any</div>
+   
   
   
 
@@ -7339,7 +7748,10 @@
 
   <p>Returns the Correct color based on the category</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnCorrectStokeColor(inData: any): any</div>
+   
   
   
 
@@ -7406,7 +7818,10 @@
 
   <p>Returns the tooltip lable for the chart</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnToolTipLable</div>
+   
   
   
 
@@ -7464,7 +7879,10 @@
 
   <p>The event listener for when you zoom in and out</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>handleZoom(domain: any)</div>
+   
   
   
 
@@ -7525,7 +7943,10 @@
 
   <p>the callback for when you mouse over a transaction on the table.</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>mouseOverCallback(e: any, inData: any)</div>
+   
   
   
 
@@ -7593,7 +8014,10 @@
 
   <p>The call back for when the mouse moves out of the table div.</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>mouseOutCallback(e: any)</div>
+   
   
   
 
@@ -7652,7 +8076,10 @@
 
   <p>Either load in the file from local or start downloading more data and make a new one.</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>gethistorydatajson()</div>
+   
   
   
 
@@ -7697,7 +8124,10 @@
 
   <p>Helper method to create URL's quickly</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>createcryptocompareurl(coinsym: any, timestamptolook: any): any</div>
+   
   
   
 
@@ -7773,7 +8203,10 @@
 
   <p>Build a object from incoming data then dispatch that to redux to populate that transaction</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setHistoryValuesOnTransaction(timeID: any, USDvalue: any, BTCValue: any)</div>
+   
   
   
 
@@ -7850,7 +8283,10 @@
 
   <p>Build a object from incoming data then dispatch that to redux to populate that transaction</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setFeeValuesOnTransaction(incomingChangeData: any)</div>
+   
   
   
 
@@ -7909,7 +8345,10 @@
 
   <p>Download both USD and BTC history on the incoming transaction</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>downloadHistoryOnTransaction(inEle: any): any</div>
+   
   
   
 
@@ -7976,7 +8415,10 @@
 
   <p>Go through all the data points that need to download new data a execute that promise</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>gothroughdatathatneedsit()</div>
+   
   
   
 
@@ -8021,7 +8463,10 @@
 
   <p>Save the history data to a json file</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>SaveHistoryDataToJson(): any</div>
+   
   
   
 
@@ -8076,7 +8521,10 @@
 <a href="http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/">http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/</a>
 Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://2ality.com/2015/08/es6-map-json.html</a></p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>mapToObject(aMap: any): any</div>
+   
   
   
 
@@ -8143,7 +8591,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>findclosestdatapoint(intimestamp: any): any</div>
+   
   
   
 
@@ -8210,7 +8661,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Compares a Data to a from Data and a To Data and returns a Bool</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>comparedate(indate: any, starttime: any, endtime: any): any</div>
+   
   
   
 
@@ -8295,7 +8749,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Return Default Page Size</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnDefaultPageSize(): any</div>
+   
   
   
 
@@ -8348,7 +8805,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Change Account</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>accountChanger</div>
+   
   
   
 
@@ -8393,7 +8853,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Select Account</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>selectAccount(inAccount: any)</div>
+   
   
   
 
@@ -8451,7 +8914,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Return Victory Chart</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>returnVictoryChart(): any</div>
+   
   
   
 
@@ -8504,7 +8970,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -8552,7 +9021,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -8570,7 +9038,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Transaction More Detail Modal</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new TransactionDetailsModal()</div>
+   
   
   
     <p>
@@ -8616,7 +9087,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Load Data</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>loadData(null: any)</div>
+   
   
   
 
@@ -8707,7 +9181,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -8755,7 +9232,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -8773,7 +9249,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>CSV Download Modal</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new CSVDownloadModal()</div>
+   
   
   
     <p>
@@ -8808,7 +9287,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -8826,7 +9304,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The Market Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Market()</div>
+   
   
   
     <p>
@@ -8872,7 +9353,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Sets up the page's context menu</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
+   
   
   
 
@@ -8930,7 +9414,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Refreshes the data from the markets</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>refresher()</div>
+   
   
   
 
@@ -8975,7 +9462,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Formats the buy data and returns it</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>formatBuyData</div>
+   
   
   
 
@@ -9033,7 +9523,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Formats the sell data and returns it</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>formatSellData(array: any): any</div>
+   
   
   
 
@@ -9099,7 +9592,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Formats the Exchange Data</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>formatChartData(exchange: any): any</div>
+   
   
   
 
@@ -9165,7 +9661,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Returns a Div of various market data from the Exchange Name</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>oneDayinfo(exchangeName: any): any</div>
+   
   
   
 
@@ -9231,7 +9730,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Refreshes the market data and shows a notification</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>refreshMarket()</div>
+   
   
   
 
@@ -9276,7 +9778,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -9324,7 +9829,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -9342,7 +9846,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Creates a Victory Chart that displays the market depth</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new MarketDepth()</div>
+   
   
   
     <p>
@@ -9388,7 +9895,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -9436,7 +9946,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -9454,7 +9963,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Creates a Victory Chart that uses CandleSticks</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Candlestick()</div>
+   
   
   
     <p>
@@ -9500,7 +10012,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -9548,7 +10063,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -9566,7 +10080,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The Address Book Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new AddressBook()</div>
+   
   
   
     <p>
@@ -9612,7 +10129,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>componentDidMount</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
+   
   
   
 
@@ -9657,7 +10177,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>componentWillUnmount</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
+   
   
   
 
@@ -9701,7 +10224,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>showAddContact</div>
+   
   
   
 
@@ -9746,7 +10272,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -9794,7 +10323,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -9812,7 +10340,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The controls in the Panel Header of Address Book Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new PanelControls()</div>
+   
   
   
     <p>
@@ -9858,7 +10389,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Export the Address Book to a CSV File</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>exportAddressBook</div>
+   
   
   
 
@@ -9898,7 +10432,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -9916,7 +10449,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>List of contacts</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new ContactList()</div>
+   
   
   
     <p>
@@ -9962,7 +10498,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -10010,7 +10549,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -10028,7 +10566,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Contact Item</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Contact()</div>
+   
   
   
     <p>
@@ -10073,7 +10614,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>confirmDelete</div>
+   
   
   
 
@@ -10117,7 +10661,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>editContact</div>
+   
   
   
 
@@ -10161,7 +10708,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>showContextMenu</div>
+   
   
   
 
@@ -10219,7 +10769,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Get the contact's initial</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>getinitial</div>
+   
   
   
 
@@ -10284,7 +10837,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>select</div>
+   
   
   
 
@@ -10329,7 +10885,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -10377,7 +10936,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -10395,7 +10953,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Contact details</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new ContactDetails()</div>
+   
   
   
     <p>
@@ -10440,7 +11001,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>confirmDelete</div>
+   
   
   
 
@@ -10484,7 +11048,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>editContact</div>
+   
   
   
 
@@ -10529,7 +11096,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -10577,7 +11147,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -10595,7 +11164,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Settings Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Settings()</div>
+   
   
   
     <p>
@@ -10641,7 +11213,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set up context menu</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
+   
   
   
 
@@ -10699,7 +11274,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -10747,7 +11325,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -10765,7 +11342,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>App Page in the Setting Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new SettingsApp()</div>
+   
   
   
     <p>
@@ -10811,7 +11391,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Confirm Wallet Back up</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>confirmBackupWallet</div>
+   
   
   
 
@@ -10856,7 +11439,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handles update Change</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>handleAutoUpdateChange</div>
+   
   
   
 
@@ -10914,7 +11500,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -10967,7 +11556,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -11020,7 +11612,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open up Dialoge</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>browseBackupDir</div>
+   
   
   
 
@@ -11060,7 +11655,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -11078,7 +11672,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Backup Directory in Settings Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new SettingsApp()</div>
+   
   
   
     <p>
@@ -11124,7 +11721,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Confirm Wallet Back up</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>confirmBackupWallet</div>
+   
   
   
 
@@ -11169,7 +11769,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handles update Change</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>handleAutoUpdateChange</div>
+   
   
   
 
@@ -11227,7 +11830,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -11280,7 +11886,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -11333,7 +11942,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open up Dialoge</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>browseBackupDir</div>
+   
   
   
 
@@ -11373,7 +11985,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -11391,7 +12002,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Internal JSX for Language Settings</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new LanguageSetting()</div>
+   
   
   
     <p>
@@ -11437,7 +12051,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handle Change</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>handleChange</div>
+   
   
   
 
@@ -11495,7 +12112,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -11543,7 +12163,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -11561,7 +12180,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Core Settings page that is inside Settings</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new SettingsCore()</div>
+   
   
   
     <p>
@@ -11607,7 +12229,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Confirms Switch to Manual Daemon</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>confirmSwitchManualDaemon</div>
+   
   
   
 
@@ -11652,7 +12277,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Restarts Core</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>restartCore</div>
+   
   
   
 
@@ -11697,7 +12325,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -11745,7 +12376,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -11763,7 +12393,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Returns JSX For Fee Settings</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new FeeSetting()</div>
+   
   
   
     <p>
@@ -11809,7 +12442,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Confirms Set TX fee</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>confirmSetTxFee</div>
+   
   
   
 
@@ -11854,7 +12490,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -11902,7 +12541,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -11920,7 +12558,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Style Settings in the Style Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new SettingsStyle()</div>
+   
   
   
     <p>
@@ -11966,7 +12607,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Toggle The Globe</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>toggleGlobeRender</div>
+   
   
   
 
@@ -12024,7 +12668,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set New Wallpaper</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setWallpaper</div>
+   
   
   
 
@@ -12090,7 +12737,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set Color</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setColor</div>
+   
   
   
 
@@ -12156,7 +12806,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Reset Colors</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>resetColors</div>
+   
   
   
 
@@ -12201,7 +12854,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Load Custom Theme from json File</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>loadCustomTheme</div>
+   
   
   
 
@@ -12259,7 +12915,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open Dialog for Picking Theme</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>openPickThemeFileDialog</div>
+   
   
   
 
@@ -12304,7 +12963,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Export Theme File</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>exportThemeFileDialog</div>
+   
   
   
 
@@ -12349,7 +13011,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Press Dark Theme Button</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>pressDarkTheme</div>
+   
   
   
 
@@ -12394,7 +13059,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Press Light Theme Button</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>pressLightTheme</div>
+   
   
   
 
@@ -12439,7 +13107,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Press Custom theme button</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>pressCustomTheme</div>
+   
   
   
 
@@ -12484,7 +13155,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Press Reset Button</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>pressResetTheme</div>
+   
   
   
 
@@ -12529,7 +13203,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Save Previous Custom Theme to state</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>savePreviousCustomTheme</div>
+   
   
   
 
@@ -12574,7 +13251,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set To Custom, this is used by background picker</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setToCustom</div>
+   
   
   
 
@@ -12619,7 +13299,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set theme button, used by theme slector</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setThemeSelector</div>
+   
   
   
 
@@ -12677,7 +13360,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -12725,7 +13411,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -12743,7 +13428,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Pick Color Element</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new ColorPicker()</div>
+   
   
   
     <p>
@@ -12789,7 +13477,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open Color Modal</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>openPicker</div>
+   
   
   
 
@@ -12834,7 +13525,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Close Modal</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>closePicker</div>
+   
   
   
 
@@ -12879,7 +13573,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handle Color Change</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>handleColorChange</div>
+   
   
   
 
@@ -12937,7 +13634,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -12985,7 +13685,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13003,7 +13702,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The Background Picker Element</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new BackgroundPicker()</div>
+   
   
   
     <p>
@@ -13049,7 +13751,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set a Default background</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setDefault</div>
+   
   
   
 
@@ -13107,7 +13812,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handle Picking a file</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>handleFilePick</div>
+   
   
   
 
@@ -13165,7 +13873,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -13213,7 +13924,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13231,7 +13941,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Theme Picker Element</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new ThemePicker()</div>
+   
   
   
     <p>
@@ -13277,7 +13990,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set to Custom Theme</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setToCustomTheme()</div>
+   
   
   
 
@@ -13322,7 +14038,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set the Theme button selector</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setSelector(selectorIndex: any)</div>
+   
   
   
 
@@ -13380,7 +14099,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -13428,7 +14150,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13446,7 +14167,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>SettingsSecurity Page on Settings Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new SettingsSecurity()</div>
+   
   
   
     <p>
@@ -13492,7 +14216,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -13540,7 +14267,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13558,7 +14284,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Login JSX</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Login()</div>
+   
   
   
     <p>
@@ -13604,7 +14333,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Get min date to lock</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>getMinDate(): any</div>
+   
   
   
 
@@ -13657,7 +14389,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Render the date &#x26; time pickers</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>renderTimeInputs</div>
+   
   
   
 
@@ -13739,7 +14474,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -13787,7 +14525,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13805,7 +14542,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>If JSX is Encryped</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Encrypted()</div>
+   
   
   
     <p>
@@ -13851,7 +14591,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -13899,7 +14642,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13917,7 +14659,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Change Password JSX</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new ChangePassword()</div>
+   
   
   
     <p>
@@ -13963,7 +14708,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Confirm Logout</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>confirmLogout</div>
+   
   
   
 
@@ -14008,7 +14756,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -14056,7 +14807,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -14074,7 +14824,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Import Private Keys</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new ImportPrivKey()</div>
+   
   
   
     <p>
@@ -14120,7 +14873,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -14168,7 +14924,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -14186,7 +14941,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>View Private Keys for Address JSX</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new ViewPrivKeyForAddress()</div>
+   
   
   
     <p>
@@ -14232,7 +14990,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Show Private Keys</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>showPrivKey(e: any)</div>
+   
   
   
 
@@ -14290,7 +15051,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Copy Private Keys</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>copyPrivkey</div>
+   
   
   
 
@@ -14335,7 +15099,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Reset Private Keys</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>resetPrivateKey</div>
+   
   
   
 
@@ -14380,7 +15147,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -14428,7 +15198,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -14446,7 +15215,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Unencrypter JSX</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Unencrypted()</div>
+   
   
   
     <p>
@@ -14492,7 +15264,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -14540,7 +15315,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -14558,7 +15332,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Encrypted Wallet</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new EncryptWallet()</div>
+   
   
   
     <p>
@@ -14604,7 +15381,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -14652,7 +15432,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -14670,7 +15449,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Terminal Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new Terminal()</div>
+   
   
   
     <p>
@@ -14716,7 +15498,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set up context menu</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
+   
   
   
 
@@ -14774,7 +15559,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -14822,7 +15610,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -14840,7 +15627,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Console Page in the Terminal Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new TerminalConsole()</div>
+   
   
   
     <p>
@@ -14885,7 +15675,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>loadCommandList</div>
+   
   
   
 
@@ -14930,7 +15723,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Before component Did Update</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>getSnapshotBeforeUpdate(): any</div>
+   
   
   
 
@@ -14982,7 +15778,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>componentDidUpdate(prevProps: any, PrevState: any, beforeUpdate: any)</div>
+   
   
   
 
@@ -15055,7 +15854,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>execute</div>
+   
   
   
 
@@ -15099,7 +15901,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+ 
+  
     <div class='pre p1 fill-light mt0'>handleKeyDown</div>
+   
   
   
 
@@ -15157,7 +15962,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -15205,7 +16013,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -15223,7 +16030,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Terminal Core page in the Terminal Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new TerminalCore()</div>
+   
   
   
     <p>
@@ -15269,7 +16079,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handle on Scroll</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>onScrollEvent(): any</div>
+   
   
   
 
@@ -15322,7 +16135,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -15370,7 +16186,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -15388,7 +16203,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Style Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new StyleGuide()</div>
+   
   
   
     <p>
@@ -15423,7 +16241,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -15441,7 +16258,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Trust List Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new List()</div>
+   
   
   
     <p>
@@ -15487,7 +16307,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set up Context Menu</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
+   
   
   
 
@@ -15545,7 +16368,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Build List</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>buildList(): any</div>
+   
   
   
 
@@ -15598,7 +16424,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>render(): any</div>
+   
   
   
 
@@ -15646,7 +16475,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -15664,7 +16492,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>About Page</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new About()</div>
+   
   
   
     <p>
@@ -15710,7 +16541,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Get Current Year</p>
 
-    <div class='pre p1 fill-light mt0'>getCurrentYear(): any</div>
+ 
+  
+    <div class='pre p1 fill-light mt0'>getCurrentYear(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></div>
+   
   
   
 
@@ -15728,8 +16562,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></code>:
+        Current Year
 
       
     
@@ -15763,7 +16597,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Get App Version</p>
 
-    <div class='pre p1 fill-light mt0'>getInterfaceVersionNumber(): any</div>
+ 
+  
+    <div class='pre p1 fill-light mt0'>getInterfaceVersionNumber(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+   
   
   
 
@@ -15781,8 +16618,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
+        App version from package.json
 
       
     
@@ -15816,7 +16653,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Gets Version number of the Daemon</p>
 
-    <div class='pre p1 fill-light mt0'>getDaemonVersionNumber(): any</div>
+ 
+  
+    <div class='pre p1 fill-light mt0'>getDaemonVersionNumber(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></div>
+   
   
   
 
@@ -15834,8 +16674,64 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>:
+        Damon Version
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='aboutrender'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>render()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>React Render Function</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>render(): JSX</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>JSX</code>:
+        JSX
 
       
     
@@ -15864,7 +16760,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -15882,7 +16777,10 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Controls the background of the app</p>
 
+ 
+  
     <div class='pre p1 fill-light mt0'>new AppBackground()</div>
+   
   
   
     <p>
@@ -15917,7 +16815,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 </section>
 
-          
         
       </div>
     </div>
