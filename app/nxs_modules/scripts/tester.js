@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
 import world from 'images/world-light-white.jpg';
+var OrbitControls = require('three-orbit-controls')(THREE);
 import worldSmall from 'images/world-light-white-small.jpg';
 import { geoInterpolate } from 'd3-geo';
 import styled from '@emotion/styled';
@@ -21,10 +22,10 @@ export default class Globe extends Component {
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.onMouseWheel = this.onMouseWheel.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.startDragPosition = { x: 0, y: 0 };
+    // this.onMouseDown = this.onMouseDown.bind(this);
+    // this.onMouseUp = this.onMouseUp.bind(this);
+    // this.onMouseMove = this.onMouseMove.bind(this);
+    // this.startDragPosition = { x: 0, y: 0 };
   }
 
   componentDidMount() {
@@ -39,6 +40,9 @@ export default class Globe extends Component {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     const camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
     const scene = new THREE.Scene();
+    // const controls = new THREE.OrbitControls(camera);
+    console.log(OrbitControls);
+    //controls.update() must be called after any manual changes to the camera's transform
 
     //set background color to transparent
     renderer.setClearColor(0x000000, 0);
@@ -48,7 +52,7 @@ export default class Globe extends Component {
 
     //set the camera position - x, y, z
     camera.position.set(0, 0, 500);
-
+    // controls.update();
     //add the camera to the scene.
     scene.add(camera);
 
@@ -97,11 +101,11 @@ export default class Globe extends Component {
 
     // Attach the renderer to the DOM element.
     this.threeRootElement.appendChild(renderer.domElement);
-    this.threeRootElement.addEventListener(
-      'mousedown',
-      this.onMouseDown,
-      false
-    );
+    // this.threeRootElement.addEventListener(
+    //   'mousedown',
+    //   this.onMouseDown,
+    //   false
+    // );
     window.addEventListener('resize', this.onWindowResize, false);
     this.threeRootElement.addEventListener(
       'mousewheel',
@@ -111,51 +115,51 @@ export default class Globe extends Component {
     this.start();
   }
 
-  onMouseDown(event) {
-    event.preventDefault();
+  // onMouseDown(event) {
+  //   event.preventDefault();
 
-    this.threeRootElement.addEventListener(
-      'mousemove',
-      this.onMouseMove,
-      false
-    );
-    this.threeRootElement.addEventListener('mouseup', this.onMouseUp, false);
-    this.threeRootElement.addEventListener('mouseout', this.onMouseUp, false);
-    this.startDragPosition = { x: event.clientX, y: event.clientY };
-    this.threeRootElement.style.cursor = 'move';
-  }
+  //   this.threeRootElement.addEventListener(
+  //     'mousemove',
+  //     this.onMouseMove,
+  //     false
+  //   );
+  //   this.threeRootElement.addEventListener('mouseup', this.onMouseUp, false);
+  //   this.threeRootElement.addEventListener('mouseout', this.onMouseUp, false);
+  //   this.startDragPosition = { x: event.clientX, y: event.clientY };
+  //   this.threeRootElement.style.cursor = 'move';
+  // }
 
-  onMouseMove(event) {
-    // this.globe.rotation.y = 0;
-    // let targetRotationX =
-    //   (event.clientX - this.startDragPosition.x + window.innerWidth / 2) *
-    //   0.0025 *
-    //   (Math.PI / 180);
-    // this.globe.rotateX(targetRotationX);
-    let targetRotationY =
-      (event.clientY - this.startDragPosition.y + window.innerHeight / 2) *
-      0.0025 *
-      (Math.PI / 180);
+  // onMouseMove(event) {
+  //   // this.globe.rotation.y = 0;
+  //   // let targetRotationX =
+  //   //   (event.clientX - this.startDragPosition.x + window.innerWidth / 2) *
+  //   //   0.0025 *
+  //   //   (Math.PI / 180);
+  //   // this.globe.rotateX(targetRotationX);
+  //   let targetRotationY =
+  //     (event.clientY - this.startDragPosition.y + window.innerHeight / 2) *
+  //     0.0025 *
+  //     (Math.PI / 180);
 
-    this.globe.rotateY(targetRotationY);
+  //   this.globe.rotateY(targetRotationY);
 
-    // this.globe.rotation.y += 0.002;
-  }
+  //   // this.globe.rotation.y += 0.002;
+  // }
 
-  onMouseUp(event) {
-    this.threeRootElement.removeEventListener(
-      'mousemove',
-      this.onMouseMove,
-      false
-    );
-    this.threeRootElement.removeEventListener('mouseup', this.onMouseUp, false);
-    this.threeRootElement.removeEventListener(
-      'mouseout',
-      this.onMouseUp,
-      false
-    );
-    this.threeRootElement.style.cursor = 'auto';
-  }
+  // onMouseUp(event) {
+  //   this.threeRootElement.removeEventListener(
+  //     'mousemove',
+  //     this.onMouseMove,
+  //     false
+  //   );
+  //   this.threeRootElement.removeEventListener('mouseup', this.onMouseUp, false);
+  //   this.threeRootElement.removeEventListener(
+  //     'mouseout',
+  //     this.onMouseUp,
+  //     false
+  //   );
+  //   this.threeRootElement.style.cursor = 'auto';
+  // }
 
   onWindowResize() {
     this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -191,15 +195,15 @@ export default class Globe extends Component {
   }
 
   animate() {
-    this.globe.rotation.y += 0.002;
+    // this.globe.rotation.y += 0.002;
     this.renderScene();
     this.frameId = window.requestAnimationFrame(this.animate);
   }
 
   renderScene() {
-    if (this.globe.rotation.y < 0) {
-      console.log(this.globe.rotation.y);
-    } else console.log('y', this.globe.rotation.y);
+    // if (this.globe.rotation.y < 0) {
+    // console.log(this.globe.rotation.y);
+    // } else console.log('y', this.globe.rotation.y);
     this.renderer.render(this.scene, this.camera);
   }
 

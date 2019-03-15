@@ -288,6 +288,7 @@
     "systeminformation": "^3.45.7",
     "tarball-extract": "0.0.6",
     "three": "^0.98.0",
+    "three-orbit-controls": "^82.1.0",
     "universal-analytics": "^0.4.17",
     "victory": "^30.5.1",
     "wait-on": "^3.0.1",
