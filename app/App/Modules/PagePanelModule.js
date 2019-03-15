@@ -1,13 +1,16 @@
 import React from 'react';
 import Panel from 'components/Panel';
-import legoBlockIcon from 'images/lego-block.sprite.svg';
+import ModuleIcon from 'components/ModuleIcon';
 import WebView from './WebView';
 
 const PageModule = ({ module }) => (
   <Panel
-    iconSrc={module.iconPath}
-    iconSprite={!module.iconPath && legoBlockIcon}
-    title={module.displayName || module.name}
+    title={
+      <>
+        <ModuleIcon module={module} className="space-right" />
+        <span className="v-align">{module.displayName || module.name}</span>
+      </>
+    }
   >
     <WebView module={module} style={{ width: '100%', height: '100%' }} />
   </Panel>

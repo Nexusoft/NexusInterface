@@ -6,6 +6,7 @@ import * as color from 'utils/color';
 
 // Internal Global Dependencies
 import Icon from 'components/Icon';
+import ModuleIcon from 'components/ModuleIcon';
 
 const intro = keyframes`
   from { 
@@ -78,19 +79,11 @@ const IconImg = styled.img({
   verticalAlign: 'middle',
 });
 
-const Panel = ({
-  iconSprite,
-  iconSrc,
-  title,
-  controls,
-  children,
-  bodyScrollable = true,
-}) => (
+const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
   <PanelComponent>
     <PanelHeader>
       <PanelTitle>
-        {!!iconSprite && <Icon className="space-right" icon={iconSprite} />}
-        {!!iconSrc && <IconImg className="space-right" src={iconSrc} />}
+        {!!icon && <Icon className="space-right" icon={icon} />}
         <span className="v-align">{title}</span>
       </PanelTitle>
       {controls}

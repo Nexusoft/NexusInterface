@@ -56,11 +56,11 @@ const ModuleIcon = ({ module, ...rest }) => {
         );
       }
     } else {
-      return <Img src={module.iconPath} />;
+      return <Img src={module.iconPath} {...rest} />;
     }
   }
 
-  return <Icon icon={legoBlockIcon} />;
+  return <Icon icon={legoBlockIcon} {...rest} />;
 };
 
 export default ModuleIcon;

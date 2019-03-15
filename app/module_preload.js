@@ -18,6 +18,7 @@ import TextField from 'components/TextField';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Link from 'components/Link';
+import Icon from 'components/Icon';
 import * as color from 'utils/color';
 
 global.nexus = {
@@ -44,6 +45,7 @@ global.nexus = {
     Switch,
     Select,
     Link,
+    Icon,
   },
   sendMessage: (...args) => ipcRenderer.sendToHost(...args),
   on: (...args) => ipcRenderer.on(...args),

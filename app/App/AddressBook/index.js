@@ -101,7 +101,7 @@ class AddressBook extends Component {
 
     return (
       <Panel
-        iconSprite={addressBookIcon}
+        icon={addressBookIcon}
         title={<Text id="AddressBook.AddressBook" />}
         controls={<PanelControls />}
         bodyScrollable={false}

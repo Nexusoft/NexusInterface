@@ -84,7 +84,7 @@ class Terminal extends Component {
     const { match } = this.props;
     return (
       <Panel
-        iconSprite={consoleIcon}
+        icon={consoleIcon}
         title={<Text id="Console.Console" />}
         bodyScrollable={false}
       >

@@ -98,7 +98,7 @@ export default class Settings extends Component {
     return (
       <Panel
         bodyScrollable={false}
-        iconSprite={settingsIcon}
+        icon={settingsIcon}
         title={<Text id="Settings.Settings" />}
       >
         <SettingsComponent>

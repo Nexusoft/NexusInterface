@@ -172,10 +172,7 @@ class Exchange extends Component {
   // Mandatory React method
   render() {
     return (
-      <Panel
-        iconSprite={shapeshiftIcon}
-        title={<Text id="Exchange.Exchange" />}
-      >
+      <Panel icon={shapeshiftIcon} title={<Text id="Exchange.Exchange" />}>
         <Modal
           open={this.props.transactionModalFlag}
           onClose={this.props.clearTransaction}

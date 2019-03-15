@@ -1788,7 +1788,7 @@ class Transactions extends Component {
     const pageSize = this.returnDefaultPageSize();
     return (
       <Panel
-        iconSprite={transactionIcon}
+        icon={transactionIcon}
         title={<Text id="transactions.Details" />}
         controls={
           <Select
