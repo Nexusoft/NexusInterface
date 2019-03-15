@@ -13,6 +13,8 @@
 - Fixed typo on Israeli Shekel using the wrong ISO code
 - Pressing Enter on the Terminal Page no longer displays the auto suggest
 - Pressing Enter on the Terminal Page now properly removes focus from input field
+- Fixed Pending Transaction lable in transaction detail modal
+- Fixed `Fee` not displaying on send transactions in the detail modal 
 
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)

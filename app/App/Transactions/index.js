@@ -548,9 +548,9 @@ class Transactions extends Component {
 
     let sendtoSendPagecallback = function() {
       this.props.SetSendAgainData({
-        address: this.props.walletItems[this.hoveringID].address,
-        account: this.props.walletItems[this.hoveringID].account,
-        amount: this.props.walletItems[this.hoveringID].amount,
+        address: this.props.walletitems[this.hoveringID].address,
+        account: this.props.walletitems[this.hoveringID].account,
+        amount: this.props.walletitems[this.hoveringID].amount,
       });
       this.props.history.push('/SendPage');
     };
@@ -558,7 +558,7 @@ class Transactions extends Component {
 
     let sendtoBlockExplorercallback = function() {
       this.props.SetExploreInfo({
-        transactionId: this.props.walletItems[this.hoveringID].txid,
+        transactionId: this.props.walletitems[this.hoveringID].txid,
       });
       this.props.history.push('/BlockExplorer');
     };
@@ -739,17 +739,18 @@ class Transactions extends Component {
     let numberOfSends = 0;
         let feeData = new Map();
 
-
-      this.props.walletItems.forEach(element => {
-        if (element.category == 'debit') {
+    console.log(this);
+      this.props.walletitems.forEach(element => {
+        if (element.category == 'debit' || element.category == 'send') {
           
           feePromises.push(RPC.PROMISE('gettransaction', [element.txid]).then(
             payload => {
               feeData.set(payload.time, payload.fee);
+              console.log(payload);
               numberOfSends++;
               this.setState({
                 CSVProgress: numberOfSends / feePromises.length
-              });
+              }, () => {this.updateProgress();});
             }
           ));
         }
@@ -766,11 +767,18 @@ class Transactions extends Component {
 
   updateProgress()
   {
-    this._Onprogress(this.state.CSVProgress);
-    if (this.state.CSVProgress >= 100){
-      googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
-      this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
-      this._OnCSVFinished();
+    console.log(this.state.CSVProgress);
+    this._Onprogress(this.state.CSVProgress * 100);
+    if (this.state.CSVProgress >= 1){
+      setTimeout(() => {
+        googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
+        this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
+        this._OnCSVFinished();
+        this.setState({
+          CSVProgress: 0
+        });
+      }, 2000);
+      
     }
   }
 

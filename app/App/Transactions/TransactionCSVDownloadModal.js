@@ -52,7 +52,7 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
 
     constructor(props) {
       super(props);
-      this.props.parent({progress: this.updateProgress.bind(this)})
+      this.props.parent({progress: this.updateProgress.bind(this), finished: this.closeModalNow.bind(this)})
     }
     state = {
         processProgress: 0,
@@ -60,6 +60,7 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
 
     updateProgress(inNum)
     {
+      console.log(inNum);
       this.setState(
         {
           processProgress: inNum,
@@ -67,7 +68,14 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
       );
     }
 
+    closeModalNow()
+    {
+      this.closeModal();
+    }
+
     render() {
+        const { processProgress} = this.state;
+        console.log(processProgress);
         return(
         <CSVDownloadModalComponent
         assignClose={closeModal => (this.closeModal = closeModal)}
@@ -75,7 +83,7 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
         >
             <Modal.Body>
             <Title><Text id="Transactions.CSVDownloadModalTitle"/></Title>
-            <ProgressBar percentage={this.state.processProgress} />
+            <ProgressBar percentage={processProgress} />
             <Button
                 skin="danger" onClick={() => this.closeModal()}>
               <Text id="Transactions.CSVDownloadModalCancel"/>

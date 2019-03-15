@@ -32,7 +32,6 @@ const DirhamSign = aed;
 
 export function CurrencyIcon(ISOValue)
 {
-    console.log(ISOValue);
     switch (ISOValue) {
         case 'USD':
         case 'AUD':
