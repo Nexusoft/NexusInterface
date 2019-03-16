@@ -2,12 +2,15 @@
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.9.0)
 #### Additions
 - Tritium Cores
-- New CSV download functionality for transaction page
+- New CSV download functionality for Transaction page
 - New Currency icons for fiat balance
+- Added links to the exchanges on the Market page
 
 #### Adjustments
 - There is now a max of `0.1` Nexus for the transaction fee setting
 - Moved `Download Recent Database` to file dropdown
+- Trust and Stake numbers now only show 6 significant numbers
+
 
 #### Fixes
 - Fixed typo on Israeli Shekel using the wrong ISO code
