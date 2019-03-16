@@ -59,5 +59,7 @@
   "MyAddressesModal.RescanTooltip": "The balances shown here could be incorrect in some rare cases, rescanning will help you correct them",
   "Footer.Address": "Address",
   "Alert.AddressCopied": "Address has been copied to clipboard",
-  "Lang.Dutch": "Dutch"
+  "Lang.Dutch": "Dutch",
+  "transactions.CSVDownloadModalCancel": "Cancel",
+  "transactions.CSVDownloadModalTitle": "Processing CSV"
 }

@@ -4,18 +4,11 @@ import Request from 'request';
 // Internal
 import * as TYPE from 'actions/actiontypes';
 
-// Header Action Creators
-export const GetInfo = info => ({ type: TYPE.GET_INFO_DUMP, payload: info });
-
-export const clearOverviewVariables = () => ({
-  type: TYPE.CLEAR_FOR_BOOTSTRAPING,
-});
-
 export const SetMarketAveData = () => dispatch => {
   Request(
     {
       url:
-        'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=NXS,BTC&tsyms=BTC,USD,EUR,AUD,BRL,GBP,CAD,CLP,CNY,CZK,HKD,INR,JPY,KRW,MYR,MXN,NZD,PKR,RUB,SAR,SGD,ZAR,CHF,TWD,AED',
+        'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=NXS,BTC&tsyms=BTC,USD,EUR,AUD,BRL,GBP,CAD,CLP,CNY,CZK,HKD,ILS,JPY,KRW,MYR,MXN,NZD,PKR,RUB,SAR,SGD,ZAR,CHF,TWD,AED',
       json: true,
     },
     (error, response, body) => {

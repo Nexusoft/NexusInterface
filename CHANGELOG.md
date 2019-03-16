@@ -1,13 +1,21 @@
-# 0.9.0-alpha2 (2019.3.XX)
+# 0.9.0-alpha3 (2019.3.XX)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.9.0)
 #### Additions
 - Tritium Cores
+- New CSV download functionality for transaction page
+- New Currency icons for fiat balance
 
 #### Adjustments
 - There is now a max of `0.1` Nexus for the transaction fee setting
 - Moved `Download Recent Database` to file dropdown
 
 #### Fixes
+- Fixed typo on Israeli Shekel using the wrong ISO code
+- Pressing Enter on the Terminal Page no longer displays the auto suggest
+- Pressing Enter on the Terminal Page now properly removes focus from input field
+- Fixed Pending Transaction label in transaction detail modal
+- Fixed `Fee` not displaying on send transactions in the detail modal
+- Fixed price history file not being created/read properly 
 
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)

@@ -24,8 +24,8 @@ import {
 } from 'actions/uiActionCreators';
 
 const filterCommands = memoize((commandList, inputValue) => {
-  if (!commandList) return [];
-  const query = inputValue || '';
+  if (!commandList || inputValue == '') return [];
+  const query = inputValue;
   return commandList.filter(
     cmd => !!cmd && cmd.toLowerCase().startsWith(query.toLowerCase())
   );
@@ -48,7 +48,9 @@ const mapStateToProps = ({
       },
     },
   },
-  overview: { connections },
+  core: {
+    info: { connections },
+  },
 }) => ({
   consoleInput: consoleInputSelector(
     currentCommand,
@@ -206,6 +208,8 @@ class TerminalConsole extends Component {
       .filter(arg => arg)
       .map(arg => (isNaN(parseFloat(arg)) ? arg : parseFloat(arg)));
 
+    this.inputRef.inputRef.current.blur();
+
     const tab = ' '.repeat(2);
     let result = null;
     try {
@@ -271,6 +275,13 @@ class TerminalConsole extends Component {
     }
   };
 
+  tempasd = (incoming) => {
+    console.log(incoming);
+    const asdfgh = incoming.split(' ')[0] + ' ';
+    console.log(asdfgh);
+    this.props.updateConsoleInput(asdfgh);
+  }
+
   /**
    * React Render
    *
@@ -307,6 +318,7 @@ class TerminalConsole extends Component {
                     onSelect={updateConsoleInput}
                     keyControl={false}
                     suggestOn="change"
+                    ref={c => this.inputRef = c}
                     inputRef={this.inputRef}
                     inputProps={{
                       autoFocus: true,

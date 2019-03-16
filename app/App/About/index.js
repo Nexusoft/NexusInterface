@@ -6,24 +6,15 @@ Last Modified by: Brian Smith
 
 // External Dependencies
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { shell } from 'electron';
 // Internal Dependencies
 import styles from './style.css';
-import * as TYPE from 'actions/actiontypes';
 import Panel from 'components/Panel';
 import Text from 'components/Text';
 
 // Images
 import nexusLogo from 'images/logo-full.svg';
 import updateicon from 'images/unlock.png';
-
-// React-Redux mandatory methods
-const mapStateToProps = state => {
-  return { ...state.overview };
-};
-//const mapDispatchToProps = dispatch => {};
 
 /**
  * About Page
@@ -67,27 +58,26 @@ class About extends Component {
   // Mandatory React method
   /**
    * React Render Function
-   * 
+   *
    * @returns {JSX} JSX
    * @memberof About
    */
   render() {
     return (
-      <Panel  title={<Text id="About" />}>
+      <Panel title={<Text id="About" />}>
         <img src={nexusLogo} />
-            <br />
+        <br />
         <row>
           <column>
-            
             <row>
               <column>
                 <b>Interface Version:</b> {this.getInterfaceVersionNumber()}{' '}
                 <br />
-                <b>Build Date: </b> March 8th 2019 <br />
+                <b>Build Date: </b> March 15th 2019 <br />
               </column>
               <column>
                 <b>Daemon Version:</b> {this.getDaemonVersionNumber()} <br />
-                <b>Build Date: </b> March 8th 2019 <br />
+                <b>Build Date: </b> March 15th 2019 <br />
               </column>
             </row>
             <br />
@@ -217,13 +207,10 @@ class About extends Component {
             </dd>
           </dl>
         </div>
-        </Panel>
+      </Panel>
     );
   }
 }
 
 // Mandatory React-Redux method
-export default connect(
-  mapStateToProps
-  //  mapDispatchToProps
-)(About);
+export default About;
