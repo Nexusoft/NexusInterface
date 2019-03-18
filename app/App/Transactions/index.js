@@ -399,20 +399,6 @@ class Transactions extends Component {
         });
         this.gothroughdatathatneedsit();
       });
-
-      let feePromises = [];
-      incomingData.forEach(element => {
-        if (element.category == 'debit') {
-          feePromises.push(RPC.PROMISE('gettransaction', [element.txid]));
-        }
-      });
-      Promise.all(feePromises).then(payload => {
-        let feeData = new Map();
-        payload.map(element => {
-          feeData.set(element.time, element.fee);
-        });
-        this.setFeeValuesOnTransaction(feeData);
-      });
     }, 1000);
   }
 
@@ -562,9 +548,9 @@ class Transactions extends Component {
 
     let sendtoSendPagecallback = function() {
       this.props.SetSendAgainData({
-        address: this.props.walletItems[this.hoveringID].address,
-        account: this.props.walletItems[this.hoveringID].account,
-        amount: this.props.walletItems[this.hoveringID].amount,
+        address: this.props.walletitems[this.hoveringID].address,
+        account: this.props.walletitems[this.hoveringID].account,
+        amount: this.props.walletitems[this.hoveringID].amount,
       });
       this.props.history.push('/SendPage');
     };
@@ -572,7 +558,7 @@ class Transactions extends Component {
 
     let sendtoBlockExplorercallback = function() {
       this.props.SetExploreInfo({
-        transactionId: this.props.walletItems[this.hoveringID].txid,
+        transactionId: this.props.walletitems[this.hoveringID].txid,
       });
       this.props.history.push('/BlockExplorer');
     };
@@ -738,19 +724,59 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   DownloadCSV() {
-    //UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
-    //if (this.state.CSVProgress >= 100){
-    googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
-    this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
-    //}
+    if (this.state.CSVProgress > 0){
+      return;
+    }
+
+    UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
+    this.gatherAllFeeData();
+    
+  }
+
+  async gatherAllFeeData()
+  {
+    let feePromises = [];
+    let numberOfSends = 0;
+        let feeData = new Map();
+
+      this.props.walletitems.forEach(element => {
+        if (element.category == 'debit' || element.category == 'send') {
+          
+          feePromises.push(RPC.PROMISE('gettransaction', [element.txid]).then(
+            payload => {
+              feeData.set(payload.time, payload.fee);
+              numberOfSends++;
+              this.setState({
+                CSVProgress: numberOfSends / feePromises.length
+              }, () => {this.updateProgress();});
+            }
+          ));
+        }
+      });
+      await Promise.all(feePromises);
+      this.setFeeValuesOnTransaction(feeData);
   }
 
   setEvents(events) {
     this._Onprogress = events.progress;
+    this._OnCSVFinished = events.finished;
   }
 
-  updateProgress() {
-    this._Onprogress(this.state.CSVProgress);
+  updateProgress()
+  {
+    console.log(this.state.CSVProgress);
+    this._Onprogress(this.state.CSVProgress * 100);
+    if (this.state.CSVProgress >= 1){
+      setTimeout(() => {
+        googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
+        this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
+        this._OnCSVFinished();
+        this.setState({
+          CSVProgress: 0
+        });
+      }, 2000);
+      
+    }
   }
 
   /**
@@ -1305,7 +1331,6 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   handleZoom(domain) {
-    //console.log(domain);
     domain.x[0] = new Date(domain.x[0]);
     domain.x[1] = new Date(domain.x[1]);
 
@@ -1330,7 +1355,6 @@ class Transactions extends Component {
     high = high == 0 ? 1 : high;
     domain.y[0] = -high;
     domain.y[1] = high;
-    console.log(domain);
     this.setState({ zoomDomain: domain });
   }
 
@@ -1365,16 +1389,9 @@ class Transactions extends Component {
    */
   gethistorydatajson() {
     try {
-      const electronapp =
-        require('electron').app || require('electron').remote.app;
-      let appdataloc =
-        process.env.APPDATA ||
-        (process.platform == 'darwin'
-          ? electronapp.getPath('appData')
-          : process.env.HOME);
-      appdataloc = appdataloc + `/Nexus_Wallet_BETA/`;
+      const appdataloc = config.GetAppDataDirectory() + '/historydata.json';
       let incominghistoryfile = JSON.parse(
-        fs.readFileSync(appdataloc + 'historydata.json', 'utf8')
+        fs.readFileSync(appdataloc, 'utf8')
       );
       let keys = Object.keys(incominghistoryfile);
       let newTempMap = new Map();
@@ -1537,17 +1554,9 @@ class Transactions extends Component {
       needsHistorySave: false,
     });
 
-    const electronapp =
-      require('electron').app || require('electron').remote.app;
-    let appdataloc =
-      process.env.APPDATA ||
-      (process.platform == 'darwin'
-        ? electronapp.getPath('appData')
-        : process.env.HOME);
-    appdataloc = appdataloc + `/Nexus_Wallet_BETA/`;
-
+    const appdataloc = config.GetAppDataDirectory() + '/historydata.json';
     fs.writeFile(
-      appdataloc + 'historydata.json',
+      appdataloc,
       JSON.stringify(this.mapToObject(this.state.historyData)),
       err => {
         if (err != null) {

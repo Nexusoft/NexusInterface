@@ -72,16 +72,38 @@ const SuggestionComponent = styled.div(
     }
 );
 
+/**
+ * Each Suggestion for a Auto Suggestion Component
+ *
+ * @class Suggestion
+ * @extends {React.PureComponent}
+ */
 class Suggestion extends React.PureComponent {
+  /**
+   * Handles Select Action
+   *
+   * @memberof Suggestion
+   */
   handleSelect = () => {
     const { suggestion, onSelect } = this.props;
     onSelect && onSelect(getValue(suggestion));
   };
 
+  /**
+   * Handles Mouse Enter Action
+   *
+   * @memberof Suggestion
+   */
   handleMouseEnter = () => {
     this.props.activate(this.props.index);
   };
 
+  /**
+   * React Render Of Component
+   *
+   * @returns JSX
+   * @memberof Suggestion
+   */
   render() {
     const { index, activeIndex, suggestion } = this.props;
     return (
@@ -172,6 +194,12 @@ export default class AutoSuggest extends React.Component {
     });
   });
 
+  /**
+   * React Did Get Updated Props
+   * 
+   * @param {*} prevProps
+   * @memberof AutoSuggest
+   */
   componentDidUpdate(prevProps) {
     if (
       prevProps.inputProps &&
@@ -182,6 +210,11 @@ export default class AutoSuggest extends React.Component {
     }
   }
 
+  /**
+   * Handles Input Focus Event
+   * @param {HTMLEvent} e HTMLEvent
+   * @memberof AutoSuggest
+   */
   handleInputFocus = e => {
     if (this.props.suggestOn === 'focus') {
       this.setState({ open: true });
@@ -189,11 +222,21 @@ export default class AutoSuggest extends React.Component {
     this.props.inputProps.onFocus && this.props.inputProps.onFocus(e);
   };
 
+  /**
+   * Handles Input Blur Event
+   * @param {HTMLEvent} e HTMLEvent
+   * @memberof AutoSuggest
+   */
   handleInputBlur = e => {
     this.setState({ open: false });
     this.props.inputProps.onBlur && this.props.inputProps.onBlur(e);
   };
 
+  /**
+   * Handles Input Change Event
+   * @param {HTMLEvent} e HTMLEvent
+   * @memberof AutoSuggest
+   */
   handleInputChange = e => {
     if (this.props.suggestOn === 'change') {
       this.setState({ open: true });
@@ -201,6 +244,11 @@ export default class AutoSuggest extends React.Component {
     this.props.inputProps.onChange && this.props.inputProps.onChange(e);
   };
 
+  /**
+   * Scroll Event
+   * @param {number} index Suggestion Number
+   * @memberof AutoSuggest
+   */
   scrollToNewSelection = index => {
     this.setState({ activeIndex: index });
     if (index !== null) {
@@ -214,6 +262,11 @@ export default class AutoSuggest extends React.Component {
     }
   };
 
+  /**
+   * Handle Key Down Event
+   * @param {HTMLEvent} e HTMLEvent
+   * @memberof AutoSuggest
+   */
   handleKeyDown = e => {
     const {
       filterSuggestions = this.defaultFilterSuggestions,
@@ -259,15 +312,39 @@ export default class AutoSuggest extends React.Component {
     inputProps.onKeyDown && inputProps.onKeyDown(e);
   };
 
+  /**
+   * Clears the input field
+   *
+   * @memberof AutoSuggest
+   */
   clearInput = () => {
     this.props.onSelect && this.props.onSelect('');
     this.focusInput();
   };
 
+  /**
+   * Focus Input Div
+   *
+   * @memberof AutoSuggest
+   */
   focusInput = () => {
     this.inputRef.current.focus();
   };
 
+  /**
+   * Blur Input Div
+   *
+   * @memberof AutoSuggest
+   */
+  blurInput = () => {
+    this.inputRef.current.blur();
+  };
+
+  /**
+   * Returns Controls JSX
+   *
+   * @memberof AutoSuggest
+   */
   controls = () => (
     <div className="flex center" style={{ alignSelf: 'stretch' }}>
       <ClearButton
@@ -284,10 +361,21 @@ export default class AutoSuggest extends React.Component {
     </div>
   );
 
+  /**
+   * Activate a suggestion
+   *
+   * @memberof AutoSuggest
+   */
   activate = index => {
     this.setState({ activeIndex: index });
   };
 
+  /**
+   * React Render for component
+   *
+   * @returns {JSX} JSX
+   * @memberof AutoSuggest
+   */
   render() {
     const {
       filterSuggestions = this.defaultFilterSuggestions,

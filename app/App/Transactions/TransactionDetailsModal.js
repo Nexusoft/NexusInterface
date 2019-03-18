@@ -20,6 +20,7 @@ class TransactionDetailsModal extends Component {
   }
 
   state = {
+    highlightedTxFee: 'Loading',
     highlightedBlockHash: 'Loading',
     highlightedBlockNum: 'Loading',
   };
@@ -39,7 +40,23 @@ class TransactionDetailsModal extends Component {
       const tx = await RPC.PROMISE('gettransaction', [
         walletItems[hoveringID].txid,
       ]);
-      this.setState({ highlightedBlockHash: tx.blockhash });
+      this.setState({ highlightedBlockHash: tx.blockhash,
+                      highlightedTxFee: tx.fee });
+        console.log(tx);
+
+ /*
+      feePromises.push(RPC.PROMISE('gettransaction', [element.txid]));
+      payload.map(element => {
+        let feeData = new Map();
+              feeData.set(element.time, element.fee);
+            });
+            this.setFeeValuesOnTransaction(feeData);
+      Promise.all(feePromises).then(payload => {
+*/
+
+      const feeAmount = await RPC.PROMISE('gettransaction', [tx.txid]);
+      //let feeData = new Map([tx.time,feeAmount.fee])
+     // this.setState({highlightedTxFee: feeAmount.fee});
 
       const block = await RPC.PROMISE('getblock', [tx.blockhash]);
       this.setState({ highlightedBlockNum: block.height });
@@ -54,14 +71,15 @@ class TransactionDetailsModal extends Component {
    */
   render() {
     const { hoveringID, walletItems, settings } = this.props;
-    const { highlightedBlockNum, highlightedBlockHash } = this.state;
-
+    const { highlightedBlockNum, highlightedBlockHash, highlightedTxFee } = this.state;
+    
     if (
       hoveringID != 999999999999 &&
       !!walletItems &&
       walletItems[hoveringID]
     ) {
       const tx = walletItems[hoveringID];
+      console.log(tx.category);
       return (
         <Modal>
           <Modal.Header>Transaction Details</Modal.Header>
@@ -69,7 +87,7 @@ class TransactionDetailsModal extends Component {
             {tx.confirmations <= settings.minConfirmations && (
               <div>
                 <a>
-                  <Text id="transactions.PendingTransaction" />
+                  <Text id="transactions.PENDINGTR" />
                 </a>
               </div>
             )}
@@ -79,10 +97,10 @@ class TransactionDetailsModal extends Component {
               <span className="TXdetails">{tx.amount}</span>
             </div>
 
-            {tx.category === 'debit' && (
+            {(tx.category === 'debit'  || tx.category === 'send') && (
               <div key="modal_fee" className="detailCat">
                 <Text id="transactions.fee" />:
-                <span className="TXdetails">{+tx.fee}</span>
+                <span className="TXdetails">{highlightedTxFee}</span>
               </div>
             )}
 

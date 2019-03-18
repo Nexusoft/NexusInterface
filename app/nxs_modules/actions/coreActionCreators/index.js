@@ -46,6 +46,12 @@ export function getInfo() {
       dispatch(ac.Unlock());
       dispatch(ac.Encrypted());
     }
+    if (info.stakeweight != 0) {
+      info.stakeweight = info.stakeweight.toFixed(6);
+    }
+    if (info.trustweight != 0) {
+      info.trustweight = info.trustweight.toFixed(6);
+    }
 
     if (info.connections !== undefined && oldInfo.connections === undefined) {
       dispatch(await loadMyAccounts());
