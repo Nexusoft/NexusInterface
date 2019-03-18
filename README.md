@@ -1,6 +1,6 @@
 # Nexus Interface
 
-### Current Version: 0.9.0-alpha2
+### Current Version: 0.9.0-alpha3
 
 This is an Electron and React based interface to Nexus. It is an example of what can comprise the 6th and 7th layers of the Nexus software stack, which are the Logical and Interface layers respectively.
 
