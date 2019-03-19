@@ -1,6 +1,5 @@
 // External
 import { app, BrowserWindow, Tray, Menu, dialog } from 'electron';
-import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import module from 'module';
@@ -10,6 +9,8 @@ import devToolsInstall, {
   REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
 import 'electron-debug';
+
+import fileServer from './fileServer';
 
 // Internal
 // import core from 'api/core';
@@ -21,6 +22,7 @@ import core from 'api/core';
 let mainWindow;
 let resizeTimer;
 // Global Objects
+global.fileServer = fileServer;
 global.core = new core();
 global.autoUpdater = autoUpdater;
 global.forceQuit = false;

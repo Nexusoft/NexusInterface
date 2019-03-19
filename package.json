@@ -300,6 +300,7 @@
     "tarball-extract": "0.0.6",
     "three": "^0.98.0",
     "universal-analytics": "^0.4.17",
+    "url-join": "^4.0.0",
     "victory": "^30.5.1",
     "wait-on": "^3.0.1",
     "xmlhttprequest": "^1.8.0"

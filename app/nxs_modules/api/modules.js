@@ -165,6 +165,7 @@ export async function loadModules() {
       }
       return map;
     }, {});
+
     return modules;
   } catch (err) {
     return {};
