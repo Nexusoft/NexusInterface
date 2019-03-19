@@ -26,7 +26,7 @@ const nxsPackageSchema = {
       type: 'string',
       pattern: semverRegex().source,
     },
-    // Nexus Module API version that this module was built upon
+    // Nexus Module API version that this module was built on
     apiVersion: {
       type: 'string',
       pattern: semverRegex().source,
@@ -49,19 +49,7 @@ const nxsPackageSchema = {
       // Checks for file extension, allows empty strings, disallows ../ and ..\
       pattern: /^(.(?<!\.\.\/|\.\.\\))+\.(svg|png)$|^$/.source,
     },
-    repository: {
-      type: 'object',
-      required: ['type', 'host', 'owner', 'repo'],
-      properties: {
-        type: { type: 'string', enum: ['git'] },
-        // Allowed hosting: github.com
-        host: { type: 'string', enum: ['github.com'] },
-        owner: { type: 'string' },
-        repo: { type: 'string' },
-        // Full SHA-1 hash of the git commit this version was built on
-        commit: { type: 'string', minLength: 40, maxLength: 40 },
-      },
-    },
+
     author: {
       type: 'object',
       required: ['name'],
@@ -85,22 +73,6 @@ const nxsPackageSchema = {
 };
 const validateNxsPackage = ajv.compile(nxsPackageSchema);
 
-async function checkRepo({ host, owner, repo, commit }) {
-  if (!host || !owner || !repo || !commit) return false;
-
-  try {
-    const apiUrls = {
-      'github.com': `https://api.github.com/${owner}/${repo}/commits/${commit}`,
-    };
-    const url = apiUrls[host];
-    const response = await axios.get(url);
-    return !!response.data.sha && response.data.sha === commit;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-}
-
 function getIconPath(iconName, dirName) {
   const iconPath = join(modulesDir, dirName, iconName);
   return existsSync(iconPath) ? iconPath : null;
@@ -121,33 +93,88 @@ function prepareModule(module) {
  * =============================================================================
  */
 
-const repoVerificationSchema = {
-  required: ['moduleHash', 'publicKey', 'signature'],
+const repoInfoSchema = {
+  required: ['data'],
   properties: {
-    moduleHash: { type: 'string' },
-    publicKey: { type: 'string' },
-    signature: { type: 'string' },
+    verification: {
+      type: 'object',
+      required: ['publicKey', 'signature'],
+      properties: {
+        publicKey: { type: 'string' },
+        signature: { type: 'string' },
+      },
+    },
+    data: {
+      type: 'object',
+      required: ['repository'],
+      properties: {
+        moduleHash: { type: 'string' },
+        repository: {
+          type: 'object',
+          required: ['type', 'host', 'owner', 'repo', 'commit'],
+          properties: {
+            type: { type: 'string', enum: ['git'] },
+            // Allowed hosting: github.com
+            host: { type: 'string', enum: ['github.com'] },
+            owner: { type: 'string' },
+            repo: { type: 'string' },
+            // Full SHA-1 hash of the git commit this version was built on
+            commit: { type: 'string', minLength: 40, maxLength: 40 },
+          },
+        },
+      },
+    },
   },
 };
-const validateRepoVerification = ajv.compile(repoVerificationSchema);
+const validateRepoInfo = ajv.compile(repoInfoSchema);
 
-async function isRepoVerified(module) {
-  const verifPath = join(modulesDir, module.dirName, 'repo_verification.json');
-  // Check repo_verification.json file exists
-  if (!existsSync(verifPath)) return false;
+async function getRepoInfo(dirPath) {
+  const filePath = join(dirPath, 'repo_info.json');
+  // Check repo_info.json file exists
+  if (!existsSync(filePath)) return false;
 
-  // Check repo_verification.json file schema
-  let verif;
+  // Check repo_info.json file schema
   try {
-    const fileContent = await promises.readFile(verifPath);
-    verif = JSON.parse(fileContent);
-    if (!validateRepoVerification(verif)) return null;
+    const fileContent = await promises.readFile(filePath);
+    const repoInfo = JSON.parse(fileContent);
+    if (validateRepoInfo(repoInfo)) {
+      return repoInfo;
+    }
   } catch (err) {
     return false;
   }
 
+  return null;
+}
+
+async function isRepoOnline(repoInfo) {
+  const { host, owner, repo, commit } = repoInfo.data.repository;
+  if (!host || !owner || !repo || !commit) return false;
+
+  try {
+    const apiUrls = {
+      'github.com': `https://api.github.com/${owner}/${repo}/commits/${commit}`,
+    };
+    const url = apiUrls[host];
+    console.log(url);
+    const response = await axios.get(url);
+    return !!response.data.sha && response.data.sha === commit;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+async function isRepoVerified(repoInfo, module) {
+  const { data, verification } = repoInfo;
+
   // Check public key matching
-  if (verif.publicKey !== NEXUS_EMBASSY_PUBLIC_KEY) return null;
+  if (
+    !verification ||
+    !data.moduleHash ||
+    verification.publicKey !== NEXUS_EMBASSY_PUBLIC_KEY
+  )
+    return false;
 
   // Check hash of module files matching
   try {
@@ -162,7 +189,7 @@ async function isRepoVerified(module) {
         crypto.createHash('sha256').update(nxsPackageContent)
       )
       .digest('base64');
-    if (hash !== verif.moduleHash) return false;
+    if (hash !== data.moduleHash) return false;
   } catch (err) {
     return false;
   }
@@ -170,9 +197,9 @@ async function isRepoVerified(module) {
   // Check signature validity
   const verifier = crypto
     .createVerify('RSA-SHA256')
-    .update(verif)
+    .update(data)
     .end();
-  return verifier.verify(NEXUS_EMBASSY_PUBLIC_KEY, verif.publicKey);
+  return verifier.verify(verification.publicKey, verification.signature);
 }
 
 /**
@@ -203,18 +230,14 @@ export async function validateModule(dirPath) {
       }
     }
 
-    module.validation = {
-      // Check if the Module API this module was built upon is still supported
-      apiVersionSupported: semver.gte(
-        module.apiVersion,
-        SUPPORTED_MODULE_API_VERSION
-      ),
-      // Check if the repository exists and is public
-      repoFound: !!module.repository && (await checkRepo(module.repository)),
-    };
-
-    if (module.validation.repoFound) {
-      module.validation.repoVerified = await isRepoVerified(module);
+    // Check if the repository info and verification
+    const repoInfo = await getRepoInfo(dirPath);
+    if (repoInfo) {
+      const [repoOnline, repoVerified] = await Promise.all([
+        isRepoOnline(repoInfo),
+        isRepoVerified(repoInfo, module),
+      ]);
+      Object.assign(module, repoInfo.data, { repoOnline, repoVerified });
     }
 
     return module;
@@ -250,6 +273,10 @@ export async function loadModules() {
     return {};
   }
 }
+
+// Check if the Module API this module was built on is still supported
+export const isModuleSupported = module =>
+  semver.gte(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
 
 export const isModuleValid = (module, state) =>
   module.validation.apiVersionSupported &&
