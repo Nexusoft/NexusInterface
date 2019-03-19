@@ -3,28 +3,23 @@
  * Express server serving static files for modules
  *
  */
+import { normalize } from 'path';
 import express from 'express';
+import config from 'api/configuration';
 
 class FileServer {
   port = 9331;
+  staticMiddleware = express.static(config.GetModulesDir());
   server = null;
-  staticMiddleware = null;
+  moduleFiles = [];
 
   get domain() {
     return `http://localhost:${this.port}`;
   }
 
-  getStaticMiddleware = (() => {
-    const middlewares = {};
-    return path =>
-      path
-        ? middlewares[path] || (middlewares[path] = express.static(path))
-        : null;
-  })();
-
   get moduleMiddleware() {
     return (req, res, next) => {
-      if (this.staticMiddleware) {
+      if (this.moduleFiles.includes(normalize(req.path))) {
         return this.staticMiddleware(req, res, next);
       } else {
         return next();
@@ -34,14 +29,22 @@ class FileServer {
 
   constructor() {
     this.server = express();
-    this.server.use('/module', this.moduleMiddleware);
+    this.server.use('/modules', this.moduleMiddleware);
     this.server.listen(this.port, () => {
       console.log(`File server listening on port ${this.port}!`);
     });
   }
 
-  serveModuleFiles = path => {
-    this.staticMiddleware = this.getStaticMiddleware(path);
+  serveModuleFiles = files => {
+    this.moduleFiles =
+      files &&
+      files.map(file => {
+        let filePath = normalize(file);
+        if (!filePath.startsWith('/') && !filePath.startsWith('\\')) {
+          filePath = normalize('/' + filePath);
+        }
+        return filePath;
+      });
   };
 }
 

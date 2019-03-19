@@ -100,11 +100,9 @@ class WebView extends React.Component {
 
   constructor(props) {
     super(props);
-    const moduleDirPath = join(
-      config.GetModulesDir(),
-      this.props.module.dirName
-    );
-    fileServer.serveModuleFiles(moduleDirPath);
+    const { module } = this.props;
+    const moduleFiles = module.files.map(file => join(module.dirName, file));
+    fileServer.serveModuleFiles(moduleFiles);
   }
 
   componentDidMount() {
@@ -160,7 +158,7 @@ class WebView extends React.Component {
     const entryPath = join(config.GetModulesDir(), module.dirName, entry);
     if (!existsSync(entryPath)) return null;
 
-    const entryUrl = urlJoin(fileServer.domain, 'module', entry);
+    const entryUrl = urlJoin(fileServer.domain, 'modules', module.name, entry);
     const env = process.env.NODE_ENV === 'development' ? 'dev' : 'prod';
 
     return (

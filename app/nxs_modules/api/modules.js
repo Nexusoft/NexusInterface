@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join, isAbsolute } from 'path';
 import { existsSync, promises, statSync } from 'fs';
 import Ajv from 'ajv';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import config from 'api/configuration';
 
 const ajv = new Ajv();
 const nxsPackageSchema = {
-  required: ['name', 'version', 'apiVersion', 'type'],
+  required: ['name', 'version', 'apiVersion', 'type', 'files'],
   properties: {
     name: {
       type: 'string',
@@ -67,6 +67,17 @@ const nxsPackageSchema = {
         email: { type: 'string' },
       },
     },
+    // Lists ALL the files which is used by the module in relative paths from the module directory
+    // including `entry` and `icon`
+    // excluding `nxs_package.json`, signature file and storage json file
+    files: {
+      type: 'array',
+      items: {
+        type: 'string',
+        // Disallows ../ and ..\
+        pattern: /^(.(?<!\.\.\/|\.\.\\))+$/.source,
+      },
+    },
   },
 };
 const validateSchema = ajv.compile(nxsPackageSchema);
@@ -117,6 +128,11 @@ export async function validateModule(dirPath) {
     const content = await promises.readFile(nxsPackagePath);
     const module = JSON.parse(content);
     if (!validateSchema(module)) return null;
+
+    // Ensure all file paths are relative
+    if (module.entry && isAbsolute(module.entry)) return null;
+    if (module.icon && isAbsolute(module.icon)) return null;
+    if (module.files.some(file => isAbsolute(file))) return null;
 
     if (isPageModule(module)) {
       // Manually check entry extension corresponding to module type
