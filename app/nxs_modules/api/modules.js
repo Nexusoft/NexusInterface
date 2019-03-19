@@ -1,11 +1,14 @@
 import { join, isAbsolute } from 'path';
-import { existsSync, promises, statSync } from 'fs';
+import { existsSync, promises, statSync, readFileSync } from 'fs';
+import crypto from 'crypto';
 import Ajv from 'ajv';
 import axios from 'axios';
 import semver from 'semver';
 import semverRegex from 'semver-regex';
 
 import config from 'api/configuration';
+
+const modulesDir = config.GetModulesDir();
 
 const ajv = new Ajv();
 const nxsPackageSchema = {
@@ -80,7 +83,7 @@ const nxsPackageSchema = {
     },
   },
 };
-const validateSchema = ajv.compile(nxsPackageSchema);
+const validateNxsPackage = ajv.compile(nxsPackageSchema);
 
 async function checkRepo({ host, owner, repo, commit }) {
   if (!host || !owner || !repo || !commit) return false;
@@ -98,19 +101,78 @@ async function checkRepo({ host, owner, repo, commit }) {
   }
 }
 
-function getIconPath(iconName, dirName, modulesDir) {
+function getIconPath(iconName, dirName) {
   const iconPath = join(modulesDir, dirName, iconName);
   return existsSync(iconPath) ? iconPath : null;
 }
 
-function prepareModule(module, modulesDir) {
+function prepareModule(module) {
   // Prepare module icon
   module.iconPath = module.icon
-    ? getIconPath(module.icon, module.dirName, modulesDir)
-    : getIconPath('icon.svg', module.dirName, modulesDir) ||
-      getIconPath('icon.png', module.dirName, modulesDir);
+    ? getIconPath(module.icon, module.dirName)
+    : getIconPath('icon.svg', module.dirName) ||
+      getIconPath('icon.png', module.dirName);
 
   return module;
+}
+
+/**
+ * Repo verification
+ * =============================================================================
+ */
+
+const repoVerificationSchema = {
+  required: ['moduleHash', 'publicKey', 'signature'],
+  properties: {
+    moduleHash: { type: 'string' },
+    publicKey: { type: 'string' },
+    signature: { type: 'string' },
+  },
+};
+const validateRepoVerification = ajv.compile(repoVerificationSchema);
+
+async function isRepoVerified(module) {
+  const verifPath = join(modulesDir, module.dirName, 'repo_verification.json');
+  // Check repo_verification.json file exists
+  if (!existsSync(verifPath)) return false;
+
+  // Check repo_verification.json file schema
+  let verif;
+  try {
+    const fileContent = await promises.readFile(verifPath);
+    verif = JSON.parse(fileContent);
+    if (!validateRepoVerification(verif)) return null;
+  } catch (err) {
+    return false;
+  }
+
+  // Check public key matching
+  if (verif.publicKey !== NEXUS_EMBASSY_PUBLIC_KEY) return null;
+
+  // Check hash of module files matching
+  try {
+    const nxsPackagePath = join(dirPath, 'nxs_package.json');
+    const nxsPackageContent = await promises.readFile(nxsPackagePath);
+    const filePaths = module.files
+      .sort()
+      .map(file => join(modulesDir, module.dirName, file));
+    const hash = filePaths
+      .reduce(
+        (hash, path) => hash.update(readFileSync(path)),
+        crypto.createHash('sha256').update(nxsPackageContent)
+      )
+      .digest('base64');
+    if (hash !== verif.moduleHash) return false;
+  } catch (err) {
+    return false;
+  }
+
+  // Check signature validity
+  const verifier = crypto
+    .createVerify('RSA-SHA256')
+    .update(verif)
+    .end();
+  return verifier.verify(NEXUS_EMBASSY_PUBLIC_KEY, verif.publicKey);
 }
 
 /**
@@ -127,7 +189,7 @@ export async function validateModule(dirPath) {
 
     const content = await promises.readFile(nxsPackagePath);
     const module = JSON.parse(content);
-    if (!validateSchema(module)) return null;
+    if (!validateNxsPackage(module)) return null;
 
     // Ensure all file paths are relative
     if (module.entry && isAbsolute(module.entry)) return null;
@@ -151,7 +213,9 @@ export async function validateModule(dirPath) {
       repoFound: !!module.repository && (await checkRepo(module.repository)),
     };
 
-    // TODO: Check directory tree hash & signature
+    if (module.validation.repoFound) {
+      module.validation.repoVerified = await isRepoVerified(module);
+    }
 
     return module;
   } catch (err) {
@@ -162,7 +226,6 @@ export async function validateModule(dirPath) {
 
 export async function loadModules() {
   try {
-    const modulesDir = config.GetModulesDir();
     if (!existsSync(modulesDir)) return {};
     const dirNames = await promises.readdir(modulesDir);
     const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
@@ -176,7 +239,7 @@ export async function loadModules() {
           !map[module.name] ||
           semver.gt(module.version, map[module.name].version)
         ) {
-          map[module.name] = prepareModule(module, modulesDir);
+          map[module.name] = prepareModule(module);
         }
       }
       return map;
