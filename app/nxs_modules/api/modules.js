@@ -1,10 +1,13 @@
 import { join, isAbsolute } from 'path';
-import { existsSync, promises, statSync, readFileSync } from 'fs';
+import { existsSync, promises, statSync, createReadStream } from 'fs';
 import crypto from 'crypto';
 import Ajv from 'ajv';
 import axios from 'axios';
 import semver from 'semver';
 import semverRegex from 'semver-regex';
+import { isText } from 'istextorbinary';
+import streamNormalizeEol from 'stream-normalize-eol';
+import Multistream from 'multistream';
 
 import config from 'api/configuration';
 
@@ -156,7 +159,6 @@ async function isRepoOnline(repoInfo) {
       'github.com': `https://api.github.com/${owner}/${repo}/commits/${commit}`,
     };
     const url = apiUrls[host];
-    console.log(url);
     const response = await axios.get(url);
     return !!response.data.sha && response.data.sha === commit;
   } catch (err) {
@@ -165,7 +167,40 @@ async function isRepoOnline(repoInfo) {
   }
 }
 
-async function isRepoVerified(repoInfo, module) {
+function normalizeFile(path) {
+  const stream = createReadStream(path);
+  if (isText(path, stream)) {
+    const normalizeNewline = streamNormalizeEol('\n');
+    return stream.pipe(normalizeNewline);
+  } else {
+    return stream;
+  }
+}
+
+async function getModuleHash(module, dirPath) {
+  return new Promise((resolve, reject) => {
+    try {
+      const nxsPackagePath = join(dirPath, 'nxs_package.json');
+      const filePaths = module.files.sort().map(file => join(dirPath, file));
+      const streams = [
+        normalizeFile(nxsPackagePath),
+        ...filePaths.map(normalizeFile),
+      ];
+
+      const hash = crypto.createHash('sha256');
+      hash.setEncoding('base64');
+      hash.on('readable', () => {
+        resolve(hash.read());
+      });
+      new Multistream(streams).pipe(hash);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+}
+
+async function isRepoVerified(repoInfo, module, dirPath) {
   const { data, verification } = repoInfo;
 
   // Check public key matching
@@ -178,17 +213,7 @@ async function isRepoVerified(repoInfo, module) {
 
   // Check hash of module files matching
   try {
-    const nxsPackagePath = join(dirPath, 'nxs_package.json');
-    const nxsPackageContent = await promises.readFile(nxsPackagePath);
-    const filePaths = module.files
-      .sort()
-      .map(file => join(modulesDir, module.dirName, file));
-    const hash = filePaths
-      .reduce(
-        (hash, path) => hash.update(readFileSync(path)),
-        crypto.createHash('sha256').update(nxsPackageContent)
-      )
-      .digest('base64');
+    const hash = await getModuleHash(module, dirPath);
     if (hash !== data.moduleHash) return false;
   } catch (err) {
     return false;
@@ -235,7 +260,7 @@ export async function validateModule(dirPath) {
     if (repoInfo) {
       const [repoOnline, repoVerified] = await Promise.all([
         isRepoOnline(repoInfo),
-        isRepoVerified(repoInfo, module),
+        isRepoVerified(repoInfo, module, dirPath),
       ]);
       Object.assign(module, repoInfo.data, { repoOnline, repoVerified });
     }
