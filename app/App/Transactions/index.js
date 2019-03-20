@@ -369,26 +369,20 @@ class Transactions extends Component {
       () => this.handleZoom(this.state.zoomDomain)
     );
 
-      let promisnew = new Promise((resolve, reject) => {
-        let temp = this.state.transactionsToCheck;
-        incomingData.forEach(element => {
-          let temphistoryData = this.findclosestdatapoint(
-            element.time.toString()
-          );
-          if (temphistoryData == undefined) {
-            temp.push(element.time);
-          }
-        });
-        resolve(temp);
-      });
-
-    
-    const inPayload = await promisnew;
+    let temp = this.state.transactionsToCheck;
+    incomingData.forEach(element => {
+      let temphistoryData = this.findclosestdatapoint(
+       element.time.toString()
+      );
+      if (temphistoryData == undefined) {
+        temp.push(element.time);
+      }
+    });
     this.setState({
-      transactionsToCheck: inPayload,
+      transactionsToCheck: temp,
     });
     this.gothroughdatathatneedsit();
-    console.log(inPayload);
+    console.log(temp);
 
   }
 

@@ -25,7 +25,7 @@ class RescanButton extends React.Component {
   rescan = async () => {
     try {
       this.setState({ rescanning: true });
-      await RPC.PROMISE('rescan');
+      await RPC.PROMISE('rescan', []);
     } catch (err) {
       UIController.showNotification(
         <Text id="MyAddressesModal.RescanError" />,
