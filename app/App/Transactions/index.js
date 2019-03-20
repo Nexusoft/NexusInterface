@@ -199,11 +199,6 @@ class Transactions extends Component {
       transactionsToCheck: [],
       mainChartWidth: 0,
       mainChartHeight: 0,
-      miniChartWidth: 0,
-      miniChartHeight: 0,
-      tableHeight: {
-        height: 200,
-      },
       addressLabels: new Map(),
       refreshInterval: undefined,
       highlightedBlockNum: 'Loading',
@@ -217,7 +212,7 @@ class Transactions extends Component {
   // React Method (Life cycle hook)
   async componentDidMount() {
     const { locale } = this.props.settings;
-    this._isMounted = true;
+    this._isMounted = true; // This is used so that if you nav away for this screen the background tasks will stop.
     this.updateChartAndTableDimensions();
     googleanalytics.SendScreen('Transactions');
 
@@ -277,23 +272,18 @@ class Transactions extends Component {
       this.transactioncontextfunction,
       false
     );
-    this._Onprogress = () => {};
-    /*setInterval(() => {
-    this.setState(
-      {
-        CSVProgress: this.state.CSVProgress + 1,
-      }, () => {this.updateProgress();}
-    )
-  }, 250); */
+    this._Onprogress = () => {}; // Might not need to define this here
   }
 
   // React Method (Life cycle hook)
   componentDidUpdate(previousprops) {
     if (this.props.txtotal != previousprops.txtotal) {
       this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
+      return;
     }
     if (this.props.selectedAccount != previousprops.selectedAccount) {
       this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
+      return;
     }
   }
 
@@ -327,7 +317,7 @@ class Transactions extends Component {
    * @param {*} incomingData the data provided by the daemon to be used to update the chart
    * @memberof Transactions
    */
-  setOnmountTransactionsCallback(incomingData) {
+  async setOnmountTransactionsCallback(incomingData) {
     this.updateChartAndTableDimensions(null);
     let objectheaders = Object.keys({
       transactionnumber: 0,
@@ -378,8 +368,7 @@ class Transactions extends Component {
       },
       () => this.handleZoom(this.state.zoomDomain)
     );
-    // Just trying to give some space on this not important call
-    setTimeout(() => {
+
       let promisnew = new Promise((resolve, reject) => {
         let temp = this.state.transactionsToCheck;
         incomingData.forEach(element => {
@@ -390,16 +379,17 @@ class Transactions extends Component {
             temp.push(element.time);
           }
         });
-
         resolve(temp);
       });
-      promisnew.then(payload => {
-        this.setState({
-          transactionsToCheck: payload,
-        });
-        this.gothroughdatathatneedsit();
-      });
-    }, 1000);
+
+    
+    const inPayload = await promisnew;
+    this.setState({
+      transactionsToCheck: inPayload,
+    });
+    this.gothroughdatathatneedsit();
+    console.log(inPayload);
+
   }
 
   //
@@ -415,40 +405,13 @@ class Transactions extends Component {
     if (chart === undefined || chart === null) {
       return;
     }
-    let details = document.getElementById('transactions-details');
     let parent = chart.parentNode;
-    if (chart !== null) {
-      let parentHeight =
-        parseInt(parent.clientHeight) -
-        parseInt(
-          window.getComputedStyle(parent, '').getPropertyValue('padding-top')
-        ) -
-        parseInt(
-          window.getComputedStyle(parent, '').getPropertyValue('padding-bottom')
-        );
-
-      let chartHeight =
-        parseInt(chart.offsetHeight) +
-        parseInt(
-          window.getComputedStyle(chart, '').getPropertyValue('margin-top')
-        ) +
-        parseInt(
-          window.getComputedStyle(chart, '').getPropertyValue('margin-bottom')
-        );
-      let detailsHeight = parentHeight - chartHeight;
-
-      let mainHeight = 150; // fixed height, should match CSS
-      let miniHeight = 50 - 8; // right now this is disabled, if re-enabled this needs to be set properly
-      this.setState({
-        mainChartWidth: parent.clientWidth,
-        miniChartWidth: chart.clientWidth,
-        mainChartHeight: mainHeight,
-        miniChartHeight: miniHeight,
-        tableHeight: {
-          height: detailsHeight,
-        },
-      });
-    }
+    let mainHeight = 150; // fixed height, should match CSS
+    this.setState({
+      mainChartWidth: parent.clientWidth,
+      mainChartHeight: mainHeight,
+    });
+    
   }
 
   /**
@@ -545,6 +508,9 @@ class Transactions extends Component {
     );
 
     // Additional Functions for the context menu
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Following functions were put on hold as the sendpage was redone and the blockexploerer was removed, we should have some of this one day
+    // when these pages are better suited
 
     let sendtoSendPagecallback = function() {
       this.props.SetSendAgainData({
@@ -613,7 +579,7 @@ class Transactions extends Component {
    * @returns {null} Cen return null if no data is retreived, exit for this method is finishingCallback
    * @memberof Transactions
    */
-  getTransactionData(finishingCallback) {
+  async getTransactionData(finishingCallback) {
     let incomingMyAccounts;
     let listedaccounts = [];
     let promisList = [];
@@ -654,26 +620,26 @@ class Transactions extends Component {
     ) {
       return;
     }
-
-    Promise.all(promisList).then(payload => {
-      payload.forEach(element => {
-        for (let index = 0; index < element.length; index++) {
-          const element2 = element[index];
+    const processedAddresses  = await Promise.all(promisList);
+    processedAddresses.forEach(eachAddress => {
+        for (let index = 0; index < eachAddress.length; index++) {
+          const elementTransaction = eachAddress[index];
           // if a move happend don't place it in the chart or table.
-          if (element2.category === 'move') {
+          // we no longer use move however for legacy we should still have this. 
+          if (elementTransaction.category === 'move') {
             return;
           }
-          const getLable = this.state.addressLabels.get(element2.address);
+          const getLable = this.state.addressLabels.get(elementTransaction.address);
 
           let tempTrans = {
             transactionnumber: index,
-            confirmations: element2.confirmations,
-            time: element2.time,
-            category: element2.category,
-            amount: element2.amount,
-            txid: element2.txid,
+            confirmations: elementTransaction.confirmations,
+            time: elementTransaction.time,
+            category: elementTransaction.category,
+            amount: elementTransaction.amount,
+            txid: elementTransaction.txid,
             account: getLable,
-            address: element2.address,
+            address: elementTransaction.address,
             value: {
               USD: 0,
               BTC: 0,
@@ -681,7 +647,7 @@ class Transactions extends Component {
             coin: 'Nexus',
             fee: 0,
           };
-          let closestData = this.findclosestdatapoint(element2.time.toString());
+          let closestData = this.findclosestdatapoint(elementTransaction.time.toString());
           if (closestData != undefined) {
             tempTrans.value[this.props.settings.fiatCurrency] =
               closestData[this.props.settings.fiatCurrency];
@@ -697,11 +663,9 @@ class Transactions extends Component {
 
       if (finishingCallback != undefined) {
         finishingCallback(tempWalletTransactions);
-        return;
       } else {
         this.props.SetWalletTransactionArray(tempWalletTransactions);
       }
-    });
   }
 
   //
@@ -725,14 +689,20 @@ class Transactions extends Component {
    */
   DownloadCSV() {
     if (this.state.CSVProgress > 0){
+      // If your already running then don't try and run again
       return;
     }
 
-    UIController.openModal(CSVDownloadModal,{parent: this.setEvents.bind(this), progress: this.state.CSVProgress});
+    UIController.openModal(CSVDownloadModal,{parent: this.setCSVEvents.bind(this), progress: this.state.CSVProgress});
     this.gatherAllFeeData();
     
   }
 
+  /**
+   * Gather All fee data for every debit/send transaction
+   *
+   * @memberof Transactions
+   */
   async gatherAllFeeData()
   {
     let feePromises = [];
@@ -755,28 +725,44 @@ class Transactions extends Component {
       });
       await Promise.all(feePromises);
       this.setFeeValuesOnTransaction(feeData);
+      this.finishCSVProcessing();
   }
 
-  setEvents(events) {
+  /**
+   * Set events for the CSV Listener
+   *
+   * @param {*} events
+   * @memberof Transactions
+   */
+  setCSVEvents(events) {
     this._Onprogress = events.progress;
     this._OnCSVFinished = events.finished;
   }
 
+  /**
+   * Each time a transaction is done processing, run this. 
+   *
+   * @memberof Transactions
+   */
   updateProgress()
   {
     console.log(this.state.CSVProgress);
     this._Onprogress(this.state.CSVProgress * 100);
-    if (this.state.CSVProgress >= 1){
-      setTimeout(() => {
-        googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
-        this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
-        this._OnCSVFinished();
-        this.setState({
-          CSVProgress: 0
-        });
-      }, 2000);
-      
-    }
+  }
+
+  /**
+   * When proccessing is finished, open up the save dialog
+   *
+   * @memberof Transactions
+   */
+  finishCSVProcessing()
+  {
+    googleanalytics.SendEvent('Transaction', 'Data', 'Download CSV', 1);
+    this.saveCSV(this.returnAllFilters([...this.props.walletitems]));
+    this._OnCSVFinished();
+    this.setState({
+      CSVProgress: 0
+    });
   }
 
   /**
@@ -1105,11 +1091,6 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   tableSelectCallback(e, indata) {
-    //e.target.select();
-    //document.execCommand('copy');
-    //this.setState({
-    //  hoveringID: indata.index
-    //});
     this.hoveringID = indata.index;
   }
 
@@ -1461,10 +1442,7 @@ class Transactions extends Component {
     if (this._isMounted == false) {
       return;
     }
-    let USDurl = this.createcryptocompareurl(
-      [this.props.settings.fiatCurrency],
-      inEle
-    );
+    let USDurl = this.createcryptocompareurl([this.props.settings.fiatCurrency],inEle);
     let BTCurl = this.createcryptocompareurl('BTC', inEle);
     rp(USDurl).then(payload => {
       let incomingUSD = JSON.parse(payload);
@@ -1502,7 +1480,7 @@ class Transactions extends Component {
             needsHistorySave: true,
           });
         });
-      }, 500);
+      }, 100); // This may change, but right now crypto compare LIMITS how many calls we can make per seconds from one IP, space out these calls so they are not done all at the same time and have a small buffer between them.
     });
   }
 
@@ -1512,27 +1490,21 @@ class Transactions extends Component {
    *
    * @memberof Transactions
    */
-  gothroughdatathatneedsit() {
-    let historyPromiseList = [];
-    for (
-      let index = 0;
-      index < this.state.transactionsToCheck.length;
-      index++
-    ) {
+  async gothroughdatathatneedsit() {
+    for (let index = 0; index < this.state.transactionsToCheck.length; index++) {
       let daylayaction = new Promise((resolve, reject) => {
         if (this._isMounted == false) {
           reject();
         }
-        setTimeout(resolve, 500 * index);
+        setTimeout((resolve), 100 * index); // This may change, but right now crypto compare LIMITS how many calls we can make per seconds from one IP, space out these calls so they are not done all at the same time and have a small buffer between them. 
       });
+      await daylayaction;
       const element = this.state.transactionsToCheck[index];
-      daylayaction.then(() => this.downloadHistoryOnTransaction(element));
+      await this.downloadHistoryOnTransaction(element);
     }
 
-    if (this.state.transactionsToCheck.length != 0) {
-      setTimeout(() => {
+    if (this.state.transactionsToCheck.length != 0) { //Don't execute save if there are no additions
         this.SaveHistoryDataToJson();
-      }, this.state.transactionsToCheck.length * 1000 + 1000);
     }
   }
 
@@ -1610,12 +1582,12 @@ class Transactions extends Component {
   }
 
   /**
-   * Compares a Data to a from Data and a To Data and returns a Bool
+   * Compares a Date to a from Date and a To Date and returns a Bool
    *
    * @param {*} indate Date to check
    * @param {*} starttime Date from
    * @param {*} endtime Date to
-   * @returns Is this true or not
+   * @returns {bool} Is this true or not
    * @memberof Transactions
    */
   comparedate(indate, starttime, endtime) {
@@ -1629,7 +1601,7 @@ class Transactions extends Component {
   /**
    * Return Default Page Size
    *
-   * @returns
+   * @returns {number}
    * @memberof Transactions
    */
   returnDefaultPageSize() {
