@@ -15,6 +15,7 @@ const modulesDir = config.GetModulesDir();
 
 const ajv = new Ajv();
 const nxsPackageSchema = {
+  additionalProperties: false,
   required: ['name', 'version', 'apiVersion', 'type', 'files'],
   properties: {
     name: {
