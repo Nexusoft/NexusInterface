@@ -15,7 +15,6 @@ import updater from 'updater';
 import appMenu from 'appMenu';
 import configuration from 'api/configuration';
 import { Tail } from 'utils/tail';
-import normalizePath from 'utils/normalizePath';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';

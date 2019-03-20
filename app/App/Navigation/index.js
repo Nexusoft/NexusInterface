@@ -12,6 +12,7 @@ import Tooltip from 'components/Tooltip';
 import ModuleIcon from 'components/ModuleIcon';
 import { isPageModule } from 'api/modules';
 import { consts, timing } from 'styles';
+import { selectEnabledModules } from 'selectors';
 
 // Internal Local Dependencies
 import NavLinkItem from './NavLinkItem';
@@ -71,7 +72,7 @@ const ModuleNavItem = ({ module }) => (
 );
 
 @connect(state => ({
-  modules: state.modules,
+  modules: selectEnabledModules(state.modules),
 }))
 class ModuleNavItems extends React.Component {
   render() {

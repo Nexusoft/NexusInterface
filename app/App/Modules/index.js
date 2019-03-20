@@ -6,6 +6,7 @@ import { remote } from 'electron';
 // Internal Global
 import googleanalytics from 'scripts/googleanalytics';
 import ContextMenuBuilder from 'contextmenu';
+import { selectEnabledModules } from 'selectors';
 
 // Internal Local
 import PageModule from './PageModule';
@@ -18,7 +19,7 @@ import PagePanelModule from './PagePanelModule';
  * @extends {Component}
  */
 @connect(state => ({
-  modules: state.modules,
+  modules: selectEnabledModules(state.modules),
 }))
 class Modules extends React.Component {
   /**
