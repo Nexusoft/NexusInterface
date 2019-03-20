@@ -105,6 +105,10 @@ class WebView extends React.Component {
     fileServer.serveModuleFiles(moduleFiles);
   }
 
+  componentWillUnmount() {
+    fileServer.serveModuleFiles([]);
+  }
+
   componentDidMount() {
     const webview = this.webviewRef.current;
     if (webview) {
