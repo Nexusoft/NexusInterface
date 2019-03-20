@@ -222,7 +222,7 @@ async function isRepoVerified(repoInfo, module, dirPath) {
   // Check signature validity
   const verifier = crypto
     .createVerify('RSA-SHA256')
-    .update(data)
+    .update(JSON.stringify(data))
     .end();
   return verifier.verify(verification.publicKey, verification.signature);
 }
