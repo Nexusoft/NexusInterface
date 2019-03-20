@@ -271,6 +271,20 @@ class SettingsApp extends Component {
           />
         </SettingsField>
 
+        <div style={{ display: settings.devMode ? 'block' : 'none' }}>
+          <SettingsField
+            indent={1}
+            connectLabel
+            label={<Text id="Settings.EnforceOpenSourceModules" />}
+            subLabel={<Text id="Settings.EnforceOpenSourceModulesNote" />}
+          >
+            <Switch
+              checked={settings.verifyModuleSource}
+              onChange={this.updateHandlers('verifyModuleSource')}
+            />
+          </SettingsField>
+        </div>
+
         <Button
           disabled={connections === undefined}
           style={{ marginTop: '2em' }}

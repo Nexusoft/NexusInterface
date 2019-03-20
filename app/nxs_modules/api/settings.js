@@ -26,6 +26,7 @@ export const defaultSettings = {
   minConfirmations: 3,
   backupDirectory: defaultBackupDir,
   devMode: false,
+  verifyModuleSource: true,
   overviewDisplay: 'standard',
 
   // Core

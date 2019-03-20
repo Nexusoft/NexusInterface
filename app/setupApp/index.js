@@ -1,7 +1,6 @@
 // External
 import { remote } from 'electron';
 import fs from 'fs';
-import path from 'path';
 
 // Internal
 import UIController from 'components/UIController';

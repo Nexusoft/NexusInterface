@@ -232,7 +232,7 @@ async function isRepoVerified(repoInfo, module, dirPath) {
  * =============================================================================
  */
 
-export async function validateModule(dirPath) {
+export async function validateModule(dirPath, settings) {
   try {
     const nxsPackagePath = join(dirPath, 'nxs_package.json');
     if (!existsSync(nxsPackagePath) || !statSync(nxsPackagePath).isFile) {
@@ -265,6 +265,7 @@ export async function validateModule(dirPath) {
       Object.assign(module, repoInfo.data, { repoOnline, repoVerified });
     }
 
+    module.disabled = !isModuleValid(module, settings);
     return module;
   } catch (err) {
     console.error(err);
@@ -272,12 +273,14 @@ export async function validateModule(dirPath) {
   }
 }
 
-export async function loadModules() {
+export async function loadModules(settings) {
   try {
     if (!existsSync(modulesDir)) return {};
     const dirNames = await promises.readdir(modulesDir);
     const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
-    const results = await Promise.all(dirPaths.map(validateModule));
+    const results = await Promise.all(
+      dirPaths.map(path => validateModule(path, settings))
+    );
 
     const modules = results.reduce((map, result, i) => {
       if (result) {
@@ -303,10 +306,11 @@ export async function loadModules() {
 export const isModuleSupported = module =>
   semver.gte(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
 
-export const isModuleValid = (module, state) =>
-  module.validation.apiVersionSupported &&
-  (module.validation.repoFound ||
-    (state.settings.devMode && state.settings.allowedModules === 'all'));
+// Check if a module is valid, if not then it must be disabled
+export const isModuleValid = (module, settings) =>
+  isModuleSupported(module) &&
+  ((settings.devMode && !settings.verifyModuleSource) ||
+    (module.repository && module.repoOnline && module.repoVerified));
 
 export const isPageModule = module =>
   module.type === 'page' || module.type === 'page-panel';
