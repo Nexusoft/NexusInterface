@@ -1,4 +1,4 @@
-# 0.9.0-alpha3 (2019.3.XX)
+# 0.9.0-alpha4 (2019.3.XX)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.9.0)
 #### Additions
 - Tritium Cores
@@ -10,6 +10,8 @@
 - There is now a max of `0.1` Nexus for the transaction fee setting
 - Moved `Download Recent Database` to file dropdown
 - Trust and Stake numbers now only show 6 significant numbers
+- Replaced Rescan Wallet on `My Addressess` with `Check Wallet` and moved button to `Settings/Core`
+- Changed scalling on screens under 720px high
 
 
 #### Fixes
