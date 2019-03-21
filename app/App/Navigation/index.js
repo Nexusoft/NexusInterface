@@ -64,7 +64,7 @@ const NavItem = ({ icon, children, ...rest }) => (
 );
 
 const ModuleNavItem = ({ module }) => (
-  <Tooltip.Trigger tooltip={module.displayName || module.name} position="top">
+  <Tooltip.Trigger tooltip={module.displayName} position="top">
     <NavLinkItem to={`/Modules/${module.name}`}>
       <ModuleIcon module={module} />
     </NavLinkItem>
@@ -78,7 +78,7 @@ class ModuleNavItems extends React.Component {
   render() {
     return (
       <>
-        {Object.values(this.props.modules)
+        {this.props.modules
           .filter(module => isPageModule(module))
           .map(module => (
             <ModuleNavItem key={module.name} module={module} />

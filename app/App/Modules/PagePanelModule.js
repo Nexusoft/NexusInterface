@@ -8,7 +8,7 @@ const PageModule = ({ module }) => (
     title={
       <>
         <ModuleIcon module={module} className="space-right" />
-        <span className="v-align">{module.displayName || module.name}</span>
+        <span className="v-align">{module.displayName}</span>
       </>
     }
   >

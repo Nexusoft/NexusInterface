@@ -1,10 +1,7 @@
 import memoize from 'memoize-one';
 
+export const selectAllModules = memoize(modules => Object.values(modules));
+
 export const selectEnabledModules = memoize(modules =>
-  Object.entries(modules)
-    .filter(([name, module]) => !module.disabled)
-    .reduce((obj, [name, module]) => {
-      obj[name] = module;
-      return obj;
-    }, {})
+  Object.values(modules).filter(module => !module.invalid)
 );

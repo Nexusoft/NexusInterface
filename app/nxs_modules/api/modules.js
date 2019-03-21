@@ -273,7 +273,7 @@ export async function validateModule(dirPath, settings) {
       Object.assign(module, repoInfo.data, { repoOnline, repoVerified });
     }
 
-    module.disabled = !isModuleValid(module, settings);
+    module.invalid = !isModuleValid(module, settings);
     return module;
   } catch (err) {
     console.error(err);

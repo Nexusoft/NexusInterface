@@ -19,7 +19,7 @@ import PagePanelModule from './PagePanelModule';
  * @extends {Component}
  */
 @connect(state => ({
-  modules: selectEnabledModules(state.modules),
+  modules: state.modules,
 }))
 class Modules extends React.Component {
   /**
@@ -64,12 +64,15 @@ class Modules extends React.Component {
   render() {
     const { modules, match } = this.props;
     const module = modules[match.params.name];
-    if (module && module.type === 'page') {
-      return <PageModule module={module} />;
-    } else if (module && module.type === 'page-panel') {
-      return <PagePanelModule module={module} />;
-    } else {
-      return null;
+    if (!module || module.invalid) return null;
+
+    switch (module.type) {
+      case 'page':
+        return <PageModule module={module} />;
+      case 'page-panel':
+        return <PagePanelModule module={module} />;
+      default:
+        return null;
     }
   }
 }
