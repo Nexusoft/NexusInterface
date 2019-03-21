@@ -3,12 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import { selectAllModules } from 'selectors';
+import { getAllModules } from 'api/modules';
 import SettingsContainer from 'components/SettingsContainer';
 import Module from './Module';
 
 @connect(state => ({
-  modules: selectAllModules(state.modules),
+  modules: getAllModules(state.modules),
 }))
 class SettingsModules extends React.Component {
   render() {

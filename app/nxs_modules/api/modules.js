@@ -8,6 +8,7 @@ import semverRegex from 'semver-regex';
 import { isText } from 'istextorbinary';
 import streamNormalizeEol from 'stream-normalize-eol';
 import Multistream from 'multistream';
+import memoize from 'memoize-one';
 
 import config from 'api/configuration';
 
@@ -90,16 +91,6 @@ function prepareModule(module) {
 
   return module;
 }
-
-// Check if the Module API this module was built on is still supported
-const isModuleSupported = module =>
-  semver.gte(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
-
-// Check if a module is valid, if not then it must be disabled
-const isModuleValid = (module, settings) =>
-  isModuleSupported(module) &&
-  ((settings.devMode && !settings.verifyModuleSource) ||
-    (module.repository && module.repoOnline && module.repoVerified));
 
 /**
  * Repo verification
@@ -312,3 +303,32 @@ export async function loadModules(settings) {
 
 export const isPageModule = module =>
   module.type === 'page' || module.type === 'page-panel';
+
+// Check if the Module API this module was built on is still supported
+const isModuleSupported = module =>
+  semver.gte(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
+
+// Check if a module is valid
+const isModuleValid = (module, settings) =>
+  isModuleSupported(module) &&
+  ((settings.devMode && !settings.verifyModuleSource) ||
+    (module.repository && module.repoOnline && module.repoVerified));
+
+// Check if a module is active, which means it's valid and not disabled by user
+const isModuleActive = (module, disabledModules) =>
+  !module.invalid && !disabledModules.includes(module.name);
+
+export const getAllModules = memoize(modules => Object.values(modules));
+
+export const getActiveModules = memoize((modules, disabledModules) =>
+  Object.values(modules).filter(module =>
+    isModuleActive(module, disabledModules)
+  )
+);
+
+export const getModuleIfActive = memoize(
+  (moduleName, modules, disabledModules) => {
+    const module = modules[moduleName];
+    return isModuleActive(module, disabledModules) ? module : null;
+  }
+);

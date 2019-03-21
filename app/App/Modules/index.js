@@ -6,7 +6,7 @@ import { remote } from 'electron';
 // Internal Global
 import googleanalytics from 'scripts/googleanalytics';
 import ContextMenuBuilder from 'contextmenu';
-import { selectEnabledModules } from 'selectors';
+import { getModuleIfActive } from 'api/modules';
 
 // Internal Local
 import PageModule from './PageModule';
@@ -18,8 +18,12 @@ import PagePanelModule from './PagePanelModule';
  * @class Modules
  * @extends {Component}
  */
-@connect(state => ({
-  modules: state.modules,
+@connect((state, props) => ({
+  module: getModuleIfActive(
+    props.match.params.name,
+    state.modules,
+    state.settings.disabledModules
+  ),
 }))
 class Modules extends React.Component {
   /**
@@ -62,11 +66,9 @@ class Modules extends React.Component {
    * @memberof Modules
    */
   render() {
-    const { modules, match } = this.props;
-    const module = modules[match.params.name];
-    if (!module || module.invalid) return null;
+    const { module } = this.props;
 
-    switch (module.type) {
+    switch (module && module.type) {
       case 'page':
         return <PageModule module={module} />;
       case 'page-panel':
