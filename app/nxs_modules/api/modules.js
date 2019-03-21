@@ -92,12 +92,23 @@ function prepareModule(module) {
   return module;
 }
 
+// Check if the Module API this module was built on is still supported
+const isModuleSupported = module =>
+  semver.gte(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
+
+// Check if a module is valid, if not then it must be disabled
+const isModuleValid = (module, settings) =>
+  isModuleSupported(module) &&
+  ((settings.devMode && !settings.verifyModuleSource) ||
+    (module.repository && module.repoOnline && module.repoVerified));
+
 /**
  * Repo verification
  * =============================================================================
  */
 
 const repoInfoSchema = {
+  additionalProperties: false,
   required: ['data'],
   properties: {
     verification: {
@@ -110,6 +121,7 @@ const repoInfoSchema = {
     },
     data: {
       type: 'object',
+      additionalProperties: false,
       required: ['repository'],
       properties: {
         moduleHash: { type: 'string' },
@@ -135,7 +147,7 @@ const validateRepoInfo = ajv.compile(repoInfoSchema);
 async function getRepoInfo(dirPath) {
   const filePath = join(dirPath, 'repo_info.json');
   // Check repo_info.json file exists
-  if (!existsSync(filePath)) return false;
+  if (!existsSync(filePath)) return null;
 
   // Check repo_info.json file schema
   try {
@@ -145,7 +157,7 @@ async function getRepoInfo(dirPath) {
       return repoInfo;
     }
   } catch (err) {
-    return false;
+    return null;
   }
 
   return null;
@@ -256,7 +268,7 @@ export async function validateModule(dirPath, settings) {
       }
     }
 
-    // Check if the repository info and verification
+    // Check the repository info and verification
     const repoInfo = await getRepoInfo(dirPath);
     if (repoInfo) {
       const [repoOnline, repoVerified] = await Promise.all([
@@ -302,16 +314,6 @@ export async function loadModules(settings) {
     return {};
   }
 }
-
-// Check if the Module API this module was built on is still supported
-export const isModuleSupported = module =>
-  semver.gte(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
-
-// Check if a module is valid, if not then it must be disabled
-export const isModuleValid = (module, settings) =>
-  isModuleSupported(module) &&
-  ((settings.devMode && !settings.verifyModuleSource) ||
-    (module.repository && module.repoOnline && module.repoVerified));
 
 export const isPageModule = module =>
   module.type === 'page' || module.type === 'page-panel';
