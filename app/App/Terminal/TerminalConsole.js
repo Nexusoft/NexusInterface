@@ -75,9 +75,7 @@ const actionCreators = {
 };
 
 const TerminalContent = styled.div({
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: 0,
+  gridArea: 'content',
   overflow: 'visible',
 });
 
@@ -275,12 +273,12 @@ class TerminalConsole extends Component {
     }
   };
 
-  tempasd = (incoming) => {
+  tempasd = incoming => {
     console.log(incoming);
     const asdfgh = incoming.split(' ')[0] + ' ';
     console.log(asdfgh);
     this.props.updateConsoleInput(asdfgh);
-  }
+  };
 
   /**
    * React Render
@@ -318,7 +316,7 @@ class TerminalConsole extends Component {
                     onSelect={updateConsoleInput}
                     keyControl={false}
                     suggestOn="change"
-                    ref={c => this.inputRef = c}
+                    ref={c => (this.inputRef = c)}
                     inputRef={this.inputRef}
                     inputProps={{
                       autoFocus: true,

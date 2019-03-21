@@ -35,9 +35,7 @@ const actionCreators = {
 };
 
 const TerminalContent = styled.div({
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: 0,
+  gridArea: 'content',
   overflow: 'hidden',
 });
 
