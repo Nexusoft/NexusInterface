@@ -17,13 +17,15 @@ import SettingsApp from './App';
 import SettingsCore from './Core';
 import SettingsStyle from './Style';
 import SettingsSecurity from './Security';
+import SettingsModules from './Modules';
 
 // Images
 import settingsIcon from 'images/settings.sprite.svg';
 import coreIcon from 'images/core.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
 import lockIcon from 'images/padlock.sprite.svg';
-import developerIcon from 'images/developer.sprite.svg';
+import leafIcon from 'images/leaf.sprite.svg';
+import legoIcon from 'images/lego-block.sprite.svg';
 
 const SettingsComponent = styled.div({
   height: '100%',
@@ -118,8 +120,13 @@ export default class Settings extends Component {
             />
             <Tab
               link={`${match.url}/Style`}
-              icon={developerIcon}
+              icon={leafIcon}
               text={<Text id="Settings.Style" />}
+            />
+            <Tab
+              link={`${match.url}/Modules`}
+              icon={legoIcon}
+              text={<Text id="Settings.Modules" />}
             />
           </SettingsTabBar>
 
@@ -132,6 +139,10 @@ export default class Settings extends Component {
                 component={SettingsSecurity}
               />
               <Route path={`${match.path}/Style`} component={SettingsStyle} />
+              <Route
+                path={`${match.path}/Modules`}
+                component={SettingsModules}
+              />
               <SettingsRedirect match={match} />
             </Switch>
           </SettingsContent>

@@ -242,6 +242,7 @@
   "Settings.Core": "Core",
   "Settings.Security": "Security",
   "Settings.Style": "Style",
+  "Settings.Modules": "Modules",
   "Settings.SetFee": "Set Transaction Fee?",
   "Settings.Yes": "Yes",
   "Settings.No": "No",

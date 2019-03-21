@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
-
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
@@ -22,7 +21,6 @@ import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
 
-// React-Redux mandatory methods
 const mapStateToProps = ({
   settings,
   core: {
