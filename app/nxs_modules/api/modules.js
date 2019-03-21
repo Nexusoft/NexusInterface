@@ -305,17 +305,17 @@ export const isPageModule = module =>
   module.type === 'page' || module.type === 'page-panel';
 
 // Check if the Module API this module was built on is still supported
-const isModuleSupported = module =>
+export const isModuleSupported = module =>
   semver.gte(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
 
 // Check if a module is valid
-const isModuleValid = (module, settings) =>
+export const isModuleValid = (module, settings) =>
   isModuleSupported(module) &&
   ((settings.devMode && !settings.verifyModuleSource) ||
     (module.repository && module.repoOnline && module.repoVerified));
 
 // Check if a module is active, which means it's valid and not disabled by user
-const isModuleActive = (module, disabledModules) =>
+export const isModuleActive = (module, disabledModules) =>
   !module.invalid && !disabledModules.includes(module.name);
 
 export const getAllModules = memoize(modules => Object.values(modules));
