@@ -16,15 +16,14 @@ const modulesDir = config.GetModulesDir();
 const ajv = new Ajv();
 const nxsPackageSchema = {
   additionalProperties: false,
-  required: ['name', 'version', 'apiVersion', 'type', 'files'],
+  required: ['name', 'displayName', 'version', 'apiVersion', 'type', 'files'],
   properties: {
     name: {
       type: 'string',
       // Allows lowercase letters, digits, underscore and dash, but must have at least one lowercase letter
       pattern: '^[0-9a-z_-]*[a-z][0-9a-z_-]*$',
     },
-    // Name to be displayed to users
-    // Fallback to `name` if not specified
+    // A user-friendly name to be displayed on the GUI
     displayName: { type: 'string' },
     version: {
       type: 'string',
