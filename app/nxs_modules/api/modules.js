@@ -217,12 +217,7 @@ async function isRepoVerified(repoInfo, module, dirPath) {
   const { data, verification } = repoInfo;
 
   // Check public key matching
-  if (
-    !verification ||
-    !data.moduleHash ||
-    verification.publicKey !== NEXUS_EMBASSY_PUBLIC_KEY
-  )
-    return false;
+  if (!verification || !data.moduleHash) return false;
 
   // Check hash of module files matching
   try {
@@ -232,12 +227,13 @@ async function isRepoVerified(repoInfo, module, dirPath) {
     return false;
   }
 
-  // Check signature validity
-  const verifier = crypto
+  // Check signature
+  const verified = crypto
     .createVerify('RSA-SHA256')
     .update(JSON.stringify(data))
-    .end();
-  return verifier.verify(verification.publicKey, verification.signature);
+    .end()
+    .verify(NEXUS_EMBASSY_PUBLIC_KEY, verification.signature);
+  return verified;
 }
 
 /**
