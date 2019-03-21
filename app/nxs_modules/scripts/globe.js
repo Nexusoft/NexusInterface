@@ -163,17 +163,17 @@ export default (DAT.Globe = function(container, opts) {
     mesh.name = 'globeObj';
     scene.add(mesh);
 
-    shader = Shaders['atmosphere'];
-    uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+    // shader = Shaders['atmosphere'];
+    // uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
-    material = new THREE.ShaderMaterial({
-      uniforms: uniforms,
-      vertexShader: shader.vertexShader,
-      fragmentShader: shader.fragmentShader,
-      side: THREE.BackSide,
-      blending: THREE.AdditiveBlending,
-      transparent: true,
-    });
+    // material = new THREE.ShaderMaterial({
+    //   uniforms: uniforms,
+    //   vertexShader: shader.vertexShader,
+    //   fragmentShader: shader.fragmentShader,
+    //   side: THREE.BackSide,
+    //   blending: THREE.AdditiveBlending,
+    //   transparent: true,
+    // });
 
     var curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(0, 0, 0),
@@ -331,6 +331,7 @@ export default (DAT.Globe = function(container, opts) {
   }
 
   function createPoints() {
+    console.log(this._baseGeometry, this.is_animated, this.points);
     if (this._baseGeometry !== undefined) {
       if (this.is_animated === false) {
         this.points = new THREE.Mesh(
@@ -343,6 +344,7 @@ export default (DAT.Globe = function(container, opts) {
         );
         this.points.name = 'Pillars';
       } else {
+        console.log('hi');
         if (this._baseGeometry.morphTargets.length < 8) {
           var padding = 8 - this._baseGeometry.morphTargets.length;
 
@@ -430,7 +432,7 @@ export default (DAT.Globe = function(container, opts) {
     point.position.z = 200 * Math.sin(phi) * Math.sin(theta);
 
     point.lookAt(mesh.position);
-
+    console.log('mesh', mesh);
     point.scale.z = Math.max(size, 0.1); // avoid non-invertible matrix
     point.updateMatrix();
 
@@ -443,7 +445,7 @@ export default (DAT.Globe = function(container, opts) {
       point.updateMatrix();
     }
     point.name = 'pillar';
-    // console.log(point);
+    console.log(point);
 
     subgeo.merge(point.geometry, point.matrix);
   }
@@ -576,11 +578,11 @@ export default (DAT.Globe = function(container, opts) {
     rotation.x += (target.x - rotation.x) * 0.1;
     rotation.y += (target.y - rotation.y) * 0.1;
     distance += (distanceTarget - distance) * 0.3;
-
+    // console.log(this);
     camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y);
     camera.position.y = distance * Math.sin(rotation.y);
     camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y);
-    // console.log(camera.position);
+    // console.log(camera);
     camera.lookAt(mesh.position);
 
     renderer.render(scene, camera);
