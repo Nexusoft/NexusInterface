@@ -21,9 +21,9 @@ const intro = keyframes`
 const borderRadius = 4;
 
 const PanelComponent = styled.div(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'stretch',
+  display: 'grid',
+  gridTemplateAreas: '"header" "body"',
+  gridTemplateRows: 'min-content 1fr',
   color: theme.foreground,
   width: '100%',
   height: '100%',
@@ -31,10 +31,10 @@ const PanelComponent = styled.div(({ theme }) => ({
 }));
 
 const PanelHeader = styled.div(({ theme }) => ({
+  gridArea: 'header',
   background: theme.background,
   borderTopLeftRadius: borderRadius,
   borderTopRightRadius: borderRadius,
-  flexShrink: 0,
   padding: '10px 30px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -49,30 +49,17 @@ const PanelTitle = styled.h3(({ theme }) => ({
   color: theme.primary,
 }));
 
-const PanelBody = styled.div(
-  ({ theme }) => ({
-    background: color.darken(theme.background, 0.3),
-    borderBottomLeftRadius: borderRadius,
-    borderBottomRightRadius: borderRadius,
-    flexGrow: 1,
-    padding: '20px 30px',
-    position: 'relative',
-  }),
-  ({ scrollable }) => ({
-    overflow: scrollable ? 'auto' : 'hidden',
-  })
-);
-
-const PanelBodyOverlay = styled.div({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
+const PanelBody = styled.div(({ theme }) => ({
+  gridArea: 'body',
+  background: color.darken(theme.background, 0.3),
+  borderBottomLeftRadius: borderRadius,
+  borderBottomRightRadius: borderRadius,
   padding: '20px 30px',
-});
+  position: 'relative',
+  overflow: 'auto',
+}));
 
-const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
+const Panel = ({ icon, title, controls, children }) => (
   <PanelComponent>
     <PanelHeader>
       <PanelTitle>
@@ -82,13 +69,7 @@ const Panel = ({ icon, title, controls, children, bodyScrollable = true }) => (
       {controls}
     </PanelHeader>
 
-    <PanelBody scrollable={bodyScrollable}>
-      {bodyScrollable ? (
-        children
-      ) : (
-        <PanelBodyOverlay>{children}</PanelBodyOverlay>
-      )}
-    </PanelBody>
+    <PanelBody>{children}</PanelBody>
   </PanelComponent>
 );
 

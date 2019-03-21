@@ -27,19 +27,17 @@ import developerIcon from 'images/developer.sprite.svg';
 
 const SettingsComponent = styled.div({
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
+  display: 'grid',
+  gridTemplateAreas: '"tab-bar" "content"',
+  gridTemplateRows: 'min-content 1fr',
 });
 
 const SettingsTabBar = styled(Tab.Bar)({
-  flexShrink: 0,
+  gridArea: 'tab-bar',
 });
 
 const SettingsContent = styled.div({
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: 0,
+  gridArea: 'content',
   overflow: 'auto',
   margin: '0 -30px',
   padding: '0 30px',
