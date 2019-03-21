@@ -140,7 +140,7 @@ const Stats = styled.div(
     transform: 'translateY(-50%)',
     whiteSpace: 'nowrap',
     // I don't like this but its a quick fix for super small screens. 
-    '@media (min-height: 10px) and (max-height: 713px)' : {
+    '@media (min-height: 10px) and (max-height: 720px)' : {
       
       fontSize: '75%',
       '& svg': {

@@ -11,7 +11,7 @@
 - Moved `Download Recent Database` to file dropdown
 - Trust and Stake numbers now only show 6 significant numbers
 - Replaced Rescan Wallet on `My Addressess` with `Check Wallet` and moved button to `Settings/Core`
-- Changed scalling on screens under 713px high
+- Changed scalling on screens under 720px high
 
 
 #### Fixes
