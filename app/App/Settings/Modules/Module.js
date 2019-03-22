@@ -11,15 +11,21 @@ import UIController from 'components/UIController';
 import { isModuleActive } from 'api/modules';
 import { updateSettings } from 'actions/settingsActionCreators';
 
-const ModuleComponent = styled.div(({ theme }) => ({
-  display: 'grid',
-  gridTemplateAreas: '"logo info controls"',
-  gridTemplateColumns: 'min-content 1fr min-content',
-  columnGap: '1em',
-  alignItems: 'center',
-  padding: '1em 0',
-  borderBottom: `1px solid ${theme.mixer(0.125)}`,
-}));
+const ModuleComponent = styled.div(
+  ({ theme }) => ({
+    display: 'grid',
+    gridTemplateAreas: '"logo info controls"',
+    gridTemplateColumns: 'min-content 1fr min-content',
+    columnGap: '1em',
+    alignItems: 'center',
+    padding: '1em 0',
+    borderBottom: `1px solid ${theme.mixer(0.125)}`,
+  }),
+  ({ invalid }) =>
+    invalid && {
+      opacity: 0.5,
+    }
+);
 
 const ModuleLogo = styled.div({
   fontSize: '2em',
@@ -105,7 +111,7 @@ class Module extends React.Component {
   render() {
     const { module, active } = this.props;
     return (
-      <ModuleComponent>
+      <ModuleComponent invalid={module.invalid}>
         <ModuleLogo>
           <ModuleIcon module={module} />
         </ModuleLogo>
