@@ -1,10 +1,11 @@
 // External
 import React from 'react';
 import styled from '@emotion/styled';
+import { shell } from 'electron';
 
 // Internal
 import Modal from 'components/Modal';
-import Link from 'components/Link';
+import ExternalLink from 'components/ExternalLink';
 
 const Line = styled.div({
   display: 'grid',
@@ -56,17 +57,17 @@ class ModuleDetailsModal extends React.Component {
           <Field label="Author">
             {module.author ? (
               <div>
-                <div>{module.author.name}</div>
+                <span>{module.author.name}</span>
                 {!!module.author.email && (
-                  <div>
-                    <Link
-                      as="a"
-                      target="_blank"
+                  <span className="space-left">
+                    -
+                    <ExternalLink
+                      className="space-left"
                       href={`mailto:${module.author.email}`}
                     >
                       {module.author.email}
-                    </Link>
-                  </div>
+                    </ExternalLink>
+                  </span>
                 )}
               </div>
             ) : (
@@ -76,9 +77,7 @@ class ModuleDetailsModal extends React.Component {
           <Field label="Repository">
             {module.repository ? (
               <div>
-                <Link as="a" target="_blank" href={repoUrl}>
-                  {repoUrl}
-                </Link>
+                <ExternalLink href={repoUrl}>{repoUrl}</ExternalLink>
               </div>
             ) : (
               <span className="dim">No information</span>
