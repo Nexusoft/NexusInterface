@@ -119,6 +119,17 @@ class SettingsApp extends Component {
     });
   };
 
+  toggleVerifyModuleSource = e => {
+    UIController.openConfirmDialog({
+      question: 'Refresh wallet?',
+      note: 'Wallet must be refreshed for the change to take effect',
+      yesCallback: () => {
+        this.updateHandlers('verifyModuleSource')(e);
+        location.reload();
+      },
+    });
+  };
+
   updateHandlers = (() => {
     const handlers = [];
     return settingName => {
@@ -280,7 +291,7 @@ class SettingsApp extends Component {
           >
             <Switch
               checked={settings.verifyModuleSource}
-              onChange={this.updateHandlers('verifyModuleSource')}
+              onChange={this.toggleVerifyModuleSource}
             />
           </SettingsField>
         </div>
