@@ -103,9 +103,8 @@ const repoInfoSchema = {
   properties: {
     verification: {
       type: 'object',
-      required: ['publicKey', 'signature'],
+      required: ['signature'],
       properties: {
-        publicKey: { type: 'string' },
         signature: { type: 'string' },
       },
     },
@@ -147,7 +146,7 @@ async function getRepoInfo(dirPath) {
       return repoInfo;
     }
   } catch (err) {
-    return null;
+    console.error(err);
   }
 
   return null;

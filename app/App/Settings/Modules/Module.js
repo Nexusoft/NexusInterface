@@ -11,6 +11,7 @@ import UIController from 'components/UIController';
 import { isModuleActive } from 'api/modules';
 import { lighten } from 'utils/color';
 import { updateSettings } from 'actions/settingsActionCreators';
+import ModuleDetailsModal from './ModuleDetailsModal';
 
 const ModuleComponent = styled.div(({ theme }) => ({
   display: 'grid',
@@ -24,10 +25,12 @@ const ModuleComponent = styled.div(({ theme }) => ({
 
 const ModuleLogo = styled.div({
   fontSize: '2em',
+  cursor: 'pointer',
 });
 
 const ModuleInfo = styled.div({
   gridArea: 'info',
+  cursor: 'pointer',
 });
 
 const ModuleControls = styled.div({
@@ -108,15 +111,22 @@ class Module extends React.Component {
     }
   };
 
+  openModuleDetails = () => {
+    UIController.openModal(ModuleDetailsModal, { module: this.props.module });
+  };
+
   render() {
     const { module, active } = this.props;
     return (
       <ModuleComponent>
-        <ModuleLogo className={module.invalid ? 'dim' : undefined}>
+        <ModuleLogo
+          className={module.invalid ? 'dim' : undefined}
+          onClick={this.openModuleDetails}
+        >
           <ModuleIcon module={module} />
         </ModuleLogo>
 
-        <ModuleInfo>
+        <ModuleInfo onClick={this.openModuleDetails}>
           <div className={module.invalid ? 'dim' : undefined}>
             <ModuleName>{module.displayName}</ModuleName>
             <ModuleVersion>v{module.version}</ModuleVersion>
