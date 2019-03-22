@@ -329,6 +329,6 @@ export const getActiveModules = memoize((modules, disabledModules) =>
 export const getModuleIfActive = memoize(
   (moduleName, modules, disabledModules) => {
     const module = modules[moduleName];
-    return isModuleActive(module, disabledModules) ? module : null;
+    return module && isModuleActive(module, disabledModules) ? module : null;
   }
 );
