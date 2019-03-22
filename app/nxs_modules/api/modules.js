@@ -264,6 +264,7 @@ export async function validateModule(dirPath, settings) {
       Object.assign(module, repoInfo.data, { repoOnline, repoVerified });
     }
 
+    module.deprecated = isModuleDeprecated(module);
     module.invalid = !isModuleValid(module, settings);
     return module;
   } catch (err) {
@@ -305,12 +306,12 @@ export const isPageModule = module =>
   module.type === 'page' || module.type === 'page-panel';
 
 // Check if the Module API this module was built on is still supported
-export const isModuleSupported = module =>
-  semver.gte(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
+export const isModuleDeprecated = module =>
+  semver.lt(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
 
 // Check if a module is valid
 export const isModuleValid = (module, settings) =>
-  isModuleSupported(module) &&
+  !isModuleDeprecated(module) &&
   ((settings.devMode && !settings.verifyModuleSource) ||
     (module.repository && module.repoOnline && module.repoVerified));
 

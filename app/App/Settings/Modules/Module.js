@@ -9,23 +9,18 @@ import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
 import { isModuleActive } from 'api/modules';
+import { lighten } from 'utils/color';
 import { updateSettings } from 'actions/settingsActionCreators';
 
-const ModuleComponent = styled.div(
-  ({ theme }) => ({
-    display: 'grid',
-    gridTemplateAreas: '"logo info controls"',
-    gridTemplateColumns: 'min-content 1fr min-content',
-    columnGap: '1em',
-    alignItems: 'center',
-    padding: '1em 0',
-    borderBottom: `1px solid ${theme.mixer(0.125)}`,
-  }),
-  ({ invalid }) =>
-    invalid && {
-      opacity: 0.5,
-    }
-);
+const ModuleComponent = styled.div(({ theme }) => ({
+  display: 'grid',
+  gridTemplateAreas: '"logo info controls"',
+  gridTemplateColumns: 'min-content 1fr min-content',
+  columnGap: '1em',
+  alignItems: 'center',
+  padding: '1em 0',
+  borderBottom: `1px solid ${theme.mixer(0.125)}`,
+}));
 
 const ModuleLogo = styled.div({
   fontSize: '2em',
@@ -51,6 +46,11 @@ const ModuleVersion = styled.span(({ theme }) => ({
 
 const ModuleDescription = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
+  fontSize: '.9em',
+}));
+
+const ModuleError = styled.div(({ theme }) => ({
+  color: lighten(theme.danger, 0.2),
   fontSize: '.9em',
 }));
 
@@ -111,19 +111,32 @@ class Module extends React.Component {
   render() {
     const { module, active } = this.props;
     return (
-      <ModuleComponent invalid={module.invalid}>
-        <ModuleLogo>
+      <ModuleComponent>
+        <ModuleLogo className={module.invalid ? 'dim' : undefined}>
           <ModuleIcon module={module} />
         </ModuleLogo>
 
         <ModuleInfo>
-          <div>
+          <div className={module.invalid ? 'dim' : undefined}>
             <ModuleName>{module.displayName}</ModuleName>
             <ModuleVersion>v{module.version}</ModuleVersion>
           </div>
           <div>
-            <ModuleDescription>{module.description}</ModuleDescription>
+            <ModuleDescription className={module.invalid ? 'dim' : undefined}>
+              {module.description}
+            </ModuleDescription>
           </div>
+          {!!module.deprecated && (
+            <ModuleError>Deprecated API version</ModuleError>
+          )}
+          {(!module.repository || !module.repoOnline) && (
+            <ModuleError>Module is not open source.</ModuleError>
+          )}
+          {!!module.repository && !module.repoVerified && (
+            <ModuleError>
+              Module is not verified that it matches the source code.
+            </ModuleError>
+          )}
         </ModuleInfo>
 
         <ModuleControls>
@@ -132,7 +145,11 @@ class Module extends React.Component {
               !module.invalid && (active ? 'Disable module' : 'Enable module')
             }
           >
-            <Switch checked={active} onChange={this.toggleModule} />
+            <Switch
+              checked={active}
+              onChange={this.toggleModule}
+              disabled={module.invalid}
+            />
           </Tooltip.Trigger>
         </ModuleControls>
       </ModuleComponent>
