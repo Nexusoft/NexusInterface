@@ -120,11 +120,12 @@ class SettingsApp extends Component {
   };
 
   toggleVerifyModuleSource = e => {
+    const verifyModuleSource = e.target.checked;
     UIController.openConfirmDialog({
       question: 'Refresh wallet?',
       note: 'Wallet must be refreshed for the change to take effect',
       yesCallback: () => {
-        this.updateHandlers('verifyModuleSource')(e);
+        this.props.updateSettings({ verifyModuleSource });
         location.reload();
       },
     });

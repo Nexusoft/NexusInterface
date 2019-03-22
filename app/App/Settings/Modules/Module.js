@@ -141,9 +141,7 @@ class Module extends React.Component {
 
         <ModuleControls>
           <Tooltip.Trigger
-            tooltip={
-              !module.invalid && (active ? 'Disable module' : 'Enable module')
-            }
+            tooltip={!module.invalid && (active ? 'Enabled' : 'Disabled')}
           >
             <Switch
               checked={active}
