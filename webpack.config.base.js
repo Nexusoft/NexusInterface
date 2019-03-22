@@ -9,8 +9,8 @@ import { dependencies as externals } from './app/package.json';
 import packageJson from './package.json';
 
 const appVersion = packageJson.version;
-const moduleApiVersion = packageJson.moduleApi.currentVersion;
-const supportedModuleApiVersion = packageJson.moduleApi.lowestSupportedVersion;
+const moduleApiVersion = packageJson.moduleApiVersion;
+const supportedModuleApiVersion = packageJson.supportedModuleApiVersion;
 const appId = packageJson.build.appId;
 const embassyPubKey = do {
   try {
