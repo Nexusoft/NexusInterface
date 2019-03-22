@@ -1,11 +1,14 @@
 // External
 import React from 'react';
 import styled from '@emotion/styled';
-import { shell } from 'electron';
 
 // Internal
 import Modal from 'components/Modal';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import ExternalLink from 'components/ExternalLink';
+import warningIcon from 'images/warning.sprite.svg';
+import linkIcon from 'images/link.sprite.svg';
 
 const Line = styled.div({
   display: 'grid',
@@ -50,7 +53,14 @@ class ModuleDetailsModal extends React.Component {
           <Field label="Display name">{module.displayName}</Field>
           <Field label="Module type">{module.type}</Field>
           <Field label="Version">{module.version}</Field>
-          <Field label="Nexus Module API version">{module.apiVersion}</Field>
+          <Field label="Nexus Module API version">
+            {
+              <span className={module.deprecated ? 'error' : undefined}>
+                {module.apiVersion}
+                {module.deprecated && ' (deprecated)'}
+              </span>
+            }
+          </Field>
           <Field label="Description">
             {module.description || <span className="dim">Not provided</span>}
           </Field>
@@ -77,10 +87,25 @@ class ModuleDetailsModal extends React.Component {
           <Field label="Repository">
             {module.repository ? (
               <div>
-                <ExternalLink href={repoUrl}>{repoUrl}</ExternalLink>
+                <Tooltip.Trigger tooltip={repoUrl}>
+                  <ExternalLink href={repoUrl}>
+                    <span className="v-align">Visit repository</span>
+                    <Icon icon={linkIcon} className="space-left" />
+                  </ExternalLink>
+                </Tooltip.Trigger>
+                {!module.repoOnline && (
+                  <Tooltip.Trigger tooltip="Repository does not exist or is private">
+                    <Icon icon={warningIcon} className="error space-left" />
+                  </Tooltip.Trigger>
+                )}
+                {!module.repoVerified && (
+                  <Tooltip.Trigger tooltip="Module is not verified to be derived from this repository">
+                    <Icon icon={warningIcon} className="error space-left" />
+                  </Tooltip.Trigger>
+                )}
               </div>
             ) : (
-              <span className="dim">No information</span>
+              <span className="error">No information</span>
             )}
           </Field>
         </Modal.Body>

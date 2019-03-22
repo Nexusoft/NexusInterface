@@ -87,6 +87,7 @@ const arrowAligning = (position, align) => {
 const Tooltip = styled.div(
   {
     whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
     maxWidth: 300,
     width: 'max-content',
     borderRadius: 4,

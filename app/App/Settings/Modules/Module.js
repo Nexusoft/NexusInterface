@@ -144,7 +144,7 @@ class Module extends React.Component {
           )}
           {!!module.repository && !module.repoVerified && (
             <ModuleError>
-              Module is not verified that it matches the source code.
+              Module is not verified to be derived from the provided repository.
             </ModuleError>
           )}
         </ModuleInfo>
