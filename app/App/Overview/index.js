@@ -17,7 +17,6 @@ import { getDifficulty } from 'actions/coreActionCreators';
 import * as helpers from 'scripts/helper.js';
 import * as RPC from 'scripts/rpc';
 import { timing, consts, animations } from 'styles';
-import NetworkGlobe from './NetworkGlobe';
 import Globe from './Globe';
 
 // Images
@@ -757,7 +756,6 @@ class Overview extends Component {
         {!!this.showingGlobe() && (
           <Globe
             handleOnLineRender={e => (this.redrawCurves = e)}
-            handleOnAddData={e => (this.reDrawEverything = e)}
             handleRemoveAllPoints={e => (this.removeAllPoints = e)}
             connections={connections}
             pillarColor={theme.globePillarColor}
@@ -765,16 +763,6 @@ class Overview extends Component {
             globeColor={theme.globeColor}
             lispPillarColor="#00ffff"
           />
-          // <NetworkGlobe
-          //   handleOnLineRender={e => (this.redrawCurves = e)}
-          //   // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
-          //   connections={connections}
-          //   handleOnAddData={e => (this.reDrawEverything = e)}
-          //   handleRemoveAllPoints={e => (this.removeAllPoints = e)}
-          //   pillarColor={theme.globePillarColor}
-          //   archColor={theme.globeArchColor}
-          //   globeColor={theme.globeColor}
-          // />
         )}
 
         <Stats left compact={!this.showingGlobe()}>

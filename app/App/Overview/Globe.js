@@ -56,10 +56,11 @@ export default class Globe extends Component {
     this.stop = this.stop.bind(this);
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
-    // this.createPoint = this.createPoint.bind(this);
-    this.pointController = this.pointController.bind(this);
+    this.animateArcs = this.animateArcs.bind(this);
+    this.pointRegister = this.pointRegister.bind(this);
     this.geoiplookup = null;
     this.pointRegistry = [];
+    this.curveRegistry = [];
     this.timesSkipped = 0;
   }
 
@@ -77,9 +78,10 @@ export default class Globe extends Component {
         )
       );
     }
-    this.props.handleOnLineRender(this.arcRender);
+
+    this.props.handleOnLineRender(this.animateArcs);
     this.props.handleRemoveAllPoints(this.removeAllPoints);
-    // this.props.handleOnAddData(this.pointController);
+
     const WIDTH = window.innerWidth;
     const HEIGHT = window.innerHeight;
     const VIEW_ANGLE = 45;
@@ -145,30 +147,12 @@ export default class Globe extends Component {
     this.controls = controls;
 
     // Add pin for user
-    fetch('http://www.geoplugin.net/json.gp')
-      .then(response => response.json())
-      .then(data => {
-        let self = new Point(
-          parseFloat(data.geoplugin_latitude),
-          parseFloat(data.geoplugin_longitude),
-          {
-            color: '#44EB08',
-            name: data.geoplugin_timezone,
-            type: 'SELF',
-          }
-        );
-        this.pointRegistry.push(self);
-        this.allPoints.add(self.pillar);
-      })
-      .catch(e => console.log(e));
+    this.addSelf();
+    this.pointRegister();
 
     this.threeRootElement.appendChild(renderer.domElement);
     window.addEventListener('resize', this.onWindowResize, false);
     this.start();
-
-    // setTimeout(() => {
-    //   this.removeAllPoints();
-    // }, 20000);
   }
 
   componentDidUpdate(prevProps) {
@@ -177,7 +161,7 @@ export default class Globe extends Component {
       this.props.connections !== prevProps.connections ||
       this.timesSkipped > 15
     ) {
-      this.pointController();
+      this.pointRegister();
       this.timesSkipped = 0;
     }
   }
@@ -187,7 +171,7 @@ export default class Globe extends Component {
     this.threeRootElement.removeChild(this.renderer.domElement);
   }
 
-  async pointController() {
+  async pointRegister() {
     const peerInfo = await RPC.PROMISE('getpeerinfo', []);
 
     // take the peerInfo look up the Geo Data in the maxmind DB
@@ -207,17 +191,24 @@ export default class Globe extends Component {
           },
         };
       })
-      .filter(peer => {
+      .filter((peer, i, array) => {
         let existIndex = this.pointRegistry.findIndex(
           point => peer.lat === point.lat && peer.lng === point.lng
+        );
+        let duplicateIndex = array.findIndex(
+          internalPoint =>
+            peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
         );
 
         if (existIndex >= 0) {
           this.pointRegistry[existIndex] = {
             ...this.pointRegistry[existIndex],
-            type: peer.type,
+            params: {
+              ...this.pointRegistry[existIndex].params,
+              type: peer.params.type,
+            },
           };
-        } else {
+        } else if (duplicateIndex === i) {
           return peer;
         }
       });
@@ -231,7 +222,7 @@ export default class Globe extends Component {
       if (existIndex <= 0 || point.params.type === 'SELF') {
         return point;
       } else {
-        this.destroyPoint(point.pillar);
+        this.destroyPoint(point);
       }
     });
 
@@ -240,35 +231,130 @@ export default class Globe extends Component {
       this.pointRegistry.push(point);
       this.allPoints.add(point.pillar);
     });
+    this.arcRegister();
+  }
 
-    console.log(newPoints, this.pointRegistry);
+  addSelf() {
+    let selfIndex = this.pointRegistry.indexOf(
+      point => point.params.type === 'SELF'
+    );
+
+    if (selfIndex < 0) {
+      fetch('http://www.geoplugin.net/json.gp')
+        .then(response => response.json())
+        .then(data => {
+          let self = new Point(
+            parseFloat(data.geoplugin_latitude),
+            parseFloat(data.geoplugin_longitude),
+            {
+              color: '#44EB08',
+              name: data.geoplugin_timezone,
+              type: 'SELF',
+            }
+          );
+          this.pointRegistry.push(self);
+          this.allPoints.add(self.pillar);
+          this.arcRegister();
+        })
+        .catch(e => console.log(e));
+    }
   }
 
   removeAllPoints() {
     this.pointRegistry.map(point => {
       if (point.params.type === 'SELF') {
         setTimeout(() => {
-          this.destroyPoint(point.pillar);
+          this.destroyPoint(point);
         }, 11000);
       } else {
         setTimeout(() => {
-          this.destroyPoint(point.pillar);
+          this.destroyPoint(point);
         }, Math.random() * 10000);
       }
     });
-    this.pointRegistry = [];
   }
 
   destroyPoint(deadPoint) {
-    console.log(deadPoint, this.allPoints);
-    this.allPoints.remove(deadPoint);
-    deadPoint.geometry.dispose();
-    deadPoint.material.dispose();
-    deadPoint = undefined;
-  }
-  //////////////////////////////////////////////////////////
+    this.pointRegistry = this.pointRegistry.filter(point => {
+      if (point.pillar.uuid !== deadPoint.pillar.uuid) return point;
+    });
 
-  //////////////////////////////////////////////////////////
+    this.allPoints.remove(deadPoint.pillar);
+    this.curveRegistry
+      .filter(arc => {
+        if (
+          (arc.pointOne.lat === deadPoint.lat &&
+            arc.pointOne.lat === deadPoint.lat) ||
+          (arc.pointTwo.lat === deadPoint.lat &&
+            arc.pointTwo.lat === deadPoint.lat)
+        )
+          return arc;
+      })
+      .map(arc => {
+        this.destroyArc(arc);
+      });
+
+    deadPoint.pillar.geometry.dispose();
+    deadPoint.pillar.material.dispose();
+    deadPoint.pillar = undefined;
+  }
+
+  arcRegister() {
+    let self = this.pointRegistry[
+      this.pointRegistry.findIndex(element => {
+        return element.params.type === 'SELF';
+      })
+    ];
+
+    if (self) {
+      this.pointRegistry.forEach(point => {
+        let existIndex = this.curveRegistry.findIndex(curve => {
+          if (
+            curve.pointOne.lat === point.lat &&
+            curve.pointOne.lng === point.lng &&
+            curve.pointTwo.lat === self.lat &&
+            curve.pointTwo.lng === self.lng
+          ) {
+            return curve;
+          } else return false;
+        });
+
+        if (
+          (point.lat === self.lat && point.lng === self.lng) ||
+          existIndex >= 0
+        ) {
+          return;
+        } else {
+          let temp = new Curve(point, self, {
+            color: this.props.archColor,
+          });
+          this.allArcs.add(temp.arc);
+          temp.play();
+          this.curveRegistry.push(temp);
+        }
+      });
+    } else {
+      this.addSelf();
+    }
+  }
+
+  animateArcs() {
+    this.curveRegistry.map(arc => {
+      arc.play();
+    });
+  }
+
+  destroyArc(deadCurve) {
+    this.curveRegistry = this.curveRegistry.filter(curve => {
+      if (curve.arc.uuid !== deadCurve.arc.uuid) return curve;
+    });
+
+    this.allArcs.remove(deadCurve.arc);
+    deadCurve.arc.geometry.dispose();
+    deadCurve.arc.material.dispose();
+    deadCurve.arc = undefined;
+  }
+
   onWindowResize() {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
@@ -296,16 +382,6 @@ export default class Globe extends Component {
   }
 
   render() {
-    if (this.pointRegistry.length > 2) {
-      // console.log(this.pointRegistry, this.allPoints);
-      // console.log(
-      //   new Point(this.pointRegistry[0].lat, this.pointRegistry[0].lng, {
-      //     color: this.props.pillarColor,
-      //     name: 'booya',
-      //   })
-      // );
-    }
-
     return (
       <GlobeContainer>
         <div ref={element => (this.threeRootElement = element)} />

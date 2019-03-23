@@ -22,31 +22,32 @@ function clamp(num, min, max) {
 }
 
 function coordinateToPosition(lat, lng, radius) {
-  const DEGREE_TO_RADIAN = Math.PI / 180;
-  const phi = (90 - lat) * DEGREE_TO_RADIAN;
-  const theta = lng * DEGREE_TO_RADIAN;
+  const phi = ((90 - lat) * Math.PI) / 180;
+  const theta = (-lng * Math.PI) / 180;
 
   return new THREE.Vector3(
-    -radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.sin(phi) * Math.cos(theta),
     radius * Math.cos(phi),
     radius * Math.sin(phi) * Math.sin(theta)
   );
 }
 
 export default class Curve {
-  constructor(pointOne, pointTwo, style) {
+  constructor(pointOne, pointTwo, params) {
     this.pointOne = pointOne;
     this.pointTwo = pointTwo;
+
     const material = new THREE.LineBasicMaterial({
       blending: THREE.AdditiveBlending,
-      opacity: 0.6, // style.opacity,
+      opacity: params.opacity || 0.6,
       transparent: true,
-      color: '#00ffff', // style.color,
-      linewidth: 1.6, // style.width,
+      color: params.color || '#00ffff',
+      linewidth: params.linewidth || 1.6,
       linejoin: 'bevel',
     });
 
-    this.curveSegments = 40;
+    this.index = 0;
+    this.curveSegments = 50;
     this.curveGeometry = new THREE.BufferGeometry();
 
     const spline = getSplineFromCoords(this.pointOne, this.pointTwo);
@@ -63,21 +64,22 @@ export default class Curve {
       'position',
       new THREE.BufferAttribute(points, 3)
     );
-    this.curveGeometry.setDrawRange(0, 32);
+    this.curveGeometry.setDrawRange(0, 50);
 
-    this.mesh = new THREE.Line(this.curveGeometry, material);
+    this.arc = new THREE.Line(this.curveGeometry, material);
   }
 
-  hasStopped = () => index > curveSegments;
-
   play = () => {
-    if (this.hasStopped()) return;
-    index += 1;
-    this.curveGeometry.setDrawRange(0, index);
+    if (this.index > this.curveSegments) {
+      this.index = 0;
+      return;
+    }
+    this.index += 1;
+    this.curveGeometry.setDrawRange(0, this.index);
     this.curveGeometry.attributes.position.needsUpdate = true;
     setTimeout(() => {
       this.play();
-    }, 50);
+    }, 40);
   };
 
   stop = () => {
@@ -86,7 +88,7 @@ export default class Curve {
   };
 
   restart = () => {
-    index = 1;
+    this.index = 1;
     this.curveGeometry.setDrawRange(0, 1);
   };
 }
