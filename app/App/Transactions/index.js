@@ -582,14 +582,14 @@ class Transactions extends Component {
       this.props.selectedAccount === undefined
     ) {
       incomingMyAccounts = this.props.myAccounts;
-      promisList.push(RPC.PROMISE('listtransactions', ['*', 9999, 0]));
+      promisList.push(RPC.PROMISE('listtransactions', ['*', 9999, 0])); //TODO: need to change this so that is gets everyting, this will eventually fail.
     } else {
       incomingMyAccounts = this.props.myAccounts[
         this.props.selectedAccount - 1
       ];
       listedaccounts.push(incomingMyAccounts.account);
       promisList.push(
-        RPC.PROMISE('listtransactions', [incomingMyAccounts.account, 9999, 0])
+        RPC.PROMISE('listtransactions', [incomingMyAccounts.account, 9999, 0]) //TODO: need to change this so that is gets everyting, this will eventually fail.
       );
     }
     let tempWalletTransactions = [];
