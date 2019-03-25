@@ -14,7 +14,7 @@
 - Replaced Rescan Wallet on `My Addressess` with `Check Wallet` and moved button to `Settings/Core`
 - Changed scalling on screens under 720px high
 - The Sample Address in Style Settings has been replaced with the User's Default Address
-
+- The `X` on the add or edit contact form is now more visible 
 
 #### Fixes
 - Fixed typo on Israeli Shekel using the wrong ISO code
