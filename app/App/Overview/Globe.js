@@ -168,6 +168,8 @@ export default class Globe extends Component {
 
   componentWillUnmount() {
     this.stop();
+    window.removeEventListener('resize', this.onWindowResize, false);
+    this.controls.dispose();
     this.threeRootElement.removeChild(this.renderer.domElement);
   }
 
@@ -177,6 +179,7 @@ export default class Globe extends Component {
     // take the peerInfo look up the Geo Data in the maxmind DB
     // and if there are any points that exist and match coords
     // update the registery entry data
+    // if (!peerInfo) return;
     let newPoints = peerInfo
       .map(peer => {
         let GeoData = this.geoiplookup.get(peer.addr.split(':')[0]);
