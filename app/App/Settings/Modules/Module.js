@@ -10,6 +10,7 @@ import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
 import { isModuleActive } from 'api/modules';
 import { lighten } from 'utils/color';
+import { timing } from 'styles';
 import { updateSettings } from 'actions/settingsActionCreators';
 import ModuleDetailsModal from './ModuleDetailsModal';
 
@@ -21,6 +22,11 @@ const ModuleComponent = styled.div(({ theme }) => ({
   alignItems: 'center',
   padding: '1em 0',
   borderBottom: `1px solid ${theme.mixer(0.125)}`,
+  opacity: 0.8,
+  transition: `opacity ${timing.normal}`,
+  '&:hover': {
+    opacity: 1,
+  },
 }));
 
 const ModuleLogo = styled.div({

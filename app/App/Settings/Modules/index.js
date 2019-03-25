@@ -7,6 +7,7 @@ import { getAllModules } from 'api/modules';
 import { switchSettingsTab } from 'actions/uiActionCreators';
 import SettingsContainer from 'components/SettingsContainer';
 import Module from './Module';
+import AddModule from './AddModule';
 
 @connect(
   state => ({
@@ -23,6 +24,7 @@ class SettingsModules extends React.Component {
   render() {
     return (
       <SettingsContainer>
+        <AddModule />
         {this.props.modules.map(module => (
           <Module key={module.name} module={module} />
         ))}
