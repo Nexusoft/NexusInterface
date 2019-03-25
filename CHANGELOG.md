@@ -5,6 +5,7 @@
 - New CSV download functionality for Transaction page
 - New Currency icons for fiat balance
 - Added links to the exchanges on the Market page
+- New Globe backend code, will allow for expanded functionality
 
 #### Adjustments
 - There is now a max of `0.1` Nexus for the transaction fee setting
@@ -12,6 +13,7 @@
 - Trust and Stake numbers now only show 6 significant numbers
 - Replaced Rescan Wallet on `My Addressess` with `Check Wallet` and moved button to `Settings/Core`
 - Changed scalling on screens under 720px high
+- The Sample Address in Style Settings has been replaced with the User's Default Address
 
 
 #### Fixes
