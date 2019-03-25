@@ -139,6 +139,14 @@ const Stats = styled.div(
     top: '50%',
     transform: 'translateY(-50%)',
     whiteSpace: 'nowrap',
+    // I don't like this but its a quick fix for super small screens. 
+    '@media (min-height: 10px) and (max-height: 720px)' : {
+      
+      fontSize: '75%',
+      '& svg': {
+        transform: 'scale(0.75)',
+      },
+    },
   },
   ({ left, compact }) =>
     left && {
