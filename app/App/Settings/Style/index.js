@@ -131,7 +131,6 @@ class SettingsStyle extends Component {
         sampleAddress: myAddress,
       }
     );
-     console.log(myAddress);
   }
 
   /**
