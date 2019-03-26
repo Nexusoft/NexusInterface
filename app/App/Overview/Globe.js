@@ -58,6 +58,8 @@ export default class Globe extends Component {
     this.onWindowResize = this.onWindowResize.bind(this);
     this.animateArcs = this.animateArcs.bind(this);
     this.pointRegister = this.pointRegister.bind(this);
+    this.contextLostHandler = this.contextLostHandler.bind(this);
+    this.contextRestoredHandler = this.contextRestoredHandler.bind(this);
     this.geoiplookup = null;
     this.pointRegistry = [];
     this.curveRegistry = [];
@@ -152,27 +154,30 @@ export default class Globe extends Component {
 
     this.renderer.context.canvas.addEventListener(
       'webglcontextlost',
-      function(event) {
-        event.preventDefault();
-        console.error('CONTEXT LOST!!');
-        this.stop();
-      },
+      this.contextLostHandler,
       false
     );
 
     this.renderer.context.canvas.addEventListener(
       'webglcontextrestored',
-      function(event) {
-        console.error('CONTEXT RESTORED');
-        this.start();
-        console.error('RESTORED GLOBE');
-      },
+      this.contextRestoredHandler,
       false
     );
 
     this.threeRootElement.appendChild(renderer.domElement);
     window.addEventListener('resize', this.onWindowResize, false);
     this.start();
+  }
+  contextRestoredHandler() {
+    console.error('CONTEXT RESTORED');
+    this.start();
+    console.error('RESTORED GLOBE');
+  }
+
+  contextLostHandler(event) {
+    event.preventDefault();
+    console.error('CONTEXT LOST!!');
+    this.stop();
   }
 
   componentDidUpdate(prevProps) {
