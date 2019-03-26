@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Icon from 'components/Icon';
+import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import ExternalLink from 'components/ExternalLink';
 import warningIcon from 'images/warning.sprite.svg';
@@ -37,9 +38,51 @@ const Field = ({ label, children }) => (
   </Line>
 );
 
+const InstallerWrapper = styled.div(({ theme }) => ({
+  textAlign: 'center',
+  padding: '20px 0',
+  margin: '0 50px',
+  borderTop: `2px solid ${theme.primary}`,
+}));
+
+const InstallerWarning = styled.div({
+  fontSize: '.9em',
+});
+
+class Installer extends React.Component {
+  state = {
+    installing: false,
+  };
+
+  render() {
+    const { installing } = this.state;
+
+    return (
+      <Modal.Footer>
+        <InstallerWrapper>
+          <InstallerWarning>
+            Warning: This module is written by a third party, Nexus is NOT
+            responsible for its quality or legitimacy. Please make sure to do
+            your due diligence before installing third party modules and use
+            them with your own risk.
+          </InstallerWarning>
+          <Button
+            skin="primary"
+            wide
+            className="mt1"
+            disabled={installing || !!module.invalid}
+          >
+            {installing ? 'Installing Module...' : 'Install Module'}
+          </Button>
+        </InstallerWrapper>
+      </Modal.Footer>
+    );
+  }
+}
+
 class ModuleDetailsModal extends React.Component {
   render() {
-    const { module } = this.props;
+    const { module, forInstall } = this.props;
     const { host, owner, repo, commit } = module.repository || {};
     const repoUrl = module.repository
       ? `https://${host}/${owner}/${repo}/tree/${commit}`
@@ -109,6 +152,8 @@ class ModuleDetailsModal extends React.Component {
             )}
           </Field>
         </Modal.Body>
+
+        {!!forInstall && <Installer module={module} />}
       </Modal>
     );
   }
