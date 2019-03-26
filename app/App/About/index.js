@@ -6,15 +6,33 @@ Last Modified by: Brian Smith
 
 // External Dependencies
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { shell } from 'electron';
 // Internal Dependencies
-import styles from './style.css';
 import Panel from 'components/Panel';
 import Text from 'components/Text';
+import styled from '@emotion/styled';
 
 // Images
 import nexusLogo from 'images/logo-full.svg';
 import updateicon from 'images/unlock.png';
+
+
+const Column = styled.col(
+
+);
+
+
+
+
+// React-Redux mandatory methods
+const mapStateToProps = ({
+  core: {
+    info: { version },
+  },
+}) => ({
+  version,
+});
 
 /**
  * About Page
@@ -22,6 +40,9 @@ import updateicon from 'images/unlock.png';
  * @class About
  * @extends {Component}
  */
+@connect(
+  mapStateToProps
+)
 class About extends Component {
   // Class Methods
   /**

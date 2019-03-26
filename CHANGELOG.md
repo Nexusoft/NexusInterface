@@ -23,6 +23,7 @@
 - Fixed Pending Transaction label in transaction detail modal
 - Fixed `Fee` not displaying on send transactions in the detail modal
 - Fixed price history file not being created/read properly 
+- About page correctly displays the backend core version
 
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)
