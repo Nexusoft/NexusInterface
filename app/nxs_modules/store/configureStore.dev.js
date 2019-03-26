@@ -3,7 +3,7 @@ import { createHashHistory } from 'history';
 import thunk from 'redux-thunk';
 import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
-import createRootReducer from 'reducers';
+import createRootReducer from './reducers';
 
 import { addLocaleData } from 'react-intl';
 import itLocaleData from 'react-intl/locale-data/it';
@@ -56,7 +56,7 @@ const configureStore = () => {
   const store = createStore(createRootReducer(history), enhancer);
 
   if (module.hot) {
-    module.hot.accept('reducers', () =>
+    module.hot.accept('./reducers', () =>
       store.replaceReducer(createRootReducer(history))
     );
   }
