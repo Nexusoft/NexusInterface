@@ -150,6 +150,26 @@ export default class Globe extends Component {
     this.addSelf();
     this.pointRegister();
 
+    this.renderer.context.canvas.addEventListener(
+      'webglcontextlost',
+      function(event) {
+        event.preventDefault();
+        console.error('CONTEXT LOST!!');
+        this.stop();
+      },
+      false
+    );
+
+    this.renderer.context.canvas.addEventListener(
+      'webglcontextrestored',
+      function(event) {
+        console.error('CONTEXT RESTORED');
+        this.start();
+        console.error('RESTORED GLOBE');
+      },
+      false
+    );
+
     this.threeRootElement.appendChild(renderer.domElement);
     window.addEventListener('resize', this.onWindowResize, false);
     this.start();
