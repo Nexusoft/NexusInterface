@@ -230,7 +230,7 @@ async function isRepoVerified(repoInfo, module, dirPath) {
  * =============================================================================
  */
 
-export async function validateModule(dirPath, settings) {
+export async function validateModule(dirPath, { devMode, verifyModuleSource }) {
   try {
     const nxsPackagePath = join(dirPath, 'nxs_package.json');
     if (!existsSync(nxsPackagePath) || !statSync(nxsPackagePath).isFile) {
@@ -264,7 +264,7 @@ export async function validateModule(dirPath, settings) {
     }
 
     module.deprecated = isModuleDeprecated(module);
-    module.invalid = !isModuleValid(module, settings);
+    module.invalid = !isModuleValid(module, { devMode, verifyModuleSource });
     return module;
   } catch (err) {
     console.error(err);
@@ -272,13 +272,15 @@ export async function validateModule(dirPath, settings) {
   }
 }
 
-export async function loadModules(settings) {
+export async function loadModules({ devMode, verifyModuleSource }) {
   try {
     if (!existsSync(modulesDir)) return {};
     const dirNames = await promises.readdir(modulesDir);
     const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
     const results = await Promise.all(
-      dirPaths.map(path => validateModule(path, settings))
+      dirPaths.map(path =>
+        validateModule(path, { devMode, verifyModuleSource })
+      )
     );
 
     const modules = results.reduce((map, result, i) => {
@@ -309,9 +311,9 @@ export const isModuleDeprecated = module =>
   semver.lt(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
 
 // Check if a module is valid
-export const isModuleValid = (module, settings) =>
+export const isModuleValid = (module, { devMode, verifyModuleSource }) =>
   !isModuleDeprecated(module) &&
-  ((settings.devMode && !settings.verifyModuleSource) ||
+  ((devMode && !verifyModuleSource) ||
     (module.repository && module.repoOnline && module.repoVerified));
 
 // Check if a module is active, which means it's valid and not disabled by user
