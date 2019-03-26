@@ -15,11 +15,16 @@ const Legend = styled.legend(({ theme }) => ({
   color: theme.mixer(0.75),
 }));
 
-const FieldSet = ({ legend, children, ...rest }) => (
-  <FieldSetComponent {...rest}>
-    <Legend>{legend}</Legend>
-    {children}
-  </FieldSetComponent>
-);
+class FieldSet extends React.Component {
+  render() {
+    const { legend, children, ...rest } = this.props;
+    return (
+      <FieldSetComponent {...rest}>
+        <Legend>{legend}</Legend>
+        {children}
+      </FieldSetComponent>
+    );
+  }
+}
 
 export default FieldSet;
