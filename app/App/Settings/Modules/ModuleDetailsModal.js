@@ -99,8 +99,13 @@ class ModuleDetailsModal extends React.Component {
           <Field label="Nexus Module API version">
             {
               <span className={module.deprecated ? 'error' : undefined}>
-                {module.apiVersion}
-                {module.deprecated && ' (deprecated)'}
+                <span className="v-align">{module.apiVersion}</span>
+                {module.deprecated && (
+                  <span className="error space-left">
+                    <Icon icon={warningIcon} />
+                    <span className="v-align space-left">(deprecated)</span>
+                  </span>
+                )}
               </span>
             }
           </Field>
@@ -127,7 +132,7 @@ class ModuleDetailsModal extends React.Component {
               <span className="dim">No information</span>
             )}
           </Field>
-          <Field label="Repository">
+          <Field label="Source code">
             {module.repository ? (
               <div>
                 <Tooltip.Trigger tooltip={repoUrl}>
@@ -137,18 +142,27 @@ class ModuleDetailsModal extends React.Component {
                   </ExternalLink>
                 </Tooltip.Trigger>
                 {!module.repoOnline && (
-                  <Tooltip.Trigger tooltip="Repository does not exist or is private">
-                    <Icon icon={warningIcon} className="error space-left" />
-                  </Tooltip.Trigger>
+                  <div className="error">
+                    <Icon icon={warningIcon} />
+                    <span className="v-align space-left">
+                      Repository does not exist or is private
+                    </span>
+                  </div>
                 )}
                 {!module.repoVerified && (
-                  <Tooltip.Trigger tooltip="Module is not verified to be derived from this repository">
-                    <Icon icon={warningIcon} className="error space-left" />
-                  </Tooltip.Trigger>
+                  <div className="error">
+                    <Icon icon={warningIcon} />
+                    <span className="v-align space-left">
+                      Module is not verified to be derived from this repository
+                    </span>
+                  </div>
                 )}
               </div>
             ) : (
-              <span className="error">No information</span>
+              <div className="error">
+                <Icon icon={warningIcon} />
+                <span className="v-align space-left">No information</span>
+              </div>
             )}
           </Field>
         </Modal.Body>
