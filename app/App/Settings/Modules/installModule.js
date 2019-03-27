@@ -13,6 +13,15 @@ import ModuleDetailsModal from './ModuleDetailsModal';
 // Temp directory for extracting module before installing
 const tempModuleDir = join(config.GetAppDataDirectory(), '.temp_module');
 
+/**
+ * Install a module from either an archive file of a directory.
+ * If it's an archive file then it will be decompressed to a
+ * temp directory then continue to install from that directory.
+ *
+ * @export
+ * @param {string} path
+ * @returns
+ */
 export default async function installModule(path) {
   try {
     if (!fs.existsSync(path)) {
@@ -52,6 +61,12 @@ export default async function installModule(path) {
   }
 }
 
+/**
+ * Install a module from a directory
+ *
+ * @param {string} path
+ * @returns
+ */
 async function installFromDirectory(path) {
   const {
     settings: { devMode, verifyModuleSource },
@@ -98,6 +113,15 @@ async function installFromDirectory(path) {
   });
 }
 
+/**
+ * Copy all files of a module from source to the destination
+ * including nxs_package.json and repo_info.json
+ *
+ * @param {*} files
+ * @param {*} source
+ * @param {*} dest
+ * @returns
+ */
 async function copyModule(files, source, dest) {
   // Create all the missing sub-directories sequentially first
   // The creations would be duplicated if they're parallel
@@ -135,6 +159,9 @@ async function mkdirRecursive(path) {
   }
   await fs.promises.mkdir(path);
 }
+
+// Utility functions
+// =========================================
 
 // TODO: make this a common utility
 function confirm(options) {

@@ -48,11 +48,22 @@ const InnerMessage = styled.div(
     }
 );
 
+/**
+ * The Add Module section in Modules Settings tab
+ *
+ * @class AddModule
+ * @extends {React.Component}
+ */
 class AddModule extends React.Component {
   state = {
     checking: false,
   };
 
+  /**
+   *
+   *
+   * @memberof AddModule
+   */
   browseFiles = () => {
     remote.dialog.showOpenDialog(
       {
@@ -73,6 +84,11 @@ class AddModule extends React.Component {
     );
   };
 
+  /**
+   *
+   *
+   * @memberof AddModule
+   */
   browseDirectories = () => {
     remote.dialog.showOpenDialog(
       {
@@ -87,23 +103,37 @@ class AddModule extends React.Component {
     );
   };
 
+  /**
+   * Override react-dropzone's default getFilesFromEvent function because
+   * by default the full paths of dropped files are tripped off
+   *
+   * @memberof AddModule
+   */
   getFilesFromEvent = event => {
     if (!event || !event.dataTransfer) return [];
     if (event.type === 'drop') {
-      console.log(event.type, Array.from(event.dataTransfer.files));
       return Array.from(event.dataTransfer.files);
     } else {
-      console.log(event.type, Array.from(event.dataTransfer.items));
       return Array.from(event.dataTransfer.items);
     }
   };
 
+  /**
+   *
+   *
+   * @memberof AddModule
+   */
   handleDrop = acceptedFiles => {
     if (acceptedFiles && acceptedFiles.length > 0) {
       this.startInstall(acceptedFiles[0].path);
     }
   };
 
+  /**
+   *
+   *
+   * @memberof AddModule
+   */
   startInstall = async path => {
     this.setState({ checking: true });
     try {
@@ -113,6 +143,12 @@ class AddModule extends React.Component {
     }
   };
 
+  /**
+   *
+   *
+   * @returns
+   * @memberof AddModule
+   */
   render() {
     const { checking } = this.state;
     return (
