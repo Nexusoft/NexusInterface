@@ -72,7 +72,7 @@
   "Settings.DisableAutoUpdateNote": "Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience",
   "Settings.KeepAutoUpdate": "Keep Auto Update On",
   "Settings.TurnOffAutoUpdate": "Turn Auto Update Off",
-  "Settings.DaemonLoading": "Please wait for the daemon to load",
+  "Settings.DaemonLoading": "Loading wallet, please wait",
   "Settings.SettingsSaved": "Settings Saved",
   "Settings.SavingSettings": "Saving Settings...",
   "Settings.RestartingDaemon": "Restarting daemon...",
