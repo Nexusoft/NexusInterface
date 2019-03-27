@@ -10,26 +10,31 @@ import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import UIController from 'components/UIController';
 import { isModuleActive } from 'api/modules';
-import { lighten } from 'utils/color';
 import { timing } from 'styles';
 import { updateSettings } from 'actions/settingsActionCreators';
 import warningIcon from 'images/warning.sprite.svg';
 import ModuleDetailsModal from './ModuleDetailsModal';
 
-const ModuleComponent = styled.div(({ theme }) => ({
-  display: 'grid',
-  gridTemplateAreas: '"logo info controls"',
-  gridTemplateColumns: 'min-content 1fr min-content',
-  columnGap: '1em',
-  alignItems: 'center',
-  padding: '1em 0',
-  borderBottom: `1px solid ${theme.mixer(0.125)}`,
-  opacity: 0.8,
-  transition: `opacity ${timing.normal}`,
-  '&:hover': {
-    opacity: 1,
-  },
-}));
+const ModuleComponent = styled.div(
+  ({ theme }) => ({
+    display: 'grid',
+    gridTemplateAreas: '"logo info controls"',
+    gridTemplateColumns: 'min-content 1fr min-content',
+    columnGap: '1em',
+    alignItems: 'center',
+    padding: '1em 0',
+    borderBottom: `1px solid ${theme.mixer(0.125)}`,
+    opacity: 0.8,
+    transition: `opacity ${timing.normal}`,
+    '&:hover': {
+      opacity: 1,
+    },
+  }),
+  ({ last }) =>
+    last && {
+      borderBottom: 'none',
+    }
+);
 
 const ModuleLogo = styled.div({
   fontSize: '2em',
@@ -57,11 +62,6 @@ const ModuleVersion = styled.span(({ theme }) => ({
 
 const ModuleDescription = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
-  fontSize: '.9em',
-}));
-
-const ModuleError = styled.div(({ theme }) => ({
-  color: lighten(theme.danger, 0.2),
   fontSize: '.9em',
 }));
 
@@ -126,9 +126,9 @@ class Module extends React.Component {
   };
 
   render() {
-    const { module, active } = this.props;
+    const { module, active, ...rest } = this.props;
     return (
-      <ModuleComponent>
+      <ModuleComponent {...rest}>
         <ModuleLogo
           className={module.invalid ? 'dim' : undefined}
           onClick={this.openModuleDetails}

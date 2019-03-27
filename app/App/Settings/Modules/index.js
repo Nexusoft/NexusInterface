@@ -25,8 +25,12 @@ class SettingsModules extends React.Component {
     return (
       <SettingsContainer>
         <AddModule />
-        {this.props.modules.map(module => (
-          <Module key={module.name} module={module} />
+        {this.props.modules.map((module, i) => (
+          <Module
+            key={module.name}
+            module={module}
+            last={i === this.props.modules.length - 1}
+          />
         ))}
       </SettingsContainer>
     );
