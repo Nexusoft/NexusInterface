@@ -74,7 +74,10 @@ class AddModule extends React.Component {
 
   render() {
     return (
-      <Dropzone getFilesFromEvent={this.getFilesFromEvent}>
+      <Dropzone
+        getFilesFromEvent={this.getFilesFromEvent}
+        onDrop={this.handleDrop}
+      >
         {({ getRootProps, getInputProps, isDragActive }) => (
           <AddModuleComponent
             {...getRootProps()}

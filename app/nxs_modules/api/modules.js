@@ -63,8 +63,8 @@ const nxsPackageSchema = {
       },
     },
     // Lists ALL the files which is used by the module in relative paths from the module directory
-    // including `entry` and `icon`
-    // excluding `nxs_package.json`, signature file and storage json file
+    // including files specified in `entry` and `icon` fields
+    // excluding `nxs_package.json`, `repo_info.json` and `storage.json`
     files: {
       type: 'array',
       items: {
