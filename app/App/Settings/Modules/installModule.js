@@ -1,4 +1,4 @@
-import { join, extname } from 'path';
+import { join, extname, dirname } from 'path';
 import fs from 'fs';
 import rimraf from 'rimraf';
 import extractZip from 'extract-zip';
@@ -14,36 +14,42 @@ import ModuleDetailsModal from './ModuleDetailsModal';
 const tempModuleDir = join(config.GetAppDataDirectory(), '.temp_module');
 
 export default async function installModule(path) {
-  if (!fs.existsSync(path)) {
-    UIController.showNotification('Cannot find module', 'error');
-    return;
-  }
-
-  let dirPath = path;
-  if (fs.statSync(path).isFile()) {
-    if (extname(path) !== '.zip') {
-      UIController.showNotification('Unsupported file type', 'error');
+  try {
+    if (!fs.existsSync(path)) {
+      UIController.showNotification('Cannot find module', 'error');
       return;
     }
+    let dirPath = path;
 
-    if (fs.existsSync(tempModuleDir)) {
-      await deleteDirectory(tempModuleDir);
-    }
+    if (fs.statSync(path).isFile()) {
+      if (extname(path) !== '.zip') {
+        UIController.showNotification('Unsupported file type', 'error');
+        return;
+      }
 
-    await extract(path, { dir: tempModuleDir });
-    dirPath = tempModuleDir;
+      if (fs.existsSync(tempModuleDir)) {
+        await deleteDirectory(tempModuleDir);
+      }
 
-    // In case the module is wrapped inside a sub directory of the archive file
-    const subItems = await fs.promises.readdir(tempModuleDir);
-    if (subItems.length === 1) {
-      const subItemPath = join(tempModuleDir, subItems[0]);
-      if (fs.statSync(subItemPath).isDirectory()) {
-        dirPath = subItemPath;
+      await extract(path, { dir: tempModuleDir });
+      dirPath = tempModuleDir;
+
+      // In case the module is wrapped inside a sub directory of the archive file
+      const subItems = await fs.promises.readdir(tempModuleDir);
+      if (subItems.length === 1) {
+        const subItemPath = join(tempModuleDir, subItems[0]);
+        if (fs.statSync(subItemPath).isDirectory()) {
+          dirPath = subItemPath;
+        }
       }
     }
-  }
 
-  await installFromDirectory(dirPath);
+    await installFromDirectory(dirPath);
+  } catch (err) {
+    console.error(err);
+    UIController.showNotification('An unknown error occurred', 'error');
+    return;
+  }
 }
 
 async function installFromDirectory(path) {
@@ -73,9 +79,16 @@ async function installFromDirectory(path) {
           await deleteDirectory(dest, { glob: false });
         }
 
-        await fs.promises.mkdir(dest);
-        await copyModuleOver(module.files, path, dest);
-        location.reload();
+        await copyModule(module.files, path, dest);
+
+        UIController.openSuccessDialog({
+          message: 'Module has been successfully installed',
+          note:
+            'The wallet will now be refreshed for the new module to take effect',
+          onClose: () => {
+            location.reload();
+          },
+        });
       } catch (err) {
         console.error(err);
         UIController.showNotification('Error copying module files', 'error');
@@ -85,25 +98,42 @@ async function installFromDirectory(path) {
   });
 }
 
-function copyModuleOver(files, source, dest) {
+async function copyModule(files, source, dest) {
+  // Create all the missing sub-directories sequentially first
+  // The creations would be duplicated if they're parallel
+  for (let file of files) {
+    const dir = dirname(join(dest, file));
+    if (!fs.existsSync(dir)) {
+      await mkdirRecursive(dir);
+    }
+  }
+
   const promises = [
-    fs.promises.copyFile(
-      join(source, 'nxs_package.json'),
-      join(dest, 'nxs_package.json')
-    ),
-    ...files.map(file =>
-      fs.promises.copyFile(join(source, file), join(dest, file))
-    ),
+    copyFile('nxs_package.json', source, dest),
+    ...files.map(file => copyFile(file, source, dest)),
   ];
   if (fs.existsSync(join(source, 'repo_info.json'))) {
-    promises.push(
-      fs.promises.copyFile(
-        join(source, 'repo_info.json'),
-        join(dest, 'repo_info.json')
-      )
-    );
+    promises.push(copyFile('repo_info.json', source, dest));
   }
-  return Promise.all(promises);
+  return await Promise.all(promises);
+}
+
+function copyFile(file, source, dest) {
+  return fs.promises.copyFile(join(source, file), join(dest, file));
+}
+
+/**
+ * Node.js `mkdir`'s `recursive` option doesn't work somehow (last tested on node.js v10.11.0)
+ * So we need to write it manually
+ *
+ * @param {string} path
+ */
+async function mkdirRecursive(path) {
+  const parent = dirname(path);
+  if (!fs.existsSync(parent)) {
+    await mkdirRecursive(parent);
+  }
+  await fs.promises.mkdir(path);
 }
 
 // TODO: make this a common utility
