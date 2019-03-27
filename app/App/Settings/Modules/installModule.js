@@ -32,6 +32,15 @@ export default async function installModule(path) {
 
     await extract(path, { dir: tempModuleDir });
     dirPath = tempModuleDir;
+
+    // In case the module is wrapped inside a sub directory of the archive file
+    const subItems = await fs.promises.readdir(tempModuleDir);
+    if (subItems.length === 1) {
+      const subItemPath = join(tempModuleDir, subItems[0]);
+      if (fs.statSync(subItemPath).isDirectory()) {
+        dirPath = subItemPath;
+      }
+    }
   }
 
   await installFromDirectory(dirPath);
@@ -86,7 +95,7 @@ function copyModuleOver(files, source, dest) {
       fs.promises.copyFile(join(source, file), join(dest, file))
     ),
   ];
-  if (existsSync(join(source, 'repo_info.json'))) {
+  if (fs.existsSync(join(source, 'repo_info.json'))) {
     promises.push(
       fs.promises.copyFile(
         join(source, 'repo_info.json'),
@@ -118,7 +127,7 @@ function confirm(options) {
 }
 
 // TODO: make this a common utility
-function deleteDirectory(path, options) {
+function deleteDirectory(path, options = {}) {
   return new Promise((resolve, reject) => {
     try {
       rimraf(path, options, err => {
