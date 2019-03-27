@@ -10,6 +10,8 @@ import { consts, timing } from 'styles';
 import * as color from 'utils/color';
 import plusCircleIcon from 'images/plus.sprite.svg';
 
+import installModule from './installModule';
+
 const AddModuleComponent = styled(FieldSet)(
   ({ theme }) => ({
     textAlign: 'center',
@@ -45,18 +47,34 @@ class AddModule extends React.Component {
   browseFiles = () => {
     remote.dialog.showOpenDialog(
       {
-        title: 'Select module',
+        title: 'Select module directory or archive',
         properties: ['openFile', 'openDirectory'],
       },
       paths => {
-        console.log(paths);
+        if (paths && paths[0]) {
+          installModule(paths[0]);
+        }
       }
     );
   };
 
+  getFilesFromEvent = event => {
+    if (event.type === 'drop') {
+      return Array.from(event.dataTransfer.files);
+    } else {
+      return Array.from(event.dataTransfer.items);
+    }
+  };
+
+  handleDrop = acceptedFiles => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      installModule(acceptedFiles[0].path);
+    }
+  };
+
   render() {
     return (
-      <Dropzone>
+      <Dropzone getFilesFromEvent={this.getFilesFromEvent}>
         {({ getRootProps, getInputProps, isDragActive }) => (
           <AddModuleComponent
             {...getRootProps()}
@@ -71,7 +89,7 @@ class AddModule extends React.Component {
           >
             <InnerMessage>
               {isDragActive ? (
-                <div>Drop the module to install</div>
+                <div>Drop here to install</div>
               ) : (
                 <div>
                   <div>Select module directory or .zip file</div>

@@ -38,51 +38,9 @@ const Field = ({ label, children }) => (
   </Line>
 );
 
-const InstallerWrapper = styled.div(({ theme }) => ({
-  textAlign: 'center',
-  padding: '20px 0',
-  margin: '0 50px',
-  borderTop: `2px solid ${theme.primary}`,
-}));
-
-const InstallerWarning = styled.div({
-  fontSize: '.9em',
-});
-
-class Installer extends React.Component {
-  state = {
-    installing: false,
-  };
-
-  render() {
-    const { installing } = this.state;
-
-    return (
-      <Modal.Footer>
-        <InstallerWrapper>
-          <InstallerWarning>
-            Warning: This module is written by a third party, Nexus is NOT
-            responsible for its quality or legitimacy. Please make sure to do
-            your due diligence before installing third party modules and use
-            them with your own risk.
-          </InstallerWarning>
-          <Button
-            skin="primary"
-            wide
-            className="mt1"
-            disabled={installing || !!module.invalid}
-          >
-            {installing ? 'Installing Module...' : 'Install Module'}
-          </Button>
-        </InstallerWrapper>
-      </Modal.Footer>
-    );
-  }
-}
-
 class ModuleDetailsModal extends React.Component {
   render() {
-    const { module, forInstall } = this.props;
+    const { module, forInstall, install } = this.props;
     const { host, owner, repo, commit } = module.repository || {};
     const repoUrl = module.repository
       ? `https://${host}/${owner}/${repo}/tree/${commit}`
@@ -167,10 +125,74 @@ class ModuleDetailsModal extends React.Component {
           </Field>
         </Modal.Body>
 
-        {!!forInstall && <Installer module={module} />}
+        {!!forInstall && <Installer module={module} install={install} />}
       </Modal>
     );
   }
 }
 
 export default ModuleDetailsModal;
+
+/**
+ * Module Installer
+ * =============================================================================
+ */
+const InstallerWrapper = styled.div(({ theme }) => ({
+  textAlign: 'center',
+  padding: '20px 0',
+  margin: '0 50px',
+  borderTop: `2px solid ${theme.primary}`,
+}));
+
+const InstallerWarning = styled.div({
+  fontSize: '.9em',
+});
+
+class Installer extends React.Component {
+  state = {
+    installing: false,
+  };
+
+  install = async () => {
+    this.setState({ installing: true });
+    try {
+      await this.props.install();
+    } finally {
+      this.setState({ installing: false });
+    }
+  };
+
+  render() {
+    const { module } = this.props;
+    const { installing } = this.state;
+    const btnLabel = module.invalid
+      ? 'Module is invalid'
+      : installing
+      ? 'Installing Module...'
+      : 'Install Module';
+
+    return (
+      <Modal.Footer>
+        <InstallerWrapper>
+          {!module.invalid && (
+            <InstallerWarning>
+              Warning: This module is written by a third party, Nexus is NOT
+              responsible for its quality or legitimacy. Please make sure to do
+              your due diligence before installing third party modules and use
+              them with your own risk.
+            </InstallerWarning>
+          )}
+          <Button
+            skin="primary"
+            wide
+            className="mt1"
+            disabled={installing || !!module.invalid}
+            onClick={this.install}
+          >
+            {btnLabel}
+          </Button>
+        </InstallerWrapper>
+      </Modal.Footer>
+    );
+  }
+}

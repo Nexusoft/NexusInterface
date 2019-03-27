@@ -7,11 +7,13 @@ import styled from '@emotion/styled';
 import ModuleIcon from 'components/ModuleIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
+import Icon from 'components/Icon';
 import UIController from 'components/UIController';
 import { isModuleActive } from 'api/modules';
 import { lighten } from 'utils/color';
 import { timing } from 'styles';
 import { updateSettings } from 'actions/settingsActionCreators';
+import warningIcon from 'images/warning.sprite.svg';
 import ModuleDetailsModal from './ModuleDetailsModal';
 
 const ModuleComponent = styled.div(({ theme }) => ({
@@ -118,7 +120,9 @@ class Module extends React.Component {
   };
 
   openModuleDetails = () => {
-    UIController.openModal(ModuleDetailsModal, { module: this.props.module });
+    UIController.openModal(ModuleDetailsModal, {
+      module: this.props.module,
+    });
   };
 
   render() {
@@ -136,23 +140,33 @@ class Module extends React.Component {
           <div className={module.invalid ? 'dim' : undefined}>
             <ModuleName>{module.displayName}</ModuleName>
             <ModuleVersion>v{module.version}</ModuleVersion>
+            <span className="error">
+              {!!module.deprecated && (
+                <Tooltip.Trigger tooltip="Deprecated API version">
+                  <Icon icon={warningIcon} className="space-left" />
+                </Tooltip.Trigger>
+              )}
+              {(!module.repository || !module.repoOnline) && (
+                <Tooltip.Trigger tooltip="Module is not open source">
+                  <Icon icon={warningIcon} className="space-left" />
+                </Tooltip.Trigger>
+              )}
+              {!!module.repository && !module.repoVerified && (
+                <Tooltip.Trigger
+                  tooltip="
+                Module is not verified to be derived from the provided
+                repository"
+                >
+                  <Icon icon={warningIcon} className="space-left" />
+                </Tooltip.Trigger>
+              )}
+            </span>
           </div>
           <div>
             <ModuleDescription className={module.invalid ? 'dim' : undefined}>
               {module.description}
             </ModuleDescription>
           </div>
-          {!!module.deprecated && (
-            <ModuleError>Deprecated API version</ModuleError>
-          )}
-          {(!module.repository || !module.repoOnline) && (
-            <ModuleError>Module is not open source.</ModuleError>
-          )}
-          {!!module.repository && !module.repoVerified && (
-            <ModuleError>
-              Module is not verified to be derived from the provided repository.
-            </ModuleError>
-          )}
         </ModuleInfo>
 
         <ModuleControls>
