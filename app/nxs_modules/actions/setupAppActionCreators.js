@@ -13,6 +13,12 @@ export const SetMarketAveData = () => dispatch => {
     },
     (error, response, body) => {
       if (response.statusCode === 200) {
+        // fetch('https://min-api.cryptocompare.com/stats/rate/limit')
+        //   .then(response => response.json())
+        //   .then(data => {
+        //     console.log(data);
+        //   });
+
         let rawBTC = Object.values(body.RAW.BTC).map(ele => {
           return {
             changePct24Hr: ele.CHANGEPCT24HOUR,

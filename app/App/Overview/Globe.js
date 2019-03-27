@@ -67,106 +67,113 @@ export default class Globe extends Component {
   }
 
   componentDidMount() {
-    if (process.env.NODE_ENV === 'development') {
-      this.geoiplookup = maxmind.openSync(
-        path.join(__dirname, 'GeoLite2-City', 'GeoLite2-City.mmdb')
+    try {
+      if (process.env.NODE_ENV === 'development') {
+        this.geoiplookup = maxmind.openSync(
+          path.join(__dirname, 'GeoLite2-City', 'GeoLite2-City.mmdb')
+        );
+      } else {
+        this.geoiplookup = maxmind.openSync(
+          path.join(
+            configuration.GetAppResourceDir(),
+            'GeoLite2-City',
+            'GeoLite2-City.mmdb'
+          )
+        );
+      }
+
+      this.props.handleOnLineRender(this.animateArcs);
+      this.props.handleRemoveAllPoints(this.removeAllPoints);
+
+      const WIDTH = window.innerWidth;
+      const HEIGHT = window.innerHeight;
+      const VIEW_ANGLE = 45;
+      const ASPECT = WIDTH / HEIGHT;
+      const NEAR = 0.1;
+      const FAR = 10000;
+
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+      });
+      const camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+      const scene = new THREE.Scene();
+
+      const controls = new OrbitControls(camera);
+      const globe = new THREE.Group();
+      const sphere = new THREE.SphereGeometry(125, 50, 50);
+      const allPoints = new THREE.Group();
+      const allArcs = new THREE.Group();
+
+      renderer.setClearColor(0x000000, 0);
+      renderer.setSize(WIDTH, HEIGHT);
+      camera.position.set(0, 235, 500);
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.8;
+      controls.minDistance = 300;
+      controls.maxDistance = 500;
+      controls.enablePan = false;
+      controls.update();
+      scene.add(camera);
+
+      const uniforms = THREE.UniformsUtils.clone(Shader.uniforms);
+      const colormoddd = new THREE.Color(this.props.globeColor);
+      const globeR = colormoddd.r / 1;
+      const globeG = colormoddd.g / 1;
+      const globeB = colormoddd.b / 1;
+
+      uniforms['_texture'] = {
+        type: 't',
+        value: new THREE.TextureLoader().load(world),
+      };
+      uniforms['colorMod'] = {
+        type: 'v4',
+        value: new THREE.Vector4(globeR, globeG, globeB, 1.0),
+      };
+
+      const shadedMap = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: Shader.vertexShader,
+        fragmentShader: Shader.fragmentShader,
+      });
+      const mesh = new THREE.Mesh(sphere, shadedMap);
+
+      globe.add(mesh);
+      globe.add(allPoints);
+      globe.add(allArcs);
+      scene.add(globe);
+
+      // Set up Three stuff we want access to
+      this.allArcs = allArcs;
+      this.allPoints = allPoints;
+      this.scene = scene;
+      this.camera = camera;
+      this.renderer = renderer;
+      this.globe = globe;
+      this.controls = controls;
+
+      // Add pin for user
+      this.addSelf();
+      this.pointRegister();
+
+      this.renderer.context.canvas.addEventListener(
+        'webglcontextlost',
+        this.contextLostHandler,
+        false
       );
-    } else {
-      this.geoiplookup = maxmind.openSync(
-        path.join(
-          configuration.GetAppResourceDir(),
-          'GeoLite2-City',
-          'GeoLite2-City.mmdb'
-        )
+
+      this.renderer.context.canvas.addEventListener(
+        'webglcontextrestored',
+        this.contextRestoredHandler,
+        false
       );
+
+      this.threeRootElement.appendChild(renderer.domElement);
+      window.addEventListener('resize', this.onWindowResize, false);
+      this.start();
+    } catch (e) {
+      console.log(e);
     }
-
-    this.props.handleOnLineRender(this.animateArcs);
-    this.props.handleRemoveAllPoints(this.removeAllPoints);
-
-    const WIDTH = window.innerWidth;
-    const HEIGHT = window.innerHeight;
-    const VIEW_ANGLE = 45;
-    const ASPECT = WIDTH / HEIGHT;
-    const NEAR = 0.1;
-    const FAR = 10000;
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    const camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-    const scene = new THREE.Scene();
-
-    const controls = new OrbitControls(camera);
-    const globe = new THREE.Group();
-    const sphere = new THREE.SphereGeometry(125, 50, 50);
-    const allPoints = new THREE.Group();
-    const allArcs = new THREE.Group();
-
-    renderer.setClearColor(0x000000, 0);
-    renderer.setSize(WIDTH, HEIGHT);
-    camera.position.set(0, 235, 500);
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.8;
-    controls.minDistance = 300;
-    controls.maxDistance = 500;
-    controls.enablePan = false;
-    controls.update();
-    scene.add(camera);
-
-    const uniforms = THREE.UniformsUtils.clone(Shader.uniforms);
-    const colormoddd = new THREE.Color(this.props.globeColor);
-    const globeR = colormoddd.r / 1;
-    const globeG = colormoddd.g / 1;
-    const globeB = colormoddd.b / 1;
-
-    uniforms['_texture'] = {
-      type: 't',
-      value: new THREE.TextureLoader().load(world),
-    };
-    uniforms['colorMod'] = {
-      type: 'v4',
-      value: new THREE.Vector4(globeR, globeG, globeB, 1.0),
-    };
-
-    const shadedMap = new THREE.ShaderMaterial({
-      uniforms: uniforms,
-      vertexShader: Shader.vertexShader,
-      fragmentShader: Shader.fragmentShader,
-    });
-    const mesh = new THREE.Mesh(sphere, shadedMap);
-
-    globe.add(mesh);
-    globe.add(allPoints);
-    globe.add(allArcs);
-    scene.add(globe);
-
-    // Set up Three stuff we want access to
-    this.allArcs = allArcs;
-    this.allPoints = allPoints;
-    this.scene = scene;
-    this.camera = camera;
-    this.renderer = renderer;
-    this.globe = globe;
-    this.controls = controls;
-
-    // Add pin for user
-    this.addSelf();
-    this.pointRegister();
-
-    this.renderer.context.canvas.addEventListener(
-      'webglcontextlost',
-      this.contextLostHandler,
-      false
-    );
-
-    this.renderer.context.canvas.addEventListener(
-      'webglcontextrestored',
-      this.contextRestoredHandler,
-      false
-    );
-
-    this.threeRootElement.appendChild(renderer.domElement);
-    window.addEventListener('resize', this.onWindowResize, false);
-    this.start();
   }
   contextRestoredHandler() {
     console.error('CONTEXT RESTORED');
