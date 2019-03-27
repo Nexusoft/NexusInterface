@@ -35,12 +35,18 @@ const AddModuleComponent = styled(FieldSet)(
     }
 );
 
-const InnerMessage = styled.div({
-  height: consts.lineHeight * 2 + 'em',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
+const InnerMessage = styled.div(
+  {
+    height: consts.lineHeight * 2 + 'em',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ({ noPointerEvents }) =>
+    noPointerEvents && {
+      pointerEvents: 'none',
+    }
+);
 
 class AddModule extends React.Component {
   browseFiles = () => {
@@ -80,8 +86,10 @@ class AddModule extends React.Component {
   getFilesFromEvent = event => {
     if (!event || !event.dataTransfer) return [];
     if (event.type === 'drop') {
+      console.log(event.type, Array.from(event.dataTransfer.files));
       return Array.from(event.dataTransfer.files);
     } else {
+      console.log(event.type, Array.from(event.dataTransfer.items));
       return Array.from(event.dataTransfer.items);
     }
   };
@@ -110,7 +118,7 @@ class AddModule extends React.Component {
             }
             active={isDragActive}
           >
-            <InnerMessage>
+            <InnerMessage noPointerEvents={isDragActive}>
               {isDragActive ? (
                 <div>Drop here to install</div>
               ) : (
