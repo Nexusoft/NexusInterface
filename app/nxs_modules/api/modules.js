@@ -213,6 +213,7 @@ async function isRepoVerified(repoInfo, module, dirPath) {
     const hash = await getModuleHash(module, dirPath);
     if (hash !== data.moduleHash) return false;
   } catch (err) {
+    console.error(err);
     return false;
   }
 
@@ -245,6 +246,14 @@ export async function validateModule(dirPath, { devMode, verifyModuleSource }) {
     if (module.entry && isAbsolute(module.entry)) return null;
     if (module.icon && isAbsolute(module.icon)) return null;
     if (module.files.some(file => isAbsolute(file))) return null;
+
+    const filePaths = module.files.map(file => join(dirPath, file));
+    if (filePaths.some(filePath => !existsSync(filePath))) {
+      console.error(
+        `Module ${module.name}: Some files listed by the module does not exist`
+      );
+      return null;
+    }
 
     if (isPageModule(module)) {
       // Manually check entry extension corresponding to module type
