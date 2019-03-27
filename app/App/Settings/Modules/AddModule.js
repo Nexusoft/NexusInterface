@@ -49,6 +49,10 @@ const InnerMessage = styled.div(
 );
 
 class AddModule extends React.Component {
+  state = {
+    checking: false,
+  };
+
   browseFiles = () => {
     remote.dialog.showOpenDialog(
       {
@@ -63,7 +67,7 @@ class AddModule extends React.Component {
       },
       paths => {
         if (paths && paths[0]) {
-          installModule(paths[0]);
+          this.startInstall(paths[0]);
         }
       }
     );
@@ -77,7 +81,7 @@ class AddModule extends React.Component {
       },
       paths => {
         if (paths && paths[0]) {
-          installModule(paths[0]);
+          this.startInstall(paths[0]);
         }
       }
     );
@@ -96,11 +100,21 @@ class AddModule extends React.Component {
 
   handleDrop = acceptedFiles => {
     if (acceptedFiles && acceptedFiles.length > 0) {
-      installModule(acceptedFiles[0].path);
+      this.startInstall(acceptedFiles[0].path);
+    }
+  };
+
+  startInstall = async path => {
+    this.setState({ checking: true });
+    try {
+      await installModule(path);
+    } finally {
+      this.setState({ checking: false });
     }
   };
 
   render() {
+    const { checking } = this.state;
     return (
       <Dropzone
         getFilesFromEvent={this.getFilesFromEvent}
@@ -116,10 +130,12 @@ class AddModule extends React.Component {
                 <span className="v-align space-left">Add Module</span>
               </>
             }
-            active={isDragActive}
+            active={isDragActive || checking}
           >
-            <InnerMessage noPointerEvents={isDragActive}>
-              {isDragActive ? (
+            <InnerMessage noPointerEvents={isDragActive || checking}>
+              {checking ? (
+                <div>Checking module...</div>
+              ) : isDragActive ? (
                 <div>Drop here to install</div>
               ) : (
                 <div>
