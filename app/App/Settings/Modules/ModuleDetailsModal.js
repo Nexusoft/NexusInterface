@@ -1,6 +1,7 @@
 // External
 import React from 'react';
 import styled from '@emotion/styled';
+import { join } from 'path';
 
 // Internal
 import Modal from 'components/Modal';
@@ -8,10 +9,34 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import ExternalLink from 'components/ExternalLink';
+import UIController from 'components/UIController';
+import config from 'api/configuration';
+import { timing } from 'styles';
+import deleteDirectory from 'utils/deleteDirectory';
 import warningIcon from 'images/warning.sprite.svg';
 import linkIcon from 'images/link.sprite.svg';
+import trashIcon from 'images/trash.sprite.svg';
 
-const Line = styled.div({
+const DeleteModule = styled.div({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  display: 'flex',
+  alignItems: 'center',
+  fontSize: '1rem',
+});
+
+const DeleteButton = styled.div(({ theme }) => ({
+  cursor: 'pointer',
+  color: theme.mixer(0.25),
+  transition: `color ${timing.normal}`,
+  '&:hover': {
+    color: theme.danger,
+  },
+}));
+
+const Row = styled.div({
   display: 'grid',
   gridTemplateAreas: '"label value"',
   gridTemplateColumns: '1fr 2fr',
@@ -32,13 +57,27 @@ const Value = styled.div({
 });
 
 const Field = ({ label, children }) => (
-  <Line>
+  <Row>
     <Label>{label}</Label>
     <Value>{children}</Value>
-  </Line>
+  </Row>
 );
 
 class ModuleDetailsModal extends React.Component {
+  confirmDelete = () => {
+    UIController.openConfirmDialog({
+      question: `Delete ${this.props.module.displayName}?`,
+      yesCallback: async () => {
+        const moduleDir = join(
+          config.GetModulesDir(),
+          this.props.module.dirName
+        );
+        await deleteDirectory(moduleDir);
+        location.reload();
+      },
+    });
+  };
+
   render() {
     const { module, forInstall, install } = this.props;
     const { host, owner, repo, commit } = module.repository || {};
@@ -48,7 +87,14 @@ class ModuleDetailsModal extends React.Component {
 
     return (
       <Modal>
-        <Modal.Header>Module Details</Modal.Header>
+        <Modal.Header className="relative">
+          Module Details
+          <DeleteModule>
+            <DeleteButton skin="plain" onClick={this.confirmDelete}>
+              <Icon icon={trashIcon} />
+            </DeleteButton>
+          </DeleteModule>
+        </Modal.Header>
         <Modal.Body>
           <Field label="Module name">{module.name}</Field>
           <Field label="Display name">{module.displayName}</Field>

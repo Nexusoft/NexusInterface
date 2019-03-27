@@ -1,12 +1,12 @@
 import { join, extname, dirname } from 'path';
 import fs from 'fs';
-import rimraf from 'rimraf';
 import extractZip from 'extract-zip';
 
 import UIController from 'components/UIController';
 import store from 'store';
 import { validateModule } from 'api/modules';
 import config from 'api/configuration';
+import deleteDirectory from 'utils/deleteDirectory';
 
 import ModuleDetailsModal from './ModuleDetailsModal';
 
@@ -175,24 +175,6 @@ function confirm(options) {
         noCallback: () => {
           resolve(false);
         },
-      });
-    } catch (err) {
-      console.error(err);
-      reject(err);
-    }
-  });
-}
-
-// TODO: make this a common utility
-function deleteDirectory(path, options = {}) {
-  return new Promise((resolve, reject) => {
-    try {
-      rimraf(path, options, err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
       });
     } catch (err) {
       console.error(err);
