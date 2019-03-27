@@ -1,5 +1,5 @@
 import { join, isAbsolute } from 'path';
-import { existsSync, promises, statSync, createReadStream } from 'fs';
+import fs from 'fs';
 import crypto from 'crypto';
 import Ajv from 'ajv';
 import axios from 'axios';
@@ -13,6 +13,104 @@ import memoize from 'memoize-one';
 import config from 'api/configuration';
 
 const modulesDir = config.GetModulesDir();
+
+/**
+ * Load Modules
+ * =============================================================================
+ */
+
+export async function loadModules({ devMode, verifyModuleSource }) {
+  try {
+    if (!fs.existsSync(modulesDir)) return {};
+    const dirNames = await fs.promises.readdir(modulesDir);
+    const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
+    const results = await Promise.all(
+      dirPaths.map(path =>
+        validateModule(path, { devMode, verifyModuleSource })
+      )
+    );
+
+    const modules = results.reduce((map, result, i) => {
+      if (result) {
+        const module = { ...result, dirName: dirNames[i] };
+        // If 2 modules have the same name, keep the one with the higher version
+        if (
+          !map[module.name] ||
+          semver.gt(module.version, map[module.name].version)
+        ) {
+          map[module.name] = prepareModule(module);
+        }
+      }
+      return map;
+    }, {});
+
+    return modules;
+  } catch (err) {
+    return {};
+  }
+}
+
+function getIconPath(iconName, dirName) {
+  const iconPath = join(modulesDir, dirName, iconName);
+  return fs.existsSync(iconPath) ? iconPath : null;
+}
+
+function prepareModule(module) {
+  // Prepare module icon
+  module.iconPath = module.icon
+    ? getIconPath(module.icon, module.dirName)
+    : getIconPath('icon.svg', module.dirName) ||
+      getIconPath('icon.png', module.dirName);
+
+  return module;
+}
+
+/**
+ * Checkers
+ * =============================================================================
+ */
+
+export const isPageModule = module =>
+  module.type === 'page' || module.type === 'page-panel';
+
+// Check if the Module API this module was built on is still supported
+export const isModuleDeprecated = module =>
+  semver.lt(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
+
+// Check if a module is valid
+export const isModuleValid = (module, { devMode, verifyModuleSource }) =>
+  !isModuleDeprecated(module) &&
+  ((devMode && !verifyModuleSource) ||
+    (module.repository && module.repoOnline && module.repoVerified));
+
+// Check if a module is active, which means it's valid and not disabled by user
+export const isModuleActive = (module, disabledModules) =>
+  !module.invalid && !disabledModules.includes(module.name);
+
+/**
+ * Memoized getters
+ * =============================================================================
+ */
+
+export const getAllModules = memoize(modules => Object.values(modules));
+
+export const getActiveModules = memoize((modules, disabledModules) =>
+  Object.values(modules).filter(module =>
+    isModuleActive(module, disabledModules)
+  )
+);
+
+export const getModuleIfActive = memoize(
+  (moduleName, modules, disabledModules) => {
+    const module = modules[moduleName];
+    return module && isModuleActive(module, disabledModules) ? module : null;
+  }
+);
+
+/**
+ * Module validation
+ * =============================================================================
+ */
 
 const ajv = new Ajv();
 const nxsPackageSchema = {
@@ -77,19 +175,54 @@ const nxsPackageSchema = {
 };
 const validateNxsPackage = ajv.compile(nxsPackageSchema);
 
-function getIconPath(iconName, dirName) {
-  const iconPath = join(modulesDir, dirName, iconName);
-  return existsSync(iconPath) ? iconPath : null;
-}
+export async function validateModule(dirPath, { devMode, verifyModuleSource }) {
+  try {
+    const nxsPackagePath = join(dirPath, 'nxs_package.json');
+    if (!fs.existsSync(nxsPackagePath) || !fs.statSync(nxsPackagePath).isFile) {
+      return null;
+    }
 
-function prepareModule(module) {
-  // Prepare module icon
-  module.iconPath = module.icon
-    ? getIconPath(module.icon, module.dirName)
-    : getIconPath('icon.svg', module.dirName) ||
-      getIconPath('icon.png', module.dirName);
+    const content = await fs.promises.readFile(nxsPackagePath);
+    const module = JSON.parse(content);
+    if (!validateNxsPackage(module)) return null;
 
-  return module;
+    // Ensure all file paths are relative
+    if (module.entry && isAbsolute(module.entry)) return null;
+    if (module.icon && isAbsolute(module.icon)) return null;
+    if (module.files.some(file => isAbsolute(file))) return null;
+
+    const filePaths = module.files.map(file => join(dirPath, file));
+    if (filePaths.some(filePath => !fs.existsSync(filePath))) {
+      console.error(
+        `Module ${module.name}: Some files listed by the module does not exist`
+      );
+      return null;
+    }
+
+    if (isPageModule(module)) {
+      // Manually check entry extension corresponding to module type
+      if (module.entry && !module.entry.endsWith('.html')) {
+        return null;
+      }
+    }
+
+    // Check the repository info and verification
+    const repoInfo = await getRepoInfo(dirPath);
+    if (repoInfo) {
+      const [repoOnline, repoVerified] = await Promise.all([
+        isRepoOnline(repoInfo),
+        isRepoVerified(repoInfo, module, dirPath),
+      ]);
+      Object.assign(module, repoInfo.data, { repoOnline, repoVerified });
+    }
+
+    module.deprecated = isModuleDeprecated(module);
+    module.invalid = !isModuleValid(module, { devMode, verifyModuleSource });
+    return module;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 }
 
 /**
@@ -136,11 +269,11 @@ const validateRepoInfo = ajv.compile(repoInfoSchema);
 async function getRepoInfo(dirPath) {
   const filePath = join(dirPath, 'repo_info.json');
   // Check repo_info.json file exists
-  if (!existsSync(filePath)) return null;
+  if (!fs.existsSync(filePath)) return null;
 
   // Check repo_info.json file schema
   try {
-    const fileContent = await promises.readFile(filePath);
+    const fileContent = await fs.promises.readFile(filePath);
     const repoInfo = JSON.parse(fileContent);
     if (validateRepoInfo(repoInfo)) {
       return repoInfo;
@@ -170,7 +303,7 @@ async function isRepoOnline(repoInfo) {
 }
 
 function normalizeFile(path) {
-  const stream = createReadStream(path);
+  const stream = fs.createReadStream(path);
   if (isText(path, stream)) {
     const normalizeNewline = streamNormalizeEol('\n');
     return stream.pipe(normalizeNewline);
@@ -225,121 +358,3 @@ async function isRepoVerified(repoInfo, module, dirPath) {
     .verify(NEXUS_EMBASSY_PUBLIC_KEY, verification.signature);
   return verified;
 }
-
-/**
- * Public API
- * =============================================================================
- */
-
-export async function validateModule(dirPath, { devMode, verifyModuleSource }) {
-  try {
-    const nxsPackagePath = join(dirPath, 'nxs_package.json');
-    if (!existsSync(nxsPackagePath) || !statSync(nxsPackagePath).isFile) {
-      return null;
-    }
-
-    const content = await promises.readFile(nxsPackagePath);
-    const module = JSON.parse(content);
-    if (!validateNxsPackage(module)) return null;
-
-    // Ensure all file paths are relative
-    if (module.entry && isAbsolute(module.entry)) return null;
-    if (module.icon && isAbsolute(module.icon)) return null;
-    if (module.files.some(file => isAbsolute(file))) return null;
-
-    const filePaths = module.files.map(file => join(dirPath, file));
-    if (filePaths.some(filePath => !existsSync(filePath))) {
-      console.error(
-        `Module ${module.name}: Some files listed by the module does not exist`
-      );
-      return null;
-    }
-
-    if (isPageModule(module)) {
-      // Manually check entry extension corresponding to module type
-      if (module.entry && !module.entry.endsWith('.html')) {
-        return null;
-      }
-    }
-
-    // Check the repository info and verification
-    const repoInfo = await getRepoInfo(dirPath);
-    if (repoInfo) {
-      const [repoOnline, repoVerified] = await Promise.all([
-        isRepoOnline(repoInfo),
-        isRepoVerified(repoInfo, module, dirPath),
-      ]);
-      Object.assign(module, repoInfo.data, { repoOnline, repoVerified });
-    }
-
-    module.deprecated = isModuleDeprecated(module);
-    module.invalid = !isModuleValid(module, { devMode, verifyModuleSource });
-    return module;
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-}
-
-export async function loadModules({ devMode, verifyModuleSource }) {
-  try {
-    if (!existsSync(modulesDir)) return {};
-    const dirNames = await promises.readdir(modulesDir);
-    const dirPaths = dirNames.map(dirName => join(modulesDir, dirName));
-    const results = await Promise.all(
-      dirPaths.map(path =>
-        validateModule(path, { devMode, verifyModuleSource })
-      )
-    );
-
-    const modules = results.reduce((map, result, i) => {
-      if (result) {
-        const module = { ...result, dirName: dirNames[i] };
-        // If 2 modules have the same name, keep the one with the higher version
-        if (
-          !map[module.name] ||
-          semver.gt(module.version, map[module.name].version)
-        ) {
-          map[module.name] = prepareModule(module);
-        }
-      }
-      return map;
-    }, {});
-
-    return modules;
-  } catch (err) {
-    return {};
-  }
-}
-
-export const isPageModule = module =>
-  module.type === 'page' || module.type === 'page-panel';
-
-// Check if the Module API this module was built on is still supported
-export const isModuleDeprecated = module =>
-  semver.lt(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
-
-// Check if a module is valid
-export const isModuleValid = (module, { devMode, verifyModuleSource }) =>
-  !isModuleDeprecated(module) &&
-  ((devMode && !verifyModuleSource) ||
-    (module.repository && module.repoOnline && module.repoVerified));
-
-// Check if a module is active, which means it's valid and not disabled by user
-export const isModuleActive = (module, disabledModules) =>
-  !module.invalid && !disabledModules.includes(module.name);
-
-export const getAllModules = memoize(modules => Object.values(modules));
-
-export const getActiveModules = memoize((modules, disabledModules) =>
-  Object.values(modules).filter(module =>
-    isModuleActive(module, disabledModules)
-  )
-);
-
-export const getModuleIfActive = memoize(
-  (moduleName, modules, disabledModules) => {
-    const module = modules[moduleName];
-    return module && isModuleActive(module, disabledModules) ? module : null;
-  }
-);
