@@ -32,6 +32,13 @@ const CenterText = styled.div(
     margin: '2em 2em',
     justifyContent: 'center',
     textAlign: 'center',
+    ['h2'] :
+    {
+      textAlign: 'center',
+    },
+    ['h3'] : {
+      textAlign: 'center',
+    },
   }
 )
 
@@ -68,6 +75,18 @@ const OpenSourceCredits = [
     License: "MIT License",
   },
 ]
+
+const OpenSourceCreditsContainer = styled.div(
+  {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    display: 'grid',
+    alignItems: 'center',
+    gridTemplateColumns: 'auto',
+    gridTemplateRows: 'auto',
+    gridGap: '1em .5em',
+  }
+)
 
 const NexusLogoimg = styled.img(
   {
@@ -214,8 +233,8 @@ class About extends Component {
               LIABILITY FOR THE USE OF THIS SOFTWARE
             </b>
           </CenterText>
-          <div>
-            <h3 style={{ textAlign: 'center' }}>License Agreement</h3>
+          <CenterText>
+            <h3>License Agreement</h3>
             <blockquote>
               Copyright {this.getCurrentYear()} Nexus
               <br />
@@ -240,12 +259,12 @@ class About extends Component {
               DEALINGS IN THE SOFTWARE.
             </blockquote>
             <br />
-          </div>
+          </CenterText>
         
         <CenterText>
-          <h2 style={{ textAlign: 'center' }}>Open Source Credits</h2>
+          <h2>Open Source Credits</h2>
           
-          <dl>
+          <OpenSourceCreditsContainer>
             {this.returnOpenSourceCredits()}
             <dt>MaxMind</dt>
             <dd>
@@ -260,15 +279,15 @@ class About extends Component {
                 }
               >
                 {' '}
-                creativecommons.org{' '}
+                creativecommons.org
               </Link>
-              . This database incorporates{' '}
+              . This database incorporates
               <Link onClick={() => shell.openExternal('http://www.geonames.org')}>
                 GeoNames
-              </Link>{' '}
+              </Link>
               geographical data, which is made available under the Creative
               Commons Attribution 3.0 License. To view a copy of this license,
-              visit{' '}
+              visit
               <Link
                 onClick={() =>
                   shell.openExternal(
@@ -277,10 +296,10 @@ class About extends Component {
                 }
               >
                 creativecommons.org
-              </Link>{' '}
+              </Link>
               .
             </dd>
-          </dl>
+          </OpenSourceCreditsContainer>
         </CenterText>
       </Panel>
     );
