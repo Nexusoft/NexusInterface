@@ -1,9 +1,3 @@
-/* 
-Title: About module. 
-Description: This page contains all of the licensing for our source code dependencies etc.
-Last Modified by: Brian Smith
-*/
-
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -18,11 +12,85 @@ import nexusLogo from 'images/logo-full.svg';
 import updateicon from 'images/unlock.png';
 
 
-const Column = styled.col(
-
+const Column = styled.div(
+  {
+    flex: '50%',
+    display: 'flex',
+    flexDirection: 'column',
+  }
 );
 
+const Row = styled.div({
+  display: 'flex',
+  flexDirection: 'row',
+  textAlign: 'center',
+  }
+);
 
+const CenterText = styled.div(
+  {
+    margin: '2em 2em',
+    justifyContent: 'center',
+    textAlign: 'center',
+  }
+)
+
+const Link = styled.u({
+  cursor: 'pointer',
+  padding: '0.5em',
+})
+
+const OpenSourceCredits = [
+  {
+    Title: "Electron",
+    WebSite: "electronjs.org",
+    URL: "https://electronjs.org/",
+    License: "MIT License",
+  },{
+    Title: "React",
+    WebSite: "reactjs.org",
+    URL: "https://reactjs.org/",
+    License: "MIT License",
+  },{
+    Title: "Redux",
+    WebSite: "redux.js.org",
+    URL: "https://redux.js.org/",
+    License: "MIT License",
+  },{
+    Title: "Babel",
+    WebSite: "babeljs.io",
+    URL: "https://babeljs.io/",
+    License: "MIT License",
+  },{
+    Title: "Victory Chart",
+    WebSite: "formidable.com",
+    URL: "https://formidable.com/open-source/victory/",
+    License: "MIT License",
+  },
+]
+
+const NexusLogoimg = styled.img(
+  {
+    display: 'inline',
+    maxwidth: '100%',
+    maxheight: '100%',
+    height: 'auto',
+    width: 'auto',
+  }
+)
+
+const BusinessUnits = styled.div(
+  {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    display: 'grid',
+    alignItems: 'center',
+    gridTemplateColumns: 'auto auto auto',
+    gridTemplateRows: 'auto',
+    gridGap: '1em .5em',
+  }
+
+)
 
 
 // React-Redux mandatory methods
@@ -76,6 +144,24 @@ class About extends Component {
     return this.props.version;
   }
 
+  returnOpenSourceCredits()
+  {
+    return  OpenSourceCredits.map((e) => 
+      (
+        <CenterText>
+          <dt>{e.Title}</dt>
+          <div>
+            <Link onClick={() => shell.openExternal(e.URL)}>
+            
+            {e.WebSite}{' '}
+            </Link>
+            {e.License}
+          </div>
+        </CenterText>
+      ));
+    
+  }
+
   // Mandatory React method
   /**
    * React Render Function
@@ -86,33 +172,49 @@ class About extends Component {
   render() {
     return (
       <Panel title={<Text id="About" />}>
-        <img src={nexusLogo} />
+        <NexusLogoimg src={nexusLogo} />
         <br />
-        <row>
-          <column>
-            <row>
-              <column>
-                <b>Interface Version:</b> {this.getInterfaceVersionNumber()}{' '}
-                <br />
-                <b>Build Date: </b> March 15th 2019 <br />
-              </column>
-              <column>
-                <b>Daemon Version:</b> {this.getDaemonVersionNumber()} <br />
-                <b>Build Date: </b> March 15th 2019 <br />
-              </column>
-            </row>
-            <br />
-            <br />
-            <b>
-              Copyright {this.getCurrentYear()}{' '}
-            </b> Nexus,Videlicet,Peercoin <br />
-            <br />
+          <Column>
+            <Row>
+              <Column>
+                  <b>Interface Version:</b> {this.getInterfaceVersionNumber()}<br />
+                  <b>Build Date: </b> March 15th 2019 <br />
+                </Column>
+                <Column>
+                  <b>Daemon Version:</b> {this.getDaemonVersionNumber()} <br />
+                  <b>Build Date: </b> March 15th 2019 <br />
+              </Column>
+            </Row>
+            <CenterText>
+              <b> Copyright {this.getCurrentYear()}{' '}</b>
+              <br />
+            </CenterText>
+            </Column>
+            <BusinessUnits> 
+              <CenterText>
+                <b>Nexus Embassy USA</b>
+                <br/>
+                This is the USA Company Info
+              </CenterText>
+              <CenterText>
+                <b>Nexus Embassy UK</b>
+                <br/>
+                This is the UK Company Info
+              </CenterText>
+              <CenterText>
+                <b>Nexus Embassy Australia</b>
+                <br/>
+                This is the AUS Company Info
+              </CenterText>
+            </BusinessUnits>
+          
+          <CenterText>
             <b>
               THIS IS EXPERIMENTAL SOFTWARE AND THE NEXUS EMBASSY HOLDS NO
               LIABILITY FOR THE USE OF THIS SOFTWARE
             </b>
-          </column>
-          <column>
+          </CenterText>
+          <div>
             <h3 style={{ textAlign: 'center' }}>License Agreement</h3>
             <blockquote>
               Copyright {this.getCurrentYear()} Nexus
@@ -138,67 +240,19 @@ class About extends Component {
               DEALINGS IN THE SOFTWARE.
             </blockquote>
             <br />
-          </column>
-        </row>
-        <div style={{ textAlign: 'center' }}>
+          </div>
+        
+        <CenterText>
           <h2 style={{ textAlign: 'center' }}>Open Source Credits</h2>
+          
           <dl>
-            <dt>Electron</dt>
-            <dd>
-              {' '}
-              <a onClick={() => shell.openExternal('https://electronjs.org/')}>
-                electronjs.org{' '}
-              </a>{' '}
-              MIT License
-            </dd>
-            <dt>React</dt>
-            <dd>
-              <a onClick={() => shell.openExternal('https://reactjs.org/')}>
-                {' '}
-                Reactjs.org{' '}
-              </a>{' '}
-              MIT License
-            </dd>
-            <dt>Redux</dt>
-            <dd>
-              {' '}
-              <a onClick={() => shell.openExternal('https://redux.js.org/')}>
-                {' '}
-                Redux.js.org{' '}
-              </a>{' '}
-              MIT License{' '}
-            </dd>
-            <dt>Babel</dt>
-            <dd>
-              {' '}
-              <a onClick={() => shell.openExternal('https://babeljs.io/')}>
-                {' '}
-                Babeljs.io{' '}
-              </a>{' '}
-              MIT License{' '}
-            </dd>
-
-            <dt>Victory Chart</dt>
-            <dd>
-              {' '}
-              <a
-                onClick={() =>
-                  shell.openExternal(
-                    'https://formidable.com/open-source/victory/'
-                  )
-                }
-              >
-                {' '}
-                Formidable Labs{' '}
-              </a>{' '}
-              MIT License
-            </dd>
+            {this.returnOpenSourceCredits()}
             <dt>MaxMind</dt>
             <dd>
               Copyright &copy; 2018 MaxMind, Inc. This work is licensed under
               the Creative Commons Attribution-ShareAlike 4.0 International
               License. To view a copy of this license, visit{' '}
-              <a
+              <Link
                 onClick={() =>
                   shell.openExternal(
                     'http://creativecommons.org/licenses/by-sa/4.0/'
@@ -207,15 +261,15 @@ class About extends Component {
               >
                 {' '}
                 creativecommons.org{' '}
-              </a>
+              </Link>
               . This database incorporates{' '}
-              <a onClick={() => shell.openExternal('http://www.geonames.org')}>
+              <Link onClick={() => shell.openExternal('http://www.geonames.org')}>
                 GeoNames
-              </a>{' '}
+              </Link>{' '}
               geographical data, which is made available under the Creative
               Commons Attribution 3.0 License. To view a copy of this license,
               visit{' '}
-              <a
+              <Link
                 onClick={() =>
                   shell.openExternal(
                     'http://www.creativecommons.org/licenses/by/3.0/us/'
@@ -223,11 +277,11 @@ class About extends Component {
                 }
               >
                 creativecommons.org
-              </a>{' '}
+              </Link>{' '}
               .
             </dd>
           </dl>
-        </div>
+        </CenterText>
       </Panel>
     );
   }
