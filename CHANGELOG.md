@@ -5,6 +5,7 @@
 - New CSV download functionality for Transaction page
 - New Currency icons for fiat balance
 - Added links to the exchanges on the Market page
+- New Globe backend code, will allow for expanded functionality
 
 #### Adjustments
 - There is now a max of `0.1` Nexus for the transaction fee setting
@@ -12,7 +13,10 @@
 - Trust and Stake numbers now only show 6 significant numbers
 - Replaced Rescan Wallet on `My Addressess` with `Check Wallet` and moved button to `Settings/Core`
 - Changed scalling on screens under 720px high
-
+- The Sample Address in Style Settings has been replaced with the User's Default Address
+- The `X` on the add or edit contact form is now more visible
+- Made grammar ajustments to en.json
+- Ajustment to terminal's `Help` command
 
 #### Fixes
 - Fixed typo on Israeli Shekel using the wrong ISO code
@@ -21,6 +25,7 @@
 - Fixed Pending Transaction label in transaction detail modal
 - Fixed `Fee` not displaying on send transactions in the detail modal
 - Fixed price history file not being created/read properly 
+- About page correctly displays the backend core version
 
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)

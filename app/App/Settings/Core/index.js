@@ -27,10 +27,11 @@ import ReScanButton from '../../../nxs_modules/components/MyAddressesModal/Resca
 const mapStateToProps = ({
   settings,
   core: {
-    info: { connections },
+    info: { connections, version },
   },
 }) => ({
   connections,
+  version,
   settings,
   initialValues: {
     manualDaemonUser: settings.manualDaemonUser,
@@ -217,6 +218,22 @@ class SettingsCore extends Component {
   })();
 
   /**
+   * If Tritium don't return fee setting, this maybe changed. 
+   *
+   * @memberof SettingsCore
+   */
+  returnFeeSetting= () => {
+    if (this.props.version.includes("Tritium")){
+        return null;
+    }
+    else
+    {
+      return (
+        <FeeSetting />);
+    }
+  }
+
+  /**
    * React Render
    *
    * @returns
@@ -273,7 +290,7 @@ class SettingsCore extends Component {
             <ReScanButton />
           </SettingsField>
 
-          <FeeSetting />
+          {this.returnFeeSetting()}
 
           <SettingsField
             connectLabel
