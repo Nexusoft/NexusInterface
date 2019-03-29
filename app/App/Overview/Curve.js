@@ -1,6 +1,14 @@
 import * as THREE from 'three';
 import { geoInterpolate } from 'd3-geo';
 
+/**
+ * Creates a spline from one point to the next
+ *
+ * @memberof Curve
+ * @param {*} pointOne Contains {lat and lng}
+ * @param {*} pointTwo Contains {lat and lng}
+ * @returns {THREE.CubicBezierCurve3}
+ */
 function getSplineFromCoords(pointOne, pointTwo) {
   const start = coordinateToPosition(pointOne.lat, pointOne.lng, 125);
   const end = coordinateToPosition(pointTwo.lat, pointTwo.lng, 125);
@@ -17,10 +25,28 @@ function getSplineFromCoords(pointOne, pointTwo) {
   return new THREE.CubicBezierCurve3(start, mid1, mid2, end);
 }
 
+/**
+ * Clamp a number between min and max
+ *
+ * @memberof Curve
+ * @param {Number} num Input Value
+ * @param {Number} min Min Value
+ * @param {Number} max Max Value
+ * @returns {Number} Return Value
+ */
 function clamp(num, min, max) {
   return num <= min ? min : num >= max ? max : num;
 }
 
+/**
+ * Translates a Lat and Lng to a Vector3 on a sphere
+ *
+ * @memberof Curve
+ * @param {Number} lat Latitude
+ * @param {Number} lng longitude
+ * @param {Number} radius radius of sphere
+ * @returns {THREE.Vector3} Point on sphere
+ */
 function coordinateToPosition(lat, lng, radius) {
   const phi = ((90 - lat) * Math.PI) / 180;
   const theta = (-lng * Math.PI) / 180;
@@ -32,6 +58,12 @@ function coordinateToPosition(lat, lng, radius) {
   );
 }
 
+/**
+ * Object for the Curves on the globe
+ *
+ * @export
+ * @class Curve
+ */
 export default class Curve {
   constructor(pointOne, pointTwo, params) {
     this.pointOne = pointOne;
@@ -69,6 +101,11 @@ export default class Curve {
     this.arc = new THREE.Line(this.curveGeometry, material);
   }
 
+  /**
+   * Play the Animation
+   *
+   * @memberof Curve
+   */
   play = () => {
     if (this.index > this.curveSegments) {
       this.index = 0;
@@ -82,11 +119,21 @@ export default class Curve {
     }, 40);
   };
 
+  /**
+   * Stop the animation
+   *
+   * @memberof Curve
+   */
   stop = () => {
     this.curveGeometry.setDrawRange(0, this.curveSegments);
     this.index = this.curveSegments + 1;
   };
 
+  /**
+   * Restart the animation
+   *
+   * @memberof Curve
+   */
   restart = () => {
     this.index = 1;
     this.curveGeometry.setDrawRange(0, 1);

@@ -1,5 +1,11 @@
 import * as THREE from 'three';
 
+/**
+ * The point/pillar on the globe
+ *
+ * @export
+ * @class Point
+ */
 export default class Point {
   constructor(lat, lng, params) {
     this.lat = lat;
@@ -23,6 +29,12 @@ export default class Point {
     this.setColor(color);
   }
 
+  /**
+   * Sets color of the point
+   *
+   * @param {string} hex
+   * @memberof Point
+   */
   setColor(hex) {
     this.pillar.material.color.set(hex);
   }

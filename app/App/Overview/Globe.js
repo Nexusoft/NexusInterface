@@ -48,6 +48,13 @@ const Shader = {
   ].join('\n'),
 };
 
+/**
+ * The 3D Globe on the overview page. 
+ *
+ * @export
+ * @class Globe
+ * @extends {Component}
+ */
 export default class Globe extends Component {
   constructor() {
     super();
@@ -66,6 +73,11 @@ export default class Globe extends Component {
     this.timesSkipped = 0;
   }
 
+  /**
+   * Mounting event from React, used to start the globe up
+   *
+   * @memberof Globe
+   */
   componentDidMount() {
     try {
       if (process.env.NODE_ENV === 'development') {
@@ -175,18 +187,35 @@ export default class Globe extends Component {
       console.log(e);
     }
   }
+  /**
+   * Handle Webgl Context Restore Event
+   *
+   * @memberof Globe
+   */
   contextRestoredHandler() {
     console.error('CONTEXT RESTORED');
     this.start();
     console.error('RESTORED GLOBE');
   }
 
+  /**
+   * Handle Webgl Context Lost Event
+   *
+   * @param {*} event
+   * @memberof Globe
+   */
   contextLostHandler(event) {
     event.preventDefault();
     console.error('CONTEXT LOST!!');
     this.stop();
   }
 
+  /**
+   * Update event from React
+   *
+   * @param {*} prevProps
+   * @memberof Globe
+   */
   componentDidUpdate(prevProps) {
     this.timesSkipped++;
     if (
@@ -198,6 +227,11 @@ export default class Globe extends Component {
     }
   }
 
+  /**
+   * Unmount event from React
+   *
+   * @memberof Globe
+   */
   componentWillUnmount() {
     this.stop();
     window.removeEventListener('resize', this.onWindowResize, false);
@@ -205,6 +239,12 @@ export default class Globe extends Component {
     this.threeRootElement.removeChild(this.renderer.domElement);
   }
 
+  /**
+   * Register point/pillar on the globe
+   *
+   * @returns
+   * @memberof Globe
+   */
   async pointRegister() {
     const peerInfo = await RPC.PROMISE('getpeerinfo', []);
     if (!peerInfo) return;
@@ -269,6 +309,11 @@ export default class Globe extends Component {
     this.arcRegister();
   }
 
+  /**
+   * Add globe to the renderer
+   *
+   * @memberof Globe
+   */
   addSelf() {
     let selfIndex = this.pointRegistry.indexOf(
       point => point.params.type === 'SELF'
@@ -295,6 +340,11 @@ export default class Globe extends Component {
     }
   }
 
+  /**
+   * Remove all points on the globe
+   *
+   * @memberof Globe
+   */
   removeAllPoints() {
     this.pointRegistry.map(point => {
       if (point.params.type === 'SELF') {
@@ -309,6 +359,12 @@ export default class Globe extends Component {
     });
   }
 
+  /**
+   * Remove point/pillar from the globe
+   *
+   * @param {*} deadPoint Point to remove
+   * @memberof Globe
+   */
   destroyPoint(deadPoint) {
     this.pointRegistry = this.pointRegistry.filter(point => {
       if (point.pillar.uuid !== deadPoint.pillar.uuid) return point;
@@ -334,6 +390,11 @@ export default class Globe extends Component {
     deadPoint.pillar = undefined;
   }
 
+  /**
+   * Register a arc with the globe
+   *
+   * @memberof Globe
+   */
   arcRegister() {
     let self = this.pointRegistry[
       this.pointRegistry.findIndex(element => {
@@ -373,12 +434,23 @@ export default class Globe extends Component {
     }
   }
 
+  /**
+   * Animate all the Curves on the globe
+   *
+   * @memberof Globe
+   */
   animateArcs() {
     this.curveRegistry.map(arc => {
       arc.play();
     });
   }
 
+  /**
+   * Removes the unused Curve
+   *
+   * @param {*} deadCurve Curve to remove
+   * @memberof Globe
+   */
   destroyArc(deadCurve) {
     this.curveRegistry = this.curveRegistry.filter(curve => {
       if (curve.arc.uuid !== deadCurve.arc.uuid) return curve;
@@ -390,32 +462,63 @@ export default class Globe extends Component {
     deadCurve.arc = undefined;
   }
 
+  /**
+   * Event when the window resizes
+   *
+   * @memberof Globe
+   */
   onWindowResize() {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
+  /**
+   * Stop the animation
+   *
+   * @memberof Globe
+   */
   stop() {
     cancelAnimationFrame(this.frameId);
   }
 
+  /**
+   * Start the animation
+   *
+   * @memberof Globe
+   */
   start() {
     if (!this.frameId) {
       this.frameId = requestAnimationFrame(this.animate);
     }
   }
 
+  /**
+   * Animate the globe
+   *
+   * @memberof Globe
+   */
   animate() {
     this.renderScene();
     this.frameId = window.requestAnimationFrame(this.animate);
   }
 
+  /**
+   * Renders the screen to the THREE's canvas
+   *
+   * @memberof Globe
+   */
   renderScene() {
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
   }
 
+  /**
+   * Render the globe using react
+   *
+   * @returns {JSX} JSX
+   * @memberof Globe
+   */
   render() {
     return (
       <GlobeContainer>
