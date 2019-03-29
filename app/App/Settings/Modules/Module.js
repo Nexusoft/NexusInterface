@@ -74,11 +74,22 @@ const actionCreators = {
   updateSettings,
 };
 
+/**
+ *
+ *
+ * @class Module
+ * @extends {React.Component}
+ */
 @connect(
   mapStateToProps,
   actionCreators
 )
 class Module extends React.Component {
+  /**
+   *
+   *
+   * @memberof Module
+   */
   enableModule = () => {
     this.props.updateSettings({
       disabledModules: this.props.disabledModules.filter(
@@ -87,12 +98,22 @@ class Module extends React.Component {
     });
   };
 
+  /**
+   *
+   *
+   * @memberof Module
+   */
   disableModule = () => {
     this.props.updateSettings({
       disabledModules: [...this.props.disabledModules, this.props.module.name],
     });
   };
 
+  /**
+   *
+   *
+   * @memberof Module
+   */
   toggleModule = () => {
     const { module, active } = this.props;
     if (module.invalid) return;
@@ -119,12 +140,23 @@ class Module extends React.Component {
     }
   };
 
+  /**
+   *
+   *
+   * @memberof Module
+   */
   openModuleDetails = () => {
     UIController.openModal(ModuleDetailsModal, {
       module: this.props.module,
     });
   };
 
+  /**
+   *
+   *
+   * @returns
+   * @memberof Module
+   */
   render() {
     const { module, active, ...rest } = this.props;
     return (

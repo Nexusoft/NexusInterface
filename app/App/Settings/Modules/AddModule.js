@@ -159,7 +159,9 @@ class AddModule extends React.Component {
         {({ getRootProps, getInputProps, isDragActive }) => (
           <AddModuleComponent
             {...getRootProps()}
-            onClick={() => {}}
+            onClick={
+              /* disable dropzone's default file browsing dialog on click */ () => {}
+            }
             legend={
               <>
                 <Icon icon={plusCircleIcon} />

@@ -14,8 +14,8 @@ import ModuleDetailsModal from './ModuleDetailsModal';
 const tempModuleDir = join(config.GetAppDataDirectory(), '.temp_module');
 
 /**
- * Install a module from either an archive file of a directory.
- * If it's an archive file then it will be decompressed to a
+ * Install a module from either an archive file or a directory.
+ * In case of an archive file, it will be extracted to a
  * temp directory then continue to install from that directory.
  *
  * @export

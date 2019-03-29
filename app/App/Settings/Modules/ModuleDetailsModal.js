@@ -63,7 +63,19 @@ const Field = ({ label, children }) => (
   </Row>
 );
 
+/**
+ * Module details modal, for viewing details of both installed modules
+ * and modules being installed
+ *
+ * @class ModuleDetailsModal
+ * @extends {React.Component}
+ */
 class ModuleDetailsModal extends React.Component {
+  /**
+   *
+   *
+   * @memberof ModuleDetailsModal
+   */
   confirmDelete = () => {
     UIController.openConfirmDialog({
       question: `Delete ${this.props.module.displayName}?`,
@@ -78,6 +90,12 @@ class ModuleDetailsModal extends React.Component {
     });
   };
 
+  /**
+   *
+   *
+   * @returns
+   * @memberof ModuleDetailsModal
+   */
   render() {
     const { module, forInstall, install } = this.props;
     const { host, owner, repo, commit } = module.repository || {};
@@ -194,11 +212,22 @@ const InstallerWarning = styled.div({
   fontSize: '.9em',
 });
 
+/**
+ * Install section at the bottom of Module Details modal
+ *
+ * @class Installer
+ * @extends {React.Component}
+ */
 class Installer extends React.Component {
   state = {
     installing: false,
   };
 
+  /**
+   *
+   *
+   * @memberof Installer
+   */
   install = async () => {
     this.setState({ installing: true });
     try {
@@ -208,6 +237,12 @@ class Installer extends React.Component {
     }
   };
 
+  /**
+   *
+   *
+   * @returns
+   * @memberof Installer
+   */
   render() {
     const { module } = this.props;
     const { installing } = this.state;
