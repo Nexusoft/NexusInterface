@@ -20,6 +20,7 @@ import { updateSettings } from 'actions/settingsActionCreators';
 import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
+import ReScanButton from '../../../nxs_modules/components/MyAddressesModal/RescanButton.js'
 
 const mapStateToProps = ({
   settings,
@@ -260,6 +261,14 @@ class SettingsCore extends Component {
               checked={settings.enableStaking}
               onChange={this.updateHandlers('enableStaking')}
             />
+          </SettingsField>
+
+          <SettingsField
+            connectLabel
+            label={<Text id="MyAddressesModal.Rescan" />}
+            subLabel = {<Text id="MyAddressesModal.RescanTooltip" />}
+          >
+           <ReScanButton />
           </SettingsField>
 
           <FeeSetting />

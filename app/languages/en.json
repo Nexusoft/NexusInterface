@@ -432,7 +432,11 @@
   "MyAddressesModal.Rescanning": "Rescanning...",
   "MyAddressesModal.RescanSuccess": "Rescanned successfully",
   "MyAddressesModal.RescanError": "Error Rescanning",
-  "MyAddressesModal.RescanTooltip": "The balances shown here could be incorrect in some rare cases, rescanning will help you correct them",
+  "MyAddressesModal.RescanTooltip": "Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.",
+  "MyAddressesModal.CheckWallet": "Check Wallet",
+  "MyAddressesModal.CheckWalletTooltip": "Check Wallet's Integerty",
+  "MyAddressesModal.CheckWalletSuccess": "Check Wallet Pass",
+  "MyAddressesModal.CheckWalletError": "Check Wallet Failed",
 
   "Footer.Overview": "Overview",
   "Footer.SendNXS": "Send NXS",
