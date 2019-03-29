@@ -1,4 +1,4 @@
-import { join, extname, dirname } from 'path';
+import { join, extname, dirname, normalize } from 'path';
 import fs from 'fs';
 import extractZip from 'extract-zip';
 
@@ -50,6 +50,13 @@ export default async function installModule(path) {
         if (fs.statSync(subItemPath).isDirectory()) {
           dirPath = subItemPath;
         }
+      }
+    } else {
+      const modulesDir = normalize(config.GetModulesDir());
+      const dirPath = normalize(path);
+      if (dirPath.startsWith(modulesDir)) {
+        UIController.showNotification('Invalid module location', 'error');
+        return;
       }
     }
 
