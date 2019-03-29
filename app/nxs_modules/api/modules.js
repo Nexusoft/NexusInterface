@@ -1,4 +1,4 @@
-import { join, isAbsolute } from 'path';
+import { join, isAbsolute, normalize } from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
 import Ajv from 'ajv';
@@ -13,6 +13,11 @@ import memoize from 'memoize-one';
 import config from 'api/configuration';
 
 const modulesDir = config.GetModulesDir();
+const reservedFileNames = [
+  'nxs_package.json',
+  'repo_info.json',
+  'storage.json',
+];
 
 /**
  * Load Modules
@@ -190,6 +195,9 @@ export async function validateModule(dirPath, { devMode, verifyModuleSource }) {
     if (module.entry && isAbsolute(module.entry)) return null;
     if (module.icon && isAbsolute(module.icon)) return null;
     if (module.files.some(file => isAbsolute(file))) return null;
+
+    if (module.files.some(file => reservedFileNames.includes(normalize(file))))
+      return null;
 
     const filePaths = module.files.map(file => join(dirPath, file));
     if (filePaths.some(filePath => !fs.existsSync(filePath))) {
