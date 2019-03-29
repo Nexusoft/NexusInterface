@@ -208,6 +208,9 @@ export default class Globe extends Component {
     event.preventDefault();
     console.error('CONTEXT LOST!!');
     this.stop();
+    window.removeEventListener('resize', this.onWindowResize, false);
+    this.controls.dispose();
+    this.threeRootElement.removeChild(this.renderer.domElement);
   }
 
   /**
