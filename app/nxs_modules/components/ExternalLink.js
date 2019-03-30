@@ -9,9 +9,10 @@ import Link from 'components/Link';
  *
  * @param {*} props
  */
-const ExternalLink = props => (
+const ExternalLink = React.forwardRef((props, ref) => (
   <Link
     {...props}
+    ref={ref}
     as="a"
     onClick={e => {
       e.preventDefault();
@@ -19,6 +20,6 @@ const ExternalLink = props => (
       props.onClick && props.onClick(e);
     }}
   />
-);
+));
 
 export default ExternalLink;

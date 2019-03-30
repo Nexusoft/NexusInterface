@@ -9,6 +9,7 @@ import Overlay from 'components/Overlay';
 import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
 import * as color from 'utils/color';
+import { passRef } from 'utils';
 
 // Minimum gap from the dropdown to the edges of the screen
 const minScreenGap = 10;
@@ -285,7 +286,7 @@ class Options extends Component {
   }
 }
 
-export default class Select extends Component {
+class Select extends Component {
   controlRef = React.createRef();
 
   state = { open: false };
@@ -322,6 +323,7 @@ export default class Select extends Component {
       error,
       onChange,
       placeholder,
+      controlRef,
       ...rest
     } = this.props;
     const { open } = this.state;
@@ -330,7 +332,10 @@ export default class Select extends Component {
     return (
       <>
         <SelectControl
-          ref={this.controlRef}
+          ref={el => {
+            passRef(this.controlRef);
+            passRef(controlRef);
+          }}
           active={open}
           onClick={this.open}
           skin={skin}
@@ -369,6 +374,10 @@ export default class Select extends Component {
     );
   }
 }
+
+export default React.forwardRef((props, ref) => (
+  <Select {...props} controlRef={ref} />
+));
 
 // Select wrapper for redux-form
 const SelectReduxForm = ({ input, meta, ...rest }) => (

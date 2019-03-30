@@ -23,12 +23,12 @@ const NativeLink = styled.a(linkStyles);
 
 const ComponentLink = styled(RouterLink)(linkStyles);
 
-const Link = ({ as, ...rest }) => {
+const Link = React.forwardRef(({ as, ...rest }, ref) => {
   if (typeof as === 'string') {
-    return <NativeLink as={as} {...rest} />;
+    return <NativeLink as={as} {...rest} ref={ref} />;
   } else {
-    return <ComponentLink as={as} {...rest} />;
+    return <ComponentLink as={as} {...rest} ref={ref} />;
   }
-};
+});
 
 export default Link;

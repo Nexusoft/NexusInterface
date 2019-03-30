@@ -59,18 +59,20 @@ const PanelBody = styled.div(({ theme }) => ({
   overflow: 'auto',
 }));
 
-const Panel = ({ icon, title, controls, children }) => (
-  <PanelComponent>
-    <PanelHeader>
-      <PanelTitle>
-        {!!icon && <Icon className="space-right" icon={icon} />}
-        <span className="v-align">{title}</span>
-      </PanelTitle>
-      {controls}
-    </PanelHeader>
+const Panel = React.forwardRef(
+  ({ icon, title, controls, children, ...rest }, ref) => (
+    <PanelComponent {...rest} ref={ref}>
+      <PanelHeader>
+        <PanelTitle>
+          {!!icon && <Icon className="space-right" icon={icon} />}
+          <span className="v-align">{title}</span>
+        </PanelTitle>
+        {controls}
+      </PanelHeader>
 
-    <PanelBody>{children}</PanelBody>
-  </PanelComponent>
+      <PanelBody>{children}</PanelBody>
+    </PanelComponent>
+  )
 );
 
 export default Panel;

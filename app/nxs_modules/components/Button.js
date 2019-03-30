@@ -223,13 +223,10 @@ const ButtonComponent = styled.button(
  * Note: the double & in &&:disabled is a css specificity hack so that the disabled styles take priority over the hover styles
  */
 
-export default class Button extends Component {
-  static defaultProps = {
-    type: 'button',
-    skin: 'default',
-  };
+const Button = React.forwardRef(
+  ({ type = 'button', skin = 'default', ...rest }, ref) => (
+    <ButtonComponent type={type} skin={skin} {...rest} ref={ref} />
+  )
+);
 
-  render() {
-    return <ButtonComponent {...this.props} />;
-  }
-}
+export default Button;

@@ -94,7 +94,9 @@ const SwitchInput = styled.input(({ theme }) => {
   };
 });
 
-const Switch = props => <SwitchInput type="checkbox" {...props} />;
+const Switch = React.forwardRef((props, ref) => (
+  <SwitchInput type="checkbox" {...props} ref={ref} />
+));
 
 const SwitchReduxForm = ({ input, meta, ...rest }) => (
   <Switch {...input} {...rest} />

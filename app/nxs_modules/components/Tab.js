@@ -34,15 +34,17 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   },
 }));
 
-const Tab = ({ link, icon, text, toolTipText, isActive }) => (
-  <TabLi>
-    <Tooltip.Trigger tooltip={toolTipText} position="top">
-      <TabLink to={link} isActive={isActive}>
-        {!!icon && <Icon className="space-right" icon={icon} />}
-        {text}
-      </TabLink>
-    </Tooltip.Trigger>
-  </TabLi>
+const Tab = React.forwardRef(
+  ({ link, icon, text, toolTipText, isActive, ...rest }, ref) => (
+    <TabLi {...rest} ref={ref}>
+      <Tooltip.Trigger tooltip={toolTipText} position="top">
+        <TabLink to={link} isActive={isActive}>
+          {!!icon && <Icon className="space-right" icon={icon} />}
+          {text}
+        </TabLink>
+      </Tooltip.Trigger>
+    </TabLi>
+  )
 );
 
 const TabBar = styled.ul({
