@@ -124,7 +124,8 @@ class SettingsStyle extends Component {
     try {
       myAddress = this.props.myAccounts[0].addresses[0];
     }
-    catch{
+    catch(e){
+      console.error(e);
     }
     this.setState(
       {
