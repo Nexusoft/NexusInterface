@@ -15,16 +15,11 @@ const Legend = styled.legend(({ theme }) => ({
   color: theme.mixer(0.75),
 }));
 
-class FieldSet extends React.Component {
-  render() {
-    const { legend, children, ...rest } = this.props;
-    return (
-      <FieldSetComponent {...rest}>
-        <Legend>{legend}</Legend>
-        {children}
-      </FieldSetComponent>
-    );
-  }
-}
+const FieldSet = React.forwardRef(({ legend, children, ...rest }, ref) => (
+  <FieldSetComponent {...rest} ref={ref}>
+    <Legend>{legend}</Legend>
+    {children}
+  </FieldSetComponent>
+));
 
 export default FieldSet;
