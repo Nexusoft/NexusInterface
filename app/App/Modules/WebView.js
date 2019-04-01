@@ -54,12 +54,12 @@ function confirm([options = {}]) {
     yesLabel,
     yesSkin,
     yesCallback: () => {
-      webview.send(`confirm-yes${id ? `:${id}` : ''}`);
+      webview.send(`confirm-answer${id ? `:${id}` : ''}`, true);
     },
     noLabel,
     noSkin,
     noCallback: () => {
-      webview.send(`confirm-no${id ? `:${id}` : ''}`);
+      webview.send(`confirm-answer${id ? `:${id}` : ''}`, false);
     },
   });
 }
