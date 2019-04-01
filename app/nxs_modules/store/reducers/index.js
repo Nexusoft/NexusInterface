@@ -13,6 +13,7 @@ import settings from './settings';
 import theme from './theme';
 import ui from './ui';
 import modules from './modules';
+import moduleState from './moduleState';
 import core from './core';
 
 import { addLocaleData } from 'react-intl';
@@ -50,6 +51,7 @@ export default function createRootReducer(history) {
       theme,
       ui,
       modules,
+      moduleState,
       form: formReducer,
     })
   );

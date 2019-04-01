@@ -7,6 +7,8 @@ import urlJoin from 'url-join';
 import { remote } from 'electron';
 
 // Internal Global
+import store from 'store';
+import { updateModuleState } from 'actions/moduleActionCreators';
 import config from 'api/configuration';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
@@ -62,7 +64,17 @@ function confirm([options = {}]) {
   });
 }
 
-function handleIpcMessage(event) {
+function updateState(moduleName, moduleState) {
+  if (typeof moduleState === 'object') {
+    store.dispatch(updateModuleState(moduleName, moduleState));
+  } else {
+    console.error(
+      `Module ${moduleName} is trying to update its state to a non-object value ${moduleState}`
+    );
+  }
+}
+
+function handleIpcMessage(event, module) {
   switch (event.channel) {
     case 'rpc-call':
       rpcCall(event.args);
@@ -76,10 +88,12 @@ function handleIpcMessage(event) {
     case 'show-success-dialog':
       showSuccessDialog(event.args);
       break;
-    case 'confirm': {
+    case 'confirm':
       confirm(event.args);
       break;
-    }
+    case 'update-state':
+      updateState(module.name, event.args[0]);
+      break;
   }
 }
 
@@ -108,7 +122,9 @@ class WebView extends React.Component {
   componentDidMount() {
     const webview = this.webviewRef.current;
     if (webview) {
-      webview.addEventListener('ipc-message', handleIpcMessage);
+      webview.addEventListener('ipc-message', event =>
+        handleIpcMessage(event, module)
+      );
       webview.addEventListener('dom-ready', () => {
         webview.openDevTools();
         const {

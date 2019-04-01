@@ -176,3 +176,4 @@ export const SWITCH_CONSOLE_TAB = 'SWITCH_CONSOLE_TAB';
 
 // Modules
 export const LOAD_MODULES = 'LOAD_MODULES';
+export const UPDATE_MODULE_STATE = 'UPDATE_MODULE_STATE';

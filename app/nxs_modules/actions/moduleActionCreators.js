@@ -11,3 +11,8 @@ const loadModulesActionCreator = () => async (dispatch, getState) => {
   });
 };
 export { loadModulesActionCreator as loadModules };
+
+export const updateModuleState = (moduleName, moduleState) => ({
+  type: TYPE.UPDATE_MODULE_STATE,
+  payload: { moduleName, moduleState },
+});
