@@ -103,11 +103,12 @@ function handleIpcMessage(event, module) {
  * @class WebView
  * @extends {Component}
  */
-@connect(({ theme, core, settings }) => ({
+@connect(({ theme, core, settings, moduleStates }, props) => ({
   theme,
   settings,
   coreInfo: core.info,
   difficulty: core.difficulty,
+  moduleState: moduleStates[props.module.name],
 }))
 class WebView extends React.Component {
   webviewRef = React.createRef();
@@ -131,12 +132,14 @@ class WebView extends React.Component {
           theme,
           coreInfo,
           difficulty,
+          moduleState,
           settings: { locale, fiatCurrency, addressStyle },
         } = this.props;
         webview.send('initialize', {
           theme,
           coreInfo,
           difficulty,
+          moduleState,
           settings: { locale, fiatCurrency, addressStyle },
         });
       });
