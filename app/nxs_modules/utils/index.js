@@ -11,7 +11,7 @@ export function escapeRegExp(s) {
 export function passRef(el, ref) {
   if (typeof ref === 'function') {
     ref(el);
-  } else {
+  } else if (ref) {
     ref.current = el;
   }
 }

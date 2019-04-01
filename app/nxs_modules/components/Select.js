@@ -333,8 +333,8 @@ class Select extends Component {
       <>
         <SelectControl
           ref={el => {
-            passRef(this.controlRef);
-            passRef(controlRef);
+            passRef(el, this.controlRef);
+            passRef(el, controlRef);
           }}
           active={open}
           onClick={this.open}
