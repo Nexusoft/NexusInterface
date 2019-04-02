@@ -1,12 +1,12 @@
 import { join, extname, dirname, normalize } from 'path';
 import fs from 'fs';
-import extractZip from 'extract-zip';
 
 import UIController from 'components/UIController';
 import store from 'store';
 import { validateModule } from 'api/modules';
 import config from 'api/configuration';
-import deleteDirectory from 'utils/deleteDirectory';
+import deleteDirectory from 'utils/promisified/deleteDirectory';
+import extractZip from 'utils/promisified/extractZip';
 
 import ModuleDetailsModal from './ModuleDetailsModal';
 
@@ -40,7 +40,7 @@ export default async function installModule(path) {
         await deleteDirectory(tempModuleDir);
       }
 
-      await extract(path, { dir: tempModuleDir });
+      await extractZip(path, { dir: tempModuleDir });
       dirPath = tempModuleDir;
 
       // In case the module is wrapped inside a sub directory of the archive file
@@ -182,24 +182,6 @@ function confirm(options) {
         noCallback: () => {
           resolve(false);
         },
-      });
-    } catch (err) {
-      console.error(err);
-      reject(err);
-    }
-  });
-}
-
-// TODO: make this a common utility
-function extract(source, options) {
-  return new Promise((resolve, reject) => {
-    try {
-      extractZip(source, options, err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
       });
     } catch (err) {
       console.error(err);

@@ -12,6 +12,7 @@ import memoize from 'memoize-one';
 
 import config from 'api/configuration';
 
+const ajv = new Ajv();
 const modulesDir = config.GetModulesDir();
 // Reserved file names, modules are not allowed to have one of these in their `files` field
 const reservedFileNames = [
@@ -141,7 +142,7 @@ export const getModuleIfActive = memoize(
  * =============================================================================
  */
 
-const ajv = new Ajv();
+// Schema for nxs_package.json
 const nxsPackageSchema = {
   additionalProperties: false,
   required: ['name', 'displayName', 'version', 'apiVersion', 'type', 'files'],
@@ -273,6 +274,7 @@ export async function validateModule(dirPath, { devMode, verifyModuleSource }) {
  * =============================================================================
  */
 
+// Schema for repo_info.json
 const repoInfoSchema = {
   additionalProperties: false,
   required: ['data'],
