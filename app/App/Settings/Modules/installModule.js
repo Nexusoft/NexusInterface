@@ -7,6 +7,7 @@ import { validateModule } from 'api/modules';
 import config from 'api/configuration';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
+import confirm from 'utils/promisified/confirm';
 
 import ModuleDetailsModal from './ModuleDetailsModal';
 
@@ -165,27 +166,4 @@ async function mkdirRecursive(path) {
     await mkdirRecursive(parent);
   }
   await fs.promises.mkdir(path);
-}
-
-// Utility functions
-// =========================================
-
-// TODO: make this a common utility
-function confirm(options) {
-  return new Promise((resolve, reject) => {
-    try {
-      UIController.openConfirmDialog({
-        ...options,
-        yesCallback: () => {
-          resolve(true);
-        },
-        noCallback: () => {
-          resolve(false);
-        },
-      });
-    } catch (err) {
-      console.error(err);
-      reject(err);
-    }
-  });
 }

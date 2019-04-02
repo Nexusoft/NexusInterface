@@ -12,7 +12,7 @@ import ExternalLink from 'components/ExternalLink';
 import UIController from 'components/UIController';
 import config from 'api/configuration';
 import { timing } from 'styles';
-import deleteDirectory from 'utils/deleteDirectory';
+import deleteDirectory from 'utils/promisified/deleteDirectory';
 import warningIcon from 'images/warning.sprite.svg';
 import linkIcon from 'images/link.sprite.svg';
 import trashIcon from 'images/trash.sprite.svg';
