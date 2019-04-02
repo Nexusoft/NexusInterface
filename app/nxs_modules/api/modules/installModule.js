@@ -14,6 +14,61 @@ import confirm from 'utils/promisified/confirm';
 const tempModuleDir = join(config.GetAppDataDirectory(), '.temp_module');
 
 /**
+ * Copy a module file from source to dest
+ *
+ * @param {*} file - file's relative path from source
+ * @param {*} source
+ * @param {*} dest
+ * @returns
+ */
+function copyFile(file, source, dest) {
+  return fs.promises.copyFile(join(source, file), join(dest, file));
+}
+
+/**
+ * Node.js `mkdir`'s `recursive` option doesn't work somehow (last tested on node.js v10.11.0)
+ * So we need to write it manually
+ *
+ * @param {string} path
+ */
+async function mkdirRecursive(path) {
+  const parent = dirname(path);
+  if (!fs.existsSync(parent)) {
+    await mkdirRecursive(parent);
+  }
+  await fs.promises.mkdir(path);
+}
+
+/**
+ * Copy all files of a module from source to the destination
+ * including nxs_package.json and repo_info.json
+ *
+ * @param {*} files
+ * @param {*} source
+ * @param {*} dest
+ * @returns
+ */
+async function copyModule(files, source, dest) {
+  // Create all the missing sub-directories sequentially first
+  // The creations would be duplicated if they're parallel
+  for (let file of files) {
+    const dir = dirname(join(dest, file));
+    if (!fs.existsSync(dir)) {
+      await mkdirRecursive(dir);
+    }
+  }
+
+  const promises = [
+    copyFile('nxs_package.json', source, dest),
+    ...files.map(file => copyFile(file, source, dest)),
+  ];
+  if (fs.existsSync(join(source, 'repo_info.json'))) {
+    promises.push(copyFile('repo_info.json', source, dest));
+  }
+  return await Promise.all(promises);
+}
+
+/**
  * Install a module from a directory
  *
  * @param {string} path
@@ -66,61 +121,6 @@ async function installFromDirectory(path) {
 }
 
 /**
- * Copy all files of a module from source to the destination
- * including nxs_package.json and repo_info.json
- *
- * @param {*} files
- * @param {*} source
- * @param {*} dest
- * @returns
- */
-async function copyModule(files, source, dest) {
-  // Create all the missing sub-directories sequentially first
-  // The creations would be duplicated if they're parallel
-  for (let file of files) {
-    const dir = dirname(join(dest, file));
-    if (!fs.existsSync(dir)) {
-      await mkdirRecursive(dir);
-    }
-  }
-
-  const promises = [
-    copyFile('nxs_package.json', source, dest),
-    ...files.map(file => copyFile(file, source, dest)),
-  ];
-  if (fs.existsSync(join(source, 'repo_info.json'))) {
-    promises.push(copyFile('repo_info.json', source, dest));
-  }
-  return await Promise.all(promises);
-}
-
-/**
- * Copy a module file from source to dest
- *
- * @param {*} file - file's relative path from source
- * @param {*} source
- * @param {*} dest
- * @returns
- */
-function copyFile(file, source, dest) {
-  return fs.promises.copyFile(join(source, file), join(dest, file));
-}
-
-/**
- * Node.js `mkdir`'s `recursive` option doesn't work somehow (last tested on node.js v10.11.0)
- * So we need to write it manually
- *
- * @param {string} path
- */
-async function mkdirRecursive(path) {
-  const parent = dirname(path);
-  if (!fs.existsSync(parent)) {
-    await mkdirRecursive(parent);
-  }
-  await fs.promises.mkdir(path);
-}
-
-/**
  * Install a module from either an archive file or a directory.
  * In case of an archive file, it will be extracted to a
  * temp directory then continue to install from that directory.
@@ -129,7 +129,7 @@ async function mkdirRecursive(path) {
  * @param {string} path
  * @returns
  */
-export default async function installModule(path) {
+export async function installModule(path) {
   try {
     if (!fs.existsSync(path)) {
       UIController.showNotification('Cannot find module', 'error');

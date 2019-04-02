@@ -1,6 +1,7 @@
 export { loadModules } from './loadModules';
 export { loadModuleFromDir } from './loadModule';
 export { installModule } from './installModule';
+export { registerWebView, unregisterWebView } from './webview';
 export {
   isPageModule,
   isModuleDeprecated,
