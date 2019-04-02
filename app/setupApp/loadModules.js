@@ -47,7 +47,7 @@ export const loadModules = async () => dispatch => {
     },
   };
   const validateSchema = ajv.compile(nxsPackageSchema);
-  async function validateModule(dirName) {
+  async function loadModuleFromDir(dirName) {
     try {
       const dirPath = join(modulesDir, dirName);
       const nxsPackagePath = join(dirPath, 'nxs_package.json');
@@ -66,7 +66,7 @@ export const loadModules = async () => dispatch => {
     }
   }
 
-  const modules = await Promise.all(subItems.map(validateModule));
+  const modules = await Promise.all(subItems.map(loadModuleFromDir));
   const modulesMap = modules
     .filter(m => m)
     .reduce((map, [dirName, module]) => {

@@ -3,7 +3,7 @@ import fs from 'fs';
 
 import UIController from 'components/UIController';
 import store from 'store';
-import { validateModule } from 'api/modules';
+import { loadModuleFromDir } from 'api/modules';
 import config from 'api/configuration';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
@@ -79,7 +79,7 @@ async function installFromDirectory(path) {
   const {
     settings: { devMode, verifyModuleSource },
   } = store.getState();
-  const module = await validateModule(path, { devMode, verifyModuleSource });
+  const module = await loadModuleFromDir(path, { devMode, verifyModuleSource });
 
   if (!module) {
     UIController.showNotification('Invalid Module', 'error');
@@ -150,6 +150,14 @@ async function copyModule(files, source, dest) {
   return await Promise.all(promises);
 }
 
+/**
+ * Copy a module file from source to dest
+ *
+ * @param {*} file - file's relative path from source
+ * @param {*} source
+ * @param {*} dest
+ * @returns
+ */
 function copyFile(file, source, dest) {
   return fs.promises.copyFile(join(source, file), join(dest, file));
 }
