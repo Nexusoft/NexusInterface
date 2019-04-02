@@ -13,6 +13,7 @@ import memoize from 'memoize-one';
 import config from 'api/configuration';
 
 const modulesDir = config.GetModulesDir();
+// Reserved file names, modules are not allowed to have one of these in their `files` field
 const reservedFileNames = [
   'nxs_package.json',
   'repo_info.json',
@@ -24,6 +25,14 @@ const reservedFileNames = [
  * =============================================================================
  */
 
+/**
+ * Load all installed modules from the app modules directory.
+ * Only called once when the wallet is started.
+ *
+ * @export
+ * @param {*} { devMode, verifyModuleSource }
+ * @returns {object} an object mapping module names and module data
+ */
 export async function loadModules({ devMode, verifyModuleSource }) {
   try {
     if (!fs.existsSync(modulesDir)) return {};
@@ -55,17 +64,30 @@ export async function loadModules({ devMode, verifyModuleSource }) {
   }
 }
 
-function getIconPath(iconName, dirName) {
+/**
+ * Get the path of an icon if the file does exist
+ *
+ * @param {*} iconName
+ * @param {*} dirName
+ * @returns
+ */
+function getIconPathIfExists(iconName, dirName) {
   const iconPath = join(modulesDir, dirName, iconName);
   return fs.existsSync(iconPath) ? iconPath : null;
 }
 
+/**
+ * Add some necessary pre-calculated data to module object before returning modules to the app
+ *
+ * @param {*} module
+ * @returns
+ */
 function prepareModule(module) {
   // Prepare module icon
   module.iconPath = module.icon
-    ? getIconPath(module.icon, module.dirName)
-    : getIconPath('icon.svg', module.dirName) ||
-      getIconPath('icon.png', module.dirName);
+    ? getIconPathIfExists(module.icon, module.dirName)
+    : getIconPathIfExists('icon.svg', module.dirName) ||
+      getIconPathIfExists('icon.png', module.dirName);
 
   return module;
 }
@@ -75,6 +97,8 @@ function prepareModule(module) {
  * =============================================================================
  */
 
+// Page modules are module types that will be rendered into a page, and has
+// an icon of their own in the navigation bar similarly to the wallet's native pages
 export const isPageModule = module =>
   module.type === 'page' || module.type === 'page-panel';
 
@@ -180,10 +204,21 @@ const nxsPackageSchema = {
 };
 const validateNxsPackage = ajv.compile(nxsPackageSchema);
 
+/**
+ * Check a directory path to see if it is a valid module directory.
+ *
+ * @export
+ * @param {*} dirPath
+ * @param {*} { devMode, verifyModuleSource }
+ * @returns
+ */
 export async function validateModule(dirPath, { devMode, verifyModuleSource }) {
   try {
     const nxsPackagePath = join(dirPath, 'nxs_package.json');
-    if (!fs.existsSync(nxsPackagePath) || !fs.statSync(nxsPackagePath).isFile) {
+    if (
+      !fs.existsSync(nxsPackagePath) ||
+      !fs.statSync(nxsPackagePath).isFile()
+    ) {
       return null;
     }
 
@@ -274,6 +309,12 @@ const repoInfoSchema = {
 };
 const validateRepoInfo = ajv.compile(repoInfoSchema);
 
+/**
+ * Returns the repository info including the Nexus signature if repo_info.json file does exist and is valid
+ *
+ * @param {*} dirPath
+ * @returns
+ */
 async function getRepoInfo(dirPath) {
   const filePath = join(dirPath, 'repo_info.json');
   // Check repo_info.json file exists
@@ -293,6 +334,12 @@ async function getRepoInfo(dirPath) {
   return null;
 }
 
+/**
+ * Check if the specified repository is currently still online
+ *
+ * @param {*} repoInfo
+ * @returns
+ */
 async function isRepoOnline(repoInfo) {
   const { host, owner, repo, commit } = repoInfo.data.repository;
   if (!host || !owner || !repo || !commit) return false;
@@ -310,39 +357,14 @@ async function isRepoOnline(repoInfo) {
   }
 }
 
-function normalizeFile(path) {
-  const stream = fs.createReadStream(path);
-  if (isText(path, stream)) {
-    const normalizeNewline = streamNormalizeEol('\n');
-    return stream.pipe(normalizeNewline);
-  } else {
-    return stream;
-  }
-}
-
-async function getModuleHash(module, dirPath) {
-  return new Promise((resolve, reject) => {
-    try {
-      const nxsPackagePath = join(dirPath, 'nxs_package.json');
-      const filePaths = module.files.sort().map(file => join(dirPath, file));
-      const streams = [
-        normalizeFile(nxsPackagePath),
-        ...filePaths.map(normalizeFile),
-      ];
-
-      const hash = crypto.createHash('sha256');
-      hash.setEncoding('base64');
-      hash.on('readable', () => {
-        resolve(hash.read());
-      });
-      new Multistream(streams).pipe(hash);
-    } catch (err) {
-      console.error(err);
-      reject(err);
-    }
-  });
-}
-
+/**
+ * Check if the module hash and Nexus signature do exist and are valid
+ *
+ * @param {*} repoInfo
+ * @param {*} module
+ * @param {*} dirPath
+ * @returns
+ */
 async function isRepoVerified(repoInfo, module, dirPath) {
   const { data, verification } = repoInfo;
 
@@ -365,4 +387,51 @@ async function isRepoVerified(repoInfo, module, dirPath) {
     .end()
     .verify(NEXUS_EMBASSY_PUBLIC_KEY, verification.signature);
   return verified;
+}
+
+/**
+ * Normalize the newline character so the same file will produce the same
+ * hash in different Operating Systems
+ *
+ * @param {*} path
+ * @returns
+ */
+function normalizeFile(path) {
+  const stream = fs.createReadStream(path);
+  if (isText(path, stream)) {
+    const normalizeNewline = streamNormalizeEol('\n');
+    return stream.pipe(normalizeNewline);
+  } else {
+    return stream;
+  }
+}
+
+/**
+ * Get the module hash, calculated by hashing all the files that it uses, concatenated
+ *
+ * @param {*} module
+ * @param {*} dirPath
+ * @returns
+ */
+async function getModuleHash(module, dirPath) {
+  return new Promise((resolve, reject) => {
+    try {
+      const nxsPackagePath = join(dirPath, 'nxs_package.json');
+      const filePaths = module.files.sort().map(file => join(dirPath, file));
+      const streams = [
+        normalizeFile(nxsPackagePath),
+        ...filePaths.map(normalizeFile),
+      ];
+
+      const hash = crypto.createHash('sha256');
+      hash.setEncoding('base64');
+      hash.on('readable', () => {
+        resolve(hash.read());
+      });
+      new Multistream(streams).pipe(hash);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
 }
