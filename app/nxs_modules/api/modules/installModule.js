@@ -2,6 +2,7 @@ import { join, extname, dirname, normalize } from 'path';
 import fs from 'fs';
 
 import UIController from 'components/UIController';
+import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import store from 'store';
 import { loadModuleFromDir } from 'api/modules';
 import config from 'api/configuration';
@@ -9,65 +10,8 @@ import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
 import confirm from 'utils/promisified/confirm';
 
-import ModuleDetailsModal from './ModuleDetailsModal';
-
 // Temp directory for extracting module before installing
 const tempModuleDir = join(config.GetAppDataDirectory(), '.temp_module');
-
-/**
- * Install a module from either an archive file or a directory.
- * In case of an archive file, it will be extracted to a
- * temp directory then continue to install from that directory.
- *
- * @export
- * @param {string} path
- * @returns
- */
-export default async function installModule(path) {
-  try {
-    if (!fs.existsSync(path)) {
-      UIController.showNotification('Cannot find module', 'error');
-      return;
-    }
-    let dirPath = path;
-
-    if (fs.statSync(path).isFile()) {
-      if (extname(path) !== '.zip') {
-        UIController.showNotification('Unsupported file type', 'error');
-        return;
-      }
-
-      if (fs.existsSync(tempModuleDir)) {
-        await deleteDirectory(tempModuleDir);
-      }
-
-      await extractZip(path, { dir: tempModuleDir });
-      dirPath = tempModuleDir;
-
-      // In case the module is wrapped inside a sub directory of the archive file
-      const subItems = await fs.promises.readdir(tempModuleDir);
-      if (subItems.length === 1) {
-        const subItemPath = join(tempModuleDir, subItems[0]);
-        if (fs.statSync(subItemPath).isDirectory()) {
-          dirPath = subItemPath;
-        }
-      }
-    } else {
-      const modulesDir = normalize(config.GetModulesDir());
-      const dirPath = normalize(path);
-      if (dirPath.startsWith(modulesDir)) {
-        UIController.showNotification('Invalid module location', 'error');
-        return;
-      }
-    }
-
-    await installFromDirectory(dirPath);
-  } catch (err) {
-    console.error(err);
-    UIController.showNotification('An unknown error occurred', 'error');
-    return;
-  }
-}
 
 /**
  * Install a module from a directory
@@ -174,4 +118,59 @@ async function mkdirRecursive(path) {
     await mkdirRecursive(parent);
   }
   await fs.promises.mkdir(path);
+}
+
+/**
+ * Install a module from either an archive file or a directory.
+ * In case of an archive file, it will be extracted to a
+ * temp directory then continue to install from that directory.
+ *
+ * @export
+ * @param {string} path
+ * @returns
+ */
+export default async function installModule(path) {
+  try {
+    if (!fs.existsSync(path)) {
+      UIController.showNotification('Cannot find module', 'error');
+      return;
+    }
+    let dirPath = path;
+
+    if (fs.statSync(path).isFile()) {
+      if (extname(path) !== '.zip') {
+        UIController.showNotification('Unsupported file type', 'error');
+        return;
+      }
+
+      if (fs.existsSync(tempModuleDir)) {
+        await deleteDirectory(tempModuleDir);
+      }
+
+      await extractZip(path, { dir: tempModuleDir });
+      dirPath = tempModuleDir;
+
+      // In case the module is wrapped inside a sub directory of the archive file
+      const subItems = await fs.promises.readdir(tempModuleDir);
+      if (subItems.length === 1) {
+        const subItemPath = join(tempModuleDir, subItems[0]);
+        if (fs.statSync(subItemPath).isDirectory()) {
+          dirPath = subItemPath;
+        }
+      }
+    } else {
+      const modulesDir = normalize(config.GetModulesDir());
+      const dirPath = normalize(path);
+      if (dirPath.startsWith(modulesDir)) {
+        UIController.showNotification('Invalid module location', 'error');
+        return;
+      }
+    }
+
+    await installFromDirectory(dirPath);
+  } catch (err) {
+    console.error(err);
+    UIController.showNotification('An unknown error occurred', 'error');
+    return;
+  }
 }

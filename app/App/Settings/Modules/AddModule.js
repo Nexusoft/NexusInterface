@@ -4,14 +4,13 @@ import Dropzone from 'react-dropzone';
 import styled from '@emotion/styled';
 
 // Internal
+import { installModule } from 'api/modules';
 import Icon from 'components/Icon';
 import FieldSet from 'components/FieldSet';
 import Button from 'components/Button';
 import { consts, timing } from 'styles';
 import * as color from 'utils/color';
 import plusCircleIcon from 'images/plus.sprite.svg';
-
-import installModule from './installModule';
 
 const AddModuleComponent = styled(FieldSet)(
   ({ theme }) => ({

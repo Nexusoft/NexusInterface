@@ -9,11 +9,11 @@ import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import UIController from 'components/UIController';
+import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { isModuleActive } from 'api/modules';
 import { timing } from 'styles';
 import { updateSettings } from 'actions/settingsActionCreators';
 import warningIcon from 'images/warning.sprite.svg';
-import ModuleDetailsModal from './ModuleDetailsModal';
 
 const ModuleComponent = styled.div(
   ({ theme }) => ({
