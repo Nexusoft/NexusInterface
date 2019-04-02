@@ -4,28 +4,12 @@ import store from 'store';
 import { updateModuleState } from 'actions/moduleActionCreators';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
+import { readModuleStorage, writeModuleStorage } from './storage';
 
 let webview = null;
 let module = null;
 let data = null;
 let unsubscribe = null;
-
-const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
-  locale,
-  fiatCurrency,
-  addressStyle,
-}));
-
-const getModuleData = ({
-  theme,
-  core,
-  settings: { locale, fiatCurrency, addressStyle },
-}) => ({
-  theme,
-  settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-  coreInfo: core.info,
-  difficulty: core.difficulty,
-});
 
 /**
  * Exports
@@ -40,11 +24,12 @@ export function registerWebView(_webview, _module) {
   webview.addEventListener('dom-ready', () => {
     const state = store.getState();
     const moduleState = state.moduleStates[module.name];
+    const storageData = readModuleStorage(module);
     data = getModuleData(state);
-
     webview.send('initialize', {
       ...data,
       moduleState,
+      storageData,
     });
     unsubscribe = store.subscribe(handleStateChange);
   });
@@ -108,7 +93,10 @@ function handleIpcMessage(event) {
       confirm(event.args);
       break;
     case 'update-state':
-      updateState(event.args[0]);
+      updateState(event.args);
+      break;
+    case 'update-storage':
+      updateStorage(event.args);
       break;
   }
 }
@@ -168,7 +156,7 @@ function confirm([options = {}]) {
   });
 }
 
-function updateState(moduleState) {
+function updateState([moduleState]) {
   const moduleName = module.name;
   if (typeof moduleState === 'object') {
     store.dispatch(updateModuleState(moduleName, moduleState));
@@ -178,3 +166,29 @@ function updateState(moduleState) {
     );
   }
 }
+
+function updateStorage([data]) {
+  writeModuleStorage(module, data);
+}
+
+/**
+ * Utilities
+ * ===========================================================================
+ */
+
+const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
+  locale,
+  fiatCurrency,
+  addressStyle,
+}));
+
+const getModuleData = ({
+  theme,
+  core,
+  settings: { locale, fiatCurrency, addressStyle },
+}) => ({
+  theme,
+  settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
+  coreInfo: core.info,
+  difficulty: core.difficulty,
+});
