@@ -28,6 +28,7 @@
 - Fixed price history file not being created/read properly 
 - About page correctly displays the backend core version
 - Fixed issue with Login Time Out
+- Encryped warning no long shows before accepting license agreement
 
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)
