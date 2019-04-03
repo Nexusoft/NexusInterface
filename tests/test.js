@@ -16,11 +16,11 @@ describe('Application launch and Daemon Load', function() {
 
   before(function() {
     if (process.platform === 'win32') {
-      appPath = 'release/win-unpacked/Nexus.exe';
+      appPath = 'release/win-unpacked/Nexus Wallet.exe';
     } else if (process.platform === 'darwin') {
-      appPath = 'release/mac-unpacked/nexus';
+      appPath = 'release/mac-unpacked/nexus_wallet';
     } else {
-      appPath = 'release/linux-unpacked/nexus';
+      appPath = 'release/linux-unpacked/nexus_wallet';
     }
 
     this.app = new Application({
@@ -94,7 +94,7 @@ describe('Application launch and Daemon Load', function() {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(2000)
-      .click('button*=ACCEPT');
+      .click('button*=I have read and Accept the Agreement');
     //.element('button*=Accept').click();
   });
 
@@ -117,7 +117,7 @@ describe('Application launch and Daemon Load', function() {
     return this.app.client
       .waitUntilWindowLoaded()
       .pause(3500)
-      .waitUntilTextExists('span', 'Connections', 2147483646);
+      .waitUntilTextExists('div', 'CONNECTIONS', 2147483646);
   });
 });
 
@@ -161,25 +161,27 @@ describe('Run Page Tests', function() {
         'Would you like to reduce the time it takes to sync by downloading a recent version of the database?',
         20000
       )
-      .click('button*=No, let it sync form scratch');
+      .click('button*=No, let it sync from scratch');
   });
 
   it('Test Go To Send', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/SendPage"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Queue', 50000);
+      .waitUntilTextExists('label', 'SEND FROM', 50000);
   });
 
   it('Add To Queue', function() {
     return appRef.client
       .waitUntilWindowLoaded()
+      //.element('#addContactTimeZoneSelect')
+      //.selectByValue('-420')
       .setValue(
-        'input[placeholder="NXS Address"]',
+        'input[placeholder="Recipient Address"]',
         '2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd'
       )
       .setValue('input[placeholder="0.00000"]', 99999999)
@@ -187,18 +189,15 @@ describe('Run Page Tests', function() {
         'textarea[placeholder="Enter Your Message',
         'TEST MESSAGE FROM TESTS'
       )
-      .click('button*=Add To Queue')
-      .waitUntilTextExists(
-        'td',
-        '2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd'
-      );
+      .click('button*=Send To Multiple Recipients')
+      ;
   });
 
   it('Test Go To Transactions', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/Transactions"]')
       .click()
       .pause(1000)
@@ -209,7 +208,7 @@ describe('Run Page Tests', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/Market"]')
       .click()
       .pause(1000)
@@ -220,7 +219,7 @@ describe('Run Page Tests', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/AddressBook"]')
       .click()
       .pause(1000)
@@ -251,7 +250,7 @@ describe('Run Page Tests', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/Settings"]')
       .click()
       .pause(1000)
@@ -277,11 +276,11 @@ describe('Run Page Tests', function() {
       .element('#fiatSelector')
       .selectByValue('JPY')
       .pause(500)
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/"]')
       .click()
       .waitUntilTextExists('span', '(JPY)')
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/Settings"]')
       .click()
       .pause(500)
@@ -293,7 +292,7 @@ describe('Run Page Tests', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/Terminal"]')
       .click()
       .pause(1000)
@@ -308,7 +307,7 @@ describe('Run Page Tests', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/Exchange"]')
       .click()
       .pause(1000)
@@ -319,7 +318,7 @@ describe('Run Page Tests', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(5000)
-      .element('#navigation')
+      .element('nav')
       .element('a[href^="#/List"]')
       .click()
       .pause(1000)
