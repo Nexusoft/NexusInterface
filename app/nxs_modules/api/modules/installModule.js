@@ -8,10 +8,12 @@ import { loadModuleFromDir } from 'api/modules';
 import config from 'api/configuration';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
+import extractTarball from 'utils/promisified/extractTarball';
 import confirm from 'utils/promisified/confirm';
 
 // Temp directory for extracting module before installing
 const tempModuleDir = join(config.GetAppDataDirectory(), '.temp_module');
+const supportedExtensions = ['.zip', '.tar.gz'];
 
 /**
  * Copy a module file from source to dest
@@ -138,7 +140,7 @@ export async function installModule(path) {
     let dirPath = path;
 
     if (fs.statSync(path).isFile()) {
-      if (extname(path) !== '.zip') {
+      if (!supportedExtensions.some(ext => path.endsWith(ext))) {
         UIController.showNotification('Unsupported file type', 'error');
         return;
       }
@@ -147,7 +149,11 @@ export async function installModule(path) {
         await deleteDirectory(tempModuleDir);
       }
 
-      await extractZip(path, { dir: tempModuleDir });
+      if (path.endsWith('.zip')) {
+        await extractZip(path, { dir: tempModuleDir });
+      } else if (path.endsWith('.tar.gz')) {
+        await extractTarball(path, tempModuleDir);
+      }
       dirPath = tempModuleDir;
 
       // In case the module is wrapped inside a sub directory of the archive file
