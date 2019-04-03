@@ -4,13 +4,15 @@ import fs from 'fs';
 import path from 'path';
 import https from 'https';
 import electron from 'electron';
-import tarball from 'tarball-extract';
 import moveFile from 'move-file';
 import rimraf from 'rimraf';
+
 // Internal
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
 import * as RPC from 'scripts/rpc';
+import extractTarball from 'utils/promisified/extractTarball';
+
 let recentDbUrl = '';
 const recentDbUrlLegacy =
   'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
@@ -249,12 +251,7 @@ export default class Bootstrapper {
    * @memberof Bootstrapper
    */
   async _extractDb() {
-    return new Promise((resolve, reject) => {
-      tarball.extractTarball(fileLocation, extractDest, err => {
-        if (err) reject(err);
-        else resolve();
-      });
-    });
+    return await extractTarball(fileLocation, extractDest);
   }
 
   /**
