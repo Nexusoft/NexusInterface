@@ -31,7 +31,7 @@ export default function setupApp(store, history) {
   store.dispatch(loadSettingsFromFile());
   store.dispatch(loadThemeFromFile());
 
-  appMenu.initialize(store, history);
+  appMenu.initialize();
   appMenu.build();
 
   dispatch(loadAddressBookFromFile());

@@ -8,6 +8,7 @@ import { remote } from 'electron';
 // Internal Global
 import { registerWebView, unregisterWebView } from 'api/modules';
 import config from 'api/configuration';
+import appMenu from 'appMenu';
 
 const fileServer = remote.getGlobal('fileServer');
 
@@ -29,10 +30,12 @@ class WebView extends React.Component {
 
   componentDidMount() {
     registerWebView(this.webviewRef.current, this.props.module);
+    appMenu.build();
   }
 
   componentWillUnmount() {
     unregisterWebView();
+    appMenu.build();
   }
 
   /**

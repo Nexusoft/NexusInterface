@@ -1,4 +1,4 @@
-import { configureStore } from './configureStore';
+import { configureStore, history } from './configureStore';
 
-export { configureStore, history } from './configureStore';
+export { configureStore, history };
 export default configureStore();

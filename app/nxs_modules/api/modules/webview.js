@@ -16,6 +16,13 @@ let unsubscribe = null;
  * ===========================================================================
  */
 
+/**
+ * Register active webview, called when the webview is mounted
+ *
+ * @export
+ * @param {*} _webview
+ * @param {*} _module
+ */
 export function registerWebView(_webview, _module) {
   webview = _webview;
   module = _module;
@@ -35,6 +42,11 @@ export function registerWebView(_webview, _module) {
   });
 }
 
+/**
+ * Unregister active webview, called when the webview is unmounted
+ *
+ * @export
+ */
 export function unregisterWebView() {
   if (typeof unsubscribe === 'function') {
     unsubscribe();
@@ -43,6 +55,31 @@ export function unregisterWebView() {
   module = null;
   data = null;
   unsubscribe = null;
+}
+
+/**
+ * Toggle the active webview's DevTools
+ *
+ * @export
+ */
+export function toggleWebViewDevTools() {
+  if (webview) {
+    if (webview.isDevToolsOpened()) {
+      webview.closeDevTools();
+    } else {
+      webview.openDevTools();
+    }
+  }
+}
+
+/**
+ * Check whether there's a webview being active
+ *
+ * @export
+ * @returns
+ */
+export function isWebViewActive() {
+  return !!webview;
 }
 
 /**
