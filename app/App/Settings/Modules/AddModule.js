@@ -70,8 +70,8 @@ class AddModule extends React.Component {
         properties: ['openFile'],
         filters: [
           {
-            name: 'ZIP Archive',
-            extensions: ['zip'],
+            name: 'Archive',
+            extensions: ['zip', 'tar.gz'],
           },
         ],
       },
@@ -179,7 +179,7 @@ class AddModule extends React.Component {
                   <div>
                     Select module{' '}
                     <Button skin="hyperlink" onClick={this.browseFiles}>
-                      archive
+                      archive file
                     </Button>{' '}
                     or{' '}
                     <Button skin="hyperlink" onClick={this.browseDirectories}>

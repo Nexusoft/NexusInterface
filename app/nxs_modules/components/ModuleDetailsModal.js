@@ -167,7 +167,7 @@ class ModuleDetailsModal extends React.Component {
                   <div className="error">
                     <Icon icon={warningIcon} />
                     <span className="v-align space-left">
-                      Repository does not exist or is private
+                      This repository does not exist or is private
                     </span>
                   </div>
                 )}
@@ -175,7 +175,8 @@ class ModuleDetailsModal extends React.Component {
                   <div className="error">
                     <Icon icon={warningIcon} />
                     <span className="v-align space-left">
-                      Module is not verified to be derived from this repository
+                      This repository is not verified to be the real source code
+                      of this module
                     </span>
                   </div>
                 )}

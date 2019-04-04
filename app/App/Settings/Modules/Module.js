@@ -186,8 +186,7 @@ class Module extends React.Component {
               {!!module.repository && !module.repoVerified && (
                 <Tooltip.Trigger
                   tooltip="
-                Module is not verified to be derived from the provided
-                repository"
+                The provided repository is not verified to be the real source code of this module"
                 >
                   <Icon icon={warningIcon} className="space-left" />
                 </Tooltip.Trigger>
