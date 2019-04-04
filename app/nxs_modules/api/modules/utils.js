@@ -13,7 +13,7 @@ export const isPageModule = module =>
 
 // Check if the Module API this module was built on is still supported
 export const isModuleDeprecated = module =>
-  semver.lt(module.apiVersion, SUPPORTED_MODULE_API_VERSION);
+  semver.lt(module.specVersion, SUPPORTED_MODULE_SPEC_VERSION);
 
 // Check if a module is valid
 export const isModuleValid = (module, { devMode, verifyModuleSource }) =>

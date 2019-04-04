@@ -17,7 +17,7 @@ const reservedFileNames = [
 // Schema for nxs_package.json
 const nxsPackageSchema = {
   additionalProperties: false,
-  required: ['name', 'displayName', 'version', 'apiVersion', 'type', 'files'],
+  required: ['name', 'displayName', 'version', 'specVersion', 'type', 'files'],
   properties: {
     name: {
       type: 'string',
@@ -30,8 +30,8 @@ const nxsPackageSchema = {
       type: 'string',
       pattern: semverRegex().source,
     },
-    // Nexus Module API version that this module was built on
-    apiVersion: {
+    // Nexus Module Specification version that this module was built on
+    specVersion: {
       type: 'string',
       pattern: semverRegex().source,
     },

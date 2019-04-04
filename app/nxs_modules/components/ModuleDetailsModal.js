@@ -118,10 +118,10 @@ class ModuleDetailsModal extends React.Component {
           <Field label="Display name">{module.displayName}</Field>
           <Field label="Module type">{module.type}</Field>
           <Field label="Version">{module.version}</Field>
-          <Field label="Nexus Module API version">
+          <Field label="Nexus Module Specification version">
             {
               <span className={module.deprecated ? 'error' : undefined}>
-                <span className="v-align">{module.apiVersion}</span>
+                <span className="v-align">{module.specVersion}</span>
                 {module.deprecated && (
                   <span className="error space-left">
                     <Icon icon={warningIcon} />

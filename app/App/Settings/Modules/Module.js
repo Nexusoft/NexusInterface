@@ -174,7 +174,7 @@ class Module extends React.Component {
             <ModuleVersion>v{module.version}</ModuleVersion>
             <span className="error">
               {!!module.deprecated && (
-                <Tooltip.Trigger tooltip="Deprecated API version">
+                <Tooltip.Trigger tooltip="Deprecated Specification version">
                   <Icon icon={warningIcon} className="space-left" />
                 </Tooltip.Trigger>
               )}

@@ -24,7 +24,7 @@ import FieldSet from 'components/FieldSet';
 import * as color from 'utils/color';
 
 global.nexusWallet = {
-  apiVersion: MODULE_API_VERSION,
+  specVersion: MODULE_SPEC_VERSION,
   libraries: {
     React,
     ReactDOM,

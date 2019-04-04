@@ -2,8 +2,8 @@
   "name": "nexus_wallet",
   "productName": "Nexus_Wallet_BETA",
   "version": "0.9.0-alpha4",
-  "moduleApiVersion": "0.1.0",
-  "supportedModuleApiVersion": "0.1.0",
+  "moduleSpecVersion": "0.1.0",
+  "supportedModuleSpecVersion": "0.1.0",
   "buildDate": "March 15th 2019",
   "description": "Nexus",
   "scripts": {
