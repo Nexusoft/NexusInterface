@@ -168,7 +168,10 @@ export async function installModule(path) {
       const modulesDir = normalize(config.GetModulesDir());
       const dirPath = normalize(path);
       if (dirPath.startsWith(modulesDir)) {
-        UIController.showNotification('Invalid module location', 'error');
+        UIController.showNotification(
+          'Cannot install from that location',
+          'error'
+        );
         return;
       }
     }
