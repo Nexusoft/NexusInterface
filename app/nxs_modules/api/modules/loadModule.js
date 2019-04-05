@@ -25,7 +25,7 @@ const nxsPackageSchema = {
       pattern: '^[0-9a-z_-]*[a-z][0-9a-z_-]*$',
     },
     // A user-friendly name to be displayed on the GUI
-    displayName: { type: 'string' },
+    displayName: { type: 'string', pattern: '^[^\n]*$' },
     version: {
       type: 'string',
       pattern: semverRegex().source,
@@ -59,7 +59,7 @@ const nxsPackageSchema = {
       required: ['name'],
       properties: {
         name: { type: 'string' },
-        email: { type: 'string' },
+        email: { type: 'string', format: 'email' },
       },
     },
     // Lists ALL the files which is used by the module in relative paths from the module directory
