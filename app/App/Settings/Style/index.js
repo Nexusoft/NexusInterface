@@ -93,7 +93,7 @@ class SettingsStyle extends Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('Style');
+    // props.switchSettingsTab('Style');
   }
 
   state = {
@@ -119,18 +119,14 @@ class SettingsStyle extends Component {
    *
    * @memberof SettingsStyle
    */
-  GetUsersDefaultAddress () {
+  GetUsersDefaultAddress() {
     let myAddress = '000000000000000000000000000000000000000000000000000';
     try {
       myAddress = this.props.myAccounts[0].addresses[0];
-    }
-    catch{
-    }
-    this.setState(
-      {
-        sampleAddress: myAddress,
-      }
-    );
+    } catch {}
+    this.setState({
+      sampleAddress: myAddress,
+    });
   }
 
   /**
@@ -415,12 +411,13 @@ class SettingsStyle extends Component {
             />
           </div>
           <div className="mt1">
-            <NexusAddress address={this.state.sampleAddress} label="Sample Address" />
+            <NexusAddress
+              address={this.state.sampleAddress}
+              label="Sample Address"
+            />
             <AddressStyleNote>
               <Icon icon={warningIcon} spaceRight />
-              <span className="v-align">
-                This is your Default Address
-              </span>
+              <span className="v-align">This is your Default Address</span>
             </AddressStyleNote>
           </div>
         </SettingsField>

@@ -11,7 +11,6 @@ import * as RPC from 'scripts/rpc';
 import configuration from 'api/configuration';
 import Curve from './Curve';
 import Point from './Point';
-import { resetConsoleOutput } from '../../nxs_modules/actions/uiActionCreators';
 
 const GlobeContainer = styled.div({
   position: 'fixed',
@@ -283,16 +282,16 @@ export default class Globe extends Component {
             peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
         );
         if (duplicateIndex !== i) console.log('Duplicate');
-        console.log(duplicateIndex, i, existIndex);
+        // console.log(duplicateIndex, i, existIndex);
 
         // if not an internal duplicate and already exists
         if (existIndex >= 0 && duplicateIndex === i) {
-          console.log('Point Exists');
+          // console.log('Point Exists');
           return this.pointRegistry[existIndex];
         } else if (duplicateIndex === i) {
           let newPoint = new Point(peer.lat, peer.lng, peer.params);
           this.allPoints.add(newPoint.pillar);
-          console.log('New Point: ', newPoint);
+          // console.log('New Point: ', newPoint);
           return newPoint;
         }
       })
@@ -309,7 +308,7 @@ export default class Globe extends Component {
     });
 
     this.pointRegistry = newRegistry;
-    console.log(this.pointRegistry);
+    // console.log(this.pointRegistry);
     this.arcRegister();
   }
 
@@ -370,7 +369,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   destroyPoint(deadPoint) {
-    console.log('Destroy Point');
+    // console.log('Destroy Point');
     this.pointRegistry = this.pointRegistry.filter(point => {
       if (point.pillar.uuid !== deadPoint.pillar.uuid) return point;
     });
@@ -437,7 +436,7 @@ export default class Globe extends Component {
     } else {
       this.addSelfPoint();
     }
-    console.log(this.curveRegistry);
+    // console.log(this.curveRegistry);
   }
 
   /**
@@ -458,7 +457,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   destroyArc(deadCurve) {
-    console.log('destroy arc');
+    // console.log('destroy arc');
     this.curveRegistry = this.curveRegistry.filter(curve => {
       if (curve.arc.uuid !== deadCurve.arc.uuid) return curve;
     });

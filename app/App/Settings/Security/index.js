@@ -37,7 +37,7 @@ class SettingsSecurity extends React.Component {
    */
   constructor(props) {
     super(props);
-    props.switchSettingsTab('Security');
+    // props.switchSettingsTab('Security');
   }
 
   /**
