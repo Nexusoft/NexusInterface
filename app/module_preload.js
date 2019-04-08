@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as ReactRouterDOM from 'react-router-dom';
-import * as redux from 'redux';
-import * as reactRedux from 'react-redux';
+import * as Redux from 'redux';
+import * as ReactRedux from 'react-redux';
 import createCache from '@emotion/cache';
 import * as core from '@emotion/core';
 import styled from '@emotion/styled';
@@ -29,8 +29,8 @@ global.nexusWallet = {
     React,
     ReactDOM,
     ReactRouterDOM,
-    redux,
-    reactRedux,
+    Redux,
+    ReactRedux,
     emotion: { core, styled, theming, createCache },
     victory,
   },
