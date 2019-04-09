@@ -208,11 +208,6 @@ export default class Globe extends Component {
     event.preventDefault();
     console.error('CONTEXT LOST!!');
     this.stop();
-    window.removeEventListener('resize', this.onWindowResize, false);
-    this.controls.dispose();
-    if (this.renderer.domElement) {
-      this.threeRootElement.removeChild(this.renderer.domElement);
-    }
   }
 
   /**
@@ -241,7 +236,7 @@ export default class Globe extends Component {
     this.stop();
     window.removeEventListener('resize', this.onWindowResize, false);
     this.controls.dispose();
-    if (this.renderer.domElement) {
+    if (this.threeRootElement.children.length > 0) {
       this.threeRootElement.removeChild(this.renderer.domElement);
     }
   }
@@ -281,17 +276,13 @@ export default class Globe extends Component {
           internalPoint =>
             peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
         );
-        if (duplicateIndex !== i) console.log('Duplicate');
-        // console.log(duplicateIndex, i, existIndex);
 
         // if not an internal duplicate and already exists
         if (existIndex >= 0 && duplicateIndex === i) {
-          // console.log('Point Exists');
           return this.pointRegistry[existIndex];
         } else if (duplicateIndex === i) {
           let newPoint = new Point(peer.lat, peer.lng, peer.params);
           this.allPoints.add(newPoint.pillar);
-          // console.log('New Point: ', newPoint);
           return newPoint;
         }
       })
@@ -308,7 +299,6 @@ export default class Globe extends Component {
     });
 
     this.pointRegistry = newRegistry;
-    // console.log(this.pointRegistry);
     this.arcRegister();
   }
 
@@ -369,7 +359,6 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   destroyPoint(deadPoint) {
-    // console.log('Destroy Point');
     this.pointRegistry = this.pointRegistry.filter(point => {
       if (point.pillar.uuid !== deadPoint.pillar.uuid) return point;
     });
@@ -436,7 +425,6 @@ export default class Globe extends Component {
     } else {
       this.addSelfPoint();
     }
-    // console.log(this.curveRegistry);
   }
 
   /**
@@ -457,7 +445,6 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   destroyArc(deadCurve) {
-    // console.log('destroy arc');
     this.curveRegistry = this.curveRegistry.filter(curve => {
       if (curve.arc.uuid !== deadCurve.arc.uuid) return curve;
     });
