@@ -88,6 +88,7 @@ export function isWebViewActive() {
  */
 
 function handleStateChange() {
+  if (!data) return;
   const state = store.getState();
   const newData = getModuleData(state);
   const { theme, settings, coreInfo, difficulty } = newData;
