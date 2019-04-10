@@ -154,7 +154,7 @@ class SettingsCore extends Component {
    */
   constructor(props) {
     super(props);
-    // props.switchSettingsTab('Core');
+    props.switchSettingsTab('Core');
   }
 
   /**

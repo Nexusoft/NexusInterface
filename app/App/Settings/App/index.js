@@ -91,7 +91,7 @@ class SettingsApp extends Component {
    */
   constructor(props) {
     super(props);
-    // props.switchSettingsTab('App');
+    props.switchSettingsTab('App');
   }
   /**
    *  Confirm Wallet Back up

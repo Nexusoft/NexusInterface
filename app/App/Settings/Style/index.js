@@ -93,7 +93,7 @@ class SettingsStyle extends Component {
    */
   constructor(props) {
     super(props);
-    // props.switchSettingsTab('Style');
+    props.switchSettingsTab('Style');
   }
 
   state = {
