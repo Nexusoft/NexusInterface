@@ -17,6 +17,7 @@
 - The `X` on the add or edit contact form is now more visible
 - Made grammar ajustments to en.json
 - Ajustment to terminal's `Help` command
+- Rephrased Staking to Minting
 
 #### Fixes
 - Fixed typo on Israeli Shekel using the wrong ISO code
@@ -26,6 +27,8 @@
 - Fixed `Fee` not displaying on send transactions in the detail modal
 - Fixed price history file not being created/read properly 
 - About page correctly displays the backend core version
+- Fixed issue with Login Time Out
+- Encryped warning no long shows before accepting license agreement
 
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)

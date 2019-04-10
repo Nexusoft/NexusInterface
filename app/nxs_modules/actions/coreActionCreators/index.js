@@ -28,7 +28,7 @@ export function getInfo() {
       dispatch(ac.Unencrypted());
       if (
         !state.common.encryptionModalShown &&
-        !state.settings.encryptionWarningDisabled
+        !state.settings.encryptionWarningDisabled && state.settings.acceptedAgreement
       ) {
         UIController.openModal(EncryptionWarningModal);
         dispatch(ac.showEncryptionWarningModal());
