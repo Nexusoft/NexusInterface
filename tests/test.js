@@ -151,7 +151,7 @@ describe('Run Page Tests', function() {
       function() {}
     );
   });
-
+ /*
   it('Test Disable Bootstrap', function() {
     return appRef.client
       .waitUntilWindowLoaded()
@@ -163,7 +163,7 @@ describe('Run Page Tests', function() {
       )
       .click('button*=No, let it sync from scratch');
   });
-
+*/
   it('Test Go To Send', function() {
     return appRef.client
       .waitUntilWindowLoaded()
@@ -189,6 +189,10 @@ describe('Run Page Tests', function() {
         'textarea[placeholder="Enter Your Message',
         'TEST MESSAGE FROM TESTS'
       )
+      .element('span[direction="down"]')
+      .click()
+      .element('//div[contains(text(),"default")]')
+      .click()
       .click('button*=Send To Multiple Recipients')
       ;
   });
@@ -201,7 +205,7 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/Transactions"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Transactions', 50000);
+      .waitUntilTextExists('label', 'SEARCH ADDRESS', 50000);
   });
 
   it('Test Go To Market', function() {
@@ -212,7 +216,7 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/Market"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'Market Information', 50000);
+      .waitUntilTextExists('b', '24hr Change', 50000);
   });
 
   it('Test Go To Address Book', function() {
@@ -230,20 +234,27 @@ describe('Run Page Tests', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(1000)
-      .click('button*=Add Contact')
-      .setValue('input[id="new-account-name"]', 'Test Contact')
-      .setValue('input[id="new-account-phone"]', '9990001234')
-      .element('#addContactTimeZoneSelect')
-      .selectByValue('-420')
+      .element('(//button[*])[2]')
+      .click()
+      .setValue('input[placeholder="Their Nexus Address"]','2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd')
+      .setValue('input[name="name"]', 'Test Contact')
+      
+      .setValue('input[placeholder="Phone Number"]', '9990001234')
       .setValue(
-        'textarea[id="new-account-notes"]',
+        'textarea[name="notes"]',
         'Test Contact Creation From Tests'
       )
-      .setValue(
-        'input[id="nxsaddress"]',
-        '2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd'
-      )
-      .click('button[id="modalAddOrEditContact"]');
+      .element('span[direction="down"]')
+      .click()
+      .pause(500)
+      .element('//div[contains(text(),"(UTC-4.00)")]')
+      .click()
+      .setValue('input[name="email"]', 'test@foo.bar')
+
+      .pause(3000)
+      .element('button[type="submit"]')
+      .click();
+      
   });
 
   it('Test Go To Settings', function() {
@@ -263,9 +274,9 @@ describe('Run Page Tests', function() {
       .pause(1000)
       .click('button*=Backup Wallet')
       .pause(500)
-      .click('input[value="Yes"]')
-      .pause(500)
-      .waitUntilTextExists('span', 'Wallet Backed Up', 5000)
+      .click('button*=Yes')
+      .pause(100)
+      .waitUntilTextExists('div', 'Wallet Backed Up', 5000)
       .pause(1000);
   });
 
@@ -273,19 +284,26 @@ describe('Run Page Tests', function() {
     return appRef.client
       .waitUntilWindowLoaded()
       .pause(1000)
-      .element('#fiatSelector')
-      .selectByValue('JPY')
+      .element('//div[contains(text(),"United States Dollar (USD)")]')
+      .click()
+      .pause(500)
+      .element('//div[contains(text(),"Euro")]')
+      .click()
       .pause(500)
       .element('nav')
       .element('a[href^="#/"]')
       .click()
-      .waitUntilTextExists('span', '(JPY)')
+      .waitUntilTextExists('div', 'EUR')
       .element('nav')
       .element('a[href^="#/Settings"]')
       .click()
       .pause(500)
-      .element('#fiatSelector')
-      .selectByValue('USD');
+      .element('//div[contains(text(),"Euro (EUR)")]')
+      .click()
+      .pause(500)
+      .element('//div[contains(text(),"United States")]')
+      .click()
+      .pause(500)
   });
 
   it('Test Go Terminal', function() {
@@ -296,13 +314,13 @@ describe('Run Page Tests', function() {
       .element('a[href^="#/Terminal"]')
       .click()
       .pause(1000)
-      .waitUntilTextExists('span', 'ClearConsole', 100000000)
-      .setValue('input[id="input-text"]', 'getinfo')
-      .element('button[id="terminal-console-input-button"]')
+      .waitUntilTextExists('div', 'Clear Console', 10000)
+      .setValue('input[placeholder="Enter Console Commands Here (ex: getinfo, help)"]', 'getinfo')
+      .element('button*=Execute')
       .click()
-      .waitUntilTextExists('div', 'balance: 0');
+      .waitUntilTextExists('div', 'protocolversion: 20000', 5000);
   });
-
+/*
   it('Test Go To Exchange', function() {
     return appRef.client
       .waitUntilWindowLoaded()
@@ -325,7 +343,7 @@ describe('Run Page Tests', function() {
       .waitUntilTextExists('span', 'Trust List', 50000);
   });
 
-  /*
+  
 
   it ("Test Encryption", function () {
     return appRef.client.waitUntilWindowLoaded().pause(5000).element("settings-container").element('a[href^="#/Settings/Unencrypted"]')
