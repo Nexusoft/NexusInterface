@@ -17,10 +17,10 @@ import { getDifficulty } from 'actions/coreActionCreators';
 import * as helpers from 'scripts/helper.js';
 import * as RPC from 'scripts/rpc';
 import { timing, consts, animations } from 'styles';
-import NetworkGlobe from './NetworkGlobe';
+import Globe from './Globe';
 
 // Images
-import {CurrencyIcon} from 'images/CurrencyIcons';
+import { CurrencyIcon } from 'images/CurrencyIcons';
 import transactionIcon from 'images/transaction.sprite.svg';
 import chartIcon from 'images/chart.sprite.svg';
 import supplyIcon from 'images/supply.sprite.svg';
@@ -762,15 +762,14 @@ class Overview extends Component {
     return (
       <OverviewPage>
         {!!this.showingGlobe() && (
-          <NetworkGlobe
+          <Globe
             handleOnLineRender={e => (this.redrawCurves = e)}
-            // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
-            connections={connections}
-            handleOnAddData={e => (this.reDrawEverything = e)}
             handleRemoveAllPoints={e => (this.removeAllPoints = e)}
+            connections={connections}
             pillarColor={theme.globePillarColor}
             archColor={theme.globeArchColor}
             globeColor={theme.globeColor}
+            lispPillarColor="#00ffff"
           />
         )}
 
