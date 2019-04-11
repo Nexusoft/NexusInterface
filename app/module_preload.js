@@ -23,7 +23,7 @@ import Tab from 'components/Tab';
 import FieldSet from 'components/FieldSet';
 import * as color from 'utils/color';
 
-global.nexusWallet = {
+global.NEXUS = {
   specVersion: MODULE_SPEC_VERSION,
   libraries: {
     React,
