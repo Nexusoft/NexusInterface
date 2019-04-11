@@ -118,6 +118,18 @@ class Login extends Component {
   }
 
   /**
+   * Get min time to lock
+   *
+   * @returns
+   * @memberof Login
+   */
+  getMinTime() {
+    const now = new Date();
+
+    return `${now.getHours()}:${now.getMinutes()}`;
+  }
+
+  /**
    * Render the date & time pickers
    *
    * @param {*} props
@@ -135,7 +147,12 @@ class Login extends Component {
           />
         </FormField>
         <FormField connectLabel label={<Text id="Settings.LoginTime" />}>
-          <Field component={TextField.RF} name="time" type="time" />
+          <Field
+            component={TextField.RF}
+            name="time"
+            type="time"
+            min={this.getMinTime()}
+          />
         </FormField>
       </div>
     ) : null;

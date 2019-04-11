@@ -30,9 +30,12 @@ import ThemePicker from './ThemePicker';
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
 
+import * as RPC from 'scripts/rpc';
+
 const mapStateToProps = ({
   settings: { renderGlobe, locale, addressStyle },
   common: { webGLEnabled },
+  myAccounts,
   theme,
 }) => {
   return {
@@ -41,6 +44,7 @@ const mapStateToProps = ({
     theme,
     locale,
     addressStyle,
+    myAccounts,
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -64,8 +68,6 @@ const addressStyleOptions = [
   { value: 'truncateMiddle', display: 'Truncate middle' },
   { value: 'raw', display: 'Raw' },
 ];
-
-const sampleAddress = '2R9SJ4jyyU1WYrsR7Je83WLMaUx2YMRURH2Z6Qro6n46SNLufUc';
 
 const AddressStyleNote = styled.div(({ theme }) => ({
   fontSize: '.8em',
@@ -98,6 +100,7 @@ class SettingsStyle extends Component {
     previousCustom: {},
     DarkTheme: DarkTheme,
     LightTheme: LightTheme,
+    sampleAddress: '000000000000000000000000000000000000000000000000000',
   };
 
   componentDidMount() {
@@ -108,6 +111,27 @@ class SettingsStyle extends Component {
     } else {
       this.setThemeSelector(2);
     }
+    this.GetUsersDefaultAddress();
+  }
+
+  /**
+   * Get the user's default address and save it to state, to be used on the Address Style Field
+   *
+   * @memberof SettingsStyle
+   */
+  GetUsersDefaultAddress () {
+    let myAddress = '000000000000000000000000000000000000000000000000000';
+    try {
+      myAddress = this.props.myAccounts[0].addresses[0];
+    }
+    catch(e){
+      console.error(e);
+    }
+    this.setState(
+      {
+        sampleAddress: myAddress,
+      }
+    );
   }
 
   /**
@@ -392,12 +416,11 @@ class SettingsStyle extends Component {
             />
           </div>
           <div className="mt1">
-            <NexusAddress address={sampleAddress} label="Sample Address" />
+            <NexusAddress address={this.state.sampleAddress} label="Sample Address" />
             <AddressStyleNote>
               <Icon icon={warningIcon} className="space-right" />
               <span className="v-align">
-                This address is just a sample one, please do NOT send your NXS
-                to it
+                This is your Default Address
               </span>
             </AddressStyleNote>
           </div>

@@ -67,7 +67,7 @@ function setupTray(mainWindow) {
   });
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Show Nexus',
+      label: 'Show Nexus Wallet',
       click: function() {
         mainWindow.show();
         if (process.platform === 'darwin') {
@@ -76,7 +76,7 @@ function setupTray(mainWindow) {
       },
     },
     {
-      label: 'Quit Nexus',
+      label: 'Quit Nexus Wallet',
       click() {
         app.quit();
       },

@@ -20,7 +20,7 @@ const autoUpdater = remote.getGlobal('autoUpdater');
 class AppMenu {
   initialize() {
     // Update the updater menu item when the updater state changes
-    // Changing menu ittem labels directly has no effect so we have to rebuild the whole menu
+    // Changing menu item labels directly has no effect so we have to rebuild the whole menu
     updater.on('state-change', this.build);
   }
 

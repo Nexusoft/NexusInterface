@@ -99,6 +99,7 @@ export default class App extends Component {
                       <Route exact path="/StyleGuide" component={StyleGuide} />
                       {/* <Route path="/Exchange" component={Exchange} /> */}
                       {/* <Route exact path="/List" component={TrustList} /> */}
+
                       <Route exact path="/About" component={About} />
                       <Route path="/Modules/:name" component={Modules} />
                     </Switch>

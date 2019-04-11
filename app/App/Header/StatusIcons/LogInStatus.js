@@ -45,12 +45,12 @@ const LoginStatusIcon = styled(StatusIcon)(
 
 const mapStateToProps = ({
   core: {
-    info: { connections, unlocked_until, staking_only, locked },
+    info: { connections, unlocked_until, minting_only, locked },
   },
 }) => ({
   connections,
   unlocked_until,
-  staking_only,
+  minting_only,
   locked,
 });
 
@@ -73,7 +73,7 @@ class LogInStatus extends Component {
    * @memberof LogInStatus
    */
   signInStatusMessage = () => {
-    const { connections, unlocked_until, staking_only, locked } = this.props;
+    const { connections, unlocked_until, minting_only, locked } = this.props;
     let unlockDate = new Date(unlocked_until * 1000).toLocaleString('en', {
       weekday: 'long',
       year: 'numeric',
@@ -101,12 +101,22 @@ class LogInStatus extends Component {
       unlocked_until >= 0 ||
       (unlocked_until === undefined && locked === false)
     ) {
-      return (
-        <>
-          <Text id="Header.UnlockedUntil" data={{ unlockDate }} />{' '}
-          {!!staking_only && <Text id="Header.StakingOnly" />}
-        </>
-      );
+      console.log(minting_only);
+      if (unlocked_until === undefined) {
+        return (
+          <>
+            <Text id="Header.WalletUnlocked" />{' '}
+            {!!minting_only && <Text id="Header.StakingOnly" />}
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Text id="Header.UnlockedUntil" data={{ unlockDate }} />{' '}
+            {!!minting_only && <Text id="Header.StakingOnly" />}
+          </>
+        );
+      }
     }
   };
 

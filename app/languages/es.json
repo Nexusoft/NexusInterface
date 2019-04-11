@@ -163,7 +163,7 @@
   "AddressBook.Addresses": "Direcciones",
   "AddressBook.MyAccount": "Mi cuenta",
   "AddressBook.EnterAddressName": "Ingrese el nombre de la dirección",
-  "AddressBook.Loading": "Please wait for the daemon to load",
+  "AddressBook.Loading": "Loading wallet, please wait",
   "AddressBook.NoContacts": "Sin contactos",
   "AddressBook.NXSAddress": "Dirección NXS",
 
