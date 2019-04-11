@@ -58,7 +58,7 @@ const ImportPrivKeyForm = styled.form({
     });
     UIController.showNotification(<Text id="Settings.Rescanning" />);
     try {
-      await RPC.PROMISE('rescan');
+      await RPC.PROMISE('rescan', []);
       UIController.showNotification(
         <Text id="Settings.RescanningDone" />,
         'success'
