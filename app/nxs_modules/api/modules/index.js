@@ -8,7 +8,6 @@ export {
   isWebViewActive,
 } from './webview';
 export {
-  isPageModule,
   isModuleDeprecated,
   isModuleValid,
   isModuleActive,

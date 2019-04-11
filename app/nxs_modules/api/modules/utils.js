@@ -6,11 +6,6 @@ import memoize from 'memoize-one';
  * =============================================================================
  */
 
-// Page modules are module types that will be rendered into a page, and has
-// an icon of their own in the navigation bar similarly to the wallet's native pages
-export const isPageModule = module =>
-  module.type === 'page' || module.type === 'page-panel';
-
 // Check if the Module API this module was built on is still supported
 export const isModuleDeprecated = module =>
   semver.lt(module.specVersion, SUPPORTED_MODULE_SPEC_VERSION);

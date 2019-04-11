@@ -3,7 +3,7 @@ import fs from 'fs';
 import Ajv from 'ajv';
 import semverRegex from 'semver-regex';
 
-import { isPageModule, isModuleDeprecated, isModuleValid } from './utils';
+import { isModuleDeprecated, isModuleValid } from './utils';
 import { getRepoInfo, isRepoOnline, isRepoVerified } from './repo';
 
 const ajv = new Ajv();
@@ -36,7 +36,13 @@ const nxsPackageSchema = {
       pattern: semverRegex().source,
     },
     description: { type: 'string' },
-    type: { type: 'string', enum: ['page', 'page-panel'] },
+    type: { type: 'string', enum: ['app'] },
+    options: {
+      type: 'object',
+      properties: {
+        wrapInPanel: { type: 'boolean' },
+      },
+    },
     // Relative path to the entry file
     // Main file could be html or js depending on module's type
     // If not specified, app will look for index.html or index.js depending on module type
@@ -118,7 +124,7 @@ export async function loadModuleFromDir(
       return null;
     }
 
-    if (isPageModule(module)) {
+    if (module.type === 'app') {
       // Manually check entry extension corresponding to module type
       if (module.entry && !module.entry.endsWith('.html')) {
         return null;

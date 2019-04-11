@@ -67,14 +67,12 @@ class Modules extends React.Component {
    */
   render() {
     const { module } = this.props;
+    if (module.type !== 'app') return null;
 
-    switch (module && module.type) {
-      case 'page':
-        return <PageModule module={module} />;
-      case 'page-panel':
-        return <PagePanelModule module={module} />;
-      default:
-        return null;
+    if (module.options && module.options.wrapInPanel) {
+      return <PagePanelModule module={module} />;
+    } else {
+      return <PageModule module={module} />;
     }
   }
 }

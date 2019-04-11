@@ -10,7 +10,7 @@ import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModuleIcon from 'components/ModuleIcon';
-import { isPageModule, getActiveModules } from 'api/modules';
+import { getActiveModules } from 'api/modules';
 import { consts, timing } from 'styles';
 
 // Internal Local Dependencies
@@ -78,7 +78,7 @@ class ModuleNavItems extends React.Component {
     return (
       <>
         {this.props.modules
-          .filter(module => isPageModule(module))
+          .filter(module => module.type === 'app')
           .map(module => (
             <ModuleNavItem key={module.name} module={module} />
           ))}
