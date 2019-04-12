@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join, isAbsolute } from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
 import Ajv from 'ajv';
@@ -6,6 +6,9 @@ import axios from 'axios';
 import { isText } from 'istextorbinary';
 import streamNormalizeEol from 'stream-normalize-eol';
 import Multistream from 'multistream';
+
+import config from 'api/configuration';
+import store from 'store';
 
 const ajv = new Ajv();
 
@@ -164,16 +167,62 @@ export async function isRepoVerified(repoInfo, module, dirPath) {
   try {
     const hash = await getModuleHash(module, dirPath);
     if (hash !== data.moduleHash) return false;
+
+    // Check signature
+    const serializedData = JSON.stringify(data);
+    const verified = crypto
+      .createVerify('RSA-SHA256')
+      .update(serializedData, 'utf8')
+      .end()
+      .verify(
+        {
+          key: NEXUS_EMBASSY_PUBLIC_KEY,
+          format: 'pem',
+          type: 'pkcs1',
+        },
+        verification.signature,
+        'base64'
+      );
+    return verified;
   } catch (err) {
     console.error(err);
     return false;
   }
-
-  // Check signature
-  const verified = crypto
-    .createVerify('RSA-SHA256')
-    .update(JSON.stringify(data))
-    .end()
-    .verify(NEXUS_EMBASSY_PUBLIC_KEY, verification.signature);
-  return verified;
 }
+
+export async function signModuleRepo(moduleName, privKeyFile) {
+  const { modules } = store.getState();
+  const module = modules[moduleName];
+
+  if (!module || !module.repository) {
+    throw 'No repository info found. Please create a repo_info.json file with repository info in it.';
+  }
+
+  const dirPath = join(config.GetModulesDir(), module.dirName);
+  const moduleHash = await getModuleHash(module, dirPath);
+  console.log('module hash', moduleHash);
+  const data = { repository: module.repository, moduleHash };
+  const serializedData = JSON.stringify(data);
+
+  const privKeyPath = isAbsolute(privKeyFile)
+    ? privKeyFile
+    : join(__dirname, privKeyFile);
+  const privKey = fs.readFileSync(privKeyPath);
+
+  const signature = crypto
+    .createSign('RSA-SHA256')
+    .update(serializedData, 'utf8')
+    .end()
+    .sign(
+      {
+        key: privKey,
+        format: 'pem',
+        type: 'pkcs1',
+      },
+      'base64'
+    );
+
+  console.log('signature', signature);
+}
+
+window.signModuleRepo = signModuleRepo;
