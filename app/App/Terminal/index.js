@@ -22,13 +22,13 @@ import Text from 'components/Text';
 
 const TerminalComponent = styled.div({
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
+  display: 'grid',
+  gridTemplateAreas: '"tab-bar" "content"',
+  gridTemplateRows: 'min-content 1fr',
 });
 
 const TerminalTabBar = styled(Tab.Bar)({
-  flexShrink: 0,
+  gridArea: 'tab-bar',
 });
 
 let ConsoleRedirect = ({ lastActiveTab, match }) => (

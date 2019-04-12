@@ -242,6 +242,8 @@
   "Settings.Core": "Core",
   "Settings.Security": "Security",
   "Settings.Style": "Style",
+  "Settings.Modules": "Modules",
+  "Settings.SetFee": "Set Transaction Fee?",
   "Settings.SetFee": "Set transaction fee?",
   "Settings.Yes": "Yes",
   "Settings.No": "No",
@@ -284,6 +286,8 @@
   "Settings.ResetTheme": "Reset",
   "Settings.ExportTheme": "Theme Exported",
   "Settings.AutoUpdateDisabled": "Auto Update is not yet available on Mac, please update the wallet manually for the time being",
+  "Settings.EnforceOpenSourceModules": "Only allow open source modules",
+  "Settings.EnforceOpenSourceModulesNote": "Only allow modules which have valid open source repositories. You can disable this option to test run the modules that you're developing",
 
   "Settings.Errors.ManualDaemonUser": "Manual Daemon Username is required",
   "Settings.Errors.ManualDaemonPassword": "Manual Daemon Password is required",

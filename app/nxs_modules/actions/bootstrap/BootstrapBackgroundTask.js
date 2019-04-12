@@ -160,7 +160,7 @@ export default class BootstrapBackgroundTask extends Component {
         onClick={this.maximize}
         index={this.props.index}
       >
-        <Icon icon={workIcon} spaceRight />
+        <Icon icon={workIcon} className="space-right" />
         {this.state.status}
       </BootstrapBackgroundTaskComponent>
     );

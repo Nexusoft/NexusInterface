@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import { timing, consts } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 const switchHeight = consts.lineHeight; // em
 const switchWidth = consts.lineHeight * 1.75; // em
@@ -94,7 +94,9 @@ const SwitchInput = styled.input(({ theme }) => {
   };
 });
 
-const Switch = props => <SwitchInput type="checkbox" {...props} />;
+const Switch = React.forwardRef((props, ref) => (
+  <SwitchInput type="checkbox" {...props} ref={ref} />
+));
 
 const SwitchReduxForm = ({ input, meta, ...rest }) => (
   <Switch {...input} {...rest} />

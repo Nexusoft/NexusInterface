@@ -8,7 +8,7 @@ import { jsx } from '@emotion/core';
 // Internal
 import { arrowStyles } from 'components/Arrow';
 import { timing, animations, zIndex } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 const spacing = 10;
 const arrowPadding = 15;
@@ -87,6 +87,7 @@ const arrowAligning = (position, align) => {
 const Tooltip = styled.div(
   {
     whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
     maxWidth: 300,
     width: 'max-content',
     borderRadius: 4,

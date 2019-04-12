@@ -1,10 +1,9 @@
 // External
 import React from 'react';
 import { Global, css } from '@emotion/core';
-import { withTheme } from 'emotion-theming';
 
 // Internal
-import { color } from 'utils';
+import * as color from 'utils/color';
 import { consts } from 'styles';
 import fontStyles from './fonts';
 
@@ -16,17 +15,27 @@ const resetStyles = theme => ({
   body: {
     color: theme.foreground,
     height: '100vh',
-    backgroundColor: '#232c39',
+    margin: 0,
     fontFamily: '"Noto Sans", sans-serif',
     fontSize: 16,
     lineHeight: consts.lineHeight,
     overflow: 'hidden',
   },
 
+  '#root': {
+    height: '100%',
+  },
+
   a: {
     outline: 'none',
     color: 'inherit',
     textDecoration: 'none',
+  },
+
+  'button, input, textarea, select, optgroup': {
+    fontFamily: 'inherit',
+    fontSize: '1em',
+    lineHeight: 1.15,
   },
 
   p: {
@@ -36,6 +45,7 @@ const resetStyles = theme => ({
 
   svg: {
     fill: 'currentColor',
+    stroke: 'currentColor',
   },
 
   li: {
@@ -120,6 +130,13 @@ const utilityClasses = theme => css`
   }
   .mt2 {
     margin-top: 2em;
+  }
+
+  .space-left {
+    margin-left: 0.4em;
+  }
+  .space-right {
+    margin-right: 0.4em;
   }
 `;
 

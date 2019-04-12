@@ -16,7 +16,8 @@ import Switch from 'components/Switch';
 import Icon from 'components/Icon';
 import UIController from 'components/UIController';
 import SettingsContainer from 'components/SettingsContainer';
-import { form, color } from 'utils';
+import * as color from 'utils/color';
+import * as form from 'utils/form';
 import warningIcon from 'images/warning.sprite.svg';
 import updater from 'updater';
 
@@ -114,6 +115,18 @@ class SettingsApp extends Component {
             message: <Text id="Settings.DaemonLoading" />,
           });
         }
+      },
+    });
+  };
+
+  toggleVerifyModuleSource = e => {
+    const verifyModuleSource = e.target.checked;
+    UIController.openConfirmDialog({
+      question: 'Refresh wallet?',
+      note: 'Wallet must be refreshed for the change to take effect',
+      yesCallback: () => {
+        this.props.updateSettings({ verifyModuleSource });
+        location.reload();
       },
     });
   };
@@ -269,6 +282,20 @@ class SettingsApp extends Component {
             onChange={this.updateHandlers('devMode')}
           />
         </SettingsField>
+
+        <div style={{ display: settings.devMode ? 'block' : 'none' }}>
+          <SettingsField
+            indent={1}
+            connectLabel
+            label={<Text id="Settings.EnforceOpenSourceModules" />}
+            subLabel={<Text id="Settings.EnforceOpenSourceModulesNote" />}
+          >
+            <Switch
+              checked={settings.verifyModuleSource}
+              onChange={this.toggleVerifyModuleSource}
+            />
+          </SettingsField>
+        </div>
 
         <Button
           disabled={connections === undefined}

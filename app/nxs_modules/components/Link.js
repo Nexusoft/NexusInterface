@@ -1,6 +1,9 @@
+// External
 import React from 'react';
 import styled from '@emotion/styled';
 import { Link as RouterLink } from 'react-router-dom';
+
+// Internal
 import { timing } from 'styles';
 
 const linkStyles = ({ theme }) => ({
@@ -20,12 +23,12 @@ const NativeLink = styled.a(linkStyles);
 
 const ComponentLink = styled(RouterLink)(linkStyles);
 
-const Link = ({ as, ...rest }) => {
+const Link = React.forwardRef(({ as, ...rest }, ref) => {
   if (typeof as === 'string') {
-    return <NativeLink as={as} {...rest} />;
+    return <NativeLink as={as} {...rest} ref={ref} />;
   } else {
-    return <ComponentLink as={as} {...rest} />;
+    return <ComponentLink as={as} {...rest} ref={ref} />;
   }
-};
+});
 
 export default Link;

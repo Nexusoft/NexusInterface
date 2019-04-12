@@ -11,7 +11,7 @@ import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from 'components/StatusIcon';
 import { timing } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';

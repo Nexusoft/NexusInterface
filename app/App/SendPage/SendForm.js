@@ -312,7 +312,7 @@ class SendForm extends Component {
           />
 
           <Button type="submit" skin="primary">
-            <Icon icon={sendIcon} spaceRight />
+            <Icon icon={sendIcon} className="space-right" />
             <Text id="sendReceive.SendNow" />
           </Button>
         </SendFormButtons>

@@ -1,35 +1,18 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Svg = styled.svg(
-  {
-    fill: 'currentColor',
-    stroke: 'currentColor',
-    verticalAlign: 'middle',
-    transitionProperty: 'fill, stroke',
-    transitionDuration: '.2s',
-    width: '1em',
-    height: '1em',
-  },
-  ({ spaceLeft }) =>
-    spaceLeft && {
-      marginLeft: '.4em',
-    },
-  ({ spaceRight }) =>
-    spaceRight && {
-      marginRight: '.4em',
-    }
-);
+const Svg = styled.svg({
+  verticalAlign: 'middle',
+  transitionProperty: 'fill, stroke',
+  transitionDuration: '.2s',
+  width: '1em',
+  height: '1em',
+});
 
-const Icon = ({ icon = {}, spaceLeft, spaceRight, ...rest }) => (
-  <Svg
-    viewBox={icon.viewBox}
-    spaceLeft={spaceLeft}
-    spaceRight={spaceRight}
-    {...rest}
-  >
-    <use xlinkHref={`#${icon.id}`} />
+const Icon = React.forwardRef(({ icon = {}, ...rest }, ref) => (
+  <Svg viewBox={icon.viewBox} {...rest} ref={ref}>
+    <use href={`${icon.url ? icon.url : ''}#${icon.id}`} />
   </Svg>
-);
+));
 
 export default Icon;

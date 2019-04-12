@@ -10,11 +10,11 @@ import { getInfo } from 'actions/coreActionCreators';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
 import { loadAddressBookFromFile } from 'actions/addressBookActionCreators';
+import { loadModules } from 'actions/moduleActionCreators';
 import updater from 'updater';
 import appMenu from 'appMenu';
 import configuration from 'api/configuration';
 import { Tail } from 'utils/tail';
-
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';
@@ -31,7 +31,7 @@ export default function setupApp(store, history) {
   store.dispatch(loadSettingsFromFile());
   store.dispatch(loadThemeFromFile());
 
-  appMenu.initialize(store, history);
+  appMenu.initialize();
   appMenu.build();
 
   dispatch(loadAddressBookFromFile());
@@ -85,6 +85,8 @@ export default function setupApp(store, history) {
   }
 
   showInitialModals(state);
+
+  dispatch(loadModules());
 }
 
 function checkWebGL(dispatch) {
