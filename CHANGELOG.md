@@ -18,6 +18,7 @@
 - Made grammar ajustments to en.json
 - Ajustment to terminal's `Help` command
 - Rephrased Staking to Minting
+- Gather Transactions on the transactions page is now handled better
 
 #### Fixes
 - Fixed typo on Israeli Shekel using the wrong ISO code
