@@ -375,7 +375,7 @@ class Select extends Component {
   }
 }
 
-Select = React.forwardRef((props, ref) => (
+const SelectWrapper = React.forwardRef((props, ref) => (
   <Select {...props} controlRef={ref} />
 ));
 
@@ -384,6 +384,6 @@ const SelectReduxForm = ({ input, meta, ...rest }) => (
   <Select error={meta.touched && meta.error} {...input} {...rest} />
 );
 
-Select.RF = SelectReduxForm;
+SelectWrapper.RF = SelectReduxForm;
 
-export default Select;
+export default SelectWrapper;
