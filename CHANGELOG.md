@@ -18,6 +18,7 @@
 - Made grammar ajustments to en.json
 - Ajustment to terminal's `Help` command
 - Rephrased Staking to Minting
+- Gather Transactions on the transactions page is now handled better
 
 #### Fixes
 - Fixed typo on Israeli Shekel using the wrong ISO code
@@ -29,6 +30,8 @@
 - About page correctly displays the backend core version
 - Fixed issue with Login Time Out
 - Encryped warning no long shows before accepting license agreement
+- Fixed issue with Globe crashing on Webgl Errors
+- Fixed context menu issue
 
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)

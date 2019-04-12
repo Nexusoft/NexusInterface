@@ -134,7 +134,7 @@ export default class Bootstrapper {
       await this._restartCore();
 
       this._progress('rescanning');
-      await RPC.PROMISE('rescan');
+      await RPC.PROMISE('rescan',[]);
 
       this._cleanUp();
 
