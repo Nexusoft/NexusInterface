@@ -200,7 +200,7 @@ class Transactions extends Component {
   }
 
   // React Method (Life cycle hook)
-  async componentDidMount() {
+  componentDidMount() {
     console.log('mount tx');
     const { locale } = this.props.settings;
     this._isMounted = true; // This is used so that if you nav away for this screen the background tasks will stop.
@@ -243,7 +243,8 @@ class Transactions extends Component {
       }
     }
 
-    await this.props.loadMyAccounts();
+    this.props.loadMyAccounts();
+
     for (let key in this.props.myAccounts) {
       for (let eachaddress in this.props.myAccounts[key].addresses) {
         tempaddpress.set(
@@ -263,7 +264,6 @@ class Transactions extends Component {
     });
 
     this._Onprogress = () => {}; // Might not need to define this here
-    console.log('mount tx done');
   }
 
   // React Method (Life cycle hook)

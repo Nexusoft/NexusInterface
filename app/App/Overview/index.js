@@ -274,7 +274,6 @@ class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-    console.log(this.props);
     googleanalytics.SendScreen('Overview');
   }
   /**
