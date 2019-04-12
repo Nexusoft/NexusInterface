@@ -8,8 +8,7 @@ import ModalContext from 'context/modal';
 import UIController from 'components/UIController';
 import Overlay from 'components/Overlay';
 import { timing } from 'styles';
-import { passRef } from 'utils';
-import * as color from 'utils/color';
+import { color, passRef } from 'utils';
 
 const intro = keyframes`
   from { 

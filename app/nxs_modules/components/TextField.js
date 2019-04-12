@@ -1,14 +1,12 @@
 // @jsx jsx
-// External
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { jsx, css } from '@emotion/core';
-
-// Internal
 import Tooltip from 'components/Tooltip';
 import { timing, consts } from 'styles';
-import { passRef } from 'utils';
-import * as color from 'utils/color';
+import { color, passRef } from 'utils';
+
+const inputHeightHalf = '1.125em';
 
 const ErrorMessage = styled(Tooltip)(
   {
@@ -87,7 +85,7 @@ const TextFieldComponent = styled.div(
               }
             : null),
         };
-      case 'filled':
+      case 'filled-light':
         return {
           borderRadius: 2,
           background: theme.mixer(0.875),
@@ -108,7 +106,7 @@ const TextFieldComponent = styled.div(
               }
             : null),
         };
-      case 'filled-inverted':
+      case 'filled-dark':
         return {
           border: `1px solid ${theme.mixer(0.125)}`,
           background: theme.background,
@@ -163,7 +161,7 @@ const Input = styled.input(
     '&[type="date"], &[type="time"]': {
       '&::-webkit-inner-spin-button': {
         position: 'relative',
-        top: consts.inputHeightEm / 2 + 'em',
+        top: inputHeightHalf,
         transform: 'translateY(-50%)',
       },
     },
@@ -205,7 +203,7 @@ const Input = styled.input(
   },
 
   ({ skin }) =>
-    (skin === 'filled' || skin === 'filled-inverted') && {
+    (skin === 'filled-light' || skin === 'filled-dark') && {
       padding: '0 .8em',
     }
 );
@@ -216,6 +214,11 @@ const multilineStyle = css({
   paddingTop: '.4em',
   paddingBottom: '.5em',
 });
+
+const multilineProps = {
+  as: 'textarea',
+  css: multilineStyle,
+};
 
 class TextArea extends Component {
   componentDidUpdate() {

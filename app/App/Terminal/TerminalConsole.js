@@ -75,7 +75,9 @@ const actionCreators = {
 };
 
 const TerminalContent = styled.div({
-  gridArea: 'content',
+  flexGrow: 1,
+  flexShrink: 1,
+  flexBasis: 0,
   overflow: 'visible',
 });
 
@@ -274,12 +276,12 @@ class TerminalConsole extends Component {
     }
   };
 
-  tempasd = incoming => {
+  tempasd = (incoming) => {
     console.log(incoming);
     const asdfgh = incoming.split(' ')[0] + ' ';
     console.log(asdfgh);
     this.props.updateConsoleInput(asdfgh);
-  };
+  }
 
   /**
    * React Render
@@ -317,11 +319,11 @@ class TerminalConsole extends Component {
                     onSelect={updateConsoleInput}
                     keyControl={false}
                     suggestOn="change"
-                    ref={c => (this.inputRef = c)}
+                    ref={c => this.inputRef = c}
                     inputRef={this.inputRef}
                     inputProps={{
                       autoFocus: true,
-                      skin: 'filled-inverted',
+                      skin: 'filled-dark',
                       value: consoleInput,
                       placeholder: cch,
                       onChange: e => {
@@ -330,7 +332,7 @@ class TerminalConsole extends Component {
                       onKeyDown: this.handleKeyDown,
                       right: (
                         <ExecuteButton
-                          skin="filled-inverted"
+                          skin="filled-dark"
                           fitHeight
                           grouped="right"
                           onClick={this.execute}
@@ -371,7 +373,7 @@ class TerminalConsole extends Component {
             </ConsoleOutput>
 
             <Button
-              skin="filled-inverted"
+              skin="filled-dark"
               grouped="bottom"
               onClick={resetConsoleOutput}
             >

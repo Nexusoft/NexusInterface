@@ -1,10 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import store, { history } from 'store';
 import App from './App';
+import { configureStore, history } from './store/configureStore';
 import setupApp from './setupApp';
 import './CSS/app.global.css';
+
+const store = configureStore();
 
 setupApp(store, history);
 

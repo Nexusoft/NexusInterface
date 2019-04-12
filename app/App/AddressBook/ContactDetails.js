@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 // Internal
 import { deleteContact } from 'actions/addressBookActionCreators';
 import Text from 'components/Text';
-import ExternalLink from 'components/ExternalLink';
+import Link from 'components/Link';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
@@ -223,9 +223,9 @@ class ContactDetails extends React.Component {
           label={<Text id="AddressBook.Email" />}
           content={
             contact.email && (
-              <ExternalLink href={`mailto:${contact.email}`}>
+              <Link as="a" href={`mailto:${contact.email}`}>
                 {contact.email}
-              </ExternalLink>
+              </Link>
             )
           }
         />

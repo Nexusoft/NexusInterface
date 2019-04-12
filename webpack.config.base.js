@@ -4,21 +4,11 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import { readFileSync } from 'fs';
 import { dependencies as externals } from './app/package.json';
 import packageJson from './package.json';
 
 const appVersion = packageJson.version;
-const moduleSpecVersion = packageJson.moduleSpecVersion;
-const supportedModuleSpecVersion = packageJson.supportedModuleSpecVersion;
 const appId = packageJson.build.appId;
-const embassyPubKey = do {
-  try {
-    readFileSync('./embassy_pub_key.pem');
-  } catch (err) {
-    ('');
-  }
-};
 
 export default {
   externals: Object.keys(externals || {}),
@@ -89,12 +79,7 @@ export default {
         process.env.NODE_ENV || 'production'
       ),
       APP_VERSION: JSON.stringify(appVersion || ''),
-      MODULE_SPEC_VERSION: JSON.stringify(moduleSpecVersion || ''),
-      SUPPORTED_MODULE_SPEC_VERSION: JSON.stringify(
-        supportedModuleSpecVersion || ''
-      ),
       APP_ID: JSON.stringify(appId || ''),
-      NEXUS_EMBASSY_PUBLIC_KEY: '`' + embassyPubKey + '`',
     }),
 
     new webpack.NamedModulesPlugin(),

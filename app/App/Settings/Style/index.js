@@ -418,7 +418,7 @@ class SettingsStyle extends Component {
           <div className="mt1">
             <NexusAddress address={this.state.sampleAddress} label="Sample Address" />
             <AddressStyleNote>
-              <Icon icon={warningIcon} className="space-right" />
+              <Icon icon={warningIcon} spaceRight />
               <span className="v-align">
                 This is your Default Address
               </span>

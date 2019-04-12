@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import { timing } from 'styles';
-import * as color from 'utils/color';
+import { color } from 'utils';
 
 const ButtonComponent = styled.button(
   {
@@ -143,7 +143,7 @@ const ButtonComponent = styled.button(
             background: theme.primary,
           },
         };
-      case 'filled-inverted':
+      case 'filled-dark':
         return {
           '&, &:active, &&:disabled': {
             background: theme.background,
@@ -154,7 +154,7 @@ const ButtonComponent = styled.button(
             background: theme.mixer(0.125),
           },
         };
-      case 'filled':
+      case 'filled-light':
         return {
           '&, &:active, &&:disabled': {
             background: theme.mixer(0.875),
@@ -176,7 +176,7 @@ const ButtonComponent = styled.button(
             background: color.lighten(theme.danger, 0.2),
           },
         };
-      case 'plain-inverted':
+      case 'blank-dark':
         return {
           '&, &:active, &&:disabled': {
             background: 'transparent',
@@ -187,7 +187,7 @@ const ButtonComponent = styled.button(
             color: theme.background,
           },
         };
-      case 'plain':
+      case 'blank-light':
         return {
           '&, &:active, &&:disabled': {
             background: 'transparent',
@@ -223,10 +223,13 @@ const ButtonComponent = styled.button(
  * Note: the double & in &&:disabled is a css specificity hack so that the disabled styles take priority over the hover styles
  */
 
-const Button = React.forwardRef(
-  ({ type = 'button', skin = 'default', ...rest }, ref) => (
-    <ButtonComponent type={type} skin={skin} {...rest} ref={ref} />
-  )
-);
+export default class Button extends Component {
+  static defaultProps = {
+    type: 'button',
+    skin: 'default',
+  };
 
-export default Button;
+  render() {
+    return <ButtonComponent {...this.props} />;
+  }
+}

@@ -17,29 +17,29 @@ import SettingsApp from './App';
 import SettingsCore from './Core';
 import SettingsStyle from './Style';
 import SettingsSecurity from './Security';
-import SettingsModules from './Modules';
 
 // Images
 import settingsIcon from 'images/settings.sprite.svg';
 import coreIcon from 'images/core.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
 import lockIcon from 'images/padlock.sprite.svg';
-import leafIcon from 'images/leaf.sprite.svg';
-import legoIcon from 'images/lego-block.sprite.svg';
+import developerIcon from 'images/developer.sprite.svg';
 
 const SettingsComponent = styled.div({
   height: '100%',
-  display: 'grid',
-  gridTemplateAreas: '"tab-bar" "content"',
-  gridTemplateRows: 'min-content 1fr',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
 });
 
 const SettingsTabBar = styled(Tab.Bar)({
-  gridArea: 'tab-bar',
+  flexShrink: 0,
 });
 
 const SettingsContent = styled.div({
-  gridArea: 'content',
+  flexGrow: 1,
+  flexShrink: 1,
+  flexBasis: 0,
   overflow: 'auto',
   margin: '0 -30px',
   padding: '0 30px',
@@ -120,13 +120,8 @@ export default class Settings extends Component {
             />
             <Tab
               link={`${match.url}/Style`}
-              icon={leafIcon}
+              icon={developerIcon}
               text={<Text id="Settings.Style" />}
-            />
-            <Tab
-              link={`${match.url}/Modules`}
-              icon={legoIcon}
-              text={<Text id="Settings.Modules" />}
             />
           </SettingsTabBar>
 
@@ -139,10 +134,6 @@ export default class Settings extends Component {
                 component={SettingsSecurity}
               />
               <Route path={`${match.path}/Style`} component={SettingsStyle} />
-              <Route
-                path={`${match.path}/Modules`}
-                component={SettingsModules}
-              />
               <SettingsRedirect match={match} />
             </Switch>
           </SettingsContent>

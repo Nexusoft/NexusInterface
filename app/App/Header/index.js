@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import Icon from 'components/Icon';
 import HorizontalLine from 'components/HorizontalLine';
 import { consts, timing, animations } from 'styles';
-import * as color from 'utils/color';
+import { color } from 'utils';
 
 // Internal Local
 import LogInStatus from './StatusIcons/LogInStatus';

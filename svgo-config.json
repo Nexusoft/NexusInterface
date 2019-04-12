@@ -1,5 +1,4 @@
 {
-  "full": true,
   "plugins": [
     { "cleanupAttrs": true },
     { "inlineStyles": true },

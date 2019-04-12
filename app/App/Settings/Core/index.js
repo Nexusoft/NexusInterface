@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
+
 import * as TYPE from 'actions/actiontypes';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
@@ -17,11 +18,12 @@ import Switch from 'components/Switch';
 import UIController from 'components/UIController';
 import SettingsContainer from 'components/SettingsContainer';
 import { updateSettings } from 'actions/settingsActionCreators';
-import * as form from 'utils/form';
+import { form } from 'utils';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
 import ReScanButton from '../../../nxs_modules/components/MyAddressesModal/RescanButton.js';
 
+// React-Redux mandatory methods
 const mapStateToProps = ({
   settings,
   core: {

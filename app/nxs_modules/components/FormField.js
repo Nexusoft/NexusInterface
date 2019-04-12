@@ -69,10 +69,6 @@ const Hint = styled.div(({ theme }) => ({
 }));
 
 class FormField extends Component {
-  static defaultProps = {
-    capitalizeLabel: true,
-  };
-
   inputId = newUID();
 
   formInput = () => {
@@ -93,7 +89,7 @@ class FormField extends Component {
   render() {
     const {
       label,
-      capitalizeLabel,
+      capitalizeLabel = true,
       connectLabel,
       children,
       hint,

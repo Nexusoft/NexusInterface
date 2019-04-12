@@ -26,7 +26,6 @@ export const defaultSettings = {
   minConfirmations: 3,
   backupDirectory: defaultBackupDir,
   devMode: false,
-  verifyModuleSource: true,
   overviewDisplay: 'standard',
 
   // Core
@@ -48,9 +47,6 @@ export const defaultSettings = {
   // Style
   renderGlobe: true,
   addressStyle: 'segmented',
-
-  // Modules
-  disabledModules: [],
 
   // Hidden settings
   acceptedAgreement: false,

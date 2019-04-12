@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 // Internal
 import Highlight from 'components/Highlight';
 import NexusAddress from 'components/NexusAddress';
-import highlightMatchingText from 'utils/highlightMatchingText';
+import { highlightMatchingText } from 'utils';
 
 const AccountComponent = styled.div(({ theme }) => ({
   padding: '1em 0',

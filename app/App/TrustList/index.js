@@ -147,9 +147,9 @@ class List extends Component {
                       {' '}
                       <Text id="TrustList.InterestRate" />
                       {this.props.acc ? (
-                        <Icon className="space-right" icon={caretdown} />
+                        <Icon spaceRight icon={caretdown} />
                       ) : (
-                        <Icon className="space-right" icon={caretUp} />
+                        <Icon spaceRight icon={caretUp} />
                       )}
                     </div>
                   </th>

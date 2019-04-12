@@ -8,7 +8,7 @@ import { withTheme } from 'emotion-theming';
 // Internal
 import Button from 'components/Button';
 import Overlay from 'components/Overlay';
-import * as color from 'utils/color';
+import { color } from 'utils';
 
 const ColorButton = styled(Button)(({ color: c, open }) => {
   const contrastColor = color.isDark(c) ? '#fff' : '#000';

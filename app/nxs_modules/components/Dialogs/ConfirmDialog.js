@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import * as color from 'utils/color';
+import { color } from 'utils';
 import Dialog from './Dialog';
 
 const QuestionMark = styled(Dialog.Icon)(({ theme }) => ({

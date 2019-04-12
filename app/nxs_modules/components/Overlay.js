@@ -1,9 +1,8 @@
-// External
+// External Dependencies
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
-// Internal
 import { animations, timing, zIndex } from 'styles';
 
 const OverlayComponent = styled.div(

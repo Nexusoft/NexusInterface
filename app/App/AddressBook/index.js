@@ -118,11 +118,11 @@ class AddressBook extends Component {
             </div>
             {connections !== undefined && (
               <Button
-                skin="plain"
+                skin="blank-light"
                 onClick={this.showAddContact}
                 className="mt1"
               >
-                <Icon icon={addContactIcon} className="space-right" />
+                <Icon icon={addContactIcon} spaceRight />
                 <Text id="AddressBook.CreateNewContact" />
               </Button>
             )}

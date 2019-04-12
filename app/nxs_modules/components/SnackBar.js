@@ -4,7 +4,7 @@ import { keyframes } from '@emotion/core';
 
 // Internal
 import { timing } from 'styles';
-import * as color from 'utils/color';
+import { color } from 'utils';
 
 const notifHeight = 40;
 const notifMargin = 15;

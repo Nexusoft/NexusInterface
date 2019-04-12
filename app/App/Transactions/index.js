@@ -1806,7 +1806,7 @@ class Transactions extends Component {
                     placeholder: 'Search for Address',
                     onChange: this.transactionaddressfiltercallback.bind(this),
                   }}
-                  left={<Icon icon={searchIcon} className="space-right" />}
+                  left={<Icon icon={searchIcon} spaceRight />}
                 />
               </FormField>
 
