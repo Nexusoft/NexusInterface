@@ -218,20 +218,17 @@ class SettingsCore extends Component {
   })();
 
   /**
-   * If Tritium don't return fee setting, this maybe changed. 
+   * If Tritium don't return fee setting, this maybe changed.
    *
    * @memberof SettingsCore
    */
-  returnFeeSetting= () => {
-    if (this.props.version.includes("Tritium")){
-        return null;
+  returnFeeSetting = () => {
+    if (this.props.version.includes('Tritium')) {
+      return null;
+    } else {
+      return <FeeSetting />;
     }
-    else
-    {
-      return (
-        <FeeSetting />);
-    }
-  }
+  };
 
   /**
    * React Render
