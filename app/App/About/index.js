@@ -197,11 +197,11 @@ class About extends Component {
             <Row>
               <Column>
                   <b>Interface Version:</b> {this.getInterfaceVersionNumber()}<br />
-                  <b>Build Date: </b> March 15th 2019 <br />
+                  <b>Build Date: </b> April 13th 2019 <br />
                 </Column>
                 <Column>
                   <b>Daemon Version:</b> {this.getDaemonVersionNumber()} <br />
-                  <b>Build Date: </b> March 15th 2019 <br />
+                  <b>Build Date: </b> April 13th 2019 <br />
               </Column>
             </Row>
             <CenterText>
