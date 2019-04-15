@@ -4,7 +4,7 @@ import Ajv from 'ajv';
 import semverRegex from 'semver-regex';
 
 import { isModuleDeprecated, isModuleValid } from './utils';
-import { getRepoInfo, isRepoOnline, isRepoVerified } from './repo';
+import { getRepoInfo, isRepoOnline, isRepoVerified, isAuthorPartOfOrg } from './repo';
 
 const ajv = new Ajv();
 // Reserved file names, modules are not allowed to have one of these in their `files` field
@@ -134,11 +134,12 @@ export async function loadModuleFromDir(
     // Check the repository info and verification
     const repoInfo = await getRepoInfo(dirPath);
     if (repoInfo) {
-      const [repoOnline, repoVerified] = await Promise.all([
+      const [repoOnline, repoVerified, nexusRepo] = await Promise.all([
         isRepoOnline(repoInfo),
         isRepoVerified(repoInfo, module, dirPath),
+        isAuthorPartOfOrg(repoInfo),
       ]);
-      Object.assign(module, repoInfo.data, { repoOnline, repoVerified });
+      Object.assign(module, repoInfo.data, { repoOnline, repoVerified, nexusRepo });
     }
 
     module.deprecated = isModuleDeprecated(module);

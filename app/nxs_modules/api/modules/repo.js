@@ -127,6 +127,32 @@ export async function getRepoInfo(dirPath) {
 }
 
 /**
+ * Check to see if Author is part of NexusSoft
+ *
+ * @export
+ * @param {*} repoInfo
+ * @returns {boolean} Is Author apart of Nexus
+ */
+export async function isAuthorPartOfOrg(repoInfo) {
+  const { host, owner, repo, commit } = repoInfo.data.repository;
+  if (!host || !owner || !repo || !commit) return false;
+
+  try {
+    const apiUrls = {
+      'github.com' : `https://api.github.com/users/${owner}/orgs`,
+    };
+    const url = apiUrls[host];
+    const response = await axios.get(url);
+    const listOfOrgs = JSON.parse(response.request.response);
+    const partOfNexus = listOfOrgs.filter( e => {return e.login === 'Nexusoft'});
+    return !!partOfNexus && partOfNexus.length != 0 ;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+/**
  * Check if the specified repository is currently still online
  *
  * @param {*} repoInfo
