@@ -140,7 +140,7 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args,
     });
-    // console.log(cmd, args); // keep here for debugging
+    //console.log(cmd, args); // keep here for debugging
     var ResponseObject;
     // console.log(PostData);
     // console.log(GETUSER(), GETPASSWORD());
@@ -173,6 +173,10 @@ export const PROMISE = (cmd, args) => {
       if (ResponseObject.status == 401) {
         // console.error(ResponseObject);
         reject('Bad Username and Password');
+      }
+      if (ResponseObject.status == 400) {
+        // console.error(ResponseObject);
+        reject('Bad Request');
       }
       if (ResponseObject.status == 500) {
         // console.log(JSON.parse(ResponseObject.responseText));

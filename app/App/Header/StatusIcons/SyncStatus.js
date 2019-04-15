@@ -69,6 +69,7 @@ class SyncStatus extends React.Component {
     const outOfSyncLegacy = heighestPeerBlock > blocks;
     let percentSynced = parseInt((blocks / heighestPeerBlock) * 100);
     if (synchronizing) percentSynced = synccomplete;
+    if (percentSynced > 100) percentSynced = 0;
     if (synchronizing || outOfSyncLegacy) {
       return <Text id="Header.Syncing" data={{ percent: percentSynced }} />;
     } else {

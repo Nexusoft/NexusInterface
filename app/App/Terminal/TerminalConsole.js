@@ -143,7 +143,8 @@ class TerminalConsole extends Component {
     const result = await RPC.PROMISE('help', []);
     const commandList = result
       .split('\n')
-      .filter(c => c !== 'please enable -richlist to use this command');
+      .filter(c => c !== 'please enable -richlist to use this command')
+      .filter(c => !c.startsWith(' ')); // Tritium added some extra comments that are not commands so filter them out
     this.props.setCommandList(commandList);
   };
 
@@ -206,7 +207,7 @@ class TerminalConsole extends Component {
 
     const args = chunks
       .filter(arg => arg)
-      .map(arg => (isNaN(parseFloat(arg)) ? arg : parseFloat(arg)));
+      .map(arg => (isNaN(Number(arg)) ? arg : Number(arg)));
 
     this.inputRef.inputRef.current.blur();
 
@@ -248,7 +249,7 @@ class TerminalConsole extends Component {
       traverseOutput(result, 1);
       printCommandOutput(output);
     } else if (typeof result === 'string') {
-      printCommandOutput(result.split('\n').map(text => tab + text));
+      printCommandOutput(result.split('\n').map(text => tab + (text.startsWith(' ') ? text : "> " + text + '\n' )));
     } else {
       printCommandOutput(tab + result);
     }

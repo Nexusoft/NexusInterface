@@ -21,15 +21,17 @@ import { updateSettings } from 'actions/settingsActionCreators';
 import { form } from 'utils';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
+import ReScanButton from '../../../nxs_modules/components/MyAddressesModal/RescanButton.js';
 
 // React-Redux mandatory methods
 const mapStateToProps = ({
   settings,
   core: {
-    info: { connections },
+    info: { connections, version },
   },
 }) => ({
   connections,
+  version,
   settings,
   initialValues: {
     manualDaemonUser: settings.manualDaemonUser,
@@ -216,6 +218,19 @@ class SettingsCore extends Component {
   })();
 
   /**
+   * If Tritium don't return fee setting, this maybe changed.
+   *
+   * @memberof SettingsCore
+   */
+  returnFeeSetting = () => {
+    if (this.props.version.includes('Tritium')) {
+      return null;
+    } else {
+      return <FeeSetting />;
+    }
+  };
+
+  /**
    * React Render
    *
    * @returns
@@ -264,7 +279,15 @@ class SettingsCore extends Component {
             />
           </SettingsField>
 
-          <FeeSetting />
+          <SettingsField
+            connectLabel
+            label={<Text id="MyAddressesModal.Rescan" />}
+            subLabel={<Text id="MyAddressesModal.RescanTooltip" />}
+          >
+            <ReScanButton />
+          </SettingsField>
+
+          {this.returnFeeSetting()}
 
           <SettingsField
             connectLabel

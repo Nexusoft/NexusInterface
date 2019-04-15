@@ -17,10 +17,10 @@ import { getDifficulty } from 'actions/coreActionCreators';
 import * as helpers from 'scripts/helper.js';
 import * as RPC from 'scripts/rpc';
 import { timing, consts, animations } from 'styles';
-import NetworkGlobe from './NetworkGlobe';
+import Globe from './Globe';
 
 // Images
-import {CurrencyIcon} from 'images/CurrencyIcons';
+import { CurrencyIcon } from 'images/CurrencyIcons';
 import transactionIcon from 'images/transaction.sprite.svg';
 import chartIcon from 'images/chart.sprite.svg';
 import supplyIcon from 'images/supply.sprite.svg';
@@ -139,6 +139,13 @@ const Stats = styled.div(
     top: '50%',
     transform: 'translateY(-50%)',
     whiteSpace: 'nowrap',
+    // I don't like this but its a quick fix for super small screens.
+    '@media (min-height: 10px) and (max-height: 720px)': {
+      fontSize: '75%',
+      '& svg': {
+        transform: 'scale(0.75)',
+      },
+    },
   },
   ({ left, compact }) =>
     left && {
@@ -267,7 +274,6 @@ class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-
     googleanalytics.SendScreen('Overview');
   }
   /**
@@ -578,6 +584,7 @@ class Overview extends Component {
       </React.Fragment>
     );
   };
+
   /**
    * Returns the Difficulty Stats for the Overview page when it is in Miner View
    *
@@ -754,15 +761,14 @@ class Overview extends Component {
     return (
       <OverviewPage>
         {!!this.showingGlobe() && (
-          <NetworkGlobe
+          <Globe
             handleOnLineRender={e => (this.redrawCurves = e)}
-            // handleOnRemoveOldPoints={e => (this.removeOldPoints = e)} // causes issues
-            connections={connections}
-            handleOnAddData={e => (this.reDrawEverything = e)}
             handleRemoveAllPoints={e => (this.removeAllPoints = e)}
+            connections={connections}
             pillarColor={theme.globePillarColor}
             archColor={theme.globeArchColor}
             globeColor={theme.globeColor}
+            lispPillarColor="#00ffff"
           />
         )}
 

@@ -1,13 +1,24 @@
-# 0.9.0-alpha3 (2019.3.XX)
+# 0.9.0-alpha4 (2019.3.XX)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.9.0)
 #### Additions
 - Tritium Cores
-- New CSV download functionality for transaction page
+- New CSV download functionality for Transaction page
 - New Currency icons for fiat balance
+- Added links to the exchanges on the Market page
+- New Globe backend code, will allow for expanded functionality
 
 #### Adjustments
 - There is now a max of `0.1` Nexus for the transaction fee setting
 - Moved `Download Recent Database` to file dropdown
+- Trust and Stake numbers now only show 6 significant numbers
+- Replaced Rescan Wallet on `My Addressess` with `Check Wallet` and moved button to `Settings/Core`
+- Changed scalling on screens under 720px high
+- The Sample Address in Style Settings has been replaced with the User's Default Address
+- The `X` on the add or edit contact form is now more visible
+- Made grammar ajustments to en.json
+- Ajustment to terminal's `Help` command
+- Rephrased some instances of Staking to Minting to more accurately convey what is happening
+- Gather Transactions on the transactions page is now handled better
 
 #### Fixes
 - Fixed typo on Israeli Shekel using the wrong ISO code
@@ -16,6 +27,12 @@
 - Fixed Pending Transaction label in transaction detail modal
 - Fixed `Fee` not displaying on send transactions in the detail modal
 - Fixed price history file not being created/read properly 
+- About page correctly displays the backend core version
+- Fixed issue with Login Time Out
+- Encryped warning no long shows before accepting license agreement
+- Fixed issue with Globe crashing on Webgl Errors
+- Fixed context menu issue
+- Fixed issue with Terminal where if a param started with a number it would only return that partial number
 
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)

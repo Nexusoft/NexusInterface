@@ -132,7 +132,7 @@ export default class Bootstrapper {
       await this._restartCore();
 
       this._progress('rescanning');
-      await RPC.PROMISE('rescan');
+      await RPC.PROMISE('rescan',[]);
 
       this._cleanUp();
 
@@ -208,7 +208,7 @@ export default class Bootstrapper {
         .on('response', response => {
           const totalSize = parseInt(response.headers['content-length'], 10);
           let downloaded = 0;
-
+          console.log(response.headers['content-length']);
           response.on('data', chunk => {
             downloaded += chunk.length;
             this._progress('downloading', { downloaded, totalSize });
