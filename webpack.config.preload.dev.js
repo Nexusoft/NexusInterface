@@ -20,8 +20,8 @@ export default merge.smart(baseConfig, {
   entry: './app/module_preload',
 
   output: {
-    path: path.join(__dirname, 'app/dist'),
-    publicPath: '../dist/',
+    path: path.join(__dirname, 'app/'),
+    publicPath: '../',
     filename: 'module_preload.dev.js',
   },
 
