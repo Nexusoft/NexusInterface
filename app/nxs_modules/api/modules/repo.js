@@ -139,13 +139,15 @@ export async function isAuthorPartOfOrg(repoInfo) {
 
   try {
     const apiUrls = {
-      'github.com' : `https://api.github.com/users/${owner}/orgs`,
+      'github.com': `https://api.github.com/users/${owner}/orgs`,
     };
     const url = apiUrls[host];
     const response = await axios.get(url);
     const listOfOrgs = JSON.parse(response.request.response);
-    const partOfNexus = listOfOrgs.filter( e => {return e.login === 'Nexusoft'});
-    return !!partOfNexus && partOfNexus.length != 0 ;
+    const partOfNexus = listOfOrgs.filter(e => {
+      return e.login === 'Nexusoft';
+    });
+    return !!partOfNexus && partOfNexus.length != 0;
   } catch (err) {
     console.error(err);
     return false;
@@ -216,7 +218,13 @@ export async function isRepoVerified(repoInfo, module, dirPath) {
   }
 }
 
-export async function signModuleRepo(moduleName, privKeyFile) {
+/**
+ * Nexus team should use this script to sign the repo verification
+ *
+ * @param {*} moduleName
+ * @param {*} privKeyFile
+ */
+async function signModuleRepo(moduleName, privKeyFile) {
   const { modules } = store.getState();
   const module = modules[moduleName];
 
@@ -226,7 +234,6 @@ export async function signModuleRepo(moduleName, privKeyFile) {
 
   const dirPath = join(config.GetModulesDir(), module.dirName);
   const moduleHash = await getModuleHash(module, dirPath);
-  console.log('module hash', moduleHash);
   const data = { repository: module.repository, moduleHash };
   const serializedData = JSON.stringify(data);
 
@@ -248,7 +255,13 @@ export async function signModuleRepo(moduleName, privKeyFile) {
       'base64'
     );
 
-  console.log('signature', signature);
+  const repoInfo = {
+    verification: { signature },
+    data,
+  };
+  const repoInfoPath = join(dirPath, 'repo_info.json');
+  fs.writeFileSync(repoInfoPath, JSON.stringify(repoInfo, null, 2));
 }
 
-window.signModuleRepo = signModuleRepo;
+// So that the function can be called on DevTools
+window.__signModuleRepo = signModuleRepo;
