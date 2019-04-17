@@ -142,10 +142,10 @@ function handleIpcMessage(event) {
 async function rpcCall([{ command, params, id }]) {
   try {
     const response = await RPC.PROMISE(command, ...(params || []));
-    webview.send(`rpc-response${id ? `:${id}` : ''}`, response);
+    webview.send(`rpc-return${id ? `:${id}` : ''}`, null, response);
   } catch (err) {
     console.error(err);
-    webview.send(`rpc-error${id ? `:${id}` : ''}`, err);
+    webview.send(`rpc-return${id ? `:${id}` : ''}`, err);
   }
 }
 
