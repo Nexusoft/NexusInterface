@@ -51,8 +51,10 @@ global.NEXUS = {
     Tab,
     FieldSet,
   },
-  sendMessage: (...args) => ipcRenderer.sendToHost(...args),
-  on: (...args) => ipcRenderer.on(...args),
-  once: (...args) => ipcRenderer.once(...args),
-  off: (...args) => ipcRenderer.removeListener(...args),
+  ipc: {
+    send: (...args) => ipcRenderer.sendToHost(...args),
+    listen: (...args) => ipcRenderer.on(...args),
+    listenOnce: (...args) => ipcRenderer.once(...args),
+    stopListening: (...args) => ipcRenderer.removeListener(...args),
+  },
 };
