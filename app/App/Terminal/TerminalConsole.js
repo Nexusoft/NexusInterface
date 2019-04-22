@@ -205,7 +205,7 @@ class TerminalConsole extends Component {
 
     const args = chunks
       .filter(arg => arg)
-      .map(arg => (isNaN(parseFloat(arg)) ? arg : parseFloat(arg)));
+      .map(arg => (isNaN(Number(arg)) ? arg : Number(arg)));
 
     this.inputRef.inputRef.current.blur();
 

@@ -49,7 +49,7 @@ const Shader = {
 };
 
 /**
- * The 3D Globe on the overview page. 
+ * The 3D Globe on the overview page.
  *
  * @export
  * @class Globe
@@ -165,7 +165,7 @@ export default class Globe extends Component {
       this.controls = controls;
 
       // Add pin for user
-      this.addSelf();
+      this.addSelfPoint();
       this.pointRegister();
 
       this.renderer.context.canvas.addEventListener(
@@ -208,9 +208,6 @@ export default class Globe extends Component {
     event.preventDefault();
     console.error('CONTEXT LOST!!');
     this.stop();
-    window.removeEventListener('resize', this.onWindowResize, false);
-    this.controls.dispose();
-    this.threeRootElement.removeChild(this.renderer.domElement);
   }
 
   /**
@@ -239,7 +236,9 @@ export default class Globe extends Component {
     this.stop();
     window.removeEventListener('resize', this.onWindowResize, false);
     this.controls.dispose();
-    this.threeRootElement.removeChild(this.renderer.domElement);
+    if (this.threeRootElement.children.length > 0) {
+      this.threeRootElement.removeChild(this.renderer.domElement);
+    }
   }
 
   /**
@@ -255,7 +254,7 @@ export default class Globe extends Component {
     // and if there are any points that exist and match coords
     // update the registery entry data
 
-    let newPoints = peerInfo
+    let newRegistry = peerInfo
       .map(peer => {
         let GeoData = this.geoiplookup.get(peer.addr.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
@@ -269,7 +268,7 @@ export default class Globe extends Component {
           },
         };
       })
-      .filter((peer, i, array) => {
+      .map((peer, i, array) => {
         let existIndex = this.pointRegistry.findIndex(
           point => peer.lat === point.lat && peer.lng === point.lng
         );
@@ -278,37 +277,28 @@ export default class Globe extends Component {
             peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
         );
 
-        if (existIndex >= 0) {
-          this.pointRegistry[existIndex] = {
-            ...this.pointRegistry[existIndex],
-            params: {
-              ...this.pointRegistry[existIndex].params,
-              type: peer.params.type,
-            },
-          };
+        // if not an internal duplicate and already exists
+        if (existIndex >= 0 && duplicateIndex === i) {
+          return this.pointRegistry[existIndex];
         } else if (duplicateIndex === i) {
-          return peer;
+          let newPoint = new Point(peer.lat, peer.lng, peer.params);
+          this.allPoints.add(newPoint.pillar);
+          return newPoint;
         }
-      });
+      })
+      .filter(e => e);
 
-    // filter out any points that exist in the new points array except self
-    this.pointRegistry = this.pointRegistry.filter(point => {
-      let existIndex = newPoints.findIndex(
+    this.pointRegistry.map(point => {
+      let existIndex = newRegistry.findIndex(
         peer => peer.lat === point.lat && peer.lng === point.lng
       );
 
-      if (existIndex <= 0 || point.params.type === 'SELF') {
-        return point;
-      } else {
+      if (existIndex < 0 && point.params.type !== 'SELF') {
         this.destroyPoint(point);
       }
     });
 
-    newPoints.map(peer => {
-      let point = new Point(peer.lat, peer.lng, peer.params);
-      this.pointRegistry.push(point);
-      this.allPoints.add(point.pillar);
-    });
+    this.pointRegistry = newRegistry;
     this.arcRegister();
   }
 
@@ -317,7 +307,7 @@ export default class Globe extends Component {
    *
    * @memberof Globe
    */
-  addSelf() {
+  addSelfPoint() {
     let selfIndex = this.pointRegistry.indexOf(
       point => point.params.type === 'SELF'
     );
@@ -433,7 +423,7 @@ export default class Globe extends Component {
         }
       });
     } else {
-      this.addSelf();
+      this.addSelfPoint();
     }
   }
 

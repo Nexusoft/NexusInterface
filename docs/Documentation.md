@@ -36,7 +36,7 @@
         -   [Parameters][32]
     -   [componentWillUnmount][33]
     -   [pointRegister][34]
-    -   [addSelf][35]
+    -   [addSelfPoint][35]
     -   [removeAllPoints][36]
     -   [destroyPoint][37]
         -   [Parameters][38]
@@ -323,17 +323,17 @@
 -   [ChangePassword][319]
     -   [confirmLogout][320]
     -   [render][321]
--   [Unencrypted][322]
-    -   [render][323]
--   [EncryptWallet][324]
-    -   [render][325]
--   [ImportPrivKey][326]
+-   [ViewPrivKeyForAddress][322]
+    -   [showPrivKey][323]
+        -   [Parameters][324]
+    -   [copyPrivkey][325]
+    -   [resetPrivateKey][326]
     -   [render][327]
--   [ViewPrivKeyForAddress][328]
-    -   [showPrivKey][329]
-        -   [Parameters][330]
-    -   [copyPrivkey][331]
-    -   [resetPrivateKey][332]
+-   [Unencrypted][328]
+    -   [render][329]
+-   [EncryptWallet][330]
+    -   [render][331]
+-   [ImportPrivKey][332]
     -   [render][333]
 -   [Terminal][334]
     -   [setupcontextmenu][335]
@@ -530,7 +530,7 @@ Register point/pillar on the globe
 
 Returns **any** 
 
-### addSelf
+### addSelfPoint
 
 Add globe to the renderer
 
@@ -1894,6 +1894,34 @@ React Render
 
 Returns **any** 
 
+## ViewPrivKeyForAddress
+
+**Extends Component**
+
+View Private Keys for Address JSX
+
+### showPrivKey
+
+Show Private Keys
+
+#### Parameters
+
+-   `e` **any** 
+
+### copyPrivkey
+
+Copy Private Keys
+
+### resetPrivateKey
+
+Reset Private Keys
+
+### render
+
+React Render
+
+Returns **any** 
+
 ## Unencrypted
 
 **Extends Component**
@@ -1923,34 +1951,6 @@ Returns **any**
 **Extends Component**
 
 Import Private Keys
-
-### render
-
-React Render
-
-Returns **any** 
-
-## ViewPrivKeyForAddress
-
-**Extends Component**
-
-View Private Keys for Address JSX
-
-### showPrivKey
-
-Show Private Keys
-
-#### Parameters
-
--   `e` **any** 
-
-### copyPrivkey
-
-Copy Private Keys
-
-### resetPrivateKey
-
-Reset Private Keys
 
 ### render
 
@@ -2168,7 +2168,7 @@ Controls the background of the app
 
 [34]: #pointregister
 
-[35]: #addself
+[35]: #addselfpoint
 
 [36]: #removeallpoints
 
@@ -2742,27 +2742,27 @@ Controls the background of the app
 
 [321]: #render-38
 
-[322]: #unencrypted
+[322]: #viewprivkeyforaddress
 
-[323]: #render-39
+[323]: #showprivkey
 
-[324]: #encryptwallet
+[324]: #parameters-75
 
-[325]: #render-40
+[325]: #copyprivkey
 
-[326]: #importprivkey
+[326]: #resetprivatekey
 
-[327]: #render-41
+[327]: #render-39
 
-[328]: #viewprivkeyforaddress
+[328]: #unencrypted
 
-[329]: #showprivkey
+[329]: #render-40
 
-[330]: #parameters-75
+[330]: #encryptwallet
 
-[331]: #copyprivkey
+[331]: #render-41
 
-[332]: #resetprivatekey
+[332]: #importprivkey
 
 [333]: #render-42
 
