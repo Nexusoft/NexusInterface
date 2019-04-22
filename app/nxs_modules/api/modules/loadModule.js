@@ -4,7 +4,12 @@ import Ajv from 'ajv';
 import semverRegex from 'semver-regex';
 
 import { isModuleDeprecated, isModuleValid } from './utils';
-import { getRepoInfo, isRepoOnline, isRepoVerified, isAuthorPartOfOrg } from './repo';
+import {
+  getRepoInfo,
+  isRepoOnline,
+  isRepoVerified,
+  isAuthorPartOfOrg,
+} from './repo';
 
 const ajv = new Ajv();
 // Reserved file names, modules are not allowed to have one of these in their `files` field
@@ -30,7 +35,7 @@ const nxsPackageSchema = {
       type: 'string',
       pattern: semverRegex().source,
     },
-    // Nexus Module Specification version that this module was built on
+    // Module Specifications version that this module was built on
     specVersion: {
       type: 'string',
       pattern: semverRegex().source,
@@ -139,7 +144,11 @@ export async function loadModuleFromDir(
         isRepoVerified(repoInfo, module, dirPath),
         isAuthorPartOfOrg(repoInfo),
       ]);
-      Object.assign(module, repoInfo.data, { repoOnline, repoVerified, nexusRepo });
+      Object.assign(module, repoInfo.data, {
+        repoOnline,
+        repoVerified,
+        nexusRepo,
+      });
     }
 
     module.deprecated = isModuleDeprecated(module);

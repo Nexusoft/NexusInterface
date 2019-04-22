@@ -118,7 +118,7 @@ class ModuleDetailsModal extends React.Component {
           <Field label="Display name">{module.displayName}</Field>
           <Field label="Module type">{module.type}</Field>
           <Field label="Version">{module.version}</Field>
-          <Field label="Nexus Module Specification version">
+          <Field label="Module Specifications version">
             {
               <span className={module.deprecated ? 'error' : undefined}>
                 <span className="v-align">{module.specVersion}</span>
@@ -149,7 +149,7 @@ class ModuleDetailsModal extends React.Component {
                     </ExternalLink>
                   </span>
                 )}
-                {isNexusOrg ? ' ✅' : null }
+                {isNexusOrg ? ' ✅' : null}
               </div>
             ) : (
               <span className="dim">No information</span>
@@ -257,7 +257,7 @@ class Installer extends React.Component {
     return (
       <Modal.Footer>
         <InstallerWrapper>
-          {(!module.invalid && !module.nexusRepo) && (
+          {!module.invalid && !module.nexusRepo && (
             <InstallerWarning>
               Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do

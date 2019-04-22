@@ -1,5 +1,5 @@
 /**
- * Build config for Nexus Modules' preload script
+ * Build config for Nexus Wallet Modules' preload script
  */
 
 import path from 'path';
