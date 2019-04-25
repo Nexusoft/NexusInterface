@@ -228,5 +228,4 @@ const getModuleData = ({
   theme,
   settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
   coreInfo: core.info,
-  difficulty: core.difficulty,
 });
