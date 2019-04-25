@@ -565,21 +565,25 @@ class Transactions extends Component {
   async getTransactionData(finishingCallback) {
     let incomingMyAccounts;
     let listedaccounts = [];
+    const numberOfTransactionsPerCall = 100;
+    const numberOfCallsToMake = Math.ceil(this.props.txtotal / numberOfTransactionsPerCall);
     let promisList = [];
     if (
       this.props.selectedAccount == 0 ||
       this.props.selectedAccount === undefined
     ) {
       incomingMyAccounts = this.props.myAccounts;
-      promisList.push(RPC.PROMISE('listtransactions', ['*', 9999, 0])); //TODO: need to change this so that is gets everyting, this will eventually fail.
+      for (let txPageCounter = 0; txPageCounter < numberOfCallsToMake; txPageCounter++) {
+        promisList.push(RPC.PROMISE('listtransactions', ['*', numberOfTransactionsPerCall, numberOfTransactionsPerCall * txPageCounter])); 
+      }
     } else {
       incomingMyAccounts = this.props.myAccounts[
         this.props.selectedAccount - 1
       ];
       listedaccounts.push(incomingMyAccounts.account);
-      promisList.push(
-        RPC.PROMISE('listtransactions', [incomingMyAccounts.account, 9999, 0]) //TODO: need to change this so that is gets everyting, this will eventually fail.
-      );
+      for (let txPageCounter = 0; txPageCounter < numberOfCallsToMake; txPageCounter++) {
+        promisList.push(RPC.PROMISE('listtransactions', [incomingMyAccounts.account, numberOfTransactionsPerCall, numberOfTransactionsPerCall * txPageCounter])); 
+      }
     }
     let tempWalletTransactions = [];
 
@@ -1053,8 +1057,8 @@ class Transactions extends Component {
     };
 
     let tempTransactionRandomTime = function() {
-      let start = new Date(2018, 3, 1);
-      let end = new Date(2018, 7, 2);
+      let start = new Date(new Date().getFullYear() - 1, 1, 1);
+      let end = new Date();
       let randomtime = new Date(
         start.getTime() + Math.random() * (end.getTime() - start.getTime())
       );

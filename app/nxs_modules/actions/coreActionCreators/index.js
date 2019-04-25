@@ -101,7 +101,7 @@ export function getInfo() {
       }
     }
     if (info.txtotal > oldInfo.txtotal) {
-      const txList = await RPC.PROMISE('listtransactions');
+      const txList = await RPC.PROMISE('listtransactions',[]);
       if (txList) {
         const mostRecentTx = txList.reduce((a, b) => (a.time > b.time ? a : b));
 
