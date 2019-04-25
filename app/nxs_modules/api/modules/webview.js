@@ -91,7 +91,7 @@ function handleStateChange() {
   if (!data) return;
   const state = store.getState();
   const newData = getModuleData(state);
-  const { theme, settings, coreInfo, difficulty } = newData;
+  const { theme, settings, coreInfo } = newData;
 
   if (data.theme !== theme) {
     webview.send('theme-updated', theme);
@@ -101,9 +101,6 @@ function handleStateChange() {
   }
   if (data.coreInfo !== coreInfo) {
     webview.send('core-info-updated', coreInfo);
-  }
-  if (data.difficulty !== difficulty) {
-    webview.send('difficulty-updated', difficulty);
   }
   data = newData;
 }
