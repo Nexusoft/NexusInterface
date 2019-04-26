@@ -217,7 +217,7 @@ class Market extends Component {
               <Text id="Market.PriceChange" />
             </b>{' '}
             {this.props[exchangeName].info24hr.change}
-            {' BTC'}
+            {' %'}
           </div>
 
           <div>

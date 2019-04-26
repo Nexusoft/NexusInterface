@@ -34,10 +34,10 @@ export const binance24hrInfo = () => {
       (error, response, body) => {
         if (response.statusCode === 200) {
           let res = {
-            change: body.priceChange,
+            change: body.priceChangePercent,
             high: body.highPrice,
             low: body.lowPrice,
-            volume: body.volume,
+            volume: parseFloat(body.volume).toFixed(2),
           };
           dispatch({ type: TYPE.BINANCE_24, payload: res });
         }
@@ -57,12 +57,14 @@ export const bittrex24hrInfo = () => {
       (error, response, body) => {
         if (response.statusCode === 200) {
           let data = body.result[0];
-
+          console.log(data);
           let res = {
-            change: parseFloat((data.Last - data.PrevDay).toFixed(8)),
+            change: parseFloat(
+              (((data.Last - data.PrevDay) / data.PrevDay) * 100).toFixed(2)
+            ),
             high: data.High,
             low: data.Low,
-            volume: data.Volume,
+            volume: parseFloat(data.Volume).toFixed(2),
           };
           dispatch({ type: TYPE.BITTREX_24, payload: res });
         }
