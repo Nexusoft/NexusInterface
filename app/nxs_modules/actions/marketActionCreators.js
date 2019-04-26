@@ -71,33 +71,6 @@ export const bittrex24hrInfo = () => {
   };
 };
 
-export const cryptopia24hrInfo = () => {
-  return dispatch => {
-    Request(
-      {
-        url: 'https://www.cryptopia.co.nz/api/GetMarket/NXS_BTC',
-        json: true,
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          if (response.headers['content-type'] !== 'text/html') {
-            if (response.body) {
-              let data = body.Data;
-              let res = {
-                change: data.Change,
-                high: data.High,
-                low: data.Low,
-                volume: data.Volume,
-              };
-              dispatch({ type: TYPE.CRYPTOPIA_24, payload: res });
-            }
-          }
-        }
-      }
-    );
-  };
-};
-
 // action creators for the market depth calls
 
 export const binanceDepthLoader = () => {
@@ -131,35 +104,6 @@ export const binanceDepthLoader = () => {
 
           dispatch({ type: TYPE.BINANCE_ORDERBOOK, payload: res });
           dispatch(marketDataLoaded());
-        }
-      }
-    );
-  };
-};
-
-export const cryptopiaDepthLoader = () => {
-  return dispatch => {
-    Request(
-      {
-        url: 'https://www.cryptopia.co.nz/api/GetMarketOrders/NXS_BTC',
-        json: true,
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          if (response.headers['content-type'] !== 'text/html') {
-            let res = {
-              buy: body.Data.Buy.sort((a, b) => b.Price - a.Price).map(e => {
-                return { Volume: e.Volume, Price: e.Price };
-              }),
-              sell: body.Data.Sell.sort((a, b) => b.Price - a.Price)
-                .map(e => {
-                  return { Volume: e.Volume, Price: e.Price };
-                })
-                .reverse(),
-            };
-            dispatch({ type: TYPE.CRYPTOPIA_ORDERBOOK, payload: res });
-            dispatch(marketDataLoaded());
-          }
         }
       }
     );
@@ -272,47 +216,6 @@ export const bittrexCandlestickLoader = any => {
             .slice(0, 30);
           dispatch({ type: TYPE.BITTREX_CANDLESTICK, payload: res });
           dispatch(marketDataLoaded());
-        }
-      }
-    );
-  };
-};
-
-export const cryptopiaCandlestickLoader = (any, mes) => {
-  const { locale } = any.props.settings;
-  return dispatch => {
-    Request(
-      {
-        url:
-          'https://www.cryptopia.co.nz/Exchange/GetTradePairChart?tradePairId=3983&dataRange=1&dataGroup=1440',
-        json: true,
-      },
-      (error, response, body) => {
-        if (response.statusCode === 200) {
-          if (body.Candle) {
-            let res = body.Candle.reverse()
-              .map(e => {
-                return {
-                  x: new Date(e[0]),
-                  open: e[1],
-                  close: e[4],
-                  high: e[2],
-                  low: e[3],
-                  label: `${translate('Market.Date', locale)}: ${new Date(
-                    e[0]
-                  ).getMonth() + 1}/${new Date(e[0]).getDate()}/${new Date(
-                    e[0]
-                  ).getFullYear()}
-                  ${translate('Market.Open', locale)}: ${e[1]}
-                  ${translate('Market.Close', locale)}: ${e[4]}
-                  ${translate('Market.High', locale)}: ${e[2]}
-                  ${translate('Market.Low', locale)}: ${e[3]}`,
-                };
-              })
-              .slice(0, 30);
-            dispatch({ type: TYPE.CRYPTOPIA_CANDLESTICK, payload: res });
-            dispatch(marketDataLoaded());
-          }
         }
       }
     );

@@ -118,8 +118,8 @@
   "transactions.CSVDownloadModalCancel": "Cancel",
   "transactions.CSVDownloadModalTitle": "Processing CSV",
 
-  "Market.Information": "Market Information",
-  "Market.Refreash": "Refresh Market Data",
+  "Market.Information": "Market Data",
+  "Market.Refreash": "Refresh",
   "Market.Refreshing": "Refreshing Market Data...",
   "Market.All": "All",
   "Market.Receive": "Receive",
