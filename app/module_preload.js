@@ -52,9 +52,14 @@ global.NEXUS = {
     FieldSet,
   },
   ipc: {
-    send: (...args) => ipcRenderer.sendToHost(...args),
-    listen: (...args) => ipcRenderer.on(...args),
-    listenOnce: (...args) => ipcRenderer.once(...args),
-    stopListening: (...args) => ipcRenderer.removeListener(...args),
+    send: (...args) => {
+      ipcRenderer.sendToHost(...args);
+    },
+    listen: (channel, listener) => {
+      ipcRenderer.on(channel, (event, ...params) => listener(...params));
+    },
+    listenOnce: (channel, listener) => {
+      ipcRenderer.once(channel, (event, ...params) => listener(...params));
+    },
   },
 };
