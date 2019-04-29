@@ -96,7 +96,7 @@ function handleStateChange() {
   if (data.theme !== theme) {
     webview.send('theme-updated', theme);
   }
-  if (data.settings !== settings) {
+  if (settingsChanged(data.settings, settings)) {
     webview.send('settings-updated', settings);
   }
   if (data.coreInfo !== coreInfo) {
@@ -216,6 +216,11 @@ const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
   fiatCurrency,
   addressStyle,
 }));
+
+const settingsChanged = (settings1, settings2) =>
+  settings1.locale !== settings2.locale ||
+  settings1.fiatCurrency !== settings2.fiatCurrency ||
+  settings1.addressStyle !== settings2.addressStyle;
 
 const getModuleData = ({
   theme,
