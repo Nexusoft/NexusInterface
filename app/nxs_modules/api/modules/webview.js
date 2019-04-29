@@ -136,13 +136,13 @@ function handleIpcMessage(event) {
   }
 }
 
-async function rpcCall([{ command, params, id }]) {
+async function rpcCall([{ command, params, callId }]) {
   try {
     const response = await RPC.PROMISE(command, ...(params || []));
-    webview.send(`rpc-return${id ? `:${id}` : ''}`, null, response);
+    webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
   } catch (err) {
     console.error(err);
-    webview.send(`rpc-return${id ? `:${id}` : ''}`, err);
+    webview.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
   }
 }
 
@@ -174,19 +174,33 @@ function showSuccessDialog([options = {}]) {
 }
 
 function confirm([options = {}]) {
-  const { id, question, note, yesLabel, yesSkin, noLabel, noSkin } = options;
+  const {
+    confirmationId,
+    question,
+    note,
+    yesLabel,
+    yesSkin,
+    noLabel,
+    noSkin,
+  } = options;
   UIController.openConfirmDialog({
     question,
     note,
     yesLabel,
     yesSkin,
     yesCallback: () => {
-      webview.send(`confirm-answer${id ? `:${id}` : ''}`, true);
+      webview.send(
+        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
+        true
+      );
     },
     noLabel,
     noSkin,
     noCallback: () => {
-      webview.send(`confirm-answer${id ? `:${id}` : ''}`, false);
+      webview.send(
+        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
+        false
+      );
     },
   });
 }
