@@ -136,7 +136,7 @@ function handleIpcMessage(event) {
   }
 }
 
-async function rpcCall([{ command, params, callId }]) {
+async function rpcCall([{ command, params, callId } = {}]) {
   try {
     const response = await RPC.PROMISE(command, ...(params || []));
     webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
@@ -146,14 +146,8 @@ async function rpcCall([{ command, params, callId }]) {
   }
 }
 
-function showNotif([content, param = {}]) {
-  const options =
-    typeof param === 'string'
-      ? { type: param }
-      : {
-          type: param.type,
-          autoClose: param.autoClose,
-        };
+function showNotif([{ content, type, autoClose } = {}]) {
+  const options = { content, type, autoClose };
   UIController.showNotification(content, options);
 }
 
