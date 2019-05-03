@@ -12,17 +12,7 @@ const initialState = {
     sell: [],
     candlesticks: [],
   },
-  cryptopia: {
-    info24hr: {
-      change: 0,
-      high: 0,
-      low: 0,
-      volume: 0,
-    },
-    buy: [],
-    sell: [],
-    candlesticks: [],
-  },
+
   bittrex: {
     info24hr: {
       change: 0,
@@ -42,15 +32,6 @@ const initialState = {
 // TODO: deprecate when we move to a new alert system
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.CRYPTOPIA_24:
-      return {
-        ...state,
-        cryptopia: {
-          ...state.cryptopia,
-          info24hr: { ...action.payload },
-        },
-      };
-      break;
     case TYPE.BITTREX_24:
       return {
         ...state,
@@ -69,16 +50,7 @@ export default (state = initialState, action) => {
         },
       };
       break;
-    case TYPE.CRYPTOPIA_ORDERBOOK:
-      return {
-        ...state,
-        cryptopia: {
-          ...state.cryptopia,
-          buy: [...action.payload.buy],
-          sell: [...action.payload.sell],
-        },
-      };
-      break;
+
     case TYPE.BINANCE_ORDERBOOK:
       return {
         ...state,
@@ -123,15 +95,7 @@ export default (state = initialState, action) => {
         },
       };
       break;
-    case TYPE.CRYPTOPIA_CANDLESTICK:
-      return {
-        ...state,
-        cryptopia: {
-          ...state.cryptopia,
-          candlesticks: [...action.payload],
-        },
-      };
-      break;
+
     case TYPE.SET_TRADEVOL:
       return {
         ...state,

@@ -118,8 +118,8 @@
   "transactions.CSVDownloadModalCancel": "Cancel",
   "transactions.CSVDownloadModalTitle": "Processing CSV",
 
-  "Market.Information": "Market Information",
-  "Market.Refreash": "Refresh Market Data",
+  "Market.Information": "Market Data",
+  "Market.Refreash": "Refresh",
   "Market.Refreshing": "Refreshing Market Data...",
   "Market.All": "All",
   "Market.Receive": "Receive",
@@ -311,6 +311,7 @@
   "Settings.Errors.ImportingPrivKey": "Error importing private key",
   "Settings.Errors.LoginDate": "Date is required",
   "Settings.Errors.LoginTime": "Time is required",
+  "Settings.Errors.LoginTimeTooClose": "Time must be at least one hour in the future",
   "Settings.Errors.LoginPassword": "Password is required",
   "Settings.Errors.LoggingIn": "Error logging in",
   "Settings.Errors.AddressEmpty": "Address cannot be empty",
