@@ -170,6 +170,7 @@ class AppMenu {
     click: async () => {
       const enoughSpace = await checkBootStrapFreeSpace();
       if (!enoughSpace) {
+        console.log('in Menu');
         UIController.openErrorDialog({
           message: <Text id="ToolTip.NotEnoughSpace" />,
         });
