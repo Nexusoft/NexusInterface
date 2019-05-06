@@ -180,6 +180,21 @@ export default class Globe extends Component {
         false
       );
 
+      this.renderer.context.canvas.addEventListener(
+        'mouseout',
+        () => {
+          this.controls.enabled = false;
+        },
+        false
+      );
+
+      this.renderer.context.canvas.addEventListener(
+        'mouseover',
+        () => {
+          this.controls.enabled = true;
+        },
+        false
+      );
       this.threeRootElement.appendChild(renderer.domElement);
       window.addEventListener('resize', this.onWindowResize, false);
       this.start();
