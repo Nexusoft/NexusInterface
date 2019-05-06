@@ -172,25 +172,25 @@ function confirm([options = {}]) {
     confirmationId,
     question,
     note,
-    yesLabel,
-    yesSkin,
-    noLabel,
-    noSkin,
+    labelYes,
+    skinYes,
+    labelNo,
+    skinNo,
   } = options;
   UIController.openConfirmDialog({
     question,
     note,
-    yesLabel,
-    yesSkin,
-    yesCallback: () => {
+    labelYes,
+    skinYes,
+    callbackYes: () => {
       webview.send(
         `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
         true
       );
     },
-    noLabel,
-    noSkin,
-    noCallback: () => {
+    labelNo,
+    skinNo,
+    callbackNo: () => {
       webview.send(
         `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
         false

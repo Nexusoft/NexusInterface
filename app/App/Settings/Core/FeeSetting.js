@@ -51,7 +51,7 @@ class FeeSetting extends React.Component {
   confirmSetTxFee = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.SetFee" />,
-      yesCallback: this.props.handleSubmit,
+      callbackYes: this.props.handleSubmit,
     });
   };
 

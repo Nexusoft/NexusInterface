@@ -98,8 +98,8 @@ class Contact extends React.PureComponent {
           data={{ name: this.props.contact.name }}
         />
       ),
-      yesSkin: 'danger',
-      yesCallback: () => {
+      skinYes: 'danger',
+      callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
       },
     });

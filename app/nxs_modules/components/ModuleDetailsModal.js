@@ -79,7 +79,7 @@ class ModuleDetailsModal extends React.Component {
   confirmDelete = () => {
     UIController.openConfirmDialog({
       question: `Delete ${this.props.module.displayName}?`,
-      yesCallback: async () => {
+      callbackYes: async () => {
         const moduleDir = join(
           config.GetModulesDir(),
           this.props.module.dirName

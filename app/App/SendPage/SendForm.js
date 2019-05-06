@@ -233,7 +233,7 @@ class SendForm extends Component {
 
     UIController.openConfirmDialog({
       question: <Text id="sendReceive.SendTransaction" />,
-      yesCallback: handleSubmit,
+      callbackYes: handleSubmit,
     });
   };
 

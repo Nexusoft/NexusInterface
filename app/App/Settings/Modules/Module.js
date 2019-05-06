@@ -122,7 +122,7 @@ class Module extends React.Component {
         question: `Disable ${module.displayName}?`,
         note:
           'Wallet will be automatically refreshed for the change to take effect',
-        yesCallback: () => {
+        callbackYes: () => {
           this.disableModule();
           document.location.reload();
         },
@@ -132,7 +132,7 @@ class Module extends React.Component {
         question: `Enable ${module.displayName}?`,
         note:
           'Wallet will be automatically refreshed for the change to take effect',
-        yesCallback: () => {
+        callbackYes: () => {
           this.enableModule();
           document.location.reload();
         },

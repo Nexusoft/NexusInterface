@@ -165,7 +165,7 @@ class SettingsCore extends Component {
       UIController.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonExit" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
-        yesCallback: async () => {
+        callbackYes: async () => {
           try {
             await RPC.PROMISE('stop', []);
           } finally {
@@ -179,7 +179,7 @@ class SettingsCore extends Component {
       UIController.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonEntry" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
-        yesCallback: async () => {
+        callbackYes: async () => {
           try {
             await RPC.PROMISE('stop', []);
           } finally {

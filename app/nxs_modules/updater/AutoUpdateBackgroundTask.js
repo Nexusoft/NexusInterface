@@ -7,10 +7,10 @@ export default class AutoUpdateBackgroundTask extends React.Component {
     this.closeTask();
     UIController.openConfirmDialog({
       question: 'Close the wallet and install update now?',
-      yesLabel: 'Close and install',
-      yesCallback: this.props.quitAndInstall,
-      noLabel: 'Install it later',
-      noCallback: () => {
+      labelYes: 'Close and install',
+      callbackYes: this.props.quitAndInstall,
+      labelNo: 'Install it later',
+      callbackNo: () => {
         UIController.showBackgroundTask(AutoUpdateBackgroundTask, this.props);
       },
     });

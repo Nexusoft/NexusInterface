@@ -179,7 +179,7 @@ class MoveBetweenAccountsForm extends Component {
 
     UIController.openConfirmDialog({
       question: <Text id="sendReceive.MoveNXS" />,
-      yesCallback: handleSubmit,
+      callbackYes: handleSubmit,
     });
   };
 

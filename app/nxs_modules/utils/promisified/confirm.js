@@ -5,10 +5,10 @@ export default function confirm(options) {
     try {
       UIController.openConfirmDialog({
         ...options,
-        yesCallback: () => {
+        callbackYes: () => {
           resolve(true);
         },
-        noCallback: () => {
+        callbackNo: () => {
           resolve(false);
         },
       });

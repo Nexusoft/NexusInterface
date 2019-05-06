@@ -77,7 +77,7 @@ class ChangePassword extends Component {
   confirmLogout = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.ConfirmLogOut" />,
-      yesCallback: async () => {
+      callbackYes: async () => {
         try {
           await RPC.PROMISE('walletlock', []);
           this.props.getInfo();

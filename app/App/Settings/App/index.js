@@ -102,7 +102,7 @@ class SettingsApp extends Component {
   confirmBackupWallet = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.BackupWallet" />,
-      yesCallback: () => {
+      callbackYes: () => {
         if (this.props.connections !== undefined) {
           backupWallet(this.props.settings.backupDirectory);
           UIController.showNotification(
@@ -123,7 +123,7 @@ class SettingsApp extends Component {
     UIController.openConfirmDialog({
       question: 'Refresh wallet?',
       note: 'Wallet must be refreshed for the change to take effect',
-      yesCallback: () => {
+      callbackYes: () => {
         this.props.updateSettings({ verifyModuleSource });
         location.reload();
       },
@@ -153,10 +153,10 @@ class SettingsApp extends Component {
       UIController.openConfirmDialog({
         question: <Text id="Settings.DisableAutoUpdate" />,
         note: <Text id="Settings.DisableAutoUpdateNote" />,
-        yesLabel: <Text id="Settings.KeepAutoUpdate" />,
-        noLabel: <Text id="Settings.TurnOffAutoUpdate" />,
-        noSkin: 'danger',
-        noCallback: () => {
+        labelYes: <Text id="Settings.KeepAutoUpdate" />,
+        labelNo: <Text id="Settings.TurnOffAutoUpdate" />,
+        skinNo: 'danger',
+        callbackNo: () => {
           this.props.updateSettings({ autoUpdate: false });
           updater.stopAutoUpdate();
         },
