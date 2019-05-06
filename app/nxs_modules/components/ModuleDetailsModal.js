@@ -63,6 +63,11 @@ const Field = ({ label, children }) => (
   </Row>
 );
 
+const CheckMark = styled.span({
+  cursor: 'default',
+  userSelect: 'none',
+});
+
 /**
  * Module details modal, for viewing details of both installed modules
  * and modules being installed
@@ -148,7 +153,11 @@ class ModuleDetailsModal extends React.Component {
                     </ExternalLink>
                   </span>
                 )}
-                {module.isFromNexus ? ' ✅' : null}
+                {module.isFromNexus && (
+                  <Tooltip.Trigger tooltip="This module is developed by Nexus core team">
+                    <CheckMark> ✔</CheckMark>
+                  </Tooltip.Trigger>
+                )}
               </div>
             ) : (
               <span className="dim">No information</span>
@@ -163,6 +172,7 @@ class ModuleDetailsModal extends React.Component {
                     <Icon icon={linkIcon} className="space-left" />
                   </ExternalLink>
                 </Tooltip.Trigger>
+
                 {!module.repoOnline && (
                   <div className="error">
                     <Icon icon={warningIcon} />
