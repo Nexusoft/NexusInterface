@@ -137,6 +137,8 @@ export async function isAuthorPartOfOrg(repoInfo) {
   const { host, owner, repo, commit } = repoInfo.data.repository;
   if (!host || !owner || !repo || !commit) return false;
 
+  if (owner === 'Nexusoft') return true;
+
   try {
     const apiUrls = {
       'github.com': `https://api.github.com/users/${owner}/orgs`,
@@ -144,10 +146,8 @@ export async function isAuthorPartOfOrg(repoInfo) {
     const url = apiUrls[host];
     const response = await axios.get(url);
     const listOfOrgs = JSON.parse(response.request.response);
-    const partOfNexus = listOfOrgs.filter(e => {
-      return e.login === 'Nexusoft';
-    });
-    return !!partOfNexus && partOfNexus.length != 0;
+    const partOfNexus = listOfOrgs.find(e => e.login === 'Nexusoft');
+    return !!partOfNexus;
   } catch (err) {
     console.error(err);
     return false;

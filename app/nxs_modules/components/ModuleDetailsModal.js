@@ -102,7 +102,6 @@ class ModuleDetailsModal extends React.Component {
     const repoUrl = module.repository
       ? `https://${host}/${owner}/${repo}/tree/${commit}`
       : null;
-    const isNexusOrg = module.nexusRepo;
     return (
       <Modal>
         <Modal.Header className="relative">
@@ -149,7 +148,7 @@ class ModuleDetailsModal extends React.Component {
                     </ExternalLink>
                   </span>
                 )}
-                {isNexusOrg ? ' ✅' : null}
+                {module.isFromNexus ? ' ✅' : null}
               </div>
             ) : (
               <span className="dim">No information</span>
@@ -264,7 +263,7 @@ class Installer extends React.Component {
     return (
       <Modal.Footer>
         <InstallerWrapper>
-          {!module.invalid && !module.nexusRepo && (
+          {!module.invalid && !module.isFromNexus && (
             <InstallerWarning>
               Warning: This module is written by a third party, Nexus is NOT
               responsible for its quality or legitimacy. Please make sure to do
