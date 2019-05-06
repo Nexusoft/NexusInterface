@@ -67,13 +67,18 @@ function normalizeFile(path) {
 }
 
 /**
+ * Exports
+ * =============================================================================
+ */
+
+/**
  * Get the module hash, calculated by hashing all the files that it uses, concatenated
  *
  * @param {*} module
  * @param {*} dirPath
  * @returns
  */
-async function getModuleHash(module, dirPath) {
+export async function getModuleHash(module, dirPath) {
   return new Promise((resolve, reject) => {
     try {
       const nxsPackagePath = join(dirPath, 'nxs_package.json');
@@ -95,11 +100,6 @@ async function getModuleHash(module, dirPath) {
     }
   });
 }
-
-/**
- * Exports
- * =============================================================================
- */
 
 /**
  * Returns the repository info including the Nexus signature if repo_info.json file does exist and is valid
@@ -193,7 +193,7 @@ export async function isRepoVerified(repoInfo, module, dirPath) {
 
   // Check hash of module files matching
   try {
-    const hash = await getModuleHash(module, dirPath);
+    const hash = module.hash || (await getModuleHash(module, dirPath));
     if (hash !== data.moduleHash) return false;
 
     // Check signature

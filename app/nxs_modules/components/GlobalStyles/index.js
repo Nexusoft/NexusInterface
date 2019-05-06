@@ -138,6 +138,9 @@ const utilityClasses = theme => css`
   .space-right {
     margin-right: 0.4em;
   }
+  .monospace {
+    font-family: ${consts.monoFontFamily};
+  }
 `;
 
 const GlobalStyles = () => (

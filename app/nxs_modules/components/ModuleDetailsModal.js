@@ -189,6 +189,13 @@ class ModuleDetailsModal extends React.Component {
               </div>
             )}
           </Field>
+          <Field label="Module hash">
+            {module.hash ? (
+              <span className="monospace">{module.hash}</span>
+            ) : (
+              <span className="dim">Not available</span>
+            )}
+          </Field>
         </Modal.Body>
 
         {!!forInstall && <Installer module={module} install={install} />}

@@ -9,6 +9,7 @@ import {
   isRepoOnline,
   isRepoVerified,
   isAuthorPartOfOrg,
+  getModuleHash,
 } from './repo';
 
 const ajv = new Ajv();
@@ -135,6 +136,8 @@ export async function loadModuleFromDir(
         return null;
       }
     }
+
+    module.hash = await getModuleHash(module, dirPath);
 
     // Check the repository info and verification
     const repoInfo = await getRepoInfo(dirPath);
