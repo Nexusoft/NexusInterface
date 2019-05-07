@@ -112,15 +112,45 @@ class SettingsApp extends Component {
   };
 
   toggleVerifyModuleSource = e => {
-    const verifyModuleSource = e.target.checked;
-    UIController.openConfirmDialog({
-      question: 'Refresh wallet?',
-      note: 'Wallet must be refreshed for the change to take effect',
-      callbackYes: () => {
-        this.props.updateSettings({ verifyModuleSource });
-        location.reload();
-      },
-    });
+    if (e.target.checked) {
+      UIController.openConfirmDialog({
+        question: 'Turn module open source policy on?',
+        note:
+          'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.',
+        callbackYes: () => {
+          this.props.updateSettings({ verifyModuleSource: true });
+          location.reload();
+        },
+      });
+    } else {
+      UIController.openConfirmDialog({
+        question: 'Turn module open source policy off?',
+        note: (
+          <div>
+            <p>
+              This is only for module developers and can be dangerous for
+              regular users. Please make sure you know what you are doing!
+            </p>
+            <p>
+              It would be much easier for a closed source module to hide
+              malicious code than for an open source one. Therefore, in case you
+              still want to disable this setting, it is highly recommended that
+              you only install and run closed source modules that you are
+              developing yourself.
+            </p>
+          </div>
+        ),
+        labelYes: 'Turn policy off',
+        skinYes: 'danger',
+        callbackYes: () => {
+          this.props.updateSettings({ verifyModuleSource: false });
+          location.reload();
+        },
+        labelNo: 'Keep policy on',
+        skinNo: 'primary',
+        style: { width: 600 },
+      });
+    }
   };
 
   updateHandlers = (() => {
