@@ -30,7 +30,7 @@ const NotificationComponent = styled(SnackBar)({
 export default class Notification extends Component {
   static defaultProps = {
     type: 'info',
-    autoClose: 3000, // ms
+    autoClose: 5000, // ms
   };
 
   notifRef = React.createRef();
