@@ -43,7 +43,6 @@ const AppWrapper = styled.div({
 const Main = styled.main({
   gridArea: 'content',
   overflow: 'hidden',
-  padding: '30px 10%',
   display: 'flex',
   alignItems: 'stretch',
 });

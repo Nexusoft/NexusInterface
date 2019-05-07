@@ -20,6 +20,14 @@ const intro = keyframes`
 
 const borderRadius = 4;
 
+const PanelWrapper = styled.div({
+  width: '100%',
+  height: '100%',
+  padding: '30px 10%',
+  display: 'flex',
+  alignItems: 'stretch',
+});
+
 const PanelComponent = styled.div(({ theme }) => ({
   display: 'grid',
   gridTemplateAreas: '"header" "body"',
@@ -61,17 +69,19 @@ const PanelBody = styled.div(({ theme }) => ({
 
 const Panel = React.forwardRef(
   ({ icon, title, controls, children, ...rest }, ref) => (
-    <PanelComponent {...rest} ref={ref}>
-      <PanelHeader>
-        <PanelTitle>
-          {!!icon && <Icon className="space-right" icon={icon} />}
-          <span className="v-align">{title}</span>
-        </PanelTitle>
-        {controls}
-      </PanelHeader>
+    <PanelWrapper {...rest}>
+      <PanelComponent ref={ref}>
+        <PanelHeader>
+          <PanelTitle>
+            {!!icon && <Icon className="space-right" icon={icon} />}
+            <span className="v-align">{title}</span>
+          </PanelTitle>
+          {controls}
+        </PanelHeader>
 
-      <PanelBody>{children}</PanelBody>
-    </PanelComponent>
+        <PanelBody>{children}</PanelBody>
+      </PanelComponent>
+    </PanelWrapper>
   )
 );
 
