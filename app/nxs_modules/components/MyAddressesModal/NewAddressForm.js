@@ -79,21 +79,16 @@ class NewAddressForm extends React.Component {
     const { handleSubmit, submitting, accountNames, finish } = this.props;
     return (
       <NewAddressFormComponent onSubmit={handleSubmit}>
-        <div className="flex center">
-          <span>Account name:</span>
-          <AccountNameInput>
-            <Field
-              component={AutoSuggest.RF}
-              name="accountName"
-              suggestions={accountNames}
-              onSelect={this.setAccountName}
-              inputProps={{
-                placeholder:
-                  'Enter a new account name or pick an existing account',
-              }}
-            />
-          </AccountNameInput>
-        </div>
+        <div>Enter a new account name or pick an existing account:</div>
+        <Field
+          component={AutoSuggest.RF}
+          name="accountName"
+          suggestions={accountNames}
+          onSelect={this.setAccountName}
+          inputProps={{
+            placeholder: 'Account name',
+          }}
+        />
         <Buttons>
           <Button onClick={finish}>Cancel</Button>
           <Button type="submit" skin="primary" disabled={submitting}>
