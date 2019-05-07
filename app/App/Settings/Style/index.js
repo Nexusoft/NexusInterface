@@ -32,8 +32,15 @@ import LightTheme from './Light.json';
 
 import * as RPC from 'scripts/rpc';
 
+const overviewDisplays = [
+  { value: 'standard', display: 'Standard' },
+  { value: 'miner', display: 'Miner' },
+  { value: 'minimalist', display: 'Minimalist' },
+  { value: 'none', display: 'None' },
+];
+
 const mapStateToProps = ({
-  settings: { renderGlobe, locale, addressStyle },
+  settings: { renderGlobe, locale, addressStyle, overviewDisplay },
   common: { webGLEnabled },
   myAccounts,
   theme,
@@ -45,10 +52,13 @@ const mapStateToProps = ({
     locale,
     addressStyle,
     myAccounts,
+    overviewDisplay,
   };
 };
 const mapDispatchToProps = dispatch => ({
   setRenderGlobe: renderGlobe => dispatch(updateSettings({ renderGlobe })),
+  setOverviewDisplay: overviewDisplay =>
+    dispatch(updateSettings({ overviewDisplay })),
   setAddressStyle: addressStyle => {
     googleanalytics.SendEvent(
       'Settings',
@@ -123,15 +133,12 @@ class SettingsStyle extends Component {
     let myAddress = '000000000000000000000000000000000000000000000000000';
     try {
       myAddress = this.props.myAccounts[0].addresses[0];
-    }
-    catch(e){
+    } catch (e) {
       console.error(e);
     }
-    this.setState(
-      {
-        sampleAddress: myAddress,
-      }
-    );
+    this.setState({
+      sampleAddress: myAddress,
+    });
   }
 
   /**
@@ -379,6 +386,8 @@ class SettingsStyle extends Component {
       webGLEnabled,
       addressStyle,
       setAddressStyle,
+      overviewDisplay,
+      setOverviewDisplay,
     } = this.props;
 
     return (
@@ -401,6 +410,15 @@ class SettingsStyle extends Component {
             disabled={!webGLEnabled}
             checked={renderGlobe}
             onChange={this.toggleGlobeRender}
+          />
+        </SettingsField>
+
+        <SettingsField label={<Text id="Settings.OverviewDisplay" />}>
+          <Select
+            value={overviewDisplay}
+            onChange={setOverviewDisplay}
+            options={overviewDisplays}
+            style={{ maxWidth: 260 }}
           />
         </SettingsField>
 
