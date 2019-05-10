@@ -155,11 +155,6 @@ class ModuleDetailsModal extends React.Component {
                     </ExternalLink>
                   </span>
                 )}
-                {module.isFromNexus && (
-                  <Tooltip.Trigger tooltip="This module is developed by Nexus core team">
-                    <CheckMark> ✔</CheckMark>
-                  </Tooltip.Trigger>
-                )}
               </div>
             ) : (
               <span className="dim">No information</span>
@@ -174,6 +169,12 @@ class ModuleDetailsModal extends React.Component {
                     <Icon icon={linkIcon} className="space-left" />
                   </ExternalLink>
                 </Tooltip.Trigger>
+
+                {module.isFromNexus && (
+                  <Tooltip.Trigger tooltip="This module is developed by Nexus">
+                    <CheckMark>&nbsp;&nbsp;✔</CheckMark>
+                  </Tooltip.Trigger>
+                )}
 
                 {!module.repoOnline && (
                   <div className="error">
