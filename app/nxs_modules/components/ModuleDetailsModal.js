@@ -111,11 +111,13 @@ class ModuleDetailsModal extends React.Component {
       <Modal>
         <Modal.Header className="relative">
           Module Details
-          <DeleteModule>
-            <DeleteButton skin="plain" onClick={this.confirmDelete}>
-              <Icon icon={trashIcon} />
-            </DeleteButton>
-          </DeleteModule>
+          {!forInstall && (
+            <DeleteModule>
+              <DeleteButton skin="plain" onClick={this.confirmDelete}>
+                <Icon icon={trashIcon} />
+              </DeleteButton>
+            </DeleteModule>
+          )}
         </Modal.Header>
         <Modal.Body>
           <Field label="Module name">{module.name}</Field>
