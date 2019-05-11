@@ -36,7 +36,60 @@ global.NEXUS = {
   },
   utilities: {
     color,
-    copyToClipboard: (...args) => clipboard.writeText(...args),
+    copyToClipboard: (...args) => {
+      clipboard.writeText(...args);
+    },
+    showNotification: options => {
+      ipcRenderer.sendToHost('show-notification', options);
+    },
+    showErrorDialog: options => {
+      ipcRenderer.sendToHost('show-error-dialog', options);
+    },
+    showSuccessDialog: options => {
+      ipcRenderer.sendToHost('show-success-dialog', options);
+    },
+    rpcCall: options => {
+      ipcRenderer.sendToHost('rpc-call', options);
+    },
+    confirm: options => {
+      ipcRenderer.sendToHost('confirm', options);
+    },
+    updateState: state => {
+      ipcRenderer.sendToHost('update-state', state);
+    },
+    updateStorage: data => {
+      ipcRenderer.sendToHost('update-storage', data);
+    },
+    onceInitialize: listener => {
+      ipcRenderer.once('initialize', (event, initialData) =>
+        listener(initialData)
+      );
+    },
+    onThemeUpdated: listener => {
+      ipcRenderer.on('theme-updated', (event, theme) => listener(theme));
+    },
+    onSettingsUpdated: listener => {
+      ipcRenderer.on('settings-updated', (event, settings) =>
+        listener(settings)
+      );
+    },
+    onCoreInfoUpdated: listener => {
+      ipcRenderer.on('core-info-updated', (event, coreInfo) =>
+        listener(coreInfo)
+      );
+    },
+    onceRpcReturn: (listener, callId) => {
+      ipcRenderer.once(
+        `rpc-return${callId ? `:${callId}` : ''}`,
+        (event, err, result) => listener(err, result)
+      );
+    },
+    onceConfirmAnswer: (listener, confirmationId) => {
+      ipcRenderer.once(
+        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
+        (event, agreed) => listener(agreed)
+      );
+    },
   },
   components: {
     GlobalStyles,
@@ -50,16 +103,5 @@ global.NEXUS = {
     Icon,
     Tab,
     FieldSet,
-  },
-  ipc: {
-    send: (...args) => {
-      ipcRenderer.sendToHost(...args);
-    },
-    listen: (channel, listener) => {
-      ipcRenderer.on(channel, (event, ...params) => listener(...params));
-    },
-    listenOnce: (channel, listener) => {
-      ipcRenderer.once(channel, (event, ...params) => listener(...params));
-    },
   },
 };
