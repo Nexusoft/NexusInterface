@@ -48,10 +48,36 @@ global.NEXUS = {
     showSuccessDialog: options => {
       ipcRenderer.sendToHost('show-success-dialog', options);
     },
-    rpcCall: options => {
-      ipcRenderer.sendToHost('rpc-call', options);
+    rpcCall: (command, params, callId) => {
+      if (typeof command !== 'string') {
+        console.error(
+          'Expected `command` to be `string` type, found: ' + typeof command
+        );
+        return;
+      }
+      if (typeof params !== 'undefined' && !Array.isArray(params)) {
+        console.error(
+          'Expected `params` to be `array` or `undefined` type, found: ' +
+            typeof params
+        );
+        return;
+      }
+      ipcRenderer.sendToHost('rpc-call', command, params, callId);
     },
     proxyRequest: (url, options, requestId) => {
+      if (typeof url !== 'string') {
+        console.error(
+          'Expected `url` to be `string` type, found: ' + typeof url
+        );
+        return;
+      }
+      if (typeof options !== 'object' && typeof options !== 'undefined') {
+        console.error(
+          'Expected `options` to be `object` or `undefined` type, found: ' +
+            typeof options
+        );
+        return;
+      }
       ipcRenderer.sendToHost('proxy-request', url, options, requestId);
     },
     confirm: options => {

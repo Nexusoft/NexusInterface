@@ -165,8 +165,7 @@ async function proxyRequest([url, options, requestId]) {
   }
 }
 
-async function rpcCall([options = {}]) {
-  const { command, params, callId } = options;
+async function rpcCall([command, params, callId]) {
   try {
     const response = await RPC.PROMISE(command, ...(params || []));
     webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
