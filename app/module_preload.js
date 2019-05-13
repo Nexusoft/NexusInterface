@@ -36,16 +36,40 @@ global.NEXUS = {
   },
   utilities: {
     color,
-    copyToClipboard: (...args) => {
-      clipboard.writeText(...args);
+    copyToClipboard: text => {
+      if (typeof text !== 'string') {
+        console.error(
+          'Expected `text` to be `string` type, found: ' + typeof text
+        );
+        return;
+      }
+      clipboard.writeText(text);
     },
     showNotification: options => {
+      if (typeof options !== 'object') {
+        console.error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+        return;
+      }
       ipcRenderer.sendToHost('show-notification', options);
     },
     showErrorDialog: options => {
+      if (typeof options !== 'object') {
+        console.error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+        return;
+      }
       ipcRenderer.sendToHost('show-error-dialog', options);
     },
     showSuccessDialog: options => {
+      if (typeof options !== 'object') {
+        console.error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+        return;
+      }
       ipcRenderer.sendToHost('show-success-dialog', options);
     },
     rpcCall: (command, params, callId) => {
@@ -81,45 +105,105 @@ global.NEXUS = {
       ipcRenderer.sendToHost('proxy-request', url, options, requestId);
     },
     confirm: options => {
+      if (typeof options !== 'object') {
+        console.error(
+          'Expected `options` to be `object` type, found: ' + typeof options
+        );
+        return;
+      }
       ipcRenderer.sendToHost('confirm', options);
     },
     updateState: state => {
+      if (typeof state !== 'object') {
+        console.error(
+          'Expected `state` to be `object` type, found: ' + typeof state
+        );
+        return;
+      }
       ipcRenderer.sendToHost('update-state', state);
     },
     updateStorage: data => {
+      if (typeof data !== 'object') {
+        console.error(
+          'Expected `data` to be `object` type, found: ' + typeof data
+        );
+        return;
+      }
       ipcRenderer.sendToHost('update-storage', data);
     },
     onceInitialize: listener => {
+      if (typeof listener !== 'function') {
+        console.error(
+          'Expected `listener` to be `function` type, found: ' + typeof listener
+        );
+        return;
+      }
       ipcRenderer.once('initialize', (event, initialData) =>
         listener(initialData)
       );
     },
     onThemeUpdated: listener => {
+      if (typeof listener !== 'function') {
+        console.error(
+          'Expected `listener` to be `function` type, found: ' + typeof listener
+        );
+        return;
+      }
       ipcRenderer.on('theme-updated', (event, theme) => listener(theme));
     },
     onSettingsUpdated: listener => {
+      if (typeof listener !== 'function') {
+        console.error(
+          'Expected `listener` to be `function` type, found: ' + typeof listener
+        );
+        return;
+      }
       ipcRenderer.on('settings-updated', (event, settings) =>
         listener(settings)
       );
     },
     onCoreInfoUpdated: listener => {
+      if (typeof listener !== 'function') {
+        console.error(
+          'Expected `listener` to be `function` type, found: ' + typeof listener
+        );
+        return;
+      }
       ipcRenderer.on('core-info-updated', (event, coreInfo) =>
         listener(coreInfo)
       );
     },
     onceRpcReturn: (listener, callId) => {
+      if (typeof listener !== 'function') {
+        console.error(
+          'Expected `listener` to be `function` type, found: ' + typeof listener
+        );
+        return;
+      }
       ipcRenderer.once(
         `rpc-return${callId ? `:${callId}` : ''}`,
         (event, err, result) => listener(err, result)
       );
     },
     onceProxyResponse: (listener, requestId) => {
+      if (typeof listener !== 'function') {
+        console.error(
+          'Expected `listener` to be `function` type, found: ' + typeof listener
+        );
+        return;
+      }
       ipcRenderer.once(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
         (event, err, response) => listener(err, response)
       );
     },
     onceConfirmAnswer: (listener, confirmationId) => {
+      if (typeof listener !== 'function') {
+        console.error(
+          'Expected `listener` to be `function` type, found: ' + typeof listener
+        );
+        return;
+      }
       ipcRenderer.once(
         `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
         (event, agreed) => listener(agreed)

@@ -175,9 +175,9 @@ async function rpcCall([command, params, callId]) {
   }
 }
 
-function showNotif([{ content, type, autoClose } = {}]) {
-  const options = { content, type, autoClose };
-  UIController.showNotification(content, options);
+function showNotif([options = {}]) {
+  const { content, type, autoClose } = options;
+  UIController.showNotification(content, { content, type, autoClose });
 }
 
 function showErrorDialog([options = {}]) {
