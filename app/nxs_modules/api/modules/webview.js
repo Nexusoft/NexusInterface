@@ -142,12 +142,14 @@ function handleIpcMessage(event) {
 
 async function proxyRequest([url, options, requestId]) {
   try {
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    const lUrl = url.toLowerCase();
+    if (!lUrl.startsWith('http://') && !lUrl.startsWith('https://')) {
       throw 'Proxy request must be in HTTP or HTTPS protocol';
     }
     if (options) {
-      // disallow baseURL, url must be absolute
+      // disallow baseURL and url options, url must be absolute
       delete options.baseURL;
+      delete options.url;
     }
 
     const response = await axios(url, options);
