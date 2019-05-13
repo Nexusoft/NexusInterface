@@ -38,105 +38,147 @@ global.NEXUS = {
     color,
     copyToClipboard: text => {
       if (typeof text !== 'string') {
-        console.error(
+        throw new Error(
           'Expected `text` to be `string` type, found: ' + typeof text
         );
-        return;
       }
       clipboard.writeText(text);
     },
     showNotification: options => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
       if (typeof options !== 'object') {
-        console.error(
+        throw new Error(
           'Expected `options` to be `object` type, found: ' + typeof options
         );
-        return;
       }
       ipcRenderer.sendToHost('show-notification', options);
     },
     showErrorDialog: options => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
       if (typeof options !== 'object') {
-        console.error(
+        throw new Error(
           'Expected `options` to be `object` type, found: ' + typeof options
         );
-        return;
       }
       ipcRenderer.sendToHost('show-error-dialog', options);
     },
     showSuccessDialog: options => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
       if (typeof options !== 'object') {
-        console.error(
+        throw new Error(
           'Expected `options` to be `object` type, found: ' + typeof options
         );
-        return;
       }
       ipcRenderer.sendToHost('show-success-dialog', options);
     },
     rpcCall: (command, params, callId) => {
+      if (!command) {
+        throw new Error('`command` is required');
+      }
       if (typeof command !== 'string') {
-        console.error(
+        throw new Error(
           'Expected `command` to be `string` type, found: ' + typeof command
         );
-        return;
       }
       if (typeof params !== 'undefined' && !Array.isArray(params)) {
-        console.error(
+        throw new Error(
           'Expected `params` to be `array` or `undefined` type, found: ' +
             typeof params
         );
-        return;
+      }
+      if (!callId) {
+        throw new Error('`callId` is required');
+      }
+      if (typeof callId !== 'number' && typeof callId !== 'string') {
+        throw new Error(
+          'Expected `callId` to be `number` or `string` type, found: ' +
+            typeof callId
+        );
       }
       ipcRenderer.sendToHost('rpc-call', command, params, callId);
     },
     proxyRequest: (url, options, requestId) => {
+      if (!url) {
+        throw new Error('`url` is required');
+      }
       if (typeof url !== 'string') {
-        console.error(
+        throw new Error(
           'Expected `url` to be `string` type, found: ' + typeof url
         );
-        return;
+      }
+      if (!options) {
+        throw new Error('`options` is required');
       }
       if (typeof options !== 'object' && typeof options !== 'undefined') {
-        console.error(
+        throw new Error(
           'Expected `options` to be `object` or `undefined` type, found: ' +
             typeof options
         );
-        return;
+      }
+      if (!requestId) {
+        throw new Error('`requestId` is required');
+      }
+      if (typeof requestId !== 'number' && typeof requestId !== 'string') {
+        throw new Error(
+          'Expected `requestId` to be `number` or `string` type, found: ' +
+            typeof requestId
+        );
       }
       ipcRenderer.sendToHost('proxy-request', url, options, requestId);
     },
-    confirm: options => {
+    confirm: (options, confirmationId) => {
+      if (!options) {
+        throw new Error('`options` is required');
+      }
+      if (!confirmationId) {
+        throw new Error('`confirmationId` is required');
+      }
       if (typeof options !== 'object') {
-        console.error(
+        throw new Error(
           'Expected `options` to be `object` type, found: ' + typeof options
         );
-        return;
       }
-      ipcRenderer.sendToHost('confirm', options);
+      if (!confirmationId) {
+        throw new Error('`confirmationId` is required');
+      }
+      if (
+        typeof confirmationId !== 'number' &&
+        typeof confirmationId !== 'string'
+      ) {
+        throw new Error(
+          'Expected `confirmationId` to be `number` or `string` type, found: ' +
+            typeof confirmationId
+        );
+      }
+      ipcRenderer.sendToHost('confirm', options, confirmationId);
     },
     updateState: state => {
       if (typeof state !== 'object') {
-        console.error(
+        throw new Error(
           'Expected `state` to be `object` type, found: ' + typeof state
         );
-        return;
       }
       ipcRenderer.sendToHost('update-state', state);
     },
     updateStorage: data => {
       if (typeof data !== 'object') {
-        console.error(
+        throw new Error(
           'Expected `data` to be `object` type, found: ' + typeof data
         );
-        return;
       }
       ipcRenderer.sendToHost('update-storage', data);
     },
     onceInitialize: listener => {
       if (typeof listener !== 'function') {
-        console.error(
+        throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
         );
-        return;
       }
       ipcRenderer.once('initialize', (event, initialData) =>
         listener(initialData)
@@ -144,19 +186,17 @@ global.NEXUS = {
     },
     onThemeUpdated: listener => {
       if (typeof listener !== 'function') {
-        console.error(
+        throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
         );
-        return;
       }
       ipcRenderer.on('theme-updated', (event, theme) => listener(theme));
     },
     onSettingsUpdated: listener => {
       if (typeof listener !== 'function') {
-        console.error(
+        throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
         );
-        return;
       }
       ipcRenderer.on('settings-updated', (event, settings) =>
         listener(settings)
@@ -164,10 +204,9 @@ global.NEXUS = {
     },
     onCoreInfoUpdated: listener => {
       if (typeof listener !== 'function') {
-        console.error(
+        throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
         );
-        return;
       }
       ipcRenderer.on('core-info-updated', (event, coreInfo) =>
         listener(coreInfo)
@@ -175,10 +214,18 @@ global.NEXUS = {
     },
     onceRpcReturn: (listener, callId) => {
       if (typeof listener !== 'function') {
-        console.error(
+        throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
         );
-        return;
+      }
+      if (!callId) {
+        throw new Error('`callId` is required');
+      }
+      if (typeof callId !== 'number' && typeof callId !== 'string') {
+        throw new Error(
+          'Expected `callId` to be `number` or `string` type, found: ' +
+            typeof callId
+        );
       }
       ipcRenderer.once(
         `rpc-return${callId ? `:${callId}` : ''}`,
@@ -187,10 +234,18 @@ global.NEXUS = {
     },
     onceProxyResponse: (listener, requestId) => {
       if (typeof listener !== 'function') {
-        console.error(
+        throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
         );
-        return;
+      }
+      if (!requestId) {
+        throw new Error('`requestId` is required');
+      }
+      if (typeof requestId !== 'number' && typeof requestId !== 'string') {
+        throw new Error(
+          'Expected `requestId` to be `number` or `string` type, found: ' +
+            typeof requestId
+        );
       }
       ipcRenderer.once(
         `proxy-response${requestId ? `:${requestId}` : ''}`,
@@ -199,10 +254,21 @@ global.NEXUS = {
     },
     onceConfirmAnswer: (listener, confirmationId) => {
       if (typeof listener !== 'function') {
-        console.error(
+        throw new Error(
           'Expected `listener` to be `function` type, found: ' + typeof listener
         );
-        return;
+      }
+      if (!confirmationId) {
+        throw new Error('`confirmationId` is required');
+      }
+      if (
+        typeof confirmationId !== 'number' &&
+        typeof confirmationId !== 'string'
+      ) {
+        throw new Error(
+          'Expected `confirmationId` to be `number` or `string` type, found: ' +
+            typeof confirmationId
+        );
       }
       ipcRenderer.once(
         `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
