@@ -51,6 +51,9 @@ global.NEXUS = {
     rpcCall: options => {
       ipcRenderer.sendToHost('rpc-call', options);
     },
+    proxyRequest: (url, options, requestId) => {
+      ipcRenderer.sendToHost('proxy-request', url, options, requestId);
+    },
     confirm: options => {
       ipcRenderer.sendToHost('confirm', options);
     },
@@ -82,6 +85,12 @@ global.NEXUS = {
       ipcRenderer.once(
         `rpc-return${callId ? `:${callId}` : ''}`,
         (event, err, result) => listener(err, result)
+      );
+    },
+    onceProxyResponse: (listener, requestId) => {
+      ipcRenderer.once(
+        `proxy-response${requestId ? `:${requestId}` : ''}`,
+        (event, err, response) => listener(err, response)
       );
     },
     onceConfirmAnswer: (listener, confirmationId) => {

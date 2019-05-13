@@ -1,4 +1,5 @@
 import memoize from 'memoize-one';
+import axios from 'axios';
 
 import store from 'store';
 import { updateModuleState } from 'actions/moduleActionCreators';
@@ -112,6 +113,9 @@ function handleStateChange() {
 
 function handleIpcMessage(event) {
   switch (event.channel) {
+    case 'proxy-request':
+      proxyRequest(event.args);
+      break;
     case 'rpc-call':
       rpcCall(event.args);
       break;
@@ -136,7 +140,33 @@ function handleIpcMessage(event) {
   }
 }
 
-async function rpcCall([{ command, params, callId } = {}]) {
+async function proxyRequest([url, options, requestId]) {
+  try {
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      throw 'Proxy request must be in HTTP or HTTPS protocol';
+    }
+    if (options) {
+      // disallow baseURL, url must be absolute
+      delete options.baseURL;
+    }
+
+    const response = await axios(url, options);
+    webview.send(
+      `proxy-response${requestId ? `:${requestId}` : ''}`,
+      null,
+      response
+    );
+  } catch (err) {
+    console.error(err);
+    webview.send(
+      `proxy-response${requestId ? `:${requestId}` : ''}`,
+      err.toString ? err.toString() : err
+    );
+  }
+}
+
+async function rpcCall([options = {}]) {
+  const { command, params, callId } = options;
   try {
     const response = await RPC.PROMISE(command, ...(params || []));
     webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
