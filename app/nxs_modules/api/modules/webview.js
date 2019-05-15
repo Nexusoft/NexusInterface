@@ -7,6 +7,46 @@ import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
 import { readModuleStorage, writeModuleStorage } from './storage';
 
+const cmdWhitelist = [
+  'checkwallet',
+  'getaccount',
+  'getaccountaddress',
+  'getaddressesbyaccount',
+  'getbalance',
+  'getblock',
+  'getblockcount',
+  'getblockhash',
+  'getblocknumber',
+  'getconnectioncount',
+  'getdifficulty',
+  'getinfo',
+  'getmininginfo',
+  'getmoneysupply',
+  'getnetworkhashps',
+  'getnetworkpps',
+  'getnetworktrustkeys',
+  'getnewaddress',
+  'getpeerinfo',
+  'getrawtransaction',
+  'getreceivedbyaccount',
+  'getreceivedbyaddress',
+  'getsupplyrates',
+  'gettransaction',
+  'help',
+  'isorphan',
+  'listaccounts',
+  'listaddresses',
+  'listreceivedbyaccount',
+  'listreceivedbyaddress',
+  'listsinceblock',
+  'listtransactions',
+  'listtrustkeys',
+  'listunspent',
+  'unspentbalance',
+  'validateaddress',
+  'verifymessage',
+];
+
 let webview = null;
 let module = null;
 let data = null;
@@ -169,6 +209,10 @@ async function proxyRequest([url, options, requestId]) {
 
 async function rpcCall([command, params, callId]) {
   try {
+    if (!cmdWhitelist.includes(command)) {
+      throw 'Invalid command';
+    }
+
     const response = await RPC.PROMISE(command, ...(params || []));
     webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
   } catch (err) {
