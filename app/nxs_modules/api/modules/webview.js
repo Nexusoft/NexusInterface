@@ -1,7 +1,8 @@
 import memoize from 'memoize-one';
 import axios from 'axios';
+import { reset, initialize } from 'redux-form';
 
-import store from 'store';
+import store, { history } from 'store';
 import { updateModuleState } from 'actions/moduleActionCreators';
 import UIController from 'components/UIController';
 import * as RPC from 'scripts/rpc';
@@ -153,6 +154,9 @@ function handleStateChange() {
 
 function handleIpcMessage(event) {
   switch (event.channel) {
+    case 'send-nxs':
+      sendNXS(event.args);
+      break;
     case 'proxy-request':
       proxyRequest(event.args);
       break;
@@ -178,6 +182,24 @@ function handleIpcMessage(event) {
       updateStorage(event.args);
       break;
   }
+}
+
+async function sendNXS([recipients, message]) {
+  if (!Array.isArray(recipients)) return;
+
+  store.dispatch(
+    initialize('sendNXS', {
+      sendFrom: null,
+      recipients: recipients.map(r => ({
+        address: `${r.address}`,
+        amount: parseFloat(r.amount) || 0,
+        fiatAmount: '',
+      })),
+      message: message,
+    })
+  );
+  store.dispatch(reset('sendNXS'));
+  history.push('/SendPage');
 }
 
 async function proxyRequest([url, options, requestId]) {

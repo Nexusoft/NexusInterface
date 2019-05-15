@@ -44,6 +44,14 @@ global.NEXUS = {
       }
       clipboard.writeText(text);
     },
+    sendNXS: (recipients, message) => {
+      if (!Array.isArray(recipients)) {
+        throw new Error(
+          'Expected `recipients` to be `array` type, found: ' + typeof params
+        );
+      }
+      ipcRenderer.sendToHost('send-nxs', recipients, message);
+    },
     showNotification: options => {
       if (!options) {
         throw new Error('`options` is required');
