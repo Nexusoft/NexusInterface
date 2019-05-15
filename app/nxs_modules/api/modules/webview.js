@@ -184,7 +184,7 @@ function handleIpcMessage(event) {
   }
 }
 
-async function sendNXS([recipients, message]) {
+function sendNXS([recipients, message]) {
   if (!Array.isArray(recipients)) return;
 
   store.dispatch(
