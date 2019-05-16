@@ -27,6 +27,7 @@ const Img = styled.img({
 const loadSVGContent = path => {
   try {
     const content = readFileSync(path);
+    // IMPORTANT! MUST sanitize icon content for security
     return DOMPurify.sanitize(content);
   } catch (err) {
     return null;

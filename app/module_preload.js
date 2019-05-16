@@ -1,3 +1,13 @@
+/**
+ * Important note - This file is the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Besides `NEXUS`, don't assign any other thing to `global` variable because
+ * it will be passed into modules' execution environment.
+ * - Make sure a similar note also presents in other files which are imported here.
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as ReactRouterDOM from 'react-router-dom';
