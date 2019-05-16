@@ -264,22 +264,18 @@ function showSuccessDialog([options = {}]) {
   });
 }
 
-function confirm([options = {}]) {
-  const {
-    confirmationId,
-    question,
-    note,
-    labelYes,
-    skinYes,
-    labelNo,
-    skinNo,
-  } = options;
+function confirm([options = {}, confirmationId]) {
+  const { question, note, labelYes, skinYes, labelNo, skinNo } = options;
   UIController.openConfirmDialog({
     question,
     note,
     labelYes,
     skinYes,
     callbackYes: () => {
+      console.log(
+        'yes',
+        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
+      );
       webview.send(
         `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
         true
