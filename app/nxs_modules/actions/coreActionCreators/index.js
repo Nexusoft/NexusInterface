@@ -28,7 +28,8 @@ export function getInfo() {
       dispatch(ac.Unencrypted());
       if (
         !state.common.encryptionModalShown &&
-        !state.settings.encryptionWarningDisabled && state.settings.acceptedAgreement
+        !state.settings.encryptionWarningDisabled &&
+        state.settings.acceptedAgreement
       ) {
         UIController.openModal(EncryptionWarningModal);
         dispatch(ac.showEncryptionWarningModal());
@@ -101,7 +102,7 @@ export function getInfo() {
       }
     }
     if (info.txtotal > oldInfo.txtotal) {
-      const txList = await RPC.PROMISE('listtransactions',[]);
+      const txList = await RPC.PROMISE('listtransactions', []);
       if (txList) {
         const mostRecentTx = txList.reduce((a, b) => (a.time > b.time ? a : b));
 
@@ -135,13 +136,14 @@ export function getInfo() {
       }
     }
 
-    const enoughSpace = await checkFreeSpace(1);
-    if (!enoughSpace) {
-      UIController.showNotification('WARNING LOW DISK SPACE', {
-        type: 'error',
-        autoClose: false,
-      });
-    }
+    // const enoughSpace = await checkFreeSpace(1);
+    // if (!enoughSpace) {
+    //   console.log('hi here is the issue with warning');
+    //   UIController.showNotification('WARNING LOW DISK SPACE', {
+    //     type: 'error',
+    //     autoClose: false,
+    //   });
+    // }
 
     delete info.timestamp;
     dispatch({ type: TYPE.GET_INFO, payload: info });

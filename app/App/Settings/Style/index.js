@@ -35,7 +35,7 @@ import * as RPC from 'scripts/rpc';
 const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
   { value: 'miner', display: 'Miner' },
-  { value: 'minimalist', display: 'Minimalist' },
+  // { value: 'minimalist', display: 'Minimalist' },
   { value: 'none', display: 'None' },
 ];
 
