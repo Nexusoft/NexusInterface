@@ -349,13 +349,13 @@ export default class AutoSuggest extends React.Component {
     <div className="flex center" style={{ alignSelf: 'stretch' }}>
       <ClearButton
         fitHeight
-        skin="blank-light"
+        skin="plain"
         onClick={this.clearInput}
         shown={this.props.inputProps && this.props.inputProps.value}
       >
         ✕
       </ClearButton>
-      <Button fitHeight skin="blank-light" onClick={this.focusInput}>
+      <Button fitHeight skin="plain" onClick={this.focusInput}>
         <Arrow direction="down" width={12} height={8} />
       </Button>
     </div>

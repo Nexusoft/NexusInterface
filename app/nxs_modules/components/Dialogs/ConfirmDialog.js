@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import { color } from 'utils';
+import * as color from 'utils/color';
 import Dialog from './Dialog';
 
 const QuestionMark = styled(Dialog.Icon)(({ theme }) => ({
@@ -21,12 +21,12 @@ const ConfirmationButton = styled(Button)({
 const ConfirmDialog = ({
   question,
   note,
-  yesLabel = 'Yes',
-  yesSkin = 'primary',
-  yesCallback,
-  noLabel = 'No',
-  noSkin = undefined,
-  noCallback,
+  labelYes = 'Yes',
+  skinYes = 'primary',
+  callbackYes,
+  labelNo = 'No',
+  skinNo = 'default',
+  callbackNo,
   ...rest
 }) => (
   <Dialog onBackgroundClick={null} {...rest}>
@@ -37,22 +37,22 @@ const ConfirmDialog = ({
         {!!note && <Dialog.Note>{note}</Dialog.Note>}
         <Dialog.Buttons>
           <ConfirmationButton
-            skin={noSkin}
+            skin={skinNo}
             onClick={() => {
-              noCallback && noCallback();
+              callbackNo && callbackNo();
               closeModal();
             }}
           >
-            {noLabel}
+            {labelNo}
           </ConfirmationButton>
           <ConfirmationButton
-            skin={yesSkin}
+            skin={skinYes}
             onClick={() => {
-              yesCallback && yesCallback();
+              callbackYes && callbackYes();
               closeModal();
             }}
           >
-            {yesLabel}
+            {labelYes}
           </ConfirmationButton>
         </Dialog.Buttons>
       </Modal.Body>

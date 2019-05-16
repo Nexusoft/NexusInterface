@@ -4,6 +4,8 @@ import { shell, remote } from 'electron';
 import fs from 'fs';
 
 // Internal
+import store, { history } from 'store';
+import { isWebViewActive, toggleWebViewDevTools } from 'api/modules';
 import * as RPC from 'scripts/rpc';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { backupWallet } from 'api/wallet';
@@ -16,10 +18,7 @@ import updater from 'updater';
 const autoUpdater = remote.getGlobal('autoUpdater');
 
 class AppMenu {
-  initialize(store, history) {
-    this.store = store;
-    this.history = history;
-
+  initialize() {
     // Update the updater menu item when the updater state changes
     // Changing menu item labels directly has no effect so we have to rebuild the whole menu
     updater.on('state-change', this.build);
@@ -39,10 +38,10 @@ class AppMenu {
   stopDaemon = {
     label: 'Stop Daemon',
     click: () => {
-      const state = this.store.getState();
+      const state = store.getState();
       if (state.settings.manualDaemon) {
         RPC.PROMISE('stop', []).then(() => {
-          this.store.dispatch(clearCoreInfo());
+          store.dispatch(clearCoreInfo());
         });
       } else {
         remote
@@ -59,7 +58,7 @@ class AppMenu {
     label: 'Quit Nexus',
     accelerator: 'CmdOrCtrl+Q',
     click: () => {
-      this.store.dispatch(clearCoreInfo());
+      store.dispatch(clearCoreInfo());
       UIController.showNotification('Closing Nexus');
       remote.getCurrentWindow().close();
     },
@@ -68,14 +67,14 @@ class AppMenu {
   about = {
     label: 'About',
     click: () => {
-      this.history.push('/About');
+      history.push('/About');
     },
   };
 
   backupWallet = {
     label: 'Backup Wallet',
     click: () => {
-      const state = this.store.getState();
+      const state = store.getState();
       if (state.core.info.connections) {
         remote.dialog.showOpenDialog(
           {
@@ -85,7 +84,7 @@ class AppMenu {
           },
           async folderPaths => {
             if (folderPaths && folderPaths.length > 0) {
-              this.store.dispatch(
+              store.dispatch(
                 updateSettings({ backupDirectory: folderPaths[0] })
               );
 
@@ -141,28 +140,28 @@ class AppMenu {
   coreSettings = {
     label: 'Core',
     click: () => {
-      this.history.push('/Settings/Core');
+      history.push('/Settings/Core');
     },
   };
 
   appSettings = {
     label: 'Application',
     click: () => {
-      this.history.push('/Settings/App');
+      history.push('/Settings/App');
     },
   };
 
   keyManagement = {
     label: 'Key Management',
     click: () => {
-      this.history.push('/Settings/Security');
+      history.push('/Settings/Security');
     },
   };
 
   styleSettings = {
     label: 'Style',
     click: () => {
-      this.history.push('/Settings/Style');
+      history.push('/Settings/Style');
     },
   };
 
@@ -171,13 +170,14 @@ class AppMenu {
     click: async () => {
       const enoughSpace = await checkBootStrapFreeSpace();
       if (!enoughSpace) {
+        console.log('in Menu');
         UIController.openErrorDialog({
           message: <Text id="ToolTip.NotEnoughSpace" />,
         });
         return;
       }
 
-      const state = this.store.getState();
+      const state = store.getState();
       if (state.settings.manualDaemon) {
         UIController.showNotification(
           'Cannot bootstrap recent database in manual mode',
@@ -191,7 +191,7 @@ class AppMenu {
         return;
       }
 
-      this.store.dispatch(bootstrap());
+      store.dispatch(bootstrap());
     },
   };
 
@@ -210,6 +210,13 @@ class AppMenu {
     accelerator: 'Alt+CmdOrCtrl+I',
     click: () => {
       remote.getCurrentWindow().toggleDevTools();
+    },
+  };
+
+  toggleModuleDevTools = {
+    label: "Toggle Module's Developer Tools",
+    click: () => {
+      toggleWebViewDevTools();
     },
   };
 
@@ -272,6 +279,13 @@ class AppMenu {
     }
   };
 
+  setPageModuleActive = active => {
+    if (this.pageModuleActive !== active) {
+      this.pageModuleActive = active;
+      this.build();
+    }
+  };
+
   buildDarwinTemplate = () => {
     const subMenuAbout = {
       label: 'Nexus',
@@ -311,9 +325,13 @@ class AppMenu {
       label: 'View',
       submenu: [this.toggleFullScreen],
     };
-    const state = this.store.getState();
+    const state = store.getState();
     if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
       subMenuWindow.submenu.push(this.toggleDevTools);
+
+      if (isWebViewActive()) {
+        subMenuWindow.submenu.push(this.toggleModuleDevTools);
+      }
     }
 
     const subMenuHelp = {
@@ -365,9 +383,13 @@ class AppMenu {
       label: '&View',
       submenu: [this.toggleFullScreen],
     };
-    const state = this.store.getState();
+    const state = store.getState();
     if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
       subMenuView.submenu.push(this.separator, this.toggleDevTools);
+
+      if (isWebViewActive()) {
+        subMenuView.submenu.push(this.toggleModuleDevTools);
+      }
     }
 
     const subMenuHelp = {

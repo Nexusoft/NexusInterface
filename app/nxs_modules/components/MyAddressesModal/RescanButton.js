@@ -51,7 +51,10 @@ class RescanButton extends React.Component {
     const { rescanning } = this.state;
     return (
       <Tooltip.Trigger
-        tooltip={!rescanning && <Text id="MyAddressesModal.RescanTooltip" />}
+        tooltip={
+          !rescanning &&
+          this.props.tooltip && <Text id="MyAddressesModal.RescanTooltip" />
+        }
       >
         <Button fitHeight disabled={rescanning} onClick={this.rescan}>
           {rescanning ? (

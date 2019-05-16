@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 // Internal
 import { deleteContact } from 'actions/addressBookActionCreators';
 import Text from 'components/Text';
-import Link from 'components/Link';
+import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
@@ -136,8 +136,8 @@ class ContactDetails extends React.Component {
           data={{ name: this.props.contact.name }}
         />
       ),
-      yesSkin: 'danger',
-      yesCallback: () => {
+      skinYes: 'danger',
+      callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
       },
     });
@@ -223,9 +223,9 @@ class ContactDetails extends React.Component {
           label={<Text id="AddressBook.Email" />}
           content={
             contact.email && (
-              <Link as="a" href={`mailto:${contact.email}`}>
+              <ExternalLink href={`mailto:${contact.email}`}>
                 {contact.email}
-              </Link>
+              </ExternalLink>
             )
           }
         />

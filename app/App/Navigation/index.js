@@ -1,15 +1,20 @@
 // External Dependencies
-import React, { Component } from 'react';
-import Text from 'components/Text';
+import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal Global Depnedencies
+import Text from 'components/Text';
 import HorizontalLine from 'components/HorizontalLine';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
+import ModuleIcon from 'components/ModuleIcon';
+import { getActiveModules } from 'api/modules';
 import { consts, timing } from 'styles';
 
 // Internal Local Dependencies
-import NavItem from './NavItem';
+import NavLinkItem from './NavLinkItem';
 
 // Images
 import logoIcon from 'images/logo.sprite.svg';
@@ -48,6 +53,39 @@ const AboveNav = styled.div({
   left: 0,
   right: 0,
 });
+
+const NavItem = ({ icon, children, ...rest }) => (
+  <Tooltip.Trigger tooltip={children} position="top">
+    <NavLinkItem {...rest}>
+      <Icon icon={icon} />
+    </NavLinkItem>
+  </Tooltip.Trigger>
+);
+
+const ModuleNavItem = ({ module }) => (
+  <Tooltip.Trigger tooltip={module.displayName} position="top">
+    <NavLinkItem to={`/Modules/${module.name}`}>
+      <ModuleIcon module={module} />
+    </NavLinkItem>
+  </Tooltip.Trigger>
+);
+
+@connect(state => ({
+  modules: getActiveModules(state.modules, state.settings.disabledModules),
+}))
+class ModuleNavItems extends React.Component {
+  render() {
+    return (
+      <>
+        {this.props.modules
+          .filter(module => module.type === 'app')
+          .map(module => (
+            <ModuleNavItem key={module.name} module={module} />
+          ))}
+      </>
+    );
+  }
+}
 
 const Navigation = () => (
   <Nav>
@@ -93,6 +131,8 @@ const Navigation = () => (
         &nbsp;
         <Text id="Footer.List" />
       </NavItem> */}
+
+      <ModuleNavItems />
     </NavBar>
   </Nav>
 );

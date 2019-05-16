@@ -248,13 +248,13 @@ class BootstrapModal extends PureComponent {
   confirmAbort = () => {
     UIController.openConfirmDialog({
       question: 'Are you sure you want to abort the process?',
-      yesLabel: 'Yes, abort',
-      yesSkin: 'danger',
-      yesCallback: () => {
+      labelYes: 'Yes, abort',
+      skinYes: 'danger',
+      callbackYes: () => {
         this.props.bootstrapper.abort();
       },
-      noLabel: 'No, let it continue',
-      noSkin: 'primary',
+      labelNo: 'No, let it continue',
+      skinNo: 'primary',
     });
   };
 

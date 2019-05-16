@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import Modal from 'components/Modal';
-import { color } from 'utils';
+import * as color from 'utils/color';
 import Dialog from './Dialog';
 
 const XMark = styled(Dialog.Icon)(({ theme }) => ({

@@ -5,7 +5,8 @@ import styled from '@emotion/styled';
 // Internal
 import Text from 'components/Text';
 import { timing } from 'styles';
-import { color, newUID } from 'utils';
+import { newUID } from 'utils';
+import * as color from 'utils/color';
 
 const Option = styled.label(
   ({ theme }) => ({
@@ -40,7 +41,7 @@ class BackgroundPicker extends Component {
    *
    * @memberof BackgroundPicker
    */
-  setDefault = (version) => {
+  setDefault = version => {
     if (this.props.defaultStyle != version) {
       version = version + 'Custom';
     }

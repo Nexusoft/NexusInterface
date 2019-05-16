@@ -21,33 +21,6 @@ const GlobeContainer = styled.div({
   overflow: 'hidden',
 });
 
-const Shader = {
-  uniforms: {
-    texture: { type: 't', value: null },
-  },
-  vertexShader: [
-    'varying vec3 vNormal;',
-    'varying vec2 vUv;',
-    'void main() {',
-    'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-    'vNormal = normalize( normalMatrix * normal );',
-    'vUv = uv;',
-    '}',
-  ].join('\n'),
-  fragmentShader: [
-    'uniform sampler2D _texture;',
-    'uniform vec4 colorMod;',
-    'varying vec3 vNormal;',
-    'varying vec2 vUv;',
-    'void main() {',
-    'vec3 diffuse = texture2D( _texture, vUv ).xyz;',
-    'float intensity = 1.05 - vNormal.z ;',
-    'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
-    'gl_FragColor = vec4( (diffuse*colorMod.xyz) + atmosphere, 1.0 );',
-    '}',
-  ].join('\n'),
-};
-
 /**
  * The 3D Globe on the overview page.
  *
@@ -128,27 +101,13 @@ export default class Globe extends Component {
       controls.update();
       scene.add(camera);
 
-      const uniforms = THREE.UniformsUtils.clone(Shader.uniforms);
-      const colormoddd = new THREE.Color(this.props.globeColor);
-      const globeR = colormoddd.r / 1;
-      const globeG = colormoddd.g / 1;
-      const globeB = colormoddd.b / 1;
-
-      uniforms['_texture'] = {
-        type: 't',
-        value: new THREE.TextureLoader().load(world),
-      };
-      uniforms['colorMod'] = {
-        type: 'v4',
-        value: new THREE.Vector4(globeR, globeG, globeB, 1.0),
-      };
-
-      const shadedMap = new THREE.ShaderMaterial({
-        uniforms: uniforms,
-        vertexShader: Shader.vertexShader,
-        fragmentShader: Shader.fragmentShader,
+      const importworld = new THREE.TextureLoader().load(world);
+      const newWorld = new THREE.MeshBasicMaterial({
+        map: importworld,
+        color: this.props.globeColor,
       });
-      const mesh = new THREE.Mesh(sphere, shadedMap);
+
+      const mesh = new THREE.Mesh(sphere, newWorld);
 
       globe.add(mesh);
       globe.add(allPoints);
@@ -180,6 +139,21 @@ export default class Globe extends Component {
         false
       );
 
+      this.renderer.context.canvas.addEventListener(
+        'mouseout',
+        () => {
+          this.controls.enabled = false;
+        },
+        false
+      );
+
+      this.renderer.context.canvas.addEventListener(
+        'mouseover',
+        () => {
+          this.controls.enabled = true;
+        },
+        false
+      );
       this.threeRootElement.appendChild(renderer.domElement);
       window.addEventListener('resize', this.onWindowResize, false);
       this.start();

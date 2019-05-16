@@ -44,7 +44,7 @@ class SearchBox extends Component {
       <Text id="AddressBook.SearchContact">
         {sc => (
           <SearchInput
-            left={<Icon icon={searchIcon} spaceRight />}
+            left={<Icon icon={searchIcon} className="space-right" />}
             placeholder={sc}
             value={this.props.searchQuery}
             onChange={e => this.props.searchContact(e.target.value)}
@@ -136,7 +136,7 @@ class PanelControls extends Component {
         {this.props.connections !== undefined && (
           <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
             <Button
-              skin="blank-light"
+              skin="plain"
               className="relative"
               onClick={this.showMyAddresses}
             >
@@ -148,7 +148,7 @@ class PanelControls extends Component {
         {this.props.connections !== undefined && (
           <Tooltip.Trigger tooltip={<Text id="AddressBook.NewContact" />}>
             <Button
-              skin="blank-light"
+              skin="plain"
               className="relative"
               onClick={this.showAddContact}
             >
@@ -159,7 +159,7 @@ class PanelControls extends Component {
 
         <Tooltip.Trigger tooltip={<Text id="AddressBook.Export" />}>
           <Button
-            skin="blank-light"
+            skin="plain"
             className="relative"
             onClick={this.exportAddressBook}
           >

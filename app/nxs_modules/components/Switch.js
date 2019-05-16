@@ -1,10 +1,21 @@
+/**
+ * Important note - This file is imported into module_preload.js, either directly or
+ * indirectly, and will be a part of the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Don't assign anything to `global` variable because it will be passed
+ * into modules' execution environment.
+ * - Make sure this note also presents in other files which are imported here.
+ */
+
 // External
 import React from 'react';
 import styled from '@emotion/styled';
 
 // Internal
 import { timing, consts } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 const switchHeight = consts.lineHeight; // em
 const switchWidth = consts.lineHeight * 1.75; // em
@@ -94,7 +105,9 @@ const SwitchInput = styled.input(({ theme }) => {
   };
 });
 
-const Switch = props => <SwitchInput type="checkbox" {...props} />;
+const Switch = React.forwardRef((props, ref) => (
+  <SwitchInput type="checkbox" {...props} ref={ref} />
+));
 
 const SwitchReduxForm = ({ input, meta, ...rest }) => (
   <Switch {...input} {...rest} />

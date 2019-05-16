@@ -1,7 +1,17 @@
+/**
+ * Important note - This file is imported into module_preload.js, either directly or
+ * indirectly, and will be a part of the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Don't assign anything to `global` variable because it will be passed
+ * into modules' execution environment.
+ * - Make sure this note also presents in other files which are imported here.
+ */
+
 // External Dependencies
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
 
 // Internal Dependencies
 import Button from 'components/Button';
@@ -9,7 +19,8 @@ import Arrow from 'components/Arrow';
 import Overlay from 'components/Overlay';
 import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
+import { passRef } from 'utils';
 
 // Minimum gap from the dropdown to the edges of the screen
 const minScreenGap = 10;
@@ -86,7 +97,7 @@ const SelectControl = styled.div(
               }
             : null),
         };
-      case 'filled-light':
+      case 'filled':
         return {
           paddingLeft: '.8em',
           background: theme.mixer(0.875),
@@ -142,7 +153,7 @@ const OptionsComponent = styled.div(
           background: theme.background,
           color: theme.foreground,
         };
-      case 'filled-light':
+      case 'filled':
         return {
           background: theme.foreground,
           color: theme.background,
@@ -178,7 +189,7 @@ const Option = styled.div(
             background: selected ? theme.primary : theme.mixer(0.125),
           },
         };
-      case 'filled-light':
+      case 'filled':
         return {
           '&:hover': {
             background: theme.mixer(0.875),
@@ -286,7 +297,7 @@ class Options extends Component {
   }
 }
 
-export default class Select extends Component {
+class Select extends Component {
   controlRef = React.createRef();
 
   state = { open: false };
@@ -323,6 +334,7 @@ export default class Select extends Component {
       error,
       onChange,
       placeholder,
+      controlRef,
       ...rest
     } = this.props;
     const { open } = this.state;
@@ -331,7 +343,10 @@ export default class Select extends Component {
     return (
       <>
         <SelectControl
-          ref={this.controlRef}
+          ref={el => {
+            passRef(el, this.controlRef);
+            passRef(el, controlRef);
+          }}
           active={open}
           onClick={this.open}
           skin={skin}
@@ -347,7 +362,7 @@ export default class Select extends Component {
           </CurrentValue>
           <Button
             fitHeight
-            skin={skin === 'filled-light' ? 'blank-dark' : 'blank-light'}
+            skin={skin === 'filled' ? 'plain-inverted' : 'plain'}
           >
             <Arrow direction="down" width={12} height={8} />
           </Button>
@@ -371,9 +386,15 @@ export default class Select extends Component {
   }
 }
 
+const SelectWrapper = React.forwardRef((props, ref) => (
+  <Select {...props} controlRef={ref} />
+));
+
 // Select wrapper for redux-form
 const SelectReduxForm = ({ input, meta, ...rest }) => (
   <Select error={meta.touched && meta.error} {...input} {...rest} />
 );
 
-Select.RF = SelectReduxForm;
+SelectWrapper.RF = SelectReduxForm;
+
+export default SelectWrapper;
