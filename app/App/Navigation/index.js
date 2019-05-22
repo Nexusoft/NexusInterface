@@ -70,22 +70,18 @@ const ModuleNavItem = ({ module }) => (
   </Tooltip.Trigger>
 );
 
-@connect(state => ({
-  modules: getActiveModules(state.modules, state.settings.disabledModules),
-}))
-class ModuleNavItems extends React.Component {
-  render() {
-    return (
-      <>
-        {this.props.modules
-          .filter(module => module.type === 'app')
-          .map(module => (
-            <ModuleNavItem key={module.name} module={module} />
-          ))}
-      </>
-    );
-  }
-}
+const ModuleNavItems = connect(
+  state => ({
+    modules: getActiveModules(state.modules, state.settings.disabledModules),
+  }),
+  null,
+  null,
+  { pure: false }
+)(({ modules }) =>
+  modules
+    .filter(module => module.type === 'app')
+    .map(module => <ModuleNavItem key={module.name} module={module} />)
+);
 
 const Navigation = () => (
   <Nav>
