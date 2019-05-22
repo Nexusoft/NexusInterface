@@ -455,7 +455,7 @@ class Overview extends Component {
       } else {
         currencyValue = currencyValue.toFixed(2);
       }
-      console.log(selectedCurrancyValue);
+
       return `${selectedCurrancyValue[0].name} ${currencyValue}`;
     } else {
       return '$0';
