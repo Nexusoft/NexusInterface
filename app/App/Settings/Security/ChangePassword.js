@@ -5,7 +5,7 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import { getInfo } from 'actions/coreActionCreators';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
@@ -59,7 +59,7 @@ const ChangePasswordComponent = styled.form({
     return errors;
   },
   onSubmit: ({ password, newPassword }) =>
-    RPC.PROMISE('walletpassphrasechange', [password, newPassword]),
+    Backend.RunCommand('RPC', 'walletpassphrasechange', [password, newPassword]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     UIController.openSuccessDialog({
@@ -79,7 +79,7 @@ class ChangePassword extends Component {
       question: <Text id="Settings.ConfirmLogOut" />,
       callbackYes: async () => {
         try {
-          await RPC.PROMISE('walletlock', []);
+          await Backend.RunCommand('RPC', 'walletlock', []);
           this.props.getInfo();
         } catch (err) {
           const note = (err & err.error && err.error.message) || err;

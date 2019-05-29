@@ -7,7 +7,6 @@ const OrbitControls = require('three-orbit-controls')(THREE);
 
 import world from 'images/world-light-white.jpg';
 import worldSmall from 'images/world-light-white-small.jpg';
-import * as RPC from 'scripts/rpc';
 import configuration from 'api/configuration';
 import Curve from './Curve';
 import Point from './Point';

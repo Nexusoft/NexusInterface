@@ -6,7 +6,7 @@ import fs from 'fs';
 // Internal
 import store, { history } from 'store';
 import { isWebViewActive, toggleWebViewDevTools } from 'api/modules';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { backupWallet } from 'api/wallet';
 import Text from 'components/Text';
@@ -40,7 +40,7 @@ class AppMenu {
     click: () => {
       const state = store.getState();
       if (state.settings.manualDaemon) {
-        RPC.PROMISE('stop', []).then(() => {
+        Backend.RunCommand('RPC', 'stop', []).then(() => {
           store.dispatch(clearCoreInfo());
         });
       } else {

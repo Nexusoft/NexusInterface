@@ -6,7 +6,7 @@ import { reduxForm, Field } from 'redux-form';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import Text from 'components/Text';
 import { switchSettingsTab } from 'actions/uiActionCreators';
 import WaitingMessage from 'components/WaitingMessage';
@@ -167,7 +167,7 @@ class SettingsCore extends Component {
         note: <Text id="Settings.ManualDaemonWarning" />,
         callbackYes: async () => {
           try {
-            await RPC.PROMISE('stop', []);
+            await Backend.RunCommand('RPC', 'stop', []);
           } finally {
             this.props.updateSettings({ manualDaemon: false });
             this.props.clearForRestart();
@@ -181,7 +181,7 @@ class SettingsCore extends Component {
         note: <Text id="Settings.ManualDaemonWarning" />,
         callbackYes: async () => {
           try {
-            await RPC.PROMISE('stop', []);
+            await Backend.RunCommand('RPC', 'stop', []);
           } finally {
             remote.getGlobal('core').stop();
             this.props.updateSettings({ manualDaemon: true });

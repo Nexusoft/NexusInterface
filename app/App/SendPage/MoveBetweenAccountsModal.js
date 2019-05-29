@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import Text from 'components/Text';
 import Select from 'components/Select';
 import Button from 'components/Button';
@@ -97,7 +97,7 @@ const mapDispatchToProps = dispatch => ({
   asyncValidate: async ({ sendTo }) => {
     if (sendTo) {
       try {
-        const result = await RPC.PROMISE('validateaddress', [sendTo]);
+        const result = await Backend.RunCommand('RPC', 'validateaddress', [sendTo]);
         if (!result.isvalid) {
           throw { sendTo: <Text id="Alert.InvalidAddress" /> };
         }
@@ -117,7 +117,7 @@ const mapDispatchToProps = dispatch => ({
     }
 
     const params = [moveFrom, moveTo, parseFloat(amount)];
-    return RPC.PROMISE('move', params, parseInt(props.minConfirmations));
+    return Backend.RunCommand('RPC', 'move', params, parseInt(props.minConfirmations));
   },
   onSubmitSuccess: (result, dispatch, props) => {
     props.closeModal();
