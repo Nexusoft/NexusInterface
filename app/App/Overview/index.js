@@ -15,7 +15,7 @@ import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 import { getDifficulty } from 'actions/coreActionCreators';
 import * as helpers from 'scripts/helper.js';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import { timing, consts, animations } from 'styles';
 import Globe from './Globe';
 
@@ -139,9 +139,8 @@ const Stats = styled.div(
     top: '50%',
     transform: 'translateY(-50%)',
     whiteSpace: 'nowrap',
-    // I don't like this but its a quick fix for super small screens. 
-    '@media (min-height: 10px) and (max-height: 720px)' : {
-      
+    // I don't like this but its a quick fix for super small screens.
+    '@media (min-height: 10px) and (max-height: 720px)': {
       fontSize: '75%',
       '& svg': {
         transform: 'scale(0.75)',
@@ -275,7 +274,6 @@ class Overview extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
-
     googleanalytics.SendScreen('Overview');
   }
   /**
@@ -457,10 +455,8 @@ class Overview extends Component {
       } else {
         currencyValue = currencyValue.toFixed(2);
       }
-      return `${helpers.ReturnCurrencySymbol(
-        selectedCurrancyValue[0].name,
-        this.props.displayNXSvalues
-      ) + currencyValue}`;
+
+      return `${selectedCurrancyValue[0].name} ${currencyValue}`;
     } else {
       return '$0';
     }
@@ -586,6 +582,7 @@ class Overview extends Component {
       </React.Fragment>
     );
   };
+
   /**
    * Returns the Difficulty Stats for the Overview page when it is in Miner View
    *

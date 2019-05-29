@@ -12,7 +12,7 @@ import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
 import UIController from 'components/UIController';
 import Text from 'components/Text';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import copyIcon from 'images/copy.sprite.svg';
 import { rpcErrorHandler } from 'utils/form';
 
@@ -36,7 +36,7 @@ import { rpcErrorHandler } from 'utils/form';
     }
     return errors;
   },
-  onSubmit: ({ address }) => RPC.PROMISE('dumpprivkey', [address]),
+  onSubmit: ({ address }) => Backend.RunCommand('RPC', 'dumpprivkey', [address]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.change('privateKey', result);
   },
@@ -55,7 +55,7 @@ class ViewPrivKeyForAddress extends Component {
     e.preventDefault();
     let address = this.inputRef.value;
     if (address) {
-      RPC.PROMISE('dumpprivkey', [address])
+      Backend.RunCommand('RPC', 'dumpprivkey', [address])
         .then(payload => {
           this.outputRef.value = payload;
         })
@@ -144,7 +144,7 @@ class ViewPrivKeyForAddress extends Component {
                 )}
               </Text>
               <Button fitHeight className="relative" onClick={this.copyPrivkey}>
-                <Icon icon={copyIcon} spaceRight />
+                <Icon icon={copyIcon} className="space-right" />
                 <Text id="Settings.Copy" />
               </Button>
             </InputGroup>

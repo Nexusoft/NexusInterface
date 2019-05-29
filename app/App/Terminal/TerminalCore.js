@@ -35,9 +35,7 @@ const actionCreators = {
 };
 
 const TerminalContent = styled.div({
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: 0,
+  gridArea: 'content',
   overflow: 'hidden',
 });
 
@@ -143,7 +141,7 @@ class TerminalCore extends Component {
                 ))}
               </Output>
               <Button
-                skin="filled-dark"
+                skin="filled-inverted"
                 fullWidth
                 onClick={paused ? unpauseCoreOutput : pauseCoreOutput}
                 style={{ flexShrink: 0 }}

@@ -15,84 +15,82 @@ import Text from 'components/Text';
 import { timing } from 'styles';
 
 const CSVDownloadModalComponent = styled(Modal)(
-    ({ maximizedFromBackground }) =>
-      maximizedFromBackground && {
-        animation: `${maximizeAnimation} ${timing.quick} linear`,
-      }
-  );
+  ({ maximizedFromBackground }) =>
+    maximizedFromBackground && {
+      animation: `${maximizeAnimation} ${timing.quick} linear`,
+    }
+);
 
-  const Title = styled.div({
-    fontSize: 28,
-  });
+const Title = styled.div({
+  fontSize: 28,
+});
 
 const ProgressBar = styled.div(({ percentage, theme }) => ({
-    height: 20,
-    borderRadius: 10,
-    border: `1px solid ${theme.mixer(0.5)}`,
-    overflow: 'hidden',
-    
-    '&::before': {
-      content: '""',
-      display: 'block',
-      background: theme.primary,
-      height: '100%',
-      width: '100%',
-      transformOrigin: 'left center',
-      transform: `scaleX(${percentage / 100})`,
-    },
-  }));
+  height: 20,
+  borderRadius: 10,
+  border: `1px solid ${theme.mixer(0.5)}`,
+  overflow: 'hidden',
 
-  /**
+  '&::before': {
+    content: '""',
+    display: 'block',
+    background: theme.primary,
+    height: '100%',
+    width: '100%',
+    transformOrigin: 'left center',
+    transform: `scaleX(${percentage / 100})`,
+  },
+}));
+
+/**
  * CSV Download Modal
  *
  * @class CSVDownloadModal
  * @extends {PureComponent}
  */
-  class CSVDownloadModal extends PureComponent {
+class CSVDownloadModal extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.props.parent({
+      progress: this.updateProgress.bind(this),
+      finished: this.closeModalNow.bind(this),
+    });
+  }
+  state = {
+    processProgress: 0,
+  };
 
-    constructor(props) {
-      super(props);
-      this.props.parent({progress: this.updateProgress.bind(this), finished: this.closeModalNow.bind(this)})
-    }
-    state = {
-        processProgress: 0,
-      }
+  updateProgress(inNum) {
+    console.log(inNum);
+    this.setState({
+      processProgress: inNum,
+    });
+  }
 
-    updateProgress(inNum)
-    {
-      console.log(inNum);
-      this.setState(
-        {
-          processProgress: inNum,
-        }
-      );
-    }
+  closeModalNow() {
+    this.closeModal();
+  }
 
-    closeModalNow()
-    {
-      this.closeModal();
-    }
-
-    render() {
-        const { processProgress} = this.state;
-        console.log(processProgress);
-        return(
-        <CSVDownloadModalComponent
+  render() {
+    const { processProgress } = this.state;
+    console.log(processProgress);
+    return (
+      <CSVDownloadModalComponent
         assignClose={closeModal => (this.closeModal = closeModal)}
         {...this.props}
-        >
-            <Modal.Body>
-            <Title><Text id="Transactions.CSVDownloadModalTitle"/></Title>
-            <ProgressBar percentage={processProgress} />
-            <Button
-                skin="danger" onClick={() => this.closeModal()}>
-              <Text id="Transactions.CSVDownloadModalCancel"/>
-            </Button>
-            </Modal.Body>
-        </CSVDownloadModalComponent>
-        );
-    }
-        
+      >
+        <Modal.Body>
+          <Title>
+            <Text id="transactions.CSVDownloadModalTitle" />
+          </Title>
+          <ProgressBar percentage={processProgress} />
+          <Button skin="danger" onClick={() => this.closeModal()}>
+            <Text id="transactions.CSVDownloadModalCancel" />
+          </Button>
+        </Modal.Body>
+      </CSVDownloadModalComponent>
+    );
   }
-  
+}
+
 export default CSVDownloadModal;

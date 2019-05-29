@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import UIController from 'components/UIController';
 import Text from 'components/Text';
 import Button from 'components/Button';
@@ -25,7 +25,7 @@ class RescanButton extends React.Component {
   rescan = async () => {
     try {
       this.setState({ rescanning: true });
-      await RPC.PROMISE('rescan', []);
+      await Backend.RunCommand('RPC', 'rescan', []);
     } catch (err) {
       UIController.showNotification(
         <Text id="MyAddressesModal.RescanError" />,
@@ -51,7 +51,10 @@ class RescanButton extends React.Component {
     const { rescanning } = this.state;
     return (
       <Tooltip.Trigger
-        tooltip={!rescanning && <Text id="MyAddressesModal.RescanTooltip" />}
+        tooltip={
+          !rescanning &&
+          this.props.tooltip && <Text id="MyAddressesModal.RescanTooltip" />
+        }
       >
         <Button fitHeight disabled={rescanning} onClick={this.rescan}>
           {rescanning ? (

@@ -5,7 +5,7 @@ import { reduxForm, Field } from 'redux-form';
 
 // Internal
 import Text from 'components/Text';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -33,7 +33,7 @@ import { rpcErrorHandler } from 'utils/form';
     }
     return errors;
   },
-  onSubmit: ({ txFee }) => RPC.PROMISE('settxfee', [parseFloat(txFee)]),
+  onSubmit: ({ txFee }) => Backend.RunCommand('RPC', 'settxfee', [parseFloat(txFee)]),
   onSubmitSuccess: () => {
     UIController.showNotification(
       <Text id="Alert.TransactionFeeSet" />,
@@ -51,7 +51,7 @@ class FeeSetting extends React.Component {
   confirmSetTxFee = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.SetFee" />,
-      yesCallback: this.props.handleSubmit,
+      callbackYes: this.props.handleSubmit,
     });
   };
 

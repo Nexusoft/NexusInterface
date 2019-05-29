@@ -17,7 +17,8 @@
 - The `X` on the add or edit contact form is now more visible
 - Made grammar ajustments to en.json
 - Ajustment to terminal's `Help` command
-- Rephrased Staking to Minting
+- Rephrased some instances of Staking to Minting to more accurately convey what is happening
+- Gather Transactions on the transactions page is now handled better
 
 #### Fixes
 - Fixed typo on Israeli Shekel using the wrong ISO code
@@ -31,6 +32,7 @@
 - Encryped warning no long shows before accepting license agreement
 - Fixed issue with Globe crashing on Webgl Errors
 - Fixed context menu issue
+- Fixed issue with Terminal where if a param started with a number it would only return that partial number
 
 # 0.8.9 (2019.3.01)
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-0.8.9)

@@ -5,7 +5,7 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import { defaultSettings } from 'api/settings';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';
@@ -122,7 +122,7 @@ const mapDispatchToProps = dispatch => ({
     const recipientsErrors = [];
     await Promise.all(
       recipients.map(({ address }, i) =>
-        RPC.PROMISE('validateaddress', [address])
+        Backend.RunCommand('RPC', 'validateaddress', [address])
           .then(result => {
             if (!result.isvalid) {
               recipientsErrors[i] = {
@@ -161,13 +161,13 @@ const mapDispatchToProps = dispatch => ({
         minConfirmations,
       ];
       if (message) params.push(message);
-      return RPC.PROMISE('sendfrom', params);
+      return Backend.RunCommand('RPC', 'sendfrom', params);
     } else {
       const queue = recipients.reduce(
         (queue, r) => ({ ...queue, [r.address]: parseFloat(r.amount) }),
         {}
       );
-      return RPC.PROMISE(
+      return Backend.RunCommand('RPC', 
         'sendmany',
         [sendFrom, queue],
         minConfirmations,
@@ -233,7 +233,7 @@ class SendForm extends Component {
 
     UIController.openConfirmDialog({
       question: <Text id="sendReceive.SendTransaction" />,
-      yesCallback: handleSubmit,
+      callbackYes: handleSubmit,
     });
   };
 
@@ -312,7 +312,7 @@ class SendForm extends Component {
           />
 
           <Button type="submit" skin="primary">
-            <Icon icon={sendIcon} spaceRight />
+            <Icon icon={sendIcon} className="space-right" />
             <Text id="sendReceive.SendNow" />
           </Button>
         </SendFormButtons>

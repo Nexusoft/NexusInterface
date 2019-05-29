@@ -15,7 +15,7 @@ import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { timing } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 import ContextMenuBuilder from 'contextmenu';
 import plusIcon from 'images/plus.sprite.svg';
 
@@ -98,8 +98,8 @@ class Contact extends React.PureComponent {
           data={{ name: this.props.contact.name }}
         />
       ),
-      yesSkin: 'danger',
-      yesCallback: () => {
+      skinYes: 'danger',
+      callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
       },
     });

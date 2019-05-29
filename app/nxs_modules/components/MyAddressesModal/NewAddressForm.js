@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import AutoSuggest from 'components/AutoSuggest';
 import Button from 'components/Button';
 import UIController from 'components/UIController';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import { rpcErrorHandler } from 'utils/form';
 
@@ -51,7 +51,7 @@ const Buttons = styled.div({
     }
     return errors;
   },
-  onSubmit: ({ accountName }) => RPC.PROMISE('getnewaddress', [accountName]),
+  onSubmit: ({ accountName }) => Backend.RunCommand('RPC', 'getnewaddress', [accountName]),
   onSubmitSuccess: (result, dispatch, props) => {
     dispatch(loadMyAccounts());
     props.finish();
@@ -79,21 +79,16 @@ class NewAddressForm extends React.Component {
     const { handleSubmit, submitting, accountNames, finish } = this.props;
     return (
       <NewAddressFormComponent onSubmit={handleSubmit}>
-        <div className="flex center">
-          <span>Account name:</span>
-          <AccountNameInput>
-            <Field
-              component={AutoSuggest.RF}
-              name="accountName"
-              suggestions={accountNames}
-              onSelect={this.setAccountName}
-              inputProps={{
-                placeholder:
-                  'Enter a new account name or pick an existing account',
-              }}
-            />
-          </AccountNameInput>
-        </div>
+        <div>Enter a new account name or pick an existing account:</div>
+        <Field
+          component={AutoSuggest.RF}
+          name="accountName"
+          suggestions={accountNames}
+          onSelect={this.setAccountName}
+          inputProps={{
+            placeholder: 'Account name',
+          }}
+        />
         <Buttons>
           <Button onClick={finish}>Cancel</Button>
           <Button type="submit" skin="primary" disabled={submitting}>

@@ -7,10 +7,10 @@ const OrbitControls = require('three-orbit-controls')(THREE);
 
 import world from 'images/world-light-white.jpg';
 import worldSmall from 'images/world-light-white-small.jpg';
-import * as RPC from 'scripts/rpc';
 import configuration from 'api/configuration';
 import Curve from './Curve';
 import Point from './Point';
+import * as Backend from 'scripts/backend-com';
 
 const GlobeContainer = styled.div({
   position: 'fixed',
@@ -21,35 +21,8 @@ const GlobeContainer = styled.div({
   overflow: 'hidden',
 });
 
-const Shader = {
-  uniforms: {
-    texture: { type: 't', value: null },
-  },
-  vertexShader: [
-    'varying vec3 vNormal;',
-    'varying vec2 vUv;',
-    'void main() {',
-    'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-    'vNormal = normalize( normalMatrix * normal );',
-    'vUv = uv;',
-    '}',
-  ].join('\n'),
-  fragmentShader: [
-    'uniform sampler2D _texture;',
-    'uniform vec4 colorMod;',
-    'varying vec3 vNormal;',
-    'varying vec2 vUv;',
-    'void main() {',
-    'vec3 diffuse = texture2D( _texture, vUv ).xyz;',
-    'float intensity = 1.05 - vNormal.z ;',
-    'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
-    'gl_FragColor = vec4( (diffuse*colorMod.xyz) + atmosphere, 1.0 );',
-    '}',
-  ].join('\n'),
-};
-
 /**
- * The 3D Globe on the overview page. 
+ * The 3D Globe on the overview page.
  *
  * @export
  * @class Globe
@@ -128,27 +101,13 @@ export default class Globe extends Component {
       controls.update();
       scene.add(camera);
 
-      const uniforms = THREE.UniformsUtils.clone(Shader.uniforms);
-      const colormoddd = new THREE.Color(this.props.globeColor);
-      const globeR = colormoddd.r / 1;
-      const globeG = colormoddd.g / 1;
-      const globeB = colormoddd.b / 1;
-
-      uniforms['_texture'] = {
-        type: 't',
-        value: new THREE.TextureLoader().load(world),
-      };
-      uniforms['colorMod'] = {
-        type: 'v4',
-        value: new THREE.Vector4(globeR, globeG, globeB, 1.0),
-      };
-
-      const shadedMap = new THREE.ShaderMaterial({
-        uniforms: uniforms,
-        vertexShader: Shader.vertexShader,
-        fragmentShader: Shader.fragmentShader,
+      const importworld = new THREE.TextureLoader().load(world);
+      const newWorld = new THREE.MeshBasicMaterial({
+        map: importworld,
+        color: this.props.globeColor,
       });
-      const mesh = new THREE.Mesh(sphere, shadedMap);
+
+      const mesh = new THREE.Mesh(sphere, newWorld);
 
       globe.add(mesh);
       globe.add(allPoints);
@@ -165,7 +124,7 @@ export default class Globe extends Component {
       this.controls = controls;
 
       // Add pin for user
-      this.addSelf();
+      this.addSelfPoint();
       this.pointRegister();
 
       this.renderer.context.canvas.addEventListener(
@@ -180,6 +139,21 @@ export default class Globe extends Component {
         false
       );
 
+      this.renderer.context.canvas.addEventListener(
+        'mouseout',
+        () => {
+          this.controls.enabled = false;
+        },
+        false
+      );
+
+      this.renderer.context.canvas.addEventListener(
+        'mouseover',
+        () => {
+          this.controls.enabled = true;
+        },
+        false
+      );
       this.threeRootElement.appendChild(renderer.domElement);
       window.addEventListener('resize', this.onWindowResize, false);
       this.start();
@@ -208,9 +182,6 @@ export default class Globe extends Component {
     event.preventDefault();
     console.error('CONTEXT LOST!!');
     this.stop();
-    window.removeEventListener('resize', this.onWindowResize, false);
-    this.controls.dispose();
-    this.threeRootElement.removeChild(this.renderer.domElement);
   }
 
   /**
@@ -239,7 +210,9 @@ export default class Globe extends Component {
     this.stop();
     window.removeEventListener('resize', this.onWindowResize, false);
     this.controls.dispose();
-    this.threeRootElement.removeChild(this.renderer.domElement);
+    if (this.threeRootElement.children.length > 0) {
+      this.threeRootElement.removeChild(this.renderer.domElement);
+    }
   }
 
   /**
@@ -249,13 +222,13 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   async pointRegister() {
-    const peerInfo = await RPC.PROMISE('getpeerinfo', []);
+    const peerInfo = await Backend.RunCommand('RPC', 'getpeerinfo', []);
     if (!peerInfo) return;
     // take the peerInfo look up the Geo Data in the maxmind DB
     // and if there are any points that exist and match coords
     // update the registery entry data
 
-    let newPoints = peerInfo
+    let newRegistry = peerInfo
       .map(peer => {
         let GeoData = this.geoiplookup.get(peer.addr.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
@@ -269,7 +242,7 @@ export default class Globe extends Component {
           },
         };
       })
-      .filter((peer, i, array) => {
+      .map((peer, i, array) => {
         let existIndex = this.pointRegistry.findIndex(
           point => peer.lat === point.lat && peer.lng === point.lng
         );
@@ -278,37 +251,28 @@ export default class Globe extends Component {
             peer.lat === internalPoint.lat && peer.lng === internalPoint.lng
         );
 
-        if (existIndex >= 0) {
-          this.pointRegistry[existIndex] = {
-            ...this.pointRegistry[existIndex],
-            params: {
-              ...this.pointRegistry[existIndex].params,
-              type: peer.params.type,
-            },
-          };
+        // if not an internal duplicate and already exists
+        if (existIndex >= 0 && duplicateIndex === i) {
+          return this.pointRegistry[existIndex];
         } else if (duplicateIndex === i) {
-          return peer;
+          let newPoint = new Point(peer.lat, peer.lng, peer.params);
+          this.allPoints.add(newPoint.pillar);
+          return newPoint;
         }
-      });
+      })
+      .filter(e => e);
 
-    // filter out any points that exist in the new points array except self
-    this.pointRegistry = this.pointRegistry.filter(point => {
-      let existIndex = newPoints.findIndex(
+    this.pointRegistry.map(point => {
+      let existIndex = newRegistry.findIndex(
         peer => peer.lat === point.lat && peer.lng === point.lng
       );
 
-      if (existIndex <= 0 || point.params.type === 'SELF') {
-        return point;
-      } else {
+      if (existIndex < 0 && point.params.type !== 'SELF') {
         this.destroyPoint(point);
       }
     });
 
-    newPoints.map(peer => {
-      let point = new Point(peer.lat, peer.lng, peer.params);
-      this.pointRegistry.push(point);
-      this.allPoints.add(point.pillar);
-    });
+    this.pointRegistry = newRegistry;
     this.arcRegister();
   }
 
@@ -317,7 +281,7 @@ export default class Globe extends Component {
    *
    * @memberof Globe
    */
-  addSelf() {
+  addSelfPoint() {
     let selfIndex = this.pointRegistry.indexOf(
       point => point.params.type === 'SELF'
     );
@@ -433,7 +397,7 @@ export default class Globe extends Component {
         }
       });
     } else {
-      this.addSelf();
+      this.addSelfPoint();
     }
   }
 
