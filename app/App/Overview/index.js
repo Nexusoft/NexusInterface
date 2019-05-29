@@ -455,10 +455,8 @@ class Overview extends Component {
       } else {
         currencyValue = currencyValue.toFixed(2);
       }
-      return `${helpers.ReturnCurrencySymbol(
-        selectedCurrancyValue[0].name,
-        this.props.displayNXSvalues
-      ) + currencyValue}`;
+
+      return `${selectedCurrancyValue[0].name} ${currencyValue}`;
     } else {
       return '$0';
     }
