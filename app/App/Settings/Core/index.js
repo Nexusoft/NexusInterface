@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { remote } from 'electron';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
+import cpy from 'cpy';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
@@ -20,7 +21,8 @@ import { updateSettings } from 'actions/settingsActionCreators';
 import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
-import ReScanButton from '../../../nxs_modules/components/MyAddressesModal/RescanButton.js';
+import ReScanButton from 'components/MyAddressesModal/RescanButton.js';
+import configuration from 'api/configuration';
 
 const mapStateToProps = ({
   settings,
@@ -201,6 +203,30 @@ class SettingsCore extends Component {
     remote.getGlobal('core').restart();
     UIController.showNotification(<Text id="Alert.CoreRestarting" />);
   };
+
+  moveDataDir = () => {
+    remote.dialog.showOpenDialog(
+      {
+        title: 'Select New Folder',
+        defaultPath: this.props.backupDir,
+        properties: ['openDirectory'],
+      },
+      folderPaths => {
+        if (folderPaths && folderPaths.length > 0) {
+          this.handleFileCopy(folderPaths[0]);
+        }
+      }
+    );
+  };
+
+  async handleFileCopy(newFolderDir) {
+    await cpy(configuration.GetCoreDataDir(), newFolderDir).on(
+      'progress',
+      progress => {
+        console.log(progress);
+      }
+    );
+  }
 
   updateHandlers = (() => {
     const handlers = [];
@@ -435,6 +461,16 @@ class SettingsCore extends Component {
                 defaultChecked={settings.detatchDatabaseOnShutdown}
                 onChange={this.updateHandlers('detatchDatabaseOnShutdown')}
               />
+            </SettingsField>
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={'Move Data Dir'}
+              subLabel={'Move the daemon data directory to a different folder'}
+            >
+              <Button onClick={this.moveDataDir}>
+                <Text id="Settings.MoveDataDirButton" />
+              </Button>
             </SettingsField>
           </div>
 

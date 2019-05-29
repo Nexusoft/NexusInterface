@@ -245,6 +245,7 @@
     "connected-react-router": "^6.1.0",
     "copy-to-clipboard": "^3.0.8",
     "core-js": "^2.6.0",
+    "cpy": "^7.2.0",
     "csvtojson": "^2.0.8",
     "devtron": "^1.4.0",
     "dompurify": "^1.0.10",
