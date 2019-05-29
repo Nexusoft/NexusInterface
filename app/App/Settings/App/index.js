@@ -16,7 +16,8 @@ import Switch from 'components/Switch';
 import Icon from 'components/Icon';
 import UIController from 'components/UIController';
 import SettingsContainer from 'components/SettingsContainer';
-import { form, color } from 'utils';
+import * as color from 'utils/color';
+import * as form from 'utils/form';
 import warningIcon from 'images/warning.sprite.svg';
 import updater from 'updater';
 
@@ -94,7 +95,7 @@ class SettingsApp extends Component {
   confirmBackupWallet = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.BackupWallet" />,
-      yesCallback: () => {
+      callbackYes: () => {
         if (this.props.connections !== undefined) {
           backupWallet(this.props.settings.backupDirectory);
           UIController.showNotification(
@@ -108,6 +109,48 @@ class SettingsApp extends Component {
         }
       },
     });
+  };
+
+  toggleVerifyModuleSource = e => {
+    if (e.target.checked) {
+      UIController.openConfirmDialog({
+        question: 'Turn module open source policy on?',
+        note:
+          'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.',
+        callbackYes: () => {
+          this.props.updateSettings({ verifyModuleSource: true });
+          location.reload();
+        },
+      });
+    } else {
+      UIController.openConfirmDialog({
+        question: 'Turn module open source policy off?',
+        note: (
+          <div>
+            <p>
+              This is only for module developers and can be dangerous for
+              regular users. Please make sure you know what you are doing!
+            </p>
+            <p>
+              It would be much easier for a closed source module to hide
+              malicious code than for an open source one. Therefore, in case you
+              still want to disable this setting, it is highly recommended that
+              you only install and run closed source modules that you are
+              developing yourself.
+            </p>
+          </div>
+        ),
+        labelYes: 'Turn policy off',
+        skinYes: 'danger',
+        callbackYes: () => {
+          this.props.updateSettings({ verifyModuleSource: false });
+          location.reload();
+        },
+        labelNo: 'Keep policy on',
+        skinNo: 'primary',
+        style: { width: 600 },
+      });
+    }
   };
 
   updateHandlers = (() => {
@@ -133,10 +176,10 @@ class SettingsApp extends Component {
       UIController.openConfirmDialog({
         question: <Text id="Settings.DisableAutoUpdate" />,
         note: <Text id="Settings.DisableAutoUpdateNote" />,
-        yesLabel: <Text id="Settings.KeepAutoUpdate" />,
-        noLabel: <Text id="Settings.TurnOffAutoUpdate" />,
-        noSkin: 'danger',
-        noCallback: () => {
+        labelYes: <Text id="Settings.KeepAutoUpdate" />,
+        labelNo: <Text id="Settings.TurnOffAutoUpdate" />,
+        skinNo: 'danger',
+        callbackNo: () => {
           this.props.updateSettings({ autoUpdate: false });
           updater.stopAutoUpdate();
         },
@@ -253,6 +296,20 @@ class SettingsApp extends Component {
             onChange={this.updateHandlers('devMode')}
           />
         </SettingsField>
+
+        <div style={{ display: settings.devMode ? 'block' : 'none' }}>
+          <SettingsField
+            indent={1}
+            connectLabel
+            label={<Text id="Settings.EnforceOpenSourceModules" />}
+            subLabel={<Text id="Settings.EnforceOpenSourceModulesNote" />}
+          >
+            <Switch
+              checked={settings.verifyModuleSource}
+              onChange={this.toggleVerifyModuleSource}
+            />
+          </SettingsField>
+        </div>
 
         <Button
           disabled={connections === undefined}

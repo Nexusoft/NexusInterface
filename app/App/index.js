@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import UIController from 'components/UIController';
-import GlobalStyles from './GlobalStyles';
+import GlobalStyles from 'components/GlobalStyles';
 import Overview from './Overview';
 import Header from './Header';
 import Navigation from './Navigation';
@@ -20,9 +20,10 @@ import BlockExplorer from './BlockExplorer';
 import Settings from './Settings';
 import Terminal from './Terminal';
 import StyleGuide from './StyleGuide';
-import TrustList from './TrustList';
 import About from './About';
+import Modules from './Modules';
 // import Exchange from './Exchange';
+// import TrustList from './TrustList';
 import AppBackground from './AppBackground';
 import ThemeController from './ThemeController';
 
@@ -42,7 +43,6 @@ const AppWrapper = styled.div({
 const Main = styled.main({
   gridArea: 'content',
   overflow: 'hidden',
-  padding: '30px 10%',
   display: 'flex',
   alignItems: 'stretch',
 });
@@ -100,6 +100,7 @@ export default class App extends Component {
                       {/* <Route exact path="/List" component={TrustList} /> */}
 
                       <Route exact path="/About" component={About} />
+                      <Route path="/Modules/:name" component={Modules} />
                     </Switch>
                   </Main>
                   <Navigation />

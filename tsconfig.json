@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "allowJs": true
+    "allowJs": true,
+    "noEmit": true
   },
   "exclude": ["node_modules", "app/node_modules", "release", "dll", "app/dist"]
 }

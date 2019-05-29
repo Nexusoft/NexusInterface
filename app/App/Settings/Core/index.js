@@ -5,9 +5,8 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
-
 import * as TYPE from 'actions/actiontypes';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import Text from 'components/Text';
 import { switchSettingsTab } from 'actions/uiActionCreators';
 import WaitingMessage from 'components/WaitingMessage';
@@ -18,12 +17,11 @@ import Switch from 'components/Switch';
 import UIController from 'components/UIController';
 import SettingsContainer from 'components/SettingsContainer';
 import { updateSettings } from 'actions/settingsActionCreators';
-import { form } from 'utils';
+import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
 import ReScanButton from '../../../nxs_modules/components/MyAddressesModal/RescanButton.js';
 
-// React-Redux mandatory methods
 const mapStateToProps = ({
   settings,
   core: {
@@ -167,9 +165,9 @@ class SettingsCore extends Component {
       UIController.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonExit" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
-        yesCallback: async () => {
+        callbackYes: async () => {
           try {
-            await RPC.PROMISE('stop', []);
+            await Backend.RunCommand('RPC', 'stop', []);
           } finally {
             this.props.updateSettings({ manualDaemon: false });
             this.props.clearForRestart();
@@ -181,9 +179,9 @@ class SettingsCore extends Component {
       UIController.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonEntry" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
-        yesCallback: async () => {
+        callbackYes: async () => {
           try {
-            await RPC.PROMISE('stop', []);
+            await Backend.RunCommand('RPC', 'stop', []);
           } finally {
             remote.getGlobal('core').stop();
             this.props.updateSettings({ manualDaemon: true });

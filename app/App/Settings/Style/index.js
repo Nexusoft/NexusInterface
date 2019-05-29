@@ -30,7 +30,7 @@ import ThemePicker from './ThemePicker';
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
 
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 
 const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
@@ -439,7 +439,7 @@ class SettingsStyle extends Component {
               label="Sample Address"
             />
             <AddressStyleNote>
-              <Icon icon={warningIcon} spaceRight />
+              <Icon icon={warningIcon} className="space-right" />
               <span className="v-align">This is your Default Address</span>
             </AddressStyleNote>
           </div>

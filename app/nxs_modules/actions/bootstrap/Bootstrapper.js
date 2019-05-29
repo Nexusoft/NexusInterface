@@ -4,13 +4,15 @@ import fs from 'fs';
 import path from 'path';
 import https from 'https';
 import electron from 'electron';
-import tarball from 'tarball-extract';
 import moveFile from 'move-file';
 import rimraf from 'rimraf';
+
 // Internal
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
+import extractTarball from 'utils/promisified/extractTarball';
+
 let recentDbUrl = '';
 const recentDbUrlLegacy =
   'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
@@ -85,7 +87,7 @@ export default class Bootstrapper {
    */
   async start({ backupFolder, clearCoreInfo }) {
     try {
-      const getinfo = await RPC.PROMISE('getinfo', []);
+      const getinfo = await Backend.RunCommand('RPC', 'getinfo', []);
       console.log(getinfo.version);
       if (getinfo.version.includes('0.3')) {
         recentDbUrl = recentDbUrlTritium;
@@ -132,7 +134,7 @@ export default class Bootstrapper {
       await this._restartCore();
 
       this._progress('rescanning');
-      await RPC.PROMISE('rescan',[]);
+      await Backend.RunCommand('RPC', 'rescan',[]);
 
       this._cleanUp();
 
@@ -249,12 +251,7 @@ export default class Bootstrapper {
    * @memberof Bootstrapper
    */
   async _extractDb() {
-    return new Promise((resolve, reject) => {
-      tarball.extractTarball(fileLocation, extractDest, err => {
-        if (err) reject(err);
-        else resolve();
-      });
-    });
+    return await extractTarball(fileLocation, extractDest);
   }
 
   /**
@@ -306,7 +303,7 @@ export default class Bootstrapper {
     electron.remote.getGlobal('core').start();
     const getInfo = async () => {
       try {
-        return await RPC.PROMISE('getinfo', []);
+        return await Backend.RunCommand('RPC', 'getinfo', []);
       } catch (err) {
         return await getInfo();
       }

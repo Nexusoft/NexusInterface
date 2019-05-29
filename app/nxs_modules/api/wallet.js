@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { defaultSettings } from 'api/settings';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 
 /**
  * Backs up wallet
@@ -26,7 +26,7 @@ export function backupWallet(backupFolder) {
     })
     .replace(/:/g, '_');
 
-  return RPC.PROMISE('backupwallet', [
+  return Backend.RunCommand('RPC', 'backupwallet', [
     backupDir + '/NexusBackup_' + now + '.dat',
   ]);
 }

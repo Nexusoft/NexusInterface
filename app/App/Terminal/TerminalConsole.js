@@ -10,7 +10,7 @@ import memoize from 'memoize-one';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
-import * as RPC from 'scripts/rpc';
+import * as Backend from 'scripts/backend-com';
 import {
   switchConsoleTab,
   updateConsoleInput,
@@ -75,9 +75,7 @@ const actionCreators = {
 };
 
 const TerminalContent = styled.div({
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: 0,
+  gridArea: 'content',
   overflow: 'visible',
 });
 
@@ -140,7 +138,7 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   loadCommandList = async () => {
-    const result = await RPC.PROMISE('help', []);
+    const result = await Backend.RunCommand('RPC', 'help', []);
     const commandList = result
       .split('\n')
       .filter(c => c !== 'please enable -richlist to use this command')
@@ -214,7 +212,7 @@ class TerminalConsole extends Component {
     const tab = ' '.repeat(2);
     let result = null;
     try {
-      result = await RPC.PROMISE(cmd, args);
+      result = await Backend.RunCommand('RPC', cmd, args);
     } catch (err) {
       console.error(err);
       if (err.message !== undefined) {
@@ -276,12 +274,12 @@ class TerminalConsole extends Component {
     }
   };
 
-  tempasd = (incoming) => {
+  tempasd = incoming => {
     console.log(incoming);
     const asdfgh = incoming.split(' ')[0] + ' ';
     console.log(asdfgh);
     this.props.updateConsoleInput(asdfgh);
-  }
+  };
 
   /**
    * React Render
@@ -319,11 +317,11 @@ class TerminalConsole extends Component {
                     onSelect={updateConsoleInput}
                     keyControl={false}
                     suggestOn="change"
-                    ref={c => this.inputRef = c}
+                    ref={c => (this.inputRef = c)}
                     inputRef={this.inputRef}
                     inputProps={{
                       autoFocus: true,
-                      skin: 'filled-dark',
+                      skin: 'filled-inverted',
                       value: consoleInput,
                       placeholder: cch,
                       onChange: e => {
@@ -332,7 +330,7 @@ class TerminalConsole extends Component {
                       onKeyDown: this.handleKeyDown,
                       right: (
                         <ExecuteButton
-                          skin="filled-dark"
+                          skin="filled-inverted"
                           fitHeight
                           grouped="right"
                           onClick={this.execute}
@@ -373,7 +371,7 @@ class TerminalConsole extends Component {
             </ConsoleOutput>
 
             <Button
-              skin="filled-dark"
+              skin="filled-inverted"
               grouped="bottom"
               onClick={resetConsoleOutput}
             >

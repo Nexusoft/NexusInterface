@@ -7,10 +7,10 @@ const OrbitControls = require('three-orbit-controls')(THREE);
 
 import world from 'images/world-light-white.jpg';
 import worldSmall from 'images/world-light-white-small.jpg';
-import * as RPC from 'scripts/rpc';
 import configuration from 'api/configuration';
 import Curve from './Curve';
 import Point from './Point';
+import * as Backend from 'scripts/backend-com';
 
 const GlobeContainer = styled.div({
   position: 'fixed',
@@ -222,7 +222,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   async pointRegister() {
-    const peerInfo = await RPC.PROMISE('getpeerinfo', []);
+    const peerInfo = await Backend.RunCommand('RPC', 'getpeerinfo', []);
     if (!peerInfo) return;
     // take the peerInfo look up the Geo Data in the maxmind DB
     // and if there are any points that exist and match coords

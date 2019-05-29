@@ -9,7 +9,7 @@ import UIController from 'components/UIController';
 import StatusIcon from 'components/StatusIcon';
 import MyAddressesModal from 'components/MyAddressesModal';
 import { timing } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
   cursor: 'pointer',
@@ -25,7 +25,7 @@ const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
 
 /**
  * Returns JSX of My Addresses
- * 
+ *
  *@returns {JSX} JSX
  */
 const MyAddresses = () => (
