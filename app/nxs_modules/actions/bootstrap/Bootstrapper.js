@@ -62,6 +62,7 @@ export default class Bootstrapper {
    * @memberof Bootstrapper
    */
   static async checkFreeSpace(gigsToCheck) {
+    return true;
     const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
     return diskSpace.free >= gigsToCheck * 1000000000;
   }
@@ -73,6 +74,7 @@ export default class Bootstrapper {
    * @memberof Bootstrapper
    */
   static async checkBootStrapFreeSpace() {
+    return true;
     const freeSpaceForBootStrap = 20000000000; //20gb
     const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
     return diskSpace.free >= freeSpaceForBootStrap;
@@ -96,31 +98,31 @@ export default class Bootstrapper {
       }
       if (this._aborted) return;
 
-      this._progress('backing_up');
-      await backupWallet(backupFolder);
-      if (this._aborted) return;
+      // this._progress('backing_up');
+      // await backupWallet(backupFolder);
+      // if (this._aborted) return;
 
       // Remove the old file if exists
 
-      if (fs.existsSync(fileLocation)) {
-        fs.unlinkSync(fileLocation, err => {
-          if (err) throw err;
-        });
-      }
+      // if (fs.existsSync(fileLocation)) {
+      //   fs.unlinkSync(fileLocation, err => {
+      //     if (err) throw err;
+      //   });
+      // }
 
-      if (fs.existsSync(extractDest)) {
-        console.log('removing the old file');
-        rimraf.sync(extractDest, {}, () => console.log('done'));
-        this._cleanUp();
-      }
+      // if (fs.existsSync(extractDest)) {
+      //   console.log('removing the old file');
+      //   rimraf.sync(extractDest, {}, () => console.log('done'));
+      //   this._cleanUp();
+      // }
 
-      this._progress('downloading', {});
-      await this._downloadCompressedDb();
-      if (this._aborted) return;
+      // this._progress('downloading', {});
+      // await this._downloadCompressedDb();
+      // if (this._aborted) return;
 
-      this._progress('extracting');
-      await this._extractDb();
-      if (this._aborted) return;
+      // this._progress('extracting');
+      // await this._extractDb();
+      // if (this._aborted) return;
 
       clearCoreInfo();
       this._progress('stopping_core');
@@ -133,10 +135,10 @@ export default class Bootstrapper {
       this._progress('restarting_core');
       await this._restartCore();
 
-      this._progress('rescanning');
-      await RPC.PROMISE('rescan',[]);
+      // this._progress('rescanning');
+      // await RPC.PROMISE('rescan', []);
 
-      this._cleanUp();
+      // this._cleanUp();
 
       this._onFinish();
     } catch (err) {
@@ -301,11 +303,14 @@ export default class Bootstrapper {
 
   async _restartCore() {
     electron.remote.getGlobal('core').start();
+
     const getInfo = async () => {
       try {
-        return await RPC.PROMISE('getinfo', []);
+        setTimeout(async () => {
+          await RPC.PROMISE('getinfo', []);
+        }, 100);
       } catch (err) {
-        return await getInfo();
+        getInfo();
       }
     };
     return await getInfo();
