@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { createHashHistory } from 'history';
 import thunk from 'redux-thunk';
 import { routerMiddleware, routerActions } from 'connected-react-router';
-import { createLogger } from 'redux-logger';
+
 import createRootReducer from './reducers';
 
 import { addLocaleData } from 'react-intl';
@@ -22,12 +22,6 @@ const configureStore = () => {
   const enhancers = [];
 
   middleware.push(thunk);
-  // Logging Middleware
-  // const logger = createLogger({
-  //   level: "info",
-  //   collapsed: true
-  // });
-  // middleware.push(logger);
 
   // Router Middleware
   const router = routerMiddleware(history);

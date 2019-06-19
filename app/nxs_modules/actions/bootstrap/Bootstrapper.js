@@ -134,7 +134,7 @@ export default class Bootstrapper {
       await this._restartCore();
 
       this._progress('rescanning');
-      await RPC.PROMISE('rescan',[]);
+      await RPC.PROMISE('rescan', []);
 
       this._cleanUp();
 
@@ -301,11 +301,14 @@ export default class Bootstrapper {
 
   async _restartCore() {
     electron.remote.getGlobal('core').start();
+
     const getInfo = async () => {
       try {
-        return await RPC.PROMISE('getinfo', []);
+        setTimeout(async () => {
+          await RPC.PROMISE('getinfo', []);
+        }, 100);
       } catch (err) {
-        return await getInfo();
+        getInfo();
       }
     };
     return await getInfo();
