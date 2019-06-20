@@ -16,7 +16,7 @@ import Account from './Account';
 import NewAddressForm from './NewAddressForm';
 import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 
 const MyAddressesModalComponent = styled(Modal)({
   // set a fixed height so that the modal won't jump when the search query changes
@@ -63,7 +63,7 @@ class MyAddressesModal extends React.Component {
 
   checkwallet = async () => {
     try {
-      await Backend.RunCommand('RPC', 'checkwallet', []);
+      await RPC.PROMISE('checkwallet', []);
     } catch (err) {
       console.log(err);
       UIController.showNotification(

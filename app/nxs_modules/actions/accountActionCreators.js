@@ -1,12 +1,12 @@
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 import * as TYPE from './actiontypes';
 
 export const loadMyAccounts = () => async dispatch => {
-  const accList = await Backend.RunCommand('RPC', 'listaccounts', []);
+  const accList = await RPC.PROMISE('listaccounts', []);
 
   const addrList = await Promise.all(
     Object.keys(accList).map(account =>
-      Backend.RunCommand('RPC', 'getaddressesbyaccount', [account])
+      RPC.PROMISE('getaddressesbyaccount', [account])
     )
   );
 
@@ -14,7 +14,7 @@ export const loadMyAccounts = () => async dispatch => {
     (list, element) => [
       ...list,
       ...element.addresses.map(address =>
-        Backend.RunCommand('RPC', 'validateaddress', [address])
+        RPC.PROMISE('validateaddress', [address])
       ),
     ],
     []

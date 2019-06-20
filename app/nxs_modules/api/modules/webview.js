@@ -5,7 +5,7 @@ import { reset, initialize } from 'redux-form';
 import store, { history } from 'store';
 import { updateModuleState } from 'actions/moduleActionCreators';
 import UIController from 'components/UIController';
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 import { readModuleStorage, writeModuleStorage } from './storage';
 
 const cmdWhitelist = [
@@ -235,7 +235,7 @@ async function rpcCall([command, params, callId]) {
       throw 'Invalid command';
     }
 
-    const response = await Backend.RunCommand('RPC', command, ...(params || []));
+    const response = await RPC.PROMISE(command, ...(params || []));
     webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
   } catch (err) {
     console.error(err);

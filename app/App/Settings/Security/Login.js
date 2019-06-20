@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import { getInfo } from 'actions/coreActionCreators';
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -87,7 +87,7 @@ const Buttons = styled.div({
       unlockUntil = Math.round((unlockDate.getTime() - now.getTime()) / 1000);
     }
 
-    return Backend.RunCommand('RPC', 'walletpassphrase', [
+    return RPC.PROMISE('walletpassphrase', [
       password,
       unlockUntil,
       stakingOnly,

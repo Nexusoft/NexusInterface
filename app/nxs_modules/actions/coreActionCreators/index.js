@@ -1,6 +1,6 @@
 import React from 'react';
 import UIController from 'components/UIController';
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 import * as ac from 'actions/setupAppActionCreators';
 import * as TYPE from 'actions/actiontypes';
 import { loadMyAccounts } from 'actions/accountActionCreators';
@@ -13,7 +13,7 @@ export function getInfo() {
     dispatch(ac.AddRPCCall('getInfo'));
     let info = null;
     try {
-      info = await Backend.RunCommand('RPC', 'getinfo', []);
+      info = await RPC.PROMISE('getinfo', []);
     } catch (err) {
       console.error(err);
       dispatch(clearCoreInfo());
@@ -59,10 +59,10 @@ export function getInfo() {
     }
 
     if (info.blocks !== oldInfo.blocks) {
-      const connectioncount = await Backend.RunCommand('RPC', 'getconnectioncount', []);
+      const connectioncount = await RPC.PROMISE('getconnectioncount', []);
 
       if (connectioncount > 0) {
-        const peerresponse = await Backend.RunCommand('RPC', 'getpeerinfo', []);
+        const peerresponse = await RPC.PROMISE('getpeerinfo', []);
 
         const highestPeerBlock = peerresponse.reduce(
           (highest, element) =>
@@ -102,7 +102,7 @@ export function getInfo() {
       }
     }
     if (info.txtotal > oldInfo.txtotal) {
-      const txList = await Backend.RunCommand('RPC', 'listtransactions', []);
+      const txList = await RPC.PROMISE('listtransactions', []);
       if (txList) {
         const mostRecentTx = txList.reduce((a, b) => (a.time > b.time ? a : b));
 
@@ -162,6 +162,6 @@ export const clearCoreInfo = () => ({
 });
 
 export const getDifficulty = () => async dispatch => {
-  const diff = await Backend.RunCommand('RPC', 'getdifficulty', []);
+  const diff = await RPC.PROMISE('getdifficulty', []);
   dispatch({ type: TYPE.GET_DIFFICULTY, payload: diff });
 };

@@ -30,7 +30,7 @@ import ThemePicker from './ThemePicker';
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
 
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 
 const overviewDisplays = [
   { value: 'standard', display: 'Standard' },

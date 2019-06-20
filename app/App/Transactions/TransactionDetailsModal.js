@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import Modal from 'components/Modal';
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 
 /**
  * Transaction More Detail Modal
@@ -37,13 +37,13 @@ class TransactionDetailsModal extends Component {
       walletItems[hoveringID] &&
       walletItems[hoveringID].confirmations
     ) {
-      const tx = await Backend.RunCommand('RPC', 'gettransaction', [
+      const tx = await RPC.PROMISE('gettransaction', [
         walletItems[hoveringID].txid,
       ]);
       this.setState({ highlightedBlockHash: tx.blockhash,
                       highlightedTxFee: tx.fee });
 
-      const block = await Backend.RunCommand('RPC', 'getblock', [tx.blockhash]);
+      const block = await RPC.PROMISE('getblock', [tx.blockhash]);
       this.setState({ highlightedBlockNum: block.height });
     }
   }

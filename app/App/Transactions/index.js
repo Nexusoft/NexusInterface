@@ -29,7 +29,7 @@ import Tooltip from 'components/Tooltip';
 import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
 import { loadMyAccounts } from 'actions/accountActionCreators';
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import config from 'api/configuration';
@@ -574,7 +574,7 @@ class Transactions extends Component {
     ) {
       incomingMyAccounts = this.props.myAccounts;
       for (let txPageCounter = 0; txPageCounter < numberOfCallsToMake; txPageCounter++) {
-        promisList.push(Backend.RunCommand('RPC', 'listtransactions', ['*', numberOfTransactionsPerCall, numberOfTransactionsPerCall * txPageCounter])); 
+        promisList.push(RPC.PROMISE('listtransactions', ['*', numberOfTransactionsPerCall, numberOfTransactionsPerCall * txPageCounter])); 
       }
     } else {
       incomingMyAccounts = this.props.myAccounts[
@@ -582,7 +582,7 @@ class Transactions extends Component {
       ];
       listedaccounts.push(incomingMyAccounts.account);
       for (let txPageCounter = 0; txPageCounter < numberOfCallsToMake; txPageCounter++) {
-        promisList.push(Backend.RunCommand('RPC', 'listtransactions', [incomingMyAccounts.account, numberOfTransactionsPerCall, numberOfTransactionsPerCall * txPageCounter])); 
+        promisList.push(RPC.PROMISE('listtransactions', [incomingMyAccounts.account, numberOfTransactionsPerCall, numberOfTransactionsPerCall * txPageCounter])); 
       }
     }
     let tempWalletTransactions = [];
@@ -704,7 +704,7 @@ class Transactions extends Component {
     this.props.walletitems.forEach(element => {
       if (element.category == 'debit' || element.category == 'send') {
         feePromises.push(
-          Backend.RunCommand('RPC', 'gettransaction', [element.txid]).then(payload => {
+          RPC.PROMISE('gettransaction', [element.txid]).then(payload => {
             feeData.set(payload.time, payload.fee);
             numberOfSends++;
             this.setState(

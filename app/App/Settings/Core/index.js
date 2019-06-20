@@ -7,7 +7,7 @@ import cpy from 'cpy';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
 import { switchSettingsTab } from 'actions/uiActionCreators';
 import WaitingMessage from 'components/WaitingMessage';
@@ -169,7 +169,7 @@ class SettingsCore extends Component {
         note: <Text id="Settings.ManualDaemonWarning" />,
         callbackYes: async () => {
           try {
-            await Backend.RunCommand('RPC', 'stop', []);
+            await RPC.PROMISE('stop', []);
           } finally {
             this.props.updateSettings({ manualDaemon: false });
             this.props.clearForRestart();
@@ -183,7 +183,7 @@ class SettingsCore extends Component {
         note: <Text id="Settings.ManualDaemonWarning" />,
         callbackYes: async () => {
           try {
-            await Backend.RunCommand('RPC', 'stop', []);
+            await RPC.PROMISE('stop', []);
           } finally {
             remote.getGlobal('core').stop();
             this.props.updateSettings({ manualDaemon: true });

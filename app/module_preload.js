@@ -50,6 +50,7 @@ global.NEXUS = {
     ReactRedux,
     emotion: { core, styled, theming, createCache },
     victory,
+    connectedReactRouter,
   },
   utilities: {
     color,

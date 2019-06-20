@@ -10,7 +10,7 @@ import rimraf from 'rimraf';
 // Internal
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
-import * as Backend from 'scripts/backend-com';
+import * as RPC from 'scripts/rpc';
 import extractTarball from 'utils/promisified/extractTarball';
 
 let recentDbUrl = '';
@@ -87,7 +87,7 @@ export default class Bootstrapper {
    */
   async start({ backupFolder, clearCoreInfo }) {
     try {
-      const getinfo = await Backend.RunCommand('RPC', 'getinfo', []);
+      const getinfo = await RPC.PROMISE('getinfo', []);
       console.log(getinfo.version);
       if (getinfo.version.includes('0.3')) {
         recentDbUrl = recentDbUrlTritium;
@@ -134,7 +134,7 @@ export default class Bootstrapper {
       await this._restartCore();
 
       this._progress('rescanning');
-      await Backend.RunCommand('RPC', 'rescan',[]);
+      await RPC.PROMISE('rescan', []);
 
       this._cleanUp();
 
@@ -301,11 +301,14 @@ export default class Bootstrapper {
 
   async _restartCore() {
     electron.remote.getGlobal('core').start();
+
     const getInfo = async () => {
       try {
-        return await Backend.RunCommand('RPC', 'getinfo', []);
+        setTimeout(async () => {
+          await RPC.PROMISE('getinfo', []);
+        }, 100);
       } catch (err) {
-        return await getInfo();
+        getInfo();
       }
     };
     return await getInfo();
