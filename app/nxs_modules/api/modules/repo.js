@@ -9,6 +9,7 @@ import Multistream from 'multistream';
 
 import config from 'api/configuration';
 import store from 'store';
+import showOpenDialog from 'utils/promisified/showOpenDialog';
 
 const ajv = new Ajv();
 
@@ -74,14 +75,17 @@ function normalizeFile(path) {
 /**
  * Get the module hash, calculated by hashing all the files that it uses, concatenated
  *
- * @param {*} module
  * @param {*} dirPath
  * @returns
  */
-export async function getModuleHash(module, dirPath) {
+export async function getModuleHash(dirPath, { module } = {}) {
   return new Promise((resolve, reject) => {
     try {
       const nxsPackagePath = join(dirPath, 'nxs_package.json');
+      if (!module) {
+        const nxsPackageContent = fs.readFileSync(nxsPackagePath);
+        module = JSON.parse(nxsPackageContent);
+      }
       const filePaths = module.files.sort().map(file => join(dirPath, file));
       const streams = [
         normalizeFile(nxsPackagePath),
@@ -193,7 +197,7 @@ export async function isRepoVerified(repoInfo, module, dirPath) {
 
   // Check hash of module files matching
   try {
-    const hash = module.hash || (await getModuleHash(module, dirPath));
+    const hash = module.hash || (await getModuleHash(dirPath, { module }));
     if (hash !== data.moduleHash) return false;
 
     // Check signature
@@ -219,27 +223,60 @@ export async function isRepoVerified(repoInfo, module, dirPath) {
 }
 
 /**
- * Nexus team should use this script to sign the repo verification
+ * This script is for Nexus team to sign the repo verification
  *
- * @param {*} moduleName
- * @param {*} privKeyFile
+ * @param {*} repoUrl
+ * @param {*} [{ moduleDir, privKeyPath, privKeyPassphrase }={}]
+ * @returns
  */
-async function signModuleRepo(moduleName, privKeyFile) {
-  const { modules } = store.getState();
-  const module = modules[moduleName];
+async function signModuleRepo(
+  repoUrl,
+  { moduleDir, privKeyPath, privKeyPassphrase } = {}
+) {
+  const repoUrlRegex = /https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/commit\/([^\/]+)/i;
+  const matches = repoUrlRegex.exec(repoUrl);
+  if (!matches) {
+    throw '`repoUrl` is missing or invalid. Please remember to include the commit in the URL.';
+  }
+  const repo = {
+    type: 'git',
+    host: 'github.com',
+    owner: matches[1],
+    repo: matches[2],
+    commit: matches[3],
+  };
 
-  if (!module || !module.repository) {
-    throw 'No repository info found. Please create a repo_info.json file with repository info in it.';
+  if (!moduleDir) {
+    const paths = await showOpenDialog({
+      title: 'Select module directory',
+      properties: ['openDirectory'],
+    });
+    if (paths && paths.length > 0) {
+      moduleDir = paths[0];
+    } else {
+      return;
+    }
+  }
+  if (!fs.existsSync(moduleDir)) {
+    throw '`moduleDir` does not exist';
   }
 
-  const dirPath = join(config.GetModulesDir(), module.dirName);
-  const moduleHash = await getModuleHash(module, dirPath);
-  const data = { repository: module.repository, moduleHash };
+  const moduleHash = await getModuleHash(moduleDir);
+  const data = { repository: repo, moduleHash };
   const serializedData = JSON.stringify(data);
 
-  const privKeyPath = isAbsolute(privKeyFile)
-    ? privKeyFile
-    : join(__dirname, privKeyFile);
+  if (!privKeyPath) {
+    const paths = await showOpenDialog({
+      title: 'Select private key file',
+      properties: ['openFile'],
+      filters: { extensions: ['pem'] },
+    });
+    if (paths && paths.length > 0) {
+      privKeyPath = paths[0];
+    } else {
+      return;
+    }
+  }
   const privKey = fs.readFileSync(privKeyPath);
 
   const signature = crypto
@@ -251,6 +288,7 @@ async function signModuleRepo(moduleName, privKeyFile) {
         key: privKey,
         format: 'pem',
         type: 'pkcs1',
+        passphrase: privKeyPassphrase || undefined,
       },
       'base64'
     );
@@ -259,8 +297,10 @@ async function signModuleRepo(moduleName, privKeyFile) {
     verification: { signature },
     data,
   };
-  const repoInfoPath = join(dirPath, 'repo_info.json');
+  const repoInfoPath = join(moduleDir, 'repo_info.json');
   fs.writeFileSync(repoInfoPath, JSON.stringify(repoInfo, null, 2));
+
+  console.log('Successfully generated repo_info.json file at ' + repoInfoPath);
 }
 
 // So that the function can be called on DevTools
