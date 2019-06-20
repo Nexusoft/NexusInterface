@@ -1,6 +1,6 @@
 {
   "name": "nexus_wallet",
-  "productName": "Nexus_Wallet_BETA",
+  "productName": "Nexus_Wallet",
   "version": "1.0.0",
   "description": "Nexus",
   "main": "./main.prod.js",

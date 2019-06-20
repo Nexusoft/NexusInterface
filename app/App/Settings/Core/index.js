@@ -468,9 +468,12 @@ class SettingsCore extends Component {
               label={'Move Data Dir'}
               subLabel={'Move the daemon data directory to a different folder'}
             >
-              <Button onClick={this.moveDataDir}>
-                <Text id="Settings.MoveDataDirButton" />
-              </Button>
+              <div>
+                <a>{'Current: ' + configuration.GetCoreDataDir()}</a>
+                <Button onClick={this.moveDataDir}>
+                  <Text id="Settings.MoveDataDirButton" />
+                </Button>
+              </div>
             </SettingsField>
           </div>
 

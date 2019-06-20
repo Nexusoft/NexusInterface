@@ -10,11 +10,11 @@ import path from 'path';
 import electron from 'electron';
 /**
  *  Configuration Class
- * 
+ *
  **/
 const configuration = {
   /**
-   * Check To see if this file excists in the App Data Directory 
+   * Check To see if this file excists in the App Data Directory
    *
    * @param {string} filename File Name plus extention
    * @returns {boolean} If exsits or not
@@ -162,12 +162,12 @@ const configuration = {
           .getPath('appData')
           .replace(' ', `\ `)
           .replace('/Electron/', ''),
-        'Nexus_Wallet_BETA'
+        'Nexus_Wallet'
       );
     } else {
       AppDataDirPath = path.join(
         app.getPath('appData').replace('/Electron/', ''),
-        'Nexus_Wallet_BETA'
+        'Nexus_Wallet'
       );
     }
 
@@ -184,11 +184,11 @@ const configuration = {
 
     //Set data directory by OS for automatic daemon mode
     if (process.platform === 'win32') {
-      var datadir = process.env.APPDATA + '\\Nexus_Core_Data_BETA';
+      var datadir = process.env.APPDATA + '\\Nexus_Core_Data';
     } else if (process.platform === 'darwin') {
-      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA';
+      var datadir = process.env.HOME + '/.Nexus_Core_Data';
     } else {
-      var datadir = process.env.HOME + '/.Nexus_Core_Data_BETA';
+      var datadir = process.env.HOME + '/.Nexus_Core_Data';
     }
     return datadir;
   },

@@ -5,7 +5,7 @@ rm -r app/dist
 rm app/*.map
 rm app/main.prod.js
 sudo apt-get purge -y nexus-wallet
-rm -r ~/.config/Nexus_Wallet_BETA_v1.0.0
+rm -r ~/.config/Nexus_Wallet_v1.0.0
 rm -r dll
 echo ""
 echo "Removed old build and associated data."
