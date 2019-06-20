@@ -462,6 +462,7 @@ class SettingsCore extends Component {
                 onChange={this.updateHandlers('detatchDatabaseOnShutdown')}
               />
             </SettingsField>
+            {/*  REMOVING THIS FOR NOW TILL I CAN CONFIRM THE SECURITY AND FUNCTION
             <SettingsField
               indent={1}
               connectLabel
@@ -475,6 +476,7 @@ class SettingsCore extends Component {
                 </Button>
               </div>
             </SettingsField>
+            */}
           </div>
 
           <div className="flex space-between" style={{ marginTop: '2em' }}>
