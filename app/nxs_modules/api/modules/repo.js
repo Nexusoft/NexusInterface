@@ -7,8 +7,6 @@ import { isText } from 'istextorbinary';
 import streamNormalizeEol from 'stream-normalize-eol';
 import Multistream from 'multistream';
 
-import config from 'api/configuration';
-import store from 'store';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
 
 const ajv = new Ajv();
