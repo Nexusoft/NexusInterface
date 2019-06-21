@@ -210,7 +210,6 @@ export async function isRepoVerified(repoInfo, module, dirPath) {
         {
           key: NEXUS_EMBASSY_PUBLIC_KEY,
           format: 'pem',
-          type: 'pkcs1',
         },
         verification.signature,
         'base64'
@@ -287,7 +286,6 @@ async function signModuleRepo(
       {
         key: privKey,
         format: 'pem',
-        type: 'pkcs1',
         passphrase: privKeyPassphrase || undefined,
       },
       'base64'
