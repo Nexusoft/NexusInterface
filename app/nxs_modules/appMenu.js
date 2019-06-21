@@ -17,7 +17,17 @@ import updater from 'updater';
 
 const autoUpdater = remote.getGlobal('autoUpdater');
 
+/**
+ * Sets up the Top Menu for the App
+ *
+ * @class AppMenu
+ */
 class AppMenu {
+  /**
+   * Initialize the App Menu
+   *
+   * @memberof AppMenu
+   */
   initialize() {
     // Update the updater menu item when the updater state changes
     // Changing menu item labels directly has no effect so we have to rebuild the whole menu
@@ -266,6 +276,11 @@ class AppMenu {
     click: autoUpdater.quitAndInstall,
   };
 
+  /**
+   * Get the Updater
+   *
+   * @memberof AppMenu
+   */
   updaterMenuItem = () => {
     switch (updater.state) {
       case 'idle':
@@ -279,6 +294,11 @@ class AppMenu {
     }
   };
 
+  /**
+   * Activate if Module is open
+   *
+   * @memberof AppMenu
+   */
   setPageModuleActive = active => {
     if (this.pageModuleActive !== active) {
       this.pageModuleActive = active;
@@ -286,6 +306,11 @@ class AppMenu {
     }
   };
 
+  /**
+   * Build Menu for OSX
+   *
+   * @memberof AppMenu
+   */
   buildDarwinTemplate = () => {
     const subMenuAbout = {
       label: 'Nexus',
@@ -355,6 +380,11 @@ class AppMenu {
     ];
   };
 
+  /**
+   * Build Menu to Windows / Linux
+   *
+   * @memberof AppMenu
+   */
   buildDefaultTemplate = () => {
     const subMenuFile = {
       label: '&File',
@@ -406,6 +436,11 @@ class AppMenu {
     return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
   };
 
+  /**
+   * Build the menu
+   *
+   * @memberof AppMenu
+   */
   build = () => {
     let template;
 

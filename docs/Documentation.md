@@ -441,8 +441,14 @@
 -   [CosmicLight][437]
 -   [ThemeController][438]
     -   [render][439]
+-   [LicenseAgreementModal][440]
+    -   [render][441]
+-   [ExperimentalWarningModal][442]
+    -   [render][443]
 
 ## renderApp
+
+Main App Entry Point
 
 ### Parameters
 
@@ -474,7 +480,7 @@ Formats the Difficulty to 3 decimal points
 
 -   `diff` **any** 
 
-Returns **[Number][440]** Diff but with 3 decimal point places
+Returns **[Number][444]** Diff but with 3 decimal point places
 
 ### componentDidMount
 
@@ -719,11 +725,11 @@ Clamp a number between min and max
 
 #### Parameters
 
--   `num` **[Number][440]** Input Value
--   `min` **[Number][440]** Min Value
--   `max` **[Number][440]** Max Value
+-   `num` **[Number][444]** Input Value
+-   `min` **[Number][444]** Min Value
+-   `max` **[Number][444]** Max Value
 
-Returns **[Number][440]** Return Value
+Returns **[Number][444]** Return Value
 
 ### coordinateToPosition
 
@@ -731,9 +737,9 @@ Translates a Lat and Lng to a Vector3 on a sphere
 
 #### Parameters
 
--   `lat` **[Number][440]** Latitude
--   `lng` **[Number][440]** longitude
--   `radius` **[Number][440]** radius of sphere
+-   `lat` **[Number][444]** Latitude
+-   `lng` **[Number][444]** longitude
+-   `radius` **[Number][444]** radius of sphere
 
 Returns **THREE.Vector3** Point on sphere
 
@@ -759,7 +765,7 @@ Sets color of the point
 
 #### Parameters
 
--   `hex` **[string][441]** 
+-   `hex` **[string][445]** 
 
 ## Header
 
@@ -1005,7 +1011,7 @@ Return JSX for the Add Recipient Button
 
 #### Parameters
 
--   `$0` **[Object][442]** 
+-   `$0` **[Object][446]** 
     -   `$0.fields`  
 
 ### render
@@ -1390,8 +1396,8 @@ Returns **any**
 ### mapToObject
 
 Used to transform a Map to a Object so that we can save it to a json file
-[http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/][443]
-Based on code from [http://2ality.com/2015/08/es6-map-json.html][444]
+[http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/][447]
+Based on code from [http://2ality.com/2015/08/es6-map-json.html][448]
 
 #### Parameters
 
@@ -1425,7 +1431,7 @@ Returns **bool** Is this true or not
 
 Return Default Page Size
 
-Returns **[number][440]** 
+Returns **[number][444]** 
 
 ### accountChanger
 
@@ -1729,7 +1735,7 @@ Get Local time
 
 -   `tz` **any** TimeZone
 
-Returns **[string][441]** Hours:Minutes AM/PM
+Returns **[string][445]** Hours:Minutes AM/PM
 
 ## Settings
 
@@ -2439,19 +2445,19 @@ About Page
 
 Get Current Year
 
-Returns **[number][440]** Current Year
+Returns **[number][444]** Current Year
 
 ### getInterfaceVersionNumber
 
 Get App Version
 
-Returns **[string][441]** App version from package.json
+Returns **[string][445]** App version from package.json
 
 ### getDaemonVersionNumber
 
 Gets Version number of the Daemon
 
-Returns **[String][441]** Damon Version
+Returns **[String][445]** Damon Version
 
 ### render
 
@@ -2556,6 +2562,30 @@ Controls the theme using {Emotion}
 Component's Renderable JSX
 
 Returns **any** 
+
+## LicenseAgreementModal
+
+**Extends React.Component**
+
+Show the MIT Licenses Agreement
+
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
+
+## ExperimentalWarningModal
+
+**Extends React.Component**
+
+Shows a Warning about safety
+
+### render
+
+Component's Renderable JSX
+
+Returns **JSX** JSX
 
 [1]: #renderapp
 
@@ -3435,12 +3465,20 @@ Returns **any**
 
 [439]: #render-55
 
-[440]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[440]: #licenseagreementmodal
 
-[441]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[441]: #render-56
 
-[442]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[442]: #experimentalwarningmodal
 
-[443]: http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
+[443]: #render-57
 
-[444]: http://2ality.com/2015/08/es6-map-json.html
+[444]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[445]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[446]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[447]: http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/
+
+[448]: http://2ality.com/2015/08/es6-map-json.html
