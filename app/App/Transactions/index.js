@@ -1211,6 +1211,8 @@ class Transactions extends Component {
           return <Text id="transactions.Trust" />;
         } else if (q.value.endsWith('(Pending)')) {
           return <Text id="transactions.Pending" />;
+        } else if (q.value === 'generate'){
+          return 'Generate';
         } else {
           return <Text id="transactions.UnknownCategory" />;
         }
@@ -1324,7 +1326,9 @@ class Transactions extends Component {
       inData.category = translate('transactions.Genesis', locale);
     } else if (inData.category == 'trust') {
       inData.category = translate('transactions.Trust', locale);
-    } else {
+    } else if (inData.category == 'generate') {
+      inData.category = 'Generate';
+    }else {
       inData.category = translate('transactions.UnknownCategory', locale);
     }
     return (
