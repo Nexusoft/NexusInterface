@@ -107,6 +107,11 @@ class BootstrapModal extends PureComponent {
 
   datapoints = [];
 
+  /**
+   *Creates an instance of BootstrapModal.
+   * @param {*} props
+   * @memberof BootstrapModal
+   */
   constructor(props) {
     super(props);
     props.bootstrapper.registerEvents({
@@ -286,7 +291,7 @@ class BootstrapModal extends PureComponent {
   };
 
   /**
-   * React React
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof BootstrapModal

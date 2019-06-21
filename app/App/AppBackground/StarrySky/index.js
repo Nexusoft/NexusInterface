@@ -34,6 +34,10 @@ const Twinkling = styled.div({
   animation: `${twinkling} 35s linear infinite`,
 });
 
+/**
+ * Returns the Starry Night Sky Background
+ *
+ */
 const StarrySky = () => (
   <Stars>
     <Twinkling />

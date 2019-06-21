@@ -204,6 +204,11 @@ class SettingsCore extends Component {
     UIController.showNotification(<Text id="Alert.CoreRestarting" />);
   };
 
+  /**
+   * Opens up a dialog to move the data directory
+   *
+   * @memberof SettingsCore
+   */
   moveDataDir = () => {
     remote.dialog.showOpenDialog(
       {
@@ -219,6 +224,12 @@ class SettingsCore extends Component {
     );
   };
 
+  /**
+   * Runs the file copy script
+   *
+   * @param {*} newFolderDir
+   * @memberof SettingsCore
+   */
   async handleFileCopy(newFolderDir) {
     await cpy(configuration.GetCoreDataDir(), newFolderDir).on(
       'progress',
@@ -228,6 +239,11 @@ class SettingsCore extends Component {
     );
   }
 
+  /**
+   * Updates the settings
+   *
+   * @memberof SettingsCore
+   */
   updateHandlers = (() => {
     const handlers = [];
     return settingName => {
@@ -255,7 +271,7 @@ class SettingsCore extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsCore

@@ -38,7 +38,7 @@ export default class Candlestick extends Component {
   // Mandatory React method
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Candlestick
@@ -86,7 +86,7 @@ export default class Candlestick extends Component {
         >
           <VictoryAxis
             label={translate('Market.Date', this.props.locale)}
-            style={{color:'#000', padding: 10}}
+            style={{ color: '#000', padding: 10 }}
             tickFormat={t =>
               `${new Date(t).toLocaleDateString(this.props.locale, {
                 month: 'short',
@@ -103,7 +103,7 @@ export default class Candlestick extends Component {
           <VictoryAxis
             label={translate('Market.Price', this.props.locale)}
             dependentAxis
-            style={{ tickLabels: { angle: -60 } , axisLabel: { padding :35}}}
+            style={{ tickLabels: { angle: -60 }, axisLabel: { padding: 35 } }}
           />
 
           <VictoryCandlestick

@@ -1,6 +1,11 @@
 import React from 'react';
 import WebView from './WebView';
 
+/**
+ * Returns the WebView of the module
+ *
+ * @param {*} { module }
+ */
 const PageModule = ({ module }) => (
   <WebView
     /* Set key attribute here so that the WebView instance will be reset and 

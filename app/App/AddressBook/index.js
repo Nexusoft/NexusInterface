@@ -82,7 +82,7 @@ class AddressBook extends Component {
   }
 
   /**
-   *
+   * Opens Add/Edit Contact Modal 
    *
    * @memberof AddressBook
    */
@@ -91,7 +91,7 @@ class AddressBook extends Component {
   };
 
   /**
-   * render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof AddressBook

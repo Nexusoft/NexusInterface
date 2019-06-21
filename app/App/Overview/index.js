@@ -86,6 +86,12 @@ const blockWeightIcons = [
   blockweight9,
 ];
 
+/**
+ * Formats the Difficulty to 3 decimal points
+ * @memberof Overview
+ * @param {*} diff
+ * @returns {Number} Diff but with 3 decimal point places
+ */
 const formatDiff = diff => (diff || 0).toFixed(3);
 
 // React-Redux mandatory methods
@@ -266,12 +272,21 @@ const MaxmindLogo = styled.img({
  * @extends {Component}
  */
 class Overview extends Component {
+  /**
+   *Creates an instance of Overview.
+   * @param {*} props
+   * @memberof Overview
+   */
   constructor(props) {
     super(props);
     this.fetchDifficulty();
   }
 
-  // React Method (Life cycle hook)
+  /**
+   * Component Mount Callback
+   *
+   * @memberof Overview
+   */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     googleanalytics.SendScreen('Overview');
@@ -282,13 +297,24 @@ class Overview extends Component {
    * @memberof Overview
    */
   reDrawEverything() {}
-  // React Method (Life cycle hook)
+
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof Overview
+   */
   componentWillUnmount() {
     clearTimeout(this.diffFetcher);
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
-  // React Method (Life cycle hook)
+  /**
+   * Component Prop Update Callback
+   *
+   * @param {*} prevProps
+   * @returns
+   * @memberof Overview
+   */
   componentDidUpdate(prevProps) {
     const {
       webGLEnabled,
@@ -321,6 +347,11 @@ class Overview extends Component {
     }
   }
 
+  /**
+   * Get the Difficulty from the network
+   *
+   * @memberof Overview
+   */
   fetchDifficulty = async () => {
     await this.props.getDifficulty();
     this.diffFetcher = setTimeout(this.fetchDifficulty, 50000);
@@ -643,7 +674,7 @@ class Overview extends Component {
 
   // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Overview

@@ -28,7 +28,8 @@
     "run-tests": "./node_modules/mocha/bin/mocha tests/test.js",
     "version2": "node ./internals/scripts/UpdateBuildDate.js",
     "extract-changes": "node ./internals/scripts/extractTranslationChanges.js",
-    "update-translations": "node ./internals/scripts/updateTranslations.js"
+    "update-translations": "node ./internals/scripts/updateTranslations.js",
+    "update-documentation": "./UpdateDocumentation.sh"
   },
   "browserslist": "electron 1.8",
   "build": {

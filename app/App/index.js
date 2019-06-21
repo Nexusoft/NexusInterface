@@ -16,7 +16,6 @@ import SendPage from './SendPage';
 import Transactions from './Transactions';
 import Market from './Market';
 import AddressBook from './AddressBook';
-import BlockExplorer from './BlockExplorer';
 import Settings from './Settings';
 import Terminal from './Terminal';
 import StyleGuide from './StyleGuide';
@@ -56,7 +55,7 @@ const Main = styled.main({
  */
 export default class App extends Component {
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof App
@@ -87,11 +86,6 @@ export default class App extends Component {
                         exact
                         path="/AddressBook"
                         component={AddressBook}
-                      />
-                      <Route
-                        exact
-                        path="/BlockExplorer"
-                        component={BlockExplorer}
                       />
                       <Route path="/Settings" component={Settings} />
                       <Route path="/Terminal" component={Terminal} />

@@ -16,6 +16,12 @@ import Text from 'components/Text';
   connections,
 }))
 class DaemonStatus extends React.Component {
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns {JSX}
+   * @memberof DaemonStatus
+   */
   render() {
     const { manualDaemon, connections } = this.props;
     return (

@@ -74,7 +74,7 @@ const ImportPrivKeyForm = styled.form({
 })
 class ImportPrivKey extends Component {
   /**
-   *  React Render
+   *  Component's Renderable JSX
    *
    * @returns
    * @memberof ImportPrivKey

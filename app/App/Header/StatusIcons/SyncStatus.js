@@ -78,7 +78,7 @@ class SyncStatus extends React.Component {
   };
 
   /**
-   * React Render Method
+   * Component's Renderable JSX
    *
    * @returns {JSX} JSX
    * @memberof SyncStatus

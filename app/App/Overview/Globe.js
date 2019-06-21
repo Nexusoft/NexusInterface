@@ -481,7 +481,7 @@ export default class Globe extends Component {
   }
 
   /**
-   * Render the globe using react
+   * Component's Renderable JSX
    *
    * @returns {JSX} JSX
    * @memberof Globe

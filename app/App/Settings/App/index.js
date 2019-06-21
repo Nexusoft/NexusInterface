@@ -79,7 +79,7 @@ const actionCreators = {
 )
 class SettingsApp extends Component {
   /**
-   *Creates an instance of SettingsApp.
+   * Creates an instance of SettingsApp.
    * @param {*} props
    * @memberof SettingsApp
    */
@@ -111,6 +111,11 @@ class SettingsApp extends Component {
     });
   };
 
+  /**
+   * Toggles if modules should be verified or not.
+   *
+   * @memberof SettingsApp
+   */
   toggleVerifyModuleSource = e => {
     if (e.target.checked) {
       UIController.openConfirmDialog({
@@ -153,6 +158,11 @@ class SettingsApp extends Component {
     }
   };
 
+  /**
+   * Update the settings
+   *
+   * @memberof SettingsApp
+   */
   updateHandlers = (() => {
     const handlers = [];
     return settingName => {
@@ -194,7 +204,7 @@ class SettingsApp extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsApp

@@ -56,7 +56,7 @@ class FeeSetting extends React.Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof FeeSetting

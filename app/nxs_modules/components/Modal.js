@@ -112,6 +112,13 @@ const ModalFooter = styled.div({
   gridArea: 'footer',
 });
 
+/**
+ * Modal Component
+ *
+ * @export
+ * @class Modal
+ * @extends {PureComponent}
+ */
 export default class Modal extends PureComponent {
   static defaultProps = {
     dimBackground: true,
@@ -119,11 +126,21 @@ export default class Modal extends PureComponent {
 
   static contextType = ModalContext;
 
+  /**
+   *Creates an instance of Modal.
+   * @param {*} props
+   * @memberof Modal
+   */
   constructor(props) {
     super(props);
     props.assignClose && props.assignClose(this.animatedClose);
   }
 
+  /**
+   * Animate the Close event
+   *
+   * @memberof Modal
+   */
   animatedClose = () => {
     const modalID = this.context;
     if (modalID) {
@@ -140,12 +157,22 @@ export default class Modal extends PureComponent {
     }
   };
 
+  /**
+   * Remove Modal
+   *
+   * @memberof Modal
+   */
   remove = () => {
     const modalID = this.context;
     UIController.removeModal(modalID);
     this.props.onClose && this.props.onClose();
   };
 
+  /**
+   * Pass Ref of this modal to state
+   *
+   * @memberof Modal
+   */
   modalRef = el => {
     this.modalElem = el;
     if (this.props.modalRef) {
@@ -153,6 +180,11 @@ export default class Modal extends PureComponent {
     }
   };
 
+  /**
+   * Pass Background Ref of this modal to state
+   *
+   * @memberof Modal
+   */
   backgroundRef = el => {
     this.backgroundElem = el;
     if (this.props.backgroundRef) {
@@ -160,6 +192,12 @@ export default class Modal extends PureComponent {
     }
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof Modal
+   */
   render() {
     const {
       open,

@@ -62,12 +62,17 @@ class RecipientField extends Component {
     this.props.change(this.props.input.name, address);
   };
 
+  /**
+   * Opens the Add/Edit Contact Modal
+   *
+   * @memberof RecipientField
+   */
   createContact = () => {
     UIController.openModal(AddEditContactModal);
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof RecipientField

@@ -164,7 +164,7 @@ class About extends Component {
 
   // Mandatory React method
   /**
-   * React Render Function
+   * Component's Renderable JSX
    *
    * @returns {JSX} JSX
    * @memberof About

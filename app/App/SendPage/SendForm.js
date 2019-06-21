@@ -265,7 +265,7 @@ class SendForm extends Component {
     );
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SendForm

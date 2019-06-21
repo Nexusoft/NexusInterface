@@ -53,7 +53,7 @@ class SettingsApp extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsApp

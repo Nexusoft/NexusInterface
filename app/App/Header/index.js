@@ -85,7 +85,7 @@ const UnderHeader = styled.div(({ theme }) => ({
 @connect(({ core: { info: { connections } } }) => ({ connections }))
 class Header extends Component {
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Header

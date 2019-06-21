@@ -170,9 +170,9 @@ class LogInStatus extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
-   * @returns
+   * @returns 
    * @memberof LogInStatus
    */
   render() {

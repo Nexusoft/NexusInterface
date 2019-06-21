@@ -64,10 +64,20 @@ SettingsRedirect = connect(({ ui: { settings: { lastActiveTab } } }) => ({
  * @extends {Component}
  */
 export default class Settings extends Component {
+  /**
+   * Component Mount Callback
+   *
+   * @memberof Settings
+   */
   componentDidMount() {
     googleanalytics.SendScreen('Settings');
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof Settings
+   */
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
@@ -87,7 +97,7 @@ export default class Settings extends Component {
   }
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Settings

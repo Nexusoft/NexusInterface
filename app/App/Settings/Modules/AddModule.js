@@ -59,7 +59,7 @@ class AddModule extends React.Component {
   };
 
   /**
-   *
+   * Open up a Dialog to select a module to install
    *
    * @memberof AddModule
    */
@@ -84,7 +84,7 @@ class AddModule extends React.Component {
   };
 
   /**
-   *
+   * Open up a Dialog to select a directory of a module to install
    *
    * @memberof AddModule
    */
@@ -118,7 +118,7 @@ class AddModule extends React.Component {
   };
 
   /**
-   *
+   * Handel the file drop event
    *
    * @memberof AddModule
    */
@@ -129,7 +129,7 @@ class AddModule extends React.Component {
   };
 
   /**
-   *
+   * Install the module code into the wallet
    *
    * @memberof AddModule
    */
@@ -143,7 +143,7 @@ class AddModule extends React.Component {
   };
 
   /**
-   *
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof AddModule

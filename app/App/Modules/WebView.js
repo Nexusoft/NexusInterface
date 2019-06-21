@@ -21,6 +21,11 @@ const fileServer = remote.getGlobal('fileServer');
 class WebView extends React.Component {
   webviewRef = React.createRef();
 
+  /**
+   * Creates an instance of WebView.
+   * @param {*} props
+   * @memberof WebView
+   */
   constructor(props) {
     super(props);
     const { module } = this.props;
@@ -28,18 +33,28 @@ class WebView extends React.Component {
     fileServer.serveModuleFiles(moduleFiles);
   }
 
+  /**
+   * Component Mount Callback
+   *
+   * @memberof WebView
+   */
   componentDidMount() {
     registerWebView(this.webviewRef.current, this.props.module);
     appMenu.build();
   }
 
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof WebView
+   */
   componentWillUnmount() {
     unregisterWebView();
     appMenu.build();
   }
 
   /**
-   *
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof WebView

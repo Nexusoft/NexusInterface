@@ -86,7 +86,7 @@ const AddressesCount = styled.div(({ theme }) => ({
 )
 class Contact extends React.PureComponent {
   /**
-   *
+   * Open a Dialog to confirm Contact Delete
    *
    * @memberof Contact
    */
@@ -106,7 +106,7 @@ class Contact extends React.PureComponent {
   };
 
   /**
-   *
+   * Open the Add Or Edit Contact Modal
    *
    * @memberof Contact
    */
@@ -118,7 +118,7 @@ class Contact extends React.PureComponent {
   };
 
   /**
-   *
+   * Build the context menu for this component
    *
    * @memberof Contact
    */
@@ -150,7 +150,7 @@ class Contact extends React.PureComponent {
   getinitial = name => (name && name.length >= 1 ? name.charAt(0) : '');
 
   /**
-   *
+   * Select a Contact
    *
    * @memberof Contact
    */
@@ -159,7 +159,7 @@ class Contact extends React.PureComponent {
   };
 
   /**
-   * render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Contact
@@ -196,6 +196,12 @@ class Contact extends React.PureComponent {
 
 export default Contact;
 
+/**
+ * Returns the New Contact Button for the AddressBook
+ *
+ * @param {*} props
+ * @memberof Contact
+ */
 const NewContactButton = props => (
   <ContactComponent {...props}>
     <ContactAvatar>
