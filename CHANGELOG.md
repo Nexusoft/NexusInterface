@@ -4,9 +4,23 @@
 
 #### Additions
 
+- Module based extension functionality
+  - More information about the module system [here](https://nexusoft.github.io/nw-modules-documentation/)
+
 #### Adjustments
 
+- English language text optimizations
+- Removed redundant tool-tip on re-scan button
+- Renamed the `Market Information` page to `Market Data`
+- Reduced decimal accuracy displayed for NXS values on the `Market Data` page
+- Removed `Minimalist` overview screen layout option
+- Removed Cryptopia from `Market Data` page
+
 #### Fixes
+
+- Fixed bug that would lead to an infinite loop of Low Disk Space warnings
+- Fixed calculation error in determining percent change in price on the `Market Data` page
+- Fixed bug where `My Addresses` modal on the overview screen was un-scrollable
 
 # 0.9.0-alpha4 (2019.3.30)
 
