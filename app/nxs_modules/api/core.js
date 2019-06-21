@@ -248,7 +248,6 @@ export default class Core {
           '-daemon',
           '-avatar',
           '-server',
-          '-fastsync',
           '-rpcthreads=4',
           '-beta',
           `-verbose=${this.verbose}`,
@@ -259,6 +258,8 @@ export default class Core {
           UpdateSettings({ forkBlocks: 0 });
         }
         if (settings.mapPortUsingUpnp == false) parameters.push('-upnp=0');
+
+        if (settings.enableFastSync) parameters.push('-fastsync');
 
         // Connect through SOCKS4 proxy
         if (settings.socks4Proxy == true)

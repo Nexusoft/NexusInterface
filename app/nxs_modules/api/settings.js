@@ -30,6 +30,7 @@ export const defaultSettings = {
   overviewDisplay: 'standard',
 
   // Core
+  enableFastSync: true,
   enableMining: false,
   enableStaking: true,
   verboseLevel: 2,

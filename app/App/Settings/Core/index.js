@@ -299,6 +299,17 @@ class SettingsCore extends Component {
         <form onSubmit={handleSubmit}>
           <SettingsField
             connectLabel
+            label={<Text id="Settings.EnableFastSync" />}
+            subLabel={<Text id="ToolTip.EnableFastSync" />}
+          >
+            <Switch
+              checked={settings.enableFastSync}
+              onChange={this.updateHandlers('enableFastSync')}
+            />
+          </SettingsField>
+
+          <SettingsField
+            connectLabel
             label={<Text id="Settings.EnableMining" />}
             subLabel={<Text id="ToolTip.EnableMining" />}
           >
