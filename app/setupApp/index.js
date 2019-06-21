@@ -106,15 +106,17 @@ function startCoreOuputeWatch(store) {
   let datadir = configuration.GetCoreDataDir();
 
   var debugfile;
-  if (fs.existsSync(join(datadir, 'log', '0.log'))) {
-    debugfile = join(datadir, 'log', '0.log');
+  if (fs.existsSync(join(datadir, 'testnet', 'log', '0.log'))) {
+    // TODO: remove testnet
+    debugfile = join(datadir, 'testnet', 'log', '0.log');
   } else if (process.platform === 'win32') {
     debugfile = datadir + '\\debug.log';
   } else {
     debugfile = datadir + '/debug.log';
   }
-  debugFileLocation = debugfile;
 
+  debugFileLocation = debugfile;
+  console.log(debugFileLocation);
   fs.stat(debugFileLocation, (err, stat) => {
     checkDebugFileExists(err, stat, store);
   });
@@ -134,6 +136,7 @@ function checkDebugFileExists(err, stat, store) {
     processDeamonOutput(debugFileLocation, store);
     clearInterval(checkIfFileExistsInterval);
   } else {
+    console.log('exists', stat);
   }
 }
 
