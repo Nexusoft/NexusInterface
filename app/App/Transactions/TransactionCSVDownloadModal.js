@@ -49,6 +49,11 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
  * @extends {PureComponent}
  */
 class CSVDownloadModal extends PureComponent {
+  /**
+   *Creates an instance of CSVDownloadModal.
+   * @param {*} props
+   * @memberof CSVDownloadModal
+   */
   constructor(props) {
     super(props);
     this.props.parent({

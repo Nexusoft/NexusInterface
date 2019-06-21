@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { remote } from 'electron';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
+import cpy from 'cpy';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
@@ -20,7 +21,8 @@ import { updateSettings } from 'actions/settingsActionCreators';
 import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
-import ReScanButton from '../../../nxs_modules/components/MyAddressesModal/RescanButton.js';
+import ReScanButton from 'components/MyAddressesModal/RescanButton.js';
+import configuration from 'api/configuration';
 
 const mapStateToProps = ({
   settings,
@@ -183,6 +185,46 @@ class SettingsCore extends Component {
     UIController.showNotification(<Text id="Alert.CoreRestarting" />);
   };
 
+  /**
+   * Opens up a dialog to move the data directory
+   *
+   * @memberof SettingsCore
+   */
+  moveDataDir = () => {
+    remote.dialog.showOpenDialog(
+      {
+        title: 'Select New Folder',
+        defaultPath: this.props.backupDir,
+        properties: ['openDirectory'],
+      },
+      folderPaths => {
+        if (folderPaths && folderPaths.length > 0) {
+          this.handleFileCopy(folderPaths[0]);
+        }
+      }
+    );
+  };
+
+  /**
+   * Runs the file copy script
+   *
+   * @param {*} newFolderDir
+   * @memberof SettingsCore
+   */
+  async handleFileCopy(newFolderDir) {
+    await cpy(configuration.GetCoreDataDir(), newFolderDir).on(
+      'progress',
+      progress => {
+        console.log(progress);
+      }
+    );
+  }
+
+  /**
+   * Updates the settings
+   *
+   * @memberof SettingsCore
+   */
   updateHandlers = (() => {
     const handlers = [];
     return settingName => {
@@ -224,7 +266,7 @@ class SettingsCore extends Component {
   // }
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsCore
@@ -250,6 +292,17 @@ class SettingsCore extends Component {
     return (
       <SettingsContainer>
         <form onSubmit={handleSubmit}>
+          <SettingsField
+            connectLabel
+            label={<Text id="Settings.EnableFastSync" />}
+            subLabel={<Text id="ToolTip.EnableFastSync" />}
+          >
+            <Switch
+              checked={settings.enableFastSync}
+              onChange={this.updateHandlers('enableFastSync')}
+            />
+          </SettingsField>
+
           <SettingsField
             connectLabel
             label={<Text id="Settings.EnableMining" />}

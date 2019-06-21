@@ -113,6 +113,11 @@ class SettingsStyle extends Component {
     sampleAddress: '000000000000000000000000000000000000000000000000000',
   };
 
+  /**
+   * Component Mount Callback
+   *
+   * @memberof SettingsStyle
+   */
   componentDidMount() {
     if (this.props.theme.defaultStyle == 'Dark') {
       this.setThemeSelector(0);
@@ -374,7 +379,7 @@ class SettingsStyle extends Component {
   setThemeSelector = selectorIndex => {};
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsStyle

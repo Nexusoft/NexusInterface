@@ -22,7 +22,7 @@ const ChangePasswordComponent = styled.form({
 });
 
 /**
- * Change Password JSX
+ * Change Password Form
  *
  * @class ChangePassword
  * @extends {Component}
@@ -93,7 +93,7 @@ class ChangePassword extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof ChangePassword

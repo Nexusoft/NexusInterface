@@ -15,7 +15,7 @@ import ViewPrivKeyForAddress from './ViewPrivKeyForAddress';
  */
 class Unencrypted extends Component {
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Unencrypted

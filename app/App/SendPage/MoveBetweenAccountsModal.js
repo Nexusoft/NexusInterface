@@ -184,7 +184,7 @@ class MoveBetweenAccountsForm extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof MoveBetweenAccountsForm
@@ -235,7 +235,9 @@ class MoveBetweenAccountsForm extends Component {
 }
 
 /**
- * JSX
+ * JSX for the Modal
+ * 
+ * @memberof MoveBetweenAccountsForm
  *
  */
 const MoveBetweenAccountsModal = () => (

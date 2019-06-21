@@ -96,7 +96,7 @@ class Recipients extends React.Component {
     );
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Recipients

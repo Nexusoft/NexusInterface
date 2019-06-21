@@ -91,7 +91,7 @@ class ViewPrivKeyForAddress extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof ViewPrivKeyForAddress

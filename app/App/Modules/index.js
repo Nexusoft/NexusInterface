@@ -27,7 +27,7 @@ import PagePanelModule from './PagePanelModule';
 }))
 class Modules extends React.Component {
   /**
-   *
+   * Component Mount Callback
    *
    * @memberof Modules
    */
@@ -37,7 +37,7 @@ class Modules extends React.Component {
   }
 
   /**
-   *
+   * Component Unmount Callback
    *
    * @memberof Modules
    */
@@ -60,7 +60,7 @@ class Modules extends React.Component {
   }
 
   /**
-   *
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Modules

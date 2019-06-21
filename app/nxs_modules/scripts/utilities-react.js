@@ -11,6 +11,11 @@ import Text from 'components/Text';
  * @extends {Component}
  */
 export default class Table extends Component {
+  /**
+   *Creates an instance of Table.
+   * @param {*} props
+   * @memberof Table
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -25,9 +30,9 @@ export default class Table extends Component {
 
 
   /**
-   * React Render Function
+   * Component's Renderable JSX
    *
-   * @returns JSX
+   * @returns {JSX}
    * @memberof Table
    */
   render() {

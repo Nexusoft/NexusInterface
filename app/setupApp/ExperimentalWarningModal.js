@@ -32,19 +32,9 @@ class ExperimentalWarningModal extends React.Component {
       >
         <Modal.Body style={{ fontSize: 18 }}>
           <p>
-            THIS SOFTWARE IS EXPERIMENTAL AND IN BETA TESTING. BY DEFAULT IT
-            WILL NOT USE ANY EXISTING NEXUS WALLET NOR ADDRESSES THAT YOU MAY
-            ALREADY HAVE.
+            IMPROPER USE OF THIS SOFTWARE COULD LEAD TO PERMANENT LOSS OF COIN.
           </p>
-          <p>
-            AS SUCH, THIS WALLET SHOULD{' '}
-            <strong>
-              <u>NOT</u>
-            </strong>{' '}
-            BE USED AS YOUR PRIMARY WALLET AND DOING SO MAY AFFECT YOUR ABILITY
-            TO ACCESS YOUR COINS UP TO AND INCLUDING LOSING THEM PERMANENTLY.
-          </p>
-          <p>USE THIS SOFTWARE AT YOUR OWN RISK.</p>
+          <p>BACKUP OFTEN AND KEEP ENCRYPTION KEY SAFE.</p>
           <p className="flex space-between" style={{ marginTop: '2em' }}>
             <Button onClick={this.dontShowAgain}>Don't show this again</Button>
             <Button skin="primary" onClick={() => this.closeModal()}>

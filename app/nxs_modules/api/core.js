@@ -248,7 +248,6 @@ export default class Core {
           '-daemon',
           '-avatar',
           '-server',
-          '-fastsync',
           '-rpcthreads=4',
           '-testnet',
           '-beta',

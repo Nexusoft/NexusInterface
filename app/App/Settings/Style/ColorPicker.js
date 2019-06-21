@@ -79,7 +79,7 @@ class ColorPicker extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof ColorPicker

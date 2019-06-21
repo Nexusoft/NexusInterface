@@ -75,12 +75,22 @@ const OutputLine = styled.code(({ theme }) => ({
 class TerminalCore extends Component {
   outputRef = React.createRef();
 
+  /**
+   *Creates an instance of TerminalCore.
+   * @param {*} props
+   * @memberof TerminalCore
+   */
   constructor(props) {
     super(props);
     props.switchConsoleTab('Core');
   }
 
-  // React Method (Life cycle hook)
+  /**
+   * Component Received New Props Callback
+   *
+   * @param {*} nextProps
+   * @memberof TerminalCore
+   */
   componentWillReceiveProps(nextProps) {
     if (this.props.rpcCallList.length != nextProps.rpcCallList.length) {
       this.forceUpdate();
@@ -110,9 +120,8 @@ class TerminalCore extends Component {
     }
   }
 
-  // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof TerminalCore
