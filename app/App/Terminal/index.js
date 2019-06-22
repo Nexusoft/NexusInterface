@@ -49,16 +49,24 @@ ConsoleRedirect = connect(({ ui: { console: { lastActiveTab } } }) => ({
  * @extends {Component}
  */
 class Terminal extends Component {
-  // React Method (Life cycle hook)
+  /**
+   * Component Mount Callback
+   *
+   * @memberof Terminal
+   */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
-  // React Method (Life cycle hook)
+
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof Terminal
+   */
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
-  // Class Methods
   /**
    * Set up context menu
    *
@@ -73,9 +81,8 @@ class Terminal extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
-  // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Terminal

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { remote } from 'electron';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
+import cpy from 'cpy';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
@@ -20,7 +21,8 @@ import { updateSettings } from 'actions/settingsActionCreators';
 import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
-import ReScanButton from '../../../nxs_modules/components/MyAddressesModal/RescanButton.js';
+import ReScanButton from 'components/MyAddressesModal/RescanButton.js';
+import configuration from 'api/configuration';
 
 const mapStateToProps = ({
   settings,
@@ -37,8 +39,6 @@ const mapStateToProps = ({
     manualDaemonIP: settings.manualDaemonIP,
     manualDaemonPort: settings.manualDaemonPort,
     manualDaemonDataDir: settings.manualDaemonDataDir,
-    socks4ProxyIP: settings.socks4ProxyIP,
-    socks4ProxyPort: settings.socks4ProxyPort,
   },
 });
 const actionCreators = {
@@ -67,8 +67,6 @@ const actionCreators = {
       manualDaemonIP,
       manualDaemonPort,
       manualDaemonDataDir,
-      socks4ProxyIP,
-      socks4ProxyPort,
     },
     props
   ) => {
@@ -97,15 +95,7 @@ const actionCreators = {
           <Text id="Settings.Errors.ManualDaemonDataDir" />
         );
       }
-    } else if (props.settings.socks4Proxy) {
-      if (!socks4ProxyIP) {
-        errors.socks4ProxyIP = <Text id="Settings.Errors.Socks4PoxyIP" />;
-      }
-      if (!socks4ProxyPort) {
-        errors.socks4ProxyPort = <Text id="Settings.Errors.Socks4PoxyPort" />;
-      }
     }
-
     return errors;
   },
   onSubmit: (
@@ -115,8 +105,6 @@ const actionCreators = {
       manualDaemonIP,
       manualDaemonPort,
       manualDaemonDataDir,
-      socks4ProxyIP,
-      socks4ProxyPort,
     },
     dispatch,
     props
@@ -128,11 +116,6 @@ const actionCreators = {
         manualDaemonIP,
         manualDaemonPort,
         manualDaemonDataDir,
-      });
-    } else if (props.settings.socks4Proxy) {
-      props.updateSettings({
-        socks4ProxyIP,
-        socks4ProxyPort,
       });
     }
   },
@@ -202,6 +185,46 @@ class SettingsCore extends Component {
     UIController.showNotification(<Text id="Alert.CoreRestarting" />);
   };
 
+  /**
+   * Opens up a dialog to move the data directory
+   *
+   * @memberof SettingsCore
+   */
+  moveDataDir = () => {
+    remote.dialog.showOpenDialog(
+      {
+        title: 'Select New Folder',
+        defaultPath: this.props.backupDir,
+        properties: ['openDirectory'],
+      },
+      folderPaths => {
+        if (folderPaths && folderPaths.length > 0) {
+          this.handleFileCopy(folderPaths[0]);
+        }
+      }
+    );
+  };
+
+  /**
+   * Runs the file copy script
+   *
+   * @param {*} newFolderDir
+   * @memberof SettingsCore
+   */
+  async handleFileCopy(newFolderDir) {
+    await cpy(configuration.GetCoreDataDir(), newFolderDir).on(
+      'progress',
+      progress => {
+        console.log(progress);
+      }
+    );
+  }
+
+  /**
+   * Updates the settings
+   *
+   * @memberof SettingsCore
+   */
   updateHandlers = (() => {
     const handlers = [];
     return settingName => {
@@ -221,15 +244,29 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   returnFeeSetting = () => {
-    if (this.props.version.includes('Tritium')) {
-      return null;
-    } else {
-      return <FeeSetting />;
+    if (this.props.version) {
+      if (this.props.version.includes('Tritium')) {
+        return null;
+      } else {
+        return <FeeSetting />;
+      }
     }
   };
 
+  // /**
+  //  * Generates the number of ip witelist feilds there are
+  //  *
+  //  * @memberof SettingsCore
+  //  */
+  // ipWhiteListFeild=()=>{
+  //   <TextField
+  //               value={settings.verboseLevel}
+  //               onChange={this.updateHandlers('verboseLevel')}
+  //             />
+  // }
+
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsCore
@@ -257,6 +294,17 @@ class SettingsCore extends Component {
         <form onSubmit={handleSubmit}>
           <SettingsField
             connectLabel
+            label={<Text id="Settings.EnableFastSync" />}
+            subLabel={<Text id="ToolTip.EnableFastSync" />}
+          >
+            <Switch
+              checked={settings.enableFastSync}
+              onChange={this.updateHandlers('enableFastSync')}
+            />
+          </SettingsField>
+
+          <SettingsField
+            connectLabel
             label={<Text id="Settings.EnableMining" />}
             subLabel={<Text id="ToolTip.EnableMining" />}
           >
@@ -265,6 +313,17 @@ class SettingsCore extends Component {
               onChange={this.updateHandlers('enableMining')}
             />
           </SettingsField>
+
+          {/* <div style={{ display: settings.enableMining ? 'block' : 'none' }}>
+            <SettingsField
+              indent={1}
+              connectLabel
+              label={<Text id="Settings.IpWhitelist" />}
+              subLabel={<Text id="ToolTip.IpWhitelist" />}
+            >
+             { this.ipWhiteListFeild()}
+            </SettingsField>
+          </div> */}
 
           <SettingsField
             connectLabel
@@ -374,76 +433,28 @@ class SettingsCore extends Component {
             </SettingsField>
           </div>
 
-          <div style={{ display: settings.manualDaemon ? 'none' : 'block' }}>
+          {/*  REMOVING THIS FOR NOW TILL I CAN CONFIRM THE SECURITY AND FUNCTION
             <SettingsField
               indent={1}
               connectLabel
-              label={<Text id="Settings.UPnp" />}
-              subLabel={<Text id="ToolTip.UPnP" />}
+              label={'Move Data Dir'}
+              subLabel={'Move the daemon data directory to a different folder'}
             >
-              <Switch
-                defaultChecked={settings.mapPortUsingUpnp}
-                onChange={this.updateHandlers('mapPortUsingUpnp')}
-              />
+              <div>
+                <a>{'Current: ' + configuration.GetCoreDataDir()}</a>
+                <Button onClick={this.moveDataDir}>
+                  <Text id="Settings.MoveDataDirButton" />
+                </Button>
+              </div>
             </SettingsField>
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={<Text id="Settings.Socks4proxy" />}
-              subLabel={<Text id="ToolTip.Socks4" />}
-            >
-              <Switch
-                defaultChecked={settings.socks4Proxy}
-                onChange={this.updateHandlers('socks4Proxy')}
-              />
-            </SettingsField>
-
-            <div style={{ display: settings.socks4Proxy ? 'block' : 'none' }}>
-              <SettingsField
-                indent={2}
-                connectLabel
-                label={<Text id="Settings.ProxyIP" />}
-                subLabel={<Text id="ToolTip.IPAddressofSOCKS4proxy" />}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="socks4ProxyIP"
-                  size="12"
-                />
-              </SettingsField>
-              <SettingsField
-                indent={2}
-                connectLabel
-                label={<Text id="Settings.ProxyPort" />}
-                subLabel={<Text id="ToolTip.PortOfSOCKS4proxyServer" />}
-              >
-                <Field
-                  component={TextField.RF}
-                  name="socks4ProxyPort"
-                  size="3"
-                />
-              </SettingsField>
-            </div>
-
-            <SettingsField
-              indent={1}
-              connectLabel
-              label={<Text id="Settings.Detach" />}
-              subLabel={<Text id="ToolTip.Detach" />}
-            >
-              <Switch
-                defaultChecked={settings.detatchDatabaseOnShutdown}
-                onChange={this.updateHandlers('detatchDatabaseOnShutdown')}
-              />
-            </SettingsField>
-          </div>
+            */}
 
           <div className="flex space-between" style={{ marginTop: '2em' }}>
             <Button onClick={this.restartCore}>
               <Text id="Settings.RestartCore" />
             </Button>
 
-            <Button
+            {/* <Button
               type="submit"
               skin="primary"
               disabled={pristine || submitting}
@@ -455,7 +466,7 @@ class SettingsCore extends Component {
               ) : (
                 <Text id="SaveSettings" />
               )}
-            </Button>
+            </Button> */}
           </div>
         </form>
       </SettingsContainer>

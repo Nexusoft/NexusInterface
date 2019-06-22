@@ -75,7 +75,7 @@ const actionCreators = {
 };
 
 /**
- *
+ * Each Module On the list of installed modules
  *
  * @class Module
  * @extends {React.Component}
@@ -86,7 +86,7 @@ const actionCreators = {
 )
 class Module extends React.Component {
   /**
-   *
+   * Enable this module
    *
    * @memberof Module
    */
@@ -99,7 +99,7 @@ class Module extends React.Component {
   };
 
   /**
-   *
+   * Disable this module
    *
    * @memberof Module
    */
@@ -110,7 +110,7 @@ class Module extends React.Component {
   };
 
   /**
-   *
+   * Toggle Module on or off
    *
    * @memberof Module
    */
@@ -141,7 +141,7 @@ class Module extends React.Component {
   };
 
   /**
-   *
+   * Open the details modal for the module
    *
    * @memberof Module
    */
@@ -152,9 +152,9 @@ class Module extends React.Component {
   };
 
   /**
+   * Component's Renderable JSX
    *
-   *
-   * @returns
+   * @returns {JSX}
    * @memberof Module
    */
   render() {

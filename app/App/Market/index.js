@@ -256,7 +256,7 @@ class Market extends Component {
 
   // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Market
@@ -274,9 +274,6 @@ class Market extends Component {
         icon={chartIcon}
         title={<Text id="Market.Information" />}
       >
-        {/* <a className="refresh" onClick={() => this.refresher()}>
-          <Text id="Market.Refreash" />
-        </a> */}
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 
         {this.props.loaded && this.props.binance.buy[0] && (

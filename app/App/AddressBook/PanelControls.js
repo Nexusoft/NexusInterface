@@ -32,6 +32,13 @@ const SearchInput = styled(TextField)({
   width: 200,
 });
 
+/**
+ * A Searchbox to search for contacts
+ *
+ * @class SearchBox
+ * @extends {Component}
+ * @memberof PanelControls
+ */
 @connect(
   state => ({
     searchQuery: state.ui.addressBook.searchQuery,
@@ -39,6 +46,12 @@ const SearchInput = styled(TextField)({
   { searchContact }
 )
 class SearchBox extends Component {
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof SearchBox
+   */
   render() {
     return (
       <Text id="AddressBook.SearchContact">
@@ -122,14 +135,30 @@ class PanelControls extends Component {
     document.body.removeChild(link);
   };
 
+  /**
+   * Opens Add/Edit Contact Modal
+   *
+   * @memberof PanelControls
+   */
   showAddContact = () => {
     UIController.openModal(AddEditContactModal);
   };
 
+  /**
+   * Opens My Addresses Modal
+   *
+   * @memberof PanelControls
+   */
   showMyAddresses = () => {
     UIController.openModal(MyAddressesModal);
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns {JSX}
+   * @memberof PanelControls
+   */
   render() {
     return (
       <div className="flex center">

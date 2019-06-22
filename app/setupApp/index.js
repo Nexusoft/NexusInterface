@@ -113,8 +113,9 @@ function startCoreOuputeWatch(store) {
   } else {
     debugfile = datadir + '/debug.log';
   }
-  debugFileLocation = debugfile;
 
+  debugFileLocation = debugfile;
+  console.log(debugFileLocation);
   fs.stat(debugFileLocation, (err, stat) => {
     checkDebugFileExists(err, stat, store);
   });
@@ -134,6 +135,7 @@ function checkDebugFileExists(err, stat, store) {
     processDeamonOutput(debugFileLocation, store);
     clearInterval(checkIfFileExistsInterval);
   } else {
+    console.log('exists', stat);
   }
 }
 

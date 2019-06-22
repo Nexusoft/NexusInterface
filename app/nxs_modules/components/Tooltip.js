@@ -152,24 +152,52 @@ const Tooltip = styled.div(
 );
 
 class TooltipPortal extends Component {
+  /**
+   *Creates an instance of TooltipPortal.
+   * @param {*} props
+   * @memberof TooltipPortal
+   */
   constructor(props) {
     super(props);
     this.el = document.createElement('div');
   }
 
+  /**
+   * Component Mount Callback
+   *
+   * @memberof TooltipPortal
+   */
   componentDidMount() {
     document.getElementsByTagName('body')[0].appendChild(this.el);
   }
 
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof TooltipPortal
+   */
   componentWillUnmount() {
     document.getElementsByTagName('body')[0].removeChild(this.el);
   }
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof TooltipPortal
+   */
   render() {
     return ReactDOM.createPortal(<Tooltip {...this.props} />, this.el);
   }
 }
 
+/**
+ * Triggers the Tooltip
+ *
+ * @class TooltipTrigger
+ * @memberof TooltipPortal
+ * @extends {Component}
+ */
 class TooltipTrigger extends Component {
   static defaultProps = {
     position: 'bottom',
@@ -182,6 +210,11 @@ class TooltipTrigger extends Component {
     tooltipStyles: {},
   };
 
+  /**
+   * Show the Tooltip
+   *
+   * @memberof TooltipTrigger
+   */
   showTooltip = () => {
     const trigger = ReactDOM.findDOMNode(this);
     if (!trigger) return;
@@ -198,10 +231,21 @@ class TooltipTrigger extends Component {
     this.setState({ active: true, tooltipStyles });
   };
 
+  /**
+   * Hide the Tooltip
+   *
+   * @memberof TooltipTrigger
+   */
   hideTooltip = () => {
     this.setState({ active: false });
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof TooltipTrigger
+   */
   render() {
     const { children, tooltip, ...rest } = this.props;
 

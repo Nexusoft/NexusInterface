@@ -57,16 +57,6 @@ const Logo = styled(Icon)(({ theme }) => ({
   fill: theme.primary,
 }));
 
-const Beta = styled.div(({ theme }) => ({
-  fontSize: 12,
-  position: 'absolute',
-  bottom: 3,
-  right: -26,
-  letterSpacing: 1,
-  textTransform: 'uppercase',
-  color: theme.foreground,
-}));
-
 const StatusIcons = styled.div({
   position: 'absolute',
   top: 24,
@@ -95,7 +85,7 @@ const UnderHeader = styled.div(({ theme }) => ({
 @connect(({ core: { info: { connections } } }) => ({ connections }))
 class Header extends Component {
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Header
@@ -107,7 +97,6 @@ class Header extends Component {
       <HeaderComponent>
         <LogoLink to="/">
           <Logo icon={logoFull} />
-          <Beta>BETA</Beta>
         </LogoLink>
 
         <UnderHeader>

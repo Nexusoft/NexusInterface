@@ -12,9 +12,9 @@ const appVersion = packageJson.version;
 const moduleSpecVersion = packageJson.moduleSpecVersion;
 const supportedModuleSpecVersion = packageJson.supportedModuleSpecVersion;
 const appId = packageJson.build.appId;
-const embassyPubKey = do {
+const nexusPubKey = do {
   try {
-    readFileSync('./embassy_pub_key.pem').toString();
+    readFileSync('./nexus_pub_key.pem').toString();
   } catch (err) {
     ('');
   }
@@ -94,7 +94,7 @@ export default {
         supportedModuleSpecVersion || ''
       ),
       APP_ID: JSON.stringify(appId || ''),
-      NEXUS_EMBASSY_PUBLIC_KEY: JSON.stringify(embassyPubKey || ''),
+      NEXUS_EMBASSY_PUBLIC_KEY: JSON.stringify(nexusPubKey || ''),
     }),
 
     new webpack.NamedModulesPlugin(),

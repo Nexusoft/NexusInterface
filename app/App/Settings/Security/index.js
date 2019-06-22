@@ -41,7 +41,7 @@ class SettingsSecurity extends React.Component {
   }
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsSecurity

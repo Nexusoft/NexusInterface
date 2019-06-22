@@ -153,6 +153,11 @@ const mapDispatchToProps = dispatch => ({
  * @extends {Component}
  */
 class Transactions extends Component {
+  /**
+   *Creates an instance of Transactions.
+   * @param {*} props
+   * @memberof Transactions
+   */
   constructor(props) {
     super(props);
     this.copyRef = element => {
@@ -199,7 +204,11 @@ class Transactions extends Component {
     };
   }
 
-  // React Method (Life cycle hook)
+  /**
+   * Component Mount Callback
+   *
+   * @memberof Transactions
+   */
   componentDidMount() {
     console.log('mount tx');
     const { locale } = this.props.settings;
@@ -266,7 +275,13 @@ class Transactions extends Component {
     this._Onprogress = () => {}; // Might not need to define this here
   }
 
-  // React Method (Life cycle hook)
+  /**
+   * Component Updated Props Callback
+   *
+   * @param {*} previousprops
+   * @returns
+   * @memberof Transactions
+   */
   componentDidUpdate(previousprops) {
     if (this.props.txtotal != previousprops.txtotal) {
       this.getTransactionData(this.setOnmountTransactionsCallback.bind(this));
@@ -278,9 +293,12 @@ class Transactions extends Component {
     }
   }
 
-  // React Method (Life cycle hook)
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof Transactions
+   */
   componentWillUnmount() {
-    console.log('unmount tx');
     this._isMounted = false;
     this.SaveHistoryDataToJson();
     clearInterval(this.state.refreshInterval);
@@ -289,10 +307,8 @@ class Transactions extends Component {
     });
     window.removeEventListener('resize', this.updateChartAndTableDimensions);
     window.removeEventListener('contextmenu', this.transactioncontextfunction);
-    console.log('unmount tx done');
   }
 
-  //
   /**
    * The callback for when we want to update just the confirmations
    *
@@ -566,23 +582,45 @@ class Transactions extends Component {
     let incomingMyAccounts;
     let listedaccounts = [];
     const numberOfTransactionsPerCall = 100;
-    const numberOfCallsToMake = Math.ceil(this.props.txtotal / numberOfTransactionsPerCall);
+    const numberOfCallsToMake = Math.ceil(
+      this.props.txtotal / numberOfTransactionsPerCall
+    );
     let promisList = [];
     if (
       this.props.selectedAccount == 0 ||
       this.props.selectedAccount === undefined
     ) {
       incomingMyAccounts = this.props.myAccounts;
-      for (let txPageCounter = 0; txPageCounter < numberOfCallsToMake; txPageCounter++) {
-        promisList.push(RPC.PROMISE('listtransactions', ['*', numberOfTransactionsPerCall, numberOfTransactionsPerCall * txPageCounter])); 
+      for (
+        let txPageCounter = 0;
+        txPageCounter < numberOfCallsToMake;
+        txPageCounter++
+      ) {
+        promisList.push(
+          RPC.PROMISE('listtransactions', [
+            '*',
+            numberOfTransactionsPerCall,
+            numberOfTransactionsPerCall * txPageCounter,
+          ])
+        );
       }
     } else {
       incomingMyAccounts = this.props.myAccounts[
         this.props.selectedAccount - 1
       ];
       listedaccounts.push(incomingMyAccounts.account);
-      for (let txPageCounter = 0; txPageCounter < numberOfCallsToMake; txPageCounter++) {
-        promisList.push(RPC.PROMISE('listtransactions', [incomingMyAccounts.account, numberOfTransactionsPerCall, numberOfTransactionsPerCall * txPageCounter])); 
+      for (
+        let txPageCounter = 0;
+        txPageCounter < numberOfCallsToMake;
+        txPageCounter++
+      ) {
+        promisList.push(
+          RPC.PROMISE('listtransactions', [
+            incomingMyAccounts.account,
+            numberOfTransactionsPerCall,
+            numberOfTransactionsPerCall * txPageCounter,
+          ])
+        );
       }
     }
     let tempWalletTransactions = [];
@@ -920,7 +958,11 @@ class Transactions extends Component {
   filterByAddress(inTransactions) {
     const addressFilter = this.state.addressFilter.toLowerCase();
     return inTransactions.filter(
-      tx => tx && tx.address && tx.address.toLowerCase().includes(addressFilter)
+      tx =>
+        tx &&
+        ((tx.address == undefined &&
+          (tx.category == 'generate' || tx.category == 'immature')) ||
+          (tx.address && tx.address.toLowerCase().includes(addressFilter)))
     );
   }
 
@@ -1173,6 +1215,10 @@ class Transactions extends Component {
           return <Text id="transactions.Trust" />;
         } else if (q.value.endsWith('(Pending)')) {
           return <Text id="transactions.Pending" />;
+        } else if (q.value === 'generate') {
+          return 'Generate';
+        } else if (q.value === 'immature') {
+          return 'Immature';
         } else {
           return <Text id="transactions.UnknownCategory" />;
         }
@@ -1286,6 +1332,10 @@ class Transactions extends Component {
       inData.category = translate('transactions.Genesis', locale);
     } else if (inData.category == 'trust') {
       inData.category = translate('transactions.Trust', locale);
+    } else if (inData.category == 'generate') {
+      inData.category = 'Generate';
+    } else if (inData.category == 'immature') {
+      inData.category = 'Immature';
     } else {
       inData.category = translate('transactions.UnknownCategory', locale);
     }

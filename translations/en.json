@@ -61,7 +61,6 @@
   "sendReceive.NeedToLogin": "Vous devez vous connecter à votre portefeuille avant d'envoyer des transactions",
   "sendReceive.MultipleRecipients": "Envoyer à plusieurs destinataires",
 
-
   "transactions.MoreDetails": "Plus de détails",
   "transactions.Details": "Détails de la transaction",
   "transactions.fee": "Frais",
@@ -135,7 +134,6 @@
   "Market.Date": "Date",
   "Market.PriceChange": "Changement de prix",
 
-
   "AddressBook.AreYouSureDelete": "Êtes-vous sûr(e) de vouloir supprimer",
   "AddressBook.ThisAddress": "Êtes-vous sûr(e) de vouloir supprimer cette adresse?",
   "AddressBook.DeleteContact": "Supprimer le Contact",
@@ -178,7 +176,6 @@
   "AddressBook.ErrorCreatingAddress": "Erreur lors de la création d'une nouvelle adresse",
   "AddressBook.EnterNameOrPick": "Entrer un nouveau compte ou choisir un compte existant",
 
-
   "Settings.Settings": "Paramètres",
   "Settings.Application": "Application",
   "Settings.Core": "Core",
@@ -200,11 +197,6 @@
   "Settings.Username": "Nom d'utilisateur",
   "Settings.IpAddress": "Adresse IP",
   "Settings.Port": "Port",
-  "Settings.UPnp": "Mapper le port avec UPnP",
-  "Settings.Socks4proxy": "Se connecter à travers un proxy SOCKS4",
-  "Settings.ProxyIP": "Adresse IP Proxy",
-  "Settings.ProxyPort": "Port du Proxy",
-  "Settings.Detach": "Détacher la base de données à l'arrêt",
   "Settings.RestartCore": "Redémarrer Core",
   "Settings.Language": "Langue",
   "Settings.English": "Anglais",
@@ -336,11 +328,6 @@
   "ToolTip.IP": "Adresse IP configurée pour le Daemon manuel",
   "ToolTip.PortConfig": "Port configuré pour le Daemon manuel",
   "ToolTip.DataDirectory": "Répertoire de données configuré pour le Daemon manuel",
-  "ToolTip.UPnP": "Ouvrez automatiquement le port client Nexus sur le routeur. Cela ne fonctionne que lorsque votre routeur prend en charge UPnP et qu'il est activé.",
-  "ToolTip.Socks4": "Connectez-vous à Nexus via un proxy SOCKS4",
-  "ToolTip.IPAddressofSOCKS4proxy": "Adresse IP du serveur proxy SOCKS4",
-  "ToolTip.PortOfSOCKS4proxyServer": "Port du serveur proxy SOCKS4",
-  "ToolTip.Detach": "Détacher la base de données lors de la fermeture du portefeuille",
   "ToolTip.RenderGlobe": "Afficher le globe sur la page d'accueil",
 
   "ToolTip.DbOption": "Souhaitez-vous réduire le temps de synchronisation en téléchargeant une version récente de la base de données?",

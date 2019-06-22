@@ -3,6 +3,11 @@ import Panel from 'components/Panel';
 import ModuleIcon from 'components/ModuleIcon';
 import WebView from './WebView';
 
+/**
+ * Returns a Module with a Panel/Webview
+ *
+ * @param {*} { module }
+ */
 const PageModule = ({ module }) => (
   <Panel
     title={

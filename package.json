@@ -1,10 +1,10 @@
 {
   "name": "nexus_wallet",
-  "productName": "Nexus_Wallet_BETA",
-  "version": "0.9.0-alpha4",
+  "productName": "Nexus_Wallet",
+  "version": "1.0.0",
   "moduleSpecVersion": "0.1.0",
   "supportedModuleSpecVersion": "0.1.0",
-  "buildDate": "April 13th 2019",
+  "buildDate": "June 26th 2019",
   "description": "Nexus",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\" \"npm run build-preload\"",
@@ -28,12 +28,13 @@
     "run-tests": "./node_modules/mocha/bin/mocha tests/test.js",
     "version2": "node ./internals/scripts/UpdateBuildDate.js",
     "extract-changes": "node ./internals/scripts/extractTranslationChanges.js",
-    "update-translations": "node ./internals/scripts/updateTranslations.js"
+    "update-translations": "node ./internals/scripts/updateTranslations.js",
+    "update-documentation": "./UpdateDocumentation.sh"
   },
   "browserslist": "electron 1.8",
   "build": {
     "productName": "Nexus Wallet",
-    "appId": "com.nexusearth.NexusTritiumBeta",
+    "appId": "com.nexusearth.NexusTritium",
     "files": [
       "dist/",
       "node_modules/",
@@ -99,7 +100,7 @@
       "menuCategory": "Nexus",
       "installerSidebar": "resources/installerSidebar.bmp",
       "license": "resources/license.txt",
-      "shortcutName": "Nexus Wallet Beta",
+      "shortcutName": "Nexus Wallet",
       "artifactName": "nexus_wallet-setup-Win-${version}.${ext}"
     },
     "linux": {
@@ -212,6 +213,7 @@
     "connected-react-router": "^6.1.0",
     "copy-to-clipboard": "^3.0.8",
     "core-js": "^2.6.0",
+    "cpy": "^7.2.0",
     "csvtojson": "^2.0.8",
     "devtron": "^1.4.0",
     "dompurify": "^1.0.10",

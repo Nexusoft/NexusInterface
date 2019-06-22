@@ -137,7 +137,7 @@ export async function loadModuleFromDir(
       }
     }
 
-    module.hash = await getModuleHash(module, dirPath);
+    module.hash = await getModuleHash(dirPath, { module });
 
     // Check the repository info and verification
     const repoInfo = await getRepoInfo(dirPath);

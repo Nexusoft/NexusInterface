@@ -16,7 +16,7 @@ const ExternalLink = React.forwardRef((props, ref) => (
     as="a"
     onClick={e => {
       e.preventDefault();
-      shell.openExternal(e.target.href);
+      shell.openExternal(e.target.href || props.href);
       props.onClick && props.onClick(e);
     }}
   />

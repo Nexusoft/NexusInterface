@@ -36,12 +36,20 @@ const CustomWallpaper = styled.div(
  * @extends {Component}
  */
 class AppBackground extends Component {
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns {JSX}
+   * @memberof AppBackground
+   */
   render() {
     const { wallpaper, defaultStyle } = this.props;
     return !!wallpaper && existsSync(wallpaper) ? (
       <CustomWallpaper wallpaper={wallpaper} />
+    ) : defaultStyle.startsWith('Dark') ? (
+      <StarrySky />
     ) : (
-      defaultStyle.startsWith('Dark') ? <StarrySky /> : <CosmicLight />
+      <CosmicLight />
     );
   }
 }

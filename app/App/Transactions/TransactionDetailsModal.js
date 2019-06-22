@@ -14,6 +14,11 @@ import * as RPC from 'scripts/rpc';
  * @extends {Component}
  */
 class TransactionDetailsModal extends Component {
+  /**
+   *Creates an instance of TransactionDetailsModal.
+   * @param {*} props
+   * @memberof TransactionDetailsModal
+   */
   constructor(props) {
     super(props);
     this.loadData(props);

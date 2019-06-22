@@ -50,9 +50,9 @@ class ContactList extends React.Component {
   };
 
   /**
-   * render
+   * Component's Renderable JSX
    *
-   * @returns
+   * @returns {JSX}
    * @memberof ContactList
    */
   render() {

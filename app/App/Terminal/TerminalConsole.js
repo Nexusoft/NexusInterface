@@ -133,7 +133,7 @@ class TerminalConsole extends Component {
   }
 
   /**
-   *
+   * Loadin all the usable RPC commands
    *
    * @memberof TerminalConsole
    */
@@ -181,7 +181,7 @@ class TerminalConsole extends Component {
   }
 
   /**
-   *
+   * Execute a Command
    *
    * @memberof TerminalConsole
    */
@@ -247,15 +247,19 @@ class TerminalConsole extends Component {
       traverseOutput(result, 1);
       printCommandOutput(output);
     } else if (typeof result === 'string') {
-      printCommandOutput(result.split('\n').map(text => tab + (text.startsWith(' ') ? text : "> " + text + '\n' )));
+      printCommandOutput(
+        result
+          .split('\n')
+          .map(text => tab + (text.startsWith(' ') ? text : '> ' + text + '\n'))
+      );
     } else {
       printCommandOutput(tab + result);
     }
   };
 
   /**
-   *
-   *
+   * Handle Key Down Event
+   * @param {*} e
    * @memberof TerminalConsole
    */
   handleKeyDown = e => {
@@ -274,15 +278,8 @@ class TerminalConsole extends Component {
     }
   };
 
-  tempasd = incoming => {
-    console.log(incoming);
-    const asdfgh = incoming.split(' ')[0] + ' ';
-    console.log(asdfgh);
-    this.props.updateConsoleInput(asdfgh);
-  };
-
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof TerminalConsole

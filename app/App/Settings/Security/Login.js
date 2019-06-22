@@ -27,7 +27,7 @@ const Buttons = styled.div({
 });
 
 /**
- * Login JSX
+ * Login Form
  *
  * @class Login
  * @extends {Component}
@@ -172,7 +172,7 @@ class Login extends Component {
     ) : null;
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Login

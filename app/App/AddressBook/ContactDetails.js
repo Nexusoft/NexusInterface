@@ -66,6 +66,11 @@ const FieldContent = styled.div({
   width: '60%',
 });
 
+/**
+ * Returns a individual field
+ * @memberof ContactDetails
+ * @param {*} { label, content }
+ */
 const Field = ({ label, content }) => (
   <div className="flex mt1">
     <FieldLabel>{label}</FieldLabel>
@@ -79,6 +84,12 @@ const Field = ({ label, content }) => (
   </div>
 );
 
+/**
+ * Get Local time
+ *
+ * @param {*} tz TimeZone
+ * @returns {string} Hours:Minutes AM/PM
+ */
 const getLocalTime = tz => {
   const now = new Date();
   const utc = new Date().getTimezoneOffset();
@@ -124,7 +135,7 @@ const getLocalTime = tz => {
 )
 class ContactDetails extends React.Component {
   /**
-   *
+   * Opens a dialog to confirm contact delete
    *
    * @memberof ContactDetails
    */
@@ -144,7 +155,7 @@ class ContactDetails extends React.Component {
   };
 
   /**
-   *
+   * Opens the Add/Edit Contact modal
    *
    * @memberof ContactDetails
    */
@@ -156,9 +167,9 @@ class ContactDetails extends React.Component {
   };
 
   /**
-   * render
+   * Component's Renderable JSX
    *
-   * @returns
+   * @returns {JSX}
    * @memberof ContactDetails
    */
   render() {

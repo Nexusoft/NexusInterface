@@ -37,7 +37,7 @@ class   extends Component {
   }
   // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    */

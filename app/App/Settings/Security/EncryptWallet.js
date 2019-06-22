@@ -68,8 +68,6 @@ const Characters = styled.span({
     UIController.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {
-        // this.props.history.push('/');
-        // this.props.ResetForEncryptionRestart();
         setTimeout(() => {
           remote.getGlobal('core').start();
         }, 10000);
@@ -81,7 +79,7 @@ const Characters = styled.span({
 })
 class EncryptWallet extends Component {
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof EncryptWallet

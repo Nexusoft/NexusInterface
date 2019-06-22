@@ -28,6 +28,11 @@ const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(
  * @extends {Component}
  */
 export default class BootstrapBackgroundTask extends Component {
+  /**
+   *Creates an instance of BootstrapBackgroundTask.
+   * @param {*} props
+   * @memberof BootstrapBackgroundTask
+   */
   constructor(props) {
     super(props);
     props.bootstrapper.registerEvents({
@@ -148,7 +153,7 @@ export default class BootstrapBackgroundTask extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof BootstrapBackgroundTask
