@@ -251,8 +251,6 @@ export default class Core {
           '-rpcthreads=4',
           '-testnet',
           '-beta',
-          '-manager=false',
-          '-connect=192.168.0.234',
           `-verbose=${this.verbose}`,
           `-rpcallowip=${this.ip}`,
         ];
@@ -267,9 +265,11 @@ export default class Core {
         if (settings.enableMining == true) {
           parameters.push('-mining=1');
         }
-        // parameters.push('-llpallowip=127.0.0.1:9325'); // TODO: llp white list
+
         // Enable staking (default is 0)
         if (settings.enableStaking == true) parameters.push('-stake=1');
+
+        // parameters.push('-llpallowip=127.0.0.1:9325'); // TODO: llp white list
 
         log.info('Core Parameters: ' + parameters.toString());
 
