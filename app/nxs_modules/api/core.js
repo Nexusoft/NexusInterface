@@ -266,9 +266,8 @@ export default class Core {
         // Enable mining (default is 0)
         if (settings.enableMining == true) {
           parameters.push('-mining=1');
-          parameters.push('-llpallowip=127.0.0.1:9325'); // TODO: llp white list
         }
-
+        // parameters.push('-llpallowip=127.0.0.1:9325'); // TODO: llp white list
         // Enable staking (default is 0)
         if (settings.enableStaking == true) parameters.push('-stake=1');
 
