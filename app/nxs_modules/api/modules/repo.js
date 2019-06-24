@@ -168,7 +168,7 @@ export async function isRepoOnline(repoInfo) {
 
   try {
     const apiUrls = {
-      'github.com': `https://api.github.com/${owner}/${repo}/commits/${commit}`,
+      'github.com': `https://api.github.com/repos/${owner}/${repo}/commits/${commit}`,
     };
     const url = apiUrls[host];
     const response = await axios.get(url);
