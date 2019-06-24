@@ -195,6 +195,7 @@ class TooltipPortal extends Component {
  * Triggers the Tooltip
  *
  * @class TooltipTrigger
+ * @memberof TooltipPortal
  * @extends {Component}
  */
 class TooltipTrigger extends Component {

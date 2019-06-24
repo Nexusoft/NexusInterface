@@ -18,6 +18,7 @@ import { Tail } from 'utils/tail';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';
+import { join } from 'path';
 
 window.remote = remote;
 
@@ -105,15 +106,20 @@ function startCoreOuputeWatch(store) {
   let datadir = configuration.GetCoreDataDir();
 
   var debugfile;
-  if (process.platform === 'win32') {
+  if (fs.existsSync(join(datadir, 'log', '0.log'))) {
+    debugfile = join(datadir, 'log', '0.log');
+  } else if (process.platform === 'win32') {
     debugfile = datadir + '\\debug.log';
   } else {
     debugfile = datadir + '/debug.log';
   }
+
   debugFileLocation = debugfile;
+  console.log(debugFileLocation);
   fs.stat(debugFileLocation, (err, stat) => {
     checkDebugFileExists(err, stat, store);
   });
+
   checkIfFileExistsInterval = setInterval(() => {
     if (tail != undefined) {
       clearInterval(checkIfFileExistsInterval);
@@ -129,6 +135,7 @@ function checkDebugFileExists(err, stat, store) {
     processDeamonOutput(debugFileLocation, store);
     clearInterval(checkIfFileExistsInterval);
   } else {
+    console.log('exists', stat);
   }
 }
 

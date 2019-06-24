@@ -7,16 +7,33 @@ import { normalize } from 'path';
 import express from 'express';
 import config from 'api/configuration';
 
+/**
+ * Express server serving static files for modules
+ *
+ * @class FileServer
+ */
 class FileServer {
   port = 9331;
   staticMiddleware = express.static(config.GetModulesDir());
   server = null;
   moduleFiles = [];
 
+  /**
+   * Get the domain where the module is
+   *
+   * @readonly
+   * @memberof FileServer
+   */
   get domain() {
     return `http://localhost:${this.port}`;
   }
 
+  /**
+   * Get the Module's Middleware
+   *
+   * @readonly
+   * @memberof FileServer
+   */
   get moduleMiddleware() {
     return (req, res, next) => {
       if (this.moduleFiles.includes(normalize(req.path))) {
@@ -27,6 +44,10 @@ class FileServer {
     };
   }
 
+  /**
+   *Creates an instance of FileServer.
+   * @memberof FileServer
+   */
   constructor() {
     this.server = express();
     this.server.use('/modules', this.moduleMiddleware);
@@ -35,6 +56,11 @@ class FileServer {
     });
   }
 
+  /**
+   * Serve the Module files to the client
+   *
+   * @memberof FileServer
+   */
   serveModuleFiles = files => {
     this.moduleFiles =
       files &&

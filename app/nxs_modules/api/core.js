@@ -249,6 +249,7 @@ export default class Core {
           '-avatar',
           '-server',
           '-rpcthreads=4',
+          '-testnet',
           '-beta',
           `-verbose=${this.verbose}`,
           `-rpcallowip=${this.ip}`,
@@ -257,29 +258,19 @@ export default class Core {
           parameters.push('-forkblocks=' + settings.forkBlocks);
           UpdateSettings({ forkBlocks: 0 });
         }
-        if (settings.mapPortUsingUpnp == false) parameters.push('-upnp=0');
 
         if (settings.enableFastSync) parameters.push('-fastsync');
-
-        // Connect through SOCKS4 proxy
-        if (settings.socks4Proxy == true)
-          parameters.push(
-            '-proxy=' + settings.socks4ProxyIP + ':' + settings.socks4ProxyPort
-          );
 
         // Enable mining (default is 0)
         if (settings.enableMining == true) {
           parameters.push('-mining=1');
-          parameters.push('-llpallowip=127.0.0.1:9325');
         }
 
         // Enable staking (default is 0)
         if (settings.enableStaking == true) parameters.push('-stake=1');
 
-        // Enable detach database on shutdown (default is 0)
-        if (settings.detatchDatabaseOnShutdown == true) {
-          parameters.push('-detachdb=1');
-        }
+        // parameters.push('-llpallowip=127.0.0.1:9325'); // TODO: llp white list
+
         log.info('Core Parameters: ' + parameters.toString());
 
         log.info('Core Manager: Starting core');
