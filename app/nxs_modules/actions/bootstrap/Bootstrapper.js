@@ -18,7 +18,7 @@ const recentDbUrlLegacy =
   'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
 //
 const recentDbUrlTritium =
-  'https://nexusearth.com/bootstrap/tritium/tritium.tar.gz'; // Tritium Bootstrap URL
+  'https://nexusearth.com/bootstrap/tritium/bootstrap.tar.gz'; // Tritium Bootstrap URL
 // Recent database download location
 const fileLocation = path.join(
   configuration.GetAppDataDirectory(),
@@ -88,8 +88,8 @@ export default class Bootstrapper {
   async start({ backupFolder, clearCoreInfo }) {
     try {
       const getinfo = await RPC.PROMISE('getinfo', []);
-      console.log(getinfo.version);
-      if (getinfo.version.includes('0.3')) {
+
+      if (getinfo.version.includes('0.3') || parseFloat(getinfo.version) >= 3) {
         recentDbUrl = recentDbUrlTritium;
       } else {
         recentDbUrl = recentDbUrlLegacy;
@@ -109,7 +109,7 @@ export default class Bootstrapper {
       }
 
       if (fs.existsSync(extractDest)) {
-        console.log('removing the old file');
+        console.log('Removing the old file');
         rimraf.sync(extractDest, {}, () => console.log('done'));
         this._cleanUp();
       }
@@ -142,7 +142,7 @@ export default class Bootstrapper {
     } catch (err) {
       this._onError(err);
     } finally {
-      electron.remote.getGlobal('core').start();
+      await electron.remote.getGlobal('core').start();
     }
   }
 
@@ -203,25 +203,30 @@ export default class Bootstrapper {
    */
   async _downloadCompressedDb() {
     const promise = new Promise((resolve, reject) => {
-      const file = fs.createWriteStream(fileLocation);
       this.request = https
         .get(recentDbUrl)
         .setTimeout(60000)
         .on('response', response => {
           const totalSize = parseInt(response.headers['content-length'], 10);
           let downloaded = 0;
-          console.log(response.headers['content-length']);
+
           response.on('data', chunk => {
             downloaded += chunk.length;
             this._progress('downloading', { downloaded, totalSize });
           });
 
-          response.pipe(file);
-          file.on('finish', function() {
-            file.close(resolve);
-          });
+          response.pipe(
+            fs
+              .createWriteStream(fileLocation, { autoClose: true })
+              .on('error', e => {
+                reject(e);
+              })
+              .on('close', () => {
+                resolve();
+              })
+          );
         })
-        .on('error', reject)
+        .on('error', e => reject(e))
         .on('timeout', function() {
           if (this.request) this.request.abort();
           reject(new Error('Request timeout!'));
@@ -229,7 +234,7 @@ export default class Bootstrapper {
         .on('abort', function() {
           if (fs.existsSync(fileLocation)) {
             fs.unlink(fileLocation, err => {
-              console.error(err);
+              if (err) console.error(err);
             });
           }
           resolve();
@@ -238,7 +243,7 @@ export default class Bootstrapper {
 
     // Ensure this.request is always cleaned up
     try {
-      return await promise;
+      return promise;
     } finally {
       this.request = null;
     }
@@ -294,21 +299,20 @@ export default class Bootstrapper {
           );
         }
       }
+      console.log('Moved Successfully');
     } catch (e) {
-      console.log(e);
+      console.log('Moveing Extracted Content Error', e);
     }
   }
 
   async _restartCore() {
-    electron.remote.getGlobal('core').start();
+    await electron.remote.getGlobal('core').start();
 
     const getInfo = async () => {
       try {
-        setTimeout(async () => {
-          await RPC.PROMISE('getinfo', []);
-        }, 100);
+        await RPC.PROMISE('getinfo', []);
       } catch (err) {
-        getInfo();
+        await getInfo();
       }
     };
     return await getInfo();
@@ -324,7 +328,9 @@ export default class Bootstrapper {
     setTimeout(() => {
       if (fs.existsSync(fileLocation)) {
         fs.unlink(fileLocation, err => {
-          console.error(err);
+          if (err) {
+            console.error(err);
+          }
         });
       }
 
@@ -332,5 +338,6 @@ export default class Bootstrapper {
         rimraf.sync(extractDest, {}, () => console.log('done'));
       }
     }, 0);
+    return;
   }
 }

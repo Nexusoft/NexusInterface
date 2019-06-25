@@ -41,7 +41,12 @@ class AppMenu {
   startDaemon = {
     label: 'Start Daemon',
     click: () => {
-      remote.getGlobal('core').start();
+      remote
+        .getGlobal('core')
+        .start()
+        .then(payload => {
+          console.log(payload);
+        });
     },
   };
 
@@ -58,6 +63,7 @@ class AppMenu {
           .getGlobal('core')
           .stop()
           .then(payload => {
+            store.dispatch(clearCoreInfo());
             console.log(payload);
           });
       }

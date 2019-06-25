@@ -115,7 +115,7 @@ function startCoreOuputeWatch(store) {
   }
 
   debugFileLocation = debugfile;
-  console.log(debugFileLocation);
+
   fs.stat(debugFileLocation, (err, stat) => {
     checkDebugFileExists(err, stat, store);
   });

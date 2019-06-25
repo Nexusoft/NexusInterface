@@ -18,7 +18,7 @@ import Market from './Market';
 import AddressBook from './AddressBook';
 import Settings from './Settings';
 import Terminal from './Terminal';
-import StyleGuide from './StyleGuide';
+
 import About from './About';
 import Modules from './Modules';
 // import Exchange from './Exchange';
@@ -89,7 +89,7 @@ export default class App extends Component {
                       />
                       <Route path="/Settings" component={Settings} />
                       <Route path="/Terminal" component={Terminal} />
-                      <Route exact path="/StyleGuide" component={StyleGuide} />
+
                       {/* <Route path="/Exchange" component={Exchange} /> */}
                       {/* <Route exact path="/List" component={TrustList} /> */}
 
