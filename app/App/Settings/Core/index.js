@@ -21,7 +21,7 @@ import { updateSettings } from 'actions/settingsActionCreators';
 import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
-import ReScanButton from 'components/MyAddressesModal/RescanButton.js';
+import ReScanButton from './RescanButton.js';
 import configuration from 'api/configuration';
 
 const mapStateToProps = ({
