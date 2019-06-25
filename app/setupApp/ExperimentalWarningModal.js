@@ -7,6 +7,12 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import { updateSettings } from 'actions/settingsActionCreators';
 
+/**
+ * Shows a Warning about safety
+ *
+ * @class ExperimentalWarningModal
+ * @extends {React.Component}
+ */
 @connect(
   null,
   dispatch => ({
@@ -20,6 +26,12 @@ class ExperimentalWarningModal extends React.Component {
     this.closeModal();
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns {JSX} JSX
+   * @memberof ExperimentalWarningModal
+   */
   render() {
     return (
       <Modal

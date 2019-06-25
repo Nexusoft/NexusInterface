@@ -9,7 +9,7 @@ import './CSS/app.global.css';
 setupApp(store, history);
 
 /**
- *
+ * Main App Entry Point
  *
  * @param {*} Component
  */

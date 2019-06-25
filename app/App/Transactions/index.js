@@ -958,7 +958,11 @@ class Transactions extends Component {
   filterByAddress(inTransactions) {
     const addressFilter = this.state.addressFilter.toLowerCase();
     return inTransactions.filter(
-      tx => tx && tx.address && tx.address.toLowerCase().includes(addressFilter)
+      tx =>
+        tx &&
+        ((tx.address == undefined &&
+          (tx.category == 'generate' || tx.category == 'immature')) ||
+          (tx.address && tx.address.toLowerCase().includes(addressFilter)))
     );
   }
 
@@ -1211,6 +1215,10 @@ class Transactions extends Component {
           return <Text id="transactions.Trust" />;
         } else if (q.value.endsWith('(Pending)')) {
           return <Text id="transactions.Pending" />;
+        } else if (q.value === 'generate') {
+          return <Text id="transactions.Generate" />;
+        } else if (q.value === 'immature') {
+          return <Text id="transactions.Immature" />;
         } else {
           return <Text id="transactions.UnknownCategory" />;
         }
@@ -1324,6 +1332,10 @@ class Transactions extends Component {
       inData.category = translate('transactions.Genesis', locale);
     } else if (inData.category == 'trust') {
       inData.category = translate('transactions.Trust', locale);
+    } else if (inData.category == 'generate') {
+      inData.category = translate('transactions.Generate', locale);
+    } else if (inData.category == 'immature') {
+      inData.category = translate('transactions.Immature', locale);
     } else {
       inData.category = translate('transactions.UnknownCategory', locale);
     }

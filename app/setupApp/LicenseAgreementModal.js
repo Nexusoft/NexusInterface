@@ -13,6 +13,12 @@ const LicenseAgreementModalComponent = styled(Modal)({
   paddingRight: 'calc(50vw - 384px)',
 });
 
+/**
+ * Show the MIT Licenses Agreement
+ *
+ * @class LicenseAgreementModal
+ * @extends {React.Component}
+ */
 @connect(
   null,
   dispatch => ({
@@ -26,6 +32,12 @@ class LicenseAgreementModal extends React.Component {
     this.closeModal();
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns {JSX} JSX
+   * @memberof LicenseAgreementModal
+   */
   render() {
     return (
       <LicenseAgreementModalComponent
