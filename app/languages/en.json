@@ -6,6 +6,7 @@
   "overview.HashDiff": "Hash Difficulty",
   "overview.StakeDiff": "Stake Difficulty",
   "overview.Balance": "Balance",
+  "overview.StakeBalance": "Stake Balance",
   "overview.EncryptedModal": "Your wallet is not encrypted!",
   "overview.Suggestion": "You really should encrypt your wallet to keep your NXS safe.",
   "overview.Ignore": "Ignore",
@@ -287,7 +288,6 @@
   "Settings.AutoUpdateDisabled": "Auto Update is not yet available on Mac, please update the wallet manually for the time being",
   "Settings.EnforceOpenSourceModules": "Module open source policy",
   "Settings.EnforceOpenSourceModulesNote": "Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing",
-  "Settings.EnableFastSync": "Enable Fast Sync",
 
   "Settings.Errors.ManualDaemonUser": "Manual daemon username is required",
   "Settings.Errors.ManualDaemonPassword": "Manual daemon password is required",
@@ -492,7 +492,6 @@
   "ToolTip.PleaseWait": "Please wait...",
   "ToolTip.RecentDatabaseExtracting": "Recent database extracting",
   "ToolTip.MinimumConfirmations": "Minimum amount of confirmations before a block is accepted. Local only.",
-  "ToolTip.EnableFastSync": "Makes the syncing time faster.",
 
   "Alert.Received": "Transaction received",
   "Alert.Sent": "Transaction sent",

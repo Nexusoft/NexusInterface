@@ -249,8 +249,11 @@ export default class Core {
           '-avatar',
           '-server',
           '-rpcthreads=4',
-          '-testnet',
-          '-beta',
+          // //
+          // '-testnet',
+          // '-manager=false',
+          // '-connect=192.168.0.234',
+          // //
           `-verbose=${this.verbose}`,
           `-rpcallowip=${this.ip}`,
         ];
@@ -258,8 +261,6 @@ export default class Core {
           parameters.push('-forkblocks=' + settings.forkBlocks);
           UpdateSettings({ forkBlocks: 0 });
         }
-
-        if (settings.enableFastSync) parameters.push('-fastsync');
 
         // Enable mining (default is 0)
         if (settings.enableMining == true) {
