@@ -15,6 +15,7 @@ import * as RPC from 'scripts/rpc';
 import { consts } from 'styles';
 import { rpcErrorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
+import { async } from 'q';
 
 const EncryptWalletForm = styled.form({
   flex: 2,
@@ -69,7 +70,12 @@ const Characters = styled.span({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {
         setTimeout(() => {
-          remote.getGlobal('core').start();
+          remote
+            .getGlobal('core')
+            .start()
+            .then(payload => {
+              console.log(payload);
+            });
         }, 10000);
         UIController.showNotification(<Text id="Settings.RestartingDaemon" />);
       },

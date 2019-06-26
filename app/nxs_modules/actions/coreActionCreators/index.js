@@ -15,8 +15,8 @@ export function getInfo() {
     try {
       info = await RPC.PROMISE('getinfo', []);
     } catch (err) {
-      console.error(err);
       dispatch(clearCoreInfo());
+      if (err) console.error(err);
       return;
     }
     // console.log(info);
@@ -53,6 +53,17 @@ export function getInfo() {
     if (info.trustweight != 0) {
       info.trustweight = info.trustweight.toFixed(6);
     }
+    if (info.blockweight != 0) {
+      info.blockweight = info.blockweight.toFixed(6);
+    }
+
+    if (!info.interestweight) {
+      if (info.stakerate != 0) {
+        info.interestweight = info.stakerate.toFixed(6);
+      } else {
+        info.interestweight = info.stakerate;
+      }
+    }
 
     if (info.connections !== undefined && oldInfo.connections === undefined) {
       dispatch(await loadMyAccounts());
@@ -63,41 +74,42 @@ export function getInfo() {
 
       if (connectioncount > 0) {
         const peerresponse = await RPC.PROMISE('getpeerinfo', []);
+        if (peerresponse != null) {
+          const highestPeerBlock = peerresponse.reduce(
+            (highest, element) =>
+              element.height >= highest ? element.height : highest,
+            0
+          );
+          // console.log(peerresponse);
+          dispatch(ac.SetHighestPeerBlock(highestPeerBlock));
+          if (highestPeerBlock > info.blocks) {
+            dispatch(ac.SetSyncStatus(false));
+          } else {
+            dispatch(ac.SetSyncStatus(true));
+          }
 
-        const highestPeerBlock = peerresponse.reduce(
-          (highest, element) =>
-            element.height >= highest ? element.height : highest,
-          0
-        );
+          if (!oldInfo.blocks || info.blocks > oldInfo.blocks) {
+            let newDate = new Date();
+            dispatch(ac.BlockDate(newDate));
+          }
 
-        dispatch(ac.SetHighestPeerBlock(highestPeerBlock));
-        if (highestPeerBlock > info.blocks) {
-          dispatch(ac.SetSyncStatus(false));
-        } else {
-          dispatch(ac.SetSyncStatus(true));
-        }
-
-        if (!oldInfo.blocks || info.blocks > oldInfo.blocks) {
-          let newDate = new Date();
-          dispatch(ac.BlockDate(newDate));
-        }
-
-        const {
-          settings: { manualDaemon, bootstrapSuggestionDisabled },
-        } = state;
-        // 172800 = (100 * 24 * 60 * 60) / 50
-        // which is the approximate number of blocks produced in 100 days
-        const isFarBehind = highestPeerBlock - info.blocks > 172800;
-        if (
-          isFarBehind &&
-          !bootstrapSuggestionDisabled &&
-          !manualDaemon &&
-          info.connections !== undefined
-        ) {
-          (async () => {
-            const enoughSpace = await checkFreeSpace(1);
-            if (enoughSpace) dispatch(bootstrap({ suggesting: true }));
-          })();
+          const {
+            settings: { manualDaemon, bootstrapSuggestionDisabled },
+          } = state;
+          // 172800 = (100 * 24 * 60 * 60) / 50
+          // which is the approximate number of blocks produced in 100 days
+          const isFarBehind = highestPeerBlock - info.blocks > 172800;
+          if (
+            isFarBehind &&
+            !bootstrapSuggestionDisabled &&
+            !manualDaemon &&
+            info.connections !== undefined
+          ) {
+            (async () => {
+              const enoughSpace = await checkFreeSpace(1);
+              if (enoughSpace) dispatch(bootstrap({ suggesting: true }));
+            })();
+          }
         }
       }
     }

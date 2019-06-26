@@ -114,6 +114,7 @@ class BootstrapModal extends PureComponent {
    */
   constructor(props) {
     super(props);
+
     props.bootstrapper.registerEvents({
       onProgress: this.handleProgress,
       onAbort: this.handleAbort,
@@ -297,6 +298,9 @@ class BootstrapModal extends PureComponent {
    * @memberof BootstrapModal
    */
   render() {
+    let percentage = this.state.status.includes('Downloading')
+      ? this.state.percentage
+      : 100;
     return (
       <BootstrapModalComponent
         modalRef={this.modalRef}
@@ -308,7 +312,7 @@ class BootstrapModal extends PureComponent {
         <Modal.Body>
           <Title>Bootstrap Recent Database</Title>
           <p>{this.state.status}</p>
-          <ProgressBar percentage={this.state.percentage} />
+          <ProgressBar percentage={percentage} />
           <div className="flex space-between" style={{ marginTop: '2em' }}>
             <div />
             <Button skin="danger" onClick={this.confirmAbort}>
