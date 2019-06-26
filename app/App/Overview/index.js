@@ -704,18 +704,16 @@ class Overview extends Component {
           <MinimalStats>
             <MinimalStat>
               <StatLabel>
-                {stake > 0 ? (
+                {/* {stake > 0 ? (
                   <span>Balance and Stake</span>
-                ) : (
-                  <Text id="overview.Balance" />
-                )}{' '}
+                ) : ( */}
+                <Text id="overview.Balance" />
+                {/* )} */}
                 (NXS) :
               </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(balance + (stake || 0))}
-              </StatValue>
+              <StatValue>{this.waitForDaemon(balance)}</StatValue>
             </MinimalStat>
-
+            {/* + (stake || 0) */}
             <MinimalStat>
               <StatLabel>
                 <Text id="overview.Balance" /> ({settings.fiatCurrency})
@@ -808,20 +806,26 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                {stake > 0 ? (
-                  <span>Balance and Stake</span>
-                ) : (
-                  <Text id="overview.Balance" />
-                )}{' '}
-                (NXS)
+                <Text id="overview.Balance" /> (NXS)
               </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(balance + (stake || 0))}
-              </StatValue>
+              <StatValue>{this.waitForDaemon(balance)}</StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />
           </Stat>
-
+          {stake > 0 && (
+            <Stat
+              as={connections ? Link : undefined}
+              to={connections ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  <Text id="overview.StakeBalance" /> (NXS)
+                </StatLabel>
+                <StatValue>{this.waitForDaemon(stake)}</StatValue>
+              </div>
+              <StatIcon icon={nxsStakeIcon} />
+            </Stat>
+          )}
           <Stat
             as={connections ? Link : undefined}
             to={connections ? '/Transactions' : undefined}

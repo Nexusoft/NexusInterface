@@ -154,7 +154,7 @@ class SettingsCore extends Component {
           } finally {
             this.props.updateSettings({ manualDaemon: false });
             this.props.clearForRestart();
-            remote.getGlobal('core').start();
+            await remote.getGlobal('core').start();
           }
         },
       });
@@ -292,17 +292,6 @@ class SettingsCore extends Component {
     return (
       <SettingsContainer>
         <form onSubmit={handleSubmit}>
-          <SettingsField
-            connectLabel
-            label={<Text id="Settings.EnableFastSync" />}
-            subLabel={<Text id="ToolTip.EnableFastSync" />}
-          >
-            <Switch
-              checked={settings.enableFastSync}
-              onChange={this.updateHandlers('enableFastSync')}
-            />
-          </SettingsField>
-
           <SettingsField
             connectLabel
             label={<Text id="Settings.EnableMining" />}

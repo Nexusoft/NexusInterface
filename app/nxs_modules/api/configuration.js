@@ -184,11 +184,11 @@ const configuration = {
 
     //Set data directory by OS for automatic daemon mode
     if (process.platform === 'win32') {
-      var datadir = process.env.APPDATA + '\\Nexus_Core_Data';
+      var datadir = process.env.APPDATA + '\\Nexus';
     } else if (process.platform === 'darwin') {
-      var datadir = process.env.HOME + '/.Nexus_Core_Data';
+      var datadir = process.env.HOME + '/.Nexus';
     } else {
-      var datadir = process.env.HOME + '/.Nexus_Core_Data';
+      var datadir = process.env.HOME + '/.Nexus';
     }
     return datadir;
   },

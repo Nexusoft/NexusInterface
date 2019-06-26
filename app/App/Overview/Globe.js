@@ -232,6 +232,7 @@ export default class Globe extends Component {
       .map(peer => {
         let GeoData = this.geoiplookup.get(peer.addr.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
+
         return {
           lat: GeoData.location.latitude,
           lng: GeoData.location.longitude,

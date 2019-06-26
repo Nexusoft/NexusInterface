@@ -1,5 +1,5 @@
 // External
-import { app, BrowserWindow, Tray, Menu, dialog } from 'electron';
+import { app, BrowserWindow, Tray, Menu } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import module from 'module';
@@ -13,14 +13,13 @@ import 'electron-debug';
 import fileServer from './fileServer';
 
 // Internal
-// import core from 'api/core';
-
 import configuration from 'api/configuration';
 import { LoadSettings, UpdateSettings } from 'api/settings';
 import core from 'api/core';
 
 let mainWindow;
 let resizeTimer;
+
 // Global Objects
 global.fileServer = fileServer;
 global.core = new core();

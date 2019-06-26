@@ -207,94 +207,104 @@ export default class Core {
     this.host = 'http://' + this._ip + ':' + this._port;
   }
 
-  // start: Start up the core with necessary parameters and return the spawned process
+  // start: Start up the core with necessary parameters
   start() {
-    var datadir = configuration.GetCoreDataDir();
-    let settings = LoadSettings();
-    let corePID = getCorePID();
+    return new Promise((resolve, reject) => {
+      var datadir = configuration.GetCoreDataDir();
+      let settings = LoadSettings();
+      let corePID = getCorePID();
 
-    if (settings.manualDaemon == true) {
-      this.ip = settings.manualDaemonIP || '127.0.0.1';
-      this.port = settings.manualDaemonPort || '9336';
-      this.user = settings.manualDaemonUser || this.user;
-      this.password = settings.manualDaemonPassword || this.password;
-      this.datadir = settings.manualDaemonDataDir || datadir;
+      if (settings.manualDaemon == true) {
+        this.ip = settings.manualDaemonIP || '127.0.0.1';
+        this.port = settings.manualDaemonPort || '9336';
+        this.user = settings.manualDaemonUser || this.user;
+        this.password = settings.manualDaemonPassword || this.password;
+        this.datadir = settings.manualDaemonDataDir || datadir;
 
-      log.info('Core Manager: Manual daemon mode, skipping starting core');
-    } else if (corePID > 1) {
-      log.info(
-        'Core Manager: Daemon Process already running. Skipping starting core'
-      );
-    } else {
-      loadNexusConf();
-      if (CoreBinaryExists()) {
-        if (!fs.existsSync(datadir)) {
-          log.info(
-            'Core Manager: Data Directory path not found. Creating folder: ' +
-              datadir
-          );
-          fs.mkdirSync(datadir);
-        }
-        if (!fs.existsSync(path.join(datadir, 'nexus.conf'))) {
-          fs.writeFileSync(
-            path.join(datadir, 'nexus.conf'),
-            `rpcuser=${this.user}\nrpcpassword=${this.password}\n`
-          );
-        }
-        this.verbose = settings.verboseLevel || this.verbose;
-        let parameters = [
-          `-rpcport=${this.port}`,
-          `-datadir=${datadir}`,
-          '-daemon',
-          '-avatar',
-          '-server',
-          '-rpcthreads=4',
-          '-testnet',
-          '-beta',
-          `-verbose=${this.verbose}`,
-          `-rpcallowip=${this.ip}`,
-        ];
-        if (settings.forkBlocks) {
-          parameters.push('-forkblocks=' + settings.forkBlocks);
-          UpdateSettings({ forkBlocks: 0 });
-        }
-
-        if (settings.enableFastSync) parameters.push('-fastsync');
-
-        // Enable mining (default is 0)
-        if (settings.enableMining == true) {
-          parameters.push('-mining=1');
-        }
-
-        // Enable staking (default is 0)
-        if (settings.enableStaking == true) parameters.push('-stake=1');
-
-        // parameters.push('-llpallowip=127.0.0.1:9325'); // TODO: llp white list
-
-        log.info('Core Parameters: ' + parameters.toString());
-
-        log.info('Core Manager: Starting core');
-
-        let coreprocess = spawn(GetCoreBinaryPath(), parameters, {
-          shell: false,
-          detached: true,
-          stdio: ['ignore', 'ignore', 'ignore'],
-        });
-
-        if (coreprocess != null) {
-          this.coreprocess = coreprocess;
-          log.info(
-            'Core Manager: Core has started (process id: ' +
-              this.coreprocess.pid +
-              ')'
-          );
-        }
-      } else {
+        log.info('Core Manager: Manual daemon mode, skipping starting core');
+        reject('Manual daemon mode');
+      } else if (corePID > 1) {
         log.info(
-          'Core Manager: Core not found, please run in manual deamon mode'
+          'Core Manager: Daemon Process already running. Skipping starting core'
         );
+        resolve('Daemon Process already running');
+      } else {
+        loadNexusConf();
+        if (CoreBinaryExists()) {
+          if (!fs.existsSync(datadir)) {
+            log.info(
+              'Core Manager: Data Directory path not found. Creating folder: ' +
+                datadir
+            );
+            fs.mkdirSync(datadir);
+          }
+          if (!fs.existsSync(path.join(datadir, 'nexus.conf'))) {
+            fs.writeFileSync(
+              path.join(datadir, 'nexus.conf'),
+              `rpcuser=${this.user}\nrpcpassword=${this.password}\n`
+            );
+          }
+          this.verbose = settings.verboseLevel || this.verbose;
+          let parameters = [
+            `-rpcport=${this.port}`,
+            `-datadir=${datadir}`,
+            '-daemon',
+            '-avatar',
+            '-server',
+            '-rpcthreads=4',
+            '-fastsync',
+            // //
+            // '-testnet',
+            // '-manager=false',
+            // '-connect=192.168.0.234',
+            // //
+            `-verbose=${this.verbose}`,
+            `-rpcallowip=${this.ip}`,
+          ];
+          if (settings.forkBlocks) {
+            parameters.push('-forkblocks=' + settings.forkBlocks);
+            UpdateSettings({ forkBlocks: 0 });
+          }
+
+          // Enable mining (default is 0)
+          if (settings.enableMining == true) {
+            parameters.push('-mining=1');
+          }
+
+          // Enable staking (default is 0)
+          if (settings.enableStaking == true) parameters.push('-stake=1');
+
+          // parameters.push('-llpallowip=127.0.0.1:9325'); // TODO: llp white list
+
+          log.info('Core Parameters: ' + parameters.toString());
+
+          log.info('Core Manager: Starting core');
+
+          let coreprocess = spawn(GetCoreBinaryPath(), parameters, {
+            shell: false,
+            detached: true,
+            stdio: ['ignore', 'ignore', 'ignore'],
+          });
+
+          if (coreprocess != null) {
+            this.coreprocess = coreprocess;
+            log.info(
+              'Core Manager: Core has started (process id: ' +
+                this.coreprocess.pid +
+                ')'
+            );
+
+            // Because this is the only thing that I can think of to get the bootstrapper back insync
+            setTimeout(() => resolve(this.coreprocess.pid), 3000);
+          }
+        } else {
+          log.info(
+            'Core Manager: Core not found, please run in manual deamon mode'
+          );
+          reject('Core not found');
+        }
       }
-    }
+    });
   }
 
   // stop: Stop the core from running by sending stop command or SIGTERM to the process
