@@ -136,6 +136,8 @@ class SettingsCore extends Component {
   constructor(props) {
     super(props);
     props.switchSettingsTab('Core');
+    this.updateMining = this.updateMining.bind(this);
+    this.updateStaking = this.updateStaking.bind(this);
   }
 
   /**
@@ -220,6 +222,54 @@ class SettingsCore extends Component {
     );
   }
 
+  updateStaking(input) {
+    let value = form.resolveValue(input);
+    UIController.openConfirmDialog({
+      question: <Text id="Settings.RestartDaemon" />,
+      note: <Text id="Settings.ReqiresRestart" />,
+      callbackYes: async () => {
+        this.props.updateSettings({
+          enableStaking: form.resolveValue(value),
+        });
+        try {
+          this.props.clearForRestart();
+          this.restartCore();
+        } finally {
+          remote.getGlobal('core').start();
+        }
+      },
+      callbackNo: () => {
+        this.props.updateSettings({
+          enableStaking: form.resolveValue(value),
+        });
+      },
+    });
+  }
+
+  updateMining(input) {
+    let value = form.resolveValue(input);
+    UIController.openConfirmDialog({
+      question: <Text id="Settings.RestartDaemon" />,
+      note: <Text id="Settings.ReqiresRestart" />,
+      callbackYes: async () => {
+        this.props.updateSettings({
+          enableMining: form.resolveValue(value),
+        });
+        try {
+          this.props.clearForRestart();
+          this.restartCore();
+        } finally {
+          remote.getGlobal('core').start();
+        }
+      },
+      callbackNo: () => {
+        this.props.updateSettings({
+          enableMining: form.resolveValue(value),
+        });
+      },
+    });
+  }
+
   /**
    * Updates the settings
    *
@@ -229,10 +279,36 @@ class SettingsCore extends Component {
     const handlers = [];
     return settingName => {
       if (!handlers[settingName]) {
+        // if (settingName === 'enableMining' || settingName === 'enableStaking') {
+        //   handlers[settingName] = input => {
+        //     UIController.openConfirmDialog({
+        //       question: <Text id="Settings.RestartDaemon" />,
+        //       note: <Text id="Settings.ReqiresRestart" />,
+        //       callbackYes: async () => {
+        //         console.log('hello');
+        //         this.props.updateSettings({
+        //           [settingName]: form.resolveValue(input),
+        //         });
+        //         try {
+        //           this.props.clearForRestart();
+        //           this.restartCore();
+        //         } finally {
+        //           await remote.getGlobal('core').start();
+        //         }
+        //       },
+        //       callbackNo: () => {
+        //         this.props.updateSettings({
+        //           [settingName]: form.resolveValue(input),
+        //         });
+        //       },
+        //     });
+        //   };
+        // } else {
         handlers[settingName] = input =>
           this.props.updateSettings({
             [settingName]: form.resolveValue(input),
           });
+        // }
       }
       return handlers[settingName];
     };
@@ -299,19 +375,19 @@ class SettingsCore extends Component {
           >
             <Switch
               checked={settings.enableMining}
-              onChange={this.updateHandlers('enableMining')}
+              onChange={e => this.updateMining(e)}
             />
           </SettingsField>
 
           {/* <div style={{ display: settings.enableMining ? 'block' : 'none' }}>
-            <SettingsField
+            <SettingsFieldthis.updateHandlers('enableMining')
               indent={1}
               connectLabel
               label={<Text id="Settings.IpWhitelist" />}
               subLabel={<Text id="ToolTip.IpWhitelist" />}
             >
              { this.ipWhiteListFeild()}
-            </SettingsField>
+            </SettingsField>this.updateHandlers('enableStaking')
           </div> */}
 
           <SettingsField
@@ -321,7 +397,7 @@ class SettingsCore extends Component {
           >
             <Switch
               checked={settings.enableStaking}
-              onChange={this.updateHandlers('enableStaking')}
+              onChange={e => this.updateStaking(e)}
             />
           </SettingsField>
 
