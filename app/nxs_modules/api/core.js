@@ -18,9 +18,18 @@ function loadNexusConf() {
       .readFileSync(path.join(configuration.GetCoreDataDir(), 'nexus.conf'))
       .toString()
       .split(`\n`);
+
     nexusconfig = {
-      user: nexusConfiguratiions[0].replace('rpcuser=', ''),
-      password: nexusConfiguratiions[1].replace('rpcpassword=', ''),
+      user: nexusConfiguratiions
+        .find(e => {
+          return e.includes('rpcuser=');
+        })
+        .replace('rpcuser=', ''),
+      password: nexusConfiguratiions
+        .find(e => {
+          return e.includes('rpcpassword=');
+        })
+        .replace('rpcpassword=', ''),
     };
   }
 }
