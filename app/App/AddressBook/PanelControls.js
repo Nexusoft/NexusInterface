@@ -13,9 +13,7 @@ import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
 import UIController from 'components/UIController';
-
-// Internal Local
-import AddEditContactModal from './AddEditContactModal';
+import AddEditContactModal from 'components/AddEditContactModal';
 
 // Icons
 import exportIcon from 'images/export.sprite.svg';
@@ -34,6 +32,13 @@ const SearchInput = styled(TextField)({
   width: 200,
 });
 
+/**
+ * A Searchbox to search for contacts
+ *
+ * @class SearchBox
+ * @extends {Component}
+ * @memberof PanelControls
+ */
 @connect(
   state => ({
     searchQuery: state.ui.addressBook.searchQuery,
@@ -41,12 +46,18 @@ const SearchInput = styled(TextField)({
   { searchContact }
 )
 class SearchBox extends Component {
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof SearchBox
+   */
   render() {
     return (
       <Text id="AddressBook.SearchContact">
         {sc => (
           <SearchInput
-            left={<Icon icon={searchIcon} spaceRight />}
+            left={<Icon icon={searchIcon} className="space-right" />}
             placeholder={sc}
             value={this.props.searchQuery}
             onChange={e => this.props.searchContact(e.target.value)}
@@ -65,7 +76,7 @@ class SearchBox extends Component {
  */
 @connect(state => ({
   addressBook: state.addressBook,
-  connections: state.overview.connections,
+  connections: state.core.info.connections,
 }))
 class PanelControls extends Component {
   /**
@@ -124,21 +135,37 @@ class PanelControls extends Component {
     document.body.removeChild(link);
   };
 
+  /**
+   * Opens Add/Edit Contact Modal
+   *
+   * @memberof PanelControls
+   */
   showAddContact = () => {
     UIController.openModal(AddEditContactModal);
   };
 
+  /**
+   * Opens My Addresses Modal
+   *
+   * @memberof PanelControls
+   */
   showMyAddresses = () => {
     UIController.openModal(MyAddressesModal);
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns {JSX}
+   * @memberof PanelControls
+   */
   render() {
     return (
       <div className="flex center">
         {this.props.connections !== undefined && (
           <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
             <Button
-              skin="blank-light"
+              skin="plain"
               className="relative"
               onClick={this.showMyAddresses}
             >
@@ -150,7 +177,7 @@ class PanelControls extends Component {
         {this.props.connections !== undefined && (
           <Tooltip.Trigger tooltip={<Text id="AddressBook.NewContact" />}>
             <Button
-              skin="blank-light"
+              skin="plain"
               className="relative"
               onClick={this.showAddContact}
             >
@@ -161,7 +188,7 @@ class PanelControls extends Component {
 
         <Tooltip.Trigger tooltip={<Text id="AddressBook.Export" />}>
           <Button
-            skin="blank-light"
+            skin="plain"
             className="relative"
             onClick={this.exportAddressBook}
           >

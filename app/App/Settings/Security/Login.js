@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import getInfo from 'actions/getInfo';
+import { getInfo } from 'actions/coreActionCreators';
 import * as RPC from 'scripts/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
@@ -27,13 +27,13 @@ const Buttons = styled.div({
 });
 
 /**
- * Login JSX
+ * Login Form
  *
  * @class Login
  * @extends {Component}
  */
 @connect(state => ({
-  tritium: state.overview.version.includes('0.3'),
+  tritium: state.core.info.version.includes('0.3'),
 }))
 @reduxForm({
   form: 'login',
@@ -47,12 +47,26 @@ const Buttons = styled.div({
   },
   validate: ({ date, time, password, setLoginTimeOut }, props) => {
     const errors = {};
+
     if (!props.tritium || setLoginTimeOut) {
       if (!date) {
         errors.date = <Text id="Settings.Errors.LoginDate" />;
       }
       if (!time) {
         errors.time = <Text id="Settings.Errors.LoginTime" />;
+      }
+      if (date && time) {
+        let unlockUntil = 0;
+        const now = new Date();
+        let unlockDate = new Date(date);
+        unlockDate = new Date(unlockDate.setMinutes(now.getTimezoneOffset()));
+        unlockDate = new Date(unlockDate.setHours(time.slice(0, 2)));
+        unlockDate = new Date(unlockDate.setMinutes(time.slice(3)));
+        unlockUntil = Math.round((unlockDate.getTime() - now.getTime()) / 1000);
+
+        if (unlockUntil < 3600) {
+          errors.time = <Text id="Settings.Errors.LoginTimeTooClose" />;
+        }
       }
     }
 
@@ -118,6 +132,18 @@ class Login extends Component {
   }
 
   /**
+   * Get min time to lock
+   *
+   * @returns
+   * @memberof Login
+   */
+  getMinTime() {
+    const now = new Date();
+
+    return `${now.getHours()}:${now.getMinutes()}`;
+  }
+
+  /**
    * Render the date & time pickers
    *
    * @param {*} props
@@ -135,13 +161,18 @@ class Login extends Component {
           />
         </FormField>
         <FormField connectLabel label={<Text id="Settings.LoginTime" />}>
-          <Field component={TextField.RF} name="time" type="time" />
+          <Field
+            component={TextField.RF}
+            name="time"
+            type="time"
+            min={this.getMinTime()}
+          />
         </FormField>
       </div>
     ) : null;
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Login

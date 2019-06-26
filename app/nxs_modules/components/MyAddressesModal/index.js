@@ -14,7 +14,9 @@ import plusIcon from 'images/plus.sprite.svg';
 
 import Account from './Account';
 import NewAddressForm from './NewAddressForm';
-import RescanButton from './RescanButton';
+import Tooltip from 'components/Tooltip';
+import UIController from 'components/UIController';
+import * as RPC from 'scripts/rpc';
 
 const MyAddressesModalComponent = styled(Modal)({
   // set a fixed height so that the modal won't jump when the search query changes
@@ -58,6 +60,23 @@ class MyAddressesModal extends React.Component {
       searchQuery: e.target.value,
     });
   };
+
+  checkwallet = async () => {
+    try {
+      await RPC.PROMISE('checkwallet', []);
+    } catch (err) {
+      console.log(err);
+      UIController.showNotification(
+        <Text id="MyAddressesModal.CheckWalletError" />,
+        'error'
+      );
+      return;
+    }
+    UIController.showNotification(
+      <Text id="MyAddressesModal.CheckWalletSuccess" />,
+      'success'
+    );
+  }
 
   /**
    * Filter the Accounts
@@ -109,13 +128,21 @@ class MyAddressesModal extends React.Component {
         <Modal.Body>
           <Search>
             <TextField
-              left={<Icon icon={searchIcon} spaceRight />}
+              left={<Icon icon={searchIcon} className="space-right" />}
               placeholder="Search account"
               value={this.state.searchQuery}
               onChange={this.handleChange}
               style={{ width: 300 }}
             />
-            <RescanButton />
+            <Tooltip.Trigger
+              tooltip={<Text id="MyAddressesModal.CheckWalletTooltip" />}
+            >
+              <Button fitHeight onClick={this.checkwallet}>
+                {
+                  <Text id="MyAddressesModal.CheckWallet" />
+                }
+              </Button>
+            </Tooltip.Trigger>
           </Search>
           {this.filteredAccounts().map(acc => (
             <Account
@@ -130,7 +157,7 @@ class MyAddressesModal extends React.Component {
           ) : (
             <Buttons>
               <Button onClick={this.startCreating}>
-                <Icon icon={plusIcon} spaceRight />
+                <Icon icon={plusIcon} className="space-right" />
                 <Text id="AddressBook.CreateAddress" />
               </Button>
             </Buttons>

@@ -7,8 +7,9 @@ import { keyframes } from '@emotion/core';
 import ModalContext from 'context/modal';
 import UIController from 'components/UIController';
 import Overlay from 'components/Overlay';
-import { timing, animations } from 'styles';
-import { color } from 'utils';
+import { timing } from 'styles';
+import { passRef } from 'utils';
+import * as color from 'utils/color';
 
 const intro = keyframes`
   from { 
@@ -111,6 +112,13 @@ const ModalFooter = styled.div({
   gridArea: 'footer',
 });
 
+/**
+ * Modal Component
+ *
+ * @export
+ * @class Modal
+ * @extends {PureComponent}
+ */
 export default class Modal extends PureComponent {
   static defaultProps = {
     dimBackground: true,
@@ -118,11 +126,21 @@ export default class Modal extends PureComponent {
 
   static contextType = ModalContext;
 
+  /**
+   *Creates an instance of Modal.
+   * @param {*} props
+   * @memberof Modal
+   */
   constructor(props) {
     super(props);
     props.assignClose && props.assignClose(this.animatedClose);
   }
 
+  /**
+   * Animate the Close event
+   *
+   * @memberof Modal
+   */
   animatedClose = () => {
     const modalID = this.context;
     if (modalID) {
@@ -139,32 +157,47 @@ export default class Modal extends PureComponent {
     }
   };
 
+  /**
+   * Remove Modal
+   *
+   * @memberof Modal
+   */
   remove = () => {
     const modalID = this.context;
     UIController.removeModal(modalID);
     this.props.onClose && this.props.onClose();
   };
 
+  /**
+   * Pass Ref of this modal to state
+   *
+   * @memberof Modal
+   */
   modalRef = el => {
     this.modalElem = el;
-    const { modalRef } = this.props;
-    if (typeof modalRef === 'function') {
-      modalRef(el);
-    } else if (modalRef && typeof modalRef === 'object') {
-      modalRef.current = el;
+    if (this.props.modalRef) {
+      passRef(el, this.props.modalRef);
     }
   };
 
+  /**
+   * Pass Background Ref of this modal to state
+   *
+   * @memberof Modal
+   */
   backgroundRef = el => {
     this.backgroundElem = el;
-    const { backgroundRef } = this.props;
-    if (typeof backgroundRef === 'function') {
-      backgroundRef(el);
-    } else if (backgroundRef && typeof backgroundRef === 'object') {
-      backgroundRef.current = el;
+    if (this.props.backgroundRef) {
+      passRef(el, this.props.backgroundRef);
     }
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof Modal
+   */
   render() {
     const {
       open,
@@ -184,7 +217,7 @@ export default class Modal extends PureComponent {
         dimBackground={this.props.dimBackground}
         onBackgroundClick={onBackgroundClick}
         backgroundRef={this.backgroundRef}
-        style={{ zIndex: fullScreen ? 9001 : undefined }}
+        zPriority={fullScreen ? 1 : 0}
       >
         <ModalComponent ref={this.modalRef} fullScreen={fullScreen} {...rest}>
           {typeof children === 'function'

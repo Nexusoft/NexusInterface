@@ -37,7 +37,9 @@ const Buttons = styled.div({
 
 const mapStateToProps = ({
   settings: { minConfirmations, fiatCurrency },
-  overview: { paytxfee },
+  core: {
+    info: { paytxfee },
+  },
   myAccounts,
   common: { encrypted, loggedIn },
   form,
@@ -177,12 +179,12 @@ class MoveBetweenAccountsForm extends Component {
 
     UIController.openConfirmDialog({
       question: <Text id="sendReceive.MoveNXS" />,
-      yesCallback: handleSubmit,
+      callbackYes: handleSubmit,
     });
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof MoveBetweenAccountsForm
@@ -233,7 +235,9 @@ class MoveBetweenAccountsForm extends Component {
 }
 
 /**
- * JSX
+ * JSX for the Modal
+ * 
+ * @memberof MoveBetweenAccountsForm
  *
  */
 const MoveBetweenAccountsModal = () => (

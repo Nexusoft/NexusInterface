@@ -30,9 +30,19 @@ import ThemePicker from './ThemePicker';
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
 
+import * as RPC from 'scripts/rpc';
+
+const overviewDisplays = [
+  { value: 'standard', display: 'Standard' },
+  { value: 'miner', display: 'Miner' },
+  // { value: 'minimalist', display: 'Minimalist' },
+  { value: 'none', display: 'None' },
+];
+
 const mapStateToProps = ({
-  settings: { renderGlobe, locale, addressStyle },
-  overview: { webGLEnabled },
+  settings: { renderGlobe, locale, addressStyle, overviewDisplay },
+  common: { webGLEnabled },
+  myAccounts,
   theme,
 }) => {
   return {
@@ -41,10 +51,14 @@ const mapStateToProps = ({
     theme,
     locale,
     addressStyle,
+    myAccounts,
+    overviewDisplay,
   };
 };
 const mapDispatchToProps = dispatch => ({
   setRenderGlobe: renderGlobe => dispatch(updateSettings({ renderGlobe })),
+  setOverviewDisplay: overviewDisplay =>
+    dispatch(updateSettings({ overviewDisplay })),
   setAddressStyle: addressStyle => {
     googleanalytics.SendEvent(
       'Settings',
@@ -64,8 +78,6 @@ const addressStyleOptions = [
   { value: 'truncateMiddle', display: 'Truncate middle' },
   { value: 'raw', display: 'Raw' },
 ];
-
-const sampleAddress = '2R9SJ4jyyU1WYrsR7Je83WLMaUx2YMRURH2Z6Qro6n46SNLufUc';
 
 const AddressStyleNote = styled.div(({ theme }) => ({
   fontSize: '.8em',
@@ -98,8 +110,14 @@ class SettingsStyle extends Component {
     previousCustom: {},
     DarkTheme: DarkTheme,
     LightTheme: LightTheme,
+    sampleAddress: '000000000000000000000000000000000000000000000000000',
   };
 
+  /**
+   * Component Mount Callback
+   *
+   * @memberof SettingsStyle
+   */
   componentDidMount() {
     if (this.props.theme.defaultStyle == 'Dark') {
       this.setThemeSelector(0);
@@ -108,6 +126,24 @@ class SettingsStyle extends Component {
     } else {
       this.setThemeSelector(2);
     }
+    this.GetUsersDefaultAddress();
+  }
+
+  /**
+   * Get the user's default address and save it to state, to be used on the Address Style Field
+   *
+   * @memberof SettingsStyle
+   */
+  GetUsersDefaultAddress() {
+    let myAddress = '000000000000000000000000000000000000000000000000000';
+    try {
+      myAddress = this.props.myAccounts[0].addresses[0];
+    } catch (e) {
+      console.error(e);
+    }
+    this.setState({
+      sampleAddress: myAddress,
+    });
   }
 
   /**
@@ -143,12 +179,17 @@ class SettingsStyle extends Component {
   setColor = (key, value) => {
     this.setToCustom();
     const defaultStyle = this.props.theme.defaultStyle;
-    const wasOnDefault = defaultStyle === 'Dark'
-     || defaultStyle === 'Light'
-     || defaultStyle.endsWith('Custom');
+    const wasOnDefault =
+      defaultStyle === 'Dark' ||
+      defaultStyle === 'Light' ||
+      defaultStyle.endsWith('Custom');
     this.props.updateTheme({
       [key]: value,
-      defaultStyle: wasOnDefault? ( defaultStyle.endsWith('Custom')? defaultStyle : defaultStyle + 'Custom') : 'Custom',
+      defaultStyle: wasOnDefault
+        ? defaultStyle.endsWith('Custom')
+          ? defaultStyle
+          : defaultStyle + 'Custom'
+        : 'Custom',
     });
   };
 
@@ -338,7 +379,7 @@ class SettingsStyle extends Component {
   setThemeSelector = selectorIndex => {};
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsStyle
@@ -350,6 +391,8 @@ class SettingsStyle extends Component {
       webGLEnabled,
       addressStyle,
       setAddressStyle,
+      overviewDisplay,
+      setOverviewDisplay,
     } = this.props;
 
     return (
@@ -375,9 +418,18 @@ class SettingsStyle extends Component {
           />
         </SettingsField>
 
+        <SettingsField label={<Text id="Settings.OverviewDisplay" />}>
+          <Select
+            value={overviewDisplay}
+            onChange={setOverviewDisplay}
+            options={overviewDisplays}
+            style={{ maxWidth: 260 }}
+          />
+        </SettingsField>
+
         <SettingsField
           label="Nexus Addresses format"
-          subLabel="Choose which format Nexus Addresses should be displayed in"
+          subLabel="Choose your Nexus Address display preference"
         >
           <div>
             <Select
@@ -387,13 +439,13 @@ class SettingsStyle extends Component {
             />
           </div>
           <div className="mt1">
-            <NexusAddress address={sampleAddress} label="Sample Address" />
+            <NexusAddress
+              address={this.state.sampleAddress}
+              label="Sample Address"
+            />
             <AddressStyleNote>
-              <Icon icon={warningIcon} spaceRight />
-              <span className="v-align">
-                This address is just a sample one, please do NOT send your NXS
-                to it
-              </span>
+              <Icon icon={warningIcon} className="space-right" />
+              <span className="v-align">This is your Default Address</span>
             </AddressStyleNote>
           </div>
         </SettingsField>

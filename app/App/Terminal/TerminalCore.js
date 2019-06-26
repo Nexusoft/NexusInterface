@@ -35,9 +35,7 @@ const actionCreators = {
 };
 
 const TerminalContent = styled.div({
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: 0,
+  gridArea: 'content',
   overflow: 'hidden',
 });
 
@@ -77,12 +75,22 @@ const OutputLine = styled.code(({ theme }) => ({
 class TerminalCore extends Component {
   outputRef = React.createRef();
 
+  /**
+   *Creates an instance of TerminalCore.
+   * @param {*} props
+   * @memberof TerminalCore
+   */
   constructor(props) {
     super(props);
     props.switchConsoleTab('Core');
   }
 
-  // React Method (Life cycle hook)
+  /**
+   * Component Received New Props Callback
+   *
+   * @param {*} nextProps
+   * @memberof TerminalCore
+   */
   componentWillReceiveProps(nextProps) {
     if (this.props.rpcCallList.length != nextProps.rpcCallList.length) {
       this.forceUpdate();
@@ -112,9 +120,8 @@ class TerminalCore extends Component {
     }
   }
 
-  // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof TerminalCore
@@ -143,7 +150,7 @@ class TerminalCore extends Component {
                 ))}
               </Output>
               <Button
-                skin="filled-dark"
+                skin="filled-inverted"
                 fullWidth
                 onClick={paused ? unpauseCoreOutput : pauseCoreOutput}
                 style={{ flexShrink: 0 }}

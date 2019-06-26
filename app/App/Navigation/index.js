@@ -1,15 +1,20 @@
 // External Dependencies
-import React, { Component } from 'react';
-import Text from 'components/Text';
+import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal Global Depnedencies
+import Text from 'components/Text';
 import HorizontalLine from 'components/HorizontalLine';
+import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
+import ModuleIcon from 'components/ModuleIcon';
+import { getActiveModules } from 'api/modules';
 import { consts, timing } from 'styles';
 
 // Internal Local Dependencies
-import NavItem from './NavItem';
+import NavLinkItem from './NavLinkItem';
 
 // Images
 import logoIcon from 'images/logo.sprite.svg';
@@ -49,6 +54,51 @@ const AboveNav = styled.div({
   right: 0,
 });
 
+/**
+ * Returns a Nav Item
+ * These are prebuild modules
+ * @param {*} { icon, children, ...rest }
+ * @memberof Navigation
+ */
+const NavItem = ({ icon, children, ...rest }) => (
+  <Tooltip.Trigger tooltip={children} position="top">
+    <NavLinkItem {...rest}>
+      <Icon icon={icon} />
+    </NavLinkItem>
+  </Tooltip.Trigger>
+);
+
+/**
+ * Returns a Module Nav Item
+ * These are nave items for user installed Modules
+ * @param {*} { module }
+ * @memberof Navigation
+ */
+const ModuleNavItem = ({ module }) => (
+  <Tooltip.Trigger tooltip={module.displayName} position="top">
+    <NavLinkItem to={`/Modules/${module.name}`}>
+      <ModuleIcon module={module} />
+    </NavLinkItem>
+  </Tooltip.Trigger>
+);
+
+const ModuleNavItems = connect(
+  state => ({
+    modules: getActiveModules(state.modules, state.settings.disabledModules),
+  }),
+  null,
+  null,
+  { pure: false }
+)(({ modules }) =>
+  modules
+    .filter(module => module.type === 'app')
+    .map(module => <ModuleNavItem key={module.name} module={module} />)
+);
+
+/**
+ * Returns the Navigation Bar
+ *  @memberof Navigation
+ */
 const Navigation = () => (
   <Nav>
     <AboveNav>
@@ -93,8 +143,13 @@ const Navigation = () => (
         &nbsp;
         <Text id="Footer.List" />
       </NavItem> */}
+
+      <ModuleNavItems />
     </NavBar>
   </Nav>
 );
 
+/**
+ *  @class Navigation
+ */
 export default Navigation;

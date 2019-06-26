@@ -107,8 +107,14 @@ class BootstrapModal extends PureComponent {
 
   datapoints = [];
 
+  /**
+   *Creates an instance of BootstrapModal.
+   * @param {*} props
+   * @memberof BootstrapModal
+   */
   constructor(props) {
     super(props);
+
     props.bootstrapper.registerEvents({
       onProgress: this.handleProgress,
       onAbort: this.handleAbort,
@@ -248,13 +254,13 @@ class BootstrapModal extends PureComponent {
   confirmAbort = () => {
     UIController.openConfirmDialog({
       question: 'Are you sure you want to abort the process?',
-      yesLabel: 'Yes, abort',
-      yesSkin: 'danger',
-      yesCallback: () => {
+      labelYes: 'Yes, abort',
+      skinYes: 'danger',
+      callbackYes: () => {
         this.props.bootstrapper.abort();
       },
-      noLabel: 'No, let it continue',
-      noSkin: 'primary',
+      labelNo: 'No, let it continue',
+      skinNo: 'primary',
     });
   };
 
@@ -286,12 +292,15 @@ class BootstrapModal extends PureComponent {
   };
 
   /**
-   * React React
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof BootstrapModal
    */
   render() {
+    let percentage = this.state.status.includes('Downloading')
+      ? this.state.percentage
+      : 100;
     return (
       <BootstrapModalComponent
         modalRef={this.modalRef}
@@ -303,7 +312,7 @@ class BootstrapModal extends PureComponent {
         <Modal.Body>
           <Title>Bootstrap Recent Database</Title>
           <p>{this.state.status}</p>
-          <ProgressBar percentage={this.state.percentage} />
+          <ProgressBar percentage={percentage} />
           <div className="flex space-between" style={{ marginTop: '2em' }}>
             <div />
             <Button skin="danger" onClick={this.confirmAbort}>

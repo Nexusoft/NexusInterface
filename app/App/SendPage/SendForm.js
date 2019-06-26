@@ -99,7 +99,7 @@ const mapDispatchToProps = dispatch => ({
       recipients.forEach(({ address, amount }, i) => {
         const recipientErrors = {};
         if (!address) {
-          recipientErrors.address = <Text id="Alert.InvalidAddress" />;
+          recipientErrors.address = <Text id="Alert.AddressEmpty" />;
         }
         const floatAmount = parseFloat(amount);
         if (!floatAmount || floatAmount < 0) {
@@ -233,7 +233,7 @@ class SendForm extends Component {
 
     UIController.openConfirmDialog({
       question: <Text id="sendReceive.SendTransaction" />,
-      yesCallback: handleSubmit,
+      callbackYes: handleSubmit,
     });
   };
 
@@ -265,7 +265,7 @@ class SendForm extends Component {
     );
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SendForm
@@ -312,7 +312,7 @@ class SendForm extends Component {
           />
 
           <Button type="submit" skin="primary">
-            <Icon icon={sendIcon} spaceRight />
+            <Icon icon={sendIcon} className="space-right" />
             <Text id="sendReceive.SendNow" />
           </Button>
         </SendFormButtons>

@@ -9,6 +9,13 @@ import { timing } from 'styles';
 
 const outro = { opacity: [1, 0] };
 
+/**
+ * Creates a background task component
+ *
+ * @export
+ * @class BackgroundTask
+ * @extends {Component}
+ */
 export default class BackgroundTask extends Component {
   static contextType = TaskContext;
 
@@ -18,11 +25,21 @@ export default class BackgroundTask extends Component {
 
   snackBarRef = React.createRef();
 
+  /**
+   *Creates an instance of BackgroundTask.
+   * @param {*} props
+   * @memberof BackgroundTask
+   */
   constructor(props) {
     super(props);
     props.assignClose && props.assignClose(this.animatedClose);
   }
 
+  /**
+   * Animate the closeout
+   *
+   * @memberof BackgroundTask
+   */
   animatedClose = () => {
     const taskID = this.context;
     if (taskID) {
@@ -35,11 +52,22 @@ export default class BackgroundTask extends Component {
     }
   };
 
+  /**
+   * Remove This task
+   *
+   * @memberof BackgroundTask
+   */
   remove = () => {
     const taskID = this.context;
     UIController.removeBackgroundTask(taskID);
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof BackgroundTask
+   */
   render() {
     const { children, assignClose, ...rest } = this.props;
     return (

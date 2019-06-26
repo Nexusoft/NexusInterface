@@ -28,7 +28,7 @@ const ImportPrivKeyForm = styled.form({
 @connect(
   null,
   dispatch => ({
-    ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_FOR_RESTART }),
+    ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_CORE_INFO }),
   })
 )
 @reduxForm({
@@ -58,7 +58,7 @@ const ImportPrivKeyForm = styled.form({
     });
     UIController.showNotification(<Text id="Settings.Rescanning" />);
     try {
-      await RPC.PROMISE('rescan');
+      await RPC.PROMISE('rescan', []);
       UIController.showNotification(
         <Text id="Settings.RescanningDone" />,
         'success'
@@ -74,7 +74,7 @@ const ImportPrivKeyForm = styled.form({
 })
 class ImportPrivKey extends Component {
   /**
-   *  React Render
+   *  Component's Renderable JSX
    *
    * @returns
    * @memberof ImportPrivKey

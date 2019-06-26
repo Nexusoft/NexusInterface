@@ -17,7 +17,9 @@ import stakingIcon from 'images/staking.sprite.svg';
  */
 @connect(
   ({
-    overview: { stakeweight, interestweight, trustweight, blockweight },
+    core: {
+      info: { stakeweight, interestweight, trustweight, blockweight },
+    },
     router: { location },
   }) => ({
     stakeweight,
@@ -28,6 +30,12 @@ import stakingIcon from 'images/staking.sprite.svg';
   })
 )
 class StakingStatus extends React.Component {
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns {JSX} JSX
+   * @memberof StakingStatus
+   */
   render() {
     const {
       stakeweight,

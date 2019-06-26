@@ -6,18 +6,16 @@ import styled from '@emotion/styled';
 // Internal
 import { deleteContact } from 'actions/addressBookActionCreators';
 import Text from 'components/Text';
-import Link from 'components/Link';
-import Button from 'components/Button';
+import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
 import UIController from 'components/UIController';
+import AddEditContactModal from 'components/AddEditContactModal';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';
 import trashIcon from 'images/trash.sprite.svg';
 import editIcon from 'images/edit.sprite.svg';
-
-import AddEditContactModal from './AddEditContactModal';
 
 const ContactDetailsComponent = styled.div({
   gridArea: 'details',
@@ -68,6 +66,11 @@ const FieldContent = styled.div({
   width: '60%',
 });
 
+/**
+ * Returns a individual field
+ * @memberof ContactDetails
+ * @param {*} { label, content }
+ */
 const Field = ({ label, content }) => (
   <div className="flex mt1">
     <FieldLabel>{label}</FieldLabel>
@@ -81,6 +84,12 @@ const Field = ({ label, content }) => (
   </div>
 );
 
+/**
+ * Get Local time
+ *
+ * @param {*} tz TimeZone
+ * @returns {string} Hours:Minutes AM/PM
+ */
 const getLocalTime = tz => {
   const now = new Date();
   const utc = new Date().getTimezoneOffset();
@@ -115,7 +124,9 @@ const getLocalTime = tz => {
     ui: {
       addressBook: { selectedContactName },
     },
-    overview: { connections },
+    core: {
+      info: { connections },
+    },
   }) => ({
     contact: addressBook[selectedContactName] || null,
     connections,
@@ -124,7 +135,7 @@ const getLocalTime = tz => {
 )
 class ContactDetails extends React.Component {
   /**
-   *
+   * Opens a dialog to confirm contact delete
    *
    * @memberof ContactDetails
    */
@@ -136,15 +147,15 @@ class ContactDetails extends React.Component {
           data={{ name: this.props.contact.name }}
         />
       ),
-      yesSkin: 'danger',
-      yesCallback: () => {
+      skinYes: 'danger',
+      callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
       },
     });
   };
 
   /**
-   *
+   * Opens the Add/Edit Contact modal
    *
    * @memberof ContactDetails
    */
@@ -156,18 +167,19 @@ class ContactDetails extends React.Component {
   };
 
   /**
-   * render
+   * Component's Renderable JSX
    *
-   * @returns
+   * @returns {JSX}
    * @memberof ContactDetails
    */
   render() {
     const { contact, connections } = this.props;
     if (!contact) return null;
 
-    const tz = contact.timeZone
-      ? timeZones.find(t => t.value === contact.timeZone)
-      : null;
+    const tz =
+      typeof contact.timeZone === 'number'
+        ? timeZones.find(t => t.value === contact.timeZone)
+        : null;
 
     return (
       <ContactDetailsComponent>
@@ -222,9 +234,9 @@ class ContactDetails extends React.Component {
           label={<Text id="AddressBook.Email" />}
           content={
             contact.email && (
-              <Link as="a" href={`mailto:${contact.email}`}>
+              <ExternalLink href={`mailto:${contact.email}`}>
                 {contact.email}
-              </Link>
+              </ExternalLink>
             )
           }
         />

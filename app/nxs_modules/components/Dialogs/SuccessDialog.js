@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Icon from 'components/Icon';
-import { color } from 'utils';
+import * as color from 'utils/color';
 import checkIcon from 'images/check.sprite.svg';
 import Dialog from './Dialog';
 

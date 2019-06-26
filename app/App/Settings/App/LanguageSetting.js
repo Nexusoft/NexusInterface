@@ -117,7 +117,7 @@ class LanguageSetting extends Component {
   handleChange = locale => this.props.updateSettings({ locale });
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof LanguageSetting

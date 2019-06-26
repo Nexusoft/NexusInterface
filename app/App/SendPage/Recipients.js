@@ -39,7 +39,6 @@ const Recipient = styled.div({
   margin: '0 -30px',
   padding: '0 30px',
   position: 'relative',
-
 });
 
 const AddressWrapper = styled.div({
@@ -68,7 +67,11 @@ const TransactionFee = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
 }));
 
-const mapStateToProps = ({ overview: { paytxfee } }) => ({
+const mapStateToProps = ({
+  core: {
+    info: { paytxfee },
+  },
+}) => ({
   paytxfee,
 });
 
@@ -93,7 +96,7 @@ class Recipients extends React.Component {
     );
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Recipients
@@ -149,7 +152,7 @@ class Recipients extends React.Component {
 
           <MoreInfo>
             <Button skin="hyperlink" onClick={addRecipient}>
-              <PlusIcon icon={plusIcon} spaceRight />
+              <PlusIcon icon={plusIcon} className="space-right" />
               <span className="v-align">
                 <Text id="sendReceive.AddRecipient" />
               </span>

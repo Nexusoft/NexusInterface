@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactTable from 'react-table';
-import { remote } from 'electron';
+import { remote, shell } from 'electron';
 import { VictoryArea, VictoryChart, VictoryAnimation } from 'victory';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
@@ -29,10 +29,10 @@ import styles from './style.css';
 import chartIcon from 'images/chart.sprite.svg';
 import bittrexLogo from 'images/BittrexLogo.png';
 import binanceLogo from 'images/BINANCE.png';
-import cryptopiaLogo from 'images/CryptopiaLogo.png';
+
 import binanceSmallLogo from 'images/binanceSmallLogo.png';
 import bittrexSmallLogo from 'images/bittrexSmallLogo.png';
-import cryptopiaSmallLogo from 'images/cryptopiaSmallLogo.png';
+
 import arrow from 'images/arrow.svg';
 
 // React-Redux mandatory methods
@@ -90,13 +90,12 @@ class Market extends Component {
     let any = this;
     this.props.binanceDepthLoader();
     this.props.bittrexDepthLoader();
-    this.props.cryptopiaDepthLoader();
+
     this.props.binanceCandlestickLoader(any);
     this.props.bittrexCandlestickLoader(any);
-    this.props.cryptopiaCandlestickLoader(any);
+
     this.props.binance24hrInfo();
     this.props.bittrex24hrInfo();
-    this.props.cryptopia24hrInfo();
   }
 
   /**
@@ -190,12 +189,6 @@ class Market extends Component {
       case 'bittrexSell':
         return this.formatBuyData(this.props.bittrex.sell);
         break;
-      case 'cryptopiaBuy':
-        return this.formatBuyData(this.props.cryptopia.buy);
-        break;
-      case 'cryptopiaSell':
-        return this.formatBuyData(this.props.cryptopia.sell);
-        break;
       default:
         return [];
         break;
@@ -219,20 +212,14 @@ class Market extends Component {
         </div>
 
         <div style={{ display: 'table-cell', paddingLeft: '1.5em' }}>
-          {exchangeName === 'cryptopia' ? (
-            <div>
-              <b>Percent change:</b> {this.props[exchangeName].info24hr.change}
-              {' %'}
-            </div>
-          ) : (
-            <div>
-              <b>
-                <Text id="Market.PriceChange" />
-              </b>{' '}
-              {this.props[exchangeName].info24hr.change}
-              {' BTC'}
-            </div>
-          )}
+          <div>
+            <b>
+              <Text id="Market.PriceChange" />
+            </b>{' '}
+            {this.props[exchangeName].info24hr.change}
+            {' %'}
+          </div>
+
           <div>
             <b>
               {' '}
@@ -269,7 +256,7 @@ class Market extends Component {
 
   // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Market
@@ -287,14 +274,17 @@ class Market extends Component {
         icon={chartIcon}
         title={<Text id="Market.Information" />}
       >
-        {/* <a className="refresh" onClick={() => this.refresher()}>
-          <Text id="Market.Refreash" />
-        </a> */}
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 
         {this.props.loaded && this.props.binance.buy[0] && (
           <div className="exchangeUnitContainer">
-            <img className="exchangeLogo" src={binanceLogo} />
+            <img
+              className="exchangeLogo"
+              src={binanceLogo}
+              onClick={() => {
+                shell.openExternal('https://www.binance.com/en/trade/NXS_BTC');
+              }}
+            />
             {this.oneDayinfo('binance')}
             <div className="marketInfoContainer">
               <MarketDepth
@@ -315,7 +305,15 @@ class Market extends Component {
         )}
         {this.props.loaded && this.props.bittrex.buy[0] && (
           <div className="exchangeUnitContainer">
-            <img className="exchangeLogo" src={bittrexLogo} />
+            <img
+              className="exchangeLogo"
+              src={bittrexLogo}
+              onClick={() => {
+                shell.openExternal(
+                  'https://bittrex.com/Market/Index?MarketName=BTC-NXS'
+                );
+              }}
+            />
             {this.oneDayinfo('bittrex')}
             <div className="marketInfoContainer">
               <br />
@@ -329,28 +327,6 @@ class Market extends Component {
                 <Candlestick
                   locale={this.props.settings.locale}
                   data={this.props.bittrex.candlesticks}
-                  theme={this.props.theme}
-                />
-              ) : null}
-            </div>
-          </div>
-        )}
-        {this.props.loaded && this.props.cryptopia.buy[0] && (
-          <div className="exchangeUnitContainer">
-            <img className="exchangeLogo" src={cryptopiaLogo} />
-            {this.oneDayinfo('cryptopia')}
-            <div className="marketInfoContainer">
-              <MarketDepth
-                locale={this.props.settings.locale}
-                chartData={this.formatChartData('cryptopiaBuy')}
-                chartSellData={this.formatChartData('cryptopiaSell')}
-                theme={this.props.theme}
-              />
-
-              {this.props.cryptopia.candlesticks[0] !== undefined ? (
-                <Candlestick
-                  data={this.props.cryptopia.candlesticks}
-                  locale={this.props.settings.locale}
                   theme={this.props.theme}
                 />
               ) : null}

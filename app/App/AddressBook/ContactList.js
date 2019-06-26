@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import UIController from 'components/UIController';
-import AddEditContactModal from './AddEditContactModal';
+import AddEditContactModal from 'components/AddEditContactModal';
 import Contact, { NewContactButton } from './Contact';
 
 const ContactListComponent = styled.div(({ theme }) => ({
@@ -27,7 +27,9 @@ const mapStateToProps = ({
   ui: {
     addressBook: { searchQuery },
   },
-  overview: { connections },
+  core: {
+    info: { connections },
+  },
 }) => ({
   addressBook,
   searchQuery,
@@ -48,9 +50,9 @@ class ContactList extends React.Component {
   };
 
   /**
-   * render
+   * Component's Renderable JSX
    *
-   * @returns
+   * @returns {JSX}
    * @memberof ContactList
    */
   render() {

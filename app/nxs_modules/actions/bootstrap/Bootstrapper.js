@@ -4,18 +4,21 @@ import fs from 'fs';
 import path from 'path';
 import https from 'https';
 import electron from 'electron';
-import tarball from 'tarball-extract';
 import moveFile from 'move-file';
 import rimraf from 'rimraf';
+
 // Internal
 import configuration from 'api/configuration';
 import { backupWallet } from 'api/wallet';
 import * as RPC from 'scripts/rpc';
+import extractTarball from 'utils/promisified/extractTarball';
 
-const recentDbUrl =
+let recentDbUrl = '';
+const recentDbUrlLegacy =
   'https://nexusearth.com/bootstrap/LLD-Database/recent.tar.gz';
 //
-//    'https://nexusearth.com/bootstrap/tritium/tritium.tar.gz';  // Tritium Bootstrap URL
+const recentDbUrlTritium =
+  'https://nexusearth.com/bootstrap/tritium/bootstrap.tar.gz'; // Tritium Bootstrap URL
 // Recent database download location
 const fileLocation = path.join(
   configuration.GetAppDataDirectory(),
@@ -78,17 +81,25 @@ export default class Bootstrapper {
   /**
    * Start the bootstrapper
    *
-   * @param {*} { backupFolder, clearOverviewVariables }
+   * @param {*} { backupFolder, clearCoreInfo }
    * @returns
    * @memberof Bootstrapper
    */
-  async start({ backupFolder, clearOverviewVariables }) {
+  async start({ backupFolder, clearCoreInfo }) {
     try {
+      const getinfo = await RPC.PROMISE('getinfo', []);
+
+      if (getinfo.version.includes('0.3') || parseFloat(getinfo.version) >= 3) {
+        recentDbUrl = recentDbUrlTritium;
+      } else {
+        recentDbUrl = recentDbUrlLegacy;
+      }
+      if (this._aborted) return;
+
       this._progress('backing_up');
       await backupWallet(backupFolder);
       if (this._aborted) return;
 
-      clearOverviewVariables();
       // Remove the old file if exists
 
       if (fs.existsSync(fileLocation)) {
@@ -98,7 +109,7 @@ export default class Bootstrapper {
       }
 
       if (fs.existsSync(extractDest)) {
-        console.log('removing the old file');
+        console.log('Removing the old file');
         rimraf.sync(extractDest, {}, () => console.log('done'));
         this._cleanUp();
       }
@@ -111,6 +122,7 @@ export default class Bootstrapper {
       await this._extractDb();
       if (this._aborted) return;
 
+      clearCoreInfo();
       this._progress('stopping_core');
       await electron.remote.getGlobal('core').stop();
       if (this._aborted) return;
@@ -122,7 +134,7 @@ export default class Bootstrapper {
       await this._restartCore();
 
       this._progress('rescanning');
-      await RPC.PROMISE('rescan');
+      await RPC.PROMISE('rescan', []);
 
       this._cleanUp();
 
@@ -130,7 +142,7 @@ export default class Bootstrapper {
     } catch (err) {
       this._onError(err);
     } finally {
-      electron.remote.getGlobal('core').start();
+      await electron.remote.getGlobal('core').start();
     }
   }
 
@@ -191,8 +203,6 @@ export default class Bootstrapper {
    */
   async _downloadCompressedDb() {
     const promise = new Promise((resolve, reject) => {
-      console.log(fileLocation);
-      const file = fs.createWriteStream(fileLocation);
       this.request = https
         .get(recentDbUrl)
         .setTimeout(60000)
@@ -205,12 +215,18 @@ export default class Bootstrapper {
             this._progress('downloading', { downloaded, totalSize });
           });
 
-          response.pipe(file);
-          file.on('finish', function() {
-            file.close(resolve);
-          });
+          response.pipe(
+            fs
+              .createWriteStream(fileLocation, { autoClose: true })
+              .on('error', e => {
+                reject(e);
+              })
+              .on('close', () => {
+                resolve();
+              })
+          );
         })
-        .on('error', reject)
+        .on('error', e => reject(e))
         .on('timeout', function() {
           if (this.request) this.request.abort();
           reject(new Error('Request timeout!'));
@@ -218,7 +234,7 @@ export default class Bootstrapper {
         .on('abort', function() {
           if (fs.existsSync(fileLocation)) {
             fs.unlink(fileLocation, err => {
-              console.error(err);
+              if (err) console.error(err);
             });
           }
           resolve();
@@ -227,7 +243,7 @@ export default class Bootstrapper {
 
     // Ensure this.request is always cleaned up
     try {
-      return await promise;
+      return promise;
     } finally {
       this.request = null;
     }
@@ -240,12 +256,7 @@ export default class Bootstrapper {
    * @memberof Bootstrapper
    */
   async _extractDb() {
-    return new Promise((resolve, reject) => {
-      tarball.extractTarball(fileLocation, extractDest, err => {
-        if (err) reject(err);
-        else resolve();
-      });
-    });
+    return await extractTarball(fileLocation, extractDest);
   }
 
   /**
@@ -288,18 +299,20 @@ export default class Bootstrapper {
           );
         }
       }
+      console.log('Moved Successfully');
     } catch (e) {
-      console.log(e);
+      console.log('Moveing Extracted Content Error', e);
     }
   }
 
   async _restartCore() {
-    electron.remote.getGlobal('core').start();
+    await electron.remote.getGlobal('core').start();
+
     const getInfo = async () => {
       try {
-        return await RPC.PROMISE('getinfo', []);
+        await RPC.PROMISE('getinfo', []);
       } catch (err) {
-        return await getInfo();
+        await getInfo();
       }
     };
     return await getInfo();
@@ -315,34 +328,16 @@ export default class Bootstrapper {
     setTimeout(() => {
       if (fs.existsSync(fileLocation)) {
         fs.unlink(fileLocation, err => {
-          console.error(err);
+          if (err) {
+            console.error(err);
+          }
         });
       }
 
       if (fs.existsSync(extractDest)) {
         rimraf.sync(extractDest, {}, () => console.log('done'));
-        //   // const recentContents = fs.readdirSync(extractDest);
-        //   // recentContents
-        //   //   .filter(child =>
-        //   //     fs.statSync(path.join(extractDest, child)).isDirectory()
-        //   //   )
-        //   //   .forEach(subFolder => {
-        //   //     fs.readdirSync(path.join(extractDest, subFolder))
-        //   //       .filter(grandchild =>
-        //   //         fs
-        //   //           .statSync(path.join(extractDest, subFolder, grandchild))
-        //   //           .isDirectory()
-        //   //       )
-        //   //       .forEach(subSubFolder => {
-        //   //         rimraf.sync(path.join(extractDest, subFolder, subSubFolder), {}, () =>
-        // console.log('done'));
-        //   //       });
-        //   //     rimraf.sync(path.join(extractDest, subFolder), {}, () =>
-        // console.log('done'));
-        //   //   });
-        //   // rimraf.sync(extractDest, {}, () =>
-        // console.log('done'));
       }
     }, 0);
+    return;
   }
 }

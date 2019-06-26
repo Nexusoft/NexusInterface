@@ -26,6 +26,7 @@ export const defaultSettings = {
   minConfirmations: 3,
   backupDirectory: defaultBackupDir,
   devMode: false,
+  verifyModuleSource: true,
   overviewDisplay: 'standard',
 
   // Core
@@ -38,15 +39,13 @@ export const defaultSettings = {
   manualDaemonIP: '127.0.0.1',
   manualDaemonPort: '9336',
   manualDaemonDataDir: config.GetCoreDataDir(),
-  mapPortUsingUpnp: true,
-  socks4Proxy: false,
-  socks4ProxyIP: '127.0.0.1',
-  socks4ProxyPort: '9050',
-  detatchDatabaseOnShutdown: false,
 
   // Style
   renderGlobe: true,
   addressStyle: 'segmented',
+
+  // Modules
+  disabledModules: [],
 
   // Hidden settings
   acceptedAgreement: false,

@@ -14,12 +14,18 @@ import * as RPC from 'scripts/rpc';
  * @extends {Component}
  */
 class TransactionDetailsModal extends Component {
+  /**
+   *Creates an instance of TransactionDetailsModal.
+   * @param {*} props
+   * @memberof TransactionDetailsModal
+   */
   constructor(props) {
     super(props);
     this.loadData(props);
   }
 
   state = {
+    highlightedTxFee: 'Loading',
     highlightedBlockHash: 'Loading',
     highlightedBlockNum: 'Loading',
   };
@@ -39,7 +45,8 @@ class TransactionDetailsModal extends Component {
       const tx = await RPC.PROMISE('gettransaction', [
         walletItems[hoveringID].txid,
       ]);
-      this.setState({ highlightedBlockHash: tx.blockhash });
+      this.setState({ highlightedBlockHash: tx.blockhash,
+                      highlightedTxFee: tx.fee });
 
       const block = await RPC.PROMISE('getblock', [tx.blockhash]);
       this.setState({ highlightedBlockNum: block.height });
@@ -54,14 +61,15 @@ class TransactionDetailsModal extends Component {
    */
   render() {
     const { hoveringID, walletItems, settings } = this.props;
-    const { highlightedBlockNum, highlightedBlockHash } = this.state;
-
+    const { highlightedBlockNum, highlightedBlockHash, highlightedTxFee } = this.state;
+    
     if (
       hoveringID != 999999999999 &&
       !!walletItems &&
       walletItems[hoveringID]
     ) {
       const tx = walletItems[hoveringID];
+      console.log(tx.category);
       return (
         <Modal>
           <Modal.Header>Transaction Details</Modal.Header>
@@ -69,7 +77,7 @@ class TransactionDetailsModal extends Component {
             {tx.confirmations <= settings.minConfirmations && (
               <div>
                 <a>
-                  <Text id="transactions.PendingTransaction" />
+                  <Text id="transactions.PENDINGTR" />
                 </a>
               </div>
             )}
@@ -79,10 +87,10 @@ class TransactionDetailsModal extends Component {
               <span className="TXdetails">{tx.amount}</span>
             </div>
 
-            {tx.category === 'debit' && (
+            {(tx.category === 'debit'  || tx.category === 'send') && (
               <div key="modal_fee" className="detailCat">
                 <Text id="transactions.fee" />:
-                <span className="TXdetails">{+tx.fee}</span>
+                <span className="TXdetails">{highlightedTxFee}</span>
               </div>
             )}
 

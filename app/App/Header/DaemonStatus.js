@@ -11,11 +11,17 @@ import Text from 'components/Text';
  * @class DaemonStatus
  * @extends {React.Component}
  */
-@connect(({ overview: { connections }, settings: { manualDaemon } }) => ({
+@connect(({ core: { info: { connections } }, settings: { manualDaemon } }) => ({
   manualDaemon,
   connections,
 }))
 class DaemonStatus extends React.Component {
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns {JSX}
+   * @memberof DaemonStatus
+   */
   render() {
     const { manualDaemon, connections } = this.props;
     return (

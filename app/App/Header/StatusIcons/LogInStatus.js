@@ -11,7 +11,7 @@ import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from 'components/StatusIcon';
 import { timing } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';
@@ -44,11 +44,13 @@ const LoginStatusIcon = styled(StatusIcon)(
 );
 
 const mapStateToProps = ({
-  overview: { connections, unlocked_until, staking_only, locked },
+  core: {
+    info: { connections, unlocked_until, minting_only, locked },
+  },
 }) => ({
   connections,
   unlocked_until,
-  staking_only,
+  minting_only,
   locked,
 });
 
@@ -71,7 +73,7 @@ class LogInStatus extends Component {
    * @memberof LogInStatus
    */
   signInStatusMessage = () => {
-    const { connections, unlocked_until, staking_only, locked } = this.props;
+    const { connections, unlocked_until, minting_only, locked } = this.props;
     let unlockDate = new Date(unlocked_until * 1000).toLocaleString('en', {
       weekday: 'long',
       year: 'numeric',
@@ -99,12 +101,22 @@ class LogInStatus extends Component {
       unlocked_until >= 0 ||
       (unlocked_until === undefined && locked === false)
     ) {
-      return (
-        <>
-          <Text id="Header.UnlockedUntil" data={{ unlockDate }} />{' '}
-          {!!staking_only && <Text id="Header.StakingOnly" />}
-        </>
-      );
+      console.log(minting_only);
+      if (unlocked_until === undefined) {
+        return (
+          <>
+            <Text id="Header.WalletUnlocked" />{' '}
+            {!!minting_only && <Text id="Header.StakingOnly" />}
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Text id="Header.UnlockedUntil" data={{ unlockDate }} />{' '}
+            {!!minting_only && <Text id="Header.StakingOnly" />}
+          </>
+        );
+      }
     }
   };
 
@@ -158,9 +170,9 @@ class LogInStatus extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
-   * @returns
+   * @returns 
    * @memberof LogInStatus
    */
   render() {

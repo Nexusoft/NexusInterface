@@ -17,7 +17,12 @@ import Unencrypted from './Unencrypted';
  * @extends {React.Component}
  */
 @connect(
-  ({ common: { encrypted, loggedIn }, overview: { connections } }) => ({
+  ({
+    common: { encrypted, loggedIn },
+    core: {
+      info: { connections },
+    },
+  }) => ({
     encrypted,
     loggedIn,
     connections,
@@ -36,7 +41,7 @@ class SettingsSecurity extends React.Component {
   }
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsSecurity

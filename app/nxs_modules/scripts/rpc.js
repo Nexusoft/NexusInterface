@@ -65,11 +65,10 @@ Available RPC methods:
 	Collection of RPC calls to populate the data for the GUI.
 	Add new Interface Specific Utilities Here. Module Specific Functions go In Module Scripts.
 **/
-export const COMMANDS = {};
-export const CALLBACK = {};
-import * as TYPE from 'actions/actiontypes';
-import core from 'api/core';
+
 import { LoadSettings } from 'api/settings';
+import { remote } from 'electron';
+const core = remote.getGlobal('core');
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults
 export const GETHOST = () => {
   // let core = require("electron").remote.getGlobal("core");
@@ -141,9 +140,11 @@ export const PROMISE = (cmd, args) => {
       method: cmd,
       params: args,
     });
+    //console.log(cmd, args); // keep here for debugging
     var ResponseObject;
     // console.log(PostData);
     // console.log(GETUSER(), GETPASSWORD());
+
     /** Opera 8.0+, Firefox, Safari **/
     try {
       ResponseObject = new XMLHttpRequest();
@@ -173,6 +174,10 @@ export const PROMISE = (cmd, args) => {
         // console.error(ResponseObject);
         reject('Bad Username and Password');
       }
+      if (ResponseObject.status == 400) {
+        // console.error(ResponseObject);
+        reject('Bad Request');
+      }
       if (ResponseObject.status == 500) {
         // console.log(JSON.parse(ResponseObject.responseText));
         reject(JSON.parse(ResponseObject.responseText).error.message);
@@ -195,7 +200,7 @@ export const PROMISE = (cmd, args) => {
 
       resolve(payload);
     };
-
+    //
     /** Generate the AJAX Request. **/
     if (GETUSER() == undefined && GETPASSWORD() == undefined)
       ResponseObject.open('POST', GETHOST(), true);
@@ -207,6 +212,7 @@ export const PROMISE = (cmd, args) => {
       'Authorization',
       'Basic ' + btoa(GETUSER() + ':' + GETPASSWORD())
     );
+
     ResponseObject.onerror = function(e) {
       e.preventDefault();
       if (ResponseObject.status == 401) {
@@ -219,23 +225,6 @@ export const PROMISE = (cmd, args) => {
     ResponseObject.send(PostData);
   });
 };
-
-// export const GETWITHPASS = (cmd, args, Callback, passdata) => {
-//   var PostData = JSON.stringify({
-//     method: cmd,
-//     params: args,
-//     passthrough: passdata
-//   });
-
-//   POST(
-//     GETHOST(),
-//     PostData,
-//     "TAG-ID-deprecate",
-//     Callback,
-//     GETUSER(),
-//     GETPASSWORD()
-//   );
-// };
 
 //TODO: clean this up... still not diving into this yet. prototype first...
 export const POST = (

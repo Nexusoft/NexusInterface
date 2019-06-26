@@ -1,4 +1,16 @@
 // @jsx jsx
+
+/**
+ * Important note - This file is imported into module_preload.js, either directly or
+ * indirectly, and will be a part of the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Don't assign anything to `global` variable because it will be passed
+ * into modules' execution environment.
+ * - Make sure this note also presents in other files which are imported here.
+ */
+
 // External
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -7,8 +19,8 @@ import { jsx } from '@emotion/core';
 
 // Internal
 import { arrowStyles } from 'components/Arrow';
-import { timing, animations } from 'styles';
-import { color } from 'utils';
+import { timing, animations, zIndex } from 'styles';
+import * as color from 'utils/color';
 
 const spacing = 10;
 const arrowPadding = 15;
@@ -87,6 +99,7 @@ const arrowAligning = (position, align) => {
 const Tooltip = styled.div(
   {
     whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
     maxWidth: 300,
     width: 'max-content',
     borderRadius: 4,
@@ -139,24 +152,52 @@ const Tooltip = styled.div(
 );
 
 class TooltipPortal extends Component {
+  /**
+   *Creates an instance of TooltipPortal.
+   * @param {*} props
+   * @memberof TooltipPortal
+   */
   constructor(props) {
     super(props);
     this.el = document.createElement('div');
   }
 
+  /**
+   * Component Mount Callback
+   *
+   * @memberof TooltipPortal
+   */
   componentDidMount() {
     document.getElementsByTagName('body')[0].appendChild(this.el);
   }
 
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof TooltipPortal
+   */
   componentWillUnmount() {
     document.getElementsByTagName('body')[0].removeChild(this.el);
   }
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof TooltipPortal
+   */
   render() {
     return ReactDOM.createPortal(<Tooltip {...this.props} />, this.el);
   }
 }
 
+/**
+ * Triggers the Tooltip
+ *
+ * @class TooltipTrigger
+ * @memberof TooltipPortal
+ * @extends {Component}
+ */
 class TooltipTrigger extends Component {
   static defaultProps = {
     position: 'bottom',
@@ -169,6 +210,11 @@ class TooltipTrigger extends Component {
     tooltipStyles: {},
   };
 
+  /**
+   * Show the Tooltip
+   *
+   * @memberof TooltipTrigger
+   */
   showTooltip = () => {
     const trigger = ReactDOM.findDOMNode(this);
     if (!trigger) return;
@@ -177,7 +223,7 @@ class TooltipTrigger extends Component {
     const rect = trigger.getBoundingClientRect();
     const tooltipStyles = {
       position: 'fixed',
-      zIndex: 9000,
+      zIndex: zIndex.tooltips,
       ...tooltipPositioning(rect, position),
       ...tooltipAligning(rect, position, align),
     };
@@ -185,10 +231,21 @@ class TooltipTrigger extends Component {
     this.setState({ active: true, tooltipStyles });
   };
 
+  /**
+   * Hide the Tooltip
+   *
+   * @memberof TooltipTrigger
+   */
   hideTooltip = () => {
     this.setState({ active: false });
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof TooltipTrigger
+   */
   render() {
     const { children, tooltip, ...rest } = this.props;
 

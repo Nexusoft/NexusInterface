@@ -23,7 +23,7 @@ import sendIcon from 'images/send.sprite.svg';
 import swapIcon from 'images/swap.sprite.svg';
 
 const mapStateToProps = state => ({
-  connections: state.overview.connections,
+  connections: state.core.info.connections,
   isInSync: state.common.isInSync,
 });
 
@@ -35,11 +35,21 @@ const mapStateToProps = state => ({
  */
 @connect(mapStateToProps)
 class SendPage extends Component {
+  /**
+   * Component Mount Callback
+   *
+   * @memberof SendPage
+   */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     googleanalytics.SendScreen('Send');
   }
 
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof SendPage
+   */
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
@@ -68,7 +78,7 @@ class SendPage extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SendPage

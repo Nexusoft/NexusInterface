@@ -1,6 +1,5 @@
 // External
-import { app, BrowserWindow, Tray, Menu, dialog } from 'electron';
-import log from 'electron-log';
+import { app, BrowserWindow, Tray, Menu } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import module from 'module';
@@ -10,16 +9,20 @@ import devToolsInstall, {
   REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
 import 'electron-debug';
+import fs from 'fs-extra';
+import fileServer from './fileServer';
 
 // Internal
-import core from 'api/core';
 import configuration from 'api/configuration';
 import { LoadSettings, UpdateSettings } from 'api/settings';
+import core from 'api/core';
 
 let mainWindow;
 let resizeTimer;
+
 // Global Objects
-global.core = core;
+global.fileServer = fileServer;
+global.core = new core();
 global.autoUpdater = autoUpdater;
 global.forceQuit = false;
 
@@ -63,7 +66,7 @@ function setupTray(mainWindow) {
   });
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Show Nexus',
+      label: 'Show Nexus Wallet',
       click: function() {
         mainWindow.show();
         if (process.platform === 'darwin') {
@@ -72,7 +75,7 @@ function setupTray(mainWindow) {
       },
     },
     {
-      label: 'Quit Nexus',
+      label: 'Quit Nexus Wallet',
       click() {
         app.quit();
       },
@@ -164,10 +167,53 @@ function createWindow() {
   });
 }
 
+//If you have a QT folder, back up that data just in case.
+async function backUpQT() {
+  const doNotCopyList = [
+    'blk0001.dat',
+    'blk0002.dat',
+    'database',
+    'keychain',
+    'datachain',
+    '__db.001',
+    '__db.002',
+    '__db.003',
+    '__db.004',
+    '__db.005',
+  ];
+  const exists = await fs.pathExists(configuration.GetCoreDataDir());
+  if (exists) {
+    const backupexists = await fs.pathExists(
+      configuration.GetCoreDataDir() + '_OldQtBackUp'
+    );
+    if (!backupexists) {
+      const filterFunc = (src, dest) => {
+        const filename = src.replace(/^.*[\\\/]/, '');
+        if (doNotCopyList.includes(filename)) {
+          return false;
+        } else {
+          return true;
+        }
+      };
+      fs.copy(
+        configuration.GetCoreDataDir(),
+        configuration.GetCoreDataDir() + '_OldQtBackUp',
+        { filter: filterFunc },
+        err => {
+          if (err) return console.error(err);
+
+          console.log('QT Backup success!');
+        }
+      );
+    }
+  }
+}
+
 // Application Startup
 app.on('ready', async () => {
+  backUpQT();
   createWindow();
-  core.start();
+  global.core.start();
 
   const settings = LoadSettings();
   if (

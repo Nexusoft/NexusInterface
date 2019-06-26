@@ -23,6 +23,14 @@ import {
   resetConsoleOutput,
 } from 'actions/uiActionCreators';
 
+const filterCommands = memoize((commandList, inputValue) => {
+  if (!commandList || inputValue == '') return [];
+  const query = inputValue;
+  return commandList.filter(
+    cmd => !!cmd && cmd.toLowerCase().startsWith(query.toLowerCase())
+  );
+});
+
 const consoleInputSelector = memoize(
   (currentCommand, commandHistory, historyIndex) =>
     historyIndex === -1 ? currentCommand : commandHistory[historyIndex]
@@ -40,7 +48,9 @@ const mapStateToProps = ({
       },
     },
   },
-  overview: { connections },
+  core: {
+    info: { connections },
+  },
 }) => ({
   consoleInput: consoleInputSelector(
     currentCommand,
@@ -65,9 +75,7 @@ const actionCreators = {
 };
 
 const TerminalContent = styled.div({
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: 0,
+  gridArea: 'content',
   overflow: 'visible',
 });
 
@@ -88,6 +96,7 @@ const ConsoleOutput = styled.code(({ theme }) => ({
   fontSize: '75%',
   overflow: 'auto',
   wordBreak: 'break-all',
+  whiteSpace: 'pre-wrap',
   background: theme.background,
   border: `1px solid ${theme.mixer(0.25)}`,
 }));
@@ -124,13 +133,16 @@ class TerminalConsole extends Component {
   }
 
   /**
-   *
+   * Loadin all the usable RPC commands
    *
    * @memberof TerminalConsole
    */
   loadCommandList = async () => {
     const result = await RPC.PROMISE('help', []);
-    const commandList = result.split('\n');
+    const commandList = result
+      .split('\n')
+      .filter(c => c !== 'please enable -richlist to use this command')
+      .filter(c => !c.startsWith(' ')); // Tritium added some extra comments that are not commands so filter them out
     this.props.setCommandList(commandList);
   };
 
@@ -169,7 +181,7 @@ class TerminalConsole extends Component {
   }
 
   /**
-   *
+   * Execute a Command
    *
    * @memberof TerminalConsole
    */
@@ -191,18 +203,13 @@ class TerminalConsole extends Component {
       return;
     }
 
-    const args = [];
-    chunks.forEach(arg => {
-      if (arg) {
-        if (!isNaN(parseFloat(arg))) {
-          args.push(parseFloat(arg));
-        } else {
-          args.push(arg);
-        }
-      }
-    });
+    const args = chunks
+      .filter(arg => arg)
+      .map(arg => (isNaN(Number(arg)) ? arg : Number(arg)));
 
-    const tab = ' '.repeat(7);
+    this.inputRef.inputRef.current.blur();
+
+    const tab = ' '.repeat(2);
     let result = null;
     try {
       result = await RPC.PROMISE(cmd, args);
@@ -240,15 +247,19 @@ class TerminalConsole extends Component {
       traverseOutput(result, 1);
       printCommandOutput(output);
     } else if (typeof result === 'string') {
-      printCommandOutput(result.split('\n').map(text => tab + text));
+      printCommandOutput(
+        result
+          .split('\n')
+          .map(text => tab + (text.startsWith(' ') ? text : '> ' + text + '\n'))
+      );
     } else {
-      printCommandOutput(result);
+      printCommandOutput(tab + result);
     }
   };
 
   /**
-   *
-   *
+   * Handle Key Down Event
+   * @param {*} e
    * @memberof TerminalConsole
    */
   handleKeyDown = e => {
@@ -268,7 +279,7 @@ class TerminalConsole extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof TerminalConsole
@@ -299,13 +310,15 @@ class TerminalConsole extends Component {
                 {cch => (
                   <AutoSuggest
                     suggestions={commandList}
+                    filterSuggestions={filterCommands}
                     onSelect={updateConsoleInput}
                     keyControl={false}
                     suggestOn="change"
+                    ref={c => (this.inputRef = c)}
                     inputRef={this.inputRef}
                     inputProps={{
                       autoFocus: true,
-                      skin: 'filled-dark',
+                      skin: 'filled-inverted',
                       value: consoleInput,
                       placeholder: cch,
                       onChange: e => {
@@ -314,7 +327,7 @@ class TerminalConsole extends Component {
                       onKeyDown: this.handleKeyDown,
                       right: (
                         <ExecuteButton
-                          skin="filled-dark"
+                          skin="filled-inverted"
                           fitHeight
                           grouped="right"
                           onClick={this.execute}
@@ -355,7 +368,7 @@ class TerminalConsole extends Component {
             </ConsoleOutput>
 
             <Button
-              skin="filled-dark"
+              skin="filled-inverted"
               grouped="bottom"
               onClick={resetConsoleOutput}
             >

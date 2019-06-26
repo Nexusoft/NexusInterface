@@ -11,13 +11,13 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
 import UIController from 'components/UIController';
+import AddEditContactModal from 'components/AddEditContactModal';
 import ContextMenuBuilder from 'contextmenu';
 
 // Internal Local
 import PanelControls from './PanelControls';
 import ContactList from './ContactList';
 import ContactDetails from './ContactDetails';
-import AddEditContactModal from './AddEditContactModal';
 
 // Icons
 import addressBookIcon from 'images/address-book.sprite.svg';
@@ -33,7 +33,7 @@ const AddressBookLayout = styled.div({
 
 const mapStateToProps = state => ({
   addressBook: state.addressBook,
-  connections: state.overview.connections,
+  connections: state.core.info.connections,
 });
 
 /**
@@ -82,7 +82,7 @@ class AddressBook extends Component {
   }
 
   /**
-   *
+   * Opens Add/Edit Contact Modal 
    *
    * @memberof AddressBook
    */
@@ -91,7 +91,7 @@ class AddressBook extends Component {
   };
 
   /**
-   * render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof AddressBook
@@ -118,11 +118,11 @@ class AddressBook extends Component {
             </div>
             {connections !== undefined && (
               <Button
-                skin="blank-light"
+                skin="plain"
                 onClick={this.showAddContact}
                 className="mt1"
               >
-                <Icon icon={addContactIcon} spaceRight />
+                <Icon icon={addContactIcon} className="space-right" />
                 <Text id="AddressBook.CreateNewContact" />
               </Button>
             )}

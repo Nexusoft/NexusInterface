@@ -9,6 +9,7 @@ import SuccessDialog from 'components/Dialogs/SuccessDialog';
 import Notification from 'components/Notification';
 import ModalContext from 'context/modal';
 import TaskContext from 'context/task';
+import { zIndex } from 'styles';
 
 const newModalID = (function() {
   let counter = 1;
@@ -29,7 +30,7 @@ const SnackBars = styled.div({
   position: 'fixed',
   top: 20,
   left: 20,
-  zIndex: 9002,
+  zIndex: zIndex.snackBars,
 });
 
 const Modals = ({ modals }) => (
@@ -75,6 +76,13 @@ let singleton = null;
 const defaultModals = [];
 
 // UIController is a SINGLETON class
+/**
+ * Controlles the elements that get rendered over the main app, so dialogs/modals etc
+ *
+ * @export
+ * @class UIController
+ * @extends {Component}
+ */
 export default class UIController extends Component {
   // For opening modals before the UIController instance is even created
   static openModal = (component, props) => {
@@ -86,6 +94,11 @@ export default class UIController extends Component {
     });
   };
 
+  /**
+   *Creates an instance of UIController.
+   * @param {*} props
+   * @memberof UIController
+   */
   constructor(props) {
     super(props);
 
@@ -115,6 +128,11 @@ export default class UIController extends Component {
     notifications: [],
   };
 
+  /**
+   * Open a Modal
+   *
+   * @memberof UIController
+   */
   openModal = (component, props) => {
     const modalID = newModalID();
     this.setState({
@@ -130,19 +148,44 @@ export default class UIController extends Component {
     return modalID;
   };
 
+  /**
+   * Remove this Modal
+   *
+   * @memberof UIController
+   */
   removeModal = modalID => {
     const modals = this.state.modals.filter(m => m.id !== modalID);
     this.setState({ modals });
   };
 
+  /**
+   * Open a Confirm Dialog
+   *
+   * @memberof UIController
+   */
   openConfirmDialog = props => this.openModal(ConfirmDialog, props);
 
+  /**
+   * Open a Error Dialog
+   *
+   * @memberof UIController
+   */
   openErrorDialog = props => this.openModal(ErrorDialog, props);
 
+  /**
+   * Open a Success Dialog
+   *
+   * @memberof UIController
+   */
   openSuccessDialog = props => this.openModal(SuccessDialog, props);
 
   // showNotification(content: any, type: String), or
   // showNotification(content: any, options: object)
+  /**
+   * Show A Notification
+   *
+   * @memberof UIController
+   */
   showNotification = (content, param) => {
     const notifID = newNotifID();
     const options = typeof param === 'string' ? { type: param } : param;
@@ -158,6 +201,11 @@ export default class UIController extends Component {
     return notifID;
   };
 
+  /**
+   * Remove A Notification
+   *
+   * @memberof UIController
+   */
   removeNotification = notifID => {
     const notifications = this.state.notifications.filter(
       n => n.id !== notifID
@@ -165,6 +213,11 @@ export default class UIController extends Component {
     this.setState({ notifications });
   };
 
+  /**
+   * Shows a Background Task
+   *
+   * @memberof UIController
+   */
   showBackgroundTask = (component, props) => {
     const taskID = newTaskID();
     this.setState({
@@ -180,11 +233,22 @@ export default class UIController extends Component {
     return taskID;
   };
 
+  /**
+   * Removes a Background Task
+   *
+   * @memberof UIController
+   */
   removeBackgroundTask = taskID => {
     const tasks = this.state.tasks.filter(t => t.id !== taskID);
     this.setState({ tasks });
   };
 
+  /**
+   * Component's Renderable JSX
+   *
+   * @returns
+   * @memberof UIController
+   */
   render() {
     return (
       <>

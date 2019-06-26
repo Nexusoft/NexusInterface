@@ -1,18 +1,34 @@
-// External Dependencies
+/**
+ * Important note - This file is imported into module_preload.js, either directly or
+ * indirectly, and will be a part of the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Don't assign anything to `global` variable because it will be passed
+ * into modules' execution environment.
+ * - Make sure this note also presents in other files which are imported here.
+ */
+
+// External
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
-import { animations, timing } from 'styles';
+// Internal
+import { animations, timing, zIndex } from 'styles';
 
-const OverlayComponent = styled.div({
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 9000,
-});
+const OverlayComponent = styled.div(
+  {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  ({ zPriority = 0 }) => ({
+    zIndex: zIndex.overlays + zPriority,
+  })
+);
 
 const OverlayBackground = styled.div(
   {
@@ -47,6 +63,7 @@ export default class Overlay extends Component {
       onBackgroundClick,
       backgroundRef,
       children,
+      zPriority,
       ...rest
     } = this.props;
     return ReactDOM.createPortal(
@@ -55,6 +72,7 @@ export default class Overlay extends Component {
           ref={backgroundRef}
           dimmed={dimBackground}
           onClick={onBackgroundClick}
+          zPriority={zPriority}
         />
         {children}
       </OverlayComponent>,
