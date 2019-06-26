@@ -5,6 +5,7 @@ import UIController from 'components/UIController';
 import Text from 'components/Text';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+import { consts } from 'styles';
 
 /**
  *
@@ -56,7 +57,11 @@ class RescanButton extends React.Component {
           this.props.tooltip && <Text id="MyAddressesModal.RescanTooltip" />
         }
       >
-        <Button fitHeight disabled={rescanning} onClick={this.rescan}>
+        <Button
+          disabled={rescanning}
+          onClick={this.rescan}
+          style={{ height: consts.inputHeightEm + 'em' }}
+        >
           {rescanning ? (
             <Text id="MyAddressesModal.Rescanning" />
           ) : (

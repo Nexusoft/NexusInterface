@@ -156,7 +156,7 @@ const Stats = styled.div(
   ({ left, compact }) =>
     left && {
       textAlign: 'right',
-      right: compact ? 'calc(56% + 80px)' : 'calc(70% + 120px)',
+      right: compact ? 'calc(56% + 80px)' : 'calc(70% + 80px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideRight}`,
       [Stat]: {
         justifyContent: 'flex-end',
@@ -168,7 +168,7 @@ const Stats = styled.div(
   ({ right, compact }) =>
     right && {
       textAlign: 'left',
-      left: compact ? 'calc(56% + 80px)' : 'calc(70% + 120px)',
+      left: compact ? 'calc(56% + 80px)' : 'calc(70% + 80px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideLeft}`,
       [Stat]: {
         justifyContent: 'flex-start',

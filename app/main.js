@@ -9,7 +9,7 @@ import devToolsInstall, {
   REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
 import 'electron-debug';
-
+import fs from 'fs-extra';
 import fileServer from './fileServer';
 
 // Internal
@@ -167,8 +167,51 @@ function createWindow() {
   });
 }
 
+//If you have a QT folder, back up that data just in case.
+async function backUpQT() {
+  const doNotCopyList = [
+    'blk0001.dat',
+    'blk0002.dat',
+    'database',
+    'keychain',
+    'datachain',
+    '__db.001',
+    '__db.002',
+    '__db.003',
+    '__db.004',
+    '__db.005',
+  ];
+  const exists = await fs.pathExists(configuration.GetCoreDataDir());
+  if (exists) {
+    const backupexists = await fs.pathExists(
+      configuration.GetCoreDataDir() + '_OldQtBackUp'
+    );
+    if (!backupexists) {
+      const filterFunc = (src, dest) => {
+        const filename = src.replace(/^.*[\\\/]/, '');
+        if (doNotCopyList.includes(filename)) {
+          return false;
+        } else {
+          return true;
+        }
+      };
+      fs.copy(
+        configuration.GetCoreDataDir(),
+        configuration.GetCoreDataDir() + '_OldQtBackUp',
+        { filter: filterFunc },
+        err => {
+          if (err) return console.error(err);
+
+          console.log('QT Backup success!');
+        }
+      );
+    }
+  }
+}
+
 // Application Startup
 app.on('ready', async () => {
+  backUpQT();
   createWindow();
   global.core.start();
 

@@ -89,6 +89,8 @@
   "transactions.Sent": "Sent",
   "transactions.Genesis": "Genesis",
   "transactions.Trust": "Trust",
+  "transactions.Generate": "Generate",
+  "transactions.Immature": "Immature",
   "transactions.MinimumAmount": "Min amount",
   "transactions.TimeSpan": "Time Span",
   "transactions.PastYear": "Past Year",
