@@ -180,13 +180,20 @@ const configuration = {
    * @returns {string} Core Data Directory Path
    */
   GetCoreDataDir() {
+    const app = electron.app || electron.remote.app;
     var datadir = '';
 
     //Set data directory by OS for automatic daemon mode
     if (process.platform === 'win32') {
       var datadir = process.env.APPDATA + '\\Nexus';
     } else if (process.platform === 'darwin') {
-      var datadir = process.env.HOME + '/.Nexus';
+      var datadir = path.join(
+        app
+          .getPath('appData')
+          .replace(' ', `\ `)
+          .replace('/Electron/', ''),
+        'Nexus'
+      );
     } else {
       var datadir = process.env.HOME + '/.Nexus';
     }
