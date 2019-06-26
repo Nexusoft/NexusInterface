@@ -6,6 +6,7 @@
 import { normalize } from 'path';
 import express from 'express';
 import config from 'api/configuration';
+import log from 'electron-log';
 
 /**
  * Express server serving static files for modules
@@ -52,7 +53,7 @@ class FileServer {
     this.server = express();
     this.server.use('/modules', this.moduleMiddleware);
     this.server.listen(this.port, () => {
-      console.log(`File server listening on port ${this.port}!`);
+      log.info(`File server listening on port ${this.port}!`);
     });
   }
 

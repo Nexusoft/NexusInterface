@@ -290,6 +290,8 @@
   "Settings.AutoUpdateDisabled": "Auto Update is not yet available on Mac, please update the wallet manually for the time being",
   "Settings.EnforceOpenSourceModules": "Module open source policy",
   "Settings.EnforceOpenSourceModulesNote": "Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing",
+  "Settings.ReqiresRestart": "Would you like to do this now?",
+  "Settings.RestartDaemon": "This action requires a core restart.",
 
   "Settings.Errors.ManualDaemonUser": "Manual daemon username is required",
   "Settings.Errors.ManualDaemonPassword": "Manual daemon password is required",
