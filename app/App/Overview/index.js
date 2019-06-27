@@ -463,14 +463,13 @@ class Overview extends Component {
    * @returns
    * @memberof Overview
    */
-  calculateUSDvalue() {
+  calculateFiatvalue() {
     if (this.props.rawNXSvalues[0]) {
       let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
         if (ele.name === this.props.settings.fiatCurrency) {
           return ele;
         }
       });
-
       if (selectedCurrancyValue[0] === undefined) {
         selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
           if (ele.name === 'USD') {
@@ -487,7 +486,9 @@ class Overview extends Component {
         currencyValue = currencyValue.toFixed(2);
       }
 
-      return `${selectedCurrancyValue[0].name} ${currencyValue}`;
+      return `${helpers.ReturnCurrencySymbol(
+        this.props.settings.fiatCurrency
+      )} ${currencyValue}`;
     } else {
       return '$0';
     }
@@ -719,7 +720,7 @@ class Overview extends Component {
                 <Text id="overview.Balance" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.calculateUSDvalue())}
+                {this.waitForDaemon(this.calculateFiatvalue())}
               </StatValue>
             </MinimalStat>
 
@@ -835,7 +836,7 @@ class Overview extends Component {
                 <Text id="overview.Balance" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.calculateUSDvalue())}
+                {this.waitForDaemon(this.calculateFiatvalue())}
               </StatValue>
             </div>
             <StatIcon icon={CurrencyIcon(this.props.settings.fiatCurrency)} />
