@@ -407,7 +407,7 @@
   "TrustList.TrustList": "Trust List",
   "TrustList.Address": "Address",
   "TrustList.InterestRate": "Stake Reward",
-  "TrustList.SyncMsg": "Synching Please Wait",
+  "TrustList.SyncMsg": "Syncing Please Wait",
 
   "Exchange.Exchange": "Exchange",
   "Exchange.ShoutOut": "Powered by ShapeShift",
