@@ -1,3 +1,19 @@
+# 1.0.1 (2019.6.28)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-1.0.1)
+
+#### Additions
+
+- Added Stake/Generate/Immature to Transaction's page category filter
+
+#### Adjustments
+
+-
+
+#### Fixes
+
+- Added Stake to the Transaction Table Filter, Stake transactions will now show up
+
 # 1.0.0 (2019.6.26)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-1.0.0)

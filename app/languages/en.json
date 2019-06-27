@@ -91,6 +91,7 @@
   "transactions.Trust": "Trust",
   "transactions.Generate": "Generate",
   "transactions.Immature": "Immature",
+  "transactions.Stake": "Stake",
   "transactions.MinimumAmount": "Min amount",
   "transactions.TimeSpan": "Time Span",
   "transactions.PastYear": "Past Year",
