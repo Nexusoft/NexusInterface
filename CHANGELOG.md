@@ -15,6 +15,7 @@
 - Added Stake to the Transaction Table Filter, Stake transactions will now show up
 - Fixed bug that would sometimes result in the daemon failing to start
 - Fixed Fiat display issue on Balance on the overview page
+- Fixed functionality that allows for indefinite login
 
 # 1.0.0 (2019.6.26)
 

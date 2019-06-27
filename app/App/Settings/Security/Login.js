@@ -33,7 +33,9 @@ const Buttons = styled.div({
  * @extends {Component}
  */
 @connect(state => ({
-  tritium: state.core.info.version.includes('0.3'),
+  tritium:
+    state.core.info.version.includes('0.3') ||
+    parseFloat(state.core.info.version) >= 3,
 }))
 @reduxForm({
   form: 'login',
