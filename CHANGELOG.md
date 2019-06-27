@@ -13,6 +13,7 @@
 #### Fixes
 
 - Added Stake to the Transaction Table Filter, Stake transactions will now show up
+- Fixed bug that would sometimes result in the daemon failing to start
 
 # 1.0.0 (2019.6.26)
 

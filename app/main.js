@@ -211,7 +211,7 @@ async function backUpQT() {
 
 // Application Startup
 app.on('ready', async () => {
-  backUpQT();
+  await backUpQT();
   createWindow();
   global.core.start();
 
