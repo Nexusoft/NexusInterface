@@ -97,7 +97,7 @@ function getCorePID() {
         { env: modEnv }
       ) + ''
     ).split(',')[1];
-    if (PID) {
+    if (PID && typeof PID === 'string') {
       PID = PID.replace(/"/gm, '');
     }
 
