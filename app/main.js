@@ -83,6 +83,13 @@ function setupTray(mainWindow) {
   ]);
   tray.setContextMenu(contextMenu);
 
+  tray.on('double-click', () => {
+    mainWindow.show();
+    if (process.platform === 'darwin') {
+      app.dock.show();
+    }
+  });
+
   return tray;
 }
 
