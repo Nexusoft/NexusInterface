@@ -7,6 +7,7 @@
 - Added Stake/Generate/Immature to Transaction's page category filter
 - Added tooltip to the tray icon
 - Double click on the tray icon now shows the wallet GUI
+- Added Polish Language
 
 #### Adjustments
 
