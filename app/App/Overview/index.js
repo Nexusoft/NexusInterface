@@ -801,19 +801,7 @@ class Overview extends Component {
         )}
 
         <Stats left compact={!this.showingGlobe()}>
-          <Stat
-            as={connections ? Link : undefined}
-            to={connections ? '/Transactions' : undefined}
-          >
-            <div>
-              <StatLabel>
-                <Text id="overview.Balance" /> (NXS)
-              </StatLabel>
-              <StatValue>{this.waitForDaemon(balance)}</StatValue>
-            </div>
-            <StatIcon icon={nxsStakeIcon} />
-          </Stat>
-          {stake > 0 && (
+          {stake > 0 ? (
             <Stat
               as={connections ? Link : undefined}
               to={connections ? '/Transactions' : undefined}
@@ -823,6 +811,19 @@ class Overview extends Component {
                   <Text id="overview.StakeBalance" /> (NXS)
                 </StatLabel>
                 <StatValue>{this.waitForDaemon(stake)}</StatValue>
+              </div>
+              <StatIcon icon={nxsStakeIcon} />
+            </Stat>
+          ) : (
+            <Stat
+              as={connections ? Link : undefined}
+              to={connections ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  <Text id="overview.Balance" /> (NXS)
+                </StatLabel>
+                <StatValue>{this.waitForDaemon(balance)}</StatValue>
               </div>
               <StatIcon icon={nxsStakeIcon} />
             </Stat>

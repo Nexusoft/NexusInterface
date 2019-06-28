@@ -12,6 +12,7 @@
 
 - Now only one instance of wallet can be run at the same time
 - Changed "Stake Reward" on Overview page to "Stake Rate"
+- Changed overview Balance and Stake stats to account of visual inbalance
 
 #### Fixes
 
