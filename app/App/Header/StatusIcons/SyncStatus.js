@@ -45,7 +45,6 @@ class SyncStatus extends React.Component {
   statusIcon = () => {
     const { synchronizing, heighestPeerBlock, blocks } = this.props;
     const outOfSyncLegacy = heighestPeerBlock > blocks;
-    console.log(this.props);
 
     if (synchronizing || outOfSyncLegacy) {
       return <SpinningIcon icon={syncingIcon} />;
