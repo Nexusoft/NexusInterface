@@ -197,7 +197,7 @@ async function backUpQT() {
     );
     if (!backupexists) {
       const filterFunc = (src, dest) => {
-        const filename = src.replace(/^.*[\\\/]/, '');
+        const filename = src && src.replace(/^.*[\\\/]/, '');
         if (doNotCopyList.includes(filename)) {
           return false;
         } else {
