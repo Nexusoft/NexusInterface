@@ -209,18 +209,36 @@ async function backUpQT() {
   }
 }
 
-// Application Startup
-app.on('ready', async () => {
-  await backUpQT();
-  createWindow();
-  global.core.start();
+const gotTheLock = app.requestSingleInstanceLock();
 
-  const settings = LoadSettings();
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true' ||
-    settings.devMode
-  ) {
-    installExtensions();
-  }
-});
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      mainWindow.show();
+      if (process.platform === 'darwin') {
+        app.dock.show();
+      }
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  // Application Startup
+  app.on('ready', async () => {
+    await backUpQT();
+    createWindow();
+    global.core.start();
+
+    const settings = LoadSettings();
+    if (
+      process.env.NODE_ENV === 'development' ||
+      process.env.DEBUG_PROD === 'true' ||
+      settings.devMode
+    ) {
+      installExtensions();
+    }
+  });
+}
