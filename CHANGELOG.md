@@ -19,6 +19,7 @@
 - Fixed Fiat display issue on Balance on the overview page
 - Fixed functionality that allows for indefinite login
 - Fixed time constraint on Login form
+- Fixed issue leading to falsely diplaying fully synced icon when syncing is incomplete
 
 # 1.0.0 (2019.6.26)
 
