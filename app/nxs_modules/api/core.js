@@ -97,7 +97,7 @@ function getCorePID() {
         { env: modEnv }
       ) + ''
     ).split(',')[1];
-    if (PID) {
+    if (PID && typeof PID === 'string') {
       PID = PID.replace(/"/gm, '');
     }
 
@@ -135,10 +135,8 @@ function getCorePID() {
       execSync('ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}', [], {
         env: modEnv,
       }) + ''
-    )
-      .split('\n')[1]
-      .replace(/^\s*/gm, '')
-      .split(' ')[0];
+    ).split('\n')[1];
+    tempPID = tempPID && tempPID.replace(/^\s*/gm, '').split(' ')[0];
     var PID = tempPID.toString().replace(/^\s+|\s+$/gm, '');
 
     if (Number(PID) == 'NaN' || Number(PID) < '2' || PID === undefined) {
