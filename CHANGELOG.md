@@ -5,16 +5,22 @@
 #### Additions
 
 - Added Stake/Generate/Immature to Transaction's page category filter
+- Added tooltip to the tray icon
+- Double click on the tray icon now shows the wallet GUI
 
 #### Adjustments
 
--
+- Now only one instance of wallet can be run at the same time
+- Changed "Stake Reward" on Overview page to "Stake Rate"
 
 #### Fixes
 
 - Added Stake to the Transaction Table Filter, Stake transactions will now show up
 - Fixed bug that would sometimes result in the daemon failing to start
 - Fixed Fiat display issue on Balance on the overview page
+- Fixed functionality that allows for indefinite login
+- Fixed time constraint on Login form
+- Fixed issue leading to falsely diplaying fully synced icon when syncing is incomplete
 
 # 1.0.0 (2019.6.26)
 
