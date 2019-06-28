@@ -60,6 +60,8 @@ function setupTray(mainWindow) {
   const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
   const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
   tray.setPressedImage(pressedImage);
+  tray.setToolTip('Nexus Wallet');
+  tray.setTitle('Nexus Wallet');
 
   app.on('before-quit', () => {
     global.forceQuit = true;
