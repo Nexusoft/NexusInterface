@@ -150,7 +150,7 @@ export function getInfo() {
 
     // const enoughSpace = await checkFreeSpace(1);
     // if (!enoughSpace) {
-    //   console.log('hi here is the issue with warning');
+
     //   UIController.showNotification('WARNING LOW DISK SPACE', {
     //     type: 'error',
     //     autoClose: false,

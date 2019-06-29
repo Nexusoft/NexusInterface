@@ -66,7 +66,7 @@ class CSVDownloadModal extends PureComponent {
   };
 
   updateProgress(inNum) {
-    console.log(inNum);
+    // console.log(inNum);
     this.setState({
       processProgress: inNum,
     });
@@ -78,7 +78,7 @@ class CSVDownloadModal extends PureComponent {
 
   render() {
     const { processProgress } = this.state;
-    console.log(processProgress);
+    // console.log(processProgress);
     return (
       <CSVDownloadModalComponent
         assignClose={closeModal => (this.closeModal = closeModal)}

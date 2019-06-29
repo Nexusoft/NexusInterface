@@ -101,7 +101,6 @@ class LogInStatus extends Component {
       unlocked_until >= 0 ||
       (unlocked_until === undefined && locked === false)
     ) {
-      console.log(minting_only);
       if (unlocked_until === undefined) {
         return (
           <>
@@ -172,7 +171,7 @@ class LogInStatus extends Component {
   /**
    * Component's Renderable JSX
    *
-   * @returns 
+   * @returns
    * @memberof LogInStatus
    */
   render() {

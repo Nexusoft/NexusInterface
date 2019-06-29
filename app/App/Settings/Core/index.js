@@ -289,7 +289,7 @@ class SettingsCore extends Component {
         //       question: <Text id="Settings.RestartDaemon" />,
         //       note: <Text id="Settings.ReqiresRestart" />,
         //       callbackYes: async () => {
-        //         console.log('hello');
+
         //         this.props.updateSettings({
         //           [settingName]: form.resolveValue(input),
         //         });
