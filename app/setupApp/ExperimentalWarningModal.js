@@ -37,7 +37,6 @@ class ExperimentalWarningModal extends React.Component {
       <Modal
         assignClose={close => {
           this.closeModal = close;
-          console.log(close);
         }}
         style={{ maxWidth: 600 }}
         {...this.props}

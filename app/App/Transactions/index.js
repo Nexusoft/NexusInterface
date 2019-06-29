@@ -75,6 +75,18 @@ const categories = [
     value: 'trust',
     display: <Text id="transactions.Trust" />,
   },
+  {
+    value: 'generate',
+    display: <Text id="transactions.Generate" />,
+  },
+  {
+    value: 'immature',
+    display: <Text id="transactions.Immature" />,
+  },
+  {
+    value: 'stake',
+    display: <Text id="transactions.Stake" />,
+  },
 ];
 
 const timeFrames = [
@@ -210,7 +222,7 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   componentDidMount() {
-    console.log('mount tx');
+    // console.log('mount tx');
     const { locale } = this.props.settings;
     this._isMounted = true; // This is used so that if you nav away for this screen the background tasks will stop.
     this.updateChartAndTableDimensions();
@@ -389,7 +401,7 @@ class Transactions extends Component {
       transactionsToCheck: temp,
     });
     this.gothroughdatathatneedsit();
-    console.log(temp);
+    // console.log(temp);
   }
 
   //
@@ -779,7 +791,6 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   updateProgress() {
-    console.log(this.state.CSVProgress);
     this._Onprogress(this.state.CSVProgress * 100);
   }
 
@@ -1219,6 +1230,8 @@ class Transactions extends Component {
           return <Text id="transactions.Generate" />;
         } else if (q.value === 'immature') {
           return <Text id="transactions.Immature" />;
+        } else if (q.value === 'stake') {
+          return <Text id="transactions.Stake" />;
         } else {
           return <Text id="transactions.UnknownCategory" />;
         }
@@ -1336,6 +1349,8 @@ class Transactions extends Component {
       inData.category = translate('transactions.Generate', locale);
     } else if (inData.category == 'immature') {
       inData.category = translate('transactions.Immature', locale);
+    } else if (inData.category == 'stake') {
+      inData.category = translate('transactions.Stake', locale);
     } else {
       inData.category = translate('transactions.UnknownCategory', locale);
     }

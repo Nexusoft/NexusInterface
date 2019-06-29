@@ -233,8 +233,7 @@ class SettingsStyle extends Component {
             response.pipe(file);
             let onFinish = () => {
               file.close(response => {
-                console.log(this);
-                console.log('FInished DOwnloading');
+                console.log('FInished Downloading');
                 this.setWallpaper(file.path);
               });
             };

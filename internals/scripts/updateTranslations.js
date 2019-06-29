@@ -3,7 +3,7 @@
  * to the corresponding `app/languages/[lang].json` files.
  */
 const fs = require('fs');
-const languages = ['de', 'es', 'fr', 'ja', 'ko', 'ru'];
+const languages = ['de', 'es', 'fr', 'ja', 'ko', 'ru', 'nl', 'pl'];
 const translationPath = lang => `./app/languages/${lang}.json`;
 const changesPath = lang => `./translations/${lang}-changes.json`;
 
