@@ -16,7 +16,7 @@ export const SetMarketAveData = () => dispatch => {
         // fetch('https://min-api.cryptocompare.com/stats/rate/limit')
         //   .then(response => response.json())
         //   .then(data => {
-        //     console.log(data);
+
         //   });
 
         let rawBTC = Object.values(body.RAW.BTC).map(ele => {

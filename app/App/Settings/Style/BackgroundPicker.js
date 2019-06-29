@@ -59,7 +59,7 @@ class BackgroundPicker extends Component {
       if (process.platform === 'win32') {
         imagePath = imagePath.replace(/\\/g, '/');
       }
-      console.log(imagePath);
+
       this.props.onChange(imagePath, 'Custom');
     }
   };

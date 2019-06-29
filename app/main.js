@@ -60,6 +60,8 @@ function setupTray(mainWindow) {
   const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
   const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
   tray.setPressedImage(pressedImage);
+  tray.setToolTip('Nexus Wallet');
+  tray.setTitle('Nexus Wallet');
 
   app.on('before-quit', () => {
     global.forceQuit = true;
@@ -82,6 +84,13 @@ function setupTray(mainWindow) {
     },
   ]);
   tray.setContextMenu(contextMenu);
+
+  tray.on('double-click', () => {
+    mainWindow.show();
+    if (process.platform === 'darwin') {
+      app.dock.show();
+    }
+  });
 
   return tray;
 }
@@ -188,7 +197,7 @@ async function backUpQT() {
     );
     if (!backupexists) {
       const filterFunc = (src, dest) => {
-        const filename = src.replace(/^.*[\\\/]/, '');
+        const filename = src && src.replace(/^.*[\\\/]/, '');
         if (doNotCopyList.includes(filename)) {
           return false;
         } else {
@@ -209,18 +218,36 @@ async function backUpQT() {
   }
 }
 
-// Application Startup
-app.on('ready', async () => {
-  backUpQT();
-  createWindow();
-  global.core.start();
+const gotTheLock = app.requestSingleInstanceLock();
 
-  const settings = LoadSettings();
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true' ||
-    settings.devMode
-  ) {
-    installExtensions();
-  }
-});
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      mainWindow.show();
+      if (process.platform === 'darwin') {
+        app.dock.show();
+      }
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  // Application Startup
+  app.on('ready', async () => {
+    await backUpQT();
+    createWindow();
+    global.core.start();
+
+    const settings = LoadSettings();
+    if (
+      process.env.NODE_ENV === 'development' ||
+      process.env.DEBUG_PROD === 'true' ||
+      settings.devMode
+    ) {
+      installExtensions();
+    }
+  });
+}

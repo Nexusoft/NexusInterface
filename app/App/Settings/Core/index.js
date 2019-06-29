@@ -227,6 +227,8 @@ class SettingsCore extends Component {
     UIController.openConfirmDialog({
       question: <Text id="Settings.RestartDaemon" />,
       note: <Text id="Settings.ReqiresRestart" />,
+      labelYes: 'Restart now',
+      labelNo: "I'll restart later",
       callbackYes: async () => {
         this.props.updateSettings({
           enableStaking: form.resolveValue(value),
@@ -251,6 +253,8 @@ class SettingsCore extends Component {
     UIController.openConfirmDialog({
       question: <Text id="Settings.RestartDaemon" />,
       note: <Text id="Settings.ReqiresRestart" />,
+      labelYes: 'Restart now',
+      labelNo: "I'll restart later",
       callbackYes: async () => {
         this.props.updateSettings({
           enableMining: form.resolveValue(value),
@@ -285,7 +289,7 @@ class SettingsCore extends Component {
         //       question: <Text id="Settings.RestartDaemon" />,
         //       note: <Text id="Settings.ReqiresRestart" />,
         //       callbackYes: async () => {
-        //         console.log('hello');
+
         //         this.props.updateSettings({
         //           [settingName]: form.resolveValue(input),
         //         });

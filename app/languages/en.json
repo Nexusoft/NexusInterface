@@ -18,7 +18,7 @@
   "overview.24hrChange": "24hr Change",
   "overview.Connections": "Connections",
   "overview.BlockCount": "Block Count",
-  "overview.InterestRate": "Stake Reward",
+  "overview.InterestRate": "Stake Rate",
   "overview.StakeWeight": "Stake Weight",
   "overview.Globe": "Globe Includes GeoLite2",
 
@@ -91,6 +91,7 @@
   "transactions.Trust": "Trust",
   "transactions.Generate": "Generate",
   "transactions.Immature": "Immature",
+  "transactions.Stake": "Stake",
   "transactions.MinimumAmount": "Min amount",
   "transactions.TimeSpan": "Time Span",
   "transactions.PastYear": "Past Year",
@@ -290,8 +291,8 @@
   "Settings.AutoUpdateDisabled": "Auto Update is not yet available on Mac, please update the wallet manually for the time being",
   "Settings.EnforceOpenSourceModules": "Module open source policy",
   "Settings.EnforceOpenSourceModulesNote": "Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing",
-  "Settings.ReqiresRestart": "Would you like to do this now?",
-  "Settings.RestartDaemon": "This action requires a core restart.",
+  "Settings.ReqiresRestart": "This setting change will only take effect after core is restarted. Do you want to restart the core now?",
+  "Settings.RestartDaemon": "Restart core?",
 
   "Settings.Errors.ManualDaemonUser": "Manual daemon username is required",
   "Settings.Errors.ManualDaemonPassword": "Manual daemon password is required",
@@ -406,7 +407,7 @@
   "TrustList.TrustList": "Trust List",
   "TrustList.Address": "Address",
   "TrustList.InterestRate": "Stake Reward",
-  "TrustList.SyncMsg": "Synching Please Wait",
+  "TrustList.SyncMsg": "Syncing Please Wait",
 
   "Exchange.Exchange": "Exchange",
   "Exchange.ShoutOut": "Powered by ShapeShift",
