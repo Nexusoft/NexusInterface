@@ -70,12 +70,7 @@ const Characters = styled.span({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {
         setTimeout(() => {
-          remote
-            .getGlobal('core')
-            .start()
-            .then(payload => {
-              console.log(payload);
-            });
+          remote.getGlobal('core').start();
         }, 10000);
         UIController.showNotification(<Text id="Settings.RestartingDaemon" />);
       },

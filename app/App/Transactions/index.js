@@ -222,7 +222,7 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   componentDidMount() {
-    console.log('mount tx');
+    // console.log('mount tx');
     const { locale } = this.props.settings;
     this._isMounted = true; // This is used so that if you nav away for this screen the background tasks will stop.
     this.updateChartAndTableDimensions();
@@ -401,7 +401,7 @@ class Transactions extends Component {
       transactionsToCheck: temp,
     });
     this.gothroughdatathatneedsit();
-    console.log(temp);
+    // console.log(temp);
   }
 
   //
@@ -791,7 +791,6 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   updateProgress() {
-    console.log(this.state.CSVProgress);
     this._Onprogress(this.state.CSVProgress * 100);
   }
 

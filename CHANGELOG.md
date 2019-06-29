@@ -4,6 +4,7 @@
 
 #### Additions
 
+- Ships with 3.0.1 Tritium daemon core
 - Added Stake/Generate/Immature to Transaction's page category filter
 - Added tooltip to the tray icon
 - Double click on the tray icon now shows the wallet GUI

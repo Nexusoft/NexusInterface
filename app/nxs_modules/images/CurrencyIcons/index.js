@@ -30,50 +30,48 @@ const FrancSign = chf;
 const TaiDollarSign = twd;
 const DirhamSign = aed;
 
-export function CurrencyIcon(ISOValue)
-{
-    switch (ISOValue) {
-        case 'USD':
-        case 'AUD':
-        case 'BRL':
-        case 'CAD':
-        case 'HKD':
-        case 'MYR':
-        case 'NZD':
-        case 'SGD':
-            return(DollarSign);
-        case 'GBP':
-            return (PoundSign);
-        case 'CLP':
-        case 'MXN':
-            return (PesoSign);
-        case 'CNY':
-        case 'JPY':
-            return(YenSign);
-        case 'CZK':
-            return(KorunaSign);
-        case 'EUR':
-            return(EuroSign);
-        case 'ILS':
-            return( ShekelSign);
-        case 'KRW':
-            return(WonSign);
-        case 'PKR':
-            return(RubeeSign);
-        case 'RUB':
-            return(RubleSign);
-        case 'SAR':
-            return(RiyalSign);
-        case 'ZAR':
-            return(RandSign);
-        case 'CHF':
-            return(FrancSign);
-        case 'TWD':
-            return(TaiDollarSign);
-        case 'AED':
-            return(DirhamSign);
-        default:
-        console.log('default');
-            return(DollarSign);
-    }
+export function CurrencyIcon(ISOValue) {
+  switch (ISOValue) {
+    case 'USD':
+    case 'AUD':
+    case 'BRL':
+    case 'CAD':
+    case 'HKD':
+    case 'MYR':
+    case 'NZD':
+    case 'SGD':
+      return DollarSign;
+    case 'GBP':
+      return PoundSign;
+    case 'CLP':
+    case 'MXN':
+      return PesoSign;
+    case 'CNY':
+    case 'JPY':
+      return YenSign;
+    case 'CZK':
+      return KorunaSign;
+    case 'EUR':
+      return EuroSign;
+    case 'ILS':
+      return ShekelSign;
+    case 'KRW':
+      return WonSign;
+    case 'PKR':
+      return RubeeSign;
+    case 'RUB':
+      return RubleSign;
+    case 'SAR':
+      return RiyalSign;
+    case 'ZAR':
+      return RandSign;
+    case 'CHF':
+      return FrancSign;
+    case 'TWD':
+      return TaiDollarSign;
+    case 'AED':
+      return DirhamSign;
+    default:
+      return DollarSign;
+  }
 }
