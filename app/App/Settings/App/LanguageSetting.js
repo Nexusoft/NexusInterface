@@ -80,6 +80,15 @@ const languages = [
     ),
   },
   {
+    value: 'pl',
+    display: (
+      <span>
+        <Flag src={FlagFile.Polish} />
+        <span className="v-align">Polski</span>
+      </span>
+    ),
+  },
+  {
     value: 'ru',
     display: (
       <span>

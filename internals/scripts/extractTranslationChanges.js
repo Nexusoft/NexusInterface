@@ -5,7 +5,7 @@
  * `update-translations` script to apply those changes into `app/languages/[lang].json` files
  */
 const fs = require('fs');
-const languages = ['de', 'es', 'fr', 'ja', 'ko', 'ru', 'nl'];
+const languages = ['de', 'es', 'fr', 'ja', 'ko', 'ru', 'nl', 'pl'];
 const translationPath = lang => `./app/languages/${lang}.json`;
 const changesPath = lang => `./translations/${lang}-changes.json`;
 const oldEnPath = './translations/en.json';
