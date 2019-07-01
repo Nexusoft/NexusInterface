@@ -1,3 +1,19 @@
+# 1.0.X (2019.7.XX)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-1.0.X)
+
+#### Additions
+
+- text
+
+#### Adjustments
+
+- text
+
+#### Fixes
+
+- Fixed issue were if you never installed QT or deleted the QT back up it would auto make a new backup
+
 # 1.0.1 (2019.6.28)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-1.0.1)
@@ -5,10 +21,10 @@
 #### Additions
 
 - Ships with 3.0.1 [Tritium Daemon Core](https://github.com/Nexusoft/LLL-TAO/releases/tag/3.0.1)
- - Fixed uninitiated values in Binary Hash Map for nFlags
- - On rescan, allow search for block when key is found for given user
- - Cleanup unnecessary constructors in Sector Database
- - Remove error reporting for incorrect sector size in Update
+  - Fixed uninitiated values in Binary Hash Map for nFlags
+  - On rescan, allow search for block when key is found for given user
+  - Cleanup unnecessary constructors in Sector Database
+  - Remove error reporting for incorrect sector size in Update
 - Added Stake/Generate/Immature to Transaction's page category filter
 - Added tooltip to the tray icon
 - Double click on the tray icon now shows the wallet GUI
