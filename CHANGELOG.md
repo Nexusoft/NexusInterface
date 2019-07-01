@@ -13,6 +13,7 @@
 #### Fixes
 
 - Fixed issue were if you never installed QT or deleted the QT back up it would auto make a new backup
+- Fixed there being a `Nexus_Wallet` AND `Nexus Wallet` folders, Removed `Nexus_Wallet` and will auto move items into correct folder
 
 # 1.0.1 (2019.6.28)
 
