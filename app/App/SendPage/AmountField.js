@@ -93,7 +93,7 @@ class AmountField extends Component {
     'fiatAmount';
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof AmountField

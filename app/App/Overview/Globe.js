@@ -7,10 +7,10 @@ const OrbitControls = require('three-orbit-controls')(THREE);
 
 import world from 'images/world-light-white.jpg';
 import worldSmall from 'images/world-light-white-small.jpg';
-import * as RPC from 'scripts/rpc';
 import configuration from 'api/configuration';
 import Curve from './Curve';
 import Point from './Point';
+import * as RPC from 'scripts/rpc';
 
 const GlobeContainer = styled.div({
   position: 'fixed',
@@ -232,6 +232,7 @@ export default class Globe extends Component {
       .map(peer => {
         let GeoData = this.geoiplookup.get(peer.addr.split(':')[0]);
         // TODO: add checks for lisp and change color appropreately
+
         return {
           lat: GeoData.location.latitude,
           lng: GeoData.location.longitude,
@@ -481,7 +482,7 @@ export default class Globe extends Component {
   }
 
   /**
-   * Render the globe using react
+   * Component's Renderable JSX
    *
    * @returns {JSX} JSX
    * @memberof Globe

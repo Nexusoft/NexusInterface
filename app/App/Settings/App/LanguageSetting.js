@@ -80,6 +80,15 @@ const languages = [
     ),
   },
   {
+    value: 'pl',
+    display: (
+      <span>
+        <Flag src={FlagFile.Polish} />
+        <span className="v-align">Polski</span>
+      </span>
+    ),
+  },
+  {
     value: 'ru',
     display: (
       <span>
@@ -117,7 +126,7 @@ class LanguageSetting extends Component {
   handleChange = locale => this.props.updateSettings({ locale });
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof LanguageSetting

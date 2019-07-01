@@ -49,6 +49,11 @@ const ProgressBar = styled.div(({ percentage, theme }) => ({
  * @extends {PureComponent}
  */
 class CSVDownloadModal extends PureComponent {
+  /**
+   *Creates an instance of CSVDownloadModal.
+   * @param {*} props
+   * @memberof CSVDownloadModal
+   */
   constructor(props) {
     super(props);
     this.props.parent({
@@ -61,7 +66,7 @@ class CSVDownloadModal extends PureComponent {
   };
 
   updateProgress(inNum) {
-    console.log(inNum);
+    // console.log(inNum);
     this.setState({
       processProgress: inNum,
     });
@@ -73,7 +78,7 @@ class CSVDownloadModal extends PureComponent {
 
   render() {
     const { processProgress } = this.state;
-    console.log(processProgress);
+    // console.log(processProgress);
     return (
       <CSVDownloadModalComponent
         assignClose={closeModal => (this.closeModal = closeModal)}

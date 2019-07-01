@@ -96,7 +96,7 @@ class Recipients extends React.Component {
     );
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Recipients
@@ -152,7 +152,7 @@ class Recipients extends React.Component {
 
           <MoreInfo>
             <Button skin="hyperlink" onClick={addRecipient}>
-              <PlusIcon icon={plusIcon} spaceRight />
+              <PlusIcon icon={plusIcon} className="space-right" />
               <span className="v-align">
                 <Text id="sendReceive.AddRecipient" />
               </span>

@@ -1,10 +1,21 @@
+/**
+ * Important note - This file is imported into module_preload.js, either directly or
+ * indirectly, and will be a part of the preload script for modules, therefore:
+ * - Be picky with importing stuffs into this file, especially for big
+ * files and libraries. The bigger the preload scripts get, the slower the modules
+ * will load.
+ * - Don't assign anything to `global` variable because it will be passed
+ * into modules' execution environment.
+ * - Make sure this note also presents in other files which are imported here.
+ */
+
 // External Dependencies
 import React from 'react';
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
-import Tooltip from 'components/Tooltip';
 
 // Internal Global Dependencies
+import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { timing } from 'styles';
 
@@ -12,22 +23,6 @@ const TabLi = styled.li({
   listStyle: 'none',
   flexGrow: 1,
   flexBasis: 0,
-});
-const TabToolTipText = styled.span({
-  visibility: 'hidden',
-  width: '120px',
-  backgroundColor: '#555',
-  color: '#fff',
-  textAlign: 'center',
-  padding: '5px 0',
-  borderRadius: '6px',
-
-  /* Position the tooltip text */
-  position: 'absolute',
-  zIndex: '1',
-  bottom: '125%',
-  left: '50%',
-  marginLeft: '-60px',
 });
 const TabLink = styled(NavLink)(({ theme }) => ({
   display: 'flex',
@@ -40,16 +35,8 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   transitionProperties: 'color, borderBottom',
   transitionDuration: timing.normal,
 
-  '&.TabToolTip': {
-    TabToolTipText,
-  },
-
   '&:hover': {
     color: theme.foreground,
-    '&.TabToolTip': {
-      TabToolTipText,
-      visibility: 'visible',
-    },
   },
 
   '&.active': {
@@ -58,26 +45,17 @@ const TabLink = styled(NavLink)(({ theme }) => ({
   },
 }));
 
-const TabToolTip = styled.span({
-  position: 'relative',
-  display: 'inline-block',
-  '&.TabToolTip': {
-    TabToolTipText,
-  },
-  '&:hover': {
-    TabToolTipText,
-    visibility: 'visible',
-  },
-});
-const Tab = ({ link, icon, text, toolTipText, isActive }) => (
-  <TabLi>
-    <Tooltip.Trigger tooltip={toolTipText} position="top">
-      <TabLink to={link} isActive={isActive}>
-        {!!icon && <Icon spaceRight icon={icon} />}
-        {text}
-      </TabLink>
-    </Tooltip.Trigger>
-  </TabLi>
+const Tab = React.forwardRef(
+  ({ link, icon, text, toolTipText, isActive, ...rest }, ref) => (
+    <TabLi {...rest} ref={ref}>
+      <Tooltip.Trigger tooltip={toolTipText} position="top">
+        <TabLink to={link} isActive={isActive}>
+          {!!icon && <Icon className="space-right" icon={icon} />}
+          {text}
+        </TabLink>
+      </Tooltip.Trigger>
+    </TabLi>
+  )
 );
 
 const TabBar = styled.ul({

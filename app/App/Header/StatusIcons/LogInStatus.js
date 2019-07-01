@@ -11,7 +11,7 @@ import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from 'components/StatusIcon';
 import { timing } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 
 // Images
 import questionMarkIcon from 'images/question-mark.sprite.svg';
@@ -101,7 +101,6 @@ class LogInStatus extends Component {
       unlocked_until >= 0 ||
       (unlocked_until === undefined && locked === false)
     ) {
-      console.log(minting_only);
       if (unlocked_until === undefined) {
         return (
           <>
@@ -170,7 +169,7 @@ class LogInStatus extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof LogInStatus

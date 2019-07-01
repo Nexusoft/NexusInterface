@@ -22,7 +22,7 @@ const ChangePasswordComponent = styled.form({
 });
 
 /**
- * Change Password JSX
+ * Change Password Form
  *
  * @class ChangePassword
  * @extends {Component}
@@ -77,7 +77,7 @@ class ChangePassword extends Component {
   confirmLogout = () => {
     UIController.openConfirmDialog({
       question: <Text id="Settings.ConfirmLogOut" />,
-      yesCallback: async () => {
+      callbackYes: async () => {
         try {
           await RPC.PROMISE('walletlock', []);
           this.props.getInfo();
@@ -93,7 +93,7 @@ class ChangePassword extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof ChangePassword

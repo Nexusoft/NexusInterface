@@ -27,13 +27,15 @@ const Buttons = styled.div({
 });
 
 /**
- * Login JSX
+ *  Login Form
  *
  * @class Login
  * @extends {Component}
  */
 @connect(state => ({
-  tritium: state.core.info.version.includes('0.3'),
+  tritium:
+    state.core.info.version.includes('0.3') ||
+    parseFloat(state.core.info.version) >= 3,
 }))
 @reduxForm({
   form: 'login',
@@ -117,33 +119,6 @@ const Buttons = styled.div({
 })
 class Login extends Component {
   /**
-   * Get min date to lock
-   *
-   * @returns
-   * @memberof Login
-   */
-  getMinDate() {
-    const today = new Date();
-    let month = today.getMonth() + 1;
-    if (month < 10) {
-      month = '0' + month;
-    }
-    return `${today.getFullYear()}-${month}-${today.getDate()}`;
-  }
-
-  /**
-   * Get min time to lock
-   *
-   * @returns
-   * @memberof Login
-   */
-  getMinTime() {
-    const now = new Date();
-
-    return `${now.getHours()}:${now.getMinutes()}`;
-  }
-
-  /**
    * Render the date & time pickers
    *
    * @param {*} props
@@ -153,26 +128,16 @@ class Login extends Component {
     !this.props.tritium || input.value ? (
       <div>
         <FormField connectLabel label={<Text id="Settings.LoginDate" />}>
-          <Field
-            component={TextField.RF}
-            name="date"
-            type="date"
-            min={this.getMinDate()}
-          />
+          <Field component={TextField.RF} name="date" type="date" />
         </FormField>
         <FormField connectLabel label={<Text id="Settings.LoginTime" />}>
-          <Field
-            component={TextField.RF}
-            name="time"
-            type="time"
-            min={this.getMinTime()}
-          />
+          <Field component={TextField.RF} name="time" type="time" />
         </FormField>
       </div>
     ) : null;
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Login

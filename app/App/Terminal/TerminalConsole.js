@@ -75,9 +75,7 @@ const actionCreators = {
 };
 
 const TerminalContent = styled.div({
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: 0,
+  gridArea: 'content',
   overflow: 'visible',
 });
 
@@ -135,7 +133,7 @@ class TerminalConsole extends Component {
   }
 
   /**
-   *
+   * Loadin all the usable RPC commands
    *
    * @memberof TerminalConsole
    */
@@ -183,7 +181,7 @@ class TerminalConsole extends Component {
   }
 
   /**
-   *
+   * Execute a Command
    *
    * @memberof TerminalConsole
    */
@@ -249,15 +247,19 @@ class TerminalConsole extends Component {
       traverseOutput(result, 1);
       printCommandOutput(output);
     } else if (typeof result === 'string') {
-      printCommandOutput(result.split('\n').map(text => tab + (text.startsWith(' ') ? text : "> " + text + '\n' )));
+      printCommandOutput(
+        result
+          .split('\n')
+          .map(text => tab + (text.startsWith(' ') ? text : '> ' + text + '\n'))
+      );
     } else {
       printCommandOutput(tab + result);
     }
   };
 
   /**
-   *
-   *
+   * Handle Key Down Event
+   * @param {*} e
    * @memberof TerminalConsole
    */
   handleKeyDown = e => {
@@ -276,15 +278,8 @@ class TerminalConsole extends Component {
     }
   };
 
-  tempasd = (incoming) => {
-    console.log(incoming);
-    const asdfgh = incoming.split(' ')[0] + ' ';
-    console.log(asdfgh);
-    this.props.updateConsoleInput(asdfgh);
-  }
-
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof TerminalConsole
@@ -319,11 +314,11 @@ class TerminalConsole extends Component {
                     onSelect={updateConsoleInput}
                     keyControl={false}
                     suggestOn="change"
-                    ref={c => this.inputRef = c}
+                    ref={c => (this.inputRef = c)}
                     inputRef={this.inputRef}
                     inputProps={{
                       autoFocus: true,
-                      skin: 'filled-dark',
+                      skin: 'filled-inverted',
                       value: consoleInput,
                       placeholder: cch,
                       onChange: e => {
@@ -332,7 +327,7 @@ class TerminalConsole extends Component {
                       onKeyDown: this.handleKeyDown,
                       right: (
                         <ExecuteButton
-                          skin="filled-dark"
+                          skin="filled-inverted"
                           fitHeight
                           grouped="right"
                           onClick={this.execute}
@@ -373,7 +368,7 @@ class TerminalConsole extends Component {
             </ConsoleOutput>
 
             <Button
-              skin="filled-dark"
+              skin="filled-inverted"
               grouped="bottom"
               onClick={resetConsoleOutput}
             >

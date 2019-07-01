@@ -27,7 +27,7 @@ import {
 export default class MarketDepth extends Component {
   // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof MarketDepth

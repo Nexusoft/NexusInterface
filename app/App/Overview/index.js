@@ -86,6 +86,12 @@ const blockWeightIcons = [
   blockweight9,
 ];
 
+/**
+ * Formats the Difficulty to 3 decimal points
+ * @memberof Overview
+ * @param {*} diff
+ * @returns {Number} Diff but with 3 decimal point places
+ */
 const formatDiff = diff => (diff || 0).toFixed(3);
 
 // React-Redux mandatory methods
@@ -150,7 +156,7 @@ const Stats = styled.div(
   ({ left, compact }) =>
     left && {
       textAlign: 'right',
-      right: compact ? 'calc(56% + 80px)' : 'calc(70% + 120px)',
+      right: compact ? 'calc(56% + 80px)' : 'calc(70% + 80px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideRight}`,
       [Stat]: {
         justifyContent: 'flex-end',
@@ -162,7 +168,7 @@ const Stats = styled.div(
   ({ right, compact }) =>
     right && {
       textAlign: 'left',
-      left: compact ? 'calc(56% + 80px)' : 'calc(70% + 120px)',
+      left: compact ? 'calc(56% + 80px)' : 'calc(70% + 80px)',
       animation: `${timing.slow} ${consts.enhancedEaseOut} 0s ${slideLeft}`,
       [Stat]: {
         justifyContent: 'flex-start',
@@ -266,12 +272,21 @@ const MaxmindLogo = styled.img({
  * @extends {Component}
  */
 class Overview extends Component {
+  /**
+   *Creates an instance of Overview.
+   * @param {*} props
+   * @memberof Overview
+   */
   constructor(props) {
     super(props);
     this.fetchDifficulty();
   }
 
-  // React Method (Life cycle hook)
+  /**
+   * Component Mount Callback
+   *
+   * @memberof Overview
+   */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
     googleanalytics.SendScreen('Overview');
@@ -282,13 +297,24 @@ class Overview extends Component {
    * @memberof Overview
    */
   reDrawEverything() {}
-  // React Method (Life cycle hook)
+
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof Overview
+   */
   componentWillUnmount() {
     clearTimeout(this.diffFetcher);
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
-  // React Method (Life cycle hook)
+  /**
+   * Component Prop Update Callback
+   *
+   * @param {*} prevProps
+   * @returns
+   * @memberof Overview
+   */
   componentDidUpdate(prevProps) {
     const {
       webGLEnabled,
@@ -321,6 +347,11 @@ class Overview extends Component {
     }
   }
 
+  /**
+   * Get the Difficulty from the network
+   *
+   * @memberof Overview
+   */
   fetchDifficulty = async () => {
     await this.props.getDifficulty();
     this.diffFetcher = setTimeout(this.fetchDifficulty, 50000);
@@ -432,14 +463,13 @@ class Overview extends Component {
    * @returns
    * @memberof Overview
    */
-  calculateUSDvalue() {
+  calculateFiatvalue() {
     if (this.props.rawNXSvalues[0]) {
       let selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
         if (ele.name === this.props.settings.fiatCurrency) {
           return ele;
         }
       });
-
       if (selectedCurrancyValue[0] === undefined) {
         selectedCurrancyValue = this.props.rawNXSvalues.filter(ele => {
           if (ele.name === 'USD') {
@@ -455,10 +485,10 @@ class Overview extends Component {
       } else {
         currencyValue = currencyValue.toFixed(2);
       }
+
       return `${helpers.ReturnCurrencySymbol(
-        selectedCurrancyValue[0].name,
-        this.props.displayNXSvalues
-      ) + currencyValue}`;
+        this.props.settings.fiatCurrency
+      )} ${currencyValue}`;
     } else {
       return '$0';
     }
@@ -645,7 +675,7 @@ class Overview extends Component {
 
   // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Overview
@@ -675,24 +705,22 @@ class Overview extends Component {
           <MinimalStats>
             <MinimalStat>
               <StatLabel>
-                {stake > 0 ? (
+                {/* {stake > 0 ? (
                   <span>Balance and Stake</span>
-                ) : (
-                  <Text id="overview.Balance" />
-                )}{' '}
+                ) : ( */}
+                <Text id="overview.Balance" />
+                {/* )} */}
                 (NXS) :
               </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(balance + (stake || 0))}
-              </StatValue>
+              <StatValue>{this.waitForDaemon(balance)}</StatValue>
             </MinimalStat>
-
+            {/* + (stake || 0) */}
             <MinimalStat>
               <StatLabel>
                 <Text id="overview.Balance" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.calculateUSDvalue())}
+                {this.waitForDaemon(this.calculateFiatvalue())}
               </StatValue>
             </MinimalStat>
 
@@ -773,26 +801,33 @@ class Overview extends Component {
         )}
 
         <Stats left compact={!this.showingGlobe()}>
-          <Stat
-            as={connections ? Link : undefined}
-            to={connections ? '/Transactions' : undefined}
-          >
-            <div>
-              <StatLabel>
-                {stake > 0 ? (
-                  <span>Balance and Stake</span>
-                ) : (
-                  <Text id="overview.Balance" />
-                )}{' '}
-                (NXS)
-              </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(balance + (stake || 0))}
-              </StatValue>
-            </div>
-            <StatIcon icon={nxsStakeIcon} />
-          </Stat>
-
+          {stake > 0 ? (
+            <Stat
+              as={connections ? Link : undefined}
+              to={connections ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  <Text id="overview.StakeBalance" /> (NXS)
+                </StatLabel>
+                <StatValue>{this.waitForDaemon(stake)}</StatValue>
+              </div>
+              <StatIcon icon={nxsStakeIcon} />
+            </Stat>
+          ) : (
+            <Stat
+              as={connections ? Link : undefined}
+              to={connections ? '/Transactions' : undefined}
+            >
+              <div>
+                <StatLabel>
+                  <Text id="overview.Balance" /> (NXS)
+                </StatLabel>
+                <StatValue>{this.waitForDaemon(balance)}</StatValue>
+              </div>
+              <StatIcon icon={nxsStakeIcon} />
+            </Stat>
+          )}
           <Stat
             as={connections ? Link : undefined}
             to={connections ? '/Transactions' : undefined}
@@ -802,7 +837,7 @@ class Overview extends Component {
                 <Text id="overview.Balance" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.calculateUSDvalue())}
+                {this.waitForDaemon(this.calculateFiatvalue())}
               </StatValue>
             </div>
             <StatIcon icon={CurrencyIcon(this.props.settings.fiatCurrency)} />

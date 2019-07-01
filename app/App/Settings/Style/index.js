@@ -113,6 +113,11 @@ class SettingsStyle extends Component {
     sampleAddress: '000000000000000000000000000000000000000000000000000',
   };
 
+  /**
+   * Component Mount Callback
+   *
+   * @memberof SettingsStyle
+   */
   componentDidMount() {
     if (this.props.theme.defaultStyle == 'Dark') {
       this.setThemeSelector(0);
@@ -228,8 +233,7 @@ class SettingsStyle extends Component {
             response.pipe(file);
             let onFinish = () => {
               file.close(response => {
-                console.log(this);
-                console.log('FInished DOwnloading');
+                console.log('FInished Downloading');
                 this.setWallpaper(file.path);
               });
             };
@@ -374,7 +378,7 @@ class SettingsStyle extends Component {
   setThemeSelector = selectorIndex => {};
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof SettingsStyle
@@ -439,7 +443,7 @@ class SettingsStyle extends Component {
               label="Sample Address"
             />
             <AddressStyleNote>
-              <Icon icon={warningIcon} spaceRight />
+              <Icon icon={warningIcon} className="space-right" />
               <span className="v-align">This is your Default Address</span>
             </AddressStyleNote>
           </div>

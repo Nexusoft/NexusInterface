@@ -45,14 +45,13 @@ const mapStateToProps = ({
 @connect(mapStateToProps)
 class ContactList extends React.Component {
   createContact = () => {
-    console.log('click');
     UIController.openModal(AddEditContactModal);
   };
 
   /**
-   * render
+   * Component's Renderable JSX
    *
-   * @returns
+   * @returns {JSX}
    * @memberof ContactList
    */
   render() {

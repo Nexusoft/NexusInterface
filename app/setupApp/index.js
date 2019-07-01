@@ -10,14 +10,15 @@ import { getInfo } from 'actions/coreActionCreators';
 import { loadSettingsFromFile } from 'actions/settingsActionCreators';
 import { loadThemeFromFile } from 'actions/themeActionCreators';
 import { loadAddressBookFromFile } from 'actions/addressBookActionCreators';
+import { loadModules } from 'actions/moduleActionCreators';
 import updater from 'updater';
 import appMenu from 'appMenu';
 import configuration from 'api/configuration';
 import { Tail } from 'utils/tail';
-
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';
+import { join } from 'path';
 
 window.remote = remote;
 
@@ -31,7 +32,7 @@ export default function setupApp(store, history) {
   store.dispatch(loadSettingsFromFile());
   store.dispatch(loadThemeFromFile());
 
-  appMenu.initialize(store, history);
+  appMenu.initialize();
   appMenu.build();
 
   dispatch(loadAddressBookFromFile());
@@ -85,6 +86,8 @@ export default function setupApp(store, history) {
   }
 
   showInitialModals(state);
+
+  dispatch(loadModules());
 }
 
 function checkWebGL(dispatch) {
@@ -103,15 +106,20 @@ function startCoreOuputeWatch(store) {
   let datadir = configuration.GetCoreDataDir();
 
   var debugfile;
-  if (process.platform === 'win32') {
+  if (fs.existsSync(join(datadir, 'log', '0.log'))) {
+    debugfile = join(datadir, 'log', '0.log');
+  } else if (process.platform === 'win32') {
     debugfile = datadir + '\\debug.log';
   } else {
     debugfile = datadir + '/debug.log';
   }
+
   debugFileLocation = debugfile;
+
   fs.stat(debugFileLocation, (err, stat) => {
     checkDebugFileExists(err, stat, store);
   });
+
   checkIfFileExistsInterval = setInterval(() => {
     if (tail != undefined) {
       clearInterval(checkIfFileExistsInterval);
@@ -127,6 +135,7 @@ function checkDebugFileExists(err, stat, store) {
     processDeamonOutput(debugFileLocation, store);
     clearInterval(checkIfFileExistsInterval);
   } else {
+    console.log('exists', stat);
   }
 }
 

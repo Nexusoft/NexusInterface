@@ -57,7 +57,7 @@ export const bittrex24hrInfo = () => {
       (error, response, body) => {
         if (response.statusCode === 200) {
           let data = body.result[0];
-          console.log(data);
+
           let res = {
             change: parseFloat(
               (((data.Last - data.PrevDay) / data.PrevDay) * 100).toFixed(2)

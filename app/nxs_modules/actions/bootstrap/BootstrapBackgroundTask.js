@@ -28,6 +28,11 @@ const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(
  * @extends {Component}
  */
 export default class BootstrapBackgroundTask extends Component {
+  /**
+   *Creates an instance of BootstrapBackgroundTask.
+   * @param {*} props
+   * @memberof BootstrapBackgroundTask
+   */
   constructor(props) {
     super(props);
     props.bootstrapper.registerEvents({
@@ -148,7 +153,7 @@ export default class BootstrapBackgroundTask extends Component {
   };
 
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof BootstrapBackgroundTask
@@ -160,7 +165,7 @@ export default class BootstrapBackgroundTask extends Component {
         onClick={this.maximize}
         index={this.props.index}
       >
-        <Icon icon={workIcon} spaceRight />
+        <Icon icon={workIcon} className="space-right" />
         {this.state.status}
       </BootstrapBackgroundTaskComponent>
     );

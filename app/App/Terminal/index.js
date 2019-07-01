@@ -22,13 +22,13 @@ import Text from 'components/Text';
 
 const TerminalComponent = styled.div({
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
+  display: 'grid',
+  gridTemplateAreas: '"tab-bar" "content"',
+  gridTemplateRows: 'min-content 1fr',
 });
 
 const TerminalTabBar = styled(Tab.Bar)({
-  flexShrink: 0,
+  gridArea: 'tab-bar',
 });
 
 let ConsoleRedirect = ({ lastActiveTab, match }) => (
@@ -49,16 +49,24 @@ ConsoleRedirect = connect(({ ui: { console: { lastActiveTab } } }) => ({
  * @extends {Component}
  */
 class Terminal extends Component {
-  // React Method (Life cycle hook)
+  /**
+   * Component Mount Callback
+   *
+   * @memberof Terminal
+   */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
   }
-  // React Method (Life cycle hook)
+
+  /**
+   * Component Unmount Callback
+   *
+   * @memberof Terminal
+   */
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
   }
 
-  // Class Methods
   /**
    * Set up context menu
    *
@@ -73,9 +81,8 @@ class Terminal extends Component {
     defaultcontextmenu.popup(remote.getCurrentWindow());
   }
 
-  // Mandatory React method
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Terminal

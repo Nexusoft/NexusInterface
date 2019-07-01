@@ -15,7 +15,7 @@ import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { timing } from 'styles';
-import { color } from 'utils';
+import * as color from 'utils/color';
 import ContextMenuBuilder from 'contextmenu';
 import plusIcon from 'images/plus.sprite.svg';
 
@@ -86,7 +86,7 @@ const AddressesCount = styled.div(({ theme }) => ({
 )
 class Contact extends React.PureComponent {
   /**
-   *
+   * Open a Dialog to confirm Contact Delete
    *
    * @memberof Contact
    */
@@ -98,15 +98,15 @@ class Contact extends React.PureComponent {
           data={{ name: this.props.contact.name }}
         />
       ),
-      yesSkin: 'danger',
-      yesCallback: () => {
+      skinYes: 'danger',
+      callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
       },
     });
   };
 
   /**
-   *
+   * Open the Add Or Edit Contact Modal
    *
    * @memberof Contact
    */
@@ -118,7 +118,7 @@ class Contact extends React.PureComponent {
   };
 
   /**
-   *
+   * Build the context menu for this component
    *
    * @memberof Contact
    */
@@ -150,7 +150,7 @@ class Contact extends React.PureComponent {
   getinitial = name => (name && name.length >= 1 ? name.charAt(0) : '');
 
   /**
-   *
+   * Select a Contact
    *
    * @memberof Contact
    */
@@ -159,7 +159,7 @@ class Contact extends React.PureComponent {
   };
 
   /**
-   * render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof Contact
@@ -196,6 +196,12 @@ class Contact extends React.PureComponent {
 
 export default Contact;
 
+/**
+ * Returns the New Contact Button for the AddressBook
+ *
+ * @param {*} props
+ * @memberof Contact
+ */
 const NewContactButton = props => (
   <ContactComponent {...props}>
     <ContactAvatar>

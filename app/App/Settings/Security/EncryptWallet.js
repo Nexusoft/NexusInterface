@@ -15,6 +15,7 @@ import * as RPC from 'scripts/rpc';
 import { consts } from 'styles';
 import { rpcErrorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
+import { async } from 'q';
 
 const EncryptWalletForm = styled.form({
   flex: 2,
@@ -68,8 +69,6 @@ const Characters = styled.span({
     UIController.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {
-        // this.props.history.push('/');
-        // this.props.ResetForEncryptionRestart();
         setTimeout(() => {
           remote.getGlobal('core').start();
         }, 10000);
@@ -81,7 +80,7 @@ const Characters = styled.span({
 })
 class EncryptWallet extends Component {
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof EncryptWallet

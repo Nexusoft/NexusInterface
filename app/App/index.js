@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import UIController from 'components/UIController';
-import GlobalStyles from './GlobalStyles';
+import GlobalStyles from 'components/GlobalStyles';
 import Overview from './Overview';
 import Header from './Header';
 import Navigation from './Navigation';
@@ -16,13 +16,13 @@ import SendPage from './SendPage';
 import Transactions from './Transactions';
 import Market from './Market';
 import AddressBook from './AddressBook';
-import BlockExplorer from './BlockExplorer';
 import Settings from './Settings';
 import Terminal from './Terminal';
-import StyleGuide from './StyleGuide';
-import TrustList from './TrustList';
+
 import About from './About';
+import Modules from './Modules';
 // import Exchange from './Exchange';
+// import TrustList from './TrustList';
 import AppBackground from './AppBackground';
 import ThemeController from './ThemeController';
 
@@ -42,7 +42,6 @@ const AppWrapper = styled.div({
 const Main = styled.main({
   gridArea: 'content',
   overflow: 'hidden',
-  padding: '30px 10%',
   display: 'flex',
   alignItems: 'stretch',
 });
@@ -56,7 +55,7 @@ const Main = styled.main({
  */
 export default class App extends Component {
   /**
-   * React Render
+   * Component's Renderable JSX
    *
    * @returns
    * @memberof App
@@ -88,18 +87,14 @@ export default class App extends Component {
                         path="/AddressBook"
                         component={AddressBook}
                       />
-                      <Route
-                        exact
-                        path="/BlockExplorer"
-                        component={BlockExplorer}
-                      />
                       <Route path="/Settings" component={Settings} />
                       <Route path="/Terminal" component={Terminal} />
-                      <Route exact path="/StyleGuide" component={StyleGuide} />
+
                       {/* <Route path="/Exchange" component={Exchange} /> */}
                       {/* <Route exact path="/List" component={TrustList} /> */}
 
                       <Route exact path="/About" component={About} />
+                      <Route path="/Modules/:name" component={Modules} />
                     </Switch>
                   </Main>
                   <Navigation />

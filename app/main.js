@@ -1,6 +1,5 @@
 // External
-import { app, BrowserWindow, Tray, Menu, dialog } from 'electron';
-import log from 'electron-log';
+import { app, BrowserWindow, Tray, Menu } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import module from 'module';
@@ -10,17 +9,19 @@ import devToolsInstall, {
   REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
 import 'electron-debug';
+import fs from 'fs-extra';
+import fileServer from './fileServer';
 
 // Internal
-// import core from 'api/core';
-
 import configuration from 'api/configuration';
 import { LoadSettings, UpdateSettings } from 'api/settings';
 import core from 'api/core';
 
 let mainWindow;
 let resizeTimer;
+
 // Global Objects
+global.fileServer = fileServer;
 global.core = new core();
 global.autoUpdater = autoUpdater;
 global.forceQuit = false;
@@ -59,6 +60,8 @@ function setupTray(mainWindow) {
   const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
   const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
   tray.setPressedImage(pressedImage);
+  tray.setToolTip('Nexus Wallet');
+  tray.setTitle('Nexus Wallet');
 
   app.on('before-quit', () => {
     global.forceQuit = true;
@@ -81,6 +84,13 @@ function setupTray(mainWindow) {
     },
   ]);
   tray.setContextMenu(contextMenu);
+
+  tray.on('double-click', () => {
+    mainWindow.show();
+    if (process.platform === 'darwin') {
+      app.dock.show();
+    }
+  });
 
   return tray;
 }
@@ -166,17 +176,78 @@ function createWindow() {
   });
 }
 
-// Application Startup
-app.on('ready', async () => {
-  createWindow();
-  global.core.start();
+//If you have a QT folder, back up that data just in case.
+async function backUpQT() {
+  const doNotCopyList = [
+    'blk0001.dat',
+    'blk0002.dat',
+    'database',
+    'keychain',
+    'datachain',
+    '__db.001',
+    '__db.002',
+    '__db.003',
+    '__db.004',
+    '__db.005',
+  ];
+  const exists = await fs.pathExists(configuration.GetCoreDataDir());
+  if (exists) {
+    const backupexists = await fs.pathExists(
+      configuration.GetCoreDataDir() + '_OldQtBackUp'
+    );
+    if (!backupexists) {
+      const filterFunc = (src, dest) => {
+        const filename = src && src.replace(/^.*[\\\/]/, '');
+        if (doNotCopyList.includes(filename)) {
+          return false;
+        } else {
+          return true;
+        }
+      };
+      fs.copy(
+        configuration.GetCoreDataDir(),
+        configuration.GetCoreDataDir() + '_OldQtBackUp',
+        { filter: filterFunc },
+        err => {
+          if (err) return console.error(err);
 
-  const settings = LoadSettings();
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true' ||
-    settings.devMode
-  ) {
-    installExtensions();
+          console.log('QT Backup success!');
+        }
+      );
+    }
   }
-});
+}
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      mainWindow.show();
+      if (process.platform === 'darwin') {
+        app.dock.show();
+      }
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  // Application Startup
+  app.on('ready', async () => {
+    await backUpQT();
+    createWindow();
+    global.core.start();
+
+    const settings = LoadSettings();
+    if (
+      process.env.NODE_ENV === 'development' ||
+      process.env.DEBUG_PROD === 'true' ||
+      settings.devMode
+    ) {
+      installExtensions();
+    }
+  });
+}

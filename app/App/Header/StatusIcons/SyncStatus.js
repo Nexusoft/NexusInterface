@@ -25,11 +25,11 @@ const SpinningIcon = styled(StatusIcon)({
 @connect(
   ({
     core: {
-      info: { synchronizing, blocks, synccomplete },
+      info: { blocks, synccomplete },
     },
     common: { heighestPeerBlock },
   }) => ({
-    synchronizing,
+    synchronizing: synccomplete < 100,
     heighestPeerBlock,
     blocks,
     synccomplete,
@@ -78,7 +78,7 @@ class SyncStatus extends React.Component {
   };
 
   /**
-   * React Render Method
+   * Component's Renderable JSX
    *
    * @returns {JSX} JSX
    * @memberof SyncStatus
