@@ -49,11 +49,11 @@ const configureStore = () => {
   // Create Store
   const store = createStore(createRootReducer(history), enhancer);
 
-  if (module.hot) {
-    module.hot.accept('./reducers', () =>
-      store.replaceReducer(createRootReducer(history))
-    );
-  }
+  // if (module.hot) {
+  //   module.hot.accept('./reducers', () =>
+  //     store.replaceReducer(createRootReducer(history))
+  //   );
+  // }
 
   return store;
 };

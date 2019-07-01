@@ -142,6 +142,12 @@ export default merge.smart(baseConfig, {
     ],
   },
 
+  resolve: {
+    alias: {
+      'react-dom': '@hot-loader/react-dom',
+    },
+  },
+
   plugins: [
     new webpack.DllReferencePlugin({
       context: process.cwd(),

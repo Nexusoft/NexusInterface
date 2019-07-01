@@ -49,7 +49,7 @@ const cmdWhitelist = [
 ];
 
 let webview = null;
-let module = null;
+let activeModule = null;
 let data = null;
 let unsubscribe = null;
 
@@ -67,13 +67,13 @@ let unsubscribe = null;
  */
 export function registerWebView(_webview, _module) {
   webview = _webview;
-  module = _module;
+  activeModule = _module;
 
   webview.addEventListener('ipc-message', handleIpcMessage);
   webview.addEventListener('dom-ready', () => {
     const state = store.getState();
-    const moduleState = state.moduleStates[module.name];
-    const storageData = readModuleStorage(module);
+    const moduleState = state.moduleStates[activeModule.name];
+    const storageData = readModuleStorage(activeModule);
     data = getModuleData(state);
     webview.send('initialize', {
       ...data,
@@ -94,7 +94,7 @@ export function unregisterWebView() {
     unsubscribe();
   }
   webview = null;
-  module = null;
+  activeModule = null;
   data = null;
   unsubscribe = null;
 }
@@ -293,7 +293,7 @@ function confirm([options = {}, confirmationId]) {
 }
 
 function updateState([moduleState]) {
-  const moduleName = module.name;
+  const moduleName = activeModule.name;
   if (typeof moduleState === 'object') {
     store.dispatch(updateModuleState(moduleName, moduleState));
   } else {
@@ -304,7 +304,7 @@ function updateState([moduleState]) {
 }
 
 function updateStorage([data]) {
-  writeModuleStorage(module, data);
+  writeModuleStorage(activeModule, data);
 }
 
 /**

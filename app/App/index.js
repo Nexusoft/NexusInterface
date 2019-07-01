@@ -1,4 +1,5 @@
 // External
+import { hot } from 'react-hot-loader/root';
 import React, { Component } from 'react';
 import { ConnectedRouter } from 'connected-react-router';
 import { Route, Switch } from 'react-router';
@@ -53,7 +54,7 @@ const Main = styled.main({
  * @class App
  * @extends {Component}
  */
-export default class App extends Component {
+class App extends Component {
   /**
    * Component's Renderable JSX
    *
@@ -107,3 +108,5 @@ export default class App extends Component {
     );
   }
 }
+
+export default hot(App);
