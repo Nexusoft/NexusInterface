@@ -8,7 +8,8 @@
 
 #### Adjustments
 
-- text
+- Updated Spanish Translation
+-
 
 #### Fixes
 
