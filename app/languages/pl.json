@@ -56,7 +56,7 @@
   "sendReceive.Total": "SUMA",
   "sendReceive.From": "OD",
   "sendReceive.FEE": "Opłata",
-  "sendReceive.CopyToFeild": "Kopiuj",
+  "sendReceive.CopyToField": "Kopiuj",
   "sendReceive.ClickToEdit": "Edytuj",
   "sendReceive.SelectAnAccount": "Wybierz konto",
   "sendReceive.FromAccount": "Z konta",

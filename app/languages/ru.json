@@ -46,7 +46,7 @@
   "sendReceive.Total": "Всего",
   "sendReceive.FEE": "плата",
   "sendReceive.From": "Из",
-  "sendReceive.CopyToFeild": "Копировать в поле",
+  "sendReceive.CopyToField": "Копировать в поле",
   "sendReceive.ClickToEdit": "редактировать",
   "sendReceive.SelectAnAccount": "Выберите аккаунт",
   "sendReceive.FromAccount": "Со счета",

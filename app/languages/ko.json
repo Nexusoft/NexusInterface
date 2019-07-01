@@ -45,7 +45,7 @@
   "sendReceive.Total": "합계",
   "sendReceive.From": "에서",
   "sendReceive.FEE": "보수",
-  "sendReceive.CopyToFeild": "필드로 복사",
+  "sendReceive.CopyToField": "필드로 복사",
   "sendReceive.ClickToEdit": "수정하려면 클릭하십시오.",
   "sendReceive.SelectAnAccount": "계정 선택",
   "sendReceive.FromAccount": "계좌로부터",

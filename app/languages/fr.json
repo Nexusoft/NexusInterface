@@ -52,7 +52,7 @@
   "sendReceive.Total": "TOTAL",
   "sendReceive.From": "DEPUIS",
   "sendReceive.FEE": "Frais",
-  "sendReceive.CopyToFeild": "Copier vers le champ",
+  "sendReceive.CopyToField": "Copier vers le champ",
   "sendReceive.ClickToEdit": "Cliquer pour modifier",
   "sendReceive.SelectAnAccount": "Séléctionner un compte",
   "sendReceive.FromAccount": "Depuis le compte",
