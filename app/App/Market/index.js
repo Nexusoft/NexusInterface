@@ -35,6 +35,13 @@ import bittrexSmallLogo from 'images/bittrexSmallLogo.png';
 
 import arrow from 'images/arrow.svg';
 
+import styled from '@emotion/styled';
+
+const OneDay = styled.div({
+  display: 'grid',
+  gridTemplateColumns: 'auto auto',
+});
+
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return {
@@ -204,44 +211,48 @@ class Market extends Component {
    */
   oneDayinfo(exchangeName) {
     return (
-      <div style={{ display: 'table-row' }}>
-        <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+      <>
+        <div
+          style={{
+            display: 'table-cell',
+            verticalAlign: 'middle',
+          }}
+        >
           <b>
             <Text id="overview.24hrChange" />
           </b>
         </div>
-
-        <div style={{ display: 'table-cell', paddingLeft: '1.5em' }}>
+        <OneDay>
           <div>
             <b>
-              <Text id="Market.PriceChange" />
-            </b>{' '}
+              <Text id="Market.High" />:{' '}
+            </b>
+            {this.props[exchangeName].info24hr.high}
+            {' BTC '}
+          </div>
+          <div>
+            <b>
+              <Text id="Market.PriceChange" />:{' '}
+            </b>
             {this.props[exchangeName].info24hr.change}
             {' %'}
           </div>
-
           <div>
             <b>
-              {' '}
-              <Text id="Market.High" />:{' '}
-            </b>{' '}
-            {this.props[exchangeName].info24hr.high}
-            {' BTC '}
-            <b>
-              {' '}
               <Text id="Market.Low" />:{' '}
             </b>{' '}
             {this.props[exchangeName].info24hr.low}
             {' BTC '}
+          </div>
+          <div>
             <b>
-              {' '}
               <Text id="Market.Volume" />:{' '}
-            </b>{' '}
+            </b>
             {this.props[exchangeName].info24hr.volume}
             {' NXS '}
           </div>
-        </div>
-      </div>
+        </OneDay>
+      </>
     );
   }
   /**
