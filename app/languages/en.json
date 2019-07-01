@@ -1,7 +1,7 @@
 {
   "overview.TrustWeight": "Trust Weight",
   "overview.LicensceAgreement": "License Agreement",
-  "overview.BlockWeightt": "Block Weight",
+  "overview.BlockWeight": "Block Weight",
   "overview.PrimeDiff": "Prime Difficulty",
   "overview.HashDiff": "Hash Difficulty",
   "overview.StakeDiff": "Stake Difficulty",

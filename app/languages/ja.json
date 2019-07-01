@@ -1,7 +1,7 @@
 {
   "overview.TrustWeight": "信頼の重み",
   "overview.LicensceAgreement": "ライセンス契約",
-  "overview.BlockWeightt": "ブロック重量",
+  "overview.BlockWeight": "ブロック重量",
   "overview.Balance": "バランス",
   "overview.EncryptedModal": "あなたのウォレットは暗号化されていません！",
   "overview.Suggestion": "あなたは本当にあなたの財布を暗号化してNXSを安全に保つべきです.",

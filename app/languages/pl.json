@@ -1,7 +1,7 @@
 {
   "overview.TrustWeight": "Waga Zaufania",
   "overview.LicensceAgreement": "Umowa Licencyjna",
-  "overview.BlockWeightt": "Waga Bloku",
+  "overview.BlockWeight": "Waga Bloku",
   "overview.PrimeDiff": " Trudnośc Prime ",
   "overview.HashDiff": "Trudnosć Hash",
   "overview.StakeDiff": "Trudność Stawki",

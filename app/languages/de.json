@@ -1,7 +1,7 @@
 {
   "overview.TrustWeight": "Trust Faktor",
   "overview.LicensceAgreement": "Lizenzvereinbarung",
-  "overview.BlockWeightt": "Block Faktor",
+  "overview.BlockWeight": "Block Faktor",
   "overview.Balance": "Kontostand",
   "overview.EncryptedModal": "Ihre Wallet ist nicht verschlüsselt!",
   "overview.Suggestion": "Damit Ihr Nexus sicher ist, sollten Sie Ihre Wallet verschlüsseln.",

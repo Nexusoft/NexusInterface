@@ -1,7 +1,7 @@
 {
   "overview.TrustWeight": "Nivel de Confianza",
   "overview.LicensceAgreement": "Acuerdo de licencia",
-  "overview.BlockWeightt": "Peso del bloque",
+  "overview.BlockWeight": "Peso del bloque",
   "overview.PrimeDiff": "Dificultad Principal",
   "overview.HashDiff": "Dificultad de Hasheo",
   "overview.StakeDiff": "Dificultad par dividendos de participación",

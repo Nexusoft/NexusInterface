@@ -1,7 +1,7 @@
 {
   "overview.TrustWeight": "신뢰 무게",
   "overview.LicensceAgreement": "라이센스 계약",
-  "overview.BlockWeightt": "블록 무게",
+  "overview.BlockWeight": "블록 무게",
   "overview.Balance": "균형",
   "overview.EncryptedModal": "월렛이 암호화되지 않았습니다!",
   "overview.Suggestion": "NXS를 안전하게 유지하려면 지갑을 암호화해야합니다.",

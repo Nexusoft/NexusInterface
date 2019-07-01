@@ -580,7 +580,7 @@ class Overview extends Component {
           <StatIcon icon={this.blockWeightIcon()} />
           <div>
             <StatLabel>
-              <Text id="overview.BlockWeightt" />
+              <Text id="overview.BlockWeight" />
             </StatLabel>
             <StatValue>
               {this.waitForDaemon(this.props.coreInfo.blockweight)}
