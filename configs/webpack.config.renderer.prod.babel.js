@@ -8,8 +8,9 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import merge from 'webpack-merge';
+
 import baseConfig from './webpack.config.base';
-import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
+import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 
 CheckNodeEnv('production');
 
@@ -20,11 +21,11 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-renderer',
 
-  entry: './app/index',
+  entry: './app/index.js',
 
   output: {
-    path: path.join(__dirname, 'app/dist'),
-    publicPath: '../dist/',
+    path: path.join(__dirname, '..', 'app/dist'),
+    publicPath: './dist/',
     filename: 'renderer.prod.js',
   },
 

@@ -14,8 +14,9 @@ import chalk from 'chalk';
 import merge from 'webpack-merge';
 import { spawn, execSync } from 'child_process';
 //import ExtractTextPlugin from "extract-text-webpack-plugin";
+
 import baseConfig from './webpack.config.base';
-import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
+import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 
 CheckNodeEnv('development');
 
@@ -203,7 +204,7 @@ export default merge.smart(baseConfig, {
     lazy: false,
     hot: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, '..', 'dist'),
     watchOptions: {
       aggregateTimeout: 300,
       ignored: /node_modules/,

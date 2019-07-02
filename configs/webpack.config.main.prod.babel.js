@@ -5,8 +5,9 @@
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
 import baseConfig from './webpack.config.base';
-import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
+import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 
 CheckNodeEnv('production');
 
@@ -21,7 +22,7 @@ export default merge.smart(baseConfig, {
 
   // 'main.js' in root
   output: {
-    path: __dirname,
+    path: path.join(__dirname, '..'),
     filename: './app/main.prod.js',
   },
 

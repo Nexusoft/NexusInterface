@@ -4,25 +4,27 @@
 
 import path from 'path';
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import merge from 'webpack-merge';
-import baseConfig from './webpack.config.base';
-import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
-CheckNodeEnv('development');
+import baseConfig from './webpack.config.base';
+import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+
+CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
-  mode: 'development',
+  mode: 'production',
 
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'source-map',
 
   target: 'electron-renderer',
 
   entry: './app/module_preload',
 
   output: {
-    path: path.join(__dirname, 'app/'),
-    publicPath: '../',
-    filename: 'module_preload.dev.js',
+    path: path.join(__dirname, '..', 'app/dist'),
+    publicPath: '../dist/',
+    filename: 'module_preload.prod.js',
   },
 
   module: {
@@ -42,14 +44,20 @@ export default merge.smart(baseConfig, {
   },
 
   plugins: [
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'production',
+    }),
+
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(
-        process.env.NODE_ENV || 'development'
+        process.env.NODE_ENV || 'production'
       ),
     }),
 
-    new webpack.LoaderOptionsPlugin({
-      debug: true,
+    new BundleAnalyzerPlugin({
+      analyzerMode:
+        process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
+      openAnalyzer: process.env.OPEN_ANALYZER === 'true',
     }),
   ],
 });
