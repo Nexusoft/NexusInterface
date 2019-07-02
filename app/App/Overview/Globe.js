@@ -51,14 +51,14 @@ export default class Globe extends Component {
    *
    * @memberof Globe
    */
-  componentDidMount() {
+  async componentDidMount() {
     try {
       if (process.env.NODE_ENV === 'development') {
-        this.geoiplookup = maxmind.openSync(
+        this.geoiplookup = await maxmind.open(
           path.join(__dirname, 'GeoLite2-City', 'GeoLite2-City.mmdb')
         );
       } else {
-        this.geoiplookup = maxmind.openSync(
+        this.geoiplookup = await maxmind.open(
           path.join(
             configuration.GetAppResourceDir(),
             'GeoLite2-City',
