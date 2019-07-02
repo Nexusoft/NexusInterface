@@ -3,7 +3,6 @@ import { hot } from 'react-hot-loader/root';
 import React, { Component } from 'react';
 import { ConnectedRouter } from 'connected-react-router';
 import { Route, Switch } from 'react-router';
-import { Provider } from 'react-redux';
 // import IntlWrapper from './IntlWrapper';
 import styled from '@emotion/styled';
 
@@ -27,7 +26,7 @@ import Modules from './Modules';
 import AppBackground from './AppBackground';
 import ThemeController from './ThemeController';
 
-const AppWrapper = styled.div({
+const AppLayout = styled.div({
   position: 'fixed',
   top: 0,
   left: 0,
@@ -47,66 +46,38 @@ const Main = styled.main({
   alignItems: 'stretch',
 });
 
-/**
- * Main App Page
- *
- * @export
- * @class App
- * @extends {Component}
- */
-class App extends Component {
-  /**
-   * Component's Renderable JSX
-   *
-   * @returns
-   * @memberof App
-   */
-  render() {
-    const { store, history } = this.props;
-    return (
-      <Provider store={store}>
-        <ThemeController>
-          <ConnectedRouter history={history}>
-            <UIController>
-              <div>
-                <GlobalStyles />
-                <AppBackground />
-                <AppWrapper>
-                  <Header />
-                  <Main>
-                    <Switch>
-                      <Route exact path="/" component={Overview} />
-                      <Route exact path="/SendPage" component={SendPage} />
-                      <Route
-                        exact
-                        path="/Transactions"
-                        component={Transactions}
-                      />
-                      <Route exact path="/Market" component={Market} />
-                      <Route
-                        exact
-                        path="/AddressBook"
-                        component={AddressBook}
-                      />
-                      <Route path="/Settings" component={Settings} />
-                      <Route path="/Terminal" component={Terminal} />
+const App = ({ history }) => (
+  <ThemeController>
+    <ConnectedRouter history={history}>
+      <UIController>
+        <div>
+          <GlobalStyles />
+          <AppBackground />
+          <AppLayout>
+            <Header />
+            <Main>
+              <Switch>
+                <Route exact path="/" component={Overview} />
+                <Route exact path="/SendPage" component={SendPage} />
+                <Route exact path="/Transactions" component={Transactions} />
+                <Route exact path="/Market" component={Market} />
+                <Route exact path="/AddressBook" component={AddressBook} />
+                <Route path="/Settings" component={Settings} />
+                <Route path="/Terminal" component={Terminal} />
 
-                      {/* <Route path="/Exchange" component={Exchange} /> */}
-                      {/* <Route exact path="/List" component={TrustList} /> */}
+                {/* <Route path="/Exchange" component={Exchange} /> */}
+                {/* <Route exact path="/List" component={TrustList} /> */}
 
-                      <Route exact path="/About" component={About} />
-                      <Route path="/Modules/:name" component={Modules} />
-                    </Switch>
-                  </Main>
-                  <Navigation />
-                </AppWrapper>
-              </div>
-            </UIController>
-          </ConnectedRouter>
-        </ThemeController>
-      </Provider>
-    );
-  }
-}
+                <Route exact path="/About" component={About} />
+                <Route path="/Modules/:name" component={Modules} />
+              </Switch>
+            </Main>
+            <Navigation />
+          </AppLayout>
+        </div>
+      </UIController>
+    </ConnectedRouter>
+  </ThemeController>
+);
 
 export default hot(App);
