@@ -3,10 +3,10 @@
  */
 
 import webpack from 'webpack';
-import merge from 'webpack-merge';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import merge from 'webpack-merge';
 
-import baseConfig from './webpack.config.base';
+import baseConfig from './webpack.config.base.main';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 
 CheckNodeEnv('production');
@@ -16,14 +16,8 @@ export default merge.smart(baseConfig, {
 
   devtool: 'source-map',
 
-  target: 'electron-main',
-
-  entry: './app/main',
-
-  // 'main.js' in root
   output: {
-    path: path.join(__dirname, '..'),
-    filename: './app/main.prod.js',
+    filename: 'main.prod.js',
   },
 
   plugins: [
@@ -44,18 +38,6 @@ export default merge.smart(baseConfig, {
      */
     new webpack.DefinePlugin({
       NODE_ENV: 'production',
-      DEBUG_PROD: false,
-      START_MINIMIZED: false,
     }),
   ],
-
-  /**
-   * Disables webpack processing of __dirname and __filename.
-   * If you run the bundle in node.js it falls back to these values of node.js.
-   * https://github.com/webpack/webpack/issues/2010
-   */
-  node: {
-    __dirname: false,
-    __filename: false,
-  },
 });

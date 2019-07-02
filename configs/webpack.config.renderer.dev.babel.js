@@ -1,7 +1,5 @@
-/* eslint global-require: 0, import/no-dynamic-require: 0 */
-
 /**
- * Build config for development electron renderer process that uses
+ * Webpack config for development electron renderer process that uses
  * Hot-Module-Replacement
  *
  * https://webpack.js.org/concepts/hot-module-replacement/
@@ -13,9 +11,8 @@ import webpack from 'webpack';
 import chalk from 'chalk';
 import merge from 'webpack-merge';
 import { spawn, execSync } from 'child_process';
-//import ExtractTextPlugin from "extract-text-webpack-plugin";
 
-import baseConfig from './webpack.config.base';
+import baseConfig from './webpack.config.base.renderer';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 
 CheckNodeEnv('development');
@@ -42,12 +39,16 @@ export default merge.smart(baseConfig, {
 
   devtool: 'cheap-module-eval-source-map',
 
-  target: 'electron-renderer',
-
-  entry: './app/index.js',
+  entry: [
+    'react-hot-loader/patch',
+    `webpack-dev-server/client?http://localhost:${port}/`,
+    'webpack/hot/only-dev-server',
+    require.resolve('../app/index'),
+  ],
 
   output: {
     publicPath: `http://localhost:${port}/dist/`,
+    filename: 'renderer.dev.js',
   },
 
   module: {
@@ -97,49 +98,6 @@ export default merge.smart(baseConfig, {
           },
         ],
       },
-      // WOFF Font
-      {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/font-woff',
-          },
-        },
-      },
-      // WOFF2 Font
-      {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'font/woff2',
-          },
-        },
-      },
-      // TTF Font
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/octet-stream',
-          },
-        },
-      },
-      // EOT Font
-      {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        use: 'file-loader',
-      },
-      // Common Image Formats
-      {
-        test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-        use: 'url-loader',
-      },
     ],
   },
 
@@ -160,8 +118,7 @@ export default merge.smart(baseConfig, {
      * https://webpack.js.org/concepts/hot-module-replacement/
      */
     new webpack.HotModuleReplacementPlugin({
-      // @TODO: Waiting on https://github.com/jantimon/html-webpack-plugin/issues/533
-      // multiStep: true
+      multiStep: true,
     }),
 
     new webpack.NoEmitOnErrorsPlugin(),
@@ -183,10 +140,6 @@ export default merge.smart(baseConfig, {
         process.env.NODE_ENV || 'development'
       ),
     }),
-
-    new webpack.LoaderOptionsPlugin({
-      debug: true,
-    }),
   ],
 
   node: {
@@ -204,7 +157,7 @@ export default merge.smart(baseConfig, {
     lazy: false,
     hot: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
-    contentBase: path.join(__dirname, '..', 'dist'),
+    contentBase: path.join(process.cwd(), 'dist'),
     watchOptions: {
       aggregateTimeout: 300,
       ignored: /node_modules/,
