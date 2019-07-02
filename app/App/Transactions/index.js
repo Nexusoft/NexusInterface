@@ -60,7 +60,7 @@ const categories = [
     display: <Text id="transactions.All" />,
   },
   {
-    value: 'receive', // Should be made credit with tritium. 
+    value: 'receive', // Should be made credit with tritium.
     display: <Text id="transactions.Receive" />,
   },
   {
@@ -82,6 +82,10 @@ const categories = [
   {
     value: 'immature',
     display: <Text id="transactions.Immature" />,
+  },
+  {
+    value: 'orphan',
+    display: <Text id="transactions.Orphan" />,
   },
   {
     value: 'stake',
@@ -1265,6 +1269,8 @@ class Transactions extends Component {
           return <Text id="transactions.Immature" />;
         } else if (q.value === 'stake') {
           return <Text id="transactions.Stake" />;
+        } else if ((q.value = 'orphan')) {
+          return <Text id="transactions.Orphan" />;
         } else {
           return <Text id="transactions.UnknownCategory" />;
         }
@@ -1384,6 +1390,8 @@ class Transactions extends Component {
       inData.category = translate('transactions.Immature', locale);
     } else if (inData.category == 'stake') {
       inData.category = translate('transactions.Stake', locale);
+    } else if (inData.category == 'orphan') {
+      inData.category = translate('transactions.Orphan', locale);
     } else {
       inData.category = translate('transactions.UnknownCategory', locale);
     }

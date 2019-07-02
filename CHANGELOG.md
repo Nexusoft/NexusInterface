@@ -4,7 +4,8 @@
 
 #### Additions
 
-- text
+- Orphan is now a option on the Transaction Table
+-
 
 #### Adjustments
 
