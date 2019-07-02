@@ -32,7 +32,7 @@ export const defaultSettings = {
   // Core
   enableMining: false,
   enableStaking: true,
-  verboseLevel: 2,
+  verboseLevel: 0,
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',
   manualDaemonPassword: defaultPassword,
