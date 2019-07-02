@@ -60,7 +60,7 @@ const categories = [
     display: <Text id="transactions.All" />,
   },
   {
-    value: 'credit',
+    value: 'receive', // Should be made credit with tritium. 
     display: <Text id="transactions.Receive" />,
   },
   {
@@ -639,6 +639,37 @@ class Transactions extends Component {
 
     // If in Dev Mode add some random transactions
     if (this.props.settings.devMode == true) {
+      console.log('Making Fakes');
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
@@ -651,9 +682,10 @@ class Transactions extends Component {
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
     }
     if (
-      promisList == null ||
-      promisList == undefined ||
-      promisList.length == 0
+      (promisList == null ||
+        promisList == undefined ||
+        promisList.length == 0) &&
+      tempWalletTransactions.length == 0
     ) {
       return;
     }
@@ -1101,9 +1133,9 @@ class Transactions extends Component {
       if (temp == 4) {
         return 'debit';
       } else if (temp == 1) {
-        return 'credit';
+        return 'stake';
       } else if (temp == 2) {
-        return 'trust';
+        return 'stake';
       } else {
         return 'genesis';
       }
@@ -1158,6 +1190,7 @@ class Transactions extends Component {
     return formatedData.map(ele => {
       txCounter++;
       let isPending = '';
+      let tempCategory = ele.category;
       if (ele.confirmations <= this.props.settings.minConfirmations) {
         isPending = '(Pending)';
       }
