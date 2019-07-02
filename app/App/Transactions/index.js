@@ -68,12 +68,8 @@ const categories = [
     display: <Text id="transactions.Sent" />,
   },
   {
-    value: 'genesis',
-    display: <Text id="transactions.Genesis" />,
-  },
-  {
-    value: 'trust',
-    display: <Text id="transactions.Trust" />,
+    value: 'stake',
+    display: <Text id="transactions.Stake" />,
   },
   {
     value: 'generate',
@@ -88,8 +84,12 @@ const categories = [
     display: <Text id="transactions.Orphan" />,
   },
   {
-    value: 'stake',
-    display: <Text id="transactions.Stake" />,
+    value: 'genesis',
+    display: <Text id="transactions.Genesis" />,
+  },
+  {
+    value: 'trust',
+    display: <Text id="transactions.Trust" />,
   },
 ];
 
