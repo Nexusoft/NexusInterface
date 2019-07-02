@@ -11,7 +11,7 @@
 
 - Updated Spanish Translation
 - Default Verbose is now 0, you can change this in the setitngs/core
--
+- Changed the way the More Details modal knows which transaction to look up
 
 #### Fixes
 

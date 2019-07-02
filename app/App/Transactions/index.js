@@ -138,6 +138,7 @@ const mapDispatchToProps = dispatch => ({
   loadMyAccounts: () => dispatch(loadMyAccounts()),
   SetWalletTransactionArray: returnData => {
     dispatch({ type: TYPE.SET_WALL_TRANS, payload: returnData });
+    dispatch({ type: TYPE.SET_TRANSACTION_MAP, payload: null });
   },
   SetSendAgainData: returnData => {
     dispatch({ type: TYPE.SET_TRANSACTION_SENDAGAIN, payload: returnData });
@@ -437,7 +438,7 @@ class Transactions extends Component {
   openTxDetailsModal = () => {
     UIController.openModal(TransactionDetailsModal, {
       hoveringID: this.hoveringID,
-      walletItems: this.props.walletitems,
+      walletItemsMap: this.props.walletitemsMap,
       settings: this.props.settings,
     });
   };
@@ -471,7 +472,7 @@ class Transactions extends Component {
     let tablecopyaddresscallback = function() {
       if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
-          this.props.walletitems[this.hoveringID].address
+          this.props.walletitemsMap[this.hoveringID].address
         );
       }
     };
@@ -480,7 +481,7 @@ class Transactions extends Component {
     let tablecopyamountcallback = function() {
       if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
-          this.props.walletitems[this.hoveringID].amount
+          this.props.walletitemsMap[this.hoveringID].amount
         );
       }
     };
@@ -489,7 +490,7 @@ class Transactions extends Component {
     let tablecopyaccountcallback = function() {
       if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
-          this.props.walletitems[this.hoveringID].account
+          this.props.walletitemsMap[this.hoveringID].account
         );
       }
     };
@@ -1174,7 +1175,10 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   tableSelectCallback(e, indata) {
-    this.hoveringID = indata.index;
+    this.hoveringID =
+      indata.original.time.toString() +
+      indata.original.account +
+      indata.original.amount.toString();
   }
 
   //
