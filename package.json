@@ -31,7 +31,7 @@
     "update-translations": "node ./internals/scripts/updateTranslations.js",
     "update-documentation": "./UpdateDocumentation.sh"
   },
-  "browserslist": "electron 1.8",
+  "browserslist": "electron 5.0.6",
   "build": {
     "productName": "Nexus Wallet",
     "appId": "com.nexusearth.NexusTritium",
