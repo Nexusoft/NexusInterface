@@ -4,6 +4,8 @@
 
 #### Additions
 
+- Added functionality to the Balance stat on overview page to change to fiat balance on click
+
 #### Adjustments
 
 - Update styling on `Market Data` page to make 24hr info be clearer
