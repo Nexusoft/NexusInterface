@@ -2,6 +2,7 @@
  * Base webpack config used across other specific configs
  */
 
+import path from 'path';
 import webpack from 'webpack';
 import { readFileSync } from 'fs';
 
@@ -15,8 +16,12 @@ const appId = packageJson.build.appId;
 
 let nexusPubKey = '';
 try {
-  nexusPubKey = readFileSync('../nexus_pub_key.pem').toString();
-} catch (err) {}
+  nexusPubKey = readFileSync(
+    path.resolve(process.cwd(), 'nexus_pub_key.pem')
+  ).toString();
+} catch (err) {
+  console.error(err);
+}
 
 export default {
   externals: Object.keys(externals || {}),
