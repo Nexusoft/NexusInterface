@@ -49,6 +49,7 @@ export default merge.smart(baseConfig, {
           options: {
             limit: 10000,
             mimetype: 'font/woff2',
+            outputPath: 'fonts',
           },
         },
       },
