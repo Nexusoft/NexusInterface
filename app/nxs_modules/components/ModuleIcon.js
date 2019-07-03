@@ -7,6 +7,7 @@ import Icon from 'components/Icon';
 import legoBlockIcon from 'images/lego-block.sprite.svg';
 
 const SvgWrapper = styled.span({
+  display: 'inline-flex',
   verticalAlign: 'middle',
   transitionProperty: 'fill, stroke',
   transitionDuration: '.2s',
