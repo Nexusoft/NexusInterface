@@ -6,7 +6,7 @@ import path from 'path';
 import webpack from 'webpack';
 import { readFileSync } from 'fs';
 
-import { dependencies as externals } from '../app/package.json';
+// import { dependencies as externals } from '../app/package.json';
 import packageJson from '../package.json';
 
 const appVersion = packageJson.version;
@@ -24,7 +24,7 @@ try {
 }
 
 export default {
-  externals: Object.keys(externals || {}),
+  // externals: Object.keys(externals || {}),
 
   module: {
     rules: [

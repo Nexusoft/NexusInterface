@@ -11,7 +11,7 @@ setupApp(store, history);
 
 render(
   <Provider store={store}>
-    <App store={store} history={history} />
+    <App history={history} />
   </Provider>,
   document.getElementById('root')
 );
