@@ -5,8 +5,9 @@
  */
 import { normalize } from 'path';
 import express from 'express';
-import config from 'api/configuration';
 import log from 'electron-log';
+
+import config from 'api/configuration';
 
 /**
  * Express server serving static files for modules

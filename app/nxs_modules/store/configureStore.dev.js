@@ -1,18 +1,9 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { createHashHistory } from 'history';
 import thunk from 'redux-thunk';
-import { routerMiddleware, routerActions } from 'connected-react-router';
+import { routerMiddleware } from 'connected-react-router';
 
 import createRootReducer from './reducers';
-
-import { addLocaleData } from 'react-intl';
-import itLocaleData from 'react-intl/locale-data/it';
-import enLocaleData from 'react-intl/locale-data/en';
-import zhLocaleData from 'react-intl/locale-data/zh';
-const UPDATE_LOCALES = 'UPDATE_LOCALES';
-// import * as counterActions from "actions/counter";
-// import type { counterStateType } from "reducers/counter";
-addLocaleData([...itLocaleData, ...zhLocaleData]);
 
 const history = createHashHistory();
 

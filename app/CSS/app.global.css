@@ -11,7 +11,6 @@
 @import "./controls/progress.css";
 @import "./controls/react-table.css";
 
-@import "~react-activity/lib/Squares/Squares.css";
 :root {
   /* COLOR PALETTE VARIABLES */
   --color-6: #ffffff; /* <-- White */
@@ -46,9 +45,11 @@
   filter: var(--icon-menu);
 }
 
-*, *::after, *::before {
-	-webkit-user-drag: none;
-	-webkit-app-region: no-drag;
+*,
+*::after,
+*::before {
+  -webkit-user-drag: none;
+  -webkit-app-region: no-drag;
 }
 
 /*------------------------------------------------------------------

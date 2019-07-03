@@ -8,11 +8,10 @@ import devToolsInstall, {
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
-import 'electron-debug';
 import fs from 'fs-extra';
-import fileServer from './fileServer';
 
 // Internal
+import fileServer from './fileServer';
 import configuration from 'api/configuration';
 import { LoadSettings, UpdateSettings } from 'api/settings';
 import core from 'api/core';

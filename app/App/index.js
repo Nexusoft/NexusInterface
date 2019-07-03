@@ -3,7 +3,6 @@ import { hot } from 'react-hot-loader/root';
 import React, { Component } from 'react';
 import { ConnectedRouter } from 'connected-react-router';
 import { Route, Switch } from 'react-router';
-// import IntlWrapper from './IntlWrapper';
 import styled from '@emotion/styled';
 
 // Internal
