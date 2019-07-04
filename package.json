@@ -45,10 +45,9 @@
     ],
     "extraResources": [
       "./app/GeoLite2-City/**/*",
-      "./app/images/tray/**/*",
       "./app/cores/**/*",
-      "./app/images/background/**/*",
-      "./app/languages/*"
+      "./app/languages/*",
+      "./resources/tray/**/*"
     ],
     "publish": {
       "provider": "github",

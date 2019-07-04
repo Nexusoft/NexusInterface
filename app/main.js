@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-const p = path.join(__dirname, '..', 'app', 'node_modules');
+const p = path.join(process.cwd(), 'app', 'node_modules');
 module.globalPaths.push(p);
 
 // Enable development tools for REACT and REDUX
@@ -47,17 +47,17 @@ const installExtensions = async () => {
 function setupTray(mainWindow) {
   const root =
     process.env.NODE_ENV === 'development'
-      ? __dirname
-      : configuration.GetAppResourceDir();
+      ? process.cwd()
+      : path.resolve(configuration.GetAppResourceDir(), '..');
   const fileName =
     process.platform == 'darwin'
       ? 'Nexus_Tray_Icon_Template_16.png'
       : 'Nexus_Tray_Icon_32.png';
-  const trayImage = path.join(root, 'images', 'tray', fileName);
+  const trayImage = path.join(root, 'resources', 'tray', fileName);
   const tray = new Tray(trayImage);
 
   const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
-  const pressedImage = path.join(root, 'images', 'tray', pressedFileName);
+  const pressedImage = path.join(root, 'resources', 'tray', pressedFileName);
   tray.setPressedImage(pressedImage);
   tray.setToolTip('Nexus Wallet');
   tray.setTitle('Nexus Wallet');
@@ -100,28 +100,13 @@ function setupTray(mainWindow) {
 
 function createWindow() {
   const settings = LoadSettings();
-  let iconPath = '';
-  if (process.env.NODE_ENV === 'development') {
-    iconPath = path.join(
-      configuration.GetAppDataDirectory(),
-      'tray',
-      'Nexus_App_Icon_64.png'
-    );
-  } else if (process.platform == 'darwin') {
-    iconPath = path.join(
-      configuration.GetAppResourceDir(),
-      'images',
-      'tray',
-      'nexuslogo.ico'
-    );
-  } else {
-    iconPath = path.join(
-      configuration.GetAppResourceDir(),
-      'images',
-      'tray',
-      'Nexus_App_Icon_64.png'
-    );
-  }
+  const root =
+    process.env.NODE_ENV === 'development'
+      ? process.cwd()
+      : path.resolve(configuration.GetAppResourceDir(), '..');
+  const fileName =
+    process.platform == 'darwin' ? 'nexuslogo.ico' : 'Nexus_App_Icon_64.png';
+  const iconPath = path.join(root, 'resources', 'tray', fileName);
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
