@@ -37,7 +37,7 @@
     "productName": "Nexus Wallet",
     "appId": "com.nexusearth.NexusTritium",
     "files": [
-      "app/dist/*",
+      "app/dist/**/*",
       "!app/dist/*.map",
       "app/app.html",
       "app/main.prod.js",
@@ -48,12 +48,7 @@
       "./app/images/tray/**/*",
       "./app/cores/**/*",
       "./app/images/background/**/*",
-      "./app/languages/*",
-      "LICENSE.txt",
-      {
-        "from": "./app/dist/fonts",
-        "to": "fonts"
-      }
+      "./app/languages/*"
     ],
     "publish": {
       "provider": "github",
