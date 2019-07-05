@@ -53,19 +53,13 @@ export default class Globe extends Component {
    */
   async componentDidMount() {
     try {
-      if (process.env.NODE_ENV === 'development') {
-        this.geoiplookup = await maxmind.open(
-          path.join(__dirname, 'GeoLite2-City', 'GeoLite2-City.mmdb')
-        );
-      } else {
-        this.geoiplookup = await maxmind.open(
-          path.join(
-            configuration.GetAppResourceDir(),
-            'GeoLite2-City',
-            'GeoLite2-City.mmdb'
-          )
-        );
-      }
+      this.geoiplookup = await maxmind.open(
+        path.join(
+          configuration.GetAssetsDir(),
+          'GeoLite2-City',
+          'GeoLite2-City.mmdb'
+        )
+      );
 
       this.props.handleOnLineRender(this.animateArcs);
       this.props.handleRemoveAllPoints(this.removeAllPoints);

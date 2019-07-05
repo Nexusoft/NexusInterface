@@ -156,20 +156,7 @@ function GetCoreBinaryName() {
 }
 
 function GetCoreBinaryPath() {
-  if (process.env.NODE_ENV === 'development') {
-    let appDir = __dirname.split('/api');
-
-    var coreBinaryPath = path.normalize(
-      path.join(appDir[0], 'cores', GetCoreBinaryName())
-    );
-  } else {
-    var coreBinaryPath = path.join(
-      configuration.GetAppResourceDir(),
-      'cores',
-      GetCoreBinaryName()
-    );
-  }
-  return coreBinaryPath;
+  return path.join(configuration.GetAssetsDir(), 'cores', GetCoreBinaryName());
 }
 
 function CoreBinaryExists() {

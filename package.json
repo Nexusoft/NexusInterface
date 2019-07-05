@@ -44,10 +44,10 @@
       "!node_modules/**/*"
     ],
     "extraResources": [
-      "./app/GeoLite2-City/**/*",
-      "./app/cores/**/*",
-      "./app/languages/*",
-      "./resources/tray/**/*"
+      "./assets/GeoLite2-City/**/*",
+      "./assets/cores/**/*",
+      "./assets/languages/*",
+      "./assets/tray/**/*"
     ],
     "publish": {
       "provider": "github",
@@ -64,7 +64,7 @@
     },
     "dmg": {
       "artifactName": "nexus_wallet-MacOSX-${version}.${ext}",
-      "background": "resources/background.jpg",
+      "background": "assets/background.jpg",
       "contents": [
         {
           "x": 129,
@@ -89,8 +89,8 @@
       "runAfterFinish": true,
       "allowToChangeInstallationDirectory": true,
       "menuCategory": "Nexus",
-      "installerSidebar": "resources/installerSidebar.bmp",
-      "license": "resources/license.txt",
+      "installerSidebar": "assets/installerSidebar.bmp",
+      "license": "assets/license.txt",
       "shortcutName": "Nexus Wallet",
       "artifactName": "nexus_wallet-setup-Win-${version}.${ext}"
     },
@@ -108,7 +108,7 @@
       "artifactName": "nexus_wallet-Linux-${version}.${ext}"
     },
     "directories": {
-      "buildResources": "resources",
+      "buildResources": "assets",
       "output": "release"
     }
   },

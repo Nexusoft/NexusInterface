@@ -7,9 +7,7 @@ const languages = {};
 export function getMessages(locale) {
   if (!languages[locale]) {
     const filePath = path.join(
-      process.env.NODE_ENV === 'development'
-        ? 'app'
-        : config.GetAppResourceDir(),
+      config.GetAssetsDir(),
       'languages',
       `${locale}.json`
     );

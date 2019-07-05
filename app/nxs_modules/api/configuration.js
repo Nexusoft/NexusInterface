@@ -142,8 +142,8 @@ const configuration = {
       fs.mkdirSync(configuration.GetAppDataDirectory());
     }
 
-    if (!fs.existsSync(configuration.GetAppResourceDir())) {
-      fs.mkdirSync(configuration.GetAppResourceDir());
+    if (!fs.existsSync(configuration.GetAssetsDir())) {
+      fs.mkdirSync(configuration.GetAssetsDir());
     }
   },
 
@@ -205,22 +205,15 @@ const configuration = {
    *
    * @returns {string} Applicaion Resources Directory Path
    */
-  GetAppResourceDir() {
+  GetAssetsDir() {
     const app = electron.app != undefined ? electron.app : electron.remote.app;
-    let rawPath = '';
-    if (process.platform === 'darwin') {
-      rawPath = path.dirname(app.getPath('exe')) + '/../Resources/app/';
-    } else {
-      rawPath = path.dirname(app.getPath('exe')) + '/resources/app/';
-    }
-    if (process.env.NODE_ENV_RUN == 'production-test') {
-      rawPath = path.join(rawPath, '..', '..', '..', '..', '..', 'app');
-    }
-    if (process.platform == 'win32') {
-      return path.win32.normalize(rawPath);
-    } else {
-      return path.normalize(rawPath);
-    }
+    const basePath =
+      process.env.NODE_ENV === 'development'
+        ? process.cwd()
+        : process.platform === 'darwin'
+        ? path.resolve(app.getPath('exe'), '..', '..', 'Resources')
+        : path.resolve(app.getPath('exe'), '..', 'resources');
+    return path.join(basePath, 'assets');
   },
 
   /**

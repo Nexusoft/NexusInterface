@@ -45,19 +45,19 @@ const installExtensions = async () => {
 };
 
 function setupTray(mainWindow) {
-  const root =
-    process.env.NODE_ENV === 'development'
-      ? process.cwd()
-      : path.resolve(configuration.GetAppResourceDir(), '..');
   const fileName =
     process.platform == 'darwin'
       ? 'Nexus_Tray_Icon_Template_16.png'
       : 'Nexus_Tray_Icon_32.png';
-  const trayImage = path.join(root, 'resources', 'tray', fileName);
+  const trayImage = path.join(configuration.GetAssetsDir(), 'tray', fileName);
   const tray = new Tray(trayImage);
 
   const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
-  const pressedImage = path.join(root, 'resources', 'tray', pressedFileName);
+  const pressedImage = path.join(
+    configuration.GetAssetsDir(),
+    'tray',
+    pressedFileName
+  );
   tray.setPressedImage(pressedImage);
   tray.setToolTip('Nexus Wallet');
   tray.setTitle('Nexus Wallet');
@@ -100,13 +100,9 @@ function setupTray(mainWindow) {
 
 function createWindow() {
   const settings = LoadSettings();
-  const root =
-    process.env.NODE_ENV === 'development'
-      ? process.cwd()
-      : path.resolve(configuration.GetAppResourceDir(), '..');
   const fileName =
     process.platform == 'darwin' ? 'nexuslogo.ico' : 'Nexus_App_Icon_64.png';
-  const iconPath = path.join(root, 'resources', 'tray', fileName);
+  const iconPath = path.join(configuration.GetAssetsDir(), 'tray', fileName);
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
