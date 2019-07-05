@@ -23,7 +23,7 @@
     "preprod": "cross-env NODE_ENV_RUN=production_test npm run build",
     "prod-test": "cross-env NODE_ENV=production NODE_ENV_RUN=production-test electron ./src/",
     "start": "npm run dev",
-    "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./src/main.dev",
+    "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./dist/main.dev.js",
     "start-renderer-dev": "cross-env NODE_ENV=development webpack-dev-server --config configs/webpack.config.renderer.dev.babel.js",
     "run-tests": "./node_modules/mocha/bin/mocha tests/test.js",
     "version2": "node ./internals/scripts/UpdateBuildDate.js",

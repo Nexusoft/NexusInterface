@@ -45,7 +45,3 @@ npm-shrinkwrap\.json~HEAD
 Test-Output
 
 .vscode/*
-
-# These files are generated therefore we don't need to store them. 
-src/main.dev.js
-src/module_preload.dev.js

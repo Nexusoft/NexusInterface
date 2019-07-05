@@ -15,7 +15,7 @@ export default merge.smart(baseConfig, {
 
   // 'main.js' in root
   output: {
-    path: path.join(process.cwd(), 'src'),
+    path: path.join(process.cwd(), 'dist'),
   },
 
   /**

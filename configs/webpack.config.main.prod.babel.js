@@ -16,7 +16,6 @@ export default merge.smart(baseConfig, {
   devtool: 'source-map',
 
   output: {
-    path: path.join(process.cwd(), 'dist'),
     filename: 'main.prod.js',
   },
 
