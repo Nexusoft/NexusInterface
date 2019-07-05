@@ -15,11 +15,12 @@ import Tooltip from 'components/Tooltip';
 import ContextMenuBuilder from 'contextmenu';
 import { getDifficulty } from 'actions/coreActionCreators';
 import * as helpers from 'scripts/helper.js';
-import * as RPC from 'scripts/rpc';
+import { updateSettings } from 'actions/settingsActionCreators';
 import { timing, consts, animations } from 'styles';
 import Globe from './Globe';
 
 // Images
+import logoIcon from 'images/NXS_coin.sprite.svg';
 import { CurrencyIcon } from 'images/CurrencyIcons';
 import transactionIcon from 'images/transaction.sprite.svg';
 import chartIcon from 'images/chart.sprite.svg';
@@ -110,6 +111,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   BlockDate: stamp => dispatch({ type: TYPE.BLOCK_DATE, payload: stamp }),
   getDifficulty: () => dispatch(getDifficulty()),
+  updateSettings: updates => dispatch(updateSettings(updates)),
 });
 
 const OverviewPage = styled.div({
@@ -801,48 +803,46 @@ class Overview extends Component {
         )}
 
         <Stats left compact={!this.showingGlobe()}>
-          {stake > 0 ? (
-            <Stat
-              as={connections ? Link : undefined}
-              to={connections ? '/Transactions' : undefined}
-            >
-              <div>
-                <StatLabel>
-                  <Text id="overview.StakeBalance" /> (NXS)
-                </StatLabel>
-                <StatValue>{this.waitForDaemon(stake)}</StatValue>
-              </div>
-              <StatIcon icon={nxsStakeIcon} />
-            </Stat>
-          ) : (
-            <Stat
-              as={connections ? Link : undefined}
-              to={connections ? '/Transactions' : undefined}
-            >
-              <div>
-                <StatLabel>
-                  <Text id="overview.Balance" /> (NXS)
-                </StatLabel>
-                <StatValue>{this.waitForDaemon(balance)}</StatValue>
-              </div>
-              <StatIcon icon={nxsStakeIcon} />
-            </Stat>
-          )}
+          <Stat
+            onClick={() => {
+              this.props.updateSettings({
+                displayFiatBalance: !settings.displayFiatBalance,
+              });
+            }}
+            to={connections ? 'HackToGetProperStyling' : undefined}
+          >
+            <div>
+              <StatLabel>
+                <Text id="overview.Balance" /> {' ('}
+                {settings.displayFiatBalance ? settings.fiatCurrency : 'NXS'}
+                {')'}
+              </StatLabel>
+              <StatValue>
+                {settings.displayFiatBalance
+                  ? this.waitForDaemon(this.calculateFiatvalue())
+                  : this.waitForDaemon(balance)}
+              </StatValue>
+            </div>
+            <StatIcon
+              icon={
+                settings.displayFiatBalance
+                  ? CurrencyIcon(this.props.settings.fiatCurrency)
+                  : logoIcon
+              }
+            />
+          </Stat>
           <Stat
             as={connections ? Link : undefined}
             to={connections ? '/Transactions' : undefined}
           >
             <div>
               <StatLabel>
-                <Text id="overview.Balance" /> ({settings.fiatCurrency})
+                <Text id="overview.StakeBalance" /> (NXS)
               </StatLabel>
-              <StatValue>
-                {this.waitForDaemon(this.calculateFiatvalue())}
-              </StatValue>
+              <StatValue>{this.waitForDaemon(stake)}</StatValue>
             </div>
-            <StatIcon icon={CurrencyIcon(this.props.settings.fiatCurrency)} />
+            <StatIcon icon={nxsStakeIcon} />
           </Stat>
-
           <Stat
             as={connections ? Link : undefined}
             to={connections ? '/Transactions' : undefined}
@@ -855,7 +855,6 @@ class Overview extends Component {
             </div>
             <StatIcon icon={transactionIcon} />
           </Stat>
-
           <Stat
             as={displayNXSvalues[0] ? Link : undefined}
             to={displayNXSvalues[0] ? '/Market' : undefined}
@@ -874,7 +873,6 @@ class Overview extends Component {
             </div>
             <StatIcon icon={chartIcon} />
           </Stat>
-
           <Stat
             as={displayNXSvalues[0] ? Link : undefined}
             to={displayNXSvalues[0] ? '/Market' : undefined}
@@ -893,7 +891,6 @@ class Overview extends Component {
             </div>
             <StatIcon icon={supplyIcon} />
           </Stat>
-
           <Stat
             as={displayNXSvalues[0] ? Link : undefined}
             to={displayNXSvalues[0] ? '/Market' : undefined}

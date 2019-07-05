@@ -1,3 +1,17 @@
+# 1.0.2 ()
+
+[Release Link]()
+
+#### Additions
+
+- Added functionality to the Balance stat on overview page to change to fiat balance on click
+
+#### Adjustments
+
+- Update styling on `Market Data` page to make 24hr info be clearer
+
+#### Fixes
+
 # 1.0.1 (2019.6.28)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-1.0.1)
@@ -5,10 +19,10 @@
 #### Additions
 
 - Ships with 3.0.1 [Tritium Daemon Core](https://github.com/Nexusoft/LLL-TAO/releases/tag/3.0.1)
- - Fixed uninitiated values in Binary Hash Map for nFlags
- - On rescan, allow search for block when key is found for given user
- - Cleanup unnecessary constructors in Sector Database
- - Remove error reporting for incorrect sector size in Update
+- Fixed uninitiated values in Binary Hash Map for nFlags
+- On rescan, allow search for block when key is found for given user
+- Cleanup unnecessary constructors in Sector Database
+- Remove error reporting for incorrect sector size in Update
 - Added Stake/Generate/Immature to Transaction's page category filter
 - Added tooltip to the tray icon
 - Double click on the tray icon now shows the wallet GUI
