@@ -68,8 +68,8 @@ class WebView extends React.Component {
     const entryUrl = urlJoin(fileServer.domain, 'modules', module.name, entry);
     const preloadUrl =
       process.env.NODE_ENV === 'development'
-        ? './module_preload.dev.js'
-        : '../dist/module_preload.prod.js';
+        ? `${DEV_SERVER}/module_preload.dev.js`
+        : 'module_preload.prod.js';
 
     return (
       <webview

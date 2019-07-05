@@ -32,7 +32,7 @@
         const port = process.env.PORT || 1212;
         scripts.push(
           process.env.HOT
-            ? 'http://localhost:' + port + '/dist/renderer.dev.js'
+            ? 'http://localhost:' + port + '/renderer.dev.js'
             : './renderer.prod.js'
         );
 

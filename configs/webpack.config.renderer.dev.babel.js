@@ -18,7 +18,7 @@ import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 CheckNodeEnv('development');
 
 const port = process.env.PORT || 1212;
-const publicPath = `http://localhost:${port}/dist`;
+const publicPath = `http://localhost:${port}/`;
 const dllPath = path.resolve(process.cwd(), 'dll');
 const manifest = path.resolve(dllPath, 'renderer.json');
 
@@ -39,16 +39,19 @@ export default merge.smart(baseConfig, {
 
   devtool: 'cheap-module-eval-source-map',
 
-  entry: [
-    'react-hot-loader/patch',
-    `webpack-dev-server/client?http://localhost:${port}/`,
-    'webpack/hot/only-dev-server',
-    require.resolve('../src/index'),
-  ],
+  entry: {
+    'renderer.dev': [
+      'react-hot-loader/patch',
+      `webpack-dev-server/client?http://localhost:${port}/`,
+      'webpack/hot/only-dev-server',
+      './src/index',
+    ],
+    'module_preload.dev': './src/module_preload',
+  },
 
   output: {
-    publicPath: `http://localhost:${port}/dist/`,
-    filename: 'renderer.dev.js',
+    publicPath,
+    filename: '[name].js',
   },
 
   module: {
@@ -98,6 +101,16 @@ export default merge.smart(baseConfig, {
           },
         ],
       },
+      {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            mimetype: 'font/woff2',
+            outputPath: 'fonts',
+          },
+        },
+      },
     ],
   },
 
@@ -139,6 +152,7 @@ export default merge.smart(baseConfig, {
       'process.env.NODE_ENV': JSON.stringify(
         process.env.NODE_ENV || 'development'
       ),
+      DEV_SERVER: JSON.stringify(publicPath),
     }),
   ],
 
