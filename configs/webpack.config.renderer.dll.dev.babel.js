@@ -25,10 +25,6 @@ export default merge.smart(baseConfig, {
 
   externals: ['fsevents', 'crypto-browserify'],
 
-  // resolve: {
-  //   modules: ['app'],
-  // },
-
   entry: {
     renderer: Object.keys(dependencies || {}),
   },
@@ -64,7 +60,7 @@ export default merge.smart(baseConfig, {
     new webpack.LoaderOptionsPlugin({
       debug: true,
       options: {
-        context: path.resolve(process.cwd(), 'app'),
+        context: path.resolve(process.cwd(), 'src'),
         output: {
           path: path.resolve(process.cwd(), 'dll'),
         },

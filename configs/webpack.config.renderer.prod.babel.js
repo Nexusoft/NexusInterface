@@ -20,7 +20,7 @@ export default merge.smart(baseConfig, {
 
   devtool: 'source-map',
 
-  entry: './app/index.js',
+  entry: './src/index.js',
 
   output: {
     path: path.join(process.cwd(), 'dist'),
@@ -96,12 +96,6 @@ export default merge.smart(baseConfig, {
      * NODE_ENV should be production so that modules do not perform certain
      * development checks
      */
-    // new CopyWebpackPlugin([
-    //   {
-    //     from: "./app/GeoLite2-City_20180403/GeoLite2-City.mmdb",
-    //     to: path.join(__dirname, "app/dist")
-    //   }
-    // ]),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(
         process.env.NODE_ENV || 'production'

@@ -6,7 +6,6 @@ import path from 'path';
 import webpack from 'webpack';
 import { readFileSync } from 'fs';
 
-// import { dependencies as externals } from '../app/package.json';
 import packageJson from '../package.json';
 
 const appVersion = packageJson.version;

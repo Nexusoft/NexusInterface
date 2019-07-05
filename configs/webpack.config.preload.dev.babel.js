@@ -17,7 +17,7 @@ export default merge.smart(baseConfig, {
   devtool: 'cheap-module-eval-source-map',
 
   output: {
-    path: path.join(process.cwd(), 'app'),
+    path: path.join(process.cwd(), 'src'),
     publicPath: '../',
     filename: 'module_preload.dev.js',
   },

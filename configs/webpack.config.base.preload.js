@@ -9,7 +9,7 @@ import baseConfig from './webpack.config.base';
 export default merge.smart(baseConfig, {
   target: 'electron-renderer',
 
-  entry: './app/module_preload',
+  entry: './src/module_preload',
 
   module: {
     rules: [
