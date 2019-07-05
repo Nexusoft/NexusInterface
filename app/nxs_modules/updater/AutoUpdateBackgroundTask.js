@@ -19,6 +19,7 @@ export default class AutoUpdateBackgroundTask extends React.Component {
   render() {
     return (
       <BackgroundTask
+        type="success"
         assignClose={close => {
           this.closeTask = close;
         }}
