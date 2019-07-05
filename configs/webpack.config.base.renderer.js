@@ -41,7 +41,6 @@ export default merge.smart(baseConfig, {
           },
         ],
       },
-      // WOFF2 Font
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         use: {
@@ -53,7 +52,6 @@ export default merge.smart(baseConfig, {
           },
         },
       },
-      // Common Image Formats
       {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
         use: 'url-loader',

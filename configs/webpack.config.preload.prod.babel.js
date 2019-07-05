@@ -19,7 +19,6 @@ export default merge.smart(baseConfig, {
 
   output: {
     path: path.join(process.cwd(), 'dist'),
-    // publicPath: '../dist/',
     filename: 'module_preload.prod.js',
   },
 

@@ -24,7 +24,6 @@ export default merge.smart(baseConfig, {
 
   output: {
     path: path.join(process.cwd(), 'dist'),
-    // publicPath: './dist/',
     filename: 'renderer.prod.js',
   },
 
