@@ -13,8 +13,6 @@ import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
-  mode: 'production',
-
   devtool: 'source-map',
 
   output: {
@@ -27,19 +25,6 @@ export default merge.smart(baseConfig, {
       analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
       openAnalyzer: process.env.OPEN_ANALYZER === 'true',
-    }),
-
-    /**
-     * Create global constants which can be configured at compile time.
-     *
-     * Useful for allowing different behaviour between development builds and
-     * release builds
-     *
-     * NODE_ENV should be production so that modules do not perform certain
-     * development checks
-     */
-    new webpack.DefinePlugin({
-      NODE_ENV: 'production',
     }),
   ],
 });

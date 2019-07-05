@@ -35,8 +35,6 @@ if (!(fs.existsSync(dllPath) && fs.existsSync(manifest))) {
 }
 
 export default merge.smart(baseConfig, {
-  mode: 'development',
-
   devtool: 'cheap-module-eval-source-map',
 
   entry: {
@@ -149,9 +147,6 @@ export default merge.smart(baseConfig, {
      * 'staging', for example, by changing the ENV variables in the npm scripts
      */
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(
-        process.env.NODE_ENV || 'development'
-      ),
       DEV_SERVER: JSON.stringify(publicPath),
     }),
   ],

@@ -13,8 +13,6 @@ import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
-  mode: 'production',
-
   devtool: 'source-map',
 
   target: 'electron-renderer',
@@ -43,12 +41,6 @@ export default merge.smart(baseConfig, {
   },
 
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(
-        process.env.NODE_ENV || 'production'
-      ),
-    }),
-
     new BundleAnalyzerPlugin({
       analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',

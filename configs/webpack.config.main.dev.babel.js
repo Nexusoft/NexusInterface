@@ -15,27 +15,10 @@ const publicPath = `http://localhost:${port}/dist`;
 CheckNodeEnv('development');
 
 export default merge.smart(baseConfig, {
-  mode: 'development',
-
   devtool: 'cheap-module-eval-source-map',
 
   output: {
     publicPath: `http://localhost:${port}/dist/`,
     filename: 'main.dev.js',
   },
-
-  plugins: [
-    /**
-     * Create global constants which can be configured at compile time.
-     *
-     * Useful for allowing different behaviour between development builds and
-     * release builds
-     *
-     * NODE_ENV should be production so that modules do not perform certain
-     * development checks
-     */
-    new webpack.DefinePlugin({
-      NODE_ENV: 'development',
-    }),
-  ],
 });
