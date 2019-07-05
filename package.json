@@ -14,7 +14,7 @@
     "build-renderer": "cross-env NODE_ENV=production webpack --max-old-space-size=4076 --config configs/webpack.config.renderer.prod.babel.js --colors",
     "build-preload-dev": "cross-env NODE_ENV=development webpack --config configs/webpack.config.preload.dev.babel.js --colors",
     "build-preload": "cross-env NODE_ENV=production webpack --config configs/webpack.config.preload.prod.babel.js --colors",
-    "dev": "cross-env START_HOT=1 npm run start-renderer-dev",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config configs/webpack.config.renderer.dev.babel.js",
     "package": "npm run build && electron-builder build --publish never",
     "package-all": "npm run build && electron-builder build -mwl",
     "package-linux": "npm run build && electron-builder build --linux",
@@ -24,7 +24,6 @@
     "prod-test": "cross-env NODE_ENV=production NODE_ENV_RUN=production-test electron ./src/",
     "start": "npm run dev",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./dist/main.dev.js",
-    "start-renderer-dev": "cross-env NODE_ENV=development webpack-dev-server --config configs/webpack.config.renderer.dev.babel.js",
     "run-tests": "./node_modules/mocha/bin/mocha tests/test.js",
     "version2": "node ./internals/scripts/UpdateBuildDate.js",
     "extract-changes": "node ./internals/scripts/extractTranslationChanges.js",
@@ -39,6 +38,7 @@
     "files": [
       "dist/**/*",
       "!dist/*.map",
+      "!dist/*.dev.js",
       "!node_modules/**/*",
       {
         "from": "src",
