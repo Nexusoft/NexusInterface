@@ -69,7 +69,7 @@ class WebView extends React.Component {
     const preloadUrl =
       process.env.NODE_ENV === 'development'
         ? './module_preload.dev.js'
-        : './dist/module_preload.prod.js';
+        : '../dist/module_preload.prod.js';
 
     return (
       <webview

@@ -23,8 +23,8 @@ export default merge.smart(baseConfig, {
   entry: './app/index.js',
 
   output: {
-    path: path.join(process.cwd(), 'app/dist'),
-    publicPath: './dist/',
+    path: path.join(process.cwd(), 'dist'),
+    // publicPath: './dist/',
     filename: 'renderer.prod.js',
   },
 

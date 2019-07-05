@@ -18,8 +18,8 @@ export default merge.smart(baseConfig, {
   devtool: 'source-map',
 
   output: {
-    path: path.join(process.cwd(), 'app', 'dist'),
-    publicPath: '../dist/',
+    path: path.join(process.cwd(), 'dist'),
+    // publicPath: '../dist/',
     filename: 'module_preload.prod.js',
   },
 

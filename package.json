@@ -32,16 +32,21 @@
     "update-documentation": "./UpdateDocumentation.sh"
   },
   "browserslist": "electron 5.0.6",
-  "main": "./app/main.prod.js",
+  "main": "./dist/main.prod.js",
   "build": {
     "productName": "Nexus Wallet",
     "appId": "com.nexusearth.NexusTritium",
     "files": [
-      "app/dist/**/*",
-      "!app/dist/*.map",
-      "app/app.html",
-      "app/main.prod.js",
-      "!node_modules/**/*"
+      "dist/**/*",
+      "!dist/*.map",
+      "!node_modules/**/*",
+      {
+        "from": "app",
+        "to": "dist",
+        "filter": [
+          "app.html"
+        ]
+      }
     ],
     "extraResources": [
       "./assets/GeoLite2-City/**/*",

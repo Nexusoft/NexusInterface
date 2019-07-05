@@ -2,6 +2,7 @@
  * Webpack config for production electron main process
  */
 
+import path from 'path';
 import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import merge from 'webpack-merge';
@@ -17,6 +18,7 @@ export default merge.smart(baseConfig, {
   devtool: 'source-map',
 
   output: {
+    path: path.join(process.cwd(), 'dist'),
     filename: 'main.prod.js',
   },
 

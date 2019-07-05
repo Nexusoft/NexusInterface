@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
-import '../../CSS/controls/react-table.css'
 import Text from 'components/Text';
 
 /**
@@ -28,7 +27,6 @@ export default class Table extends Component {
     };
   }
 
-
   /**
    * Component's Renderable JSX
    *
@@ -52,9 +50,9 @@ export default class Table extends Component {
       <Text id="transactions.Rows">
         {R => (
           <ReactTable
-            className = '-striped -highlight'
+            className="-striped -highlight"
             noDataText={<Text id="transactions.NoRowsFound" />}
-            key='ReactTable'
+            key="ReactTable"
             data={data}
             pageText={<Text id="transactions.Page" />}
             columns={columns}
@@ -88,7 +86,10 @@ export default class Table extends Component {
               };
             }}
             style={{
-              height: '400px','--colorPrimary':this.props.style.background, '--colorAccent': this.props.style.primary, '--colorSecondary' : this.props.style.foreground,
+              height: '400px',
+              '--colorPrimary': this.props.style.background,
+              '--colorAccent': this.props.style.primary,
+              '--colorSecondary': this.props.style.foreground,
             }}
           />
         )}

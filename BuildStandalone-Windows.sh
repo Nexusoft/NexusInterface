@@ -1,9 +1,7 @@
 #!/bin/bash
 
 rm -r release
-rm -r app/dist
-rm app/*.map
-rm app/main.prod.js
+rm -r dist
 sudo apt-get purge -y nexus-tritium
 rm -r ~/.config/Nexus_Tritium_Wallet
 npm run package-win
