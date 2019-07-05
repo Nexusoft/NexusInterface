@@ -120,7 +120,9 @@ function createWindow() {
   global.tray = setupTray(mainWindow);
 
   // Load the index.html into the new browser window
-  mainWindow.loadURL(`file://${path.resolve(__dirname, '../src/app.html')}`);
+  const htmlPath =
+    process.env.NODE_ENV === 'development' ? '../src/app.html' : 'app.html';
+  mainWindow.loadURL(`file://${path.resolve(__dirname, htmlPath)}`);
 
   // Show the window only once the contents finish loading, then check for updates
   mainWindow.webContents.on('did-finish-load', function() {
