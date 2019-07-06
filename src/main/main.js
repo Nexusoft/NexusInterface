@@ -11,10 +11,10 @@ import devToolsInstall, {
 import fs from 'fs-extra';
 
 // Internal
-import fileServer from './fileServer';
 import configuration from 'api/configuration';
 import { LoadSettings, UpdateSettings } from 'api/settings';
-import core from 'api/core';
+import core from './core';
+import fileServer from './fileServer';
 
 let mainWindow;
 let resizeTimer;

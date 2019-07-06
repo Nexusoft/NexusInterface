@@ -11,7 +11,7 @@ import baseConfig from './webpack.config.base';
 export default merge.smart(baseConfig, {
   target: 'electron-main',
 
-  entry: './src/main',
+  entry: './src/main/main.js',
 
   // 'main.js' in root
   output: {
