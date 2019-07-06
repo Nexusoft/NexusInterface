@@ -20,7 +20,7 @@ import Overlay from 'components/Overlay';
 import Tooltip from 'components/Tooltip';
 import { timing, consts, animations } from 'styles';
 import * as color from 'utils/color';
-import { passRef } from 'utils';
+import { passRef } from 'utils/etc';
 
 // Minimum gap from the dropdown to the edges of the screen
 const minScreenGap = 10;

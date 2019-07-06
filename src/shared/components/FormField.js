@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 
 // Internal
-import { newUID } from 'utils';
+import { newUID } from 'utils/etc';
 
 const FormFieldComponent = styled.div(
   { marginTop: '1em' },
