@@ -50,7 +50,7 @@ export default {
    */
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
-    modules: ['nxs_modules', 'node_modules'],
+    modules: ['shared', 'node_modules'],
   },
 
   plugins: [
