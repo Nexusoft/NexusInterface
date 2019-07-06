@@ -4,7 +4,7 @@ import { shell, remote } from 'electron';
 import fs from 'fs';
 
 // Internal
-import store, { history } from 'store';
+import store, { observeStore, history } from 'store';
 import { isWebViewActive, toggleWebViewDevTools } from 'lib/modules';
 import * as RPC from 'scripts/rpc';
 import { updateSettings } from 'actions/settingsActionCreators';
@@ -13,6 +13,7 @@ import Text from 'components/Text';
 import UIController from 'components/UIController';
 import { clearCoreInfo } from 'actions/coreActionCreators';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
+import showOpenDialog from 'utils/promisified/showOpenDialog';
 import updater from 'updater';
 
 const autoUpdater = remote.getGlobal('autoUpdater');
@@ -32,6 +33,8 @@ class AppMenu {
     // Update the updater menu item when the updater state changes
     // Changing menu item labels directly has no effect so we have to rebuild the whole menu
     updater.on('state-change', this.build);
+    observeStore(state => state.core.info.connections, this.build);
+    observeStore(state => state.settings.devMode, this.build);
   }
 
   separator = {
@@ -89,32 +92,27 @@ class AppMenu {
 
   backupWallet = {
     label: 'Backup Wallet',
-    click: () => {
+    click: async () => {
       const state = store.getState();
-      if (state.core.info.connections) {
-        remote.dialog.showOpenDialog(
-          {
-            title: 'Select a folder',
-            defaultPath: state.settings.backupDirectory,
-            properties: ['openDirectory'],
-          },
-          async folderPaths => {
-            if (folderPaths && folderPaths.length > 0) {
-              store.dispatch(
-                updateSettings({ backupDirectory: folderPaths[0] })
-              );
+      const folderPaths = await showOpenDialog({
+        title: 'Select a folder',
+        defaultPath: state.settings.backupDirectory,
+        properties: ['openDirectory'],
+      });
 
-              await backupWallet(folderPaths[0]);
-              UIController.showNotification(
-                <Text id="Alert.WalletBackedUp" />,
-                'success'
-              );
-              console.log(folderPaths[0]);
-            }
-          }
-        );
-      } else {
+      if (state.core.info.connections === undefined) {
         UIController.showNotification(<Text id="Header.DaemonNotLoaded" />);
+        return;
+      }
+
+      if (folderPaths && folderPaths.length > 0) {
+        store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
+
+        await backupWallet(folderPaths[0]);
+        UIController.showNotification(
+          <Text id="Alert.WalletBackedUp" />,
+          'success'
+        );
       }
     },
   };
@@ -318,12 +316,14 @@ class AppMenu {
    * @memberof AppMenu
    */
   buildDarwinTemplate = () => {
+    const state = store.getState();
+    const daemonRunning = state.core.info.connections !== undefined;
+
     const subMenuAbout = {
       label: 'Nexus',
       submenu: [
         this.about,
-        this.startDaemon,
-        this.stopDaemon,
+        daemonRunning ? this.stopDaemon : this.startDaemon,
         this.separator,
         this.quitNexus,
       ],
@@ -356,7 +356,6 @@ class AppMenu {
       label: 'View',
       submenu: [this.toggleFullScreen],
     };
-    const state = store.getState();
     if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
       subMenuWindow.submenu.push(this.toggleDevTools);
 
@@ -392,6 +391,9 @@ class AppMenu {
    * @memberof AppMenu
    */
   buildDefaultTemplate = () => {
+    const state = store.getState();
+    const daemonRunning = state.core.info.connections !== undefined;
+
     const subMenuFile = {
       label: '&File',
       submenu: [
@@ -400,8 +402,7 @@ class AppMenu {
         this.separator,
         this.downloadRecent,
         this.separator,
-        this.startDaemon,
-        this.stopDaemon,
+        daemonRunning ? this.stopDaemon : this.startDaemon,
         this.separator,
         this.quitNexus,
       ],
@@ -419,7 +420,6 @@ class AppMenu {
       label: '&View',
       submenu: [this.toggleFullScreen],
     };
-    const state = store.getState();
     if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
       subMenuView.submenu.push(this.separator, this.toggleDevTools);
 
