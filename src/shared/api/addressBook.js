@@ -1,8 +1,12 @@
+import fs from 'fs';
+import path from 'path';
 import Ajv from 'ajv';
-import config from 'api/configuration';
+import { walletDataDir } from 'consts/paths';
 import { emailRegex } from 'utils/form';
+import { readJson, writeJson } from 'utils/fileSystem';
 
 const fileName = 'addressbook.json';
+const filePath = path.join(walletDataDir, fileName);
 
 /**
  * Convert the old addressbook.json schema
@@ -98,8 +102,8 @@ export function LoadAddressBook() {
   const ajv = new Ajv();
   const validate = ajv.compile(schema);
 
-  if (config.Exists(fileName)) {
-    const json = config.ReadJson(fileName);
+  if (fs.existsSync(filePath)) {
+    const json = readJson(filePath);
     let addressBook, valid;
     // `addressbook` (all lowercase) signals the old schema
     // New schema uses camel case `addressBook`
@@ -121,7 +125,7 @@ export function LoadAddressBook() {
       return {};
     }
   } else {
-    config.WriteJson(fileName, {
+    writeJson(filePath, {
       addressBook: {},
     });
     return {};
@@ -129,5 +133,5 @@ export function LoadAddressBook() {
 }
 
 export function SaveAddressBook(addressBook) {
-  config.WriteJson(fileName, { addressBook });
+  return writeJson(filePath, { addressBook });
 }

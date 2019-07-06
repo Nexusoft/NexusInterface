@@ -1,11 +1,14 @@
+import path from 'path';
 import crypto from 'crypto';
 import macaddress from 'macaddress';
-import config from 'api/configuration';
+import { walletDataDir } from 'consts/paths';
 import { homeDir } from 'consts/paths';
 import { coreDataDir } from 'consts/paths';
 import normalizePath from 'utils/normalizePath';
+import { readJson, writeJson } from 'utils/fileSystem';
 
 const settingsFileName = 'settings.json';
+const settingsFilePath = path.join(walletDataDir, settingsFileName);
 
 const defaultBackupDir = normalizePath(homeDir + '/NexusBackups');
 
@@ -60,11 +63,11 @@ export const defaultSettings = {
 };
 
 function readSettings() {
-  return config.ReadJson(settingsFileName);
+  return readJson(settingsFilePath);
 }
 
 function writeSettings(settings) {
-  return config.WriteJson(settingsFileName, filterValidSettings(settings));
+  return writeJson(settingsFilePath, filterValidSettings(settings));
 }
 
 export function filterValidSettings(settings) {

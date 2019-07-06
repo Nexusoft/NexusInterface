@@ -1,6 +1,9 @@
-import config from 'api/configuration';
+import path from 'path';
+import { walletDataDir } from 'consts/paths';
+import { readJson, writeJson } from 'utils/fileSystem';
 
 const themeFileName = 'theme.json';
+const themeFilePath = path.join(walletDataDir, themeFileName);
 
 export const defaultTheme = {
   defaultStyle: 'Dark',
@@ -17,11 +20,11 @@ export const defaultTheme = {
 };
 
 function readTheme() {
-  return config.ReadJson(themeFileName);
+  return readJson(themeFilePath);
 }
 
 function writeTheme(theme) {
-  return config.WriteJson(themeFileName, filterValidTheme(theme));
+  return writeJson(themeFilePath, filterValidTheme(theme));
 }
 
 export function filterValidTheme(theme) {
