@@ -13,8 +13,6 @@ import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 CheckNodeEnv('production');
 
 export default merge.smart(baseConfig, {
-  devtool: 'source-map',
-
   target: 'electron-renderer',
 
   entry: './src/module_preload',
