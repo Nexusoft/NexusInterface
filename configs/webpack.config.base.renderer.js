@@ -42,17 +42,6 @@ export default merge.smart(baseConfig, {
         ],
       },
       {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'font/woff2',
-            outputPath: 'fonts',
-          },
-        },
-      },
-      {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
         use: 'url-loader',
       },
