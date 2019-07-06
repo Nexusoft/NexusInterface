@@ -7,9 +7,6 @@ import UIController from 'components/UIController';
 import WEBGL from 'scripts/WebGLCheck.js';
 import * as ac from 'actions/setupAppActionCreators';
 import { getInfo } from 'actions/coreActionCreators';
-import { loadSettingsFromFile } from 'actions/settingsActionCreators';
-import { loadThemeFromFile } from 'actions/themeActionCreators';
-import { loadAddressBookFromFile } from 'actions/addressBookActionCreators';
 import { loadModules } from 'actions/moduleActionCreators';
 import updater from 'updater';
 import { rebuildMenu, initializeMenu } from 'appMenu';
@@ -27,13 +24,9 @@ var printCoreOutputTimer;
 
 export default function setupApp(store) {
   const { dispatch } = store;
-  store.dispatch(loadSettingsFromFile());
-  store.dispatch(loadThemeFromFile());
 
   initializeMenu();
   rebuildMenu();
-
-  dispatch(loadAddressBookFromFile());
 
   dispatch(getInfo());
   setInterval(() => dispatch(getInfo()), 10000);

@@ -7,7 +7,7 @@ import createRootReducer from './reducers';
 
 const history = createHashHistory();
 
-const configureStore = () => {
+const configureStore = initialState => {
   // Redux Configuration
   const middleware = [];
   const enhancers = [];
@@ -37,8 +37,10 @@ const configureStore = () => {
   enhancers.push(applyMiddleware(...middleware));
   const enhancer = composeEnhancers(...enhancers);
 
+  const rootReducer = createRootReducer(history);
+
   // Create Store
-  const store = createStore(createRootReducer(history), enhancer);
+  const store = createStore(rootReducer, initialState, enhancer);
 
   return store;
 };
