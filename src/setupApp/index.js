@@ -20,14 +20,12 @@ import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';
 import { join } from 'path';
 
-window.remote = remote;
-
 var tail;
 var debugFileLocation;
 var checkIfFileExistsInterval;
 var printCoreOutputTimer;
 
-export default function setupApp(store, history) {
+export default function setupApp(store) {
   const { dispatch } = store;
   store.dispatch(loadSettingsFromFile());
   store.dispatch(loadThemeFromFile());
