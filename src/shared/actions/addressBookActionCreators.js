@@ -1,10 +1,5 @@
 import * as TYPE from './actiontypes';
-import { LoadAddressBook, SaveAddressBook } from 'lib/addressBook';
-
-export const loadAddressBookFromFile = () => ({
-  type: TYPE.LOAD_ADDRESS_BOOK,
-  payload: LoadAddressBook(),
-});
+import { SaveAddressBook } from 'lib/addressBook';
 
 export const addNewContact = contact => (dispatch, getState) => {
   const result = dispatch({

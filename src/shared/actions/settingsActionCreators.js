@@ -1,11 +1,6 @@
 import ga from 'scripts/googleanalytics';
-import { LoadSettings, UpdateSettings } from 'lib/settings';
+import { UpdateSettings } from 'lib/settings';
 import * as TYPE from './actiontypes';
-
-export const loadSettingsFromFile = () => dispatch => {
-  const settings = LoadSettings();
-  dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings });
-};
 
 export const updateSettings = updates => (dispatch, getState) => {
   const oldState = getState();
