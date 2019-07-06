@@ -2,8 +2,6 @@ import ga from 'scripts/googleanalytics';
 import { LoadSettings, UpdateSettings } from 'lib/settings';
 import * as TYPE from './actiontypes';
 
-import appMenu from 'appMenu';
-
 export const loadSettingsFromFile = () => dispatch => {
   const settings = LoadSettings();
   dispatch({ type: TYPE.UPDATE_SETTINGS, payload: settings });
@@ -26,10 +24,5 @@ export const updateSettings = updates => (dispatch, getState) => {
       ga.DisableAnalytics();
       ga.SendEvent('Settings', 'Analytics', 'Disabled', 1);
     }
-  }
-
-  // Rebuild menu for Toggle Developer Tools when devMode setting changes
-  if (updates.devMode !== undefined) {
-    appMenu.build();
   }
 };

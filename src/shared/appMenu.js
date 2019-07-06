@@ -8,7 +8,7 @@ import store, { observeStore, history } from 'store';
 import { isWebViewActive, toggleWebViewDevTools } from 'lib/modules';
 import * as RPC from 'scripts/rpc';
 import { updateSettings } from 'actions/settingsActionCreators';
-import { backupWallet } from 'lib/wallet';
+import { backupWallet as backup } from 'lib/wallet';
 import Text from 'components/Text';
 import UIController from 'components/UIController';
 import { clearCoreInfo } from 'actions/coreActionCreators';
@@ -18,448 +18,431 @@ import updater from 'updater';
 
 const autoUpdater = remote.getGlobal('autoUpdater');
 
-/**
- * Sets up the Top Menu for the App
- *
- * @class AppMenu
- */
-class AppMenu {
-  /**
-   * Initialize the App Menu
-   *
-   * @memberof AppMenu
-   */
-  initialize() {
-    // Update the updater menu item when the updater state changes
-    // Changing menu item labels directly has no effect so we have to rebuild the whole menu
-    updater.on('state-change', this.build);
-    observeStore(state => state.core.info.connections, this.build);
-    observeStore(state => state.settings.devMode, this.build);
-  }
+const separator = {
+  type: 'separator',
+};
 
-  separator = {
-    type: 'separator',
-  };
+const startDaemon = {
+  label: 'Start Daemon',
+  click: () => {
+    remote
+      .getGlobal('core')
+      .start()
+      .then(payload => {
+        console.log(payload);
+      });
+  },
+};
 
-  startDaemon = {
-    label: 'Start Daemon',
-    click: () => {
+const stopDaemon = {
+  label: 'Stop Daemon',
+  click: () => {
+    const state = store.getState();
+    if (state.settings.manualDaemon) {
+      RPC.PROMISE('stop', []).then(() => {
+        store.dispatch(clearCoreInfo());
+      });
+    } else {
       remote
         .getGlobal('core')
-        .start()
+        .stop()
         .then(payload => {
+          store.dispatch(clearCoreInfo());
           console.log(payload);
         });
-    },
-  };
+    }
+  },
+};
 
-  stopDaemon = {
-    label: 'Stop Daemon',
-    click: () => {
-      const state = store.getState();
-      if (state.settings.manualDaemon) {
-        RPC.PROMISE('stop', []).then(() => {
-          store.dispatch(clearCoreInfo());
-        });
-      } else {
-        remote
-          .getGlobal('core')
-          .stop()
-          .then(payload => {
-            store.dispatch(clearCoreInfo());
-            console.log(payload);
-          });
-      }
-    },
-  };
+const quitNexus = {
+  label: 'Quit Nexus',
+  accelerator: 'CmdOrCtrl+Q',
+  click: () => {
+    store.dispatch(clearCoreInfo());
+    UIController.showNotification('Closing Nexus');
+    remote.getCurrentWindow().close();
+  },
+};
 
-  quitNexus = {
-    label: 'Quit Nexus',
-    accelerator: 'CmdOrCtrl+Q',
-    click: () => {
-      store.dispatch(clearCoreInfo());
-      UIController.showNotification('Closing Nexus');
-      remote.getCurrentWindow().close();
-    },
-  };
+const about = {
+  label: 'About',
+  click: () => {
+    history.push('/About');
+  },
+};
 
-  about = {
-    label: 'About',
-    click: () => {
-      history.push('/About');
-    },
-  };
+const backupWallet = {
+  label: 'Backup Wallet',
+  click: async () => {
+    const state = store.getState();
+    const folderPaths = await showOpenDialog({
+      title: 'Select a folder',
+      defaultPath: state.settings.backupDirectory,
+      properties: ['openDirectory'],
+    });
 
-  backupWallet = {
-    label: 'Backup Wallet',
-    click: async () => {
-      const state = store.getState();
-      const folderPaths = await showOpenDialog({
-        title: 'Select a folder',
-        defaultPath: state.settings.backupDirectory,
-        properties: ['openDirectory'],
+    if (state.core.info.connections === undefined) {
+      UIController.showNotification(<Text id="Header.DaemonNotLoaded" />);
+      return;
+    }
+
+    if (folderPaths && folderPaths.length > 0) {
+      store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
+
+      await backup(folderPaths[0]);
+      UIController.showNotification(
+        <Text id="Alert.WalletBackedUp" />,
+        'success'
+      );
+    }
+  },
+};
+
+const viewBackups = {
+  label: 'View Backups',
+  click: () => {
+    let BackupDir = process.env.HOME + '/NexusBackups';
+    if (process.platform === 'win32') {
+      BackupDir = process.env.USERPROFILE + '/NexusBackups';
+      BackupDir = BackupDir.replace(/\\/g, '/');
+    }
+    let backupDirExists = fs.existsSync(BackupDir);
+    if (!backupDirExists) {
+      fs.mkdirSync(BackupDir);
+    }
+    shell.openItem(BackupDir);
+  },
+};
+
+const cut = {
+  label: 'Cut',
+  accelerator: 'CmdOrCtrl+X',
+  role: 'cut',
+};
+
+const copy = {
+  label: 'Copy',
+  accelerator: 'CmdOrCtrl+C',
+  role: 'copy',
+};
+
+const paste = {
+  label: 'Paste',
+  accelerator: 'CmdOrCtrl+V',
+  role: 'paste',
+};
+
+const coreSettings = {
+  label: 'Core',
+  click: () => {
+    history.push('/Settings/Core');
+  },
+};
+
+const appSettings = {
+  label: 'Application',
+  click: () => {
+    history.push('/Settings/App');
+  },
+};
+
+const keyManagement = {
+  label: 'Key Management',
+  click: () => {
+    history.push('/Settings/Security');
+  },
+};
+
+const styleSettings = {
+  label: 'Style',
+  click: () => {
+    history.push('/Settings/Style');
+  },
+};
+
+const downloadRecent = {
+  label: 'Download Recent Database',
+  click: async () => {
+    const enoughSpace = await checkBootStrapFreeSpace();
+    if (!enoughSpace) {
+      console.log('in Menu');
+      UIController.openErrorDialog({
+        message: <Text id="ToolTip.NotEnoughSpace" />,
       });
-
-      if (state.core.info.connections === undefined) {
-        UIController.showNotification(<Text id="Header.DaemonNotLoaded" />);
-        return;
-      }
-
-      if (folderPaths && folderPaths.length > 0) {
-        store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
-
-        await backupWallet(folderPaths[0]);
-        UIController.showNotification(
-          <Text id="Alert.WalletBackedUp" />,
-          'success'
-        );
-      }
-    },
-  };
-
-  viewBackups = {
-    label: 'View Backups',
-    click: () => {
-      let BackupDir = process.env.HOME + '/NexusBackups';
-      if (process.platform === 'win32') {
-        BackupDir = process.env.USERPROFILE + '/NexusBackups';
-        BackupDir = BackupDir.replace(/\\/g, '/');
-      }
-      let backupDirExists = fs.existsSync(BackupDir);
-      if (!backupDirExists) {
-        fs.mkdirSync(BackupDir);
-      }
-      shell.openItem(BackupDir);
-    },
-  };
-
-  cut = {
-    label: 'Cut',
-    accelerator: 'CmdOrCtrl+X',
-    role: 'cut',
-  };
-
-  copy = {
-    label: 'Copy',
-    accelerator: 'CmdOrCtrl+C',
-    role: 'copy',
-  };
-
-  paste = {
-    label: 'Paste',
-    accelerator: 'CmdOrCtrl+V',
-    role: 'paste',
-  };
-
-  coreSettings = {
-    label: 'Core',
-    click: () => {
-      history.push('/Settings/Core');
-    },
-  };
-
-  appSettings = {
-    label: 'Application',
-    click: () => {
-      history.push('/Settings/App');
-    },
-  };
-
-  keyManagement = {
-    label: 'Key Management',
-    click: () => {
-      history.push('/Settings/Security');
-    },
-  };
-
-  styleSettings = {
-    label: 'Style',
-    click: () => {
-      history.push('/Settings/Style');
-    },
-  };
-
-  downloadRecent = {
-    label: 'Download Recent Database',
-    click: async () => {
-      const enoughSpace = await checkBootStrapFreeSpace();
-      if (!enoughSpace) {
-        console.log('in Menu');
-        UIController.openErrorDialog({
-          message: <Text id="ToolTip.NotEnoughSpace" />,
-        });
-        return;
-      }
-
-      const state = store.getState();
-      if (state.settings.manualDaemon) {
-        UIController.showNotification(
-          'Cannot bootstrap recent database in manual mode',
-          'error'
-        );
-        return;
-      }
-
-      if (state.core.info.connections === undefined) {
-        UIController.showNotification('Please wait for the daemon to start.');
-        return;
-      }
-
-      store.dispatch(bootstrap());
-    },
-  };
-
-  toggleFullScreen = {
-    label: 'Toggle FullScreen',
-    accelerator: 'F11',
-    click: () => {
-      remote
-        .getCurrentWindow()
-        .setFullScreen(!remote.getCurrentWindow().isFullScreen());
-    },
-  };
-
-  toggleDevTools = {
-    label: 'Toggle Developer Tools',
-    accelerator: 'Alt+CmdOrCtrl+I',
-    click: () => {
-      remote.getCurrentWindow().toggleDevTools();
-    },
-  };
-
-  toggleModuleDevTools = {
-    label: "Toggle Module's Developer Tools",
-    click: () => {
-      toggleWebViewDevTools();
-    },
-  };
-
-  websiteLink = {
-    label: 'Nexus Earth Website',
-    click: () => {
-      shell.openExternal('http://nexusearth.com');
-    },
-  };
-
-  gitRepoLink = {
-    label: 'Nexus Git Repository',
-    click: () => {
-      shell.openExternal('http://github.com/Nexusoft');
-    },
-  };
-
-  updaterIdle = {
-    label: 'Check for Updates...',
-    enabled: true,
-    click: async () => {
-      const result = await autoUpdater.checkForUpdates();
-      // Not sure if this is the best way to check if there's an update
-      // available because autoUpdater.checkForUpdates() doesn't return
-      // any reliable results like a boolean `updateAvailable` property
-      if (result.updateInfo.version === APP_VERSION) {
-        UIController.showNotification(
-          'There are currently no updates available'
-        );
-      }
-    },
-  };
-
-  updaterChecking = {
-    label: 'Checking for Updates...',
-    enabled: false,
-  };
-
-  updaterDownloading = {
-    label: 'Update available! Downloading...',
-    enabled: false,
-  };
-
-  updaterReadyToInstall = {
-    label: 'Quit and install update...',
-    enabled: true,
-    click: autoUpdater.quitAndInstall,
-  };
-
-  /**
-   * Get the Updater
-   *
-   * @memberof AppMenu
-   */
-  updaterMenuItem = () => {
-    switch (updater.state) {
-      case 'idle':
-        return this.updaterIdle;
-      case 'checking':
-        return this.updaterChecking;
-      case 'downloading':
-        return this.updaterDownloading;
-      case 'downloaded':
-        return this.updaterReadyToInstall;
+      return;
     }
-  };
 
-  /**
-   * Activate if Module is open
-   *
-   * @memberof AppMenu
-   */
-  setPageModuleActive = active => {
-    if (this.pageModuleActive !== active) {
-      this.pageModuleActive = active;
-      this.build();
-    }
-  };
-
-  /**
-   * Build Menu for OSX
-   *
-   * @memberof AppMenu
-   */
-  buildDarwinTemplate = () => {
     const state = store.getState();
-    const daemonRunning = state.core.info.connections !== undefined;
-
-    const subMenuAbout = {
-      label: 'Nexus',
-      submenu: [
-        this.about,
-        daemonRunning ? this.stopDaemon : this.startDaemon,
-        this.separator,
-        this.quitNexus,
-      ],
-    };
-    const subMenuFile = {
-      label: 'File',
-      submenu: [
-        this.backupWallet,
-        this.viewBackups,
-        this.separator,
-        this.downloadRecent,
-      ],
-    };
-    const subMenuEdit = {
-      label: 'Edit',
-      submenu: [this.cut, this.copy, this.paste],
-    };
-    const subMenuView = {
-      label: 'Settings',
-      submenu: [
-        this.appSettings,
-        this.coreSettings,
-        this.keyManagement,
-        this.styleSettings,
-        //TODO: take this out before 1.0
-      ],
-    };
-
-    const subMenuWindow = {
-      label: 'View',
-      submenu: [this.toggleFullScreen],
-    };
-    if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
-      subMenuWindow.submenu.push(this.toggleDevTools);
-
-      if (isWebViewActive()) {
-        subMenuWindow.submenu.push(this.toggleModuleDevTools);
-      }
+    if (state.settings.manualDaemon) {
+      UIController.showNotification(
+        'Cannot bootstrap recent database in manual mode',
+        'error'
+      );
+      return;
     }
 
-    const subMenuHelp = {
-      label: 'Help',
-      submenu: [
-        this.websiteLink,
-        this.gitRepoLink,
-        // this.separator,
-        // Disable checking for updates on Mac until we have the developer key
-        // this.updaterMenuItem(),
-      ],
-    };
-
-    return [
-      subMenuAbout,
-      subMenuFile,
-      subMenuEdit,
-      subMenuView,
-      subMenuWindow,
-      subMenuHelp,
-    ];
-  };
-
-  /**
-   * Build Menu to Windows / Linux
-   *
-   * @memberof AppMenu
-   */
-  buildDefaultTemplate = () => {
-    const state = store.getState();
-    const daemonRunning = state.core.info.connections !== undefined;
-
-    const subMenuFile = {
-      label: '&File',
-      submenu: [
-        this.backupWallet,
-        this.viewBackups,
-        this.separator,
-        this.downloadRecent,
-        this.separator,
-        daemonRunning ? this.stopDaemon : this.startDaemon,
-        this.separator,
-        this.quitNexus,
-      ],
-    };
-    const subMenuSettings = {
-      label: 'Settings',
-      submenu: [
-        this.appSettings,
-        this.coreSettings,
-        this.keyManagement,
-        this.styleSettings,
-      ],
-    };
-    const subMenuView = {
-      label: '&View',
-      submenu: [this.toggleFullScreen],
-    };
-    if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
-      subMenuView.submenu.push(this.separator, this.toggleDevTools);
-
-      if (isWebViewActive()) {
-        subMenuView.submenu.push(this.toggleModuleDevTools);
-      }
+    if (state.core.info.connections === undefined) {
+      UIController.showNotification('Please wait for the daemon to start.');
+      return;
     }
 
-    const subMenuHelp = {
-      label: 'Help',
-      submenu: [
-        this.about,
-        this.websiteLink,
-        this.gitRepoLink,
-        this.separator,
-        this.updaterMenuItem(),
-      ],
-    };
+    store.dispatch(bootstrap());
+  },
+};
 
-    return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
-  };
+const toggleFullScreen = {
+  label: 'Toggle FullScreen',
+  accelerator: 'F11',
+  click: () => {
+    remote
+      .getCurrentWindow()
+      .setFullScreen(!remote.getCurrentWindow().isFullScreen());
+  },
+};
 
-  /**
-   * Build the menu
-   *
-   * @memberof AppMenu
-   */
-  build = () => {
-    let template;
+const toggleDevTools = {
+  label: 'Toggle Developer Tools',
+  accelerator: 'Alt+CmdOrCtrl+I',
+  click: () => {
+    remote.getCurrentWindow().toggleDevTools();
+  },
+};
 
-    if (process.platform === 'darwin') {
-      template = this.buildDarwinTemplate();
-    } else {
-      template = this.buildDefaultTemplate();
+const toggleModuleDevTools = {
+  label: "Toggle Module's Developer Tools",
+  click: () => {
+    toggleWebViewDevTools();
+  },
+};
+
+const websiteLink = {
+  label: 'Nexus Earth Website',
+  click: () => {
+    shell.openExternal('http://nexusearth.com');
+  },
+};
+
+const gitRepoLink = {
+  label: 'Nexus Git Repository',
+  click: () => {
+    shell.openExternal('http://github.com/Nexusoft');
+  },
+};
+
+const updaterIdle = {
+  label: 'Check for Updates...',
+  enabled: true,
+  click: async () => {
+    const result = await autoUpdater.checkForUpdates();
+    // Not sure if this is the best way to check if there's an update
+    // available because autoUpdater.checkForUpdates() doesn't return
+    // any reliable results like a boolean `updateAvailable` property
+    if (result.updateInfo.version === APP_VERSION) {
+      UIController.showNotification('There are currently no updates available');
     }
+  },
+};
 
-    const menu = remote.Menu.buildFromTemplate(template);
-    remote.Menu.setApplicationMenu(menu);
-    return menu;
-  };
+const updaterChecking = {
+  label: 'Checking for Updates...',
+  enabled: false,
+};
+
+const updaterDownloading = {
+  label: 'Update available! Downloading...',
+  enabled: false,
+};
+
+const updaterReadyToInstall = {
+  label: 'Quit and install update...',
+  enabled: true,
+  click: autoUpdater.quitAndInstall,
+};
+
+/**
+ * Get the Updater
+ *
+ * @memberof AppMenu
+ */
+function updaterMenuItem() {
+  switch (updater.state) {
+    case 'idle':
+      return updaterIdle;
+    case 'checking':
+      return updaterChecking;
+    case 'downloading':
+      return updaterDownloading;
+    case 'downloaded':
+      return updaterReadyToInstall;
+  }
 }
 
-export default new AppMenu();
+/**
+ * Activate if Module is open
+ *
+ * @memberof AppMenu
+ */
+// const setPageModuleActive = active => {
+//   if (pageModuleActive !== active) {
+//     pageModuleActive = active;
+//     build();
+//   }
+// };
+
+/**
+ * Build Menu for OSX
+ *
+ * @memberof AppMenu
+ */
+function buildDarwinTemplate() {
+  const state = store.getState();
+  const daemonRunning = state.core.info.connections !== undefined;
+
+  const subMenuAbout = {
+    label: 'Nexus',
+    submenu: [
+      about,
+      daemonRunning ? stopDaemon : startDaemon,
+      separator,
+      quitNexus,
+    ],
+  };
+  const subMenuFile = {
+    label: 'File',
+    submenu: [backupWallet, viewBackups, separator, downloadRecent],
+  };
+  const subMenuEdit = {
+    label: 'Edit',
+    submenu: [cut, copy, paste],
+  };
+  const subMenuView = {
+    label: 'Settings',
+    submenu: [
+      appSettings,
+      coreSettings,
+      keyManagement,
+      styleSettings,
+      //TODO: take this out before 1.0
+    ],
+  };
+
+  const subMenuWindow = {
+    label: 'View',
+    submenu: [toggleFullScreen],
+  };
+  if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
+    subMenuWindow.submenu.push(toggleDevTools);
+
+    if (isWebViewActive()) {
+      subMenuWindow.submenu.push(toggleModuleDevTools);
+    }
+  }
+
+  const subMenuHelp = {
+    label: 'Help',
+    submenu: [
+      websiteLink,
+      gitRepoLink,
+      // separator,
+      // Disable checking for updates on Mac until we have the developer key
+      // updaterMenuItem(),
+    ],
+  };
+
+  return [
+    subMenuAbout,
+    subMenuFile,
+    subMenuEdit,
+    subMenuView,
+    subMenuWindow,
+    subMenuHelp,
+  ];
+}
+
+/**
+ * Build Menu to Windows / Linux
+ *
+ * @memberof AppMenu
+ */
+function buildDefaultTemplate() {
+  const state = store.getState();
+  const daemonRunning = state.core.info.connections !== undefined;
+
+  const subMenuFile = {
+    label: '&File',
+    submenu: [
+      backupWallet,
+      viewBackups,
+      separator,
+      downloadRecent,
+      separator,
+      daemonRunning ? stopDaemon : startDaemon,
+      separator,
+      quitNexus,
+    ],
+  };
+  const subMenuSettings = {
+    label: 'Settings',
+    submenu: [appSettings, coreSettings, keyManagement, styleSettings],
+  };
+  const subMenuView = {
+    label: '&View',
+    submenu: [toggleFullScreen],
+  };
+  if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
+    subMenuView.submenu.push(separator, toggleDevTools);
+
+    if (isWebViewActive()) {
+      subMenuView.submenu.push(toggleModuleDevTools);
+    }
+  }
+
+  const subMenuHelp = {
+    label: 'Help',
+    submenu: [about, websiteLink, gitRepoLink, separator, updaterMenuItem()],
+  };
+
+  return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
+}
+
+/**
+ * Build the menu
+ *
+ * @memberof AppMenu
+ */
+function buildMenu() {
+  let template;
+
+  if (process.platform === 'darwin') {
+    template = buildDarwinTemplate();
+  } else {
+    template = buildDefaultTemplate();
+  }
+
+  const menu = remote.Menu.buildFromTemplate(template);
+  remote.Menu.setApplicationMenu(menu);
+  return menu;
+}
+
+let nextRebuild = null;
+
+/**
+ * Rebuild the menu asynchronously so that if multiple rebuild requests come
+ * at the same time, it only rebuilds once
+ *
+ */
+export function rebuildMenu() {
+  clearTimeout(nextRebuild);
+  nextRebuild = setTimeout(buildMenu, 0);
+}
+
+// Update the updater menu item when the updater state changes
+// Changing menu item labels directly has no effect so we have to rebuild the whole menu
+export function initializeMenu() {
+  updater.on('state-change', rebuildMenu);
+  observeStore(
+    state => state.core && state.core.info && state.core.info.connections,
+    rebuildMenu
+  );
+  observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
+}

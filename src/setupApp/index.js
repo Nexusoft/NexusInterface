@@ -12,7 +12,7 @@ import { loadThemeFromFile } from 'actions/themeActionCreators';
 import { loadAddressBookFromFile } from 'actions/addressBookActionCreators';
 import { loadModules } from 'actions/moduleActionCreators';
 import updater from 'updater';
-import appMenu from 'appMenu';
+import { rebuildMenu, initializeMenu } from 'appMenu';
 import { coreDataDir } from 'consts/paths';
 import { Tail } from 'utils/tail';
 import LicenseAgreementModal from './LicenseAgreementModal';
@@ -30,8 +30,8 @@ export default function setupApp(store) {
   store.dispatch(loadSettingsFromFile());
   store.dispatch(loadThemeFromFile());
 
-  appMenu.initialize();
-  appMenu.build();
+  initializeMenu();
+  rebuildMenu();
 
   dispatch(loadAddressBookFromFile());
 
