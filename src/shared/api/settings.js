@@ -4,13 +4,12 @@ import macaddress from 'macaddress';
 import { walletDataDir } from 'consts/paths';
 import { homeDir } from 'consts/paths';
 import { coreDataDir } from 'consts/paths';
-import normalizePath from 'utils/normalizePath';
 import { readJson, writeJson } from 'utils/fileSystem';
 
 const settingsFileName = 'settings.json';
 const settingsFilePath = path.join(walletDataDir, settingsFileName);
 
-const defaultBackupDir = normalizePath(homeDir + '/NexusBackups');
+const defaultBackupDir = path.join(homeDir, '/NexusBackups');
 
 const secret =
   process.platform === 'darwin'
