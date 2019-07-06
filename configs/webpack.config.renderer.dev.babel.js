@@ -6,11 +6,8 @@
  */
 
 import path from 'path';
-import fs from 'fs';
 import webpack from 'webpack';
-import chalk from 'chalk';
 import merge from 'webpack-merge';
-import { execSync } from 'child_process';
 
 import baseConfig from './webpack.config.base.renderer';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
@@ -21,18 +18,6 @@ const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/`;
 const dllPath = path.resolve(process.cwd(), 'dll');
 const manifest = path.resolve(dllPath, 'renderer.json');
-
-/**
- * Warn if the DLL is not built
- */
-if (!(fs.existsSync(dllPath) && fs.existsSync(manifest))) {
-  console.log(
-    chalk.black.bgYellow.bold(
-      'The DLL files are missing. Sit back while we build them for you with "npm run build-dll"'
-    )
-  );
-  execSync('npm run build-dll');
-}
 
 export default merge.smart(baseConfig, {
   devtool: 'cheap-module-eval-source-map',
