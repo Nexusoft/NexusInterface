@@ -58,9 +58,7 @@ const quitNexus = {
   label: 'Quit Nexus',
   accelerator: 'CmdOrCtrl+Q',
   click: () => {
-    store.dispatch(clearCoreInfo());
-    UIController.showNotification('Closing Nexus');
-    remote.getCurrentWindow().close();
+    remote.app.quit();
   },
 };
 

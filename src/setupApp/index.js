@@ -66,12 +66,10 @@ export default function setupApp(store) {
       clearInterval(checkIfFileExistsInterval);
       UIController.openModal(ClosingModal);
 
-      if (manualDaemon) {
-        remote.app.exit();
-      } else {
+      if (!manualDaemon) {
         await remote.getGlobal('core').stop();
-        remote.app.exit();
       }
+      remote.app.exit();
     }
   });
 
