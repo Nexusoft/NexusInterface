@@ -1,5 +1,5 @@
 import * as TYPE from './actiontypes';
-import { loadModules } from 'api/modules';
+import { loadModules } from 'lib/modules';
 
 const loadModulesActionCreator = () => async (dispatch, getState) => {
   const state = getState();

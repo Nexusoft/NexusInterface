@@ -10,7 +10,7 @@ import rimraf from 'rimraf';
 // Internal
 import { coreDataDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
-import { backupWallet } from 'api/wallet';
+import { backupWallet } from 'lib/wallet';
 import * as RPC from 'scripts/rpc';
 import extractTarball from 'utils/promisified/extractTarball';
 

@@ -10,7 +10,7 @@ import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModuleIcon from 'components/ModuleIcon';
-import { getActiveModules } from 'api/modules';
+import { getActiveModules } from 'lib/modules';
 import { consts, timing } from 'styles';
 
 // Internal Local Dependencies

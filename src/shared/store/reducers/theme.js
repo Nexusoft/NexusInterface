@@ -1,5 +1,5 @@
 import * as TYPE from 'actions/actiontypes';
-import { filterValidTheme } from 'api/theme';
+import { filterValidTheme } from 'lib/theme';
 
 const initialState = {};
 

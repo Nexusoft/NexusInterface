@@ -6,7 +6,7 @@ import urlJoin from 'url-join';
 import { remote } from 'electron';
 
 // Internal Global
-import { registerWebView, unregisterWebView } from 'api/modules';
+import { registerWebView, unregisterWebView } from 'lib/modules';
 import { modulesDir } from 'consts/paths';
 import appMenu from 'appMenu';
 

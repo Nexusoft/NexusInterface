@@ -8,7 +8,7 @@ import childProcess from 'child_process';
 import xmlhttprequest from 'xmlhttprequest';
 import btoa from 'btoa';
 import { coreDataDir, assetsDir } from 'consts/paths';
-import { LoadSettings, UpdateSettings } from 'api/settings';
+import { LoadSettings, UpdateSettings } from 'lib/settings';
 
 let nexusconfig = {};
 function loadNexusConf() {

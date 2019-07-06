@@ -4,7 +4,7 @@ import fs from 'fs';
 import UIController from 'components/UIController';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import store from 'store';
-import { loadModuleFromDir } from 'api/modules';
+import { loadModuleFromDir } from 'lib/modules';
 import { modulesDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import deleteDirectory from 'utils/promisified/deleteDirectory';

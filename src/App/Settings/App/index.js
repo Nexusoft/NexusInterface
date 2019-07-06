@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 import Text from 'components/Text';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { switchSettingsTab } from 'actions/uiActionCreators';
-import { backupWallet } from 'api/wallet';
+import { backupWallet } from 'lib/wallet';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';

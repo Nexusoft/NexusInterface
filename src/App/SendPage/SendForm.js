@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import * as RPC from 'scripts/rpc';
-import { defaultSettings } from 'api/settings';
+import { defaultSettings } from 'lib/settings';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';
 import Icon from 'components/Icon';

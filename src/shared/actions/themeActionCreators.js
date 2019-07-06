@@ -1,4 +1,4 @@
-import { LoadTheme, UpdateTheme, ResetColors } from 'api/theme';
+import { LoadTheme, UpdateTheme, ResetColors } from 'lib/theme';
 import * as TYPE from './actiontypes';
 
 export const loadThemeFromFile = () => dispatch => {

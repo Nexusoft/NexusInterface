@@ -6,7 +6,7 @@ import { remote } from 'electron';
 // Internal Global
 import googleanalytics from 'scripts/googleanalytics';
 import ContextMenuBuilder from 'contextmenu';
-import { getModuleIfActive } from 'api/modules';
+import { getModuleIfActive } from 'lib/modules';
 
 // Internal Local
 import PageModule from './PageModule';

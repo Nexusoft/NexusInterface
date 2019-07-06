@@ -4,7 +4,7 @@ import Dropzone from 'react-dropzone';
 import styled from '@emotion/styled';
 
 // Internal
-import { installModule } from 'api/modules';
+import { installModule } from 'lib/modules';
 import Icon from 'components/Icon';
 import FieldSet from 'components/FieldSet';
 import Button from 'components/Button';

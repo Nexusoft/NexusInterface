@@ -5,10 +5,10 @@ import fs from 'fs';
 
 // Internal
 import store, { history } from 'store';
-import { isWebViewActive, toggleWebViewDevTools } from 'api/modules';
+import { isWebViewActive, toggleWebViewDevTools } from 'lib/modules';
 import * as RPC from 'scripts/rpc';
 import { updateSettings } from 'actions/settingsActionCreators';
-import { backupWallet } from 'api/wallet';
+import { backupWallet } from 'lib/wallet';
 import Text from 'components/Text';
 import UIController from 'components/UIController';
 import { clearCoreInfo } from 'actions/coreActionCreators';

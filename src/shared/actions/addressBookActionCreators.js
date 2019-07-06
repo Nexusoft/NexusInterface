@@ -1,5 +1,5 @@
 import * as TYPE from './actiontypes';
-import { LoadAddressBook, SaveAddressBook } from 'api/addressBook';
+import { LoadAddressBook, SaveAddressBook } from 'lib/addressBook';
 
 export const loadAddressBookFromFile = () => ({
   type: TYPE.LOAD_ADDRESS_BOOK,

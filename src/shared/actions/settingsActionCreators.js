@@ -1,5 +1,5 @@
 import ga from 'scripts/googleanalytics';
-import { LoadSettings, UpdateSettings } from 'api/settings';
+import { LoadSettings, UpdateSettings } from 'lib/settings';
 import * as TYPE from './actiontypes';
 
 import appMenu from 'appMenu';

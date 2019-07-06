@@ -66,7 +66,7 @@ Available RPC methods:
 	Add new Interface Specific Utilities Here. Module Specific Functions go In Module Scripts.
 **/
 
-import { LoadSettings } from 'api/settings';
+import { LoadSettings } from 'lib/settings';
 import { remote } from 'electron';
 const core = remote.getGlobal('core');
 // GETHOST: Get the rpc host name from the core configuration, else default to development defaults

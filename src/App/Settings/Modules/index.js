@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import { getAllModules } from 'api/modules';
+import { getAllModules } from 'lib/modules';
 import { switchSettingsTab } from 'actions/uiActionCreators';
 import SettingsContainer from 'components/SettingsContainer';
 import Module from './Module';
