@@ -22,7 +22,7 @@
     "preprod": "cross-env NODE_ENV_RUN=production_test npm run build",
     "prod-test": "cross-env NODE_ENV=production NODE_ENV_RUN=production-test electron ./src/",
     "start": "npm run dev",
-    "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./dist/main.dev.js",
+    "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./build/main.dev.js",
     "start-renderer-dev": "cross-env NODE_ENV=development webpack-dev-server --config configs/webpack.config.renderer.dev.babel.js",
     "run-tests": "./node_modules/mocha/bin/mocha tests/test.js",
     "version2": "node ./internals/scripts/UpdateBuildDate.js",
@@ -31,18 +31,18 @@
     "update-documentation": "./UpdateDocumentation.sh"
   },
   "browserslist": "electron 5.0.6",
-  "main": "./dist/main.prod.js",
+  "main": "./build/main.prod.js",
   "build": {
     "productName": "Nexus Wallet",
     "appId": "com.nexusearth.NexusTritium",
     "files": [
-      "dist/**/*",
-      "!dist/*.map",
-      "!dist/*.dev.js",
+      "build/**/*",
+      "!build/*.map",
+      "!build/*.dev.js",
       "!node_modules/**/*",
       {
         "from": "src",
-        "to": "dist",
+        "to": "build",
         "filter": [
           "app.html"
         ]

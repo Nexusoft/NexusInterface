@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rm -r release
-rm -r dist
+rm -r build
 rm -r dll
 rm -r ~/.config/Nexus
 echo ""

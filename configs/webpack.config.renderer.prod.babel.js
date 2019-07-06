@@ -19,7 +19,7 @@ export default merge.smart(baseConfig, {
   entry: './src/index.js',
 
   output: {
-    path: path.join(process.cwd(), 'dist'),
+    path: path.join(process.cwd(), 'build'),
     filename: 'renderer.prod.js',
   },
 

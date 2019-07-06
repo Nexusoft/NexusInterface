@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rm -r release
-rm -r dist
+rm -r build
 sudo apt-get purge -y nexus-tritium
 rm -r ~/.config/Nexus_Tritium_Wallet
 npm run package-win

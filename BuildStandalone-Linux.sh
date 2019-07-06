@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rm -r release
-rm -r dist
+rm -r build
 sudo apt-get purge -y nexus-wallet
 rm -r ~/.config/Nexus_Wallet_v1.0.1
 echo ""
