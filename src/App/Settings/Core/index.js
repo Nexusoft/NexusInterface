@@ -22,7 +22,7 @@ import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
 import FeeSetting from './FeeSetting';
 import ReScanButton from './RescanButton.js';
-import configuration from 'api/configuration';
+import { coreDataDir } from 'consts/paths';
 
 const mapStateToProps = ({
   settings,
@@ -214,12 +214,9 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   async handleFileCopy(newFolderDir) {
-    await cpy(configuration.GetCoreDataDir(), newFolderDir).on(
-      'progress',
-      progress => {
-        console.log(progress);
-      }
-    );
+    await cpy(coreDataDir, newFolderDir).on('progress', progress => {
+      console.log(progress);
+    });
   }
 
   updateStaking(input) {
@@ -510,7 +507,7 @@ class SettingsCore extends Component {
               subLabel={'Move the daemon data directory to a different folder'}
             >
               <div>
-                <a>{'Current: ' + configuration.GetCoreDataDir()}</a>
+                <a>{'Current: ' + coreDataDir}</a>
                 <Button onClick={this.moveDataDir}>
                   <Text id="Settings.MoveDataDirButton" />
                 </Button>

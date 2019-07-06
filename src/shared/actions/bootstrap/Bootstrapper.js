@@ -8,7 +8,8 @@ import moveFile from 'move-file';
 import rimraf from 'rimraf';
 
 // Internal
-import configuration from 'api/configuration';
+import { coreDataDir } from 'consts/paths';
+import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'api/wallet';
 import * as RPC from 'scripts/rpc';
 import extractTarball from 'utils/promisified/extractTarball';
@@ -20,13 +21,9 @@ const recentDbUrlLegacy =
 const recentDbUrlTritium =
   'https://nexusearth.com/bootstrap/tritium/bootstrap.tar.gz'; // Tritium Bootstrap URL
 // Recent database download location
-const fileLocation = path.join(
-  configuration.GetAppDataDirectory(),
-  'recent.tar.gz'
-);
+const fileLocation = path.join(walletDataDir, 'recent.tar.gz');
 
-const dataDir = configuration.GetCoreDataDir();
-const extractDest = path.join(dataDir, 'recent');
+const extractDest = path.join(coreDataDir, 'recent');
 
 /**
  * Low Level Functions for the Bootstrapper
@@ -62,7 +59,7 @@ export default class Bootstrapper {
    * @memberof Bootstrapper
    */
   static async checkFreeSpace(gigsToCheck) {
-    const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
+    const diskSpace = await checkDiskSpace(coreDataDir);
     return diskSpace.free >= gigsToCheck * 1000000000;
   }
   /**
@@ -74,7 +71,7 @@ export default class Bootstrapper {
    */
   static async checkBootStrapFreeSpace() {
     const freeSpaceForBootStrap = 20000000000; //20gb
-    const diskSpace = await checkDiskSpace(configuration.GetCoreDataDir());
+    const diskSpace = await checkDiskSpace(coreDataDir);
     return diskSpace.free >= freeSpaceForBootStrap;
   }
 
@@ -282,20 +279,20 @@ export default class Bootstrapper {
               for (let evenDeeperEle of newerContents) {
                 moveFile.sync(
                   path.join(extractDest, element, deeperEle, evenDeeperEle),
-                  path.join(dataDir, element, deeperEle, evenDeeperEle)
+                  path.join(coreDataDir, element, deeperEle, evenDeeperEle)
                 );
               }
             } else {
               moveFile.sync(
                 path.join(extractDest, element, deeperEle),
-                path.join(dataDir, element, deeperEle)
+                path.join(coreDataDir, element, deeperEle)
               );
             }
           }
         } else {
           moveFile.sync(
             path.join(extractDest, element),
-            path.join(dataDir, element)
+            path.join(coreDataDir, element)
           );
         }
       }

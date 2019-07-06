@@ -11,7 +11,7 @@ import devToolsInstall, {
 import fs from 'fs-extra';
 
 // Internal
-import configuration from 'api/configuration';
+import { coreDataDir, assetsDir } from 'consts/paths';
 import { LoadSettings, UpdateSettings } from 'api/settings';
 import core from './core';
 import fileServer from './fileServer';
@@ -49,15 +49,11 @@ function setupTray(mainWindow) {
     process.platform == 'darwin'
       ? 'Nexus_Tray_Icon_Template_16.png'
       : 'Nexus_Tray_Icon_32.png';
-  const trayImage = path.join(configuration.GetAssetsDir(), 'tray', fileName);
+  const trayImage = path.join(assetsDir, 'tray', fileName);
   const tray = new Tray(trayImage);
 
   const pressedFileName = 'Nexus_Tray_Icon_Highlight_16.png';
-  const pressedImage = path.join(
-    configuration.GetAssetsDir(),
-    'tray',
-    pressedFileName
-  );
+  const pressedImage = path.join(assetsDir, 'tray', pressedFileName);
   tray.setPressedImage(pressedImage);
   tray.setToolTip('Nexus Wallet');
   tray.setTitle('Nexus Wallet');
@@ -102,7 +98,7 @@ function createWindow() {
   const settings = LoadSettings();
   const fileName =
     process.platform == 'darwin' ? 'nexuslogo.ico' : 'Nexus_App_Icon_64.png';
-  const iconPath = path.join(configuration.GetAssetsDir(), 'tray', fileName);
+  const iconPath = path.join(assetsDir, 'tray', fileName);
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
@@ -172,11 +168,9 @@ async function backUpQT() {
     '__db.004',
     '__db.005',
   ];
-  const exists = await fs.pathExists(configuration.GetCoreDataDir());
+  const exists = await fs.pathExists(coreDataDir);
   if (exists) {
-    const backupexists = await fs.pathExists(
-      configuration.GetCoreDataDir() + '_OldQtBackUp'
-    );
+    const backupexists = await fs.pathExists(coreDataDir + '_OldQtBackUp');
     if (!backupexists) {
       const filterFunc = (src, dest) => {
         const filename = src && src.replace(/^.*[\\\/]/, '');
@@ -187,8 +181,8 @@ async function backUpQT() {
         }
       };
       fs.copy(
-        configuration.GetCoreDataDir(),
-        configuration.GetCoreDataDir() + '_OldQtBackUp',
+        coreDataDir,
+        coreDataDir + '_OldQtBackUp',
         { filter: filterFunc },
         err => {
           if (err) return console.error(err);

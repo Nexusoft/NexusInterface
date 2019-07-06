@@ -7,15 +7,15 @@ import macaddress from 'macaddress';
 import childProcess from 'child_process';
 import xmlhttprequest from 'xmlhttprequest';
 import btoa from 'btoa';
-import configuration from 'api/configuration';
+import { coreDataDir, assetsDir } from 'consts/paths';
 import { LoadSettings, UpdateSettings } from 'api/settings';
 
 let nexusconfig = {};
 function loadNexusConf() {
-  if (fs.existsSync(path.join(configuration.GetCoreDataDir(), 'nexus.conf'))) {
+  if (fs.existsSync(path.join(coreDataDir, 'nexus.conf'))) {
     log.info('nexus.conf exists. Importing username and password.');
     let nexusConfiguratiions = fs
-      .readFileSync(path.join(configuration.GetCoreDataDir(), 'nexus.conf'))
+      .readFileSync(path.join(coreDataDir, 'nexus.conf'))
       .toString()
       .split(`\n`);
 
@@ -156,7 +156,7 @@ function GetCoreBinaryName() {
 }
 
 function GetCoreBinaryPath() {
-  return path.join(configuration.GetAssetsDir(), 'cores', GetCoreBinaryName());
+  return path.join(assetsDir, 'cores', GetCoreBinaryName());
 }
 
 function CoreBinaryExists() {
@@ -204,7 +204,7 @@ export default class Core {
   // start: Start up the core with necessary parameters
   start() {
     return new Promise((resolve, reject) => {
-      var datadir = configuration.GetCoreDataDir();
+      var datadir = coreDataDir;
       let settings = LoadSettings();
       let corePID = getCorePID();
 

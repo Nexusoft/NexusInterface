@@ -2,10 +2,8 @@ import { join, isAbsolute, normalize } from 'path';
 import fs from 'fs';
 import semver from 'semver';
 
-import config from 'api/configuration';
+import { modulesDir } from 'consts/paths';
 import { loadModuleFromDir } from './loadModule';
-
-const modulesDir = config.GetModulesDir();
 
 /**
  * Get the path of an icon if the file does exist

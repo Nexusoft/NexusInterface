@@ -32,7 +32,7 @@ import { loadMyAccounts } from 'actions/accountActionCreators';
 import * as RPC from 'scripts/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
-import config from 'api/configuration';
+import { walletDataDir } from 'consts/paths';
 import UIController from 'components/UIController';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
@@ -1429,7 +1429,7 @@ class Transactions extends Component {
    */
   gethistorydatajson() {
     try {
-      const appdataloc = config.GetAppDataDirectory() + '/historydata.json';
+      const appdataloc = walletDataDir + '/historydata.json';
       let incominghistoryfile = JSON.parse(fs.readFileSync(appdataloc, 'utf8'));
       let keys = Object.keys(incominghistoryfile);
       let newTempMap = new Map();
@@ -1591,7 +1591,7 @@ class Transactions extends Component {
       needsHistorySave: false,
     });
 
-    const appdataloc = config.GetAppDataDirectory() + '/historydata.json';
+    const appdataloc = walletDataDir + '/historydata.json';
     fs.writeFile(
       appdataloc,
       JSON.stringify(this.mapToObject(this.state.historyData)),

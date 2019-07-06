@@ -21,16 +21,14 @@ import UIController from 'components/UIController';
 import NexusAddress from 'components/NexusAddress';
 import SettingsContainer from 'components/SettingsContainer';
 import warningIcon from 'images/warning.sprite.svg';
+import { walletDataDir } from 'consts/paths';
 
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
-import configuration from 'api/configuration';
 import ThemePicker from './ThemePicker';
 
 import DarkTheme from './Dark.json';
 import LightTheme from './Light.json';
-
-import * as RPC from 'scripts/rpc';
 
 const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
@@ -224,7 +222,7 @@ class SettingsStyle extends Component {
         const wallpaperPathSplit = customTheme.wallpaper.split('.');
         const fileEnding = wallpaperPathSplit[wallpaperPathSplit.length - 1];
         const file = fs.createWriteStream(
-          configuration.GetAppDataDirectory() + '/wallpaper.' + fileEnding
+          walletDataDir + '/wallpaper.' + fileEnding
         );
         this.wallpaperRequest = https
           .get(customTheme.wallpaper)
@@ -292,20 +290,16 @@ class SettingsStyle extends Component {
       },
       path => {
         console.log(path);
-        fs.copyFile(
-          configuration.GetAppDataDirectory() + '/theme.json',
-          path,
-          err => {
-            if (err) {
-              console.error(err);
-              UIController.showNotification(err, 'error');
-            }
-            UIController.showNotification(
-              <Text id="Settings.ExportTheme" />,
-              'success'
-            );
+        fs.copyFile(walletDataDir + '/theme.json', path, err => {
+          if (err) {
+            console.error(err);
+            UIController.showNotification(err, 'error');
           }
-        );
+          UIController.showNotification(
+            <Text id="Settings.ExportTheme" />,
+            'success'
+          );
+        });
       }
     );
   };

@@ -1,11 +1,13 @@
 import crypto from 'crypto';
 import macaddress from 'macaddress';
 import config from 'api/configuration';
+import { homeDir } from 'consts/paths';
+import { coreDataDir } from 'consts/paths';
 import normalizePath from 'utils/normalizePath';
 
 const settingsFileName = 'settings.json';
 
-const defaultBackupDir = normalizePath(config.GetHomeDir() + '/NexusBackups');
+const defaultBackupDir = normalizePath(homeDir + '/NexusBackups');
 
 const secret =
   process.platform === 'darwin'
@@ -38,7 +40,7 @@ export const defaultSettings = {
   manualDaemonPassword: defaultPassword,
   manualDaemonIP: '127.0.0.1',
   manualDaemonPort: '9336',
-  manualDaemonDataDir: config.GetCoreDataDir(),
+  manualDaemonDataDir: coreDataDir,
 
   // Style
   renderGlobe: true,

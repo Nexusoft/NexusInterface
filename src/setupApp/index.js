@@ -13,7 +13,7 @@ import { loadAddressBookFromFile } from 'actions/addressBookActionCreators';
 import { loadModules } from 'actions/moduleActionCreators';
 import updater from 'updater';
 import appMenu from 'appMenu';
-import configuration from 'api/configuration';
+import { coreDataDir } from 'consts/paths';
 import { Tail } from 'utils/tail';
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
@@ -103,7 +103,7 @@ function startCoreOuputeWatch(store) {
   if (store.getState().settings.manualDaemon) {
     return;
   }
-  let datadir = configuration.GetCoreDataDir();
+  let datadir = coreDataDir;
 
   var debugfile;
   if (fs.existsSync(join(datadir, 'log', '0.log'))) {

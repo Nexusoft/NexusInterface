@@ -7,7 +7,7 @@
 // External
 import fs from 'fs';
 import path from 'path';
-import electron from 'electron';
+import { walletDataDir } from 'consts/paths';
 /**
  *  Configuration Class
  *
@@ -21,7 +21,7 @@ const configuration = {
    */
   Exists(filename) {
     try {
-      fs.accessSync(path.join(configuration.GetAppDataDirectory(), filename));
+      fs.accessSync(path.join(walletDataDir, filename));
       return true;
     } catch (err) {
       return false;
@@ -36,9 +36,7 @@ const configuration = {
    */
   Read(filename) {
     try {
-      return fs.readFileSync(
-        path.join(configuration.GetAppDataDirectory(), filename)
-      );
+      return fs.readFileSync(path.join(walletDataDir, filename));
     } catch (err) {
       console.log('Error reading file: ' + filename + ' => ' + err);
 
@@ -68,10 +66,7 @@ const configuration = {
    */
   Write(filename, content) {
     try {
-      fs.writeFileSync(
-        path.join(configuration.GetAppDataDirectory(), filename),
-        content
-      );
+      fs.writeFileSync(path.join(walletDataDir, filename), content);
 
       return true;
     } catch (err) {
@@ -101,7 +96,7 @@ const configuration = {
    */
   Delete(filename) {
     try {
-      fs.unlink(path.join(configuration.GetAppDataDirectory(), filename));
+      fs.unlink(path.join(walletDataDir, filename));
 
       return true;
     } catch (err) {
@@ -121,8 +116,8 @@ const configuration = {
   Rename(oldFilename, newFilename) {
     try {
       fs.renameSync(
-        path.join(configuration.GetAppDataDirectory(), oldFilename),
-        path.join(configuration.GetAppDataDirectory(), newFilename)
+        path.join(walletDataDir, oldFilename),
+        path.join(walletDataDir, newFilename)
       );
 
       return true;
@@ -132,108 +127,6 @@ const configuration = {
       return false;
     }
   },
-
-  /**
-   * Usesd on the start of the app to make the necessary directories
-   *
-   */
-  Start() {
-    if (!fs.existsSync(configuration.GetAppDataDirectory())) {
-      fs.mkdirSync(configuration.GetAppDataDirectory());
-    }
-
-    if (!fs.existsSync(configuration.GetAssetsDir())) {
-      fs.mkdirSync(configuration.GetAssetsDir());
-    }
-  },
-
-  /**
-   * Get the application data directory
-   *
-   * @returns {string} the path to the application data directory
-   */
-  GetAppDataDirectory() {
-    const app = electron.app || electron.remote.app;
-    let AppDataDirPath = '';
-
-    if (process.platform === 'darwin') {
-      AppDataDirPath = path.join(
-        app
-          .getPath('appData')
-          .replace(' ', `\ `)
-          .replace('/Electron/', ''),
-        'Nexus_Wallet'
-      );
-    } else {
-      AppDataDirPath = path.join(
-        app.getPath('appData').replace('/Electron/', ''),
-        'Nexus_Wallet'
-      );
-    }
-
-    return AppDataDirPath;
-  },
-
-  /**
-   * Returns the core data directory path
-   *
-   * @returns {string} Core Data Directory Path
-   */
-  GetCoreDataDir() {
-    const app = electron.app || electron.remote.app;
-    var datadir = '';
-
-    //Set data directory by OS for automatic daemon mode
-    if (process.platform === 'win32') {
-      var datadir = process.env.APPDATA + '\\Nexus';
-    } else if (process.platform === 'darwin') {
-      var datadir = path.join(
-        app
-          .getPath('appData')
-          .replace(' ', `\ `)
-          .replace('/Electron/', ''),
-        'Nexus'
-      );
-    } else {
-      var datadir = process.env.HOME + '/.Nexus';
-    }
-    return datadir;
-  },
-
-  /**
-   * Returns the Application Resources Directory path
-   *
-   * @returns {string} Applicaion Resources Directory Path
-   */
-  GetAssetsDir() {
-    const app = electron.app != undefined ? electron.app : electron.remote.app;
-    const basePath =
-      process.env.NODE_ENV === 'development'
-        ? process.cwd()
-        : process.platform === 'darwin'
-        ? path.resolve(app.getPath('exe'), '..', '..', 'Resources')
-        : path.resolve(app.getPath('exe'), '..', 'resources');
-    return path.join(basePath, 'assets');
-  },
-
-  /**
-   * Returns the user's home directory
-   *
-   * @returns {string} User's home directory
-   */
-  GetHomeDir() {
-    if (process.platform === 'win32') {
-      return process.env.USERPROFILE;
-    } else {
-      return process.env.HOME;
-    }
-  },
-
-  GetModulesDir() {
-    return path.join(configuration.GetAppDataDirectory(), 'modules');
-  },
 };
-
-configuration.Start();
 
 export default configuration;

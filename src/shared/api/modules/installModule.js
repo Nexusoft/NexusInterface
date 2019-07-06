@@ -5,14 +5,15 @@ import UIController from 'components/UIController';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import store from 'store';
 import { loadModuleFromDir } from 'api/modules';
-import config from 'api/configuration';
+import { modulesDir } from 'consts/paths';
+import { walletDataDir } from 'consts/paths';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import extractZip from 'utils/promisified/extractZip';
 import extractTarball from 'utils/promisified/extractTarball';
 import confirm from 'utils/promisified/confirm';
 
 // Temp directory for extracting module before installing
-const tempModuleDir = join(config.GetAppDataDirectory(), '.temp_module');
+const tempModuleDir = join(walletDataDir, '.temp_module');
 const supportedExtensions = ['.zip', '.tar.gz'];
 
 /**
@@ -92,7 +93,7 @@ async function installFromDirectory(path) {
     forInstall: true,
     install: async () => {
       try {
-        const dest = join(config.GetModulesDir(), module.name);
+        const dest = join(modulesDir, module.name);
         if (fs.existsSync(dest)) {
           const agreed = await confirm({
             question: 'Overwrite module?',
@@ -165,7 +166,7 @@ export async function installModule(path) {
         }
       }
     } else {
-      const modulesDir = normalize(config.GetModulesDir());
+      const modulesDir = normalize(modulesDir);
       const dirPath = normalize(path);
       if (dirPath.startsWith(modulesDir)) {
         UIController.showNotification(

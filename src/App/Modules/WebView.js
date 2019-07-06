@@ -7,7 +7,7 @@ import { remote } from 'electron';
 
 // Internal Global
 import { registerWebView, unregisterWebView } from 'api/modules';
-import config from 'api/configuration';
+import { modulesDir } from 'consts/paths';
 import appMenu from 'appMenu';
 
 const fileServer = remote.getGlobal('fileServer');
@@ -62,7 +62,7 @@ class WebView extends React.Component {
   render() {
     const { module, className, style } = this.props;
     const entry = module.entry || 'index.html';
-    const entryPath = join(config.GetModulesDir(), module.dirName, entry);
+    const entryPath = join(modulesDir, module.dirName, entry);
     if (!existsSync(entryPath)) return null;
 
     const entryUrl = urlJoin(fileServer.domain, 'modules', module.name, entry);

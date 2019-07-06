@@ -7,7 +7,7 @@ const OrbitControls = require('three-orbit-controls')(THREE);
 
 import world from 'images/world-light-white.jpg';
 import worldSmall from 'images/world-light-white-small.jpg';
-import configuration from 'api/configuration';
+import { assetsDir } from 'consts/paths';
 import Curve from './Curve';
 import Point from './Point';
 import * as RPC from 'scripts/rpc';
@@ -54,11 +54,7 @@ export default class Globe extends Component {
   async componentDidMount() {
     try {
       this.geoiplookup = await maxmind.open(
-        path.join(
-          configuration.GetAssetsDir(),
-          'GeoLite2-City',
-          'GeoLite2-City.mmdb'
-        )
+        path.join(assetsDir, 'GeoLite2-City', 'GeoLite2-City.mmdb')
       );
 
       this.props.handleOnLineRender(this.animateArcs);

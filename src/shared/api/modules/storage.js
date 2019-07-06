@@ -1,9 +1,8 @@
 import { join } from 'path';
 import fs from 'fs';
-import config from 'api/configuration';
+import { modulesDir } from 'consts/paths';
 
 const storageFileName = 'storage.json';
-const modulesDir = config.GetModulesDir();
 
 /**
  *

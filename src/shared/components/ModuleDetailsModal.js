@@ -10,7 +10,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import ExternalLink from 'components/ExternalLink';
 import UIController from 'components/UIController';
-import config from 'api/configuration';
+import { modulesDir } from 'consts/paths';
 import { timing } from 'styles';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
 import warningIcon from 'images/warning.sprite.svg';
@@ -85,10 +85,7 @@ class ModuleDetailsModal extends React.Component {
     UIController.openConfirmDialog({
       question: `Delete ${this.props.module.displayName}?`,
       callbackYes: async () => {
-        const moduleDir = join(
-          config.GetModulesDir(),
-          this.props.module.dirName
-        );
+        const moduleDir = join(modulesDir, this.props.module.dirName);
         await deleteDirectory(moduleDir);
         location.reload();
       },

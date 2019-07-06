@@ -7,7 +7,7 @@ import { normalize } from 'path';
 import express from 'express';
 import log from 'electron-log';
 
-import config from 'api/configuration';
+import { modulesDir } from 'consts/paths';
 
 /**
  * Express server serving static files for modules
@@ -16,7 +16,7 @@ import config from 'api/configuration';
  */
 class FileServer {
   port = 9331;
-  staticMiddleware = express.static(config.GetModulesDir());
+  staticMiddleware = express.static(modulesDir);
   server = null;
   moduleFiles = [];
 
