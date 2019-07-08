@@ -472,7 +472,7 @@ class Transactions extends Component {
     let tablecopyaddresscallback = function() {
       if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
-          this.props.walletitemsMap[this.hoveringID].address
+          this.props.walletitemsMap.get(this.hoveringID).address
         );
       }
     };
@@ -481,7 +481,7 @@ class Transactions extends Component {
     let tablecopyamountcallback = function() {
       if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
-          this.props.walletitemsMap[this.hoveringID].amount
+          this.props.walletitemsMap.get(this.hoveringID).amount
         );
       }
     };
@@ -490,7 +490,7 @@ class Transactions extends Component {
     let tablecopyaccountcallback = function() {
       if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
-          this.props.walletitemsMap[this.hoveringID].account
+          this.props.walletitemsMap.get(this.hoveringID).account
         );
       }
     };
