@@ -1,6 +1,5 @@
-// External
+//  External
 import { remote } from 'electron';
-import fs from 'fs';
 
 // Internal
 import UIController from 'components/UIController';
@@ -9,17 +8,11 @@ import { getInfo } from 'actions/coreActionCreators';
 import { loadModules } from 'actions/moduleActionCreators';
 import updater from 'updater';
 import { rebuildMenu, initializeMenu } from 'appMenu';
-import { coreDataDir } from 'consts/paths';
-import { Tail } from 'utils/tail';
+
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';
-import { join } from 'path';
-
-var tail;
-var debugFileLocation;
-var checkIfFileExistsInterval;
-var printCoreOutputTimer;
+import { startCoreOuputWatch, stopCoreOuputWatch } from './coreOutputWatch';
 
 export default function setupApp(store) {
   const { dispatch } = store;
@@ -49,11 +42,7 @@ export default function setupApp(store) {
         remote.app.dock.hide();
       }
     } else {
-      if (tail != undefined) {
-        tail.unwatch();
-      }
-      clearInterval(printCoreOutputTimer);
-      clearInterval(checkIfFileExistsInterval);
+      stopCoreOuputWatch();
       UIController.openModal(ClosingModal);
 
       if (!manualDaemon) {
@@ -63,7 +52,7 @@ export default function setupApp(store) {
     }
   });
 
-  startCoreOuputeWatch(store);
+  startCoreOuputWatch();
   const state = store.getState();
 
   updater.setup();
@@ -76,67 +65,6 @@ export default function setupApp(store) {
   dispatch(loadModules());
 }
 
-function startCoreOuputeWatch(store) {
-  if (store.getState().settings.manualDaemon) {
-    return;
-  }
-  let datadir = coreDataDir;
-
-  var debugfile;
-  if (fs.existsSync(join(datadir, 'log', '0.log'))) {
-    debugfile = join(datadir, 'log', '0.log');
-  } else if (process.platform === 'win32') {
-    debugfile = datadir + '\\debug.log';
-  } else {
-    debugfile = datadir + '/debug.log';
-  }
-
-  debugFileLocation = debugfile;
-
-  fs.stat(debugFileLocation, (err, stat) => {
-    checkDebugFileExists(err, stat, store);
-  });
-
-  checkIfFileExistsInterval = setInterval(() => {
-    if (tail != undefined) {
-      clearInterval(checkIfFileExistsInterval);
-      return;
-    }
-    fs.stat(debugFileLocation, (err, stat) => {
-      checkDebugFileExists(err, stat, store);
-    });
-  }, 5000);
-}
-function checkDebugFileExists(err, stat, store) {
-  if (err == null) {
-    processDeamonOutput(debugFileLocation, store);
-    clearInterval(checkIfFileExistsInterval);
-  } else {
-    console.log('exists', stat);
-  }
-}
-
-function processDeamonOutput(debugfile, store) {
-  const tailOptions = {
-    useWatchFile: true,
-  };
-  tail = new Tail(debugfile, tailOptions);
-  let n = 0;
-  let batch = [];
-  tail.on('line', d => {
-    batch.push(d);
-  });
-  printCoreOutputTimer = setInterval(() => {
-    if (store.getState().ui.console.core.paused) {
-      return;
-    }
-    if (batch.length == 0) {
-      return;
-    }
-    store.dispatch(ac.printCoreOutput(batch));
-    batch = [];
-  }, 1000);
-}
 function showInitialModals({ settings }) {
   const showExperimentalWarning = () => {
     if (!settings.experimentalWarningDisabled) {
