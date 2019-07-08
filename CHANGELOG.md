@@ -13,6 +13,7 @@
 - Default Verbose is now 0, you can change this in the setitngs/core
 - Changed the way the More Details modal knows which transaction to look up
 - Fake Transactions for testing is now moved out of auto true in dev mode and is now a toggle.
+- When selecting the a suggestion on the terminal page, the help portion will no longer be pasted into the input field
 
 #### Fixes
 
