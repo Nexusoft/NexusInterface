@@ -102,11 +102,6 @@ export const AddRPCCall = returnCall => ({
   payload: returnCall,
 });
 
-export const setWebGLEnabled = enabled => ({
-  type: TYPE.SET_WEBGL_ENABLED,
-  payload: enabled,
-});
-
 export const showEncryptionWarningModal = () => ({
   type: TYPE.SHOW_ENCRYPTION_MODAL,
 });

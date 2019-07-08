@@ -18,6 +18,7 @@ import * as helpers from 'scripts/helper.js';
 import * as RPC from 'scripts/rpc';
 import { timing, consts, animations } from 'styles';
 import Globe from './Globe';
+import { webGLAvailable } from 'consts/misc';
 
 // Images
 import { CurrencyIcon } from 'images/CurrencyIcons';
@@ -99,7 +100,6 @@ const mapStateToProps = state => {
   return {
     coreInfo: state.core.info,
     difficulty: state.core.difficulty,
-    webGLEnabled: state.common.webGLEnabled,
     blockDate: state.common.blockDate,
     rawNXSvalues: state.common.rawNXSvalues,
     displayNXSvalues: state.common.displayNXSvalues,
@@ -317,7 +317,6 @@ class Overview extends Component {
    */
   componentDidUpdate(prevProps) {
     const {
-      webGLEnabled,
       settings,
       coreInfo: { blocks, connections },
     } = this.props;
@@ -326,7 +325,7 @@ class Overview extends Component {
       settings.overviewDisplay !== 'none';
     if (
       settings.acceptedAgreement &&
-      webGLEnabled &&
+      webGLAvailable &&
       settings.renderGlobe &&
       correctView
     ) {
@@ -441,7 +440,7 @@ class Overview extends Component {
     return (
       this.props.settings.acceptedAgreement &&
       this.props.settings.renderGlobe &&
-      this.props.webGLEnabled
+      webGLAvailable
     );
   }
 

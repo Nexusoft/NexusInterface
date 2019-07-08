@@ -4,7 +4,6 @@ import fs from 'fs';
 
 // Internal
 import UIController from 'components/UIController';
-import WEBGL from 'scripts/WebGLCheck.js';
 import * as ac from 'actions/setupAppActionCreators';
 import { getInfo } from 'actions/coreActionCreators';
 import { loadModules } from 'actions/moduleActionCreators';
@@ -35,8 +34,6 @@ export default function setupApp(store) {
   setInterval(function() {
     dispatch(ac.SetMarketAveData());
   }, 900000);
-
-  checkWebGL(dispatch);
 
   const mainWindow = remote.getCurrentWindow();
 
@@ -77,15 +74,6 @@ export default function setupApp(store) {
   showInitialModals(state);
 
   dispatch(loadModules());
-}
-
-function checkWebGL(dispatch) {
-  if (WEBGL.isWebGLAvailable()) {
-    dispatch(ac.setWebGLEnabled(true));
-  } else {
-    dispatch(ac.setWebGLEnabled(false));
-    console.error(WEBGL.getWebGLErrorMessage());
-  }
 }
 
 function startCoreOuputeWatch(store) {

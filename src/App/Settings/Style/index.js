@@ -22,6 +22,7 @@ import NexusAddress from 'components/NexusAddress';
 import SettingsContainer from 'components/SettingsContainer';
 import warningIcon from 'images/warning.sprite.svg';
 import { walletDataDir } from 'consts/paths';
+import { webGLAvailable } from 'consts/misc';
 
 import ColorPicker from './ColorPicker';
 import BackgroundPicker from './BackgroundPicker';
@@ -39,13 +40,11 @@ const overviewDisplays = [
 
 const mapStateToProps = ({
   settings: { renderGlobe, locale, addressStyle, overviewDisplay },
-  common: { webGLEnabled },
   myAccounts,
   theme,
 }) => {
   return {
     renderGlobe,
-    webGLEnabled,
     theme,
     locale,
     addressStyle,
@@ -381,7 +380,6 @@ class SettingsStyle extends Component {
     const {
       theme,
       renderGlobe,
-      webGLEnabled,
       addressStyle,
       setAddressStyle,
       overviewDisplay,
@@ -396,7 +394,7 @@ class SettingsStyle extends Component {
           subLabel={
             <div>
               <Text id="ToolTip.RenderGlobe" />
-              {!webGLEnabled && (
+              {!webGLAvailable && (
                 <div className="error">
                   <Text id="ToolTip.RenderGlobeOpenGLFail" />
                 </div>
@@ -405,7 +403,7 @@ class SettingsStyle extends Component {
           }
         >
           <Switch
-            disabled={!webGLEnabled}
+            disabled={!webGLAvailable}
             checked={renderGlobe}
             onChange={this.toggleGlobeRender}
           />
