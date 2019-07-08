@@ -121,7 +121,7 @@ function initialize() {
   autoUpdater.on('update-available', updateInfo => {
     UIController.showNotification(
       `New wallet version ${updateInfo.version} available. Downloading...`,
-      'success'
+      'work'
     );
   });
 

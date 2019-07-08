@@ -32,6 +32,7 @@ export const defaultSettings = {
   devMode: false,
   verifyModuleSource: true,
   overviewDisplay: 'standard',
+  displayFiatBalance: false,
 
   // Core
   enableMining: false,
