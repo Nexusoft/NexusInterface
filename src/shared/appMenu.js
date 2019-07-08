@@ -14,7 +14,7 @@ import UIController from 'components/UIController';
 import { clearCoreInfo } from 'actions/coreActionCreators';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
-import updater from 'updater';
+import { updaterSubscribe, getUpdaterState } from 'updater';
 
 const autoUpdater = remote.getGlobal('autoUpdater');
 
@@ -263,7 +263,7 @@ const updaterReadyToInstall = {
  * @memberof AppMenu
  */
 function updaterMenuItem() {
-  switch (updater.state) {
+  switch (getUpdaterState) {
     case 'idle':
       return updaterIdle;
     case 'checking':
@@ -437,7 +437,7 @@ export function rebuildMenu() {
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
 export function initializeMenu() {
-  updater.on('state-change', rebuildMenu);
+  updaterSubscribe(rebuildMenu);
   observeStore(
     state => state.core && state.core.info && state.core.info.connections,
     rebuildMenu

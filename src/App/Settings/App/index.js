@@ -19,7 +19,7 @@ import SettingsContainer from 'components/SettingsContainer';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
 import warningIcon from 'images/warning.sprite.svg';
-import updater from 'updater';
+import { getUpdaterState, startAutoUpdate, stopAutoUpdate } from 'updater';
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
@@ -191,14 +191,14 @@ class SettingsApp extends Component {
         skinNo: 'danger',
         callbackNo: () => {
           this.props.updateSettings({ autoUpdate: false });
-          updater.stopAutoUpdate();
+          stopAutoUpdate();
         },
         style: { width: 580 },
       });
     } else {
       this.props.updateSettings({ autoUpdate: true });
-      if (updater.state === 'idle') {
-        updater.autoUpdate();
+      if (getUpdaterState() === 'idle') {
+        startAutoUpdate();
       }
     }
   };

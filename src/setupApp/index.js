@@ -6,7 +6,7 @@ import UIController from 'components/UIController';
 import * as ac from 'actions/setupAppActionCreators';
 import { getInfo } from 'actions/coreActionCreators';
 import { loadModules } from 'actions/moduleActionCreators';
-import updater from 'updater';
+import { startAutoUpdate } from 'updater';
 import { rebuildMenu, initializeMenu } from 'appMenu';
 
 import LicenseAgreementModal from './LicenseAgreementModal';
@@ -55,9 +55,8 @@ export default function setupApp(store) {
   startCoreOuputWatch();
   const state = store.getState();
 
-  updater.setup();
   if (state.settings.autoUpdate) {
-    updater.autoUpdate();
+    startAutoUpdate();
   }
 
   showInitialModals(state);
