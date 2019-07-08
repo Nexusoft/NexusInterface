@@ -14,6 +14,7 @@
 - Changed the way the More Details modal knows which transaction to look up
 - Fake Transactions for testing is now moved out of auto true in dev mode and is now a toggle.
 - When selecting the a suggestion on the terminal page, the help portion will no longer be pasted into the input field
+- Globe now has a hard display cap of 64, this does not effect your actual backend connections
 
 #### Fixes
 
