@@ -20,13 +20,11 @@ import stakingIcon from 'images/staking.sprite.svg';
     core: {
       info: { stakeweight, interestweight, trustweight, blockweight },
     },
-    router: { location },
   }) => ({
     stakeweight,
     interestweight,
     trustweight,
     blockweight,
-    location,
   })
 )
 class StakingStatus extends React.Component {
@@ -42,7 +40,6 @@ class StakingStatus extends React.Component {
       interestweight,
       trustweight,
       blockweight,
-      location,
     } = this.props;
 
     return (

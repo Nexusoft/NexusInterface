@@ -24,7 +24,7 @@ export default function setupApp(store) {
   setInterval(() => dispatch(getInfo()), 10000);
 
   dispatch(ac.SetMarketAveData());
-  setInterval(function() {
+  setInterval(() => {
     dispatch(ac.SetMarketAveData());
   }, 900000);
 

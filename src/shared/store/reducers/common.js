@@ -13,7 +13,7 @@ const initialState = {
   confirmation: false,
   actionItem: '',
   modalVisable: false,
-  heighestPeerBlock: 0,
+  highestPeerBlock: 0,
   isInSync: false,
   blockDate: null,
   portAvailable: false,
@@ -161,7 +161,7 @@ export default (state = initialState, action) => {
     case TYPE.SET_HIGHEST_PEER_BLOCK:
       return {
         ...state,
-        heighestPeerBlock: action.payload,
+        highestPeerBlock: action.payload,
       };
       break;
     case TYPE.CLEAR_SEARCHBAR:

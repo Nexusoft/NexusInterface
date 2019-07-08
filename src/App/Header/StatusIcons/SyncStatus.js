@@ -27,10 +27,10 @@ const SpinningIcon = styled(StatusIcon)({
     core: {
       info: { blocks, synccomplete },
     },
-    common: { heighestPeerBlock },
+    common: { highestPeerBlock },
   }) => ({
     synchronizing: synccomplete < 100,
-    heighestPeerBlock,
+    highestPeerBlock,
     blocks,
     synccomplete,
   })
@@ -43,8 +43,8 @@ class SyncStatus extends React.Component {
    * @returns {JSX} JSX
    */
   statusIcon = () => {
-    const { synchronizing, heighestPeerBlock, blocks } = this.props;
-    const outOfSyncLegacy = heighestPeerBlock > blocks;
+    const { synchronizing, highestPeerBlock, blocks } = this.props;
+    const outOfSyncLegacy = highestPeerBlock > blocks;
 
     if (synchronizing || outOfSyncLegacy) {
       return <SpinningIcon icon={syncingIcon} />;
@@ -62,12 +62,12 @@ class SyncStatus extends React.Component {
   statusTooltip = () => {
     const {
       synchronizing,
-      heighestPeerBlock,
+      highestPeerBlock,
       blocks,
       synccomplete,
     } = this.props;
-    const outOfSyncLegacy = heighestPeerBlock > blocks;
-    let percentSynced = parseInt((blocks / heighestPeerBlock) * 100);
+    const outOfSyncLegacy = highestPeerBlock > blocks;
+    let percentSynced = parseInt((blocks / highestPeerBlock) * 100);
     if (synchronizing) percentSynced = synccomplete;
     if (percentSynced > 100) percentSynced = 0;
     if (synchronizing || outOfSyncLegacy) {
