@@ -14,9 +14,9 @@ import UIController from 'components/UIController';
 import { clearCoreInfo } from 'actions/coreActionCreators';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
-import { updaterSubscribe, getUpdaterState } from 'updater';
+import { updaterSubscribe, getUpdaterState, getAutoUpdater } from 'updater';
 
-const autoUpdater = remote.getGlobal('autoUpdater');
+const autoUpdater = getAutoUpdater();
 
 const separator = {
   type: 'separator',
@@ -263,7 +263,7 @@ const updaterReadyToInstall = {
  * @memberof AppMenu
  */
 function updaterMenuItem() {
-  switch (getUpdaterState) {
+  switch (getUpdaterState()) {
     case 'idle':
       return updaterIdle;
     case 'checking':

@@ -24,6 +24,16 @@ export function getUpdaterState() {
 }
 
 /**
+ * Get autoUpdater
+ *
+ * @export
+ * @returns
+ */
+export function getAutoUpdater() {
+  return autoUpdater;
+}
+
+/**
  * Update the Updater's state
  *
  * @param {*} newState
@@ -100,8 +110,7 @@ function initialize() {
   autoUpdater.autoInstallOnAppQuit = false;
   if (process.env.NODE_ENV === 'development') {
     autoUpdater.updateConfigPath = path.join(
-      __dirname,
-      '..',
+      process.cwd(),
       'dev-app-update.yml'
     );
   }
