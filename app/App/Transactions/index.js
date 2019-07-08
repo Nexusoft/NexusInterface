@@ -643,7 +643,7 @@ class Transactions extends Component {
     let tempWalletTransactions = [];
 
     // If in Dev Mode add some random transactions
-    if (this.props.settings.devMode == true) {
+    if (this.props.settings.devMode == true && this.props.settings.fakeTransactions) {
       console.log('Making Fakes');
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
@@ -1138,7 +1138,7 @@ class Transactions extends Component {
       if (temp == 4) {
         return 'debit';
       } else if (temp == 1) {
-        return 'stake';
+        return 'receive';
       } else if (temp == 2) {
         return 'stake';
       } else {

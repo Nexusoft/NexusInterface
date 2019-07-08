@@ -27,6 +27,7 @@ export const defaultSettings = {
   backupDirectory: defaultBackupDir,
   devMode: false,
   verifyModuleSource: true,
+  fakeTransactions: false,
   overviewDisplay: 'standard',
 
   // Core
