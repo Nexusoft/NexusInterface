@@ -30,7 +30,6 @@ export default merge.smart(baseConfig, {
 
   plugins: [
     new webpack.DefinePlugin({
-      DEBUG_PROD: false,
       START_MINIMIZED: false,
     }),
   ],

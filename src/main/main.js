@@ -2,8 +2,6 @@
 import { app, BrowserWindow, Tray, Menu } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
-import module from 'module';
-import sourceMapSupport from 'source-map-support';
 import devToolsInstall, {
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS,
@@ -26,14 +24,6 @@ global.autoUpdater = autoUpdater;
 global.forceQuit = false;
 
 app.setAppUserModelId(APP_ID);
-
-// Enable source map support
-if (process.env.NODE_ENV === 'production') {
-  sourceMapSupport.install();
-}
-
-const p = path.join(process.cwd(), 'app', 'node_modules');
-module.globalPaths.push(p);
 
 // Enable development tools for REACT and REDUX
 const installExtensions = async () => {
@@ -194,6 +184,7 @@ async function backUpQT() {
   }
 }
 
+// Ensure only one instance of the wallet is run
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
