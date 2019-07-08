@@ -24,6 +24,7 @@
 - Fixed issue with Recieved transactions not being shown in the table when selecting Receive Only Filter.
 - Fixed issue where the daemon would not be set to verbose 0, and set a min/max on the setting
 - Fixed issue where you could not copy the Address or Account from a transaction
+- Fixed issue where scrolling in the transaction table would also scroll the parent panel
 
 # 1.0.1 (2019.6.28)
 
