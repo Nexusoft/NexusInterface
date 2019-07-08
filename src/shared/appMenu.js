@@ -14,7 +14,7 @@ import UIController from 'components/UIController';
 import { clearCoreInfo } from 'actions/coreActionCreators';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
-import { updaterSubscribe, getUpdaterState, getAutoUpdater } from 'updater';
+import { updaterSubscribe, getUpdaterState, getAutoUpdater } from 'lib/updater';
 
 const autoUpdater = getAutoUpdater();
 

@@ -6,7 +6,7 @@ import UIController from 'components/UIController';
 import * as ac from 'actions/setupAppActionCreators';
 import { getInfo } from 'actions/coreActionCreators';
 import { loadModules } from 'actions/moduleActionCreators';
-import { startAutoUpdate } from 'updater';
+import { startAutoUpdate } from 'lib/updater';
 import { rebuildMenu, initializeMenu } from 'appMenu';
 
 import LicenseAgreementModal from './LicenseAgreementModal';
