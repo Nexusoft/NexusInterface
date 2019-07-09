@@ -823,7 +823,11 @@ class Overview extends Component {
                 <StatLabel>
                   <Text id="overview.Balance" /> (NXS)
                 </StatLabel>
-                <StatValue>{this.waitForDaemon(balance)}</StatValue>
+                <StatValue>
+                  {this.waitForDaemon(
+                    settings.overviewDisplay === 'balHidden' ? '-' : balance
+                  )}
+                </StatValue>
               </div>
               <StatIcon icon={nxsStakeIcon} />
             </Stat>
@@ -837,7 +841,11 @@ class Overview extends Component {
                 <Text id="overview.Balance" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.calculateFiatvalue())}
+                {this.waitForDaemon(
+                  settings.overviewDisplay === 'balHidden'
+                    ? '-'
+                    : this.calculateFiatvalue()
+                )}
               </StatValue>
             </div>
             <StatIcon icon={CurrencyIcon(this.props.settings.fiatCurrency)} />

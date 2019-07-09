@@ -5,7 +5,7 @@
 #### Additions
 
 - Orphan is now a option on the Transaction Table
--
+- Added `Hidden Balance` option in overview display settings to allow users to privately share their overview page
 
 #### Adjustments
 
