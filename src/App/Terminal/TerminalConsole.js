@@ -24,10 +24,9 @@ import {
 } from 'actions/uiActionCreators';
 
 const filterCommands = memoize((commandList, inputValue) => {
-  if (!commandList || inputValue == '') return [];
-  const query = inputValue;
+  if (!commandList || !inputValue) return [];
   return commandList.filter(
-    cmd => !!cmd && cmd.toLowerCase().startsWith(query.toLowerCase())
+    cmd => !!cmd && cmd.value.toLowerCase().startsWith(inputValue.toLowerCase())
   );
 });
 
@@ -141,8 +140,17 @@ class TerminalConsole extends Component {
     const result = await RPC.PROMISE('help', []);
     const commandList = result
       .split('\n')
-      .filter(c => c !== 'please enable -richlist to use this command')
-      .filter(c => !c.startsWith(' ')); // Tritium added some extra comments that are not commands so filter them out
+      .filter(
+        c =>
+          c &&
+          typeof c === 'string' &&
+          c !== 'please enable -richlist to use this command' &&
+          !c.startsWith(' ')
+      ) // Tritium added some extra comments that are not commands so filter them out
+      .map(c => ({
+        display: c,
+        value: c.split(' ')[0],
+      }));
     this.props.setCommandList(commandList);
   };
 
@@ -198,7 +206,7 @@ class TerminalConsole extends Component {
     const [cmd, ...chunks] = consoleInput.split(' ');
     executeCommand(consoleInput);
     googleanalytics.SendEvent('Terminal', 'Console', 'UseCommand', 1);
-    if (!commandList.some(c => c.includes(cmd))) {
+    if (!commandList.some(c => c.value.includes(cmd))) {
       printCommandError(`\`${cmd}\` is not a valid command`);
       return;
     }
