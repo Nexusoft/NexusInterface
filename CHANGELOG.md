@@ -1,16 +1,32 @@
-# 1.0.2 ()
+# 1.1.0 (2019.7.XX)
 
-[Release Link]()
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-1.0.X)
 
 #### Additions
 
+- Orphan is now a option on the Transaction Table
+- Added `Hidden Balance` option in overview display settings to allow users to privately share their overview page
 - Added functionality to the Balance stat on overview page to change to fiat balance on click
 
 #### Adjustments
 
+- Updated Spanish Translation
 - Update styling on `Market Data` page to make 24hr info be clearer
+- Default Verbose is now 0, you can change this in the setitngs/core
+- Changed the way the More Details modal knows which transaction to look up
+- Fake Transactions for testing is now moved out of auto true in dev mode and is now a toggle.
+- When selecting the a suggestion on the terminal page, the help portion will no longer be pasted into the input field
+- Globe now has a hard display cap of 64, this does not effect your actual backend connections
+- Transactions in the transaction table now have a fixed height
 
 #### Fixes
+
+- Fixed issue were if you never installed QT or deleted the QT back up it would auto make a new backup
+- Fixed there being a `Nexus_Wallet` AND `Nexus Wallet` folders, Removed `Nexus_Wallet` and will auto move items into correct folder
+- Fixed issue with Recieved transactions not being shown in the table when selecting Receive Only Filter.
+- Fixed issue where the daemon would not be set to verbose 0, and set a min/max on the setting
+- Fixed issue where you could not copy the Address or Account from a transaction
+- Fixed issue where scrolling in the transaction table would also scroll the parent panel
 
 # 1.0.1 (2019.6.28)
 
@@ -19,10 +35,10 @@
 #### Additions
 
 - Ships with 3.0.1 [Tritium Daemon Core](https://github.com/Nexusoft/LLL-TAO/releases/tag/3.0.1)
-- Fixed uninitiated values in Binary Hash Map for nFlags
-- On rescan, allow search for block when key is found for given user
-- Cleanup unnecessary constructors in Sector Database
-- Remove error reporting for incorrect sector size in Update
+  - Fixed uninitiated values in Binary Hash Map for nFlags
+  - On rescan, allow search for block when key is found for given user
+  - Cleanup unnecessary constructors in Sector Database
+  - Remove error reporting for incorrect sector size in Update
 - Added Stake/Generate/Immature to Transaction's page category filter
 - Added tooltip to the tray icon
 - Double click on the tray icon now shows the wallet GUI

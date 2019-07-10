@@ -190,6 +190,10 @@ async function backUpQT() {
     '__db.004',
     '__db.005',
   ];
+  const settings = LoadSettings();
+  if (settings.acceptedAgreement) {
+    return;
+  }
   const exists = await fs.pathExists(configuration.GetCoreDataDir());
   if (exists) {
     const backupexists = await fs.pathExists(

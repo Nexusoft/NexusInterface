@@ -251,7 +251,10 @@ export default class Core {
               `rpcuser=${this.user}\nrpcpassword=${this.password}\n`
             );
           }
-          this.verbose = settings.verboseLevel || this.verbose;
+          this.verbose =
+            settings.verboseLevel != undefined
+              ? settings.verboseLevel
+              : this.verbose;
           let parameters = [
             `-rpcport=${this.port}`,
             `-datadir=${datadir}`,

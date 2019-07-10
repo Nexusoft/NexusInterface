@@ -60,7 +60,7 @@ const categories = [
     display: <Text id="transactions.All" />,
   },
   {
-    value: 'credit',
+    value: 'receive', // Should be made credit with tritium.
     display: <Text id="transactions.Receive" />,
   },
   {
@@ -68,12 +68,8 @@ const categories = [
     display: <Text id="transactions.Sent" />,
   },
   {
-    value: 'genesis',
-    display: <Text id="transactions.Genesis" />,
-  },
-  {
-    value: 'trust',
-    display: <Text id="transactions.Trust" />,
+    value: 'stake',
+    display: <Text id="transactions.Stake" />,
   },
   {
     value: 'generate',
@@ -84,8 +80,16 @@ const categories = [
     display: <Text id="transactions.Immature" />,
   },
   {
-    value: 'stake',
-    display: <Text id="transactions.Stake" />,
+    value: 'orphan',
+    display: <Text id="transactions.Orphan" />,
+  },
+  {
+    value: 'genesis',
+    display: <Text id="transactions.Genesis" />,
+  },
+  {
+    value: 'trust',
+    display: <Text id="transactions.Trust" />,
   },
 ];
 
@@ -134,6 +138,7 @@ const mapDispatchToProps = dispatch => ({
   loadMyAccounts: () => dispatch(loadMyAccounts()),
   SetWalletTransactionArray: returnData => {
     dispatch({ type: TYPE.SET_WALL_TRANS, payload: returnData });
+    dispatch({ type: TYPE.SET_TRANSACTION_MAP, payload: null });
   },
   SetSendAgainData: returnData => {
     dispatch({ type: TYPE.SET_TRANSACTION_SENDAGAIN, payload: returnData });
@@ -433,7 +438,7 @@ class Transactions extends Component {
   openTxDetailsModal = () => {
     UIController.openModal(TransactionDetailsModal, {
       hoveringID: this.hoveringID,
-      walletItems: this.props.walletitems,
+      walletItemsMap: this.props.walletitemsMap,
       settings: this.props.settings,
     });
   };
@@ -467,7 +472,7 @@ class Transactions extends Component {
     let tablecopyaddresscallback = function() {
       if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
-          this.props.walletitems[this.hoveringID].address
+          this.props.walletitemsMap.get(this.hoveringID).address
         );
       }
     };
@@ -476,7 +481,7 @@ class Transactions extends Component {
     let tablecopyamountcallback = function() {
       if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
-          this.props.walletitems[this.hoveringID].amount
+          this.props.walletitemsMap.get(this.hoveringID).amount
         );
       }
     };
@@ -485,7 +490,7 @@ class Transactions extends Component {
     let tablecopyaccountcallback = function() {
       if (this.hoveringID != 999999999999) {
         this.copysomethingtotheclipboard(
-          this.props.walletitems[this.hoveringID].account
+          this.props.walletitemsMap.get(this.hoveringID).account
         );
       }
     };
@@ -638,7 +643,41 @@ class Transactions extends Component {
     let tempWalletTransactions = [];
 
     // If in Dev Mode add some random transactions
-    if (this.props.settings.devMode == true) {
+    if (
+      this.props.settings.devMode == true &&
+      this.props.settings.fakeTransactions
+    ) {
+      console.log('Making Fakes');
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
@@ -651,9 +690,10 @@ class Transactions extends Component {
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
     }
     if (
-      promisList == null ||
-      promisList == undefined ||
-      promisList.length == 0
+      (promisList == null ||
+        promisList == undefined ||
+        promisList.length == 0) &&
+      tempWalletTransactions.length == 0
     ) {
       return;
     }
@@ -1101,9 +1141,9 @@ class Transactions extends Component {
       if (temp == 4) {
         return 'debit';
       } else if (temp == 1) {
-        return 'credit';
+        return 'receive';
       } else if (temp == 2) {
-        return 'trust';
+        return 'stake';
       } else {
         return 'genesis';
       }
@@ -1138,7 +1178,10 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   tableSelectCallback(e, indata) {
-    this.hoveringID = indata.index;
+    this.hoveringID =
+      indata.original.time.toString() +
+      indata.original.account +
+      indata.original.amount.toString();
   }
 
   //
@@ -1158,6 +1201,7 @@ class Transactions extends Component {
     return formatedData.map(ele => {
       txCounter++;
       let isPending = '';
+      let tempCategory = ele.category;
       if (ele.confirmations <= this.props.settings.minConfirmations) {
         isPending = '(Pending)';
       }
@@ -1232,6 +1276,8 @@ class Transactions extends Component {
           return <Text id="transactions.Immature" />;
         } else if (q.value === 'stake') {
           return <Text id="transactions.Stake" />;
+        } else if ((q.value = 'orphan')) {
+          return <Text id="transactions.Orphan" />;
         } else {
           return <Text id="transactions.UnknownCategory" />;
         }
@@ -1351,6 +1397,8 @@ class Transactions extends Component {
       inData.category = translate('transactions.Immature', locale);
     } else if (inData.category == 'stake') {
       inData.category = translate('transactions.Stake', locale);
+    } else if (inData.category == 'orphan') {
+      inData.category = translate('transactions.Orphan', locale);
     } else {
       inData.category = translate('transactions.UnknownCategory', locale);
     }

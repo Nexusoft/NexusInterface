@@ -319,6 +319,17 @@ class SettingsApp extends Component {
               onChange={this.toggleVerifyModuleSource}
             />
           </SettingsField>
+          <SettingsField
+            indent={1}
+            connectLabel
+            label={<Text id="Settings.FakeTransactions" />}
+            subLabel={<Text id="Settings.FakeTransactionsNote" />}
+          >
+            <Switch
+              checked={settings.fakeTransactions}
+              onChange={this.updateHandlers('fakeTransactions')}
+            />
+          </SettingsField>
         </div>
 
         <Button

@@ -36,6 +36,7 @@ const overviewDisplays = [
   { value: 'standard', display: 'Standard' },
   { value: 'miner', display: 'Miner' },
   // { value: 'minimalist', display: 'Minimalist' },
+  { value: 'balHidden', display: 'Hidden Balance' },
   { value: 'none', display: 'None' },
 ];
 

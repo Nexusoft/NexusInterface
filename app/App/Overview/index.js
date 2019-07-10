@@ -582,7 +582,7 @@ class Overview extends Component {
           <StatIcon icon={this.blockWeightIcon()} />
           <div>
             <StatLabel>
-              <Text id="overview.BlockWeightt" />
+              <Text id="overview.BlockWeight" />
             </StatLabel>
             <StatValue>
               {this.waitForDaemon(this.props.coreInfo.blockweight)}
@@ -818,7 +818,9 @@ class Overview extends Component {
                 {')'}
               </StatLabel>
               <StatValue>
-                {settings.displayFiatBalance
+                {settings.overviewDisplay === 'balHidden'
+                  ? '-'
+                  : settings.displayFiatBalance
                   ? this.waitForDaemon(this.calculateFiatvalue())
                   : this.waitForDaemon(balance)}
               </StatValue>
@@ -839,7 +841,11 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.StakeBalance" /> (NXS)
               </StatLabel>
-              <StatValue>{this.waitForDaemon(stake)}</StatValue>
+              <StatValue>
+                {settings.overviewDisplay === 'balHidden'
+                  ? '-'
+                  : this.waitForDaemon(stake)}
+              </StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />
           </Stat>

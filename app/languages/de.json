@@ -1,7 +1,7 @@
 {
   "overview.TrustWeight": "Trust Faktor",
   "overview.LicensceAgreement": "Lizenzvereinbarung",
-  "overview.BlockWeightt": "Block Faktor",
+  "overview.BlockWeight": "Block Faktor",
   "overview.Balance": "Kontostand",
   "overview.EncryptedModal": "Ihre Wallet ist nicht verschlüsselt!",
   "overview.Suggestion": "Damit Ihr Nexus sicher ist, sollten Sie Ihre Wallet verschlüsseln.",
@@ -46,7 +46,7 @@
   "sendReceive.Total": "GESAMT",
   "sendReceive.From": "VON",
   "sendReceive.FEE": "GEBÜHR",
-  "sendReceive.CopyToFeild": "In das Feld kopieren",
+  "sendReceive.CopyToField": "In das Feld kopieren",
   "sendReceive.ClickToEdit": "Zum Bearbeiten anklicken",
 
   "sendReceive.SelectAnAccount": "Wählen Sie ein Konto aus",

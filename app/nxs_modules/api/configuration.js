@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////
 
 // External
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import electron from 'electron';
 /**
@@ -145,6 +145,45 @@ const configuration = {
     if (!fs.existsSync(configuration.GetAppResourceDir())) {
       fs.mkdirSync(configuration.GetAppResourceDir());
     }
+
+    if (
+      fs.existsSync(
+        configuration
+          .GetAppDataDirectory()
+          .replace('Nexus Wallet', 'Nexus_Wallet')
+      )
+    ) {
+      console.log('Has Bad Folder');
+      configuration.CopyBadFolder();
+    }
+  },
+
+  //TODO: REMOVE THIS AFTER >1.3
+  CopyBadFolder() {
+    const doNotCopyList = [
+      'Cache',
+      'GPUCache',
+      'Local Storage',
+      'Cookies',
+      'Cookies-journal',
+      'log.log',
+      'Perferences',
+    ];
+    const badFolder = configuration
+      .GetAppDataDirectory()
+      .replace('Nexus Wallet', 'Nexus_Wallet');
+    const filterFunc = (src, dest) => {
+      const filename = src && src.replace(/^.*[\\\/]/, '');
+      if (doNotCopyList.includes(filename)) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+    fs.copySync(badFolder, configuration.GetAppDataDirectory(), {
+      filter: filterFunc,
+    });
+    fs.removeSync(badFolder);
   },
 
   /**
@@ -162,12 +201,12 @@ const configuration = {
           .getPath('appData')
           .replace(' ', `\ `)
           .replace('/Electron/', ''),
-        'Nexus_Wallet'
+        'Nexus Wallet'
       );
     } else {
       AppDataDirPath = path.join(
         app.getPath('appData').replace('/Electron/', ''),
-        'Nexus_Wallet'
+        'Nexus Wallet'
       );
     }
 

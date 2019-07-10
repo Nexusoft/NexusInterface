@@ -1,7 +1,7 @@
 {
   "overview.TrustWeight": "Trust Gewicht",
   "overview.LicensceAgreement": "Licentieovereenkomst",
-  "overview.BlockWeightt": "Block Gewicht",
+  "overview.BlockWeight": "Block Gewicht",
   "overview.Balance": "Balans",
   "overview.EncryptedModal": "Uw portemonnee is niet gecodeerd!",
   "overview.Suggestion": "U dient uw portemonnee te versleutelen om uw NXS veilig te houden.",
@@ -46,7 +46,7 @@
   "sendReceive.Total": "TOTAAL",
   "sendReceive.From": "VAN",
   "sendReceive.FEE": "Honorarium",
-  "sendReceive.CopyToFeild": "Kopiëren naar veld",
+  "sendReceive.CopyToField": "Kopiëren naar veld",
   "sendReceive.ClickToEdit": "Klik om te bewerken",
   "sendReceive.SelectAnAccount": "Selecteer een Account",
   "sendReceive.FromAccount": "Van Account",

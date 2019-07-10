@@ -27,13 +27,14 @@ export const defaultSettings = {
   backupDirectory: defaultBackupDir,
   devMode: false,
   verifyModuleSource: true,
+  fakeTransactions: false,
   overviewDisplay: 'standard',
   displayFiatBalance: false,
 
   // Core
   enableMining: false,
   enableStaking: true,
-  verboseLevel: 2,
+  verboseLevel: 0,
   manualDaemon: false,
   manualDaemonUser: 'rpcserver',
   manualDaemonPassword: defaultPassword,

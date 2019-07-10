@@ -36,14 +36,14 @@ class TransactionDetailsModal extends Component {
    * @param {*} { walletItems, hoveringID }
    * @memberof TransactionDetailsModal
    */
-  async loadData({ walletItems, hoveringID }) {
+  async loadData({ walletItemsMap, hoveringID }) {
     if (
-      walletItems &&
-      walletItems[hoveringID] &&
-      walletItems[hoveringID].confirmations
+      walletItemsMap &&
+      walletItemsMap.get(hoveringID) &&
+      walletItemsMap.get(hoveringID).confirmations
     ) {
       const tx = await RPC.PROMISE('gettransaction', [
-        walletItems[hoveringID].txid,
+        walletItemsMap.get(hoveringID).txid,
       ]);
       this.setState({
         highlightedBlockHash: tx.blockhash,
@@ -62,7 +62,7 @@ class TransactionDetailsModal extends Component {
    * @memberof TransactionDetailsModal
    */
   render() {
-    const { hoveringID, walletItems, settings } = this.props;
+    const { hoveringID, walletItemsMap, settings } = this.props;
     const {
       highlightedBlockNum,
       highlightedBlockHash,
@@ -71,10 +71,10 @@ class TransactionDetailsModal extends Component {
 
     if (
       hoveringID != 999999999999 &&
-      !!walletItems &&
-      walletItems[hoveringID]
+      !!walletItemsMap &&
+      walletItemsMap.get(hoveringID)
     ) {
-      const tx = walletItems[hoveringID];
+      const tx = walletItemsMap.get(hoveringID);
       // console.log(tx.category);
       return (
         <Modal>
