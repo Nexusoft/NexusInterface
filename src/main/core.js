@@ -15,6 +15,11 @@ const coreBinaryName = `nexus-${process.platform}-${process.arch}${
 }`;
 const coreBinaryPath = path.join(assetsDir, 'cores', coreBinaryName);
 
+/**
+ * Check if core binary file exists
+ *
+ * @returns
+ */
 function coreBinaryExists() {
   log.info('Checking if core binary exists: ' + coreBinaryPath);
   try {
@@ -27,6 +32,11 @@ function coreBinaryExists() {
   }
 }
 
+/**
+ * Load user & password from the nexus.conf file
+ *
+ * @returns
+ */
 function loadNexusConf() {
   if (fs.existsSync(path.join(coreDataDir, 'nexus.conf'))) {
     log.info('nexus.conf exists. Importing username and password.');
@@ -50,6 +60,11 @@ function loadNexusConf() {
   }
 }
 
+/**
+ * Get Process ID of core process if core is running
+ *
+ * @returns
+ */
 async function getCorePID() {
   const modEnv = process.env;
   modEnv.Nexus_Daemon = coreBinaryName;
@@ -103,8 +118,17 @@ async function getCorePID() {
   }
 }
 
+/**
+ *
+ *
+ * @class Core
+ */
 class Core {
-  // start: Start up the core with necessary parameters
+  /**
+   * Start up the core with necessary parameters
+   *
+   * @memberof Core
+   */
   start = async () => {
     const settings = LoadSettings();
     const corePID = await getCorePID();
@@ -195,7 +219,11 @@ class Core {
     }
   };
 
-  // stop: Stop the core from running by sending stop command or SIGTERM to the process
+  /**
+   * Stop the core from running by sending stop command or SIGTERM to the process
+   *
+   * @memberof Core
+   */
   stop = async () => {
     log.info('Core Manager: Stop function called');
     const settings = LoadSettings();
@@ -252,7 +280,11 @@ class Core {
     return false;
   };
 
-  // restart: Restart the core process
+  /**
+   * Restart the core process
+   *
+   * @memberof Core
+   */
   restart = async () => {
     await stopCore();
     await startCore();

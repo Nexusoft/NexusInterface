@@ -69,55 +69,6 @@ Available RPC methods:
 import { LoadSettings } from 'lib/settings';
 import { customConfig } from 'lib/coreConfig';
 
-// GETHOST: Get the rpc host name from the core configuration, else default to development defaults
-// export const GETHOST = () => {
-//   // let core = require("electron").remote.getGlobal("core");
-//   let settings = LoadSettings();
-//   if (settings.manualDaemon == true) {
-//     let savedport = core.port;
-//     if (settings.manualDaemonPort != undefined) {
-//       savedport = settings.manualDaemonPort;
-//     }
-//     let savedIP = core.ip;
-//     if (settings.manualDaemonIP != undefined) {
-//       savedIP = settings.manualDaemonIP;
-//     }
-//     return 'http://' + savedIP + ':' + savedport;
-//   } else {
-//     return core.host;
-//   }
-// };
-
-// // GETUSER: Get the rpc user name from the core configuration, else default to development defaults
-// export const GETUSER = () => {
-//   let settings = LoadSettings();
-//   if (settings.manualDaemon == true) {
-//     let saveduser =
-//       settings.manualDaemonUser === undefined
-//         ? core.user
-//         : settings.manualDaemonUser;
-
-//     return saveduser;
-//   } else {
-//     return core.user;
-//   }
-// };
-
-// // GETPASSWORD: Get the rpc password from the core configuration, else default to development defaults
-// export const GETPASSWORD = () => {
-//   let settings = LoadSettings();
-//   if (settings.manualDaemon == true) {
-//     let savedpassword =
-//       settings.manualDaemonPassword === undefined
-//         ? core.password
-//         : settings.manualDaemonPassword;
-
-//     return savedpassword;
-//   } else {
-//     return core.password;
-//   }
-// };
-
 // export const GET = (cmd, args, Callback) => {
 //   var PostData = JSON.stringify({
 //     method: cmd,
