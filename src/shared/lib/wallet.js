@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { defaultSettings } from 'lib/settings';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 
 /**
  * Backs up wallet

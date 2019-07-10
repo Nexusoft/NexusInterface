@@ -1,6 +1,6 @@
 import React from 'react';
 import UIController from 'components/UIController';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import * as ac from 'actions/setupAppActionCreators';
 import * as TYPE from 'actions/actiontypes';
 import { loadMyAccounts } from 'actions/accountActionCreators';

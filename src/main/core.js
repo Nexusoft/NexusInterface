@@ -252,9 +252,9 @@ class Core {
     );
 
     // Check if the core really stopped
+    let corePID;
     for (let i = 0; i < 30; i++) {
-      await sleep(1000);
-      let corePID = await getCorePID();
+      corePID = await getCorePID();
 
       if (corePID) {
         log.info(
@@ -264,12 +264,13 @@ class Core {
         log.info(`Core Manager: Core stopped gracefully.`);
         return true;
       }
+      await sleep(1000);
     }
 
     // If core still doesn't stop after 30 seconds, kill the process
     log.info('Core Manager: Killing process ' + corePID);
     const { env } = process;
-    env.KILL_PID = await getCorePID();
+    env.KILL_PID = corePID;
     if (process.platform == 'win32') {
       await exec(`taskkill /F /PID ${corePID}`, [], { env });
     } else {

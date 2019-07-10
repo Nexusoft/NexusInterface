@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import AutoSuggest from 'components/AutoSuggest';
 import Button from 'components/Button';
 import UIController from 'components/UIController';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import { rpcErrorHandler } from 'utils/form';
 

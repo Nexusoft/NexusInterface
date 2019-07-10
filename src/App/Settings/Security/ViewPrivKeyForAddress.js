@@ -12,7 +12,7 @@ import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
 import UIController from 'components/UIController';
 import Text from 'components/Text';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import copyIcon from 'images/copy.sprite.svg';
 import { rpcErrorHandler } from 'utils/form';
 

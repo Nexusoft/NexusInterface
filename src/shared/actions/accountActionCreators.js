@@ -1,4 +1,4 @@
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import * as TYPE from './actiontypes';
 
 export const loadMyAccounts = () => async dispatch => {

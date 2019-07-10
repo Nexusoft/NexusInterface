@@ -10,7 +10,7 @@ import memoize from 'memoize-one';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import {
   switchConsoleTab,
   updateConsoleInput,

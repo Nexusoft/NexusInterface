@@ -11,7 +11,7 @@ import rimraf from 'rimraf';
 import { coreDataDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import extractTarball from 'utils/promisified/extractTarball';
 
 let recentDbUrl = '';
@@ -139,7 +139,13 @@ export default class Bootstrapper {
     } catch (err) {
       this._onError(err);
     } finally {
-      await electron.remote.getGlobal('core').start();
+      if (
+        ['stopping_core', 'moving_db', 'restarting_core'].includes(
+          this._currentProgress
+        )
+      ) {
+        await electron.remote.getGlobal('core').start();
+      }
     }
   }
 

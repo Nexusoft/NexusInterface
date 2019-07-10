@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import Modal from 'components/Modal';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 
 /**
  * Transaction More Detail Modal

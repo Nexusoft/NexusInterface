@@ -5,7 +5,7 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import { defaultSettings } from 'lib/settings';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';

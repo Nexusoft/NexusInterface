@@ -16,7 +16,7 @@ import Account from './Account';
 import NewAddressForm from './NewAddressForm';
 import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 
 const MyAddressesModalComponent = styled(Modal)({
   // set a fixed height so that the modal won't jump when the search query changes

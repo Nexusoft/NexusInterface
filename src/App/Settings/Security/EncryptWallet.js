@@ -11,11 +11,10 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import { consts } from 'styles';
 import { rpcErrorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
-import { async } from 'q';
 
 const EncryptWalletForm = styled.form({
   flex: 2,

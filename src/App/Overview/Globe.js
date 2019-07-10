@@ -10,7 +10,7 @@ import worldSmall from 'images/world-light-white-small.jpg';
 import { assetsDir } from 'consts/paths';
 import Curve from './Curve';
 import Point from './Point';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 
 const GlobeContainer = styled.div({
   position: 'fixed',

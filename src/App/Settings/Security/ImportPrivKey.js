@@ -11,7 +11,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { rpcErrorHandler, trimText } from 'utils/form';
 

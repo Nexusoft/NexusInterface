@@ -5,7 +5,7 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import { getInfo } from 'actions/coreActionCreators';
 import Text from 'components/Text';
 import FormField from 'components/FormField';

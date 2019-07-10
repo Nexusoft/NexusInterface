@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import { getInfo } from 'actions/coreActionCreators';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';

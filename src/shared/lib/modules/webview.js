@@ -5,7 +5,7 @@ import { reset, initialize } from 'redux-form';
 import store, { history } from 'store';
 import { updateModuleState } from 'actions/moduleActionCreators';
 import UIController from 'components/UIController';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import { readModuleStorage, writeModuleStorage } from './storage';
 
 const cmdWhitelist = [

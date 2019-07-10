@@ -29,7 +29,7 @@ import Tooltip from 'components/Tooltip';
 import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
 import { loadMyAccounts } from 'actions/accountActionCreators';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';

@@ -14,7 +14,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import * as TYPE from 'actions/actiontypes';
 import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';

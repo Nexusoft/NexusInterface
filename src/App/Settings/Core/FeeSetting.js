@@ -5,7 +5,7 @@ import { reduxForm, Field } from 'redux-form';
 
 // Internal
 import Text from 'components/Text';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';

@@ -7,7 +7,7 @@ import cpy from 'cpy';
 
 // Internal
 import * as TYPE from 'actions/actiontypes';
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import Text from 'components/Text';
 import { switchSettingsTab } from 'actions/uiActionCreators';
 import WaitingMessage from 'components/WaitingMessage';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as RPC from 'scripts/rpc';
+import * as RPC from 'lib/rpc';
 import UIController from 'components/UIController';
 import Text from 'components/Text';
 import Button from 'components/Button';
