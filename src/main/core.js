@@ -211,8 +211,6 @@ class Core {
         `Core Manager: Core has started (process id: ${coreProcess.pid})`
       );
 
-      // Because this is the only thing that I can think of to get the bootstrapper back insync
-      await sleep(3000);
       return coreProcess.pid;
     } else {
       throw 'Core failed to start';
