@@ -19,7 +19,7 @@ let resizeTimer;
 
 // Global Objects
 global.fileServer = fileServer;
-global.core = new core();
+global.core = core;
 global.autoUpdater = autoUpdater;
 global.forceQuit = false;
 
