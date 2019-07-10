@@ -13,9 +13,7 @@ export const loadMyAccounts = () => async dispatch => {
   const validateAddressPromises = addrList.reduce(
     (list, element) => [
       ...list,
-      ...element.addresses.map(address =>
-        RPC.PROMISE('validateaddress', [address])
-      ),
+      ...element.map(address => RPC.PROMISE('validateaddress', [address])),
     ],
     []
   );
