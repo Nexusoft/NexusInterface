@@ -68,7 +68,7 @@ Available RPC methods:
 
 import axios from 'axios';
 
-import { LoadSettings } from 'lib/settings';
+import store from 'store';
 import { customConfig } from 'lib/coreConfig';
 
 // export const GET = (cmd, args, Callback) => {
@@ -88,7 +88,7 @@ import { customConfig } from 'lib/coreConfig';
 // };
 
 export async function PROMISE(cmd, args) {
-  const settings = LoadSettings();
+  const { settings } = store.getState();
   const conf = customConfig(
     settings.manualDaemon
       ? {
