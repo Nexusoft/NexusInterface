@@ -13,6 +13,7 @@ import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
 import * as RPC from 'lib/rpc';
 import extractTarball from 'utils/promisified/extractTarball';
+import sleep from 'utils/promisified/sleep';
 
 let recentDbUrl = '';
 const recentDbUrlLegacy =
@@ -131,7 +132,7 @@ export default class Bootstrapper {
       await this._restartCore();
 
       this._progress('rescanning');
-      await RPC.PROMISE('rescan', []);
+      await this._rescan();
 
       this._cleanUp();
 
@@ -319,6 +320,22 @@ export default class Bootstrapper {
       }
     };
     return await getInfo();
+  }
+
+  async _rescan() {
+    let count = 1;
+    // Sometimes the core RPC server is not yet ready after restart, so rescan may fail
+    // Retry up to 5 times in 5 seconds
+    while (count <= 5) {
+      try {
+        await RPC.PROMISE('rescan', []);
+        return;
+      } catch (err) {
+        console.error('Rescan failed', err);
+        count++;
+        if (count < 5) await sleep(1000);
+      }
+    }
   }
 
   /**
