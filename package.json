@@ -251,7 +251,6 @@
     "three": "^0.106.2",
     "three-orbit-controls": "^82.1.0",
     "universal-analytics": "^0.4.20",
-    "url-join": "^4.0.1",
     "victory": "^32.3.3",
     "xmlhttprequest": "^1.8.0"
   },

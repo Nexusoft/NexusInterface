@@ -2,7 +2,6 @@
 import React from 'react';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import urlJoin from 'url-join';
 import { remote } from 'electron';
 
 // Internal Global
@@ -65,7 +64,7 @@ class WebView extends React.Component {
     const entryPath = join(modulesDir, module.dirName, entry);
     if (!existsSync(entryPath)) return null;
 
-    const entryUrl = urlJoin(fileServer.domain, 'modules', module.name, entry);
+    const entryUrl = `${fileServer.domain}/modules/${module.name}/${entry}`;
     const preloadUrl =
       process.env.NODE_ENV === 'development'
         ? `file://${process.cwd()}/build/module_preload.dev.js`
