@@ -101,6 +101,7 @@ function createWindow() {
     show: false,
     webPreferences: {
       nodeIntegration: true,
+      webviewTag: true,
     },
   });
   global.tray = setupTray(mainWindow);
