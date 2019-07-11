@@ -68,10 +68,7 @@ const Characters = styled.span({
     UIController.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {
-        setTimeout(() => {
-          remote.getGlobal('core').start();
-        }, 10000);
-        UIController.showNotification(<Text id="Settings.RestartingDaemon" />);
+        remote.getGlobal('core').start();
       },
     });
   },
