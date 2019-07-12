@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 
-import { coreDataDir, assetsDir } from 'consts/paths';
+import { coreDataDir, assetsByPlatformDir } from 'consts/paths';
 import { LoadSettings, UpdateSettings } from 'lib/settings';
 import { customConfig } from 'lib/coreConfig';
 import exec from 'utils/promisified/exec';
@@ -13,7 +13,7 @@ import sleep from 'utils/promisified/sleep';
 const coreBinaryName = `nexus-${process.platform}-${process.arch}${
   process.platform === 'win32' ? '.exe' : ''
 }`;
-const coreBinaryPath = path.join(assetsDir, 'cores', coreBinaryName);
+const coreBinaryPath = path.join(assetsByPlatformDir, 'cores', coreBinaryName);
 
 /**
  * Check if core binary file exists

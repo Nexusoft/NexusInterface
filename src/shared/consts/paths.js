@@ -30,6 +30,11 @@ const assetsParentDir =
     : path.resolve(app.getPath('exe'), '..', 'resources');
 export const assetsDir = path.join(assetsParentDir, 'assets');
 
+export const assetsByPlatformDir =
+  process.platform === 'win32' || process.platform === 'darwin'
+    ? path.join(assetsDir, process.platform)
+    : path.join(assetsDir, 'linux');
+
 export const homeDir =
   process.platform === 'win32' ? process.env.USERPROFILE : process.env.HOME;
 

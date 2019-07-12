@@ -52,7 +52,6 @@
     ],
     "extraResources": [
       "./assets/GeoLite2-City/**/*",
-      "./assets/cores/**/*",
       "./assets/languages/*",
       "./assets/tray/**/*"
     ],
@@ -66,7 +65,10 @@
         "dmg",
         "zip"
       ],
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "extraResources": [
+        "./assets/darwin/cores/**/*"
+      ]
     },
     "dmg": {
       "artifactName": "nexus_wallet-MacOSX-${version}.${ext}",
@@ -87,6 +89,9 @@
     "win": {
       "target": [
         "nsis"
+      ],
+      "extraResources": [
+        "./assets/win32/cores/**/*"
       ]
     },
     "nsis": {
@@ -105,7 +110,10 @@
         "deb",
         "AppImage"
       ],
-      "category": "P2P"
+      "category": "P2P",
+      "extraResources": [
+        "./assets/linux/cores/**/*"
+      ]
     },
     "deb": {
       "artifactName": "nexus_wallet-Linux-${version}.${ext}"
