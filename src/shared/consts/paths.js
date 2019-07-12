@@ -56,11 +56,7 @@ if (!fs.existsSync(modulesDir)) {
 }
 
 //TODO: REMOVE THIS AFTER >1.3
-if (
-  fse.existsSync(
-    configuration.GetAppDataDirectory().replace('Nexus Wallet', 'Nexus_Wallet')
-  )
-) {
+if (fse.existsSync(walletDataDir.replace('Nexus Wallet', 'Nexus_Wallet'))) {
   console.log('Has Bad Folder');
   const doNotCopyList = [
     'Cache',
@@ -76,7 +72,7 @@ if (
     const filename = src && src.replace(/^.*[\\\/]/, '');
     return !doNotCopyList.includes(filename);
   };
-  fse.copySync(badFolder, configuration.GetAppDataDirectory(), {
+  fse.copySync(badFolder, walletDataDir, {
     filter: filterFunc,
   });
   fse.removeSync(badFolder);

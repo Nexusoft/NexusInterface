@@ -35,7 +35,7 @@ export function customConfig(config = {}) {
     dataDir: config.dataDir || defaultConfig.dataDir,
     verbose:
       config.verbose || config.verbose === 0
-        ? conf.verbose
+        ? config.verbose
         : defaultConfig.verbose,
   };
 }
