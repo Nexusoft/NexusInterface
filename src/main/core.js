@@ -201,19 +201,24 @@ class Core {
 
     log.info('Core Parameters: ' + params.toString());
     log.info('Core Manager: Starting core');
-    const coreProcess = spawn(coreBinaryPath, params, {
-      shell: false,
-      detached: true,
-      stdio: ['ignore', 'ignore', 'ignore'],
-    });
-    if (coreProcess) {
-      log.info(
-        `Core Manager: Core has started (process id: ${coreProcess.pid})`
-      );
+    try {
+      const coreProcess = spawn(coreBinaryPath, params, {
+        shell: false,
+        detached: true,
+        stdio: ['ignore', 'ignore', 'ignore'],
+      });
+      if (coreProcess) {
+        log.info(
+          `Core Manager: Core has started (process id: ${coreProcess.pid})`
+        );
 
-      return coreProcess.pid;
-    } else {
-      throw 'Core failed to start';
+        return coreProcess.pid;
+      } else {
+        throw 'Core failed to start';
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   };
 
