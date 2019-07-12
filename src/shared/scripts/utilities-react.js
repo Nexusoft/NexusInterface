@@ -86,6 +86,7 @@ export default class Table extends Component {
               };
             }}
             style={{
+              overscrollBehavior: 'contain',
               height: '400px',
               '--colorPrimary': this.props.style.background,
               '--colorAccent': this.props.style.primary,

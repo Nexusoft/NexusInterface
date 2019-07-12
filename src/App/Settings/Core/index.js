@@ -420,6 +420,8 @@ class SettingsCore extends Component {
             <TextField
               type="number"
               value={settings.verboseLevel}
+              min={0}
+              max={5}
               onChange={this.updateHandlers('verboseLevel')}
               style={{ maxWidth: 50 }}
             />

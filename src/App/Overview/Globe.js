@@ -12,6 +12,8 @@ import Curve from './Curve';
 import Point from './Point';
 import * as RPC from 'lib/rpc';
 
+const MaxDisplayPoints = 64;
+
 const GlobeContainer = styled.div({
   position: 'fixed',
   top: 0,
@@ -213,6 +215,9 @@ export default class Globe extends Component {
    */
   async pointRegister() {
     const peerInfo = await RPC.PROMISE('getpeerinfo', []);
+    if (peerInfo.length > MaxDisplayPoints) {
+      peerInfo.length = MaxDisplayPoints;
+    }
     if (!peerInfo) return;
     // take the peerInfo look up the Geo Data in the maxmind DB
     // and if there are any points that exist and match coords
@@ -247,7 +252,10 @@ export default class Globe extends Component {
           return this.pointRegistry[existIndex];
         } else if (duplicateIndex === i) {
           let newPoint = new Point(peer.lat, peer.lng, peer.params);
+          // console.log(this.allPoints);
+          //if (this.allPoints.children.length <= 10) {
           this.allPoints.add(newPoint.pillar);
+          //}
           return newPoint;
         }
       })

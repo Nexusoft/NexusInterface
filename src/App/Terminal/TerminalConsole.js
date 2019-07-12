@@ -287,6 +287,16 @@ class TerminalConsole extends Component {
   };
 
   /**
+   * Take the Autosuggest and drop everything after the `-`
+   *
+   * @memberof TerminalConsole
+   */
+  formateAutoSuggest = e => {
+    const output = e.split('-')[0];
+    this.props.updateConsoleInput(output);
+  };
+
+  /**
    * Component's Renderable JSX
    *
    * @returns
@@ -319,7 +329,7 @@ class TerminalConsole extends Component {
                   <AutoSuggest
                     suggestions={commandList}
                     filterSuggestions={filterCommands}
-                    onSelect={updateConsoleInput}
+                    onSelect={this.formateAutoSuggest}
                     keyControl={false}
                     suggestOn="change"
                     ref={c => (this.inputRef = c)}

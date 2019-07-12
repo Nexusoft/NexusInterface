@@ -11,7 +11,18 @@ export default (state = initialState, action) => {
         ...state,
         walletitems: action.payload,
       };
-      break;
+    case TYPE.SET_TRANSACTION_MAP:
+      let tempMap = new Map();
+      state.walletitems.forEach(element => {
+        tempMap.set(
+          element.time.toString() + element.account + element.amount.toString(),
+          element
+        );
+      });
+      return {
+        ...state,
+        walletitemsMap: tempMap,
+      };
     case TYPE.SET_TRANSACTION_SENDAGAIN:
       return {
         ...state,

@@ -33,6 +33,9 @@ export function customConfig(config = {}) {
     user: config.user || defaultConfig.user,
     password: config.password || defaultConfig.password,
     dataDir: config.dataDir || defaultConfig.dataDir,
-    verbose: defaultConfig.verbose,
+    verbose:
+      config.verbose || config.verbose === 0
+        ? conf.verbose
+        : defaultConfig.verbose,
   };
 }

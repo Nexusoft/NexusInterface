@@ -76,6 +76,7 @@ const PanelBody = styled.div(({ theme }) => ({
   padding: '20px 30px',
   position: 'relative',
   overflow: 'auto',
+  overscrollBehavior: 'none',
 }));
 
 const Panel = React.forwardRef(

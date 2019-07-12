@@ -1,4 +1,5 @@
 import fs from 'fs';
+import fse from 'fs-extra';
 import path from 'path';
 import electron from 'electron';
 
@@ -15,7 +16,7 @@ const appDataDir = escapeSpace(
  * Exports
  * =============================================================================
  */
-export const walletDataDir = path.join(appDataDir, 'Nexus_Wallet');
+export const walletDataDir = path.join(appDataDir, 'Nexus Wallet');
 
 export const coreDataDir =
   process.platform === 'win32' || process.platform === 'darwin'
@@ -52,4 +53,31 @@ if (!fs.existsSync(assetsDir)) {
 }
 if (!fs.existsSync(modulesDir)) {
   fs.mkdirSync(modulesDir);
+}
+
+//TODO: REMOVE THIS AFTER >1.3
+if (
+  fse.existsSync(
+    configuration.GetAppDataDirectory().replace('Nexus Wallet', 'Nexus_Wallet')
+  )
+) {
+  console.log('Has Bad Folder');
+  const doNotCopyList = [
+    'Cache',
+    'GPUCache',
+    'Local Storage',
+    'Cookies',
+    'Cookies-journal',
+    'log.log',
+    'Perferences',
+  ];
+  const badFolder = walletDataDir.replace('Nexus Wallet', 'Nexus_Wallet');
+  const filterFunc = (src, dest) => {
+    const filename = src && src.replace(/^.*[\\\/]/, '');
+    return !doNotCopyList.includes(filename);
+  };
+  fse.copySync(badFolder, configuration.GetAppDataDirectory(), {
+    filter: filterFunc,
+  });
+  fse.removeSync(badFolder);
 }
