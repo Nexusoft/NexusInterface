@@ -13,7 +13,7 @@ const initialState = {
   confirmation: false,
   actionItem: '',
   modalVisable: false,
-  highestPeerBlock: 0,
+  highestPeerBlock: null,
   isInSync: false,
   blockDate: null,
   portAvailable: false,

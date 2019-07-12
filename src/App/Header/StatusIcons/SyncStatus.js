@@ -29,54 +29,17 @@ const SpinningIcon = styled(StatusIcon)({
     },
     common: { highestPeerBlock },
   }) => ({
-    synchronizing: synccomplete < 100,
-    highestPeerBlock,
-    blocks,
-    synccomplete,
+    syncUnknown: !synccomplete && synccomplete !== 0 && !highestPeerBlock,
+    synchronizing: synccomplete !== 100 || highestPeerBlock > blocks,
+    percentSynced:
+      synccomplete || synccomplete === 0
+        ? synccomplete
+        : highestPeerBlock
+        ? Math.floor((100 * blocks) / highestPeerBlock)
+        : 0,
   })
 )
 class SyncStatus extends React.Component {
-  /**
-   * Returns JSX of either Spinning Icon or Status Icon depending on if wallet is in sync
-   *
-   * @memberof SyncStatus
-   * @returns {JSX} JSX
-   */
-  statusIcon = () => {
-    const { synchronizing, highestPeerBlock, blocks } = this.props;
-    const outOfSyncLegacy = highestPeerBlock > blocks;
-
-    if (synchronizing || outOfSyncLegacy) {
-      return <SpinningIcon icon={syncingIcon} />;
-    } else {
-      return <StatusIcon icon={checkIcon} />;
-    }
-  };
-
-  /**
-   * Returns JSX of tooltip depending on if wallet is in sync or not
-   *
-   * @memberof SyncStatus
-   * @returns {JSX} JSX
-   */
-  statusTooltip = () => {
-    const {
-      synchronizing,
-      highestPeerBlock,
-      blocks,
-      synccomplete,
-    } = this.props;
-    const outOfSyncLegacy = highestPeerBlock > blocks;
-    let percentSynced = parseInt((blocks / highestPeerBlock) * 100);
-    if (synchronizing) percentSynced = synccomplete;
-    if (percentSynced > 100) percentSynced = 0;
-    if (synchronizing || outOfSyncLegacy) {
-      return <Text id="Header.Syncing" data={{ percent: percentSynced }} />;
-    } else {
-      return <Text id="Header.Synced" />;
-    }
-  };
-
   /**
    * Component's Renderable JSX
    *
@@ -84,10 +47,22 @@ class SyncStatus extends React.Component {
    * @memberof SyncStatus
    */
   render() {
+    const { syncUnknown, synchronizing, percentSynced } = this.props;
     return (
-      <Tooltip.Trigger tooltip={this.statusTooltip()}>
-        {this.statusIcon()}
-      </Tooltip.Trigger>
+      !syncUnknown &&
+      (synchronizing ? (
+        <Tooltip.Trigger
+          tooltip={
+            <Text id="Header.Syncing" data={{ percent: percentSynced }} />
+          }
+        >
+          <SpinningIcon icon={syncingIcon} />
+        </Tooltip.Trigger>
+      ) : (
+        <Tooltip.Trigger tooltip={<Text id="Header.Synced" />}>
+          <StatusIcon icon={checkIcon} />
+        </Tooltip.Trigger>
+      ))
     );
   }
 }
