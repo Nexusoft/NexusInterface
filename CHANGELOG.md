@@ -18,6 +18,10 @@
 - When selecting the a suggestion on the terminal page, the help portion will no longer be pasted into the input field
 - Globe now has a hard display cap of 64, this does not effect your actual backend connections
 - Transactions in the transaction table now have a fixed height
+- Terminal console now fills only the command (without the description) when a suggestion is selected
+- Quit Nexus menu item will now always quit the app regardless of "Minimize on close" setting
+- Either Start Daemon or Stop Daemon menu item will be available at one time depending on whether the daemon is running or not
+- Various reorganization and optimizations of the internal structure
 
 #### Fixes
 
@@ -27,6 +31,8 @@
 - Fixed issue where the daemon would not be set to verbose 0, and set a min/max on the setting
 - Fixed issue where you could not copy the Address or Account from a transaction
 - Fixed issue where scrolling in the transaction table would also scroll the parent panel
+- Fixed incorrect synchronization status icon in some cases
+- Fixed My Addresses not showing addresses in some cases
 
 # 1.0.1 (2019.6.28)
 
