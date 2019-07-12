@@ -10,4 +10,6 @@
 *.ttf binary
 *.woff binary
 *.woff2 binary
-assets/cores/* binary
+assets/win32/cores/* binary
+assets/darwin/cores/* binary
+assets/linux/cores/* binary
