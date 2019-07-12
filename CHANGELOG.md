@@ -1,6 +1,6 @@
 # 1.1.0 (2019.7.XX)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-1.0.X)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/1.1.0)
 
 #### Additions
 
@@ -36,7 +36,7 @@
 
 # 1.0.1 (2019.6.28)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-1.0.1)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/1.0.1)
 
 #### Additions
 
