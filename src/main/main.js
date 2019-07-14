@@ -11,6 +11,8 @@ import fs from 'fs-extra';
 // Internal
 import { coreDataDir, assetsDir } from 'consts/paths';
 import { LoadSettings, UpdateSettings } from 'lib/settings';
+import { debounced } from 'utils/etc';
+
 import core from './core';
 import fileServer from './fileServer';
 
@@ -92,6 +94,8 @@ function createWindow() {
 
   // Create the main browser window
   mainWindow = new BrowserWindow({
+    x: settings.windowX,
+    y: settings.windowY,
     width: settings.windowWidth,
     height: settings.windowHeight,
     minWidth: 1022,
@@ -126,17 +130,25 @@ function createWindow() {
   });
 
   // Save the window dimensions once the resize event is completed
-  mainWindow.on('resize', function(event) {
-    clearTimeout(resizeTimer);
+  const updateWindowSize = debounced(() => {
+    const bounds = mainWindow.getBounds();
+    // Resize event has been completed
+    UpdateSettings({
+      windowWidth: bounds.width,
+      windowHeight: bounds.height,
+    });
+  }, 1000);
+  mainWindow.on('resize', updateWindowSize);
 
-    resizeTimer = setTimeout(function() {
-      // Resize event has been completed
-      UpdateSettings({
-        windowWidth: mainWindow.getBounds().width,
-        windowHeight: mainWindow.getBounds().height,
-      });
-    }, 250);
-  });
+  const updateWindowPos = debounced(() => {
+    const bounds = mainWindow.getBounds();
+    console.log('pos', bounds.x, bounds.y);
+    UpdateSettings({
+      windowX: bounds.x,
+      windowY: bounds.y,
+    });
+  }, 1000);
+  mainWindow.on('move', () => updateWindowPos);
 
   // e.preventDefault doesn't work on renderer process so leave it in the main process
   // https://github.com/electron/electron/issues/4473

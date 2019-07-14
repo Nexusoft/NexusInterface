@@ -26,3 +26,14 @@ export function passRef(el, ref) {
     ref.current = el;
   }
 }
+
+export function debounced(fn, ms) {
+  let timeout;
+
+  return function() {
+    const functionCall = () => fn.apply(this, arguments);
+
+    clearTimeout(timeout);
+    timeout = setTimeout(functionCall, ms);
+  };
+}

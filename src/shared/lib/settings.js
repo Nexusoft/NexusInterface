@@ -60,6 +60,8 @@ export const defaultSettings = {
   bootstrapSuggestionDisabled: false,
   windowWidth: 1020,
   windowHeight: 700,
+  windowX: undefined,
+  windowY: undefined,
   forkBlocks: 0,
 };
 
