@@ -199,7 +199,7 @@ function sendNXS([recipients, message]) {
     })
   );
   store.dispatch(reset('sendNXS'));
-  history.push('/SendPage');
+  history.push('/Send');
 }
 
 async function proxyRequest([url, options, requestId]) {

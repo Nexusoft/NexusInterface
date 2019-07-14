@@ -71,7 +71,7 @@ class AddressBook extends Component {
    * Set up the context menu
    *
    * @param {*} e
-   * @memberof SendPage
+   * @memberof AddressBook
    */
   setupcontextmenu(e) {
     e.preventDefault();
@@ -82,7 +82,7 @@ class AddressBook extends Component {
   }
 
   /**
-   * Opens Add/Edit Contact Modal 
+   * Opens Add/Edit Contact Modal
    *
    * @memberof AddressBook
    */

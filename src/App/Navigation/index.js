@@ -110,7 +110,7 @@ const Navigation = () => (
         <Text id="Footer.Overview" />
       </NavItem>
 
-      <NavItem icon={sendIcon} to="/SendPage">
+      <NavItem icon={sendIcon} to="/Send">
         <Text id="Footer.SendNXS" />
       </NavItem>
 

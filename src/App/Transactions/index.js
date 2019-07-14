@@ -528,15 +528,15 @@ class Transactions extends Component {
     // Following functions were put on hold as the sendpage was redone and the blockexploerer was removed, we should have some of this one day
     // when these pages are better suited
 
-    let sendtoSendPagecallback = function() {
+    let sendtoSendcallback = function() {
       this.props.SetSendAgainData({
         address: this.props.walletitems[this.hoveringID].address,
         account: this.props.walletitems[this.hoveringID].account,
         amount: this.props.walletitems[this.hoveringID].amount,
       });
-      this.props.history.push('/SendPage');
+      this.props.history.push('/Send');
     };
-    //sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
+    //sendtoSendcallback = sendtoSendcallback.bind(this);
 
     let sendtoBlockExplorercallback = function() {
       this.props.SetExploreInfo({
@@ -554,7 +554,7 @@ class Transactions extends Component {
         label: "Send Again",
         click() {
 
-          sendtoSendPagecallback();
+          sendtoSendcallback();
  
         }
       })

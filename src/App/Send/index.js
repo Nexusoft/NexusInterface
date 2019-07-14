@@ -30,15 +30,15 @@ const mapStateToProps = state => ({
 /**
  * Send Page
  *
- * @class SendPage
+ * @class Send
  * @extends {Component}
  */
 @connect(mapStateToProps)
-class SendPage extends Component {
+class Send extends Component {
   /**
    * Component Mount Callback
    *
-   * @memberof SendPage
+   * @memberof Send
    */
   componentDidMount() {
     window.addEventListener('contextmenu', this.setupcontextmenu, false);
@@ -48,7 +48,7 @@ class SendPage extends Component {
   /**
    * Component Unmount Callback
    *
-   * @memberof SendPage
+   * @memberof Send
    */
   componentWillUnmount() {
     window.removeEventListener('contextmenu', this.setupcontextmenu);
@@ -58,7 +58,7 @@ class SendPage extends Component {
    * Set up the context menu
    *
    * @param {*} e
-   * @memberof SendPage
+   * @memberof Send
    */
   setupcontextmenu(e) {
     e.preventDefault();
@@ -71,7 +71,7 @@ class SendPage extends Component {
   /**
    * Opens the Move NXS between account modal
    *
-   * @memberof SendPage
+   * @memberof Send
    */
   moveBetweenAccounts = () => {
     UIController.openModal(MoveBetweenAccountsModal);
@@ -81,7 +81,7 @@ class SendPage extends Component {
    * Component's Renderable JSX
    *
    * @returns
-   * @memberof SendPage
+   * @memberof Send
    */
   render() {
     return (
@@ -127,4 +127,4 @@ class SendPage extends Component {
     );
   }
 }
-export default SendPage;
+export default Send;

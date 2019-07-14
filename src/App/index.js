@@ -11,7 +11,7 @@ import GlobalStyles from 'components/GlobalStyles';
 import Overview from './Overview';
 import Header from './Header';
 import Navigation from './Navigation';
-import SendPage from './SendPage';
+import Send from './Send';
 import Transactions from './Transactions';
 import Market from './Market';
 import AddressBook from './AddressBook';
@@ -57,7 +57,7 @@ const App = ({ history }) => (
             <Main>
               <Switch>
                 <Route exact path="/" component={Overview} />
-                <Route exact path="/SendPage" component={SendPage} />
+                <Route exact path="/Send" component={Send} />
                 <Route exact path="/Transactions" component={Transactions} />
                 <Route exact path="/Market" component={Market} />
                 <Route exact path="/AddressBook" component={AddressBook} />
