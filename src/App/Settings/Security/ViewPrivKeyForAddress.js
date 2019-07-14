@@ -12,7 +12,7 @@ import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
 import UIController from 'components/UIController';
 import Text from 'components/Text';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import copyIcon from 'images/copy.sprite.svg';
 import { rpcErrorHandler } from 'utils/form';
 
@@ -36,7 +36,7 @@ import { rpcErrorHandler } from 'utils/form';
     }
     return errors;
   },
-  onSubmit: ({ address }) => RPC.PROMISE('dumpprivkey', [address]),
+  onSubmit: ({ address }) => rpc('dumpprivkey', [address]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.change('privateKey', result);
   },
@@ -55,7 +55,7 @@ class ViewPrivKeyForAddress extends Component {
     e.preventDefault();
     let address = this.inputRef.value;
     if (address) {
-      RPC.PROMISE('dumpprivkey', [address])
+      rpc('dumpprivkey', [address])
         .then(payload => {
           this.outputRef.value = payload;
         })

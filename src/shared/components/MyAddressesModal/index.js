@@ -16,7 +16,7 @@ import Account from './Account';
 import NewAddressForm from './NewAddressForm';
 import Tooltip from 'components/Tooltip';
 import UIController from 'components/UIController';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 
 const MyAddressesModalComponent = styled(Modal)({
   // set a fixed height so that the modal won't jump when the search query changes
@@ -63,7 +63,7 @@ class MyAddressesModal extends React.Component {
 
   checkwallet = async () => {
     try {
-      await RPC.PROMISE('checkwallet', []);
+      await rpc('checkwallet', []);
     } catch (err) {
       console.log(err);
       UIController.showNotification(
@@ -76,7 +76,7 @@ class MyAddressesModal extends React.Component {
       <Text id="MyAddressesModal.CheckWalletSuccess" />,
       'success'
     );
-  }
+  };
 
   /**
    * Filter the Accounts
@@ -138,9 +138,7 @@ class MyAddressesModal extends React.Component {
               tooltip={<Text id="MyAddressesModal.CheckWalletTooltip" />}
             >
               <Button fitHeight onClick={this.checkwallet}>
-                {
-                  <Text id="MyAddressesModal.CheckWallet" />
-                }
+                {<Text id="MyAddressesModal.CheckWallet" />}
               </Button>
             </Tooltip.Trigger>
           </Search>

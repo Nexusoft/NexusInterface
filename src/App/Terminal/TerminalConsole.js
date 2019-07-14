@@ -10,7 +10,7 @@ import memoize from 'memoize-one';
 import WaitingMessage from 'components/WaitingMessage';
 import Button from 'components/Button';
 import AutoSuggest from 'components/AutoSuggest';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import {
   switchConsoleTab,
   updateConsoleInput,
@@ -137,7 +137,7 @@ class TerminalConsole extends Component {
    * @memberof TerminalConsole
    */
   loadCommandList = async () => {
-    const result = await RPC.PROMISE('help', []);
+    const result = await rpc('help', []);
     const commandList = result
       .split('\n')
       .filter(
@@ -220,7 +220,7 @@ class TerminalConsole extends Component {
     const tab = ' '.repeat(2);
     let result = null;
     try {
-      result = await RPC.PROMISE(cmd, args);
+      result = await rpc(cmd, args);
     } catch (err) {
       console.error(err);
       if (err.message !== undefined) {

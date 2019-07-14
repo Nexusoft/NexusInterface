@@ -5,7 +5,7 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal Global
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import { defaultSettings } from 'lib/settings';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import Text from 'components/Text';
@@ -122,7 +122,7 @@ const mapDispatchToProps = dispatch => ({
     const recipientsErrors = [];
     await Promise.all(
       recipients.map(({ address }, i) =>
-        RPC.PROMISE('validateaddress', [address])
+        rpc('validateaddress', [address])
           .then(result => {
             if (!result.isvalid) {
               recipientsErrors[i] = {
@@ -161,18 +161,13 @@ const mapDispatchToProps = dispatch => ({
         minConfirmations,
       ];
       if (message) params.push(message);
-      return RPC.PROMISE('sendfrom', params);
+      return rpc('sendfrom', params);
     } else {
       const queue = recipients.reduce(
         (queue, r) => ({ ...queue, [r.address]: parseFloat(r.amount) }),
         {}
       );
-      return RPC.PROMISE(
-        'sendmany',
-        [sendFrom, queue],
-        minConfirmations,
-        message
-      );
+      return rpc('sendmany', [sendFrom, queue], minConfirmations, message);
     }
   },
   onSubmitSuccess: (result, dispatch, props) => {

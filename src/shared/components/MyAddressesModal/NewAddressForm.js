@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import AutoSuggest from 'components/AutoSuggest';
 import Button from 'components/Button';
 import UIController from 'components/UIController';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import { rpcErrorHandler } from 'utils/form';
 
@@ -51,7 +51,7 @@ const Buttons = styled.div({
     }
     return errors;
   },
-  onSubmit: ({ accountName }) => RPC.PROMISE('getnewaddress', [accountName]),
+  onSubmit: ({ accountName }) => rpc('getnewaddress', [accountName]),
   onSubmitSuccess: (result, dispatch, props) => {
     dispatch(loadMyAccounts());
     props.finish();

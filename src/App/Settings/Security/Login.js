@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import { getInfo } from 'actions/coreActionCreators';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -89,11 +89,7 @@ const Buttons = styled.div({
       unlockUntil = Math.round((unlockDate.getTime() - now.getTime()) / 1000);
     }
 
-    return RPC.PROMISE('walletpassphrase', [
-      password,
-      unlockUntil,
-      stakingOnly,
-    ]);
+    return rpc('walletpassphrase', [password, unlockUntil, stakingOnly]);
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();

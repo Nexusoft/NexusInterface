@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { defaultSettings } from 'lib/settings';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 
 /**
  * Backs up wallet
@@ -26,7 +26,5 @@ export function backupWallet(backupFolder) {
     })
     .replace(/:/g, '_');
 
-  return RPC.PROMISE('backupwallet', [
-    backupDir + '/NexusBackup_' + now + '.dat',
-  ]);
+  return rpc('backupwallet', [backupDir + '/NexusBackup_' + now + '.dat']);
 }

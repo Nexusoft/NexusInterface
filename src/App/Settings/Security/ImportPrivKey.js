@@ -11,7 +11,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import * as TYPE from 'actions/actiontypes';
 import { rpcErrorHandler, trimText } from 'utils/form';
 
@@ -49,7 +49,7 @@ const ImportPrivKeyForm = styled.form({
     return errors;
   },
   onSubmit: ({ accountName, privateKey }) =>
-    RPC.PROMISE('importprivkey', [privateKey], [accountName]),
+    rpc('importprivkey', [privateKey], [accountName]),
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
     // this.props.ResetForEncryptionRestart();
@@ -58,7 +58,7 @@ const ImportPrivKeyForm = styled.form({
     });
     UIController.showNotification(<Text id="Settings.Rescanning" />);
     try {
-      await RPC.PROMISE('rescan', []);
+      await rpc('rescan', []);
       UIController.showNotification(
         <Text id="Settings.RescanningDone" />,
         'success'

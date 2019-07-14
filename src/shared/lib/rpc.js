@@ -87,7 +87,7 @@ import { customConfig } from 'lib/coreConfig';
 //   );
 // };
 
-export async function PROMISE(cmd, args) {
+export default async function rpc(cmd, args) {
   const { settings } = store.getState();
   const conf = customConfig(
     settings.manualDaemon

@@ -29,7 +29,7 @@ import Tooltip from 'components/Tooltip';
 import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
 import { loadMyAccounts } from 'actions/accountActionCreators';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import * as TYPE from 'actions/actiontypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
@@ -614,7 +614,7 @@ class Transactions extends Component {
         txPageCounter++
       ) {
         promisList.push(
-          RPC.PROMISE('listtransactions', [
+          rpc('listtransactions', [
             '*',
             numberOfTransactionsPerCall,
             numberOfTransactionsPerCall * txPageCounter,
@@ -632,7 +632,7 @@ class Transactions extends Component {
         txPageCounter++
       ) {
         promisList.push(
-          RPC.PROMISE('listtransactions', [
+          rpc('listtransactions', [
             incomingMyAccounts.account,
             numberOfTransactionsPerCall,
             numberOfTransactionsPerCall * txPageCounter,
@@ -794,7 +794,7 @@ class Transactions extends Component {
     this.props.walletitems.forEach(element => {
       if (element.category == 'debit' || element.category == 'send') {
         feePromises.push(
-          RPC.PROMISE('gettransaction', [element.txid]).then(payload => {
+          rpc('gettransaction', [element.txid]).then(payload => {
             feeData.set(payload.time, payload.fee);
             numberOfSends++;
             this.setState(

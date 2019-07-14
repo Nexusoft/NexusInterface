@@ -6,7 +6,7 @@ import fs from 'fs';
 // Internal
 import store, { observeStore, history } from 'store';
 import { isWebViewActive, toggleWebViewDevTools } from 'lib/modules';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { backupWallet as backup } from 'lib/wallet';
 import Text from 'components/Text';
@@ -39,7 +39,7 @@ const stopDaemon = {
   click: () => {
     const state = store.getState();
     if (state.settings.manualDaemon) {
-      RPC.PROMISE('stop', []).then(() => {
+      rpc('stop', []).then(() => {
         store.dispatch(clearCoreInfo());
       });
     } else {

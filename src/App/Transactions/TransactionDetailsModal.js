@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import Modal from 'components/Modal';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 
 /**
  * Transaction More Detail Modal
@@ -42,7 +42,7 @@ class TransactionDetailsModal extends Component {
       walletItemsMap.get(hoveringID) &&
       walletItemsMap.get(hoveringID).confirmations
     ) {
-      const tx = await RPC.PROMISE('gettransaction', [
+      const tx = await rpc('gettransaction', [
         walletItemsMap.get(hoveringID).txid,
       ]);
       this.setState({
@@ -50,7 +50,7 @@ class TransactionDetailsModal extends Component {
         highlightedTxFee: tx.fee,
       });
 
-      const block = await RPC.PROMISE('getblock', [tx.blockhash]);
+      const block = await rpc('getblock', [tx.blockhash]);
       this.setState({ highlightedBlockNum: block.height });
     }
   }

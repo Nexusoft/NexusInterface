@@ -5,7 +5,7 @@ import { reduxForm, Field } from 'redux-form';
 
 // Internal
 import Text from 'components/Text';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
@@ -33,7 +33,7 @@ import { rpcErrorHandler } from 'utils/form';
     }
     return errors;
   },
-  onSubmit: ({ txFee }) => RPC.PROMISE('settxfee', [parseFloat(txFee)]),
+  onSubmit: ({ txFee }) => rpc('settxfee', [parseFloat(txFee)]),
   onSubmitSuccess: () => {
     UIController.showNotification(
       <Text id="Alert.TransactionFeeSet" />,

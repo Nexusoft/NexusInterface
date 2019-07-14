@@ -11,7 +11,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import { consts } from 'styles';
 import { rpcErrorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
@@ -62,7 +62,7 @@ const Characters = styled.span({
     }
     return errors;
   },
-  onSubmit: ({ password }) => RPC.PROMISE('encryptwallet', [password]),
+  onSubmit: ({ password }) => rpc('encryptwallet', [password]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     UIController.openSuccessDialog({

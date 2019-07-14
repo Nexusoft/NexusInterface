@@ -14,7 +14,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import * as TYPE from 'actions/actiontypes';
 import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
@@ -46,7 +46,7 @@ const mapDispatchToProps = dispatch => ({
 class List extends Component {
   // React Method (Life cycle hook)
   componentDidMount() {
-    RPC.PROMISE('getnetworktrustkeys', []).then(payload => {
+    rpc('getnetworktrustkeys', []).then(payload => {
       this.props.GetListDump(payload.keys);
     });
     googleanalytics.SendScreen('TrustList');
@@ -62,7 +62,7 @@ class List extends Component {
       prevProps.connections === undefined &&
       this.props.connections !== undefined
     ) {
-      RPC.PROMISE('getnetworktrustkeys', []).then(payload => {
+      rpc('getnetworktrustkeys', []).then(payload => {
         this.props.GetListDump(payload.keys);
       });
     }

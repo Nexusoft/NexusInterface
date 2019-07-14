@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import UIController from 'components/UIController';
 import Text from 'components/Text';
 import Button from 'components/Button';
@@ -26,7 +26,7 @@ class RescanButton extends React.Component {
   rescan = async () => {
     try {
       this.setState({ rescanning: true });
-      await RPC.PROMISE('rescan', []);
+      await rpc('rescan', []);
     } catch (err) {
       UIController.showNotification(
         <Text id="MyAddressesModal.RescanError" />,

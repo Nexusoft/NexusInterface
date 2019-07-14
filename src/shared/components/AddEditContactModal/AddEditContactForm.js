@@ -8,7 +8,7 @@ import {
   addNewContact,
   updateContact,
 } from 'actions/addressBookActionCreators';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
@@ -51,7 +51,7 @@ function validateAddresses(addresses) {
 
 function asyncValidateAddresses(isMine, addresses, errors) {
   return addresses.map(({ address }, i) =>
-    RPC.PROMISE('validateaddress', [address])
+    rpc('validateaddress', [address])
       .then(result => {
         if (!result.isvalid) {
           errors[i] = {
