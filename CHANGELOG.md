@@ -7,6 +7,7 @@
 - Orphan is now a option on the Transaction Table
 - Added `Hidden Balance` option in overview display settings to allow users to privately share their overview page
 - Added functionality to the Balance stat on overview page to change to fiat balance on click
+- Wallet position on screen is now remembered for the next time it's opened
 
 #### Adjustments
 
