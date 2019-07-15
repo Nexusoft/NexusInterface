@@ -31,8 +31,7 @@ export const openModal = (component, props) => ({
   },
 });
 
-// Using regular function here to avoid an error which is caused
-// by circular dependencies
+// Using regular function here to avoid circular dependency which causes error
 export function removeModal(modalId) {
   return {
     type: TYPE.REMOVE_MODAL,

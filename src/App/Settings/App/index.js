@@ -23,7 +23,7 @@ import SettingsContainer from 'components/SettingsContainer';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
 import warningIcon from 'images/warning.sprite.svg';
-import { getUpdaterState, startAutoUpdate, stopAutoUpdate } from 'lib/updater';
+import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
@@ -204,9 +204,7 @@ class SettingsApp extends Component {
       });
     } else {
       this.props.updateSettings({ autoUpdate: true });
-      if (getUpdaterState() === 'idle') {
-        startAutoUpdate();
-      }
+      startAutoUpdate();
     }
   };
 

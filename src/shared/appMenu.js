@@ -14,9 +14,7 @@ import { showNotification, openErrorDialog } from 'actions/globalUI';
 import { clearCoreInfo } from 'actions/core';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
-import { updaterSubscribe, getUpdaterState, getAutoUpdater } from 'lib/updater';
-
-const autoUpdater = getAutoUpdater();
+import { checkForUpdates, quitAndInstall } from 'lib/updater';
 
 const separator = {
   type: 'separator',
@@ -234,7 +232,7 @@ const updaterIdle = {
   label: 'Check for Updates...',
   enabled: true,
   click: async () => {
-    const result = await autoUpdater.checkForUpdates();
+    const result = await checkForUpdates();
     // Not sure if this is the best way to check if there's an update
     // available because autoUpdater.checkForUpdates() doesn't return
     // any reliable results like a boolean `updateAvailable` property
@@ -259,7 +257,7 @@ const updaterDownloading = {
 const updaterReadyToInstall = {
   label: 'Quit and install update...',
   enabled: true,
-  click: autoUpdater.quitAndInstall,
+  click: quitAndInstall,
 };
 
 /**
@@ -268,7 +266,8 @@ const updaterReadyToInstall = {
  * @memberof AppMenu
  */
 function updaterMenuItem() {
-  switch (getUpdaterState()) {
+  const updaterState = store.getState().updater.state;
+  switch (updaterState) {
     case 'idle':
       return updaterIdle;
     case 'checking':
@@ -442,7 +441,7 @@ export function rebuildMenu() {
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
 export function initializeMenu() {
-  updaterSubscribe(rebuildMenu);
+  observeStore(state => state.updater.state, rebuildMenu);
   observeStore(
     state => state.core && state.core.info && state.core.info.connections,
     rebuildMenu

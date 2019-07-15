@@ -22,7 +22,7 @@ let resizeTimer;
 // Global Objects
 global.fileServer = fileServer;
 global.core = core;
-global.autoUpdater = autoUpdater;
+global.updater = autoUpdater;
 global.forceQuit = false;
 
 app.setAppUserModelId(APP_ID);
