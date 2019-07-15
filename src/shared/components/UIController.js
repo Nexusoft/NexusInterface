@@ -103,9 +103,9 @@ export default class UIController extends Component {
     super(props);
 
     // Ensure there are no other instances
-    if (singleton) {
-      throw new Error('Cannot have more than one instance of UIController!');
-    }
+    // if (singleton) {
+    //   throw new Error('Cannot have more than one instance of UIController!');
+    // }
     singleton = this;
 
     // Expose the public UI APIs

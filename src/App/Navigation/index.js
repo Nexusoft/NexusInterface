@@ -87,8 +87,8 @@ const ModuleNavItems = connect(
     modules: getActiveModules(state.modules, state.settings.disabledModules),
   }),
   null,
-  null,
-  { pure: false }
+  null
+  // { pure: false }
 )(({ modules }) =>
   modules
     .filter(module => module.type === 'app')
