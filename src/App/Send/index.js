@@ -116,17 +116,7 @@ class Send extends Component {
             ...
           </WaitingMessage>
         ) : (
-          <div>
-            <SendForm />
-
-            {this.props.Queue && !!Object.keys(this.props.Queue).length && (
-              <Queue
-                accHud={this.accHud.bind(this)}
-                getAccountData={this.getAccountData}
-                {...this.props}
-              />
-            )}
-          </div>
+          <SendForm />
         )}
       </Panel>
     );
