@@ -2,6 +2,7 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 import styled from '@emotion/styled';
+import { remote } from 'electron';
 
 // Internal
 import { installModule } from 'lib/modules';
