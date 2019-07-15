@@ -11,8 +11,13 @@ import Select from 'components/Select';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
 import Link from 'components/Link';
-import UIController from 'components/UIController';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import {
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+  removeModal,
+} from 'actions/overlays';
+import { loadMyAccounts } from 'actions/account';
 import { rpcErrorHandler } from 'utils/form';
 import { getAccountOptions, getRegisteredFieldNames } from './selectors';
 import AmountField from './AmountField';
@@ -55,9 +60,13 @@ const mapStateToProps = ({
   ),
 });
 
-const mapDispatchToProps = dispatch => ({
-  loadMyAccounts: () => dispatch(loadMyAccounts()),
-});
+const acctionCreators = {
+  loadMyAccounts,
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+  removeModal,
+};
 
 /**
  * Internal JXS for the Move Between Accounts Modal
@@ -67,7 +76,7 @@ const mapDispatchToProps = dispatch => ({
  */
 @connect(
   mapStateToProps,
-  mapDispatchToProps
+  acctionCreators
 )
 @reduxForm({
   form: 'moveBetweenAccounts',
@@ -123,7 +132,7 @@ const mapDispatchToProps = dispatch => ({
     props.closeModal();
     props.reset();
     props.loadMyAccounts();
-    UIController.openSuccessDialog({
+    this.props.openSuccessDialog({
       message: <Text id="sendReceive.Messages.Success" />,
     });
   },
@@ -155,7 +164,9 @@ class MoveBetweenAccountsForm extends Component {
     }
 
     if (encrypted && !loggedIn) {
-      const modalId = UIController.openErrorDialog({
+      const {
+        payload: { id: modalId },
+      } = this.props.openErrorDialog({
         message: <Text id="sendReceive.Messages.NotLoggedIn" />,
         note: (
           <>
@@ -165,7 +176,7 @@ class MoveBetweenAccountsForm extends Component {
             <Link
               to="/Settings/Security"
               onClick={() => {
-                UIController.removeModal(modalId);
+                this.props.removeModal(modalId);
                 this.props.closeModal();
               }}
             >
@@ -177,7 +188,7 @@ class MoveBetweenAccountsForm extends Component {
       return;
     }
 
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: <Text id="sendReceive.MoveNXS" />,
       callbackYes: handleSubmit,
     });

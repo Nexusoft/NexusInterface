@@ -12,7 +12,7 @@ import Panel from 'components/Panel';
 import Button from 'components/Button';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
-import UIController from 'components/UIController';
+import { openModal } from 'actions/overlays';
 
 // Internal Local Dependencies
 import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';
@@ -27,13 +27,18 @@ const mapStateToProps = state => ({
   isInSync: state.common.isInSync,
 });
 
+const actionCreators = { openModal };
+
 /**
  * Send Page
  *
  * @class Send
  * @extends {Component}
  */
-@connect(mapStateToProps)
+@connect(
+  mapStateToProps,
+  actionCreators
+)
 class Send extends Component {
   /**
    * Component Mount Callback
@@ -74,7 +79,7 @@ class Send extends Component {
    * @memberof Send
    */
   moveBetweenAccounts = () => {
-    UIController.openModal(MoveBetweenAccountsModal);
+    this.props.openModal(MoveBetweenAccountsModal);
   };
 
   /**
@@ -111,17 +116,7 @@ class Send extends Component {
             ...
           </WaitingMessage>
         ) : (
-          <div>
-            <SendForm />
-
-            {this.props.Queue && !!Object.keys(this.props.Queue).length && (
-              <Queue
-                accHud={this.accHud.bind(this)}
-                getAccountData={this.getAccountData}
-                {...this.props}
-              />
-            )}
-          </div>
+          <SendForm />
         )}
       </Panel>
     );

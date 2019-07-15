@@ -10,7 +10,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
-import UIController from 'components/UIController';
+import { openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import ContextMenuBuilder from 'contextmenu';
 
@@ -36,13 +36,18 @@ const mapStateToProps = state => ({
   connections: state.core.info.connections,
 });
 
+const actionCreators = { openModal };
+
 /**
  * The Address Book Page
  *
  * @class AddressBook
  * @extends {Component}
  */
-@connect(mapStateToProps)
+@connect(
+  mapStateToProps,
+  actionCreators
+)
 class AddressBook extends Component {
   state = {
     activeIndex: 0,
@@ -87,7 +92,7 @@ class AddressBook extends Component {
    * @memberof AddressBook
    */
   showAddContact = () => {
-    UIController.openModal(AddEditContactModal);
+    this.props.openModal(AddEditContactModal);
   };
 
   /**

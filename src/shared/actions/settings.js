@@ -1,6 +1,6 @@
 import ga from 'scripts/googleanalytics';
 import { UpdateSettings } from 'lib/settings';
-import * as TYPE from './actiontypes';
+import * as TYPE from 'consts/actionTypes';
 
 export const updateSettings = updates => (dispatch, getState) => {
   const oldState = getState();

@@ -1,4 +1,4 @@
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
   currentCommand: '',

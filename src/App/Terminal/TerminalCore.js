@@ -9,7 +9,7 @@ import {
   printCoreOutput,
   pauseCoreOutput,
   unpauseCoreOutput,
-} from 'actions/uiActionCreators';
+} from 'actions/ui';
 import Button from 'components/Button';
 
 // React-Redux mandatory methods

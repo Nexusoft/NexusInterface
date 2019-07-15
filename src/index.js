@@ -7,7 +7,7 @@ import App from './App';
 import setupApp from './setupApp';
 import './CSS/app.global.css';
 
-setupApp(store);
+setupApp();
 
 render(
   <Provider store={store}>

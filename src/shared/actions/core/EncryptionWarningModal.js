@@ -10,7 +10,7 @@ import Modal from 'components/Modal';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
 import Button from 'components/Button';
-import { updateSettings } from 'actions/settingsActionCreators';
+import { updateSettings } from 'actions/settings';
 import * as color from 'utils/color';
 import warningIcon from 'images/warning.sprite.svg';
 

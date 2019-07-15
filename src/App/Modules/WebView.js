@@ -1,11 +1,12 @@
 // External
 import React from 'react';
+import { connect } from 'react-redux';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { remote } from 'electron';
 
 // Internal Global
-import { registerWebView, unregisterWebView } from 'lib/modules';
+import { setActiveWebView } from 'actions/webview';
 import { modulesDir } from 'consts/paths';
 import { rebuildMenu } from 'appMenu';
 
@@ -17,6 +18,10 @@ const fileServer = remote.getGlobal('fileServer');
  * @class WebView
  * @extends {Component}
  */
+@connect(
+  null,
+  { setActiveWebView }
+)
 class WebView extends React.Component {
   webviewRef = React.createRef();
 
@@ -38,7 +43,7 @@ class WebView extends React.Component {
    * @memberof WebView
    */
   componentDidMount() {
-    registerWebView(this.webviewRef.current, this.props.module);
+    this.props.setActiveWebView(this.webviewRef.current);
     rebuildMenu();
   }
 
@@ -48,7 +53,7 @@ class WebView extends React.Component {
    * @memberof WebView
    */
   componentWillUnmount() {
-    unregisterWebView();
+    this.props.setActiveWebView(null);
     rebuildMenu();
   }
 

@@ -1,12 +1,21 @@
 import memoize from 'memoize-one';
 import axios from 'axios';
 import { reset, initialize } from 'redux-form';
+import { createMatchSelector } from 'connected-react-router';
 
-import store, { history } from 'store';
-import { updateModuleState } from 'actions/moduleActionCreators';
-import UIController from 'components/UIController';
+import store, { history, observeStore } from 'store';
+import { updateModuleState } from 'actions/module';
+import {
+  showNotification,
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+} from 'actions/overlays';
 import rpc from 'lib/rpc';
 import { readModuleStorage, writeModuleStorage } from './storage';
+import { getModuleIfActive } from './utils';
+
+const matchSelector = createMatchSelector({ path: '/Modules/:name' });
 
 const cmdWhitelist = [
   'checkwallet',
@@ -48,104 +57,43 @@ const cmdWhitelist = [
   'verifymessage',
 ];
 
-let webview = null;
-let activeModule = null;
-let data = null;
-let unsubscribe = null;
-
 /**
- * Exports
+ * Utilities
  * ===========================================================================
  */
 
-/**
- * Register active webview, called when the webview is mounted
- *
- * @export
- * @param {*} _webview
- * @param {*} _module
- */
-export function registerWebView(_webview, _module) {
-  webview = _webview;
-  activeModule = _module;
+const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
+  locale,
+  fiatCurrency,
+  addressStyle,
+}));
 
-  webview.addEventListener('ipc-message', handleIpcMessage);
-  webview.addEventListener('dom-ready', () => {
-    const state = store.getState();
-    const moduleState = state.moduleStates[activeModule.name];
-    const storageData = readModuleStorage(activeModule);
-    data = getModuleData(state);
-    webview.send('initialize', {
-      ...data,
-      moduleState,
-      storageData,
-    });
-    unsubscribe = store.subscribe(handleStateChange);
-  });
-}
+const settingsChanged = (settings1, settings2) =>
+  settings1 !== settings2 && (!!settings1 && !!settings2)
+    ? settings1.locale !== settings2.locale ||
+      settings1.fiatCurrency !== settings2.fiatCurrency ||
+      settings1.addressStyle !== settings2.addressStyle
+    : true;
 
-/**
- * Unregister active webview, called when the webview is unmounted
- *
- * @export
- */
-export function unregisterWebView() {
-  if (typeof unsubscribe === 'function') {
-    unsubscribe();
-  }
-  webview = null;
-  activeModule = null;
-  data = null;
-  unsubscribe = null;
-}
+const getModuleData = ({
+  theme,
+  core,
+  settings: { locale, fiatCurrency, addressStyle },
+}) => ({
+  theme,
+  settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
+  coreInfo: core.info,
+});
 
-/**
- * Toggle the active webview's DevTools
- *
- * @export
- */
-export function toggleWebViewDevTools() {
-  if (webview) {
-    if (webview.isDevToolsOpened()) {
-      webview.closeDevTools();
-    } else {
-      webview.openDevTools();
-    }
-  }
-}
-
-/**
- * Check whether there's a webview being active
- *
- * @export
- * @returns
- */
-export function isWebViewActive() {
-  return !!webview;
-}
-
-/**
- * Outgoing IPC messages TO modules
- * ===========================================================================
- */
-
-function handleStateChange() {
-  if (!data) return;
+const getActiveModule = () => {
   const state = store.getState();
-  const newData = getModuleData(state);
-  const { theme, settings, coreInfo } = newData;
-
-  if (data.theme !== theme) {
-    webview.send('theme-updated', theme);
-  }
-  if (settingsChanged(data.settings, settings)) {
-    webview.send('settings-updated', settings);
-  }
-  if (data.coreInfo !== coreInfo) {
-    webview.send('core-info-updated', coreInfo);
-  }
-  data = newData;
-}
+  const match = matchSelector(state);
+  return getModuleIfActive(
+    match.params.name,
+    state.modules,
+    state.settings.disabledModules
+  );
+};
 
 /**
  * Incoming IPC messages FROM modules
@@ -215,17 +163,23 @@ async function proxyRequest([url, options, requestId]) {
     }
 
     const response = await axios(url, options);
-    webview.send(
-      `proxy-response${requestId ? `:${requestId}` : ''}`,
-      null,
-      response
-    );
+    const { webview } = store.getState();
+    if (webview) {
+      webview.send(
+        `proxy-response${requestId ? `:${requestId}` : ''}`,
+        null,
+        response
+      );
+    }
   } catch (err) {
     console.error(err);
-    webview.send(
-      `proxy-response${requestId ? `:${requestId}` : ''}`,
-      err.toString ? err.toString() : err
-    );
+    const { webview } = store.getState();
+    if (webview) {
+      webview.send(
+        `proxy-response${requestId ? `:${requestId}` : ''}`,
+        err.toString ? err.toString() : err
+      );
+    }
   }
 }
 
@@ -236,63 +190,82 @@ async function rpcCall([command, params, callId]) {
     }
 
     const response = await rpc(command, ...(params || []));
-    webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
+    const { webview } = store.getState();
+    if (webview) {
+      webview.send(`rpc-return${callId ? `:${callId}` : ''}`, null, response);
+    }
   } catch (err) {
     console.error(err);
-    webview.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
+    const { webview } = store.getState();
+    if (webview) {
+      webview.send(`rpc-return${callId ? `:${callId}` : ''}`, err);
+    }
   }
 }
 
 function showNotif([options = {}]) {
   const { content, type, autoClose } = options;
-  UIController.showNotification(content, { content, type, autoClose });
+  store.dispatch(showNotification(content, { content, type, autoClose }));
 }
 
 function showErrorDialog([options = {}]) {
   const { message, note } = options;
-  UIController.openErrorDialog({
-    message,
-    note,
-  });
+  store.dispatch(
+    openErrorDialog({
+      message,
+      note,
+    })
+  );
 }
 
 function showSuccessDialog([options = {}]) {
   const { message, note } = options;
-  UIController.openSuccessDialog({
-    message,
-    note,
-  });
+  store.dispatch(
+    openSuccessDialog({
+      message,
+      note,
+    })
+  );
 }
 
 function confirm([options = {}, confirmationId]) {
   const { question, note, labelYes, skinYes, labelNo, skinNo } = options;
-  UIController.openConfirmDialog({
-    question,
-    note,
-    labelYes,
-    skinYes,
-    callbackYes: () => {
-      console.log(
-        'yes',
-        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
-      );
-      webview.send(
-        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
-        true
-      );
-    },
-    labelNo,
-    skinNo,
-    callbackNo: () => {
-      webview.send(
-        `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
-        false
-      );
-    },
-  });
+  store.dispatch(
+    openConfirmDialog({
+      question,
+      note,
+      labelYes,
+      skinYes,
+      callbackYes: () => {
+        console.log(
+          'yes',
+          `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`
+        );
+        const { webview } = store.getState();
+        if (webview) {
+          webview.send(
+            `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
+            true
+          );
+        }
+      },
+      labelNo,
+      skinNo,
+      callbackNo: () => {
+        const { webview } = store.getState();
+        if (webview) {
+          webview.send(
+            `confirm-answer${confirmationId ? `:${confirmationId}` : ''}`,
+            false
+          );
+        }
+      },
+    })
+  );
 }
 
 function updateState([moduleState]) {
+  const activeModule = getActiveModule();
   const moduleName = activeModule.name;
   if (typeof moduleState === 'object') {
     store.dispatch(updateModuleState(moduleName, moduleState));
@@ -304,31 +277,70 @@ function updateState([moduleState]) {
 }
 
 function updateStorage([data]) {
+  const activeModule = getActiveModule();
   writeModuleStorage(activeModule, data);
 }
 
 /**
- * Utilities
+ * Initialize
  * ===========================================================================
  */
 
-const getSettingsForModules = memoize((locale, fiatCurrency, addressStyle) => ({
-  locale,
-  fiatCurrency,
-  addressStyle,
-}));
+export function initializeWebView() {
+  observeStore(
+    state => state.webview,
+    (webview, { getState }) => {
+      if (webview) {
+        webview.addEventListener('ipc-message', handleIpcMessage);
+        webview.addEventListener('dom-ready', () => {
+          const state = getState();
+          const activeModule = getActiveModule();
+          const moduleState = state.moduleStates[activeModule.name];
+          const storageData = readModuleStorage(activeModule);
+          webview.send('initialize', {
+            ...getModuleData(state),
+            moduleState,
+            storageData,
+          });
+        });
+      }
+    }
+  );
 
-const settingsChanged = (settings1, settings2) =>
-  settings1.locale !== settings2.locale ||
-  settings1.fiatCurrency !== settings2.fiatCurrency ||
-  settings1.addressStyle !== settings2.addressStyle;
+  observeStore(
+    state => state.settings,
+    (settings, { getState }) => {
+      const { webview } = getState();
+      if (webview) {
+        try {
+          webview.send('settings-updated', settings);
+        } catch (err) {}
+      }
+    },
+    settingsChanged
+  );
 
-const getModuleData = ({
-  theme,
-  core,
-  settings: { locale, fiatCurrency, addressStyle },
-}) => ({
-  theme,
-  settings: getSettingsForModules(locale, fiatCurrency, addressStyle),
-  coreInfo: core.info,
-});
+  observeStore(
+    state => state.theme,
+    (theme, { getState }) => {
+      const { webview } = getState();
+      if (webview) {
+        try {
+          webview.send('theme-updated', theme);
+        } catch (err) {}
+      }
+    }
+  );
+
+  observeStore(
+    state => state.coreInfo,
+    (coreInfo, { getState }) => {
+      const { webview } = getState();
+      if (webview) {
+        try {
+          webview.send('coreInfo-updated', coreInfo);
+        } catch (err) {}
+      }
+    }
+  );
+}

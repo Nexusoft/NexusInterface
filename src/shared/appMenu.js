@@ -5,18 +5,16 @@ import fs from 'fs';
 
 // Internal
 import store, { observeStore, history } from 'store';
-import { isWebViewActive, toggleWebViewDevTools } from 'lib/modules';
+import { toggleWebViewDevTools } from 'actions/webview';
 import rpc from 'lib/rpc';
-import { updateSettings } from 'actions/settingsActionCreators';
+import { updateSettings } from 'actions/settings';
 import { backupWallet as backup } from 'lib/wallet';
 import Text from 'components/Text';
-import UIController from 'components/UIController';
-import { clearCoreInfo } from 'actions/coreActionCreators';
+import { showNotification, openErrorDialog } from 'actions/overlays';
+import { clearCoreInfo } from 'actions/core';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
-import { updaterSubscribe, getUpdaterState, getAutoUpdater } from 'lib/updater';
-
-const autoUpdater = getAutoUpdater();
+import { checkForUpdates, quitAndInstall } from 'lib/updater';
 
 const separator = {
   type: 'separator',
@@ -80,7 +78,7 @@ const backupWallet = {
     });
 
     if (state.core.info.connections === undefined) {
-      UIController.showNotification(<Text id="Header.DaemonNotLoaded" />);
+      store.dispatch(showNotification(<Text id="Header.DaemonNotLoaded" />));
       return;
     }
 
@@ -88,9 +86,8 @@ const backupWallet = {
       store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
 
       await backup(folderPaths[0]);
-      UIController.showNotification(
-        <Text id="Alert.WalletBackedUp" />,
-        'success'
+      store.dispatch(
+        showNotification(<Text id="Alert.WalletBackedUp" />, 'success')
       );
     }
   },
@@ -164,23 +161,27 @@ const downloadRecent = {
     const enoughSpace = await checkBootStrapFreeSpace();
     if (!enoughSpace) {
       console.log('in Menu');
-      UIController.openErrorDialog({
-        message: <Text id="ToolTip.NotEnoughSpace" />,
-      });
+      store.dispatch(
+        openErrorDialog({
+          message: <Text id="ToolTip.NotEnoughSpace" />,
+        })
+      );
       return;
     }
 
     const state = store.getState();
     if (state.settings.manualDaemon) {
-      UIController.showNotification(
-        'Cannot bootstrap recent database in manual mode',
-        'error'
+      store.dispatch(
+        showNotification(
+          'Cannot bootstrap recent database in manual mode',
+          'error'
+        )
       );
       return;
     }
 
     if (state.core.info.connections === undefined) {
-      UIController.showNotification('Please wait for the daemon to start.');
+      store.dispatch(showNotification('Please wait for the daemon to start.'));
       return;
     }
 
@@ -209,7 +210,7 @@ const toggleDevTools = {
 const toggleModuleDevTools = {
   label: "Toggle Module's Developer Tools",
   click: () => {
-    toggleWebViewDevTools();
+    store.dispatch(toggleWebViewDevTools());
   },
 };
 
@@ -231,12 +232,14 @@ const updaterIdle = {
   label: 'Check for Updates...',
   enabled: true,
   click: async () => {
-    const result = await autoUpdater.checkForUpdates();
+    const result = await checkForUpdates();
     // Not sure if this is the best way to check if there's an update
     // available because autoUpdater.checkForUpdates() doesn't return
     // any reliable results like a boolean `updateAvailable` property
     if (result.updateInfo.version === APP_VERSION) {
-      UIController.showNotification('There are currently no updates available');
+      store.dispatch(
+        showNotification('There are currently no updates available')
+      );
     }
   },
 };
@@ -254,7 +257,7 @@ const updaterDownloading = {
 const updaterReadyToInstall = {
   label: 'Quit and install update...',
   enabled: true,
-  click: autoUpdater.quitAndInstall,
+  click: quitAndInstall,
 };
 
 /**
@@ -263,7 +266,8 @@ const updaterReadyToInstall = {
  * @memberof AppMenu
  */
 function updaterMenuItem() {
-  switch (getUpdaterState()) {
+  const updaterState = store.getState().updater.state;
+  switch (updaterState) {
     case 'idle':
       return updaterIdle;
     case 'checking':
@@ -295,6 +299,7 @@ function updaterMenuItem() {
 function buildDarwinTemplate() {
   const state = store.getState();
   const daemonRunning = state.core.info.connections !== undefined;
+  const { webview } = state;
 
   const subMenuAbout = {
     label: 'Nexus',
@@ -331,7 +336,7 @@ function buildDarwinTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(toggleDevTools);
 
-    if (isWebViewActive()) {
+    if (webview) {
       subMenuWindow.submenu.push(toggleModuleDevTools);
     }
   }
@@ -365,6 +370,7 @@ function buildDarwinTemplate() {
 function buildDefaultTemplate() {
   const state = store.getState();
   const daemonRunning = state.core.info.connections !== undefined;
+  const { webview } = state;
 
   const subMenuFile = {
     label: '&File',
@@ -390,7 +396,7 @@ function buildDefaultTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(separator, toggleDevTools);
 
-    if (isWebViewActive()) {
+    if (webview) {
       subMenuView.submenu.push(toggleModuleDevTools);
     }
   }
@@ -437,7 +443,7 @@ export function rebuildMenu() {
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
 export function initializeMenu() {
-  updaterSubscribe(rebuildMenu);
+  observeStore(state => state.updater.state, rebuildMenu);
   observeStore(
     state => state.core && state.core.info && state.core.info.connections,
     rebuildMenu

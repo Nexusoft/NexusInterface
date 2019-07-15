@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import { updateSettings } from 'actions/settingsActionCreators';
+import { updateSettings } from 'actions/settings';
 
 /**
  * Shows a Warning about safety

@@ -8,8 +8,8 @@ import googleanalytics from 'scripts/googleanalytics';
 import Text from 'components/Text';
 
 // Internal
-import UIController from 'components/UIController';
-import * as actionsCreators from 'actions/exchangeActionCreators';
+import { showNotification } from 'actions/overlays';
+import * as actionsCreators from 'actions/exchange';
 import ExchangeForm from './ExchangeForm';
 import styles from './style.css';
 
@@ -20,8 +20,7 @@ import arrow from 'images/arrow.svg';
 const mapStateToProps = state => {
   return { ...state.common, ...state.exchange };
 };
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch);
+const mapDispatchToProps = { ...actionsCreators, showNotification };
 
 /**
  * The internal page to use the Fast method on Shapeshift
@@ -221,7 +220,7 @@ class Fast extends Component {
                 let res = JSON.parse(response.body);
                 if (!res.isvalid) {
                   {
-                    UIController.showNotification(
+                    this.props.showNotification(
                       `${res.error}\n ${this.props.to} Address.`,
                       'error'
                     );
@@ -238,7 +237,7 @@ class Fast extends Component {
                       if (response.statusCode === 200) {
                         let res = JSON.parse(response.body);
                         if (!res.isvalid) {
-                          UIController.showNotification(
+                          this.props.showNotification(
                             `${res.error}\n ${this.props.from} Address.`,
                             'error'
                           );
@@ -257,16 +256,16 @@ class Fast extends Component {
             }
           );
         } else {
-          UIController.showNotification('Refund Address is required', 'error');
+          this.props.showNotification('Refund Address is required', 'error');
         }
       } else {
-        UIController.showNotification(
+        this.props.showNotification(
           `${this.currencylabel()} Address is required`,
           'error'
         );
       }
     } else {
-      UIController.showNotification('Outside trade-able ammounts', 'error');
+      this.props.showNotification('Outside trade-able ammounts', 'error');
     }
     // } else alert("Please unlock your wallet");
 

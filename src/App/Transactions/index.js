@@ -28,12 +28,12 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import { loadMyAccounts } from 'actions/account';
 import rpc from 'lib/rpc';
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
-import UIController from 'components/UIController';
+import { openModal } from 'actions/overlays';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
@@ -161,6 +161,7 @@ const mapDispatchToProps = dispatch => ({
   UpdateFilteredTransaction: returnData => {
     dispatch({ type: TYPE.UPDATE_FILTERED_TRANSACTIONS, payload: returnData });
   },
+  openModal: (...args) => dispatch(openModal(...args)),
 });
 
 /**
@@ -436,7 +437,7 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   openTxDetailsModal = () => {
-    UIController.openModal(TransactionDetailsModal, {
+    this.props.openModal(TransactionDetailsModal, {
       hoveringID: this.hoveringID,
       walletItemsMap: this.props.walletitemsMap,
       settings: this.props.settings,
@@ -774,7 +775,7 @@ class Transactions extends Component {
       return;
     }
 
-    UIController.openModal(CSVDownloadModal, {
+    this.props.openModal(CSVDownloadModal, {
       parent: this.setCSVEvents.bind(this),
       progress: this.state.CSVProgress,
     });

@@ -21,7 +21,7 @@ import {
   printCommandOutput,
   printCommandError,
   resetConsoleOutput,
-} from 'actions/uiActionCreators';
+} from 'actions/ui';
 
 const filterCommands = memoize((commandList, inputValue) => {
   if (!commandList || !inputValue) return [];

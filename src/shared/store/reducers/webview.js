@@ -1,10 +1,10 @@
 import * as TYPE from 'consts/actionTypes';
 
-const initialState = 'Console';
+const initialState = null;
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.SWITCH_CONSOLE_TAB:
+    case TYPE.SET_ACTIVE_WEBVIEW:
       return action.payload;
 
     default:

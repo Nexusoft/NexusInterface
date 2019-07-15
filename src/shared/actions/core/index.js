@@ -1,9 +1,10 @@
 import React from 'react';
-import UIController from 'components/UIController';
+
+import { openModal, showNotification } from 'actions/overlays';
 import rpc from 'lib/rpc';
-import * as ac from 'actions/setupAppActionCreators';
-import * as TYPE from 'actions/actiontypes';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import * as ac from 'actions/setupApp';
+import * as TYPE from 'consts/actionTypes';
+import { loadMyAccounts } from 'actions/account';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
 import Text from 'components/Text';
@@ -31,7 +32,7 @@ export function getInfo() {
         !state.settings.encryptionWarningDisabled &&
         state.settings.acceptedAgreement
       ) {
-        UIController.openModal(EncryptionWarningModal);
+        dispatch(openModal(EncryptionWarningModal));
         dispatch(ac.showEncryptionWarningModal());
       }
     } else if (
@@ -121,27 +122,20 @@ export function getInfo() {
         switch (mostRecentTx.category) {
           case 'receive':
             showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
-            UIController.showNotification(
-              <Text id="Alert.Received" />,
-              'success'
-            );
+            dispatch(showNotification(<Text id="Alert.Received" />, 'success'));
             break;
           case 'send':
             showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
-            UIController.showNotification(<Text id="Alert.Sent" />, 'success');
+            dispatch(showNotification(<Text id="Alert.Sent" />, 'success'));
             break;
           case 'genesis':
             showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
-            UIController.showNotification(
-              <Text id="Alert.Genesis" />,
-              'success'
-            );
+            dispatch(showNotification(<Text id="Alert.Genesis" />, 'success'));
             break;
           case 'trust':
             showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
-            UIController.showNotification(
-              <Text id="Alert.TrustTransaction" />,
-              'success'
+            dispatch(
+              showNotification(<Text id="Alert.TrustTransaction" />, 'success')
             );
             break;
         }
@@ -151,10 +145,10 @@ export function getInfo() {
     // const enoughSpace = await checkFreeSpace(1);
     // if (!enoughSpace) {
 
-    //   UIController.showNotification('WARNING LOW DISK SPACE', {
+    //   dispatch(showNotification('WARNING LOW DISK SPACE', {
     //     type: 'error',
     //     autoClose: false,
-    //   });
+    //   }));
     // }
 
     delete info.timestamp;

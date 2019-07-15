@@ -7,14 +7,19 @@ import styled from '@emotion/styled';
 // Internal Global
 import rpc from 'lib/rpc';
 import { defaultSettings } from 'lib/settings';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import { loadMyAccounts } from 'actions/account';
 import Text from 'components/Text';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import FormField from 'components/FormField';
-import UIController from 'components/UIController';
+import {
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+  removeModal,
+} from 'actions/overlays';
 import Link from 'components/Link';
 import { rpcErrorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';
@@ -55,9 +60,13 @@ const mapStateToProps = ({
   ),
 });
 
-const mapDispatchToProps = dispatch => ({
-  loadMyAccounts: () => dispatch(loadMyAccounts()),
-});
+const mapDispatchToProps = {
+  loadMyAccounts,
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+  removeModal,
+};
 
 /**
  * The Internal Send Form in the Send Page
@@ -173,7 +182,7 @@ const mapDispatchToProps = dispatch => ({
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     props.loadMyAccounts();
-    UIController.openSuccessDialog({
+    this.props.openSuccessDialog({
       message: <Text id="Alert.Sent" />,
     });
   },
@@ -207,7 +216,9 @@ class SendForm extends Component {
     }
 
     if (encrypted && !loggedIn) {
-      const modalId = UIController.openErrorDialog({
+      const {
+        payload: { id: modalId },
+      } = this.props.openErrorDialog({
         message: 'You are not logged in',
         note: (
           <>
@@ -215,7 +226,7 @@ class SendForm extends Component {
             <Link
               to="/Settings/Security"
               onClick={() => {
-                UIController.removeModal(modalId);
+                this.props.removeModal(modalId);
               }}
             >
               Log in now
@@ -226,7 +237,7 @@ class SendForm extends Component {
       return;
     }
 
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: <Text id="sendReceive.SendTransaction" />,
       callbackYes: handleSubmit,
     });

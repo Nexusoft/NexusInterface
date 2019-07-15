@@ -1,4 +1,4 @@
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import { filterValidTheme } from 'lib/theme';
 
 const initialState = {};
