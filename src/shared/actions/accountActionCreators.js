@@ -1,5 +1,5 @@
 import rpc from 'lib/rpc';
-import * as TYPE from './actionTypes';
+import * as TYPE from 'consts/actionTypes';
 
 export const loadMyAccounts = () => async dispatch => {
   const accList = await rpc('listaccounts', []);

@@ -1,5 +1,5 @@
 import Request from 'request';
-import * as TYPE from './actionTypes';
+import * as TYPE from 'consts/actionTypes';
 
 export const refundAddressSetter = refundAdd => {
   return dispatch => {

@@ -1,4 +1,4 @@
-import * as TYPE from './actionTypes';
+import * as TYPE from 'consts/actionTypes';
 import { SaveAddressBook } from 'lib/addressBook';
 
 export const addNewContact = contact => (dispatch, getState) => {
