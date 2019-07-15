@@ -13,7 +13,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
-import UIController from 'components/UIController';
+import { showNotification, openErrorDialog } from 'actions/globalUI';
 
 const LoginFieldSet = styled(FieldSet)({
   maxWidth: 400,
@@ -32,11 +32,14 @@ const Buttons = styled.div({
  * @class Login
  * @extends {Component}
  */
-@connect(state => ({
-  tritium:
-    state.core.info.version.includes('0.3') ||
-    parseFloat(state.core.info.version) >= 3,
-}))
+@connect(
+  state => ({
+    tritium:
+      state.core.info.version.includes('0.3') ||
+      parseFloat(state.core.info.version) >= 3,
+  }),
+  { showNotification, openErrorDialog }
+)
 @reduxForm({
   form: 'login',
   destroyOnUnmount: false,
@@ -93,7 +96,7 @@ const Buttons = styled.div({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    UIController.showNotification(<Text id="Settings.LoggedIn" />, 'success');
+    this.props.showNotification(<Text id="Settings.LoggedIn" />, 'success');
     dispatch(getInfo());
   },
   onSubmitFail: (errors, dispatch, submitError) => {
@@ -106,7 +109,7 @@ const Buttons = styled.div({
       } else if (submitError === 'value is type null, expected int') {
         note = <Text id="Alert.FutureDate" />;
       }
-      UIController.openErrorDialog({
+      this.props.openErrorDialog({
         message: <Text id="Settings.Errors.LoggingIn" />,
         note: note,
       });

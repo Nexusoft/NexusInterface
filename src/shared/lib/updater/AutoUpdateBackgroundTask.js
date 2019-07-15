@@ -1,17 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import BackgroundTask from 'components/BackgroundTask';
-import UIController from 'components/UIController';
+import { openConfirmDialog, showBackgroundTask } from 'actions/globalUI';
 
+@connect(
+  null,
+  openConfirmDialog,
+  showBackgroundTask
+)
 export default class AutoUpdateBackgroundTask extends React.Component {
   confirmInstall = () => {
     this.closeTask();
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: 'Close the wallet and install update now?',
       labelYes: 'Close and install',
       callbackYes: this.props.quitAndInstall,
       labelNo: 'Install it later',
       callbackNo: () => {
-        UIController.showBackgroundTask(AutoUpdateBackgroundTask, this.props);
+        this.props.showBackgroundTask(AutoUpdateBackgroundTask, this.props);
       },
     });
   };

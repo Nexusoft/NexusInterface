@@ -1,11 +1,12 @@
 // External
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
 import Tooltip from 'components/Tooltip';
 import userIcon from 'images/user.sprite.svg';
-import UIController from 'components/UIController';
+import { openModal } from 'actions/globalUI';
 import StatusIcon from 'components/StatusIcon';
 import MyAddressesModal from 'components/MyAddressesModal';
 import { timing } from 'styles';
@@ -23,6 +24,8 @@ const MyAddressesIcon = styled(StatusIcon)(({ theme }) => ({
   },
 }));
 
+const actionCreators = { openModal };
+
 /**
  * Returns JSX of My Addresses
  *
@@ -37,10 +40,13 @@ const MyAddresses = () => (
     <MyAddressesIcon
       icon={userIcon}
       onClick={() => {
-        UIController.openModal(MyAddressesModal);
+        this.props.openModal(MyAddressesModal);
       }}
     />
   </Tooltip.Trigger>
 );
 
-export default MyAddresses;
+export default connect(
+  null,
+  actionCreators
+)(MyAddresses);

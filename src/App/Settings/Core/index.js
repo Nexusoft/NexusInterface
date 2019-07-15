@@ -15,7 +15,7 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
-import UIController from 'components/UIController';
+import { showNotification, openConfirmDialog } from 'actions/globalUI';
 import SettingsContainer from 'components/SettingsContainer';
 import { updateSettings } from 'actions/settingsActionCreators';
 import * as form from 'utils/form';
@@ -45,6 +45,8 @@ const actionCreators = {
   updateSettings,
   switchSettingsTab,
   clearForRestart: () => ({ type: TYPE.CLEAR_CORE_INFO }),
+  openConfirmDialog,
+  showNotification,
 };
 
 /**
@@ -120,7 +122,7 @@ const actionCreators = {
     }
   },
   onSubmitSuccess: () => {
-    UIController.showNotification(
+    this.props.showNotification(
       <Text id="Alert.CoreSettingsSaved" />,
       'success'
     );
@@ -147,7 +149,7 @@ class SettingsCore extends Component {
    */
   confirmSwitchManualDaemon = () => {
     if (this.props.settings.manualDaemon) {
-      UIController.openConfirmDialog({
+      this.props.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonExit" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
         callbackYes: async () => {
@@ -161,7 +163,7 @@ class SettingsCore extends Component {
         },
       });
     } else {
-      UIController.openConfirmDialog({
+      this.props.openConfirmDialog({
         question: <Text id="Settings.ManualDaemonEntry" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
         callbackYes: async () => {
@@ -184,7 +186,7 @@ class SettingsCore extends Component {
   restartCore = () => {
     this.props.clearForRestart();
     remote.getGlobal('core').restart();
-    UIController.showNotification(<Text id="Alert.CoreRestarting" />);
+    this.props.showNotification(<Text id="Alert.CoreRestarting" />);
   };
 
   /**
@@ -221,7 +223,7 @@ class SettingsCore extends Component {
 
   updateStaking(input) {
     let value = form.resolveValue(input);
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: <Text id="Settings.RestartDaemon" />,
       note: <Text id="Settings.ReqiresRestart" />,
       labelYes: 'Restart now',
@@ -247,7 +249,7 @@ class SettingsCore extends Component {
 
   updateMining(input) {
     let value = form.resolveValue(input);
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: <Text id="Settings.RestartDaemon" />,
       note: <Text id="Settings.ReqiresRestart" />,
       labelYes: 'Restart now',
@@ -282,7 +284,7 @@ class SettingsCore extends Component {
       if (!handlers[settingName]) {
         // if (settingName === 'enableMining' || settingName === 'enableStaking') {
         //   handlers[settingName] = input => {
-        //     UIController.openConfirmDialog({
+        //     this.props.openConfirmDialog({
         //       question: <Text id="Settings.RestartDaemon" />,
         //       note: <Text id="Settings.ReqiresRestart" />,
         //       callbackYes: async () => {

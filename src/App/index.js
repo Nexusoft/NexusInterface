@@ -6,8 +6,8 @@ import { Route, Switch } from 'react-router';
 import styled from '@emotion/styled';
 
 // Internal
-import UIController from 'components/UIController';
 import GlobalStyles from 'components/GlobalStyles';
+import GlobalUI from './GlobalUI';
 import Overview from './Overview';
 import Header from './Header';
 import Navigation from './Navigation';
@@ -48,7 +48,7 @@ const Main = styled.main({
 const App = ({ history }) => (
   <ThemeController>
     <ConnectedRouter history={history}>
-      <UIController>
+      <GlobalUI>
         <div>
           <GlobalStyles />
           <AppBackground />
@@ -74,7 +74,7 @@ const App = ({ history }) => (
             <Navigation />
           </AppLayout>
         </div>
-      </UIController>
+      </GlobalUI>
     </ConnectedRouter>
   </ThemeController>
 );

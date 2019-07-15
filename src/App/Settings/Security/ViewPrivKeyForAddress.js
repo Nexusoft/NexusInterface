@@ -1,5 +1,6 @@
 // External
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import { clipboard } from 'electron';
 
@@ -10,7 +11,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
-import UIController from 'components/UIController';
+import { openErrorDialog, showNotification } from 'actions/globalUI';
 import Text from 'components/Text';
 import rpc from 'lib/rpc';
 import copyIcon from 'images/copy.sprite.svg';
@@ -22,6 +23,10 @@ import { rpcErrorHandler } from 'utils/form';
  * @class ViewPrivKeyForAddress
  * @extends {Component}
  */
+@connect(
+  null,
+  { openErrorDialog, showNotification }
+)
 @reduxForm({
   form: 'viewPrivateKey',
   destroyOnUnmount: false,
@@ -63,7 +68,7 @@ class ViewPrivKeyForAddress extends Component {
           if (e.includes(address)) {
             e = e.replace(address + ' ', '');
           }
-          UIController.openErrorDialog({ message: e });
+          this.props.openErrorDialog({ message: e });
         });
     } else {
       this.inputRef.focus();
@@ -78,7 +83,7 @@ class ViewPrivKeyForAddress extends Component {
   copyPrivkey = () => {
     const privKey = this.privKeyRef.current.value;
     clipboard.writeText(privKey);
-    UIController.showNotification(<Text id="Alert.Copied" />, 'success');
+    this.props.showNotification(<Text id="Alert.Copied" />, 'success');
   };
 
   /**

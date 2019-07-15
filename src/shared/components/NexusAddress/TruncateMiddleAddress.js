@@ -1,12 +1,13 @@
 // External
 import React from 'react';
+import { connect } from 'react-redux';
 import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
 // Internal
 import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import UIController from 'components/UIController';
+import { showNotification } from 'actions/globalUI';
 import { timing, consts } from 'styles';
 
 const TruncateMiddleAddressComponent = styled.div({
@@ -97,6 +98,10 @@ const Label = styled.div(({ theme }) => ({
  * @class TruncateMiddleAddress
  * @extends {React.Component}
  */
+@connect(
+  null,
+  { showNotification }
+)
 export default class TruncateMiddleAddress extends React.Component {
   addressRef = React.createRef();
   contentRef = React.createRef();
@@ -157,7 +162,7 @@ export default class TruncateMiddleAddress extends React.Component {
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
-    UIController.showNotification(<Text id="Alert.AddressCopied" />, 'success');
+    this.props.showNotification(<Text id="Alert.AddressCopied" />, 'success');
   };
 
   /**

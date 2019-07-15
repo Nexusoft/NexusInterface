@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import * as TYPE from 'consts/actionTypes';
-import UIController from 'components/UIController';
+import { showNotification } from 'actions/globalUI';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
@@ -12,13 +12,14 @@ const mapStateToProps = state => {
     ...state.market,
   };
 };
-const mapDispatchToProps = dispatch => ({
-  setTradeVol: TV => dispatch({ type: TYPE.SET_TRADEVOL, payload: TV }),
-  setThershold: TH => dispatch({ type: TYPE.SET_THRESHOLD, payload: TH }),
+const actionCreators = {
+  setTradeVol: TV => ({ type: TYPE.SET_TRADEVOL, payload: TV }),
+  setThershold: TH => ({ type: TYPE.SET_THRESHOLD, payload: TH }),
   OpenModal: type => {
-    dispatch({ type: TYPE.SHOW_MODAL, payload: type });
+    ({ type: TYPE.SHOW_MODAL, payload: type });
   },
-});
+  showNotification,
+};
 
 /**
  * Settings for Market in the Settings Page
@@ -26,14 +27,14 @@ const mapDispatchToProps = dispatch => ({
  * @class SettingsMarket
  * @extends {Component}
  */
-class   extends Component {
+class SettingsMarket extends Component {
   // Class methods
   /**
    * Set Feedback
    *
    */
   feedback() {
-    UIController.showNotification(<Text id="Alert.SettingsSaved" />, 'success');
+    this.props.showNotification(<Text id="Alert.SettingsSaved" />, 'success');
   }
   // Mandatory React method
   /**
@@ -91,5 +92,5 @@ class   extends Component {
 // Mandatory React-Redux method
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  actionCreators
 )(SettingsMarket);

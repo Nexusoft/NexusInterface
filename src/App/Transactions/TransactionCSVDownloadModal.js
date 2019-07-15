@@ -1,16 +1,10 @@
 // External
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
 
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import UIController from 'components/UIController';
-import Icon from 'components/Icon';
-import Tooltip from 'components/Tooltip';
-import ModalContext from 'context/modal';
 import Text from 'components/Text';
 import { timing } from 'styles';
 

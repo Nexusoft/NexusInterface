@@ -2,21 +2,21 @@
 import { remote } from 'electron';
 
 // Internal
-import UIController from 'components/UIController';
+import { openModal } from 'actions/globalUI';
 import * as ac from 'actions/setupAppActionCreators';
 import { getInfo } from 'actions/coreActionCreators';
 import { loadModules } from 'actions/moduleActionCreators';
 import { startAutoUpdate } from 'lib/updater';
 import { rebuildMenu, initializeMenu } from 'appMenu';
+import store from 'store';
 
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';
 import { startCoreOuputWatch, stopCoreOuputWatch } from './coreOutputWatch';
 
-export default function setupApp(store) {
-  const { dispatch } = store;
-
+const { dispatch } = store;
+export default function setupApp() {
   initializeMenu();
   rebuildMenu();
 
@@ -43,7 +43,7 @@ export default function setupApp(store) {
       }
     } else {
       stopCoreOuputWatch();
-      UIController.openModal(ClosingModal);
+      dispatch(openModal(ClosingModal));
 
       if (!manualDaemon) {
         await remote.getGlobal('core').stop();
@@ -67,15 +67,17 @@ export default function setupApp(store) {
 function showInitialModals({ settings }) {
   const showExperimentalWarning = () => {
     if (!settings.experimentalWarningDisabled) {
-      UIController.openModal(ExperimentalWarningModal);
+      dispatch(openModal(ExperimentalWarningModal));
     }
   };
 
   if (!settings.acceptedAgreement) {
-    UIController.openModal(LicenseAgreementModal, {
-      fullScreen: true,
-      onClose: showExperimentalWarning,
-    });
+    dispatch(
+      openModal(LicenseAgreementModal, {
+        fullScreen: true,
+        onClose: showExperimentalWarning,
+      })
+    );
   } else {
     showExperimentalWarning();
   }

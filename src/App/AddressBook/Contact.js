@@ -12,7 +12,7 @@ import {
 import Icon from 'components/Icon';
 import Text, { translate } from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import UIController from 'components/UIController';
+import { openConfirmDialog, openModal } from 'actions/globalUI';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { timing } from 'styles';
 import * as color from 'utils/color';
@@ -82,7 +82,7 @@ const AddressesCount = styled.div(({ theme }) => ({
     locale: state.settings.locale,
     connections: state.core.info.connections,
   }),
-  { selectContact, deleteContact }
+  { selectContact, deleteContact, openModal, openConfirmDialog }
 )
 class Contact extends React.PureComponent {
   /**
@@ -91,7 +91,7 @@ class Contact extends React.PureComponent {
    * @memberof Contact
    */
   confirmDelete = () => {
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: (
         <Text
           id="AddressBook.DeleteQuestion"
@@ -111,7 +111,7 @@ class Contact extends React.PureComponent {
    * @memberof Contact
    */
   editContact = () => {
-    UIController.openModal(AddEditContactModal, {
+    this.props.openModal(AddEditContactModal, {
       edit: true,
       contact: this.props.contact,
     });

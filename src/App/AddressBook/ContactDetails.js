@@ -10,7 +10,7 @@ import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
-import UIController from 'components/UIController';
+import { openConfirmDialog, openModal } from 'actions/globalUI';
 import AddEditContactModal from 'components/AddEditContactModal';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';
@@ -131,7 +131,7 @@ const getLocalTime = tz => {
     contact: addressBook[selectedContactName] || null,
     connections,
   }),
-  { deleteContact }
+  { deleteContact, openConfirmDialog, openModal }
 )
 class ContactDetails extends React.Component {
   /**
@@ -140,7 +140,7 @@ class ContactDetails extends React.Component {
    * @memberof ContactDetails
    */
   confirmDelete = () => {
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: (
         <Text
           id="AddressBook.DeleteQuestion"
@@ -160,7 +160,7 @@ class ContactDetails extends React.Component {
    * @memberof ContactDetails
    */
   editContact = () => {
-    UIController.openModal(AddEditContactModal, {
+    this.props.openModal(AddEditContactModal, {
       edit: true,
       contact: this.props.contact,
     });

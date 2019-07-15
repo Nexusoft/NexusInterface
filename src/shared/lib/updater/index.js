@@ -4,7 +4,8 @@ import log from 'electron-log';
 import path from 'path';
 
 // Internal
-import UIController from 'components/UIController';
+import store from 'store';
+import { showBackgroundTask, showNotification } from 'actions/globalUI';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 
 const autoUpdater = remote.getGlobal('autoUpdater');
@@ -119,18 +120,22 @@ function initialize() {
   });
 
   autoUpdater.on('update-available', updateInfo => {
-    UIController.showNotification(
-      `New wallet version ${updateInfo.version} available. Downloading...`,
-      'work'
+    store.dispatch(
+      showNotification(
+        `New wallet version ${updateInfo.version} available. Downloading...`,
+        'work'
+      )
     );
   });
 
   autoUpdater.on('update-downloaded', updateInfo => {
     stopAutoUpdate();
-    UIController.showBackgroundTask(AutoUpdateBackgroundTask, {
-      version: updateInfo.version,
-      quitAndInstall: autoUpdater.quitAndInstall,
-    });
+    store.dispatch(
+      showBackgroundTask(AutoUpdateBackgroundTask, {
+        version: updateInfo.version,
+        quitAndInstall: autoUpdater.quitAndInstall,
+      })
+    );
   });
 
   autoUpdater.on('error', err => {

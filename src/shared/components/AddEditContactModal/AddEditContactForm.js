@@ -14,7 +14,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Button from 'components/Button';
-import UIController from 'components/UIController';
+import { showNotification } from 'actions/globalUI';
 import { emailRegex } from 'utils/form';
 import timeZones from 'data/timeZones';
 import Addresses from './Addresses';
@@ -31,6 +31,7 @@ const mapStateToProps = state => ({
 const actionCreators = {
   addNewContact,
   updateContact,
+  showNotification,
 };
 
 function validateAddresses(addresses) {
@@ -158,12 +159,12 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     props.destroy();
     props.closeModal();
     if (props.edit) {
-      UIController.showNotification(
+      this.props.showNotification(
         <Text id="AddEditContact.EditSuccess" />,
         'success'
       );
     } else {
-      UIController.showNotification(
+      this.props.showNotification(
         <Text id="AddEditContact.CreateSuccess" />,
         'success'
       );

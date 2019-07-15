@@ -10,7 +10,7 @@ import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import syncingIcon from 'images/syncing.sprite.svg';
 import googleanalytics from 'scripts/googleanalytics';
-import UIController from 'components/UIController';
+import { showNotification } from 'actions/globalUI';
 
 // Internal Global Dependencies
 import * as TYPE from 'consts/actionTypes';
@@ -52,8 +52,7 @@ const mapStateToProps = state => {
     settings: state.settings,
   };
 };
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch);
+const mapDispatchToProps = { ...actionsCreators, showNotification };
 
 /**
  * The Market Page
@@ -262,7 +261,7 @@ class Market extends Component {
    */
   refreshMarket() {
     this.refresher();
-    UIController.showNotification(<Text id="Market.Refreshing" />, 'success');
+    this.props.showNotification(<Text id="Market.Refreshing" />, 'success');
   }
 
   // Mandatory React method

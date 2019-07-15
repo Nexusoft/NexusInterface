@@ -8,7 +8,7 @@ import ModuleIcon from 'components/ModuleIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
-import UIController from 'components/UIController';
+import { openConfirmDialog, openModal } from 'actions/globalUI';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { isModuleActive } from 'lib/modules';
 import { timing } from 'styles';
@@ -72,6 +72,8 @@ const mapStateToProps = (state, props) => ({
 
 const actionCreators = {
   updateSettings,
+  openConfirmDialog,
+  openModal,
 };
 
 /**
@@ -118,7 +120,7 @@ class Module extends React.Component {
     const { module, active } = this.props;
     if (module.invalid) return;
     if (active) {
-      UIController.openConfirmDialog({
+      this.props.openConfirmDialog({
         question: `Disable ${module.displayName}?`,
         note:
           'Wallet will be automatically refreshed for the change to take effect',
@@ -128,7 +130,7 @@ class Module extends React.Component {
         },
       });
     } else {
-      UIController.openConfirmDialog({
+      this.props.openConfirmDialog({
         question: `Enable ${module.displayName}?`,
         note:
           'Wallet will be automatically refreshed for the change to take effect',
@@ -146,7 +148,7 @@ class Module extends React.Component {
    * @memberof Module
    */
   openModuleDetails = () => {
-    UIController.openModal(ModuleDetailsModal, {
+    this.props.openModal(ModuleDetailsModal, {
       module: this.props.module,
     });
   };

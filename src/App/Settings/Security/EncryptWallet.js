@@ -1,5 +1,6 @@
 // External
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 import { remote } from 'electron';
@@ -10,7 +11,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import UIController from 'components/UIController';
+import { openSuccessDialog } from 'actions/globalUI';
 import rpc from 'lib/rpc';
 import { consts } from 'styles';
 import { rpcErrorHandler } from 'utils/form';
@@ -38,6 +39,10 @@ const Characters = styled.span({
  * @class EncryptWallet
  * @extends {Component}
  */
+@connect(
+  null,
+  { openSuccessDialog }
+)
 @reduxForm({
   form: 'encryptWallet',
   destroyOnUnmount: false,
@@ -65,7 +70,7 @@ const Characters = styled.span({
   onSubmit: ({ password }) => rpc('encryptwallet', [password]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
-    UIController.openSuccessDialog({
+    this.props.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {
         remote.getGlobal('core').start();

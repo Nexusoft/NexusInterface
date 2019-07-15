@@ -12,7 +12,7 @@ import googleanalytics from 'scripts/googleanalytics';
 // Internal Global Dependencies
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
-import UIController from 'components/UIController';
+import { showNotification } from 'actions/globalUI';
 import * as TYPE from 'consts/actionTypes';
 import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
@@ -34,11 +34,10 @@ const mapStateToProps = state => {
     ...state.exchange,
   };
 };
-const mapDispatchToProps = dispatch => ({
-  clearTransaction: () => {
-    dispatch({ type: TYPE.CLEAR_TRANSACTION });
-  },
-});
+const mapDispatchToProps = {
+  clearTransaction: () => ({ type: TYPE.CLEAR_TRANSACTION }),
+  showNotification,
+};
 
 /**
  * The Exchange Page
@@ -104,7 +103,7 @@ class Exchange extends Component {
             onComplete={() => this.props.clearTransaction()}
             renderer={({ hours, minutes, seconds, completed }) => {
               if (completed) {
-                UIController.showNotification('Transaction Expired');
+                this.props.showNotification('Transaction Expired');
                 return null;
               } else {
                 return (

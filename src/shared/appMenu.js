@@ -10,7 +10,7 @@ import rpc from 'lib/rpc';
 import { updateSettings } from 'actions/settingsActionCreators';
 import { backupWallet as backup } from 'lib/wallet';
 import Text from 'components/Text';
-import UIController from 'components/UIController';
+import { showNotification, openErrorDialog } from 'actions/globalUI';
 import { clearCoreInfo } from 'actions/coreActionCreators';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
@@ -80,7 +80,7 @@ const backupWallet = {
     });
 
     if (state.core.info.connections === undefined) {
-      UIController.showNotification(<Text id="Header.DaemonNotLoaded" />);
+      store.dispatch(showNotification(<Text id="Header.DaemonNotLoaded" />));
       return;
     }
 
@@ -88,9 +88,8 @@ const backupWallet = {
       store.dispatch(updateSettings({ backupDirectory: folderPaths[0] }));
 
       await backup(folderPaths[0]);
-      UIController.showNotification(
-        <Text id="Alert.WalletBackedUp" />,
-        'success'
+      store.dispatch(
+        showNotification(<Text id="Alert.WalletBackedUp" />, 'success')
       );
     }
   },
@@ -164,23 +163,27 @@ const downloadRecent = {
     const enoughSpace = await checkBootStrapFreeSpace();
     if (!enoughSpace) {
       console.log('in Menu');
-      UIController.openErrorDialog({
-        message: <Text id="ToolTip.NotEnoughSpace" />,
-      });
+      store.dispatch(
+        openErrorDialog({
+          message: <Text id="ToolTip.NotEnoughSpace" />,
+        })
+      );
       return;
     }
 
     const state = store.getState();
     if (state.settings.manualDaemon) {
-      UIController.showNotification(
-        'Cannot bootstrap recent database in manual mode',
-        'error'
+      store.dispatch(
+        showNotification(
+          'Cannot bootstrap recent database in manual mode',
+          'error'
+        )
       );
       return;
     }
 
     if (state.core.info.connections === undefined) {
-      UIController.showNotification('Please wait for the daemon to start.');
+      store.dispatch(showNotification('Please wait for the daemon to start.'));
       return;
     }
 
@@ -236,7 +239,9 @@ const updaterIdle = {
     // available because autoUpdater.checkForUpdates() doesn't return
     // any reliable results like a boolean `updateAvailable` property
     if (result.updateInfo.version === APP_VERSION) {
-      UIController.showNotification('There are currently no updates available');
+      store.dispatch(
+        showNotification('There are currently no updates available')
+      );
     }
   },
 };

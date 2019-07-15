@@ -8,7 +8,14 @@ import { keyframes } from '@emotion/core';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import UIController from 'components/UIController';
+import {
+  showBackgroundTask,
+  showNotification,
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+  removeModal,
+} from 'actions/globalUI';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';
@@ -96,9 +103,19 @@ const MinimizeIcon = styled(Icon)(({ theme }) => ({
  * @class BootstrapModal
  * @extends {PureComponent}
  */
-@connect(state => ({
-  locale: state.settings.locale,
-}))
+@connect(
+  state => ({
+    locale: state.settings.locale,
+  }),
+  {
+    showBackgroundTask,
+    showNotification,
+    openConfirmDialog,
+    openErrorDialog,
+    openSuccessDialog,
+    removeModal,
+  }
+)
 class BootstrapModal extends PureComponent {
   static contextType = ModalContext;
 
@@ -197,10 +214,7 @@ class BootstrapModal extends PureComponent {
     }
 
     if (this.state.step === 'backing_up' && step === 'stopping_core') {
-      UIController.showNotification(
-        'Your wallet has been backed up',
-        'success'
-      );
+      this.props.showNotification('Your wallet has been backed up', 'success');
     }
   };
 
@@ -211,11 +225,11 @@ class BootstrapModal extends PureComponent {
    */
   handleAbort = () => {
     this.closeModal();
-    UIController.showNotification(
+    this.props.showNotification(
       'Aborted recent database bootstrapping',
       'error'
     );
-    UIController.showNotification('Daemon is restarting...');
+    this.props.showNotification('Daemon is restarting...');
   };
 
   /**
@@ -225,11 +239,11 @@ class BootstrapModal extends PureComponent {
    */
   handleError = err => {
     this.closeModal();
-    UIController.openErrorDialog({
+    this.props.openErrorDialog({
       message: 'Error bootstrapping recent database',
       note: err.message || 'An unknown error occured',
     });
-    UIController.showNotification('Daemon is restarting...');
+    this.props.showNotification('Daemon is restarting...');
     console.error(err);
   };
 
@@ -240,10 +254,10 @@ class BootstrapModal extends PureComponent {
    */
   handleFinish = () => {
     this.closeModal();
-    UIController.openSuccessDialog({
+    this.props.openSuccessDialog({
       message: 'Recent database has been successfully updated',
     });
-    UIController.showNotification('Daemon is restarting...');
+    this.props.showNotification('Daemon is restarting...');
   };
 
   /**
@@ -252,7 +266,7 @@ class BootstrapModal extends PureComponent {
    * @memberof BootstrapModal
    */
   confirmAbort = () => {
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: 'Are you sure you want to abort the process?',
       labelYes: 'Yes, abort',
       skinYes: 'danger',
@@ -270,7 +284,7 @@ class BootstrapModal extends PureComponent {
    * @memberof BootstrapModal
    */
   minimize = () => {
-    UIController.showBackgroundTask(BootstrapBackgroundTask, {
+    this.props.showBackgroundTask(BootstrapBackgroundTask, {
       bootstrapper: this.props.bootstrapper,
     });
 
@@ -288,7 +302,7 @@ class BootstrapModal extends PureComponent {
    */
   remove = () => {
     const modalID = this.context;
-    UIController.removeModal(modalID);
+    this.props.removeModal(modalID);
   };
 
   /**

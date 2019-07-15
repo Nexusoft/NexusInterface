@@ -12,7 +12,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
-import UIController from 'components/UIController';
+import { openModal } from 'actions/globalUI';
 import AddEditContactModal from 'components/AddEditContactModal';
 
 // Icons
@@ -74,10 +74,13 @@ class SearchBox extends Component {
  * @class PanelControls
  * @extends {Component}
  */
-@connect(state => ({
-  addressBook: state.addressBook,
-  connections: state.core.info.connections,
-}))
+@connect(
+  state => ({
+    addressBook: state.addressBook,
+    connections: state.core.info.connections,
+  }),
+  { openModal }
+)
 class PanelControls extends Component {
   /**
    * Export the Address Book to a CSV File
@@ -141,7 +144,7 @@ class PanelControls extends Component {
    * @memberof PanelControls
    */
   showAddContact = () => {
-    UIController.openModal(AddEditContactModal);
+    this.props.openModal(AddEditContactModal);
   };
 
   /**
@@ -150,7 +153,7 @@ class PanelControls extends Component {
    * @memberof PanelControls
    */
   showMyAddresses = () => {
-    UIController.openModal(MyAddressesModal);
+    this.props.openModal(MyAddressesModal);
   };
 
   /**
