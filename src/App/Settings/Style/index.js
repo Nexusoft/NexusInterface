@@ -8,9 +8,9 @@ import https from 'https';
 
 // Internal
 import googleanalytics from 'scripts/googleanalytics';
-import { updateSettings } from 'actions/settingsActionCreators';
-import { updateTheme, resetColors } from 'actions/themeActionCreators';
-import { switchSettingsTab } from 'actions/uiActionCreators';
+import { updateSettings } from 'actions/settings';
+import { updateTheme, resetColors } from 'actions/theme';
+import { switchSettingsTab } from 'actions/ui';
 import Text, { translate } from 'components/Text';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';

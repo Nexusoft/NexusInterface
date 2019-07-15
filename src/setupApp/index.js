@@ -3,9 +3,9 @@ import { remote } from 'electron';
 
 // Internal
 import { openModal } from 'actions/globalUI';
-import * as ac from 'actions/setupAppActionCreators';
-import { getInfo } from 'actions/coreActionCreators';
-import { loadModules } from 'actions/moduleActionCreators';
+import * as ac from 'actions/setupApp';
+import { getInfo } from 'actions/core';
+import { loadModules } from 'actions/module';
 import { startAutoUpdate } from 'lib/updater';
 import { rebuildMenu, initializeMenu } from 'appMenu';
 import store from 'store';

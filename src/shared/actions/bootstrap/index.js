@@ -1,8 +1,8 @@
 // Internal
 import store from 'store';
 import { openConfirmDialog, openModal } from 'actions/globalUI';
-import { clearCoreInfo } from 'actions/coreActionCreators';
-import { updateSettings } from 'actions/settingsActionCreators';
+import { clearCoreInfo } from 'actions/core';
+import { updateSettings } from 'actions/settings';
 import Bootstrapper from './Bootstrapper';
 import BootstrapModal from './BootstrapModal';
 

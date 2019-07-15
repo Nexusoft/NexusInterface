@@ -4,10 +4,7 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
 
 // Internal
-import {
-  addNewContact,
-  updateContact,
-} from 'actions/addressBookActionCreators';
+import { addNewContact, updateContact } from 'actions/addressBook';
 import rpc from 'lib/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';

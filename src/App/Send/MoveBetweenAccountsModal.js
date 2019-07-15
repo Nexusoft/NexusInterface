@@ -17,7 +17,7 @@ import {
   openSuccessDialog,
   removeModal,
 } from 'actions/globalUI';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import { loadMyAccounts } from 'actions/account';
 import { rpcErrorHandler } from 'utils/form';
 import { getAccountOptions, getRegisteredFieldNames } from './selectors';
 import AmountField from './AmountField';

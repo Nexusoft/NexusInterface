@@ -3,7 +3,7 @@ import axios from 'axios';
 import { reset, initialize } from 'redux-form';
 
 import store, { history } from 'store';
-import { updateModuleState } from 'actions/moduleActionCreators';
+import { updateModuleState } from 'actions/module';
 import {
   showNotification,
   openConfirmDialog,

@@ -5,8 +5,8 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import Text from 'components/Text';
-import { updateSettings } from 'actions/settingsActionCreators';
-import { switchSettingsTab } from 'actions/uiActionCreators';
+import { updateSettings } from 'actions/settings';
+import { switchSettingsTab } from 'actions/ui';
 import { backupWallet } from 'lib/wallet';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';

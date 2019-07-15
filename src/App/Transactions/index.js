@@ -28,7 +28,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import { loadMyAccounts } from 'actions/account';
 import rpc from 'lib/rpc';
 import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';

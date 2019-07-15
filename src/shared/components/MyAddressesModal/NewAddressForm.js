@@ -9,7 +9,7 @@ import AutoSuggest from 'components/AutoSuggest';
 import Button from 'components/Button';
 import { showNotification } from 'actions/globalUI';
 import rpc from 'lib/rpc';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import { loadMyAccounts } from 'actions/account';
 import { rpcErrorHandler } from 'utils/form';
 
 const NewAddressFormComponent = styled.form({

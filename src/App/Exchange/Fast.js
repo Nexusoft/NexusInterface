@@ -9,7 +9,7 @@ import Text from 'components/Text';
 
 // Internal
 import { showNotification } from 'actions/globalUI';
-import * as actionsCreators from 'actions/exchangeActionCreators';
+import * as actionsCreators from 'actions/exchange';
 import ExchangeForm from './ExchangeForm';
 import styles from './style.css';
 

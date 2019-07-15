@@ -5,10 +5,7 @@ import styled from '@emotion/styled';
 import { remote } from 'electron';
 
 // Internal Global
-import {
-  selectContact,
-  deleteContact,
-} from 'actions/addressBookActionCreators';
+import { selectContact, deleteContact } from 'actions/addressBook';
 import Icon from 'components/Icon';
 import Text, { translate } from 'components/Text';
 import Tooltip from 'components/Tooltip';

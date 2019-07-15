@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal
 import { getAllModules } from 'lib/modules';
-import { switchSettingsTab } from 'actions/uiActionCreators';
+import { switchSettingsTab } from 'actions/ui';
 import SettingsContainer from 'components/SettingsContainer';
 import Module from './Module';
 import AddModule from './AddModule';

@@ -2,9 +2,9 @@ import React from 'react';
 
 import { openModal, showNotification } from 'actions/globalUI';
 import rpc from 'lib/rpc';
-import * as ac from 'actions/setupAppActionCreators';
+import * as ac from 'actions/setupApp';
 import * as TYPE from 'consts/actionTypes';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import { loadMyAccounts } from 'actions/account';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
 import Text from 'components/Text';

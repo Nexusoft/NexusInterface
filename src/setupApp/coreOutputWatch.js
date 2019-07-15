@@ -4,7 +4,7 @@ import path from 'path';
 import store from 'store';
 import { coreDataDir } from 'consts/paths';
 import { Tail } from 'utils/tail';
-import * as ac from 'actions/setupAppActionCreators';
+import * as ac from 'actions/setupApp';
 
 var tail;
 var debugFileLocation;

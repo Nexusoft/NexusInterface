@@ -18,7 +18,7 @@ import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Text, { translate } from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
-import * as actionsCreators from 'actions/marketActionCreators';
+import * as actionsCreators from 'actions/market';
 
 // Internal Local Dependencies
 import MarketDepth from './Chart/MarketDepth';

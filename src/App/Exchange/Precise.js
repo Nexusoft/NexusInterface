@@ -18,7 +18,7 @@ import { showNotification } from 'actions/globalUI';
 import styles from './style.css';
 
 import arrow from 'images/arrow.svg';
-import * as actionsCreators from 'actions/exchangeActionCreators';
+import * as actionsCreators from 'actions/exchange';
 import Text from 'components/Text';
 
 // React-Redux mandatory methods

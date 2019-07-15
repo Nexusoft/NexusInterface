@@ -12,7 +12,7 @@ import { openConfirmDialog, openModal } from 'actions/globalUI';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { isModuleActive } from 'lib/modules';
 import { timing } from 'styles';
-import { updateSettings } from 'actions/settingsActionCreators';
+import { updateSettings } from 'actions/settings';
 import warningIcon from 'images/warning.sprite.svg';
 
 const ModuleComponent = styled.div(

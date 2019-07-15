@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import { getInfo } from 'actions/coreActionCreators';
+import { getInfo } from 'actions/core';
 import rpc from 'lib/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
