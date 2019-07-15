@@ -5,7 +5,7 @@ import fs from 'fs';
 
 // Internal
 import store, { observeStore, history } from 'store';
-import { isWebViewActive, toggleWebViewDevTools } from 'lib/modules';
+import { toggleWebViewDevTools } from 'actions/webview';
 import rpc from 'lib/rpc';
 import { updateSettings } from 'actions/settings';
 import { backupWallet as backup } from 'lib/wallet';
@@ -210,7 +210,7 @@ const toggleDevTools = {
 const toggleModuleDevTools = {
   label: "Toggle Module's Developer Tools",
   click: () => {
-    toggleWebViewDevTools();
+    store.dispatch(toggleWebViewDevTools());
   },
 };
 
@@ -299,6 +299,7 @@ function updaterMenuItem() {
 function buildDarwinTemplate() {
   const state = store.getState();
   const daemonRunning = state.core.info.connections !== undefined;
+  const { webview } = state;
 
   const subMenuAbout = {
     label: 'Nexus',
@@ -335,7 +336,7 @@ function buildDarwinTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuWindow.submenu.push(toggleDevTools);
 
-    if (isWebViewActive()) {
+    if (webview) {
       subMenuWindow.submenu.push(toggleModuleDevTools);
     }
   }
@@ -369,6 +370,7 @@ function buildDarwinTemplate() {
 function buildDefaultTemplate() {
   const state = store.getState();
   const daemonRunning = state.core.info.connections !== undefined;
+  const { webview } = state;
 
   const subMenuFile = {
     label: '&File',
@@ -394,7 +396,7 @@ function buildDefaultTemplate() {
   if (process.env.NODE_ENV === 'development' || state.settings.devMode) {
     subMenuView.submenu.push(separator, toggleDevTools);
 
-    if (isWebViewActive()) {
+    if (webview) {
       subMenuView.submenu.push(toggleModuleDevTools);
     }
   }

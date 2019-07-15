@@ -49,31 +49,29 @@ const App = ({ history }) => (
   <ThemeController>
     <ConnectedRouter history={history}>
       <Overlays>
-        <div>
-          <GlobalStyles />
-          <AppBackground />
-          <AppLayout>
-            <Header />
-            <Main>
-              <Switch>
-                <Route exact path="/" component={Overview} />
-                <Route exact path="/Send" component={Send} />
-                <Route exact path="/Transactions" component={Transactions} />
-                <Route exact path="/Market" component={Market} />
-                <Route exact path="/AddressBook" component={AddressBook} />
-                <Route path="/Settings" component={Settings} />
-                <Route path="/Terminal" component={Terminal} />
+        <GlobalStyles />
+        <AppBackground />
+        <AppLayout>
+          <Header />
+          <Main>
+            <Switch>
+              <Route exact path="/" component={Overview} />
+              <Route exact path="/Send" component={Send} />
+              <Route exact path="/Transactions" component={Transactions} />
+              <Route exact path="/Market" component={Market} />
+              <Route exact path="/AddressBook" component={AddressBook} />
+              <Route path="/Settings" component={Settings} />
+              <Route path="/Terminal" component={Terminal} />
 
-                {/* <Route path="/Exchange" component={Exchange} /> */}
-                {/* <Route exact path="/List" component={TrustList} /> */}
+              {/* <Route path="/Exchange" component={Exchange} /> */}
+              {/* <Route exact path="/List" component={TrustList} /> */}
 
-                <Route exact path="/About" component={About} />
-                <Route path="/Modules/:name" component={Modules} />
-              </Switch>
-            </Main>
-            <Navigation />
-          </AppLayout>
-        </div>
+              <Route exact path="/About" component={About} />
+              <Route path="/Modules/:name" component={Modules} />
+            </Switch>
+          </Main>
+          <Navigation />
+        </AppLayout>
       </Overlays>
     </ConnectedRouter>
   </ThemeController>

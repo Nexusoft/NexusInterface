@@ -7,6 +7,7 @@ import * as ac from 'actions/setupApp';
 import { getInfo } from 'actions/core';
 import { loadModules } from 'actions/module';
 import { startAutoUpdate } from 'lib/updater';
+import { initializeWebView } from 'lib/modules';
 import { rebuildMenu, initializeMenu } from 'appMenu';
 import store from 'store';
 
@@ -60,6 +61,7 @@ export default function setupApp() {
   }
 
   showInitialModals(state);
+  initializeWebView();
 
   dispatch(loadModules());
 }

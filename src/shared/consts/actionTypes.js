@@ -184,3 +184,6 @@ export const UPDATE_MODULE_STATE = 'UPDATE_MODULE_STATE';
 
 // Updater
 export const SET_UPDATER_STATE = 'SET_UPDATER_STATE';
+
+// Webview
+export const SET_ACTIVE_WEBVIEW = 'SET_ACTIVE_WEBVIEW';

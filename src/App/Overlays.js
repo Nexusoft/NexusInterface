@@ -75,7 +75,7 @@ export default class Overlays extends Component {
     const { children, modals, notifications, backgroundTasks } = this.props;
     return (
       <>
-        {children}
+        <div>{children}</div>
         <Modals modals={modals} />
         <BackgroundTasks tasks={backgroundTasks} />
         <Notifications
