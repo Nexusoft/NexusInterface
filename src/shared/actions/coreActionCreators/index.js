@@ -2,7 +2,7 @@ import React from 'react';
 import UIController from 'components/UIController';
 import rpc from 'lib/rpc';
 import * as ac from 'actions/setupAppActionCreators';
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';

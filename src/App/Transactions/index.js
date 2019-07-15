@@ -30,7 +30,7 @@ import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
 import { loadMyAccounts } from 'actions/accountActionCreators';
 import rpc from 'lib/rpc';
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
 import UIController from 'components/UIController';

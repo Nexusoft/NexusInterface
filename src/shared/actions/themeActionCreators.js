@@ -1,5 +1,5 @@
 import { UpdateTheme, ResetColors } from 'lib/theme';
-import * as TYPE from './actiontypes';
+import * as TYPE from './actionTypes';
 
 export const updateTheme = updates => dispatch => {
   dispatch({ type: TYPE.UPDATE_THEME, payload: updates });

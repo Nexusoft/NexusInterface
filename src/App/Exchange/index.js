@@ -13,7 +13,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
 import UIController from 'components/UIController';
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 

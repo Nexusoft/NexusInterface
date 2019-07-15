@@ -13,7 +13,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import UIController from 'components/UIController';
 
 // Internal Global Dependencies
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Text, { translate } from 'components/Text';

@@ -12,7 +12,7 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import UIController from 'components/UIController';
 import rpc from 'lib/rpc';
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import { rpcErrorHandler, trimText } from 'utils/form';
 
 const ImportPrivKeyForm = styled.form({

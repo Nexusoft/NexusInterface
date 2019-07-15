@@ -6,7 +6,7 @@ import { reduxForm, Field } from 'redux-form';
 import cpy from 'cpy';
 
 // Internal
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import rpc from 'lib/rpc';
 import Text from 'components/Text';
 import { switchSettingsTab } from 'actions/uiActionCreators';

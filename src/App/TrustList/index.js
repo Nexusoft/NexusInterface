@@ -15,7 +15,7 @@ import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import WaitingMessage from 'components/WaitingMessage';
 import rpc from 'lib/rpc';
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 
