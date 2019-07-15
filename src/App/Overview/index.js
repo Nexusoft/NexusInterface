@@ -59,6 +59,7 @@ import trust100 from 'images/trust00.sprite.svg';
 import nxsblocksIcon from 'images/blockexplorer-invert-white.sprite.svg';
 import interestIcon from 'images/interest.sprite.svg';
 import stakeIcon from 'images/staking-white.sprite.svg';
+import warningIcon from 'images/warning.sprite.svg';
 
 const trustIcons = [
   trust00,
@@ -97,15 +98,28 @@ const blockWeightIcons = [
 const formatDiff = diff => (diff || 0).toFixed(3);
 
 // React-Redux mandatory methods
-const mapStateToProps = state => {
+const mapStateToProps = ({
+  core: { info, difficulty },
+  common: { blockDate, rawNXSvalues, displayNXSvalues, highestPeerBlock },
+  settings,
+  theme,
+}) => {
+  const { synccomplete, blocks } = info;
+  const syncUnknown =
+    ((!synccomplete && synccomplete !== 0) ||
+      synccomplete < 0 ||
+      synccomplete > 100) &&
+    !highestPeerBlock;
   return {
-    coreInfo: state.core.info,
-    difficulty: state.core.difficulty,
-    blockDate: state.common.blockDate,
-    rawNXSvalues: state.common.rawNXSvalues,
-    displayNXSvalues: state.common.displayNXSvalues,
-    settings: state.settings,
-    theme: state.theme,
+    difficulty,
+    blockDate,
+    rawNXSvalues,
+    displayNXSvalues,
+    settings,
+    theme,
+    coreInfo: info,
+    synchronizing:
+      !syncUnknown && (synccomplete !== 100 || highestPeerBlock > blocks),
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -696,6 +710,7 @@ class Overview extends Component {
       difficulty,
       settings,
       theme,
+      synchronizing,
     } = this.props;
     if (settings.overviewDisplay === 'none') {
       return <OverviewPage />;
@@ -812,9 +827,19 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.Balance" /> {' ('}
-                {settings.displayFiatBalance ? settings.fiatCurrency : 'NXS'}
-                {')'}
+                {!!synchronizing && (
+                  <Tooltip.Trigger
+                    align="start"
+                    tooltip="The balance displayed might not be up-to-date since the wallet is not yet fully synchronized"
+                  >
+                    <Icon icon={warningIcon} className="space-right" />
+                  </Tooltip.Trigger>
+                )}{' '}
+                <span className="v-align">
+                  <Text id="overview.Balance" /> {' ('}
+                  {settings.displayFiatBalance ? settings.fiatCurrency : 'NXS'}
+                  {')'}
+                </span>
               </StatLabel>
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
