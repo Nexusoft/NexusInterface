@@ -19,7 +19,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
   removeModal,
-} from 'actions/globalUI';
+} from 'actions/overlays';
 import Link from 'components/Link';
 import { rpcErrorHandler } from 'utils/form';
 import sendIcon from 'images/send.sprite.svg';

@@ -10,7 +10,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import ExternalLink from 'components/ExternalLink';
-import { openConfirmDialog } from 'actions/globalUI';
+import { openConfirmDialog } from 'actions/overlays';
 import { modulesDir } from 'consts/paths';
 import { timing } from 'styles';
 import deleteDirectory from 'utils/promisified/deleteDirectory';

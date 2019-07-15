@@ -1,5 +1,5 @@
 import store from 'store';
-import { openErrorDialog } from 'actions/globalUI';
+import { openErrorDialog } from 'actions/overlays';
 
 export function resolveValue(input) {
   if (input && input.target) {

@@ -5,7 +5,7 @@ import {
   showNotification,
   openModal,
   openSuccessDialog,
-} from 'actions/globalUI';
+} from 'actions/overlays';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import store from 'store';
 import { loadModuleFromDir } from 'lib/modules';

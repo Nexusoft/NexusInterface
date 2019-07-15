@@ -9,7 +9,7 @@ import rpc from 'lib/rpc';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
-import { showNotification, openConfirmDialog } from 'actions/globalUI';
+import { showNotification, openConfirmDialog } from 'actions/overlays';
 import { rpcErrorHandler } from 'utils/form';
 
 /**

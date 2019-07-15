@@ -9,7 +9,7 @@ import { selectContact, deleteContact } from 'actions/addressBook';
 import Icon from 'components/Icon';
 import Text, { translate } from 'components/Text';
 import Tooltip from 'components/Tooltip';
-import { openConfirmDialog, openModal } from 'actions/globalUI';
+import { openConfirmDialog, openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import { timing } from 'styles';
 import * as color from 'utils/color';

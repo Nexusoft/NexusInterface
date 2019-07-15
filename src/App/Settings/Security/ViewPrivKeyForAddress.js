@@ -11,7 +11,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import InputGroup from 'components/InputGroup';
-import { openErrorDialog, showNotification } from 'actions/globalUI';
+import { openErrorDialog, showNotification } from 'actions/overlays';
 import Text from 'components/Text';
 import rpc from 'lib/rpc';
 import copyIcon from 'images/copy.sprite.svg';

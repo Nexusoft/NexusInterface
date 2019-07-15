@@ -2,7 +2,7 @@
 import { remote } from 'electron';
 
 // Internal
-import { openModal } from 'actions/globalUI';
+import { openModal } from 'actions/overlays';
 import * as ac from 'actions/setupApp';
 import { getInfo } from 'actions/core';
 import { loadModules } from 'actions/module';

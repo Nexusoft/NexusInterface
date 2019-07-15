@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import { removeNotification } from 'actions/globalUI';
+import { removeNotification } from 'actions/overlays';
 import SnackBar from 'components/SnackBar';
 import { timing } from 'styles';
 

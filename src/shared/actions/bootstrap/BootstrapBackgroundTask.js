@@ -9,7 +9,7 @@ import {
   openSuccessDialog,
   openModal,
   showNotification,
-} from 'actions/globalUI';
+} from 'actions/overlays';
 import BackgroundTask from 'components/BackgroundTask';
 import Icon from 'components/Icon';
 import { animations, timing } from 'styles';

@@ -6,7 +6,7 @@ import { keyframes } from '@emotion/core';
 
 // Internal
 import ModalContext from 'context/modal';
-import { removeModal } from 'actions/globalUI';
+import { removeModal } from 'actions/overlays';
 import Overlay from 'components/Overlay';
 import { timing } from 'styles';
 import { passRef } from 'utils/etc';

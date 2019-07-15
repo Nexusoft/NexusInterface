@@ -17,7 +17,7 @@ import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Icon from 'components/Icon';
-import { showNotification } from 'actions/globalUI';
+import { showNotification } from 'actions/overlays';
 import NexusAddress from 'components/NexusAddress';
 import SettingsContainer from 'components/SettingsContainer';
 import warningIcon from 'images/warning.sprite.svg';

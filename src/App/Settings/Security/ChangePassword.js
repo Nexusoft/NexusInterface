@@ -16,7 +16,7 @@ import {
   openConfirmDialog,
   openErrorDialog,
   openSuccessDialog,
-} from 'actions/globalUI';
+} from 'actions/overlays';
 import { rpcErrorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 

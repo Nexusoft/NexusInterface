@@ -12,7 +12,7 @@ import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Tooltip from 'components/Tooltip';
 import MyAddressesModal from 'components/MyAddressesModal';
-import { openModal } from 'actions/globalUI';
+import { openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 
 // Icons

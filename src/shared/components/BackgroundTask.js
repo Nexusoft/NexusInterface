@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import { removeBackgroundTask } from 'actions/globalUI';
+import { removeBackgroundTask } from 'actions/overlays';
 import SnackBar from 'components/SnackBar';
 import TaskContext from 'context/task';
 import { timing } from 'styles';

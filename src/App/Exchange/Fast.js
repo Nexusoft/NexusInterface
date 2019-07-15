@@ -8,7 +8,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import Text from 'components/Text';
 
 // Internal
-import { showNotification } from 'actions/globalUI';
+import { showNotification } from 'actions/overlays';
 import * as actionsCreators from 'actions/exchange';
 import ExchangeForm from './ExchangeForm';
 import styles from './style.css';

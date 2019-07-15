@@ -6,7 +6,7 @@ import path from 'path';
 // Internal
 import store from 'store';
 import { setUpdaterState } from 'actions/updater';
-import { showBackgroundTask, showNotification } from 'actions/globalUI';
+import { showBackgroundTask, showNotification } from 'actions/overlays';
 import AutoUpdateBackgroundTask from './AutoUpdateBackgroundTask';
 
 const mainUpdater = remote.getGlobal('updater');

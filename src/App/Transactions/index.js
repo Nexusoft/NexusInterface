@@ -33,7 +33,7 @@ import rpc from 'lib/rpc';
 import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
-import { openModal } from 'actions/globalUI';
+import { openModal } from 'actions/overlays';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import BackgroundTask from 'components/BackgroundTask';
-import { openConfirmDialog, showBackgroundTask } from 'actions/globalUI';
+import { openConfirmDialog, showBackgroundTask } from 'actions/overlays';
 
 @connect(
   null,

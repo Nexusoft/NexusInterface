@@ -13,7 +13,7 @@ import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import Switch from 'components/Switch';
-import { showNotification, openErrorDialog } from 'actions/globalUI';
+import { showNotification, openErrorDialog } from 'actions/overlays';
 
 const LoginFieldSet = styled(FieldSet)({
   maxWidth: 400,

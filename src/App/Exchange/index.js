@@ -12,7 +12,7 @@ import googleanalytics from 'scripts/googleanalytics';
 // Internal Global Dependencies
 import Panel from 'components/Panel';
 import Tab from 'components/Tab';
-import { showNotification } from 'actions/globalUI';
+import { showNotification } from 'actions/overlays';
 import * as TYPE from 'consts/actionTypes';
 import Text from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';

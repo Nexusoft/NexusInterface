@@ -15,7 +15,7 @@ import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
 import Switch from 'components/Switch';
-import { showNotification, openConfirmDialog } from 'actions/globalUI';
+import { showNotification, openConfirmDialog } from 'actions/overlays';
 import SettingsContainer from 'components/SettingsContainer';
 import { updateSettings } from 'actions/settings';
 import * as form from 'utils/form';

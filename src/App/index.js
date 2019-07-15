@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 
 // Internal
 import GlobalStyles from 'components/GlobalStyles';
-import GlobalUI from './GlobalUI';
+import Overlays from './Overlays';
 import Overview from './Overview';
 import Header from './Header';
 import Navigation from './Navigation';
@@ -48,7 +48,7 @@ const Main = styled.main({
 const App = ({ history }) => (
   <ThemeController>
     <ConnectedRouter history={history}>
-      <GlobalUI>
+      <Overlays>
         <div>
           <GlobalStyles />
           <AppBackground />
@@ -74,7 +74,7 @@ const App = ({ history }) => (
             <Navigation />
           </AppLayout>
         </div>
-      </GlobalUI>
+      </Overlays>
     </ConnectedRouter>
   </ThemeController>
 );

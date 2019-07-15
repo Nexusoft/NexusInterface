@@ -10,7 +10,7 @@ import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import NexusAddress from 'components/NexusAddress';
-import { openConfirmDialog, openModal } from 'actions/globalUI';
+import { openConfirmDialog, openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import timeZones from 'data/timeZones';
 import { timing } from 'styles';

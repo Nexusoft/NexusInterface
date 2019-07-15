@@ -14,7 +14,7 @@ import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Dependencies
 import ExchangeForm from './ExchangeForm';
-import { showNotification } from 'actions/globalUI';
+import { showNotification } from 'actions/overlays';
 import styles from './style.css';
 
 import arrow from 'images/arrow.svg';

@@ -10,7 +10,7 @@ import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
-import { showNotification } from 'actions/globalUI';
+import { showNotification } from 'actions/overlays';
 import copyIcon from 'images/copy.sprite.svg';
 
 const RawAddressComponent = styled.div({

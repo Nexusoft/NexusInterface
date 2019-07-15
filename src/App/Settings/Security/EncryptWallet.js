@@ -11,7 +11,7 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import { openSuccessDialog } from 'actions/globalUI';
+import { openSuccessDialog } from 'actions/overlays';
 import rpc from 'lib/rpc';
 import { consts } from 'styles';
 import { rpcErrorHandler } from 'utils/form';

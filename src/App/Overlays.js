@@ -56,7 +56,7 @@ const Notifications = ({ notifications, taskCount }) => (
  * Controls the elements that get rendered over the main app, so dialogs/modals etc
  *
  * @export
- * @class GlobalUI
+ * @class Overlays
  * @extends {Component}
  */
 @connect(({ ui: { modals, notifications, backgroundTasks } }) => ({
@@ -64,12 +64,12 @@ const Notifications = ({ notifications, taskCount }) => (
   notifications,
   backgroundTasks,
 }))
-export default class GlobalUI extends Component {
+export default class Overlays extends Component {
   /**
    * Component's Renderable JSX
    *
    * @returns
-   * @memberof GlobalUI
+   * @memberof Overlays
    */
   render() {
     const { children, modals, notifications, backgroundTasks } = this.props;

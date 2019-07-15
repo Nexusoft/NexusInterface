@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 // Internal
 import Tooltip from 'components/Tooltip';
 import userIcon from 'images/user.sprite.svg';
-import { openModal } from 'actions/globalUI';
+import { openModal } from 'actions/overlays';
 import StatusIcon from 'components/StatusIcon';
 import MyAddressesModal from 'components/MyAddressesModal';
 import { timing } from 'styles';

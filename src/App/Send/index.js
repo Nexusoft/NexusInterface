@@ -12,7 +12,7 @@ import Panel from 'components/Panel';
 import Button from 'components/Button';
 import WaitingMessage from 'components/WaitingMessage';
 import Tooltip from 'components/Tooltip';
-import { openModal } from 'actions/globalUI';
+import { openModal } from 'actions/overlays';
 
 // Internal Local Dependencies
 import MoveBetweenAccountsModal from './MoveBetweenAccountsModal';

@@ -14,7 +14,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
   showNotification,
-} from 'actions/globalUI';
+} from 'actions/overlays';
 import rpc from 'lib/rpc';
 import * as TYPE from 'consts/actionTypes';
 import { rpcErrorHandler, trimText } from 'utils/form';

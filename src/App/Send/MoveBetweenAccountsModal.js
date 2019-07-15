@@ -16,7 +16,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
   removeModal,
-} from 'actions/globalUI';
+} from 'actions/overlays';
 import { loadMyAccounts } from 'actions/account';
 import { rpcErrorHandler } from 'utils/form';
 import { getAccountOptions, getRegisteredFieldNames } from './selectors';

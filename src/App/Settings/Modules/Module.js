@@ -8,7 +8,7 @@ import ModuleIcon from 'components/ModuleIcon';
 import Switch from 'components/Switch';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
-import { openConfirmDialog, openModal } from 'actions/globalUI';
+import { openConfirmDialog, openModal } from 'actions/overlays';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import { isModuleActive } from 'lib/modules';
 import { timing } from 'styles';

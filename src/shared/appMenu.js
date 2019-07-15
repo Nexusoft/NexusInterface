@@ -10,7 +10,7 @@ import rpc from 'lib/rpc';
 import { updateSettings } from 'actions/settings';
 import { backupWallet as backup } from 'lib/wallet';
 import Text from 'components/Text';
-import { showNotification, openErrorDialog } from 'actions/globalUI';
+import { showNotification, openErrorDialog } from 'actions/overlays';
 import { clearCoreInfo } from 'actions/core';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';

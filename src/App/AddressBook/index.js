@@ -10,7 +10,7 @@ import googleanalytics from 'scripts/googleanalytics';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Panel from 'components/Panel';
-import { openModal } from 'actions/globalUI';
+import { openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import ContextMenuBuilder from 'contextmenu';
 

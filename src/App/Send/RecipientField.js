@@ -10,7 +10,7 @@ import FormField from 'components/FormField';
 import Text, { translate } from 'components/Text';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import { openModal } from 'actions/globalUI';
+import { openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import plusIcon from 'images/plus.sprite.svg';
 import { getAddressNameMap, getRecipientSuggestions } from './selectors';

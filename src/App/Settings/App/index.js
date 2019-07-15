@@ -18,7 +18,7 @@ import {
   openConfirmDialog,
   openErrorDialog,
   showNotification,
-} from 'actions/globalUI';
+} from 'actions/overlays';
 import SettingsContainer from 'components/SettingsContainer';
 import * as color from 'utils/color';
 import * as form from 'utils/form';

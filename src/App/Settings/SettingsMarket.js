@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // Internal Dependencies
 import * as TYPE from 'consts/actionTypes';
-import { showNotification } from 'actions/globalUI';
+import { showNotification } from 'actions/overlays';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {

@@ -10,7 +10,7 @@ import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import syncingIcon from 'images/syncing.sprite.svg';
 import googleanalytics from 'scripts/googleanalytics';
-import { showNotification } from 'actions/globalUI';
+import { showNotification } from 'actions/overlays';
 
 // Internal Global Dependencies
 import * as TYPE from 'consts/actionTypes';

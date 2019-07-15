@@ -15,7 +15,7 @@ import {
   openErrorDialog,
   openSuccessDialog,
   removeModal,
-} from 'actions/globalUI';
+} from 'actions/overlays';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import ModalContext from 'context/modal';

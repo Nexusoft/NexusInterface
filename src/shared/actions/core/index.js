@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { openModal, showNotification } from 'actions/globalUI';
+import { openModal, showNotification } from 'actions/overlays';
 import rpc from 'lib/rpc';
 import * as ac from 'actions/setupApp';
 import * as TYPE from 'consts/actionTypes';

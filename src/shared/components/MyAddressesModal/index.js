@@ -15,7 +15,7 @@ import plusIcon from 'images/plus.sprite.svg';
 import Account from './Account';
 import NewAddressForm from './NewAddressForm';
 import Tooltip from 'components/Tooltip';
-import { showNotification } from 'actions/globalUI';
+import { showNotification } from 'actions/overlays';
 import rpc from 'lib/rpc';
 
 const MyAddressesModalComponent = styled(Modal)({

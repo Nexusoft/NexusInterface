@@ -1,5 +1,5 @@
 import store from 'store';
-import { openConfirmDialog } from 'actions/globalUI';
+import { openConfirmDialog } from 'actions/overlays';
 
 export default function confirm(options) {
   return new Promise((resolve, reject) => {
