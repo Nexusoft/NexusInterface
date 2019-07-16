@@ -428,25 +428,27 @@ function buildMenu() {
   return menu;
 }
 
-let nextRebuild = null;
+let rebuildTimerId = null;
 
 /**
  * Rebuild the menu asynchronously so that if multiple rebuild requests come
  * at the same time, it only rebuilds once
  *
  */
-export function rebuildMenu() {
-  clearTimeout(nextRebuild);
-  nextRebuild = setTimeout(buildMenu, 0);
+function rebuildMenu() {
+  clearTimeout(rebuildTimerId);
+  rebuildTimerId = setTimeout(buildMenu, 0);
 }
 
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
 export function initializeMenu() {
+  buildMenu();
   observeStore(state => state.updater.state, rebuildMenu);
   observeStore(
     state => state.core && state.core.info && state.core.info.connections,
     rebuildMenu
   );
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
+  observeStore(state => state.webview, rebuildMenu);
 }

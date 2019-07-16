@@ -8,7 +8,6 @@ import { remote } from 'electron';
 // Internal Global
 import { setActiveWebView } from 'actions/webview';
 import { modulesDir } from 'consts/paths';
-import { rebuildMenu } from 'appMenu';
 
 const fileServer = remote.getGlobal('fileServer');
 
@@ -44,7 +43,6 @@ class WebView extends React.Component {
    */
   componentDidMount() {
     this.props.setActiveWebView(this.webviewRef.current);
-    rebuildMenu();
   }
 
   /**
@@ -54,7 +52,6 @@ class WebView extends React.Component {
    */
   componentWillUnmount() {
     this.props.setActiveWebView(null);
-    rebuildMenu();
   }
 
   /**

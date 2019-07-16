@@ -6,9 +6,9 @@ import { openModal } from 'actions/overlays';
 import * as ac from 'actions/setupApp';
 import { getInfo } from 'actions/core';
 import { loadModules } from 'actions/module';
-import { startAutoUpdate } from 'lib/updater';
+import { initializeUpdater, startAutoUpdate } from 'lib/updater';
 import { initializeWebView } from 'lib/modules';
-import { rebuildMenu, initializeMenu } from 'appMenu';
+import { initializeMenu } from 'appMenu';
 import store from 'store';
 
 import LicenseAgreementModal from './LicenseAgreementModal';
@@ -19,7 +19,6 @@ import { startCoreOuputWatch, stopCoreOuputWatch } from './coreOutputWatch';
 const { dispatch } = store;
 export default function setupApp() {
   initializeMenu();
-  rebuildMenu();
 
   dispatch(getInfo());
   setInterval(() => dispatch(getInfo()), 10000);
@@ -56,6 +55,7 @@ export default function setupApp() {
   startCoreOuputWatch();
   const state = store.getState();
 
+  initializeUpdater();
   if (state.settings.autoUpdate) {
     startAutoUpdate();
   }

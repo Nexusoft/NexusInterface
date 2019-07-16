@@ -68,51 +68,56 @@ export function stopAutoUpdate() {
  * Initialize the Updater
  *
  */
-mainUpdater.logger = log;
-mainUpdater.currentVersion = APP_VERSION;
-mainUpdater.autoDownload = true;
-mainUpdater.autoInstallOnAppQuit = false;
-if (process.env.NODE_ENV === 'development') {
-  mainUpdater.updateConfigPath = path.join(process.cwd(), 'dev-app-update.yml');
+export function initializeUpdater() {
+  mainUpdater.logger = log;
+  mainUpdater.currentVersion = APP_VERSION;
+  mainUpdater.autoDownload = true;
+  mainUpdater.autoInstallOnAppQuit = false;
+  if (process.env.NODE_ENV === 'development') {
+    mainUpdater.updateConfigPath = path.join(
+      process.cwd(),
+      'dev-app-update.yml'
+    );
+  }
+  mainUpdater.on('error', err => {
+    console.error(err);
+  });
+
+  mainUpdater.on('update-available', updateInfo => {
+    store.dispatch(
+      showNotification(
+        `New wallet version ${updateInfo.version} available. Downloading...`,
+        'work'
+      )
+    );
+  });
+
+  mainUpdater.on('update-downloaded', updateInfo => {
+    stopAutoUpdate();
+    store.dispatch(
+      showBackgroundTask(AutoUpdateBackgroundTask, {
+        version: updateInfo.version,
+        quitAndInstall: mainUpdater.quitAndInstall,
+      })
+    );
+  });
+
+  mainUpdater.on('error', err => {
+    store.dispatch(setUpdaterState('idle'));
+  });
+  mainUpdater.on('checking-for-update', () => {
+    store.dispatch(setUpdaterState('checking'));
+  });
+  mainUpdater.on('update-available', () => {
+    store.dispatch(setUpdaterState('downloading'));
+  });
+  mainUpdater.on('update-not-available', () => {
+    store.dispatch(setUpdaterState('idle'));
+  });
+  mainUpdater.on('download-progress', () => {
+    store.dispatch(setUpdaterState('downloading'));
+  });
+  mainUpdater.on('update-downloaded', () => {
+    store.dispatch(setUpdaterState('downloaded'));
+  });
 }
-mainUpdater.on('error', err => {
-  console.error(err);
-});
-
-mainUpdater.on('update-available', updateInfo => {
-  store.dispatch(
-    showNotification(
-      `New wallet version ${updateInfo.version} available. Downloading...`,
-      'work'
-    )
-  );
-});
-
-mainUpdater.on('update-downloaded', updateInfo => {
-  stopAutoUpdate();
-  store.dispatch(
-    showBackgroundTask(AutoUpdateBackgroundTask, {
-      version: updateInfo.version,
-      quitAndInstall: mainUpdater.quitAndInstall,
-    })
-  );
-});
-
-mainUpdater.on('error', err => {
-  store.dispatch(setUpdaterState('idle'));
-});
-mainUpdater.on('checking-for-update', () => {
-  store.dispatch(setUpdaterState('checking'));
-});
-mainUpdater.on('update-available', () => {
-  store.dispatch(setUpdaterState('downloading'));
-});
-mainUpdater.on('update-not-available', () => {
-  store.dispatch(setUpdaterState('idle'));
-});
-mainUpdater.on('download-progress', () => {
-  store.dispatch(setUpdaterState('downloading'));
-});
-mainUpdater.on('update-downloaded', () => {
-  store.dispatch(setUpdaterState('downloaded'));
-});

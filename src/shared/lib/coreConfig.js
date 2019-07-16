@@ -39,3 +39,31 @@ export function customConfig(config = {}) {
         : defaultConfig.verbose,
   };
 }
+
+/**
+ * Load user & password from the nexus.conf file
+ *
+ * @returns
+ */
+export function loadNexusConf() {
+  if (fs.existsSync(path.join(coreDataDir, 'nexus.conf'))) {
+    log.info('nexus.conf exists. Importing username and password.');
+
+    const configs = fs
+      .readFileSync(path.join(coreDataDir, 'nexus.conf'))
+      .toString()
+      .split(`\n`);
+    const userConfig = configs
+      .map(c => /^rpcuser=(.*)/.exec(c.trim()))
+      .find(c => c);
+    const user = userConfig && userConfig[1];
+    const passwordConfig = configs
+      .map(c => /^rpcpassword=(.*)/.exec(c.trim()))
+      .find(c => c);
+    const password = passwordConfig && passwordConfig[1];
+
+    return { user, password };
+  } else {
+    return {};
+  }
+}
