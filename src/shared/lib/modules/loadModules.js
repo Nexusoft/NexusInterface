@@ -3,7 +3,7 @@ import fs from 'fs';
 import semver from 'semver';
 
 import { modulesDir } from 'consts/paths';
-import { loadModuleFromDir } from './loadModule';
+import { loadModuleFromDir } from './loadModuleFromDir';
 
 /**
  * Get the path of an icon if the file does exist

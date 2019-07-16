@@ -68,7 +68,7 @@ export function stopAutoUpdate() {
  * Initialize the Updater
  *
  */
-export function initializeUpdater() {
+export function initializeUpdater(autoUpdate) {
   mainUpdater.logger = log;
   mainUpdater.currentVersion = APP_VERSION;
   mainUpdater.autoDownload = true;
@@ -120,4 +120,8 @@ export function initializeUpdater() {
   mainUpdater.on('update-downloaded', () => {
     store.dispatch(setUpdaterState('downloaded'));
   });
+
+  if (autoUpdate) {
+    startAutoUpdate();
+  }
 }

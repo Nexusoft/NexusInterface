@@ -6,7 +6,7 @@ import { openModal } from 'actions/overlays';
 import * as ac from 'actions/setupApp';
 import { getInfo } from 'actions/core';
 import { loadModules } from 'actions/module';
-import { initializeUpdater, startAutoUpdate } from 'lib/updater';
+import { initializeUpdater } from 'lib/updater';
 import { initializeWebView } from 'lib/modules';
 import { initializeMenu } from 'appMenu';
 import store from 'store';
@@ -17,19 +17,20 @@ import ClosingModal from './ClosingModal';
 import { startCoreOuputWatch, stopCoreOuputWatch } from './coreOutputWatch';
 
 const { dispatch } = store;
-export default function setupApp() {
-  initializeMenu();
-
+export function preRender() {
   dispatch(getInfo());
   setInterval(() => dispatch(getInfo()), 10000);
+
+  showInitialModals();
 
   dispatch(ac.SetMarketAveData());
   setInterval(() => {
     dispatch(ac.SetMarketAveData());
   }, 900000);
 
-  const mainWindow = remote.getCurrentWindow();
+  dispatch(loadModules());
 
+  const mainWindow = remote.getCurrentWindow();
   mainWindow.on('close', async e => {
     const {
       settings: { minimizeOnClose, manualDaemon },
@@ -51,29 +52,32 @@ export default function setupApp() {
       remote.app.exit();
     }
   });
-
-  startCoreOuputWatch();
-  const state = store.getState();
-
-  initializeUpdater();
-  if (state.settings.autoUpdate) {
-    startAutoUpdate();
-  }
-
-  showInitialModals(state);
-  initializeWebView();
-
-  dispatch(loadModules());
 }
 
-function showInitialModals({ settings }) {
+export function postRender() {
+  const {
+    settings: { autoUpdate },
+  } = store.getState();
+
+  startCoreOuputWatch();
+
+  initializeMenu();
+  initializeWebView();
+  initializeUpdater(autoUpdate);
+}
+
+function showInitialModals() {
+  const {
+    settings: { experimentalWarningDisabled, acceptedAgreement },
+  } = store.getState();
+
   const showExperimentalWarning = () => {
-    if (!settings.experimentalWarningDisabled) {
+    if (!experimentalWarningDisabled) {
       dispatch(openModal(ExperimentalWarningModal));
     }
   };
 
-  if (!settings.acceptedAgreement) {
+  if (!acceptedAgreement) {
     dispatch(
       openModal(LicenseAgreementModal, {
         fullScreen: true,
