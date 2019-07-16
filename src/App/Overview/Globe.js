@@ -183,6 +183,9 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   componentDidUpdate(prevProps) {
+    if (this.geoiplookup == null) {
+      return;
+    }
     this.timesSkipped++;
     if (
       this.props.connections !== prevProps.connections ||
