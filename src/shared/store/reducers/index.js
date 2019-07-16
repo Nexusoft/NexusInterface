@@ -15,6 +15,8 @@ import ui from './ui';
 import modules from './modules';
 import moduleStates from './moduleStates';
 import core from './core';
+import updater from './updater';
+import webview from './webview';
 
 export default function createRootReducer(history) {
   const routerReducer = connectRouter(history);
@@ -22,7 +24,6 @@ export default function createRootReducer(history) {
   return connectRouter(history)(
     combineReducers({
       core,
-      router: routerReducer,
       list,
       market,
       transactions,
@@ -35,6 +36,9 @@ export default function createRootReducer(history) {
       ui,
       modules,
       moduleStates,
+      updater,
+      webview,
+      router: routerReducer,
       form: formReducer,
     })
   );

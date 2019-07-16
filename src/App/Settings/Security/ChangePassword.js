@@ -5,14 +5,18 @@ import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import * as RPC from 'lib/rpc';
-import { getInfo } from 'actions/coreActionCreators';
+import rpc from 'lib/rpc';
+import { getInfo } from 'actions/core';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import UIController from 'components/UIController';
+import {
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+} from 'actions/overlays';
 import { rpcErrorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
 
@@ -29,9 +33,12 @@ const ChangePasswordComponent = styled.form({
  */
 @connect(
   null,
-  dispatch => ({
-    getInfo: () => dispatch(getInfo()),
-  })
+  {
+    getInfo,
+    openConfirmDialog,
+    openErrorDialog,
+    openSuccessDialog,
+  }
 )
 @reduxForm({
   form: 'changePassword',
@@ -59,10 +66,10 @@ const ChangePasswordComponent = styled.form({
     return errors;
   },
   onSubmit: ({ password, newPassword }) =>
-    RPC.PROMISE('walletpassphrasechange', [password, newPassword]),
+    rpc('walletpassphrasechange', [password, newPassword]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
-    UIController.openSuccessDialog({
+    this.props.openSuccessDialog({
       message: <Text id="Alert.PasswordHasBeenChanged" />,
     });
   },
@@ -75,15 +82,15 @@ class ChangePassword extends Component {
    * @memberof ChangePassword
    */
   confirmLogout = () => {
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: <Text id="Settings.ConfirmLogOut" />,
       callbackYes: async () => {
         try {
-          await RPC.PROMISE('walletlock', []);
+          await rpc('walletlock', []);
           this.props.getInfo();
         } catch (err) {
           const note = (err & err.error && err.error.message) || err;
-          UIController.openErrorDialog({
+          this.props.openErrorDialog({
             message: <Text id="Settings.Errors.LoggingOut" />,
             note,
           });

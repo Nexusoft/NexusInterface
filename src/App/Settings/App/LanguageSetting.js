@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 // Internal
 import Text from 'components/Text';
 import * as FlagFile from 'images/LanguageFlags';
-import { updateSettings } from 'actions/settingsActionCreators';
+import { updateSettings } from 'actions/settings';
 import SettingsField from 'components/SettingsField';
 import Select from 'components/Select';
 

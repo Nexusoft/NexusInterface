@@ -2,7 +2,7 @@
 import Request from 'request';
 
 // Internal
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 
 export const SetMarketAveData = () => dispatch => {
   Request(

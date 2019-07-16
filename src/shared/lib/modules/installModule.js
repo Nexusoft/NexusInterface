@@ -1,7 +1,11 @@
 import { join, extname, dirname, normalize } from 'path';
 import fs from 'fs';
 
-import UIController from 'components/UIController';
+import {
+  showNotification,
+  openModal,
+  openSuccessDialog,
+} from 'actions/overlays';
 import ModuleDetailsModal from 'components/ModuleDetailsModal';
 import store from 'store';
 import { loadModuleFromDir } from 'lib/modules';
@@ -84,43 +88,49 @@ async function installFromDirectory(path) {
   const module = await loadModuleFromDir(path, { devMode, verifyModuleSource });
 
   if (!module) {
-    UIController.showNotification('Invalid Module', 'error');
+    store.dispatch(showNotification('Invalid Module', 'error'));
     return;
   }
 
-  UIController.openModal(ModuleDetailsModal, {
-    module,
-    forInstall: true,
-    install: async () => {
-      try {
-        const dest = join(modulesDir, module.name);
-        if (fs.existsSync(dest)) {
-          const agreed = await confirm({
-            question: 'Overwrite module?',
-            note: 'A module with the same directory name already exists',
-          });
-          if (!agreed) return;
+  store.dispatch(
+    openModal(ModuleDetailsModal, {
+      module,
+      forInstall: true,
+      install: async () => {
+        try {
+          const dest = join(modulesDir, module.name);
+          if (fs.existsSync(dest)) {
+            const agreed = await confirm({
+              question: 'Overwrite module?',
+              note: 'A module with the same directory name already exists',
+            });
+            if (!agreed) return;
 
-          await deleteDirectory(dest, { glob: false });
+            await deleteDirectory(dest, { glob: false });
+          }
+
+          await copyModule(module.files, path, dest);
+
+          store.dispatch(
+            openSuccessDialog({
+              message: 'Module has been successfully installed',
+              note:
+                'The wallet will now be refreshed for the new module to take effect',
+              onClose: () => {
+                location.reload();
+              },
+            })
+          );
+        } catch (err) {
+          console.error(err);
+          store.dispatch(
+            showNotification('Error copying module files', 'error')
+          );
+          return;
         }
-
-        await copyModule(module.files, path, dest);
-
-        UIController.openSuccessDialog({
-          message: 'Module has been successfully installed',
-          note:
-            'The wallet will now be refreshed for the new module to take effect',
-          onClose: () => {
-            location.reload();
-          },
-        });
-      } catch (err) {
-        console.error(err);
-        UIController.showNotification('Error copying module files', 'error');
-        return;
-      }
-    },
-  });
+      },
+    })
+  );
 }
 
 /**
@@ -135,14 +145,14 @@ async function installFromDirectory(path) {
 export async function installModule(path) {
   try {
     if (!fs.existsSync(path)) {
-      UIController.showNotification('Cannot find module', 'error');
+      store.dispatch(showNotification('Cannot find module', 'error'));
       return;
     }
     let dirPath = path;
 
     if (fs.statSync(path).isFile()) {
       if (!supportedExtensions.some(ext => path.endsWith(ext))) {
-        UIController.showNotification('Unsupported file type', 'error');
+        store.dispatch(showNotification('Unsupported file type', 'error'));
         return;
       }
 
@@ -169,9 +179,8 @@ export async function installModule(path) {
       const modulesDir = normalize(modulesDir);
       const dirPath = normalize(path);
       if (dirPath.startsWith(modulesDir)) {
-        UIController.showNotification(
-          'Cannot install from that location',
-          'error'
+        store.dispatch(
+          showNotification('Cannot install from that location', 'error')
         );
         return;
       }
@@ -180,7 +189,7 @@ export async function installModule(path) {
     await installFromDirectory(dirPath);
   } catch (err) {
     console.error(err);
-    UIController.showNotification('An unknown error occurred', 'error');
+    store.dispatch(showNotification('An unknown error occurred', 'error'));
     return;
   }
 }

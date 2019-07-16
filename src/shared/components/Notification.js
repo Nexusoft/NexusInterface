@@ -1,9 +1,10 @@
 // External
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import UIController from 'components/UIController';
+import { removeNotification } from 'actions/overlays';
 import SnackBar from 'components/SnackBar';
 import { timing } from 'styles';
 
@@ -27,6 +28,10 @@ const NotificationComponent = styled(SnackBar)({
   },
 });
 
+@connect(
+  null,
+  removeNotification
+)
 export default class Notification extends Component {
   static defaultProps = {
     type: 'info',
@@ -59,7 +64,7 @@ export default class Notification extends Component {
   };
 
   remove = () => {
-    UIController.removeNotification(this.props.notifID);
+    this.props.removeNotification(this.props.notifID);
   };
 
   stopAutoClose = () => {

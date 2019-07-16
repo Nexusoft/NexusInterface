@@ -10,15 +10,15 @@ import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import syncingIcon from 'images/syncing.sprite.svg';
 import googleanalytics from 'scripts/googleanalytics';
-import UIController from 'components/UIController';
+import { showNotification } from 'actions/overlays';
 
 // Internal Global Dependencies
-import * as TYPE from 'actions/actiontypes';
+import * as TYPE from 'consts/actionTypes';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Text, { translate } from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
-import * as actionsCreators from 'actions/marketActionCreators';
+import * as actionsCreators from 'actions/market';
 
 // Internal Local Dependencies
 import MarketDepth from './Chart/MarketDepth';
@@ -52,8 +52,7 @@ const mapStateToProps = state => {
     settings: state.settings,
   };
 };
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch);
+const mapDispatchToProps = { ...actionsCreators, showNotification };
 
 /**
  * The Market Page
@@ -262,7 +261,7 @@ class Market extends Component {
    */
   refreshMarket() {
     this.refresher();
-    UIController.showNotification(<Text id="Market.Refreshing" />, 'success');
+    this.props.showNotification(<Text id="Market.Refreshing" />, 'success');
   }
 
   // Mandatory React method

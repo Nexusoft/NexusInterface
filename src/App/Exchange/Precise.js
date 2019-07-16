@@ -14,19 +14,18 @@ import googleanalytics from 'scripts/googleanalytics';
 
 // Internal Dependencies
 import ExchangeForm from './ExchangeForm';
-import UIController from 'components/UIController';
+import { showNotification } from 'actions/overlays';
 import styles from './style.css';
 
 import arrow from 'images/arrow.svg';
-import * as actionsCreators from 'actions/exchangeActionCreators';
+import * as actionsCreators from 'actions/exchange';
 import Text from 'components/Text';
 
 // React-Redux mandatory methods
 const mapStateToProps = state => {
   return { ...state.common, ...state.exchange };
 };
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(actionsCreators, dispatch);
+const mapDispatchToProps = { ...actionsCreators, showNotification };
 
 /**
  * The Internal Page to use the Precise function on Shapeshift
@@ -200,7 +199,7 @@ class Precise extends Component {
       let pair = this.props.from + '_' + this.props.to;
       this.props.GetQuote(pair, this.props.ammount);
     } else {
-      UIController.showNotification('Outside trade-able ammounts', 'error');
+      this.props.showNotification('Outside trade-able ammounts', 'error');
     }
     this.props.ToggleAcyncButtons();
   }
@@ -227,7 +226,7 @@ class Precise extends Component {
             if (response.statusCode === 200) {
               let res = JSON.parse(response.body);
               if (!res.isvalid) {
-                UIController.showNotification(
+                this.props.showNotification(
                   `${res.error}\n ${this.props.to} Address.`,
                   'error'
                 );
@@ -243,7 +242,7 @@ class Precise extends Component {
                     if (response.statusCode === 200) {
                       let res = JSON.parse(response.body);
                       if (!res.isvalid) {
-                        UIController.showNotification(
+                        this.props.showNotification(
                           `${res.error}\n ${this.props.from} Address.`,
                           'error'
                         );
@@ -265,10 +264,9 @@ class Precise extends Component {
             }
           }
         );
-      } else
-        UIController.showNotification('Refund Address is required', 'error');
+      } else this.props.showNotification('Refund Address is required', 'error');
     } else
-      UIController.showNotification(
+      this.props.showNotification(
         `${this.currencylabel()} Address is required`,
         'error'
       );

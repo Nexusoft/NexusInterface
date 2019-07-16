@@ -1,5 +1,6 @@
 // External
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import { join } from 'path';
 
@@ -9,7 +10,7 @@ import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import ExternalLink from 'components/ExternalLink';
-import UIController from 'components/UIController';
+import { openConfirmDialog } from 'actions/overlays';
 import { modulesDir } from 'consts/paths';
 import { timing } from 'styles';
 import deleteDirectory from 'utils/promisified/deleteDirectory';
@@ -75,6 +76,10 @@ const CheckMark = styled.span({
  * @class ModuleDetailsModal
  * @extends {React.Component}
  */
+@connect(
+  null,
+  { openConfirmDialog }
+)
 class ModuleDetailsModal extends React.Component {
   /**
    *
@@ -82,7 +87,7 @@ class ModuleDetailsModal extends React.Component {
    * @memberof ModuleDetailsModal
    */
   confirmDelete = () => {
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: `Delete ${this.props.module.displayName}?`,
       callbackYes: async () => {
         const moduleDir = join(modulesDir, this.props.module.dirName);

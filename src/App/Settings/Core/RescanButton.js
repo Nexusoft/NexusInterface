@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import * as RPC from 'lib/rpc';
-import UIController from 'components/UIController';
+import rpc from 'lib/rpc';
+import { showNotification } from 'actions/overlays';
 import Text from 'components/Text';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
@@ -13,6 +14,10 @@ import { consts } from 'styles';
  * @class RescanButton
  * @extends {React.Component}
  */
+@connect(
+  null,
+  { showNotification }
+)
 class RescanButton extends React.Component {
   state = {
     rescanning: false,
@@ -26,9 +31,9 @@ class RescanButton extends React.Component {
   rescan = async () => {
     try {
       this.setState({ rescanning: true });
-      await RPC.PROMISE('rescan', []);
+      await rpc('rescan', []);
     } catch (err) {
-      UIController.showNotification(
+      this.props.showNotification(
         <Text id="MyAddressesModal.RescanError" />,
         'error'
       );
@@ -36,7 +41,7 @@ class RescanButton extends React.Component {
     } finally {
       this.setState({ rescanning: false });
     }
-    UIController.showNotification(
+    this.props.showNotification(
       <Text id="MyAddressesModal.RescanSuccess" />,
       'success'
     );

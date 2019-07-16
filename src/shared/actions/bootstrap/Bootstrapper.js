@@ -11,7 +11,7 @@ import rimraf from 'rimraf';
 import { coreDataDir } from 'consts/paths';
 import { walletDataDir } from 'consts/paths';
 import { backupWallet } from 'lib/wallet';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import extractTarball from 'utils/promisified/extractTarball';
 import sleep from 'utils/promisified/sleep';
 
@@ -85,7 +85,7 @@ export default class Bootstrapper {
    */
   async start({ backupFolder, clearCoreInfo }) {
     try {
-      const getinfo = await RPC.PROMISE('getinfo', []);
+      const getinfo = await rpc('getinfo', []);
 
       if (getinfo.version.includes('0.3') || parseFloat(getinfo.version) >= 3) {
         recentDbUrl = recentDbUrlTritium;
@@ -314,7 +314,7 @@ export default class Bootstrapper {
 
     const getInfo = async () => {
       try {
-        await RPC.PROMISE('getinfo', []);
+        await rpc('getinfo', []);
       } catch (err) {
         await getInfo();
       }
@@ -328,7 +328,7 @@ export default class Bootstrapper {
     // Retry up to 5 times in 5 seconds
     while (count <= 5) {
       try {
-        await RPC.PROMISE('rescan', []);
+        await rpc('rescan', []);
         return;
       } catch (err) {
         console.error('Rescan failed', err);

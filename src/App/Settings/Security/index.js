@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // Internal
 import Text from 'components/Text';
 import WaitingMessage from 'components/WaitingMessage';
-import { switchSettingsTab } from 'actions/uiActionCreators';
+import { switchSettingsTab } from 'actions/ui';
 import Login from './Login';
 import Encrypted from './Encrypted';
 import Unencrypted from './Unencrypted';

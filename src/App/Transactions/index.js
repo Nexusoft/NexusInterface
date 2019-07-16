@@ -28,12 +28,12 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
-import { loadMyAccounts } from 'actions/accountActionCreators';
-import * as RPC from 'lib/rpc';
-import * as TYPE from 'actions/actiontypes';
+import { loadMyAccounts } from 'actions/account';
+import rpc from 'lib/rpc';
+import * as TYPE from 'consts/actionTypes';
 import ContextMenuBuilder from 'contextmenu';
 import { walletDataDir } from 'consts/paths';
-import UIController from 'components/UIController';
+import { openModal } from 'actions/overlays';
 import TransactionDetailsModal from './TransactionDetailsModal';
 import styles from './style.css';
 import CSVDownloadModal from './TransactionCSVDownloadModal';
@@ -160,6 +160,7 @@ const mapDispatchToProps = dispatch => ({
   ToggleTransactionChart: inUpdate => {
     dispatch({ type: TYPE.UPDATE_SETTINGS, payload: inUpdate });
   },
+  openModal: (...args) => dispatch(openModal(...args)),
 });
 
 /**
@@ -436,7 +437,7 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   openTxDetailsModal = () => {
-    UIController.openModal(TransactionDetailsModal, {
+    this.props.openModal(TransactionDetailsModal, {
       hoveringID: this.hoveringID,
       walletItemsMap: this.props.walletitemsMap,
       settings: this.props.settings,
@@ -528,15 +529,15 @@ class Transactions extends Component {
     // Following functions were put on hold as the sendpage was redone and the blockexploerer was removed, we should have some of this one day
     // when these pages are better suited
 
-    let sendtoSendPagecallback = function() {
+    let sendtoSendcallback = function() {
       this.props.SetSendAgainData({
         address: this.props.walletitems[this.hoveringID].address,
         account: this.props.walletitems[this.hoveringID].account,
         amount: this.props.walletitems[this.hoveringID].amount,
       });
-      this.props.history.push('/SendPage');
+      this.props.history.push('/Send');
     };
-    //sendtoSendPagecallback = sendtoSendPagecallback.bind(this);
+    //sendtoSendcallback = sendtoSendcallback.bind(this);
 
     let sendtoBlockExplorercallback = function() {
       this.props.SetExploreInfo({
@@ -554,7 +555,7 @@ class Transactions extends Component {
         label: "Send Again",
         click() {
 
-          sendtoSendPagecallback();
+          sendtoSendcallback();
  
         }
       })
@@ -614,7 +615,7 @@ class Transactions extends Component {
         txPageCounter++
       ) {
         promisList.push(
-          RPC.PROMISE('listtransactions', [
+          rpc('listtransactions', [
             '*',
             numberOfTransactionsPerCall,
             numberOfTransactionsPerCall * txPageCounter,
@@ -632,7 +633,7 @@ class Transactions extends Component {
         txPageCounter++
       ) {
         promisList.push(
-          RPC.PROMISE('listtransactions', [
+          rpc('listtransactions', [
             incomingMyAccounts.account,
             numberOfTransactionsPerCall,
             numberOfTransactionsPerCall * txPageCounter,
@@ -898,7 +899,7 @@ class Transactions extends Component {
       return;
     }
 
-    UIController.openModal(CSVDownloadModal, {
+    this.props.openModal(CSVDownloadModal, {
       parent: this.setCSVEvents.bind(this),
       progress: this.state.CSVProgress,
     });
@@ -918,7 +919,7 @@ class Transactions extends Component {
     this.props.walletitems.forEach(element => {
       if (element.category == 'debit' || element.category == 'send') {
         feePromises.push(
-          RPC.PROMISE('gettransaction', [element.txid]).then(payload => {
+          rpc('gettransaction', [element.txid]).then(payload => {
             feeData.set(payload.time, payload.fee);
             numberOfSends++;
             this.setState(
@@ -1906,7 +1907,7 @@ class Transactions extends Component {
 
   toggleVictoryChart() {
     const value = !this.props.settings.showTransactionChart;
-    this.props.ToggleTransactionChart({showTransactionChart: value})
+    this.props.ToggleTransactionChart({ showTransactionChart: value });
     console.log(this.props.settings.showTransactionChart);
     console.log(this.props.settings);
     UpdateSettings({
@@ -2064,11 +2065,16 @@ class Transactions extends Component {
                 display: 'inline',
                 position: 'absolute',
                 left: '0px',
-                
               }}
               onClick={() => this.toggleVictoryChart()}
             >
-              <Arrow direction={ this.props.settings.showTransactionChart ? "up" : "down"} width={12} height={8} />
+              <Arrow
+                direction={
+                  this.props.settings.showTransactionChart ? 'up' : 'down'
+                }
+                width={12}
+                height={8}
+              />
             </Button>
             {this.props.settings.showTransactionChart ? (
               <div
@@ -2076,7 +2082,7 @@ class Transactions extends Component {
                 style={{
                   display: data.length === 0 ? 'none' : 'block',
                   border: '2px solid ' + this.props.theme.background,
-                  transition: 'all 1s ease'
+                  transition: 'all 1s ease',
                 }}
               >
                 {data.length === 0 ? null : this.returnVictoryChart()}

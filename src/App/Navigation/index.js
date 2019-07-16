@@ -87,8 +87,8 @@ const ModuleNavItems = connect(
     modules: getActiveModules(state.modules, state.settings.disabledModules),
   }),
   null,
-  null,
-  { pure: false }
+  null
+  // { pure: false }
 )(({ modules }) =>
   modules
     .filter(module => module.type === 'app')
@@ -110,7 +110,7 @@ const Navigation = () => (
         <Text id="Footer.Overview" />
       </NavItem>
 
-      <NavItem icon={sendIcon} to="/SendPage">
+      <NavItem icon={sendIcon} to="/Send">
         <Text id="Footer.SendNXS" />
       </NavItem>
 

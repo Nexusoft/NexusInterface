@@ -4,17 +4,14 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
 
 // Internal
-import {
-  addNewContact,
-  updateContact,
-} from 'actions/addressBookActionCreators';
-import * as RPC from 'lib/rpc';
+import { addNewContact, updateContact } from 'actions/addressBook';
+import rpc from 'lib/rpc';
 import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Button from 'components/Button';
-import UIController from 'components/UIController';
+import { showNotification } from 'actions/overlays';
 import { emailRegex } from 'utils/form';
 import timeZones from 'data/timeZones';
 import Addresses from './Addresses';
@@ -31,6 +28,7 @@ const mapStateToProps = state => ({
 const actionCreators = {
   addNewContact,
   updateContact,
+  showNotification,
 };
 
 function validateAddresses(addresses) {
@@ -51,7 +49,7 @@ function validateAddresses(addresses) {
 
 function asyncValidateAddresses(isMine, addresses, errors) {
   return addresses.map(({ address }, i) =>
-    RPC.PROMISE('validateaddress', [address])
+    rpc('validateaddress', [address])
       .then(result => {
         if (!result.isvalid) {
           errors[i] = {
@@ -158,12 +156,12 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     props.destroy();
     props.closeModal();
     if (props.edit) {
-      UIController.showNotification(
+      this.props.showNotification(
         <Text id="AddEditContact.EditSuccess" />,
         'success'
       );
     } else {
-      UIController.showNotification(
+      this.props.showNotification(
         <Text id="AddEditContact.CreateSuccess" />,
         'success'
       );

@@ -1,4 +1,5 @@
-import UIController from 'components/UIController';
+import store from 'store';
+import { openErrorDialog } from 'actions/overlays';
 
 export function resolveValue(input) {
   if (input && input.target) {
@@ -19,10 +20,12 @@ export function rpcErrorHandler(message) {
     // If errors object has some values it means the form validation failed
     // In that case, no need to open an error dialog
     if (!errors || !Object.keys(errors).length) {
-      UIController.openErrorDialog({
-        message,
-        note: submitError || 'An unknown error occurred',
-      });
+      store.dispatch(
+        openErrorDialog({
+          message,
+          note: submitError || 'An unknown error occurred',
+        })
+      );
     }
   };
 }

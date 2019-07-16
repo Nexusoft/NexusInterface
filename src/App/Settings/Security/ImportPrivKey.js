@@ -10,9 +10,13 @@ import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
-import UIController from 'components/UIController';
-import * as RPC from 'lib/rpc';
-import * as TYPE from 'actions/actiontypes';
+import {
+  openErrorDialog,
+  openSuccessDialog,
+  showNotification,
+} from 'actions/overlays';
+import rpc from 'lib/rpc';
+import * as TYPE from 'consts/actionTypes';
 import { rpcErrorHandler, trimText } from 'utils/form';
 
 const ImportPrivKeyForm = styled.form({
@@ -27,9 +31,12 @@ const ImportPrivKeyForm = styled.form({
  */
 @connect(
   null,
-  dispatch => ({
-    ResetForEncryptionRestart: () => dispatch({ type: TYPE.CLEAR_CORE_INFO }),
-  })
+  {
+    ResetForEncryptionRestart: () => ({ type: TYPE.CLEAR_CORE_INFO }),
+    openErrorDialog,
+    openSuccessDialog,
+    showNotification,
+  }
 )
 @reduxForm({
   form: 'importPrivateKey',
@@ -49,22 +56,22 @@ const ImportPrivKeyForm = styled.form({
     return errors;
   },
   onSubmit: ({ accountName, privateKey }) =>
-    RPC.PROMISE('importprivkey', [privateKey], [accountName]),
+    rpc('importprivkey', [privateKey], [accountName]),
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
     // this.props.ResetForEncryptionRestart();
-    UIController.openSuccessDialog({
+    this.props.openSuccessDialog({
       message: <Text id="Settings.PrivKeyImported" />,
     });
-    UIController.showNotification(<Text id="Settings.Rescanning" />);
+    this.props.showNotification(<Text id="Settings.Rescanning" />);
     try {
-      await RPC.PROMISE('rescan', []);
-      UIController.showNotification(
+      await rpc('rescan', []);
+      this.props.showNotification(
         <Text id="Settings.RescanningDone" />,
         'success'
       );
     } catch (err) {
-      UIController.openErrorDialog({
+      this.props.openErrorDialog({
         message: <Text id="Settings.Errors.Rescanning" />,
         note: (err && err.message) || <Text id="Common.UnknownError" />,
       });

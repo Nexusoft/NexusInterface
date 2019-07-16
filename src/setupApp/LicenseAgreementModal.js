@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import { updateSettings } from 'actions/settingsActionCreators';
+import { updateSettings } from 'actions/settings';
 
 const LicenseAgreementModalComponent = styled(Modal)({
   paddingLeft: 'calc(50vw - 384px)',

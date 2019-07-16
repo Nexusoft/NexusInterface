@@ -8,16 +8,16 @@ import https from 'https';
 
 // Internal
 import googleanalytics from 'scripts/googleanalytics';
-import { updateSettings } from 'actions/settingsActionCreators';
-import { updateTheme, resetColors } from 'actions/themeActionCreators';
-import { switchSettingsTab } from 'actions/uiActionCreators';
+import { updateSettings } from 'actions/settings';
+import { updateTheme, resetColors } from 'actions/theme';
+import { switchSettingsTab } from 'actions/ui';
 import Text, { translate } from 'components/Text';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Select from 'components/Select';
 import Icon from 'components/Icon';
-import UIController from 'components/UIController';
+import { showNotification } from 'actions/overlays';
 import NexusAddress from 'components/NexusAddress';
 import SettingsContainer from 'components/SettingsContainer';
 import warningIcon from 'images/warning.sprite.svg';
@@ -69,6 +69,7 @@ const mapDispatchToProps = dispatch => ({
   updateTheme: updates => dispatch(updateTheme(updates)),
   resetColors: () => dispatch(resetColors()),
   switchSettingsTab: tab => dispatch(switchSettingsTab(tab)),
+  showNotification: (...args) => dispatch(showNotification(...args)),
 });
 
 const addressStyleOptions = [
@@ -199,7 +200,7 @@ class SettingsStyle extends Component {
   resetColors = () => {
     //Dont think we need this anymore
     this.props.resetColors();
-    UIController.showNotification(
+    this.props.showNotification(
       <Text id="Settings.ResetColorNoti" />,
       'success'
     );
@@ -246,7 +247,7 @@ class SettingsStyle extends Component {
           });
       }
     } catch (err) {
-      UIController.showNotification(
+      this.props.showNotification(
         <Text id="Settings.Errors.InvalidJSON" />,
         'error'
       );
@@ -293,9 +294,9 @@ class SettingsStyle extends Component {
         fs.copyFile(walletDataDir + '/theme.json', path, err => {
           if (err) {
             console.error(err);
-            UIController.showNotification(err, 'error');
+            this.props.showNotification(err, 'error');
           }
-          UIController.showNotification(
+          this.props.showNotification(
             <Text id="Settings.ExportTheme" />,
             'success'
           );
@@ -338,7 +339,7 @@ class SettingsStyle extends Component {
   pressResetTheme = () => {
     this.props.updateTheme(DarkTheme);
     this.setThemeSelector(0);
-    UIController.showNotification(
+    this.props.showNotification(
       <Text id="Settings.ResetThemeNoti" />,
       'success'
     );

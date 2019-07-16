@@ -10,7 +10,7 @@ import worldSmall from 'images/world-light-white-small.jpg';
 import { assetsDir } from 'consts/paths';
 import Curve from './Curve';
 import Point from './Point';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 
 const MaxDisplayPoints = 64;
 
@@ -217,7 +217,7 @@ export default class Globe extends Component {
    * @memberof Globe
    */
   async pointRegister() {
-    const peerInfo = await RPC.PROMISE('getpeerinfo', []);
+    const peerInfo = await rpc('getpeerinfo', []);
     if (peerInfo.length > MaxDisplayPoints) {
       peerInfo.length = MaxDisplayPoints;
     }

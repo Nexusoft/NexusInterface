@@ -61,6 +61,8 @@ export const defaultSettings = {
   showTransactionChart: true,
   windowWidth: 1020,
   windowHeight: 700,
+  windowX: undefined,
+  windowY: undefined,
   forkBlocks: 0,
 };
 

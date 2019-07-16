@@ -4,9 +4,9 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 
-import { coreDataDir, assetsByPlatformDir } from 'consts/paths';
+import { assetsByPlatformDir } from 'consts/paths';
 import { LoadSettings, UpdateSettings } from 'lib/settings';
-import { customConfig } from 'lib/coreConfig';
+import { customConfig, loadNexusConf } from 'lib/coreConfig';
 import exec from 'utils/promisified/exec';
 import sleep from 'utils/promisified/sleep';
 
@@ -29,34 +29,6 @@ function coreBinaryExists() {
   } catch (e) {
     log.info('Core binary does not exist: ' + coreBinaryPath);
     return false;
-  }
-}
-
-/**
- * Load user & password from the nexus.conf file
- *
- * @returns
- */
-function loadNexusConf() {
-  if (fs.existsSync(path.join(coreDataDir, 'nexus.conf'))) {
-    log.info('nexus.conf exists. Importing username and password.');
-
-    const configs = fs
-      .readFileSync(path.join(coreDataDir, 'nexus.conf'))
-      .toString()
-      .split(`\n`);
-    const userConfig = configs
-      .map(c => /^rpcuser=(.*)/.exec(c.trim()))
-      .find(c => c);
-    const user = userConfig && userConfig[1];
-    const passwordConfig = configs
-      .map(c => /^rpcpassword=(.*)/.exec(c.trim()))
-      .find(c => c);
-    const password = passwordConfig && passwordConfig[1];
-
-    return { user, password };
-  } else {
-    return {};
   }
 }
 
@@ -124,6 +96,10 @@ async function getCorePID() {
  * @class Core
  */
 class Core {
+  get config() {
+    return this._config;
+  }
+
   /**
    * Start up the core with necessary parameters
    *
@@ -152,7 +128,7 @@ class Core {
       throw 'Core not found';
     }
 
-    const conf = (this.config = customConfig({
+    const conf = (this._config = customConfig({
       ...loadNexusConf(),
       verbose: settings.verboseLevel,
     }));
@@ -231,16 +207,15 @@ class Core {
     log.info('Core Manager: Stop function called');
     const settings = LoadSettings();
 
-    if (settings.manualDaemon) {
-      this.config = customConfig({
-        ip: settings.manualDaemonIP,
-        port: settings.manualDaemonPort,
-        user: settings.manualDaemonUser,
-        password: settings.manualDaemonPassword,
-        dataDir: settings.manualDaemonDataDir,
-      });
-    }
-    const conf = this.config;
+    const conf = settings.manualDaemon
+      ? customConfig({
+          ip: settings.manualDaemonIP,
+          port: settings.manualDaemonPort,
+          user: settings.manualDaemonUser,
+          password: settings.manualDaemonPassword,
+          dataDir: settings.manualDaemonDataDir,
+        })
+      : this.config;
 
     await axios.post(
       conf.host,

@@ -5,14 +5,19 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 // Internal
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import Text from 'components/Text';
 import Select from 'components/Select';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
 import Link from 'components/Link';
-import UIController from 'components/UIController';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import {
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+  removeModal,
+} from 'actions/overlays';
+import { loadMyAccounts } from 'actions/account';
 import { rpcErrorHandler } from 'utils/form';
 import { getAccountOptions, getRegisteredFieldNames } from './selectors';
 import AmountField from './AmountField';
@@ -55,9 +60,13 @@ const mapStateToProps = ({
   ),
 });
 
-const mapDispatchToProps = dispatch => ({
-  loadMyAccounts: () => dispatch(loadMyAccounts()),
-});
+const acctionCreators = {
+  loadMyAccounts,
+  openConfirmDialog,
+  openErrorDialog,
+  openSuccessDialog,
+  removeModal,
+};
 
 /**
  * Internal JXS for the Move Between Accounts Modal
@@ -67,7 +76,7 @@ const mapDispatchToProps = dispatch => ({
  */
 @connect(
   mapStateToProps,
-  mapDispatchToProps
+  acctionCreators
 )
 @reduxForm({
   form: 'moveBetweenAccounts',
@@ -97,7 +106,7 @@ const mapDispatchToProps = dispatch => ({
   asyncValidate: async ({ sendTo }) => {
     if (sendTo) {
       try {
-        const result = await RPC.PROMISE('validateaddress', [sendTo]);
+        const result = await rpc('validateaddress', [sendTo]);
         if (!result.isvalid) {
           throw { sendTo: <Text id="Alert.InvalidAddress" /> };
         }
@@ -117,13 +126,13 @@ const mapDispatchToProps = dispatch => ({
     }
 
     const params = [moveFrom, moveTo, parseFloat(amount)];
-    return RPC.PROMISE('move', params, parseInt(props.minConfirmations));
+    return rpc('move', params, parseInt(props.minConfirmations));
   },
   onSubmitSuccess: (result, dispatch, props) => {
     props.closeModal();
     props.reset();
     props.loadMyAccounts();
-    UIController.openSuccessDialog({
+    this.props.openSuccessDialog({
       message: <Text id="sendReceive.Messages.Success" />,
     });
   },
@@ -155,7 +164,9 @@ class MoveBetweenAccountsForm extends Component {
     }
 
     if (encrypted && !loggedIn) {
-      const modalId = UIController.openErrorDialog({
+      const {
+        payload: { id: modalId },
+      } = this.props.openErrorDialog({
         message: <Text id="sendReceive.Messages.NotLoggedIn" />,
         note: (
           <>
@@ -165,7 +176,7 @@ class MoveBetweenAccountsForm extends Component {
             <Link
               to="/Settings/Security"
               onClick={() => {
-                UIController.removeModal(modalId);
+                this.props.removeModal(modalId);
                 this.props.closeModal();
               }}
             >
@@ -177,7 +188,7 @@ class MoveBetweenAccountsForm extends Component {
       return;
     }
 
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: <Text id="sendReceive.MoveNXS" />,
       callbackYes: handleSubmit,
     });

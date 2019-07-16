@@ -7,9 +7,9 @@ import styled from '@emotion/styled';
 // Internal
 import AutoSuggest from 'components/AutoSuggest';
 import Button from 'components/Button';
-import UIController from 'components/UIController';
-import * as RPC from 'lib/rpc';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+import { showNotification } from 'actions/overlays';
+import rpc from 'lib/rpc';
+import { loadMyAccounts } from 'actions/account';
 import { rpcErrorHandler } from 'utils/form';
 
 const NewAddressFormComponent = styled.form({
@@ -33,9 +33,12 @@ const Buttons = styled.div({
  * @class NewAddressForm
  * @extends {React.Component}
  */
-@connect(state => ({
-  accountNames: (state.myAccounts || []).map(acc => acc.account),
-}))
+@connect(
+  state => ({
+    accountNames: (state.myAccounts || []).map(acc => acc.account),
+  }),
+  { showNotification }
+)
 @reduxForm({
   form: 'newAddress',
   initialValues: {
@@ -51,11 +54,11 @@ const Buttons = styled.div({
     }
     return errors;
   },
-  onSubmit: ({ accountName }) => RPC.PROMISE('getnewaddress', [accountName]),
+  onSubmit: ({ accountName }) => rpc('getnewaddress', [accountName]),
   onSubmitSuccess: (result, dispatch, props) => {
     dispatch(loadMyAccounts());
     props.finish();
-    UIController.showNotification('New address has been created', 'success');
+    this.props.showNotification('New address has been created', 'success');
   },
   onSubmitFail: rpcErrorHandler('Error creating new address'),
 })

@@ -1,19 +1,17 @@
-import * as RPC from 'lib/rpc';
-import * as TYPE from './actiontypes';
+import rpc from 'lib/rpc';
+import * as TYPE from 'consts/actionTypes';
 
 export const loadMyAccounts = () => async dispatch => {
-  const accList = await RPC.PROMISE('listaccounts', []);
+  const accList = await rpc('listaccounts', []);
 
   const addrList = await Promise.all(
-    Object.keys(accList).map(account =>
-      RPC.PROMISE('getaddressesbyaccount', [account])
-    )
+    Object.keys(accList).map(account => rpc('getaddressesbyaccount', [account]))
   );
 
   const validateAddressPromises = addrList.reduce(
     (list, element) => [
       ...list,
-      ...element.map(address => RPC.PROMISE('validateaddress', [address])),
+      ...element.map(address => rpc('validateaddress', [address])),
     ],
     []
   );

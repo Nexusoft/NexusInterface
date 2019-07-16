@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import UIController from 'components/UIController';
+import { openModal } from 'actions/overlays';
 import AddEditContactModal from 'components/AddEditContactModal';
 import Contact, { NewContactButton } from './Contact';
 
@@ -36,16 +36,21 @@ const mapStateToProps = ({
   connections,
 });
 
+const actionCreators = { openModal };
+
 /**
  * List of contacts
  *
  * @class ContactList
  * @extends {Component}
  */
-@connect(mapStateToProps)
+@connect(
+  mapStateToProps,
+  actionCreators
+)
 class ContactList extends React.Component {
   createContact = () => {
-    UIController.openModal(AddEditContactModal);
+    this.props.openModal(AddEditContactModal);
   };
 
   /**

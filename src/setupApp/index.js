@@ -2,23 +2,23 @@
 import { remote } from 'electron';
 
 // Internal
-import UIController from 'components/UIController';
-import * as ac from 'actions/setupAppActionCreators';
-import { getInfo } from 'actions/coreActionCreators';
-import { loadModules } from 'actions/moduleActionCreators';
-import { startAutoUpdate } from 'lib/updater';
-import { rebuildMenu, initializeMenu } from 'appMenu';
+import { openModal } from 'actions/overlays';
+import * as ac from 'actions/setupApp';
+import { getInfo } from 'actions/core';
+import { loadModules } from 'actions/module';
+import { initializeUpdater, startAutoUpdate } from 'lib/updater';
+import { initializeWebView } from 'lib/modules';
+import { initializeMenu } from 'appMenu';
+import store from 'store';
 
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';
 import { startCoreOuputWatch, stopCoreOuputWatch } from './coreOutputWatch';
 
-export default function setupApp(store) {
-  const { dispatch } = store;
-
+const { dispatch } = store;
+export default function setupApp() {
   initializeMenu();
-  rebuildMenu();
 
   dispatch(getInfo());
   setInterval(() => dispatch(getInfo()), 10000);
@@ -43,7 +43,7 @@ export default function setupApp(store) {
       }
     } else {
       stopCoreOuputWatch();
-      UIController.openModal(ClosingModal);
+      dispatch(openModal(ClosingModal));
 
       if (!manualDaemon) {
         await remote.getGlobal('core').stop();
@@ -55,11 +55,13 @@ export default function setupApp(store) {
   startCoreOuputWatch();
   const state = store.getState();
 
+  initializeUpdater();
   if (state.settings.autoUpdate) {
     startAutoUpdate();
   }
 
   showInitialModals(state);
+  initializeWebView();
 
   dispatch(loadModules());
 }
@@ -67,15 +69,17 @@ export default function setupApp(store) {
 function showInitialModals({ settings }) {
   const showExperimentalWarning = () => {
     if (!settings.experimentalWarningDisabled) {
-      UIController.openModal(ExperimentalWarningModal);
+      dispatch(openModal(ExperimentalWarningModal));
     }
   };
 
   if (!settings.acceptedAgreement) {
-    UIController.openModal(LicenseAgreementModal, {
-      fullScreen: true,
-      onClose: showExperimentalWarning,
-    });
+    dispatch(
+      openModal(LicenseAgreementModal, {
+        fullScreen: true,
+        onClose: showExperimentalWarning,
+      })
+    );
   } else {
     showExperimentalWarning();
   }

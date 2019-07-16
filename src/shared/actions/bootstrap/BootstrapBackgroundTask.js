@@ -1,9 +1,15 @@
 // External
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import UIController from 'components/UIController';
+import {
+  openErrorDialog,
+  openSuccessDialog,
+  openModal,
+  showNotification,
+} from 'actions/overlays';
 import BackgroundTask from 'components/BackgroundTask';
 import Icon from 'components/Icon';
 import { animations, timing } from 'styles';
@@ -27,6 +33,10 @@ const BootstrapBackgroundTaskComponent = styled(BackgroundTask)(
  * @class BootstrapBackgroundTask
  * @extends {Component}
  */
+@connect(
+  null,
+  { openErrorDialog, openModal, openSuccessDialog, showNotification }
+)
 export default class BootstrapBackgroundTask extends Component {
   /**
    *Creates an instance of BootstrapBackgroundTask.
@@ -90,10 +100,7 @@ export default class BootstrapBackgroundTask extends Component {
     this.setState({ status });
 
     if (this.state.step === 'backing_up' && step === 'stopping_core') {
-      UIController.showNotification(
-        'Your wallet has been backed up',
-        'success'
-      );
+      this.props.showNotification('Your wallet has been backed up', 'success');
     }
   };
 
@@ -104,11 +111,11 @@ export default class BootstrapBackgroundTask extends Component {
    */
   handleAbort = () => {
     this.closeTask();
-    UIController.showNotification(
+    this.props.showNotification(
       'Aborted recent database bootstrapping',
       'error'
     );
-    UIController.showNotification('Daemon is restarting...');
+    this.props.showNotification('Daemon is restarting...');
   };
 
   /**
@@ -118,11 +125,11 @@ export default class BootstrapBackgroundTask extends Component {
    */
   handleError = err => {
     this.closeTask();
-    UIController.openErrorDialog({
+    this.props.openErrorDialog({
       message: 'Error bootstrapping recent database',
       note: err.message || 'An unknown error occured',
     });
-    UIController.showNotification('Daemon is restarting...');
+    this.props.showNotification('Daemon is restarting...');
     console.error(err);
   };
 
@@ -133,10 +140,10 @@ export default class BootstrapBackgroundTask extends Component {
    */
   handleFinish = () => {
     this.closeTask();
-    UIController.openSuccessDialog({
+    this.props.openSuccessDialog({
       message: 'Recent database has been successfully updated',
     });
-    UIController.showNotification('Daemon is restarting...');
+    this.props.showNotification('Daemon is restarting...');
   };
 
   /**
@@ -145,7 +152,7 @@ export default class BootstrapBackgroundTask extends Component {
    * @memberof BootstrapBackgroundTask
    */
   maximize = () => {
-    UIController.openModal(BootstrapModal, {
+    this.props.openModal(BootstrapModal, {
       bootstrapper: this.props.bootstrapper,
       maximizedFromBackground: true,
     });

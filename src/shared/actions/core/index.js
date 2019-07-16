@@ -1,9 +1,10 @@
 import React from 'react';
-import UIController from 'components/UIController';
-import * as RPC from 'lib/rpc';
-import * as ac from 'actions/setupAppActionCreators';
-import * as TYPE from 'actions/actiontypes';
-import { loadMyAccounts } from 'actions/accountActionCreators';
+
+import { openModal, showNotification } from 'actions/overlays';
+import rpc from 'lib/rpc';
+import * as ac from 'actions/setupApp';
+import * as TYPE from 'consts/actionTypes';
+import { loadMyAccounts } from 'actions/account';
 import bootstrap, { checkFreeSpace } from 'actions/bootstrap';
 import EncryptionWarningModal from './EncryptionWarningModal';
 import Text from 'components/Text';
@@ -13,7 +14,7 @@ export function getInfo() {
     dispatch(ac.AddRPCCall('getInfo'));
     let info = null;
     try {
-      info = await RPC.PROMISE('getinfo', []);
+      info = await rpc('getinfo', []);
     } catch (err) {
       dispatch(clearCoreInfo());
       if (err) console.error(err);
@@ -31,7 +32,7 @@ export function getInfo() {
         !state.settings.encryptionWarningDisabled &&
         state.settings.acceptedAgreement
       ) {
-        UIController.openModal(EncryptionWarningModal);
+        dispatch(openModal(EncryptionWarningModal));
         dispatch(ac.showEncryptionWarningModal());
       }
     } else if (
@@ -70,10 +71,10 @@ export function getInfo() {
     }
 
     if (info.blocks !== oldInfo.blocks) {
-      const connectioncount = await RPC.PROMISE('getconnectioncount', []);
+      const connectioncount = await rpc('getconnectioncount', []);
 
       if (connectioncount > 0) {
-        const peerresponse = await RPC.PROMISE('getpeerinfo', []);
+        const peerresponse = await rpc('getpeerinfo', []);
         if (peerresponse != null) {
           const highestPeerBlock = peerresponse.reduce(
             (highest, element) =>
@@ -114,34 +115,27 @@ export function getInfo() {
       }
     }
     if (info.txtotal > oldInfo.txtotal) {
-      const txList = await RPC.PROMISE('listtransactions', []);
+      const txList = await rpc('listtransactions', []);
       if (txList) {
         const mostRecentTx = txList.reduce((a, b) => (a.time > b.time ? a : b));
 
         switch (mostRecentTx.category) {
           case 'receive':
             showDesktopNotif('Received', mostRecentTx.amount + ' NXS');
-            UIController.showNotification(
-              <Text id="Alert.Received" />,
-              'success'
-            );
+            dispatch(showNotification(<Text id="Alert.Received" />, 'success'));
             break;
           case 'send':
             showDesktopNotif('Sent', mostRecentTx.amount + ' NXS');
-            UIController.showNotification(<Text id="Alert.Sent" />, 'success');
+            dispatch(showNotification(<Text id="Alert.Sent" />, 'success'));
             break;
           case 'genesis':
             showDesktopNotif('Genesis', mostRecentTx.amount + ' NXS');
-            UIController.showNotification(
-              <Text id="Alert.Genesis" />,
-              'success'
-            );
+            dispatch(showNotification(<Text id="Alert.Genesis" />, 'success'));
             break;
           case 'trust':
             showDesktopNotif('Trust', mostRecentTx.amount + ' NXS');
-            UIController.showNotification(
-              <Text id="Alert.TrustTransaction" />,
-              'success'
+            dispatch(
+              showNotification(<Text id="Alert.TrustTransaction" />, 'success')
             );
             break;
         }
@@ -151,10 +145,10 @@ export function getInfo() {
     // const enoughSpace = await checkFreeSpace(1);
     // if (!enoughSpace) {
 
-    //   UIController.showNotification('WARNING LOW DISK SPACE', {
+    //   dispatch(showNotification('WARNING LOW DISK SPACE', {
     //     type: 'error',
     //     autoClose: false,
-    //   });
+    //   }));
     // }
 
     delete info.timestamp;
@@ -174,6 +168,6 @@ export const clearCoreInfo = () => ({
 });
 
 export const getDifficulty = () => async dispatch => {
-  const diff = await RPC.PROMISE('getdifficulty', []);
+  const diff = await rpc('getdifficulty', []);
   dispatch({ type: TYPE.GET_DIFFICULTY, payload: diff });
 };

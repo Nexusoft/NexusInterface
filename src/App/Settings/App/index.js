@@ -5,8 +5,8 @@ import styled from '@emotion/styled';
 
 // Internal Global
 import Text from 'components/Text';
-import { updateSettings } from 'actions/settingsActionCreators';
-import { switchSettingsTab } from 'actions/uiActionCreators';
+import { updateSettings } from 'actions/settings';
+import { switchSettingsTab } from 'actions/ui';
 import { backupWallet } from 'lib/wallet';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -14,12 +14,16 @@ import TextField from 'components/TextField';
 import Select from 'components/Select';
 import Switch from 'components/Switch';
 import Icon from 'components/Icon';
-import UIController from 'components/UIController';
+import {
+  openConfirmDialog,
+  openErrorDialog,
+  showNotification,
+} from 'actions/overlays';
 import SettingsContainer from 'components/SettingsContainer';
 import * as color from 'utils/color';
 import * as form from 'utils/form';
 import warningIcon from 'images/warning.sprite.svg';
-import { getUpdaterState, startAutoUpdate, stopAutoUpdate } from 'lib/updater';
+import { startAutoUpdate, stopAutoUpdate } from 'lib/updater';
 
 // Internal Local
 import LanguageSetting from './LanguageSetting';
@@ -65,6 +69,9 @@ const mapStateToProps = state => ({
 const actionCreators = {
   updateSettings,
   switchSettingsTab,
+  openConfirmDialog,
+  openErrorDialog,
+  showNotification,
 };
 
 /**
@@ -93,17 +100,17 @@ class SettingsApp extends Component {
    * @memberof SettingsApp
    */
   confirmBackupWallet = () => {
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: <Text id="Settings.BackupWallet" />,
       callbackYes: () => {
         if (this.props.connections !== undefined) {
           backupWallet(this.props.settings.backupDirectory);
-          UIController.showNotification(
+          this.props.showNotification(
             <Text id="Alert.WalletBackedUp" />,
             'success'
           );
         } else {
-          UIController.openErrorDialog({
+          this.props.openErrorDialog({
             message: <Text id="Settings.DaemonLoading" />,
           });
         }
@@ -118,7 +125,7 @@ class SettingsApp extends Component {
    */
   toggleVerifyModuleSource = e => {
     if (e.target.checked) {
-      UIController.openConfirmDialog({
+      this.props.openConfirmDialog({
         question: 'Turn module open source policy on?',
         note:
           'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.',
@@ -128,7 +135,7 @@ class SettingsApp extends Component {
         },
       });
     } else {
-      UIController.openConfirmDialog({
+      this.props.openConfirmDialog({
         question: 'Turn module open source policy off?',
         note: (
           <div>
@@ -183,7 +190,7 @@ class SettingsApp extends Component {
    */
   handleAutoUpdateChange = e => {
     if (!e.target.checked) {
-      UIController.openConfirmDialog({
+      this.props.openConfirmDialog({
         question: <Text id="Settings.DisableAutoUpdate" />,
         note: <Text id="Settings.DisableAutoUpdateNote" />,
         labelYes: <Text id="Settings.KeepAutoUpdate" />,
@@ -197,9 +204,7 @@ class SettingsApp extends Component {
       });
     } else {
       this.props.updateSettings({ autoUpdate: true });
-      if (getUpdaterState() === 'idle') {
-        startAutoUpdate();
-      }
+      startAutoUpdate();
     }
   };
 

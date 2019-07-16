@@ -151,7 +151,7 @@ describe('Run Page Tests', function() {
       function() {}
     );
   });
- /*
+  /*
   it('Test Disable Bootstrap', function() {
     return appRef.client
       .waitUntilWindowLoaded()
@@ -169,32 +169,33 @@ describe('Run Page Tests', function() {
       .waitUntilWindowLoaded()
       .pause(5000)
       .element('nav')
-      .element('a[href^="#/SendPage"]')
+      .element('a[href^="#/Send"]')
       .click()
       .pause(1000)
       .waitUntilTextExists('label', 'SEND FROM', 50000);
   });
 
   it('Add To Queue', function() {
-    return appRef.client
-      .waitUntilWindowLoaded()
-      //.element('#addContactTimeZoneSelect')
-      //.selectByValue('-420')
-      .setValue(
-        'input[placeholder="Recipient Address"]',
-        '2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd'
-      )
-      .setValue('input[placeholder="0.00000"]', 99999999)
-      .setValue(
-        'textarea[placeholder="Enter Your Message',
-        'TEST MESSAGE FROM TESTS'
-      )
-      .element('span[direction="down"]')
-      .click()
-      .element('//div[contains(text(),"default")]')
-      .click()
-      .click('button*=Send To Multiple Recipients')
-      ;
+    return (
+      appRef.client
+        .waitUntilWindowLoaded()
+        //.element('#addContactTimeZoneSelect')
+        //.selectByValue('-420')
+        .setValue(
+          'input[placeholder="Recipient Address"]',
+          '2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd'
+        )
+        .setValue('input[placeholder="0.00000"]', 99999999)
+        .setValue(
+          'textarea[placeholder="Enter Your Message',
+          'TEST MESSAGE FROM TESTS'
+        )
+        .element('span[direction="down"]')
+        .click()
+        .element('//div[contains(text(),"default")]')
+        .click()
+        .click('button*=Send To Multiple Recipients')
+    );
   });
 
   it('Test Go To Transactions', function() {
@@ -236,14 +237,14 @@ describe('Run Page Tests', function() {
       .pause(1000)
       .element('(//button[*])[2]')
       .click()
-      .setValue('input[placeholder="Their Nexus Address"]','2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd')
-      .setValue('input[name="name"]', 'Test Contact')
-      
-      .setValue('input[placeholder="Phone Number"]', '9990001234')
       .setValue(
-        'textarea[name="notes"]',
-        'Test Contact Creation From Tests'
+        'input[placeholder="Their Nexus Address"]',
+        '2SBUwJAQMK5BbhUb7QtirKj8r56ae1GwERtQ6svU6MBmbA1iKHd'
       )
+      .setValue('input[name="name"]', 'Test Contact')
+
+      .setValue('input[placeholder="Phone Number"]', '9990001234')
+      .setValue('textarea[name="notes"]', 'Test Contact Creation From Tests')
       .element('span[direction="down"]')
       .click()
       .pause(500)
@@ -254,7 +255,6 @@ describe('Run Page Tests', function() {
       .pause(3000)
       .element('button[type="submit"]')
       .click();
-      
   });
 
   it('Test Go To Settings', function() {
@@ -303,7 +303,7 @@ describe('Run Page Tests', function() {
       .pause(500)
       .element('//div[contains(text(),"United States")]')
       .click()
-      .pause(500)
+      .pause(500);
   });
 
   it('Test Go Terminal', function() {
@@ -315,12 +315,15 @@ describe('Run Page Tests', function() {
       .click()
       .pause(1000)
       .waitUntilTextExists('div', 'Clear Console', 10000)
-      .setValue('input[placeholder="Enter Console Commands Here (ex: getinfo, help)"]', 'getinfo')
+      .setValue(
+        'input[placeholder="Enter Console Commands Here (ex: getinfo, help)"]',
+        'getinfo'
+      )
       .element('button*=Execute')
       .click()
       .waitUntilTextExists('div', 'protocolversion: 20000', 5000);
   });
-/*
+  /*
   it('Test Go To Exchange', function() {
     return appRef.client
       .waitUntilWindowLoaded()

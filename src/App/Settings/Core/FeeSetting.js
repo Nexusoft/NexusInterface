@@ -5,11 +5,11 @@ import { reduxForm, Field } from 'redux-form';
 
 // Internal
 import Text from 'components/Text';
-import * as RPC from 'lib/rpc';
+import rpc from 'lib/rpc';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import TextField from 'components/TextField';
-import UIController from 'components/UIController';
+import { showNotification, openConfirmDialog } from 'actions/overlays';
 import { rpcErrorHandler } from 'utils/form';
 
 /**
@@ -18,11 +18,14 @@ import { rpcErrorHandler } from 'utils/form';
  * @class FeeSetting
  * @extends {React.Component}
  */
-@connect(state => ({
-  initialValues: {
-    txFee: state.core.info.paytxfee,
-  },
-}))
+@connect(
+  state => ({
+    initialValues: {
+      txFee: state.core.info.paytxfee,
+    },
+  }),
+  { openConfirmDialog, showNotification }
+)
 @reduxForm({
   form: 'setTransactionFee',
   destroyOnUnmount: false,
@@ -33,9 +36,9 @@ import { rpcErrorHandler } from 'utils/form';
     }
     return errors;
   },
-  onSubmit: ({ txFee }) => RPC.PROMISE('settxfee', [parseFloat(txFee)]),
+  onSubmit: ({ txFee }) => rpc('settxfee', [parseFloat(txFee)]),
   onSubmitSuccess: () => {
-    UIController.showNotification(
+    this.props.showNotification(
       <Text id="Alert.TransactionFeeSet" />,
       'success'
     );
@@ -49,7 +52,7 @@ class FeeSetting extends React.Component {
    * @memberof FeeSetting
    */
   confirmSetTxFee = () => {
-    UIController.openConfirmDialog({
+    this.props.openConfirmDialog({
       question: <Text id="Settings.SetFee" />,
       callbackYes: this.props.handleSubmit,
     });
