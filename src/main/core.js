@@ -96,6 +96,7 @@ async function getCorePID() {
  * @class Core
  */
 class Core {
+  // Store the config params that was used to start the core
   _config = null;
   get config() {
     return this._config;
@@ -109,6 +110,7 @@ class Core {
   start = async () => {
     const settings = LoadSettings();
     const corePID = await getCorePID();
+    this._config = null;
 
     if (settings.manualDaemon == true) {
       log.info('Core Manager: Manual daemon mode, skipping starting core');
@@ -129,10 +131,10 @@ class Core {
       throw 'Core not found';
     }
 
-    const conf = (this._config = customConfig({
+    const conf = customConfig({
       ...loadNexusConf(),
       verbose: settings.verboseLevel,
-    }));
+    });
     if (!fs.existsSync(conf.dataDir)) {
       log.info(
         'Core Manager: Data Directory path not found. Creating folder: ' +
@@ -188,7 +190,7 @@ class Core {
         log.info(
           `Core Manager: Core has started (process id: ${coreProcess.pid})`
         );
-
+        this._config = conf;
         return coreProcess.pid;
       } else {
         throw 'Core failed to start';
