@@ -70,7 +70,7 @@ import axios from 'axios';
 import { remote } from 'electron';
 
 import store from 'store';
-import { customConfig } from 'lib/coreConfig';
+import { customConfig, loadNexusConf } from 'lib/coreConfig';
 
 const core = remote.getGlobal('core');
 
@@ -100,7 +100,7 @@ export default async function rpc(cmd, args) {
         password: settings.manualDaemonPassword,
         dataDir: settings.manualDaemonDataDir,
       })
-    : core.config;
+    : core.config || customConfig(loadNexusConf());
   try {
     const response = await axios.post(
       conf.host,
