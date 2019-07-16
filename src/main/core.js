@@ -96,7 +96,7 @@ async function getCorePID() {
  * @class Core
  */
 class Core {
-  _config = {};
+  _config = null;
   get config() {
     return this._config;
   }
@@ -216,7 +216,7 @@ class Core {
           password: settings.manualDaemonPassword,
           dataDir: settings.manualDaemonDataDir,
         })
-      : this.config;
+      : this.config || customConfig(loadNexusConf());
 
     await axios.post(
       conf.host,
