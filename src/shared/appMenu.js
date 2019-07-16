@@ -428,7 +428,7 @@ function buildMenu() {
   return menu;
 }
 
-let nextRebuild = null;
+let rebuildTimerId = null;
 
 /**
  * Rebuild the menu asynchronously so that if multiple rebuild requests come
@@ -436,8 +436,8 @@ let nextRebuild = null;
  *
  */
 export function rebuildMenu() {
-  clearTimeout(nextRebuild);
-  nextRebuild = setTimeout(buildMenu, 0);
+  clearTimeout(rebuildTimerId);
+  rebuildTimerId = setTimeout(buildMenu, 0);
 }
 
 // Update the updater menu item when the updater state changes
@@ -449,4 +449,5 @@ export function initializeMenu() {
     rebuildMenu
   );
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
+  observeStore(state => state.webview, rebuildMenu);
 }
