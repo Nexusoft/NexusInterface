@@ -96,6 +96,7 @@ async function getCorePID() {
  * @class Core
  */
 class Core {
+  _config = {};
   get config() {
     return this._config;
   }
