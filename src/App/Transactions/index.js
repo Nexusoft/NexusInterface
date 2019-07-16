@@ -44,12 +44,8 @@ import downloadIcon from 'images/download.sprite.svg';
 import searchIcon from 'images/search.sprite.svg';
 
 import copy from 'copy-to-clipboard';
-
-/* TODO: THIS DOESN'T WORK AS IT SHOULD, MUST BE SOMETHING WITH WEBPACK NOT RESOLVING CSS INCLUDES TO /node_modules properly */
-// import "react-table/react-table.css"
-
-/* TODO: THIS DOESN"T WORK EITHER, COULD BE DUE TO WEBPACK CONFIG FOR ExtractTextPlugin? */
-//import tablestyles from "./react-table.css";
+import Arrow from '../../shared/components/Arrow';
+import { UpdateSettings } from 'lib/settings';
 
 // Global variables
 let tempaddpress = new Map();
@@ -160,6 +156,9 @@ const mapDispatchToProps = dispatch => ({
   },
   UpdateFilteredTransaction: returnData => {
     dispatch({ type: TYPE.UPDATE_FILTERED_TRANSACTIONS, payload: returnData });
+  },
+  ToggleTransactionChart: inUpdate => {
+    dispatch({ type: TYPE.UPDATE_SETTINGS, payload: inUpdate });
   },
 });
 
@@ -348,7 +347,7 @@ class Transactions extends Component {
     let objectheaders = Object.keys({
       transactionnumber: 0,
       confirmations: 0,
-      time: 0,
+      time: new Date(),
       category: '',
       amount: 0,
       txid: 0,
@@ -375,13 +374,12 @@ class Transactions extends Component {
       y: [0, 1],
     };
     if (incomingData != undefined && incomingData.length > 0) {
+      console.log(incomingData[0]);
       tempZoomDomain = {
         x: [
-          new Date(new Date(incomingData[0].time * 1000).getTime() - 43200000),
+          new Date(incomingData[0].time.getTime() - 43200000),
           new Date(
-            new Date(
-              (incomingData[incomingData.length - 1].time + 1000) * 1000
-            ).getTime() + 43200000
+            incomingData[incomingData.length - 1].time.getTime() + 43200000
           ),
         ],
         y: [-1, 1],
@@ -397,7 +395,9 @@ class Transactions extends Component {
 
     let temp = this.state.transactionsToCheck;
     incomingData.forEach(element => {
-      let temphistoryData = this.findclosestdatapoint(element.time.toString());
+      let temphistoryData = this.findclosestdatapoint(
+        element.time.getTime().toString()
+      );
       if (temphistoryData == undefined) {
         temp.push(element.time);
       }
@@ -688,6 +688,126 @@ class Transactions extends Component {
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
       tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
+      tempWalletTransactions.push(this.TEMPaddfaketransaction());
     }
     if (
       (promisList == null ||
@@ -713,7 +833,7 @@ class Transactions extends Component {
         let tempTrans = {
           transactionnumber: index,
           confirmations: elementTransaction.confirmations,
-          time: elementTransaction.time,
+          time: new Date(elementTransaction.time * 1000),
           category: elementTransaction.category,
           amount: elementTransaction.amount,
           txid: elementTransaction.txid,
@@ -726,8 +846,12 @@ class Transactions extends Component {
           coin: 'Nexus',
           fee: 0,
         };
+        console.log(
+          '****$$$$$$$$$$$$$$$$$$$$$$$$$$$######################################'
+        );
+        console.error(tempTrans);
         let closestData = this.findclosestdatapoint(
-          elementTransaction.time.toString()
+          tempTrans.time.getTime().toString()
         );
         if (closestData != undefined) {
           tempTrans.value[this.props.settings.fiatCurrency] =
@@ -1053,8 +1177,8 @@ class Transactions extends Component {
       if (this.state.changeTimeFrame) {
         this.handleZoom({
           x: [
-            new Date(inTransactions[0].time * 1000),
-            new Date(inTransactions[inTransactions.length - 1].time * 1000),
+            inTransactions[0].time,
+            inTransactions[inTransactions.length - 1].time,
           ],
           y: [0, 1],
         });
@@ -1064,10 +1188,10 @@ class Transactions extends Component {
       }
       return inTransactions;
     }
-    todaydate = Math.round(todaydate.getTime() / 1000);
-    pastdate = Math.round(pastdate.getTime() / 1000);
+    todaydate = Math.round(todaydate.getTime());
+    pastdate = Math.round(pastdate.getTime());
 
-    todaydate = todaydate + 10000;
+    todaydate = todaydate + 1000;
 
     for (let index = 0; index < inTransactions.length; index++) {
       //just holding this to keep it clean
@@ -1081,7 +1205,7 @@ class Transactions extends Component {
 
     if (this.state.changeTimeFrame) {
       this.handleZoom({
-        x: [new Date(pastdate * 1000), new Date()],
+        x: [pastdate, new Date()],
         y: [0, 1],
       });
       this.setState({
@@ -1123,7 +1247,7 @@ class Transactions extends Component {
       transactionnumber:
         this.props.walletitems != undefined ? this.props.walletitems.length : 0,
       confirmations: 1000,
-      time: 3432423,
+      time: new Date(),
       category: '',
       amount: Math.random() * 100,
       txid: '00000000000000000000000000000000000000000',
@@ -1155,12 +1279,12 @@ class Transactions extends Component {
       let randomtime = new Date(
         start.getTime() + Math.random() * (end.getTime() - start.getTime())
       );
-      return randomtime.getTime() / 1000.0;
+      return randomtime;
     };
 
     faketrans.category = tempTransactionRandomCategory();
     faketrans.time = tempTransactionRandomTime();
-    faketrans.time = Math.round(faketrans.time);
+    //faketrans.time = Math.round(faketrans.time);
 
     if (faketrans.category == 'debit') {
       faketrans.amount = faketrans.amount * -1;
@@ -1247,10 +1371,7 @@ class Transactions extends Component {
       Cell: d => (
         <div>
           {' '}
-          {new Date(d.value * 1000).toLocaleString(
-            this.props.settings.locale,
-            options
-          )}{' '}
+          {d.value.toLocaleString(this.props.settings.locale, options)}{' '}
         </div>
       ), // We want to display the time in  a readable format
       accessor: 'time',
@@ -1317,15 +1438,43 @@ class Transactions extends Component {
     if (this.props.walletitems == undefined) {
       return [];
     }
-    const filteredData = this.returnAllFilters([...this.props.walletitems]);
-    return filteredData.map(ele => {
-      return {
-        a: new Date(ele.time * 1000),
-        b: ele.amount,
-        fill: 'white',
-        category: ele.category,
-      };
-    });
+    const difference = this.state.zoomDomain.x[1] - this.state.zoomDomain.x[0];
+
+    console.log(this.state.zoomDomain.x[1] - this.state.zoomDomain.x[0]);
+    let filteredData = this.returnAllFilters([...this.props.walletitems]);
+    console.log(filteredData.length);
+    if (filteredData.length > 100) {
+      let arraylength = filteredData.length;
+      for (let index = 1; index < arraylength; index++) {
+        const element = filteredData[index];
+        if (element.category === filteredData[index - 1].category) {
+          const timeDif = element.time - filteredData[index - 1].time;
+          if (timeDif <= 86400000) {
+            console.log('COMBINED ITEMS: ');
+
+            filteredData[index].amount =
+              element.amount + filteredData[index - 1].amount;
+            const removed = filteredData.splice(index - 1, 1);
+            console.log(removed);
+            arraylength = filteredData.length;
+          }
+        }
+      }
+    }
+    console.log(filteredData);
+    return filteredData
+      .map(ele => {
+        return {
+          a: ele.time,
+          b: ele.amount,
+          fill: 'white',
+          category: ele.category,
+        };
+      })
+      .filter(
+        e =>
+          e.a > this.state.zoomDomain.x[0] && e.a < this.state.zoomDomain.x[1]
+      );
   }
 
   //
@@ -1407,7 +1556,7 @@ class Transactions extends Component {
       `\n ${translate('transactions.AMOUNT', locale)}` +
       inData.b +
       `\n ${translate('transactions.TIME', locale)}` +
-      inData.a.toLocaleString(this.props.settings.locale, options)
+      inData.a
     );
   };
 
@@ -1426,10 +1575,7 @@ class Transactions extends Component {
     let low = 0;
     for (let index = 0; index < this.props.walletitems.length; index++) {
       const element = this.props.walletitems[index];
-      if (
-        element.time * 1000 >= domain.x[0] &&
-        element.time * 1000 <= domain.x[1]
-      ) {
+      if (element.time >= domain.x[0] && element.time <= domain.x[1]) {
         if (element.amount > high) {
           high = element.amount + element.amount * 0.3;
         }
@@ -1544,6 +1690,7 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   downloadHistoryOnTransaction(inEle) {
+    console.error(inEle);
     if (this._isMounted == false) {
       return;
     }
@@ -1612,7 +1759,7 @@ class Transactions extends Component {
       });
       await daylayaction;
       const element = this.state.transactionsToCheck[index];
-      await this.downloadHistoryOnTransaction(element);
+      await this.downloadHistoryOnTransaction(element.getTime());
     }
 
     if (this.state.transactionsToCheck.length != 0) {
@@ -1755,6 +1902,16 @@ class Transactions extends Component {
    */
   selectAccount(inAccount) {
     this.props.SetSelectedMyAccount(inAccount);
+  }
+
+  toggleVictoryChart() {
+    const value = !this.props.settings.showTransactionChart;
+    this.props.ToggleTransactionChart({showTransactionChart: value})
+    console.log(this.props.settings.showTransactionChart);
+    console.log(this.props.settings);
+    UpdateSettings({
+      showTransactionChart: value,
+    });
   }
 
   /**
@@ -1900,15 +2057,31 @@ class Transactions extends Component {
           </WaitingMessage>
         ) : (
           <div>
-            <div
-              id="transactions-chart"
+            <Button
               style={{
-                display: data.length === 0 ? 'none' : 'block',
-                border: '2px solid ' + this.props.theme.background,
+                width: '16px',
+                height: '12px',
+                display: 'inline',
+                position: 'absolute',
+                left: '0px',
+                
               }}
+              onClick={() => this.toggleVictoryChart()}
             >
-              {data.length === 0 ? null : this.returnVictoryChart()}
-            </div>
+              <Arrow direction={ this.props.settings.showTransactionChart ? "up" : "down"} width={12} height={8} />
+            </Button>
+            {this.props.settings.showTransactionChart ? (
+              <div
+                id="transactions-chart"
+                style={{
+                  display: data.length === 0 ? 'none' : 'block',
+                  border: '2px solid ' + this.props.theme.background,
+                  transition: 'all 1s ease'
+                }}
+              >
+                {data.length === 0 ? null : this.returnVictoryChart()}
+              </div>
+            ) : null}
             <Filters>
               <FormField
                 connectLabel
