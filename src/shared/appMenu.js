@@ -435,7 +435,7 @@ let rebuildTimerId = null;
  * at the same time, it only rebuilds once
  *
  */
-export function rebuildMenu() {
+function rebuildMenu() {
   clearTimeout(rebuildTimerId);
   rebuildTimerId = setTimeout(buildMenu, 0);
 }
@@ -443,6 +443,7 @@ export function rebuildMenu() {
 // Update the updater menu item when the updater state changes
 // Changing menu item labels directly has no effect so we have to rebuild the whole menu
 export function initializeMenu() {
+  buildMenu();
   observeStore(state => state.updater.state, rebuildMenu);
   observeStore(
     state => state.core && state.core.info && state.core.info.connections,
