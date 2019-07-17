@@ -37,11 +37,8 @@ import { rpcErrorHandler } from 'utils/form';
     return errors;
   },
   onSubmit: ({ txFee }) => rpc('settxfee', [parseFloat(txFee)]),
-  onSubmitSuccess: () => {
-    this.props.showNotification(
-      <Text id="Alert.TransactionFeeSet" />,
-      'success'
-    );
+  onSubmitSuccess: (result, dispatch, props) => {
+    props.showNotification(<Text id="Alert.TransactionFeeSet" />, 'success');
   },
   onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.SettingTxFee" />),
 })

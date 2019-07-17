@@ -121,11 +121,8 @@ const actionCreators = {
       });
     }
   },
-  onSubmitSuccess: () => {
-    this.props.showNotification(
-      <Text id="Alert.CoreSettingsSaved" />,
-      'success'
-    );
+  onSubmitSuccess: (result, dispatch, props) => {
+    props.showNotification(<Text id="Alert.CoreSettingsSaved" />, 'success');
   },
   onSubmitFail: rpcErrorHandler('Error Saving Settings'),
 })

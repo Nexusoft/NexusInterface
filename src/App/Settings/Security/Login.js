@@ -96,10 +96,10 @@ const Buttons = styled.div({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    this.props.showNotification(<Text id="Settings.LoggedIn" />, 'success');
+    props.showNotification(<Text id="Settings.LoggedIn" />, 'success');
     dispatch(getInfo());
   },
-  onSubmitFail: (errors, dispatch, submitError) => {
+  onSubmitFail: (errors, dispatch, submitError, props) => {
     if (!errors || !Object.keys(errors).length) {
       let note = submitError || <Text id="Common.UnknownError" />;
       if (
@@ -109,7 +109,7 @@ const Buttons = styled.div({
       } else if (submitError === 'value is type null, expected int') {
         note = <Text id="Alert.FutureDate" />;
       }
-      this.props.openErrorDialog({
+      props.openErrorDialog({
         message: <Text id="Settings.Errors.LoggingIn" />,
         note: note,
       });

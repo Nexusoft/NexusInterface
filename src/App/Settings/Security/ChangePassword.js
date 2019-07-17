@@ -69,7 +69,7 @@ const ChangePasswordComponent = styled.form({
     rpc('walletpassphrasechange', [password, newPassword]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
-    this.props.openSuccessDialog({
+    props.openSuccessDialog({
       message: <Text id="Alert.PasswordHasBeenChanged" />,
     });
   },

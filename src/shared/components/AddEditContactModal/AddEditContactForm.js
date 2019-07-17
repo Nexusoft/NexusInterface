@@ -156,12 +156,12 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     props.destroy();
     props.closeModal();
     if (props.edit) {
-      this.props.showNotification(
+      props.showNotification(
         <Text id="AddEditContact.EditSuccess" />,
         'success'
       );
     } else {
-      this.props.showNotification(
+      props.showNotification(
         <Text id="AddEditContact.CreateSuccess" />,
         'success'
       );

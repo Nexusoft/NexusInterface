@@ -130,7 +130,7 @@ const acctionCreators = {
     props.closeModal();
     props.reset();
     props.loadMyAccounts();
-    this.props.openSuccessDialog({
+    props.openSuccessDialog({
       message: <Text id="sendReceive.Messages.Success" />,
     });
   },

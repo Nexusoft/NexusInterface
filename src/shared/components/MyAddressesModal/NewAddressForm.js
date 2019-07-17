@@ -58,7 +58,7 @@ const Buttons = styled.div({
   onSubmitSuccess: (result, dispatch, props) => {
     dispatch(loadMyAccounts());
     props.finish();
-    this.props.showNotification('New address has been created', 'success');
+    props.showNotification('New address has been created', 'success');
   },
   onSubmitFail: rpcErrorHandler('Error creating new address'),
 })

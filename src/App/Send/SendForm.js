@@ -183,7 +183,7 @@ const mapDispatchToProps = {
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     props.loadMyAccounts();
-    this.props.openSuccessDialog({
+    props.openSuccessDialog({
       message: <Text id="Alert.Sent" />,
     });
   },
