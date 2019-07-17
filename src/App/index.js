@@ -20,8 +20,6 @@ import Terminal from './Terminal';
 
 import About from './About';
 import Modules from './Modules';
-// import Exchange from './Exchange';
-// import TrustList from './TrustList';
 import AppBackground from './AppBackground';
 import ThemeController from './ThemeController';
 
