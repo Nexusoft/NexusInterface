@@ -81,11 +81,6 @@ export const SetHighestPeerBlock = hpb => ({
   payload: hpb,
 });
 
-export const SetPortIsAvailable = isAvailable => ({
-  type: TYPE.PORT_AVAILABLE,
-  payload: isAvailable,
-});
-
 export const AddRPCCall = returnCall => ({
   type: TYPE.ADD_RPC_CALL,
   payload: returnCall,

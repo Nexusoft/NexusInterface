@@ -8,13 +8,13 @@ import { loadModules } from 'actions/module';
 import { initializeUpdater } from 'lib/updater';
 import { initializeWebView } from 'lib/modules';
 import { initializeCoreInfo } from 'lib/coreInfo';
+import { startCoreOuputWatch, stopCoreOuputWatch } from 'lib/coreOutput';
 import { initializeMenu } from 'appMenu';
 import store from 'store';
 
 import LicenseAgreementModal from './LicenseAgreementModal';
 import ExperimentalWarningModal from './ExperimentalWarningModal';
 import ClosingModal from './ClosingModal';
-import { startCoreOuputWatch, stopCoreOuputWatch } from './coreOutputWatch';
 
 const { dispatch } = store;
 export function preRender() {
