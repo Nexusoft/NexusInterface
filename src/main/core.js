@@ -157,7 +157,6 @@ class Core {
       '-rpcthreads=4',
       '-fastsync',
       `-datadir=${conf.dataDir}`,
-      `-rpcallowip=${conf.ip}`,
       `-rpcport=${conf.port}`,
       `-verbose=${conf.verbose}`,
       // //
