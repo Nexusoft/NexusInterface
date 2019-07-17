@@ -43,17 +43,15 @@ const Buttons = styled.div({
 const mapStateToProps = ({
   settings: { minConfirmations, fiatCurrency },
   core: {
-    info: { paytxfee },
+    info: { paytxfee, locked },
   },
   myAccounts,
-  common: { encrypted, loggedIn },
   form,
 }) => ({
   minConfirmations,
   fiatCurrency,
   paytxfee,
-  encrypted,
-  loggedIn,
+  locked,
   accountOptions: getAccountOptions(myAccounts),
   fieldNames: getRegisteredFieldNames(
     form.moveBetweenAccounts && form.moveBetweenAccounts.registeredFields
@@ -146,14 +144,7 @@ class MoveBetweenAccountsForm extends Component {
    */
   confirmMove = e => {
     e.preventDefault();
-    const {
-      handleSubmit,
-      invalid,
-      encrypted,
-      loggedIn,
-      touch,
-      fieldNames,
-    } = this.props;
+    const { handleSubmit, invalid, locked, touch, fieldNames } = this.props;
 
     if (invalid) {
       // Mark the form touched so that the validation errors will be shown.
@@ -163,7 +154,7 @@ class MoveBetweenAccountsForm extends Component {
       return;
     }
 
-    if (encrypted && !loggedIn) {
+    if (locked) {
       const {
         payload: { id: modalId },
       } = this.props.openErrorDialog({

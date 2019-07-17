@@ -1,8 +1,6 @@
 import * as TYPE from 'consts/actionTypes';
 
 const initialState = {
-  loggedIn: false,
-  encrypted: false,
   busyFlag: false,
   open: false,
   openSecondModal: false,
@@ -29,12 +27,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case TYPE.LOCK:
-      return {
-        ...state,
-        loggedIn: false,
-      };
-      break;
     case TYPE.TOGGLE_MODAL_VIS_STATE:
       return {
         ...state,
@@ -63,18 +55,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         busyFlag: action.payload,
-      };
-      break;
-    case TYPE.UNLOCK:
-      return {
-        ...state,
-        loggedIn: true,
-      };
-      break;
-    case TYPE.UNENCRYPTED:
-      return {
-        ...state,
-        encrypted: false,
       };
       break;
     case TYPE.BLOCK_DATE:
@@ -165,12 +145,6 @@ export default (state = initialState, action) => {
         ...state,
         Search: '',
         contactSearch: '',
-      };
-      break;
-    case TYPE.ENCRYPTED:
-      return {
-        ...state,
-        encrypted: true,
       };
       break;
 

@@ -74,15 +74,7 @@ export const SetMarketAveData = () => dispatch => {
   );
 };
 
-export const Lock = () => ({ type: TYPE.LOCK });
-
-export const Unlock = () => ({ type: TYPE.UNLOCK });
-
-export const Encrypted = () => ({ type: TYPE.ENCRYPTED });
-
 export const BlockDate = stamp => ({ type: TYPE.BLOCK_DATE, payload: stamp });
-
-export const Unencrypted = () => ({ type: TYPE.UNENCRYPTED });
 
 export const SetHighestPeerBlock = hpb => ({
   type: TYPE.SET_HIGHEST_PEER_BLOCK,
