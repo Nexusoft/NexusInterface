@@ -20,7 +20,6 @@ import SettingsContainer from 'components/SettingsContainer';
 import { updateSettings } from 'actions/settings';
 import * as form from 'utils/form';
 import { rpcErrorHandler } from 'utils/form';
-import FeeSetting from './FeeSetting';
 import ReScanButton from './RescanButton.js';
 import { coreDataDir } from 'consts/paths';
 
@@ -314,21 +313,6 @@ class SettingsCore extends Component {
     };
   })();
 
-  /**
-   * If Tritium don't return fee setting, this maybe changed.
-   *
-   * @memberof SettingsCore
-   */
-  returnFeeSetting = () => {
-    if (this.props.version) {
-      if (this.props.version.includes('Tritium')) {
-        return null;
-      } else {
-        return <FeeSetting />;
-      }
-    }
-  };
-
   // /**
   //  * Generates the number of ip witelist feilds there are
   //  *
@@ -408,8 +392,6 @@ class SettingsCore extends Component {
           >
             <ReScanButton />
           </SettingsField>
-
-          {this.returnFeeSetting()}
 
           <SettingsField
             connectLabel

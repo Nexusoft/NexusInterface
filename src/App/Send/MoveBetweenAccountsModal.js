@@ -43,14 +43,13 @@ const Buttons = styled.div({
 const mapStateToProps = ({
   settings: { minConfirmations, fiatCurrency },
   core: {
-    info: { paytxfee, locked },
+    info: { locked },
   },
   myAccounts,
   form,
 }) => ({
   minConfirmations,
   fiatCurrency,
-  paytxfee,
   locked,
   accountOptions: getAccountOptions(myAccounts),
   fieldNames: getRegisteredFieldNames(
@@ -216,15 +215,7 @@ class MoveBetweenAccountsForm extends Component {
           />
         </AccountSelectors>
 
-        <div>
-          <AmountField change={this.props.change} />
-          {this.props.paytxfee && (
-            <div style={{ marginTop: '1em' }}>
-              <Text id="sendReceive.FEE" />: {this.props.paytxfee.toFixed(5)}{' '}
-              NXS
-            </div>
-          )}
-        </div>
+        <AmountField change={this.props.change} />
 
         <Buttons>
           <Button skin="primary" type="submit" disabled={this.props.submitting}>

@@ -1,6 +1,5 @@
 // External
 import React from 'react';
-import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
@@ -63,38 +62,13 @@ const PlusIcon = styled(Icon)({
   fontSize: '.8em',
 });
 
-const TransactionFee = styled.div(({ theme }) => ({
-  color: theme.mixer(0.75),
-}));
-
-const mapStateToProps = ({
-  core: {
-    info: { paytxfee },
-  },
-}) => ({
-  paytxfee,
-});
-
 /**
  * Recipients Field from the Send Page
  *
  * @class Recipients
  * @extends {React.Component}
  */
-@connect(mapStateToProps)
 class Recipients extends React.Component {
-  /**
-   * Return Tx Fee
-   *
-   * @memberof Recipients
-   */
-  renderTxFee = () =>
-    !!this.props.paytxfee && (
-      <TransactionFee>
-        <Text id="sendReceive.FEE" />: {this.props.paytxfee.toFixed(5)} NXS
-      </TransactionFee>
-    );
-
   /**
    * Component's Renderable JSX
    *
@@ -102,7 +76,7 @@ class Recipients extends React.Component {
    * @memberof Recipients
    */
   render() {
-    const { fields, change, addRecipient, paytxfee } = this.props;
+    const { fields, change, addRecipient } = this.props;
 
     if (!fields || !fields.length) return null;
 
@@ -115,8 +89,6 @@ class Recipients extends React.Component {
             change={change}
           />
           <AmountField parentFieldName={`${fields.name}[0]`} change={change} />
-
-          <MoreInfo>{this.renderTxFee()}</MoreInfo>
         </>
       );
     } else {
@@ -157,8 +129,6 @@ class Recipients extends React.Component {
                 <Text id="sendReceive.AddRecipient" />
               </span>
             </Button>
-
-            {this.renderTxFee()}
           </MoreInfo>
         </>
       );
