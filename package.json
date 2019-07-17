@@ -230,7 +230,7 @@
     "istextorbinary": "^2.5.1",
     "jsdom": "^15.1.1",
     "macaddress": "^0.2.9",
-    "maxmind": "^3.1.1",
+    "maxmind": "^3.1.2",
     "memoize-one": "^5.0.5",
     "move-file": "^1.2.0",
     "multistream": "^3.0.0",

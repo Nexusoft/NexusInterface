@@ -18,13 +18,11 @@ import Unencrypted from './Unencrypted';
  */
 @connect(
   ({
-    common: { encrypted, loggedIn },
     core: {
-      info: { connections },
+      info: { connections, locked },
     },
   }) => ({
-    encrypted,
-    loggedIn,
+    locked,
     connections,
   }),
   { switchSettingsTab }
@@ -47,7 +45,7 @@ class SettingsSecurity extends React.Component {
    * @memberof SettingsSecurity
    */
   render() {
-    const { loggedIn, encrypted, connections } = this.props;
+    const { locked, connections } = this.props;
     if (connections === undefined) {
       return (
         <WaitingMessage>
@@ -57,14 +55,12 @@ class SettingsSecurity extends React.Component {
       );
     }
 
-    if (!loggedIn) {
-      return <Login />;
-    }
-
-    if (encrypted) {
-      return <Encrypted />;
-    } else {
+    if (locked === undefined) {
       return <Unencrypted />;
+    } else if (locked) {
+      return <Login />;
+    } else {
+      return <Encrypted />;
     }
   }
 }

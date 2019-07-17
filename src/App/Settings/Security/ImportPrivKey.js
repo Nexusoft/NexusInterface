@@ -59,19 +59,15 @@ const ImportPrivKeyForm = styled.form({
     rpc('importprivkey', [privateKey], [accountName]),
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    // this.props.ResetForEncryptionRestart();
-    this.props.openSuccessDialog({
+    props.openSuccessDialog({
       message: <Text id="Settings.PrivKeyImported" />,
     });
-    this.props.showNotification(<Text id="Settings.Rescanning" />);
+    props.showNotification(<Text id="Settings.Rescanning" />);
     try {
       await rpc('rescan', []);
-      this.props.showNotification(
-        <Text id="Settings.RescanningDone" />,
-        'success'
-      );
+      props.showNotification(<Text id="Settings.RescanningDone" />, 'success');
     } catch (err) {
-      this.props.openErrorDialog({
+      props.openErrorDialog({
         message: <Text id="Settings.Errors.Rescanning" />,
         note: (err && err.message) || <Text id="Common.UnknownError" />,
       });

@@ -89,19 +89,12 @@ class LogInStatus extends Component {
       );
     }
 
-    if (unlocked_until === undefined && locked === undefined) {
+    if (locked === undefined) {
       return <Text id="Header.WalletUnencrypted" />;
-    } else if (
-      unlocked_until === 0 ||
-      ((unlocked_until === undefined && locked === true) ||
-        (typeof unlocked_until === 'number' && locked === true))
-    ) {
+    } else if (locked) {
       return <Text id="Header.WalletLocked" />;
-    } else if (
-      unlocked_until >= 0 ||
-      (unlocked_until === undefined && locked === false)
-    ) {
-      if (unlocked_until === undefined) {
+    } else if (locked === false) {
+      if (!unlocked_until) {
         return (
           <>
             <Text id="Header.WalletUnlocked" />{' '}
@@ -125,11 +118,11 @@ class LogInStatus extends Component {
    * @memberof LogInStatus
    */
   statusIcon = () => {
-    const { connections, unlocked_until, locked } = this.props;
+    const { connections, locked } = this.props;
     if (connections === undefined) {
       return <StatusIcon icon={questionMarkIcon} css={{ opacity: 0.7 }} />;
     } else {
-      if (unlocked_until === undefined && locked === undefined) {
+      if (locked === undefined) {
         return (
           <LoginStatusIcon
             icon={unlockedIcon}
@@ -137,17 +130,11 @@ class LogInStatus extends Component {
             danger
           />
         );
-      } else if (
-        unlocked_until === 0 ||
-        (unlocked_until === undefined && locked === true)
-      ) {
+      } else if (locked === true) {
         return (
           <LoginStatusIcon icon={lockedIcon} onClick={this.goToSecurity} />
         );
-      } else if (
-        unlocked_until >= 0 ||
-        (unlocked_until === undefined && locked === false)
-      ) {
+      } else if (locked === false) {
         return (
           <LoginStatusIcon
             icon={unlockedIcon}
