@@ -24,7 +24,6 @@ import swapIcon from 'images/swap.sprite.svg';
 
 const mapStateToProps = state => ({
   connections: state.core.info.connections,
-  isInSync: state.common.isInSync,
 });
 
 const actionCreators = { openModal };

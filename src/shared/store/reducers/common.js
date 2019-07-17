@@ -14,7 +14,6 @@ const initialState = {
   actionItem: '',
   modalVisable: false,
   highestPeerBlock: null,
-  isInSync: false,
   blockDate: null,
   portAvailable: false,
   Search: '',
@@ -59,9 +58,6 @@ export default (state = initialState, action) => {
         ...state,
         contactSearch: action.payload,
       };
-      break;
-    case TYPE.SET_SYNC_STATUS:
-      return { ...state, isInSync: action.payload };
       break;
     case TYPE.TOGGLE_BUSY_FLAG:
       return {

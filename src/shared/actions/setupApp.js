@@ -3,6 +3,8 @@ import Request from 'request';
 
 // Internal
 import * as TYPE from 'consts/actionTypes';
+import { openModal } from 'actions/overlays';
+import EncryptionWarningModal from 'components/EncryptionWarningModal';
 
 export const SetMarketAveData = () => dispatch => {
   Request(
@@ -82,11 +84,6 @@ export const BlockDate = stamp => ({ type: TYPE.BLOCK_DATE, payload: stamp });
 
 export const Unencrypted = () => ({ type: TYPE.UNENCRYPTED });
 
-export const SetSyncStatus = stat => ({
-  type: TYPE.SET_SYNC_STATUS,
-  payload: stat,
-});
-
 export const SetHighestPeerBlock = hpb => ({
   type: TYPE.SET_HIGHEST_PEER_BLOCK,
   payload: hpb,
@@ -102,9 +99,19 @@ export const AddRPCCall = returnCall => ({
   payload: returnCall,
 });
 
-export const showEncryptionWarningModal = () => ({
-  type: TYPE.SHOW_ENCRYPTION_MODAL,
-});
+export const showEncryptionWarningModal = () => (dispatch, getState) => {
+  const state = getState();
+  if (
+    !state.common.encryptionModalShown &&
+    !state.settings.encryptionWarningDisabled &&
+    state.settings.acceptedAgreement
+  ) {
+    dispatch(openModal(EncryptionWarningModal));
+    dispatch({
+      type: TYPE.SHOW_ENCRYPTION_MODAL,
+    });
+  }
+};
 
 export const printCoreOutput = data => ({
   type: TYPE.PRINT_CORE_OUTPUT,
