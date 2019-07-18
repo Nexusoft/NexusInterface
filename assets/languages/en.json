@@ -535,7 +535,7 @@
   "Alert.AccountsAreTheSame": "Accounts are the same",
   "Alert.NoSecondAccountChosen": "No second account chosen",
   "Alert.InsufficientFunds": "Insufficient funds",
-  "Alert.ManualDaemonDown": "Manual Core is down",
+  "Alert.ManualDaemonDown": "Manual Core is disconnected",
   "Alert.ClosingNexus": "Closing Nexus Wallet",
 
   "Cp.AC1": "Accent Color 1",
