@@ -111,7 +111,7 @@ class Send extends Component {
       >
         {!true || this.props.connections === undefined ? (
           <WaitingMessage>
-            <Text id="TrustList.SyncMsg" />
+            <Text id="Alert.DaemonLoadingWait" />
             ...
           </WaitingMessage>
         ) : (
