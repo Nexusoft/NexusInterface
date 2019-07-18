@@ -589,6 +589,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   returnWeightStats = () => {
+    console.log(this.props.coreInfo);
     return (
       <React.Fragment>
         <Stat>
@@ -598,7 +599,7 @@ class Overview extends Component {
               <Text id="overview.BlockWeight" />
             </StatLabel>
             <StatValue>
-              {this.waitForDaemon(this.props.coreInfo.blockweight)}
+              {this.waitForDaemon(this.props.coreInfo.blockweight.toFixed(4))}
             </StatValue>
           </div>
         </Stat>
@@ -610,7 +611,7 @@ class Overview extends Component {
               <Text id="overview.TrustWeight" />
             </StatLabel>
             <StatValue>
-              {this.waitForDaemon(this.props.coreInfo.trustweight)}
+              {this.waitForDaemon(this.props.coreInfo.trustweight.toFixed(4))}
             </StatValue>
           </div>
         </Stat>
@@ -622,7 +623,7 @@ class Overview extends Component {
               <Text id="overview.StakeWeight" />
             </StatLabel>
             <StatValue>
-              {this.waitForDaemon(this.props.coreInfo.stakeweight)}
+              {this.waitForDaemon(this.props.coreInfo.stakeweight.toFixed(4))}
             </StatValue>
           </div>
         </Stat>
@@ -636,6 +637,7 @@ class Overview extends Component {
    * @memberof Overview
    */
   returnDifficultyStats = difficulty => {
+    console.error(difficulty);
     return (
       <React.Fragment>
         <Stat>
