@@ -287,13 +287,12 @@ class TerminalConsole extends Component {
   };
 
   /**
-   * Take the Autosuggest and drop everything after the `-`
+   * Take the Autosuggest and updateConsoleInput
    *
    * @memberof TerminalConsole
    */
   formateAutoSuggest = e => {
-    const output = e.split('-')[0];
-    this.props.updateConsoleInput(output);
+    this.props.updateConsoleInput(e);
   };
 
   /**
