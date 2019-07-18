@@ -356,7 +356,7 @@ class Overview extends Component {
       }
 
       if (connections && prevProps.connections !== connections) {
-        //Daemon Starting Up
+        //Core Starting Up
         this.reDrawEverything();
       }
     }
@@ -572,11 +572,11 @@ class Overview extends Component {
   }
 
   /**
-   * Displays Wait for Daemon
+   * Displays Wait for Core
    *
    * @memberof Overview
    */
-  waitForDaemon = stat =>
+  waitForCore = stat =>
     this.props.coreInfo.connections !== undefined ? (
       stat
     ) : (
@@ -601,7 +601,7 @@ class Overview extends Component {
               <Text id="overview.BlockWeight" />
             </StatLabel>
             <StatValue>
-              {this.waitForDaemon(this.props.coreInfo.blockweight.toFixed(4))}
+              {this.waitForCore(this.props.coreInfo.blockweight.toFixed(4))}
             </StatValue>
           </div>
         </Stat>
@@ -613,7 +613,7 @@ class Overview extends Component {
               <Text id="overview.TrustWeight" />
             </StatLabel>
             <StatValue>
-              {this.waitForDaemon(this.props.coreInfo.trustweight.toFixed(4))}
+              {this.waitForCore(this.props.coreInfo.trustweight.toFixed(4))}
             </StatValue>
           </div>
         </Stat>
@@ -625,7 +625,7 @@ class Overview extends Component {
               <Text id="overview.StakeWeight" />
             </StatLabel>
             <StatValue>
-              {this.waitForDaemon(this.props.coreInfo.stakeweight.toFixed(4))}
+              {this.waitForCore(this.props.coreInfo.stakeweight.toFixed(4))}
             </StatValue>
           </div>
         </Stat>
@@ -732,7 +732,7 @@ class Overview extends Component {
                 {/* )} */}
                 (NXS) :
               </StatLabel>
-              <StatValue>{this.waitForDaemon(balance)}</StatValue>
+              <StatValue>{this.waitForCore(balance)}</StatValue>
             </MinimalStat>
             {/* + (stake || 0) */}
             <MinimalStat>
@@ -740,7 +740,7 @@ class Overview extends Component {
                 <Text id="overview.Balance" /> ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(this.calculateFiatvalue())}
+                {this.waitForCore(this.calculateFiatvalue())}
               </StatValue>
             </MinimalStat>
 
@@ -748,7 +748,7 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.Transactions" />
               </StatLabel>
-              <StatValue>{this.waitForDaemon(txtotal)}</StatValue>
+              <StatValue>{this.waitForCore(txtotal)}</StatValue>
             </MinimalStat>
 
             <MinimalStat>
@@ -780,7 +780,7 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.Connections" />
               </StatLabel>
-              <StatValue>{this.waitForDaemon(connections)}</StatValue>
+              <StatValue>{this.waitForCore(connections)}</StatValue>
             </MinimalStat>
 
             <MinimalStat>
@@ -788,7 +788,7 @@ class Overview extends Component {
                 <Text id="overview.InterestRate" />
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(interestweight || stakerate + '%')}
+                {this.waitForCore(interestweight || stakerate + '%')}
               </StatValue>
             </MinimalStat>
 
@@ -798,7 +798,7 @@ class Overview extends Component {
               </StatLabel>
 
               <StatValue>
-                {this.waitForDaemon(this.numberWithCommas(blocks))}
+                {this.waitForCore(this.numberWithCommas(blocks))}
               </StatValue>
             </MinimalStat>
           </MinimalStats>
@@ -849,8 +849,8 @@ class Overview extends Component {
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
                   : settings.displayFiatBalance
-                  ? this.waitForDaemon(this.calculateFiatvalue())
-                  : this.waitForDaemon(balance)}
+                  ? this.waitForCore(this.calculateFiatvalue())
+                  : this.waitForCore(balance)}
               </StatValue>
             </div>
             <StatIcon
@@ -872,7 +872,7 @@ class Overview extends Component {
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'
-                  : this.waitForDaemon(stake)}
+                  : this.waitForCore(stake)}
               </StatValue>
             </div>
             <StatIcon icon={nxsStakeIcon} />
@@ -885,7 +885,7 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.Transactions" />
               </StatLabel>
-              <StatValue>{this.waitForDaemon(txtotal)}</StatValue>
+              <StatValue>{this.waitForCore(txtotal)}</StatValue>
             </div>
             <StatIcon icon={transactionIcon} />
           </Stat>
@@ -952,7 +952,7 @@ class Overview extends Component {
               <StatLabel>
                 <Text id="overview.Connections" />
               </StatLabel>
-              <StatValue>{this.waitForDaemon(connections)}</StatValue>
+              <StatValue>{this.waitForCore(connections)}</StatValue>
             </div>
           </Stat>
 
@@ -963,7 +963,7 @@ class Overview extends Component {
                 <Text id="overview.InterestRate" />
               </StatLabel>
               <StatValue>
-                {this.waitForDaemon(interestweight || stakerate + '%')}
+                {this.waitForCore(interestweight || stakerate + '%')}
               </StatValue>
             </div>
           </Stat>
@@ -977,7 +977,7 @@ class Overview extends Component {
                 </StatLabel>
 
                 <StatValue>
-                  {this.waitForDaemon(this.numberWithCommas(blocks))}
+                  {this.waitForCore(this.numberWithCommas(blocks))}
                 </StatValue>
               </div>
             </Stat>

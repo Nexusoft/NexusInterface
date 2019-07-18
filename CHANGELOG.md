@@ -15,8 +15,8 @@
 #### Adjustments
 
 - Updated Spanish Translation
-- Update styling on `Market Data` page to make 24hr info be clearer
-- Default Verbose is now 0, you can change this in the setitngs/core
+- Updated styling on `Market Data` page to make 24hr info be clearer
+- Default Verbose is now 0, you can change this in the Setitngs/Core
 - Changed the way the More Details modal knows which transaction to look up
 - Fake Transactions for testing is now moved out of auto true in dev mode and is now a toggle.
 - When selecting the a suggestion on the terminal page, the help portion will no longer be pasted into the input field
@@ -25,6 +25,7 @@
 - Terminal console now fills only the command (without the description) when a suggestion is selected
 - Quit Nexus menu item will now always quit the app regardless of "Minimize on close" setting
 - Either Start Daemon or Stop Daemon menu item will be available at one time depending on whether the daemon is running or not
+- Updated wording: use "Core" and "Nexus Core" instead of "Daemon"
 - Various reorganization and optimizations of the internal structure
 
 #### Fixes

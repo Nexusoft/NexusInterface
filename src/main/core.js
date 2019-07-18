@@ -113,13 +113,13 @@ class Core {
     this._config = null;
 
     if (settings.manualDaemon == true) {
-      log.info('Core Manager: Manual daemon mode, skipping starting core');
-      throw 'Manual daemon mode';
+      log.info('Core Manager: Manual Core mode, skipping starting core');
+      throw 'Manual Core mode';
     }
 
     if (corePID) {
       log.info(
-        'Core Manager: Daemon Process already running. Skipping starting core'
+        'Core Manager: Nexux Core Process already running. Skipping starting core'
       );
       return null;
     }

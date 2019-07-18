@@ -182,7 +182,7 @@ class About extends Component {
               <b>Build Date: </b> July 19th 2019 <br />
             </Column>
             <Column>
-              <b>Daemon Version:</b> {this.getDaemonVersionNumber()} <br />
+              <b>Nexus Core Version:</b> {this.getDaemonVersionNumber()} <br />
               <b>Build Date: </b> July 19th 2019 <br />
             </Column>
           </Row>

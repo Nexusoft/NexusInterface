@@ -178,13 +178,13 @@ class BootstrapModal extends PureComponent {
       case 'extracting':
         return 'Decompressing the database...';
       case 'stopping_core':
-        return 'Stopping daemon...';
+        return 'Stopping Nexus Core...';
       case 'moving_db':
         return 'Moving the database...';
       case 'restarting_core':
-        return 'Restarting daemon...';
+        return 'Restarting Nexus Core...';
       case 'rescanning':
-        return 'Rescanning wallet...';
+        return 'Rescanning Wallet...';
       default:
         return '';
     }
@@ -229,7 +229,7 @@ class BootstrapModal extends PureComponent {
       'Aborted recent database bootstrapping',
       'error'
     );
-    this.props.showNotification('Daemon is restarting...');
+    this.props.showNotification('Nexus Core is restarting...');
   };
 
   /**
@@ -243,7 +243,7 @@ class BootstrapModal extends PureComponent {
       message: 'Error bootstrapping recent database',
       note: err.message || 'An unknown error occured',
     });
-    this.props.showNotification('Daemon is restarting...');
+    this.props.showNotification('Nexus Core is restarting...');
     console.error(err);
   };
 
@@ -257,7 +257,7 @@ class BootstrapModal extends PureComponent {
     this.props.openSuccessDialog({
       message: 'Recent database has been successfully updated',
     });
-    this.props.showNotification('Daemon is restarting...');
+    this.props.showNotification('Nexus Core is restarting...');
   };
 
   /**
