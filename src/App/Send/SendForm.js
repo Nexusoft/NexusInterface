@@ -47,12 +47,13 @@ const mapStateToProps = ({
   addressBook,
   myAccounts,
   settings: { minConfirmations },
-  common: { encrypted, loggedIn },
+  core: {
+    info: { locked },
+  },
   form,
 }) => ({
   minConfirmations,
-  encrypted,
-  loggedIn,
+  locked,
   accountOptions: getAccountOptions(myAccounts),
   addressNameMap: getAddressNameMap(addressBook),
   fieldNames: getRegisteredFieldNames(
@@ -182,7 +183,7 @@ const mapDispatchToProps = {
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     props.loadMyAccounts();
-    this.props.openSuccessDialog({
+    props.openSuccessDialog({
       message: <Text id="Alert.Sent" />,
     });
   },
@@ -198,14 +199,7 @@ class SendForm extends Component {
    */
   confirmSend = e => {
     e.preventDefault();
-    const {
-      handleSubmit,
-      invalid,
-      encrypted,
-      loggedIn,
-      touch,
-      fieldNames,
-    } = this.props;
+    const { handleSubmit, invalid, locked, touch, fieldNames } = this.props;
 
     if (invalid) {
       // Mark the form touched so that the validation errors will be shown.
@@ -215,7 +209,7 @@ class SendForm extends Component {
       return;
     }
 
-    if (encrypted && !loggedIn) {
+    if (locked) {
       const {
         payload: { id: modalId },
       } = this.props.openErrorDialog({

@@ -31,7 +31,7 @@ const actionCreators = { openModal };
  *
  *@returns {JSX} JSX
  */
-const MyAddresses = () => (
+const MyAddresses = ({ openModal }) => (
   <Tooltip.Trigger
     align="end"
     tooltip="My Addresses"
@@ -40,7 +40,7 @@ const MyAddresses = () => (
     <MyAddressesIcon
       icon={userIcon}
       onClick={() => {
-        this.props.openModal(MyAddressesModal);
+        openModal(MyAddressesModal);
       }}
     />
   </Tooltip.Trigger>

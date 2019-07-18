@@ -70,7 +70,7 @@ const Characters = styled.span({
   onSubmit: ({ password }) => rpc('encryptwallet', [password]),
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
-    this.props.openSuccessDialog({
+    props.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {
         remote.getGlobal('core').start();

@@ -30,7 +30,7 @@ const NotificationComponent = styled(SnackBar)({
 
 @connect(
   null,
-  removeNotification
+  { removeNotification }
 )
 export default class Notification extends Component {
   static defaultProps = {
