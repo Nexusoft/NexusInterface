@@ -589,7 +589,9 @@ class Overview extends Component {
    * @memberof Overview
    */
   returnWeightStats = () => {
-    console.log(this.props.coreInfo);
+    if (Object.keys(this.props.coreInfo).length === 0) {
+      return;
+    }
     return (
       <React.Fragment>
         <Stat>
