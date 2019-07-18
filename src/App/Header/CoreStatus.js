@@ -6,21 +6,21 @@ import { connect } from 'react-redux';
 import Text from 'components/Text';
 
 /**
- * Handels the Daemon Status
+ * Handles the Core Status
  *
- * @class DaemonStatus
+ * @class CoreStatus
  * @extends {React.Component}
  */
 @connect(({ core: { info: { connections } }, settings: { manualDaemon } }) => ({
   manualDaemon,
   connections,
 }))
-class DaemonStatus extends React.Component {
+class CoreStatus extends React.Component {
   /**
    * Component's Renderable JSX
    *
    * @returns {JSX}
-   * @memberof DaemonStatus
+   * @memberof CoreStatus
    */
   render() {
     const { manualDaemon, connections } = this.props;
@@ -40,4 +40,4 @@ class DaemonStatus extends React.Component {
   }
 }
 
-export default DaemonStatus;
+export default CoreStatus;

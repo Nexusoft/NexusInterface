@@ -20,8 +20,8 @@ const separator = {
   type: 'separator',
 };
 
-const startDaemon = {
-  label: 'Start Daemon',
+const startCore = {
+  label: 'Start Nexus Core',
   click: () => {
     remote
       .getGlobal('core')
@@ -32,8 +32,8 @@ const startDaemon = {
   },
 };
 
-const stopDaemon = {
-  label: 'Stop Daemon',
+const stopCore = {
+  label: 'Stop Nexus Core',
   click: () => {
     const state = store.getState();
     if (state.settings.manualDaemon) {
@@ -181,7 +181,7 @@ const downloadRecent = {
     }
 
     if (state.core.info.connections === undefined) {
-      store.dispatch(showNotification('Please wait for the daemon to start.'));
+      store.dispatch(showNotification('Please wait for Nexus Core to start.'));
       return;
     }
 
@@ -298,17 +298,12 @@ function updaterMenuItem() {
  */
 function buildDarwinTemplate() {
   const state = store.getState();
-  const daemonRunning = state.core.info.connections !== undefined;
+  const coreRunning = state.core.info.connections !== undefined;
   const { webview } = state;
 
   const subMenuAbout = {
     label: 'Nexus',
-    submenu: [
-      about,
-      daemonRunning ? stopDaemon : startDaemon,
-      separator,
-      quitNexus,
-    ],
+    submenu: [about, coreRunning ? stopCore : startCore, separator, quitNexus],
   };
   const subMenuFile = {
     label: 'File',
@@ -369,7 +364,7 @@ function buildDarwinTemplate() {
  */
 function buildDefaultTemplate() {
   const state = store.getState();
-  const daemonRunning = state.core.info.connections !== undefined;
+  const coreRunning = state.core.info.connections !== undefined;
   const { webview } = state;
 
   const subMenuFile = {
@@ -380,7 +375,7 @@ function buildDefaultTemplate() {
       separator,
       downloadRecent,
       separator,
-      daemonRunning ? stopDaemon : startDaemon,
+      coreRunning ? stopCore : startCore,
       separator,
       quitNexus,
     ],

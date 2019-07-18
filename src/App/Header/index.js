@@ -15,7 +15,7 @@ import LogInStatus from './StatusIcons/LogInStatus';
 import StakingStatus from './StatusIcons/StakingStatus';
 import SyncStatus from './StatusIcons/SyncStatus';
 import MyAddresses from './StatusIcons/MyAddresses';
-import DaemonStatus from './DaemonStatus';
+import CoreStatus from './CoreStatus';
 import logoFull from './logo-full-beta.sprite.svg';
 
 const HeaderComponent = styled.header(({ theme }) => ({
@@ -101,7 +101,7 @@ class Header extends Component {
 
         <UnderHeader>
           <HorizontalLine />
-          <DaemonStatus {...this.props} />
+          <CoreStatus {...this.props} />
         </UnderHeader>
 
         {connections !== undefined && (

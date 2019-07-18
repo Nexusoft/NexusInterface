@@ -84,7 +84,7 @@ class LogInStatus extends Component {
       return (
         <div>
           <div>Unknown Lock Status</div>
-          <div>Waiting for daemon to load...</div>
+          <div>Waiting for Nexus Core to load...</div>
         </div>
       );
     }

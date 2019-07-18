@@ -139,7 +139,7 @@ class SettingsCore extends Component {
   }
 
   /**
-   * Confirms Switch to Manual Daemon
+   * Confirms Switch to Manual Core
    *
    * @memberof SettingsCore
    */

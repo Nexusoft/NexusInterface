@@ -71,13 +71,13 @@ export default class BootstrapBackgroundTask extends Component {
       case 'extracting':
         return 'Decompressing...';
       case 'stopping_core':
-        return 'Stopping daemon...';
+        return 'Stopping Core...';
       case 'moving_db':
         return 'Moving...';
       case 'restarting_core':
-        return 'Restarting daemon...';
+        return 'Restarting Core...';
       case 'rescanning':
-        return 'Rescanning wallet...';
+        return 'Rescanning Wallet...';
       default:
         return '';
     }
@@ -115,7 +115,7 @@ export default class BootstrapBackgroundTask extends Component {
       'Aborted recent database bootstrapping',
       'error'
     );
-    this.props.showNotification('Daemon is restarting...');
+    this.props.showNotification('Nexus Core is restarting...');
   };
 
   /**
@@ -129,7 +129,7 @@ export default class BootstrapBackgroundTask extends Component {
       message: 'Error bootstrapping recent database',
       note: err.message || 'An unknown error occured',
     });
-    this.props.showNotification('Daemon is restarting...');
+    this.props.showNotification('Nexus Core is restarting...');
     console.error(err);
   };
 
@@ -143,7 +143,7 @@ export default class BootstrapBackgroundTask extends Component {
     this.props.openSuccessDialog({
       message: 'Recent database has been successfully updated',
     });
-    this.props.showNotification('Daemon is restarting...');
+    this.props.showNotification('Nexus Core is restarting...');
   };
 
   /**
