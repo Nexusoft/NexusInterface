@@ -89,6 +89,15 @@ const languages = [
     ),
   },
   {
+    value: 'pt',
+    display: (
+      <span>
+        <Flag src={FlagFile.Portuguese} />
+        <span className="v-align">Portuguese</span>
+      </span>
+    ),
+  },
+  {
     value: 'ru',
     display: (
       <span>

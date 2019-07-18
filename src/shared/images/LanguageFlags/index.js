@@ -7,6 +7,7 @@ import ja from './jp.png';
 import fr from './fr.png';
 import nl from './nl.png';
 import pl from './pl.png';
+import pt from './pt.png';
 import usuk from './US-UK.png';
 
 export const America = us;
@@ -18,4 +19,5 @@ export const Japan = ja;
 export const France = fr;
 export const Polish = pl;
 export const Netherlands = nl;
+export const Portuguese = pt;
 export const USAUK = usuk;
