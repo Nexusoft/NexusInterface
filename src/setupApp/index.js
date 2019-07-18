@@ -5,6 +5,7 @@ import { remote } from 'electron';
 import { openModal } from 'actions/overlays';
 import * as ac from 'actions/setupApp';
 import { loadModules } from 'actions/module';
+import { stopCore } from 'actions/core';
 import { initializeUpdater } from 'lib/updater';
 import { initializeWebView } from 'lib/modules';
 import { initializeCoreInfo } from 'lib/coreInfo';
@@ -46,7 +47,7 @@ export function preRender() {
       dispatch(openModal(ClosingModal));
 
       if (!manualDaemon) {
-        await remote.getGlobal('core').stop();
+        await dispatch(stopCore());
       }
       remote.app.exit();
     }

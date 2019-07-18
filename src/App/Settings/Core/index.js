@@ -6,10 +6,9 @@ import { reduxForm, Field } from 'redux-form';
 import cpy from 'cpy';
 
 // Internal
-import * as TYPE from 'consts/actionTypes';
-import rpc from 'lib/rpc';
 import Text from 'components/Text';
 import { switchSettingsTab } from 'actions/ui';
+import { stopCore, startCore, restartCore } from 'actions/core';
 import WaitingMessage from 'components/WaitingMessage';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
@@ -43,9 +42,11 @@ const mapStateToProps = ({
 const actionCreators = {
   updateSettings,
   switchSettingsTab,
-  clearForRestart: () => ({ type: TYPE.CLEAR_CORE_INFO }),
   openConfirmDialog,
   showNotification,
+  stopCore,
+  startCore,
+  restartCore,
 };
 
 /**
@@ -144,31 +145,34 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   confirmSwitchManualDaemon = () => {
-    if (this.props.settings.manualDaemon) {
-      this.props.openConfirmDialog({
+    const {
+      settings,
+      openConfirmDialog,
+      stopCore,
+      startCore,
+      updateSettings,
+    } = this.props;
+
+    if (settings.manualDaemon) {
+      openConfirmDialog({
         question: <Text id="Settings.ManualDaemonExit" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
         callbackYes: async () => {
           try {
-            await rpc('stop', []);
+            await stopCore();
           } finally {
-            this.props.updateSettings({ manualDaemon: false });
-            this.props.clearForRestart();
-            await remote.getGlobal('core').start();
+            updateSettings({ manualDaemon: false });
+            await startCore();
           }
         },
       });
     } else {
-      this.props.openConfirmDialog({
+      openConfirmDialog({
         question: <Text id="Settings.ManualDaemonEntry" />,
         note: <Text id="Settings.ManualDaemonWarning" />,
         callbackYes: async () => {
-          try {
-            await rpc('stop', []);
-          } finally {
-            remote.getGlobal('core').stop();
-            this.props.updateSettings({ manualDaemon: true });
-          }
+          updateSettings({ manualDaemon: true });
+          await stopCore();
         },
       });
     }
@@ -180,8 +184,7 @@ class SettingsCore extends Component {
    * @memberof SettingsCore
    */
   restartCore = () => {
-    this.props.clearForRestart();
-    remote.getGlobal('core').restart();
+    this.props.restartCore();
     this.props.showNotification(<Text id="Alert.CoreRestarting" />);
   };
 
@@ -228,12 +231,7 @@ class SettingsCore extends Component {
         this.props.updateSettings({
           enableStaking: form.resolveValue(value),
         });
-        try {
-          this.props.clearForRestart();
-          this.restartCore();
-        } finally {
-          remote.getGlobal('core').start();
-        }
+        this.restartCore();
       },
       callbackNo: () => {
         this.props.updateSettings({
@@ -254,12 +252,7 @@ class SettingsCore extends Component {
         this.props.updateSettings({
           enableMining: form.resolveValue(value),
         });
-        try {
-          this.props.clearForRestart();
-          this.restartCore();
-        } finally {
-          remote.getGlobal('core').start();
-        }
+        this.restartCore();
       },
       callbackNo: () => {
         this.props.updateSettings({
@@ -278,36 +271,10 @@ class SettingsCore extends Component {
     const handlers = [];
     return settingName => {
       if (!handlers[settingName]) {
-        // if (settingName === 'enableMining' || settingName === 'enableStaking') {
-        //   handlers[settingName] = input => {
-        //     this.props.openConfirmDialog({
-        //       question: <Text id="Settings.RestartDaemon" />,
-        //       note: <Text id="Settings.ReqiresRestart" />,
-        //       callbackYes: async () => {
-
-        //         this.props.updateSettings({
-        //           [settingName]: form.resolveValue(input),
-        //         });
-        //         try {
-        //           this.props.clearForRestart();
-        //           this.restartCore();
-        //         } finally {
-        //           await remote.getGlobal('core').start();
-        //         }
-        //       },
-        //       callbackNo: () => {
-        //         this.props.updateSettings({
-        //           [settingName]: form.resolveValue(input),
-        //         });
-        //       },
-        //     });
-        //   };
-        // } else {
         handlers[settingName] = input =>
           this.props.updateSettings({
             [settingName]: form.resolveValue(input),
           });
-        // }
       }
       return handlers[settingName];
     };

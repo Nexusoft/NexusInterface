@@ -6,12 +6,11 @@ import fs from 'fs';
 // Internal
 import store, { observeStore, history } from 'store';
 import { toggleWebViewDevTools } from 'actions/webview';
-import rpc from 'lib/rpc';
 import { updateSettings } from 'actions/settings';
+import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
 import Text from 'components/Text';
 import { showNotification, openErrorDialog } from 'actions/overlays';
-import { clearCoreInfo } from 'actions/core';
 import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
@@ -23,32 +22,14 @@ const separator = {
 const startCore = {
   label: 'Start Nexus Core',
   click: () => {
-    remote
-      .getGlobal('core')
-      .start()
-      .then(payload => {
-        console.log(payload);
-      });
+    store.dispatch(startCoreAC());
   },
 };
 
 const stopCore = {
   label: 'Stop Nexus Core',
   click: () => {
-    const state = store.getState();
-    if (state.settings.manualDaemon) {
-      rpc('stop', []).then(() => {
-        store.dispatch(clearCoreInfo());
-      });
-    } else {
-      remote
-        .getGlobal('core')
-        .stop()
-        .then(payload => {
-          store.dispatch(clearCoreInfo());
-          console.log(payload);
-        });
-    }
+    store.dispatch(stopCoreAC());
   },
 };
 
@@ -299,12 +280,23 @@ function updaterMenuItem() {
 function buildDarwinTemplate() {
   const state = store.getState();
   const coreRunning = state.core.info.connections !== undefined;
+  const { manualDaemon } = state.settings;
   const { webview } = state;
 
   const subMenuAbout = {
     label: 'Nexus',
-    submenu: [about, coreRunning ? stopCore : startCore, separator, quitNexus],
+    submenu: [
+      about,
+      /* may insert Start/Stop Core here */ separator,
+      quitNexus,
+    ],
   };
+  // If it's in manual core mode and core is not running, don't show
+  // Start Core option because it does nothing
+  if (!manualDaemon || coreRunning) {
+    subMenuAbout.submenu.splice(1, 0, coreRunning ? stopCore : startCore);
+  }
+
   const subMenuFile = {
     label: 'File',
     submenu: [backupWallet, viewBackups, separator, downloadRecent],
@@ -365,6 +357,7 @@ function buildDarwinTemplate() {
 function buildDefaultTemplate() {
   const state = store.getState();
   const coreRunning = state.core.info.connections !== undefined;
+  const { manualDaemon } = state.settings;
   const { webview } = state;
 
   const subMenuFile = {
@@ -375,11 +368,17 @@ function buildDefaultTemplate() {
       separator,
       downloadRecent,
       separator,
-      coreRunning ? stopCore : startCore,
+      /* may insert Start/Stop Core here */
       separator,
       quitNexus,
     ],
   };
+  // If it's in manual core mode and core is not running, don't show
+  // Start Core option because it does nothing
+  if (!manualDaemon || coreRunning) {
+    subMenuFile.submenu.splice(5, 0, coreRunning ? stopCore : startCore);
+  }
+
   const subMenuSettings = {
     label: 'Settings',
     submenu: [appSettings, coreSettings, keyManagement, styleSettings],
@@ -446,4 +445,5 @@ export function initializeMenu() {
   );
   observeStore(state => state.settings && state.settings.devMode, rebuildMenu);
   observeStore(state => state.webview, rebuildMenu);
+  observeStore(state => state.settings.manualDaemon, rebuildMenu);
 }

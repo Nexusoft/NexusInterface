@@ -18,6 +18,7 @@ const incStep = 1000;
 const maxTime = 10000;
 let waitTime = 0;
 let connected = false;
+let timerId = null;
 
 /**
  *
@@ -26,16 +27,29 @@ let connected = false;
  */
 export async function autoFetchCoreInfo() {
   try {
+    // Clear timeout in case this function is called again when
+    // the autoFetching is already running
+    clearTimeout(timerId);
     await store.dispatch(getInfo());
     connected = true;
     waitTime = maxTime;
   } catch (err) {
     if (connected) waitTime = incStep;
     else if (waitTime < maxTime) waitTime += incStep;
+    else waitTime = maxTime;
     connected = false;
   } finally {
-    setTimeout(autoFetchCoreInfo, waitTime);
+    const {
+      core: { autoConnect },
+    } = store.getState();
+    if (autoConnect) {
+      timerId = setTimeout(autoFetchCoreInfo, waitTime);
+    }
   }
+}
+
+export function stopFetchingCoreInfo() {
+  clearTimeout(timerId);
 }
 
 /**
@@ -138,4 +152,12 @@ export function initializeCoreInfo() {
   );
 
   autoFetchCoreInfo();
+
+  observeStore(
+    state => state.core.autoConnect,
+    autoConnect => {
+      if (autoConnect) autoFetchCoreInfo();
+      else stopFetchingCoreInfo();
+    }
+  );
 }

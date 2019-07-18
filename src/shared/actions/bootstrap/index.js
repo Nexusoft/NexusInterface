@@ -1,7 +1,6 @@
 // Internal
-import store from 'store';
 import { openConfirmDialog, openModal } from 'actions/overlays';
-import { clearCoreInfo } from 'actions/core';
+import { startCore, stopCore } from 'actions/core';
 import { updateSettings } from 'actions/settings';
 import Bootstrapper from './Bootstrapper';
 import BootstrapModal from './BootstrapModal';
@@ -22,7 +21,7 @@ export default function bootstrap({ suggesting } = {}) {
 
     running = true;
     const state = getState();
-    store.dispatch(
+    dispatch(
       openConfirmDialog({
         question: 'Download recent database?',
         note:
@@ -31,7 +30,7 @@ export default function bootstrap({ suggesting } = {}) {
         callbackYes: async () => {
           const bootstrapper = new Bootstrapper();
           try {
-            store.dispatch(openModal(BootstrapModal, { bootstrapper }));
+            dispatch(openModal(BootstrapModal, { bootstrapper }));
           } catch (err) {
             running = false;
             throw err;
@@ -40,9 +39,8 @@ export default function bootstrap({ suggesting } = {}) {
             try {
               await bootstrapper.start({
                 backupFolder: state.settings.backupDirectory,
-                clearCoreInfo: () => {
-                  dispatch(clearCoreInfo());
-                },
+                startCore: () => dispatch(startCore()),
+                stopCore: () => dispatch(stopCore()),
               });
             } finally {
               running = false;

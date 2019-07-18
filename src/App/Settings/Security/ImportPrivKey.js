@@ -16,7 +16,6 @@ import {
   showNotification,
 } from 'actions/overlays';
 import rpc from 'lib/rpc';
-import * as TYPE from 'consts/actionTypes';
 import { rpcErrorHandler, trimText } from 'utils/form';
 
 const ImportPrivKeyForm = styled.form({
@@ -32,7 +31,6 @@ const ImportPrivKeyForm = styled.form({
 @connect(
   null,
   {
-    ResetForEncryptionRestart: () => ({ type: TYPE.CLEAR_CORE_INFO }),
     openErrorDialog,
     openSuccessDialog,
     showNotification,

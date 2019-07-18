@@ -3,7 +3,6 @@ import checkDiskSpace from 'check-disk-space';
 import fs from 'fs';
 import path from 'path';
 import https from 'https';
-import electron from 'electron';
 import moveFile from 'move-file';
 import rimraf from 'rimraf';
 
@@ -79,11 +78,11 @@ export default class Bootstrapper {
   /**
    * Start the bootstrapper
    *
-   * @param {*} { backupFolder, clearCoreInfo }
+   * @param {*} { backupFolder, startCore, stopCore }
    * @returns
    * @memberof Bootstrapper
    */
-  async start({ backupFolder, clearCoreInfo }) {
+  async start({ backupFolder, startCore, stopCore }) {
     try {
       const getinfo = await rpc('getinfo', []);
 
@@ -120,16 +119,15 @@ export default class Bootstrapper {
       await this._extractDb();
       if (this._aborted) return;
 
-      clearCoreInfo();
       this._progress('stopping_core');
-      await electron.remote.getGlobal('core').stop();
+      await stopCore();
       if (this._aborted) return;
 
       this._progress('moving_db');
       await this._moveExtractedContent();
 
       this._progress('restarting_core');
-      await this._restartCore();
+      await startCore();
 
       this._progress('rescanning');
       await this._rescan();
@@ -145,7 +143,7 @@ export default class Bootstrapper {
           this._currentProgress
         )
       ) {
-        await electron.remote.getGlobal('core').start();
+        await startCore();
       }
     }
   }
@@ -307,19 +305,6 @@ export default class Bootstrapper {
     } catch (e) {
       console.log('Moveing Extracted Content Error', e);
     }
-  }
-
-  async _restartCore() {
-    await electron.remote.getGlobal('core').start();
-
-    const getInfo = async () => {
-      try {
-        await rpc('getinfo', []);
-      } catch (err) {
-        await getInfo();
-      }
-    };
-    return await getInfo();
   }
 
   async _rescan() {

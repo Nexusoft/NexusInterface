@@ -1,3 +1,7 @@
+// Core
+export const START_CORE_AUTO_CONNECT = 'START_CORE_AUTO_CONNECT';
+export const STOP_CORE_AUTO_CONNECT = 'STOP_CORE_AUTO_CONNECT';
+
 // Overview
 export const GET_INFO = 'GET_INFO';
 export const USD_RATE = 'USD_RATE';

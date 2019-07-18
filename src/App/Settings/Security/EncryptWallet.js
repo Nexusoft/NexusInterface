@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import styled from '@emotion/styled';
-import { remote } from 'electron';
 
 // Internal
 import Text from 'components/Text';
@@ -13,6 +12,7 @@ import Button from 'components/Button';
 import FieldSet from 'components/FieldSet';
 import { openSuccessDialog } from 'actions/overlays';
 import rpc from 'lib/rpc';
+import { startCore } from 'actions/core';
 import { consts } from 'styles';
 import { rpcErrorHandler } from 'utils/form';
 import passwordInvalidChars from './passwordInvalidChars';
@@ -41,7 +41,7 @@ const Characters = styled.span({
  */
 @connect(
   null,
-  { openSuccessDialog }
+  { openSuccessDialog, startCore }
 )
 @reduxForm({
   form: 'encryptWallet',
@@ -73,7 +73,9 @@ const Characters = styled.span({
     props.openSuccessDialog({
       message: <Text id="Alert.WalletHasBeenEncrypted" />,
       onClose: () => {
-        remote.getGlobal('core').start();
+        // In some old version, core stops after wallet is encrypted
+        // So start the core here for legacy support
+        props.startCore();
       },
     });
   },
