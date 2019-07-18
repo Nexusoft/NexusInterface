@@ -9,6 +9,7 @@
 - Added functionality to the Balance stat on overview page to change to fiat balance on click
 - Wallet position on screen is now remembered for the next time it's opened
 - Added a warning on balance reminding it might not be up-to-date when the wallet is not fully synchronized
+- Added ability to disable the Transaction Chart.
 
 #### Adjustments
 

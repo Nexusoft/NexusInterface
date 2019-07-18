@@ -188,6 +188,7 @@ class Transactions extends Component {
       changeTimeFrame: false,
       amountFilter: 0,
       categoryFilter: 'all',
+      showTransactionChart: true,
       addressFilter: '',
       zoomDomain: {
         x: [
@@ -290,6 +291,12 @@ class Transactions extends Component {
     });
 
     this._Onprogress = () => {}; // Might not need to define this here
+
+    setTimeout(() => {
+      this.setState({
+        showTransactionChart: this.props.showTransactionChart,
+      });
+    }, 50);
   }
 
   /**
@@ -375,7 +382,7 @@ class Transactions extends Component {
       y: [0, 1],
     };
     if (incomingData != undefined && incomingData.length > 0) {
-      console.log(incomingData[0]);
+      //console.log(incomingData[0]);
       tempZoomDomain = {
         x: [
           new Date(incomingData[0].time.getTime() - 43200000),
@@ -847,10 +854,6 @@ class Transactions extends Component {
           coin: 'Nexus',
           fee: 0,
         };
-        console.log(
-          '****$$$$$$$$$$$$$$$$$$$$$$$$$$$######################################'
-        );
-        console.error(tempTrans);
         let closestData = this.findclosestdatapoint(
           tempTrans.time.getTime().toString()
         );
@@ -1441,9 +1444,10 @@ class Transactions extends Component {
     }
     const difference = this.state.zoomDomain.x[1] - this.state.zoomDomain.x[0];
 
-    console.log(this.state.zoomDomain.x[1] - this.state.zoomDomain.x[0]);
+    //console.log(this.state.zoomDomain.x[1] - this.state.zoomDomain.x[0]);
     let filteredData = this.returnAllFilters([...this.props.walletitems]);
-    console.log(filteredData.length);
+    //console.log(filteredData.length);
+    /*
     if (filteredData.length > 100) {
       let arraylength = filteredData.length;
       for (let index = 1; index < arraylength; index++) {
@@ -1462,7 +1466,8 @@ class Transactions extends Component {
         }
       }
     }
-    console.log(filteredData);
+    */
+    //console.log(filteredData);
     return filteredData
       .map(ele => {
         return {
@@ -1691,7 +1696,6 @@ class Transactions extends Component {
    * @memberof Transactions
    */
   downloadHistoryOnTransaction(inEle) {
-    console.error(inEle);
     if (this._isMounted == false) {
       return;
     }
@@ -1908,9 +1912,12 @@ class Transactions extends Component {
   toggleVictoryChart() {
     const value = !this.props.settings.showTransactionChart;
     this.props.ToggleTransactionChart({ showTransactionChart: value });
-    console.log(this.props.settings.showTransactionChart);
-    console.log(this.props.settings);
+    //console.log(this.props.settings.showTransactionChart);
+    //console.log(this.props.settings);
     UpdateSettings({
+      showTransactionChart: value,
+    });
+    this.setState({
       showTransactionChart: value,
     });
   }
@@ -1980,7 +1987,7 @@ class Transactions extends Component {
             />
           }
           labels={d => this.returnToolTipLable(d)}
-          data={chartData}
+          data={this.state.showTransactionChart ? chartData : []}
           x="a"
           y="b"
         />
@@ -2038,6 +2045,7 @@ class Transactions extends Component {
     const columns = this.returnTableColumns();
     const open = this.state.open;
     const pageSize = this.returnDefaultPageSize();
+    const renderTransactionChart = this.state.showTransactionChart;
     return (
       <Panel
         icon={transactionIcon}
@@ -2063,20 +2071,21 @@ class Transactions extends Component {
                 width: '16px',
                 height: '12px',
                 display: 'inline',
+                border: '2px solid ' + this.props.theme.background,
                 position: 'absolute',
-                left: '0px',
+                left: '8px',
+                paddingLeft: '2px',
+                paddingRight: '15px',
               }}
               onClick={() => this.toggleVictoryChart()}
             >
               <Arrow
-                direction={
-                  this.props.settings.showTransactionChart ? 'up' : 'down'
-                }
+                direction={renderTransactionChart ? 'up' : 'down'}
                 width={12}
                 height={8}
               />
             </Button>
-            {this.props.settings.showTransactionChart ? (
+            {renderTransactionChart ? (
               <div
                 id="transactions-chart"
                 style={{
@@ -2085,9 +2094,13 @@ class Transactions extends Component {
                   transition: 'all 1s ease',
                 }}
               >
-                {data.length === 0 ? null : this.returnVictoryChart()}
+                {data.length === 0 || renderTransactionChart == false
+                  ? null
+                  : this.returnVictoryChart()}
               </div>
-            ) : null}
+            ) : (
+              <div style={{ fontSize: '75%' }}>Show Transaction Chart</div>
+            )}
             <Filters>
               <FormField
                 connectLabel
