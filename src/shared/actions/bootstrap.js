@@ -49,6 +49,7 @@ export function bootstrap({ suggesting } = {}) {
         labelNo: 'No, let it sync',
         skinNo: suggesting ? 'danger' : undefined,
         callbackNo: () => {
+          dispatch(setBootstrapStatus('idle'));
           if (suggesting) {
             dispatch(
               updateSettings({
