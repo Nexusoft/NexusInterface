@@ -83,7 +83,7 @@ class LogInStatus extends Component {
     if (connections === undefined) {
       return (
         <div>
-          <div>Unknown Lock Status</div>
+          <div>Unknown login status</div>
           <div>Waiting for Nexus Core to load...</div>
         </div>
       );
