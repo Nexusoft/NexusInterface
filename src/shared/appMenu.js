@@ -196,7 +196,7 @@ const toggleModuleDevTools = {
 };
 
 const websiteLink = {
-  label: 'Nexus Earth Website',
+  label: 'Nexus Website',
   click: () => {
     shell.openExternal('http://nexusearth.com');
   },
