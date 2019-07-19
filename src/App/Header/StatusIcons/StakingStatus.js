@@ -18,11 +18,11 @@ import stakingIcon from 'images/staking.sprite.svg';
 @connect(
   ({
     core: {
-      info: { stakeweight, interestweight, trustweight, blockweight },
+      info: { stakeweight, stakerate, trustweight, blockweight },
     },
   }) => ({
     stakeweight,
-    interestweight,
+    stakerate,
     trustweight,
     blockweight,
   })
@@ -35,12 +35,7 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const {
-      stakeweight,
-      interestweight,
-      trustweight,
-      blockweight,
-    } = this.props;
+    const { stakeweight, stakerate, trustweight, blockweight } = this.props;
 
     return (
       <Tooltip.Trigger
@@ -49,14 +44,12 @@ class StakingStatus extends React.Component {
             <div>
               <Text id="Header.StakeWeight" />: {stakeweight}%
             </div>
-            <div>
-              <Text id="Header.InterestRate" />: {interestweight}%
-            </div>
+            <div>Stake Rate: {stakerate}%</div>
             <div>
               <Text id="Header.TrustWeight" />: {trustweight}%
             </div>
             <div>
-              <Text id="Header.BlockWeight" />: {blockweight}
+              <Text id="Header.BlockWeight" />: {blockweight}%
             </div>
           </div>
         }
