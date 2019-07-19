@@ -209,6 +209,13 @@ const gitRepoLink = {
   },
 };
 
+const walletGuideLink = {
+  label: 'Nexus Wallet Guide',
+  click: () => {
+    shell.openExternal('https://nexusearth.com/nexus-tritium-wallet-guide/');
+  },
+};
+
 const updaterIdle = {
   label: 'Check for Updates...',
   enabled: true,
@@ -333,6 +340,7 @@ function buildDarwinTemplate() {
     submenu: [
       websiteLink,
       gitRepoLink,
+      walletGuideLink,
       // separator,
       // Disable checking for updates on Mac until we have the developer key
       // updaterMenuItem(),
@@ -397,7 +405,14 @@ function buildDefaultTemplate() {
 
   const subMenuHelp = {
     label: 'Help',
-    submenu: [about, websiteLink, gitRepoLink, separator, updaterMenuItem()],
+    submenu: [
+      about,
+      websiteLink,
+      gitRepoLink,
+      walletGuideLink,
+      separator,
+      updaterMenuItem(),
+    ],
   };
 
   return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];
