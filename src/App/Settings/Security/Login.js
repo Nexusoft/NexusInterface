@@ -127,7 +127,12 @@ class Login extends Component {
     !this.props.tritium || input.value ? (
       <div>
         <FormField connectLabel label={<Text id="Settings.LoginDate" />}>
-          <Field component={TextField.RF} name="date" type="date" />
+          <Field
+            component={TextField.RF}
+            name="date"
+            type="date"
+            min={new Date().toISOString().slice(0, 10)}
+          />
         </FormField>
         <FormField connectLabel label={<Text id="Settings.LoginTime" />}>
           <Field component={TextField.RF} name="time" type="time" />
