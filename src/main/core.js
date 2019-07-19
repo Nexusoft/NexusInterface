@@ -43,18 +43,18 @@ async function getCorePID() {
   let PID;
 
   if (process.platform == 'win32') {
-    PID = await exec(
+    PID = (await exec(
       `tasklist /NH /v /fi "IMAGENAME eq ${coreBinaryName}" /fo CSV`,
       [],
       { env: modEnv }
-    )
+    ))
       .toString()
       .split(',')[1];
     PID = PID && Number(PID.replace(/"/gm, ''));
   } else if (process.platform == 'darwin') {
-    PID = await exec('ps -A', [], {
+    PID = (await exec('ps -A', [], {
       env: modEnv,
-    })
+    }))
       .toString()
       .split('\n')
       .find(output => output.includes(coreBinaryPath));
@@ -68,9 +68,9 @@ async function getCorePID() {
           .replace(/^\s+|\s+$/gm, '')
       );
   } else {
-    PID = await exec('ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}', [], {
+    PID = (await exec('ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}', [], {
       env: modEnv,
-    })
+    }))
       .toString()
       .split('\n')[1];
     PID =
