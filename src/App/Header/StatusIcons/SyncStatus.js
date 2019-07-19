@@ -53,21 +53,20 @@ class SyncStatus extends React.Component {
    */
   render() {
     const { syncUnknown, synchronizing, percentSynced } = this.props;
-    return (
-      !syncUnknown &&
-      (synchronizing ? (
-        <Tooltip.Trigger
-          tooltip={
-            <Text id="Header.Syncing" data={{ percent: percentSynced }} />
-          }
-        >
-          <SpinningIcon icon={syncingIcon} />
-        </Tooltip.Trigger>
-      ) : (
-        <Tooltip.Trigger tooltip={<Text id="Header.Synced" />}>
-          <StatusIcon icon={checkIcon} />
-        </Tooltip.Trigger>
-      ))
+    return syncUnknown ? (
+      <Tooltip.Trigger tooltip="Checking sync status">
+        <SpinningIcon className="dim" icon={syncingIcon} />
+      </Tooltip.Trigger>
+    ) : synchronizing ? (
+      <Tooltip.Trigger
+        tooltip={<Text id="Header.Syncing" data={{ percent: percentSynced }} />}
+      >
+        <SpinningIcon icon={syncingIcon} />
+      </Tooltip.Trigger>
+    ) : (
+      <Tooltip.Trigger tooltip={<Text id="Header.Synced" />}>
+        <StatusIcon icon={checkIcon} />
+      </Tooltip.Trigger>
     );
   }
 }
