@@ -27,6 +27,8 @@
 - Either Start Daemon or Stop Daemon menu item will be available at one time depending on whether the daemon is running or not
 - Updated wording: use "Core" and "Nexus Core" instead of "Daemon"
 - Various reorganization and optimizations of the internal structure
+- Updated project's dependencies
+- Bumped Nexus Wallet Module Specification version to 0.2.0
 
 #### Fixes
 
