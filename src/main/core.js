@@ -209,6 +209,13 @@ class Core {
     log.info('Core Manager: Stop function called');
     const settings = LoadSettings();
 
+    let corePID;
+    corePID = await getCorePID();
+    if (!corePID) {
+      log.info(`Core Manager: Core has already stopped.`);
+      return false;
+    }
+
     const conf = settings.manualDaemon
       ? customConfig({
           ip: settings.manualDaemonIP,
@@ -219,22 +226,27 @@ class Core {
         })
       : this.config || customConfig(loadNexusConf());
 
-    await axios.post(
-      conf.host,
-      { method: 'stop', params: [] },
-      {
-        auth:
-          conf.user && conf.password
-            ? {
-                username: conf.user,
-                password: conf.password,
-              }
-            : undefined,
-      }
-    );
+    try {
+      await axios.post(
+        conf.host,
+        { method: 'stop', params: [] },
+        {
+          auth:
+            conf.user && conf.password
+              ? {
+                  username: conf.user,
+                  password: conf.password,
+                }
+              : undefined,
+        }
+      );
+    } catch (err) {
+      log.error('Error stopping core');
+      log.error(err);
+    }
 
     // Check if the core really stopped
-    let corePID;
+
     for (let i = 0; i < 30; i++) {
       corePID = await getCorePID();
 
