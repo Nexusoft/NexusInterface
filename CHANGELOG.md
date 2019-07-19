@@ -11,6 +11,7 @@
 - Added a warning on balance reminding it might not be up-to-date when the wallet is not fully synchronized
 - Added ability to disable the Transaction Chart.
 - Added Portuguese Language.
+- Added a link to Nexus Wallet Guide under Help menu
 
 #### Adjustments
 
@@ -25,8 +26,11 @@
 - Terminal console now fills only the command (without the description) when a suggestion is selected
 - Quit Nexus menu item will now always quit the app regardless of "Minimize on close" setting
 - Either Start Daemon or Stop Daemon menu item will be available at one time depending on whether the daemon is running or not
+- Login form date input now won't let you select a day in the past
 - Updated wording: use "Core" and "Nexus Core" instead of "Daemon"
 - Various reorganization and optimizations of the internal structure
+- Updated project's dependencies
+- Bumped Nexus Wallet Module Specification version to 0.2.0
 
 #### Fixes
 
@@ -38,6 +42,8 @@
 - Fixed issue where scrolling in the transaction table would also scroll the parent panel
 - Fixed incorrect synchronization status icon in some cases
 - Fixed My Addresses not showing addresses in some cases
+- Fixed some bugs with Bootstrap Recent Database function
+- Various typo fixes
 
 # 1.0.1 (2019.6.28)
 

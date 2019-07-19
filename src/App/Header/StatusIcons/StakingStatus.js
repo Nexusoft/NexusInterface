@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from 'components/StatusIcon';
+import { limitDecimal } from 'utils/etc';
 
 import stakingIcon from 'images/staking.sprite.svg';
 
@@ -18,11 +19,11 @@ import stakingIcon from 'images/staking.sprite.svg';
 @connect(
   ({
     core: {
-      info: { stakeweight, interestweight, trustweight, blockweight },
+      info: { stakeweight, stakerate, trustweight, blockweight },
     },
   }) => ({
     stakeweight,
-    interestweight,
+    stakerate,
     trustweight,
     blockweight,
   })
@@ -35,28 +36,21 @@ class StakingStatus extends React.Component {
    * @memberof StakingStatus
    */
   render() {
-    const {
-      stakeweight,
-      interestweight,
-      trustweight,
-      blockweight,
-    } = this.props;
+    const { stakeweight, stakerate, trustweight, blockweight } = this.props;
 
     return (
       <Tooltip.Trigger
         tooltip={
           <div>
             <div>
-              <Text id="Header.StakeWeight" />: {stakeweight}%
+              <Text id="Header.StakeWeight" />: {limitDecimal(stakeweight, 2)}%
+            </div>
+            <div>Stake Rate: {limitDecimal(stakerate, 2)}%</div>
+            <div>
+              <Text id="Header.TrustWeight" />: {limitDecimal(trustweight, 2)}%
             </div>
             <div>
-              <Text id="Header.InterestRate" />: {interestweight}%
-            </div>
-            <div>
-              <Text id="Header.TrustWeight" />: {trustweight}%
-            </div>
-            <div>
-              <Text id="Header.BlockWeight" />: {blockweight}
+              <Text id="Header.BlockWeight" />: {limitDecimal(blockweight, 2)}%
             </div>
           </div>
         }

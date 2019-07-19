@@ -43,18 +43,18 @@ async function getCorePID() {
   let PID;
 
   if (process.platform == 'win32') {
-    PID = await exec(
+    PID = (await exec(
       `tasklist /NH /v /fi "IMAGENAME eq ${coreBinaryName}" /fo CSV`,
       [],
       { env: modEnv }
-    )
+    ))
       .toString()
       .split(',')[1];
     PID = PID && Number(PID.replace(/"/gm, ''));
   } else if (process.platform == 'darwin') {
-    PID = await exec('ps -A', [], {
+    PID = (await exec('ps -A', [], {
       env: modEnv,
-    })
+    }))
       .toString()
       .split('\n')
       .find(output => output.includes(coreBinaryPath));
@@ -68,9 +68,9 @@ async function getCorePID() {
           .replace(/^\s+|\s+$/gm, '')
       );
   } else {
-    PID = await exec('ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}', [], {
+    PID = (await exec('ps -o pid --no-headers -p 1 -C ${Nexus_Daemon}', [], {
       env: modEnv,
-    })
+    }))
       .toString()
       .split('\n')[1];
     PID =
@@ -209,6 +209,13 @@ class Core {
     log.info('Core Manager: Stop function called');
     const settings = LoadSettings();
 
+    let corePID;
+    corePID = await getCorePID();
+    if (!corePID) {
+      log.info(`Core Manager: Core has already stopped.`);
+      return false;
+    }
+
     const conf = settings.manualDaemon
       ? customConfig({
           ip: settings.manualDaemonIP,
@@ -219,22 +226,27 @@ class Core {
         })
       : this.config || customConfig(loadNexusConf());
 
-    await axios.post(
-      conf.host,
-      { method: 'stop', params: [] },
-      {
-        auth:
-          conf.user && conf.password
-            ? {
-                username: conf.user,
-                password: conf.password,
-              }
-            : undefined,
-      }
-    );
+    try {
+      await axios.post(
+        conf.host,
+        { method: 'stop', params: [] },
+        {
+          auth:
+            conf.user && conf.password
+              ? {
+                  username: conf.user,
+                  password: conf.password,
+                }
+              : undefined,
+        }
+      );
+    } catch (err) {
+      log.error('Error stopping core');
+      log.error(err);
+    }
 
     // Check if the core really stopped
-    let corePID;
+
     for (let i = 0; i < 30; i++) {
       corePID = await getCorePID();
 

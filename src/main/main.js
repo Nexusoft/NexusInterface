@@ -148,7 +148,7 @@ function createWindow() {
       windowY: bounds.y,
     });
   }, 1000);
-  mainWindow.on('move', () => updateWindowPos);
+  mainWindow.on('move', updateWindowPos);
 
   // e.preventDefault doesn't work on renderer process so leave it in the main process
   // https://github.com/electron/electron/issues/4473

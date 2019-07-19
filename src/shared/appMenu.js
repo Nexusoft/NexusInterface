@@ -11,7 +11,7 @@ import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
 import Text from 'components/Text';
 import { showNotification, openErrorDialog } from 'actions/overlays';
-import bootstrap, { checkBootStrapFreeSpace } from 'actions/bootstrap';
+import { bootstrap } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';
 import { checkForUpdates, quitAndInstall } from 'lib/updater';
 
@@ -138,18 +138,7 @@ const styleSettings = {
 
 const downloadRecent = {
   label: 'Download Recent Database',
-  click: async () => {
-    const enoughSpace = await checkBootStrapFreeSpace();
-    if (!enoughSpace) {
-      console.log('in Menu');
-      store.dispatch(
-        openErrorDialog({
-          message: <Text id="ToolTip.NotEnoughSpace" />,
-        })
-      );
-      return;
-    }
-
+  click: () => {
     const state = store.getState();
     if (state.settings.manualDaemon) {
       store.dispatch(
@@ -196,7 +185,7 @@ const toggleModuleDevTools = {
 };
 
 const websiteLink = {
-  label: 'Nexus Earth Website',
+  label: 'Nexus Website',
   click: () => {
     shell.openExternal('http://nexusearth.com');
   },
@@ -206,6 +195,13 @@ const gitRepoLink = {
   label: 'Nexus Git Repository',
   click: () => {
     shell.openExternal('http://github.com/Nexusoft');
+  },
+};
+
+const walletGuideLink = {
+  label: 'Nexus Wallet Guide',
+  click: () => {
+    shell.openExternal('https://nexusearth.com/nexus-tritium-wallet-guide/');
   },
 };
 
@@ -333,6 +329,7 @@ function buildDarwinTemplate() {
     submenu: [
       websiteLink,
       gitRepoLink,
+      walletGuideLink,
       // separator,
       // Disable checking for updates on Mac until we have the developer key
       // updaterMenuItem(),
@@ -397,7 +394,14 @@ function buildDefaultTemplate() {
 
   const subMenuHelp = {
     label: 'Help',
-    submenu: [about, websiteLink, gitRepoLink, separator, updaterMenuItem()],
+    submenu: [
+      about,
+      websiteLink,
+      gitRepoLink,
+      walletGuideLink,
+      separator,
+      updaterMenuItem(),
+    ],
   };
 
   return [subMenuFile, subMenuSettings, subMenuView, subMenuHelp];

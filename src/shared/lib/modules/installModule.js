@@ -176,9 +176,8 @@ export async function installModule(path) {
         }
       }
     } else {
-      const modulesDir = normalize(modulesDir);
       const dirPath = normalize(path);
-      if (dirPath.startsWith(modulesDir)) {
+      if (dirPath.startsWith(normalize(modulesDir))) {
         store.dispatch(
           showNotification('Cannot install from that location', 'error')
         );
