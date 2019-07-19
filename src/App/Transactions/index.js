@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { remote } from 'electron';
-import { Promise } from 'bluebird-lst';
 import fs from 'fs';
 import {
   VictoryBar,
