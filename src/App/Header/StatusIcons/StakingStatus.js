@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from 'components/StatusIcon';
+import { limitDecimal } from 'utils/etc';
 
 import stakingIcon from 'images/staking.sprite.svg';
 
@@ -42,14 +43,14 @@ class StakingStatus extends React.Component {
         tooltip={
           <div>
             <div>
-              <Text id="Header.StakeWeight" />: {stakeweight}%
+              <Text id="Header.StakeWeight" />: {limitDecimal(stakeweight, 2)}%
             </div>
-            <div>Stake Rate: {stakerate}%</div>
+            <div>Stake Rate: {limitDecimal(stakerate, 2)}%</div>
             <div>
-              <Text id="Header.TrustWeight" />: {trustweight}%
+              <Text id="Header.TrustWeight" />: {limitDecimal(trustweight, 2)}%
             </div>
             <div>
-              <Text id="Header.BlockWeight" />: {blockweight}%
+              <Text id="Header.BlockWeight" />: {limitDecimal(blockweight, 2)}%
             </div>
           </div>
         }
