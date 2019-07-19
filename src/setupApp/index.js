@@ -10,6 +10,7 @@ import { initializeUpdater } from 'lib/updater';
 import { initializeWebView } from 'lib/modules';
 import { initializeCoreInfo } from 'lib/coreInfo';
 import { startCoreOuputWatch, stopCoreOuputWatch } from 'lib/coreOutput';
+import { initializeBootstrapEvents } from 'lib/bootstrap';
 import { initializeMenu } from 'appMenu';
 import store from 'store';
 
@@ -64,6 +65,7 @@ export function postRender() {
   initializeMenu();
   initializeWebView();
   initializeUpdater(autoUpdate);
+  initializeBootstrapEvents(store);
 }
 
 function showInitialModals() {

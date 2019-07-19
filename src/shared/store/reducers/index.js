@@ -17,6 +17,7 @@ import moduleStates from './moduleStates';
 import core from './core';
 import updater from './updater';
 import webview from './webview';
+import bootstrap from './bootstrap';
 
 export default function createRootReducer(history) {
   const routerReducer = connectRouter(history);
@@ -38,6 +39,7 @@ export default function createRootReducer(history) {
       moduleStates,
       updater,
       webview,
+      bootstrap,
       router: routerReducer,
       form: formReducer,
     })
