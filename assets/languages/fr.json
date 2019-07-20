@@ -20,6 +20,7 @@
   "overview.InterestRate": "Stake Reward",
   "overview.StakeWeight": "Stake Weight",
   "overview.Globe": "Globe inclut GeoLite2",
+  
   "sendReceive.SendNexus": "Envoyer NXS",
   "sendReceive.SendFrom": "Envoyer depuis",
   "sendReceive.SendTo": "Envoyer vers",
@@ -70,6 +71,7 @@
   "sendReceive.Messages.NotLoggedInNote": "Vous devez vous connecter à votre portefeuille pour pouvoir envoyer des transactions",
   "sendReceive.Messages.LogInNow": "Se connecter maintenant",
   "sendReceive.Messages.Success": "NXS transféré avec succès",
+  
   "transactions.MoreDetails": "Plus de détails",
   "transactions.Details": "Détails de la transaction",
   "transactions.fee": "Frais",
@@ -111,6 +113,9 @@
   "transactions.NoRowsFound": "Aucune rangée trouvée",
   "transactions.AllAccounts": "Tous les comptes",
   "transactions.PENDINGTR": "TRANSACTIONS EN ATTENTE",
+  "transactions.CSVDownloadModalCancel": "Annuler",
+  "transactions.CSVDownloadModalTitle": "Traitement du CSV",
+  
   "Market.Information": "Informations du marché",
   "Market.Refreash": "Rafraîchir les données du marché",
   "Market.Refreshing": "Rafraîchissement des données du marché...",
@@ -141,7 +146,9 @@
   "Market.High": "Haut",
   "Market.Low": "Bas",
   "Market.Date": "Date",
+  
   "Market.PriceChange": "Changement de prix",
+  
   "AddressBook.AreYouSureDelete": "Êtes-vous sûr(e) de vouloir supprimer",
   "AddressBook.ThisAddress": "Êtes-vous sûr(e) de vouloir supprimer cette adresse?",
   "AddressBook.DeleteContact": "Supprimer le contact",
@@ -194,6 +201,7 @@
   "AddressBook.Delete": "Supprimer",
   "AddressBook.Edit": "Modifier",
   "AddressBook.DeleteQuestion": "Supprimer contact {nom}?",
+  
   "AddEditContact.Errors.NameRequired": "Un nom est requis",
   "AddEditContact.Errors.NameExists": "Un contact avec le même nom existe déjà",
   "AddEditContact.Errors.NoAddresses": "Il doit y avoir au moins une adresse",
@@ -225,6 +233,7 @@
   "AddEditContact.Reset": "Réinitialiser",
   "AddEditContact.CreateSuccess": "Nouveau contact ajouté au carnet d'adresses",
   "AddEditContact.EditSuccess": "Le contact a été mis à jour",
+  
   "Settings.Settings": "Paramètres",
   "Settings.Application": "Application",
   "Settings.Core": "Noyau",
@@ -272,6 +281,13 @@
   "Settings.ResetTheme": "Réinitialiser",
   "Settings.ExportTheme": "Thème exporté",
   "Settings.AutoUpdateDisabled": "La mise à jour automatique n'est pas encore disponible pour Mac, veuillez mettre à jour le portefeuille manuellement pour le moment",
+  "Settings.EnforceOpenSourceModules": "Stratégie de source ouverte du module",
+  "Settings.EnforceOpenSourceModulesNote": "Seuls les modules possédant des référentiels open source valides sont autorisés à être installés et exécutés. Vous pouvez désactiver cette option pour tester l'exécution des modules que vous développez",
+  "Settings.FakeTransactions": "Faux tests de transaction",
+  "Settings.FakeTransactionsNote": "Afficher les transactions de test sur la page Transactions",
+  "Settings.ReqiresRestart": "Cette modification de paramètre ne prendra effet qu'après le redémarrage du Core. Voulez-vous redémarrer le Core maintenant?",
+  "Settings.RestartDaemon": "Redémarrer Core?",
+
   "Settings.Errors.ManualDaemonUser": "Le nom d'utilisateur du daemon manuel est requis",
   "Settings.Errors.ManualDaemonPassword": "Le mot de passe du daemon manuel est requis",
   "Settings.Errors.ManualDaemonIP": "L'adresse IP du daemon manuel est requise",
@@ -299,6 +315,7 @@
   "Settings.Errors.AddressEmpty": "L'adresse ne peut pas être vide",
   "Settings.Errors.ViewPrivKey": "Erreur dans l'obtention de la clé privée",
   "Settings.Errors.InvalidJSON": "Format fichier invalide! Le thème personnalisé doit être au format JSON",
+  
   "Settings.LoginDate": "Connexion jusqu'à Date",
   "Settings.LoginTime": "Connexion jusqu'à Heure",
   "Settings.PasswordPlaceholder": "Mot de passe de votre portefeuille",
@@ -309,6 +326,7 @@
   "Settings.Language": "Langue",
   "Settings.English": "Anglais",
   "Settings.Russian": "Russe",
+  "Settings.Portuguese": "Portugais",
   "Settings.Spanish": "Espanol",
   "Settings.German": "Allemand",
   "Settings.Japanese": "Japonais",
@@ -330,6 +348,7 @@
   "Settings.LightBackground": "Lumière Cosmique",
   "Settings.CustomWallpaper": "Fond d'écran personnalisé",
   "Settings.SelectCustomWallpaper": "Sélectionner un fond d'écran personnalisé",
+  
   "Settings.KeyDisplayHere": "La clé privée sera affichée ici",
   "Settings.ViewPrivateKey": "Voir clé privée",
   "Settings.Address": "Adresse",
@@ -369,16 +388,19 @@
   "Settings.BackgroundSubLabel": "Personnaliser votre arrière-plan",
   "Settings.ColorScheme": "Schéma de couleurs",
   "Settings.SelectCustomTheme": "Sélectionner fichier de thème personnalisé",
+  
   "Console.CoreOutput": "Sortie de noyau",
   "Console.Console": "Console",
   "Console.ClearConsole": "Effacer la console",
   "Console.Exe": "Exécuter",
   "Console.MdMode": "Commencé en mode daemon manuel",
   "Console.CommandsHere": "Entrez les commandes de la console ici (ex: getinfo, help)",
+  
   "TrustList.TrustList": "Liste de Trust",
   "TrustList.Address": "Adresse",
   "TrustList.InterestRate": "Taux d'intérêt",
-  "TrustList.SyncMsg": "Veuillez attendre la synchronisation de votre portefeuille avec le réseau...",
+  "TrustList.SyncMsg": "Veuillez attendre la synchronisation...",
+  
   "Exchange.Exchange": "Échange",
   "Exchange.ShoutOut": "Propulsé par ShapeShift",
   "Exchange.Precise": "Précis",
@@ -399,11 +421,17 @@
   "Exchange.TradeExceed": "Échange maximum  dépassé",
   "Exchange.TradeUnMet": "Échange minimum non satisfait",
   "Exchange.Addresss": "Adresse",
+  
   "MyAddressesModal.Rescan": "Rebalayer le portefeuille",
   "MyAddressesModal.Rescanning": "Rebalayage...",
   "MyAddressesModal.RescanSuccess": "Rebalayé avec succès",
   "MyAddressesModal.RescanError": "Erreur de rebalayage",
   "MyAddressesModal.RescanTooltip": "Les soldes affichés ici peuvent être incorrects dans de rares cas, rebalayer vous aidera à les corriger",
+  "MyAddressesModal.CheckWallet": "Vérifier le portefeuille",
+  "MyAddressesModal.CheckWalletTooltip": "Vérifier l'intégrité du portefeuille",
+  "MyAddressesModal.CheckWalletSuccess": "Vérifier le passeport du portefeuille",
+  "MyAddressesModal.CheckWalletError": "Echec de la vérification du portefeuille",
+  
   "Footer.Overview": "Vue d'ensemble",
   "Footer.SendNXS": "Envoyer NXS",
   "Footer.Transactions": "Transactions",
@@ -415,6 +443,7 @@
   "Footer.Exchange": "Échange",
   "Footer.Trust": "Trust",
   "Footer.List": "Liste",
+  
   "Header.StakeWeight": "Stake Weight",
   "Header.InterestRate": "Taux d'intérêt",
   "Header.BlockWeight": "Block Weight",
@@ -427,6 +456,7 @@
   "Header.Syncing": "Synchronisation...\nEn arrière\n",
   "Header.Blocks": "Blocs",
   "Header.DaemonNotLoaded": "Daemon non chargé",
+  
   "ToolTip.GettingNextBlock": "Obtention du bloc suivant...",
   "ToolTip.SystemStartUP": "Démarrer automatiquement le portefeuille au démarrage du système",
   "ToolTip.MinimizeTheWallet": "Réduire le portefeuille dans la barre d'état système",
@@ -457,7 +487,8 @@
   "ToolTip.RecentDatabaseDownloading": "Téléchargement de la base de données récente",
   "ToolTip.PleaseWait": "Veuillez patienter...",
   "ToolTip.RecentDatabaseExtracting": "Extraction de la base de donnée récente",
-  "ToolTip.MinimumConfirmations": "Vide",
+  "ToolTip.MinimumConfirmations": "Le nombre minimum de confirmations avant qu'un bloc ne soit accepté. Local seulement.",
+  
   "Alert.Received": "Transaction reçue",
   "Alert.Sent": "Transaction envoyée",
   "Alert.Genesis": "Transaction Genesis",
@@ -492,6 +523,8 @@
   "Alert.NoSecondAccountChosen": "Aucun second compte sélectionné",
   "Alert.InsufficientFunds": "Fonds insuffisants",
   "Alert.ManualDaemonDown": "Le daemon manuel est en panne",
+  "Alert.ClosingNexus": "Portefeuille de fermeture Nexus",
+  
   "Cp.AC1": "Couleur d'accent 1",
   "Cp.AC2": "Couleur d'accent 2",
   "Cp.THC": "Couleur d'en-tête de table",
@@ -510,13 +543,16 @@
   "Cp.PCA": "Accent Couleur Primaire",
   "Cp.ER": "Erreur Couleur",
   "Cp.ERA": "Erreur Accent Couleur",
+  
   "Lang.English": "Anglais",
   "Lang.Russian": "Russe",
   "Lang.Spanish": "Espanol",
+  "Lang.Portuguese": "Portugais",
   "Lang.Korean": "Coréen",
   "Lang.German": "Allemand",
   "Lang.Japanese": "Japonais",
   "Lang.French": "Français",
   "Lang.Dutch": "Néerlandais",
+  
   "Common.UnknownError": "Une erreur inconnue s'est produite"
 }
