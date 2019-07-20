@@ -208,6 +208,7 @@
   "Settings.Language": "Taal",
   "Settings.English": "English",
   "Settings.Russian": "Russian",
+  "Settings.Portuguese": "Portugees",
   "Settings.Spanish": "Spanish",
   "Settings.German": "German",
   "Settings.Japanese": "Japanese",
@@ -474,6 +475,7 @@
 
   "Lang.English": "English",
   "Lang.Russian": "Russian",
+  "Lang.Portuguese": "Portugees",
   "Lang.Spanish": "Spanish",
   "Lang.Korean": "Korean",
   "Lang.German": "German",
