@@ -1,4 +1,5 @@
-// Internal
+import React from 'react';
+
 import * as TYPE from 'consts/actionTypes';
 import { openConfirmDialog, openModal } from 'actions/overlays';
 import { updateSettings } from 'actions/settings';
