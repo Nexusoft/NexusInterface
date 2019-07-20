@@ -373,7 +373,7 @@
   "Settings.RenderGlobe": "Renderizar globo",
 
   "Settings.ResetStyle": "Repor as definições de estilo",
-  "Configurações.Cor": "Cor",
+  "Settings.Color": "Cor",
   "Settings.Fiat": "Moeda da Fiat",
   "Settings.EnableMining": "Ativar mineração",
   "Settings.EnableStaking": "Ativar o estacamento",
@@ -392,7 +392,7 @@
   "Settings.EncryptRestart": "Criptografar e reiniciar",
   "Settings.MinimumConfirmations": "Confirmações mínimas",
   "Settings.Forkblock": "ForkBlocks",
-  "Settings.BackupDir": "Diretório de backup",
+  "Settings.BackupDir": "Diretório de recuperação",
   "Settings.SelectBackupDirectory": "Selecione o diretório de recuperamento",
   "Settings.PickThemeFile": "Importar tema personalizado",
   "Settings.ThemeFileExport": "Exportar tema personalizado",
@@ -430,7 +430,7 @@
   "Exchange.ExecuteTrade": "Execute o negócio",
   "Exchange.QUOTE": "Obter cota",
   "Exchange.NotAvailible": "Esse par está temporariamente indisponível para negociações",
-  "Exchange.TradeExceed": "Trade Maximum Exceeded",
+  "Exchange.TradeExceed": "Máximo de comercio excedido",
   "Exchange.TradeUnMet": "Comércio mínimo não atendido",
   "Exchange.Addresss": "Endereço",
 
