@@ -1,9 +1,7 @@
 #!/bin/bash
 
 rm -r release
-rm -r app/dist
-rm app/*.map
-rm app/main.prod.js
+rm -r build
 rm -r dll
 rm -r ~/.config/Nexus
 echo ""

@@ -1,10 +1,10 @@
 /**
  * Run this script to update the changes from `translations/[lang]-changes.json` files
- * to the corresponding `app/languages/[lang].json` files.
+ * to the corresponding `src/languages/[lang].json` files.
  */
 const fs = require('fs');
 const languages = ['de', 'es', 'fr', 'ja', 'ko', 'ru', 'nl', 'pl'];
-const translationPath = lang => `./app/languages/${lang}.json`;
+const translationPath = lang => `./src/languages/${lang}.json`;
 const changesPath = lang => `./translations/${lang}-changes.json`;
 
 const translations = languages.reduce(

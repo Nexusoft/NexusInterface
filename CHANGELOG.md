@@ -1,14 +1,61 @@
+# 1.1.0 (2019.7.19)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/1.1.0)
+
+#### Additions
+
+- Orphan is now a option on the Transaction Table
+- Added `Hidden Balance` option in overview display settings to allow users to privately share their overview page
+- Added functionality to the Balance stat on overview page to change to fiat balance on click
+- Wallet position on screen is now remembered for the next time it's opened
+- Added a warning on balance reminding it might not be up-to-date when the wallet is not fully synchronized
+- Added ability to disable the Transaction Chart.
+- Added Portuguese Language.
+- Added a link to Nexus Wallet Guide under Help menu
+
+#### Adjustments
+
+- Updated Spanish Translation
+- Updated styling on `Market Data` page to make 24hr info be clearer
+- Default Verbose is now 0, you can change this in the Settings/Core
+- Changed the way the More Details modal knows which transaction to look up
+- Fake Transactions for testing is now moved out of auto true in dev mode and is now a toggle.
+- When selecting the a suggestion on the terminal page, the help portion will no longer be pasted into the input field
+- Globe now has a hard display cap of 64, this does not effect your actual backend connections
+- Transactions in the transaction table now have a fixed height
+- Terminal console now fills only the command (without the description) when a suggestion is selected
+- Quit Nexus menu item will now always quit the app regardless of "Minimize on close" setting
+- Either Start Daemon or Stop Daemon menu item will be available at one time depending on whether the daemon is running or not
+- Login form date input now won't let you select a day in the past
+- Updated wording: use "Core" and "Nexus Core" instead of "Daemon"
+- Various reorganization and optimizations of the internal structure
+- Updated project's dependencies
+- Bumped Nexus Wallet Module Specification version to 0.2.0
+
+#### Fixes
+
+- Fixed issue were if you never installed QT or deleted the QT back up it would auto make a new backup
+- Fixed there being a `Nexus_Wallet` AND `Nexus Wallet` folders, Removed `Nexus_Wallet` and will auto move items into correct folder
+- Fixed issue with Received transactions not being shown in the table when selecting Receive Only Filter.
+- Fixed issue where the daemon would not be set to verbose 0, and set a min/max on the setting
+- Fixed issue where you could not copy the Address or Account from a transaction
+- Fixed issue where scrolling in the transaction table would also scroll the parent panel
+- Fixed incorrect synchronization status icon in some cases
+- Fixed My Addresses not showing addresses in some cases
+- Fixed some bugs with Bootstrap Recent Database function
+- Various typo fixes
+
 # 1.0.1 (2019.6.28)
 
-[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/Release-1.0.1)
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/1.0.1)
 
 #### Additions
 
 - Ships with 3.0.1 [Tritium Daemon Core](https://github.com/Nexusoft/LLL-TAO/releases/tag/3.0.1)
- - Fixed uninitiated values in Binary Hash Map for nFlags
- - On rescan, allow search for block when key is found for given user
- - Cleanup unnecessary constructors in Sector Database
- - Remove error reporting for incorrect sector size in Update
+  - Fixed uninitiated values in Binary Hash Map for nFlags
+  - On rescan, allow search for block when key is found for given user
+  - Cleanup unnecessary constructors in Sector Database
+  - Remove error reporting for incorrect sector size in Update
 - Added Stake/Generate/Immature to Transaction's page category filter
 - Added tooltip to the tray icon
 - Double click on the tray icon now shows the wallet GUI

@@ -4,5 +4,5 @@
     "allowJs": true,
     "noEmit": true
   },
-  "exclude": ["node_modules", "app/node_modules", "release", "dll", "app/dist"]
+  "exclude": ["node_modules", "release", "dll", "build"]
 }

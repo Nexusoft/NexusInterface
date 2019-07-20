@@ -1,21 +1,21 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset='utf-8' />
-  <title>nexus_wallet 1.0.0 | Documentation</title>
+  <meta charset='utf-8'>
+  <title>nexus_wallet 1.1.0 | Documentation</title>
+  <meta name='description' content='User interface for the Nexus blockchain and ecossystem.'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
-  <link href='assets/style.css' type='text/css' rel='stylesheet' />
-  <link href='assets/github.css' type='text/css' rel='stylesheet' />
-  <link href='assets/split.css' type='text/css' rel='stylesheet' />
-  <meta name='description' content='Nexus'>
+  <link href='assets/bass.css' rel='stylesheet'>
+  <link href='assets/style.css' rel='stylesheet'>
+  <link href='assets/github.css' rel='stylesheet'>
+  <link href='assets/split.css' rel='stylesheet'>
 </head>
 <body class='documentation m0'>
     <div class='flex'>
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>nexus_wallet</h3>
-          <div class='mb1'><code>1.0.0</code></div>
+          <div class='mb1'><code>1.1.0</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -26,19 +26,9 @@
               
                 
                 <li><a
-                  href='#renderapp'
-                  class="">
-                  renderApp
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#app'
+                  href='#overlays'
                   class=" toggle-sibling">
-                  App
+                  Overlays
                   <span class='icon'>▸</span>
                 </a>
                 
@@ -48,7 +38,7 @@
                     <li class='h5'><span>Static members</span></li>
                     
                       <li><a
-                        href='#apprender'
+                        href='#overlaysrender'
                         class='regular pre-open'>
                         .render
                       </a></li>
@@ -154,9 +144,9 @@
                       </a></li>
                     
                       <li><a
-                        href='#overviewcalculateusdvalue'
+                        href='#overviewcalculatefiatvalue'
                         class='regular pre-open'>
-                        .calculateUSDvalue
+                        .calculateFiatvalue
                       </a></li>
                     
                       <li><a
@@ -178,9 +168,9 @@
                       </a></li>
                     
                       <li><a
-                        href='#overviewwaitfordaemon'
+                        href='#overviewwaitforcore'
                         class='regular pre-open'>
-                        .waitForDaemon
+                        .waitForCore
                       </a></li>
                     
                       <li><a
@@ -542,18 +532,6 @@
                     <li class='h5'><span>Static members</span></li>
                     
                       <li><a
-                        href='#syncstatusstatusicon'
-                        class='regular pre-open'>
-                        .statusIcon
-                      </a></li>
-                    
-                      <li><a
-                        href='#syncstatusstatustooltip'
-                        class='regular pre-open'>
-                        .statusTooltip
-                      </a></li>
-                    
-                      <li><a
                         href='#syncstatusrender'
                         class='regular pre-open'>
                         .render
@@ -580,9 +558,9 @@
               
                 
                 <li><a
-                  href='#daemonstatus'
+                  href='#corestatus'
                   class=" toggle-sibling">
-                  DaemonStatus
+                  CoreStatus
                   <span class='icon'>▸</span>
                 </a>
                 
@@ -592,7 +570,7 @@
                     <li class='h5'><span>Static members</span></li>
                     
                       <li><a
-                        href='#daemonstatusrender'
+                        href='#corestatusrender'
                         class='regular pre-open'>
                         .render
                       </a></li>
@@ -648,9 +626,9 @@
               
                 
                 <li><a
-                  href='#sendpage'
+                  href='#send'
                   class=" toggle-sibling">
-                  SendPage
+                  Send
                   <span class='icon'>▸</span>
                 </a>
                 
@@ -660,37 +638,31 @@
                     <li class='h5'><span>Static members</span></li>
                     
                       <li><a
-                        href='#sendpagecomponentdidmount'
+                        href='#sendcomponentdidmount'
                         class='regular pre-open'>
                         .componentDidMount
                       </a></li>
                     
                       <li><a
-                        href='#sendpagecomponentwillunmount'
+                        href='#sendcomponentwillunmount'
                         class='regular pre-open'>
                         .componentWillUnmount
                       </a></li>
                     
                       <li><a
-                        href='#sendpagesetupcontextmenu'
+                        href='#sendsetupcontextmenu'
                         class='regular pre-open'>
                         .setupcontextmenu
                       </a></li>
                     
                       <li><a
-                        href='#sendpagesetupcontextmenu'
-                        class='regular pre-open'>
-                        .setupcontextmenu
-                      </a></li>
-                    
-                      <li><a
-                        href='#sendpagemovebetweenaccounts'
+                        href='#sendmovebetweenaccounts'
                         class='regular pre-open'>
                         .moveBetweenAccounts
                       </a></li>
                     
                       <li><a
-                        href='#sendpagerender'
+                        href='#sendrender'
                         class='regular pre-open'>
                         .render
                       </a></li>
@@ -854,12 +826,6 @@
                   
                   <ul class='list-reset py1-ul pl1'>
                     <li class='h5'><span>Static members</span></li>
-                    
-                      <li><a
-                        href='#recipientsrendertxfee'
-                        class='regular pre-open'>
-                        .renderTxFee
-                      </a></li>
                     
                       <li><a
                         href='#recipientsrender'
@@ -1290,6 +1256,16 @@
               
                 
                 <li><a
+                  href='#styled'
+                  class="">
+                  styled
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
                   href='#market'
                   class=" toggle-sibling">
                   Market
@@ -1437,6 +1413,12 @@
                         href='#addressbookcomponentwillunmount'
                         class='regular pre-open'>
                         .componentWillUnmount
+                      </a></li>
+                    
+                      <li><a
+                        href='#addressbooksetupcontextmenu'
+                        class='regular pre-open'>
+                        .setupcontextmenu
                       </a></li>
                     
                       <li><a
@@ -1922,12 +1904,6 @@
                       </a></li>
                     
                       <li><a
-                        href='#settingscorereturnfeesetting'
-                        class='regular pre-open'>
-                        .returnFeeSetting
-                      </a></li>
-                    
-                      <li><a
                         href='#settingscorerender'
                         class='regular pre-open'>
                         .render
@@ -1944,9 +1920,9 @@
               
                 
                 <li><a
-                  href='#feesetting'
+                  href='#rescanbutton'
                   class=" toggle-sibling">
-                  FeeSetting
+                  RescanButton
                   <span class='icon'>▸</span>
                 </a>
                 
@@ -1956,13 +1932,13 @@
                     <li class='h5'><span>Static members</span></li>
                     
                       <li><a
-                        href='#feesettingconfirmsettxfee'
+                        href='#rescanbuttonrescan'
                         class='regular pre-open'>
-                        .confirmSetTxFee
+                        .rescan
                       </a></li>
                     
                       <li><a
-                        href='#feesettingrender'
+                        href='#rescanbuttonrender'
                         class='regular pre-open'>
                         .render
                       </a></li>
@@ -2266,18 +2242,6 @@
                   
                   <ul class='list-reset py1-ul pl1'>
                     <li class='h5'><span>Static members</span></li>
-                    
-                      <li><a
-                        href='#logingetmindate'
-                        class='regular pre-open'>
-                        .getMinDate
-                      </a></li>
-                    
-                      <li><a
-                        href='#logingetmintime'
-                        class='regular pre-open'>
-                        .getMinTime
-                      </a></li>
                     
                       <li><a
                         href='#loginrendertimeinputs'
@@ -2720,6 +2684,12 @@
                       </a></li>
                     
                       <li><a
+                        href='#terminalconsoleformateautosuggest'
+                        class='regular pre-open'>
+                        .formateAutoSuggest
+                      </a></li>
+                    
+                      <li><a
                         href='#terminalconsolerender'
                         class='regular pre-open'>
                         .render
@@ -2771,16 +2741,6 @@
                   
                   
                 </div>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#styleguide'
-                  class="">
-                  StyleGuide
-                  
-                </a>
                 
                 </li>
               
@@ -3083,81 +3043,17 @@
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='renderapp'>
-      renderApp
+    <h3 class='fl m0' id='overlays'>
+      Overlays
     </h3>
     
     
   </div>
   
 
-  <p>Main App Entry Point</p>
+  <p>Controls the elements that get rendered over the main app, so dialogs/modals etc</p>
 
- 
-  
-    <div class='pre p1 fill-light mt0'>renderApp(Component: any)</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>Component</span> <code class='quiet'>(any)</code>
-	    
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-        
-          
-          <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='app'>
-      App
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>Main App Page</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>new App()</div>
-   
+    <div class='pre p1 fill-light mt0'>new Overlays()</div>
   
   
     <p>
@@ -3189,7 +3085,7 @@
     <div class='py1 quiet mt1 prose-big'>Static Members</div>
     <div class="clearfix">
   
-    <div class='border-bottom' id='apprender'>
+    <div class='border-bottom' id='overlaysrender'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
@@ -3203,10 +3099,7 @@
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -3240,6 +3133,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -3252,8 +3147,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -3271,10 +3169,7 @@
 
   <p>Overview Page, The main page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Overview()</div>
-   
   
   
     <p>
@@ -3320,10 +3215,7 @@
 
   <p>Formats the Difficulty to 3 decimal points</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>formatDiff</div>
-   
   
   
 
@@ -3370,6 +3262,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -3389,10 +3283,7 @@
 
   <p>Component Mount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -3401,6 +3292,8 @@
   
   
   
+  
+
   
 
   
@@ -3437,10 +3330,7 @@
 
   <p>Set by {NetworkGlobe}, ReDraws all Pillars and Archs</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>reDrawEverything()</div>
-   
   
   
 
@@ -3449,6 +3339,8 @@
   
   
   
+  
+
   
 
   
@@ -3485,10 +3377,7 @@
 
   <p>Component Unmount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
-   
   
   
 
@@ -3497,6 +3386,8 @@
   
   
   
+  
+
   
 
   
@@ -3533,10 +3424,7 @@
 
   <p>Component Prop Update Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidUpdate(prevProps: any): any</div>
-   
   
   
 
@@ -3583,6 +3471,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -3602,10 +3492,7 @@
 
   <p>Get the Difficulty from the network</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>fetchDifficulty</div>
-   
   
   
 
@@ -3614,6 +3501,8 @@
   
   
   
+  
+
   
 
   
@@ -3650,10 +3539,7 @@
 
   <p>Sets up the context menu</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
-   
   
   
 
@@ -3692,6 +3578,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -3711,10 +3599,7 @@
 
   <p>Returns the Block Date of the last given block</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>blockDate(): any</div>
-   
   
   
 
@@ -3737,6 +3622,8 @@
 
       
     
+  
+
   
 
   
@@ -3767,10 +3654,7 @@
 
   <p>Returns the Connections icon based on how many connections the user has</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>connectionsIcon(): any</div>
-   
   
   
 
@@ -3793,6 +3677,8 @@
 
       
     
+  
+
   
 
   
@@ -3823,10 +3709,7 @@
 
   <p>Returns the trust icon</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>trustIcon(): any</div>
-   
   
   
 
@@ -3849,6 +3732,8 @@
 
       
     
+  
+
   
 
   
@@ -3879,10 +3764,7 @@
 
   <p>Returns the block weight icon</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>blockWeightIcon(): any</div>
-   
   
   
 
@@ -3905,6 +3787,8 @@
 
       
     
+  
+
   
 
   
@@ -3935,10 +3819,7 @@
 
   <p>Returns if the Globe should be rendered</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>showingGlobe(): any</div>
-   
   
   
 
@@ -3972,6 +3853,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -3991,10 +3874,7 @@
 
   <p>Add in Commas to a number</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>numberWithCommas(x: any): any</div>
-   
   
   
 
@@ -4041,16 +3921,18 @@
   
 
   
+
+  
 </section>
 
       </div>
     </div>
   
-    <div class='border-bottom' id='overviewcalculateusdvalue'>
+    <div class='border-bottom' id='overviewcalculatefiatvalue'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>calculateUSDvalue()</span>
+            <span class='code strong strong truncate'>calculateFiatvalue()</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -4060,10 +3942,7 @@
 
   <p>Calculate the value based on the User's Currency</p>
 
- 
-  
-    <div class='pre p1 fill-light mt0'>calculateUSDvalue(): any</div>
-   
+    <div class='pre p1 fill-light mt0'>calculateFiatvalue(): any</div>
   
   
 
@@ -4086,6 +3965,8 @@
 
       
     
+  
+
   
 
   
@@ -4116,10 +3997,7 @@
 
   <p>Formats the Market Price</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>marketPriceFormatter(): any</div>
-   
   
   
 
@@ -4142,6 +4020,8 @@
 
       
     
+  
+
   
 
   
@@ -4172,10 +4052,7 @@
 
   <p>Formats the Market Cap</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>marketCapFormatter(): any</div>
-   
   
   
 
@@ -4198,6 +4075,8 @@
 
       
     
+  
+
   
 
   
@@ -4228,10 +4107,7 @@
 
   <p>Returns the percentile changed in 24 hrs</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>pctChange24hrFormatter(): any</div>
-   
   
   
 
@@ -4265,16 +4141,18 @@
   
 
   
+
+  
 </section>
 
       </div>
     </div>
   
-    <div class='border-bottom' id='overviewwaitfordaemon'>
+    <div class='border-bottom' id='overviewwaitforcore'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>waitForDaemon</span>
+            <span class='code strong strong truncate'>waitForCore</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -4282,12 +4160,9 @@
 
   
 
-  <p>Displays Wait for Daemon</p>
+  <p>Displays Wait for Core</p>
 
- 
-  
-    <div class='pre p1 fill-light mt0'>waitForDaemon</div>
-   
+    <div class='pre p1 fill-light mt0'>waitForCore</div>
   
   
 
@@ -4326,6 +4201,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -4345,10 +4222,7 @@
 
   <p>Returns the weight stats for the overview page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnWeightStats</div>
-   
   
   
 
@@ -4357,6 +4231,8 @@
   
   
   
+  
+
   
 
   
@@ -4393,10 +4269,7 @@
 
   <p>Returns the Difficulty Stats for the Overview page when it is in Miner View</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnDifficultyStats</div>
-   
   
   
 
@@ -4435,6 +4308,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -4454,10 +4329,7 @@
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -4491,6 +4363,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -4503,8 +4377,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -4522,10 +4399,7 @@
 
   <p>The 3D Globe on the overview page.</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Globe()</div>
-   
   
   
     <p>
@@ -4571,10 +4445,7 @@
 
   <p>Mounting event from React, used to start the globe up</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -4583,6 +4454,8 @@
   
   
   
+  
+
   
 
   
@@ -4619,10 +4492,7 @@
 
   <p>Handle Webgl Context Restore Event</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>contextRestoredHandler()</div>
-   
   
   
 
@@ -4631,6 +4501,8 @@
   
   
   
+  
+
   
 
   
@@ -4667,10 +4539,7 @@
 
   <p>Handle Webgl Context Lost Event</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>contextLostHandler(event: any)</div>
-   
   
   
 
@@ -4709,6 +4578,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -4728,10 +4599,7 @@
 
   <p>Update event from React</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidUpdate(prevProps: any)</div>
-   
   
   
 
@@ -4770,6 +4638,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -4789,10 +4659,7 @@
 
   <p>Unmount event from React</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
-   
   
   
 
@@ -4801,6 +4668,8 @@
   
   
   
+  
+
   
 
   
@@ -4837,10 +4706,7 @@
 
   <p>Register point/pillar on the globe</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>pointRegister(): any</div>
-   
   
   
 
@@ -4874,6 +4740,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -4893,10 +4761,7 @@
 
   <p>Add globe to the renderer</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>addSelfPoint()</div>
-   
   
   
 
@@ -4905,6 +4770,8 @@
   
   
   
+  
+
   
 
   
@@ -4941,10 +4808,7 @@
 
   <p>Remove all points on the globe</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>removeAllPoints()</div>
-   
   
   
 
@@ -4953,6 +4817,8 @@
   
   
   
+  
+
   
 
   
@@ -4989,10 +4855,7 @@
 
   <p>Remove point/pillar from the globe</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>destroyPoint(deadPoint: any)</div>
-   
   
   
 
@@ -5032,6 +4895,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -5051,10 +4916,7 @@
 
   <p>Register a arc with the globe</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>arcRegister()</div>
-   
   
   
 
@@ -5063,6 +4925,8 @@
   
   
   
+  
+
   
 
   
@@ -5099,10 +4963,7 @@
 
   <p>Animate all the Curves on the globe</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>animateArcs()</div>
-   
   
   
 
@@ -5111,6 +4972,8 @@
   
   
   
+  
+
   
 
   
@@ -5147,10 +5010,7 @@
 
   <p>Removes the unused Curve</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>destroyArc(deadCurve: any)</div>
-   
   
   
 
@@ -5190,6 +5050,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -5209,10 +5071,7 @@
 
   <p>Event when the window resizes</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>onWindowResize()</div>
-   
   
   
 
@@ -5221,6 +5080,8 @@
   
   
   
+  
+
   
 
   
@@ -5257,10 +5118,7 @@
 
   <p>Stop the animation</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>stop()</div>
-   
   
   
 
@@ -5269,6 +5127,8 @@
   
   
   
+  
+
   
 
   
@@ -5305,10 +5165,7 @@
 
   <p>Start the animation</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>start()</div>
-   
   
   
 
@@ -5317,6 +5174,8 @@
   
   
   
+  
+
   
 
   
@@ -5353,10 +5212,7 @@
 
   <p>Animate the globe</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>animate()</div>
-   
   
   
 
@@ -5365,6 +5221,8 @@
   
   
   
+  
+
   
 
   
@@ -5401,10 +5259,7 @@
 
   <p>Renders the screen to the THREE's canvas</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>renderScene()</div>
-   
   
   
 
@@ -5413,6 +5268,8 @@
   
   
   
+  
+
   
 
   
@@ -5449,10 +5306,7 @@
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -5486,6 +5340,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -5498,8 +5354,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -5517,10 +5376,7 @@
 
   <p>Object for the Curves on the globe</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Curve()</div>
-   
   
   
 
@@ -5559,10 +5415,7 @@
 
   <p>Creates a spline from one point to the next</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>getSplineFromCoords(pointOne: any, pointTwo: any): THREE.CubicBezierCurve3</div>
-   
   
   
 
@@ -5619,6 +5472,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -5638,10 +5493,7 @@
 
   <p>Clamp a number between min and max</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>clamp(num: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>, min: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>, max: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></div>
-   
   
   
 
@@ -5707,6 +5559,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -5726,10 +5580,7 @@
 
   <p>Translates a Lat and Lng to a Vector3 on a sphere</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>coordinateToPosition(lat: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>, lng: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>, radius: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>): THREE.Vector3</div>
-   
   
   
 
@@ -5795,6 +5646,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -5814,10 +5667,7 @@
 
   <p>Play the Animation</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>play</div>
-   
   
   
 
@@ -5826,6 +5676,8 @@
   
   
   
+  
+
   
 
   
@@ -5862,10 +5714,7 @@
 
   <p>Stop the animation</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>stop</div>
-   
   
   
 
@@ -5874,6 +5723,8 @@
   
   
   
+  
+
   
 
   
@@ -5910,10 +5761,7 @@
 
   <p>Restart the animation</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>restart</div>
-   
   
   
 
@@ -5922,6 +5770,8 @@
   
   
   
+  
+
   
 
   
@@ -5951,8 +5801,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -5970,10 +5823,7 @@
 
   <p>The point/pillar on the globe</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Point()</div>
-   
   
   
 
@@ -6012,10 +5862,7 @@
 
   <p>Sets color of the point</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setColor(hex: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
-   
   
   
 
@@ -6054,6 +5901,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -6066,8 +5915,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -6085,10 +5937,7 @@
 
   <p>Handles the App Header</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Header()</div>
-   
   
   
     <p>
@@ -6134,10 +5983,7 @@
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -6171,6 +6017,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -6183,8 +6031,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -6202,10 +6053,7 @@
 
   <p>Handles the Login Status</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new LogInStatus()</div>
-   
   
   
     <p>
@@ -6251,10 +6099,7 @@
 
   <p>Sign in Message</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>signInStatusMessage</div>
-   
   
   
 
@@ -6263,6 +6108,8 @@
   
   
   
+  
+
   
 
   
@@ -6299,10 +6146,7 @@
 
   <p>Return the correct status icon</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>statusIcon</div>
-   
   
   
 
@@ -6311,6 +6155,8 @@
   
   
   
+  
+
   
 
   
@@ -6347,10 +6193,7 @@
 
   <p>Go to the Security Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>goToSecurity</div>
-   
   
   
 
@@ -6359,6 +6202,8 @@
   
   
   
+  
+
   
 
   
@@ -6395,10 +6240,7 @@
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -6432,6 +6274,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -6444,8 +6288,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -6463,10 +6310,7 @@
 
   <p>Handles the Staking Status</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new StakingStatus()</div>
-   
   
   
     <p>
@@ -6512,10 +6356,7 @@
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -6549,6 +6390,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -6561,8 +6404,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -6580,10 +6426,7 @@
 
   <p>Handles the Sync Status</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new SyncStatus()</div>
-   
   
   
     <p>
@@ -6615,118 +6458,6 @@
     <div class='py1 quiet mt1 prose-big'>Static Members</div>
     <div class="clearfix">
   
-    <div class='border-bottom' id='syncstatusstatusicon'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>statusIcon</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Returns JSX of either Spinning Icon or Status Icon depending on if wallet is in sync</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>statusIcon</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>JSX</code>:
-        JSX
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='syncstatusstatustooltip'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>statusTooltip</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Returns JSX of tooltip depending on if wallet is in sync or not</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>statusTooltip</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>JSX</code>:
-        JSX
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
     <div class='border-bottom' id='syncstatusrender'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -6741,10 +6472,7 @@
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -6767,6 +6495,8 @@
 
       
     
+  
+
   
 
   
@@ -6790,8 +6520,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -6809,10 +6542,7 @@
 
   <p>Returns JSX of My Addresses</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>MyAddresses</div>
-   
   
   
 
@@ -6823,6 +6553,43 @@
   
   
 
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$0</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>$0.openModal</span> <code class='quiet'>any</code>
+  </td>
+  <td class='break-word'><span></span></td>
+</tr>
+
+
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+    </div>
   
 
   
@@ -6846,8 +6613,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -6855,20 +6625,17 @@
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='daemonstatus'>
-      DaemonStatus
+    <h3 class='fl m0' id='corestatus'>
+      CoreStatus
     </h3>
     
     
   </div>
   
 
-  <p>Handels the Daemon Status</p>
+  <p>Handles the Core Status</p>
 
- 
-  
-    <div class='pre p1 fill-light mt0'>new DaemonStatus()</div>
-   
+    <div class='pre p1 fill-light mt0'>new CoreStatus()</div>
   
   
     <p>
@@ -6900,7 +6667,7 @@
     <div class='py1 quiet mt1 prose-big'>Static Members</div>
     <div class="clearfix">
   
-    <div class='border-bottom' id='daemonstatusrender'>
+    <div class='border-bottom' id='corestatusrender'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
@@ -6914,10 +6681,7 @@
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -6951,6 +6715,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -6963,8 +6729,11 @@
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -6981,10 +6750,7 @@
   
 
   
- 
-  
     <div class='pre p1 fill-light mt0'>new Navigation()</div>
-   
   
   
 
@@ -7024,10 +6790,7 @@
   <p>Returns a Nav Item
 These are prebuild modules</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>NavItem</div>
-   
   
   
 
@@ -7107,6 +6870,8 @@ These are prebuild modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -7127,10 +6892,7 @@ These are prebuild modules</p>
   <p>Returns a Module Nav Item
 These are nave items for user installed Modules</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>ModuleNavItem</div>
-   
   
   
 
@@ -7194,6 +6956,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -7213,10 +6977,7 @@ These are nave items for user installed Modules</p>
 
   <p>Returns the Navigation Bar</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>Navigation</div>
-   
   
   
 
@@ -7225,6 +6986,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -7254,8 +7017,11 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -7263,8 +7029,8 @@ These are nave items for user installed Modules</p>
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='sendpage'>
-      SendPage
+    <h3 class='fl m0' id='send'>
+      Send
     </h3>
     
     
@@ -7273,10 +7039,7 @@ These are nave items for user installed Modules</p>
 
   <p>Send Page</p>
 
- 
-  
-    <div class='pre p1 fill-light mt0'>new SendPage()</div>
-   
+    <div class='pre p1 fill-light mt0'>new Send()</div>
   
   
     <p>
@@ -7308,7 +7071,7 @@ These are nave items for user installed Modules</p>
     <div class='py1 quiet mt1 prose-big'>Static Members</div>
     <div class="clearfix">
   
-    <div class='border-bottom' id='sendpagecomponentdidmount'>
+    <div class='border-bottom' id='sendcomponentdidmount'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
@@ -7322,10 +7085,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component Mount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -7334,6 +7094,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -7356,7 +7118,7 @@ These are nave items for user installed Modules</p>
       </div>
     </div>
   
-    <div class='border-bottom' id='sendpagecomponentwillunmount'>
+    <div class='border-bottom' id='sendcomponentwillunmount'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
@@ -7370,10 +7132,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component Unmount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
-   
   
   
 
@@ -7382,6 +7141,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -7404,7 +7165,7 @@ These are nave items for user installed Modules</p>
       </div>
     </div>
   
-    <div class='border-bottom' id='sendpagesetupcontextmenu'>
+    <div class='border-bottom' id='sendsetupcontextmenu'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
@@ -7418,10 +7179,7 @@ These are nave items for user installed Modules</p>
 
   <p>Set up the context menu</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
-   
   
   
 
@@ -7460,65 +7218,6 @@ These are nave items for user installed Modules</p>
   
 
   
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='sendpagesetupcontextmenu'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>setupcontextmenu(e)</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Set up the context menu</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>e</span> <code class='quiet'>(any)</code>
-	    
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
   
 </section>
@@ -7526,7 +7225,7 @@ These are nave items for user installed Modules</p>
       </div>
     </div>
   
-    <div class='border-bottom' id='sendpagemovebetweenaccounts'>
+    <div class='border-bottom' id='sendmovebetweenaccounts'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
@@ -7540,10 +7239,7 @@ These are nave items for user installed Modules</p>
 
   <p>Opens the Move NXS between account modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>moveBetweenAccounts</div>
-   
   
   
 
@@ -7552,6 +7248,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -7574,7 +7272,7 @@ These are nave items for user installed Modules</p>
       </div>
     </div>
   
-    <div class='border-bottom' id='sendpagerender'>
+    <div class='border-bottom' id='sendrender'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
@@ -7588,10 +7286,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -7625,6 +7320,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -7637,8 +7334,11 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -7656,10 +7356,7 @@ These are nave items for user installed Modules</p>
 
   <p>Internal JXS for the Move Between Accounts Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new MoveBetweenAccountsForm()</div>
-   
   
   
     <p>
@@ -7705,10 +7402,7 @@ These are nave items for user installed Modules</p>
 
   <p>Confirm Move</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>confirmMove</div>
-   
   
   
 
@@ -7747,6 +7441,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -7766,10 +7462,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -7803,6 +7496,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -7822,10 +7517,7 @@ These are nave items for user installed Modules</p>
 
   <p>JSX for the Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>MoveBetweenAccountsModal</div>
-   
   
   
 
@@ -7834,6 +7526,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -7863,8 +7557,11 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -7882,10 +7579,7 @@ These are nave items for user installed Modules</p>
 
   <p>The Amount Feild on the Send Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new AmountField()</div>
-   
   
   
     <p>
@@ -7931,10 +7625,7 @@ These are nave items for user installed Modules</p>
 
   <p>Convert the NXS to the User's currency</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>nxsToFiat</div>
-   
   
   
 
@@ -7966,6 +7657,8 @@ These are nave items for user installed Modules</p>
         </div>
       
     </div>
+  
+
   
 
   
@@ -8000,10 +7693,7 @@ These are nave items for user installed Modules</p>
 
   <p>Returns the fiat from NXS</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>fiatToNxs</div>
-   
   
   
 
@@ -8050,6 +7740,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -8069,10 +7761,7 @@ These are nave items for user installed Modules</p>
 
   <p>Returns the Amount Feild Name</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>amountFieldName</div>
-   
   
   
 
@@ -8081,6 +7770,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -8117,10 +7808,7 @@ These are nave items for user installed Modules</p>
 
   <p>Returns the Fiat Amount Name</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>fiatAmountFieldName</div>
-   
   
   
 
@@ -8129,6 +7817,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -8165,10 +7855,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -8202,6 +7889,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -8214,8 +7903,11 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -8233,10 +7925,7 @@ These are nave items for user installed Modules</p>
 
   <p>The Internal Send Form in the Send Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new SendForm()</div>
-   
   
   
     <p>
@@ -8282,10 +7971,7 @@ These are nave items for user installed Modules</p>
 
   <p>Confirm the Send</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>confirmSend</div>
-   
   
   
 
@@ -8324,6 +8010,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -8343,10 +8031,7 @@ These are nave items for user installed Modules</p>
 
   <p>Add Recipient to the queue</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>addRecipient</div>
-   
   
   
 
@@ -8355,6 +8040,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -8391,10 +8078,7 @@ These are nave items for user installed Modules</p>
 
   <p>Return JSX for the Add Recipient Button</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>renderAddRecipientButton</div>
-   
   
   
 
@@ -8457,6 +8141,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -8476,10 +8162,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -8513,6 +8196,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -8525,8 +8210,11 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -8544,10 +8232,7 @@ These are nave items for user installed Modules</p>
 
   <p>Recipients Field from the Send Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Recipients()</div>
-   
   
   
     <p>
@@ -8579,54 +8264,6 @@ These are nave items for user installed Modules</p>
     <div class='py1 quiet mt1 prose-big'>Static Members</div>
     <div class="clearfix">
   
-    <div class='border-bottom' id='recipientsrendertxfee'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>renderTxFee</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Return Tx Fee</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>renderTxFee</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
     <div class='border-bottom' id='recipientsrender'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -8641,10 +8278,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -8678,6 +8312,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -8690,8 +8326,11 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -8709,10 +8348,7 @@ These are nave items for user installed Modules</p>
 
   <p>The Recipient Field in the Send Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new RecipientField()</div>
-   
   
   
     <p>
@@ -8758,10 +8394,7 @@ These are nave items for user installed Modules</p>
 
   <p>Handle Select Address</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleSelect</div>
-   
   
   
 
@@ -8800,6 +8433,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -8819,10 +8454,7 @@ These are nave items for user installed Modules</p>
 
   <p>Opens the Add/Edit Contact Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>createContact</div>
-   
   
   
 
@@ -8831,6 +8463,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -8867,10 +8501,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -8904,6 +8535,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -8916,8 +8549,11 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -8935,10 +8571,7 @@ These are nave items for user installed Modules</p>
 
   <p>Transactions Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Transactions()</div>
-   
   
   
     <p>
@@ -8984,10 +8617,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component Mount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -8996,6 +8626,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -9032,10 +8664,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component Updated Props Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidUpdate(previousprops: any): any</div>
-   
   
   
 
@@ -9082,6 +8711,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9101,10 +8732,7 @@ These are nave items for user installed Modules</p>
 
   <p>Component Unmount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
-   
   
   
 
@@ -9113,6 +8741,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -9149,10 +8779,7 @@ These are nave items for user installed Modules</p>
 
   <p>The callback for when we want to update just the confirmations</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setConfirmationsCallback(incomingData: any)</div>
-   
   
   
 
@@ -9192,6 +8819,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9211,10 +8840,7 @@ These are nave items for user installed Modules</p>
 
   <p>The callback for the on Mount State</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setOnmountTransactionsCallback(incomingData: any)</div>
-   
   
   
 
@@ -9254,6 +8880,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9273,10 +8901,7 @@ These are nave items for user installed Modules</p>
 
   <p>Updates the height and width of the chart and table when you resize the window</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>updateChartAndTableDimensions(event: any): any</div>
-   
   
   
 
@@ -9324,6 +8949,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9343,10 +8970,7 @@ These are nave items for user installed Modules</p>
 
   <p>Open Tx Detail modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>openTxDetailsModal</div>
-   
   
   
 
@@ -9355,6 +8979,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -9391,10 +9017,7 @@ These are nave items for user installed Modules</p>
 
   <p>This is the method that is called when the user pressed the right click</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>transactioncontextfunction</div>
-   
   
   
 
@@ -9434,6 +9057,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9453,10 +9078,7 @@ These are nave items for user installed Modules</p>
 
   <p>Copy to Clipboard</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>copysomethingtotheclipboard(instringtocopy: any)</div>
-   
   
   
 
@@ -9496,6 +9118,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9515,10 +9139,7 @@ These are nave items for user installed Modules</p>
 
   <p>Gets all the data from each account held by the wallet</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>getTransactionData(finishingCallback: any): null</div>
-   
   
   
 
@@ -9566,6 +9187,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9585,10 +9208,7 @@ These are nave items for user installed Modules</p>
 
   <p>Set the display property in state from the dropdown element</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>transactionTimeframeChange(value: any)</div>
-   
   
   
 
@@ -9628,6 +9248,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9647,10 +9269,7 @@ These are nave items for user installed Modules</p>
 
   <p>Download CSV</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>DownloadCSV()</div>
-   
   
   
 
@@ -9659,6 +9278,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -9695,10 +9316,7 @@ These are nave items for user installed Modules</p>
 
   <p>Gather All fee data for every debit/send transaction</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>gatherAllFeeData()</div>
-   
   
   
 
@@ -9707,6 +9325,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -9743,10 +9363,7 @@ These are nave items for user installed Modules</p>
 
   <p>Set events for the CSV Listener</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setCSVEvents(events: any)</div>
-   
   
   
 
@@ -9785,6 +9402,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9804,10 +9423,7 @@ These are nave items for user installed Modules</p>
 
   <p>Each time a transaction is done processing, run this.</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>updateProgress()</div>
-   
   
   
 
@@ -9816,6 +9432,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -9852,10 +9470,7 @@ These are nave items for user installed Modules</p>
 
   <p>When proccessing is finished, open up the save dialog</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>finishCSVProcessing()</div>
-   
   
   
 
@@ -9864,6 +9479,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -9900,10 +9517,7 @@ These are nave items for user installed Modules</p>
 
   <p>creates a CSV file then prompts the user to save that file</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>saveCSV(DataToSave: [any])</div>
-   
   
   
 
@@ -9943,6 +9557,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -9962,10 +9578,7 @@ These are nave items for user installed Modules</p>
 
   <p>Callback for when you change the category filter</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>transactiontypefiltercallback</div>
-   
   
   
 
@@ -10004,6 +9617,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10023,10 +9638,7 @@ These are nave items for user installed Modules</p>
 
   <p>Callback for when you change the amount filter</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>transactionamountfiltercallback</div>
-   
   
   
 
@@ -10050,6 +9662,8 @@ These are nave items for user installed Modules</p>
         </div>
       
     </div>
+  
+
   
 
   
@@ -10084,10 +9698,7 @@ These are nave items for user installed Modules</p>
 
   <p>Callback for when you change the address filter</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>transactionaddressfiltercallback</div>
-   
   
   
 
@@ -10126,6 +9737,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10145,10 +9758,7 @@ These are nave items for user installed Modules</p>
 
   <p>Filter the transactions based on the CategoryFilter</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>filterByCategory(inTransactions: [any]): [any]</div>
-   
   
   
 
@@ -10185,6 +9795,8 @@ These are nave items for user installed Modules</p>
 
       
     
+  
+
   
 
   
@@ -10215,10 +9827,7 @@ These are nave items for user installed Modules</p>
 
   <p>Filter the transactions based on the AmountFilter</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>filterbyAmount(inTransactions: [any]): [any]</div>
-   
   
   
 
@@ -10255,6 +9864,8 @@ These are nave items for user installed Modules</p>
 
       
     
+  
+
   
 
   
@@ -10285,10 +9896,7 @@ These are nave items for user installed Modules</p>
 
   <p>Filter the transactions based on the AddressFilter</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>filterByAddress(inTransactions: [any]): [any]</div>
-   
   
   
 
@@ -10325,6 +9933,8 @@ These are nave items for user installed Modules</p>
 
       
     
+  
+
   
 
   
@@ -10355,10 +9965,7 @@ These are nave items for user installed Modules</p>
 
   <p>Filter the transactions based on the DisplayTimeFrame</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>filterByTime(inTransactions: [any]): [any]</div>
-   
   
   
 
@@ -10406,6 +10013,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10425,10 +10034,7 @@ These are nave items for user installed Modules</p>
 
   <p>Returns all the transaction that have been filtered by the filter</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnAllFilters(inTransactions: [any]): [any]</div>
-   
   
   
 
@@ -10476,6 +10082,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10495,10 +10103,7 @@ These are nave items for user installed Modules</p>
 
   <p>DEV MODE: Create a fake transaction for testing.</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>TEMPaddfaketransaction(): any</div>
-   
   
   
 
@@ -10532,6 +10137,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10551,10 +10158,7 @@ These are nave items for user installed Modules</p>
 
   <p>What happens when you select something in the table</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>tableSelectCallback(e: any, indata: any)</div>
-   
   
   
 
@@ -10603,6 +10207,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10622,10 +10228,7 @@ These are nave items for user installed Modules</p>
 
   <p>Return the data to be placed into the Table</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnFormatedTableData(): any</div>
-   
   
   
 
@@ -10659,6 +10262,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10678,10 +10283,7 @@ These are nave items for user installed Modules</p>
 
   <p>Returns the columns and their rules/formats for the Table</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnTableColumns(): [any]</div>
-   
   
   
 
@@ -10715,6 +10317,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10734,10 +10338,7 @@ These are nave items for user installed Modules</p>
 
   <p>Returns formated data for the Victory Chart</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnChartData(): [any]</div>
-   
   
   
 
@@ -10771,6 +10372,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10790,10 +10393,7 @@ These are nave items for user installed Modules</p>
 
   <p>returns the correct fill color based on the category</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnCorrectFillColor(inData: any): any</div>
-   
   
   
 
@@ -10841,6 +10441,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10860,10 +10462,7 @@ These are nave items for user installed Modules</p>
 
   <p>Returns the Correct color based on the category</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnCorrectStokeColor(inData: any): any</div>
-   
   
   
 
@@ -10911,6 +10510,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10930,10 +10531,7 @@ These are nave items for user installed Modules</p>
 
   <p>Returns the tooltip lable for the chart</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnToolTipLable</div>
-   
   
   
 
@@ -10972,6 +10570,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -10991,10 +10591,7 @@ These are nave items for user installed Modules</p>
 
   <p>The event listener for when you zoom in and out</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleZoom(domain: any)</div>
-   
   
   
 
@@ -11036,6 +10633,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -11055,10 +10654,7 @@ These are nave items for user installed Modules</p>
 
   <p>the callback for when you mouse over a transaction on the table.</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>mouseOverCallback(e: any, inData: any)</div>
-   
   
   
 
@@ -11107,6 +10703,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -11126,10 +10724,7 @@ These are nave items for user installed Modules</p>
 
   <p>The call back for when the mouse moves out of the table div.</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>mouseOutCallback(e: any)</div>
-   
   
   
 
@@ -11169,6 +10764,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -11188,10 +10785,7 @@ These are nave items for user installed Modules</p>
 
   <p>Either load in the file from local or start downloading more data and make a new one.</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>gethistorydatajson()</div>
-   
   
   
 
@@ -11200,6 +10794,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -11236,10 +10832,7 @@ These are nave items for user installed Modules</p>
 
   <p>Helper method to create URL's quickly</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>createcryptocompareurl(coinsym: any, timestamptolook: any): any</div>
-   
   
   
 
@@ -11296,6 +10889,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -11315,10 +10910,7 @@ These are nave items for user installed Modules</p>
 
   <p>Build a object from incoming data then dispatch that to redux to populate that transaction</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setHistoryValuesOnTransaction(timeID: any, USDvalue: any, BTCValue: any)</div>
-   
   
   
 
@@ -11376,6 +10968,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -11395,10 +10989,7 @@ These are nave items for user installed Modules</p>
 
   <p>Build a object from incoming data then dispatch that to redux to populate that transaction</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setFeeValuesOnTransaction(incomingChangeData: any)</div>
-   
   
   
 
@@ -11438,6 +11029,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -11457,10 +11050,7 @@ These are nave items for user installed Modules</p>
 
   <p>Download both USD and BTC history on the incoming transaction</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>downloadHistoryOnTransaction(inEle: any): any</div>
-   
   
   
 
@@ -11508,6 +11098,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -11527,10 +11119,7 @@ These are nave items for user installed Modules</p>
 
   <p>Go through all the data points that need to download new data a execute that promise</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>gothroughdatathatneedsit()</div>
-   
   
   
 
@@ -11539,6 +11128,8 @@ These are nave items for user installed Modules</p>
   
   
   
+  
+
   
 
   
@@ -11575,10 +11166,7 @@ These are nave items for user installed Modules</p>
 
   <p>Save the history data to a json file</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>SaveHistoryDataToJson(): any</div>
-   
   
   
 
@@ -11612,6 +11200,8 @@ These are nave items for user installed Modules</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -11633,10 +11223,7 @@ These are nave items for user installed Modules</p>
 <a href="http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/">http://embed.plnkr.co/oNlQQBDyJUiIQlgWUPVP/</a>
 Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://2ality.com/2015/08/es6-map-json.html</a></p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>mapToObject(aMap: any): any</div>
-   
   
   
 
@@ -11684,6 +11271,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -11703,10 +11292,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>If you give this a timestamp it will find the closes timestamp to the nearest hour. And returns the object containing priceUSD and priceBTC</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>findclosestdatapoint(intimestamp: any): any</div>
-   
   
   
 
@@ -11754,6 +11340,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -11773,10 +11361,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Compares a Date to a from Date and a To Date and returns a Bool</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>comparedate(indate: any, starttime: any, endtime: any): bool</div>
-   
   
   
 
@@ -11842,6 +11427,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -11861,10 +11448,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Return Default Page Size</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnDefaultPageSize(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></div>
-   
   
   
 
@@ -11898,6 +11482,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -11917,10 +11503,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Change Account</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>accountChanger</div>
-   
   
   
 
@@ -11929,6 +11512,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -11965,10 +11550,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Select Account</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>selectAccount(inAccount: any)</div>
-   
   
   
 
@@ -12007,6 +11589,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12026,10 +11610,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Return Victory Chart</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>returnVictoryChart(): any</div>
-   
   
   
 
@@ -12063,6 +11644,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12082,10 +11665,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -12119,6 +11699,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12131,8 +11713,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -12150,10 +11735,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Transaction More Detail Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new TransactionDetailsModal()</div>
-   
   
   
     <p>
@@ -12199,10 +11781,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Load Data</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>loadData(null: any)</div>
-   
   
   
 
@@ -12238,7 +11817,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
             <tbody class='mt1'>
               
                 <tr>
-  <td class='break-word'><span class='code bold'>null.walletItems</span> <code class='quiet'>any</code>
+  <td class='break-word'><span class='code bold'>null.walletItemsMap</span> <code class='quiet'>any</code>
   </td>
   <td class='break-word'><span></span></td>
 </tr>
@@ -12274,6 +11853,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12293,10 +11874,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>React Render</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -12330,6 +11908,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12342,8 +11922,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -12361,10 +11944,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>CSV Download Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new CSVDownloadModal()</div>
-   
   
   
     <p>
@@ -12397,8 +11977,68 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='styled'>
+      styled
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Important note - This file is imported into module_preload.js, either directly or
+indirectly, and will be a part of the preload script for modules, therefore:</p>
+<ul>
+<li>Be picky with importing stuffs into this file, especially for big
+files and libraries. The bigger the preload scripts get, the slower the modules
+will load.</li>
+<li>Don't assign anything to <code>global</code> variable because it will be passed
+into modules' execution environment.</li>
+<li>Make sure this note also presents in other files which are imported here.</li>
+</ul>
+
+    <div class='pre p1 fill-light mt0'>styled</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -12416,10 +12056,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The Market Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Market()</div>
-   
   
   
     <p>
@@ -12465,10 +12102,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Sets up the page's context menu</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
-   
   
   
 
@@ -12507,6 +12141,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12526,10 +12162,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Refreshes the data from the markets</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>refresher()</div>
-   
   
   
 
@@ -12538,6 +12171,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -12574,10 +12209,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Formats the buy data and returns it</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>formatBuyData</div>
-   
   
   
 
@@ -12616,6 +12248,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12635,10 +12269,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Formats the sell data and returns it</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>formatSellData(array: any): any</div>
-   
   
   
 
@@ -12685,6 +12316,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12704,10 +12337,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Formats the Exchange Data</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>formatChartData(exchange: any): any</div>
-   
   
   
 
@@ -12754,6 +12384,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12773,10 +12405,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Returns a Div of various market data from the Exchange Name</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>oneDayinfo(exchangeName: any): any</div>
-   
   
   
 
@@ -12823,6 +12452,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12842,10 +12473,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Refreshes the market data and shows a notification</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>refreshMarket()</div>
-   
   
   
 
@@ -12854,6 +12482,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -12890,10 +12520,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -12927,6 +12554,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -12939,8 +12568,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -12958,10 +12590,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Creates a Victory Chart that displays the market depth</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new MarketDepth()</div>
-   
   
   
     <p>
@@ -13007,10 +12636,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -13044,6 +12670,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -13056,8 +12684,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13075,10 +12706,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Creates a Victory Chart that uses CandleSticks</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Candlestick()</div>
-   
   
   
     <p>
@@ -13124,10 +12752,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -13161,6 +12786,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -13173,8 +12800,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13192,10 +12822,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The Address Book Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new AddressBook()</div>
-   
   
   
     <p>
@@ -13241,10 +12868,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>componentDidMount</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -13253,6 +12877,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -13289,10 +12915,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>componentWillUnmount</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
-   
   
   
 
@@ -13301,6 +12924,68 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='addressbooksetupcontextmenu'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>setupcontextmenu(e)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Set up the context menu</p>
+
+    <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>e</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
   
 
   
@@ -13337,10 +13022,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Opens Add/Edit Contact Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>showAddContact</div>
-   
   
   
 
@@ -13349,6 +13031,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -13385,10 +13069,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -13422,6 +13103,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -13434,8 +13117,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13453,10 +13139,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The controls in the Panel Header of Address Book Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new PanelControls()</div>
-   
   
   
     <p>
@@ -13502,10 +13185,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>A Searchbox to search for contacts</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new SearchBox()</div>
-   
   
   
     <p>
@@ -13521,6 +13201,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -13557,10 +13239,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Export the Address Book to a CSV File</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>exportAddressBook</div>
-   
   
   
 
@@ -13569,6 +13248,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -13605,10 +13286,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Opens Add/Edit Contact Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>showAddContact</div>
-   
   
   
 
@@ -13617,6 +13295,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -13653,10 +13333,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Opens My Addresses Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>showMyAddresses</div>
-   
   
   
 
@@ -13665,6 +13342,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -13701,10 +13380,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -13738,6 +13414,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -13750,8 +13428,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13769,10 +13450,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -13806,8 +13484,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13825,10 +13506,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>List of contacts</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new ContactList()</div>
-   
   
   
     <p>
@@ -13874,10 +13552,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -13911,6 +13586,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -13923,8 +13600,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -13942,10 +13622,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Contact Item</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Contact()</div>
-   
   
   
     <p>
@@ -13991,10 +13668,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open a Dialog to confirm Contact Delete</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>confirmDelete</div>
-   
   
   
 
@@ -14003,6 +13677,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -14039,10 +13715,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open the Add Or Edit Contact Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>editContact</div>
-   
   
   
 
@@ -14051,6 +13724,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -14087,10 +13762,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Build the context menu for this component</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>showContextMenu</div>
-   
   
   
 
@@ -14129,6 +13801,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -14148,10 +13822,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Get the contact's initial</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>getinitial</div>
-   
   
   
 
@@ -14198,6 +13869,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -14217,10 +13890,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Select a Contact</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>select</div>
-   
   
   
 
@@ -14229,6 +13899,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -14265,10 +13937,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -14302,6 +13971,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -14321,10 +13992,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Returns the New Contact Button for the AddressBook</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>NewContactButton</div>
-   
   
   
 
@@ -14363,6 +14031,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -14375,8 +14045,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -14394,10 +14067,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Contact details</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new ContactDetails()</div>
-   
   
   
     <p>
@@ -14443,10 +14113,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Returns a individual field</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>Field</div>
-   
   
   
 
@@ -14518,6 +14185,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -14537,10 +14206,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Opens a dialog to confirm contact delete</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>confirmDelete</div>
-   
   
   
 
@@ -14549,6 +14215,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -14585,10 +14253,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Opens the Add/Edit Contact modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>editContact</div>
-   
   
   
 
@@ -14597,6 +14262,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -14633,10 +14300,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -14670,6 +14334,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -14682,8 +14348,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -14701,10 +14370,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Get Local time</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>getLocalTime</div>
-   
   
   
 
@@ -14752,8 +14418,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -14771,10 +14440,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Settings Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Settings()</div>
-   
   
   
     <p>
@@ -14820,10 +14486,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component Mount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -14832,6 +14495,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -14868,10 +14533,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component Unmount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
-   
   
   
 
@@ -14880,6 +14542,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -14916,10 +14580,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set up context menu</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
-   
   
   
 
@@ -14943,6 +14604,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
         </div>
       
     </div>
+  
+
   
 
   
@@ -14977,10 +14640,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -15014,6 +14674,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -15026,8 +14688,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -15045,10 +14710,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>App Page in the Setting Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new SettingsApp()</div>
-   
   
   
     <p>
@@ -15094,10 +14756,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Confirm Wallet Back up</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>confirmBackupWallet</div>
-   
   
   
 
@@ -15106,6 +14765,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -15142,10 +14803,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Toggles if modules should be verified or not.</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>toggleVerifyModuleSource</div>
-   
   
   
 
@@ -15184,6 +14842,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -15203,10 +14863,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Update the settings</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>updateHandlers</div>
-   
   
   
 
@@ -15215,6 +14872,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -15251,10 +14910,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handles update Change</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleAutoUpdateChange</div>
-   
   
   
 
@@ -15293,6 +14949,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -15312,10 +14970,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -15349,6 +15004,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -15368,10 +15025,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -15394,6 +15048,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
       
     
+  
+
   
 
   
@@ -15424,10 +15080,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open up Dialoge</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>browseBackupDir</div>
-   
   
   
 
@@ -15436,6 +15089,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -15465,8 +15120,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -15484,10 +15142,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Backup Directory in Settings Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new SettingsApp()</div>
-   
   
   
     <p>
@@ -15533,10 +15188,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Confirm Wallet Back up</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>confirmBackupWallet</div>
-   
   
   
 
@@ -15545,6 +15197,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -15581,10 +15235,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Toggles if modules should be verified or not.</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>toggleVerifyModuleSource</div>
-   
   
   
 
@@ -15623,6 +15274,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -15642,10 +15295,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Update the settings</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>updateHandlers</div>
-   
   
   
 
@@ -15654,6 +15304,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -15690,10 +15342,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handles update Change</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleAutoUpdateChange</div>
-   
   
   
 
@@ -15732,6 +15381,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -15751,10 +15402,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -15788,6 +15436,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -15807,10 +15457,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -15833,6 +15480,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
       
     
+  
+
   
 
   
@@ -15863,10 +15512,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open up Dialoge</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>browseBackupDir</div>
-   
   
   
 
@@ -15875,6 +15521,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -15904,8 +15552,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -15923,10 +15574,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Internal JSX for Language Settings</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new LanguageSetting()</div>
-   
   
   
     <p>
@@ -15972,10 +15620,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handle Change</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleChange</div>
-   
   
   
 
@@ -16014,6 +15659,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -16033,10 +15680,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -16070,6 +15714,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -16082,8 +15728,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -16101,10 +15750,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Core Settings page that is inside Settings</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new SettingsCore()</div>
-   
   
   
     <p>
@@ -16148,12 +15794,9 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   
 
-  <p>Confirms Switch to Manual Daemon</p>
+  <p>Confirms Switch to Manual Core</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>confirmSwitchManualDaemon</div>
-   
   
   
 
@@ -16162,6 +15805,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -16198,10 +15843,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Restarts Core</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>restartCore</div>
-   
   
   
 
@@ -16210,6 +15852,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -16246,10 +15890,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Opens up a dialog to move the data directory</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>moveDataDir</div>
-   
   
   
 
@@ -16258,6 +15899,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -16294,10 +15937,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Runs the file copy script</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleFileCopy(newFolderDir: any)</div>
-   
   
   
 
@@ -16336,6 +15976,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -16355,10 +15997,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Updates the settings</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>updateHandlers</div>
-   
   
   
 
@@ -16369,52 +16008,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
 
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='settingscorereturnfeesetting'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>returnFeeSetting</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>If Tritium don't return fee setting, this maybe changed.</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>returnFeeSetting</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
   
 
   
@@ -16451,10 +16044,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -16488,6 +16078,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -16500,8 +16092,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -16509,20 +16104,16 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='feesetting'>
-      FeeSetting
+    <h3 class='fl m0' id='rescanbutton'>
+      RescanButton
     </h3>
     
     
   </div>
   
 
-  <p>Returns JSX For Fee Settings</p>
-
- 
   
-    <div class='pre p1 fill-light mt0'>new FeeSetting()</div>
-   
+    <div class='pre p1 fill-light mt0'>new RescanButton()</div>
   
   
     <p>
@@ -16554,11 +16145,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
     <div class='py1 quiet mt1 prose-big'>Static Members</div>
     <div class="clearfix">
   
-    <div class='border-bottom' id='feesettingconfirmsettxfee'>
+    <div class='border-bottom' id='rescanbuttonrescan'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>confirmSetTxFee</span>
+            <span class='code strong strong truncate'>rescan</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -16566,12 +16157,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   
 
-  <p>Confirms Set TX fee</p>
-
- 
   
-    <div class='pre p1 fill-light mt0'>confirmSetTxFee</div>
-   
+    <div class='pre p1 fill-light mt0'>rescan</div>
   
   
 
@@ -16580,6 +16167,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -16602,7 +16191,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
       </div>
     </div>
   
-    <div class='border-bottom' id='feesettingrender'>
+    <div class='border-bottom' id='rescanbuttonrender'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
@@ -16614,12 +16203,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   
 
-  <p>Component's Renderable JSX</p>
-
- 
   
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -16653,6 +16238,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -16665,8 +16252,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -16684,10 +16274,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Style Settings in the Style Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new SettingsStyle()</div>
-   
   
   
     <p>
@@ -16733,10 +16320,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component Mount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -16745,6 +16329,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -16781,10 +16367,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Get the user's default address and save it to state, to be used on the Address Style Field</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>GetUsersDefaultAddress()</div>
-   
   
   
 
@@ -16793,6 +16376,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -16829,10 +16414,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Toggle The Globe</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>toggleGlobeRender</div>
-   
   
   
 
@@ -16871,6 +16453,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -16890,10 +16474,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set New Wallpaper</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setWallpaper</div>
-   
   
   
 
@@ -16940,6 +16521,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -16959,10 +16542,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set Color</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setColor</div>
-   
   
   
 
@@ -17009,6 +16589,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -17028,10 +16610,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Reset Colors</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>resetColors</div>
-   
   
   
 
@@ -17040,6 +16619,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17076,10 +16657,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Load Custom Theme from json File</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>loadCustomTheme</div>
-   
   
   
 
@@ -17118,6 +16696,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -17137,10 +16717,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open Dialog for Picking Theme</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>openPickThemeFileDialog</div>
-   
   
   
 
@@ -17149,6 +16726,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17185,10 +16764,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Export Theme File</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>exportThemeFileDialog</div>
-   
   
   
 
@@ -17197,6 +16773,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17233,10 +16811,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Press Dark Theme Button</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>pressDarkTheme</div>
-   
   
   
 
@@ -17245,6 +16820,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17281,10 +16858,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Press Light Theme Button</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>pressLightTheme</div>
-   
   
   
 
@@ -17293,6 +16867,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17329,10 +16905,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Press Custom theme button</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>pressCustomTheme</div>
-   
   
   
 
@@ -17341,6 +16914,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17377,10 +16952,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Press Reset Button</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>pressResetTheme</div>
-   
   
   
 
@@ -17389,6 +16961,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17425,10 +16999,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Save Previous Custom Theme to state</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>savePreviousCustomTheme</div>
-   
   
   
 
@@ -17437,6 +17008,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17473,10 +17046,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set To Custom, this is used by background picker</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setToCustom</div>
-   
   
   
 
@@ -17485,6 +17055,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17521,10 +17093,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set theme button, used by theme slector</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setThemeSelector</div>
-   
   
   
 
@@ -17563,6 +17132,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -17582,10 +17153,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -17619,6 +17187,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -17631,8 +17201,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -17650,10 +17223,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Pick Color Element</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new ColorPicker()</div>
-   
   
   
     <p>
@@ -17699,10 +17269,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open Color Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>openPicker</div>
-   
   
   
 
@@ -17711,6 +17278,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17747,10 +17316,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Close Modal</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>closePicker</div>
-   
   
   
 
@@ -17759,6 +17325,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -17795,10 +17363,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handle Color Change</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleColorChange</div>
-   
   
   
 
@@ -17837,6 +17402,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -17856,10 +17423,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -17893,6 +17457,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -17905,8 +17471,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -17924,10 +17493,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The Background Picker Element</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new BackgroundPicker()</div>
-   
   
   
     <p>
@@ -17973,10 +17539,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set a Default background</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setDefault</div>
-   
   
   
 
@@ -18015,6 +17578,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -18034,10 +17599,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Handle Picking a file</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleFilePick</div>
-   
   
   
 
@@ -18076,6 +17638,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -18095,10 +17659,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -18132,6 +17693,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -18144,8 +17707,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -18163,10 +17729,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Theme Picker Element</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new ThemePicker()</div>
-   
   
   
     <p>
@@ -18212,10 +17775,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set to Custom Theme</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setToCustomTheme()</div>
-   
   
   
 
@@ -18224,6 +17784,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -18260,10 +17822,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Set the Theme button selector</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setSelector(selectorIndex: any)</div>
-   
   
   
 
@@ -18302,6 +17861,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -18321,10 +17882,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -18358,6 +17916,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -18370,8 +17930,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -18389,10 +17952,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>SettingsSecurity Page on Settings Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new SettingsSecurity()</div>
-   
   
   
     <p>
@@ -18438,10 +17998,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -18475,6 +18032,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -18487,8 +18046,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -18506,10 +18068,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Login Form</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Login()</div>
-   
   
   
     <p>
@@ -18541,118 +18100,6 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
     <div class='py1 quiet mt1 prose-big'>Static Members</div>
     <div class="clearfix">
   
-    <div class='border-bottom' id='logingetmindate'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>getMinDate()</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Get min date to lock</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>getMinDate(): any</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='logingetmintime'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>getMinTime()</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Get min time to lock</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>getMinTime(): any</div>
-   
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
     <div class='border-bottom' id='loginrendertimeinputs'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -18667,10 +18114,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Render the date &#x26; time pickers</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>renderTimeInputs</div>
-   
   
   
 
@@ -18733,6 +18177,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -18752,10 +18198,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -18789,6 +18232,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -18801,8 +18246,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -18820,10 +18268,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>If JSX is Encryped</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Encrypted()</div>
-   
   
   
     <p>
@@ -18869,10 +18314,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -18906,6 +18348,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -18918,8 +18362,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -18937,10 +18384,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Change Password Form</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new ChangePassword()</div>
-   
   
   
     <p>
@@ -18986,10 +18430,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Confirm Logout</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>confirmLogout</div>
-   
   
   
 
@@ -18998,6 +18439,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -19034,10 +18477,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -19071,6 +18511,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -19083,8 +18525,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -19102,10 +18547,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Import Private Keys</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new ImportPrivKey()</div>
-   
   
   
     <p>
@@ -19151,10 +18593,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -19188,6 +18627,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -19200,8 +18641,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -19219,10 +18663,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>View Private Keys for Address JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new ViewPrivKeyForAddress()</div>
-   
   
   
     <p>
@@ -19268,10 +18709,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Show Private Keys</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>showPrivKey(e: any)</div>
-   
   
   
 
@@ -19310,6 +18748,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -19329,10 +18769,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Copy Private Keys</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>copyPrivkey</div>
-   
   
   
 
@@ -19341,6 +18778,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -19377,10 +18816,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Reset Private Keys</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>resetPrivateKey</div>
-   
   
   
 
@@ -19389,6 +18825,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -19425,10 +18863,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -19462,6 +18897,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -19474,8 +18911,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -19493,10 +18933,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Unencrypter JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Unencrypted()</div>
-   
   
   
     <p>
@@ -19542,10 +18979,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -19579,6 +19013,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -19591,8 +19027,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -19610,10 +19049,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Encrypted Wallet</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new EncryptWallet()</div>
-   
   
   
     <p>
@@ -19659,10 +19095,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -19696,6 +19129,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -19708,8 +19143,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -19727,10 +19165,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The Module's Settings Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new SettingsModules()</div>
-   
   
   
     <p>
@@ -19776,10 +19211,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -19813,6 +19245,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -19825,8 +19259,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -19844,10 +19281,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Each Module On the list of installed modules</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Module()</div>
-   
   
   
     <p>
@@ -19893,10 +19327,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Enable this module</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>enableModule</div>
-   
   
   
 
@@ -19905,6 +19336,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -19941,10 +19374,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Disable this module</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>disableModule</div>
-   
   
   
 
@@ -19953,6 +19383,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -19989,10 +19421,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Toggle Module on or off</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>toggleModule</div>
-   
   
   
 
@@ -20001,6 +19430,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -20037,10 +19468,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open the details modal for the module</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>openModuleDetails</div>
-   
   
   
 
@@ -20049,6 +19477,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -20085,10 +19515,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -20122,6 +19549,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
       </div>
@@ -20134,8 +19563,11 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -20153,10 +19585,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>The Add Module section in Modules Settings tab</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new AddModule()</div>
-   
   
   
     <p>
@@ -20202,10 +19631,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open up a Dialog to select a module to install</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>browseFiles</div>
-   
   
   
 
@@ -20214,6 +19640,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -20250,10 +19678,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
 
   <p>Open up a Dialog to select a directory of a module to install</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>browseDirectories</div>
-   
   
   
 
@@ -20262,6 +19687,8 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   
   
   
+  
+
   
 
   
@@ -20299,10 +19726,7 @@ Based on code from <a href="http://2ality.com/2015/08/es6-map-json.html">http://
   <p>Override react-dropzone's default getFilesFromEvent function because
 by default the full paths of dropped files are tripped off</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>getFilesFromEvent</div>
-   
   
   
 
@@ -20341,6 +19765,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -20360,10 +19786,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Handel the file drop event</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleDrop</div>
-   
   
   
 
@@ -20402,6 +19825,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -20421,10 +19846,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Install the module code into the wallet</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>startInstall</div>
-   
   
   
 
@@ -20463,6 +19885,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -20482,10 +19906,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -20519,6 +19940,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -20531,8 +19954,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -20550,10 +19976,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Terminal Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Terminal()</div>
-   
   
   
     <p>
@@ -20599,10 +20022,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component Mount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -20611,6 +20031,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -20647,10 +20069,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component Unmount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
-   
   
   
 
@@ -20659,6 +20078,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -20695,10 +20116,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Set up context menu</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
-   
   
   
 
@@ -20737,6 +20155,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -20756,10 +20176,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -20793,6 +20210,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -20805,8 +20224,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -20824,10 +20246,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Console Page in the Terminal Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new TerminalConsole()</div>
-   
   
   
     <p>
@@ -20873,10 +20292,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Loadin all the usable RPC commands</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>loadCommandList</div>
-   
   
   
 
@@ -20885,6 +20301,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -20921,10 +20339,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Before component Did Update</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>getSnapshotBeforeUpdate(): any</div>
-   
   
   
 
@@ -20958,6 +20373,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -20976,10 +20393,7 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidUpdate(prevProps: any, PrevState: any, beforeUpdate: any)</div>
-   
   
   
 
@@ -21034,6 +20448,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -21053,10 +20469,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Execute a Command</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>execute</div>
-   
   
   
 
@@ -21065,6 +20478,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -21101,10 +20516,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Handle Key Down Event</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>handleKeyDown</div>
-   
   
   
 
@@ -21143,6 +20555,68 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='terminalconsoleformateautosuggest'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>formateAutoSuggest</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Take the Autosuggest and updateConsoleInput</p>
+
+    <div class='pre p1 fill-light mt0'>formateAutoSuggest</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>e</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 </section>
 
       </div>
@@ -21162,10 +20636,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -21199,6 +20670,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -21211,8 +20684,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -21230,10 +20706,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Terminal Core page in the Terminal Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new TerminalCore()</div>
-   
   
   
     <p>
@@ -21279,10 +20752,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component Received New Props Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillReceiveProps(nextProps: any)</div>
-   
   
   
 
@@ -21321,6 +20791,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -21340,10 +20812,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Handle on Scroll</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>onScrollEvent(): any</div>
-   
   
   
 
@@ -21366,6 +20835,8 @@ by default the full paths of dropped files are tripped off</p>
 
       
     
+  
+
   
 
   
@@ -21396,10 +20867,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -21433,6 +20901,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -21445,63 +20915,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
-        
           
-          <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='styleguide'>
-      StyleGuide
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>Style Page</p>
-
- 
-  
-    <div class='pre p1 fill-light mt0'>new StyleGuide()</div>
-   
-  
-  
-    <p>
-      Extends
-      
-        Component
-      
-    </p>
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -21519,10 +20937,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>About Page</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new About()</div>
-   
   
   
     <p>
@@ -21568,10 +20983,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Get Current Year</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>getCurrentYear(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></div>
-   
   
   
 
@@ -21605,6 +21017,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -21624,10 +21038,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Get App Version</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>getInterfaceVersionNumber(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
-   
   
   
 
@@ -21661,6 +21072,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -21680,10 +21093,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Gets Version number of the Daemon</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>getDaemonVersionNumber(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></div>
-   
   
   
 
@@ -21717,6 +21127,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -21736,10 +21148,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -21773,6 +21182,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -21785,8 +21196,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -21804,10 +21218,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Modules</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new Modules()</div>
-   
   
   
     <p>
@@ -21853,10 +21264,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component Mount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -21865,6 +21273,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -21901,10 +21311,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component Unmount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
-   
   
   
 
@@ -21913,6 +21320,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -21949,10 +21358,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Set up the context menu</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>setupcontextmenu(e: any)</div>
-   
   
   
 
@@ -21991,6 +21397,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -22010,10 +21418,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -22047,6 +21452,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -22059,8 +21466,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -22078,10 +21488,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Returns the WebView of the module</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>PageModule</div>
-   
   
   
 
@@ -22145,8 +21552,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -22164,10 +21574,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Returns a Module with a Panel/Webview</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>PageModule</div>
-   
   
   
 
@@ -22231,8 +21638,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -22250,10 +21660,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>WebView</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new WebView()</div>
-   
   
   
     <p>
@@ -22299,10 +21706,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component Mount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentDidMount()</div>
-   
   
   
 
@@ -22311,6 +21715,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -22347,10 +21753,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component Unmount Callback</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>componentWillUnmount()</div>
-   
   
   
 
@@ -22359,6 +21762,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -22395,10 +21800,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -22432,6 +21834,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -22444,8 +21848,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -22463,10 +21870,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Controls the background of the app</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new AppBackground()</div>
-   
   
   
     <p>
@@ -22512,10 +21916,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -22549,6 +21950,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -22561,8 +21964,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -22580,10 +21986,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Returns the Starry Night Sky Background</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>StarrySky</div>
-   
   
   
 
@@ -22592,6 +21995,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -22611,6 +22016,7 @@ by default the full paths of dropped files are tripped off</p>
   
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -22628,10 +22034,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Returns the Cosmic Light Background</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>CosmicLight</div>
-   
   
   
 
@@ -22640,6 +22043,8 @@ by default the full paths of dropped files are tripped off</p>
   
   
   
+  
+
   
 
   
@@ -22659,6 +22064,7 @@ by default the full paths of dropped files are tripped off</p>
   
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -22676,10 +22082,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Controls the theme using {Emotion}</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new ThemeController()</div>
-   
   
   
     <p>
@@ -22725,10 +22128,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): any</div>
-   
   
   
 
@@ -22762,6 +22162,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -22774,8 +22176,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -22793,10 +22198,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Show the MIT Licenses Agreement</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new LicenseAgreementModal()</div>
-   
   
   
     <p>
@@ -22842,10 +22244,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -22879,6 +22278,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -22891,8 +22292,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
           
           <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -22910,10 +22314,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Shows a Warning about safety</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>new ExperimentalWarningModal()</div>
-   
   
   
     <p>
@@ -22959,10 +22360,7 @@ by default the full paths of dropped files are tripped off</p>
 
   <p>Component's Renderable JSX</p>
 
- 
-  
     <div class='pre p1 fill-light mt0'>render(): JSX</div>
-   
   
   
 
@@ -22996,6 +22394,8 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
       </div>
@@ -23008,8 +22408,11 @@ by default the full paths of dropped files are tripped off</p>
   
 
   
+
+  
 </section>
 
+          
         
       </div>
     </div>
