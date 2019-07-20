@@ -193,6 +193,7 @@
   "Settings.Language": "言語",
   "Settings.English": "英語",
   "Settings.Russian": "ロシア",
+  "Settings.Portuguese": "ポルトガル人",
   "Settings.Spanish": "スペイン語",
   "Settings.German": "ドイツ人",
   "Settings.Japanese": "日本語",
@@ -387,6 +388,7 @@
 
   "Lang.English": "英語",
   "Lang.Russian": "ロシア",
+  "Lang.Portuguese": "ポルトガル人",
   "Lang.Spanish": "スペイン語",
   "Lang.Korean": "韓国語",
   "Lang.German": "ドイツ人",
