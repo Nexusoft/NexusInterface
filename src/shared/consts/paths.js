@@ -41,6 +41,10 @@ export const homeDir =
 
 export const modulesDir = path.join(walletDataDir, 'modules');
 
+export function fileExists(inPath) {
+  return fs.existsSync(path);
+}
+
 /**
  * Start
  * =============================================================================

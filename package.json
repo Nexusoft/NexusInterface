@@ -68,11 +68,13 @@
       "category": "public.app-category.utilities",
       "extraResources": [
         "./assets/darwin/cores/**/*"
-      ]
+      ],
+      "identity": null
     },
     "dmg": {
       "artifactName": "nexus_wallet-MacOSX-${version}.${ext}",
       "background": "assets/background.jpg",
+      "sign": false,
       "contents": [
         {
           "x": 129,

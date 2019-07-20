@@ -1,4 +1,4 @@
-# 1.1.0 (2019.7.XX)
+# 1.1.0 (2019.7.19)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/1.1.0)
 
@@ -17,7 +17,7 @@
 
 - Updated Spanish Translation
 - Updated styling on `Market Data` page to make 24hr info be clearer
-- Default Verbose is now 0, you can change this in the Setitngs/Core
+- Default Verbose is now 0, you can change this in the Settings/Core
 - Changed the way the More Details modal knows which transaction to look up
 - Fake Transactions for testing is now moved out of auto true in dev mode and is now a toggle.
 - When selecting the a suggestion on the terminal page, the help portion will no longer be pasted into the input field
@@ -36,7 +36,7 @@
 
 - Fixed issue were if you never installed QT or deleted the QT back up it would auto make a new backup
 - Fixed there being a `Nexus_Wallet` AND `Nexus Wallet` folders, Removed `Nexus_Wallet` and will auto move items into correct folder
-- Fixed issue with Recieved transactions not being shown in the table when selecting Receive Only Filter.
+- Fixed issue with Received transactions not being shown in the table when selecting Receive Only Filter.
 - Fixed issue where the daemon would not be set to verbose 0, and set a min/max on the setting
 - Fixed issue where you could not copy the Address or Account from a transaction
 - Fixed issue where scrolling in the transaction table would also scroll the parent panel
