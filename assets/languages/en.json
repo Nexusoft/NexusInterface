@@ -337,6 +337,7 @@
   "Settings.Language": "Language",
   "Settings.English": "English",
   "Settings.Russian": "Russian",
+  "Settings.Portuguese": "Portuguese",
   "Settings.Spanish": "Spanish",
   "Settings.German": "German",
   "Settings.Japanese": "Japanese",
@@ -559,6 +560,7 @@
 
   "Lang.English": "English",
   "Lang.Russian": "Russian",
+  "Lang.Portuguese": "Portuguese",
   "Lang.Spanish": "Spanish",
   "Lang.Korean": "Korean",
   "Lang.German": "German",
