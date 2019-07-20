@@ -1,5 +1,5 @@
 import path from 'path';
-import { walletDataDir } from 'consts/paths';
+import { walletDataDir, fileExists } from 'consts/paths';
 import { readJson, writeJson } from 'utils/fileSystem';
 
 const themeFileName = 'theme.json';
@@ -20,7 +20,11 @@ export const defaultTheme = {
 };
 
 function readTheme() {
-  return readJson(themeFilePath);
+  if (fileExists(themeFilePath)) {
+    return readJson(themeFilePath);
+  } else {
+    return defaultTheme;
+  }
 }
 
 function writeTheme(theme) {

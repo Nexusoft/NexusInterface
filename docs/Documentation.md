@@ -26,7 +26,7 @@
     -   [marketPriceFormatter][22]
     -   [marketCapFormatter][23]
     -   [pctChange24hrFormatter][24]
-    -   [waitForDaemon][25]
+    -   [waitForCore][25]
         -   [Parameters][26]
     -   [returnWeightStats][27]
     -   [returnDifficultyStats][28]
@@ -81,7 +81,7 @@
     -   [render][77]
 -   [MyAddresses][78]
     -   [Parameters][79]
--   [DaemonStatus][80]
+-   [CoreStatus][80]
     -   [render][81]
 -   [Navigation][82]
     -   [NavItem][83]
@@ -359,17 +359,17 @@
 -   [ChangePassword][355]
     -   [confirmLogout][356]
     -   [render][357]
--   [ViewPrivKeyForAddress][358]
-    -   [showPrivKey][359]
-        -   [Parameters][360]
-    -   [copyPrivkey][361]
-    -   [resetPrivateKey][362]
-    -   [render][363]
--   [Unencrypted][364]
+-   [ImportPrivKey][358]
+    -   [render][359]
+-   [ViewPrivKeyForAddress][360]
+    -   [showPrivKey][361]
+        -   [Parameters][362]
+    -   [copyPrivkey][363]
+    -   [resetPrivateKey][364]
     -   [render][365]
--   [EncryptWallet][366]
+-   [Unencrypted][366]
     -   [render][367]
--   [ImportPrivKey][368]
+-   [EncryptWallet][368]
     -   [render][369]
 -   [SettingsModules][370]
     -   [render][371]
@@ -567,9 +567,9 @@ Returns the percentile changed in 24 hrs
 
 Returns **any** 
 
-### waitForDaemon
+### waitForCore
 
-Displays Wait for Daemon
+Displays Wait for Core
 
 #### Parameters
 
@@ -825,11 +825,11 @@ Returns JSX of My Addresses
 
 Returns **JSX** JSX
 
-## DaemonStatus
+## CoreStatus
 
 **Extends React.Component**
 
-Handels the Daemon Status
+Handles the Core Status
 
 ### render
 
@@ -1873,7 +1873,7 @@ Core Settings page that is inside Settings
 
 ### confirmSwitchManualDaemon
 
-Confirms Switch to Manual Daemon
+Confirms Switch to Manual Core
 
 ### restartCore
 
@@ -2150,6 +2150,18 @@ Component's Renderable JSX
 
 Returns **any** 
 
+## ImportPrivKey
+
+**Extends Component**
+
+Import Private Keys
+
+### render
+
+Component's Renderable JSX
+
+Returns **any** 
+
 ## ViewPrivKeyForAddress
 
 **Extends Component**
@@ -2195,18 +2207,6 @@ Returns **any**
 **Extends Component**
 
 Encrypted Wallet
-
-### render
-
-Component's Renderable JSX
-
-Returns **any** 
-
-## ImportPrivKey
-
-**Extends Component**
-
-Import Private Keys
 
 ### render
 
@@ -2603,7 +2603,7 @@ Returns **JSX** JSX
 
 [24]: #pctchange24hrformatter
 
-[25]: #waitfordaemon
+[25]: #waitforcore
 
 [26]: #parameters-4
 
@@ -2713,7 +2713,7 @@ Returns **JSX** JSX
 
 [79]: #parameters-14
 
-[80]: #daemonstatus
+[80]: #corestatus
 
 [81]: #render-7
 
@@ -3269,27 +3269,27 @@ Returns **JSX** JSX
 
 [357]: #render-40
 
-[358]: #viewprivkeyforaddress
+[358]: #importprivkey
 
-[359]: #showprivkey
+[359]: #render-41
 
-[360]: #parameters-86
+[360]: #viewprivkeyforaddress
 
-[361]: #copyprivkey
+[361]: #showprivkey
 
-[362]: #resetprivatekey
+[362]: #parameters-86
 
-[363]: #render-41
+[363]: #copyprivkey
 
-[364]: #unencrypted
+[364]: #resetprivatekey
 
 [365]: #render-42
 
-[366]: #encryptwallet
+[366]: #unencrypted
 
 [367]: #render-43
 
-[368]: #importprivkey
+[368]: #encryptwallet
 
 [369]: #render-44
 
