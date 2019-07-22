@@ -45,7 +45,7 @@ export function initializeBootstrapEvents({ dispatch }) {
   bootstrapEvents.on('abort', () =>
     dispatch(showNotification('Bootstrap process has been aborted', 'error'))
   );
-  bootstrapEvents.on('error', () =>
+  bootstrapEvents.on('error', err =>
     dispatch(
       openErrorDialog({
         message: 'Error bootstrapping recent database',
