@@ -1,3 +1,19 @@
+# 1.1.1 (2019.7.XX)
+
+[Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/v1.1.1)
+
+#### Additions
+
+- abc
+
+#### Adjustments
+
+- Stake Rate now rounded to 6 significant digits
+
+#### Fixes
+
+- abc
+
 # 1.1.0 (2019.7.19)
 
 [Release Link](https://github.com/Nexusoft/NexusInterface/releases/tag/1.1.0)

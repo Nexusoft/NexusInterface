@@ -19,6 +19,7 @@ import { updateSettings } from 'actions/settings';
 import { timing, consts, animations } from 'styles';
 import Globe from './Globe';
 import { webGLAvailable } from 'consts/misc';
+import { limitDecimal } from 'utils/etc';
 
 // Images
 import logoIcon from 'images/NXS_coin.sprite.svg';
@@ -592,6 +593,8 @@ class Overview extends Component {
     if (Object.keys(this.props.coreInfo).length === 0) {
       return;
     }
+    const { blockweight, trustweight, stakeweight } = this.props.coreInfo;
+
     return (
       <React.Fragment>
         <Stat>
@@ -601,7 +604,7 @@ class Overview extends Component {
               <Text id="overview.BlockWeight" />
             </StatLabel>
             <StatValue>
-              {this.waitForCore(this.props.coreInfo.blockweight.toFixed(4))}
+              {this.waitForCore(limitDecimal(blockweight, 4))}
             </StatValue>
           </div>
         </Stat>
@@ -613,7 +616,7 @@ class Overview extends Component {
               <Text id="overview.TrustWeight" />
             </StatLabel>
             <StatValue>
-              {this.waitForCore(this.props.coreInfo.trustweight.toFixed(4))}
+              {this.waitForCore(limitDecimal(trustweight, 4))}
             </StatValue>
           </div>
         </Stat>
@@ -625,7 +628,7 @@ class Overview extends Component {
               <Text id="overview.StakeWeight" />
             </StatLabel>
             <StatValue>
-              {this.waitForCore(this.props.coreInfo.stakeweight.toFixed(4))}
+              {this.waitForCore(limitDecimal(stakeweight, 4))}
             </StatValue>
           </div>
         </Stat>
@@ -639,7 +642,8 @@ class Overview extends Component {
    * @memberof Overview
    */
   returnDifficultyStats = difficulty => {
-    console.error(difficulty);
+    
+
     return (
       <React.Fragment>
         <Stat>
@@ -650,7 +654,7 @@ class Overview extends Component {
             </StatLabel>
             <StatValue>
               {!!difficulty ? (
-                formatDiff(difficulty.prime)
+                limitDecimal(difficulty.prime,6)
               ) : (
                 <span className="dim">-</span>
               )}
@@ -665,7 +669,7 @@ class Overview extends Component {
             </StatLabel>
             <StatValue>
               {!!difficulty ? (
-                formatDiff(difficulty.hash)
+                limitDecimal(difficulty.hash,6)
               ) : (
                 <span className="dim">-</span>
               )}
@@ -681,7 +685,7 @@ class Overview extends Component {
             </StatLabel>
             <StatValue>
               {!!difficulty ? (
-                formatDiff(difficulty.stake)
+                limitDecimal(difficulty.stake,6)
               ) : (
                 <span className="dim">-</span>
               )}
@@ -963,7 +967,10 @@ class Overview extends Component {
                 <Text id="overview.InterestRate" />
               </StatLabel>
               <StatValue>
-                {this.waitForCore(interestweight || stakerate + '%')}
+                {this.waitForCore(
+                  limitDecimal(interestweight, 6) ||
+                    limitDecimal(stakerate, 6) + '%'
+                )}
               </StatValue>
             </div>
           </Stat>
