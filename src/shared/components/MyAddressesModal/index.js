@@ -83,7 +83,7 @@ class MyAddressesModal extends React.Component {
   filteredAccounts = () => {
     const allAccounts = this.props.myAccounts || [];
     return allAccounts.filter(acc => {
-      const accName = acc.account || translate('AddressBook.MyAccount', locale);
+      const accName = acc.account || _('My Account');
       const searchedName = accName.toLowerCase();
       const query = this.state.searchQuery.toLowerCase();
       return searchedName.indexOf(query) >= 0;

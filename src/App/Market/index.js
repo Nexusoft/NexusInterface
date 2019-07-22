@@ -127,9 +127,9 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${translate('Market.Price', locale)}: ${
+            label: `${_('Price')}: ${
               e.Price
-            } \n ${translate('Market.Volume', locale)}: ${newQuantity}`,
+            } \n ${_('Volume')}: ${newQuantity}`,
           };
         }
       })
@@ -162,9 +162,9 @@ class Market extends Component {
           return {
             x: e.Price,
             y: newQuantity,
-            label: `${translate('Market.Price', locale)}: ${
+            label: `${_('Price')}: ${
               e.Price
-            } \n ${translate('Market.Volume', locale)}: ${newQuantity}`,
+            } \n ${_('Volume')}: ${newQuantity}`,
           };
         }
       })

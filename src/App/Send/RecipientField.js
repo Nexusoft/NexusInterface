@@ -102,7 +102,7 @@ class RecipientField extends Component {
           input={input}
           meta={meta}
           inputProps={{
-            placeholder: translate('sendReceive.RecipientAddress', locale),
+            placeholder: _('Recipient address'),
           }}
           suggestions={suggestions}
           onSelect={this.handleSelect}

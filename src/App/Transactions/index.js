@@ -471,7 +471,7 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: translate('transactions.MoreDetails', locale),
+        label: _('More details'),
         click: this.openTxDetailsModal,
       })
     );
@@ -505,23 +505,23 @@ class Transactions extends Component {
 
     transactiontablecontextmenu.append(
       new remote.MenuItem({
-        label: translate('Settings.Copy', locale),
+        label: _('Copy'),
         submenu: [
           {
-            label: translate('AddressBook.Address', locale),
+            label: _('Address'),
             click() {
               tablecopyaddresscallback();
             },
           },
           {
-            label: translate('AddressBook.Account', locale),
+            label: _('Account'),
 
             click() {
               tablecopyaccountcallback();
             },
           },
           {
-            label: translate('sendReceive.TableAmount', locale),
+            label: _('Amount'),
             click() {
               tablecopyamountcallback();
             },
@@ -1538,29 +1538,29 @@ class Transactions extends Component {
     };
 
     if (inData.category == 'credit' || inData.category === 'receive') {
-      inData.category = translate('transactions.Receive', locale);
+      inData.category = _('Receive');
     } else if (inData.category == 'debit' || inData.category === 'send') {
-      inData.category = translate('transactions.Sent', locale);
+      inData.category = _('Sent');
     } else if (inData.category == 'genesis') {
-      inData.category = translate('transactions.Genesis', locale);
+      inData.category = _('Genesis');
     } else if (inData.category == 'trust') {
-      inData.category = translate('transactions.Trust', locale);
+      inData.category = _('Trust');
     } else if (inData.category == 'generate') {
-      inData.category = translate('transactions.Generate', locale);
+      inData.category = _('Generate');
     } else if (inData.category == 'immature') {
-      inData.category = translate('transactions.Immature', locale);
+      inData.category = _('Immature');
     } else if (inData.category == 'stake') {
-      inData.category = translate('transactions.Stake', locale);
+      inData.category = _('Stake');
     } else if (inData.category == 'orphan') {
-      inData.category = translate('transactions.Orphan', locale);
+      inData.category = _('Orphan');
     } else {
-      inData.category = translate('transactions.UnknownCategory', locale);
+      inData.category = _('Unknown');
     }
     return (
       inData.category +
-      `\n ${translate('transactions.AMOUNT', locale)}` +
+      `\n ${_('Amount: ')}` +
       inData.b +
-      `\n ${translate('transactions.TIME', locale)}` +
+      `\n ${_('Time: ')}` +
       inData.a
     );
   };
@@ -1891,7 +1891,7 @@ class Transactions extends Component {
         display: e.account,
       }));
       return [
-        { value: 0, display: translate('transactions.AllAccounts', locale) },
+        { value: 0, display: _('All Accounts') },
         ...accounts,
       ];
     }

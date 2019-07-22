@@ -264,7 +264,7 @@ class SettingsStyle extends Component {
   openPickThemeFileDialog = () => {
     remote.dialog.showOpenDialog(
       {
-        title: translate('Settings.SelectCustomTheme', this.props.locale),
+        title: _('Select custom theme file'),
         properties: ['openFile'],
         filters: [{ name: 'Theme JSON', extensions: ['json'] }],
       },

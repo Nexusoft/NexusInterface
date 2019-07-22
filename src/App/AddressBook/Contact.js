@@ -120,12 +120,12 @@ class Contact extends React.PureComponent {
     const template = [...new ContextMenuBuilder().defaultContext];
     if (this.props.connections !== undefined) {
       template.push({
-        label: translate('AddressBook.EditContact', this.props.locale),
+        label: _('Edit contact'),
         click: this.editContact,
       });
     }
     template.push({
-      label: translate('AddressBook.DeleteContact', this.props.locale),
+      label: _('Delete Contact'),
       click: this.confirmDelete,
     });
     let contextMenu = remote.Menu.buildFromTemplate(template);

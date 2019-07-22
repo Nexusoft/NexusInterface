@@ -38,7 +38,7 @@ class SettingsApp extends Component {
   browseBackupDir = () => {
     remote.dialog.showOpenDialog(
       {
-        title: translate('Settings.SelectBackupDirectory', this.props.locale),
+        title: _('Select backup directory'),
         defaultPath: this.props.backupDir,
         properties: ['openDirectory'],
       },

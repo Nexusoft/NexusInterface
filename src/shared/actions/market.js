@@ -164,15 +164,15 @@ export const binanceCandlestickLoader = any => {
                 close: parseFloat(e[4]),
                 high: parseFloat(e[2]),
                 low: parseFloat(e[3]),
-                label: `${translate('Market.Date', locale)}: ${new Date(
+                label: `${_('Date')}: ${new Date(
                   e[0]
                 ).getMonth() + 1}/${new Date(e[0]).getDate()}/${new Date(
                   e[0]
                 ).getFullYear()}
-             ${translate('Market.Open', locale)}: ${parseFloat(e[1])}
-             ${translate('Market.Close', locale)}: ${parseFloat(e[4])}
-             ${translate('Market.High', locale)}: ${parseFloat(e[2])}
-             ${translate('Market.Low', locale)}: ${parseFloat(e[3])}`,
+             ${_('Open')}: ${parseFloat(e[1])}
+             ${_('Close')}: ${parseFloat(e[4])}
+             ${_('High')}: ${parseFloat(e[2])}
+             ${_('Low')}: ${parseFloat(e[3])}`,
               };
             })
             .slice(0, 30);
@@ -204,15 +204,15 @@ export const bittrexCandlestickLoader = any => {
                 close: e.C,
                 high: e.H,
                 low: e.L,
-                label: `${translate('Market.Date', locale)}: ${new Date(
+                label: `${_('Date')}: ${new Date(
                   e.T
                 ).getMonth() + 1}/${new Date(e.T).getDate()}/${new Date(
                   e.T
                 ).getFullYear()}
-                ${translate('Market.Open', locale)}: ${e.O}
-                ${translate('Market.Close', locale)}: ${e.C}
-                ${translate('Market.High', locale)}: ${e.H}
-                ${translate('Market.Low', locale)}: ${e.L}`,
+                ${_('Open')}: ${e.O}
+                ${_('Close')}: ${e.C}
+                ${_('High')}: ${e.H}
+                ${_('Low')}: ${e.L}`,
               };
             })
             .slice(0, 30);
