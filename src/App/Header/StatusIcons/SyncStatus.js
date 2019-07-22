@@ -64,7 +64,7 @@ class SyncStatus extends React.Component {
         <SpinningIcon icon={syncingIcon} />
       </Tooltip.Trigger>
     ) : (
-      <Tooltip.Trigger tooltip={<Text id="Header.Synced" />}>
+      <Tooltip.Trigger tooltip={_`Synchronized`}>
         <StatusIcon icon={checkIcon} />
       </Tooltip.Trigger>
     );

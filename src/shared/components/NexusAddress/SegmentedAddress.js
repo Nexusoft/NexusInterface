@@ -70,7 +70,7 @@ export default class SegmentedAddress extends React.Component {
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
-    this.props.showNotification(<Text id="Alert.AddressCopied" />, 'success');
+    this.props.showNotification(_`Address has been copied to clipboard`, 'success');
   };
 
   /**

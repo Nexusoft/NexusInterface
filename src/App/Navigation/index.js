@@ -107,41 +107,41 @@ const Navigation = () => (
 
     <NavBar>
       <NavItem icon={logoIcon} exact to="/">
-        <Text id="Footer.Overview" />
+        _`Overview`
       </NavItem>
 
       <NavItem icon={sendIcon} to="/Send">
-        <Text id="Footer.SendNXS" />
+        _`Send NXS`
       </NavItem>
 
       <NavItem icon={transactionsIcon} to="/Transactions">
-        <Text id="Footer.Transactions" />
+        _`Transactions`
       </NavItem>
 
       <NavItem icon={chartIcon} to="/Market">
-        <Text id="Footer.MarketData" />
+        _`Market Data`
       </NavItem>
 
       <NavItem icon={addressBookIcon} to="/AddressBook">
-        <Text id="Footer.AddressBook" />
+        _`Address Book`
       </NavItem>
 
       <NavItem icon={settingsIcon} to="/Settings">
-        <Text id="Footer.Settings" />
+        _`Settings`
       </NavItem>
 
       <NavItem icon={consoleIcon} to="/Terminal">
-        <Text id="Footer.Console" />
+        _`Console`
       </NavItem>
       {/* 
       <NavItem icon={shapeshiftIcon} to="/Exchange">
-        <Text id="Footer.Exchange" />
+        _`Exchange`
       </NavItem> */}
 
       {/* <NavItem icon={trustListIcon} to="/List">
-        <Text id="Footer.Trust" />
+        _`Trust`
         &nbsp;
-        <Text id="Footer.List" />
+        _`List`
       </NavItem> */}
 
       <ModuleNavItems />

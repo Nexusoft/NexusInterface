@@ -52,58 +52,58 @@ let tempaddpress = new Map();
 const categories = [
   {
     value: 'all',
-    display: <Text id="transactions.All" />,
+    display: _`All`,
   },
   {
     value: 'receive', // Should be made credit with tritium.
-    display: <Text id="transactions.Receive" />,
+    display: _`Receive`,
   },
   {
     value: 'debit',
-    display: <Text id="transactions.Sent" />,
+    display: _`Sent`,
   },
   {
     value: 'stake',
-    display: <Text id="transactions.Stake" />,
+    display: _`Stake`,
   },
   {
     value: 'generate',
-    display: <Text id="transactions.Generate" />,
+    display: _`Generate`,
   },
   {
     value: 'immature',
-    display: <Text id="transactions.Immature" />,
+    display: _`Immature`,
   },
   {
     value: 'orphan',
-    display: <Text id="transactions.Orphan" />,
+    display: _`Orphan`,
   },
   {
     value: 'genesis',
-    display: <Text id="transactions.Genesis" />,
+    display: _`Genesis`,
   },
   {
     value: 'trust',
-    display: <Text id="transactions.Trust" />,
+    display: _`Trust`,
   },
 ];
 
 const timeFrames = [
   {
     value: 'All',
-    display: <Text id="transactions.All" />,
+    display: _`All`,
   },
   {
     value: 'Year',
-    display: <Text id="transactions.PastYear" />,
+    display: _`Past Year`,
   },
   {
     value: 'Month',
-    display: <Text id="transactions.PastMonth" />,
+    display: _`Past Month`,
   },
   {
     value: 'Week',
-    display: <Text id="transactions.PastWeek" />,
+    display: _`Past Week`,
   },
 ];
 
@@ -1363,13 +1363,13 @@ class Transactions extends Component {
     let tempColumns = [];
 
     tempColumns.push({
-      Header: <Text id="transactions.TX" />,
+      Header: _`TX Number`,
       accessor: 'transactionnumber',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: <Text id="transactions.Time" />,
+      Header: _`Time span`,
       id: 'time',
       Cell: d => (
         <div>
@@ -1385,47 +1385,47 @@ class Transactions extends Component {
       id: 'category',
       Cell: q => {
         if (q.value === 'debit' || q.value === 'send') {
-          return <Text id="transactions.Sent" />;
+          return _`Sent`;
         } else if (q.value === 'credit' || q.value === 'receive') {
-          return <Text id="transactions.Receive" />;
+          return _`Receive`;
         } else if (q.value === 'genesis') {
-          return <Text id="transactions.Genesis" />;
+          return _`Genesis`;
         } else if (q.value === 'trust') {
-          return <Text id="transactions.Trust" />;
+          return _`Trust`;
         } else if (q.value.endsWith('(Pending)')) {
-          return <Text id="transactions.Pending" />;
+          return _`(Pending)`;
         } else if (q.value === 'generate') {
-          return <Text id="transactions.Generate" />;
+          return _`Generate`;
         } else if (q.value === 'immature') {
-          return <Text id="transactions.Immature" />;
+          return _`Immature`;
         } else if (q.value === 'stake') {
-          return <Text id="transactions.Stake" />;
+          return _`Stake`;
         } else if ((q.value = 'orphan')) {
-          return <Text id="transactions.Orphan" />;
+          return _`Orphan`;
         } else {
-          return <Text id="transactions.UnknownCategory" />;
+          return _`Unknown`;
         }
       },
-      Header: <Text id="transactions.Category" />,
+      Header: _`CATEGORY`,
       accessor: 'category',
 
       maxWidth: 85,
     });
 
     tempColumns.push({
-      Header: <Text id="transactions.Amount" />,
+      Header: _`AMOUNT`,
       accessor: 'amount',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: <Text id="transactions.Account" />,
+      Header: _`ACCOUNT`,
       accessor: 'account',
       maxWidth: 150,
     });
 
     tempColumns.push({
-      Header: <Text id="transactions.Address" />,
+      Header: _`ADDRESS`,
       accessor: 'address',
     });
     return tempColumns;
@@ -2048,7 +2048,7 @@ class Transactions extends Component {
     return (
       <Panel
         icon={transactionIcon}
-        title={<Text id="transactions.Details" />}
+        title={_`Transaction details`}
         controls={
           <Select
             value={this.props.selectedAccount}
@@ -2060,7 +2060,7 @@ class Transactions extends Component {
       >
         {this.props.connections === undefined ? (
           <WaitingMessage>
-            <Text id="transactions.Loading" />
+            _`Connecting to Nexus Core`
             ...
           </WaitingMessage>
         ) : (
@@ -2103,7 +2103,7 @@ class Transactions extends Component {
             <Filters>
               <FormField
                 connectLabel
-                label={<Text id="transactions.SearchAddress" />}
+                label={_`Search Address`}
               >
                 <TextField
                   inputProps={{
@@ -2116,7 +2116,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField label={<Text id="transactions.Type" />}>
+              <FormField label={_`Type`}>
                 <Select
                   value={this.state.categoryFilter}
                   onChange={this.transactiontypefiltercallback.bind(this)}
@@ -2126,7 +2126,7 @@ class Transactions extends Component {
 
               <FormField
                 connectLabel
-                label={<Text id="transactions.MinimumAmount" />}
+                label={_`Min amount`}
               >
                 <TextField
                   type="number"
@@ -2136,7 +2136,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField label={<Text id="transactions.Time" />}>
+              <FormField label={_`Time span`}>
                 <Select
                   value={this.state.displayTimeFrame}
                   onChange={this.transactionTimeframeChange.bind(this)}
@@ -2144,7 +2144,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <Tooltip.Trigger tooltip={<Text id="transactions.Download" />}>
+              <Tooltip.Trigger tooltip={_`Download`}>
                 <Button
                   square
                   className="relative"

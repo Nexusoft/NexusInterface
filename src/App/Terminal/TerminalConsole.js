@@ -314,7 +314,7 @@ class TerminalConsole extends Component {
     if (connections === undefined) {
       return (
         <WaitingMessage>
-          <Text id="transactions.Loading" />
+          _`Connecting to Nexus Core`
           ...
         </WaitingMessage>
       );
@@ -349,7 +349,7 @@ class TerminalConsole extends Component {
                           grouped="right"
                           onClick={this.execute}
                         >
-                          <Text id="Console.Exe" />
+                          _`Execute`
                         </ExecuteButton>
                       ),
                     }}
@@ -389,7 +389,7 @@ class TerminalConsole extends Component {
               grouped="bottom"
               onClick={resetConsoleOutput}
             >
-              <Text id="Console.ClearConsole" />
+              _`Clear console`
             </Button>
           </Console>
         </TerminalContent>

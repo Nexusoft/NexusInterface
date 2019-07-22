@@ -106,7 +106,7 @@ class AmountField extends Component {
             connectLabel
             label={
               <span className="v-align">
-                <Text id="sendReceive.Amount" />
+                _`NXS Amount`
               </span>
             }
           >

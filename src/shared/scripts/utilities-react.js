@@ -51,17 +51,17 @@ export default class Table extends Component {
         {R => (
           <ReactTable
             className="-striped -highlight"
-            noDataText={<Text id="transactions.NoRowsFound" />}
+            noDataText={_`No Rows Found`}
             key="ReactTable"
             data={data}
-            pageText={<Text id="transactions.Page" />}
+            pageText={_`Page`}
             columns={columns}
             minRows={minRows}
             defaultSorted={defaultsorting}
             defaultPageSize={10}
             rowsText={R}
-            previousText={<Text id="transactions.Previous" />}
-            nextText={<Text id="transactions.Next" />}
+            previousText={_`Previous`}
+            nextText={_`Next`}
             getTrProps={(state, rowInfo) => {
               return {
                 onClick: e => {

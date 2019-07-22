@@ -395,7 +395,7 @@ class Overview extends Component {
    */
   blockDate() {
     if (!this.props.blockDate) {
-      return <Text id="ToolTip.GettingNextBlock" />;
+      return _`Getting next block...`;
     } else {
       return this.props.blockDate.toLocaleString(this.props.settings.locale);
     }
@@ -598,7 +598,7 @@ class Overview extends Component {
           <StatIcon icon={this.blockWeightIcon()} />
           <div>
             <StatLabel>
-              <Text id="overview.BlockWeight" />
+              _`Block Weight`
             </StatLabel>
             <StatValue>
               {this.waitForCore(this.props.coreInfo.blockweight.toFixed(4))}
@@ -610,7 +610,7 @@ class Overview extends Component {
           <StatIcon icon={this.trustIcon()} />
           <div>
             <StatLabel>
-              <Text id="overview.TrustWeight" />
+              _`Trust Weight`
             </StatLabel>
             <StatValue>
               {this.waitForCore(this.props.coreInfo.trustweight.toFixed(4))}
@@ -622,7 +622,7 @@ class Overview extends Component {
           <StatIcon icon={stakeIcon} />
           <div>
             <StatLabel>
-              <Text id="overview.StakeWeight" />
+              _`Stake Weight`
             </StatLabel>
             <StatValue>
               {this.waitForCore(this.props.coreInfo.stakeweight.toFixed(4))}
@@ -646,7 +646,7 @@ class Overview extends Component {
           <StatIcon icon={this.trustIcon()} />
           <div>
             <StatLabel>
-              <Text id="overview.PrimeDiff" />
+              _`Prime Difficulty`
             </StatLabel>
             <StatValue>
               {!!difficulty ? (
@@ -661,7 +661,7 @@ class Overview extends Component {
           <StatIcon icon={stakeIcon} />
           <div>
             <StatLabel>
-              <Text id="overview.HashDiff" />
+              _`Hash Difficulty`
             </StatLabel>
             <StatValue>
               {!!difficulty ? (
@@ -677,7 +677,7 @@ class Overview extends Component {
           <StatIcon icon={this.blockWeightIcon()} />
           <div>
             <StatLabel>
-              <Text id="overview.StakeDiff" />
+              _`Stake Difficulty`
             </StatLabel>
             <StatValue>
               {!!difficulty ? (
@@ -728,7 +728,7 @@ class Overview extends Component {
                 {/* {stake > 0 ? (
                   <span>Balance and Stake</span>
                 ) : ( */}
-                <Text id="overview.Balance" />
+                _`Balance`
                 {/* )} */}
                 (NXS) :
               </StatLabel>
@@ -737,7 +737,7 @@ class Overview extends Component {
             {/* + (stake || 0) */}
             <MinimalStat>
               <StatLabel>
-                <Text id="overview.Balance" /> ({settings.fiatCurrency})
+                _`Balance` ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {this.waitForCore(this.calculateFiatvalue())}
@@ -746,14 +746,14 @@ class Overview extends Component {
 
             <MinimalStat>
               <StatLabel>
-                <Text id="overview.Transactions" />
+                _`Transactions`
               </StatLabel>
               <StatValue>{this.waitForCore(txtotal)}</StatValue>
             </MinimalStat>
 
             <MinimalStat>
               <StatLabel>
-                <Text id="overview.MarketPrice" /> ({settings.fiatCurrency})
+                _`Market Price` ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -766,7 +766,7 @@ class Overview extends Component {
 
             <MinimalStat>
               <StatLabel>
-                <Text id="overview.24hrChange" /> ({settings.fiatCurrency} %)
+                _`24hr Change` ({settings.fiatCurrency} %)
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -778,14 +778,14 @@ class Overview extends Component {
             </MinimalStat>
             <MinimalStat>
               <StatLabel>
-                <Text id="overview.Connections" />
+                _`Connections`
               </StatLabel>
               <StatValue>{this.waitForCore(connections)}</StatValue>
             </MinimalStat>
 
             <MinimalStat>
               <StatLabel>
-                <Text id="overview.InterestRate" />
+                _`Stake Rate`
               </StatLabel>
               <StatValue>
                 {this.waitForCore(interestweight || stakerate + '%')}
@@ -794,7 +794,7 @@ class Overview extends Component {
 
             <MinimalStat className="relative">
               <StatLabel>
-                <Text id="overview.BlockCount" />
+                _`Block Count`
               </StatLabel>
 
               <StatValue>
@@ -840,7 +840,7 @@ class Overview extends Component {
                   </Tooltip.Trigger>
                 )}{' '}
                 <span className="v-align">
-                  <Text id="overview.Balance" /> {' ('}
+                  _`Balance` {' ('}
                   {settings.displayFiatBalance ? settings.fiatCurrency : 'NXS'}
                   {')'}
                 </span>
@@ -867,7 +867,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.StakeBalance" /> (NXS)
+                _`Stake Balance` (NXS)
               </StatLabel>
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
@@ -883,7 +883,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.Transactions" />
+                _`Transactions`
               </StatLabel>
               <StatValue>{this.waitForCore(txtotal)}</StatValue>
             </div>
@@ -895,7 +895,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.MarketPrice" /> ({settings.fiatCurrency})
+                _`Market Price` ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -913,7 +913,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.MarketCap" /> ({settings.fiatCurrency})
+                _`Market Cap` ({settings.fiatCurrency})
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -931,7 +931,7 @@ class Overview extends Component {
           >
             <div>
               <StatLabel>
-                <Text id="overview.24hrChange" /> ({settings.fiatCurrency} %)
+                _`24hr Change` ({settings.fiatCurrency} %)
               </StatLabel>
               <StatValue>
                 {!!displayNXSvalues[0] ? (
@@ -950,7 +950,7 @@ class Overview extends Component {
             <StatIcon icon={this.connectionsIcon()} />
             <div>
               <StatLabel>
-                <Text id="overview.Connections" />
+                _`Connections`
               </StatLabel>
               <StatValue>{this.waitForCore(connections)}</StatValue>
             </div>
@@ -960,7 +960,7 @@ class Overview extends Component {
             <StatIcon icon={interestIcon} />
             <div>
               <StatLabel>
-                <Text id="overview.InterestRate" />
+                _`Stake Rate`
               </StatLabel>
               <StatValue>
                 {this.waitForCore(interestweight || stakerate + '%')}
@@ -973,7 +973,7 @@ class Overview extends Component {
               <StatIcon icon={nxsblocksIcon} />
               <div>
                 <StatLabel>
-                  <Text id="overview.BlockCount" />
+                  _`Block Count`
                 </StatLabel>
 
                 <StatValue>

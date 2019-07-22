@@ -109,34 +109,34 @@ export default class Settings extends Component {
       <Panel
         bodyScrollable={false}
         icon={settingsIcon}
-        title={<Text id="Settings.Settings" />}
+        title={_`Settings`}
       >
         <SettingsComponent>
           <SettingsTabBar>
             <Tab
               link={`${match.url}/App`}
               icon={logoIcon}
-              text={<Text id="Settings.Application" />}
+              text={_`Application`}
             />
             <Tab
               link={`${match.url}/Core`}
               icon={coreIcon}
-              text={<Text id="Settings.Core" />}
+              text={_`Core`}
             />
             <Tab
               link={`${match.url}/Security`}
               icon={lockIcon}
-              text={<Text id="Settings.Security" />}
+              text={_`Security`}
             />
             <Tab
               link={`${match.url}/Style`}
               icon={leafIcon}
-              text={<Text id="Settings.Style" />}
+              text={_`Style`}
             />
             <Tab
               link={`${match.url}/Modules`}
               icon={legoIcon}
-              text={<Text id="Settings.Modules" />}
+              text={_`Modules`}
             />
           </SettingsTabBar>
 

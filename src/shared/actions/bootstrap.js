@@ -29,7 +29,7 @@ export function bootstrap({ suggesting } = {}) {
       if (!suggesting) {
         store.dispatch(
           openErrorDialog({
-            message: <Text id="ToolTip.NotEnoughSpace" />,
+            message: _`Not enough disk space! Minimum 20GB of free space is required.`,
           })
         );
       }

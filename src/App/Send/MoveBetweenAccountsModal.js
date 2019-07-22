@@ -87,15 +87,15 @@ const acctionCreators = {
   validate: ({ moveFrom, moveTo, amount }) => {
     const errors = {};
     if (!moveFrom) {
-      errors.moveFrom = <Text id="sendReceive.Messages.NoAccounts" />;
+      errors.moveFrom = _`No accounts selected`;
     }
     if (!moveTo) {
-      errors.moveTo = <Text id="sendReceive.Messages.NoAccounts" />;
+      errors.moveTo = _`No accounts selected`;
     } else if (moveTo === moveFrom) {
-      errors.moveTo = <Text id="sendReceive.Messages.SameAccount" />;
+      errors.moveTo = _`Cannot move to the same account`;
     }
     if (!amount || parseFloat(amount) <= 0) {
-      errors.amount = <Text id="Alert.InvalidAmount" />;
+      errors.amount = _`Invalid amount`;
     }
     return errors;
   },
@@ -105,13 +105,13 @@ const acctionCreators = {
       try {
         const result = await rpc('validateaddress', [sendTo]);
         if (!result.isvalid) {
-          throw { sendTo: <Text id="Alert.InvalidAddress" /> };
+          throw { sendTo: _`Invalid address` };
         }
         if (result.ismine) {
-          throw { sendTo: <Text id="Alert.registeredToThis" /> };
+          throw { sendTo: _`This is an address registered to this wallet.` };
         }
       } catch (err) {
-        throw { sendTo: <Text id="Alert.InvalidAddress" /> };
+        throw { sendTo: _`Invalid address` };
       }
     }
     return null;
@@ -130,10 +130,10 @@ const acctionCreators = {
     props.reset();
     props.loadMyAccounts();
     props.openSuccessDialog({
-      message: <Text id="sendReceive.Messages.Success" />,
+      message: _`NXS moved successfully`,
     });
   },
-  onSubmitFail: rpcErrorHandler(<Text id="sendReceive.Messages.ErrorMoving" />),
+  onSubmitFail: rpcErrorHandler(_`Error moving NXS`),
 })
 class MoveBetweenAccountsForm extends Component {
   /**
@@ -157,11 +157,11 @@ class MoveBetweenAccountsForm extends Component {
       const {
         payload: { id: modalId },
       } = this.props.openErrorDialog({
-        message: <Text id="sendReceive.Messages.NotLoggedIn" />,
+        message: _`You are not logged in`,
         note: (
           <>
             <p>
-              <Text id="sendReceive.Messages.NotLoggedInNote" />
+              _`You need to log in to your wallet before sending transactions`
             </p>
             <Link
               to="/Settings/Security"
@@ -170,7 +170,7 @@ class MoveBetweenAccountsForm extends Component {
                 this.props.closeModal();
               }}
             >
-              <Text id="sendReceive.Messages.LogInNow" />
+              _`Log in now`
             </Link>
           </>
         ),
@@ -179,7 +179,7 @@ class MoveBetweenAccountsForm extends Component {
     }
 
     this.props.openConfirmDialog({
-      question: <Text id="sendReceive.MoveNXS" />,
+      question: _`Move NXS`,
       callbackYes: handleSubmit,
     });
   };
@@ -195,23 +195,23 @@ class MoveBetweenAccountsForm extends Component {
       <form onSubmit={this.confirmMove}>
         <AccountSelectors>
           <Label>
-            <Text id="sendReceive.FromAccount" />
+            _`From account`
           </Label>
           <Field
             component={Select.RF}
             name="moveFrom"
             options={this.props.accountOptions}
-            placeholder={<Text id="sendReceive.SelectAnAccount" />}
+            placeholder={_`Select an account`}
           />
 
           <Label>
-            <Text id="sendReceive.ToAccount" />
+            _`To account`
           </Label>
           <Field
             component={Select.RF}
             name="moveTo"
             options={this.props.accountOptions}
-            placeholder={<Text id="sendReceive.SelectAnAccount" />}
+            placeholder={_`Select an account`}
           />
         </AccountSelectors>
 
@@ -219,7 +219,7 @@ class MoveBetweenAccountsForm extends Component {
 
         <Buttons>
           <Button skin="primary" type="submit" disabled={this.props.submitting}>
-            <Text id="sendReceive.MoveNXS" />
+            _`Move NXS`
           </Button>
         </Buttons>
       </form>
@@ -238,7 +238,7 @@ const MoveBetweenAccountsModal = () => (
     {closeModal => (
       <>
         <Modal.Header>
-          <Text id="sendReceive.MoveNxsBetweenAccount" />
+          _`Move NXS between accounts`
         </Modal.Header>
 
         <Modal.Body>

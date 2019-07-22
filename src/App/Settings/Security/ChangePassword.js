@@ -51,17 +51,17 @@ const ChangePasswordComponent = styled.form({
   validate: ({ password, newPassword, newPasswordRepeat }) => {
     const errors = {};
     if (!password) {
-      errors.password = <Text id="Settings.Errors.PasswordRequired" />;
+      errors.password = _`Password is required`;
     }
     if (passwordInvalidChars.test(newPassword)) {
-      errors.newPassword = <Text id="Settings.Errors.PasswordInvalidChars" />;
+      errors.newPassword = _`Password cannot contain these characters: - $ / & * | < >`;
     } else if (!newPassword || newPassword.length < 8) {
-      errors.newPassword = <Text id="Settings.Errors.PasswordMinLength" />;
+      errors.newPassword = _`Password must be at least 8 characters`;
     } else if (newPassword !== newPassword.trim()) {
-      errors.newPassword = <Text id="Settings.Errors.PasswordSpaces" />;
+      errors.newPassword = _`Password cannot start or end with spaces`;
     }
     if (newPasswordRepeat !== newPassword) {
-      errors.newPasswordRepeat = <Text id="Settings.Errors.PasswordsNoMatch" />;
+      errors.newPasswordRepeat = _`Passwords do not match`;
     }
     return errors;
   },
@@ -70,10 +70,10 @@ const ChangePasswordComponent = styled.form({
   onSubmitSuccess: (result, dispatch, props) => {
     props.reset();
     props.openSuccessDialog({
-      message: <Text id="Alert.PasswordHasBeenChanged" />,
+      message: _`Password has been changed.`,
     });
   },
-  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ChangingPassword" />),
+  onSubmitFail: rpcErrorHandler(_`Error changing password`),
 })
 class ChangePassword extends Component {
   /**
@@ -83,7 +83,7 @@ class ChangePassword extends Component {
    */
   confirmLogout = () => {
     this.props.openConfirmDialog({
-      question: <Text id="Settings.ConfirmLogOut" />,
+      question: _`Are you sure you want to log out?`,
       callbackYes: async () => {
         try {
           await rpc('walletlock', []);
@@ -91,7 +91,7 @@ class ChangePassword extends Component {
         } catch (err) {
           const note = (err & err.error && err.error.message) || err;
           this.props.openErrorDialog({
-            message: <Text id="Settings.Errors.LoggingOut" />,
+            message: _`Error logging out`,
             note,
           });
         }
@@ -109,12 +109,12 @@ class ChangePassword extends Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <ChangePasswordComponent onSubmit={handleSubmit}>
-        <FieldSet legend={<Text id="Settings.ChangePassword" />}>
+        <FieldSet legend={_`Change password`}>
           <Text id="Settings.Password">
             {p => (
               <FormField
                 connectLabel
-                label={<Text id="Settings.PreviousPassword" />}
+                label={_`Previous password`}
               >
                 <Field
                   component={TextField.RF}
@@ -129,7 +129,7 @@ class ChangePassword extends Component {
             {np => (
               <FormField
                 connectLabel
-                label={<Text id="Settings.NewPassword" />}
+                label={_`New password`}
               >
                 <Field
                   component={TextField.RF}
@@ -144,7 +144,7 @@ class ChangePassword extends Component {
             {placeholder => (
               <FormField
                 connectLabel
-                label={<Text id="Settings.ReEnterPassword" />}
+                label={_`Re-enter password:`}
               >
                 <Field
                   component={TextField.RF}
@@ -163,12 +163,12 @@ class ChangePassword extends Component {
             disabled={submitting}
             style={{ marginTop: '2em' }}
           >
-            <Text id="Settings.ChangePassword" />
+            _`Change password`
           </Button>
         </FieldSet>
 
         <Button wide onClick={this.confirmLogout}>
-          <Text id="Settings.LogOut" />
+          _`Log out`
         </Button>
       </ChangePasswordComponent>
     );

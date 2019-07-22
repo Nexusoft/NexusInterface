@@ -70,13 +70,13 @@ class MyAddressesModal extends React.Component {
     } catch (err) {
       console.log(err);
       this.props.showNotification(
-        <Text id="MyAddressesModal.CheckWalletError" />,
+        _`Check wallet failed`,
         'error'
       );
       return;
     }
     this.props.showNotification(
-      <Text id="MyAddressesModal.CheckWalletSuccess" />,
+      _`Check wallet pass`,
       'success'
     );
   };
@@ -138,10 +138,10 @@ class MyAddressesModal extends React.Component {
               style={{ width: 300 }}
             />
             <Tooltip.Trigger
-              tooltip={<Text id="MyAddressesModal.CheckWalletTooltip" />}
+              tooltip={_`Check wallet's integerty`}
             >
               <Button fitHeight onClick={this.checkwallet}>
-                {<Text id="MyAddressesModal.CheckWallet" />}
+                {_`Check wallet`}
               </Button>
             </Tooltip.Trigger>
           </Search>
@@ -159,7 +159,7 @@ class MyAddressesModal extends React.Component {
             <Buttons>
               <Button onClick={this.startCreating}>
                 <Icon icon={plusIcon} className="space-right" />
-                <Text id="AddressBook.CreateAddress" />
+                _`Create new address`
               </Button>
             </Buttons>
           )}

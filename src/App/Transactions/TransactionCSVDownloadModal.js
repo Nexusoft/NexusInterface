@@ -80,11 +80,11 @@ class CSVDownloadModal extends PureComponent {
       >
         <Modal.Body>
           <Title>
-            <Text id="transactions.CSVDownloadModalTitle" />
+            _`Processing CSV`
           </Title>
           <ProgressBar percentage={processProgress} />
           <Button skin="danger" onClick={() => this.closeModal()}>
-            <Text id="transactions.CSVDownloadModalCancel" />
+            _`Cancel`
           </Button>
         </Modal.Body>
       </CSVDownloadModalComponent>

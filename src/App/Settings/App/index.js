@@ -101,17 +101,17 @@ class SettingsApp extends Component {
    */
   confirmBackupWallet = () => {
     this.props.openConfirmDialog({
-      question: <Text id="Settings.BackupWallet" />,
+      question: _`Backup wallet`,
       callbackYes: () => {
         if (this.props.connections !== undefined) {
           backupWallet(this.props.settings.backupDirectory);
           this.props.showNotification(
-            <Text id="Alert.WalletBackedUp" />,
+            _`Wallet backed up`,
             'success'
           );
         } else {
           this.props.openErrorDialog({
-            message: <Text id="Settings.DaemonLoading" />,
+            message: _`Connecting to Nexus Core`,
           });
         }
       },
@@ -191,10 +191,10 @@ class SettingsApp extends Component {
   handleAutoUpdateChange = e => {
     if (!e.target.checked) {
       this.props.openConfirmDialog({
-        question: <Text id="Settings.DisableAutoUpdate" />,
-        note: <Text id="Settings.DisableAutoUpdateNote" />,
-        labelYes: <Text id="Settings.KeepAutoUpdate" />,
-        labelNo: <Text id="Settings.TurnOffAutoUpdate" />,
+        question: _`Are you sure you want to disable auto update?`,
+        note: _`Keeping your wallet up-to-date is important for your security and will ensure that you get the best possible user experience.`,
+        labelYes: _`Keep auto update On`,
+        labelNo: _`Turn auto update Off`,
         skinNo: 'danger',
         callbackNo: () => {
           this.props.updateSettings({ autoUpdate: false });
@@ -222,8 +222,8 @@ class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
-          label={<Text id="Settings.MinimizeClose" />}
-          subLabel={<Text id="ToolTip.MinimizeOnClose" />}
+          label={_`Minimize on close`}
+          subLabel={_`Minimize the wallet when closing the window instead of closing it.`}
         >
           <Switch
             checked={settings.minimizeOnClose}
@@ -236,7 +236,7 @@ class SettingsApp extends Component {
           label={
             <span>
               <span className="v-align">
-                <Text id="Settings.AutoUpdate" />{' '}
+                _`Auto update (Recommended)`{' '}
                 {!settings.autoUpdate && (
                   <WarningIcon spaceLeft icon={warningIcon} />
                 )}
@@ -245,10 +245,10 @@ class SettingsApp extends Component {
           }
           subLabel={
             <div>
-              <Text id="Settings.AutoUpdateNote" />
+              _`Automatically check for new versions and notify if a new version is available.`
               {process.platform === 'darwin' && (
                 <div className="error">
-                  <Text id="Settings.AutoUpdateDisabled" />
+                  _`Auto Update is not yet available on Mac, please update the wallet manually for the time being`
                 </div>
               )}
             </div>
@@ -263,8 +263,8 @@ class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
-          label={<Text id="Settings.UsageData" />}
-          subLabel={<Text id="ToolTip.Usage" />}
+          label={_`Send anonymous usage data`}
+          subLabel={_`Send anonymous usage data to allow the Nexus developers to improve the wallet.`}
         >
           <Switch
             checked={settings.sendUsageData}
@@ -272,7 +272,7 @@ class SettingsApp extends Component {
           />
         </SettingsField>
 
-        <SettingsField label={<Text id="Settings.Fiat" />}>
+        <SettingsField label={_`Fiat currency`}>
           <Select
             value={settings.fiatCurrency}
             onChange={this.updateHandlers('fiatCurrency')}
@@ -283,8 +283,8 @@ class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
-          label={<Text id="Settings.MinimumConfirmations" />}
-          subLabel={<Text id="ToolTip.MinimumConfirmations" />}
+          label={_`Minimum confirmations`}
+          subLabel={_`Minimum amount of confirmations before a block is accepted. Local only.`}
         >
           <TextField
             type="number"
@@ -303,8 +303,8 @@ class SettingsApp extends Component {
 
         <SettingsField
           connectLabel
-          label={<Text id="Settings.DeveloperMode" />}
-          subLabel={<Text id="ToolTip.DevMode" />}
+          label={_`Developer mode`}
+          subLabel={_`Development mode enables advanced features to aid in development. After enabling the wallet must be closed and reopened to enable those features.`}
         >
           <Switch
             checked={settings.devMode}
@@ -316,8 +316,8 @@ class SettingsApp extends Component {
           <SettingsField
             indent={1}
             connectLabel
-            label={<Text id="Settings.EnforceOpenSourceModules" />}
-            subLabel={<Text id="Settings.EnforceOpenSourceModulesNote" />}
+            label={_`Module open source policy`}
+            subLabel={_`Only modules which have valid open source repositories are allowed to be installed and run. You can disable this option to test run the modules that you're developing`}
           >
             <Switch
               checked={settings.verifyModuleSource}
@@ -327,8 +327,8 @@ class SettingsApp extends Component {
           <SettingsField
             indent={1}
             connectLabel
-            label={<Text id="Settings.FakeTransactions" />}
-            subLabel={<Text id="Settings.FakeTransactionsNote" />}
+            label={_`Fake Test Transactions`}
+            subLabel={_`Display Test Transactions on the Transactions page`}
           >
             <Switch
               checked={settings.fakeTransactions}
@@ -342,7 +342,7 @@ class SettingsApp extends Component {
           style={{ marginTop: '2em' }}
           onClick={this.confirmBackupWallet}
         >
-          <Text id="Settings.BackupWallet" />
+          _`Backup wallet`
         </Button>
       </SettingsContainer>
     );

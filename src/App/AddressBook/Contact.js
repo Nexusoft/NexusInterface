@@ -205,7 +205,7 @@ const NewContactButton = props => (
       <Icon icon={plusIcon} style={{ fontSize: '.8em', opacity: 0.7 }} />
     </ContactAvatar>
     <ContactName style={{ opacity: 0.7 }}>
-      <Text id="AddressBook.NewContact" />
+      _`New contact`
     </ContactName>
   </ContactComponent>
 );

@@ -34,7 +34,7 @@ class RescanButton extends React.Component {
       await rpc('rescan', []);
     } catch (err) {
       this.props.showNotification(
-        <Text id="MyAddressesModal.RescanError" />,
+        _`Error rescanning`,
         'error'
       );
       return;
@@ -42,7 +42,7 @@ class RescanButton extends React.Component {
       this.setState({ rescanning: false });
     }
     this.props.showNotification(
-      <Text id="MyAddressesModal.RescanSuccess" />,
+      _`Rescanned successfully`,
       'success'
     );
   };
@@ -59,7 +59,7 @@ class RescanButton extends React.Component {
       <Tooltip.Trigger
         tooltip={
           !rescanning &&
-          this.props.tooltip && <Text id="MyAddressesModal.RescanTooltip" />
+          this.props.tooltip && _`Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.`
         }
       >
         <Button
@@ -68,9 +68,9 @@ class RescanButton extends React.Component {
           style={{ height: consts.inputHeightEm + 'em' }}
         >
           {rescanning ? (
-            <Text id="MyAddressesModal.Rescanning" />
+            _`Rescanning...`
           ) : (
-            <Text id="MyAddressesModal.Rescan" />
+            _`Rescan wallet`
           )}
         </Button>
       </Tooltip.Trigger>

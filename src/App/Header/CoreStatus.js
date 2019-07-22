@@ -30,10 +30,10 @@ class CoreStatus extends React.Component {
       !coreConnected && (
         <span className="dim">
           {manualDaemon ? (
-            <Text id="Alert.ManualDaemonDown" />
+            _`Manual Core is disconnected`
           ) : autoConnect ? (
             <>
-              <Text id="Alert.DaemonLoadingWait" />
+              _`Connecting to Nexus Core`
               ...
             </>
           ) : (

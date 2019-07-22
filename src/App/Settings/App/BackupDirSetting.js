@@ -60,7 +60,7 @@ class SettingsApp extends Component {
    */
   render() {
     return (
-      <SettingsField connectLabel label={<Text id="Settings.BackupDir" />}>
+      <SettingsField connectLabel label={_`Backup directory`}>
         {inputId => (
           <div className="flex stretch">
             <TextField
@@ -74,7 +74,7 @@ class SettingsApp extends Component {
               onClick={this.browseBackupDir}
               style={{ marginLeft: '1em' }}
             >
-              <Text id="Settings.Browse" />
+              _`Browse`
             </Button>
           </div>
         )}

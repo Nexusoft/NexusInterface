@@ -46,10 +46,10 @@ const ImportPrivKeyForm = styled.form({
   validate: ({ accountName, privateKey }) => {
     const errors = {};
     if (!accountName) {
-      errors.accountName = <Text id="Settings.Errors.AccountName" />;
+      errors.accountName = _`Account name is required`;
     }
     if (!privateKey) {
-      errors.privateKey = <Text id="Settings.Errors.PrivateKey" />;
+      errors.privateKey = _`Private key is required`;
     }
     return errors;
   },
@@ -58,20 +58,20 @@ const ImportPrivKeyForm = styled.form({
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
     props.openSuccessDialog({
-      message: <Text id="Settings.PrivKeyImported" />,
+      message: _`Private key imported. Rescanning now`,
     });
-    props.showNotification(<Text id="Settings.Rescanning" />);
+    props.showNotification(_`Rescanning...`);
     try {
       await rpc('rescan', []);
-      props.showNotification(<Text id="Settings.RescanningDone" />, 'success');
+      props.showNotification(_`Rescanning done`, 'success');
     } catch (err) {
       props.openErrorDialog({
-        message: <Text id="Settings.Errors.Rescanning" />,
-        note: (err && err.message) || <Text id="Common.UnknownError" />,
+        message: _`Error rescanning`,
+        note: (err && err.message) || _`An unknown error occurred`,
       });
     }
   },
-  onSubmitFail: rpcErrorHandler(<Text id="Settings.Errors.ImportingPrivKey" />),
+  onSubmitFail: rpcErrorHandler(_`Error importing private key`),
 })
 class ImportPrivKey extends Component {
   /**
@@ -84,12 +84,12 @@ class ImportPrivKey extends Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <ImportPrivKeyForm onSubmit={handleSubmit}>
-        <FieldSet legend={<Text id="Settings.ImportPrivateKey" />}>
+        <FieldSet legend={_`Import private key`}>
           <Text id="Settings.AccountName">
             {An => (
               <FormField
                 connectLabel
-                label={<Text id="Settings.AccountName" />}
+                label={_`Account name`}
               >
                 <Field
                   component={TextField.RF}
@@ -103,7 +103,7 @@ class ImportPrivKey extends Component {
           </Text>
           <Text id="Settings.PrivateKey">
             {pk => (
-              <FormField connectLabel label={<Text id="Settings.PrivateKey" />}>
+              <FormField connectLabel label={_`Private key`}>
                 <Field
                   component={TextField.RF}
                   name="privateKey"
@@ -122,7 +122,7 @@ class ImportPrivKey extends Component {
             waiting={submitting}
             style={{ marginTop: '2em' }}
           >
-            <Text id="Settings.Import" />
+            _`Import`
           </Button>
         </FieldSet>
       </ImportPrivKeyForm>

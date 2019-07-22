@@ -59,7 +59,7 @@ export default class RawAddress extends React.Component {
   copyAddress = () => {
     clipboard.writeText(this.props.address);
     this.inputRef.current.select();
-    this.props.showNotification(<Text id="Alert.AddressCopied" />, 'success');
+    this.props.showNotification(_`Address has been copied to clipboard`, 'success');
   };
 
   /**

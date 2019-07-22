@@ -104,7 +104,7 @@ class ThemePicker extends Component {
             this.props.darkCallback();
           }}
         >
-          <Text id="Settings.DarkTheme" />
+          _`Dark`
         </OptionButton>
         <OptionButton
           selected={this.state.themeOn == 1 ? true : false}
@@ -116,7 +116,7 @@ class ThemePicker extends Component {
             this.props.lightCallback();
           }}
         >
-          <Text id="Settings.LightTheme" />
+          _`Light`
         </OptionButton>
         <OptionButton
           selected={this.state.themeOn == 2 ? true : false}
@@ -125,7 +125,7 @@ class ThemePicker extends Component {
             this.props.customCallback();
           }}
         >
-          <Text id="Settings.CustomTheme" />
+          _`Custom`
         </OptionButton>
         <OptionButton
           selected={this.state.themeOn == 3 ? true : false}
@@ -137,7 +137,7 @@ class ThemePicker extends Component {
             this.props.resetCallback();
           }}
         >
-          <Text id="Settings.ResetTheme" />
+          _`Reset`
         </OptionButton>
       </div>
     );

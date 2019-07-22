@@ -34,7 +34,7 @@ class SettingsMarket extends Component {
    *
    */
   feedback() {
-    this.props.showNotification(<Text id="Alert.SettingsSaved" />, 'success');
+    this.props.showNotification(_`Settings saved`, 'success');
   }
   // Mandatory React method
   /**

@@ -83,54 +83,54 @@ class TransactionDetailsModal extends Component {
             {tx.confirmations <= settings.minConfirmations && (
               <div>
                 <a>
-                  <Text id="transactions.PENDINGTR" />
+                  _`PENDING TRANSACTION`
                 </a>
               </div>
             )}
 
             <div key="modal_amount" className="detailCat">
-              <Text id="transactions.AMOUNT" />
+              _`Amount: `
               <span className="TXdetails">{tx.amount}</span>
             </div>
 
             {(tx.category === 'debit' || tx.category === 'send') && (
               <div key="modal_fee" className="detailCat">
-                <Text id="transactions.fee" />:
+                _`Fee`:
                 <span className="TXdetails">{highlightedTxFee}</span>
               </div>
             )}
 
             <div key="modal_time" className="detailCat">
-              <Text id="transactions.TIME" />
+              _`Time: `
               <span className="TXdetails">
                 {new Date(tx.time * 1000).toLocaleString(settings.locale)}
               </span>
             </div>
 
             <div key="modal_Account" className="detailCat">
-              <Text id="AddressBook.Account" />:
+              _`Account`:
               <span className="TXdetails">{tx.account}</span>
             </div>
 
             <div key="modal_Confirms" className="detailCat">
-              <Text id="transactions.confirmations" />:
+              _`Confirmations`:
               <span className="TXdetails">{tx.confirmations}</span>
             </div>
 
             <div key="modal_TXID">
-              <Text id="transactions.TX" />:
+              _`TX Number`:
               <div className="blockHash" style={{ wordWrap: 'break-word' }}>
                 <span>{tx.txid}</span>
               </div>
             </div>
 
             <div key="modal_BlockNumber" className="detailCat">
-              <Text id="transactions.blocknumber" />:
+              _`Block Number`:
               <span className="TXdetails">{highlightedBlockNum}</span>
             </div>
 
             <div key="modal_BlockHash">
-              <Text id="transactions.blockhash" />:
+              _`Block Hash`:
               <div className="blockHash" style={{ wordWrap: 'break-word' }}>
                 <span>{highlightedBlockHash}</span>
               </div>

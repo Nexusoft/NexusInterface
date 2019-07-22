@@ -142,7 +142,7 @@ class LanguageSetting extends Component {
    */
   render() {
     return (
-      <SettingsField label={<Text id="Settings.Language" />}>
+      <SettingsField label={_`Language`}>
         <Select
           options={languages}
           value={this.props.locale}

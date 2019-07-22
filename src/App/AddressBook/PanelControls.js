@@ -166,7 +166,7 @@ class PanelControls extends Component {
     return (
       <div className="flex center">
         {this.props.connections !== undefined && (
-          <Tooltip.Trigger tooltip={<Text id="AddressBook.MyAddresses" />}>
+          <Tooltip.Trigger tooltip={_`My Addresses`}>
             <Button
               skin="plain"
               className="relative"
@@ -178,7 +178,7 @@ class PanelControls extends Component {
         )}
 
         {this.props.connections !== undefined && (
-          <Tooltip.Trigger tooltip={<Text id="AddressBook.NewContact" />}>
+          <Tooltip.Trigger tooltip={_`New contact`}>
             <Button
               skin="plain"
               className="relative"
@@ -189,7 +189,7 @@ class PanelControls extends Component {
           </Tooltip.Trigger>
         )}
 
-        <Tooltip.Trigger tooltip={<Text id="AddressBook.Export" />}>
+        <Tooltip.Trigger tooltip={_`Export contacts`}>
           <Button
             skin="plain"
             className="relative"
