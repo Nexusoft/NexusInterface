@@ -36,9 +36,7 @@ function validateAddresses(addresses) {
   (addresses || []).forEach(({ address }, i) => {
     const addressErrors = {};
     if (!address) {
-      addressErrors.address = (
-        _('Invalid address')
-      );
+      addressErrors.address = _('Invalid address');
     }
     if (Object.keys(addressErrors).length) {
       addressesErrors[i] = addressErrors;
@@ -156,10 +154,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     props.destroy();
     props.closeModal();
     if (props.edit) {
-      props.showNotification(
-        _('Contact has been updated'),
-        'success'
-      );
+      props.showNotification(_('Contact has been updated'), 'success');
     } else {
       props.showNotification(
         _('New contact has been added to address book'),
@@ -224,10 +219,7 @@ class AddEditContactForm extends Component {
         <div className="mt2">
           <Text id="AddEditContact.EmailPlaceholder">
             {text => (
-              <FormField
-                connectLabel
-                label={_('Email Address')}
-              >
+              <FormField connectLabel label={_('Email Address')}>
                 <Field
                   name="email"
                   component={TextField.RF}
@@ -240,10 +232,7 @@ class AddEditContactForm extends Component {
 
           <Text id="AddEditContact.PhonePlaceholder">
             {text => (
-              <FormField
-                connectLabel
-                label={_('Phone Number')}
-              >
+              <FormField connectLabel label={_('Phone Number')}>
                 <Field
                   name="phoneNumber"
                   component={TextField.RF}
@@ -264,10 +253,7 @@ class AddEditContactForm extends Component {
 
           <Text id="AddEditContact.NotesPlaceholder">
             {text => (
-              <FormField
-                connectLabel
-                label={_('Notes')}
-              >
+              <FormField connectLabel label={_('Notes')}>
                 <Field
                   name="notes"
                   component={TextField.RF}
@@ -282,23 +268,17 @@ class AddEditContactForm extends Component {
 
         <div className="mt2 flex space-between" style={{ marginBottom: '1em' }}>
           <div>
-            <Button onClick={closeModal}>
-              _('Cancel')
-            </Button>
+            <Button onClick={closeModal}>{_('Cancel')}</Button>
             <Button
               onClick={reset}
               disabled={pristine}
               style={{ marginLeft: '1em' }}
             >
-              _('Reset')
+              {_('Reset')}
             </Button>
           </div>
           <Button skin="primary" type="submit" disabled={submitting}>
-            {edit ? (
-              _('Save changes')
-            ) : (
-              _('Create')
-            )}
+            {edit ? _('Save changes') : _('Create')}
           </Button>
         </div>
       </form>

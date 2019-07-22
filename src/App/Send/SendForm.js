@@ -187,9 +187,7 @@ const mapDispatchToProps = {
       message: _('Transaction sent'),
     });
   },
-  onSubmitFail: rpcErrorHandler(
-    _('Error sending NXS')
-  ),
+  onSubmitFail: rpcErrorHandler(_('Error sending NXS')),
 })
 class SendForm extends Component {
   /**
@@ -258,7 +256,7 @@ class SendForm extends Component {
   renderAddRecipientButton = ({ fields }) =>
     fields.length === 1 ? (
       <Button onClick={this.addRecipient}>
-        _('Send To multiple recipients')
+        {_('Send To multiple recipients')}
       </Button>
     ) : (
       <div />
@@ -313,7 +311,7 @@ class SendForm extends Component {
 
           <Button type="submit" skin="primary">
             <Icon icon={sendIcon} className="space-right" />
-            _('Send')
+            {_('Send')}
           </Button>
         </SendFormButtons>
       </SendFormComponent>

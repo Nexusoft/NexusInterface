@@ -2060,7 +2060,7 @@ class Transactions extends Component {
       >
         {this.props.connections === undefined ? (
           <WaitingMessage>
-            _('Connecting to Nexus Core')
+            {_('Connecting to Nexus Core')}
             ...
           </WaitingMessage>
         ) : (
@@ -2101,10 +2101,7 @@ class Transactions extends Component {
               <div style={{ fontSize: '75%' }}>Show Transaction Chart</div>
             )}
             <Filters>
-              <FormField
-                connectLabel
-                label={_('Search Address')}
-              >
+              <FormField connectLabel label={_('Search Address')}>
                 <TextField
                   inputProps={{
                     type: 'search',
@@ -2124,10 +2121,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField
-                connectLabel
-                label={_('Min amount')}
-              >
+              <FormField connectLabel label={_('Min amount')}>
                 <TextField
                   type="number"
                   min="0"

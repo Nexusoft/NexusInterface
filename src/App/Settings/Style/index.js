@@ -296,10 +296,7 @@ class SettingsStyle extends Component {
             console.error(err);
             this.props.showNotification(err, 'error');
           }
-          this.props.showNotification(
-            _('Theme exported'),
-            'success'
-          );
+          this.props.showNotification(_('Theme exported'), 'success');
         });
       }
     );
@@ -395,10 +392,10 @@ class SettingsStyle extends Component {
           label={_('Render globe')}
           subLabel={
             <div>
-              _('Render the globe on the Overview page.')
+              {_('Render the globe on the Overview page.')}
               {!webGLAvailable && (
                 <div className="error">
-                  _('Your computer does not support OPENGL 2.0')
+                  {_('Your computer does not support OPENGL 2.0')}
                 </div>
               )}
             </div>
@@ -499,13 +496,13 @@ class SettingsStyle extends Component {
 
         <div style={{ marginTop: '2em' }}>
           <Button onClick={this.openPickThemeFileDialog}>
-            _('Import custom theme')
+            {_('Import custom theme')}
           </Button>
           <Button
             style={{ marginLeft: '1em' }}
             onClick={this.exportThemeFileDialog}
           >
-            _('Export custom theme')
+            {_('Export custom theme')}
           </Button>
         </div>
       </SettingsContainer>

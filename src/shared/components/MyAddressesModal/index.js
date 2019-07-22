@@ -69,16 +69,10 @@ class MyAddressesModal extends React.Component {
       await rpc('checkwallet', []);
     } catch (err) {
       console.log(err);
-      this.props.showNotification(
-        _('Check wallet failed'),
-        'error'
-      );
+      this.props.showNotification(_('Check wallet failed'), 'error');
       return;
     }
-    this.props.showNotification(
-      _('Check wallet pass'),
-      'success'
-    );
+    this.props.showNotification(_('Check wallet pass'), 'success');
   };
 
   /**
@@ -137,9 +131,7 @@ class MyAddressesModal extends React.Component {
               onChange={this.handleChange}
               style={{ width: 300 }}
             />
-            <Tooltip.Trigger
-              tooltip={_('Check wallet\'s integerty')}
-            >
+            <Tooltip.Trigger tooltip={_("Check wallet's integerty")}>
               <Button fitHeight onClick={this.checkwallet}>
                 {_('Check wallet')}
               </Button>
@@ -159,7 +151,7 @@ class MyAddressesModal extends React.Component {
             <Buttons>
               <Button onClick={this.startCreating}>
                 <Icon icon={plusIcon} className="space-right" />
-                _('Create new address')
+                {_('Create new address')}
               </Button>
             </Buttons>
           )}

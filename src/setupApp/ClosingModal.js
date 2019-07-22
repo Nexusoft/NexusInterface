@@ -45,9 +45,7 @@ const ClosingMessage = styled.div(({ theme }) => ({
 const ClosingModal = () => (
   <ClosingModalComponent fullScreen>
     <ModalBody>
-      <ClosingMessage>
-        _('Closing Nexus Wallet')
-      </ClosingMessage>
+      <ClosingMessage>{_('Closing Nexus Wallet')}</ClosingMessage>
     </ModalBody>
   </ClosingModalComponent>
 );

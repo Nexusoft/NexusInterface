@@ -91,7 +91,7 @@ class RecipientField extends Component {
         label={
           <>
             <span>
-              _('Send to')
+              {_('Send to')}
               &nbsp;&nbsp;
             </span>
             <RecipientName>{recipientName}</RecipientName>
@@ -110,14 +110,14 @@ class RecipientField extends Component {
           emptyFiller={
             suggestions.length === 0 && (
               <EmptyMessage>
-                _('Your address book is empty.')
+                {_('Your address book is empty.')}
                 <Button as="a" skin="hyperlink" onClick={this.createContact}>
                   <Icon
                     icon={plusIcon}
                     className="space-right"
                     style={{ fontSize: '.8em' }}
                   />
-                  _('Create new contact')
+                  {_('Create new contact')}
                 </Button>
               </EmptyMessage>
             )

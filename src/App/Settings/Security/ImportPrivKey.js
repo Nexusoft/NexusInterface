@@ -87,10 +87,7 @@ class ImportPrivKey extends Component {
         <FieldSet legend={_('Import private key')}>
           <Text id="Settings.AccountName">
             {An => (
-              <FormField
-                connectLabel
-                label={_('Account name')}
-              >
+              <FormField connectLabel label={_('Account name')}>
                 <Field
                   component={TextField.RF}
                   name="accountName"
@@ -122,7 +119,7 @@ class ImportPrivKey extends Component {
             waiting={submitting}
             style={{ marginTop: '2em' }}
           >
-            _('Import')
+            {_('Import')}
           </Button>
         </FieldSet>
       </ImportPrivKeyForm>

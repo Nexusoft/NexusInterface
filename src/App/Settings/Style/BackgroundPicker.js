@@ -79,19 +79,19 @@ class BackgroundPicker extends Component {
           selected={!wallpaper && defaultStyle.startsWith('Dark')}
           style={{ display: 'inline', marginBottom: '.5em' }}
         >
-          _('Twinkling stars')
+          {_('Twinkling stars')}
         </Option>
         <Option
           onClick={() => this.setDefault('Light')}
           selected={!wallpaper && defaultStyle.startsWith('Light')}
           style={{ display: 'inline', marginBottom: '.5em' }}
         >
-          _('Cosmic light')
+          {_('Cosmic light')}
         </Option>
         <Option htmlFor={this.fileInputID} selected={!!wallpaper}>
           {wallpaper ? (
             <span>
-              _('Custom wallpaper'): {wallpaper}
+              {_('Custom wallpaper')}: {wallpaper}
             </span>
           ) : (
             _('Select a custom wallpaper')

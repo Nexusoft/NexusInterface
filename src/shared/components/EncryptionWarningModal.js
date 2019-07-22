@@ -59,18 +59,18 @@ class EncryptionWarningModal extends React.Component {
         <Modal.Body style={{ fontSize: 18 }}>
           <WarningIcon icon={warningIcon} />
           <WarningMessage>
-            _('Your wallet is not encrypted!')
+            _({'Your wallet is not encrypted!')}
           </WarningMessage>
           <p>
-            _('You really should encrypt your wallet to keep your NXS safe.')
+            {_('You really should encrypt your wallet to keep your NXS safe.')}
           </p>
           <br />
           <div className="flex space-between">
             <Button skin="danger" onClick={this.ignore}>
-              _('Ignore')
+              {_('Ignore')}
             </Button>
             <Button skin="primary" onClick={this.goToSecuritySettings}>
-              _('Take me there')
+              {_('Take me there')}
             </Button>
           </div>
         </Modal.Body>

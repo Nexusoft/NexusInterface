@@ -217,36 +217,25 @@ class Market extends Component {
             verticalAlign: 'middle',
           }}
         >
-          <b>
-            _('24hr Change')
-          </b>
+          <b>{_('24hr Change')}</b>
         </div>
         <OneDay>
           <div>
-            <b>
-              _('High'):{' '}
-            </b>
+            <b>{_('High')}: </b>
             {this.props[exchangeName].info24hr.high}
             {' BTC '}
           </div>
           <div>
-            <b>
-              _('Price Change'):{' '}
-            </b>
+            <b>{_('Price Change')}: </b>
             {this.props[exchangeName].info24hr.change}
             {' %'}
           </div>
           <div>
-            <b>
-              _('Low'):{' '}
-            </b>{' '}
-            {this.props[exchangeName].info24hr.low}
+            <b>{_('Low')}: </b> {this.props[exchangeName].info24hr.low}
             {' BTC '}
           </div>
           <div>
-            <b>
-              _('Volume'):{' '}
-            </b>
+            <b>{_('Volume')}: </b>
             {this.props[exchangeName].info24hr.volume}
             {' NXS '}
           </div>

@@ -56,7 +56,9 @@ const Characters = styled.span({
       errors.password = _('Password is required');
     }
     if (passwordInvalidChars.test(password)) {
-      errors.password = _('Password cannot contain these characters: - $ / & * | < >');
+      errors.password = _(
+        'Password cannot contain these characters: - $ / & * | < >'
+      );
     } else if (!password || password.length < 8) {
       errors.password = _('Password must be at least 8 characters');
     } else if (password !== password.trim()) {
@@ -94,7 +96,7 @@ class EncryptWallet extends Component {
       <EncryptWalletForm onSubmit={handleSubmit}>
         <FieldSet legend={_('Encrypt wallet')}>
           <Note>
-            _('Password cannot contain these characters')
+            {_('Password cannot contain these characters')}
             :<br />
             <Characters>{' -$/&*|<>'}</Characters>
           </Note>
@@ -131,7 +133,7 @@ class EncryptWallet extends Component {
             waiting={submitting}
             style={{ marginTop: '2em' }}
           >
-            _('Encrypt and restart')
+            {_('Encrypt and restart')}
           </Button>
         </FieldSet>
       </EncryptWalletForm>

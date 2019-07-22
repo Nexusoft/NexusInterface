@@ -94,9 +94,7 @@ class Send extends Component {
         title={_('Send NXS')}
         controls={
           this.props.connections !== undefined && (
-            <Tooltip.Trigger
-              tooltip={_('Move NXS between accounts')}
-            >
+            <Tooltip.Trigger tooltip={_('Move NXS between accounts')}>
               <Button
                 square
                 skin="primary"
@@ -111,7 +109,7 @@ class Send extends Component {
       >
         {!true || this.props.connections === undefined ? (
           <WaitingMessage>
-            _('Connecting to Nexus Core')
+            {_('Connecting to Nexus Core')}
             ...
           </WaitingMessage>
         ) : (

@@ -54,7 +54,9 @@ const ChangePasswordComponent = styled.form({
       errors.password = _('Password is required');
     }
     if (passwordInvalidChars.test(newPassword)) {
-      errors.newPassword = _('Password cannot contain these characters: - $ / & * | < >');
+      errors.newPassword = _(
+        'Password cannot contain these characters: - $ / & * | < >'
+      );
     } else if (!newPassword || newPassword.length < 8) {
       errors.newPassword = _('Password must be at least 8 characters');
     } else if (newPassword !== newPassword.trim()) {
@@ -112,10 +114,7 @@ class ChangePassword extends Component {
         <FieldSet legend={_('Change password')}>
           <Text id="Settings.Password">
             {p => (
-              <FormField
-                connectLabel
-                label={_('Previous password')}
-              >
+              <FormField connectLabel label={_('Previous password')}>
                 <Field
                   component={TextField.RF}
                   name="password"
@@ -127,10 +126,7 @@ class ChangePassword extends Component {
           </Text>
           <Text id="Settings.NewPassword">
             {np => (
-              <FormField
-                connectLabel
-                label={_('New password')}
-              >
+              <FormField connectLabel label={_('New password')}>
                 <Field
                   component={TextField.RF}
                   name="newPassword"
@@ -142,10 +138,7 @@ class ChangePassword extends Component {
           </Text>
           <Text id="Settings.ConfirmPassword">
             {placeholder => (
-              <FormField
-                connectLabel
-                label={_('Re-enter password:')}
-              >
+              <FormField connectLabel label={_('Re-enter password:')}>
                 <Field
                   component={TextField.RF}
                   name="newPasswordRepeat"
@@ -163,12 +156,12 @@ class ChangePassword extends Component {
             disabled={submitting}
             style={{ marginTop: '2em' }}
           >
-            _('Change password')
+            {_('Change password')}
           </Button>
         </FieldSet>
 
         <Button wide onClick={this.confirmLogout}>
-          _('Log out')
+          {_('Log out')}
         </Button>
       </ChangePasswordComponent>
     );

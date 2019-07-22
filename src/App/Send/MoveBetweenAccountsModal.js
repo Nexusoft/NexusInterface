@@ -161,7 +161,9 @@ class MoveBetweenAccountsForm extends Component {
         note: (
           <>
             <p>
-              _('You need to log in to your wallet before sending transactions')
+              {_(
+                'You need to log in to your wallet before sending transactions'
+              )}
             </p>
             <Link
               to="/Settings/Security"
@@ -170,7 +172,7 @@ class MoveBetweenAccountsForm extends Component {
                 this.props.closeModal();
               }}
             >
-              _('Log in now')
+              {_('Log in now')}
             </Link>
           </>
         ),
@@ -194,9 +196,7 @@ class MoveBetweenAccountsForm extends Component {
     return (
       <form onSubmit={this.confirmMove}>
         <AccountSelectors>
-          <Label>
-            _('From account')
-          </Label>
+          <Label>{_('From account')}</Label>
           <Field
             component={Select.RF}
             name="moveFrom"
@@ -204,9 +204,7 @@ class MoveBetweenAccountsForm extends Component {
             placeholder={_('Select an account')}
           />
 
-          <Label>
-            _('To account')
-          </Label>
+          <Label>{_('To account')}</Label>
           <Field
             component={Select.RF}
             name="moveTo"
@@ -219,7 +217,7 @@ class MoveBetweenAccountsForm extends Component {
 
         <Buttons>
           <Button skin="primary" type="submit" disabled={this.props.submitting}>
-            _('Move NXS')
+            {_('Move NXS')}
           </Button>
         </Buttons>
       </form>
@@ -237,9 +235,7 @@ const MoveBetweenAccountsModal = () => (
   <Modal style={{ maxWidth: 650 }}>
     {closeModal => (
       <>
-        <Modal.Header>
-          _('Move NXS between accounts')
-        </Modal.Header>
+        <Modal.Header>{_('Move NXS between accounts')}</Modal.Header>
 
         <Modal.Body>
           <MoveBetweenAccountsForm closeModal={closeModal} />

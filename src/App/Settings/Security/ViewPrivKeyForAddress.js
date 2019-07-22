@@ -128,7 +128,7 @@ class ViewPrivKeyForAddress extends Component {
                   disabled={submitting}
                   waiting={submitting}
                 >
-                  _('View private key')
+                  {_('View private key')}
                 </Button>
               </InputGroup>
             )}
@@ -150,7 +150,7 @@ class ViewPrivKeyForAddress extends Component {
               </Text>
               <Button fitHeight className="relative" onClick={this.copyPrivkey}>
                 <Icon icon={copyIcon} className="space-right" />
-                _('Copy')
+                {_('Copy')}
               </Button>
             </InputGroup>
           </FormField>

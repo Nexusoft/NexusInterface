@@ -49,7 +49,7 @@ class SettingsSecurity extends React.Component {
     if (connections === undefined) {
       return (
         <WaitingMessage>
-          _('Connecting to Nexus Core')
+          {_('Connecting to Nexus Core')}
           ...
         </WaitingMessage>
       );

@@ -118,9 +118,7 @@ class AddressBook extends Component {
           </AddressBookLayout>
         ) : (
           <div style={{ marginTop: 50, textAlign: 'center' }}>
-            <div className="dim">
-              _('Your address book is empty')
-            </div>
+            <div className="dim">{_('Your address book is empty')}</div>
             {connections !== undefined && (
               <Button
                 skin="plain"
@@ -128,7 +126,7 @@ class AddressBook extends Component {
                 className="mt1"
               >
                 <Icon icon={addContactIcon} className="space-right" />
-                _('Create new contact')
+                {_('Create new contact')}
               </Button>
             )}
           </div>

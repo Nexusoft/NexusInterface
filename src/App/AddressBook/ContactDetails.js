@@ -75,11 +75,7 @@ const Field = ({ label, content }) => (
   <div className="flex mt1">
     <FieldLabel>{label}</FieldLabel>
     <FieldContent>
-      {content || (
-        <span className="dim">
-          _('No information')
-        </span>
-      )}
+      {content || <span className="dim">{_('No information')}</span>}
     </FieldContent>
   </div>
 );
@@ -201,9 +197,7 @@ class ContactDetails extends React.Component {
           )}
         </Header>
 
-        <SectionHeader>
-          _('NXS addresses')
-        </SectionHeader>
+        <SectionHeader>{_('NXS addresses')}</SectionHeader>
 
         {contact.addresses.map(({ address, label, isMine }, i) => (
           <NexusAddress
@@ -226,9 +220,7 @@ class ContactDetails extends React.Component {
           />
         ))}
 
-        <SectionHeader>
-          _('Contact info')
-        </SectionHeader>
+        <SectionHeader>{_('Contact info')}</SectionHeader>
 
         <Field
           label={_('Email')}
@@ -240,18 +232,12 @@ class ContactDetails extends React.Component {
             )
           }
         />
-        <Field
-          label={_('Phone Number')}
-          content={contact.phoneNumber}
-        />
+        <Field label={_('Phone Number')} content={contact.phoneNumber} />
         <Field
           label={_('Local Time')}
           content={tz && `${getLocalTime(tz.value)} (${tz.offset})`}
         />
-        <Field
-          label={_('Notes')}
-          content={contact.notes}
-        />
+        <Field label={_('Notes')} content={contact.notes} />
       </ContactDetailsComponent>
     );
   }

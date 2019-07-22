@@ -97,8 +97,7 @@ class LogInStatus extends Component {
       if (!unlocked_until) {
         return (
           <>
-            _('Logged in'){' '}
-            {!!minting_only && _('for staking only')}
+            {_('Logged in')} {!!minting_only && _('for staking only')}
           </>
         );
       } else {

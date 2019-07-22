@@ -75,27 +75,19 @@ const actionCreators = {
     const errors = {};
     if (props.settings.manualDaemon) {
       if (!manualDaemonUser) {
-        errors.manualDaemonUser = (
-          _('Manual Core username is required')
-        );
+        errors.manualDaemonUser = _('Manual Core username is required');
       }
       if (!manualDaemonPassword) {
-        errors.manualDaemonPassword = (
-          _('Manual Core password is required')
-        );
+        errors.manualDaemonPassword = _('Manual Core password is required');
       }
       if (!manualDaemonIP) {
         errors.manualDaemonIP = _('Manual Core IP is required');
       }
       if (!manualDaemonPort) {
-        errors.manualDaemonPort = (
-          _('Manual Core port is required')
-        );
+        errors.manualDaemonPort = _('Manual Core port is required');
       }
       if (!manualDaemonDataDir) {
-        errors.manualDaemonDataDir = (
-          _('Data directory is required')
-        );
+        errors.manualDaemonDataDir = _('Data directory is required');
       }
     }
     return errors;
@@ -224,7 +216,9 @@ class SettingsCore extends Component {
     let value = form.resolveValue(input);
     this.props.openConfirmDialog({
       question: _('Restart Core?'),
-      note: _('This setting change will only take effect after Core is restarted. Do you want to restart the Core now?'),
+      note: _(
+        'This setting change will only take effect after Core is restarted. Do you want to restart the Core now?'
+      ),
       labelYes: 'Restart now',
       labelNo: "I'll restart later",
       callbackYes: async () => {
@@ -245,7 +239,9 @@ class SettingsCore extends Component {
     let value = form.resolveValue(input);
     this.props.openConfirmDialog({
       question: _('Restart Core?'),
-      note: _('This setting change will only take effect after Core is restarted. Do you want to restart the Core now?'),
+      note: _(
+        'This setting change will only take effect after Core is restarted. Do you want to restart the Core now?'
+      ),
       labelYes: 'Restart now',
       labelNo: "I'll restart later",
       callbackYes: async () => {
@@ -310,7 +306,7 @@ class SettingsCore extends Component {
     if (connections === undefined && !settings.manualDaemon) {
       return (
         <WaitingMessage>
-          _('Connecting to Nexus Core')
+          {_('Connecting to Nexus Core')}
           ...
         </WaitingMessage>
       );
@@ -355,7 +351,9 @@ class SettingsCore extends Component {
           <SettingsField
             connectLabel
             label={_('Rescan wallet')}
-            subLabel={_('Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.')}
+            subLabel={_(
+              'Used to correct transaction/balance issues, scans over every block in the database. Could take up to 10 minutes.'
+            )}
           >
             <ReScanButton />
           </SettingsField>
@@ -378,7 +376,9 @@ class SettingsCore extends Component {
           <SettingsField
             connectLabel
             label={_('Manual Core mode')}
-            subLabel={_('Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.')}
+            subLabel={_(
+              'Enable manual Core mode if you are running the Nexus Core manually outside of the wallet.'
+            )}
           >
             <Switch
               checked={settings.manualDaemon}
@@ -466,9 +466,7 @@ class SettingsCore extends Component {
             */}
 
           <div className="flex space-between" style={{ marginTop: '2em' }}>
-            <Button onClick={this.restartCore}>
-              _('Restart Core')
-            </Button>
+            <Button onClick={this.restartCore}>{_('Restart Core')}</Button>
 
             {/* <Button
               type="submit"
