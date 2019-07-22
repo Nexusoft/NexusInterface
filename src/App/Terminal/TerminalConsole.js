@@ -323,39 +323,37 @@ class TerminalConsole extends Component {
         <TerminalContent>
           <Console>
             <ConsoleInput>
-              <Text id="Console.CommandsHere">
-                {cch => (
-                  <AutoSuggest
-                    suggestions={commandList}
-                    filterSuggestions={filterCommands}
-                    onSelect={this.formateAutoSuggest}
-                    keyControl={false}
-                    suggestOn="change"
-                    ref={c => (this.inputRef = c)}
-                    inputRef={this.inputRef}
-                    inputProps={{
-                      autoFocus: true,
-                      skin: 'filled-inverted',
-                      value: consoleInput,
-                      placeholder: cch,
-                      onChange: e => {
-                        updateConsoleInput(e.target.value);
-                      },
-                      onKeyDown: this.handleKeyDown,
-                      right: (
-                        <ExecuteButton
-                          skin="filled-inverted"
-                          fitHeight
-                          grouped="right"
-                          onClick={this.execute}
-                        >
-                          {_('Execute')}
-                        </ExecuteButton>
-                      ),
-                    }}
-                  />
-                )}
-              </Text>
+              <AutoSuggest
+                suggestions={commandList}
+                filterSuggestions={filterCommands}
+                onSelect={this.formateAutoSuggest}
+                keyControl={false}
+                suggestOn="change"
+                ref={c => (this.inputRef = c)}
+                inputRef={this.inputRef}
+                inputProps={{
+                  autoFocus: true,
+                  skin: 'filled-inverted',
+                  value: consoleInput,
+                  placeholder: _(
+                    'Enter console commands here (ex: getinfo, help)'
+                  ),
+                  onChange: e => {
+                    updateConsoleInput(e.target.value);
+                  },
+                  onKeyDown: this.handleKeyDown,
+                  right: (
+                    <ExecuteButton
+                      skin="filled-inverted"
+                      fitHeight
+                      grouped="right"
+                      onClick={this.execute}
+                    >
+                      {_('Execute')}
+                    </ExecuteButton>
+                  ),
+                }}
+              />
             </ConsoleInput>
 
             <ConsoleOutput ref={this.outputRef}>

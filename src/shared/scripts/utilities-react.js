@@ -47,54 +47,50 @@ export default class Table extends Component {
       ];
     }
     return (
-      <Text id="transactions.Rows">
-        {R => (
-          <ReactTable
-            className="-striped -highlight"
-            noDataText={_('No Rows Found')}
-            key="ReactTable"
-            data={data}
-            pageText={_('Page')}
-            columns={columns}
-            minRows={minRows}
-            defaultSorted={defaultsorting}
-            defaultPageSize={10}
-            rowsText={R}
-            previousText={_('Previous')}
-            nextText={_('Next')}
-            getTrProps={(state, rowInfo) => {
-              return {
-                onClick: e => {
-                  this.props.onMouseOverCallback(e, rowInfo);
-                  this.props.selectCallback(e, rowInfo);
-                  this.setState({
-                    selected: rowInfo.index,
-                  });
-                },
-                onContextMenu: e => {
-                  this.props.selectCallback(e, rowInfo);
-                },
-                onMouseDown: e => {
-                  this.props.onMouseOverCallback(e, rowInfo);
-                },
-                onMouseOver: e => {
-                  this.props.onMouseOverCallback(e, rowInfo);
-                },
-                onMouseOut: e => {
-                  this.props.onMouseOutCallback(e);
-                },
-              };
-            }}
-            style={{
-              overscrollBehavior: 'contain',
-              height: '400px',
-              '--colorPrimary': this.props.style.background,
-              '--colorAccent': this.props.style.primary,
-              '--colorSecondary': this.props.style.foreground,
-            }}
-          />
-        )}
-      </Text>
+      <ReactTable
+        className="-striped -highlight"
+        noDataText={_('No Rows Found')}
+        key="ReactTable"
+        data={data}
+        pageText={_('Page')}
+        columns={columns}
+        minRows={minRows}
+        defaultSorted={defaultsorting}
+        defaultPageSize={10}
+        rowsText={_('Rows')}
+        previousText={_('Previous')}
+        nextText={_('Next')}
+        getTrProps={(state, rowInfo) => {
+          return {
+            onClick: e => {
+              this.props.onMouseOverCallback(e, rowInfo);
+              this.props.selectCallback(e, rowInfo);
+              this.setState({
+                selected: rowInfo.index,
+              });
+            },
+            onContextMenu: e => {
+              this.props.selectCallback(e, rowInfo);
+            },
+            onMouseDown: e => {
+              this.props.onMouseOverCallback(e, rowInfo);
+            },
+            onMouseOver: e => {
+              this.props.onMouseOverCallback(e, rowInfo);
+            },
+            onMouseOut: e => {
+              this.props.onMouseOutCallback(e);
+            },
+          };
+        }}
+        style={{
+          overscrollBehavior: 'contain',
+          height: '400px',
+          '--colorPrimary': this.props.style.background,
+          '--colorAccent': this.props.style.primary,
+          '--colorSecondary': this.props.style.foreground,
+        }}
+      />
     );
   }
 }

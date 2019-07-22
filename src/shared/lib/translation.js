@@ -19,6 +19,10 @@ export function initializeTranslation(locale) {
   polyglot = new Polyglot({
     locale,
     phrases,
+    interpolation: {
+      prefix: '{',
+      suffix: '}',
+    },
   });
 }
 

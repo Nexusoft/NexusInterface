@@ -100,30 +100,22 @@ class EncryptWallet extends Component {
             :<br />
             <Characters>{' -$/&*|<>'}</Characters>
           </Note>
-          <Text id="Settings.NewPassword">
-            {p => (
-              <FormField connectLabel label={_('Password')}>
-                <Field
-                  component={TextField.RF}
-                  name="password"
-                  type="password"
-                  placeholder={p}
-                />
-              </FormField>
-            )}
-          </Text>
-          <Text id="Settings.ConfirmPassword">
-            {text => (
-              <FormField connectLabel label={_('Re-enter password')}>
-                <Field
-                  component={TextField.RF}
-                  name="passwordRepeat"
-                  type="password"
-                  placeholder={text}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={_('Password')}>
+            <Field
+              component={TextField.RF}
+              name="password"
+              type="password"
+              placeholder={_('New password')}
+            />
+          </FormField>
+          <FormField connectLabel label={_('Re-enter password')}>
+            <Field
+              component={TextField.RF}
+              name="passwordRepeat"
+              type="password"
+              placeholder={_('Confirm password')}
+            />
+          </FormField>
 
           <Button
             type="submit"

@@ -83,14 +83,13 @@ class Addresses extends React.Component {
   }
 
   renderFieldLabel = ({ input, ...rest }) => {
-    const id = this.props.isMine
+    return this.props.isMine
       ? input.value
-        ? 'AddEditContact.MyAddressFor'
-        : 'AddEditContact.MyAddress'
+        ? _('My Nexus address for {name}', { name: input.value })
+        : 'My Nexus address'
       : input.value
-      ? 'AddEditContact.TheirAddressWithName'
-      : 'AddEditContact.TheirAddress';
-    return <Text id={id} data={{ name: input.value || undefined }} {...rest} />;
+      ? _("{name}'s Nexus address", { name: input.value })
+      : 'Their Nexus address';
   };
 
   addNewAddress = () => {
@@ -111,9 +110,7 @@ class Addresses extends React.Component {
       <div className="mt2">
         {fields.map((fieldName, i) => (
           <NXSAddress key={i}>
-            <Tooltip.Trigger
-              tooltip={_('Remove address')}
-            >
+            <Tooltip.Trigger tooltip={_('Remove address')}>
               <RemoveButton
                 onClick={() => {
                   fields.remove(i);
@@ -139,15 +136,11 @@ class Addresses extends React.Component {
             </AddressWrapper>
 
             <LabelWrapper>
-              <Text id="AddEditContact.Label">
-                {text => (
-                  <Field
-                    name={`${fieldName}.label`}
-                    component={TextField.RF}
-                    placeholder={text}
-                  />
-                )}
-              </Text>
+              <Field
+                name={`${fieldName}.label`}
+                component={TextField.RF}
+                placeholder={_('Label (optional)')}
+              />
             </LabelWrapper>
           </NXSAddress>
         ))}

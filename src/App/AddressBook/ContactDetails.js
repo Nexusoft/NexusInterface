@@ -137,12 +137,7 @@ class ContactDetails extends React.Component {
    */
   confirmDelete = () => {
     this.props.openConfirmDialog({
-      question: (
-        <Text
-          id="AddressBook.DeleteQuestion"
-          data={{ name: this.props.contact.name }}
-        />
-      ),
+      question: _('Delete contact {name}?', { name: this.props.contact.name }),
       skinYes: 'danger',
       callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
@@ -206,14 +201,9 @@ class ContactDetails extends React.Component {
             label={
               label || (
                 <DefaultLabel>
-                  <Text
-                    id={
-                      isMine
-                        ? 'AddressBook.MyAddressFor'
-                        : 'AddressBook.TheirAddressWithName'
-                    }
-                    data={{ name: contact.name }}
-                  />
+                  {_(isMine ? 'My address for {name}' : "{name}'s Address", {
+                    name: contact.name,
+                  })}
                 </DefaultLabel>
               )
             }

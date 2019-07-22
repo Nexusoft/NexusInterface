@@ -54,16 +54,12 @@ class SearchBox extends Component {
    */
   render() {
     return (
-      <Text id="AddressBook.SearchContact">
-        {sc => (
-          <SearchInput
-            left={<Icon icon={searchIcon} className="space-right" />}
-            placeholder={sc}
-            value={this.props.searchQuery}
-            onChange={e => this.props.searchContact(e.target.value)}
-          />
-        )}
-      </Text>
+      <SearchInput
+        left={<Icon icon={searchIcon} className="space-right" />}
+        placeholder={_('Search contact')}
+        value={this.props.searchQuery}
+        onChange={e => this.props.searchContact(e.target.value)}
+      />
     );
   }
 }

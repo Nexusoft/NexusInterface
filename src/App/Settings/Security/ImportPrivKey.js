@@ -85,32 +85,24 @@ class ImportPrivKey extends Component {
     return (
       <ImportPrivKeyForm onSubmit={handleSubmit}>
         <FieldSet legend={_('Import private key')}>
-          <Text id="Settings.AccountName">
-            {An => (
-              <FormField connectLabel label={_('Account name')}>
-                <Field
-                  component={TextField.RF}
-                  name="accountName"
-                  type="Text"
-                  placeholder={An}
-                  normalize={trimText}
-                />
-              </FormField>
-            )}
-          </Text>
-          <Text id="Settings.PrivateKey">
-            {pk => (
-              <FormField connectLabel label={_('Private key')}>
-                <Field
-                  component={TextField.RF}
-                  name="privateKey"
-                  type="password"
-                  placeholder={pk}
-                  normalize={trimText}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={_('Account name')}>
+            <Field
+              component={TextField.RF}
+              name="accountName"
+              type="Text"
+              placeholder={_('Account name')}
+              normalize={trimText}
+            />
+          </FormField>
+          <FormField connectLabel label={_('Private key')}>
+            <Field
+              component={TextField.RF}
+              name="privateKey"
+              type="password"
+              placeholder={_('Private key')}
+              normalize={trimText}
+            />
+          </FormField>
           <Button
             type="submit"
             skin="primary"

@@ -197,18 +197,14 @@ class AddEditContactForm extends Component {
 
     return (
       <form onSubmit={handleSubmit}>
-        <Text id="AddEditContact.NamePlaceholder">
-          {text => (
-            <FormField connectLabel label={_('Name')}>
-              <Field
-                name="name"
-                component={TextField.RF}
-                placeholder={text}
-                inputRef={this.inputRef}
-              />
-            </FormField>
-          )}
-        </Text>
+        <FormField connectLabel label={_('Name')}>
+          <Field
+            name="name"
+            component={TextField.RF}
+            placeholder={_('Contact Name')}
+            inputRef={this.inputRef}
+          />
+        </FormField>
 
         <FieldArray name="notMine" component={Addresses} isMine={false} />
 
@@ -217,30 +213,22 @@ class AddEditContactForm extends Component {
         {error && <div className="error mt1">{error}</div>}
 
         <div className="mt2">
-          <Text id="AddEditContact.EmailPlaceholder">
-            {text => (
-              <FormField connectLabel label={_('Email Address')}>
-                <Field
-                  name="email"
-                  component={TextField.RF}
-                  type="email"
-                  placeholder={text}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={_('Email Address')}>
+            <Field
+              name="email"
+              component={TextField.RF}
+              type="email"
+              placeholder={_('Email address')}
+            />
+          </FormField>
 
-          <Text id="AddEditContact.PhonePlaceholder">
-            {text => (
-              <FormField connectLabel label={_('Phone Number')}>
-                <Field
-                  name="phoneNumber"
-                  component={TextField.RF}
-                  placeholder={text}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={_('Phone Number')}>
+            <Field
+              name="phoneNumber"
+              component={TextField.RF}
+              placeholder={_('Phone Number')}
+            />
+          </FormField>
 
           <FormField connectLabel label={_('Time Zone')}>
             <Field
@@ -251,19 +239,15 @@ class AddEditContactForm extends Component {
             />
           </FormField>
 
-          <Text id="AddEditContact.NotesPlaceholder">
-            {text => (
-              <FormField connectLabel label={_('Notes')}>
-                <Field
-                  name="notes"
-                  component={TextField.RF}
-                  placeholder={text}
-                  multiline
-                  rows={1}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={_('Notes')}>
+            <Field
+              name="notes"
+              component={TextField.RF}
+              placeholder={_('Notes')}
+              multiline
+              rows={1}
+            />
+          </FormField>
         </div>
 
         <div className="mt2 flex space-between" style={{ marginBottom: '1em' }}>

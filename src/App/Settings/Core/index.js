@@ -326,17 +326,6 @@ class SettingsCore extends Component {
             />
           </SettingsField>
 
-          {/* <div style={{ display: settings.enableMining ? 'block' : 'none' }}>
-            <SettingsFieldthis.updateHandlers('enableMining')
-              indent={1}
-              connectLabel
-              label={<Text id="Settings.IpWhitelist" />}
-              subLabel={<Text id="ToolTip.IpWhitelist" />}
-            >
-             { this.ipWhiteListFeild()}
-            </SettingsField>this.updateHandlers('enableStaking')
-          </div> */}
-
           <SettingsField
             connectLabel
             label={_('Enable staking')}

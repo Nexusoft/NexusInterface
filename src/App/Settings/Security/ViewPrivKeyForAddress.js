@@ -109,17 +109,13 @@ class ViewPrivKeyForAddress extends Component {
           <FormField connectLabel label={_('Address')}>
             {inputId => (
               <InputGroup>
-                <Text id="Settings.EnterAddressHere">
-                  {placeholder => (
-                    <Field
-                      component={TextField.RF}
-                      name="address"
-                      id={inputId}
-                      placeholder={placeholder}
-                      onChange={this.resetPrivateKey}
-                    />
-                  )}
-                </Text>
+                <Field
+                  component={TextField.RF}
+                  name="address"
+                  id={inputId}
+                  placeholder={_('Enter address here')}
+                  onChange={this.resetPrivateKey}
+                />
 
                 <Button
                   type="submit"
@@ -136,18 +132,14 @@ class ViewPrivKeyForAddress extends Component {
 
           <FormField label={_('Private key')}>
             <InputGroup>
-              <Text id="Settings.KeyDisplayHere">
-                {placeholder => (
-                  <Field
-                    component={TextField.RF}
-                    name="privateKey"
-                    readOnly
-                    type="password"
-                    placeholder={placeholder}
-                    ref={this.privKeyRef}
-                  />
-                )}
-              </Text>
+              <Field
+                component={TextField.RF}
+                name="privateKey"
+                readOnly
+                type="password"
+                placeholder={_('Private key will be displayed here')}
+                ref={this.privKeyRef}
+              />
               <Button fitHeight className="relative" onClick={this.copyPrivkey}>
                 <Icon icon={copyIcon} className="space-right" />
                 {_('Copy')}

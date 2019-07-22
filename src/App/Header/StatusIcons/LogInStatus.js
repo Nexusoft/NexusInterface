@@ -103,7 +103,7 @@ class LogInStatus extends Component {
       } else {
         return (
           <>
-            <Text id="Header.UnlockedUntil" data={{ unlockDate }} />{' '}
+            {_('Logged in until {unlockDate}', { unlockDate })}{' '}
             {!!minting_only && _('for staking only')}
           </>
         );

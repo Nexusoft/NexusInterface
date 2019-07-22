@@ -107,7 +107,9 @@ const Buttons = styled.div({
       ) {
         note = _('Incorrect passsword');
       } else if (submitError === 'value is type null, expected int') {
-        note = _('Unlock until date/time must be at least an hour in the future');
+        note = _(
+          'Unlock until date/time must be at least an hour in the future'
+        );
       }
       props.openErrorDialog({
         message: _('Error logging in'),
@@ -153,18 +155,14 @@ class Login extends Component {
       <div>
         <form onSubmit={handleSubmit}>
           <LoginFieldSet legend="Login">
-            <Text id="Settings.PasswordPlaceholder">
-              {text => (
-                <FormField connectLabel label={_('Password')}>
-                  <Field
-                    component={TextField.RF}
-                    name="password"
-                    type="password"
-                    placeholder={text}
-                  />
-                </FormField>
-              )}
-            </Text>
+            <FormField connectLabel label={_('Password')}>
+              <Field
+                component={TextField.RF}
+                name="password"
+                type="password"
+                placeholder={_('Your wallet password')}
+              />
+            </FormField>
             <FormField
               inline
               connectLabel

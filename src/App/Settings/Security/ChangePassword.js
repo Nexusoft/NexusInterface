@@ -112,42 +112,30 @@ class ChangePassword extends Component {
     return (
       <ChangePasswordComponent onSubmit={handleSubmit}>
         <FieldSet legend={_('Change password')}>
-          <Text id="Settings.Password">
-            {p => (
-              <FormField connectLabel label={_('Previous password')}>
-                <Field
-                  component={TextField.RF}
-                  name="password"
-                  type="password"
-                  placeholder={p}
-                />
-              </FormField>
-            )}
-          </Text>
-          <Text id="Settings.NewPassword">
-            {np => (
-              <FormField connectLabel label={_('New password')}>
-                <Field
-                  component={TextField.RF}
-                  name="newPassword"
-                  type="password"
-                  placeholder={np}
-                />
-              </FormField>
-            )}
-          </Text>
-          <Text id="Settings.ConfirmPassword">
-            {placeholder => (
-              <FormField connectLabel label={_('Re-enter password:')}>
-                <Field
-                  component={TextField.RF}
-                  name="newPasswordRepeat"
-                  type="password"
-                  placeholder={placeholder}
-                />
-              </FormField>
-            )}
-          </Text>
+          <FormField connectLabel label={_('Previous password')}>
+            <Field
+              component={TextField.RF}
+              name="password"
+              type="password"
+              placeholder={_('Password')}
+            />
+          </FormField>
+          <FormField connectLabel label={_('New password')}>
+            <Field
+              component={TextField.RF}
+              name="newPassword"
+              type="password"
+              placeholder={_('New password')}
+            />
+          </FormField>
+          <FormField connectLabel label={_('Re-enter password:')}>
+            <Field
+              component={TextField.RF}
+              name="newPasswordRepeat"
+              type="password"
+              placeholder={_('Confirm password')}
+            />
+          </FormField>
 
           <Button
             type="submit"

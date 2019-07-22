@@ -289,19 +289,15 @@ class SendForm extends Component {
           addRecipient={this.addRecipient}
         />
 
-        <Text id="sendReceive.EnterYourMessage">
-          {placeholder => (
-            <FormField connectLabel label={_('Message')}>
-              <Field
-                component={TextField.RF}
-                name="message"
-                multiline
-                rows={1}
-                placeholder={placeholder}
-              />
-            </FormField>
-          )}
-        </Text>
+        <FormField connectLabel label={_('Message')}>
+          <Field
+            component={TextField.RF}
+            name="message"
+            multiline
+            rows={1}
+            placeholder={_('Enter your message')}
+          />
+        </FormField>
 
         <SendFormButtons>
           <FieldArray
