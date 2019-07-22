@@ -46,7 +46,7 @@ const ClosingModal = () => (
   <ClosingModalComponent fullScreen>
     <ModalBody>
       <ClosingMessage>
-        _`Closing Nexus Wallet`
+        _('Closing Nexus Wallet')
       </ClosingMessage>
     </ModalBody>
   </ClosingModalComponent>

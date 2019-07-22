@@ -37,7 +37,7 @@ import { rpcErrorHandler } from 'utils/form';
   validate: ({ address }) => {
     const errors = {};
     if (!address) {
-      errors.address = _`Address cannot be empty`;
+      errors.address = _('Address cannot be empty');
     }
     return errors;
   },
@@ -45,7 +45,7 @@ import { rpcErrorHandler } from 'utils/form';
   onSubmitSuccess: (result, dispatch, props) => {
     props.change('privateKey', result);
   },
-  onSubmitFail: rpcErrorHandler(_`Error getting private key`),
+  onSubmitFail: rpcErrorHandler(_('Error getting private key')),
 })
 class ViewPrivKeyForAddress extends Component {
   privKeyRef = React.createRef();
@@ -83,7 +83,7 @@ class ViewPrivKeyForAddress extends Component {
   copyPrivkey = () => {
     const privKey = this.privKeyRef.current.value;
     clipboard.writeText(privKey);
-    this.props.showNotification(_`Copied to clipboard`, 'success');
+    this.props.showNotification(_('Copied to clipboard'), 'success');
   };
 
   /**
@@ -105,8 +105,8 @@ class ViewPrivKeyForAddress extends Component {
     const { handleSubmit, submitting } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <FieldSet legend={_`View private key for address`}>
-          <FormField connectLabel label={_`Address`}>
+        <FieldSet legend={_('View private key for address')}>
+          <FormField connectLabel label={_('Address')}>
             {inputId => (
               <InputGroup>
                 <Text id="Settings.EnterAddressHere">
@@ -128,13 +128,13 @@ class ViewPrivKeyForAddress extends Component {
                   disabled={submitting}
                   waiting={submitting}
                 >
-                  _`View private key`
+                  _('View private key')
                 </Button>
               </InputGroup>
             )}
           </FormField>
 
-          <FormField label={_`Private key`}>
+          <FormField label={_('Private key')}>
             <InputGroup>
               <Text id="Settings.KeyDisplayHere">
                 {placeholder => (
@@ -150,7 +150,7 @@ class ViewPrivKeyForAddress extends Component {
               </Text>
               <Button fitHeight className="relative" onClick={this.copyPrivkey}>
                 <Icon icon={copyIcon} className="space-right" />
-                _`Copy`
+                _('Copy')
               </Button>
             </InputGroup>
           </FormField>

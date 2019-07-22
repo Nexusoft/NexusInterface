@@ -1,26 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 
-const enContent = fs.readFileSync(
-  path.resolve(__dirname, '../../assets/languages/en.json')
-);
-const en = JSON.parse(enContent);
-
-const regex = /<Text\s+id="([^"]*)"\s*\/>/gm;
+const regex = /_`([^`]*)`/gm;
 
 function convertFile(filePath) {
   console.log('Converting file', filePath);
   const content = fs.readFileSync(filePath).toString();
-  const newContent = content.replace(regex, (oldText, id) => {
-    const translation = en[id];
-    if (!translation) {
-      console.log('Cannot find id', id);
-      return oldText;
-    } else {
-      console.log('Converted id', id);
-      return `_\`${translation}\``;
-    }
-  });
+  const newContent = content.replace(
+    regex,
+    (oldText, content) => `_('${content.replace(/'/gm, "\\'")}')`
+  );
   fs.writeFileSync(filePath, newContent);
 }
 

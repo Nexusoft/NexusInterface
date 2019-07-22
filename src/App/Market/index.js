@@ -218,34 +218,34 @@ class Market extends Component {
           }}
         >
           <b>
-            _`24hr Change`
+            _('24hr Change')
           </b>
         </div>
         <OneDay>
           <div>
             <b>
-              _`High`:{' '}
+              _('High'):{' '}
             </b>
             {this.props[exchangeName].info24hr.high}
             {' BTC '}
           </div>
           <div>
             <b>
-              _`Price Change`:{' '}
+              _('Price Change'):{' '}
             </b>
             {this.props[exchangeName].info24hr.change}
             {' %'}
           </div>
           <div>
             <b>
-              _`Low`:{' '}
+              _('Low'):{' '}
             </b>{' '}
             {this.props[exchangeName].info24hr.low}
             {' BTC '}
           </div>
           <div>
             <b>
-              _`Volume`:{' '}
+              _('Volume'):{' '}
             </b>
             {this.props[exchangeName].info24hr.volume}
             {' NXS '}
@@ -261,7 +261,7 @@ class Market extends Component {
    */
   refreshMarket() {
     this.refresher();
-    this.props.showNotification(_`Refreshing market data...`, 'success');
+    this.props.showNotification(_('Refreshing market data...'), 'success');
   }
 
   // Mandatory React method
@@ -275,14 +275,14 @@ class Market extends Component {
     return (
       <Panel
         controls={
-          <Tooltip.Trigger tooltip={_`Refresh`}>
+          <Tooltip.Trigger tooltip={_('Refresh')}>
             <Button square skin="primary" onClick={() => this.refreshMarket()}>
               <Icon icon={syncingIcon} />
             </Button>
           </Tooltip.Trigger>
         }
         icon={chartIcon}
-        title={_`Market Data`}
+        title={_('Market Data')}
       >
         {/* <div className="alertbox">{this.arbitageAlert()}</div> */}
 

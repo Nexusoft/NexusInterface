@@ -52,58 +52,58 @@ let tempaddpress = new Map();
 const categories = [
   {
     value: 'all',
-    display: _`All`,
+    display: _('All'),
   },
   {
     value: 'receive', // Should be made credit with tritium.
-    display: _`Receive`,
+    display: _('Receive'),
   },
   {
     value: 'debit',
-    display: _`Sent`,
+    display: _('Sent'),
   },
   {
     value: 'stake',
-    display: _`Stake`,
+    display: _('Stake'),
   },
   {
     value: 'generate',
-    display: _`Generate`,
+    display: _('Generate'),
   },
   {
     value: 'immature',
-    display: _`Immature`,
+    display: _('Immature'),
   },
   {
     value: 'orphan',
-    display: _`Orphan`,
+    display: _('Orphan'),
   },
   {
     value: 'genesis',
-    display: _`Genesis`,
+    display: _('Genesis'),
   },
   {
     value: 'trust',
-    display: _`Trust`,
+    display: _('Trust'),
   },
 ];
 
 const timeFrames = [
   {
     value: 'All',
-    display: _`All`,
+    display: _('All'),
   },
   {
     value: 'Year',
-    display: _`Past Year`,
+    display: _('Past Year'),
   },
   {
     value: 'Month',
-    display: _`Past Month`,
+    display: _('Past Month'),
   },
   {
     value: 'Week',
-    display: _`Past Week`,
+    display: _('Past Week'),
   },
 ];
 
@@ -1363,13 +1363,13 @@ class Transactions extends Component {
     let tempColumns = [];
 
     tempColumns.push({
-      Header: _`TX Number`,
+      Header: _('TX Number'),
       accessor: 'transactionnumber',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: _`Time span`,
+      Header: _('Time span'),
       id: 'time',
       Cell: d => (
         <div>
@@ -1385,47 +1385,47 @@ class Transactions extends Component {
       id: 'category',
       Cell: q => {
         if (q.value === 'debit' || q.value === 'send') {
-          return _`Sent`;
+          return _('Sent');
         } else if (q.value === 'credit' || q.value === 'receive') {
-          return _`Receive`;
+          return _('Receive');
         } else if (q.value === 'genesis') {
-          return _`Genesis`;
+          return _('Genesis');
         } else if (q.value === 'trust') {
-          return _`Trust`;
+          return _('Trust');
         } else if (q.value.endsWith('(Pending)')) {
-          return _`(Pending)`;
+          return _('(Pending)');
         } else if (q.value === 'generate') {
-          return _`Generate`;
+          return _('Generate');
         } else if (q.value === 'immature') {
-          return _`Immature`;
+          return _('Immature');
         } else if (q.value === 'stake') {
-          return _`Stake`;
+          return _('Stake');
         } else if ((q.value = 'orphan')) {
-          return _`Orphan`;
+          return _('Orphan');
         } else {
-          return _`Unknown`;
+          return _('Unknown');
         }
       },
-      Header: _`CATEGORY`,
+      Header: _('CATEGORY'),
       accessor: 'category',
 
       maxWidth: 85,
     });
 
     tempColumns.push({
-      Header: _`AMOUNT`,
+      Header: _('AMOUNT'),
       accessor: 'amount',
       maxWidth: 100,
     });
 
     tempColumns.push({
-      Header: _`ACCOUNT`,
+      Header: _('ACCOUNT'),
       accessor: 'account',
       maxWidth: 150,
     });
 
     tempColumns.push({
-      Header: _`ADDRESS`,
+      Header: _('ADDRESS'),
       accessor: 'address',
     });
     return tempColumns;
@@ -2048,7 +2048,7 @@ class Transactions extends Component {
     return (
       <Panel
         icon={transactionIcon}
-        title={_`Transaction details`}
+        title={_('Transaction details')}
         controls={
           <Select
             value={this.props.selectedAccount}
@@ -2060,7 +2060,7 @@ class Transactions extends Component {
       >
         {this.props.connections === undefined ? (
           <WaitingMessage>
-            _`Connecting to Nexus Core`
+            _('Connecting to Nexus Core')
             ...
           </WaitingMessage>
         ) : (
@@ -2103,7 +2103,7 @@ class Transactions extends Component {
             <Filters>
               <FormField
                 connectLabel
-                label={_`Search Address`}
+                label={_('Search Address')}
               >
                 <TextField
                   inputProps={{
@@ -2116,7 +2116,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField label={_`Type`}>
+              <FormField label={_('Type')}>
                 <Select
                   value={this.state.categoryFilter}
                   onChange={this.transactiontypefiltercallback.bind(this)}
@@ -2126,7 +2126,7 @@ class Transactions extends Component {
 
               <FormField
                 connectLabel
-                label={_`Min amount`}
+                label={_('Min amount')}
               >
                 <TextField
                   type="number"
@@ -2136,7 +2136,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <FormField label={_`Time span`}>
+              <FormField label={_('Time span')}>
                 <Select
                   value={this.state.displayTimeFrame}
                   onChange={this.transactionTimeframeChange.bind(this)}
@@ -2144,7 +2144,7 @@ class Transactions extends Component {
                 />
               </FormField>
 
-              <Tooltip.Trigger tooltip={_`Download`}>
+              <Tooltip.Trigger tooltip={_('Download')}>
                 <Button
                   square
                   className="relative"

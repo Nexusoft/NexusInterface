@@ -87,15 +87,15 @@ const acctionCreators = {
   validate: ({ moveFrom, moveTo, amount }) => {
     const errors = {};
     if (!moveFrom) {
-      errors.moveFrom = _`No accounts selected`;
+      errors.moveFrom = _('No accounts selected');
     }
     if (!moveTo) {
-      errors.moveTo = _`No accounts selected`;
+      errors.moveTo = _('No accounts selected');
     } else if (moveTo === moveFrom) {
-      errors.moveTo = _`Cannot move to the same account`;
+      errors.moveTo = _('Cannot move to the same account');
     }
     if (!amount || parseFloat(amount) <= 0) {
-      errors.amount = _`Invalid amount`;
+      errors.amount = _('Invalid amount');
     }
     return errors;
   },
@@ -105,13 +105,13 @@ const acctionCreators = {
       try {
         const result = await rpc('validateaddress', [sendTo]);
         if (!result.isvalid) {
-          throw { sendTo: _`Invalid address` };
+          throw { sendTo: _('Invalid address') };
         }
         if (result.ismine) {
-          throw { sendTo: _`This is an address registered to this wallet.` };
+          throw { sendTo: _('This is an address registered to this wallet.') };
         }
       } catch (err) {
-        throw { sendTo: _`Invalid address` };
+        throw { sendTo: _('Invalid address') };
       }
     }
     return null;
@@ -130,10 +130,10 @@ const acctionCreators = {
     props.reset();
     props.loadMyAccounts();
     props.openSuccessDialog({
-      message: _`NXS moved successfully`,
+      message: _('NXS moved successfully'),
     });
   },
-  onSubmitFail: rpcErrorHandler(_`Error moving NXS`),
+  onSubmitFail: rpcErrorHandler(_('Error moving NXS')),
 })
 class MoveBetweenAccountsForm extends Component {
   /**
@@ -157,11 +157,11 @@ class MoveBetweenAccountsForm extends Component {
       const {
         payload: { id: modalId },
       } = this.props.openErrorDialog({
-        message: _`You are not logged in`,
+        message: _('You are not logged in'),
         note: (
           <>
             <p>
-              _`You need to log in to your wallet before sending transactions`
+              _('You need to log in to your wallet before sending transactions')
             </p>
             <Link
               to="/Settings/Security"
@@ -170,7 +170,7 @@ class MoveBetweenAccountsForm extends Component {
                 this.props.closeModal();
               }}
             >
-              _`Log in now`
+              _('Log in now')
             </Link>
           </>
         ),
@@ -179,7 +179,7 @@ class MoveBetweenAccountsForm extends Component {
     }
 
     this.props.openConfirmDialog({
-      question: _`Move NXS`,
+      question: _('Move NXS'),
       callbackYes: handleSubmit,
     });
   };
@@ -195,23 +195,23 @@ class MoveBetweenAccountsForm extends Component {
       <form onSubmit={this.confirmMove}>
         <AccountSelectors>
           <Label>
-            _`From account`
+            _('From account')
           </Label>
           <Field
             component={Select.RF}
             name="moveFrom"
             options={this.props.accountOptions}
-            placeholder={_`Select an account`}
+            placeholder={_('Select an account')}
           />
 
           <Label>
-            _`To account`
+            _('To account')
           </Label>
           <Field
             component={Select.RF}
             name="moveTo"
             options={this.props.accountOptions}
-            placeholder={_`Select an account`}
+            placeholder={_('Select an account')}
           />
         </AccountSelectors>
 
@@ -219,7 +219,7 @@ class MoveBetweenAccountsForm extends Component {
 
         <Buttons>
           <Button skin="primary" type="submit" disabled={this.props.submitting}>
-            _`Move NXS`
+            _('Move NXS')
           </Button>
         </Buttons>
       </form>
@@ -238,7 +238,7 @@ const MoveBetweenAccountsModal = () => (
     {closeModal => (
       <>
         <Modal.Header>
-          _`Move NXS between accounts`
+          _('Move NXS between accounts')
         </Modal.Header>
 
         <Modal.Body>

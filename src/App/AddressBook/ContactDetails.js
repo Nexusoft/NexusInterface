@@ -77,7 +77,7 @@ const Field = ({ label, content }) => (
     <FieldContent>
       {content || (
         <span className="dim">
-          _`No information`
+          _('No information')
         </span>
       )}
     </FieldContent>
@@ -184,14 +184,14 @@ class ContactDetails extends React.Component {
     return (
       <ContactDetailsComponent>
         <Header>
-          <Tooltip.Trigger tooltip={_`Delete`}>
+          <Tooltip.Trigger tooltip={_('Delete')}>
             <HeaderAction danger onClick={this.confirmDelete}>
               <Icon icon={trashIcon} />
             </HeaderAction>
           </Tooltip.Trigger>
           <ContactName>{contact.name}</ContactName>
           {connections !== undefined ? (
-            <Tooltip.Trigger tooltip={_`Edit`}>
+            <Tooltip.Trigger tooltip={_('Edit')}>
               <HeaderAction onClick={this.editContact}>
                 <Icon icon={editIcon} />
               </HeaderAction>
@@ -202,7 +202,7 @@ class ContactDetails extends React.Component {
         </Header>
 
         <SectionHeader>
-          _`NXS addresses`
+          _('NXS addresses')
         </SectionHeader>
 
         {contact.addresses.map(({ address, label, isMine }, i) => (
@@ -227,11 +227,11 @@ class ContactDetails extends React.Component {
         ))}
 
         <SectionHeader>
-          _`Contact info`
+          _('Contact info')
         </SectionHeader>
 
         <Field
-          label={_`Email`}
+          label={_('Email')}
           content={
             contact.email && (
               <ExternalLink href={`mailto:${contact.email}`}>
@@ -241,15 +241,15 @@ class ContactDetails extends React.Component {
           }
         />
         <Field
-          label={_`Phone Number`}
+          label={_('Phone Number')}
           content={contact.phoneNumber}
         />
         <Field
-          label={_`Local Time`}
+          label={_('Local Time')}
           content={tz && `${getLocalTime(tz.value)} (${tz.offset})`}
         />
         <Field
-          label={_`Notes`}
+          label={_('Notes')}
           content={contact.notes}
         />
       </ContactDetailsComponent>

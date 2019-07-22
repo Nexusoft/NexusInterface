@@ -90,22 +90,22 @@ class LogInStatus extends Component {
     }
 
     if (locked === undefined) {
-      return _`Wallet Unencrypted`;
+      return _('Wallet Unencrypted');
     } else if (locked) {
-      return _`Not logged in`;
+      return _('Not logged in');
     } else if (locked === false) {
       if (!unlocked_until) {
         return (
           <>
-            _`Logged in`{' '}
-            {!!minting_only && _`for staking only`}
+            _('Logged in'){' '}
+            {!!minting_only && _('for staking only')}
           </>
         );
       } else {
         return (
           <>
             <Text id="Header.UnlockedUntil" data={{ unlockDate }} />{' '}
-            {!!minting_only && _`for staking only`}
+            {!!minting_only && _('for staking only')}
           </>
         );
       }

@@ -171,7 +171,7 @@ class About extends Component {
    */
   render() {
     return (
-      <Panel title={_`About`}>
+      <Panel title={_('About')}>
         <NexusLogoimg src={nexusLogo} />
         <br />
         <Column>

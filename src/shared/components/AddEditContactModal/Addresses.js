@@ -112,7 +112,7 @@ class Addresses extends React.Component {
         {fields.map((fieldName, i) => (
           <NXSAddress key={i}>
             <Tooltip.Trigger
-              tooltip={_`Remove address`}
+              tooltip={_('Remove address')}
             >
               <RemoveButton
                 onClick={() => {

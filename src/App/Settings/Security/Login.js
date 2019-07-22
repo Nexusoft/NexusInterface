@@ -55,10 +55,10 @@ const Buttons = styled.div({
 
     if (!props.tritium || setLoginTimeOut) {
       if (!date) {
-        errors.date = _`Date is required`;
+        errors.date = _('Date is required');
       }
       if (!time) {
-        errors.time = _`Time is required`;
+        errors.time = _('Time is required');
       }
       if (date && time) {
         let unlockUntil = 0;
@@ -70,13 +70,13 @@ const Buttons = styled.div({
         unlockUntil = Math.round((unlockDate.getTime() - now.getTime()) / 1000);
 
         if (unlockUntil < 3600) {
-          errors.time = _`Time must be at least one hour in the future`;
+          errors.time = _('Time must be at least one hour in the future');
         }
       }
     }
 
     if (!password) {
-      errors.password = _`Password is required`;
+      errors.password = _('Password is required');
     }
     return errors;
   },
@@ -96,21 +96,21 @@ const Buttons = styled.div({
   },
   onSubmitSuccess: async (result, dispatch, props) => {
     props.reset();
-    props.showNotification(_`Logged in successfully`, 'success');
+    props.showNotification(_('Logged in successfully'), 'success');
     dispatch(getInfo());
   },
   onSubmitFail: (errors, dispatch, submitError, props) => {
     if (!errors || !Object.keys(errors).length) {
-      let note = submitError || _`An unknown error occurred`;
+      let note = submitError || _('An unknown error occurred');
       if (
         submitError === 'Error: The wallet passphrase entered was incorrect.'
       ) {
-        note = _`Incorrect passsword`;
+        note = _('Incorrect passsword');
       } else if (submitError === 'value is type null, expected int') {
-        note = _`Unlock until date/time must be at least an hour in the future`;
+        note = _('Unlock until date/time must be at least an hour in the future');
       }
       props.openErrorDialog({
-        message: _`Error logging in`,
+        message: _('Error logging in'),
         note: note,
       });
     }
@@ -126,7 +126,7 @@ class Login extends Component {
   renderTimeInputs = ({ input }) =>
     !this.props.tritium || input.value ? (
       <div>
-        <FormField connectLabel label={_`Login until date`}>
+        <FormField connectLabel label={_('Login until date')}>
           <Field
             component={TextField.RF}
             name="date"
@@ -134,7 +134,7 @@ class Login extends Component {
             min={new Date().toISOString().slice(0, 10)}
           />
         </FormField>
-        <FormField connectLabel label={_`Login until time`}>
+        <FormField connectLabel label={_('Login until time')}>
           <Field component={TextField.RF} name="time" type="time" />
         </FormField>
       </div>
@@ -155,7 +155,7 @@ class Login extends Component {
           <LoginFieldSet legend="Login">
             <Text id="Settings.PasswordPlaceholder">
               {text => (
-                <FormField connectLabel label={_`Password`}>
+                <FormField connectLabel label={_('Password')}>
                   <Field
                     component={TextField.RF}
                     name="password"
@@ -168,7 +168,7 @@ class Login extends Component {
             <FormField
               inline
               connectLabel
-              label={_`Login for staking & mining only`}
+              label={_('Login for staking & mining only')}
             >
               <Field component={Switch.RF} name="stakingOnly" />
             </FormField>

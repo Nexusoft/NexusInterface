@@ -96,12 +96,12 @@ const mapDispatchToProps = {
   validate: ({ sendFrom, recipients }) => {
     const errors = {};
     if (!sendFrom) {
-      errors.sendFrom = _`No accounts selected`;
+      errors.sendFrom = _('No accounts selected');
     }
 
     if (!recipients || !recipients.length) {
       errors.recipients = {
-        _error: _`There must be at least one recipient`,
+        _error: _('There must be at least one recipient'),
       };
     } else {
       const recipientsErrors = [];
@@ -109,11 +109,11 @@ const mapDispatchToProps = {
       recipients.forEach(({ address, amount }, i) => {
         const recipientErrors = {};
         if (!address) {
-          recipientErrors.address = _`Address is required`;
+          recipientErrors.address = _('Address is required');
         }
         const floatAmount = parseFloat(amount);
         if (!floatAmount || floatAmount < 0) {
-          recipientErrors.amount = _`Invalid amount`;
+          recipientErrors.amount = _('Invalid amount');
         }
         if (Object.keys(recipientErrors).length) {
           recipientsErrors[i] = recipientErrors;
@@ -136,17 +136,17 @@ const mapDispatchToProps = {
           .then(result => {
             if (!result.isvalid) {
               recipientsErrors[i] = {
-                address: _`Invalid address`,
+                address: _('Invalid address'),
               };
             } else if (result.ismine) {
               recipientsErrors[i] = {
-                address: _`This is an address registered to this wallet.`,
+                address: _('This is an address registered to this wallet.'),
               };
             }
           })
           .catch(err => {
             recipientsErrors[i] = {
-              address: _`Invalid address`,
+              address: _('Invalid address'),
             };
           })
       )
@@ -184,11 +184,11 @@ const mapDispatchToProps = {
     props.reset();
     props.loadMyAccounts();
     props.openSuccessDialog({
-      message: _`Transaction sent`,
+      message: _('Transaction sent'),
     });
   },
   onSubmitFail: rpcErrorHandler(
-    _`Error sending NXS`
+    _('Error sending NXS')
   ),
 })
 class SendForm extends Component {
@@ -232,7 +232,7 @@ class SendForm extends Component {
     }
 
     this.props.openConfirmDialog({
-      question: _`Send transaction?`,
+      question: _('Send transaction?'),
       callbackYes: handleSubmit,
     });
   };
@@ -258,7 +258,7 @@ class SendForm extends Component {
   renderAddRecipientButton = ({ fields }) =>
     fields.length === 1 ? (
       <Button onClick={this.addRecipient}>
-        _`Send To multiple recipients`
+        _('Send To multiple recipients')
       </Button>
     ) : (
       <div />
@@ -275,11 +275,11 @@ class SendForm extends Component {
 
     return (
       <SendFormComponent onSubmit={this.confirmSend}>
-        <FormField label={_`Send from`}>
+        <FormField label={_('Send from')}>
           <Field
             component={Select.RF}
             name="sendFrom"
-            placeholder={_`Select an account`}
+            placeholder={_('Select an account')}
             options={accountOptions}
           />
         </FormField>
@@ -293,7 +293,7 @@ class SendForm extends Component {
 
         <Text id="sendReceive.EnterYourMessage">
           {placeholder => (
-            <FormField connectLabel label={_`Message`}>
+            <FormField connectLabel label={_('Message')}>
               <Field
                 component={TextField.RF}
                 name="message"
@@ -313,7 +313,7 @@ class SendForm extends Component {
 
           <Button type="submit" skin="primary">
             <Icon icon={sendIcon} className="space-right" />
-            _`Send`
+            _('Send')
           </Button>
         </SendFormButtons>
       </SendFormComponent>

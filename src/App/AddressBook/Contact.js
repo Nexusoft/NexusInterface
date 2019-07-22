@@ -89,7 +89,7 @@ class Contact extends React.PureComponent {
    */
   confirmDelete = () => {
     this.props.openConfirmDialog({
-      question: _`Delete contact ${this.props.contact.name}?`,
+      question: _('Delete contact ${this.props.contact.name}?'),
       skinYes: 'danger',
       callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
@@ -199,7 +199,7 @@ const NewContactButton = props => (
     <ContactAvatar>
       <Icon icon={plusIcon} style={{ fontSize: '.8em', opacity: 0.7 }} />
     </ContactAvatar>
-    <ContactName style={{ opacity: 0.7 }}>{_`New contact`}</ContactName>
+    <ContactName style={{ opacity: 0.7 }}>{_('New contact')}</ContactName>
   </ContactComponent>
 );
 

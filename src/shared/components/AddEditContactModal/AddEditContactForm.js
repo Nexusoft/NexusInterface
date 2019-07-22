@@ -37,7 +37,7 @@ function validateAddresses(addresses) {
     const addressErrors = {};
     if (!address) {
       addressErrors.address = (
-        _`Invalid address`
+        _('Invalid address')
       );
     }
     if (Object.keys(addressErrors).length) {
@@ -53,21 +53,21 @@ function asyncValidateAddresses(isMine, addresses, errors) {
       .then(result => {
         if (!result.isvalid) {
           errors[i] = {
-            address: _`Invalid address`,
+            address: _('Invalid address'),
           };
         } else if (isMine && !result.ismine) {
           errors[i] = {
-            address: _`This is not one of your addresses.`,
+            address: _('This is not one of your addresses.'),
           };
         } else if (!isMine && result.ismine) {
           errors[i] = {
-            address: _`This is one of your addresses.`,
+            address: _('This is one of your addresses.'),
           };
         }
       })
       .catch(err => {
         errors[i] = {
-          address: _`Invalid address`,
+          address: _('Invalid address'),
         };
       })
   );
@@ -89,16 +89,16 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     const errors = {};
 
     if (!name || !name.trim()) {
-      errors.name = _`Name is required.`;
+      errors.name = _('Name is required.');
     } else if (
       (!props.edit || name !== props.oldName) &&
       props.addressBook[name]
     ) {
-      errors.name = _`A contact with the same name already exists.`;
+      errors.name = _('A contact with the same name already exists.');
     }
 
     if (mine && notMine && mine.length + notMine.length === 0) {
-      errors['_error'] = _`There must be at least one address.`;
+      errors['_error'] = _('There must be at least one address.');
     }
 
     const mineErrors = validateAddresses(mine);
@@ -112,7 +112,7 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     }
 
     if (email && !emailRegex.test(email.toLowerCase())) {
-      errors.email = _`Invalid email`;
+      errors.email = _('Invalid email');
     }
 
     return errors;
@@ -157,12 +157,12 @@ function asyncValidateAddresses(isMine, addresses, errors) {
     props.closeModal();
     if (props.edit) {
       props.showNotification(
-        _`Contact has been updated`,
+        _('Contact has been updated'),
         'success'
       );
     } else {
       props.showNotification(
-        _`New contact has been added to address book`,
+        _('New contact has been added to address book'),
         'success'
       );
     }
@@ -204,7 +204,7 @@ class AddEditContactForm extends Component {
       <form onSubmit={handleSubmit}>
         <Text id="AddEditContact.NamePlaceholder">
           {text => (
-            <FormField connectLabel label={_`Name`}>
+            <FormField connectLabel label={_('Name')}>
               <Field
                 name="name"
                 component={TextField.RF}
@@ -226,7 +226,7 @@ class AddEditContactForm extends Component {
             {text => (
               <FormField
                 connectLabel
-                label={_`Email Address`}
+                label={_('Email Address')}
               >
                 <Field
                   name="email"
@@ -242,7 +242,7 @@ class AddEditContactForm extends Component {
             {text => (
               <FormField
                 connectLabel
-                label={_`Phone Number`}
+                label={_('Phone Number')}
               >
                 <Field
                   name="phoneNumber"
@@ -253,12 +253,12 @@ class AddEditContactForm extends Component {
             )}
           </Text>
 
-          <FormField connectLabel label={_`Time Zone`}>
+          <FormField connectLabel label={_('Time Zone')}>
             <Field
               name="timeZone"
               component={Select.RF}
               options={tzOptions}
-              placeholder={_`Select a time zone`}
+              placeholder={_('Select a time zone')}
             />
           </FormField>
 
@@ -266,7 +266,7 @@ class AddEditContactForm extends Component {
             {text => (
               <FormField
                 connectLabel
-                label={_`Notes`}
+                label={_('Notes')}
               >
                 <Field
                   name="notes"
@@ -283,21 +283,21 @@ class AddEditContactForm extends Component {
         <div className="mt2 flex space-between" style={{ marginBottom: '1em' }}>
           <div>
             <Button onClick={closeModal}>
-              _`Cancel`
+              _('Cancel')
             </Button>
             <Button
               onClick={reset}
               disabled={pristine}
               style={{ marginLeft: '1em' }}
             >
-              _`Reset`
+              _('Reset')
             </Button>
           </div>
           <Button skin="primary" type="submit" disabled={submitting}>
             {edit ? (
-              _`Save changes`
+              _('Save changes')
             ) : (
-              _`Create`
+              _('Create')
             )}
           </Button>
         </div>

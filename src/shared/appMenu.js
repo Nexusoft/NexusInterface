@@ -59,7 +59,7 @@ const backupWallet = {
     });
 
     if (state.core.info.connections === undefined) {
-      store.dispatch(showNotification(_`Nexus Core is not connected`));
+      store.dispatch(showNotification(_('Nexus Core is not connected')));
       return;
     }
 
@@ -68,7 +68,7 @@ const backupWallet = {
 
       await backup(folderPaths[0]);
       store.dispatch(
-        showNotification(_`Wallet backed up`, 'success')
+        showNotification(_('Wallet backed up'), 'success')
       );
     }
   },

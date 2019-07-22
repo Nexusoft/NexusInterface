@@ -107,7 +107,7 @@ class AddressBook extends Component {
     return (
       <Panel
         icon={addressBookIcon}
-        title={_`Address book`}
+        title={_('Address book')}
         controls={<PanelControls />}
         bodyScrollable={false}
       >
@@ -119,7 +119,7 @@ class AddressBook extends Component {
         ) : (
           <div style={{ marginTop: 50, textAlign: 'center' }}>
             <div className="dim">
-              _`Your address book is empty`
+              _('Your address book is empty')
             </div>
             {connections !== undefined && (
               <Button
@@ -128,7 +128,7 @@ class AddressBook extends Component {
                 className="mt1"
               >
                 <Icon icon={addContactIcon} className="space-right" />
-                _`Create new contact`
+                _('Create new contact')
               </Button>
             )}
           </div>

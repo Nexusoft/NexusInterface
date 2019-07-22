@@ -43,14 +43,14 @@ class StakingStatus extends React.Component {
         tooltip={
           <div>
             <div>
-              _`Stake Weight`: {limitDecimal(stakeweight, 2)}%
+              _('Stake Weight'): {limitDecimal(stakeweight, 2)}%
             </div>
             <div>Stake Rate: {limitDecimal(stakerate, 2)}%</div>
             <div>
-              _`Trust Weight`: {limitDecimal(trustweight, 2)}%
+              _('Trust Weight'): {limitDecimal(trustweight, 2)}%
             </div>
             <div>
-              _`Block Weight`: {limitDecimal(blockweight, 2)}%
+              _('Block Weight'): {limitDecimal(blockweight, 2)}%
             </div>
           </div>
         }

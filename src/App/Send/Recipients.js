@@ -97,7 +97,7 @@ class Recipients extends React.Component {
           {fields.map((fieldName, i) => (
             <Recipient key={i}>
               <Tooltip.Trigger
-                tooltip={_`Remove recipient`}
+                tooltip={_('Remove recipient')}
               >
                 <RemoveButton
                   onClick={() => {
@@ -126,7 +126,7 @@ class Recipients extends React.Component {
             <Button skin="hyperlink" onClick={addRecipient}>
               <PlusIcon icon={plusIcon} className="space-right" />
               <span className="v-align">
-                _`Add recipient`
+                _('Add recipient')
               </span>
             </Button>
           </MoreInfo>
