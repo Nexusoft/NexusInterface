@@ -47,4 +47,10 @@ export default merge.smart(baseConfig, {
       },
     ],
   },
+
+  plugins: [
+    new webpack.ProvidePlugin({
+      _: 'es2015-i18n-tag',
+    }),
+  ],
 });
