@@ -2,6 +2,7 @@
  * Webpack base config for electron renderer process
  */
 
+import path from 'path';
 import merge from 'webpack-merge';
 
 import baseConfig from './webpack.config.base';
@@ -50,7 +51,10 @@ export default merge.smart(baseConfig, {
 
   plugins: [
     new webpack.ProvidePlugin({
-      _: 'es2015-i18n-tag',
+      _: [
+        path.join(process.cwd(), 'src', 'shared', 'lib', 'translation.js'),
+        'translate',
+      ],
     }),
   ],
 });
