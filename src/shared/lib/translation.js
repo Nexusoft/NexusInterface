@@ -3,20 +3,20 @@ import path from 'path';
 import Polyglot from 'node-polyglot';
 
 import { assetsDir } from 'consts/paths';
+import { LoadSettings } from 'lib/settings';
 
-let polyglot;
-
-export function initializeTranslation(locale) {
-  const languages = ['de', 'es', 'fr', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru'];
-  locale = languages.includes(locale) ? locale : 'en';
+function initializePolyglot() {
+  const { locale } = LoadSettings();
+  const locales = ['de', 'es', 'fr', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru'];
+  const loc = locales.includes(locale) ? locale : 'en';
   const phrases =
-    locale === 'en'
+    loc === 'en'
       ? null
       : JSON.parse(
-          fs.readFileSync(path.join(assetsDir, 'languages', `${locale}.json`))
+          fs.readFileSync(path.join(assetsDir, 'languages', `${loc}.json`))
         );
 
-  polyglot = new Polyglot({
+  return new Polyglot({
     locale,
     phrases,
     interpolation: {
@@ -25,6 +25,8 @@ export function initializeTranslation(locale) {
     },
   });
 }
+
+const polyglot = initializePolyglot();
 
 export function translate(...args) {
   return polyglot.t(...args);

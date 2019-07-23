@@ -29,14 +29,14 @@ class CoreStatus extends React.Component {
       !coreConnected && (
         <span className="dim">
           {manualDaemon ? (
-            {_('Manual Core is disconnected')}
+            _('Manual Core is disconnected')
           ) : autoConnect ? (
             <>
               {_('Connecting to Nexus Core')}
               ...
             </>
           ) : (
-            'Nexus Core is stopped'
+            _('Nexus Core is stopped')
           )}
         </span>
       )
