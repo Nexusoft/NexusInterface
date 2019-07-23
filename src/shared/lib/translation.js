@@ -5,32 +5,27 @@ import Polyglot from 'node-polyglot';
 import { assetsDir } from 'consts/paths';
 import { LoadSettings } from 'lib/settings';
 
-function initializePolyglot() {
-  const { locale } = LoadSettings();
-  const locales = ['de', 'es', 'fr', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru'];
-  const loc = locales.includes(locale) ? locale : 'en';
-  const phrases =
-    loc === 'en'
-      ? null
-      : JSON.parse(
-          fs.readFileSync(path.join(assetsDir, 'languages', `${loc}.json`))
-        );
+const locales = ['de', 'es', 'fr', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru'];
+const { locale: loc } = LoadSettings();
+const locale = locales.includes(loc) ? loc : 'en';
+const phrases =
+  locale === 'en'
+    ? null
+    : JSON.parse(
+        fs.readFileSync(path.join(assetsDir, 'languages', `${locale}.json`))
+      );
 
-  return new Polyglot({
-    locale,
-    phrases,
-    interpolation: {
-      prefix: '{',
-      suffix: '}',
-    },
-  });
-}
+const polyglot = new Polyglot({
+  locale,
+  phrases,
+});
 
-const polyglot = initializePolyglot();
+const translate =
+  locale === 'en'
+    ? (string, data) => Polyglot.transformPhrase(string, data, 'en')
+    : (string, data) => polyglot.t(string, { _: string, ...data });
 
-export function translate(...args) {
-  return polyglot.t(...args);
-}
+export { translate };
 
 // function joinKey(strings) {
 //   let key = '';
