@@ -142,7 +142,6 @@ function createWindow() {
 
   const updateWindowPos = debounced(() => {
     const bounds = mainWindow.getBounds();
-    console.log('pos', bounds.x, bounds.y);
     UpdateSettings({
       windowX: bounds.x,
       windowY: bounds.y,
