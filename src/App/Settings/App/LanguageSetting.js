@@ -131,7 +131,10 @@ class LanguageSetting extends Component {
    *
    * @memberof LanguageSetting
    */
-  handleChange = locale => this.props.updateSettings({ locale });
+  handleChange = locale => {
+    this.props.updateSettings({ locale });
+    location.reload();
+  };
 
   /**
    * Component's Renderable JSX
