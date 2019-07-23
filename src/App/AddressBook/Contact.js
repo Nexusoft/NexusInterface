@@ -167,9 +167,10 @@ class Contact extends React.PureComponent {
         <ContactAvatar>{this.getinitial(contact.name)}</ContactAvatar>
         <ContactName>{contact.name}</ContactName>
         <Tooltip.Trigger
-          tooltip={_('%{count} address |||| %{count} addresses', {
-            count: contact.addresses.length,
-          })}
+          tooltip={_(
+            '%{smart_count} address |||| %{smart_count} addresses',
+            contact.addresses.length
+          )}
         >
           <AddressesCount>{contact.addresses.length}</AddressesCount>
         </Tooltip.Trigger>
