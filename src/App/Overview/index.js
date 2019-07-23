@@ -844,7 +844,7 @@ class Overview extends Component {
             to={connections ? '/Transactions' : undefined}
           >
             <div>
-              <StatLabel>{_('Stake Balance')(NXS)}</StatLabel>
+              <StatLabel>{_('Stake Balance')} (NXS)</StatLabel>
               <StatValue>
                 {settings.overviewDisplay === 'balHidden'
                   ? '-'

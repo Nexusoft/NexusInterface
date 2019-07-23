@@ -136,7 +136,7 @@ class ContactDetails extends React.Component {
    */
   confirmDelete = () => {
     this.props.openConfirmDialog({
-      question: _('Delete contact {name}?', { name: this.props.contact.name }),
+      question: _('Delete contact %{name}?', { name: this.props.contact.name }),
       skinYes: 'danger',
       callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
@@ -200,7 +200,7 @@ class ContactDetails extends React.Component {
             label={
               label || (
                 <DefaultLabel>
-                  {_(isMine ? 'My address for {name}' : "{name}'s Address", {
+                  {_(isMine ? 'My address for %{name}' : "%{name}'s Address", {
                     name: contact.name,
                   })}
                 </DefaultLabel>

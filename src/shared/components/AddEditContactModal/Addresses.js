@@ -84,10 +84,10 @@ class Addresses extends React.Component {
   renderFieldLabel = ({ input, ...rest }) => {
     return this.props.isMine
       ? input.value
-        ? _('My Nexus address for {name}', { name: input.value })
+        ? _('My Nexus address for %{name}', { name: input.value })
         : 'My Nexus address'
       : input.value
-      ? _("{name}'s Nexus address", { name: input.value })
+      ? _("%{name}'s Nexus address", { name: input.value })
       : 'Their Nexus address';
   };
 

@@ -57,9 +57,7 @@ class SyncStatus extends React.Component {
         <SpinningIcon className="dim" icon={syncingIcon} />
       </Tooltip.Trigger>
     ) : synchronizing ? (
-      <Tooltip.Trigger
-        tooltip={_('Synchronizing: {percent}%', { percent: percentSynced })}
-      >
+      <Tooltip.Trigger tooltip={`${_('Synchronizing')}: ${percentSynced}%`}>
         <SpinningIcon icon={syncingIcon} />
       </Tooltip.Trigger>
     ) : (

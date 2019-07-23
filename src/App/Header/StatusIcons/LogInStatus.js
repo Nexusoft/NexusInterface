@@ -102,7 +102,7 @@ class LogInStatus extends Component {
       } else {
         return (
           <>
-            {_('Logged in until {unlockDate}', { unlockDate })}{' '}
+            {_('Logged in until %{unlockDate}', { unlockDate })}{' '}
             {!!minting_only && _('for staking only')}
           </>
         );
