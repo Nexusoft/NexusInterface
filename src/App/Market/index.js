@@ -16,7 +16,6 @@ import { showNotification } from 'actions/overlays';
 import * as TYPE from 'consts/actionTypes';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
-import Text, { translate } from 'components/Text';
 import ContextMenuBuilder from 'contextmenu';
 import * as actionsCreators from 'actions/market';
 

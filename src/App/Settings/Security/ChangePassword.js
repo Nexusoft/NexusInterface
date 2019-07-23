@@ -7,7 +7,6 @@ import styled from '@emotion/styled';
 // Internal
 import rpc from 'lib/rpc';
 import { getInfo } from 'actions/core';
-import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';

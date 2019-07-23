@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
 // Internal Global Depnedencies
-import Text from 'components/Text';
 import HorizontalLine from 'components/HorizontalLine';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';

@@ -5,7 +5,6 @@ import { clipboard } from 'electron';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import { showNotification } from 'actions/overlays';
 import { consts, timing } from 'styles';

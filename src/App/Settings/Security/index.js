@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal
-import Text from 'components/Text';
 import WaitingMessage from 'components/WaitingMessage';
 import { switchSettingsTab } from 'actions/ui';
 import Login from './Login';

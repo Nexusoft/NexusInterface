@@ -7,7 +7,6 @@ Last Modified by: Brian Smith
 // External Dependencies
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Text, { translate } from 'components/Text';
 import {
   VictoryChart,
   VictoryAxis,

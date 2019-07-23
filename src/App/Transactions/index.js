@@ -25,7 +25,6 @@ import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import Text, { translate } from 'components/Text';
 import Table from 'scripts/utilities-react';
 import { loadMyAccounts } from 'actions/account';
 import rpc from 'lib/rpc';

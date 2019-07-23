@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
 // Internal Dependencies
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from 'components/StatusIcon';
 import { timing } from 'styles';

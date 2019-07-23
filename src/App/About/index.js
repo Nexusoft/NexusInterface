@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { shell } from 'electron';
 // Internal Dependencies
 import Panel from 'components/Panel';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Images

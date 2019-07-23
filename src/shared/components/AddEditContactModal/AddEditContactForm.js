@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 // Internal
 import { addNewContact, updateContact } from 'actions/addressBook';
 import rpc from 'lib/rpc';
-import Text from 'components/Text';
 import FormField from 'components/FormField';
 import TextField from 'components/TextField';
 import Select from 'components/Select';

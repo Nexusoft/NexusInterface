@@ -7,7 +7,6 @@ import styled from '@emotion/styled';
 import Tooltip from 'components/Tooltip';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
-import Text from 'components/Text';
 import { timing } from 'styles';
 import plusIcon from 'images/plus.sprite.svg';
 import RecipientField from './RecipientField';

@@ -6,7 +6,6 @@ import { reduxForm, Field } from 'redux-form';
 
 // Internal
 import rpc from 'lib/rpc';
-import Text from 'components/Text';
 import Select from 'components/Select';
 import Button from 'components/Button';
 import Modal from 'components/Modal';

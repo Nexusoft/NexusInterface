@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 

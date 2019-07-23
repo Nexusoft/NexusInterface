@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 // Internal
 import Modal from 'components/Modal';
 import Icon from 'components/Icon';
-import Text from 'components/Text';
 import Button from 'components/Button';
 import { updateSettings } from 'actions/settings';
 import * as color from 'utils/color';

@@ -18,7 +18,6 @@ import TerminalCore from './TerminalCore';
 import consoleIcon from 'images/console.sprite.svg';
 import logoIcon from 'images/logo.sprite.svg';
 import coreIcon from 'images/core.sprite.svg';
-import Text from 'components/Text';
 
 const TerminalComponent = styled.div({
   height: '100%',

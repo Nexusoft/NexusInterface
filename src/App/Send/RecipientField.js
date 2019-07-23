@@ -7,7 +7,6 @@ import styled from '@emotion/styled';
 // Internal
 import AutoSuggest from 'components/AutoSuggest';
 import FormField from 'components/FormField';
-import Text, { translate } from 'components/Text';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import { openModal } from 'actions/overlays';

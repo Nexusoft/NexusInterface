@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 
 // Internal
-import Text from 'components/Text';
 import Modal from 'components/Modal';
 import AddEditContactForm from './AddEditContactForm';
 

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 
 // Internal
-import Text, { translate } from 'components/Text';
 import { updateSettings } from 'actions/settings';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';

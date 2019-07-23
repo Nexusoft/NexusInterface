@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import Button from 'components/Button';
-import Text from 'components/Text';
 import { timing } from 'styles';
 
 const CSVDownloadModalComponent = styled(Modal)(

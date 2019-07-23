@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as TYPE from 'consts/actionTypes';
 import { remote } from 'electron';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 import googleanalytics from 'scripts/googleanalytics';

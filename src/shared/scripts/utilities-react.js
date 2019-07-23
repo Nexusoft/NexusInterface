@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
-import Text from 'components/Text';
 
 /**
  * Table for the transaction page

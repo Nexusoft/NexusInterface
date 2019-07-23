@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 
 // Internal
 import { deleteContact } from 'actions/addressBook';
-import Text from 'components/Text';
 import ExternalLink from 'components/ExternalLink';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';

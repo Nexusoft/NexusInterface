@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 
-import Text from 'components/Text';
 import Modal from 'components/Modal';
 import { timing, consts } from 'styles';
 

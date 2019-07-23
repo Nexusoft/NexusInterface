@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import * as FlagFile from 'images/LanguageFlags';
 import { updateSettings } from 'actions/settings';
 import SettingsField from 'components/SettingsField';

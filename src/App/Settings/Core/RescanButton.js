@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import rpc from 'lib/rpc';
 import { showNotification } from 'actions/overlays';
-import Text from 'components/Text';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { consts } from 'styles';

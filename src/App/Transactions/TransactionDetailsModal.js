@@ -1,6 +1,5 @@
 // External
 import React, { Component } from 'react';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
 
 // Internal

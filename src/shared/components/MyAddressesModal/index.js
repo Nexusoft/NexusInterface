@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 // Internal
 import Modal from 'components/Modal';
 import TextField from 'components/TextField';
-import Text, { translate } from 'components/Text';
 import Icon from 'components/Icon';
 import Button from 'components/Button';
 import searchIcon from 'images/search.sprite.svg';

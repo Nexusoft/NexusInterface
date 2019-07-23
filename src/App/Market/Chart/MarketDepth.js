@@ -5,7 +5,6 @@ Last Modified by: Brian Smith
 */
 // External Dependencies
 import React, { Component } from 'react';
-import Text, { translate } from 'components/Text';
 import {
   VictoryArea,
   VictoryChart,

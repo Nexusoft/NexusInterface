@@ -1,7 +1,6 @@
 // External Dependencies
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 import memoize from 'memoize-one';

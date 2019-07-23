@@ -5,7 +5,6 @@ import { Field } from 'redux-form';
 import styled from '@emotion/styled';
 
 // Internal
-import Text from 'components/Text';
 import TextField from 'components/TextField';
 import FormField from 'components/FormField';
 import { getNxsFiatPrice } from './selectors';

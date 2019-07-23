@@ -6,7 +6,6 @@ import { remote } from 'electron';
 // Internal Global Dependencies
 import googleanalytics from 'scripts/googleanalytics';
 import ContextMenuBuilder from 'contextmenu';
-import Text from 'components/Text';
 import Icon from 'components/Icon';
 import Panel from 'components/Panel';
 import Button from 'components/Button';

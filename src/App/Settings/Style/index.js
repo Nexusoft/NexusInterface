@@ -11,7 +11,6 @@ import googleanalytics from 'scripts/googleanalytics';
 import { updateSettings } from 'actions/settings';
 import { updateTheme, resetColors } from 'actions/theme';
 import { switchSettingsTab } from 'actions/ui';
-import Text, { translate } from 'components/Text';
 import SettingsField from 'components/SettingsField';
 import Button from 'components/Button';
 import Switch from 'components/Switch';

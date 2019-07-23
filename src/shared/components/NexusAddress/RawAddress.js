@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 
 // Internal
 import TextField from 'components/TextField';
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import Button from 'components/Button';

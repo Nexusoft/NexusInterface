@@ -9,7 +9,6 @@ import { toggleWebViewDevTools } from 'actions/webview';
 import { updateSettings } from 'actions/settings';
 import { startCore as startCoreAC, stopCore as stopCoreAC } from 'actions/core';
 import { backupWallet as backup } from 'lib/wallet';
-import Text from 'components/Text';
 import { showNotification, openErrorDialog } from 'actions/overlays';
 import { bootstrap } from 'actions/bootstrap';
 import showOpenDialog from 'utils/promisified/showOpenDialog';

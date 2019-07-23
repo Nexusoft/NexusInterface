@@ -6,7 +6,6 @@ import { reduxForm, Field } from 'redux-form';
 import cpy from 'cpy';
 
 // Internal
-import Text from 'components/Text';
 import { switchSettingsTab } from 'actions/ui';
 import { stopCore, startCore, restartCore } from 'actions/core';
 import WaitingMessage from 'components/WaitingMessage';

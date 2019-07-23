@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Internal Dependencies
-import Text from 'components/Text';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from 'components/StatusIcon';
 import { limitDecimal } from 'utils/etc';

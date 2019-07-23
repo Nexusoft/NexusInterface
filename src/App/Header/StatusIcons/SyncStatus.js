@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal Global Dependencies
-import Text from 'components/Text';
 import { animations } from 'styles';
 import Tooltip from 'components/Tooltip';
 import StatusIcon from 'components/StatusIcon';

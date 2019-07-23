@@ -1,7 +1,6 @@
 // External
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Text from 'components/Text';
 import styled from '@emotion/styled';
 import googleanalytics from 'scripts/googleanalytics';
 
