@@ -121,7 +121,7 @@ class Core {
       log.info(
         'Core Manager: Nexux Core Process already running. Skipping starting core'
       );
-      this._config = loadNexusConf();
+      this._config = customConfig(loadNexusConf());
       return null;
     }
 
