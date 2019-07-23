@@ -12,7 +12,7 @@ const phrases =
   locale === 'en'
     ? null
     : JSON.parse(
-        fs.readFileSync(path.join(assetsDir, 'languages', `${locale}.json`))
+        fs.readFileSync(path.join(assetsDir, 'translations', `${locale}.json`))
       );
 
 const polyglot = new Polyglot({

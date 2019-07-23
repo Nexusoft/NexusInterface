@@ -52,7 +52,7 @@
     ],
     "extraResources": [
       "./assets/GeoLite2-City/**/*",
-      "./assets/languages/*",
+      "./assets/translations/*",
       "./assets/tray/**/*"
     ],
     "publish": {
