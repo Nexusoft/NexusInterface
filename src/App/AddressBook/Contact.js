@@ -88,7 +88,7 @@ class Contact extends React.PureComponent {
    */
   confirmDelete = () => {
     this.props.openConfirmDialog({
-      question: _('Delete contact ${this.props.contact.name}?'),
+      question: _('Delete contact %{name}?', { name: this.props.contact.name }),
       skinYes: 'danger',
       callbackYes: () => {
         this.props.deleteContact(this.props.contact.name);
