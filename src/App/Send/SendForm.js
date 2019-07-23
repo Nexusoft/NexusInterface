@@ -213,14 +213,18 @@ class SendForm extends Component {
         message: 'You are not logged in',
         note: (
           <>
-            <p>You need to log in to your wallet before sending transactions</p>
+            <p>
+              {_(
+                'You need to log in to your wallet before sending transactions'
+              )}
+            </p>
             <Link
               to="/Settings/Security"
               onClick={() => {
                 this.props.removeModal(modalId);
               }}
             >
-              Log in now
+              {_('Log in now')}
             </Link>
           </>
         ),

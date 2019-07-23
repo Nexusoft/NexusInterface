@@ -44,7 +44,9 @@ class StakingStatus extends React.Component {
             <div>
               {_('Stake Weight')}: {limitDecimal(stakeweight, 2)}%
             </div>
-            <div>Stake Rate: {limitDecimal(stakerate, 2)}%</div>
+            <div>
+              {_('Stake Rate')}: {limitDecimal(stakerate, 2)}%
+            </div>
             <div>
               {_('Trust Weight')}: {limitDecimal(trustweight, 2)}%
             </div>

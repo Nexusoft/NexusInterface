@@ -28,7 +28,7 @@ const SuccessDialog = ({ message, note, ...rest }) => (
           {!!note && <Dialog.Note>{note}</Dialog.Note>}
         </Modal.Body>
         <Dialog.Button skin="filled-primary" onClick={closeModal}>
-          Dismiss
+          {_('Dismiss')}
         </Dialog.Button>
       </>
     )}

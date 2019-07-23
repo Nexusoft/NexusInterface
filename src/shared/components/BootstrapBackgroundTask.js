@@ -4,12 +4,7 @@ import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 // Internal
-import {
-  openErrorDialog,
-  openSuccessDialog,
-  openModal,
-  showNotification,
-} from 'actions/overlays';
+import { openModal } from 'actions/overlays';
 import BackgroundTask from 'components/BackgroundTask';
 import Icon from 'components/Icon';
 import { bootstrapEvents } from 'lib/bootstrap';
@@ -50,20 +45,20 @@ function getPercentage({ step, details }) {
 function getStatusMsg({ step, details }) {
   switch (step) {
     case 'backing_up':
-      return 'Backing up...';
+      return _('Backing up...');
     case 'downloading':
       const percentage = getPercentage({ step, details });
-      return `Downloading... ${percentage}%`;
+      return `${_('Downloading')}... ${percentage}%`;
     case 'extracting':
-      return 'Decompressing...';
+      return _('Decompressing...');
     case 'stopping_core':
-      return 'Stopping Core...';
+      return _('Stopping Core...');
     case 'moving_db':
-      return 'Moving...';
+      return _('Moving...');
     case 'restarting_core':
-      return 'Restarting Core...';
+      return _('Restarting Core...');
     case 'rescanning':
-      return 'Rescanning Wallet...';
+      return _('Rescanning Wallet...');
     default:
       return '';
   }

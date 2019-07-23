@@ -138,7 +138,7 @@ class TerminalCore extends Component {
       <TerminalContent>
         <TerminalCoreComponent ref={this.outputRef}>
           {settings.manualDaemon ? (
-            <div className="dim">Core in Manual Mode</div>
+            <div className="dim">{_('Core in Manual Mode')}</div>
           ) : (
             <>
               <Output

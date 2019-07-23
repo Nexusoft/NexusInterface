@@ -21,10 +21,10 @@ const ConfirmationButton = styled(Button)({
 const ConfirmDialog = ({
   question,
   note,
-  labelYes = 'Yes',
+  labelYes = _('Yes'),
   skinYes = 'primary',
   callbackYes,
-  labelNo = 'No',
+  labelNo = _('No'),
   skinNo = 'default',
   callbackNo,
   ...rest

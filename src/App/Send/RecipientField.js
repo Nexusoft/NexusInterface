@@ -38,10 +38,9 @@ const filterRecipients = memoize((suggestions, inputValue) => {
   );
 });
 
-const mapStateToProps = ({ addressBook, settings: { locale } }) => ({
+const mapStateToProps = ({ addressBook }) => ({
   suggestions: getRecipientSuggestions(addressBook),
   addressNameMap: getAddressNameMap(addressBook),
-  locale,
 });
 
 const actionCreators = { openModal };
@@ -82,7 +81,7 @@ class RecipientField extends Component {
    * @memberof RecipientField
    */
   render() {
-    const { addressNameMap, input, meta, locale, suggestions } = this.props;
+    const { addressNameMap, input, meta, suggestions } = this.props;
     const recipientName = addressNameMap[input.value];
 
     return (

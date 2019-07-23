@@ -122,9 +122,10 @@ class SettingsApp extends Component {
   toggleVerifyModuleSource = e => {
     if (e.target.checked) {
       this.props.openConfirmDialog({
-        question: 'Turn module open source policy on?',
-        note:
-          'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.',
+        question: _('Turn module open source policy on?'),
+        note: _(
+          'All modules without open source verifications, possibly including your own under-development modules, will become invalid. Wallet must be refreshed for the change to take effect.'
+        ),
         callbackYes: () => {
           this.props.updateSettings({ verifyModuleSource: true });
           location.reload();
@@ -132,29 +133,29 @@ class SettingsApp extends Component {
       });
     } else {
       this.props.openConfirmDialog({
-        question: 'Turn module open source policy off?',
+        question: _('Turn module open source policy off?'),
         note: (
           <div>
             <p>
-              This is only for module developers and can be dangerous for
-              regular users. Please make sure you know what you are doing!
+              {_(`This is only for module developers and can be dangerous for
+              regular users. Please make sure you know what you are doing!`)}
             </p>
             <p>
-              It would be much easier for a closed source module to hide
+              {_(`It would be much easier for a closed source module to hide
               malicious code than for an open source one. Therefore, in case you
               still want to disable this setting, it is highly recommended that
               you only install and run closed source modules that you are
-              developing yourself.
+              developing yourself.`)}
             </p>
           </div>
         ),
-        labelYes: 'Turn policy off',
+        labelYes: _('Turn policy off'),
         skinYes: 'danger',
         callbackYes: () => {
           this.props.updateSettings({ verifyModuleSource: false });
           location.reload();
         },
-        labelNo: 'Keep policy on',
+        labelNo: _('Keep policy on'),
         skinNo: 'primary',
         style: { width: 600 },
       });

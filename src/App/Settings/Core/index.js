@@ -147,7 +147,7 @@ class SettingsCore extends Component {
     if (settings.manualDaemon) {
       openConfirmDialog({
         question: _('Exit manual Core mode?'),
-        note: _('(This will shut down your Core)'),
+        note: _('(This will restart your Core)'),
         callbackYes: async () => {
           try {
             await stopCore();
@@ -160,7 +160,7 @@ class SettingsCore extends Component {
     } else {
       openConfirmDialog({
         question: _('Enter manual Core mode?'),
-        note: _('(This will shut down your Core)'),
+        note: _('(This will restart your Core)'),
         callbackYes: async () => {
           updateSettings({ manualDaemon: true });
           await stopCore();
@@ -187,7 +187,7 @@ class SettingsCore extends Component {
   moveDataDir = () => {
     remote.dialog.showOpenDialog(
       {
-        title: 'Select New Folder',
+        title: _('Select a directory'),
         defaultPath: this.props.backupDir,
         properties: ['openDirectory'],
       },

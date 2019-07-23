@@ -12,10 +12,10 @@ export default class AutoUpdateBackgroundTask extends React.Component {
   confirmInstall = () => {
     this.closeTask();
     this.props.openConfirmDialog({
-      question: 'Close the wallet and install update now?',
-      labelYes: 'Close and install',
+      question: _('Close the wallet and install update now?'),
+      labelYes: _('Close and install'),
       callbackYes: this.props.quitAndInstall,
-      labelNo: 'Install it later',
+      labelNo: _('Install it later'),
       callbackNo: () => {
         this.props.showBackgroundTask(AutoUpdateBackgroundTask, this.props);
       },
@@ -31,7 +31,9 @@ export default class AutoUpdateBackgroundTask extends React.Component {
         }}
         onClick={this.confirmInstall}
       >
-        New wallet version {this.props.version} - Ready to install!
+        {_('New wallet version %{version} - Ready to install!', {
+          version: this.props.version,
+        })}
       </BackgroundTask>
     );
   }

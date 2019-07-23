@@ -8,7 +8,6 @@ import styled from '@emotion/styled';
 
 // Images
 import nexusLogo from 'images/logo-full.svg';
-import updateicon from 'images/unlock.png';
 
 const Column = styled.div({
   flex: '50%',
@@ -176,13 +175,15 @@ class About extends Component {
         <Column>
           <Row>
             <Column>
-              <b>Interface Version:</b> {this.getInterfaceVersionNumber()}
+              <b>{_('Interface Version')}:</b>{' '}
+              {this.getInterfaceVersionNumber()}
               <br />
-              <b>Build Date: </b> July 19th 2019 <br />
+              <b>{_('Build Date')}: </b> July 19th 2019 <br />
             </Column>
             <Column>
-              <b>Nexus Core Version:</b> {this.getDaemonVersionNumber()} <br />
-              <b>Build Date: </b> July 19th 2019 <br />
+              <b>{_('Nexus Core Version')}:</b> {this.getDaemonVersionNumber()}{' '}
+              <br />
+              <b>{_('Build Date')}: </b> July 19th 2019 <br />
             </Column>
           </Row>
           <CenterText>

@@ -118,7 +118,7 @@ function getPercentage({ step, details }) {
 function getStatusMsg({ step, details }, locale) {
   switch (step) {
     case 'backing_up':
-      return 'Backing up your wallet...';
+      return _('Backing up your wallet...');
     case 'downloading':
       const { downloaded, totalSize } = details || {};
       const percentage = getPercentage({ step, details });
@@ -128,17 +128,19 @@ function getStatusMsg({ step, details }, locale) {
             locale
           )})`
         : '';
-      return `Downloading the database... ${percentage}% ${sizeProgress}`;
+      return `${_(
+        'Downloading the database'
+      )}... ${percentage}% ${sizeProgress}`;
     case 'extracting':
-      return 'Decompressing the database...';
+      return _('Decompressing the database...');
     case 'stopping_core':
-      return 'Stopping Nexus Core...';
+      return _('Stopping Nexus Core...');
     case 'moving_db':
-      return 'Moving the database...';
+      return _('Moving the database...');
     case 'restarting_core':
-      return 'Restarting Nexus Core...';
+      return _('Restarting Nexus Core...');
     case 'rescanning':
-      return 'Rescanning Wallet...';
+      return _('Rescanning Wallet...');
     default:
       return '';
   }
@@ -186,11 +188,11 @@ class BootstrapModal extends PureComponent {
    */
   confirmAbort = () => {
     this.props.openConfirmDialog({
-      question: 'Are you sure you want to abort the process?',
-      labelYes: 'Yes, abort',
+      question: _('Are you sure you want to abort the process?'),
+      labelYes: _('Yes, abort'),
       skinYes: 'danger',
       callbackYes: abortBootstrap,
-      labelNo: 'No, let it continue',
+      labelNo: _('No, let it continue'),
       skinNo: 'primary',
     });
   };
@@ -237,13 +239,13 @@ class BootstrapModal extends PureComponent {
         {...rest}
       >
         <Modal.Body>
-          <Title>Bootstrap Recent Database</Title>
+          <Title>{_('Bootstrap Recent Database')}</Title>
           <p>{statusMsg}</p>
           <ProgressBar percentage={percentage} />
           <div className="flex space-between" style={{ marginTop: '2em' }}>
             <div />
             <Button skin="danger" onClick={this.confirmAbort}>
-              Abort
+              {_('Abort')}
             </Button>
           </div>
           <Tooltip.Trigger tooltip="Minimize">

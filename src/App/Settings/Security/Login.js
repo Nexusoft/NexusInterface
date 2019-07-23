@@ -170,7 +170,7 @@ class Login extends Component {
               <Field component={Switch.RF} name="stakingOnly" />
             </FormField>
             {tritium && (
-              <FormField inline connectLabel label={'SET TIMEOUT FOR LOGIN'}>
+              <FormField inline connectLabel label={_('SET TIMEOUT FOR LOGIN')}>
                 <Field component={Switch.RF} name="setLoginTimeOut" />
               </FormField>
             )}

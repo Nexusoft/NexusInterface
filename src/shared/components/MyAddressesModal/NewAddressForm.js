@@ -16,11 +16,6 @@ const NewAddressFormComponent = styled.form({
   marginTop: '2em',
 });
 
-const AccountNameInput = styled.div({
-  flexGrow: 1,
-  marginLeft: '1em',
-});
-
 const Buttons = styled.div({
   marginTop: '2em',
   display: 'flex',
@@ -47,10 +42,10 @@ const Buttons = styled.div({
   validate: ({ accountName }) => {
     const errors = {};
     if (!accountName) {
-      errors.accountName = 'Account name is required';
+      errors.accountName = _('Account name is required');
     }
     if (accountName === '*') {
-      errors.accountName = 'Invalid account name';
+      errors.accountName = _('Invalid account name');
     }
     return errors;
   },
@@ -58,9 +53,9 @@ const Buttons = styled.div({
   onSubmitSuccess: (result, dispatch, props) => {
     dispatch(loadMyAccounts());
     props.finish();
-    props.showNotification('New address has been created', 'success');
+    props.showNotification(_('New address has been created'), 'success');
   },
-  onSubmitFail: rpcErrorHandler('Error creating new address'),
+  onSubmitFail: rpcErrorHandler(_('Error creating new address')),
 })
 class NewAddressForm extends React.Component {
   /**
@@ -82,20 +77,20 @@ class NewAddressForm extends React.Component {
     const { handleSubmit, submitting, accountNames, finish } = this.props;
     return (
       <NewAddressFormComponent onSubmit={handleSubmit}>
-        <div>Enter a new account name or pick an existing account:</div>
+        <div>{_('Enter a new account name or pick an existing account:')}</div>
         <Field
           component={AutoSuggest.RF}
           name="accountName"
           suggestions={accountNames}
           onSelect={this.setAccountName}
           inputProps={{
-            placeholder: 'Account name',
+            placeholder: _('Account name'),
           }}
         />
         <Buttons>
-          <Button onClick={finish}>Cancel</Button>
+          <Button onClick={finish}>{_('Cancel')}</Button>
           <Button type="submit" skin="primary" disabled={submitting}>
-            Create Address
+            {_('Create Address')}
           </Button>
         </Buttons>
       </NewAddressFormComponent>

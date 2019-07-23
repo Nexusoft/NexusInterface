@@ -67,7 +67,7 @@ class AddModule extends React.Component {
   browseFiles = () => {
     remote.dialog.showOpenDialog(
       {
-        title: 'Select module archive file',
+        title: _('Select module archive file'),
         properties: ['openFile'],
         filters: [
           {
@@ -92,7 +92,7 @@ class AddModule extends React.Component {
   browseDirectories = () => {
     remote.dialog.showOpenDialog(
       {
-        title: 'Select module directory',
+        title: _('Select module directory'),
         properties: ['openDirectory'],
       },
       paths => {
@@ -143,6 +143,42 @@ class AddModule extends React.Component {
     }
   };
 
+  msgToReact = msg => {
+    const [t1, archiveFile] = /#fls#(.*)#fle#/.exec(msg) || [];
+    const [t2, directory] = /#dls#(.*)#dle#/.exec(msg) || [];
+    if (archiveFile && directory) {
+      const string = msg.replace(t1, '|#f#|').replace(t2, '|#d#|');
+      const segments = string.split('|');
+      return segments.map(t =>
+        t === '#f#' ? (
+          <Button skin="hyperlink" onClick={this.browseFiles}>
+            {archiveFile}
+          </Button>
+        ) : t === '#d#' ? (
+          <Button skin="hyperlink" onClick={this.browseDirectories}>
+            {directory}
+          </Button>
+        ) : (
+          t
+        )
+      );
+    } else {
+      return null;
+    }
+  };
+
+  getSelectModuleMsg = () => {
+    const enMsg =
+      'Select module %{fls}archive file%{fle} or %{dls}directory%{dle}';
+    const msg = _(enMsg, {
+      fls: '#fls#',
+      fle: '#fle#',
+      dls: '#dls#',
+      dle: '#dle#',
+    });
+    return this.msgToReact(msg) || this.msgToReact(enMsg);
+  };
+
   /**
    * Component's Renderable JSX
    *
@@ -151,6 +187,7 @@ class AddModule extends React.Component {
    */
   render() {
     const { checking } = this.state;
+
     return (
       <Dropzone
         getFilesFromEvent={this.getFilesFromEvent}
@@ -165,29 +202,20 @@ class AddModule extends React.Component {
             legend={
               <>
                 <Icon icon={plusCircleIcon} />
-                <span className="v-align space-left">Add Module</span>
+                <span className="v-align space-left">{_('Add Module')}</span>
               </>
             }
             active={isDragActive || checking}
           >
             <InnerMessage noPointerEvents={isDragActive || checking}>
               {checking ? (
-                <div>Checking module...</div>
+                <div>{_('Checking module')}...</div>
               ) : isDragActive ? (
-                <div>Drop here to install</div>
+                <div>{_('Drop here to install')}</div>
               ) : (
                 <div>
-                  <div>
-                    Select module{' '}
-                    <Button skin="hyperlink" onClick={this.browseFiles}>
-                      archive file
-                    </Button>{' '}
-                    or{' '}
-                    <Button skin="hyperlink" onClick={this.browseDirectories}>
-                      directory
-                    </Button>
-                  </div>
-                  <div>or drag and drop it here</div>
+                  <div>{this.getSelectModuleMsg()}</div>
+                  <div>{_('or drag and drop it here')}</div>
                 </div>
               )}
             </InnerMessage>

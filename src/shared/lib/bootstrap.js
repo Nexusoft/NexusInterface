@@ -43,12 +43,12 @@ export const bootstrapEvents = new EventEmitter();
  */
 export function initializeBootstrapEvents({ dispatch }) {
   bootstrapEvents.on('abort', () =>
-    dispatch(showNotification('Bootstrap process has been aborted', 'error'))
+    dispatch(showNotification(_('Bootstrap process has been aborted'), 'error'))
   );
   bootstrapEvents.on('error', err =>
     dispatch(
       openErrorDialog({
-        message: 'Error bootstrapping recent database',
+        message: _('Error bootstrapping recent database'),
         note: err.message || 'Unknown error',
       })
     )
@@ -56,7 +56,7 @@ export function initializeBootstrapEvents({ dispatch }) {
   bootstrapEvents.on('success', () =>
     dispatch(
       openSuccessDialog({
-        message: 'Recent database has been successfully bootstrapped',
+        message: _('Recent database has been successfully bootstrapped'),
       })
     )
   );

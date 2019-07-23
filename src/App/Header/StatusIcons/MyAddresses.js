@@ -34,7 +34,7 @@ const actionCreators = { openModal };
 const MyAddresses = ({ openModal }) => (
   <Tooltip.Trigger
     align="end"
-    tooltip="My Addresses"
+    tooltip={_('My Addresses')}
     style={{ transform: 'translateX(12px)' }}
   >
     <MyAddressesIcon

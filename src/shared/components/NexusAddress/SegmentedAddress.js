@@ -69,7 +69,10 @@ export default class SegmentedAddress extends React.Component {
    */
   copyAddress = () => {
     clipboard.writeText(this.props.address);
-    this.props.showNotification(_('Address has been copied to clipboard'), 'success');
+    this.props.showNotification(
+      _('Address has been copied to clipboard'),
+      'success'
+    );
   };
 
   /**
@@ -108,7 +111,7 @@ export default class SegmentedAddress extends React.Component {
       <SegmentedAddressComponent {...rest}>
         {!!label && <Label>{label}</Label>}
 
-        <Tooltip.Trigger tooltip="Click to copy to clipboard">
+        <Tooltip.Trigger tooltip={_('Click to copy to clipboard')}>
           <Address
             readOnly
             ref={this.addressRef}

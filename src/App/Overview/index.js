@@ -813,7 +813,9 @@ class Overview extends Component {
                 {!!synchronizing && (
                   <Tooltip.Trigger
                     align="start"
-                    tooltip="The balance displayed might not be up-to-date since the wallet is not yet fully synchronized"
+                    tooltip={_(
+                      'The balance displayed might not be up-to-date since the wallet is not yet fully synchronized'
+                    )}
                   >
                     <Icon icon={warningIcon} className="space-right" />
                   </Tooltip.Trigger>

@@ -90,10 +90,10 @@ class Addresses extends React.Component {
     this.props.isMine
       ? name
         ? _('My Nexus address for %{name}', { name })
-        : 'My Nexus address'
+        : _('My Nexus address')
       : name
       ? _("%{name}'s Nexus address", { name })
-      : 'Their Nexus address';
+      : _('Their Nexus address');
 
   /**
    * React Render
