@@ -81,20 +81,19 @@ class Addresses extends React.Component {
     }
   }
 
-  renderFieldLabel = ({ input, ...rest }) => {
-    return this.props.isMine
-      ? input.value
-        ? _('My Nexus address for %{name}', { name: input.value })
-        : 'My Nexus address'
-      : input.value
-      ? _("%{name}'s Nexus address", { name: input.value })
-      : 'Their Nexus address';
-  };
-
   addNewAddress = () => {
     this.props.fields.push({ address: '', label: '' });
     this.justAdded = true;
   };
+
+  getAddressLabel = name =>
+    this.props.isMine
+      ? name
+        ? _('My Nexus address for %{name}', { name })
+        : 'My Nexus address'
+      : name
+      ? _("%{name}'s Nexus address", { name })
+      : 'Their Nexus address';
 
   /**
    * React Render
@@ -120,18 +119,19 @@ class Addresses extends React.Component {
             </Tooltip.Trigger>
 
             <AddressWrapper>
-              <Field name="name" component={this.renderFieldLabel}>
-                {text => (
+              <Field
+                name="name"
+                component={({ input }) => (
                   <Field
                     name={`${fieldName}.address`}
                     component={TextField.RF}
-                    placeholder={text}
+                    placeholder={this.getAddressLabel(input.value)}
                     inputRef={
                       i === fields.length - 1 ? this.lastInputRef : undefined
                     }
                   />
                 )}
-              </Field>
+              />
             </AddressWrapper>
 
             <LabelWrapper>
@@ -148,7 +148,10 @@ class Addresses extends React.Component {
           <AddButton skin="hyperlink" onClick={this.addNewAddress}>
             <PlusIcon icon={plusIcon} className="space-right" />
             <span className="v-align">
-              <Field name="name" component={this.renderFieldLabel} />
+              <Field
+                name="name"
+                component={({ input }) => this.getAddressLabel(input.value)}
+              />
             </span>
           </AddButton>
         </div>

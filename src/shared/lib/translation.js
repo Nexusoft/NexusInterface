@@ -23,7 +23,11 @@ const polyglot = new Polyglot({
 const translate =
   locale === 'en'
     ? (string, data) => Polyglot.transformPhrase(string, data, 'en')
-    : (string, data) => polyglot.t(string, { _: string, ...data });
+    : (string, data) =>
+        polyglot.t(string, {
+          _: Polyglot.transformPhrase(string, data, 'en'),
+          ...data,
+        });
 
 export { translate };
 
