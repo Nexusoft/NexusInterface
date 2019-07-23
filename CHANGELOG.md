@@ -12,7 +12,7 @@
 
 #### Fixes
 
-- abc
+- Stake and Trust transactions now properly show on the transaction page
 
 # 1.1.0 (2019.7.19)
 

@@ -1139,7 +1139,7 @@ class Transactions extends Component {
       tx =>
         tx &&
         ((tx.address == undefined &&
-          (tx.category == 'generate' || tx.category == 'immature')) ||
+          (tx.category == 'generate' || tx.category == 'immature'|| tx.category == 'trust'|| tx.category == 'stake')) ||
           (tx.address && tx.address.toLowerCase().includes(addressFilter)))
     );
   }
