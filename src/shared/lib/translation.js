@@ -14,20 +14,18 @@ const phrases =
     : JSON.parse(
         fs.readFileSync(path.join(assetsDir, 'translations', `${locale}.json`))
       );
+const engTranslate = (string, data) =>
+  Polyglot.transformPhrase(string, data, 'en');
 
 const polyglot = new Polyglot({
   locale,
   phrases,
+  allowMissing: true,
+  onMissingKey: engTranslate,
 });
 
 const translate =
-  locale === 'en'
-    ? (string, data) => Polyglot.transformPhrase(string, data, 'en')
-    : (string, data) =>
-        polyglot.t(string, {
-          _: Polyglot.transformPhrase(string, data, 'en'),
-          ...data,
-        });
+  locale === 'en' ? engTranslate : (string, data) => polyglot.t(string, data);
 
 export { translate };
 
